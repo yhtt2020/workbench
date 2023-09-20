@@ -35,15 +35,15 @@
             <a-avatar :size="40" :src="item.icon" shape="square"></a-avatar>
             <span class="font-16-500 pl-3 truncate" style="color:var(--primary-text);">{{ item.name }}</span>
           </div>
-
-          <!-- <span  class="font-14-400  mb-2.5 " style="color:var(--primary-text);">{{ item.summary }}</span> -->
-
           <div class="flex justify-between">
             <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
-            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.type === 'PublicJoin' ? '公开加入' : '审核加入' }}</span>
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.joinOption === 'freeAccess' ? '公开加入' : '审核加入' }}</span>
           </div>
+
           <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;" />
-          <XtButton  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
+
+          <XtButton v-if="isJoin(item)" style="background:var(--active-secondary-bg);color:var(--secondary-text);height:40px;width:100%;" @click="closeJoinCom">已加入</XtButton>
+          <XtButton v-else  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
         </div>
       </div>
 
@@ -54,14 +54,13 @@
             <span class="font-16-500 pl-3 truncate" style="color:var(--primary-text);">{{ item.name }}</span>
           </div>
 
-          <!-- <span  class="font-14-400  mb-2.5 " style="color:var(--primary-text);">{{ item.summary }}</span> -->
-
           <div class="flex justify-between">
             <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
-            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.type === 'PublicJoin' ? '公开加入' : '审核加入' }}</span>
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.joinOption === 'freeAccess' ? '公开加入' : '审核加入' }}</span>
           </div>
           <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;" />
-          <XtButton  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
+          <XtButton v-if="isJoin(item)" style="background:var(--active-secondary-bg);color:var(--secondary-text);height:40px;width:100%;" @click="closeJoinCom">已加入</XtButton>
+          <XtButton v-else style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
         </div>
       </div>
 
@@ -72,10 +71,11 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
 import { myCommunityStore } from '../store/myCommunity'
-
+import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
 
 
 export default defineComponent({
@@ -85,7 +85,6 @@ export default defineComponent({
  setup (props,ctx) {
 
   const myCom = myCommunityStore()
-  // console.log('获取搜索数据::>>',myCom.searchCommunity)
 
   const data = reactive({
     settingsScroller: {
@@ -100,6 +99,7 @@ export default defineComponent({
     searchResult:[], 
   })
 
+
   // 关闭加入弹窗
   const closeJoinCom = () =>{
     ctx.emit('close')
@@ -109,7 +109,6 @@ export default defineComponent({
   const searchCommunity = (evt) =>{
     if(data.searchId !== ''){
       myCom.searchCommendCommunity(data.searchId).then(result=>{
-        // console.log('搜索结果',result.data.list)
         data.searchResult = result.data.list
       })
     }else{
@@ -119,12 +118,31 @@ export default defineComponent({
 
   // 加入社群
   const nowJoin = (item) =>{
-    console.log('测试::>>',item)
+    myCom.joinCommunity({no:item.no}).then(res=>{
+      if(res.status === 1){
+        myCom.getMyCommunity()
+        message.success(`${res.info}`)
+        ctx.emit('close')
+      }else{
+        message.error(`${res.info}`)
+        ctx.emit('close')
+      }
+    })
   }
+
+  // 判断是否已经加入社群
+  const isJoin = (item) =>{
+    const index = _.find(myCom.myCommunityList,function(o){ return o.id === item.id })
+    if(index !== undefined){
+      console.log('排查问题::>>',index)
+      return index.communityInfo.status === 1
+    }
+  }
+
 
   
   return {
-   closeJoinCom,...toRefs(data),searchCommunity,nowJoin
+    isJoin,closeJoinCom,...toRefs(data),searchCommunity,nowJoin
   }
  }
 })

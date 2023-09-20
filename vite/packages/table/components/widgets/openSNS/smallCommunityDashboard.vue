@@ -4,9 +4,6 @@
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
         </div>
-        <div class="link-icon">
-            <Icon icon="fluent:open-20-filled" />
-        </div>
         <div class="dash-board">
             <div class="dash-cell pointer" v-for="(item,index) in dataList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
@@ -46,7 +43,7 @@
                         <a-input style="border-radius: 10px;" v-model:value="this.options.title" class="search pl-1"></a-input>
                     </p>
                     <p>选择统计数值</p>
-                    <div class="transfer">
+                    <div class="transfer" >
                         <a-transfer
                         v-model:target-keys="targetKeys"
                         :data-source="mockData"
@@ -119,7 +116,9 @@ export default {
             options: {
                 className: "card",
                 title: "社区数据",
-                icon: "iconamoon:history-fill",
+                // 左侧图标
+                // icon: "iconamoon:history-fill",
+                rightIcon:"fluent:open-20-filled",
             },
             dataList:[
                 {
@@ -172,6 +171,66 @@ export default {
                     key: 6,
                     title: "我是标题",
                 },
+                {
+                    key: 7,
+                    title: "总访问",
+                },
+                {
+                    key: 8,
+                    title: "本周发布",
+                },
+                {
+                    key: 9,
+                    title: "本月发布",
+                },
+                {
+                    key: 10,
+                    title: "我是标题",
+                },
+                {
+                    key: 11,
+                    title: "我是标题",
+                },
+                {
+                    key: 12,
+                    title: "我是标题",
+                },
+                {
+                    key: 13,
+                    title: "我是标题",
+                },
+                {
+                    key: 14,
+                    title: "我是标题",
+                },
+                {
+                    key: 15,
+                    title: "我是标题",
+                },
+                {
+                    key: 16,
+                    title: "总访问",
+                },
+                {
+                    key: 17,
+                    title: "本周发布",
+                },
+                {
+                    key: 18,
+                    title: "本月发布",
+                },
+                {
+                    key: 19,
+                    title: "我是标题",
+                },
+                {
+                    key: 20,
+                    title: "我是标题",
+                },
+                {
+                    key: 21,
+                    title: "我是标题",
+                },
 
             ],
             targetKeys:[5,6],
@@ -182,28 +241,8 @@ export default {
 
     },
     methods:{
-        // getMock(){
-        //     const keys = [];
-        //     const mData = [];
-        //     for (let i = 0; i < 20; i++) {
-        //         const data = {
-        //             key: i.toString(),
-        //             title: `content${i + 1}`,
-        //             description: `description of content${i + 1}`,
-        //             chosen: Math.random() * 2 > 1,
-        //         };
-        //         if (data.chosen) {
-        //             keys.push(data.key);
-        //         }
-        //         mData.push(data);
-        //     }
-        //     this.mockData = mData;
-        //     this.targetKeys = keys;
-        //     console.log("mockData",this.mockData)
-        //     console.log("targetKeys",this.targetKeys)
-        // },
         handleChange(keys, direction, moveKeys){
-            console.log(keys, direction, moveKeys);
+            // console.log(keys, direction, moveKeys);
         }
     }
 };
@@ -266,7 +305,7 @@ export default {
     
     :deep(.ant-transfer-list){
         border-radius: 3px !important;
-        
+        max-height: 564px;
         width: 194px !important;
         height: 656px !important;
         
@@ -276,17 +315,6 @@ export default {
         height: 40px;
         border-radius: 3px;
         margin-top: 8px;
-    }
-
-    .link-icon{
-        position: absolute;
-        top:17px;
-        left: 117px;
-        cursor: pointer;
-    }
-    .link-icon svg{
-        width: 20px;
-        height: 20px;
     }
 
     :deep(.ant-transfer-list-content-item){
@@ -363,6 +391,32 @@ export default {
         height: 40px;
         margin-bottom: 12px;
         background-color: #2A2A2A 100%;
+    }
+
+    :deep(.ant-pagination){
+        text-align: center !important;
+    }
+
+
+    .ant-transfer-list-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1 !important;
+    }
+
+    
+
+
+    // 滚动条
+    :deep(.ant-transfer-list-content){
+        flex: 1 1 0%;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    :deep(.ant-transfer-list-content::-webkit-scrollbar){
+        width: 5px;
+    }
+    :deep(.ant-transfer-list-content::-webkit-scrollbar-thumb){
+        background: #aaa;
+        border-radius: 3px;
     }
 </style>
   
