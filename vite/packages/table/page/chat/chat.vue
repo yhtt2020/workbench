@@ -247,7 +247,7 @@ export default {
         noBg: true,
         callBack: selectTab,
         route: {
-          name: 'defaultCommunity'
+          name: 'defaultCommunity',params:{no:'',info:JSON.stringify('')}
         }
       },
 

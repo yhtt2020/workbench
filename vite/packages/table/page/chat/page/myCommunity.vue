@@ -83,10 +83,7 @@
    }
  
     watchEffect(()=>{
-      // console.log('排查问题',JSON.parse(route.params.info))
-      if(route.params.info !== ''){
-        data.myCommunityData = JSON.parse(route.params.info)
-      }
+      data.myCommunityData = JSON.parse(route.params.info)
     })
  
  
