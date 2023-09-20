@@ -34,7 +34,8 @@
 
 
 <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
-   <AddNewChannel v-if="type === 'addChannel'" @close="addShow = false"></AddNewChannel>
+  <CreateNewChannel v-if="type === 'addChannel'" @close="addShow = false"></CreateNewChannel>
+  
 </Modal>
 
 </template>
@@ -47,12 +48,13 @@ import { UserAddOutlined,PlusOutlined,MenuUnfoldOutlined } from '@ant-design/ico
 
 import ChatDropDown from '../components/chatDropDown.vue'
 import Modal from '../../../components/Modal.vue'
-import AddNewChannel from '../components/addNewChannel.vue'
+import CreateNewChannel from '../components/createNewChannel.vue'
+
 
 export default defineComponent({
  props:['info'],
  components:{
-  ChatDropDown,CommunityIcon,Modal,AddNewChannel,
+  ChatDropDown,CommunityIcon,Modal,CreateNewChannel,
   UserAddOutlined,PlusOutlined,MenuUnfoldOutlined
  },
 

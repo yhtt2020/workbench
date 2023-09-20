@@ -11,12 +11,13 @@
   </div>
 
   <div class="flex flex-col px-6">
-   <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子({{ createGroup.length }})</span>
+   <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子</span>
+   <!-- ({{ createGroup.length }}) -->
    
    
 
    <div class="mt-4 flex items-center justify-end" style="height:40px;">
-    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @close="closeChannel">
+    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
      取消
     </XtButton>
 
