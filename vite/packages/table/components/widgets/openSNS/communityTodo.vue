@@ -4,11 +4,8 @@
         <div class="top-icon">
             <Icon icon="akar-icons:check-box" />
         </div>
-        <div class="link-icon">
-            <Icon icon="fluent:open-20-filled" />
-        </div>
         <div class="dash-board">
-            <div class="dash-cell pointer" :class="item.className" v-for="(item, index) in dataList" :key="index">
+            <div class="dash-cell pointer" :class="item.num == 0 || item.num == '-' ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in dataList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
                 <div class="cell-num">{{ item.num }}</div>
             </div>
@@ -49,44 +46,38 @@ export default {
     },
     data() {
         return {
+            // 标题样式
             options: {
                 className: "card",
                 title: "社区待办",
-                // icon: "bianji",
-                // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
+                rightIcon:"fluent:open-20-filled",
                 // icon: "games-16-filled",
             },
             dataList:[
                 {
                     title:"内容审核",
-                    num:"123",
-                    className:"green-cell"
+                    num:"0",
                 },
                 {
                     title:"今日注册",
                     num:"123",
-                    className:"red-cell"
                 },
                 {
                     title:"今日发布",
-                    num:"123",
-                    className:"yellow-cell"
+                    num:"12",
                 },
                 {
                     title:"今日评论",
-                    num:"123",
-                    className:"yellow-cell"
+                    num:"98",
                 },
                 {
                     title:"今日访问",
-                    num:"123",
-                    className:"yellow-cell"
+                    num:"39",
                 },
                 {
                     title:"今日访问",
-                    num:"123",
-                    className:"green-cell"
+                    num:"-",
                 },
             ]
         };
@@ -108,16 +99,6 @@ export default {
     .top-icon svg{
         width:20px;
         height:20px;
-    }
-    .link-icon{
-        position: absolute;
-        top:17px;
-        left: 117px;
-        cursor: pointer;
-    }
-    .link-icon svg{
-        width: 20px;
-        height: 20px;
     }
     .dash-board{
         display: flex;
@@ -150,16 +131,16 @@ export default {
         font-weight: 500;
     }
 
-    .green-cell{
+    .green{
         // opacity: 0.2;
         background-color: rgba( #52C41A, 0.2);
         color: #52C41A;
     }
-    .red-cell{
+    .red{
         background-color: rgba( #FF4D4F, 0.2);
         color: #FF4D4F;
     }
-    .yellow-cell{
+    .yellow{
         background-color: rgba( #FAAD14, 0.2);
         color: #FAAD14;
     }

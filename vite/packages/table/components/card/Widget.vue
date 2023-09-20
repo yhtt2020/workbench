@@ -13,7 +13,13 @@
         <div class="left-title" v-if="options.noTitle !== true">
           <slot name="left-title"></slot>
           <Icon :icon="options.icon" class="title-icon"></Icon>
-          <div class="w-2/3">{{ options.title }}</div>
+          <div class="w-2/3 flex">{{ options.title }}
+            <slot name="left-title" v-if="options.rightIcon">
+              <div class="right-icon">
+                <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
+              </div>
+            </slot>
+          </div>
         </div>
         <div class="z-10 right-title"  v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
           <Icon icon="gengduo1" class="title-icon pointer"></Icon>
@@ -63,6 +69,7 @@ import {cardStore} from "../../store/card";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import _ from "lodash-es";
 import {PropType} from "vue";
+import {Icon as MyIcon} from '@iconify/vue';
 import BottomEdit from "./BottomEdit.vue";
 //组件选项
 declare interface IOption {
@@ -85,7 +92,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel,BottomEdit},
+  components: {HorizontalPanel},
 
   name: "Widget",
 
@@ -277,4 +284,12 @@ export default {
   position: relative;
 }
 
+
+  .right-icon svg{
+    position: relative;
+    left: -10px;
+    top: 3px;
+      width: 20px;
+      height: 20px;
+  }
 </style>
