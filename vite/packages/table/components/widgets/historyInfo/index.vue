@@ -1,25 +1,26 @@
 <template>
-
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
-        <Icon icon="iconamoon:history-fill" class="icon1"/>
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+        <div class="icon">
+            <CalendarOutlined style="width:20px;height:20px;" />
+        </div>
+        <div class="box-flex">
             <div class="date" :title="this.history.date">{{this.history.date}}</div>
             <div class="title" :title="this.history.title">{{this.history.title}}</div>
+        </div>
     </Widget>
-
-
 </template>
   
 <script>
-import axios from "axios";
+import { CalendarOutlined, } from '@ant-design/icons-vue';
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
-import {sUrl} from "../../../consts"
-import {get} from "../../../js/axios/request"
 import {getHistoryInfo} from "../../../store/historyInfo"
+
 export default {
     components:{
         Widget,
         Icon,
+        CalendarOutlined,
     },
 
     props: {
@@ -46,10 +47,7 @@ export default {
             options: {
                 className: "card small",
                 title: "历史上的今天",
-                // icon: "bianji",
-                // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
-                // icon: "games-16-filled",
             },
             history:{
                 date:"",
@@ -58,7 +56,6 @@ export default {
         };
     },
     async mounted() {
-        // await this.onTest()
         await this.onHistoryMessage()
     },
     methods:{
@@ -73,14 +70,25 @@ export default {
 </script>
   
 <style lang="scss" scoped>
-    .icon1{
-        width: 24px;
-    }
-    svg{
-        width: 24px;
-        height: 24px;
+    .icon{
+        width: 20px;
+        height: 20px;
         position: relative;
-        top: -23px;
+        top: -21px;
+        left: 0;
+    }
+    
+    :deep(.anticon svg){
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .box-flex{
+        display: flex;
+        flex-direction: column;
+        height: 120px;
+        margin-top: -16px;
+        width: 240px;
     }
     .date{
         text-align: center;
@@ -89,12 +97,13 @@ export default {
     }
     .title{
         font-size: 24px;
-        margin-top: 12px;
         font-family: '优设标题黑';
         text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        // max-width: 212px;
+        height: 110px;
+        white-space: pre-wrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     @font-face {
