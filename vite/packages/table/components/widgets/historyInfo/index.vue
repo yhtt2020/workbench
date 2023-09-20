@@ -2,8 +2,8 @@
 
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
         <Icon icon="iconamoon:history-fill" class="icon1"/>
-            <div class="date">{{this.history.date}}</div>
-            <div class="title">{{this.history.title}}</div>
+            <div class="date" :title="this.history.date">{{this.history.date}}</div>
+            <div class="title" :title="this.history.title">{{this.history.title}}</div>
     </Widget>
 
 
@@ -92,6 +92,8 @@ export default {
         margin-top: 12px;
         font-family: '优设标题黑';
         text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
         // max-width: 212px;
     }
     

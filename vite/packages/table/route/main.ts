@@ -52,6 +52,8 @@ import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
 import Rank from '../page/social/Rank.vue';
 import BillingRecord from '../page/social/BillingRecord.vue';
+
+import Share from '../apps/share/page/index.vue';
 import MarketIndex from '../page/market/MarketIndex.vue';
 import MarketHome from '../page/market/MarketHome.vue';
 import Prop from '../page/market/Prop.vue';
@@ -73,7 +75,7 @@ import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
 // import ImTeam from '../page/chat/team.vue'
 import ChatMain from '../page/chat/page/chatMain.vue'
-import ThiskyIndex from '../page/chat/page/thiskyIndex.vue'
+import CommunityIndex from '../page/chat/page/communityIndex.vue'
 import ChatFind from '../page/chat/page/chatFind.vue'
 /**聊天团队模式结束**/
 
@@ -166,6 +168,11 @@ export default [
             path: "/bill",
             name: 'bill',
             component: BillingRecord
+          },
+          {
+            path: "/share",
+            name: 'share',
+            component: Share
           }
         ],
       },
@@ -240,12 +247,10 @@ export default [
                 }
               },
               {
-                path:'/thisky',
-                name:'chatThisky',
-                component:ThiskyIndex,
-                meta:{
-                  type:'thisky'
-                }
+                path:'/community',
+                name:'defaultCommunity',
+                component:CommunityIndex,
+                props:true,
               }
             ]
           },

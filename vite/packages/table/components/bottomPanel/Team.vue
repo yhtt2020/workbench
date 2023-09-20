@@ -9,10 +9,10 @@
         <a-avatar :src="t.img" :size="40"></a-avatar>
         <span>{{ t.title }}</span>
       </div>
-      <div class="team-item" @click="openTask()">
-        <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
-        <span>任务中心</span>
-      </div>
+        <div class="team-item" @click="openTask()">
+          <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
+          <span>任务中心</span>
+        </div>
     </div>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
@@ -72,7 +72,7 @@ export default {
             name: 'prop'
           },
           type: 'route'
-        },  
+        },
       ],
       //显示小组提示
       showTeamTip: false,
@@ -82,12 +82,12 @@ export default {
   },
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
-    ...mapWritableState(taskStore, [ 'isTaskDrawer']),
+    ...mapWritableState(taskStore, ['isTaskDrawer']),
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
-    openTask(){
-      this.isTaskDrawer=true
+    openTask() {
+      this.isTaskDrawer = true
     },
     async jump(type,val){
       switch(type){

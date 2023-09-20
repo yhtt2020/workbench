@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-between px-3 pt-3 pb-4" style="width:500px;">
    <div class="flex w-full h-10 items-center justify-center" style="position: relative;margin-bottom: 46px;">
     <!-- 左侧返回按钮 -->
-    <div hidden="" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" >
+    <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
      <LeftOutlined style="font-size: 1.25em;" />
     </div>
  
@@ -50,13 +50,16 @@
  import { LeftOutlined, CloseOutlined, CameraOutlined} from '@ant-design/icons-vue'
  import {fileUpload} from '../../../components/card/hooks/imageProcessing'
  import { message } from 'ant-design-vue'
- import { myCommunityStore } from '../store/communityGroup'
+ import { myCommunityStore } from '../store/myCommunity'
  
  
  export default defineComponent({
   components:{
    LeftOutlined,CloseOutlined,CameraOutlined
   },
+
+  props:['id'],
+
   setup (props,ctx) {
    const community = myCommunityStore()
 
@@ -86,6 +89,7 @@
        const res = await community.createCommunity(option)
       //  console.log('排查结果',res)
        if(res.status === 1){
+        community.getMyCommunity()
         message.success(`${res.info}`)
         ctx.emit('close')
        }else{
@@ -97,6 +101,11 @@
        message.error('不能超过2-16个汉字')
      }
    
+   }
+
+   // 返回上一层
+   const backCreate = () =>{
+    ctx.emit('back')
    }
  
  
@@ -116,7 +125,7 @@
    return {
      ...toRefs(data),
     closeCreateCom,createCommunity,updateGroupAvatar,
-    getFileInfo
+    getFileInfo,backCreate
    }
   }
  })

@@ -50,6 +50,7 @@
 import { defineComponent, onMounted, reactive,toRefs } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
  props:['data'],
@@ -57,6 +58,8 @@ export default defineComponent({
    CloseOutlined,
  },
  setup (props,ctx) {
+  const router = useRouter()
+
   const data = reactive({
    validateObj:props.data,
   })
@@ -69,6 +72,7 @@ export default defineComponent({
    
    if(res.data.status === 'JoinedSuccess'){
       message.success('加群成功')
+      router.push({name:'chatMain'})
       const name = `GROUP${props.data.groupID}`
       window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse)=>{
          // 通知 TUIConversation 添加当前会话

@@ -10,41 +10,60 @@
 
   <div class="w-full flex items-center justify-center" style="margin: 0 0 16px 0;">
     <div style="width:452px;" >
-      <a-input placeholder="搜索" :spellcheck="false" v-model:value="searchId" class="h-10" style="border-radius: 10px;">
-      <!-- @keyup.enter="searchGroup" -->
+      <a-input placeholder="搜索" :spellcheck="false" v-model:value="searchId" class="h-10" style="border-radius: 10px;" @keyup.enter="searchCommunity">
         <template #suffix>
-          <SearchOutlined />
-          <!-- @click="searchGroup" -->
+          <SearchOutlined @click="searchCommunity"/>
         </template>
       </a-input>
     </div>
   </div>
 
   <div class="w-full flex items-center justify-center mb-6">
-    <div style="width:452px; color:var(--secondary-text);" class="font-14-400">
+    <div style="width:452px; color:var(--secondary-text);" class="font-14-400" v-if="searchId === ''">
       推荐社群
+    </div>
+    <div style="width:452px; color:var(--secondary-text);" class="font-14-400" v-else>
+      搜索结果
     </div>
   </div>
 
   <vue-custom-scrollbar :settings="settingsScroller" style="height:466px;">
     <div class="w-full flex items-center justify-center">
-      <div class="flex grid grid-cols-2 gap-3" style="width:452px;">
+      <div class="flex grid grid-cols-2 gap-3" style="width:452px;" v-if="searchId === ''">
         <div v-for="item in list" class="flex flex-col rounded-lg p-4" style="background: var(--secondary-bg);">
           <div class="flex items-center mb-3">
             <a-avatar :size="40" :src="item.icon" shape="square"></a-avatar>
-            <span class="font-16-500 pl-3" style="color:var(--primary-text);">{{ item.name }}</span>
+            <span class="font-16-500 pl-3 truncate" style="color:var(--primary-text);">{{ item.name }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.joinOption === 'freeAccess' ? '公开加入' : '审核加入' }}</span>
           </div>
 
-          <span  class="font-14-400 mb-2.5 " style="max-width:96px;color:var(--primary-text);">{{ item.summary }}</span>
+          <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;" />
+
+          <XtButton v-if="isJoin(item)" style="background:var(--active-secondary-bg);color:var(--secondary-text);height:40px;width:100%;" @click="closeJoinCom">已加入</XtButton>
+          <XtButton v-else  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
+        </div>
+      </div>
+
+      <div class="flex grid grid-cols-2 gap-3" style="width:452px;" v-else>
+        <div v-for="item in searchResult" class="flex flex-col rounded-lg p-4" style="background: var(--secondary-bg);">
+          <div class="flex items-center mb-3">
+            <a-avatar :size="40" :src="item.icon" shape="square"></a-avatar>
+            <span class="font-16-500 pl-3 truncate" style="color:var(--primary-text);">{{ item.name }}</span>
+          </div>
 
           <div class="flex justify-between">
             <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
-            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.type === 'PublicJoin' ? '公开加入' : '审核加入' }}</span>
+            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.joinOption === 'freeAccess' ? '公开加入' : '审核加入' }}</span>
           </div>
           <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;" />
-          <XtButton  style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;">立即加入</XtButton>
+          <XtButton v-if="isJoin(item)" style="background:var(--active-secondary-bg);color:var(--secondary-text);height:40px;width:100%;" @click="closeJoinCom">已加入</XtButton>
+          <XtButton v-else style="background:var(--active-bg);color:var(--active-text);height:40px;width:100%;" @click="nowJoin(item)">立即加入</XtButton>
         </div>
       </div>
+
     </div>
   </vue-custom-scrollbar>
 
@@ -52,10 +71,12 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
-// import { recommendedJoin } from '../../../js/data/chatList'
-import { myCommunityStore } from '../store/communityGroup'
+import { myCommunityStore } from '../store/myCommunity'
+import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
+
 
 export default defineComponent({
  components:{
@@ -64,7 +85,6 @@ export default defineComponent({
  setup (props,ctx) {
 
   const myCom = myCommunityStore()
-  // console.log('获取数据::>>',myCom.$state.recommendCommunityList)
 
   const data = reactive({
     settingsScroller: {
@@ -75,17 +95,54 @@ export default defineComponent({
       wheelPropagation: true
     },
     list:myCom.$state.recommendCommunityList,
+    searchId:'',
+    searchResult:[], 
   })
+
 
   // 关闭加入弹窗
   const closeJoinCom = () =>{
     ctx.emit('close')
   }  
 
+  // 搜索社群
+  const searchCommunity = (evt) =>{
+    if(data.searchId !== ''){
+      myCom.searchCommendCommunity(data.searchId).then(result=>{
+        data.searchResult = result.data.list
+      })
+    }else{
+      evt.preventDefault();
+    }
+  }
+
+  // 加入社群
+  const nowJoin = (item) =>{
+    myCom.joinCommunity({no:item.no}).then(res=>{
+      if(res.status === 1){
+        myCom.getMyCommunity()
+        message.success(`${res.info}`)
+        ctx.emit('close')
+      }else{
+        message.error(`${res.info}`)
+        ctx.emit('close')
+      }
+    })
+  }
+
+  // 判断是否已经加入社群
+  const isJoin = (item) =>{
+    const index = _.find(myCom.myCommunityList,function(o){ return o.id === item.id })
+    if(index !== undefined){
+      console.log('排查问题::>>',index)
+      return index.communityInfo.status === 1
+    }
+  }
+
+
   
   return {
-  //  recommendedJoin,
-   closeJoinCom,...toRefs(data)
+    isJoin,closeJoinCom,...toRefs(data),searchCommunity,nowJoin
   }
  }
 })

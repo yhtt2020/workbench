@@ -29,9 +29,7 @@
             </div>
         </div>
         <div class="clip-body">
-
             <div  v-for="(item,index) in clipboardShowList" :key="index">
-
                  <!-- 文本框 -->
                 <div class="col"  v-if="item.type == 'txt'">
                     <div class="icon-sign active-index">
@@ -432,8 +430,8 @@ export default {
         z-index: 999;
     }
     .col img{
-        width:156px;
-        max-height:99px;
+        width:230px;
+        max-height:120px;
         // min-height: 50px;
 
     }

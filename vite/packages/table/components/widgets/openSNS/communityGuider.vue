@@ -55,6 +55,7 @@ export default {
                 // icon: "bianji",
                 // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
+                rightIcon:"fluent:open-20-filled",
                 // icon: "games-16-filled",
             },
             dataList:[
@@ -97,7 +98,7 @@ export default {
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
-        top:18px;
+        top:17px;
     }
     .top-icon svg{
         width:20px;
@@ -138,7 +139,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        
+        font-weight: 400;
     }
 </style>
   

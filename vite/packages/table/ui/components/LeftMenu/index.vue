@@ -22,12 +22,10 @@
       </div>
       <!-- 中间 -->
       <div class="xt-scrollbar xt-container  xt-bt flex flex-col items-center flex-1">
-        <!-- <vue-custom-scrollbar :settings="scrollerSettings" style="height: 100%">
-          <div style="height: auto"> -->
         <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
           <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
-            <template #content v-if="item.float ">
-              <slot :name="isFloat === true ? item.float : ''"> </slot>
+            <template #content v-if="item.float">
+              <slot :name="item.float"> </slot>
             </template>
             <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
@@ -39,8 +37,6 @@
             </Box>
           </tippy>
         </Menu>
-        <!-- </div>
-        </vue-custom-scrollbar> -->
       </div>
       <!-- 底部 -->
       <div>
@@ -76,20 +72,9 @@ import Menu from "./Menu.vue";
 import Full from "./Full.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
-import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
-import { chatStore } from '../../../store/chat'
 
 const props = defineProps({
-  // scrollerSettings: {
-  //   default: {
-  //     useBothWheelAxes: true,
-  //     swipeEasing: true,
-  //     suppressScrollY: false,
-  //     suppressScrollX: true,
-  //     wheelPropagation: true,
-  //   },
-  // },
   config: {
     default: () => {
       return {
@@ -183,26 +168,7 @@ const itemClick = (item) => {
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
-
-// 判断是否展开悬浮模式
-const isFloat = computed(()=>{
-  return chatStore().$state.settings.enableHide
-});
 </script>
 
 <style lang="scss" scoped>
-// .box {
-//   border: 4px solid var(--active-bg) !important;
-//   border-radius: 12px;
-// }
-
-// :deep(.anticon) {
-//   font-size: 20px;
-// }
-
-// :deep(.ps__rail-y) {
-//   display: none;
-// }
-
-
 </style>

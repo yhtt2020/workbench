@@ -77,6 +77,14 @@ export default {
           name:'rank'
         }
        },
+       {
+        title:'推广中心',
+        index:'share',
+        icon:'trophy',
+        route:{
+          name:'share'
+        }
+       },
       //  {
       //   title:'账单(开发中)',
       //   index:'bill',
