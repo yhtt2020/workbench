@@ -13,29 +13,7 @@
   <div class="flex flex-col px-6">
    <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子({{ createGroup.length }})</span>
    
-   <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
-     <div class="flex flex-col">
-       <div v-for="item in createGroup" class="flex items-center px-4 pb-5">
-
-        <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
-
-        <div class="flex flex-col ml-4">
-         <span class="font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
-
-         <div class="flex font-14-400" style="color:var(--secondary-text);">
-          <span>{{ item.memberCount }}人</span>
-          <span class="mx-1"> • </span>
-          <span>
-           {{
-            item.joinOption === 'FreeAccess' ? '公开加入' :  
-            item.joinOption === 'NeedPermission' ? '审核加入' : '私密'
-           }} 
-          </span>
-         </div>
-        </div>
-       </div>
-     </div>
-   </vue-custom-scrollbar>
+   
 
    <div class="mt-4 flex items-center justify-end" style="height:40px;">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @close="closeChannel">
@@ -64,7 +42,6 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
-  const community = window.$TUIKit.TUIServer
 
   const data = reactive({
    settingsScroller: {
@@ -75,14 +52,7 @@ export default defineComponent({
     wheelPropagation: true
    }
   })
-  
-  // 将自己创建的群进行过滤
-  const createGroup = computed(()=>{
-   const data = _.filter(community.TUIGroup.store.groupList,function(o){
-    return o.selfInfo.role !== 'Member'
-   })
-   return data
-  })
+
 
   // 关闭
   const closeChannel = () => {
@@ -95,7 +65,6 @@ export default defineComponent({
   }
 
   return {
-   createGroup,
    ...toRefs(data),
    closeChannel,backChannel
   }

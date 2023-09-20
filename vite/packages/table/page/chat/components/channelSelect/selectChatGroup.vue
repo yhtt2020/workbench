@@ -1,5 +1,5 @@
 <template>
- <div class="flex flex-col my-3" style="width:500px;">
+ <div class="flex flex-col my-3" style="width:667px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
     <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
@@ -11,12 +11,52 @@
   </div>
 
   <div class="flex px-6">
-   <div class="flex" style="width: 293px;">
-     
+   <div class="flex flex-col" style="width: 293px;">
+    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索">
+     <template #suffix>
+       <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
+     </template>
+    </a-input>
+
+    <span class="my-4 font-14-400" style="color:var(--secondary-text);">我创建的群聊</span>
+
+    <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
+     <div class="flex flex-col">
+       <div v-for="(item,index) in filterList" :class="{'select-bg':isSelected(index)}" class="flex rounded-lg items-center px-4 py-3 mb-3" @click="leftListClick(item)">
+        <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
+        <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
+       </div>
+     </div>
+    </vue-custom-scrollbar>
    </div>
+   
    <a-divider type="vertical" style="height:442px; margin: 0 16px; background-color:var(--divider);" />
-   <div class="flex" style="width: 293px;">
+   
+   <div class="flex flex-col justify-between" style="width: 293px;">
+    <span class="">已选({{ selectGroup.length }}个)</span>
+    <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
+     <div class="flex flex-col">
+      <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
+        <div class="flex items-center">
+         <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
+         <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
+        </div>
+        <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
+         <MinusCircleFilled  style="font-size:1.5em;color:var(--secondary-text);"/>
+        </div>
+      </div>
+     </div>
+    </vue-custom-scrollbar>
      
+    <div class="flex items-center justify-end">
+     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeGroup">
+      取消
+     </XtButton>
+ 
+     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">
+      选择
+     </XtButton>
+    </div>
    </div>
   </div>
 
@@ -26,27 +66,39 @@
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue'
-import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
+import { computed, defineComponent,reactive,toRefs} from 'vue'
+import { CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
-
 
 export default defineComponent({
  components:{
-  CloseOutlined,LeftOutlined
+  CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled
  },
  setup (props,ctx) {
   const tui = window.$TUIKit
 
+  const data = reactive({
+   settingsScroller: {
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true
+   },
+   selectGroup:[],
+  })
   
+  // 返回上一层
   const backChannel = ()=>{
    ctx.emit('back')
   }
 
+  // 关闭和取消
   const closeGroup = () =>{
    ctx.emit('close')
   }
 
+  // 过滤自己创建的群聊
   const filterList = computed(()=>{
    const list = tui.TUIServer.TUIGroup.store.groupList
    const arr = _.filter(list,function(o){
@@ -54,11 +106,32 @@ export default defineComponent({
    })
    return arr
   })
+
+  // 点击左侧选中
+  const leftListClick = (item) =>{
+   const index = _.findIndex(data.selectGroup,function(o){ return o.groupID === item.groupID })
+   if(index === -1){
+    data.selectGroup.push(item)
+   }else{
+    return;
+   }
+  }
+
+  // 判断是否选中状态
+  const isSelected = (index)=>{
+   return data.selectGroup.includes(filterList.value[index])
+  }
   
+  // 清除选中的群聊
+  const removeGroup = (item) =>{
+   const index = _.findIndex(data.selectGroup,function(o){ return o.groupID === item.groupID })
+   data.selectGroup.splice(index,1) 
+  }
 
   return {
    filterList,
-   backChannel,closeGroup
+   ...toRefs(data),
+   backChannel,closeGroup,leftListClick,isSelected,removeGroup
   }
  }
 })
@@ -103,5 +176,12 @@ export default defineComponent({
 .select-bg{
  background: var(--active-secondary-bg) !important;
  border:1px solid var(--active-bg) !important;
+}
+
+:deep(.ant-input){
+ font-size: 1.15em;
+ &::placeholder{
+   color: var(--secondary-text) !important;
+ }
 }
 </style>
