@@ -65,7 +65,7 @@
 
    const data = reactive({
      communityName:'',
-     avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/ERRU-oLYf-1bKi-Va_l'
+     avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
    })
  
    const closeCreateCom = () =>{

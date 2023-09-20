@@ -1,4 +1,8 @@
 <template>
+  <div>
+     {{ isFloat }}
+  </div>
+
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
       <MyCommunity v-if="currentCom" :info="info"/>
@@ -91,6 +95,7 @@ import { myCommunityStore } from './store/myCommunity'
 import { localCache } from '../../js/axios/serverCache'
 import MyCommunity from './page/myCommunity.vue'
 import { Icon as chatIcon } from '@iconify/vue'
+import { chatStore } from '../../store/chat'
 
 export default {
   name: 'App',
@@ -114,6 +119,7 @@ export default {
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const Server = window.$chat
+    const chat  = chatStore()
 
     const data = reactive({
       index: 'chat',
@@ -171,7 +177,7 @@ export default {
           name: myCommunityList[i].communityInfo.name,
           img: myCommunityList[i].communityInfo.icon,
           type: `community${myCommunityList[i].cno}`,
-          float: 'communityFloat',
+          // float: 'communityFloat',
           noBg: true,
           callBack: selectCommunityTab,
           info: myCommunityList[i],
@@ -194,8 +200,11 @@ export default {
       return data.index === localCache.get('communityId')
     })
 
-    console.log(menuCommunityList, '菜单社群')
-    // console.log('获取我的社群列表',...newArr)
+    // 判断是否展开悬浮模式
+    const isFloat = computed(()=>{
+     console.log('排查问题', chat.settings.enableHide)
+     return chat.settings.enableHide
+    });
 
     const chatLeftList = ref([
       {
@@ -240,7 +249,7 @@ export default {
         icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float: 'communityFloat',
+        float: isFloat === false ? '' : 'communityFloat',
         noBg: true,
         callBack: selectTab,
         route: {
@@ -300,7 +309,7 @@ export default {
     })
 
     return {
-      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,
+      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,
       ...toRefs(data),
     }
   }

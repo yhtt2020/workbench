@@ -10,12 +10,20 @@
    </div>
   </div>
 
+  <div class="flex flex-col px-6">
+   <span class="px-4 font-16-400 " style="color: var(--primary-text);">我创建的圈子</span>
+   <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+    
+   </vue-custom-scrollbar>
+  </div>
+  
+  
   
  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
@@ -27,7 +35,20 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
+
+  const data = reactive({
+   settingsScroller: {
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true
+   }
+  })
   
+  // 将自己创建的群进行过滤
+  
+
   // 关闭
   const closeChannel = () => {
    ctx.emit('close')
@@ -39,6 +60,7 @@ export default defineComponent({
   }
 
   return {
+   ...toRefs(data),
    closeChannel,backChannel
   }
  }
