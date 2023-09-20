@@ -20,7 +20,7 @@
      <aside class="left">
       <a-avatar v-if="conversation.type === 'C2C'" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
       <a-avatar v-else shape="square" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
-      <div class="online-status" 
+      <div class="online-status"
        :class="userStatusList?.get(conversation?.userProfile?.userID)?.statusType === 1 ? 'online-status-online' : 'online-status-offline'"
        v-if="showUserOnlineStatus()"
       >
@@ -51,7 +51,7 @@
       <div class="content">
         <div class="content-header">
           <label>
-            <p class="name">{{ handleConversation?.name(conversation) }}</p>
+            <p class="name" >{{ handleConversation?.name(conversation) }}  <a-badge style="margin-top: -1px;zoom:0.9" :number-style="{border:'none !important'}" :count="conversation.conversationID==='GROUP'+liveRoom?'全员':''"></a-badge></p>
           </label>
           <div class="middle-box">
             <span
@@ -74,12 +74,12 @@
         <span>{{ $t('TUIConversation.删除会话') }}</span>
       </div>
 
-      <div class="rounded-lg conversation-options flex items-center justify-center"  
+      <div class="rounded-lg conversation-options flex items-center justify-center"
        v-if="!conversation.isPinned" @click.stop="handleItem('ispinned')"
       >
         <span>{{ $t('TUIConversation.置顶会话') }}</span>
       </div>
-  
+
       <div class="rounded-lg conversation-options flex items-center justify-center" v-if="conversation.isPinned" @click.stop="handleItem('dispinned')">
          <span>{{ $t('TUIConversation.取消置顶') }}</span>
       </div>
@@ -87,7 +87,7 @@
       <div class="rounded-lg conversation-options flex items-center justify-center"  v-if="conversation.messageRemindType === '' || conversation.messageRemindType === 'AcceptAndNotify'" @click.stop="handleItem('mute')" >
         <span>{{ $t('TUIConversation.消息免打扰') }}</span>
       </div>
-       
+
       <div class="flex items-center justify-center rounded-lg conversation-options"  v-if="conversation.messageRemindType === 'AcceptNotNotify'" @click.stop="handleItem('notMute')" >
         {{ $t('TUIConversation.取消免打扰') }}
       </div>
@@ -99,6 +99,8 @@
 import { onClickOutside, useElementBounding } from '@vueuse/core';
 import { defineComponent, nextTick, reactive, ref, toRefs, watch, watchEffect } from 'vue';
 import { Conversation } from '../../interface';
+import config from '../../../../../../page/chat/config'
+
 const ListItem: any = defineComponent({
   props: [
     'conversation','handleConversation','currentID',
@@ -118,6 +120,7 @@ const ListItem: any = defineComponent({
       loop: 0,
       displayOnlineStatus: false,
       userStatusList: new Map(),
+      liveRoom:config.liveRoom//全网聊天室
     });
 
     const dialog: any = ref();
@@ -190,6 +193,7 @@ const ListItem: any = defineComponent({
       content,
       toggleDialog,
       showUserOnlineStatus,
+
     };
   },
 });

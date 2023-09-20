@@ -2,7 +2,7 @@
   <div class="h-full w-full flex flex-col">
     <div class="flex items-center justify-between" style="margin-bottom: 14px;">
       <span class="font-16" style="color: var(--primary-text);">群聊 ({{ list.length }}个) </span>
-      
+
       <div class="w-11 h-11 rounded-lg flex pointer items-center active-button justify-center" style="background: var(--active-bg);" @click="clickSearch">
        <Icon icon="tianjia2" style="width: 20px;height: 20px;color: var(--primary-text);"></Icon>
       </div>
@@ -13,7 +13,7 @@
          <a-avatar shape="square" :size="32" :src="item.avatar"></a-avatar>
          <div class="flex flex-col" style="margin-left: 16px;">
           <span class="font-16" style="color:var(--primary-text);">{{ item.name }}</span>
-          <span class="font-14" style="color:var(--secondary-text);">200人</span>
+           <span>200人群</span>
          </div>
         </div>
       </vue-custom-scrollbar>
@@ -50,7 +50,7 @@ export default defineComponent({
   setup(){
 
    const data = reactive({
-    settingsScroller: {  // 滚动条配置 
+    settingsScroller: {  // 滚动条配置
       useBothWheelAxes: true,
       swipeEasing: true,
       suppressScrollY: false,
@@ -61,7 +61,7 @@ export default defineComponent({
     groupItem:{}, // 接收点击中的群聊列表项
     memeber:[],
     groupVisible:false,
-   })  
+   })
 
    const clickGroupList = async (item) =>{  // 点击群聊列表
     data.groupShow = true
