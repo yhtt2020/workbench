@@ -14,8 +14,16 @@
                 <!-- {{ replyCom.content }} -->
             </div>
             <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="replyCom.image">
-                <img :src="item" alt="" v-for="(item, index) in replyCom.image_pc"
-                    class="object-cover mr-2 rounded-md cover-sm" :key="index">
+                <viewer :images="replyCom.image_pc" :options="options" class="items-center p-0 mb-0 ">
+                    <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
+                        <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in replyCom.image_pc"
+                            :span="11" style="">
+                            <!-- {{ commentList.image }} -->
+                            <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
+                                :data-source="replyCom.image_pc[index]" style="position: relative object-fit: fill;">
+                        </a-col>
+                    </a-row>
+                </viewer>
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">
                 <div class="flex items-center justify-center ">
@@ -48,7 +56,9 @@ import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 const useUserStore = appStore()
-
+const options=reactive({
+    url:'data-source'
+})
 const isLike=ref(false)
 const replyVisible=ref(false)
 const replyCmmentList=computed(()=>{
