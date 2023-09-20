@@ -206,7 +206,8 @@ export default {
         type: 'chat',
         title: '消息',
         route: {
-          name: 'chatMain'
+          name: 'chatMain',
+          params:{no:'',info:JSON.stringify('')}
         },
         callBack: selectTab,
       },
@@ -215,7 +216,8 @@ export default {
         type: 'contact',
         callBack: selectTab,
         route: {
-          name: 'contact'
+          name: 'contact',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       ...(config.adminUids.includes(userInfo.uid) ? [
@@ -225,7 +227,8 @@ export default {
           title: '管理面板(仅管理员可见)',
           callBack: selectTab,
           route: {
-            name: 'chatAdmin'
+            name: 'chatAdmin',
+            params:{no:'',info:JSON.stringify('')}
           }
         }
       ] : []),
@@ -235,7 +238,8 @@ export default {
         type: 'find',
         callBack: selectTab,
         route: {
-          name: 'chatFind'
+          name: 'chatFind',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       // 写社群相关静态内容时临时打开的路由
