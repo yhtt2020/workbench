@@ -15,8 +15,7 @@
             v-for="item in navList"
           >
             <div
-              class="flex justify-center items-center rounded-xl cursor-pointer h-12 mr-2"
-              style="width: 120px"
+              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
               :key="item.name"
               @click="name = item.component"
               :class="{ 'xt-bg-2': item.component == name }"
@@ -26,18 +25,15 @@
           </div>
         </div>
       </div>
-      <xt-task :modelValue="m02014">
-        <div class="pl-2 w-full h-full">
-          <xt-task :modelValue="m02013"></xt-task>
-
-          <component
-            ref="apps"
-            :is="name"
-            :type="type"
-            @updateData="updateData"
-          ></component>
-        </div>
-      </xt-task>
+      <div class="pl-2 w-full h-full">
+        <xt-task :modelValue="m02013"></xt-task>
+        <component
+          ref="apps"
+          :is="name"
+          :type="type"
+          @updateData="updateData"
+        ></component>
+      </div>
     </main>
     <div class="flex items-center my-3" v-if="selectAppsLenght">
       <div style="width: 130px" class="flex justify-end">
@@ -60,12 +56,14 @@
         v-if="name == 'Links'"
         style="width: 380px; height: 48px"
         boxClass="my-2 p-1 xt-bg-2"
-        v-model="type"
+        v-model:data="type"
         :list="linkList"
       ></XtTab>
-      <XtButton type="theme" class="ml-2" @click="commitIcons()">
-        确认
-      </XtButton>
+      <xt-task :modelValue="m02015" @cb="commitIcons">
+        <XtButton type="theme" class="ml-2" @click="commitIcons()">
+          确认
+        </XtButton>
+      </xt-task>
     </footer>
   </XtView>
 </template>
@@ -81,6 +79,7 @@ import { scrollable } from "./hooks/scrollable";
 import { mapActions, mapWritableState } from "pinia";
 import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
 import { taskStore } from "../../../apps/task/store";
+
 export default {
   emits: ["update:navName"],
   props: {
@@ -155,14 +154,14 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "iconList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-
     m02013() {
-      this.name = "Desktop";
-      return this.taskID == "M0201" && this.step == 3;
+      if (this.taskID == "M0201" && this.step == 3) {
+        this.name = "Desktop";
+        return this.taskID == "M0201" && this.step == 3;
+      }
     },
-    m02014() {
-      this.name = "Desktop";
-      return this.taskID == "M0201" && this.step == 4;
+    m02015() {
+      return this.taskID == "M0201" && this.step == 5;
     },
     height() {
       let h = this.screenHeight;
@@ -178,7 +177,7 @@ export default {
     },
     selectedWidth() {
       let w = this.width;
-      if (this.navName == "Links") w += 128;
+      if (this.name == "Links") w += 128;
       return {
         width: w + 8 + "px",
       };
@@ -230,10 +229,11 @@ export default {
       }
       for (let key in this.selectApps) {
         this.selectApps[key].forEach(async (item) => {
+          console.log('item :>> ', item);
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";
-          if (this.navName !== "Desktop" && this.navName !== "MyApps") {
+          if (this.name !== "Desktop" && this.name !== "MyApps") {
             iconOption.src = item.icon;
           } else {
             iconOption.src = await useBase64AsImage(item.icon);

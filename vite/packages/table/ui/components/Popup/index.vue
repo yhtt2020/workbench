@@ -1,23 +1,15 @@
 <template>
   <teleport to="body">
     <!-- 蒙版 -->
-    {{ position }}
     <transition name="fade">
-      <div
-        v-if="visible"
-        class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
-        style="z-index: 999"
-        @click="visible = false"
-      ></div>
+      <div v-if="visible" class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0" style="z-index: 999"
+        @click="visible = false"></div>
     </transition>
     <!-- 内容 -->
     <transition name="popup">
-      <div
-        v-if="visible"
-        class="h-full bg-white-50 fixed top-1/2 -translate-y-1/2 rounded-xl"
-        style="z-index: 9999; box-sizing: border-box"
-        :style="{ [position]: '0' }"
-      >
+      <!-- top-1/2 -translate-y-1/2 -->
+      <div v-if="visible" class="h-full bg-white-50 fixed  rounded-xl"
+        style="z-index: 9999; box-sizing: border-box;  top: 0; bottom: 0;" :style="{ [position]: '0' }">
         <slot> </slot>
       </div>
     </transition>
@@ -41,6 +33,9 @@ watch(
   () => props.modelValue,
   (newW) => {
     visible.value = newW;
+  },
+  {
+    immediate: true
   }
 );
 </script>
@@ -51,6 +46,7 @@ watch(
 .fade-leave-active {
   transition: all 0.3s;
 }
+
 // 准备进入 离开完成
 .fade-enter-from,
 .fade-leave-to {
@@ -59,11 +55,11 @@ watch(
 
 .popup-enter-active,
 .popup-leave-active {
-  transition: all 0.3s;
+  transition: transform 0.3s ease-in-out;
 }
+
 .popup-enter-from,
 .popup-leave-to {
-  transform: translate(100%);
-  // transform: all 0.3s;
+  transform: translateX(100%);
 }
 </style>
