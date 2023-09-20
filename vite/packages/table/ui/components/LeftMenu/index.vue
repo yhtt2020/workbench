@@ -1,15 +1,56 @@
 <template>
-  <div class="xt-text flex h-full" style="box-sizing: border-box; " :class="[typeClass]">
+  <div
+    class="xt-text flex h-full"
+    style="box-sizing: border-box"
+    :class="[typeClass]"
+  >
+    {{ index }}
+    <p>{{ newList }}</p>
     <!-- 左侧区域开始 -->
-    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px">
+    <div
+      class="flex flex-col items-center h-full xt-br mr-3"
+      style="width: 72px; min-width: 72px"
+    >
       <!-- 头部 -->
       <div>
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(0, last)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content v-if="item.float">
+        <Menu
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(0, last)"
+        >
+          <Test :item="item">
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mb-2"
+            >
+              <Full v-if="item.full"></Full>
+              <Item :item="item" v-else>
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
+                </template>
+              </Item>
+            </Box>
+            <template #content> <slot :name="item.float"> </slot> </template
+          ></Test>
+          <!-- <tippy
+            trigger="mouseenter"
+            :interactive="true"
+            placement="right"
+            v-if="item.float"
+          >
+            <template #content>
               <slot :name="item.float"> </slot>
             </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mb-2">
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mb-2"
+            >
               <Full v-if="item.full"></Full>
               <Item :item="item" v-else>
                 <template #[item.slot]>
@@ -18,16 +59,48 @@
               </Item>
             </Box>
           </tippy>
+          <Box
+            v-else
+            @itemClick="itemClick"
+            :item="item"
+            @selectClick="selectClick"
+            :id="currentIndex"
+            class="mb-2"
+          >
+            <Full v-if="item.full"></Full>
+            <Item :item="item" v-else>
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box> -->
         </Menu>
       </div>
       <!-- 中间 -->
-      <div class="xt-scrollbar xt-container  xt-bt flex flex-col items-center flex-1">
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
+      <div
+        class="xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1"
+      >
+        <Menu
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(last, -1 * end)"
+        >
+          <tippy
+            :trigger="item.float ? 'mouseenter' : ''"
+            :interactive="true"
+            placement="right"
+            :arrow="false"
+          >
             <template #content v-if="item.float">
-              <slot :name="item.float"> </slot>
+              <slot :name="isFloat === true ? item.float : ''"> </slot>
             </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mt-2"
+            >
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item v-else :item="item" w="40">
                 <template #[item.slot]>
@@ -40,12 +113,26 @@
       </div>
       <!-- 底部 -->
       <div>
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(-1 * end)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content v-if="item.float">
+        <Menu
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(-1 * end)"
+        >
+          <tippy
+            :trigger="item.float ? 'mouseenter' : ''"
+            :interactive="true"
+            placement="right"
+          >
+            <template #content v-if="item.float !== false">
               <slot :name="item.float"> </slot>
             </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
+            <Box
+              @itemClick="itemClick"
+              :item="item"
+              @selectClick="selectClick"
+              :id="currentIndex"
+              class="mt-2"
+            >
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item :item="item" type="" v-else>
                 <template #[item.slot]>
@@ -67,11 +154,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import Menu from "./Menu.vue";
 import Full from "./Full.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
+import Test from "./test.vue";
 import { nanoid } from "nanoid";
 
 const props = defineProps({
@@ -141,14 +229,8 @@ const newList = computed(() => {
   return res;
 });
 
-// 动态获取ID
-const index = computed(() => {
-  return isNaN(props.index.value) ? newList.value[0].id : props.index.value;
-});
-
 // 选择ID
-const currentIndex = ref(index.value);
-
+const currentIndex = ref(0);
 //选中事件
 const emit = defineEmits(["modelValue", "index"]);
 const selectClick = (id, flag) => {
@@ -156,6 +238,14 @@ const selectClick = (id, flag) => {
   if (flag) return;
   currentIndex.value = id;
 };
+
+// 动态获取ID
+const index = computed(() => {
+  console.log("id更新了 :>> ");
+  const id = isNaN(props.index.value) ? newList.value[0].id : props.index.value;
+  selectClick(id);
+  return id;
+});
 
 // 点击事件
 const itemClick = (item) => {
@@ -170,5 +260,4 @@ const itemClick = (item) => {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
