@@ -282,6 +282,8 @@ const showImage = () => {
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 
     #context {
@@ -293,6 +295,7 @@ const showImage = () => {
         font-weight: 400;
         white-space: pre-wrap;
         word-wrap: break-word;
+        word-break: break-all;
 
         // &:img {
         //     max-width: 150px;

@@ -17,10 +17,10 @@
                 <viewer :images="replyCom.image_pc" :options="options" class="items-center p-0 mb-0 ">
                     <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                         <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in replyCom.image_pc"
-                            :span="11" style="">
+                            :span="7" style="">
                             <!-- {{ commentList.image }} -->
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
-                                :data-source="replyCom.image_pc[index]" style="position: relative object-fit: fill;">
+                                :data-source="replyCom.image_artwork_master[index]" style="position: relative object-fit: fill;">
                         </a-col>
                     </a-row>
                 </viewer>

@@ -22,10 +22,10 @@
                 <viewer :images="commentList.image_pc" :options="options" class="items-center p-0 mb-0 ">
                     <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                         <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in commentList.image_pc"
-                            :span="11" style="">
+                            :span="7" style="">
                             <!-- {{ commentList.image }} -->
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
-                                :data-source="commentList.image_pc[index]" 
+                                :data-source="commentList.image_artwork_master[index]" 
                                 style="position: relative object-fit: fill;">
                         </a-col>
                     </a-row>

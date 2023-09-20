@@ -226,22 +226,24 @@ const title = computed(() => {
         #title {
             font-family: PingFangSC-Regular;
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
+            // color: rgba(255, 255, 255, 0.85);
             text-align: left;
             line-height: 22px;
             font-weight: 500;
-            white-space: pre-wrap;
+            white-space: normal;
+            word-break: break-all;
         }
 
         #context {
             font-family: PingFangSC-Regular;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.60);
+            // color: rgba(255, 255, 255, 0.60);
             text-align: left;
             line-height: 22px;
             font-weight: 400;
             white-space: pre-wrap;
             word-wrap: break-word;
+            word-break: break-all;
             // overflow: scroll;
         }
 
