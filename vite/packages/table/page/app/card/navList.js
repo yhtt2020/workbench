@@ -288,7 +288,7 @@ export const NavList = [
         cname: "新闻头条",
         detail:
           "头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息",
-        sizes: ["2x4','4x4", "4x6"],
+        sizes: ["2x4","4x4", "4x6"],
         option: [
           {
             name: "news",

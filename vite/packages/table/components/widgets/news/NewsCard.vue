@@ -199,6 +199,7 @@ export default {
       this.getNewsData()
       this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newsList,'newsList')
+      console.log(this.customData,'customData');
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -249,7 +250,11 @@ export default {
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
-      return this.customData.newsList.slice(0, this.copyNum)
+      if(this.customData && this.customData.newsList){
+        return this.customData.newsList.slice(0, this.copyNum)
+      }
+      return this.newsMsgList.slice(0,this.copyNum)
+      
     },
     currentTag(){
       if(this.customData && this.customData.index){
