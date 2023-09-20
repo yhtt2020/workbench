@@ -245,7 +245,10 @@ const handleOk = (e: MouseEvent) => {
         font-family: PingFangSC-Regular;
     }
 }
-
+:deep(.tippy-box){
+    width: 51%;
+    margin-left: 35%;
+}
 
 
 .reply-textarea {

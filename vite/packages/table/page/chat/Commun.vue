@@ -230,16 +230,15 @@ const closeDetail = (value) => {
 onBeforeMount(() => {
   NProgress.start()
   NProgress.configure({ showSpinner: false });
+  NProgress.configure({parent:'.container'})
+
 })
 onMounted(() => {
   setCurrentIndex(0)
   NProgress.done()
-  NProgress.configure({parent:'.container'})
 })
 onBeforeUpdate(() => {
   NProgress.start()
-  
-
   // NProgress.configure({ showSpinner: false });
 })
 onUpdated(() => {

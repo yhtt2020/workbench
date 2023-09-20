@@ -39,6 +39,21 @@
                         <MessageOutlined style="font-size: 16px;margin-top: 2px" class="mr-1 " />
                         <!-- <div>回复</div> -->
                     </div>
+                    <div class="flex justify-center ml-1" v-if="replyCom.author_uid === replyCom.user.uid">
+                        <a-dropdown trigger="click">
+                            <template #overlay>
+                                <a-menu @click="handleMenuClick">
+                                    <a-menu-item key="1">删除</a-menu-item>
+                                </a-menu>
+                            </template>
+                            <button class="border-0 xt-bg w-[20px] h-[20px]">
+                                <Icon class="text-xl text-center xt-text-2 pointer"
+                                    icon="fluent:more-horizontal-16-filled" />
+
+                            </button>
+
+                        </a-dropdown>
+                    </div>
                 </div>
                 <div>
                     <span class="local-city">{{ replyCom.user_home?.region }}</span>
@@ -61,6 +76,7 @@ import ReplyCommentLite from './ReplyCommentLite.vue';
 import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
+import {Icon} from '@iconify/vue'
 const useUserStore = appStore()
 const options=reactive({
     url:'data-source'

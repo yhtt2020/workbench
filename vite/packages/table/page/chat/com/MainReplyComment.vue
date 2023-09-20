@@ -25,7 +25,7 @@
                             :span="7" style="">
                             <!-- {{ commentList.image }} -->
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
-                                :data-source="commentList.image_artwork_master[index]" 
+                                :data-source="commentList.image_artwork_master[index]"
                                 style="position: relative object-fit: fill;">
                         </a-col>
                     </a-row>
@@ -40,6 +40,22 @@
                     <div class="flex" @click="replyStatus">
                         <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
                         <div class="font-14 xt-text-2">回复</div>
+                    </div>
+                    <!-- v-if="props.uid === commentList.user.uid" -->
+                    <div class="flex justify-center ml-1" v-if="props.uid === commentList.user.uid">
+                        <a-dropdown trigger="click">
+                            <template #overlay>
+                                <a-menu @click="handleMenuClick">
+                                    <a-menu-item key="1">删除</a-menu-item>
+                                </a-menu>
+                            </template>
+                            <button class="border-0 xt-bg w-[20px] h-[20px]">
+                                <Icon class="text-xl text-center xt-text-2 pointer"
+                                    icon="fluent:more-horizontal-16-filled" />
+
+                            </button>
+
+                        </a-dropdown>
                     </div>
                 </div>
                 <div class="">
@@ -68,9 +84,10 @@ import ReplyComment from './ReplyComment.vue';
 import replyComments from './replyComments.vue'
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
+import { Icon } from '@iconify/vue'
 const useUserStore = appStore()
-const options=reactive({
-    url:'data-source'
+const options = reactive({
+    url: 'data-source'
 })
 const isLike = ref(false)
 const replyVisible = ref(false)

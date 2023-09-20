@@ -18,10 +18,10 @@
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
         <div class="w-full">
-            <tippy trigger=" click" placement="bottom" :interactive="true">
+            <tippy trigger=" click" placement="bottom" :interactive="true" >
                 <template #content>
                     <!-- <div class="w-full"> -->
-                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
                         style="flex-wrap: wrap;">
                         <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
                             @click="addEmoji(item)" :key="index" style="cursor: pointer;">
@@ -189,7 +189,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-
+:deep(.tippy-box){
+    width: 51%;
+    margin-left: 15%;
+}
 .btn {
     border: none;
 }

@@ -29,7 +29,7 @@
                     <!-- 单个图片 -->
                     <template v-if="cardData.image.length === 1 && !cardData.data?.video">
                         <!-- <div > -->
-                            <img :src="cardData.image_170_170[0].image" class="object-fill mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
+                            <img :src="cardData.image_170_170[0].image" class="object-cover mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
                                  >
                         <!-- </div> -->
 
