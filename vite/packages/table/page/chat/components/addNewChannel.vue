@@ -11,7 +11,7 @@
    <div class="p-4 flex rounded-lg flex-col" style="background: var(--secondary-bg);">
     <span class="font-16-400 mb-2.5" style="color:var(--primary-text);">选择类型</span>
     <span class="font-14-400" style="color:var(--secondary-text)">
-     你可以选择添加桌面，关联工作台内部的酷应用，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
+     你可以选择添加桌面，关联工作台内部的社区，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
     </span>
    </div>
    <div class="flex flex-col mt-4">

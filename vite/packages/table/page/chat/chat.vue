@@ -1,8 +1,4 @@
 <template>
-  <div>
-     {{ isFloat }}
-  </div>
-
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
       <MyCommunity v-if="currentCom" :info="info"/>
