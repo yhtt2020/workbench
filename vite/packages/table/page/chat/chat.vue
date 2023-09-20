@@ -1,8 +1,7 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
     <div class="w-full">
-      <MyCommunity v-if="currentCom" :info="info"/>
-      <router-view v-else></router-view>
+      <router-view ></router-view>
     </div>
 
     <template #communityFloat>
@@ -153,12 +152,13 @@ export default {
       data.open = true
     }
 
-    const selectCommunityTab = (item) => {
-      // console.log('排查问题::>>',item)
-      localCache.set('communityId', item.type)
-      data.index = item.type
-      data.info = item.info
-    }
+    // const selectCommunityTab = (item) => {
+    //   console.log('排查问题::>>',item)
+    //   router.push(item.route)
+    //   // localCache.set('communityId', item.type)
+    //   // data.index = item.type
+    //   // data.info = item.info
+    // }
 
     const appS = appStore()
 
@@ -175,10 +175,8 @@ export default {
           type: `community${myCommunityList[i].cno}`,
           // float: 'communityFloat',
           noBg: true,
-          callBack: selectCommunityTab,
-          info: myCommunityList[i],
-
-          // route:{ name:'defaultCommunity',info:myCommunityList[i]},
+          callBack: selectTab,
+          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no,info:JSON.stringify(myCommunityList[i].communityInfo)}},
         }
         menuCommunityList.push(item)
       } else {
