@@ -112,6 +112,9 @@ export default [
         path: "",
         name: "home",
         component: Home,
+        meta:{
+          tab1:'home'
+        }
       },
       {
         path: "/app",
@@ -201,56 +204,81 @@ export default [
         path: '/chat',
         component: ChatIndex,
         name: 'chatIndex',
+
+
         children: [
           BarrageRoute,
           {
-            path:'',
-            name:'chatDesk',
-            component:ChatDesk
+            path: '/chatDesk',
+            name: 'chatDesk',
+            component: ChatDesk
           },
 
           {
-            path: '',
+            path: '/chatHome',
             name: 'chat',
             component: Chat,
-            children:[
+            meta: {
+              rememberChildrenPosition: true
+            },
+            redirect: {
+              name: 'chatMain',
+            },
+            children: [
               {
                 path: '/contact',
                 name: 'contact',
                 component: Contact,
-                meta:{
-                  type:'contact'
+                meta: {
+                  type: 'contact',
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'contact'
                 }
               },
               {
-                path:'/chatMain',
-                name:'chatMain',
-                component:ChatMain,
-                meta:{
-                  type:'chat'
+                path: '/chatMain',
+                name: 'chatMain',
+                component: ChatMain,
+                meta: {
+                  type: 'chat',
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'session'
                 }
               },
               {
-                path:'/chatAdmin',
-                name:'chatAdmin',
-                component:ChatAdmin,
-                meta:{
-                    type:'chatAdmin'
+                path: '/chatAdmin',
+                name: 'chatAdmin',
+                component: ChatAdmin,
+                meta: {
+                  type: 'chatAdmin',
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'admin'
                 }
               },
               {
-                path:'/chatFind',
-                name:'chatFind',
-                component:ChatFind,
-                meta:{
-                  type:'find'
+                path: '/chatFind',
+                name: 'chatFind',
+                component: ChatFind,
+                meta: {
+                  type: 'find',
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'find'
                 }
               },
               {
-                path:'/community',
-                name:'defaultCommunity',
-                component:CommunityIndex,
-                props:true,
+                path: '/community',
+                name: 'defaultCommunity',
+                component: CommunityIndex,
+                props: true,
+                meta: {
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'community_{no}'
+                }
               }
             ]
           },
@@ -263,6 +291,10 @@ export default [
               {
                 path: "",
                 name: "hall",
+                meta: {
+                  tab1:'community',
+                  tab2: 'team',
+                },
                 component: Hall,
               },
             ],
@@ -290,96 +322,147 @@ export default [
             path: "/gameIndex",
             name: "gameIndex",
             component: GameIndex,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/gameSetting",
             name: "gameSetting",
             component: GameSetting,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/gameCommunity",
             name: "gameCommunity",
             component: GameCommunity,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/gameMedia",
             name: "gameMedia",
             component: GameMedia,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/gameDiscount",
             name: "recommend",
             component: GameDiscount,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/gameIntroduction",
             name: "gameIntroduction",
             component: GameIntroduction,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/myGame",
             name: "myGame",
             component: MyGame,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/GameDiscountDetail",
             name: "GameDiscountDetail",
             component: GameDiscountDetail,
             props: true,
+            meta:{
+              tab1:'game'
+            }
           },
           {
             path: "/GameCapture",
             name: 'GameCapture',
             component: GameCapture,
+            meta:{
+              tab1:'game'
+            }
           }
         ],
       },
 
       {
-        path:"/work",
-        name:'work',
-        component:WorkIndex,
-        children:[
+        path: "/work",
+        name: 'work',
+        component: WorkIndex,
+        meta: {
+          rememberChildrenPosition: true
+        },
+        redirect: '/desk',
+        children: [
+          {
+            path: "/deck",
+            name: "deckIndex",
+            component: DeckIndex,
+            children: [
+              {
+                path: '',
+                name: 'deck',
+                component: DeckHome,
+                meta:{
+                  tab1:'work'
+                }
+              },
+              {
+                path: "/add",
+                name: 'deckAdd',
+                component: DeckAdd
+              }
+            ]
+          },
           {
             path: '/desk',
             name: 'workDesk',
             component: WorkDesk,
+            meta:{
+              tab1:'work',
+              tab2:'workDesk'
+            }
           },
           {
             path: "/ai",
             name: "ai",
             component: AIAssistant,
+            meta:{
+              tab1:'work',
+              tab2:'ai'
+            }
           },
           {
             path: '/clipboard',
             name: 'clipboard',
             component: Clipboard,
+            meta:{
+              tab1:'work',
+              tab2:'clipboard'
+            }
           },
           ShortcutKeyRoute,
           {
             path: "/todo",
             name: "todo",
             component: Todo,
+            meta:{
+              tab1:'work',
+              tab2:'todo'
+            }
           }
         ]
       },
-      {
-        path: "/deck",
-        name: "deckIndex",
-        component: DeckIndex,
-        children: [
-          {
-            path: '',
-            name: 'deck',
-            component: DeckHome
-          },
-          {
-            path: "/add",
-            name: 'deckAdd',
-            component: DeckAdd
-          }
-        ]
-      },
+
       {
         path: "/status",
         name: "status",

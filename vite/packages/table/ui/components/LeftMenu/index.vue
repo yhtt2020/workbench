@@ -27,7 +27,7 @@
             <template #content v-if="item.float">
               <slot :name="item.float"> </slot>
             </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
+            <Box :tabVariables="tabVariables" @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
               <Full v-if="item.full" v-model:full="isFull" type=""></Full>
               <Item v-else :item="item" w="40">
                 <template #[item.slot]>
@@ -89,6 +89,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
+  tabVariables:undefined,
   modelValue: {},
   index: { default: false },
   list: {
