@@ -30,6 +30,9 @@ export const initSocket = async () => {
     socket.on('onBarrage',(data)=>{
       barrageHandler.on(data)
     })
+    // socket.on('onCommunity',(data)=>{
+    //   communityHandler.on(data)
+    // })
   });
   socket.on('error', error => {
     console.log("连接错误", error);
