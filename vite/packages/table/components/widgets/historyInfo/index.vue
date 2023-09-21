@@ -4,8 +4,11 @@
             <CalendarOutlined style="width:20px;height:20px;" />
         </div>
         <div class="box-flex">
-            <div class="date" :title="this.history.date">{{this.history.date}}</div>
-            <div class="title" :title="this.history.title">{{ this.history.title }}</div>
+            <div>
+                {{this.history.date}} 
+                <br/> 
+                {{ this.history.title }}
+            </div>
         </div>
     </Widget>
 </template>
@@ -87,24 +90,23 @@ export default {
         display: flex;
         flex-direction: column;
         width: 240px;
-        padding: 0 5px;
+        position: relative;
+        top: -10px;
     }
-    .date{
+    .box-flex div{
         text-align: center;
+        padding: 0 5px;
+        text-align: center;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 24px;
         font-family: '优设标题黑';
         margin-top: -5px;
-    }
-    .title{
-        font-size: 24px;
-        font-family: '优设标题黑';
-        text-align: center;
-        height: 110px;
         white-space: pre-wrap;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
+
     
     @font-face {
         font-family: "优设标题黑";
