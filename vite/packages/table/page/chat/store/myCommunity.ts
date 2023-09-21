@@ -3,6 +3,7 @@ import dbStorage from "../../../store/dbStorage";
 import { sUrl } from "../../../consts";
 import { post, postMock } from "../../../js/axios/request";
 import { serverCache, localCache } from "../../../js/axios/serverCache";
+import _ from 'lodash-es'
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -27,9 +28,15 @@ export const myCommunityStore = defineStore('myCommunity',{
    // 获取我的社群
    async getMyCommunity(){
     const res = await post(getMyCommunity,{})
-    localCache.set('list',res.data.list,20*60)
+    const list = res.data.list
+    const index = _.filter(list,function(o:any){ 
+      if('communityInfo' in o){
+        return o
+      }
+    })
+    console.log('获取数据',index);
+    localCache.set('list',index,20*60)
     this.myCommunityList = localCache.get('list')
-    
    },
 
    // 申请加入社群
