@@ -5,7 +5,7 @@
         </div>
         <div class="box-flex">
             <div class="date" :title="this.history.date">{{this.history.date}}</div>
-            <div class="title" :title="this.history.title">{{this.history.title}}</div>
+            <div class="title" :title="this.history.title">{{ this.history.title }}</div>
         </div>
     </Widget>
 </template>
@@ -86,14 +86,14 @@ export default {
     .box-flex{
         display: flex;
         flex-direction: column;
-        height: 120px;
-        margin-top: -16px;
         width: 240px;
+        padding: 0 5px;
     }
     .date{
         text-align: center;
         font-size: 24px;
         font-family: '优设标题黑';
+        margin-top: -5px;
     }
     .title{
         font-size: 24px;
