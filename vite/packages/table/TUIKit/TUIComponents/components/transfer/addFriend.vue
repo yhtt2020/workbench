@@ -20,7 +20,7 @@
         </div>
         
         <vue-custom-scrollbar :settings="settingsScroller" style="height:90%;">
-          <div v-for="item in friendList" class="flex items-center pointer" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);"  @click="selectUser(item)">
+          <div v-for="(item,index) in friendList" :class="{ 'select-bg':isSelected(index) }" class="flex items-center pointer rounded-lg" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);"  @click="selectUser(item)">
             <a-avatar :size="32" :src="item.profile.avatar"></a-avatar>
             <div class="font-16" style="color: var(--primary-text);margin-left: 16px;">
               {{ item.profile.nick }}
@@ -274,6 +274,11 @@ export default defineComponent({
      groupTypeData.value.icon = res
     }
 
+    // 左侧列表选中状态
+    const isSelected = (index) =>{
+      return data.selectList.includes(data.friendList[index])
+    }
+
 
     onMounted(getFriendList)
 
@@ -281,6 +286,7 @@ export default defineComponent({
       groupTypeData,validateChinese,
       ...toRefs(data), getFriendList,selectUser,enterNextStep,closeContact,
       clearSelect,goBack,getGroupType,submit,getFileInfo,updateGroupAvatar,
+      isSelected,
     }
   }
 })
@@ -349,4 +355,9 @@ export default defineComponent({
   font-size: 12px;
   font-weight: 400;
 }
+
+.select-bg{
+  background: var(--active-secondary-bg) !important;
+  border:1px solid var(--active-bg) !important;
+ }
 </style>

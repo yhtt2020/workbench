@@ -10,13 +10,29 @@
    </div>
   </div>
 
-  
+  <div class="flex flex-col px-6">
+   <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子</span>
+   <!-- ({{ createGroup.length }}) -->
+   
+   
+
+   <div class="mt-4 flex items-center justify-end" style="height:40px;">
+    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
+     取消
+    </XtButton>
+
+    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">
+     选择
+    </XtButton>
+   </div>
+  </div>
  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { computed, defineComponent, reactive, toRefs } from 'vue'
 import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
+import _ from 'lodash-es'
 
 export default defineComponent({
 
@@ -27,7 +43,18 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
-  
+
+  const data = reactive({
+   settingsScroller: {
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true
+   }
+  })
+
+
   // 关闭
   const closeChannel = () => {
    ctx.emit('close')
@@ -39,6 +66,7 @@ export default defineComponent({
   }
 
   return {
+   ...toRefs(data),
    closeChannel,backChannel
   }
  }

@@ -2,8 +2,7 @@
   <xt-left-menu :tabVariables="defaultCommunity?undefined:{no:info.cno}" :list="chatLeftList" :index="index" last="3" end="2">
 
     <div class="w-full">
-      <MyCommunity v-if="currentCom" :info="info"/>
-      <router-view v-else></router-view>
+      <router-view ></router-view>
     </div>
 
     <template #communityFloat>
@@ -92,6 +91,7 @@ import { myCommunityStore } from './store/myCommunity'
 import { localCache } from '../../js/axios/serverCache'
 import MyCommunity from './page/myCommunity.vue'
 import { Icon as chatIcon } from '@iconify/vue'
+import { chatStore } from '../../store/chat'
 
 export default {
   name: 'App',
@@ -115,6 +115,7 @@ export default {
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const Server = window.$chat
+    const chat  = chatStore()
 
     const data = reactive({
       index: 'chat',
@@ -153,13 +154,13 @@ export default {
       data.open = true
     }
 
-    const selectCommunityTab = (item) => {
-      // console.log('排查问题::>>',item)
-      localCache.set('communityId', item.type)
-      data.index = item.type
-      data.defaultCommunity=false
-      data.info = item.info
-    }
+    // const selectCommunityTab = (item) => {
+    //   console.log('排查问题::>>',item)
+    //   router.push(item.route)
+    //   // localCache.set('communityId', item.type)
+    //   // data.index = item.type
+    //   // data.info = item.info
+    // }
 
     const appS = appStore()
 
@@ -174,13 +175,14 @@ export default {
           name: myCommunityList[i].communityInfo.name,
           img: myCommunityList[i].communityInfo.icon,
           type: `community${myCommunityList[i].cno}`,
-          float: 'communityFloat',
+          // float: 'communityFloat',
           tab:'community_'+ myCommunityList[i].communityInfo.no,
           noBg: true,
-          callBack: selectCommunityTab,
-          info: myCommunityList[i],
-
-          // route:{ name:'defaultCommunity',info:myCommunityList[i]},
+          callBack:(item)=>{
+            selectTab(item)
+            data.defaultCommunity=false
+          } ,
+          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no,info:JSON.stringify(myCommunityList[i].communityInfo)}},
         }
         menuCommunityList.push(item)
       } else {
@@ -198,8 +200,11 @@ export default {
       return data.index === localCache.get('communityId')
     })
 
-    console.log(menuCommunityList, '菜单社群')
-    // console.log('获取我的社群列表',...newArr)
+    // 判断是否展开悬浮模式
+    const isFloat = computed(()=>{
+     console.log('排查问题', chat.settings.enableHide)
+     return chat.settings.enableHide
+    });
 
     const chatLeftList = ref([
       {
@@ -207,7 +212,8 @@ export default {
         tab: 'session',
         title: '消息',
         route: {
-          name: 'chatMain'
+          name: 'chatMain',
+          params:{no:'',info:JSON.stringify('')}
         },
         callBack: selectTab,
       },
@@ -216,7 +222,8 @@ export default {
         tab: 'contact',
         callBack: selectTab,
         route: {
-          name: 'contact'
+          name: 'contact',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       ...(config.adminUids.includes(userInfo.uid) ? [
@@ -227,7 +234,8 @@ export default {
           title: '管理面板(仅管理员可见)',
           callBack: selectTab,
           route: {
-            name: 'chatAdmin'
+            name: 'chatAdmin',
+            params:{no:'',info:JSON.stringify('')}
           }
         }
       ] : []),
@@ -238,7 +246,8 @@ export default {
         tab:'find',
         callBack: selectTab,
         route: {
-          name: 'chatFind'
+          name: 'chatFind',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       // 写社群相关静态内容时临时打开的路由
@@ -246,7 +255,7 @@ export default {
         icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float: 'communityFloat',
+        float: isFloat === false ? '' : 'communityFloat',
         noBg: true,
         callBack: (item)=>{
           selectTab(item)
@@ -254,7 +263,7 @@ export default {
         },
         tab:'community_{no}',
         route: {
-          name: 'defaultCommunity'
+          name: 'defaultCommunity',params:{no:'',info:JSON.stringify('')}
         }
       },
 
@@ -310,7 +319,7 @@ export default {
     // })
 
     return {
-      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,
+      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,
       ...toRefs(data),
     }
   }

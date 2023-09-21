@@ -11,7 +11,7 @@
    <div class="p-4 flex rounded-lg flex-col" style="background: var(--secondary-bg);">
     <span class="font-16-400 mb-2.5" style="color:var(--primary-text);">选择类型</span>
     <span class="font-14-400" style="color:var(--secondary-text)">
-     你可以选择添加桌面，关联工作台内部的酷应用，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
+     你可以选择添加桌面，关联工作台内部的社区，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
     </span>
    </div>
    <div class="flex flex-col mt-4">
@@ -31,7 +31,7 @@
   </div>
  </div>
 
- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk>
+ <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
  <SelectChannel v-if="selectIndex === 'channel' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
  <SelectGroupChat v-if="selectIndex === 'chat' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
  <SelectWebLink v-if="selectIndex === 'web' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectWebLink>
@@ -45,15 +45,17 @@ import { Icon as  ChannelIcon } from '@iconify/vue'
 
 
 import Modal from '../../../components/Modal.vue'
-import SelectDesk from './channelSelect/selectDesk.vue'
-import SelectChannel from './channelSelect/selectChannel.vue'
+// import SelectDesk from './channelSelect/selectDesk.vue'
+import SelectChannel from './channelSelect/selectCommunity.vue'
 import SelectGroupChat from './channelSelect/selectGroupChat.vue'
 import SelectWebLink from './channelSelect/selectWebLink.vue'
 
 export default defineComponent({
  components:{
   CloseOutlined,
-  ChannelIcon,Modal,SelectDesk,SelectChannel,
+  ChannelIcon,Modal,
+  // SelectDesk,
+  SelectChannel,
   SelectGroupChat,SelectWebLink,
  },
 
@@ -63,12 +65,12 @@ export default defineComponent({
 
   const data = reactive({
    channelList:[
-    { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
+    // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
     { icon:'fluent-emoji-flat:placard',name:'社区',type:'channel' },
     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
     { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'web' }
    ],
-   selectIndex:'desk',
+   selectIndex:'channel',
    nextShow:false, // 选择完第一步的是否进入第二步
   })
   
