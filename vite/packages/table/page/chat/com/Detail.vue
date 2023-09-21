@@ -296,12 +296,9 @@ const showImage = () => {
         white-space: pre-wrap;
         word-wrap: break-word;
         word-break: break-all;
-
-        // &:img {
-        //     max-width: 150px;
-        //     max-height: 100px !important;
-
-        // }
+        & > p img{
+            width: 100%;
+        }
     }
 
     .card-bottom {

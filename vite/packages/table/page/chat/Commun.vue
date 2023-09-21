@@ -115,7 +115,7 @@ const createOrder = computed(() => {
   if(createTime.split('-').length<3){
     const currentYear = new Date().getFullYear();
     const dateStr = `${currentYear}-${createTime}`;
-    console.log(dateStr);
+    // console.log(dateStr);
     
     return dateStr
   }else{
@@ -144,6 +144,7 @@ const handleMenuItemClick = (index) => {
 // 选择全部，热门的内容
 const setCurrentIndex = (index) => {
   currentIndex.value = index
+  detailVisible.value = false
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
 }
 const goYuan = () => {
@@ -159,6 +160,7 @@ const refreshPost = () => {
 }
 const changePage = (page) => {
   refreshFlag.value = true
+  detailVisible.value = false
   current.value = page
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
   refreshFlag.value = false
@@ -208,6 +210,7 @@ const showDetail = async (index) => {
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
+  await store.getCommunityPostReply(tid)
 }
 const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {

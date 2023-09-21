@@ -1,12 +1,12 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t-b-close">
+    <Modal :maskNoClose="true" class="" :animationName="t-b-close" >
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="font-16">写动态</div>
                 </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center" @click="handleOk">
+                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer" @click="handleOk" >
                     <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross"  />
                 </button>
 

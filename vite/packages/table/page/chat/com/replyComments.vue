@@ -30,12 +30,12 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
+                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
                     <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 
                 </button>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 

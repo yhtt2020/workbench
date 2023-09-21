@@ -30,12 +30,12 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
+                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
                     <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 表情
                 </button>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 图片
@@ -44,9 +44,6 @@
         <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
             @click="addComment">回复</a-button>
     </div>
-    <!-- <tippy trigger="mouseenter click" placement="bottom">
-
-    </tippy> -->
 </template>
 
 <script setup lang='ts'>
@@ -60,7 +57,7 @@ const imageVis = ref(false)
 const addEmoji = ( item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
+    // console.log(emoiiValue);
     
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
     value.value +=`${key}`

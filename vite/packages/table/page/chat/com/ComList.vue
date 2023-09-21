@@ -52,7 +52,7 @@
                 <template v-if="cardData.image.length > 1">
                     <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper ">
                         <!-- <div> -->
-                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-contain mr-2 overflow-hidden rounded-md cover-sm" >
+                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-cover mr-2 overflow-hidden rounded-md cover-sm" >
                         <!-- </div> -->
                         
                     </div>
