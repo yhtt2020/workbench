@@ -5,6 +5,12 @@
       </div>
       <div class="flex-box">
         <div class="box-title">{{ this.incomeList.title }}</div>
+        <div class="select-box">
+          <input type="text" class="ant-input ant-input-borderless search" placeholder="代理名称" v-model="userName">
+          <input type="text" class="ant-input ant-input-borderless search" placeholder="代理账号" v-model="userAcc">
+          <button class="text-center rounded-lg center pointer sel-btn btn-active " @click="onTest">重置</button>
+          <button class="text-center rounded-lg center pointer sel-btn btn-active ">查询</button>
+        </div>
         <a-table :dataSource="incomeList.data" :columns="incomeCol" class="table-box"/>
       </div>
   
@@ -28,6 +34,8 @@
     },
     data(){
       return {
+        userName:"",
+        userAcc:"",
         incomeList:{
           title:"下级代理收益",
           data:[
@@ -107,6 +115,10 @@
 
     },
     methods:{
+      onTest(){
+        console.log(this.userAcc);
+        console.log(this.userName);
+      }
 
     },
   }
@@ -137,6 +149,51 @@
       background-color: none;
       margin-top: 24px;
     }
+    /* atd table */
+    .table-box :deep(.ant-table-tbody > tr > td){
+      background: transparent;
+    }
+    .table-box :deep(.ant-table-thead > tr > th){
+      background: transparent;
+      border-bottom: transparent;
+    }
+    .table-box :deep(.ant-table){
+      background: transparent;
+    }
 
+
+    /* select */
+    .select-box :deep(.ant-input){
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin-top: 24px;
+    }
+
+    .sel-btn{
+      padding: 7px 23px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      margin-left: 12px;
+      border: none;
+      background: rgba(0,0,0,0.30);
+    }
+    
+    .sel-btn:nth-of-type(2){
+      background-color: var(--active-bg);
+    }
+    
+    .select-box input{
+      /* margin-left: 12px; */
+      width: 160px;
+      height: 40px;
+    }
+
+    .select-box input:nth-of-type(2){
+
+      margin-left: 12px;
+    }
+    /* .select-box input:nth-of-type(2){
+    } */
   </style>
   

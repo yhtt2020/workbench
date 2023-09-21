@@ -18,10 +18,7 @@
             <div class="flex-box">
                 <div class="box-title">{{ this.incomeList.title }}</div>
                 <div class="box-list" v-for="item in incomeList.data" :key="item.key">
-                  <div class="list-title">{{ item.title }}</div> 
-                  <div class="list-num">{{ item.num }}</div>
-                  <!-- <a-statistic" :title="item.title" :value="item.num" style="margin-right: 50px" /> -->
-    
+                  <a-statistic :title="item.title" :value="item.num" :precision="1" />
                 </div>
             </div>
         </div>
@@ -83,28 +80,28 @@
             },
             {
               title:"当日收益",
-              num:12.5,
-              key:1,
+              num:122131.5,
+              key:2,
             },
             {
               title:"昨日收益",
-              num:23.5,
-              key:1,
+              num:23213123.55,
+              key:3,
             },
             {
               title:"下级代理当月总收益",
-              num:29.0,
-              key:1,
+              num:232139.0,
+              key:4,
             },
             {
               title:"下级代理当日收益",
-              num:13.0,
-              key:1,
+              num:23123.0,
+              key:5,
             },
             {
               title:"下级代理昨日收益",
-              num:0.0,
-              key:1,
+              num:2310.0,
+              key:6,
             },
           ]
         }
@@ -155,6 +152,21 @@
     }
 
 
+    .list-title{
+      /* margin-top: 16px; */
+      font-size: 14px;
+      color: rgba(255,255,255,0.60);
+    }
+    
+    .list-num{
+      margin-top: 16px;
+      font-family: Oswald-Regular;
+      font-size: 24px;
+      color: rgba(255,255,255,0.85);
+    }
 
+    :deep(.ant-statistic-content){
+      margin-top: 10px;
+    }
   </style>
   

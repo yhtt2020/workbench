@@ -1,6 +1,6 @@
 <template>
     <vueCustomScrollbar :settings="scrollbarSettings" style="padding: 15px;white-space: nowrap;height: 100%">
-      <div class="page-container rounded-xl xt-bg box-body flex"  style="height: 100%;">
+      <div class="page-container rounded-xl xt-bg box-body flex"  style="height: 100%;min-width: 1050px;">
           <div class="left-box">
               <!-- 头像 -->
               <div class="head-user">
@@ -186,5 +186,10 @@
       min-width: 800px;
       /* border: 1px solid #fff; */
     }
+
+
+
+
+    
   </style>
   
