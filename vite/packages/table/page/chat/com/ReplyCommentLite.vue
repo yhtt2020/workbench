@@ -9,7 +9,7 @@
                         {{ replyCom.user.nickname }}
                     </span>
                     <div class="font-12 w-[32px] h-[20px] rounded-lg xt-theme-b xt-theme-text ml-2 mt-1"
-                        v-if="replyCom.author_uid === replyCom.user.uid">作者</div>
+                        v-if="store.communityPostDetail.user.uid === replyCom.user.uid">作者</div>
                 </div>
             </div>
             <div class="mt-2 font-16 xt-text" style="user-select: text;text-align: left; " :innerHTML="content">
@@ -38,7 +38,7 @@
                         <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
                         <!-- <div>回复</div> -->
                     </div>
-                    <div class="flex justify-center ml-1" v-if="replyCom.author_uid === replyCom.user.uid">
+                    <div class="flex justify-center ml-1" v-if="store.communityPostDetail.user.uid=== replyCom.user.uid">
                         <a-dropdown trigger="click">
                             <template #overlay>
                                 <a-menu @click="handleMenuClick">
@@ -76,6 +76,8 @@ import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 import { Icon } from '@iconify/vue'
+import {useCommunityStore} from '../commun'
+const store=useCommunityStore()
 const useUserStore = appStore()
 const options = reactive({
     url: 'data-source'

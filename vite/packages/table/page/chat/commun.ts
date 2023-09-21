@@ -67,7 +67,7 @@ export const useCommunityStore = defineStore('community',{
             if(res.code===200){
             //   console.log(res.data,'返回数据')
                 this.communityPost=res.data
-                console.log(this.communityPost,'this.communityPost');
+                // console.log(this.communityPost,'this.communityPost');
                 localCache.set(`communityPost_${id}-${page}-${type}`,this.communityPost,60*60*12)
             }
 
@@ -101,7 +101,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
-                // console.log(this.communityReply,'res');
+                console.log(this.communityReply,'res');
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
         },
