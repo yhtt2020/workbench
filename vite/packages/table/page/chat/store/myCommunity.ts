@@ -10,7 +10,8 @@ const getMyCommunity = sUrl("/app/community/my")  // 我的社群
 const getRecommendCommunity = sUrl("/app/community/getRecommendList") // 获取推荐社群
 const applyJoin = sUrl("/app/community/join") // 申请加入社群
 const searchRecommendCommunity = sUrl("/app/community/searchCommunity") // 搜索
-
+const getChannelList = sUrl("/app/community/channel/getList") // 获取频道列表
+const createChannels = sUrl("/app/community/channel/create") // 创建社群频道
 
 // @ts-ignore
 export const myCommunityStore = defineStore('myCommunity',{
@@ -54,6 +55,16 @@ export const myCommunityStore = defineStore('myCommunity',{
    // 搜索社群
    async searchCommendCommunity(val:any){
     return await post(searchRecommendCommunity,{keywords:val})
+   },
+
+   // 获取社群频道列表
+   async getChannel(data:any){
+    return await post(getChannelList,data)
+   },
+
+   // 创建社群频道
+   async createChannel(data:any){
+    return await post(createChannels,data)
    }
 
   },

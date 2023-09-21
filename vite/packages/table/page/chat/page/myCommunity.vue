@@ -34,7 +34,7 @@
  
  
  <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
-   <CreateNewChannel v-if="type === 'addChannel'" @close="addShow = false"></CreateNewChannel>
+   <CreateNewChannel v-if="type === 'addChannel'" :no="myCommunityData.no" @close="addShow = false"></CreateNewChannel>
    <CreateNewGroup v-if="type === 'addNewGroup' " @close="addShow = false"></CreateNewGroup>
  </Modal>
  
@@ -46,13 +46,14 @@
  import { showDropList } from '../../../js/data/chatList'
  import { Icon as CommunityIcon } from '@iconify/vue'
  import { UserAddOutlined,PlusOutlined,MenuUnfoldOutlined } from '@ant-design/icons-vue'
- 
+ import { myCommunityStore } from '../store/myCommunity'
 
  import ChatDropDown from '../components/chatDropDown.vue'
  import Modal from '../../../components/Modal.vue'
  import CreateNewChannel from '../components/createNewChannel.vue'
  import CreateNewGroup from '../components/createNewGroup.vue'
  
+
  export default defineComponent({
   // props:['info'],
   components:{
@@ -64,6 +65,7 @@
  
   setup (props,ctx) {
    const route = useRoute()
+   const communityStore = myCommunityStore()
 
    const data = reactive({
      emptyList:[
@@ -83,7 +85,20 @@
    }
  
     watchEffect(()=>{
-      data.myCommunityData = JSON.parse(route.params.info)
+      // data.myCommunityData = JSON.parse(route.params.info)
+      // if(route.params.no !== ''){
+      //   const option = {
+      //    communityNo:route.params.no,
+      //    cache:1,
+      //   }
+      //   console.log('获取配置项',option)
+      //   communityStore.getChannel(option).then(res=>{
+      //    console.log('获取频道数据',res)
+      //   })
+      // }else{
+      //   return;
+      // }
+     
     })
  
  

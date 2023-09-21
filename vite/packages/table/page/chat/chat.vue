@@ -176,7 +176,8 @@ export default {
           // float: 'communityFloat',
           noBg: true,
           callBack: selectTab,
-          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no,info:JSON.stringify(myCommunityList[i].communityInfo)}},
+          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
+          // info:JSON.stringify(myCommunityList[i].communityInfo)
         }
         menuCommunityList.push(item)
       } else {
@@ -228,7 +229,8 @@ export default {
           callBack: selectTab,
           route: {
             name: 'chatAdmin',
-            params:{no:'',info:JSON.stringify('')}
+            params:{no:'',}
+            // info:JSON.stringify('')
           }
         }
       ] : []),

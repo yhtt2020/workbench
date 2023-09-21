@@ -34,7 +34,7 @@
  <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
  <SelectChannel v-if="selectIndex === 'channel' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
  <SelectGroupChat v-if="selectIndex === 'chat' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
- <SelectWebLink v-if="selectIndex === 'web' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectWebLink>
+ <SelectWebLink v-if="selectIndex === 'web' && nextShow === true " :no="no" type="link" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
 
 </template>
 
@@ -59,7 +59,7 @@ export default defineComponent({
   SelectGroupChat,SelectWebLink,
  },
 
- props:[],
+ props:['no'],
 
  setup (props,ctx) {
 
