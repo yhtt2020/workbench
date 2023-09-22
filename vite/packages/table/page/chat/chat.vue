@@ -1,5 +1,5 @@
 <template>
-  <xt-left-menu :tabVariables="defaultCommunity?undefined:{no:info.cno}" :list="chatLeftList" :index="index" last="3" end="2">
+  <xt-left-menu :tabVariables="{no:communityNo}" :list="chatLeftList" :index="index" last="3" end="2">
 
     <div class="w-full">
       <router-view ></router-view>
@@ -121,7 +121,7 @@ export default {
       index: 'chat',
       // type:'chat',
       addIndex: '',
-      defaultCommunity:true,
+      communityNo:'1',
       open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
@@ -180,9 +180,9 @@ export default {
           noBg: true,
           callBack:(item)=>{
             selectTab(item)
-            data.defaultCommunity=false
+            data.communityNo=myCommunityList[i].communityInfo.no
           } ,
-          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no,info:JSON.stringify(myCommunityList[i].communityInfo)}},
+          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
         }
         menuCommunityList.push(item)
       } else {
@@ -259,11 +259,11 @@ export default {
         noBg: true,
         callBack: (item)=>{
           selectTab(item)
-          data.defaultCommunity=true
+          data.communityNo=1
         },
-        tab:'community_{no}',
+        tab:'community',
         route: {
-          name: 'defaultCommunity',params:{no:'',info:JSON.stringify('')}
+          name: 'defaultCommunity',params:{no:1}
         }
       },
 

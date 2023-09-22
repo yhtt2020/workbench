@@ -205,8 +205,10 @@ export default [
         path: '/chat',
         component: ChatIndex,
         name: 'chatIndex',
-
-
+        rememberChildrenPosition: true,
+        redirect: {
+          name:'chat'
+        },
         children: [
           BarrageRoute,
           {
@@ -275,6 +277,11 @@ export default [
                 name:'defaultCommunity',
                 component:CommunityIndex,
                 props:true,
+                meta: {
+                  tab1:'community',
+                  tab2: 'chat',
+                  tab3:'community'
+                }
               },
               {
                 path:'/myCommunity/:no',
@@ -284,7 +291,7 @@ export default [
                 meta: {
                   tab1:'community',
                   tab2: 'chat',
-                  tab3:'community_{no}'
+                  tab3:'community_{no}',
                 }
               }
             ]
