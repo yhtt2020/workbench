@@ -5,14 +5,14 @@ const routerTab = {
    *
    * @param tab 用于检测的tab
    * @param level 路由层级
-   * @param variables 路由变量
+   * @param params 路由变量
    */
-  isActive(tab,level,variables) {
+  isActive(tab,level,params) {
     const route = useRoute()
     if(route.meta){
-      if(variables){
+      if(params){
         let matched=String(route.meta['tab'+String(level)]).replace(/\{([^}]+)\}/g, function(match, key) {
-          return variables[key.trim()] || match;
+          return params[key.trim()] || match;
         })
         return matched === tab
       }
