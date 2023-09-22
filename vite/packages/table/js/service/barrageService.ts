@@ -32,4 +32,9 @@ export const barrageService={
     return sendList
 
   },
+
+  send(data){
+    window.$manager.send(barrageService.filterBarrages([data]))//进行前置过滤
+    window.$manager.start()
+  }
 }

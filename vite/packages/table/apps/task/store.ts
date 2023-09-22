@@ -17,7 +17,7 @@ export const taskStore = defineStore("taskStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["taskID", "list", "firstTask"],
+        paths: ["taskID", "list", "firstTask", "success", "isTask"],
         storage: localStorage,
       },
     ],

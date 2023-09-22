@@ -56,6 +56,8 @@ import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
 import Sortable from 'sortablejs';
 import { message } from 'ant-design-vue';
+import routerTab from '../js/common/routerTab'
+
 export default {
   name: 'SidePanel',
   components: {
@@ -207,6 +209,9 @@ export default {
       message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
     },
     current(item) {
+      if(item.tab){
+        return routerTab.isActive(item.tab,1)
+      }
       if (item.data?.name) {
         return this.$route.params.name === item.data.name
       } else if (item.event) {

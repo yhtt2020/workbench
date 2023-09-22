@@ -1,5 +1,6 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+
     <div class="w-full">
       <router-view ></router-view>
     </div>
@@ -120,6 +121,7 @@ export default {
       index: 'chat',
       // type:'chat',
       addIndex: '',
+      communityNo:'1',
       open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
@@ -174,10 +176,13 @@ export default {
           img: myCommunityList[i].communityInfo.icon,
           type: `community${myCommunityList[i].cno}`,
           // float: 'communityFloat',
+          tab:'community_'+ myCommunityList[i].communityInfo.no,
           noBg: true,
-          callBack: selectTab,
+          callBack:(item)=>{
+            selectTab(item)
+            data.communityNo=myCommunityList[i].communityInfo.no
+          } ,
           route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
-          // info:JSON.stringify(myCommunityList[i].communityInfo)
         }
         menuCommunityList.push(item)
       } else {
@@ -204,7 +209,7 @@ export default {
     const chatLeftList = ref([
       {
         icon: 'message',
-        type: 'chat',
+        tab: 'session',
         title: '消息',
         route: {
           name: 'chatMain',
@@ -214,7 +219,7 @@ export default {
       },
       {
         icon: 'team',
-        type: 'contact',
+        tab: 'contact',
         callBack: selectTab,
         route: {
           name: 'contact',
@@ -225,6 +230,7 @@ export default {
         {
           icon: 'diannao',
           type: 'admin',
+          tab:'admin',
           title: '管理面板(仅管理员可见)',
           callBack: selectTab,
           route: {
@@ -238,6 +244,7 @@ export default {
       {
         icon: 'zhinanzhen',
         type: 'find',
+        tab:'find',
         callBack: selectTab,
         route: {
           name: 'chatFind',
@@ -251,9 +258,13 @@ export default {
         type: 'community',
         float: isFloat === false ? '' : 'communityFloat',
         noBg: true,
-        callBack: selectTab,
+        callBack: (item)=>{
+          selectTab(item)
+          data.communityNo=1
+        },
+        tab:'community',
         route: {
-          name: 'defaultCommunity',params:{no:'',info:JSON.stringify('')}
+          name: 'defaultCommunity',params:{no:1}
         }
       },
 
@@ -304,9 +315,9 @@ export default {
       },
     ])
 
-    onMounted(() => {
-      router.push({ name: 'chatMain' })
-    })
+    // onMounted(() => {
+    //   router.push({ name: 'chatMain' })
+    // })
 
     return {
       chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,

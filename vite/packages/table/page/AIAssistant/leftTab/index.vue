@@ -1,5 +1,5 @@
 <template>
-  <xt-left-menu :list="menuList" last="1" end="3">
+   <xt-left-menu :list="menuList" last="1" end="3">
     <template #test>
       <xt-button @click="showRightPanel = !showRightPanel">Toggle Right Panel</xt-button>
     </template>
@@ -84,5 +84,5 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>  
+<style lang="scss" scoped>
 </style>

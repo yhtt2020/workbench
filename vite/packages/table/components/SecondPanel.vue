@@ -23,7 +23,7 @@
 import GradeSmallTip from "./GradeSmallTip.vue";
 import { taskStore } from "../apps/task/store";
 import { mapWritableState } from 'pinia'
-
+import routerTab from '../js/common/routerTab'
 export default {
   name: 'SecondPanel',
   props: [
@@ -75,12 +75,18 @@ export default {
     },
   },
   methods: {
+    isActive:routerTab.isActive,
     current(menu) {
-      if (menu.route) {
-        return this.$route.name === menu.route.name || this.$route.path === menu.route.path
-      } else {
-        return this.activeIndex === menu.index
+      if(menu.tab){
+        return this.isActive(menu.tab,2)
+      }else{
+        if (menu.route) {
+          return this.$route.name === menu.route.name || this.$route.path === menu.route.path
+        } else {
+          return this.activeIndex === menu.index
+        }
       }
+
 
     },
     change(e, menu) {
