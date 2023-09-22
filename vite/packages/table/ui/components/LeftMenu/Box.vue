@@ -1,16 +1,12 @@
 <template>
   <!-- 统一选择模板 -->
-  <a-tooltip :title="item.title" placement="right">
-    <div
-      @click="selectClick(item.id, item.flag)"
-      class="xt-base-btn"
-      style="width: 50px; height: 50px; border-radius: 14px"
-      :style="[isActive(item.tab||item.id,3,{no:no}) ? 'border: 3px solid var(--active-bg)' : '']"
-    >
-      <!--      {{no}}-->
-      <slot></slot>
-    </div>
-  </a-tooltip>
+  <div
+    class="xt-base-btn"
+    style="width: 50px; height: 50px; border-radius: 14px"
+    :style="[isActive(item.tab||item.id,3,{no:no}) ? 'border: 3px solid var(--active-bg)' : '']"
+  >
+    <slot></slot>
+  </div>
 </template>
 
 <script setup>
@@ -23,13 +19,12 @@ const isActive = routerTab.isActive
 
 const props = defineProps({
   item: {},
-  id: '',
-  tabVariables: undefined
-})
-const emits = defineEmits(['itemClick'])
+  id: "",
+});
+const emits = defineEmits(["itemClick"]);
 const selectClick = () => {
-  emits('itemClick', props.item)
-}
+  emits("itemClick", props.item);
+};
 const no = ref(
   1
 )
