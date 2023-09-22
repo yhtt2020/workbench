@@ -52,8 +52,8 @@
     <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
     <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
-        :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
+      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }"
+        class="w-full thread-list" :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
         :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
           <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
@@ -111,14 +111,14 @@ const menuList = ref([
     type: 'essence'
   }])
 const createOrder = computed(() => {
-  let createTime=store.communityPost?.list[0].create_time
-  if(createTime.split('-').length<3){
+  let createTime = store.communityPost?.list[0].create_time
+  if (createTime.split('-').length < 3) {
     const currentYear = new Date().getFullYear();
     const dateStr = `${currentYear}-${createTime}`;
     // console.log(dateStr);
-    
+
     return dateStr
-  }else{
+  } else {
     return createTime
   }
 })
@@ -145,7 +145,17 @@ const handleMenuItemClick = (index) => {
 const setCurrentIndex = (index) => {
   currentIndex.value = index
   detailVisible.value = false
-  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
+  current.value = 1
+  store.getCommunityPost(
+    props.forumId,
+    current.value,
+    menuList.value[currentIndex.value].type,
+    checkMenuList.value[currentIndex.value].order)
+  // let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
+  // if (detailVisible.value === true) {
+  //   store.getCommunityPostDetail(tid)
+  // }
+
 }
 const goYuan = () => {
   browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
@@ -165,7 +175,7 @@ const changePage = (page) => {
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
   refreshFlag.value = false
 }
-const totalPost=computed(()=>{
+const totalPost = computed(() => {
   return store.communityPost.count
 })
 //当前选中的详情帖子的索引
@@ -230,14 +240,15 @@ const closeDetail = (value) => {
   }
   updateScroller()
 }
-onBeforeMount(() => {
+onBeforeMount(async () => {
   NProgress.start()
   NProgress.configure({ showSpinner: false });
+  await NProgress.configure({ parent: '.container' })
+
 
 })
-onMounted(() => {
+onMounted( () => {
   setCurrentIndex(0)
-  NProgress.configure({parent:'.container'})
   NProgress.done()
 })
 onBeforeUpdate(() => {
@@ -402,4 +413,5 @@ onUpdated(() => {
       display: none;
     }
   }
-}</style>
+}
+</style>

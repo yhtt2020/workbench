@@ -52,7 +52,7 @@ export const useCommunityStore = defineStore('community',{
 
         },
         // 获取查询板块下的所有帖子
-        async getCommunityPost(id,page=1,type,order=''){
+        async getCommunityPost(id,page=1,type='hot',order=''){
             if(localCache.get(`communityPost_${id}-${type}`)){
                 this.communityPost=localCache.get(`communityPost_${id}-${type}`)
             }
