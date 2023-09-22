@@ -4,8 +4,8 @@
     <div class="flex flex-col">
      <div class="flex justify-between items-center w-full mb-2.5">
       <div class="flex  flex-col">
-       <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ communityInfo.name }}</span>
-       <span class="font-14" style="color:var(--secondary-text);">{{ communityInfo.summary }}</span>
+       <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ routeData.name }}</span>
+       <span class="font-14" style="color:var(--secondary-text);">{{ routeData.summary }}</span>
       </div>
       <ChatDropDown :list="showDropList"/>
      </div>
@@ -16,12 +16,26 @@
 
     <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
 
-    <div class="flex items-center h-full justify-center flex-col">
-      <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3" style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-         <component :is="item.icon"></component>
-         <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
+    <template v-if="channelDetail.length === 0">
+      <div class="flex items-center h-full justify-center flex-col">
+        <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3" style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
+          <component :is="item.icon"></component>
+          <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
+        </div> 
       </div>
-    </div>
+    </template>
+
+    <template v-else>
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+        <div v-for="item in channelDetail">
+          <ChatFold :title="item.name">
+            <div class="flex items-center px-4 py-3 rounded-lg pointer group-item" v-for="">
+
+            </div>
+          </ChatFold>
+        </div>
+      </vue-custom-scrollbar>
+    </template>
 
 
    </a-col>
@@ -41,33 +55,33 @@
  </template>
 
  <script>
- import { defineComponent, reactive, toRefs,watchEffect} from 'vue'
+ import { defineComponent, reactive, toRefs,watchEffect,computed } from 'vue'
  import { useRoute,useRouter } from 'vue-router'
  import { showDropList } from '../../../js/data/chatList'
  import { Icon as CommunityIcon } from '@iconify/vue'
  import { UserAddOutlined,PlusOutlined,MenuUnfoldOutlined } from '@ant-design/icons-vue'
-import { myCommunityStore } from '../store/myCommunity'
+ import { communityStore } from '../store/communityChannel'
+ import _ from 'lodash-es'
 
  import ChatDropDown from '../components/chatDropDown.vue'
  import Modal from '../../../components/Modal.vue'
  import CreateNewChannel from '../components/createNewChannel.vue'
  import CreateNewGroup from '../components/createNewGroup.vue'
+ import ChatFold from '../components/chatFold.vue'
  
 
  export default defineComponent({
-  // props:['info'],
   components:{
    UserAddOutlined,PlusOutlined,MenuUnfoldOutlined,
    ChatDropDown,CommunityIcon,Modal,CreateNewChannel,
-   CreateNewGroup,
+   CreateNewGroup,ChatFold,
 
   },
 
   setup (props,ctx) {
    const route = useRoute()
-   const communityStore = myCommunityStore()
-    const myCom = myCommunityStore()
-    const { myCommunityList } = myCom
+   const myCom = communityStore()
+   const { communityList } = myCom
    const data = reactive({
      emptyList:[
        { icon:UserAddOutlined,name:'邀请其他人',type:'inviteOther' },
@@ -77,6 +91,14 @@ import { myCommunityStore } from '../store/myCommunity'
      type:'',
      addShow:false, // 点击按钮弹窗
      routeData:{}, // 接收路由参数
+     channelDetail:[],
+     settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      }
    })
 
 
@@ -85,27 +107,37 @@ import { myCommunityStore } from '../store/myCommunity'
      data.addShow = true
    }
  
-    watchEffect(()=>{
-      console.log('获取路由参数::>>',route.params.no)
-      data.routeData = { no:route.params.no }
-      if(route.params.no !== ''){
-        const option = {
-         communityNo:route.params.no,
-         cache:1,
-        }
-        communityStore.getChannel(option)
-        // communityStore.getTreeChannelList(option)
+   watchEffect(()=>{
+    data.routeData = { no:route.params.no }
+    if(route.params.no !== ''){
+      const communityName = _.find(communityList,function(item){
+        return String(item.communityInfo.no) === String(route.params.no)
+      })
+      if(communityName && communityName.communityInfo){
+        data.routeData.name = communityName.communityInfo?.name
+        data.routeData.summary = communityName.summary ? "" : communityName.summary
       }
-      // if(){
-        
-      //   console.log('获取配置项',option)
-      
-      // }else{
-      //   return;
-      // }
-     
-    })
 
+      const option = {
+        communityNo:route.params.no,
+        cache:1,
+      }
+      
+      myCom.getTreeChannelList(option).then(res=>{
+        if(res.data && res.data.treeList){
+
+         const filterNoChildren = _.filter(res.data.treeList,function(item){
+           return item.hasOwnProperty('children')
+         })
+
+         data.channelDetail = filterNoChildren
+
+        }
+      })
+
+      
+    }
+   })
 
    return {
      showDropList,

@@ -62,6 +62,8 @@ export default defineComponent({
  props:['no'],
 
  setup (props,ctx) {
+  console.log('排查no为undefined问题',props.no)
+
   const data = reactive({
    channelList:[
     // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},

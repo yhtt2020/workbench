@@ -91,8 +91,9 @@ import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import { classMock } from '../../data/selectClassMock'
 import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
-import { myCommunityStore } from '../../store/myCommunity'
+import { communityStore } from '../../store/communityChannel'
 import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
 
 export default defineComponent({
  props:['no','type','linkOpen'],
@@ -104,7 +105,7 @@ export default defineComponent({
 
   console.log('选择分类',props.no,props.type)
 
-  const communityStore = myCommunityStore()
+  const myCom = communityStore()
 
   const data = reactive({
    settingsScroller: {
@@ -215,24 +216,31 @@ export default defineComponent({
         type:"category",
         communityNo:props.no,
         role:'category',
-        parentId:1,
+        parentId:0,
       }
-      const categoryRes = await communityStore.createChannel(option) 
-      if(categoryRes.status === 1){
+
+      const categoryRes = await myCom.createChannel(option)  // 创建一级分类
+
+      if(categoryRes.status === 1 && categoryRes.data){
+
         const channelOption = {
           name:props.linkOpen.name,
           type:props.type.type,
           props:JSON.stringify({ url:props.linkOpen.props }),
           communityNo:props.no,
           role:'channel',
-          parentId:2,
+          parentId:categoryRes.data
         }
-        const channelRes = await communityStore.createChannel(channelOption)
-        if(channelRes.status === 1){
-          message.success(`${channelRes.info}`)
+
+        const createRes = await myCom.createChannel(channelOption) // 创建二级分类
+
+        if(createRes.status === 1){
+          message.success(`${createRes.info}`)
           closeChannel()
         }
+
       }
+
     }
     
   }
