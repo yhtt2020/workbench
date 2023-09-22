@@ -152,7 +152,6 @@ export default {
   methods: {
     added(){
       this.getTodoType(this.selectTodo)
-      this.addVisible=false
       message.success('添加任务成功。')
     },
     showDrawer() {

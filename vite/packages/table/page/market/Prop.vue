@@ -1,10 +1,10 @@
 <template>
-  <div class="xt-bg pl-6 box">
-    <div class="pr-4" :style="showPreview ? 'width:70%' : 'width:100%'">
+  <div class="xt-bg pl-6 box h-full" >
+    <div class="pr-4 pt-4" :style="showPreview ? 'width:70%' : 'width:100%'" style="height: 100%;display: flex;flex-direction: column">
       <!-- 头部导航 -->
       <div class="flex items-center justify-between" style="height: 96px;">
         <div class="flex">
-          <div @click="onBack" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+          <div @click="onBack" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
             style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
@@ -12,7 +12,7 @@
         </div>
         <div class="flex items-center">
           <!-- 头部搜索和下拉列表 -->
-          <Search 
+          <Search
             :searchValue="inputSearchValue"
             :defaultSelect="sort"
             :sortType="sortType"
@@ -26,11 +26,11 @@
           </div>
         </div>
       </div>
-      <div class="flex" style="height: 90%;">
+      <div class="flex mt-4 h-full" >
         <!-- 侧边导航 -->
         <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
         <!-- 列表内容 -->
-        <div class="ml-5 right no-drag">
+        <div class="ml-5 right no-drag h-full"  >
           <Props :selected="sort" :navList="marketList[navIndex].children" @getFrameImage="getFrameImage"></Props>
         </div>
       </div>
@@ -38,13 +38,13 @@
     <div class="preview" v-if="showPreview">
       <div class="flex items-center justify-between mb-6" style="height: 48px;">
        <div class="flex items-center">
-          <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+          <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
             style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
             <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
           </div>
           <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
        </div>
-       <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center" 
+       <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
           style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
           <Icon icon="clear" style="font-size: 1.5em;"></Icon>
         </div>
@@ -180,7 +180,6 @@ export default {
   }
   .right{
     width:100%;
-    height:90%;
     display: flex;
   }
   .left::-webkit-scrollbar{

@@ -1,25 +1,29 @@
 <template>
-
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
-        <Icon icon="iconamoon:history-fill" class="icon1"/>
-            <div class="date" :title="this.history.date">{{this.history.date}}</div>
-            <div class="title" :title="this.history.title">{{this.history.title}}</div>
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+        <div class="icon" @click="onHistoryMessage">
+            <CalendarOutlined style="width:20px;height:20px;" />
+        </div>
+        <div class="box-flex">
+            <div>
+                {{this.history.date}}
+                <br/>
+                {{ this.history.title }}
+            </div>
+        </div>
     </Widget>
-
-
 </template>
-  
+
 <script>
-import axios from "axios";
+import { CalendarOutlined, } from '@ant-design/icons-vue';
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
-import {sUrl} from "../../../consts"
-import {get} from "../../../js/axios/request"
 import {getHistoryInfo} from "../../../store/historyInfo"
+
 export default {
     components:{
         Widget,
         Icon,
+        CalendarOutlined,
     },
 
     props: {
@@ -46,20 +50,29 @@ export default {
             options: {
                 className: "card small",
                 title: "历史上的今天",
-                // icon: "bianji",
-                // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
-                // icon: "games-16-filled",
             },
             history:{
                 date:"",
                 tetle:""
             },
+            timer:"12",
         };
     },
     async mounted() {
-        // await this.onTest()
         await this.onHistoryMessage()
+        // 设置一次性定时器 当天12点过后自动触发事件
+        let now = new Date;
+        var midnight = new Date();
+        midnight.setHours(23, 59, 59, 999); // 设置时间为今天的最后一秒
+        var remainingTime = midnight.getTime() - now.getTime(); // 计算剩余时间戳
+        this.timer = setTimeout(() => {
+            this.onHistoryMessage();
+        }, remainingTime);
+    },
+    // 组件卸载后 清除定时器
+    unmounted(){
+        clearTimeout(this.timer)
     },
     methods:{
         // 获取今天所发生的的事情
@@ -67,39 +80,48 @@ export default {
             let getData = await getHistoryInfo("/app/juhe/get");
             this.history = getData;
         },
-
-    }
+    },
 };
 </script>
-  
+
 <style lang="scss" scoped>
-    .icon1{
-        width: 24px;
-    }
-    svg{
-        width: 24px;
-        height: 24px;
+    .icon{
+        width: 20px;
+        height: 20px;
         position: relative;
-        top: -23px;
+        top: -21px;
+        left: 0;
     }
-    .date{
+
+    :deep(.anticon svg){
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .box-flex{
+        display: flex;
+        flex-direction: column;
+        width: 240px;
+        position: relative;
+        top: -10px;
+    }
+    .box-flex div{
         text-align: center;
+        padding: 0 5px;
+        text-align: center;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 24px;
         font-family: '优设标题黑';
+        margin-top: -5px;
+        white-space: pre-wrap;
     }
-    .title{
-        font-size: 24px;
-        margin-top: 12px;
-        font-family: '优设标题黑';
-        text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        // max-width: 212px;
-    }
-    
+
+
     @font-face {
         font-family: "优设标题黑";
-        src: url(../../../../../public/优设标题黑.ttf);
+        src: url("../../../../../public/font/优设标题黑.ttf");
     }
 </style>
-  

@@ -1,5 +1,11 @@
 <template>
-  <div v-if="slot == 'default'" ref="el" @click.stop="next($event)" @contextmenu="next($event)" class="box">
+  <div
+    v-if="slot == 'default'"
+    ref="el"
+    @click.stop="next($event)"
+    @contextmenu="next($event)"
+    class="box"
+  >
     <div :class="{ 'xt-task-container': zIndexValue }">
       <slot></slot>
       <div class="" :class="{ 'xt-task-overlay': zIndexValue }"></div>
@@ -43,7 +49,7 @@ export default defineComponent({
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
-      let next = this.step == length ? '完成' : this.task?.next || '下一步';
+      let next = this.step == length ? "完成" : this.task?.next || "下一步";
       return `${next} ${this.step} / ${length}`;
     },
   },
@@ -74,6 +80,7 @@ export default defineComponent({
       this.tour.next();
       this.step++;
       if (this.task.success) {
+
         this.success = true;
         // 发奖励
       }
@@ -152,11 +159,11 @@ export default defineComponent({
     },
   },
 
-  mounted() { },
+  mounted() {},
 });
 </script>
 
-<style >
+<style>
 /* .box {
   position: relative;
 } */
@@ -174,7 +181,7 @@ export default defineComponent({
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.0);
+  background: rgba(0, 0, 0, 0);
   /* 设置半透明黑色背景，可以根据需要调整 */
   z-index: 999999999999998;
   /* 设置比 .container 的 z-index 更低的值 */
@@ -186,7 +193,7 @@ export default defineComponent({
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.0);
+  background: rgba(0, 0, 0, 0);
   /* 设置半透明黑色背景，可以根据需要调整 */
   z-index: 999999999999999;
   /* 设置比 .relative 的 z-index 更高的值 */

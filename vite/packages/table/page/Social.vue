@@ -27,7 +27,7 @@ export default {
       tabs:[
         {
           index: 'com',
-          title: '互动社区',
+          title: '版本更新',
           icon:'xiaoxi',
           route:
             {
@@ -79,10 +79,10 @@ export default {
        },
        {
         title:'推广中心',
-        index:'share',
+        index:'promotion',
         icon:'trophy',
         route:{
-          name:'share'
+          name:'promotion'
         }
        },
       //  {

@@ -4,10 +4,10 @@
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab">
     </SecondPanel>
     <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"
-      style="margin: 1em;background: var(--primary-bg);" >
+         style="margin: 1em;background: var(--primary-bg);">
       <div v-if="myApps.length === 0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-        <Icon  style="font-size: 2em;vertical-align: middle;"
-          icon="line-dragdroptuofang"></Icon>
+        <Icon style="font-size: 2em;vertical-align: middle;"
+              icon="line-dragdroptuofang"></Icon>
         将应用拖放到此处，即可用于快捷启动
       </div>
       <div v-if="myApps.length === 0" style="text-align: center">
@@ -20,7 +20,7 @@
         ></MyApps>
         <Teleport to="body">
           <AddIcon
-          v-if="iconVisible"
+            v-if="iconVisible"
             @getSelectApps="getSelectApps"
             @close="iconHide"
             navName="Desktop"
@@ -33,20 +33,24 @@
       </div>
     </div>
     <div class="app-content s-bg" style="margin: 1em;background: var(--primary-bg);" v-if="currentIndex === 'qing'">
-      <QingApps >
+      <QingApps>
       </QingApps>
     </div>
-    <div class="app-content s-bg" v-if="currentIndex === 'store'" style="margin:1em;padding: 1em;background: var(--primary-bg);"
-  >
+    <div class="app-content s-bg" v-if="currentIndex === 'store'"
+         style="margin:1em;padding: 1em;background: var(--primary-bg);"
+    >
       <vue-custom-scrollbar :settings="settings" style="position:relative;height:100%;  border-radius: 8px;">
         <div style="margin: auto;width:100%;height: auto;margin-bottom:1em;text-align: center ">
           <div style="margin-bottom: 1em;font-size: 1.5em">
             <div @click="becomeDeveloper" class="pointer" style="float:left;font-size: 0.8em;">
-              <notification-outlined />
+              <notification-outlined/>
               入驻成为开发者
-            </div> 共 {{ storeApps.length }} 应用 <div class="pointer" @click="openDir"
-              style="font-size: 0.8em;float: right">
-              <FolderOpenOutlined /> 下载目录
+            </div>
+            共 {{ storeApps.length }} 应用
+            <div class="pointer" @click="openDir"
+                 style="font-size: 0.8em;float: right">
+              <FolderOpenOutlined/>
+              下载目录
             </div>
           </div>
           <a-row :gutter="[30, 20]">
@@ -63,8 +67,9 @@
               </a-col>
               <a-col :span="5">
                 <div class="app-name  font-bold text-white" style="text-align: left;"
-                  :style="{ color: 'var(--font-color)' }">
-                  {{ app.name
+                     :style="{ color: 'var(--font-color)' }">
+                  {{
+                    app.name
                   }}
 
                 </div>
@@ -78,22 +83,25 @@
                   <div v-if="!checkInstalled(app)" @click="install(app)" class="btn">
                     <template v-if="app.downloading">
                       <svg style="vertical-align: text-bottom;" class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                         </path>
                       </svg>
                       <span>{{ app.percent }} %</span>
                     </template>
                     <template v-else-if="app.installing">
                       <svg style="vertical-align: text-bottom;" class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                         </path>
-                      </svg> 安装中
+                      </svg>
+                      安装中
                     </template>
                     <template v-else>
                       <span>下载安装</span>
@@ -104,7 +112,7 @@
                   </div>
                 </tempalate>
                 <template v-else>
-                  <div @click="executeApp(app.data)" class="btn" >
+                  <div @click="executeApp(app.data)" class="btn">
                     打开
                   </div>
                 </template>
@@ -130,19 +138,21 @@ import { runExec } from '../js/common/exec'
 import Template from '../../user/pages/Template.vue'
 import { NotificationOutlined, FolderOpenOutlined } from '@ant-design/icons-vue'
 import browser from '../js/common/browser'
-import AddIcon from "../page/app/addIcon/index.vue"
-import Desktop from "../page/app/addIcon/modules/Desktop.vue"
+import AddIcon from '../page/app/addIcon/index.vue'
+import Desktop from '../page/app/addIcon/modules/Desktop.vue'
+import pathLib from 'path'
+
 let { fs } = window.$models
 export default {
   name: 'Apps',
-  components: { AddIcon,Desktop,Template, MyApps, QingApps, SecondPanel, NotificationOutlined, FolderOpenOutlined },
+  components: { AddIcon, Desktop, Template, MyApps, QingApps, SecondPanel, NotificationOutlined, FolderOpenOutlined },
   computed: {
     ...mapWritableState(appStore, ['appData']),
     ...mapWritableState(appsStore, ['myApps'])
   },
-  data() {
+  data () {
     return {
-      iconVisible:false,
+      iconVisible: false,
       settings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -159,16 +169,16 @@ export default {
         title: '轻应用',
         index: 'qing'
       },
-      {
-        title: '应用市场',
-        icon: '',
-        index: 'store'
-      }
+        {
+          title: '应用市场',
+          icon: '',
+          index: 'store'
+        }
       ],
       desktopApps: [],
       dropFiles: [],
       storeApps: [
-      {
+        {
           icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
           name: 'AI助手',
           summary: 'AI助手',
@@ -307,7 +317,7 @@ export default {
           summary: '一款开源桌面看板娘，让你不再孤单。',
           needInstall: true,
           installPath: 'C:\\Program Files\\PPet3\\PPet3.exe',
-          downloadUrl: "https://a.apps.vip/download/ppet3330.exe",
+          downloadUrl: 'https://a.apps.vip/download/ppet3330.exe',
           data: {
             security: true
           }
@@ -318,7 +328,7 @@ export default {
           summary: '基于Electron的调试工具，用于发现问题。',
           needInstall: true,
           installPath: '%LOCALAPPDATA%\\debugtron\\Debugtron.exe',
-          downloadUrl: "https://a.apps.vip/download/debugtron.exe",
+          downloadUrl: 'https://a.apps.vip/download/debugtron.exe',
           data: {
             security: true
           }
@@ -330,7 +340,7 @@ export default {
           needInstall: true,
           silent: false,//静默安装
           installPath: 'C:\\Program Files (x86)\\FinalWire\\AIDA64 Extreme\\aida64.exe',
-          downloadUrl: "https://a.apps.vip/download/aida64extreme685.exe",
+          downloadUrl: 'https://a.apps.vip/download/aida64extreme685.exe',
           data: {
             security: true
           }
@@ -341,7 +351,7 @@ export default {
           summary: '一款免费的游戏帧数监测软件。',
           needInstall: true,
           installPath: 'C:\\Program Files (x86)\\RivaTuner Statistics Server\\RTSS.exe',
-          downloadUrl: "https://a.apps.vip/download/rtss.exe",
+          downloadUrl: 'https://a.apps.vip/download/rtss.exe',
           data: {
             security: true
           }
@@ -353,7 +363,7 @@ export default {
           needInstall: true,
           silent: false,//非静默安装
           installPath: 'C:\\Program Files\\DisplayFusion\\DisplayFusion.exe',
-          downloadUrl: "https://a.apps.vip/download/DisplayFusionSetup-10.0.exe",
+          downloadUrl: 'https://a.apps.vip/download/DisplayFusionSetup-10.0.exe',
           data: {
             security: true
           }
@@ -468,39 +478,39 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['addApps']),
-    getSelectApps(data){
-    this.addApps(data["default"])
+    getSelectApps (data) {
+      this.addApps(data['default'])
     },
-    executeApp(appData) {
+    executeApp (appData) {
       this.$router.push({
         name: 'app',
         params: appData
       })
     },
-    open(app) {
+    open (app) {
       require('electron').shell.openPath(app.path)
     },
-    iconHide(){
+    iconHide () {
       this.iconVisible = false
     },
-    async loadDeskIconApps() {
+    async loadDeskIconApps () {
       this.iconVisible = true
       // const desktopApps = await ipc.sendSync('getDeskApps')
       // this.desktopApps = desktopApps
       // this.addApps(this.desktopApps)
     },
-    dragOver() {
+    dragOver () {
 
     },
-    changeTab(data) {
+    changeTab (data) {
       this.currentIndex = data.index
     },
-    checkInstalled(checkApp) {
+    checkInstalled (checkApp) {
       if (fs.existsSync(checkApp.installPath)) {
         return true
       }
     },
-    executeLocalApp(app) {
+    executeLocalApp (app) {
       runExec('"' + app.installPath + '"')
     },
     /**
@@ -508,7 +518,7 @@ export default {
      * @param app
      * @param path
      */
-    setup(app, path, silent = true) {
+    setup (app, path, silent = true) {
       message.success({ content: '正在为您安装', key: 'install' })
       app.installing = true
       if (silent) {
@@ -537,15 +547,14 @@ export default {
         })
       }
 
-
     },
-    becomeDeveloper() {
+    becomeDeveloper () {
       browser.openInUserSelect('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')
     },
-    openDir() {
+    openDir () {
       require('electron').shell.openPath(require('path').join(window.globalArgs['user-data-dir'], 'download'))
     },
-    install(app) {
+    install (app) {
       if (app.downloading) {
         return
       }
@@ -582,17 +591,26 @@ export default {
         }
       })
     },
-    async drop(e) {
+    async drop (e) {
       let files = e.dataTransfer.files
 
       let filesArr = []
+      const pathLib = require('path')
+      console.log(files)
       if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path)
+          let path = files[i].path
+          let ext = pathLib.extname(path)
+          let icon = ['.png', '.jpg', '.jpeg'].includes(ext) ? path : await tsbApi.system.extractFileIcon(files[i].path)
+          filesArr.push({
+            icon: icon,
+            name: require('path').basename(files[i].path),
+            path: path
+          })
           console.log('path:', files[i])
         }
       }
-      this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
+      this.dropFiles = filesArr
       this.addApps(this.dropFiles)
     }
   }
@@ -603,8 +621,8 @@ export default {
 .btn {
   background: var(--secondary-bg);
 
-  &:hover{
-    color:var(--primary-text);
+  &:hover {
+    color: var(--primary-text);
     background: var(--active-secondary-bg);
 
   }

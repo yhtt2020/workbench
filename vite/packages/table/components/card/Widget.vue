@@ -5,6 +5,7 @@
       display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
+      background:this.options.background
     }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->
@@ -92,7 +93,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel},
+  components: {HorizontalPanel,BottomEdit},
 
   name: "Widget",
 
@@ -285,7 +286,7 @@ export default {
 }
 
 
-  .right-icon svg{
+  .cardTitle .right-icon svg{
     position: relative;
     left: -10px;
     top: 3px;

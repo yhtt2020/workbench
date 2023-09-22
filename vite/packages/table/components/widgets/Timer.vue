@@ -77,7 +77,7 @@ export default {
     cursor: pointer;
   }
 }
-.timer-content{
+ .timer-content{
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,6 +1,7 @@
 export const chatList = [
   {
     name: '想天工作台官方社群',
+    cno:1,
     summary: '欢迎加入想天工作台官方社群，在这里您可以了解到和产品有关的一切',
     settings: {//用户设置的
       enableColumns: false,

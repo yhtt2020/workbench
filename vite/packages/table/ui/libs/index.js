@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, defineComponent } from "vue";
 export default {
   install(app) {
     // 1、获取当前路径下所有文件中的index.vue
@@ -8,7 +8,17 @@ export default {
       const component = fullPath.replace("./", "").split("/")[0];
       const componentName = "Xt" + component;
       // 3、进行注册
-      app.component(componentName, defineAsyncComponent(fn));
+      if (componentName == "XtDrawer1") {
+      } else {
+        app.component(
+          componentName,
+          defineAsyncComponent(() =>
+            fn().then((module) => {
+              return module.default;
+            })
+          )
+        );
+      }
     }
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row" style="height: 100%">
-    <div class="item-content">
+    <div class="item-content" style="height: 100%">
       <div v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
       :style="avatarBgColor(item.frame.rarity)" style="width:337px;">
         <div class="avatar-top flex " style="position: relative">
@@ -28,8 +28,8 @@
               获得途径：{{ avatarGainMethodText(item.frame.gainMethod) }}
             </span>
             <div class="mt-2" v-if="item.prices.length">
-              <a-avatar-group>
-                <span class="mr-4 xt-text-2" > 已售 {{item.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar"></a-avatar>
+              <a-avatar-group v-if="item.ownersCount">
+                <span class="mr-4 xt-text-2" > 已售 {{item?.ownersCount[1]}} 件</span>   <a-avatar class="pointer" @click="showUserCard(owner.uid,owner.userInfo)" v-for="owner in item.ownersCount[0]"  :src="owner.userInfo.avatar"></a-avatar>
               </a-avatar-group>
             </div>
           </div>
@@ -47,7 +47,7 @@
               <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
           </a-button>
           <div disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
-            已有 
+            已有
           </div>
           <!-- <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
             已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>

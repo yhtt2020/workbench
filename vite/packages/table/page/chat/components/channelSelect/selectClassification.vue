@@ -1,5 +1,5 @@
 <template>
- <div class="flex flex-col my-3" style="width:500px;"> 
+ <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backButton">
     <LeftOutlined style="font-size: 1.25em;" />
@@ -19,11 +19,11 @@
      <PlusOutlined style="font-size: 1.25em;"/>
      <span class="font-16-400 ml-2" style="color:var(--primary-text);">添加新分组</span>
     </div>
-    
+
     <div class="flex flex-col" id="classSortTab">
       <div v-for="(item,index) in list" class="flex pointer  rounded-lg items-center px-5 mb-4"
        style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
-       @click.stop="listClick(item,index)" :key="index" 
+       @click.stop="listClick(item,index)" :key="index"
       >
 
       <template v-if="isEditing && editIndex === index">
@@ -42,7 +42,7 @@
           <div class="flex">
            <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click.stop="edit(index)"></ClassIcon>
            <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted"></ClassIcon>
-          </div> 
+          </div>
         </div>
       </template>
 
@@ -58,15 +58,15 @@
               <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click="exitEdit"></ClassIcon>
             </div>
           </div>
-         
+
           <div class="flex w-full justify-between" v-else>
             <span>{{ item.name }}</span>
             <div class="flex">
              <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click="edit"></ClassIcon>
              <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click="deleted"></ClassIcon>
-            </div> 
+            </div>
           </div>
-          
+
         </template>
         <template v-else>
           <div>{{ item.name }}</div>
@@ -91,8 +91,9 @@ import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import { classMock } from '../../data/selectClassMock'
 import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
-import { myCommunityStore } from '../../store/myCommunity'
+import { communityStore } from '../../store/communityStore'
 import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
 
 export default defineComponent({
  props:['no','type','linkOpen'],
@@ -104,7 +105,7 @@ export default defineComponent({
 
   console.log('选择分类',props.no,props.type)
 
-  const communityStore = myCommunityStore()
+  const myCom = communityStore()
 
   const data = reactive({
    settingsScroller: {
@@ -150,7 +151,7 @@ export default defineComponent({
       data.classItem = item
     }
   }
-  
+
   // 触发编辑
   const edit = (index) =>{
     data.isEditing = true
@@ -174,9 +175,9 @@ export default defineComponent({
 
   // 添加新分类
   const addClassItem = () =>{
-    
+
   }
-  
+
   // 保存编辑数据
   const save = () =>{
     data.isEditing = false
@@ -215,26 +216,33 @@ export default defineComponent({
         type:"category",
         communityNo:props.no,
         role:'category',
-        parentId:1,
+        parentId:0,
       }
-      const categoryRes = await communityStore.createChannel(option) 
-      if(categoryRes.status === 1){
+
+      const categoryRes = await myCom.createChannel(option)  // 创建一级分类
+
+      if(categoryRes.status === 1 && categoryRes.data){
+
         const channelOption = {
           name:props.linkOpen.name,
           type:props.type.type,
           props:JSON.stringify({ url:props.linkOpen.props }),
           communityNo:props.no,
           role:'channel',
-          parentId:2,
+          parentId:categoryRes.data
         }
-        const channelRes = await communityStore.createChannel(channelOption)
-        if(channelRes.status === 1){
-          message.success(`${channelRes.info}`)
+
+        const createRes = await myCom.createChannel(channelOption) // 创建二级分类
+
+        if(createRes.status === 1){
+          message.success(`${createRes.info}`)
           closeChannel()
         }
+
       }
+
     }
-    
+
   }
 
   onMounted(()=>{

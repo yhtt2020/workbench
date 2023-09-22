@@ -18,10 +18,10 @@
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
         <div class="w-full">
-            <tippy trigger=" click" placement="bottom" :interactive="true">
+            <tippy trigger=" click" placement="bottom" :interactive="true" >
                 <template #content>
                     <!-- <div class="w-full"> -->
-                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
                         style="flex-wrap: wrap;">
                         <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
                             @click="addEmoji(item)" :key="index" style="cursor: pointer;">
@@ -30,12 +30,12 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
+                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
                     <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 表情
                 </button>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 图片
@@ -44,9 +44,6 @@
         <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
             @click="addComment">回复</a-button>
     </div>
-    <!-- <tippy trigger="mouseenter click" placement="bottom">
-
-    </tippy> -->
 </template>
 
 <script setup lang='ts'>
@@ -60,7 +57,7 @@ const imageVis = ref(false)
 const addEmoji = ( item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
+    // console.log(emoiiValue);
     
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
     value.value +=`${key}`
@@ -189,9 +186,12 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-
+:deep(.tippy-box){
+    width: 51%;
+    margin-left: 15%;
+}
 .btn {
-    border: none;
+    border: 1px solid var(--secondary-text);
 }
 
 .comment-input {

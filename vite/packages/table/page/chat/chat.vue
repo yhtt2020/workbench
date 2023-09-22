@@ -1,5 +1,6 @@
 <template>
   <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+
     <div class="w-full">
       <router-view ></router-view>
     </div>
@@ -86,9 +87,9 @@ import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
-import { myCommunityStore } from './store/myCommunity'
+import { communityStore } from './store/communityStore'
 import { localCache } from '../../js/axios/serverCache'
-import MyCommunity from './page/myCommunity.vue'
+import MyCommunity from './page/communityDetail.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
 
@@ -109,7 +110,7 @@ export default {
   },
 
   setup () {
-    const myCom = myCommunityStore()
+    const myCom = communityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
@@ -120,6 +121,7 @@ export default {
       index: 'chat',
       // type:'chat',
       addIndex: '',
+      communityNo:'1',
       open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
@@ -163,21 +165,24 @@ export default {
     const appS = appStore()
 
     const { userInfo } = appS
-    const { myCommunityList } = myCom
+    const { communityList } = myCom
 
     const menuCommunityList = []
     // 遍历将社群进行UI层数据替换
-    for (let i = 0; i < myCommunityList.length; i++) {
-      if (myCommunityList[i].communityInfo) {
+    for (let i = 0; i < communityList.length; i++) {
+      if (communityList[i].communityInfo) {
         const item = {
-          name: myCommunityList[i].communityInfo.name,
-          img: myCommunityList[i].communityInfo.icon,
-          type: `community${myCommunityList[i].cno}`,
+          name: communityList[i].communityInfo.name,
+          img: communityList[i].communityInfo.icon,
+          type: `community${communityList[i].cno}`,
           // float: 'communityFloat',
+          tab:'community_'+ communityList[i].communityInfo.no,
           noBg: true,
-          callBack: selectTab,
-          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
-          // info:JSON.stringify(myCommunityList[i].communityInfo)
+          callBack:(item)=>{
+            selectTab(item)
+            data.communityNo= communityList[i].communityInfo.no
+          } ,
+          route:{ name:'myCommunity',params:{no:communityList[i].communityInfo.no}},
         }
         menuCommunityList.push(item)
       } else {
@@ -204,7 +209,7 @@ export default {
     const chatLeftList = ref([
       {
         icon: 'message',
-        type: 'chat',
+        tab: 'session',
         title: '消息',
         route: {
           name: 'chatMain',
@@ -214,7 +219,7 @@ export default {
       },
       {
         icon: 'team',
-        type: 'contact',
+        tab: 'contact',
         callBack: selectTab,
         route: {
           name: 'contact',
@@ -225,12 +230,12 @@ export default {
         {
           icon: 'diannao',
           type: 'admin',
+          tab:'admin',
           title: '管理面板(仅管理员可见)',
           callBack: selectTab,
           route: {
             name: 'chatAdmin',
-            params:{no:'',}
-            // info:JSON.stringify('')
+            params:{no:'',info:JSON.stringify('')}
           }
         }
       ] : []),
@@ -238,6 +243,7 @@ export default {
       {
         icon: 'zhinanzhen',
         type: 'find',
+        tab:'find',
         callBack: selectTab,
         route: {
           name: 'chatFind',
@@ -251,9 +257,13 @@ export default {
         type: 'community',
         float: isFloat === false ? '' : 'communityFloat',
         noBg: true,
-        callBack: selectTab,
+        callBack: (item)=>{
+          selectTab(item)
+          data.communityNo=1
+        },
+        tab:'community',
         route: {
-          name: 'defaultCommunity',params:{no:'',info:JSON.stringify('')}
+          name: 'defaultCommunity',params:{no:1}
         }
       },
 
@@ -304,9 +314,9 @@ export default {
       },
     ])
 
-    onMounted(() => {
-      router.push({ name: 'chatMain' })
-    })
+    // onMounted(() => {
+    //   router.push({ name: 'chatMain' })
+    // })
 
     return {
       chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,

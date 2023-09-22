@@ -38,6 +38,7 @@ export const hotStore = defineStore("hot", {
         let heat = dom(el).children().eq(2).text()
         hotList.push({id, title, heat})
       })
+
       this.data = hotList
       // const date = new Date()
       // const requestObj = {

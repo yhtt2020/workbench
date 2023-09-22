@@ -2,6 +2,7 @@ export const NavList = [
   {
     cname: "推荐",
     children: [
+
       {
         name: "myIcons",
         cname: "图标组件",
@@ -15,6 +16,20 @@ export const NavList = [
           },
         ],
         time: "2023/6/28",
+      },
+      {
+        name: 'AIaides',
+        cname: 'AI助手',
+        detail: '你的专属AI助手,内置数个预设模板供你使用。',
+        sizes: ['2x2','2x4'],
+        option: [
+          {
+            name: 'AIaides',
+            size: '2x2',
+            zoom: '30'
+          },
+        ],
+        time: '2023/8/25'
       },
       {
         name: "clocks",
@@ -168,7 +183,7 @@ export const NavList = [
           {
             name: "CPULineChart",
             size: "2*4",
-            zoom: "11",
+            zoom: "8",
           },
           {
             name: "CPUFourCard",
@@ -274,11 +289,11 @@ export const NavList = [
           {
             name: 'SingleFilm',
             size: '2x4',
-            zoom: '11'
+            zoom: '8'
           }, {
             name: 'ManyFilm',
             size: '2x4',
-            zoom: '11'
+            zoom: '8'
           },
         ],
         time: '2023/5/31'
@@ -288,7 +303,7 @@ export const NavList = [
         cname: "新闻头条",
         detail:
           "头条（推荐），国内，娱乐，体育，军事，科技，财经，时尚等新闻信息",
-        sizes: ["2x4','4x4", "4x6"],
+        sizes: ["2x4","4x4", "4x6"],
         option: [
           {
             name: "news",
@@ -409,7 +424,7 @@ export const NavList = [
           {
             name: "clock",
             size: "2x2",
-            zoom: "11",
+            zoom: "20",
           },
         ],
         time: "2023/5/31",
@@ -504,7 +519,7 @@ export const NavList = [
           {
             name: "CPULineChart",
             size: "2*4",
-            zoom: "11",
+            zoom: "8",
           },
           {
             name: "CPUFourCard",
@@ -574,12 +589,12 @@ export const NavList = [
           {
             name: "GamesDiscount",
             size: "2x4",
-            zoom: "11",
+            zoom: "8",
           },
           {
             name: "DiscountPercentage",
             size: "2x4",
-            zoom: "38",
+            zoom: "32",
           },
         ],
         time: "2023/5/31",
@@ -698,15 +713,29 @@ export const NavList = [
           {
             name: "SingleFilm",
             size: "2x4",
-            zoom: "11",
+            zoom: "8",
           },
           {
             name: "ManyFilm",
             size: "2x4",
-            zoom: "11",
+            zoom: "8",
           },
         ],
         time: "2023/5/31",
+      },
+      {
+        name: 'historyInfo',
+        cname: '历史上的今天',
+        detail: '历史上的今天都发生了什么大事呢？',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'historyInfo',
+            size: '2x2',
+            zoom: '40'
+          },
+        ],
+        time: '2023/9/9'
       },
 
     ],
@@ -810,7 +839,7 @@ export const NavList = [
       },
       {
         name: 'historyInfo',
-        cname: '历史上的今天(开发中)',
+        cname: '历史上的今天',
         detail: '历史上的今天都发生了什么大事呢？',
         sizes: ['2x2'],
         option: [
@@ -821,7 +850,7 @@ export const NavList = [
           },
         ],
         time: '2023/9/9'
-      },      
+      },
 
       {
         name: 'shortcutKey',
@@ -860,12 +889,12 @@ export const NavList = [
           {
             name: 'smallCommunityDashboard',
             size: '2x4',
-            zoom: '10'
+            zoom: '8'
           },
           {
             name: 'middleCommunityDashboard',
             size: '4x4',
-            zoom: '10'
+            zoom: '8'
           },
         ],
         time: '2023/9/15'
@@ -911,6 +940,25 @@ export const NavList = [
           },
         ],
         time: '2023/9/19'
+      },
+      {
+        name: 'tomatoTimer',
+        cname: '番茄钟（开发中）',
+        detail: '快速开启番茄钟时刻，记录每天专注成果。',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'TimerClock',
+            size: '2x2',
+            zoom: '24'
+          },
+          {
+            name: 'TimerChart',
+            size: '2x2',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/23'
       },
     ]
   },

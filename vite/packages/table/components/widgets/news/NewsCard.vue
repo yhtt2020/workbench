@@ -10,31 +10,20 @@
         </div>
 
       </template>
-      <!-- {{ newsMsgList.length }} -->
       <div class="top-bar">
-        <!-- <div class="left" style="width: 40px; height: 40px; border-radius: 8%;" @click="decrease">
-          <span>
-            <LeftOutlined />
-          </span>
-        </div> -->
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
             @click="setCurrentIndex(index)" :style="{width:this.showSize.width==1?'81px':'67px'}">
             <span >{{ title.title }}</span>
           </div>
         </div>
-        <!-- <div class="right" style="width: 40px; height: 40px; border-radius: 8%;" @click="increase">
-          <span>
-            <RightOutlined />
-          </span>
-        </div> -->
       </div>
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
         <div class="content" v-else >
-          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type"> 
+          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type">
             <span class="sort">{{ index+1 }}</span>
             <div class="item">
               <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
@@ -43,7 +32,7 @@
             <div class="divider" v-show="this.copyNum>=8">
               <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;"/>
             </div>
-            
+
           </div>
 
         </div>
@@ -206,10 +195,11 @@ export default {
   methods: {
     setCurrentIndex(index) {
       this.currentIndex = index
+      this.customData.index=this.currentIndex
       this.getNewsData()
-      if(this.customData){
-        this.newsItemList=this.customData
-      }
+      this.customData.newsList=this.newsMsgList
+      // console.log(this.customData.newsList,'newsList')
+      console.log(this.customData,'customData');
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -218,11 +208,11 @@ export default {
     ...mapActions(newsStore, ['getNewsMsg']),
     getNewsData() {
       let tag = this.showList[this.currentIndex].tag
-      // let num = this.copyNum
-      // console.log(this.getNewsMsg);
-      this.getNewsMsg(tag)
-      // console.log('getNewsData',res);
-      this.customData.newsList={tag:this.newsItemList}
+      this.customData.tag=tag
+      this.getNewsMsg(this.customData.tag)
+
+      // this.customData.newsList=this.newsMsgList
+      // console.log(this.customData.newList);
     }
   },
   computed: {
@@ -260,12 +250,28 @@ export default {
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
-      return this.newsMsgList.slice(0, this.copyNum)
+      if(this.customData && this.customData.newsList){
+        if(this.customData.newsList.tag){
+          this.customData.newsList=this.customData.newsList.tag
+          return []
+        }
+        console.error(this.customData,'customdata')
+        return this.customData.newsList.slice(0, this.copyNum)
+      }
+      return this.newsMsgList.slice(0,this.copyNum)
+
+    },
+    currentTag(){
+      if(this.customData && this.customData.index){
+        return this.showList[this.customData.index].title
+      }
+      return this.showList[this.currentIndex].title
     }
   },
   async mounted() {
     this.isLoading = true
-    await this.getNewsData()
+    await this.getNewsMsg(this.showList[this.currentIndex].tag)
+    // await this.getNewsData()
     setTimeout(() => {
       this.isLoading = false
     })
@@ -359,7 +365,7 @@ export default {
   // flex-direction: column;
   overflow: hidden;
   position: relative;
-  
+
   .divider{
     width: 1px;
     height: 100%;
@@ -367,9 +373,9 @@ export default {
     left: 285px;
     right: 286px;
     overflow: hidden;
-    
+
   }
-  
+
   .sort {
   width: 24px;
   height: 24px;

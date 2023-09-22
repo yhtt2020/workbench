@@ -1,7 +1,11 @@
+// import isXT from "../../ui/hooks/model"
 export const getConfig = async () => {
   let token;
-  const res = await window.tsbApi.user.get()
-  token = res.data.token
+  let res
+// if (isXT) {
+  res  = await window.tsbApi.user.get()
+  token =  res.data.token
+// }
 
   return {
     headers: {
