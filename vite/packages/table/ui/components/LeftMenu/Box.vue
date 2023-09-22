@@ -37,7 +37,6 @@ onMounted(()=>{
   no.value=Number(useRoute().params.no)
 })
 onBeforeRouteUpdate((to, from) => {
-  console.error(to.params.no, '变化了')
   no.value = Number(to.params.no)
 })
 

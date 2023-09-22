@@ -1,5 +1,5 @@
 <template>
-  <xt-left-menu :tabVariables="{no:communityNo}" :list="chatLeftList" :index="index" last="3" end="2">
+  <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
 
     <div class="w-full">
       <router-view ></router-view>

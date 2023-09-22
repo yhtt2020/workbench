@@ -89,9 +89,7 @@
       }else{
         await myCom.getMyCommunity()
       }
-      console.error('当前的社群no',route.params)
       let found=myCommunityList.find(item=>{
-        console.error('调试',item)
         return Number(item.cno)===Number(route.params.no)
       })
       if(found){
@@ -99,10 +97,6 @@
       }else{
         //todo 通过接口获取社群详细信息
       }
-
-      console.error('当前的社群信息')
-
-
     //  data.myCommunityData = //JSON.parse(route.params.info)
     })
 
