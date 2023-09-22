@@ -8,7 +8,14 @@ export default {
       const component = fullPath.replace("./", "").split("/")[0];
       const componentName = "Xt" + component;
       // 3、进行注册
-      app.component(componentName, defineAsyncComponent(fn));
+      app.component(
+        componentName,
+        defineAsyncComponent(() =>
+        fn().then((module) => {
+            return module.default
+          })
+        )
+      )
     }
   },
 };
