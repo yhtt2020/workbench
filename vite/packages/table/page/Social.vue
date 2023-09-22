@@ -79,10 +79,10 @@ export default {
        },
        {
         title:'推广中心',
-        index:'share',
+        index:'promotion',
         icon:'trophy',
         route:{
-          name:'share'
+          name:'promotion'
         }
        },
       //  {
