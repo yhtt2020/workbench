@@ -2,8 +2,8 @@
   <!-- 统一选择模板 -->
   <div
     class="xt-base-btn"
+    :class="{active:isActive(item.tab||item.id,3,tabParams) }"
     style="width: 50px; height: 50px; border-radius: 14px"
-    :style="[isActive(item.tab||item.id,3,tabParams) ? 'border: 3px solid var(--active-bg)' : '']"
   >
     <slot></slot>
   </div>
@@ -38,4 +38,8 @@ onBeforeRouteUpdate((to, from) => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.active{
+  border: 3px solid var(--active-bg)
+}
+</style>

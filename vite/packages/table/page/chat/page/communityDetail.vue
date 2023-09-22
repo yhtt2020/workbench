@@ -29,7 +29,7 @@
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div v-for="item in channelDetail">
           <ChatFold :title="item.name">
-            <div class="flex items-center px-4 py-3 rounded-lg pointer group-item" v-for="">
+            <div class="flex items-center px-4 py-3 rounded-lg pointer group-item">
 
             </div>
           </ChatFold>
