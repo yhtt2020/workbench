@@ -18,6 +18,7 @@
     </span>
    </div>
 
+   <a-input class="h-10" v-model:value="linkName" v-if="type.type === 'link'" style="border-radius: 10px;margin: 12px 0;" placeholder="请输入名称" spellcheck="false"/>
    <a-input class="h-10" v-model:value="linkData" style="border-radius: 10px;" placeholder="请输入" spellcheck="false"/>
    
    <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
@@ -30,7 +31,7 @@
   </div>
  </div>
 
- <SelectClass v-if="classShow === true" :no="no" :type="type" :linkOpen="defaultType" @close="closeChannel" @back="classShow = false"></SelectClass>
+ <SelectClass v-if="classShow === true" :no="no" :type="type" :linkOpen="{props:linkData,defaultType,name:linkName}" @close="closeChannel" @back="classShow = false"></SelectClass>
 </template>
 
 <script>
@@ -49,6 +50,7 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
+  // console.log('创建网页链接',props.no)
 
   const data = reactive({
    linkType:[
@@ -56,8 +58,9 @@ export default defineComponent({
     { title:'内部浏览器',name:'inter' },
     { title:'系统浏览器',name:'system' }
    ],
-   defaultType:{},
+   defaultType:{ title:'默认',name:'default'},
    linkData:'',
+   linkName:'',
    classShow:false,
   })
   
@@ -73,7 +76,7 @@ export default defineComponent({
 
   // 确定按钮
   const linkButton = (evt) =>{
-    if(data.linkData !== ''){
+    if(data.linkData !== '' && data.linkName !== ''){
       data.classShow = true
     }else{
       evt.preventDefault()
@@ -81,6 +84,7 @@ export default defineComponent({
   }
 
   return {
+  //  no:props.no,
    ...toRefs(data),
    closeChannel,backChannel,linkButton
   }

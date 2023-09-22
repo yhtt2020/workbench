@@ -4,7 +4,7 @@
     <div class="flex flex-col">
      <div class="flex justify-between items-center w-full mb-2.5">
       <div class="flex  flex-col">
-       <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ myCommunityData.name }}</span>
+       <!-- <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ Data.name }}</span> -->
        <span class="font-14" style="color:var(--secondary-text);">一起打磨出闪闪发光的技术宝石！</span>
       </div>
       <ChatDropDown :list="showDropList"/>
@@ -34,7 +34,7 @@
  
  
  <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
-   <CreateNewChannel v-if="type === 'addChannel'" :no="myCommunityData.no" @close="addShow = false"></CreateNewChannel>
+   <CreateNewChannel v-if="type === 'addChannel'" :no="routeData.no" @close="addShow = false"></CreateNewChannel>
    <CreateNewGroup v-if="type === 'addNewGroup' " @close="addShow = false"></CreateNewGroup>
  </Modal>
  
@@ -75,7 +75,7 @@
      ],
      type:'',
      addShow:false, // 点击按钮弹窗
-     myCommunityData:{}, // 接收路由参数
+     routeData:{}, // 接收路由参数
    })
  
  
@@ -85,16 +85,20 @@
    }
  
     watchEffect(()=>{
-      // data.myCommunityData = JSON.parse(route.params.info)
-      // if(route.params.no !== ''){
-      //   const option = {
-      //    communityNo:route.params.no,
-      //    cache:1,
-      //   }
+      console.log('获取路由参数::>>',route.params.no)
+      data.routeData = { no:route.params.no }
+      if(route.params.no !== ''){
+        const option = {
+         communityNo:route.params.no,
+         cache:1,
+        }
+        communityStore.getChannel(option)
+        // communityStore.getTreeChannelList(option)
+      }
+      // if(){
+        
       //   console.log('获取配置项',option)
-      //   communityStore.getChannel(option).then(res=>{
-      //    console.log('获取频道数据',res)
-      //   })
+      
       // }else{
       //   return;
       // }

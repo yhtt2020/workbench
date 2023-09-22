@@ -23,15 +23,15 @@
     <div class="flex flex-col" id="classSortTab">
       <div v-for="(item,index) in list" class="flex pointer  rounded-lg items-center px-5 mb-4"
        style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
-       @click="listClick(index)" :key="index" 
+       @click.stop="listClick(item,index)" :key="index" 
       >
 
       <template v-if="isEditing && editIndex === index">
         <div class="flex w-full justify-between items-center">
           <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false"></a-input>
           <div class="flex">
-            <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click="save"></ClassIcon>
-            <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click="exitEdit"></ClassIcon>
+            <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="save"></ClassIcon>
+            <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
           </div>
         </div>
       </template>
@@ -40,8 +40,8 @@
         <div class="flex w-full justify-between">
           <span class="font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
           <div class="flex">
-           <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click="edit(index)"></ClassIcon>
-           <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click="deleted"></ClassIcon>
+           <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click.stop="edit(index)"></ClassIcon>
+           <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted"></ClassIcon>
           </div> 
         </div>
       </template>
@@ -79,20 +79,20 @@
 
   <div class="flex items-center px-6 justify-end mt-4">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">确定</XtButton>
+    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="createClass">确定</XtButton>
   </div>
 
  </div>
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, toRefs,ref } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs,ref,nextTick } from 'vue'
 import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import { classMock } from '../../data/selectClassMock'
 import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
-import { nextTick } from 'process';
-
+import { myCommunityStore } from '../../store/myCommunity'
+import { message } from 'ant-design-vue'
 
 export default defineComponent({
  props:['no','type','linkOpen'],
@@ -101,6 +101,10 @@ export default defineComponent({
   ClassIcon,
  },
  setup (props,ctx) {
+
+  console.log('选择分类',props.no,props.type)
+
+  const communityStore = myCommunityStore()
 
   const data = reactive({
    settingsScroller: {
@@ -116,6 +120,7 @@ export default defineComponent({
    hoverIndex:-1,
    editIndex:-1,
    statusIndex:-1, // 点击选中下标
+   classItem:'', // 接收选中的分组名称
   })
 
 
@@ -137,14 +142,12 @@ export default defineComponent({
   // }
 
   // 点击选中状态
-  const listClick = (index) =>{
-    data.statusIndex = index
-    if(data.isEditing){  
-      nextTick(()=>{
-      const classRef = document.querySelector('#classInputRef')
-       classRef.focus()
-       classRef.select()
-      })
+  const listClick = (item,index) =>{
+    if(data.statusIndex === index){
+      data.statusIndex = -1
+    }else{
+      data.statusIndex = index
+      data.classItem = item
     }
   }
   
@@ -202,9 +205,40 @@ export default defineComponent({
     data.list = cloneTemp
   }
 
+  // 创建判断最后一步
+  const createClass = async () =>{
+
+    // 判断是否选择分类
+    if(data.statusIndex !== -1){
+      const option = {
+        name:data.classItem.name,
+        type:"category",
+        communityNo:props.no,
+        role:'category',
+        parentId:1,
+      }
+      const categoryRes = await communityStore.createChannel(option) 
+      if(categoryRes.status === 1){
+        const channelOption = {
+          name:props.linkOpen.name,
+          type:props.type.type,
+          props:JSON.stringify({ url:props.linkOpen.props }),
+          communityNo:props.no,
+          role:'channel',
+          parentId:2,
+        }
+        const channelRes = await communityStore.createChannel(channelOption)
+        if(channelRes.status === 1){
+          message.success(`${channelRes.info}`)
+          closeChannel()
+        }
+      }
+    }
+    
+  }
+
   onMounted(()=>{
     const el = document.querySelector('#classSortTab')
-    // console.log('获取refs',el)
     new Sortable(el,{
       group: 'sortableGroup',
       onEnd:onSortEnd // 拖拽结束时触发的回调函数
@@ -213,7 +247,7 @@ export default defineComponent({
 
   return {
    ...toRefs(data),closeChannel,backButton,addClassItem,
-   edit,deleted,listClick,save,exitEdit,
+   edit,deleted,listClick,save,exitEdit,createClass,
   //  handleMouseOver,handleMouseOut,
   }
  }
