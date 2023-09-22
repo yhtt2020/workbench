@@ -15,7 +15,6 @@
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(0, last)"
-          :key="item.id"
           :data="item"
         >
           <Box :item="item" :id="currentIndex" class="mb-2">
@@ -36,7 +35,6 @@
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(last, -1 * end)"
-          :key="item.id"
           :data="item"
         >
           <Box :item="item" :id="currentIndex" class="mt-2">
@@ -55,7 +53,6 @@
           @itemClick="itemClick"
           :list="item.children"
           v-for="item in newList.slice(-1 * end)"
-          :key="item.id"
           :data="item"
         >
           <Box :item="item" :id="currentIndex" class="mt-2">
@@ -142,9 +139,11 @@ const typeClass = computed(() => {
 });
 // 动态添加ID
 const newList = computed(() => {
+  let index = -1;
   let res = props.list.map((item) => {
     if (item.full) full.value = true;
-    let id = item.id ?? nanoid(4);
+    // let id = item.id ?? nanoid(4);
+    let id = item.id ?? ++index;
     return {
       id,
       ...item,
