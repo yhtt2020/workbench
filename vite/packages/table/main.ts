@@ -65,7 +65,7 @@ loadChat()
 
 //socket部分
 import {initSocket} from './js/socket/socket'
-//initSocket()
+initSocket()
 
 import {Notifications} from './js/common/sessionNotice'
 
