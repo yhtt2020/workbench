@@ -1,11 +1,11 @@
 <template>
     <vueCustomScrollbar :settings="scrollbarSettings" style="padding: 15px;white-space: nowrap;height: 100%">
-      <div class="page-container rounded-xl xt-bg box-body flex"  style="height: 100%;min-width: 1050px;min-height: 800px;">
+      <div class="page-container rounded-xl xt-bg box-body flex"  style="height: 100%;min-width: 1050px;">
           <div class="left-box">
               <!-- 头像 -->
               <div class="head-user">
                 <img src="../../../../../public/img/user.png" alt="" >
-                <p>皮皮虾</p>
+                <p>nihao</p>
               </div>
               <!-- 左侧列表 -->
               <div class="nav-list">
@@ -25,6 +25,8 @@
               <Explain  v-if="indexKey == 5"/>
             </div>
       </div>
+
+  
     </vueCustomScrollbar>
   
 
@@ -103,7 +105,7 @@
       },
       methods:{
         onChangeList(key){
-          // console.log(key);
+          console.log(key);
           this.indexKey = key
         }
       },
@@ -124,7 +126,7 @@
       min-width: 250px;
       height: 100%;
       /* border: 1px solid #fff; */
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid #7C7C7C;
     }
     
     .left-box .head-user{

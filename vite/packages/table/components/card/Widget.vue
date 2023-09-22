@@ -285,7 +285,7 @@ export default {
 }
 
 
-  .cardTitle .right-icon svg{
+  .right-icon svg{
     position: relative;
     left: -10px;
     top: 3px;

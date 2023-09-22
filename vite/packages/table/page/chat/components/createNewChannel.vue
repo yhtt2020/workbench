@@ -33,8 +33,8 @@
 
  <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
  <SelectChannel v-if="selectIndex === 'channel' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
- <SelectGroupChat v-if="selectIndex === 'chat' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
- <SelectWebLink v-if="selectIndex === 'web' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectWebLink>
+ <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :type="{type:'group',name:`${selectItem.name}`}" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
+ <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" :type="{type:'link',name:`${selectItem.name}`}" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
 
 </template>
 
@@ -59,18 +59,20 @@ export default defineComponent({
   SelectGroupChat,SelectWebLink,
  },
 
- props:[],
+ props:['no'],
 
  setup (props,ctx) {
+  console.log('排查no为undefined问题',props.no)
 
   const data = reactive({
    channelList:[
     // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
     { icon:'fluent-emoji-flat:placard',name:'社区',type:'channel' },
-    { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
-    { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'web' }
+    { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'group' },
+    { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
    ],
    selectIndex:'channel',
+   selectItem:{name:'社区',type:'channel'},
    nextShow:false, // 选择完第一步的是否进入第二步
   })
   
@@ -82,6 +84,7 @@ export default defineComponent({
   // 选择频道
   const selectChannel = (item) =>{
    data.selectIndex = item.type
+   data.selectItem = item
   }
 
   // 最后选择按钮
@@ -91,6 +94,7 @@ export default defineComponent({
 
 
   return {
+   no:props.no,
    ...toRefs(data),closeChannel,selectChannel,selectSubmit,
   }
  }

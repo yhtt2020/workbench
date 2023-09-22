@@ -9,7 +9,7 @@ const threadList=sUrl('/app/com/forum/getThreadList')
 const detail=sUrl('/app/com/thread/getDetail')
 const replyList=sUrl('/app/com/thread/getReplyList')
 const upload=sUrl('/app/upload')
-export const useCommunityStore = defineStore('community',{
+export const useCommunityStore = defineStore('commun',{
     state:()=>({
         communityInfo:[],
         communityCate:[],
