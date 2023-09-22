@@ -409,7 +409,7 @@ export const NavList = [
           {
             name: "clock",
             size: "2x2",
-            zoom: "11",
+            zoom: "20",
           },
         ],
         time: "2023/5/31",

@@ -17,9 +17,9 @@
         {{ countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds }}
       </div>
       <div style="display: flex;align-items: center;justify-content: space-between;padding: 0 6em;">
-        <clockIcon style="width: 3em; height: 3em;cursor:pointer;color: var(--primary-text);" icon="akar-icons:pause"
+        <clockIcon style="width: 2em; height: 2em;cursor:pointer;color: var(--primary-text);" icon="akar-icons:pause"
           @click="closeCountDown" v-show="!countDownBtn"></clockIcon>
-        <clockIcon style="width: 3em; height: 3em;cursor:pointer;color: var(--primary-text);" icon="fluent:play-16-filled"
+        <clockIcon style="width: 2em; height: 2em;cursor:pointer;color: var(--primary-text);" icon="fluent:play-16-filled"
           @click="startCountDown" v-show="countDownBtn"></clockIcon>
         <clockIcon style="width: 2em; height: 2em;cursor:pointer;color: var(--primary-text);"
           icon="fluent:dismiss-16-filled" @click="deleteCountDown"></clockIcon>
@@ -29,15 +29,10 @@
       <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
-      <!-- <a-empty style="margin-top: 40px" :description="null" :image="simpleImage"/> -->
       <div class="flex flex-col items-center justify-center mt-10">
-        <!-- <a-button type="primary" class="mb-4 rounded-lg xt-text xt--active-bg" style="border: none;" @click="onSetup">添加闹钟
-        </a-button>
-        <a-button type="primary" class="rounded-full xt-text warn" style="border: none;" @click="onSetup">添加定时器
-        </a-button> -->
-        <button class="rounded-lg  w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16"
-          @click="onSetup">添加闹钟</button>
-        <button class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 warn-bg font-16">添加定时器</button>
+        <xt-button class="rounded-lg  w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16" type="primary"
+          @click="onSetup">添加闹钟</xt-button>
+        <xt-button type="text" class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 warn-bg font-16" @click="onSetCountDown">添加定时器</xt-button>
       </div>
 
     </div>
@@ -87,25 +82,11 @@
   </Widget>
 
 
-  <a-drawer v-model:visible="visibleDrawer" class="custom-class" style="color: red" title="设置" placement="right"
+  <a-drawer v-model:visible="visibleDrawer" class="custom-class" style="color: red" title="设置" placement="right" :width="600"
     @after-visible-change="afterVisibleChange">
     <div class="flex">
-      <div >
-        
-        <div>
-          <div>添加闹钟</div>
-          <a-input v-model:value="clockValue" :placeholder="setClockName" />
-        </div>
-        <div>
-          <div>小时</div>
-          <div>
-            
-          </div>
-        </div>
-      </div>
-      <div></div>
+      <SetupClock></SetupClock>
     </div>
-
   </a-drawer>
   <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
     style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
@@ -126,10 +107,10 @@ import { cardStore } from '../../store/card'
 import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
-
+import SetupClock from './setupClock.vue'
 export default {
   name: 'Clock',
-  components: { Widget, clockIcon },
+  components: { Widget, clockIcon, SetupClock },
   props: {
     customIndex: {
       type: Number,
@@ -167,6 +148,9 @@ export default {
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
     onContextMenuClick(e) {
 
+    },
+    onSetCountDown() {
+      this.$refs.cardSlot.menuVisible=true
     },
     showDrawer() {
       this.visible = true

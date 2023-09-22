@@ -34,10 +34,10 @@
         <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
           <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
         </a-button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost">
+        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost" style="flex-shrink: 0;">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
         </button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan">
+        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan" style="flex-shrink: 0;">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
         </button>
 
@@ -110,25 +110,31 @@ const menuList = ref([
     name: '精华',
     type: 'essence'
   }])
-const createOrder = computed(() => {
-  let createTime = store.communityPost?.list[0].create_time
-  if (createTime.split('-').length < 3) {
-    const currentYear = new Date().getFullYear();
-    const dateStr = `${currentYear}-${createTime}`;
-    // console.log(dateStr);
-
-    return dateStr
-  } else {
-    return createTime
-  }
+const comCards = computed(() => {
+  return store.communityPost
 })
-const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
+// const createOrder = computed(async() => {
+//   let createTime =await store.communityPost?.list[0].create_time
+//   if (createTime.split('-').length < 3) {
+//     const currentYear = new Date().getFullYear();
+//     const dateStr = `${currentYear}-${createTime}`;
+//     // console.log(dateStr);
+
+//     return dateStr
+//   } else {
+//     return createTime
+//   }
+// })
+// console.log(createOrder.value, 'createOrder');
+
+// const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
+// // createOrder.value ? new Date(createOrder.value).getTime() : 0
 const checkMenuList = ref([{
   type: '最近更新',
-  order: createOrder ? new Date(createOrder).getTime() : 0,
+  order: 'create_time',
 }, {
   type: '最近回复',
-  order: replyOrder
+  order: 'reply_time'
 
 }])
 
@@ -150,7 +156,7 @@ const setCurrentIndex = (index) => {
     props.forumId,
     current.value,
     menuList.value[currentIndex.value].type,
-    checkMenuList.value[currentIndex.value].order)
+    checkMenuList.value[checkMenuCurrentIndex.value].order)
   // let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // if (detailVisible.value === true) {
   //   store.getCommunityPostDetail(tid)
@@ -199,9 +205,7 @@ const modalVisible = (val) => {
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
 }
-const comCards = computed(() => {
-  return store.communityPost
-})
+
 const threadListRef = ref()
 function updateScroller() {
   // console.log(threadListRef)
@@ -244,11 +248,10 @@ onBeforeMount(async () => {
   NProgress.start()
   NProgress.configure({ showSpinner: false });
   await NProgress.configure({ parent: '.container' })
-
-
 })
-onMounted( () => {
-  setCurrentIndex(0)
+onMounted(() => {
+  // setCurrentIndex(0)
+  store.getCommunityPost(props.forumId)
   NProgress.done()
 })
 onBeforeUpdate(() => {

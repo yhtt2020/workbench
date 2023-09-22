@@ -191,7 +191,7 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     margin-left: 15%;
 }
 .btn {
-    border: none;
+    border: 1px solid var(--secondary-text);
 }
 
 .comment-input {
