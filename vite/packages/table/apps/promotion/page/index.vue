@@ -4,8 +4,8 @@
           <div class="left-box">
               <!-- 头像 -->
               <div class="head-user">
-                <img src="../../../../../public/img/user.png" alt="" >
-                <p>皮皮虾</p>
+                <img :src="this.userInfo.avatar" alt="" >
+                <p>{{ this.userInfo.nickname }}</p>
               </div>
               <!-- 左侧列表 -->
               <div class="nav-list">
@@ -45,6 +45,10 @@
   import Explain from "../components/explain.vue";
   import Income from "../components/income.vue";
   import Invite from "../components/invite.vue";
+  import {mapActions, mapState} from "pinia";
+  // import { appStore } from '../store'
+  import { appStore } from '../../../store'
+  const { appModel } = window.$models
 
     export default {
       name: 'Promotion',
@@ -61,6 +65,9 @@
       },
       computed: {
       //   ...mapState(appStore, ['userInfo','secondaryVisible'])
+      
+        ...mapState(appStore, ['userInfo']),
+      
       },
       data(){
         return {
@@ -97,15 +104,18 @@
       },
       mounted(){
 
+        this.getUserInfo()
+        // this.apps = await appModel.getAll({order:"create_time"})
       },
       watch:{
 
       },
       methods:{
         onChangeList(key){
-          // console.log(key);
+          // console.log(key);s
           this.indexKey = key
-        }
+        },
+        ...mapActions(appStore, ['getUserInfo']),
       },
     }
   </script>
