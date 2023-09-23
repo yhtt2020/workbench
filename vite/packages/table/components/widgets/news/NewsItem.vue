@@ -15,7 +15,7 @@
       </div>
 
     </div>
-    <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg">
+    <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" @click="goNews">
       <!-- <img :src="img" alt="" class="image"> -->
     </div>
 

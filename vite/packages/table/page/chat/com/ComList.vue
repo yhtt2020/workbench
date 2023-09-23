@@ -29,7 +29,7 @@
                     <!-- 单个图片 -->
                     <template v-if="cardData.image.length === 1 && !cardData.data?.video">
                         <!-- <div > -->
-                            <img :src="cardData.image_170_170[0].image" class="object-fill mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
+                            <img :src="cardData.image_170_170[0].image" class="object-cover mr-2 overflow-hidden rounded-md cover-im" :class="{ 'hide-images-video': detailVisible }" style="flex-shrink: 0;text-align: "
                                  >
                         <!-- </div> -->
 
@@ -52,7 +52,7 @@
                 <template v-if="cardData.image.length > 1">
                     <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper ">
                         <!-- <div> -->
-                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-contain mr-2 overflow-hidden rounded-md cover-sm" >
+                            <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-cover mr-2 overflow-hidden rounded-md cover-sm" >
                         <!-- </div> -->
                         
                     </div>
@@ -90,12 +90,15 @@ const props = defineProps({
 
 let uid = props.cardData.user.uid
 let userInfo = {
-    uid: uid,
+    uid: props.cardData.user.uid,
     nickname: props.cardData.user.nickname,
     avatar: props.cardData.user.avatar_128
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
+    // console.log(uid)
+    // console.log(props.cardData);
+    
 }
 const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
@@ -223,22 +226,24 @@ const title = computed(() => {
         #title {
             font-family: PingFangSC-Regular;
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
+            // color: rgba(255, 255, 255, 0.85);
             text-align: left;
             line-height: 22px;
             font-weight: 500;
-            white-space: pre-wrap;
+            white-space: normal;
+            word-break: break-all;
         }
 
         #context {
             font-family: PingFangSC-Regular;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.60);
+            // color: rgba(255, 255, 255, 0.60);
             text-align: left;
             line-height: 22px;
             font-weight: 400;
             white-space: pre-wrap;
             word-wrap: break-word;
+            word-break: break-all;
             // overflow: scroll;
         }
 
