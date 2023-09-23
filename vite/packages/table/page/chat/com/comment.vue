@@ -12,17 +12,17 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed ,onMounted} from 'vue'
+import { ref, computed ,onMounted,onBeforeMount} from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
 import {useCommunityStore} from '../commun'
-onMounted(async ()=>{
-    // props.tid
-    // console.log(props.tid);
-    // console.log(typeof props.reply);
+// onBeforeMount(async ()=>{
+//     // props.tid
+//     // console.log(props.tid);
+//     // console.log(typeof props.reply);
     
-    await store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id)
-})
+//     await store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id)
+// })
 const current = ref(1)
 const changePage=(val)=>{
     current.value=val

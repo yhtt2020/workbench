@@ -8,7 +8,7 @@
                 <span class="xt-text-2 font-16">详情</span>
                 <div class="flex items-center">
                     <Icon class="text-xl xt-text pointer" icon="fluent:more-horizontal-16-filled" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail"/>
+                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail" />
                     <Icon class="ml-3 text-xl xt-text pointer" icon="majesticons:open" @click="goYuan" />
                     <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:cross" @click="closeDetail" />
                 </div>
@@ -48,23 +48,34 @@
                                 <source :src="cardData.data.video" type="video/webm" />
                             </video>
                         </div>
-                        <template v-if="cardData.image">
-                            <ul class="flex flex-col items-center p-0 mb-0">
-                                <img :src="item.image" v-for="(item, index) in cardData.image_170_170"
-                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
-                            </ul>
-                        </template>
                         <!-- 正文元素 -->
-                        <div class="mt-1">
+                        <div class="mb-2">
                             <div>
                                 <div id="title" style="color: var(--primary-text); " v-if="cardData.title"
-                                    :innerHTML="title">
-                                </div>
+                                    :innerHTML="title"></div>
                                 <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;"
                                     :innerHTML="content"></div>
                             </div>
 
                         </div>
+                        <template v-if="cardData.image_170_170">
+                            <!-- <ul class="flex flex-wrap items-center p-0 mb-0 ">
+                                <img :src="item.image" v-for="(item, index) in cardData.image_170_170" @click="showImage"
+                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
+                            </ul> -->
+                            <!-- :options="options" -->
+                            <viewer  :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 ">
+                                <a-row :gutter="[20, 20]"  style="margin-right: 1em" wrap="'true">
+                                    <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in cardData.image_170_170" :span="11" 
+                                        style="">
+                                        <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm" :src="img.image"
+                                            :data-source="cardData.image[index].image" @contextmenu.stop="showMenu(img)"
+                                            style="position: relative object-fit: fill;">
+                                    </a-col>
+                                </a-row>
+                            </viewer>
+                        </template>
+
                     </div>
 
                 </div>
@@ -74,10 +85,8 @@
                     <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                 </div>
                 <!-- 分隔线 -->
-                <!-- <div class="w-full h-[2px] mt-4 xt-bg-2"></div> -->
                 <a-divider class="w-full h-[2px] mt-4 xt-bg-2" />
                 <div class="flex mt-4 mb-4 ">
-                    <!-- :icon="h(SearchOutlined)" -->
                     <!-- {{ isLike }} -->
                     <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
                         <button class="mr-3 reply w-[57px] h-[32px]  pl-5 "
@@ -97,13 +106,16 @@
                 </div>
                 <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
             </div>
-            <a-spin v-else tip="Loading..." size="large" style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
+            <a-spin v-else tip="Loading..." size="large"
+                style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
+
         </div>
+
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onBeforeUpdate } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from './comment.vue';
 import { useCommunityStore } from '../commun'
@@ -155,13 +167,7 @@ const createTime = computed(() => {
     return [date, time]
 })
 // const tid=store.communityPostDetail.pay_set.tid 
-let tid=store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id
-// console.log(store.communityPostDetail);
-// 当tid不存在时，处理
-// if (store.communityPostDetail.pay_set) {
-//     tid = store.communityPostDetail.pay_set.tid
-// }
-
+let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
     refreshDetailFlag.value = false
@@ -180,6 +186,18 @@ const content = computed(() => {
 const title = computed(() => {
     return emojiReplace(props.cardData.title);
 });
+
+const showMenu = (img) => {
+    console.log(img);
+}
+const options = reactive({
+    url: 'data-source',
+})
+// 控制图片画廊的显示
+const vieewerVisible = ref(false)
+const showImage = () => {
+    vieewerVisible.value = !vieewerVisible.value
+}
 </script>
 <style lang='scss' scoped>
 .card {
@@ -244,11 +262,12 @@ const title = computed(() => {
         }
 
         .cover-lm {
-            width: 250px;
-            height: 175px;
+            width: 150px;
+            height: 100px;
             text-align: center;
             // object-fit: cover;
-
+            margin-right: 8px;
+            margin-bottom: 8px;
         }
     }
 
@@ -263,17 +282,23 @@ const title = computed(() => {
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 
     #context {
         font-family: PingFangSC-Regular;
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.60);
+        // color: rgba(255, 255, 255, 0.60); 
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
         white-space: pre-wrap;
         word-wrap: break-word;
+        word-break: break-all;
+        & > p img{
+            width: 100%;
+        }
     }
 
     .card-bottom {

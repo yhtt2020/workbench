@@ -21,7 +21,7 @@
             <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
                     <!-- <div class="w-full"> -->
-                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
                         style="flex-wrap: wrap;">
                         <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
                             @click="addEmoji(item)" :key="index" style="cursor: pointer;">
@@ -30,12 +30,12 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
+                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
                     <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 
                 </button>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 
@@ -207,5 +207,9 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
         font-size: 16px;
         font-family: PingFangSC-Regular;
     }
+}
+:deep(.tippy-box){
+    width: 51%;
+    margin-left: 15%;
 }
 </style>

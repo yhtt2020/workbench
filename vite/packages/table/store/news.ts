@@ -15,6 +15,7 @@ export const newsStore = defineStore("news", {
     async getNewsMsg(tag, num) {
       if(localCache.get(tag)){
         this.newsMsgList = localCache.get(tag)
+        console.log(this.newsMsgList);
       }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
