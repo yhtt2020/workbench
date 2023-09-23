@@ -202,9 +202,6 @@ const refresh = async () => {
     await store.getCommunityPostDetail(Detailtid)
     // refreshDetailFlag.value = true
 }
-// onBeforeUpdate(()=>{
-//     store.getCommunityPostDetail(tid)
-// })
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/

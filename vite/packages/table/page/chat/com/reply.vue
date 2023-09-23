@@ -1,6 +1,7 @@
 <template>
     <div class="flex items-center justify-between w-full">
-        <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32"></a-avatar>
+        <!-- {{ userUid}} -->
+        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(userUid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
         <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
@@ -47,8 +48,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../../../../table/store'
+const userStore=appStore()
 const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
@@ -171,6 +174,24 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
+const userInfo=computed(() => {
+    return userStore.userInfo
+})
+let userUid=userInfo.value.uid
+let Info = {
+    uid:userInfo.uid,
+    nickname: userInfo.nickname,
+    avatar: userInfo.avatar
+}
+const showCard = (userUid, Info) => {
+    userStore.showUserCard(userUid, Info)
+    
+}
+onMounted(async () => {
+    await userStore.getUserInfo()
+    console.log(userStore.userInfo);
+    
+})
 </script>
 <style lang='scss' scoped>
 :deep(.ant-upload.ant-upload-select-picture-card) {
