@@ -31,8 +31,8 @@ export const communityStore = defineStore('community',{
    // 获取我的社群
    async getMyCommunity(){
     const res = await post(getMyCommunity,{})
-    if(res.data && res.data.list){
-      const deduplicateData = _.filter(res.data.list,function(item){ 
+    if(res !== null &&  res.data && res.data.list){
+      const deduplicateData = res.data.list.filter((item:any) => { 
         return item.hasOwnProperty('communityInfo')
       })
       this.communityList = deduplicateData
