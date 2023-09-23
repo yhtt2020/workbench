@@ -9,6 +9,9 @@ const threadList=sUrl('/app/com/forum/getThreadList')
 const detail=sUrl('/app/com/thread/getDetail')
 const replyList=sUrl('/app/com/thread/getReplyList')
 const upload=sUrl('/app/upload')
+const doSupport=sUrl('/app/com/doSupport')
+const collect=sUrl('/app/com/collect')
+const cancelCollect=sUrl('/app/com/cancelCollect')
 export const useCommunityStore = defineStore('community',{
     state:()=>({
         communityInfo:[],
@@ -16,6 +19,9 @@ export const useCommunityStore = defineStore('community',{
         communityPost:[],
         communityPostDetail:[],
         communityReply:[],
+        communitySupport:[],
+        communityCollect:[],
+        communityCancelCollect:[],
     }),
     actions:{
         // 根据板块id来获取板块信息
@@ -110,6 +116,36 @@ export const useCommunityStore = defineStore('community',{
             let res=await post(upload,{
                 file:file
             })
+        },
+        // 点赞帖子
+        async getCommunityLike(model,id){
+            let res=await post(doSupport,{
+                model:model,
+                row:id
+            })
+            console.log(res,'doSupport');
+            
+        },
+        // 收藏帖子
+        async getCommunityCollect(id){
+            let res=await post(collect,{
+                tid:id
+            })
+            console.log(res.data,'collect');
+            if(res.code==200){
+                this.communityCollect=res.data
+            }
+            
+        },
+        // 
+        async getCommunityCancelCollect(id){
+            let res=await post(cancelCollect,{
+                tid:id
+            })
+            console.log(res.data,'cancelCollect');
+            if(res.code===200){
+                this.communityCancelCollect=res.data
+            }
         }
 
 
