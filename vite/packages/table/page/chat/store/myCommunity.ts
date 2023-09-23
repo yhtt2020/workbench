@@ -24,12 +24,15 @@ export const myCommunityStore = defineStore('myCommunity',{
    async createCommunity(option: any) {
     return await post(createCommunity, option);
    },
-   
+
    // 获取我的社群
    async getMyCommunity(){
     const res = await post(getMyCommunity,{})
+     if(!res){
+       return
+     }
     const list = res.data.list
-    const index = _.filter(list,function(o:any){ 
+    const index = _.filter(list,function(o:any){
       if('communityInfo' in o){
         return o
       }
