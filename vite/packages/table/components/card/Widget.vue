@@ -92,7 +92,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel},
+  components: {HorizontalPanel,BottomEdit},
 
   name: "Widget",
 
@@ -285,7 +285,7 @@ export default {
 }
 
 
-  .right-icon svg{
+  .cardTitle .right-icon svg{
     position: relative;
     left: -10px;
     top: 3px;

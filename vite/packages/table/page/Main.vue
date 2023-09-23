@@ -29,7 +29,9 @@
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;"
       >
         <!--主题区域，自动滚动条        -->
+        <keep-alive>
         <router-view></router-view>
+        </keep-alive>
         <!-- 删除区域 -->
         <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
       </div>

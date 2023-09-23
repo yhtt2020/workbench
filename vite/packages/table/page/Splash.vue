@@ -33,7 +33,16 @@
 
           </div>
           <div class="mb-10 xt-text-2">如遇网络问题，请检查系统代理或耐心等待。</div>
-          <a-button size="large" block type="primary" @click="login">登录/注册账号</a-button>
+          <a-row :gutter="10" class="w-full">
+            <a-col flex="1" >
+              <xt-button size="mini" style="width: 100%"  type="theme" @click="login">登录/注册账号</xt-button>
+            </a-col>
+            <a-col flex="150px" v-if="netError">
+              <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
+            </a-col>
+          </a-row>
+
+
         </p>
         <div class="text-center" v-else>
           <div class="mb-3 mt-3  inline-block">
@@ -82,6 +91,7 @@ export default {
     return {
       showTip: false,
       loading: false,
+      netError:false,
       code: '',
       launching: true,
       storeReadyTimer: null,
@@ -182,6 +192,13 @@ export default {
     bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
+        console.error(args,'参数')
+        if(args.data.uid===-2){
+          this.netError=true
+          message.error({
+            content:'网络错误，请重试',key:'net'
+          })
+        }
         this.tipped = false
         this.loading = false
         if (args.data.uid <= 0) {

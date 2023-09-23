@@ -1,5 +1,5 @@
 <template>
-  <div class="relative no-drag" ref="boxRef" :style="{ width: w, height: h }">
+  <div class="relative no-drag" ref="boxRef" :style="{ width: w, height: h }" style="margin-top: 2px;">
     <slot></slot>
     <svg
       @mousedown.stop

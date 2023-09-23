@@ -1,60 +1,69 @@
 <template>
-  <div class="xt-text flex h-full" style="box-sizing: border-box; " :class="[typeClass]">
+  <div
+    class="xt-text flex h-full"
+    style="box-sizing: border-box"
+    :class="[typeClass]"
+  >
     <!-- 左侧区域开始 -->
-    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px">
+    <div
+      class="flex flex-col items-center h-full xt-br mr-3"
+      style="width: 72px; min-width: 72px"
+    >
       <!-- 头部 -->
       <div>
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(0, last)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content v-if="item.float">
-              <slot :name="item.float"> </slot>
-            </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mb-2">
-              <Full v-if="item.full"></Full>
-              <Item :item="item" v-else>
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-        </Menu>
+        <Float
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(0, last)"
+          :data="item"
+        >
+          <Box :item="item" :id="currentIndex" class="mb-2">
+            <Item :item="item">
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
       <!-- 中间 -->
-      <div class="xt-scrollbar xt-container  xt-bt flex flex-col items-center flex-1">
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(last, -1 * end)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right" :arrow="false" >
-            <template #content v-if="item.float">
-              <slot :name="item.float"> </slot>
-            </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
-              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-              <Item v-else :item="item" w="40">
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-        </Menu>
+      <div
+        class="xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1"
+      >
+        <Float
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(last, -1 * end)"
+          :data="item"
+        >
+          <Box :item="item" :id="currentIndex" class="mt-2">
+            <Item :item="item" w="40">
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
       <!-- 底部 -->
       <div>
-        <Menu @itemClick="itemClick" :list="item.children" v-for="item in newList.slice(-1 * end)">
-          <tippy trigger="mouseenter" :interactive="true" placement="right">
-            <template #content v-if="item.float">
-              <slot :name="item.float"> </slot>
-            </template>
-            <Box @itemClick="itemClick" :item="item" @selectClick="selectClick" :id="currentIndex" class="mt-2">
-              <Full v-if="item.full" v-model:full="isFull" type=""></Full>
-              <Item :item="item" type="" v-else>
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
-          </tippy>
-        </Menu>
+        <Float
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in newList.slice(-1 * end)"
+          :data="item"
+        >
+          <Box :item="item" :id="currentIndex" class="mt-2">
+            <Item :item="item" type="">
+              <template #[item.slot]>
+                <slot :name="item.slot"></slot>
+              </template>
+            </Item>
+          </Box>
+          <template #content> <slot :name="item.float"> </slot> </template>
+        </Float>
       </div>
     </div>
     <!-- 左侧区域结束 -->
@@ -67,9 +76,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import Menu from "./Menu.vue";
-import Full from "./Full.vue";
+import { ref, computed, watch } from "vue";
+import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
 import { nanoid } from "nanoid";
@@ -89,6 +97,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
+  tabVariables:undefined,
   modelValue: {},
   index: { default: false },
   list: {
@@ -130,9 +139,11 @@ const typeClass = computed(() => {
 });
 // 动态添加ID
 const newList = computed(() => {
+  let index = -1;
   let res = props.list.map((item) => {
     if (item.full) full.value = true;
-    let id = item.id ?? nanoid();
+    // let id = item.id ?? nanoid(4);
+    let id = item.id ?? ++index;
     return {
       id,
       ...item,
@@ -159,16 +170,16 @@ const selectClick = (id, flag) => {
 
 // 点击事件
 const itemClick = (item) => {
-  if (item.full) {
+  if (item?.full) {
     isFull.value = !isFull.value;
+    return;
+  } else if (item?.children) {
     return;
   }
   selectClick(item.id, item.flag);
-  if (item.children) return;
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

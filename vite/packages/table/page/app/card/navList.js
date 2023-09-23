@@ -708,6 +708,20 @@ export const NavList = [
         ],
         time: "2023/5/31",
       },
+      {
+        name: 'historyInfo',
+        cname: '历史上的今天',
+        detail: '历史上的今天都发生了什么大事呢？',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'historyInfo',
+            size: '2x2',
+            zoom: '40'
+          },
+        ],
+        time: '2023/9/9'
+      },  
 
     ],
   },
@@ -810,7 +824,7 @@ export const NavList = [
       },
       {
         name: 'historyInfo',
-        cname: '历史上的今天(开发中)',
+        cname: '历史上的今天',
         detail: '历史上的今天都发生了什么大事呢？',
         sizes: ['2x2'],
         option: [

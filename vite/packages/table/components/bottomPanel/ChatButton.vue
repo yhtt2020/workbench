@@ -18,7 +18,7 @@ export default defineComponent({
   },
   methods: {
     enterIM() {
-      this.$router.push({name: 'chatMain'})
+      this.$router.push({name: 'chat'})
     },
   }
 })
