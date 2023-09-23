@@ -230,6 +230,7 @@ export interface IReply {
   toReplyUid: string;
 }
 
+// @ts-ignore
 export const useCommunityStore = defineStore('forumStore',{
     state:()=>({
         communityInfo:[],
@@ -298,7 +299,8 @@ export const useCommunityStore = defineStore('forumStore',{
             if(localCache.get(`communityPostDetail_${id}`)){
                 this.communityPostDetail=localCache.get(`communityPostDetail_${id}`)
             }
-            let res=await post(detail,{
+            // @ts-ignore
+          let res=await post(detail,{
                 tid:id
             })
             // console.log('datail', res);
