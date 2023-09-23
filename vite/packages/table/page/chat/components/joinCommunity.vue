@@ -73,7 +73,7 @@
 <script>
 import { defineComponent, onMounted, reactive, toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
-import { myCommunityStore } from '../store/myCommunity'
+import { communityStore } from '../store/communityChannel'
 import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
 
@@ -84,7 +84,7 @@ export default defineComponent({
  },
  setup (props,ctx) {
 
-  const myCom = myCommunityStore()
+  const myCom = communityStore()
 
   const data = reactive({
     settingsScroller: {
@@ -132,7 +132,7 @@ export default defineComponent({
 
   // 判断是否已经加入社群
   const isJoin = (item) =>{
-    const index = _.find(myCom.myCommunityList,function(o){ return o.id === item.id })
+    const index = _.find(myCom.communityList,function(o){ return o.id === item.id })
     if(index !== undefined){
       console.log('排查问题::>>',index)
       return index.communityInfo.status === 1
