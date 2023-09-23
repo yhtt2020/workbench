@@ -99,21 +99,23 @@
     }
     
 
-    /* // 滚动条 */
-    .ant-transfer-list-content::-webkit-scrollbar-track {
-      background-color: #f1f1f1 !important;
-    }
 
-    :deep(.ant-transfer-list-content){
-        flex: 1 1 0%;
-        overflow: hidden;
-        overflow-y: auto;
+
+    /* // 滚动条 */
+    .box-body::-webkit-scrollbar-track {
+      background: rgba(72, 72, 72, 0.85);
     }
-    :deep(.ant-transfer-list-content::-webkit-scrollbar){
-        width: 5px;
+    
+    .box-body{
+      flex: 1 1 0%;
+      overflow: hidden;
+      overflow-y: auto;
     }
-    :deep(.ant-transfer-list-content::-webkit-scrollbar-thumb){
-        background: #aaa;
+    .box-body::-webkit-scrollbar{
+      width: 3px;
+    }
+    .box-body::-webkit-scrollbar-thumb{
+      background-color: #f1f1f1 !important;
         border-radius: 3px;
     }
 

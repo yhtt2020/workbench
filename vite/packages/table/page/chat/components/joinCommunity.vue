@@ -73,7 +73,7 @@
 <script>
 import { defineComponent, onMounted, reactive, toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
-import {  communityStore } from '../store/communityChannel'
+import { myCommunityStore } from '../store/myCommunity'
 import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
 
@@ -84,7 +84,7 @@ export default defineComponent({
  },
  setup (props,ctx) {
 
-  const myCom = communityStore()
+  const myCom = myCommunityStore()
 
   const data = reactive({
     settingsScroller: {

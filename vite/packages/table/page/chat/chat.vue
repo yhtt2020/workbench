@@ -87,9 +87,9 @@ import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
-import { communityStore } from './store/communityChannel'
+import { myCommunityStore } from './store/myCommunity'
 import { localCache } from '../../js/axios/serverCache'
-import MyCommunity from './page/communityDetail.vue'
+import MyCommunity from './page/myCommunity.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
 
@@ -110,7 +110,7 @@ export default {
   },
 
   setup () {
-    const myCom = communityStore()
+    const myCom = myCommunityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
@@ -165,24 +165,24 @@ export default {
     const appS = appStore()
 
     const { userInfo } = appS
-    const { communityList } = myCom
+    const { myCommunityList } = myCom
 
     const menuCommunityList = []
     // 遍历将社群进行UI层数据替换
-    for (let i = 0; i < communityList.length; i++) {
-      if (communityList[i].communityInfo) {
+    for (let i = 0; i < myCommunityList.length; i++) {
+      if (myCommunityList[i].communityInfo) {
         const item = {
-          name: communityList[i].communityInfo.name,
-          img: communityList[i].communityInfo.icon,
-          type: `community${communityList[i].cno}`,
+          name: myCommunityList[i].communityInfo.name,
+          img: myCommunityList[i].communityInfo.icon,
+          type: `community${myCommunityList[i].cno}`,
           // float: 'communityFloat',
-          tab:'community_'+ communityList[i].communityInfo.no,
+          tab:'community_'+ myCommunityList[i].communityInfo.no,
           noBg: true,
           callBack:(item)=>{
             selectTab(item)
-            data.communityNo= communityList[i].communityInfo.no
+            data.communityNo=myCommunityList[i].communityInfo.no
           } ,
-          route:{ name:'myCommunity',params:{no:communityList[i].communityInfo.no}},
+          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
         }
         menuCommunityList.push(item)
       } else {
@@ -201,9 +201,10 @@ export default {
     })
 
     // 判断是否展开悬浮模式
-    const isFloat = () =>{
-      return chat.settings.enableHide
-    };
+    const isFloat = computed(()=>{
+     console.log('排查问题', chat.settings.enableHide)
+     return chat.settings.enableHide
+    });
 
     const chatLeftList = ref([
       {
@@ -234,8 +235,7 @@ export default {
           callBack: selectTab,
           route: {
             name: 'chatAdmin',
-            params:{no:'',}
-            // info:JSON.stringify('')
+            params:{no:'',info:JSON.stringify('')}
           }
         }
       ] : []),
@@ -255,7 +255,7 @@ export default {
         icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float: isFloat  ? "communityFloat" : "" ,
+        float: isFloat === false ? '' : 'communityFloat',
         noBg: true,
         callBack: (item)=>{
           selectTab(item)

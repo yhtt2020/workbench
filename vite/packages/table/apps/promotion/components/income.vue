@@ -5,7 +5,9 @@
           <div class="box-list" v-for="(item,index) in incomeList.data" :key="index">
               <div class="list-title">{{ item.title }}</div>
               <div class="list-content">{{ item.content }}</div>
-              <div class="list-num">{{ item.num }}元</div>
+              <div class="list-num">{{ item.num }}元
+                <!-- <button class="xt-btn list-btn" style="width:80px;height:40px;">提现</button> -->
+              </div>
           </div>
       </div>
       <div class="flex-box">
@@ -17,14 +19,24 @@
               <a-select-option value="取消">取消</a-select-option>
             </a-select>
           </div>
-
-          <a-table :dataSource="detailList.data" :columns="detailCol" class="table-box">
+          <a-table 
+          :dataSource="detailList.data" 
+          :pagination="{ pageSize: 5 }"
+          :columns="detailCol" class="table-box">
             <a-table-column key="tags" title="Tags" data-index="tags">
               <template #default="{ text: tags }">
               </template>
             </a-table-column>
           </a-table>
+          <a-modal :visible="visible"
+            width="600px" 
+            height="500px"
+            centered
+            :closable="false"
+            :footer="null">
 
+                
+          </a-modal>
 
       </div>
 
@@ -49,6 +61,7 @@
     },
     data(){
       return {
+        visible:false,
         incomeList:{
           title:"我的钱包",
           data:[
@@ -77,6 +90,46 @@
               Alipay:"12354156",
               state:"完成",
               remark:"-"
+            },
+            {
+              time:"2018-08-03 18:13",
+              amount:"100.0",
+              commission:"0.5",
+              Alipay:"12354156",
+              state:"取消",
+              remark:"账号错误"
+            },
+            {
+              time:"2018-08-03 18:13",
+              amount:"100.0",
+              commission:"0.5",
+              Alipay:"12354156",
+              state:"取消",
+              remark:"账号错误"
+            },
+            {
+              time:"2018-08-03 18:13",
+              amount:"100.0",
+              commission:"0.5",
+              Alipay:"12354156",
+              state:"取消",
+              remark:"账号错误"
+            },
+            {
+              time:"2018-08-03 18:13",
+              amount:"100.0",
+              commission:"0.5",
+              Alipay:"12354156",
+              state:"取消",
+              remark:"账号错误"
+            },
+            {
+              time:"2018-08-03 18:13",
+              amount:"100.0",
+              commission:"0.5",
+              Alipay:"12354156",
+              state:"取消",
+              remark:"账号错误"
             },
             {
               time:"2018-08-03 18:13",
@@ -217,6 +270,14 @@
       margin-top: 16px;
       font-size: 24px;
       color: rgba(255,255,255,0.85);
+    }
+
+    .list-num .list-btn{
+      width: 80px;
+      height: 40px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      border-radius: 10px;
     }
 
     .table-box{

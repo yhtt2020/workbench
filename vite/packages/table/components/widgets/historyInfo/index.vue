@@ -5,14 +5,14 @@
         </div>
         <div class="box-flex">
             <div>
-                {{this.history.date}} 
-                <br/> 
+                {{this.history.date}}
+                <br/>
                 {{ this.history.title }}
             </div>
         </div>
     </Widget>
 </template>
-  
+
 <script>
 import { CalendarOutlined, } from '@ant-design/icons-vue';
 import Widget from "../../card/Widget.vue";
@@ -71,7 +71,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .icon{
         width: 20px;
@@ -80,7 +80,7 @@ export default {
         top: -21px;
         left: 0;
     }
-    
+
     :deep(.anticon svg){
       width: 18px !important;
       height: 18px !important;
@@ -107,10 +107,9 @@ export default {
         white-space: pre-wrap;
     }
 
-    
+
     @font-face {
         font-family: "优设标题黑";
-        src: url(../../../../../public/优设标题黑.ttf);
+        src: url(font/优设标题黑.ttf);
     }
 </style>
-  
