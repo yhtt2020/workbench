@@ -1,6 +1,6 @@
 <template>
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
-        <div class="icon">
+        <div class="icon" @click="onHistoryMessage">
             <CalendarOutlined style="width:20px;height:20px;" />
         </div>
         <div class="box-flex">
@@ -62,8 +62,10 @@ export default {
         await this.onHistoryMessage()
     },
     methods:{
+        
         // 获取今天所发生的的事情
         async onHistoryMessage(){
+            console.log("开始加载了")
             let getData = await getHistoryInfo("/app/juhe/get");
             this.history = getData;
         },
