@@ -13,8 +13,9 @@ export const newsStore = defineStore("news", {
   actions: {
 
     async getNewsMsg(tag, num) {
-      if(localCache.get(tag)){
-        this.newsMsgList = localCache.get(tag)
+      let newsMsgListCache = localCache.get(`newsMsgList-${tag}`)
+      if(newsMsgListCache){
+        this.newsMsgList = newsMsgListCache
         console.log(this.newsMsgList);
       }
       let response = await get(juheGet, {
@@ -37,7 +38,7 @@ export const newsStore = defineStore("news", {
         }else{
           this.newsMsgList = response.data.result.data
         }
-        localCache.set(tag,this.newsMsgList,300)
+        localCache.set(`newsMsgList-${tag}`,this.newsMsgList,300)
       }
       else{
         return false

@@ -35,7 +35,7 @@
                 <div class="flex items-center justify-center ">
                     <div class="flex " @click="clickLike" :class="{ 'xt-theme-text': isLike }">
                         <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />
-                        <div class="mr-4 text-center font-14 xt-text-2">{{ commentList.support_count }} 点赞</div>
+                        <div class="mr-4 text-center font-14 xt-text-2">{{ supportCount }} 点赞</div>
                     </div>
                     <div class="flex" @click="replyStatus">
                         <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
@@ -85,11 +85,21 @@ import replyComments from './replyComments.vue'
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 import { Icon } from '@iconify/vue'
+import { message } from "ant-design-vue";
+import {useCommunityStore} from '../commun'
+const store = useCommunityStore()
 const useUserStore = appStore()
-const options = reactive({
-    url: 'data-source'
+// 接收评论列表
+const props = defineProps({
+    commentList: {
+        type: Object,
+        default: () => []
+    },
+    uid: Number
 })
-const isLike = ref(false)
+const isLike = computed(() => {
+    return props.commentList.is_support
+})
 const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.commentList.comment
@@ -103,21 +113,17 @@ const content = computed(() => {
 });
 
 // 点赞
-const clickLike = () => {
-    isLike.value = !isLike.value
+const clickLike =async () => {
+    await store.getCommunityLike('reply',props.commentList.user.uid)
+    message.success(store.communitySupport.info)
 }
+// 点赞数
+const supportCount=ref(props.commentList.support_count)
 // 回复评论框状态改变
 const replyStatus = () => {
     replyVisible.value = !replyVisible.value
 }
-// 接收评论列表
-const props = defineProps({
-    commentList: {
-        type: Object,
-        default: () => []
-    },
-    uid: Number
-})
+
 let uid = props.commentList.user.uid
 let userInfo = {
     uid: uid,
@@ -126,14 +132,12 @@ let userInfo = {
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
-    // console.log(content);
 
 }
 // 接收回复框的状态
 const getReplyFlag = (val) => {
     // console.log(val);
     replyVisible.value = val
-
 }
 // 接收回复框的内容
 const getReplyText = (val) => {

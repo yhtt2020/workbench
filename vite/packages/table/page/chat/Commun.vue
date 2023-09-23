@@ -45,7 +45,7 @@
         <!-- </div> -->
 
       </div>
-      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
+      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" :forumId="props.forumId" />
 
     </div>
     <!-- {{ store.communityPost.count }} -->

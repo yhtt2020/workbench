@@ -107,7 +107,7 @@
                 <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
             </div>
             <a-spin v-else tip="Loading..." size="large"
-                style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
+                style="margin-top: 45%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
 
         </div>
 
@@ -155,8 +155,8 @@ const clickLike =async () => {
     let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
     // let thread = thread
     await store.getCommunityLike("thread" ,tid)
-    message.info(store.communitySupport.info)
-    refreshDetail()
+    message.success(store.communitySupport.info)
+    refresh()
 }
 const isCollect = computed(() => {
     return store.communityPostDetail.is_collect
@@ -167,12 +167,12 @@ const clickCollect = async () => {
     // isCollect.value = !isCollect.value
     if (store.communityPostDetail.is_collect == 0) {
         await store.getCommunityCollect(tid)
-        message.info(store.communityCollect.info)
-        refreshDetail()
+        message.success(store.communityCollect.info)
+        refresh()
     } else {
         await store.getCommunityCancelCollect(tid)
-        message.info(store.communityCancelCollect.info)
-        refreshDetail()
+        message.success(store.communityCancelCollect.info)
+        refresh()
     }
 
 }
@@ -191,9 +191,16 @@ const createTime = computed(() => {
 let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
+    let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
     refreshDetailFlag.value = false
-    await store.getCommunityPostDetail(tid)
+    await store.getCommunityPostDetail(Detailtid)
     refreshDetailFlag.value = true
+}
+const refresh = async () => {
+    let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
+    // refreshDetailFlag.value = false
+    await store.getCommunityPostDetail(Detailtid)
+    // refreshDetailFlag.value = true
 }
 // onBeforeUpdate(()=>{
 //     store.getCommunityPostDetail(tid)

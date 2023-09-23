@@ -23,7 +23,7 @@
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 @preview="handlePreview">
                                 <div v-if="fileList.length < 6">
-                                    <plus-outlined style="font-size: 1em;" />
+                                    <plus-outlined style="font-size: 1.2em; " class="xt-text" />
                                 </div>
                             </a-upload>
                         </div>
@@ -68,7 +68,7 @@
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
                         @click="handleOk">取消</a-button>
-                    <a-button type="primary" class="ml-2 xt-text"
+                    <a-button type="primary" class="ml-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
                 </div>
             </div>
@@ -85,13 +85,14 @@ import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
 const imageLoadVisible=ref(true)
 const goYuan = () => {
-    browser.openInUserSelect('https://s.apps.vip/')
+    browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
 // const userName = ref('我是皮克斯呀')
 const replyValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
+    forumId: Number
 })
 // 添加表情
 const addEmoji = (item) => {
@@ -243,6 +244,7 @@ const handleOk = (e: MouseEvent) => {
         font-weight: 400;
         font-size: 16px;
         font-family: PingFangSC-Regular;
+        color: var(--secondary-text);
     }
 }
 :deep(.tippy-box){

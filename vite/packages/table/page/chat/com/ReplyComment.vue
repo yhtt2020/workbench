@@ -77,13 +77,16 @@ import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 import {Icon} from '@iconify/vue'
+import {message} from 'ant-design-vue'
 import {useCommunityStore} from '../commun'
 const store=useCommunityStore()
 const useUserStore = appStore()
 const options=reactive({
     url:'data-source'
 })
-const isLike = ref(false)
+const isLike = computed(() => {
+    return props.replyCom.is_support
+})
 const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.replyCom.comment
@@ -105,8 +108,10 @@ let userInfo = {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
-const clickLike = () => {
-    isLike.value = !isLike.value
+const clickLike =async () => {
+    // isLike.value = !isLike.value
+    await store.getCommunityLike('reply',props.replyCom.user.uid)
+    message.success(store.communitySupport.info)
 }
 const replyStatus = () => {
     replyVisible.value = !replyVisible.value
