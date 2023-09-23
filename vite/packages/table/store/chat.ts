@@ -9,7 +9,7 @@ const getUserSigUrl = sUrl('/app/chat/getUserSig')
 import {appStore} from "../store";
 import * as sns from "../js/common/sns";
 import _ from "lodash-es";
-import { communityStore } from '../page/chat/store/communityChannel'
+import { communityStore } from '../page/chat/store/communityStore'
 
 // @ts-ignore
 export const chatStore = defineStore('chatStore',{
@@ -34,7 +34,7 @@ export const chatStore = defineStore('chatStore',{
 
     //是否在加载中
     isLoading: false,
-    
+
     //推荐数据
     recommendData: {
       users: [],
@@ -42,7 +42,7 @@ export const chatStore = defineStore('chatStore',{
     },
 
     // 存储上一次会话记录
-    conversations: {  
+    conversations: {
       conversationID: undefined,
     },
 
@@ -50,9 +50,9 @@ export const chatStore = defineStore('chatStore',{
     settings:{
       showDouble: false,  // 是否展示社群双列
       enableHide:false, // 隐藏边栏
-    },   
-    
-    
+    },
+
+
     //通讯录数据存储
     contactsSet:{
       groupNum:0,
@@ -126,16 +126,16 @@ export const chatStore = defineStore('chatStore',{
       for (let i = 0; i < this.group.length; i++){
         try {
           const option = this.group[i].groupID
-          
+
           // console.log('排查配置项',option);
 
           const result = await (window as any).$chat.searchGroupByID(option)
-          
+
           // console.log('排查结果',result);
 
           const group = {...result.data.group, relationShip: ''}
           groups.push(group)
-          
+
         } catch (error) {
           console.warn(this.group[i].groupID, error)
         }
@@ -234,7 +234,7 @@ export const chatStore = defineStore('chatStore',{
           //   users: [],
           //   groups: []
           // }
-          
+
           console.warn('获取数据失败,返回undefined', result);
           this.isLoading = this.recommendData.users.length === 0
           this.loadRecommendData()
@@ -255,12 +255,12 @@ export const chatStore = defineStore('chatStore',{
       this.settings.enableHide = localCache.get('float')
     },
 
-   
+
     updateNum(option:any){
       this.contactsSet = option
     },
 
-    
+
 
 
   },

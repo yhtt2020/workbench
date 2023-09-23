@@ -230,7 +230,7 @@ export interface IReply {
   toReplyUid: string;
 }
 
-export const useCommunityStore = defineStore('community',{
+export const useCommunityStore = defineStore('forumStore',{
     state:()=>({
         communityInfo:[],
         communityCate:[],

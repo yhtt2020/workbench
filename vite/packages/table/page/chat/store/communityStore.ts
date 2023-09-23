@@ -1,9 +1,7 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import dbStorage from "../../../store/dbStorage";
-import { sUrl } from "../../../consts";
-import { post, postMock } from "../../../js/axios/request";
-import { serverCache, localCache } from "../../../js/axios/serverCache";
-import _ from 'lodash-es'
+import {sUrl} from "../../../consts";
+import {post} from "../../../js/axios/request";
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -16,7 +14,7 @@ const createChannels = sUrl("/app/community/channel/create") // 创建社群频�
 
 
 // @ts-ignore
-export const communityStore = defineStore('community',{
+export const communityStore = defineStore('communityStore',{
   state: () => ({
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
@@ -30,13 +28,11 @@ export const communityStore = defineStore('community',{
 
    // 获取我的社群
    async getMyCommunity(){
-    const res = await post(getMyCommunity,{})
-     res=undefined
+    let res = await post(getMyCommunity,{})
     if(res?.data?.list){
-      const deduplicateData = res.data.list.filter((item:any) => {
+      this.communityList = res.data.list.filter((item: any) => {
         return item.hasOwnProperty('communityInfo')
       })
-      this.communityList = deduplicateData
     }
    },
 

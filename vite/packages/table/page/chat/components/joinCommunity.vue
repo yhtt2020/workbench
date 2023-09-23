@@ -73,7 +73,7 @@
 <script>
 import { defineComponent, onMounted, reactive, toRefs,computed } from 'vue'
 import { CloseOutlined,SearchOutlined } from '@ant-design/icons-vue'
-import { communityStore } from '../store/communityChannel'
+import { communityStore } from '../store/communityStore'
 import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
 
@@ -96,14 +96,14 @@ export default defineComponent({
     },
     list:myCom.$state.recommendCommunityList,
     searchId:'',
-    searchResult:[], 
+    searchResult:[],
   })
 
 
   // 关闭加入弹窗
   const closeJoinCom = () =>{
     ctx.emit('close')
-  }  
+  }
 
   // 搜索社群
   const searchCommunity = (evt) =>{
@@ -140,7 +140,7 @@ export default defineComponent({
   }
 
 
-  
+
   return {
     isJoin,closeJoinCom,...toRefs(data),searchCommunity,nowJoin
   }
@@ -201,6 +201,6 @@ export default defineComponent({
 .font-12-400{
   font-family: PingFangSC-Regular;
   font-size: 12px;
-  font-weight: 400; 
+  font-weight: 400;
 }
 </style>

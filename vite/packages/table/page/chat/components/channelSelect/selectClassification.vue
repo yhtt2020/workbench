@@ -1,5 +1,5 @@
 <template>
- <div class="flex flex-col my-3" style="width:500px;"> 
+ <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backButton">
     <LeftOutlined style="font-size: 1.25em;" />
@@ -19,11 +19,11 @@
      <PlusOutlined style="font-size: 1.25em;"/>
      <span class="font-16-400 ml-2" style="color:var(--primary-text);">添加新分组</span>
     </div>
-    
+
     <div class="flex flex-col" id="classSortTab">
       <div v-for="(item,index) in list" class="flex pointer  rounded-lg items-center px-5 mb-4"
        style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
-       @click.stop="listClick(item,index)" :key="index" 
+       @click.stop="listClick(item,index)" :key="index"
       >
 
       <template v-if="isEditing && editIndex === index">
@@ -42,7 +42,7 @@
           <div class="flex">
            <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click.stop="edit(index)"></ClassIcon>
            <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted"></ClassIcon>
-          </div> 
+          </div>
         </div>
       </template>
 
@@ -58,15 +58,15 @@
               <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click="exitEdit"></ClassIcon>
             </div>
           </div>
-         
+
           <div class="flex w-full justify-between" v-else>
             <span>{{ item.name }}</span>
             <div class="flex">
              <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click="edit"></ClassIcon>
              <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click="deleted"></ClassIcon>
-            </div> 
+            </div>
           </div>
-          
+
         </template>
         <template v-else>
           <div>{{ item.name }}</div>
@@ -91,7 +91,7 @@ import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import { classMock } from '../../data/selectClassMock'
 import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
-import { communityStore } from '../../store/communityChannel'
+import { communityStore } from '../../store/communityStore'
 import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
 
@@ -151,7 +151,7 @@ export default defineComponent({
       data.classItem = item
     }
   }
-  
+
   // 触发编辑
   const edit = (index) =>{
     data.isEditing = true
@@ -175,9 +175,9 @@ export default defineComponent({
 
   // 添加新分类
   const addClassItem = () =>{
-    
+
   }
-  
+
   // 保存编辑数据
   const save = () =>{
     data.isEditing = false
@@ -242,7 +242,7 @@ export default defineComponent({
       }
 
     }
-    
+
   }
 
   onMounted(()=>{

@@ -21,7 +21,7 @@
         <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3" style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
           <component :is="item.icon"></component>
           <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
-        </div> 
+        </div>
       </div>
     </template>
 
@@ -60,7 +60,7 @@
  import { showDropList } from '../../../js/data/chatList'
  import { Icon as CommunityIcon } from '@iconify/vue'
  import { UserAddOutlined,PlusOutlined,MenuUnfoldOutlined } from '@ant-design/icons-vue'
- import { communityStore } from '../store/communityChannel'
+ import { communityStore } from '../store/communityStore'
  import _ from 'lodash-es'
 
  import ChatDropDown from '../components/chatDropDown.vue'
@@ -68,7 +68,7 @@
  import CreateNewChannel from '../components/createNewChannel.vue'
  import CreateNewGroup from '../components/createNewGroup.vue'
  import ChatFold from '../components/chatFold.vue'
- 
+
 
  export default defineComponent({
   components:{
@@ -106,7 +106,7 @@
      data.type = item.type
      data.addShow = true
    }
- 
+
    watchEffect(()=>{
     data.routeData = { no:route.params.no }
     if(route.params.no !== ''){
@@ -122,7 +122,7 @@
         communityNo:route.params.no,
         cache:1,
       }
-      
+
       myCom.getTreeChannelList(option).then(res=>{
         if(res.data && res.data.treeList){
 
@@ -135,7 +135,7 @@
         }
       })
 
-      
+
     }
    })
 
