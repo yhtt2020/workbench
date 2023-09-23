@@ -110,7 +110,7 @@ export default {
     
     @font-face {
         font-family: "优设标题黑";
-        src: url(../../../../../public/优设标题黑.ttf);
+        src: url(../../../../../public/font/优设标题黑.ttf);
     }
 </style>
   
