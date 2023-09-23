@@ -26,8 +26,9 @@ export const useCommunityStore = defineStore('community',{
     actions:{
         // 根据板块id来获取板块信息
         async getCommunityInfo(id){
-            if(localCache.get(`communityInfo_${id}`)){
-                this.communityInfo=localCache.get(`communityInfo_${id}`)
+            let communityInfoCache=localCache.get(`communityInfo_${id}`)
+            if(communityInfoCache){
+                this.communityInfo=communityInfoCache
             }
             let res=await post(community,{
                 fid:id
@@ -124,6 +125,9 @@ export const useCommunityStore = defineStore('community',{
                 row:id
             })
             console.log(res,'doSupport');
+            if(res.code===200){
+                this.communitySupport=res.data
+            }
             
         },
         // 收藏帖子

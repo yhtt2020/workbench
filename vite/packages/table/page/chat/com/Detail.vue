@@ -150,16 +150,18 @@ const isLike = computed(() => {
     return store.communityPostDetail.is_support
 })
 // 
-const clickLike = () => {
+const clickLike =async () => {
     // isLike.value = !isLike.value
     let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
-    let uid = store.communityPostDetail.author_uid
-    store.getCommunityLike(tid, uid)
+    // let thread = thread
+    await store.getCommunityLike("thread" ,tid)
+    message.info(store.communitySupport.info)
+    refreshDetail()
 }
 const isCollect = computed(() => {
     return store.communityPostDetail.is_collect
 })
-// 
+// 收藏
 const clickCollect = async () => {
     let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
     // isCollect.value = !isCollect.value
