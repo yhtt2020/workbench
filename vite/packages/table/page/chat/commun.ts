@@ -12,6 +12,7 @@ const upload=sUrl('/app/upload')
 const doSupport=sUrl('/app/com/doSupport')
 const collect=sUrl('/app/com/collect')
 const cancelCollect=sUrl('/app/com/cancelCollect')
+const threadReply=sUrl('/app/com/thread/reply')
 declare interface IThread {
     /**
      * 1进入人工审核0系统自动审核
@@ -375,8 +376,17 @@ export const useCommunityStore = defineStore('community',{
             if(res.code===200){
                 this.communityCancelCollect=res.data
             }
+        },
+        // 发布评论和回复评论，以及楼中楼
+        async getCommunitythreadReply(authorId,content,tid,image=''){
+            let res=await post(threadReply,{
+                thread_id:tid,
+                content:content,
+                image:image,
+                to_reply_uid:authorId
+            })
+            console.log(res,'threadReply');
         }
-
 
 
     },

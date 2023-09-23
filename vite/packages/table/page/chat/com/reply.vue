@@ -51,6 +51,9 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
+import {transformImage,base64File} from '../../../components/card/hooks/imageProcessing' 
+import { useCommunityStore } from '../commun'
+const useCommunStore=useCommunityStore()
 const userStore=appStore()
 const value = ref('')
 const commentList = ref([])
@@ -66,10 +69,22 @@ const addEmoji = ( item) => {
     value.value +=`${key}`
 
 }
+let imageUrlList=ref([])
 const emit = defineEmits(['addComment'])
-const addComment = () => {
-    if (value.value) {
-        commentList.value.push(value.value)
+const addComment =async () => {
+    if (value.value || fileList.value.length > 0) {
+        fileList.value.forEach((item)=>{
+            let url=base64File(item.thumbUrl)
+            let [fir,...imageUrl]=url.split(':')
+            let urlList=imageUrl.join(':')
+            console.log(urlList);
+            imageUrlList.value.push(urlList)
+        })
+        console.log(imageUrlList.value,'imageurl')
+        let authorid=useCommunStore.communityPostDetail.author_uid
+        let content=value.value
+        let threadId=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
+        await useCommunStore.getCommunitythreadReply(authorid,content,threadId,imageUrlList.value)
         value.value = ''
     }
     emit('addComment', commentList)
@@ -189,7 +204,6 @@ const showCard = (userUid, Info) => {
 }
 onMounted(async () => {
     await userStore.getUserInfo()
-    console.log(userStore.userInfo);
     
 })
 </script>

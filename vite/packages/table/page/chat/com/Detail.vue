@@ -201,6 +201,7 @@ const refresh = async () => {
     // refreshDetailFlag.value = false
     await store.getCommunityPostDetail(Detailtid)
     // refreshDetailFlag.value = true
+    await store.getCommunityPostReply(Detailtid)
 }
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
