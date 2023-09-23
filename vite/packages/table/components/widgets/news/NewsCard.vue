@@ -23,7 +23,7 @@
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
         <div class="content" v-else >
-          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type"> 
+          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type">
             <span class="sort">{{ index+1 }}</span>
             <div class="item">
               <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
@@ -32,7 +32,7 @@
             <div class="divider" v-show="this.copyNum>=8">
               <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;"/>
             </div>
-            
+
           </div>
 
         </div>
@@ -210,7 +210,7 @@ export default {
       let tag = this.showList[this.currentIndex].tag
       this.customData.tag=tag
       this.getNewsMsg(this.customData.tag)
-      
+
       // this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newList);
     }
@@ -251,10 +251,15 @@ export default {
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
       if(this.customData && this.customData.newsList){
+        if(this.customData.newsList.tag){
+          this.customData.newsList=this.customData.newsList.tag
+          return []
+        }
+        console.error(this.customData,'customdata')
         return this.customData.newsList.slice(0, this.copyNum)
       }
       return this.newsMsgList.slice(0,this.copyNum)
-      
+
     },
     currentTag(){
       if(this.customData && this.customData.index){
@@ -360,7 +365,7 @@ export default {
   // flex-direction: column;
   overflow: hidden;
   position: relative;
-  
+
   .divider{
     width: 1px;
     height: 100%;
@@ -368,9 +373,9 @@ export default {
     left: 285px;
     right: 286px;
     overflow: hidden;
-    
+
   }
-  
+
   .sort {
   width: 24px;
   height: 24px;
