@@ -176,6 +176,10 @@ onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
+    let textareaElement=window.document.querySelector('textarea')
+    console.log(textareaElement);
+    
+    textareaElement?.focus()
 
 })
 const settingsScroller = reactive({
