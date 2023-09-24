@@ -1,20 +1,25 @@
 <template>
-    <Widget :options="options" :customIndex="customIndex" :desk="desk">
-        <div class="title" @click="onClick">本周番茄时间3</div>
-        <div class="time">4h15msda</div>
-        <!-- <div class="echarts" id="mychart" :style="myChartStyle"></div> -->
-
+    <Widget :options="options" :customIndex="customIndex" :desk="desk" >
+        <div class="title" @click="onClick">本周番茄时间</div>
+        <div class="time">4h15m</div>
+        <div class="echarts">
+            <div class="echarts-col" v-for="(item,index) in yTimer" :key="index" 
+            :style="{'height': item/maxTimer*110 + 10 + 'px'}"
+            :class="index == today ? 'active-col':''"
+            :alt="item"
+            ></div>
+        </div>
     </Widget>
-  </template>
+</template>
   
 <script>
     import Widget from "../../card/Widget.vue";
     // import * as echarts from "echarts";
     export default {
-        name: "Chart",
+        name: "TimerChart",
         components:{
             Widget,
-            echarts,
+            // echarts,
         },
         props: {
             customIndex: {
@@ -33,67 +38,21 @@
             return {
                 options:{
                     className:'card small',
-                    title:'',
+                    title:'TimerChart',
                     icon:'',
                     type:'timer',
                     noTitle:true,
+                    background:"#24B284",
                 },
-                // xData:["1","2","3","4","5","6","7"],
-                // yClock:[1,2,5,3,2,4,4],
-                // myChartStyle:{
-                //     // float:"left",
-                //     width:"252px",
-                //     height:"90px",
-                // },
+                xTimer:["1","2","3","4","5","6","7"],
+                yTimer:[1,2,5,3,2,4,0],
+                maxTimer:5,
+                today:5,
             }
         },
         async mounted() {
-            //  this.initEcharts();
         },
         methods: {
-            // initEcharts(){
-            //     console.log("开始渲染了");
-            //     // 多列柱状图
-            //     const mulColumnData = {
-            //         xAxis:{
-            //             data: this.xData,
-            //         },
-            //         // 图例属性
-            //         legend:{
-            //             data:["日期","时间"],
-            //         },
-            //         // y轴线条
-            //         yAxis:{
-            //             splitLine:{
-            //                 show: true,
-            //                 lineStyle: {
-            //                     type: 'solid',
-            //                     color:'#FCFCFC',//网格颜色
-            //                     opacity:"0.3"
-            //                 }
-            //             }
-            //         },
-            //         // 内部属性
-            //         series:[
-            //             {
-            //                 type: "bar",
-            //                 data:this.yClock,
-            //                 name:"时间",
-            //                 label:{
-            //                     show:true,
-            //                     position:"top",
-            //                 }
-            //             },
-            //         ],
-                    
-            //     }
-            //     const myChart = echarts.init(document.getElementById("mychart"))
-
-            //     myChart.setOption(mulColumnData);
-            //     window.addEventListener("resize",()=>{
-            //         myChart.resize();
-            //     })
-            // },
             onClick(){
                 console.log("nihao")
             }
@@ -102,15 +61,44 @@
 </script>
   
   <style scoped lang="scss">
-    // .echarts{
-    //     font-family: Helvetica;
-    //     font-size: 12px;
-    //     color: rgba(255,255,255,0.85);
-    //     text-align: left;
-    //     font-weight: 400;
-    //     width: 252px;
-    //     height: 90px;
-    //     border: 1px solid #fff;
-    // }
-  </style>
+
+    .title{
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: rgba(255,255,255,0.60);
+        font-weight: 400;
+        text-align: center;
+    }
+    .time{
+        font-family: Oswald-SemiBold;
+        font-size: 20px;
+        color: rgba(255,255,255,0.85);
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .echarts{
+        // border: 1px solid #fff;
+        margin-top: 6px;
+        height: 120px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .echarts .echarts-col{
+        background: rgba(255,255,255,0.40);
+        border-radius: 10px;
+        width: 29px;
+        height: 120px;
+        cursor: pointer;
+        // min-height: 20px;
+    }
+    .echarts .echarts-col:hover{
+        background: rgba(255,255,255,0.85);
+    }
+    .active-col{
+        background: rgba(255,255,255,0.85) !important;
+    }
+    </style>
   

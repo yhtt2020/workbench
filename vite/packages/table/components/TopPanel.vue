@@ -28,6 +28,13 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
+      <div class="tomato-timer no-drag">
+        <Icon icon="sousuo"></Icon>
+        番茄时间 24：59
+        <div class="tomato-float">
+          <TomatoTimer />
+        </div>
+      </div>
       <div  v-if="noticeSettings.show && hasChat"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
@@ -35,13 +42,11 @@
         </div>
         <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
         <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
-
       </div>
 
       <div v-else class="no-drag  flex items-center pointer justify-center pr-3" @click="messageAlert" style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
-
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">
@@ -100,8 +105,6 @@
             </div>
           </a-col>
         </a-row>
-
-
       </div>
     </div>
   </a-drawer>
@@ -123,12 +126,14 @@ import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
 import { noticeStore } from '../store/notice'
+import TomatoTimer from './widgets/tomatoTimer/Clock.vue'
 
 export default {
   name: 'TopPanel',
   components: {
     WindowController,
-    MessagePopup
+    MessagePopup,
+    TomatoTimer,
   },
   data () {
     return {
@@ -364,5 +369,27 @@ export default {
     50% { opacity: 1; }
     100% { opacity: 0; }
   }
+}
+
+.tomato-timer{
+  position: relative;
+  top: 2px;
+  left: -5px;
+  width: 143px;
+  height: 32px;
+  background: #E7763E;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  z-index: 1001;
+}
+.tomato-timer .tomato-float{
+  display: none;
+}
+.tomato-timer:hover .tomato-float{
+  display: block;
 }
 </style>
