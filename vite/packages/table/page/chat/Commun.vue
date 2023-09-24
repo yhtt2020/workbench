@@ -113,22 +113,7 @@ const menuList = ref([
 const comCards = computed(() => {
   return store.communityPost
 })
-// const createOrder = computed(async() => {
-//   let createTime =await store.communityPost?.list[0].create_time
-//   if (createTime.split('-').length < 3) {
-//     const currentYear = new Date().getFullYear();
-//     const dateStr = `${currentYear}-${createTime}`;
-//     // console.log(dateStr);
 
-//     return dateStr
-//   } else {
-//     return createTime
-//   }
-// })
-// console.log(createOrder.value, 'createOrder');
-
-// const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
-// // createOrder.value ? new Date(createOrder.value).getTime() : 0
 const checkMenuList = ref([{
   type: '最近更新',
   order: 'create_time',

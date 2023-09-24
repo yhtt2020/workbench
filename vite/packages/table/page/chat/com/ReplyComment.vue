@@ -39,14 +39,14 @@
                         <MessageOutlined style="font-size: 16px;margin-top: 2px" class="mr-1 " />
                         <!-- <div>回复</div> -->
                     </div>
-                    <div class="flex justify-center ml-1" v-if="store.communityPostDetail.user.uid=== replyCom.user.uid">
-                        <a-dropdown trigger="click">
-                            <template #overlay>
-                                <a-menu @click="handleMenuClick">
-                                    <a-menu-item key="1">删除</a-menu-item>
+                    <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid === replyCom.user.uid">
+                        <a-dropdown trigger="click" overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
+                            <template #overlay >
+                                <a-menu @click="handleMenuClick" class="xt-bg">
+                                    <a-menu-item key="1" class="xt-text">删除</a-menu-item>
                                 </a-menu>
                             </template>
-                            <button class="border-0 xt-bg w-[20px] h-[20px]">
+                            <button class="border-0 xt-bg w-[30px] h-[20px]">
                                 <Icon class="text-xl text-center xt-text-2 pointer"
                                     icon="fluent:more-horizontal-16-filled" />
 
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyCommentLite from './ReplyCommentLite.vue';
 import replyComments from './replyComments.vue';
@@ -136,7 +136,9 @@ const getReplyText = (val) => {
 const content = computed(() => {
     return emojiReplace(props.replyCom.content)
 });
-
+onMounted(() => {
+    useUserStore.getUserInfo()
+})
 </script>
 <style lang='scss' scoped>
 .box {
