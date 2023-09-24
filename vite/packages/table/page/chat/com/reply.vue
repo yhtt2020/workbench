@@ -19,7 +19,7 @@
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
         <div class="w-full">
-            <tippy trigger=" click" placement="bottom" :interactive="true" >
+            <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
                     <!-- <div class="w-full"> -->
                     <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
@@ -51,43 +51,49 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
-import {fileUpload} from '../../../components/card/hooks/imageProcessing' 
+import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
-const useCommunStore=useCommunityStore()
-const userStore=appStore()
+const useCommunStore = useCommunityStore()
+const userStore = appStore()
 const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
 const imageVis = ref(true)
 // 添加表情
-const addEmoji = ( item) => {
+const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    value.value +=`${key}`
+    value.value += `${key}`
 
 }
-let imageUrlList:any=ref([])
+
 const emit = defineEmits(['addComment'])
-const addComment =async () => {
+const addComment = async () => {
+    let imageUrlList: any = ref([])
+    let url
     if (value.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item)=>{
+        fileList.value.forEach(async (item) => {
             console.log(item.originFileObj)
-            let url:string =await fileUpload(item.originFileObj)
-            console.log(url,'url')
+            url = await fileUpload(item.originFileObj)
+            console.log(url, 'url')
             imageUrlList.value.push(url)
-            
+
         })
-        console.log(imageUrlList.value,'imageurl')
-        let authorid:number=useCommunStore.communityPostDetail.author_uid
-        let content:string=value.value
-        let threadId:number=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
-        let imageList:Array<string>=imageUrlList.value
-        await useCommunStore.getCommunitythreadReply(authorid,content,threadId) 
-        // 重新请求一遍评论接口，渲染新的数据
-        await useCommunStore.getCommunityPostReply(threadId)
+        console.log(imageUrlList.value, 'imageurl')
+        let authorid: number = useCommunStore.communityPostDetail.author_uid
+        let content: string = value.value
+        let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
+        // let imageList=imageUrlList
+        console.log(threadId, content, authorid, imageUrlList.value);
+        // setTimeout(async () => {
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId)
+            await useCommunStore.getCommunityPostDetail(threadId)
+            await useCommunStore.getCommunityPostReply(threadId)
+        // },5000);
+
         value.value = ''
-        fileList.value=[]
+        fileList.value = []
     }
     emit('addComment', commentList)
 }
@@ -191,22 +197,22 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
-const userInfo=computed(() => {
+const userInfo = computed(() => {
     return userStore.userInfo
 })
-let userUid=userInfo.value.uid
+let userUid = userInfo.value.uid
 let Info = {
-    uid:userInfo.uid,
+    uid: userInfo.uid,
     nickname: userInfo.nickname,
     avatar: userInfo.avatar
 }
 const showCard = (userUid, Info) => {
     userStore.showUserCard(userUid, Info)
-    
+
 }
 onMounted(async () => {
     await userStore.getUserInfo()
-    
+
 })
 </script>
 <style lang='scss' scoped>
@@ -223,10 +229,12 @@ onMounted(async () => {
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
 }
-:deep(.tippy-box){
+
+:deep(.tippy-box) {
     width: 51%;
     margin-left: 15%;
 }
+
 .btn {
     border: 1px solid var(--secondary-text);
 }

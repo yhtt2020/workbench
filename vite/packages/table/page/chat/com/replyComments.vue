@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid,Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" :placeholder="props.replyCom.to_reply_second_id" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="props.replyCom.id" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -80,7 +80,7 @@ const addEmoji = ( item) => {
 const fileList = ref<UploadProps['fileList']>([]);
 let imageUrlList:any=ref([])
 const emit = defineEmits(['addComment'])
-const addComment = () => {
+const addComment =async () => {
     if (value.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item)=>{
             console.log(item.originFileObj)
@@ -90,7 +90,7 @@ const addComment = () => {
             
         })
         console.log(imageUrlList.value,'imageurl')
-        console.log(props.replyCom,'props');
+        // console.log(props.replyCom,'props');
         
         let authorid:number=props.replyCom.to_reply_uid || ''
         let content:string=value.value
@@ -98,9 +98,9 @@ const addComment = () => {
         let imageList:Array<string>=imageUrlList.value
         let to_reply_id=props.replyCom.to_reply_id===0?props.replyCom.id:props.replyCom.to_reply_id
         let to_reply_second_id=props.replyCom.to_reply_second_id===0?props.replyCom.id:props.replyCom.to_reply_id
-        setTimeout(async () => {
-           await useCommunStore.getCommunitythreadReply(authorid,content,threadId,to_reply_id,to_reply_second_id) 
-        })
+        await useCommunStore.getCommunitythreadReply(authorid,content,threadId,to_reply_id,to_reply_second_id) 
+        await useCommunStore.getCommunityPostDetail(threadId)
+        await useCommunStore.getCommunityPostReply(threadId)
         
         value.value = ''
         fileList.value=[]

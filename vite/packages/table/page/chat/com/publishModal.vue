@@ -17,8 +17,8 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                            :bordered="false" />
+                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                            :bordered="false" @keyup.enter="publishPost"/>
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 @preview="handlePreview">
@@ -69,7 +69,7 @@
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
                         @click="handleOk">取消</a-button>
                     <a-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
+                        style="border-radius:10px ; color: var(--secondary-text) !important;" @click="publishPost">发布</a-button>
                 </div>
             </div>
         </div>
@@ -83,12 +83,13 @@ import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
+import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 const imageLoadVisible=ref(true)
 const goYuan = () => {
     browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
 // const userName = ref('我是皮克斯呀')
-const replyValue = ref('')
+const postValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
@@ -177,7 +178,7 @@ onMounted(() => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
     let textareaElement=window.document.querySelector('textarea')
-    console.log(textareaElement);
+    // console.log(textareaElement);
     
     textareaElement?.focus()
 
@@ -204,11 +205,27 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
 const handleOk = (e: MouseEvent) => {
-    console.log(e);
+    // console.log(e);
     visible.value = false
     emit('handleOk', visible)
 };
-
+// 发布帖子
+let imageUrlList=ref([])
+const publishPost=async()=>{
+    if (postValue.value || fileList.value.length > 0) {
+        fileList.value.forEach(async (item)=>{
+            console.log(item.originFileObj)
+            let url:string =await fileUpload(item.originFileObj)
+            console.log(url,'url')
+            imageUrlList.value.push(url)
+            
+        })
+        console.log(imageUrlList.value,'imageurl')
+        postValue.value = ''
+        fileList.value=[]
+        handleOk(e)
+    }
+}
 </script>
 <style lang='scss' scoped>
 .box {

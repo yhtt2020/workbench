@@ -351,6 +351,10 @@ export const useCommunityStore = defineStore('community',{
         },
         // 点赞帖子
         async getCommunityLike(model,id){
+            let supportCache=localCache.get(`communitySupport_${model}_${id}`)
+            if(supportCache){
+                this.communitySupport=supportCache
+            }
             let res=await post(doSupport,{
                 model:model,
                 row:id
@@ -358,37 +362,48 @@ export const useCommunityStore = defineStore('community',{
             console.log(res,'doSupport');
             if(res.code===200){
                 this.communitySupport=res.data
+                localCache.set(`communitySupport_${model}_${id}`,this.communitySupport,60*60*12)
             }
             
         },
         // 收藏帖子
         async getCommunityCollect(id){
+            let collectCache=localCache.get(`communityCollect_${id}`)
+            if(collectCache){
+                this.communityCollect=collectCache
+            }
             let res=await post(collect,{
                 tid:id
             })
             console.log(res.data,'collect');
             if(res.code==200){
                 this.communityCollect=res.data
+                localCache.set(`communityCollect_${id}`,this.communityCollect,60*60*12)
             }
             
         },
         // 取消收藏帖子
         async getCommunityCancelCollect(id){
+            let cancelCollectCache=localCache.get(`communityCancelCollect_${id}`)
+            if(cancelCollectCache){
+                this.communityCancelCollect=cancelCollectCache
+            }
             let res=await post(cancelCollect,{
                 tid:id
             })
             console.log(res.data,'cancelCollect');
             if(res.code===200){
                 this.communityCancelCollect=res.data
+                localCache.set(`communityCancelCollect_${id}`,this.communityCancelCollect,60*60*12)
             }
         },
         // 发布评论和回复评论，以及楼中楼
-        async getCommunitythreadReply(authorId,content,tid,image=[],is_nameless=0,to_reply_id='',to_reply_second_id='',audio_id='',audio_time='',audio_url=''):Promise<IReply>{
+        async getCommunitythreadReply(authorId,content,tid,imageList='',is_nameless=0,to_reply_id='',to_reply_second_id='',audio_id='',audio_time='',audio_url=''):Promise<IReply>{
             try {
                 let res=await post(threadReply,{
                 thread_id:tid,
                 content:content,
-                image:image,
+                image:imageList,
                 to_reply_uid:authorId,
                 is_nameless:is_nameless,
                 to_reply_id:to_reply_id,
@@ -399,6 +414,14 @@ export const useCommunityStore = defineStore('community',{
 
             })
             console.log(res,'threadReply');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        // 发布帖子
+        async getCommunityPublishPost():Promise<IThread>{
+            try {
+                
             } catch (error) {
                 console.error(error)
             }

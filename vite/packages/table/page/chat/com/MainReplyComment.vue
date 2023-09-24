@@ -150,7 +150,6 @@ const createTime = computed(() => {
 })
 onMounted(()=>{
     useUserStore.getUserInfo()
-    console.log(useUserStore.userInfo); 
     
 })
 </script>
