@@ -325,7 +325,8 @@ export const useCommunityStore = defineStore('community',{
             if(communityReplyCache){
                 this.communityReply=communityReplyCache
             }
-            let res=await post(replyList,{
+            try {
+                let res=await post(replyList,{
                 tid:id,
                 page:page,
                 row:10,
@@ -337,6 +338,10 @@ export const useCommunityStore = defineStore('community',{
                 console.log(this.communityReply,'res');
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
+            } catch (error) {
+                console.error(error)
+            }
+            
         },
         // 图片上传
         async uploadImage(file){
@@ -378,14 +383,25 @@ export const useCommunityStore = defineStore('community',{
             }
         },
         // 发布评论和回复评论，以及楼中楼
-        async getCommunitythreadReply(authorId,content,tid,image=''){
-            let res=await post(threadReply,{
+        async getCommunitythreadReply(authorId,content,tid,image=[],is_nameless=0,to_reply_id='',to_reply_second_id='',audio_id='',audio_time='',audio_url=''):Promise<IReply>{
+            try {
+                let res=await post(threadReply,{
                 thread_id:tid,
                 content:content,
                 image:image,
-                to_reply_uid:authorId
+                to_reply_uid:authorId,
+                is_nameless:is_nameless,
+                to_reply_id:to_reply_id,
+                to_reply_second_id:to_reply_second_id,
+                audio_id:audio_id,
+                audio_time:audio_time,
+                audio_url:audio_url,
+
             })
             console.log(res,'threadReply');
+            } catch (error) {
+                console.error(error)
+            }
         }
 
 

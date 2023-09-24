@@ -51,41 +51,43 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
-import {transformImage,base64File} from '../../../components/card/hooks/imageProcessing' 
+import {fileUpload} from '../../../components/card/hooks/imageProcessing' 
 import { useCommunityStore } from '../commun'
 const useCommunStore=useCommunityStore()
 const userStore=appStore()
 const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
-const imageVis = ref(false)
+const imageVis = ref(true)
 // 添加表情
 const addEmoji = ( item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    // console.log(emoiiValue);
-    
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
     value.value +=`${key}`
 
 }
-let imageUrlList=ref([])
+let imageUrlList:any=ref([])
 const emit = defineEmits(['addComment'])
 const addComment =async () => {
     if (value.value || fileList.value.length > 0) {
-        fileList.value.forEach((item)=>{
-            let url=base64File(item.thumbUrl)
-            let [fir,...imageUrl]=url.split(':')
-            let urlList=imageUrl.join(':')
-            console.log(urlList);
-            imageUrlList.value.push(urlList)
+        fileList.value.forEach(async (item)=>{
+            console.log(item.originFileObj)
+            let url:string =await fileUpload(item.originFileObj)
+            console.log(url,'url')
+            imageUrlList.value.push(url)
+            
         })
         console.log(imageUrlList.value,'imageurl')
-        let authorid=useCommunStore.communityPostDetail.author_uid
-        let content=value.value
-        let threadId=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
-        await useCommunStore.getCommunitythreadReply(authorid,content,threadId,imageUrlList.value)
+        let authorid:number=useCommunStore.communityPostDetail.author_uid
+        let content:string=value.value
+        let threadId:number=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
+        let imageList:Array<string>=imageUrlList.value
+        await useCommunStore.getCommunitythreadReply(authorid,content,threadId) 
+        // 重新请求一遍评论接口，渲染新的数据
+        await useCommunStore.getCommunityPostReply(threadId)
         value.value = ''
+        fileList.value=[]
     }
     emit('addComment', commentList)
 }

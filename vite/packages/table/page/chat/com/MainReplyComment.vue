@@ -66,7 +66,7 @@
 
             </div>
             <replyComments v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"
-                :userName="props.commentList.user.nickname" />
+                :userName="props.commentList.user.nickname" :replyCom="props.commentList"/>
         </div>
         <div class="ml-8 ">
             <ReplyComment :replyVisible="replyVisible" v-for="(item, index) in replyCmmentList" :key="index"

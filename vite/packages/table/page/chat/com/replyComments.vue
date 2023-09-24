@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid,Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="props.replyCom.to_reply_second_id" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -53,9 +53,18 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import {appStore} from '../../../../table/store'
+import {fileUpload} from '../../../components/card/hooks/imageProcessing' 
+import { useCommunityStore } from '../commun'
+const useCommunStore=useCommunityStore()
 const userStore=appStore()
 const value = ref('')
 const commentList = ref([])
+const props=defineProps({
+    replyCom:{
+        type: Object,
+        default: () => []
+    }
+})
 // const emojiVis = ref(false)
 const imageVis = ref(false)
 // 添加表情
@@ -68,11 +77,33 @@ const addEmoji = ( item) => {
     value.value +=`${key}`
 
 }
+const fileList = ref<UploadProps['fileList']>([]);
+let imageUrlList:any=ref([])
 const emit = defineEmits(['addComment'])
 const addComment = () => {
-    if (value.value) {
-        commentList.value.push(value.value)
+    if (value.value || fileList.value.length > 0) {
+        fileList.value.forEach(async (item)=>{
+            console.log(item.originFileObj)
+            let url:string =await fileUpload(item.originFileObj)
+            console.log(url,'url')
+            imageUrlList.value.push(url)
+            
+        })
+        console.log(imageUrlList.value,'imageurl')
+        console.log(props.replyCom,'props');
+        
+        let authorid:number=props.replyCom.to_reply_uid || ''
+        let content:string=value.value
+        let threadId:number=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
+        let imageList:Array<string>=imageUrlList.value
+        let to_reply_id=props.replyCom.to_reply_id===0?props.replyCom.id:props.replyCom.to_reply_id
+        let to_reply_second_id=props.replyCom.to_reply_second_id===0?props.replyCom.id:props.replyCom.to_reply_id
+        setTimeout(async () => {
+           await useCommunStore.getCommunitythreadReply(authorid,content,threadId,to_reply_id,to_reply_second_id) 
+        })
+        
         value.value = ''
+        fileList.value=[]
     }
     emit('addComment', commentList)
 }
@@ -161,8 +192,7 @@ onMounted(() => {
     })
 
 })
-const fileList = ref<UploadProps['fileList']>([
-]);
+
 
 const handleCancel = () => {
     previewVisible.value = false;
@@ -210,7 +240,7 @@ onMounted(async () => {
 }
 
 .btn {
-    border: none;
+    border: 1px solid var(--secondary-text);
 }
 
 .comment-input {

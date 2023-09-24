@@ -62,7 +62,7 @@
                 </div>
             </div>
             <replyComments v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"
-                :userName="replyCom.user.nickname" />
+                :replyCom="props.replyCom" />
         </div>
         <ReplyCommentLite v-for="item in replyCmmentList" :key="item" :replyCom="item" :replyVisible="replyVisible">
         </ReplyCommentLite>
