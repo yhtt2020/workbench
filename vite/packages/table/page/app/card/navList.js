@@ -926,6 +926,25 @@ export const NavList = [
         ],
         time: '2023/9/19'
       },
+      {
+        name: 'tomatoTimer',
+        cname: '番茄钟（开发中）',
+        detail: '快速开启番茄钟时刻，记录每天专注成果。',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'TimerClock',
+            size: '2x2',
+            zoom: '24'
+          },
+          {
+            name: 'TimerChart',
+            size: '2x2',
+            zoom: '24'
+          },
+        ],
+        time: '2023/9/23'
+      },
     ]
   },
 ];

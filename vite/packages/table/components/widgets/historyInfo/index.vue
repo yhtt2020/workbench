@@ -1,6 +1,6 @@
 <template>
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
-        <div class="icon">
+        <div class="icon" @click="onHistoryMessage">
             <CalendarOutlined style="width:20px;height:20px;" />
         </div>
         <div class="box-flex">
@@ -56,10 +56,23 @@ export default {
                 date:"",
                 tetle:""
             },
+            timer:"12",
         };
     },
     async mounted() {
         await this.onHistoryMessage()
+        // 设置一次性定时器 当天12点过后自动触发事件
+        let now = new Date;
+        var midnight = new Date();
+        midnight.setHours(23, 59, 59, 999); // 设置时间为今天的最后一秒
+        var remainingTime = midnight.getTime() - now.getTime(); // 计算剩余时间戳
+        this.timer = setTimeout(() => {
+            this.onHistoryMessage();
+        }, remainingTime);
+    },
+    // 组件卸载后 清除定时器
+    unmounted(){
+        clearTimeout(this.timer)
     },
     methods:{
         // 获取今天所发生的的事情
@@ -67,8 +80,7 @@ export default {
             let getData = await getHistoryInfo("/app/juhe/get");
             this.history = getData;
         },
-
-    }
+    },
 };
 </script>
 
@@ -110,6 +122,6 @@ export default {
 
     @font-face {
         font-family: "优设标题黑";
-        src: url(font/优设标题黑.ttf);
+        src: url("../../../../../public/font/优设标题黑.ttf");
     }
 </style>
