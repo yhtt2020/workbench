@@ -353,7 +353,8 @@ export default {
       border-radius: 10px 0 0 0;
 
       img {
-        zoom: 0.07 !important;
+        zoom: 0.07 ;
+        border-radius: 8px;
         object-fit: contain;
       }
 
