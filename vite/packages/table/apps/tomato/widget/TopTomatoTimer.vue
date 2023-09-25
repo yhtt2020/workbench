@@ -1,7 +1,7 @@
 <template>
-    <div class="tomato-timer no-drag" @click="onClick">
+    <div class="tomato-timer no-drag">
         <Icon icon="sousuo"></Icon>
-        番茄时间
+        番茄时间{{ displayNum(minutes) }}:{{ displayNum(seconds) }}
         <div class="tomato-float">
             <TomatoTimer />
         </div>
@@ -12,7 +12,7 @@
 
   
   import { tomatoStore } from '../store'
-  import {mapActions, mapState} from "pinia";
+  import {mapActions, mapState,mapWritableState} from "pinia";
   import TomatoTimer from '../page/Clock.vue'
 
     export default {
@@ -21,31 +21,29 @@
         TomatoTimer
       },
       computed: {
-        ...mapState(tomatoStore, ['getTomatoTimer']),
+        ...mapWritableState(tomatoStore, ['hours','minutes','seconds']),
       },
       data(){
         return {
-            tomatoTimer1:{
-                timer1:"23"
-            }
 
 
         }
       },
       mounted(){
-        this.getTomatoTimer()
+
       },
       watch:{
 
       },
       methods:{
-        ...mapActions(tomatoStore, ['getTomatoTimer']),
-        onClick(){
-            console.log("this",this);
-            console.log("this.tomatoTimer1.timer1",this.tomatoTimer1.timer1)
-            console.log("tomatoTimer1.timer1",tomatoTimer1.timer1);
+        // 时间格式
+        displayNum (num) {
+          if (num < 10) {
+            return '0' + num
+          } else {
+            return num
+          }
         },
-
       },
     }
   </script>
