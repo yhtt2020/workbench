@@ -27,7 +27,7 @@ export default {
       tabs:[
         {
           index: 'com',
-          title: '版本更新',
+          title: '互动社区',
           icon:'xiaoxi',
           route:
             {

@@ -133,11 +133,19 @@ export const recommendedJoin = [
 
 
 export const hideDropList = [
-  {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
-  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+  {icon:'ic:sharp-format-indent-increase',title:'收起边栏',type:'hidden'},
+  {icon:'ant-design:appstore-twotone',title:'切换双/单列',type:'change'},
+  {icon:'fluent:add-16-filled',title:'添加新应用',type:'apply'},
+  {icon:'ant-design:team-outlined',title:'邀请其他人',type:'invited'},
+  {icon:'ic:sharp-format-indent-increase',title:'添加新分组',type:'category'},
 ]
 
 export const showDropList = [
-  {icon:'MenuFoldOutlined',title:'展开边栏',type:'show'},
-  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+  {icon:'material-symbols:format-indent-decrease-rounded',title:'展开边栏',type:'show'},
+  {icon:'ant-design:appstore-twotone',title:'切换双/单列',type:'change'},
+  {icon:'fluent:add-16-filled',title:'添加新应用',type:'apply'},
+  {icon:'ant-design:team-outlined',title:'邀请其他人',type:'invited'},
+  {icon:'ic:sharp-format-indent-increase',title:'添加新分组',type:'category'},
+  // {icon:'',title:'社群管理',type:'manage'},
+  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'}
 ]

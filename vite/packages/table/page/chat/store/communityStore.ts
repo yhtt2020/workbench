@@ -18,6 +18,8 @@ export const communityStore = defineStore('communityStore',{
   state: () => ({
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
+    categoryList:[], // 频道目录列表
+    categoryTreeList:[], // 频道树列表
   }),
 
   actions: {
@@ -44,7 +46,9 @@ export const communityStore = defineStore('communityStore',{
    // 获取推荐社群
    async getRecommendCommunityList(){
     const res = await post(getRecommendCommunity,{})
-    this.recommendCommunityList = res.data
+    if(res?.data){
+      this.recommendCommunityList = res.data
+    }
    },
 
    // 搜索社群
@@ -60,14 +64,20 @@ export const communityStore = defineStore('communityStore',{
 
 
    // 获取社群频道列表
-   async getChannel(data){
-    return await post(getChannelList,data)
+   async getChannel(data:any){
+    const categoryRes = await post(getChannelList,data)
+    if(categoryRes?.data?.list){
+      this.categoryList = categoryRes.data.list
+    }
    },
 
 
    // 获取树状判断列表
-   async getTreeChannelList(data){
-    return await post(getChannelTree,data)
+   async getTreeChannelList(data:any){
+    const categoryTreeRef =  await post(getChannelTree,data)
+    if(categoryTreeRef?.data?.treeList){
+      this.categoryTreeList = categoryTreeRef.data.treeList 
+    }
    },
 
 
@@ -81,7 +91,7 @@ export const communityStore = defineStore('communityStore',{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['myCommunityList','recommendCommunityList','channelData']
+      paths: ['myCommunityList','recommendCommunityList','categoryList']
       // state 中的字段名，按组打包储存
     }]
   }

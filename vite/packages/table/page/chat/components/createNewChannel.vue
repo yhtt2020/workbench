@@ -32,9 +32,9 @@
   </div>
  
   <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
-  <SelectChannel v-if="selectIndex === 'channel' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
-  <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :type="{type:'group',name:`${selectItem.name}`}" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
-  <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" :type="{type:'link',name:`${selectItem.name}`}" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
+  <SelectChannel v-if="selectIndex === 'community' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
+  <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
+  <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
  
  </template>
  
@@ -62,16 +62,17 @@
   props:['no'],
  
   setup (props,ctx) {
+ 
    const data = reactive({
     channelList:[
      // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
-     { icon:'fluent-emoji-flat:placard',name:'社区',type:'channel' },
+     { icon:'fluent-emoji-flat:placard',name:'社区',type:'community' },
      { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'group' },
      { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
     ],
-    selectIndex:'channel',
-    selectItem:{name:'社区',type:'channel'},
+    selectIndex:'community',
     nextShow:false, // 选择完第一步的是否进入第二步
+    type:'',
    })
    
    // 创建新频道弹窗
@@ -82,7 +83,7 @@
    // 选择频道
    const selectChannel = (item) =>{
     data.selectIndex = item.type
-    data.selectItem = item
+    data.type = item.type
    }
  
    // 最后选择按钮
@@ -92,7 +93,6 @@
  
  
    return {
-    no:props.no,
     ...toRefs(data),closeChannel,selectChannel,selectSubmit,
    }
   }
@@ -133,3 +133,4 @@
   border:1px solid var(--active-bg) !important;
  }
  </style>
+ 
