@@ -53,6 +53,7 @@ export default defineComponent({
     }
     const categoryRes =  await category.createChannel(option)
     if(categoryRes.status === 1){
+     message.success(`${categoryRes.info}`)
      const getChannelOption = { communityNo:props.no,cache:1 }
      category.getChannel(getChannelOption)
      closeNewGroup()

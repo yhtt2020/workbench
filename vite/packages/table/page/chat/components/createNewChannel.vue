@@ -33,7 +33,7 @@
  
   <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
   <SelectChannel v-if="selectIndex === 'community' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
-  <SelectGroupChat v-if="selectIndex === 'chat' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
+  <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
   <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
  
  </template>
@@ -67,10 +67,10 @@
     channelList:[
      // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
      { icon:'fluent-emoji-flat:placard',name:'社区',type:'community' },
-     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
+     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'group' },
      { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
     ],
-    selectIndex:'channel',
+    selectIndex:'community',
     nextShow:false, // 选择完第一步的是否进入第二步
     type:'',
    })
