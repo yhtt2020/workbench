@@ -2,7 +2,8 @@ const path = require('path')
 const fs = require('fs-extra')
 const { app } = require('electron')
 const { exec } = require('child_process')
-const iconv=require('iconv-lite')
+const iconv = require('iconv-lite')
+
 function getResPath () {
   const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
   if (isDevelopmentMode) {
@@ -59,14 +60,21 @@ module.exports = class SystemHelper {
     fs.ensureDirSync(savePath)
     let hash = SystemHelper.sha(uri)
     let filePath = path.join(savePath, hash + '.png')
-    if(fs.existsSync(filePath)){
-      return filePath
+    if (fs.existsSync(filePath)) {
+       return filePath
     }
-    // let icon = fileIcon.getFileIcon(uri,256)  //await require('electron').app.getFileIcon(uri)
-    const exePath = getResPathJoin('extracticon.exe')
-    const cmd=`${exePath} "${uri}" "${filePath}"`
-    await runExec(cmd)
-    if (!fs.existsSync(filePath)) {
+    let error = false
+    try {
+      // let icon = fileIcon.getFileIcon(uri,256)  //await require('electron').app.getFileIcon(uri)
+      const exePath = getResPathJoin('extracticon.exe')
+      const cmd = `"${exePath}" "${uri}" "${filePath}"`
+      console.log(cmd, '输出的cmd')
+      await runExec(cmd)
+    } catch (e) {
+      console.error('意外报错', e)
+      error = true
+    }
+    if (!fs.existsSync(filePath) || error) {
       let icon = await app.getFileIcon(uri)
       if (!icon) {
         return ''
