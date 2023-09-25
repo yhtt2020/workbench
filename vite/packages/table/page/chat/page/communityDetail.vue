@@ -4,31 +4,33 @@
            :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
            style=" border-right:1px solid var(--divider);">
       <div class="flex flex-col">
-        <div class="flex justify-between w-full mb-2.5">
+        <div class=" w-full mb-2.5">
           <div class="flex justify-between w-full mb-2">
-          <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ routeData.name }}</span>
-          <div style="float: right">
-          <ChatDropDown @updatePage="updatePage"  :list="hideDropList"/>
-          </div>
+            <div class="w-full">
+              <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ routeData.name }}</span>
+              <div style="float: right">
+                <ChatDropDown @updatePage="updatePage" :list="hideDropList"/>
+              </div>
+            </div>
           </div>
 
-        <!-- <div class="font-14" style="color:var(--secondary-text);">
-          {{ summary }}
-        </div> -->
-        <div class="ml-1">
-          社群号：{{routeData.no}}
-        </div>
-        <div class="font-14" style="color:var(--secondary-text);">
-          <span class="font-14" style="color:var(--secondary-text);">{{ routeData.summary }}</span>
-        </div>
+          <!-- <div class="font-14" style="color:var(--secondary-text);">
+            {{ summary }}
+          </div> -->
+          <div class="ml-1">
+            社群号：{{ routeData.no }}
+          </div>
+          <div class="font-14" style="color:var(--secondary-text);">
+            <span class="font-14" style="color:var(--secondary-text);">{{ routeData.summary }}</span>
+          </div>
 
-        <div>
-        </div>
+          <div>
+          </div>
           <a-row :gutter="10">
             <a-col flex="55px" class="mt-1 text-right">
               <span class="px-2 rounded-full xt-active-bg">0 级</span>
             </a-col>
-            <a-col  flex="auto" style="padding-top: 3px">
+            <a-col flex="auto" style="padding-top: 3px">
               <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="10"></a-progress>
             </a-col>
 
@@ -40,7 +42,7 @@
       <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
 
 
-      <template v-if="channelDetail.length === 0">
+      <template v-if="channelList.length === 0">
         <div class="flex items-center h-full justify-center flex-col">
           <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
                style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
@@ -51,42 +53,46 @@
       </template>
 
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
-        <div v-for="item in channelDetail">
+        <div v-for="item in channelList">
           <ChatFold :title="item.name">
             <div class="flex flex-col" v-if="doubleCol === false">
-              <div :class="{'active-bg':currentChannel.id===item.id}" v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
+              <div :class="{'active-bg':currentChannel.id===item.id}" v-for="item in item.children"
+                   class="flex items-center px-4 py-3 rounded-lg pointer group-item"
                    @click="currentItem(item)"
               >
                 <template v-if="item.type === 'group'">
-                  <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
+                  <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
                 </template>
                 <template v-if="item.type === 'link'">
-                  <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+                  <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
                 </template>
                 <template v-if="item.type === 'forum'">
                   <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                 </template>
                 <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                <SelectOutlined  class="ml-1 xt-text-2 flip" style="font-size: 14px"
+                <SelectOutlined class="ml-1 xt-text-2 flip" style="font-size: 14px"
                                 v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
               </div>
             </div>
 
             <div class="flex grid grid-cols-2 gap-1" v-else>
               <div v-for="item in item.children" @click="currentItem(item)"
-                   :class="{'active-bg':currentChannel.id===item.id}"   class="flex items-center p-2 rounded-lg pointer group-item">
+                   :class="{'active-bg':currentChannel.id===item.id}"
+                   class="flex items-center p-2 rounded-lg pointer group-item">
                 <div class="flex items-center">
                   <template v-if="item.type === 'group'">
-                    <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
+                    <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
                   </template>
                   <template v-if="item.type === 'link'">
-                    <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+                    <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
                   </template>
                   <template v-if="item.type === 'forum'">
                     <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
                   </template>
                 </div>
-                <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+                <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{
+                    item.name || item.title
+                  }}</span>
                 <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
                                 v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
               </div>
@@ -101,14 +107,14 @@
       <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top">
         <template v-if="currentChannel.type === 'group'">
-          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
+          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
         </template>
         <template v-if="currentChannel.type === 'link'">
-          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
         </template>
-        <!-- <template v-if="currentChannel.type === 'forum'">
-          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-        </template> -->
+          <!-- <template v-if="currentChannel.type === 'forum'">
+            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template> -->
        </span>
         {{ currentChannel.name }}
       </div>
@@ -118,7 +124,7 @@
       </div>
 
       <div style="height: 0;flex:1" v-else>
-        <template v-if="!currentChannel.name">
+        <template v-if="!currentChannel.name && channelList.length>0">
           <div class="flex flex-col items-center justify-center h-full">
             <div style="width:64px;height:64px;" class="rounded-full mb-6">
               <img src="/icons/logo128.png" class="w-full h-full object-cover rounded-full"/>
@@ -136,7 +142,7 @@
             </div>
           </div>
         </template>
-        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
+        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id"/>
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.name !== 'Roadmap'" style="text-align: center;margin-top: 30%">
@@ -149,10 +155,10 @@
 
         </template>
 
-    <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
-      <!--  空状态，取文章 -->
-      <div class="community-article h-full">
-        <vue-custom-scrollbar class="h-full" :settings=" {
+        <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
+          <!--  空状态，取文章 -->
+          <div class="community-article h-full">
+            <vue-custom-scrollbar class="h-full" :settings=" {
       default: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -161,16 +167,17 @@
         wheelPropagation: true
       }
     }">
-          <h2 v-html="emptyArticle.title"></h2>
-          <div v-html="emptyArticle.content"></div>
-        </vue-custom-scrollbar>
+              <h2 v-html="emptyArticle.title"></h2>
+              <div v-html="emptyArticle.content"></div>
+            </vue-custom-scrollbar>
+
+          </div>
+
+
+        </a-col>
 
       </div>
-
-
     </a-col>
-
-      </div>
   </a-row>
 
 
@@ -182,11 +189,11 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect, computed,ref, onMounted  } from 'vue'
+import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { hideDropList } from '../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined } from '@ant-design/icons-vue'
+import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined, SelectOutlined } from '@ant-design/icons-vue'
 import { communityStore } from '../store/communityStore'
 import { chatStore } from '../../../store/chat'
 import _ from 'lodash-es'
@@ -199,11 +206,10 @@ import CreateNewGroup from '../components/createNewCategory.vue'
 import ChatFold from '../components/chatFold.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 
-
 export default defineComponent({
   components: {
     VueCustomScrollbar,
-    UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined,
+    UserAddOutlined, PlusOutlined, MenuUnfoldOutlined, SelectOutlined,
     ChatDropDown, CommunityIcon, Modal, CreateNewChannel,
     CreateNewGroup, ChatFold,
 
@@ -228,7 +234,7 @@ export default defineComponent({
       type: '',
       addShow: false, // 点击按钮弹窗
       routeData: {}, // 接收路由参数
-      channelDetail: [],
+      channelList: [],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -236,7 +242,7 @@ export default defineComponent({
         suppressScrollX: true,
         wheelPropagation: true
       },
-      currentChannel:{},
+      currentChannel: {},
 
     })
 
@@ -270,14 +276,14 @@ export default defineComponent({
           cache: 1,
         }
         await myCom.getTreeChannelList(option)
-        data.channelDetail = myCom.categoryTreeList
+        data.channelList = myCom.categoryTreeList
       }
     })
 
     // 选择当前状态
-    const currentItem = (item) =>{
-      if(item.type === 'link' && item.name !== 'Roadmap'){
-        const url = JSON.parse(item.props).url;
+    const currentItem = (item) => {
+      if (item.type === 'link' && item.name !== 'Roadmap') {
+        const url = JSON.parse(item.props).url
         browser.openInUserSelect(url)
       }
       data.currentChannel = item
@@ -292,10 +298,9 @@ export default defineComponent({
       doubleCol.value = chat.$state.settings.showDouble
     }
 
-
     return {
-      hideDropList,isFloat,doubleCol,
-      ...toRefs(data), clickEmptyButton,currentItem,updatePage,
+      hideDropList, isFloat, doubleCol,
+      ...toRefs(data), clickEmptyButton, currentItem, updatePage,
       onMounted
     }
   }
@@ -351,7 +356,8 @@ export default defineComponent({
     opacity: 0.8;
   }
 }
-.active-bg{
+
+.active-bg {
   background: var(--active-secondary-bg);
 }
 
@@ -361,8 +367,9 @@ export default defineComponent({
   padding: 20px;
   font-size: 16px;
   line-height: 1.5;
-  img{
-    border-radius: 8px !important ;
+
+  img {
+    border-radius: 8px !important;
   }
 }
 </style>
