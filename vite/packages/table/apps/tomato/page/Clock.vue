@@ -6,14 +6,18 @@
         
         <div class="icon-box">
           <!-- 开始 -->
-          <div class="icon" v-if="!running">
+          <div class="icon" v-if="running" @click="onPause">
             <Icon icon="fluent:play-16-filled" />
           </div>
+          <!-- 暂停 -->
+          <div class="icon" v-if="running" @click="onPause">
+            <Icon icon="fluent:play-16-filled" />1
+          </div>
           <!-- 结束 -->
-          <div class="icon" v-if="!running" @click="onStop">
+          <div class="icon" v-if="running" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
-          <div class="icon icon-font" v-if="running" @click="onPlay">
+          <div class="icon icon-font" v-if="!running" @click="onPlay">
             <span>立即开始</span>
           </div>
           <div class="icon" @click="onFullScreen">
@@ -65,10 +69,11 @@
   </template>
   
   <script>
-  import Widget from "../../card/Widget.vue";
+  import Widget from "../../../components/card/Widget.vue";
   import { Icon } from '@iconify/vue';
-
-  import FullScreen from "./fullScreen.vue";
+  import {mapActions, mapState} from "pinia";
+  import FullScreen from "../components/fullScreen.vue";
+  import { tomatoStore } from '../store'
 
   export default {
     name: "TimerClock",
@@ -127,30 +132,68 @@
         ],
       }
     },
+    mounted(){
+      this.getTomatoTimer()
+    },
     methods: {
-      onStop(){
-        this.running = true;
-        this.options.background ="#e5b047";
-      },
+      ...mapActions(tomatoStore, ['getTomatoTimer','setTomatoTimer']),
       onPlay(){
-        this.running = false;
+        console.log("触发从头开始");
+
+        this.running = true;
         this.options.background ="#E7763E";
-      },
-      start () {
         this.reset(0, 25, 0)
         this.timer = setInterval(this.interval, this.tick)
-        this.running = true
       },
-      stop () {
-        this.running = false
+      onStop(){
+        console.log("触发停止番茄钟");
+        
+        this.running = false;
+        this.options.background ="#e5b047";
         this.clearInterval()
         this.reset(0, 0, 0)
       },
+      onPause () {
+        // 
+        console.log("触发开始/暂停");
+        console.log(this)
+        // console.log(this.tomatoTimer1())
+        let dataTime = this.getTomatoTimer()
+        console.log(dataTime)
+        console.log(this.tomatoTimer1)
+        this.setTomatoTimer("45")
+        if (this.timer === null) {
+          console.log("开始/暂停1");
+          this.timer = setInterval(this.interval, this.tick)
+        } else {
+          console.log("开始/暂停2");
+          this.clearInterval()
+        }
+      },
+      finish () {
+        // 
+        console.log("时间到了");
+        this.running=false
+        this.clearInterval()
+        this.reset()
+        Modal.success({
+          width: '50vw',
+          content: '已成功完成一个番茄，点击收下。',
+          okText: '收下',
+          centered: true,
+          onOk: () => {
+            this.tomato++
+          },
+          cancelText:null
+        })
+      },
       onFullScreen(){
-        console.log("全屏，启动！")
         this.isFullScreen = true;
       },
+      // 定时器
       interval () {
+        // 
+        // console.log("触发定时器");
         if (!this.running) return
         if (this.seconds <= 0) {
           if (this.minutes === 0) {
@@ -172,7 +215,9 @@
           this.seconds--
         }
       },
+      // 重置时间
       reset (hours = 0, minutes = 0, seconds = 0) {
+        console.log("触发重置");
         this.totalTime = {
           hours,
           minutes,
@@ -189,6 +234,16 @@
           return num
         }
       },
+      // 
+      clearInterval () {
+        // 
+        console.log("触发停止定时器");
+        clearInterval(this.timer)
+        this.timer = null
+      },
+    },
+    computed: {
+      ...mapState(tomatoStore, ['getTomatoTimer']),
     },
   };
   </script>

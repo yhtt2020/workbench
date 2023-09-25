@@ -13,7 +13,7 @@
 </template>
   
 <script>
-    import Widget from "../../card/Widget.vue";
+    import Widget from "../../../components/card/Widget.vue";
     // import * as echarts from "echarts";
     export default {
         name: "TimerChart",
