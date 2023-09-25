@@ -11,7 +11,7 @@ const searchRecommendCommunity = sUrl("/app/community/searchCommunity") // 搜�
 const getChannelList = sUrl("/app/community/channel/getList") // 获取频道列表
 const getChannelTree = sUrl("/app/community/channel/getTreeList") // 获取树状频道
 const createChannels = sUrl("/app/community/channel/create") // 创建社群频道
-
+const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频道
 
 // @ts-ignore
 export const communityStore = defineStore('communityStore',{
@@ -61,24 +61,23 @@ export const communityStore = defineStore('communityStore',{
     return await post(createChannels,data)
    },
 
-
-
-   // 获取社群频道列表
-   async getChannel(data:any){
-    const categoryRes = await post(getChannelList,data)
-    if(categoryRes?.data?.list){
-      this.categoryList = categoryRes.data.list
+   // 获取社群频道数据
+   async getCategoryData(id:any){
+    const option = {
+      communityNo:id,
+      cache:1
     }
+    const categoryRes = await post(getChannelList,option)
+    const categoryTreeRef =  await post(getChannelTree,option)
+    const result = { category:categoryRes?.data?.list , tree:categoryTreeRef?.data?.treeList}
+    return result
    },
 
 
-   // 获取树状判断列表
-   async getTreeChannelList(data:any){
-    const categoryTreeRef =  await post(getChannelTree,data)
-    if(categoryTreeRef?.data?.treeList){
-      this.categoryTreeList = categoryTreeRef.data.treeList 
-    }
-   },
+   // 删除社群频道
+   async removeCategory(id:any){
+    return post(deleteCategory,{id:id})
+   }
 
 
 

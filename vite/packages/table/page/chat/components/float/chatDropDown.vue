@@ -30,12 +30,12 @@
  <script>
  import { defineComponent, reactive, toRefs} from 'vue'
  import { EllipsisOutlined } from '@ant-design/icons-vue'
- import { chatStore } from '../../../store/chat'
+ import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
  
- import Modal from '../../../components/Modal.vue'
- import UpdateCommunityApply from './updateCommunityApply.vue'
- import CreateNewCategory from './createNewCategory.vue'
+ import Modal from '../../../../components/Modal.vue'
+ import UpdateCommunityApply from '../updateCommunityApply.vue'
+ import CreateNewCategory from '../createNewCategory.vue'
  
  export default defineComponent({
   components:{
@@ -61,7 +61,7 @@
     switch (item.type) {
      case 'change':
        chat.setDouble()
-       console.log('测试',11)
+      //  console.log('测试',11)
        ctx.emit('updatePage')
        break;
      case 'show':

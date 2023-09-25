@@ -137,8 +137,8 @@
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
 import { chatList,hideDropList } from '../../../js/data/chatList'
-import ChatDropDown from '../components/chatDropDown.vue'
-import ChatFold from '../components/chatFold.vue'
+import ChatDropDown from '../components/float/chatDropDown.vue'
+import ChatFold from '../components/float/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
