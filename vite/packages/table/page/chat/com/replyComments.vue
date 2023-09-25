@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-between w-full mt-2">
-        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid,Info)"></a-avatar>
+        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
         <a-input v-model:value="value" :placeholder="props.replyCom.id" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
@@ -32,13 +32,13 @@
                 </template>
                 <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
-                    <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 
+                    <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" />
                 </button>
             </tippy>
             <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
-                <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 
+                <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" />
             </button>
         </div>
         <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
@@ -52,15 +52,15 @@
 <script setup lang='ts'>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import {appStore} from '../../../../table/store'
-import {fileUpload} from '../../../components/card/hooks/imageProcessing' 
+import { appStore } from '../../../../table/store'
+import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
-const useCommunStore=useCommunityStore()
-const userStore=appStore()
+const useCommunStore = useCommunityStore()
+const userStore = appStore()
 const value = ref('')
 const commentList = ref([])
-const props=defineProps({
-    replyCom:{
+const props = defineProps({
+    replyCom: {
         type: Object,
         default: () => []
     }
@@ -68,42 +68,46 @@ const props=defineProps({
 // const emojiVis = ref(false)
 const imageVis = ref(false)
 // 添加表情
-const addEmoji = ( item) => {
+const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
     console.log(emoiiValue);
-    
+
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    value.value +=`${key}`
+    value.value += `${key}`
 
 }
 const fileList = ref<UploadProps['fileList']>([]);
-let imageUrlList:any=ref([])
 const emit = defineEmits(['addComment'])
-const addComment =async () => {
+const addComment = async () => {
+    let imageUrlList: any = ref([])
     if (value.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item)=>{
+        fileList.value.forEach(async (item) => {
             console.log(item.originFileObj)
-            let url:string =await fileUpload(item.originFileObj)
-            console.log(url,'url')
+            let url: string = await fileUpload(item.originFileObj)
+            console.log(url, 'url')
             imageUrlList.value.push(url)
-            
+
         })
-        console.log(imageUrlList.value,'imageurl')
+        console.log(imageUrlList.value, 'imageurl')
         // console.log(props.replyCom,'props');
-        
-        let authorid:number=props.replyCom.to_reply_uid || ''
-        let content:string=value.value
-        let threadId:number=useCommunStore.communityPostDetail.pay_set.tid?useCommunStore.communityPostDetail.pay_set.tid:useCommunStore.communityPostDetail.id
-        let imageList:Array<string>=imageUrlList.value
-        let to_reply_id=props.replyCom.to_reply_id===0?props.replyCom.id:props.replyCom.to_reply_id
-        let to_reply_second_id=props.replyCom.to_reply_second_id===0?props.replyCom.id:props.replyCom.to_reply_id
-        await useCommunStore.getCommunitythreadReply(authorid,content,threadId,to_reply_id,to_reply_second_id) 
-        await useCommunStore.getCommunityPostDetail(threadId)
-        await useCommunStore.getCommunityPostReply(threadId)
-        
+
+        let authorid: number = props.replyCom.to_reply_uid || ''
+        let content: string = value.value
+        let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
+        // let imageList:Array<string>=imageUrlList.value
+        let to_reply_id = props.replyCom.to_reply_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
+        let to_reply_second_id = props.replyCom.to_reply_second_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
+        console.log(JSON.stringify(imageUrlList.value), 'image');
+        setTimeout(() => {
+            useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value), to_reply_id, to_reply_second_id)
+            useCommunStore.getCommunityPostDetail(threadId)
+            useCommunStore.getCommunityPostReply(threadId)
+        },3000)
+
+
         value.value = ''
-        fileList.value=[]
+        fileList.value = []
     }
     emit('addComment', commentList)
 }
@@ -206,10 +210,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
-const userInfo=computed(() => {
+const userInfo = computed(() => {
     return userStore.userInfo
 })
-let uid=userInfo.value.uid
+let uid = userInfo.value.uid
 let Info = {
     uid: uid,
     nickname: userInfo.nickname,
@@ -220,8 +224,7 @@ const showCard = (uid, Info) => {
 }
 onMounted(async () => {
     await userStore.getUserInfo()
-    console.log(userStore.userInfo);
-    
+
 })
 </script>
 <style lang='scss' scoped>
@@ -257,7 +260,8 @@ onMounted(async () => {
         font-family: PingFangSC-Regular;
     }
 }
-:deep(.tippy-box){
+
+:deep(.tippy-box) {
     width: 51%;
     margin-left: 15%;
 }

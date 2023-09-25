@@ -398,7 +398,7 @@ export const useCommunityStore = defineStore('community',{
             }
         },
         // 发布评论和回复评论，以及楼中楼
-        async getCommunitythreadReply(authorId,content,tid,imageList='',is_nameless=0,to_reply_id='',to_reply_second_id='',audio_id='',audio_time='',audio_url=''):Promise<IReply>{
+        async getCommunitythreadReply(authorId,content,tid,imageList:string='',is_nameless=0,to_reply_id='',to_reply_second_id='',audio_id='',audio_time='',audio_url=''):Promise<IReply>{
             try {
                 let res=await post(threadReply,{
                 thread_id:tid,

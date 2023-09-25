@@ -74,23 +74,23 @@ const addComment = async () => {
     let url
     if (value.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item) => {
-            console.log(item.originFileObj)
+            // console.log(item.originFileObj)
             url = await fileUpload(item.originFileObj)
-            console.log(url, 'url')
+            // console.log(url, 'url')
             imageUrlList.value.push(url)
-
         })
-        console.log(imageUrlList.value, 'imageurl')
+        // console.log(imageUrlList.value, 'imageurl')
         let authorid: number = useCommunStore.communityPostDetail.author_uid
         let content: string = value.value
         let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
-        // let imageList=imageUrlList
-        console.log(threadId, content, authorid, imageUrlList.value);
-        // setTimeout(async () => {
-            await useCommunStore.getCommunitythreadReply(authorid, content, threadId)
-            await useCommunStore.getCommunityPostDetail(threadId)
-            await useCommunStore.getCommunityPostReply(threadId)
-        // },5000);
+        // let imageList=JSON.stringify(imageUrlList.value)
+        // console.log(threadId, content, authorid, imageUrlList.value);
+        setTimeout(async () => {
+            // console.log(JSON.stringify(imageList), 'imageurl.value');
+            useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value))
+            useCommunStore.getCommunityPostDetail(threadId)
+            useCommunStore.getCommunityPostReply(threadId)
+        },3000);
 
         value.value = ''
         fileList.value = []
