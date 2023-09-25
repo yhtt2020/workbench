@@ -18,9 +18,9 @@
      </span>
     </div>
  
-    <a-input class="h-10" v-model:value="linkName" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
+    <a-input class="h-10" v-model:value="linkName" spellcheck="false" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
  
-    <a-input class="h-10" v-model:value="link" style="border-radius: 12px;" placeholder="请输入" />
+    <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" />
     
     <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
     <RadioTab :navList="linkType" v-model:selectType="defaultType"></RadioTab>
