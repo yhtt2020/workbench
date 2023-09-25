@@ -193,6 +193,8 @@ onMounted(() => {
     useCommunStore.getCommunityInfo(props.forumId)
     useCommunStore.getCommunityCate(props.forumId)
     // console.log(useCommunStore.communityCate[0].id);
+    // console.log(navigator.plugins);
+    
     
 })
 const cascaderValue=reactive([])

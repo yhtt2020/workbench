@@ -8,7 +8,7 @@
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
-        <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview">
+        <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview" multiple>
             <div v-if="fileList.length < 3">
                 <plus-outlined style="font-size: 20px;" />
             </div>
