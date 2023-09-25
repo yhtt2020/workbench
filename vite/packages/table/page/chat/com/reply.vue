@@ -85,6 +85,7 @@ const addComment = async () => {
         let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
         // let imageList=JSON.stringify(imageUrlList.value)
         // console.log(threadId, content, authorid, imageUrlList.value);
+        // console.log(useCommunStore.communityPostDetail.pay_set.tid,useCommunStore.communityPostDetail.id);
         setTimeout(async () => {
             // console.log(JSON.stringify(imageList), 'imageurl.value');
             useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value))

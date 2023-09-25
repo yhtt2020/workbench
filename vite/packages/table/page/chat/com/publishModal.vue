@@ -1,13 +1,14 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t-b-close" >
+    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="font-16">写动态</div>
                 </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer" @click="handleOk" >
-                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross"  />
+                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
+                    @click="handleOk">
+                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
                 </button>
 
             </div>
@@ -18,7 +19,7 @@
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
                         <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                            :bordered="false" @keyup.enter="publishPost"/>
+                            :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 @preview="handlePreview">
@@ -52,7 +53,7 @@
                                     </template> 表情</a-button>
                             </tippy>
 
-                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible=!imageLoadVisible"
+                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible = !imageLoadVisible"
                                 style="color: var(--secondary-text) !important;"><template #icon>
                                     <PictureOutlined style="" />
                                 </template> 图片</a-button>
@@ -62,14 +63,19 @@
                 </div>
             </div>
             <div class="flex items-center justify-between h-[56px] ">
-                <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button>
+                <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
+                <a-cascader v-model:value="cascaderValue" :options="options" :load-data="loadData" placeholder="想天工作台/桌面分享" style="color:var(--primary-text) !important; font-size: 14px; "
+                    change-on-select >
+                    <template #suffixIcon><Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon></template>
+                </a-cascader>
                 <div class="flex items-center">
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
                         @click="handleOk">取消</a-button>
                     <a-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;" @click="publishPost">发布</a-button>
+                        style="border-radius:10px ; color: var(--secondary-text) !important;"
+                        @click="publishPost">发布</a-button>
                 </div>
             </div>
         </div>
@@ -77,14 +83,17 @@
     </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted ,computed} from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
-import {fileUpload} from '../../../components/card/hooks/imageProcessing'
-const imageLoadVisible=ref(true)
+import { fileUpload } from '../../../components/card/hooks/imageProcessing'
+import { useCommunityStore } from '../commun'
+import type { CascaderProps } from 'ant-design-vue';
+const useCommunStore = useCommunityStore()
+const imageLoadVisible = ref(true)
 const goYuan = () => {
     browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
@@ -177,12 +186,42 @@ onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
-    let textareaElement=window.document.querySelector('textarea')
+    let textareaElement = window.document.querySelector('textarea')
     // console.log(textareaElement);
-    
-    textareaElement?.focus()
 
+    textareaElement?.focus()
+    useCommunStore.getCommunityInfo(props.forumId)
+    useCommunStore.getCommunityCate(props.forumId)
+    // console.log(useCommunStore.communityCate[0].id);
+    
 })
+const cascaderValue=reactive([])
+const forumInfo=computed(()=>{
+    return useCommunStore.communityInfo.forum
+})
+const options = ref<CascaderProps['options']>([
+    {
+        value:forumInfo.value.id,
+        label:forumInfo.value.name
+    }
+])
+const loadData: CascaderProps['loadData'] = selectedOptions =>{
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+    let forumChildName=ref([])
+    useCommunStore.communityCate.forEach((item)=>{
+        if(item.name){
+            forumChildName.value.push({
+                value:item.id,
+                label:item.name,
+            })
+        }
+    })
+    targetOption.children = forumChildName.value
+    options.value=[...options.value]
+    targetOption.loading = false;
+    return forumChildName.value
+}
 const settingsScroller = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -210,20 +249,22 @@ const handleOk = (e: MouseEvent) => {
     emit('handleOk', visible)
 };
 // 发布帖子
-let imageUrlList=ref([])
-const publishPost=async()=>{
+const publishPost = async () => {
+    let imageUrlList=ref([])
     if (postValue.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item)=>{
-            console.log(item.originFileObj)
-            let url:string =await fileUpload(item.originFileObj)
-            console.log(url,'url')
+        fileList.value.forEach(async (item) => {
+            // console.log(item.originFileObj)
+            let url = await fileUpload(item.originFileObj)
+            // console.log(url, 'url')
             imageUrlList.value.push(url)
-            
         })
-        console.log(imageUrlList.value,'imageurl')
+        let image=JSON.stringify(imageUrlList.value)
+        let forumId=props.forumId
+        let content=postValue.value
+        
+
         postValue.value = ''
-        fileList.value=[]
-        handleOk(e)
+        fileList.value = []
     }
 }
 </script>
@@ -259,7 +300,14 @@ const publishPost=async()=>{
     width: 64px;
     height: 64px;
 }
-
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+    // &::placeholder {
+        font-weight: 400;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: var(--secondary-text);
+    // }
+}
 :deep(.ant-input) {
     &::placeholder {
         font-weight: 400;
@@ -268,7 +316,8 @@ const publishPost=async()=>{
         color: var(--secondary-text);
     }
 }
-:deep(.tippy-box){
+
+:deep(.tippy-box) {
     width: 51%;
     margin-left: 35%;
 }
@@ -286,4 +335,5 @@ const publishPost=async()=>{
             }
         }
     }
-}</style>
+}
+</style>

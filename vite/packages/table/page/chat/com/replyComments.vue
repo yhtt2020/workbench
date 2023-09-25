@@ -74,7 +74,7 @@ const imageVis = ref(false)
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
+    // console.log(emoiiValue);
 
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
     value.value += `${key}`
@@ -95,13 +95,14 @@ const addComment = async () => {
         // console.log(imageUrlList.value, 'imageurl')
         // console.log(props.replyCom,'props');
 
-        let authorid: number = props.replyCom.to_reply_uid || ''
+        let authorid: number = props.replyCom.to_reply_uid===0?  props.replyCom.author_uid : props.replyCom.to_reply_uid
         let content: string = value.value
         let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
         // let imageList:Array<string>=imageUrlList.value
         let to_reply_id = props.replyCom.to_reply_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
         let to_reply_second_id = props.replyCom.to_reply_second_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
         // console.log(JSON.stringify(imageUrlList.value), 'image');
+        // console.log(props.replyCom.to_reply_id,props.replyCom.id);
         setTimeout(() => {
             useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value), to_reply_id, to_reply_second_id)
             useCommunStore.getCommunityPostDetail(threadId)
