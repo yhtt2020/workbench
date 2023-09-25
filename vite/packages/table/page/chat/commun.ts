@@ -3,7 +3,6 @@ import dbStorage from "../../store/dbStorage";
 import {sUrl} from "../../consts";
 import {post} from "../../js/axios/request";
 import {localCache} from '../../js/axios/serverCache'
-import { title } from 'process';
 const community=sUrl('/app/com/forum/getDetail')
 const cate=sUrl('/app/com/forum/getThreadClasses')
 const threadList=sUrl('/app/com/forum/getThreadList')
@@ -277,7 +276,7 @@ export const useCommunityStore = defineStore('community',{
             // console.log(res);
             if(res.code===200){
                 this.communityCate=res.data
-                console.log(this.communityCate,'this.communityCate');
+                // console.log(this.communityCate,'this.communityCate');
                 localCache.set(`communityCate_${id}`,this.communityCate,60*60*12)
             }
 
@@ -420,7 +419,7 @@ export const useCommunityStore = defineStore('community',{
         },
         // 发布帖子
         async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC'):Promise<IThread>{
-            console.log(fid,image,content,title,'getCommunityPublishPost');
+            // console.log(fid,image,content,title,'getCommunityPublishPost');
             
             try {
                 let res=await post(threadPost,{
@@ -432,7 +431,7 @@ export const useCommunityStore = defineStore('community',{
                     from:from,
                     title:title
                 })
-                console.log(res,'threadPost');
+                // console.log(res,'threadPost');
                 
             } catch (error) {
                 console.error(error)

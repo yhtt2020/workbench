@@ -18,8 +18,8 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-input v-model:value="titleValue" placeholder="输入标题" :bordered="false" />
-                        <a-textarea v-model:value="postValue" placeholder="输入正文" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-input v-model:value="titleValue" placeholder="输入标题（不少于5个字）" :bordered="false" />
+                        <a-textarea v-model:value="postValue" placeholder="输入正文（不少于十个字）" :autoSize="{ minRows: 3, maxRows: 8 }"
                             :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
@@ -66,12 +66,12 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-cascader v-model:value="cascaderValue" :options="options" :load-data="loadData" placeholder="想天工作台/桌面分享"
-                    style="color:var(--primary-text) !important; font-size: 14px; " change-on-select>
+                <a-select v-model:value="cascaderValue" :options="options" placeholder="想天工作台/桌面分享" :loadData="loadData" :bordered="false" @change="handleChange"
+                    style="color:var(--primary-text) !important; font-size: 14px; border-radius: 10px; " change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
                     </template>
-                </a-cascader>
+                </a-select>
                 <div class="flex items-center">
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
@@ -201,32 +201,33 @@ onMounted(() => {
 
 
 })
+const communCate = computed(() => useCommunStore.communityCate)
+let arr = ref([])
+communCate.value.forEach((item) => {
+    arr.value.push({
+        value: item.id,
+        label: item.name
+    })
+})
 const cascaderValue = reactive([])
 const forumInfo = computed(() => {
     return useCommunStore.communityInfo.forum
 })
-const options = ref<CascaderProps['options']>([
-    {
-        value: forumInfo.value.id,
-        label: forumInfo.value.name
-    }
-])
+const options = ref<CascaderProps['options']>([]);
+arr.value.forEach((item) => {
+    options.value.push(item)
+})
 const loadData: CascaderProps['loadData'] = selectedOptions => {
     const targetOption = selectedOptions[selectedOptions.length - 1];
     targetOption.loading = true;
-    let forumChildName = ref([])
-    useCommunStore.communityCate.forEach((item) => {
-        if (item.name) {
-            forumChildName.value.push({
-                value: item.id,
-                label: item.name,
-            })
-        }
+    arr.value.forEach((item) => {
+        targetOption.children?.push(item)
     })
-    targetOption.children = forumChildName.value
-    options.value = [...options.value]
-    targetOption.loading = false;
-    return forumChildName.value
+    options.value = [...options.value];
+};
+const handleChange = (value) => {
+    cascaderValue.value = value
+    // console.log(value);
 }
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -258,16 +259,16 @@ const handleOk = (e: MouseEvent) => {
 const titleValue = ref('')
 const publishPost = async () => {
     let imageUrlList = ref([])
-    console.log(fileList.value);
+    // console.log(fileList.value);
 
     if (postValue.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item) => {
             // console.log(item.originFileObj)
             let url = await fileUpload(item.originFileObj)
-            console.log(url, 'url')
+            // console.log(url, 'url')
             imageUrlList.value.push(url)
         })
-        let image = JSON.stringify(imageUrlList.value)
+        // let image = JSON.stringify(imageUrlList.value)
         let forumId = props.forumId
         let content = postValue.value
         let title = computed(() => {
@@ -276,12 +277,12 @@ const publishPost = async () => {
             }
             return titleValue.value
         })
-        console.log(title.value, 'title.value');
+        // console.log(title.value, 'title.value');
 
 
         setTimeout(() => {
-            console.log(forumId, content, title.value, image, 'titleValue.value');
-            useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value)
+            // console.log(forumId, content, title.value, image, 'titleValue.value');
+            useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value,cascaderValue)
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
