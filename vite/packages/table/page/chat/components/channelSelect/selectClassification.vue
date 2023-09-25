@@ -81,6 +81,17 @@
    // console.log('获取数据',props.data)
  
    const communityCategory = communityStore()
+
+   const filterList = computed(()=>{
+     if(communityCategory.categoryList.length !== 0){
+       const categoryList = communityCategory.categoryList.filter((item)=>{
+         return item.role === 'category'
+       })
+       return categoryList
+     }else{
+       return []
+     }
+   })
  
    const data = reactive({
     settingsScroller: {
@@ -99,19 +110,11 @@
     option:{  // 请求频道列表和频道树状列表的参数
      communityNo:props.no,
      cache:1,
-    }
+    },
+    list:filterList.value
    })
  
-   const list = computed(()=>{
-     if(communityCategory.categoryList.length !== 0){
-       const categoryList = communityCategory.categoryList.filter((item)=>{
-         return item.role === 'category'
-       })
-       return categoryList
-     }else{
-       return []
-     }
-   })
+  
  
  
    // 关闭按钮
@@ -120,7 +123,7 @@
    }
    // 返回按钮
    const backButton = ()=>{
-     ctx.emit('back')
+     ctx.emit('classBack')
    }
  
    // 点击选中状态
@@ -171,6 +174,7 @@
      }else{
        document.querySelector('#classSortTab').insertBefore(newItem,oldItem.nextSibling)
      }
+
      let cloneTemp = [...data.list]   // 将原数据进行复制
      let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
      cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
@@ -206,7 +210,7 @@
    })
  
    return {
-   list,
+   filterList,
     ...toRefs(data),closeChannel,backButton,addClassItem,
     edit,deleted,listClick,save,exitEdit,createClass,
    }

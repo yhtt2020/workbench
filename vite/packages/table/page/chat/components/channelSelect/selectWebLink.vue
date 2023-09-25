@@ -32,7 +32,7 @@
    </div>
   </div>
  
-  <SelectClassification v-else :no="no"   :data="{name:linkName,props:link,type:'link'}"></SelectClassification>
+  <SelectClassification v-else :no="no"   :data="{name:linkName,props:link,type:'link'}" @classBack="classShow = false"></SelectClassification>
  </template>
  
  <script>
