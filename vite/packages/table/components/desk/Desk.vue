@@ -281,8 +281,8 @@ import CommunityTodo from '../widgets/openSNS/communityTodo.vue'
 import SmallCommunityDashboard from '../widgets/openSNS/smallCommunityDashboard.vue'
 import MiddleCommunityDashboard from '../widgets/openSNS/middleCommunityDashboard.vue'
 import CommunityChart from '../widgets/openSNS/communityChart.vue'
-
-
+import TimerChart from '../../apps/tomato/page/Chart.vue'
+import TimerClock from '../../apps/tomato/page/Clock.vue'
 
 const NewAddCard = defineAsyncComponent(() => import('../../page/app/card/NewAddCard.vue'))
 import myIcons from '../widgets/myIcons/index.vue'
@@ -317,6 +317,8 @@ export default {
     SmallCommunityDashboard,
     MiddleCommunityDashboard,
     CommunityChart,
+    TimerChart,
+    TimerClock,
     News,
     Template,
     HorizontalPanel,

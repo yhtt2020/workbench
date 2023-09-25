@@ -310,7 +310,8 @@ export const useCommunityStore = defineStore('community',{
             if(communityPostDetailCache){
                 this.communityPostDetail=communityPostDetailCache
             }
-            let res=await post(detail,{
+            // @ts-ignore
+          let res=await post(detail,{
                 tid:id
             })
             // console.log('datail', res);

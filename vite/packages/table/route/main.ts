@@ -77,7 +77,7 @@ import ChatIndex from '../page/chat/index.vue'
 import ChatMain from '../page/chat/page/chatMain.vue'
 import CommunityIndex from '../page/chat/page/communityIndex.vue'
 import ChatFind from '../page/chat/page/chatFind.vue'
-import MyCommunity from '../page/chat/page/myCommunity.vue'
+import MyCommunity from '../page/chat/page/communityDetail.vue'
 /**聊天团队模式结束**/
 
 //导入应用路由

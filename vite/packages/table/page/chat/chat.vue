@@ -1,5 +1,5 @@
 <template>
-  <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+  <xt-left-menu :list="isFloat" :index="index" last="3" end="2">
 
     <div class="w-full">
       <router-view ></router-view>
@@ -19,8 +19,8 @@
 
         <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
 
-        <div style="height:510px;">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+        <div style="height:400px;">
+          <vue-custom-scrollbar :settings="settingsScroller" style="height: 388px;">
             <div v-for="items in community.channelList">
               <ChatFold :title="items.name">
                 <div class="flex flex-col">
@@ -87,9 +87,9 @@ import ChatDropDown from './components/chatDropDown.vue'
 import ChatFold from './components/chatFold.vue'
 import JoinCommunity from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
-import { myCommunityStore } from './store/myCommunity'
+import { communityStore } from './store/communityStore'
 import { localCache } from '../../js/axios/serverCache'
-import MyCommunity from './page/myCommunity.vue'
+import MyCommunity from './page/communityDetail.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
 
@@ -110,7 +110,7 @@ export default {
   },
 
   setup () {
-    const myCom = myCommunityStore()
+    const myCom = communityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
@@ -165,24 +165,24 @@ export default {
     const appS = appStore()
 
     const { userInfo } = appS
-    const { myCommunityList } = myCom
+    const { communityList } = myCom
 
     const menuCommunityList = []
     // 遍历将社群进行UI层数据替换
-    for (let i = 0; i < myCommunityList.length; i++) {
-      if (myCommunityList[i].communityInfo) {
+    for (let i = 0; i < communityList.length; i++) {
+      if (communityList[i].communityInfo) {
         const item = {
-          name: myCommunityList[i].communityInfo.name,
-          img: myCommunityList[i].communityInfo.icon,
-          type: `community${myCommunityList[i].cno}`,
-          // float: 'communityFloat',
-          tab:'community_'+ myCommunityList[i].communityInfo.no,
+          name: communityList[i].communityInfo.name,
+          img: communityList[i].communityInfo.icon,
+          type: `community${communityList[i].cno}`,
+          float: "",
+          tab:'community_'+ communityList[i].communityInfo.no,
           noBg: true,
           callBack:(item)=>{
             selectTab(item)
-            data.communityNo=myCommunityList[i].communityInfo.no
+            data.communityNo = communityList[i].communityInfo.no
           } ,
-          route:{ name:'myCommunity',params:{no:myCommunityList[i].communityInfo.no}},
+          route:{ name:'myCommunity',params:{no: communityList[i].communityInfo.no}},
         }
         menuCommunityList.push(item)
       } else {
@@ -200,17 +200,12 @@ export default {
       return data.index === localCache.get('communityId')
     })
 
-    // 判断是否展开悬浮模式
-    const isFloat = computed(()=>{
-     console.log('排查问题', chat.settings.enableHide)
-     return chat.settings.enableHide
-    });
+   
 
     const chatLeftList = ref([
       {
         icon: 'message',
         tab: 'session',
-        title: '消息',
         route: {
           name: 'chatMain',
           params:{no:'',info:JSON.stringify('')}
@@ -255,7 +250,8 @@ export default {
         icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float: isFloat === false ? '' : 'communityFloat',
+        float: "",
+        // chat.settings.enableHide ? "communityFloat" : 
         noBg: true,
         callBack: (item)=>{
           selectTab(item)
@@ -314,12 +310,27 @@ export default {
       },
     ])
 
+    // 判断是否展开悬浮模式
+    const isFloat = computed(()=>{
+      // console.log('排查条件',chat.settings.enableHide)
+      // return
+      if(chat.settings.enableHide){
+        const mapList = chatLeftList.value.map((item)=>{
+          return {...item,float:item.float === '' ? "communityFloat" : ''}
+        })
+        // console.log('测试::>>',mapList)
+        return mapList
+      }else{
+        return chatLeftList.value
+      }
+    });
+
     // onMounted(() => {
     //   router.push({ name: 'chatMain' })
     // })
 
     return {
-      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,
+      chatLeftList,  route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,
       ...toRefs(data),
     }
   }

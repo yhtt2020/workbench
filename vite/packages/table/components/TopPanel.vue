@@ -28,6 +28,7 @@
       </div>
     </div>
     <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
+      <TopTomatoTimer />
       <div  v-if="noticeSettings.show && hasChat"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="w-full h-full object-cover">
@@ -35,13 +36,11 @@
         </div>
         <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
         <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
-
       </div>
 
       <div v-else class="no-drag  flex items-center pointer justify-center pr-3" @click="messageAlert" style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
-
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="no-drag truncate" v-if="!loading">
@@ -100,8 +99,6 @@
             </div>
           </a-col>
         </a-row>
-
-
       </div>
     </div>
   </a-drawer>
@@ -123,12 +120,14 @@ import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
 import { noticeStore } from '../store/notice'
+import TopTomatoTimer from '../../table/apps/tomato/widget/TopTomatoTimer.vue'
 
 export default {
   name: 'TopPanel',
   components: {
     WindowController,
-    MessagePopup
+    MessagePopup,
+    TopTomatoTimer,
   },
   data () {
     return {
@@ -365,4 +364,6 @@ export default {
     100% { opacity: 0; }
   }
 }
+
+
 </style>

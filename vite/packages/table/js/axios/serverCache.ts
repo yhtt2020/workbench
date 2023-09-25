@@ -112,7 +112,7 @@ export const serverCache = {
     let axiosResponse = await axios.get(url, axiosConfig.config)
     if (axiosResponse.status === 200) {
       // 如果请求到数据，post到serverCache的setCache api
-      serverCache.set(url, axiosResponse).then()
+      serverCache.set(url, axiosResponse,cacheOptions.ttl).then()
       localCache.set(key, axiosResponse, cacheOptions.localTtl)
       return axiosResponse
     }

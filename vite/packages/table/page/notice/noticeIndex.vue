@@ -44,7 +44,7 @@ export default defineComponent({
     NoticeDetail
   },
 
-  setup() {
+  setup(props,ctx) {
     const store = noticeStore();
 
     const data = reactive({

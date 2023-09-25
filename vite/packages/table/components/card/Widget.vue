@@ -5,6 +5,7 @@
       display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
+      background:this.options.background
     }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->
