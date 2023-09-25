@@ -38,18 +38,29 @@
  <script>
  import { defineComponent, reactive, toRefs } from 'vue'
  import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
+
+ import RadioTab from '../../../../components/RadioTab.vue'
+ 
  
  export default defineComponent({
  
+  props:['no'],
+ 
   components:{
-   CloseOutlined,LeftOutlined
+   CloseOutlined,LeftOutlined,RadioTab,
   },
  
   setup (props,ctx) {
  
    const data = reactive({
+    linkType:[
+     { title:'默认',name:'default'},
+     { title:'内部浏览器',name:'inter' },
+     { title:'系统浏览器',name:'system' }
+    ],
+    defaultType:{},
     link:'',
-    linkName:''
+    linkName:'',
    })
    
    const backChannel = () =>{
