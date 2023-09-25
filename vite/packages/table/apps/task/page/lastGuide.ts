@@ -6,31 +6,26 @@ const getDesk = () => {
   const store: any = cardStore();
   const task: any = taskStore();
   task.deskID = nanoid(4);
-
-  let desk = store.desks.find((item) => item.name === "任务桌面");
-  if (desk) {
-    // console.log("有桌面 :>> ");
-    task.deskID = desk.id;
-  } else {
-    // console.log("没桌面 :>> ");
-    let obj = {
-      name: "任务桌面",
-      id: task.deskID,
-      icon: "desktop",
-      cards: [],
-      layoutSize: {
-        width: 1498,
-        height: 466,
-      },
-      settings: {
-        cardMargin: 5,
-        cardZoom: 100,
-        marginTop: 0,
-        enableZoom: true,
-      },
-    };
-    store.desks.push(obj);
-  }
+  let name = "任务桌面" + Date.now();
+  console.log('name :>> ', name);
+  store.desks = store.desks.filter((item) => item.name !== name);
+  let obj = {
+    name: "任务桌面",
+    id: task.deskID,
+    icon: "desktop",
+    cards: [],
+    layoutSize: {
+      width: 1498,
+      height: 466,
+    },
+    settings: {
+      cardMargin: 5,
+      cardZoom: 100,
+      marginTop: 0,
+      enableZoom: true,
+    },
+  };
+  store.desks.push(obj);
   store.currentDeskId = task.deskID;
   return store.desks.find((item) => task.deskID == item.id);
 };

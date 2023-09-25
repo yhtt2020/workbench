@@ -98,7 +98,6 @@ export default {
   data() {
     return {
       checked: false,
-      iconObj: "",
       menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
