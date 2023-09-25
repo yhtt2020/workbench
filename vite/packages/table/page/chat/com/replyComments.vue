@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" :placeholder="props.replyCom.id" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -66,6 +66,9 @@ const props = defineProps({
     }
 })
 // const emojiVis = ref(false)
+const replyPlaceholder =computed(()=>{
+    return `回复${props.replyCom.user.nickname}`
+})
 const imageVis = ref(false)
 // 添加表情
 const addEmoji = (item) => {
@@ -83,13 +86,13 @@ const addComment = async () => {
     let imageUrlList: any = ref([])
     if (value.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item) => {
-            console.log(item.originFileObj)
+            // console.log(item.originFileObj)
             let url: string = await fileUpload(item.originFileObj)
-            console.log(url, 'url')
+            // console.log(url, 'url')
             imageUrlList.value.push(url)
 
         })
-        console.log(imageUrlList.value, 'imageurl')
+        // console.log(imageUrlList.value, 'imageurl')
         // console.log(props.replyCom,'props');
 
         let authorid: number = props.replyCom.to_reply_uid || ''
@@ -98,14 +101,15 @@ const addComment = async () => {
         // let imageList:Array<string>=imageUrlList.value
         let to_reply_id = props.replyCom.to_reply_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
         let to_reply_second_id = props.replyCom.to_reply_second_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
-        console.log(JSON.stringify(imageUrlList.value), 'image');
+        // console.log(JSON.stringify(imageUrlList.value), 'image');
         setTimeout(() => {
             useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value), to_reply_id, to_reply_second_id)
             useCommunStore.getCommunityPostDetail(threadId)
             useCommunStore.getCommunityPostReply(threadId)
         },3000)
 
-
+        // console.log(props.replyCom);
+        
         value.value = ''
         fileList.value = []
     }
