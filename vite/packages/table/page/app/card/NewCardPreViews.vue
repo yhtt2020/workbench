@@ -19,10 +19,10 @@
                     <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
                   </div>
                   <div class="bottom">
-                    <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                    <img  class="small-cover"  v-for="i in item.option" :src="getImg(i.name)" alt="" />
                   </div>
                 </template>
-                <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
+                <img v-else:src="getImg(item.option[0].name)" alt="" :style="[
                   {
                     zoom: item.option[0].zoom
                       ? item.option[0].zoom + '%'
@@ -72,7 +72,7 @@
                 <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
               </div>
               <div class="bottom">
-                <img v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                <img  class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt="" />
               </div>
             </template>
             <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
@@ -353,10 +353,12 @@ export default {
       border-radius: 10px 0 0 0;
 
       img {
+
         zoom: 0.07 ;
         border-radius: 8px;
         object-fit: contain;
       }
+
 
       .zoom {
         zoom: 0.05 !important;
@@ -364,10 +366,15 @@ export default {
     }
 
     .bottom {
+      .small-cover{
+        width: 90%;
+        height: 90%;
+      }
       width: 100%;
       height: 62px;
       border-radius: 0px 0px 0px 12px;
       display: flex;
+      gap:5px;
       justify-content: space-around;
       padding: 10px;
 
