@@ -3,6 +3,7 @@ import dbStorage from "../../store/dbStorage";
 import {sUrl} from "../../consts";
 import {post} from "../../js/axios/request";
 import {localCache} from '../../js/axios/serverCache'
+import { title } from 'process';
 const community=sUrl('/app/com/forum/getDetail')
 const cate=sUrl('/app/com/forum/getThreadClasses')
 const threadList=sUrl('/app/com/forum/getThreadList')
@@ -12,6 +13,7 @@ const doSupport=sUrl('/app/com/doSupport')
 const collect=sUrl('/app/com/collect')
 const cancelCollect=sUrl('/app/com/cancelCollect')
 const threadReply=sUrl('/app/com/thread/reply')
+const threadPost=sUrl('/app/com/thread/post')
 declare interface IThread {
     /**
      * 1进入人工审核0系统自动审核
@@ -417,8 +419,20 @@ export const useCommunityStore = defineStore('community',{
             }
         },
         // 发布帖子
-        async getCommunityPublishPost():Promise<IThread>{
+        async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC'):Promise<IThread>{
+            console.log(fid,image,content,title,'getCommunityPublishPost');
+            
             try {
+                let res=await post(threadPost,{
+                    fid:fid,
+                    image:image,
+                    content:content,
+                    class_id:classId,
+                    is_close_comment:is_close_comment,
+                    from:from,
+                    title:title
+                })
+                console.log(res,'threadPost');
                 
             } catch (error) {
                 console.error(error)

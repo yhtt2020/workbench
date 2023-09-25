@@ -18,18 +18,19 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-input v-model:value="titleValue" placeholder="输入标题" :bordered="false" />
+                        <a-textarea v-model:value="postValue" placeholder="输入正文" :autoSize="{ minRows: 3, maxRows: 8 }"
                             :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
-                                @preview="handlePreview">
+                                multiple @preview="handlePreview">
                                 <div v-if="fileList.length < 6">
                                     <plus-outlined style="font-size: 1.2em; " class="xt-text" />
                                 </div>
                             </a-upload>
                         </div>
                         <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                            <img alt="example" style="width: 100%" :src="previewImage" />
+                            <img style="width: 100%" :src="previewImage" />
                         </a-modal>
                     </div>
                     <div class="h-[45px] flex items-center justify-between">
@@ -65,9 +66,11 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-cascader v-model:value="cascaderValue" :options="options" :load-data="loadData" placeholder="想天工作台/桌面分享" style="color:var(--primary-text) !important; font-size: 14px; "
-                    change-on-select >
-                    <template #suffixIcon><Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon></template>
+                <a-cascader v-model:value="cascaderValue" :options="options" :load-data="loadData" placeholder="想天工作台/桌面分享"
+                    style="color:var(--primary-text) !important; font-size: 14px; " change-on-select>
+                    <template #suffixIcon>
+                        <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                    </template>
                 </a-cascader>
                 <div class="flex items-center">
                     <a-button type="text" class=" xt-text xt-bg-2"
@@ -83,7 +86,7 @@
     </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted ,computed} from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
@@ -92,6 +95,7 @@ import { Icon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
 import type { CascaderProps } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
 const useCommunStore = useCommunityStore()
 const imageLoadVisible = ref(true)
 const goYuan = () => {
@@ -108,10 +112,10 @@ const props = defineProps({
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
+    // console.log(emoiiValue);
 
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    replyValue.value += `${key}`
+    postValue.value += `${key}`
 
 }
 const visible = ref(false)
@@ -194,33 +198,33 @@ onMounted(() => {
     useCommunStore.getCommunityCate(props.forumId)
     // console.log(useCommunStore.communityCate[0].id);
     // console.log(navigator.plugins);
-    
-    
+
+
 })
-const cascaderValue=reactive([])
-const forumInfo=computed(()=>{
+const cascaderValue = reactive([])
+const forumInfo = computed(() => {
     return useCommunStore.communityInfo.forum
 })
 const options = ref<CascaderProps['options']>([
     {
-        value:forumInfo.value.id,
-        label:forumInfo.value.name
+        value: forumInfo.value.id,
+        label: forumInfo.value.name
     }
 ])
-const loadData: CascaderProps['loadData'] = selectedOptions =>{
+const loadData: CascaderProps['loadData'] = selectedOptions => {
     const targetOption = selectedOptions[selectedOptions.length - 1];
     targetOption.loading = true;
-    let forumChildName=ref([])
-    useCommunStore.communityCate.forEach((item)=>{
-        if(item.name){
+    let forumChildName = ref([])
+    useCommunStore.communityCate.forEach((item) => {
+        if (item.name) {
             forumChildName.value.push({
-                value:item.id,
-                label:item.name,
+                value: item.id,
+                label: item.name,
             })
         }
     })
     targetOption.children = forumChildName.value
-    options.value=[...options.value]
+    options.value = [...options.value]
     targetOption.loading = false;
     return forumChildName.value
 }
@@ -251,22 +255,39 @@ const handleOk = (e: MouseEvent) => {
     emit('handleOk', visible)
 };
 // 发布帖子
+const titleValue = ref('')
 const publishPost = async () => {
-    let imageUrlList=ref([])
+    let imageUrlList = ref([])
+    console.log(fileList.value);
+
     if (postValue.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item) => {
             // console.log(item.originFileObj)
             let url = await fileUpload(item.originFileObj)
-            // console.log(url, 'url')
+            console.log(url, 'url')
             imageUrlList.value.push(url)
         })
-        let image=JSON.stringify(imageUrlList.value)
-        let forumId=props.forumId
-        let content=postValue.value
-        
+        let image = JSON.stringify(imageUrlList.value)
+        let forumId = props.forumId
+        let content = postValue.value
+        let title = computed(() => {
+            if (!titleValue.value) {
+                return postValue.value.slice(0, 5)
+            }
+            return titleValue.value
+        })
+        console.log(title.value, 'title.value');
 
-        postValue.value = ''
-        fileList.value = []
+
+        setTimeout(() => {
+            console.log(forumId, content, title.value, image, 'titleValue.value');
+            useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value)
+            message.success('发布成功')
+            titleValue.value = ''
+            postValue.value = ''
+            fileList.value = []
+        }, 3000);
+
     }
 }
 </script>
@@ -302,14 +323,16 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     // &::placeholder {
-        font-weight: 400;
-        font-size: 16px;
-        font-family: PingFangSC-Regular;
-        color: var(--secondary-text);
+    font-weight: 400;
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+    color: var(--secondary-text);
     // }
 }
+
 :deep(.ant-input) {
     &::placeholder {
         font-weight: 400;
