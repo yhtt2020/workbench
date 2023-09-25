@@ -12,7 +12,7 @@
               </div>
             </div>
             <div class="ml-1">
-              社群号：{{routeData.no}}
+              社群号：{{ routeData.no }}
             </div>
             <div class="font-14" style="color:var(--secondary-text);">
               <span class="font-14" style="color:var(--secondary-text);">{{ routeData.summary }}</span>
@@ -66,7 +66,23 @@
     </a-col>
 
     <a-col flex=" 1 1 200px" class="h-full flex flex-col">
-      <!--  -->
+      <!--  空状态，取文章 -->
+      <div class="community-article h-full">
+        <vue-custom-scrollbar class="h-full" :settings=" {
+      default: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      }
+    }">
+          <h2 v-html="emptyArticle.title"></h2>
+          <div v-html="emptyArticle.content"></div>
+        </vue-custom-scrollbar>
+
+      </div>
+
 
     </a-col>
   </a-row>
@@ -80,22 +96,24 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect, computed } from 'vue'
+import { defineComponent, reactive, toRefs, watchEffect, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showDropList } from '../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import { communityStore } from '../store/communityStore'
 import _ from 'lodash-es'
-
+import articleService from '../../../js/service/articleService'
 import ChatDropDown from '../components/chatDropDown.vue'
 import Modal from '../../../components/Modal.vue'
 import CreateNewChannel from '../components/createNewChannel.vue'
 import CreateNewGroup from '../components/createNewGroup.vue'
 import ChatFold from '../components/chatFold.vue'
+import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 
 export default defineComponent({
   components: {
+    VueCustomScrollbar,
     UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,
     ChatDropDown, CommunityIcon, Modal, CreateNewChannel,
     CreateNewGroup, ChatFold,
@@ -107,6 +125,10 @@ export default defineComponent({
     const myCom = communityStore()
     const { communityList } = myCom
     const data = reactive({
+      emptyArticle: {
+        title: '',
+        content: ''
+      },
       emptyList: [
         { icon: UserAddOutlined, name: '邀请其他人', type: 'inviteOther' },
         { icon: PlusOutlined, name: '添加新频道', type: 'addChannel' },
@@ -129,6 +151,13 @@ export default defineComponent({
       data.type = item.type
       data.addShow = true
     }
+
+    onMounted(async () => {
+      console.log('启动')
+      const rs = await articleService.getOne('community_after_created_empty')
+      data.emptyArticle = rs
+      console.log(rs)
+    })
 
     watchEffect(() => {
       data.routeData = { no: route.params.no }
@@ -164,7 +193,7 @@ export default defineComponent({
     return {
       showDropList,
       ...toRefs(data), clickEmptyButton,
-
+      onMounted
     }
   }
 })
@@ -217,6 +246,18 @@ export default defineComponent({
 
   &:hover {
     opacity: 0.8;
+  }
+}
+
+
+</style>
+<style lang="scss">
+.community-article {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  img{
+    border-radius: 8px !important ;
   }
 }
 </style>
