@@ -1,11 +1,11 @@
 <template>
   <div @contextmenu.stop="showDrawer" :class="classes"
-       style=" background: var( --primary-bg); color: var(--primary-text)"
+       style=" color: var(--primary-text)"
        :style="{
       display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-      background:this.options.background
+      background: options.background || 'var( --primary-bg)'
     }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->
@@ -145,7 +145,7 @@ export default {
     showRightIcon: {
       type: Boolean,
       default: true
-    }
+    },
   },
   data() {
     return {

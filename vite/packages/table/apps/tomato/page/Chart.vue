@@ -1,6 +1,6 @@
 <template>
     <Widget :options="options" :customIndex="customIndex" :desk="desk" >
-        <div class="title" @click="onClick">本周番茄时间</div>
+        <div class="title">本周番茄时间</div>
         <div class="time">4h15m</div>
         <div class="echarts">
             <div class="echarts-col" v-for="(item,index) in yTimer" :key="index" 
@@ -53,9 +53,7 @@
         async mounted() {
         },
         methods: {
-            onClick(){
-                console.log("nihao")
-            }
+
         },
     };
 </script>
