@@ -7,15 +7,23 @@
     ref="todoSlot"
     :menuList="toggleTodoList"
   >
-    <div @click="todoPage" class="pointer" style="position:absolute;left: 0;top: 0;bottom: 0;right: 0;z-index: 0">
+    <template #right-menu>
+      <div @click="todoPage" class="pointer float-right" style=" z-index: 0;  margin-left: 10px">
+        <RightOutlined />
+      </div>
+    </template>
 
-    </div>
     <div style="height:100%;">
       <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
         <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
       </div>
-      <div class="head-title" @click.stop="showDrawer">{{ selectTodo.title }}
+
+      <div class="head-title">
+        <div   @click.stop="showDrawer">{{ selectTodo.title }}
+        </div>
+
       </div>
+
       <div @click.stop style="cursor: auto;height:calc( 100% - 30px);position: relative" class="mt-2 ">
         <Tasklist class="content-box " :data="notFinish"></Tasklist>
 
@@ -67,7 +75,7 @@ import Widget from '../../card/Widget.vue'
 import {mapActions, mapWritableState} from 'pinia'
 import Tasklist from './TaskList.vue'
 import {databaseStore, listStore, taskStore} from "../../../page/app/todo/store";
-import {PlusOutlined, LeftOutlined} from "@ant-design/icons-vue";
+import {PlusOutlined, LeftOutlined,RightOutlined} from "@ant-design/icons-vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import Modal from "../../Modal.vue";
 import TaskInput from "../../../page/app/todo/components/TaskInput.vue";
@@ -79,7 +87,7 @@ export default {
     Tippy,
     TaskInput,
     Modal,
-    XtButton, PlusOutlined, LeftOutlined,
+    XtButton, PlusOutlined, LeftOutlined,RightOutlined,
     Widget,
     Tasklist,
   },
@@ -221,7 +229,8 @@ export default {
   border-radius: 4px;
   left: 45px;
   top: 12px;
-  background: rgba(255, 255, 255, 0.1);
   color: var(--primary-text);
+  display: flex;
+
 }
 </style>
