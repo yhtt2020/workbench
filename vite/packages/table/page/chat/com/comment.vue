@@ -5,7 +5,7 @@
             评论 {{ props.reply }}
         </div>
         <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
-        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible"/>
+        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible" class="xt-text-2"/>
     </div>
 </template>
 

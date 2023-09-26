@@ -62,7 +62,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2"/>
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->

@@ -10,7 +10,7 @@
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
         <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview" multiple>
             <div v-if="fileList.length < 3">
-                <plus-outlined style="font-size: 20px;" />
+                <plus-outlined style="font-size: 20px;color: var(--secondary-text);" />
             </div>
         </a-upload>
         <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
@@ -42,8 +42,9 @@
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 图片
             </button>
         </div>
-        <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
-            @click="addComment">回复</a-button>
+        <xt-button type="primary" class=" reply xt-text"
+            style="color: var(--secondary-text) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
+            @click="addComment">回复</xt-button>
     </div>
 </template>
 
@@ -69,34 +70,31 @@ const addEmoji = (item) => {
 }
 
 const emit = defineEmits(['addComment'])
-const addComment =() => {
-    let imageUrlList: any = ref([])
-    let url
+const addComment = async () => {
     if (value.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item) => {
-            // console.log(item.originFileObj)
-            url = await fileUpload(item.originFileObj)
-            // console.log(url, 'url')
-            imageUrlList.value.push(url)
-        })
-        let authorid: number = useCommunStore.communityPostDetail.author_uid
-        let content: string = value.value
-        let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
-        // let imageList=JSON.stringify(imageUrlList.value)
-        // console.log(threadId, content, authorid, imageUrlList.value);
-        // console.log(useCommunStore.communityPostDetail.pay_set.tid,useCommunStore.communityPostDetail.id);
-        setTimeout(() => {
-            // console.log(JSON.stringify(imageList), 'imageurl.value');
-            useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value))
-            useCommunStore.getCommunityPostDetail(threadId)
-            useCommunStore.getCommunityPostReply(threadId)
-        },550);
+        const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
 
-        value.value = ''
-        fileList.value = []
+        let authorid = useCommunStore.communityPostDetail.author_uid;
+        let content = value.value;
+        let threadId = useCommunStore.communityPostDetail.pay_set.tid || useCommunStore.communityPostDetail.id;
+
+        setTimeout(async () => {
+            const imageList = JSON.stringify(imageUrlList);
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
+            await useCommunStore.getCommunityPostDetail(threadId);
+            await useCommunStore.getCommunityPostReply(threadId);
+
+            value.value = '';
+            fileList.value = [];
+        });
     }
-    emit('addComment', commentList)
+
+    emit('addComment', commentList);
 }
+
 const imageVisible = () => {
     imageVis.value = !imageVis.value
 }
@@ -247,6 +245,8 @@ onMounted(async () => {
 }
 
 :deep(.ant-input) {
+    color: var(--secondary-text);
+
     &::placeholder {
         font-weight: 400;
         font-size: 16px;

@@ -1,6 +1,6 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
+    <Modal :maskNoClose="true" class="" :animationName="t-b-close">
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
@@ -18,7 +18,7 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-input v-model:value="titleValue" placeholder="输入标题（不少于5个字）" :bordered="false" />
+                        <a-input v-model:value="titleValue" placeholder="输入标题（不少于五个字）" :bordered="false" />
                         <a-textarea v-model:value="postValue" placeholder="输入正文（不少于十个字）" :autoSize="{ minRows: 3, maxRows: 8 }"
                             :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
@@ -67,18 +67,18 @@
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
                 <a-select v-model:value="cascaderValue" :options="options" placeholder="想天工作台/桌面分享" :loadData="loadData" :bordered="false" @change="handleChange"
-                    style="color:var(--primary-text) !important; font-size: 14px; border-radius: 10px; " change-on-select>
+                    style=" font-size: 14px; border-radius: 10px;" change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
                     </template>
                 </a-select>
                 <div class="flex items-center">
-                    <a-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;"
-                        @click="handleOk">取消</a-button>
-                    <a-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;"
-                        @click="publishPost">发布</a-button>
+                    <xt-button type="text" class=" xt-text xt-bg-2"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 68px; height: 32px;"
+                        @click="handleOk">取消</xt-button>
+                    <xt-button type="primary" class="ml-2"
+                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 68px; height: 32px;background-color: var(--active-bg);"
+                        @click="publishPost">发布</xt-button>
                 </div>
             </div>
         </div>
@@ -209,7 +209,7 @@ communCate.value.forEach((item) => {
         label: item.name
     })
 })
-const cascaderValue = reactive([])
+let cascaderValue = reactive([])
 const forumInfo = computed(() => {
     return useCommunStore.communityInfo.forum
 })
@@ -226,7 +226,7 @@ const loadData: CascaderProps['loadData'] = selectedOptions => {
     options.value = [...options.value];
 };
 const handleChange = (value) => {
-    cascaderValue.value = value
+    cascaderValue = value
     // console.log(value);
 }
 const settingsScroller = reactive({
@@ -250,24 +250,19 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
-const handleOk = (e: MouseEvent) => {
+const handleOk = () => {
     // console.log(e);
     visible.value = false
     emit('handleOk', visible)
 };
 // 发布帖子
 const titleValue = ref('')
-const publishPost =  () => {
-    let imageUrlList = ref([])
-    // console.log(fileList.value);
-
+const publishPost = async () => {
     if (postValue.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item) => {
-            // console.log(item.originFileObj)
-            let url = await fileUpload(item.originFileObj)
-            // console.log(url, 'url')
-            imageUrlList.value.push(url)
-        })
+        const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
         // let image = JSON.stringify(imageUrlList.value)
         let forumId = props.forumId
         let content = postValue.value
@@ -280,14 +275,16 @@ const publishPost =  () => {
         // console.log(title.value, 'title.value');
 
 
-        setTimeout( () => {
+        setTimeout(async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
-            useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value,cascaderValue)
+            const imageList = JSON.stringify(imageUrlList);
+            await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
             fileList.value = []
-        },550);
+            handleOk()
+        });
 
     }
 }
@@ -324,7 +321,13 @@ const publishPost =  () => {
     width: 64px;
     height: 64px;
 }
-
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+    color: var(--secondary-text);
+}
+:deep(.ant-select-arrow){
+    color: var(--secondary-text);
+    font-size: 16px;
+}
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     // &::placeholder {
     font-weight: 400;
@@ -333,7 +336,9 @@ const publishPost =  () => {
     color: var(--secondary-text);
     // }
 }
-
+:deep(.ant-select-open){
+    background: var(--primary-bg) !important;
+}
 :deep(.ant-input) {
     &::placeholder {
         font-weight: 400;
