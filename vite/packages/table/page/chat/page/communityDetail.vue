@@ -1,9 +1,10 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
-      :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}"
+    <a-col  class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
       style=" border-right:1px solid var(--divider);"
     >
+    <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
+    <!-- flex=" 0 1 300px" -->
       
       <CategoryFloat :communityID="routeData" :float="false"  @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
 

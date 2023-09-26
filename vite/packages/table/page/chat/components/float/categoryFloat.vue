@@ -1,17 +1,16 @@
 <template>
  <div class="flex flex-col">
   <!-- 左侧顶部社群描述 -->
-  <div class="w-full mb-2.5 flex justify-between items-center">
-   <div class="flex flex-col">
-
+  <div class="w-full mb-2.5 flex  justify-between items-center">
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ leftList?.name }}</span>
-    <div class="font-14" style="color:var(--secondary-text);max-width:238px;">
-     {{ leftList?.summary }}
-    </div>
-   </div>
-   <ChatDropDown @updatePage="updatePage" :no="communityID.no" :list="floatList"/>
+    <ChatDropDown @updatePage="updatePage" :no="communityID.no" :list="floatList"/> 
   </div>
-  <div class="ml-1 category-14-400" style="color:var(--primary-text);">
+
+  <div class="font-14 mb-2" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
+    {{ leftList?.summary }}
+  </div> 
+  
+  <div class="ml-1 category-14-400 mb-2" style="color:var(--primary-text);">
    社群号：{{ communityID?.no }}
   </div>
   <div>
@@ -49,7 +48,7 @@
 
      <div v-for="item in item.children" @click="currentItem(item)" 
       :class="{'active-bg': currentID ===item.id}"
-      class="flex items-center p-2 rounded-lg pointer group-item"
+      class="flex items-center rounded-lg p-2 pointer group-item" 
      >
       <div class="flex items-center">
        <template v-if="item.type === 'group'">
@@ -73,7 +72,7 @@
     <div class="flex grid grid-cols-2 gap-1" v-else>
 
      <div v-for="item in item.children" @click="currentItem(item)"
-      :class="{'active-bg':currentID === item.id}" class="flex items-center p-2 rounded-lg pointer group-item"
+      :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
      >
       <div class="flex items-center">
        <template v-if="item.type === 'group'">
