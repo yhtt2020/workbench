@@ -67,18 +67,29 @@ export const communityStore = defineStore('communityStore',{
       cache:1
     }
     const categoryList = await post(getChannelList,option)
-    return categoryList
+    const categoryTreeList = await post(getChannelTree,option)
+    
+    const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
+
+    return result
+    
+    // if(categoryList?.data?.list){
+    //   this.categoryList.category = categoryList.data.list
+    // }
+
    },
 
    // 获取频道树状列表
-   async getCategoryTreeData(id:any){
-    const option = {
-      communityNo:id,
-      cache:1
-    }
-    const categoryTreeList = await post(getChannelTree,option)
-    return categoryTreeList
-   },
+  //  async getCategoryTreeData(id:any){
+  //   const option = {
+  //     communityNo:id,
+  //     cache:1
+  //   }
+  //   const categoryTreeList = await post(getChannelTree,option)
+  //   if(categoryTreeList?.data?.treeList){
+  //     this.categoryList.tree = categoryTreeList.data.treeList
+  //   }
+  //  },
 
 
    // 删除社群频道

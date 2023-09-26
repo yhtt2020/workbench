@@ -61,7 +61,7 @@
  </template>
  
  <script>
- import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed } from 'vue'
+ import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed,watchEffect } from 'vue'
  import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
  import Sortable from 'sortablejs';
  import { Icon as ClassIcon} from '@iconify/vue'
@@ -80,7 +80,46 @@
  
    console.log('获取数据',props.no)
  
-  //  const communityCategory = communityStore()
+   const communityCategory = communityStore()
+
+   const data = reactive({
+    settingsScroller: {
+     useBothWheelAxes: true,
+     swipeEasing: true,
+     suppressScrollY: false,
+     suppressScrollX: true,
+     wheelPropagation: true
+    },
+    isHover:false, // 判断是否悬浮
+    isEditing:false, // 是否这种编辑
+    hoverIndex:-1,
+    editIndex:-1,
+    statusIndex:-1, // 点击选中下标
+    classItem:'', // 接收选中的分组名称
+    option:{  // 请求频道列表和频道树状列表的参数
+     communityNo:props.no,
+     cache:1,
+    },
+    list:[],
+   })
+
+   watchEffect( async ()=>{
+    const res  = await communityCategory.getCategoryData(props.no)
+    
+    const filterCategoryRes = res?.category.filter((item)=>{
+      return item.role === 'category'
+    })
+
+    // await communityCategory.getCategoryData(props.no)
+    // const filterCategoryRes = communityCategory?.categoryList?.category.filter((item)=>{
+    //   return item.role === 'category'
+    // })
+
+    if(filterCategoryRes?.length !== 0){
+      data.list = filterCategoryRes
+    }
+
+   })
 
   //  const filterList = computed(()=>{
   //    if(communityCategory.categoryList.length !== 0){
@@ -93,126 +132,119 @@
   //    }
   //  })
  
-  //  const data = reactive({
-  //   settingsScroller: {
-  //    useBothWheelAxes: true,
-  //    swipeEasing: true,
-  //    suppressScrollY: false,
-  //    suppressScrollX: true,
-  //    wheelPropagation: true
-  //   },
-  //   isHover:false, // 判断是否悬浮
-  //   isEditing:false, // 是否这种编辑
-  //   hoverIndex:-1,
-  //   editIndex:-1,
-  //   statusIndex:-1, // 点击选中下标
-  //   classItem:'', // 接收选中的分组名称
-  //   option:{  // 请求频道列表和频道树状列表的参数
-  //    communityNo:props.no,
-  //    cache:1,
-  //   },
-  //   list:filterList.value
-  //  })
+  
  
   
-  //  // 关闭按钮
-  //  const closeChannel = ()=>{
-  //    ctx.emit('close')
-  //  }
-  //  // 返回按钮
-  //  const backButton = ()=>{
-  //    ctx.emit('classBack')
-  //  }
+   // 关闭按钮
+   const closeChannel = ()=>{
+     ctx.emit('close')
+   }
+   // 返回按钮
+   const backButton = ()=>{
+     ctx.emit('classBack')
+   }
  
-  //  // 点击选中状态
-  //  const listClick = (item,index) =>{
-  //    if(data.statusIndex === index){
-  //      data.statusIndex = -1
-  //    }else{
-  //      data.statusIndex = index
-  //      data.classItem = item
-  //    }
-  //  }
- 
-   
-  //  // 添加新分类
-  //  const addClassItem = () =>{}
-  //  // 触发编辑
-  //  const edit = (index) =>{
-  //    data.isEditing = true
-  //    data.editIndex = index
-  //    nextTick(()=>{
-  //      const classRef = document.querySelector('#classInputRef')
-  //      classRef.focus()
-  //      classRef.select()
-  //    })
-  //  }
-  //  // 删除列表分类项
-  //  const deleted = async (item) =>{
-  //   console.log('测试',item)
-  //   const result = await communityCategory.removeCategory(item.id)
-  //   console.log('返回状态',result)
-  //  }
+   // 点击选中状态
+   const listClick = (item,index) =>{
+     if(data.statusIndex === index){
+       data.statusIndex = -1
+     }else{
+       data.statusIndex = index
+       data.classItem = item
+     }
+   }
  
    
- 
- 
-  //  // 保存编辑数据
-  //  const save = () =>{
-  //    data.isEditing = false
-  //  }
-  //  // 退出编辑模式
-  //  const exitEdit = () =>{
-  //    data.isEditing = false
-  //  }
-  //  // 拖拽排序
-  //  const onSortEnd = (evt) =>{
-  //    let newIndex = evt.newIndex , oldIndex = evt.oldIndex
-  //    let newItem = document.querySelector('#classSortTab').children[newIndex]
-  //    let oldItem = document.querySelector('#classSortTab').children[oldIndex]
-  //    document.querySelector('#classSortTab').removeChild(newItem)
-  //    if(newIndex > oldIndex){
-  //      document.querySelector('#classSortTab').insertBefore(newItem,oldItem)
-  //    }else{
-  //      document.querySelector('#classSortTab').insertBefore(newItem,oldItem.nextSibling)
-  //    }
+   // 添加新分类
+   const addClassItem = () =>{}
+   // 触发编辑
+   const edit = (index) =>{
+     data.isEditing = true
+     data.editIndex = index
+     nextTick(()=>{
+       const classRef = document.querySelector('#classInputRef')
+       classRef.focus()
+       classRef.select()
+     })
+   }
+   // 删除列表分类项
+   const deleted = async (item) =>{
+    // console.log('测试',item)
+    const result = await communityCategory.removeCategory(item.id)
+    if(result?.status === 1){
+      message.success(`${result.info}`)
+      await communityCategory.getCategoryData(props.no)
 
-  //    let cloneTemp = [...data.list]   // 将原数据进行复制
-  //    let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
-  //    cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
-  //    cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
-  //    data.list = cloneTemp
-  //  }
- 
- 
-  //  // 创建判断最后一步
-  //  const createClass = async () =>{
-  //    // 判断是否选择分类
-  //    if(data.statusIndex !== -1){
-  //      const option = { type:props.data.type,id:data.classItem.id,no:props.no,content:props.data}
-  //      const createRes = await channelClass.secondaryChannel(option)
-  //      if(createRes.status === 1){
-  //        message.success(`${createRes.info}`)
-  //        communityCategory.getTreeChannelList(data.option)
-  //        closeChannel()
-  //      }
-  //    }
-  //  }
+      // const res = await communityCategory.getCategoryData(props.no)
+      // if(res?.data?.list){
+      //   data.list = res.data.list
+      
+      // }
+    }
+    // console.log('返回状态',result)
+   }
  
    
  
-  //  // 初始化挂载
-  //  onMounted(()=>{
-  //    const el = document.querySelector('#classSortTab')
-  //    new Sortable(el,{
-  //      group: 'sortableGroup',
-  //      onEnd:onSortEnd // 拖拽结束时触发的回调函数
-  //    })
+ 
+   // 保存编辑数据
+   const save = () =>{
+     data.isEditing = false
+   }
+   // 退出编辑模式
+   const exitEdit = () =>{
+     data.isEditing = false
+   }
+   // 拖拽排序
+   const onSortEnd = (evt) =>{
+     let newIndex = evt.newIndex , oldIndex = evt.oldIndex
+     let newItem = document.querySelector('#classSortTab').children[newIndex]
+     let oldItem = document.querySelector('#classSortTab').children[oldIndex]
+     document.querySelector('#classSortTab').removeChild(newItem)
+     if(newIndex > oldIndex){
+       document.querySelector('#classSortTab').insertBefore(newItem,oldItem)
+     }else{
+       document.querySelector('#classSortTab').insertBefore(newItem,oldItem.nextSibling)
+     }
+
+     let cloneTemp = [...data.list]   // 将原数据进行复制
+     let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
+     cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
+     cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
+     data.list = cloneTemp
+   }
+ 
+ 
+   // 创建判断最后一步
+   const createClass = async () =>{
+     // 判断是否选择分类
+     if(data.statusIndex !== -1){
+       const option = { type:props.data.type,id:data.classItem.id,no:props.no,content:props.data}
+       const createRes = await channelClass.secondaryChannel(option)
+       if(createRes.status === 1){
+         message.success(`${createRes.info}`)
+        //  communityCategory.getCategoryTreeData(data.option)
+         await communityCategory.getCategoryData(props.no)
+         closeChannel()
+       }
+     }
+   }
+ 
+   
+ 
+   // 初始化挂载
+   onMounted(()=>{
+     const el = document.querySelector('#classSortTab')
+     new Sortable(el,{
+       group: 'sortableGroup',
+       onEnd:onSortEnd // 拖拽结束时触发的回调函数
+     })
      
-  //  })
+     
+   })
  
    return {
-   filterList,
+  //  filterList,
     ...toRefs(data),closeChannel,backButton,addClassItem,
     edit,deleted,listClick,save,exitEdit,createClass,
    }

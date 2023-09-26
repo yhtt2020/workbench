@@ -20,7 +20,7 @@
  
   <teleport to='body' >
    <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:2000 !important;">
-     <!-- <UpdateCommunityApply v-if="type === 'apply' " :no="no" @close="categoryShow = false"></UpdateCommunityApply> -->
+     <UpdateCommunityApply v-if="type === 'apply' " :no="no" @close="categoryShow = false"></UpdateCommunityApply>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
     </Modal>
   </teleport>

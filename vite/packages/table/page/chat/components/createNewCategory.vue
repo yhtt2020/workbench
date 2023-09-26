@@ -54,7 +54,8 @@ export default defineComponent({
     const categoryRes =  await category.createChannel(option)
     if(categoryRes.status === 1){
      message.success(`${categoryRes.info}`)
-     category.getCategoryData(props.no)
+     await category.getCategoryData(props.no)
+     // await category.getCategoryTreeData(props.no)
      closeNewGroup()
     }else{
      message.error(`${categoryRes.info}`)

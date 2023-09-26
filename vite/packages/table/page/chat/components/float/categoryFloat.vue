@@ -146,12 +146,14 @@ export default defineComponent({
       // console.log('获取数据',chatList[0])
 
       if(props.communityID?.no !== '1'){
-
-        const tree =  await leftListCategory.getCategoryTreeData(props.communityID.no)
+        const res = await leftListCategory.getCategoryData(props.communityID.no)
+        
+        // await leftListCategory.getCategoryTreeData(props.communityID.no)
+        
         const communityName = communityList?.find((item)=>{
          return String(item.communityInfo.no) === String(props.communityID.no)
         })
-        data.leftList.tree = tree?.data?.treeList
+        data.leftList.tree = res?.tree
         data.leftList.role = communityName?.role
         data.leftList.name = communityName?.communityInfo?.name
 
