@@ -210,9 +210,6 @@ communCate.value.forEach((item) => {
     })
 })
 let cascaderValue = reactive([])
-const forumInfo = computed(() => {
-    return useCommunStore.communityInfo.forum
-})
 const options = ref<CascaderProps['options']>([]);
 arr.value.forEach((item) => {
     options.value.push(item)
@@ -227,7 +224,7 @@ const loadData: CascaderProps['loadData'] = selectedOptions => {
 };
 const handleChange = (value) => {
     cascaderValue = value
-    // console.log(value);
+    console.log(value);
 }
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -336,8 +333,17 @@ const publishPost = async () => {
     color: var(--secondary-text);
     // }
 }
-:deep(.ant-select-open){
+:deep( .ant-select-open){
     background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+}
+:deep( .ant-select-focused){
+    background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+}
+:deep( .ant-select-focused .ant-select-open){
+    background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
 }
 :deep(.ant-input) {
     color: var(--secondary-text);
