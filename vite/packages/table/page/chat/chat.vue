@@ -7,7 +7,6 @@
 
     <template #communityFloat>
       <div class="flex flex-col" style="height:500px;width:300px;">
-        {{ communityNo }}
         <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
       </div>
     </template>

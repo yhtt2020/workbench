@@ -18,8 +18,7 @@ export const communityStore = defineStore('communityStore',{
   state: () => ({
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
-    categoryList:[], // 频道目录列表
-    categoryTreeList:[], // 频道树列表
+    categoryList:{}, // 频道目录列表
   }),
 
   actions: {
@@ -61,16 +60,24 @@ export const communityStore = defineStore('communityStore',{
     return await post(createChannels,data)
    },
 
-   // 获取社群频道数据
+   // 获取社群频道目录
    async getCategoryData(id:any){
     const option = {
       communityNo:id,
       cache:1
     }
-    const categoryRes = await post(getChannelList,option)
-    const categoryTreeRef =  await post(getChannelTree,option)
-    const result = { category:categoryRes?.data?.list , tree:categoryTreeRef?.data?.treeList}
-    return result
+    const categoryList = await post(getChannelList,option)
+    return categoryList
+   },
+
+   // 获取频道树状列表
+   async getCategoryTreeData(id:any){
+    const option = {
+      communityNo:id,
+      cache:1
+    }
+    const categoryTreeList = await post(getChannelTree,option)
+    return categoryTreeList
    },
 
 

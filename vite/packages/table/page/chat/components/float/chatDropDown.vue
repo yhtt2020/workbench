@@ -20,7 +20,7 @@
  
   <teleport to='body' >
    <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:2000 !important;">
-     <UpdateCommunityApply v-if="type === 'apply' " :no="no" @close="categoryShow = false"></UpdateCommunityApply>
+     <!-- <UpdateCommunityApply v-if="type === 'apply' " :no="no" @close="categoryShow = false"></UpdateCommunityApply> -->
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
     </Modal>
   </teleport>
@@ -28,7 +28,7 @@
  </template>
  
  <script>
- import { defineComponent, reactive, toRefs} from 'vue'
+ import { defineComponent, reactive, toRefs,watchEffect} from 'vue'
  import { EllipsisOutlined } from '@ant-design/icons-vue'
  import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
@@ -49,10 +49,14 @@
    const chat = chatStore()
  
    const data = reactive({
-    dropDownList:props.list,
+    dropDownList:[],
     dropDownIndex:0,
     type:'',
     categoryShow:false,
+   })
+
+   watchEffect(()=>{
+     data.dropDownList = props.list
    })
  
    const selectMenuItem = (item,index) =>{

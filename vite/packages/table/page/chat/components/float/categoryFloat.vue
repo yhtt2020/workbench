@@ -1,6 +1,6 @@
 <template>
  <div class="flex flex-col">
-  <!-- 左侧顶部社群描述 -->
+
   <div class="w-full mb-2.5 flex  justify-between items-center">
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ leftList?.name }}</span>
     <ChatDropDown @updatePage="updatePage" :no="communityID.no" :list="floatList"/> 
@@ -29,21 +29,24 @@
 
  <a-divider style="height: 2px;margin: 12px 0; background-color: var(--divider)"/>
 
- <template v-if="leftList?.tree?.length === 0">
-  <div class="flex items-center h-full justify-center flex-col">
-   <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
-        style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-     <component :is="item.icon"></component>
-     <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
-   </div>
+ <!-- <template v-if=""></template> -->
+
+
+ <template v-if="leftList?.tree?.length === 0 ">
+  <div class="flex items-center h-full justify-center flex-col" v-if="leftList?.role !== 'member'">
+    <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
+         style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
+      <CommunityIcon :icon="item.icon"></CommunityIcon>
+      <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
+    </div>
   </div>
+  
  </template>
 
-  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
+ <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
   <div v-for="item in leftList?.tree">
    <ChatFold :title="item.name">
     
-    <!-- 单列 -->
     <div class="flex flex-col" v-if="isDoubleColumn === false">
 
      <div v-for="item in item.children" @click="currentItem(item)" 
@@ -68,7 +71,6 @@
 
     </div>
 
-    <!-- 双列 -->
     <div class="flex grid grid-cols-2 gap-1" v-else>
 
      <div v-for="item in item.children" @click="currentItem(item)"
@@ -90,141 +92,139 @@
      </div>
 
     </div>
+
    </ChatFold>
   </div>
  </vue-custom-scrollbar>
 
+
 </template>
 
 <script>
-import { hideDropList,chatList,showDropList } from '../../../../js/data/chatList'
-import { Icon as CommunityIcon } from '@iconify/vue'
-import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined } from '@ant-design/icons-vue'
-import { mapWritableState, mapActions, mapState } from 'pinia'
+import { defineComponent,watchEffect,toRefs,reactive,computed } from 'vue'
 import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
+import { hideDropList,chatList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
+import { Icon as CommunityIcon } from '@iconify/vue'
+
 
 import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
 
-export default {
- props:[ 'communityID','float' ],
+export default defineComponent({
+  props:[ 'communityID','float' ],
 
- components:{
-  UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined,
-  ChatDropDown,CommunityIcon,ChatFold
- },
- 
- data(){
-  return{
-   hideDropList,
+  components:{
+    CommunityIcon,ChatDropDown,ChatFold,
+  },
 
-   emptyList: [
-    { icon:UserAddOutlined, name: '邀请其他人', type: 'inviteOther' },
-    { icon: PlusOutlined, name: '添加新应用', type: 'addChannel' },
-    { icon: MenuUnfoldOutlined, name: '添加新分组', type: 'addNewGroup' },
-   ],
+  setup (props,ctx) {
+    const chat = chatStore()
+    const leftListCategory = communityStore()
+    const { communityList } = leftListCategory
+    const data = reactive({
+      leftList:{},
+      emptyList: [
+       { icon:'fluent:people-add-16-regular', name: '邀请其他人', type: 'inviteOther' },
+       { icon:'fluent:apps-add-in-20-filled', name: '添加新应用', type: 'addChannel' },
+       { icon:'fluent:add-16-filled', name: '添加新分组', type: 'addNewGroup' },
+      ],
+      currentID:'',
+      settingsScroller: {
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
+    })
 
-   settingsScroller: {
-    useBothWheelAxes: true,
-    swipeEasing: true,
-    suppressScrollY: false,
-    suppressScrollX: true,
-    wheelPropagation: true
-   },
-  
-   currentID:'',
+    watchEffect(async ()=>{
+      // console.log('获取props参数::>>',typeof props.communityID.no)
+      // console.log('获取props参数::>>',props.communityID.no !== '1')
 
-   receptionData:{}
+      // console.log('获取数据',chatList[0])
 
+      if(props.communityID?.no !== '1'){
+
+        const tree =  await leftListCategory.getCategoryTreeData(props.communityID.no)
+        const communityName = communityList?.find((item)=>{
+         return String(item.communityInfo.no) === String(props.communityID.no)
+        })
+        data.leftList.tree = tree?.data?.treeList
+        data.leftList.role = communityName?.role
+        data.leftList.name = communityName?.communityInfo?.name
+
+      }else{
+        // console.log('获取数据',chatList[0])
+        // console.log('判断',props.float)
+        data.leftList.name = chatList[0]?.name
+        data.leftList.summary = chatList[0]?.summary
+        data.leftList.tree = chatList[0]?.channelList
+        data.leftList.category = []
+        data.leftList.role = ''
+        // console.log('排查问题',data.leftList)
+      }
+    })
+
+    // 判断单双列
+    const isDoubleColumn = computed(()=>{
+      return chat.settings.showDouble
+    })
+
+    // 通过判断获取菜单选择数据
+    const floatList = computed(()=>{
+
+      if(props.float){  // 开启悬浮模式
+
+        if(props.communityID.no === 1){
+          return memberShowList
+        }else{
+          // console.log('排查::>>',)
+          if(data.leftList?.role !== 'member'){
+            return showDropList
+          }else{
+            return memberShowList
+          }
+        }
+
+      }else{ // 关闭悬浮模式
+
+        if(props.communityID.no === '1'){
+          return memberDropList
+        }else{
+          if(data.leftList?.role !== 'member'){
+            return hideDropList
+          }else{
+            return memberDropList
+          }
+        }
+
+      }
+    
+    })
+
+    // 当社群为空时触发
+    const clickEmptyButton = (item) => {
+     ctx.emit('createCategory',item)
+    }
+
+     // 点击当前
+    const currentItem = (item) => {
+     data.currentID = item.id
+     ctx.emit('clickItem',item)
+    }
+
+
+
+
+
+    return {
+     isDoubleColumn,floatList,chatList,
+     ...toRefs(data),clickEmptyButton,currentItem,
+    }
   }
- },
-
- computed:{
-  ...mapWritableState(chatStore,['settings']),
-  ...mapWritableState(communityStore,['communityList']),
-
-  isDoubleColumn(){
-   return this.settings.showDouble
-  },
-  leftList(){
-    // console.log('通过传过来的社群id进行数据判断',this.communityID)
-
-    if(this.communityID.no !== '1'){
-
-      const communityName = this.communityList?.find((item)=>{
-        return String(item.communityInfo.no) === String(this.communityID.no)
-      })
-      this.getTreeList()
-      const changeData = { 
-        name:communityName?.communityInfo?.name,
-        summary:communityName?.summary ? '' : communityName?.summary,
-        tree:this.receptionData?.tree,
-        category: this.receptionData?.category
-      }
-      return changeData
-
-    }else{
-
-      const defaultData = {
-        name:chatList[0].name,
-        summary:chatList[0].summary,
-        tree:chatList[0].channelList,
-        category:[]
-      }
-     console.log('排查数据为空问题',defaultData)
-
-      return defaultData
-      
-    }
-  },
-
-  floatList(){
-    if(this.float){
-      return showDropList
-    }else{
-      return hideDropList
-    }
-  }
- },
-
- methods:{
-  ...mapActions(communityStore,['getCategoryData']),
-
-  // 切换单双列显示
-  updatePage(){
-   this.$emit('updateColumn')
-  },
-
-  // 当社群为空时触发
-  clickEmptyButton(item){
-   this.$emit('createCategory',item)
-  },
-
-  // 点击当前
-  currentItem(item){
-   this.currentID = item.id
-   this.$emit('clickItem',item)
-  },
-
-  // 获取频道目录树状数据,在不是默认数据的情况下
-  async getTreeList(){
-    if(this.communityID.no  !== '1'){
-      const res = await this.getCategoryData(this.communityID.no)
-      if(res){
-       this.receptionData = res
-      }
-    }else{
-      return;
-    }
-  },
-
-
- }
-
-  
-
-}
+})
 </script>
 
 <style lang="scss" scoped>
