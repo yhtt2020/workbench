@@ -3,7 +3,7 @@
         <!-- {{ userUid}} -->
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(userUid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false" style="cursor: default;"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -242,6 +242,7 @@ onMounted(async () => {
     height: 40px;
     // width: 300px;
     width: calc(100% - 45px);
+    // cursor: cursor;
 }
 
 :deep(.ant-input) {

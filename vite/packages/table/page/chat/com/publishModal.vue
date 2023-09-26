@@ -340,6 +340,7 @@ const publishPost = async () => {
     background: var(--primary-bg) !important;
 }
 :deep(.ant-input) {
+    color: var(--secondary-text);
     &::placeholder {
         font-weight: 400;
         font-size: 16px;

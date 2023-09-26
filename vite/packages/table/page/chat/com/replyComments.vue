@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false" style="cursor: default;"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -258,6 +258,7 @@ onMounted(async () => {
 }
 
 :deep(.ant-input) {
+    color: var(--secondary-text);
     &::placeholder {
         font-weight: 400;
         font-size: 16px;

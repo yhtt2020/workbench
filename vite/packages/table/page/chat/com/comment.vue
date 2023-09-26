@@ -70,7 +70,9 @@ const getReplyText=(val)=>{
     text-align: center;
 }
 
-
+:deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link){
+    color: var(--secondary-text) !important;
+}
 .input-btm {
     :deep(.ant-button) {
         color: var(--secondary-text) !important;

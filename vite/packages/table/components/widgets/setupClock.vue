@@ -1,9 +1,9 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 10em)">
+            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 5em )">
                 <vue-custom-scrollbar :settings="outerSettings"
-                    style="position: relative; height: calc(100vh - 10em);color: var(--primary-text);" class="scroll">
+                    style="position: relative; height: calc(100vh );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
@@ -48,7 +48,7 @@
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
                              -->
-                            <xt-button class="w-full h-[40px] font-16 xt-active-bg"
+                            <xt-button type="primary" class=" font-16" style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
                         </div>
                     </div>
@@ -319,24 +319,20 @@ export default {
 :deep(.ant-select) {
     border: none !important;
 }
-:deep(.ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child) {
-    border-radius: 8px !important;
-}
-:deep(.ant-radio-button-wrapper:last-child) {
-    border-radius: 8px !important;
-    margin-left: 5px;
-}
-:deep(.ant-radio-button-wrapper:first-child) {
-    border-radius: 8px !important;
-}
 :deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
     // border-radius: 10px !important;
     height: 100%;
     border-radius: 10px;
 
 }
-
+// :deep(.anticon.ant-input-clear-icon-has-suffix){
+//     background: var(--primary-bg);
+// }
+// :deep(.ant-innput-suffix){
+//     background: var(--primary-bg);
+// }
 :deep(.ant-input) {
+    color: var(--primary-text);
     &::placeholder {
         font-family: PingFangSC-Regular;
         font-size: 14px;
@@ -357,10 +353,7 @@ export default {
     padding-top: 0px;
 }
 
-:deep(.xt-btn) {
-    width: 100% !important;
-    height: 40px !important;
-}
+
 
 .font-16 {
     font-family: PingFangSC-Regular;
