@@ -48,11 +48,11 @@ const menus = ref([
     value: "Primary",
     callBack: selectTab,
   },
-  // {
-  //   slot: "flag",
-  //   value: "Branch",
-  //   callBack: selectTab,
-  // },
+  {
+    slot: "flag",
+    value: "Branch",
+    callBack: selectTab,
+  },
   // {
   //   slot: "info",
   //   value: "Branch",
