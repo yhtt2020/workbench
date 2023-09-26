@@ -9,7 +9,7 @@
       <Icon :icon="data.icon.name" style="font-size: 17.5px"></Icon>
       <div class="ml-2 flex flex-col">
         <div class="flex justify-between">
-          {{ data.name }}
+          <div class="truncate" style="width: 120px;">{{ data.name }}</div>
           <div class="xt-text-2 text-xs">
             {{ time }}
           </div>
