@@ -2,7 +2,7 @@
   <div
     v-if="slot == 'default'"
     ref="el"
-    @click.stop="next($event)"
+    @click="next($event)"
     @contextmenu="next($event)"
     class="box"
   >
