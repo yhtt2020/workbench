@@ -57,12 +57,20 @@ const taskGuide = () => {
       data.text = currentTask.value;
       data.visible = true;
       break;
+    case "router message":
+      data.text = currentTask.value;
+      data.visible = true;
+      break;
+
     default:
       break;
   }
 };
 
 const ok = () => {
+  router.push({
+    name: 'home',
+  });
   store.isTaskDrawer = false;
   //  这里执行fn
   let fn = lastGuide[store.taskID];

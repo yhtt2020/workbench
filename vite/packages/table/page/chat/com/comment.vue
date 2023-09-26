@@ -1,10 +1,8 @@
 <template>
     <div class="w-full ">
-        
         <reply @addComment="getReplyText"/>
         <div class="mb-4 font-14 xt-text">
             评论 {{ props.reply }}
-            <!-- {{ commentList }} -->
         </div>
         <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
         <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible"/>
@@ -12,17 +10,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed ,onMounted,onBeforeMount} from 'vue'
+import { ref, computed } from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './reply.vue'
 import {useCommunityStore} from '../commun'
-// onBeforeMount(async ()=>{
-//     // props.tid
-//     // console.log(props.tid);
-//     // console.log(typeof props.reply);
-    
-//     await store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id)
-// })
 const current = ref(1)
 const changePage=(val)=>{
     current.value=val

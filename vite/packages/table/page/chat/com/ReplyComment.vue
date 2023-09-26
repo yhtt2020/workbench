@@ -39,14 +39,14 @@
                         <MessageOutlined style="font-size: 16px;margin-top: 2px" class="mr-1 " />
                         <!-- <div>回复</div> -->
                     </div>
-                    <div class="flex justify-center ml-1" v-if="store.communityPostDetail.user.uid=== replyCom.user.uid">
-                        <a-dropdown trigger="click">
-                            <template #overlay>
-                                <a-menu @click="handleMenuClick">
-                                    <a-menu-item key="1">删除</a-menu-item>
+                    <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid === replyCom.user.uid">
+                        <a-dropdown trigger="click" overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
+                            <template #overlay >
+                                <a-menu @click="handleMenuClick" class="xt-bg">
+                                    <a-menu-item key="1" class="xt-text">删除</a-menu-item>
                                 </a-menu>
                             </template>
-                            <button class="border-0 xt-bg w-[20px] h-[20px]">
+                            <button class="border-0 xt-bg w-[30px] h-[20px]">
                                 <Icon class="text-xl text-center xt-text-2 pointer"
                                     icon="fluent:more-horizontal-16-filled" />
 
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <replyComments v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"
-                :userName="replyCom.user.nickname" />
+                :replyCom="props.replyCom" />
         </div>
         <ReplyCommentLite v-for="item in replyCmmentList" :key="item" :replyCom="item" :replyVisible="replyVisible">
         </ReplyCommentLite>
@@ -70,20 +70,23 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyCommentLite from './ReplyCommentLite.vue';
 import replyComments from './replyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 import {Icon} from '@iconify/vue'
+import {message} from 'ant-design-vue'
 import {useCommunityStore} from '../commun'
 const store=useCommunityStore()
 const useUserStore = appStore()
 const options=reactive({
     url:'data-source'
 })
-const isLike = ref(false)
+const isLike = computed(() => {
+    return props.replyCom.is_support
+})
 const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.replyCom.comment
@@ -105,8 +108,10 @@ let userInfo = {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
-const clickLike = () => {
-    isLike.value = !isLike.value
+const clickLike =async () => {
+    // isLike.value = !isLike.value
+    await store.getCommunityLike('reply',props.replyCom.user.uid)
+    message.success(store.communitySupport.info)
 }
 const replyStatus = () => {
     replyVisible.value = !replyVisible.value
@@ -131,7 +136,9 @@ const getReplyText = (val) => {
 const content = computed(() => {
     return emojiReplace(props.replyCom.content)
 });
-
+onMounted(() => {
+    useUserStore.getUserInfo()
+})
 </script>
 <style lang='scss' scoped>
 .box {

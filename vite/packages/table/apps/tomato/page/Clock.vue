@@ -3,17 +3,21 @@
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间1h</div>
-        
+
         <div class="icon-box">
           <!-- 开始 -->
-          <div class="icon" v-if="!running">
+          <div class="icon" v-if="running && isPause" @click="onPause">
             <Icon icon="fluent:play-16-filled" />
           </div>
-          <!-- 结束 -->
-          <div class="icon" v-if="!running" @click="onStop">
+          <!-- 暂停 -->
+          <div class="icon" v-if="running && !isPause" @click="onPause">
+            <Icon icon="fluent:play-16-filled" />1
+          </div>
+          <!-- 结束 --> 
+          <div class="icon" v-if="running" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
-          <div class="icon icon-font" v-if="running" @click="onPlay">
+          <div class="icon icon-font" v-if="!running" @click="onPlay">
             <span>立即开始</span>
           </div>
           <div class="icon" @click="onFullScreen">
@@ -21,21 +25,14 @@
             <Icon icon="fluent:full-screen-maximize-16-filled" />
           </div>
         </div>
-
+        <!-- 全屏 -->
         <FullScreen
           v-if="isFullScreen"
           @exit="isFullScreen = false"
-
         >
-
-
         </FullScreen>
         
-        <!-- 退出全屏 -->
-        <!-- <div class="icon">
-          <Icon icon="fluent:full-screen-minimize-16-filled" />
-        </div> -->
-        
+
       <!-- 设置面板 -->
       <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
@@ -64,11 +61,12 @@
     </Widget>
   </template>
   
-  <script>
-  import Widget from "../../card/Widget.vue";
+<script>
+  import Widget from "../../../components/card/Widget.vue";
   import { Icon } from '@iconify/vue';
-
-  import FullScreen from "./fullScreen.vue";
+  import {mapActions, mapState,mapWritableState} from "pinia";
+  import FullScreen from "../components/fullScreen.vue";
+  import { tomatoStore } from '../store'
 
   export default {
     name: "TimerClock",
@@ -105,16 +103,7 @@
           noTitle:true,
           background:"#E7763E",
         },
-        totalTime: {
-          hours: 0,
-          minutes: 0,
-          seconds: 0
-        },
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        tick: 1000,
-        running: false,
+        // running: false,
         menuList: [
             {
                 icon: 'shezhi1',
@@ -127,61 +116,19 @@
         ],
       }
     },
+    mounted(){
+      console.log(this);
+    },
+    computed: {
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause']),
+    },
     methods: {
-      onStop(){
-        this.running = true;
-        this.options.background ="#e5b047";
-      },
-      onPlay(){
-        this.running = false;
-        this.options.background ="#E7763E";
-      },
-      start () {
-        this.reset(0, 25, 0)
-        this.timer = setInterval(this.interval, this.tick)
-        this.running = true
-      },
-      stop () {
-        this.running = false
-        this.clearInterval()
-        this.reset(0, 0, 0)
-      },
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause']),
+      // 控制是否全屏
       onFullScreen(){
-        console.log("全屏，启动！")
         this.isFullScreen = true;
       },
-      interval () {
-        if (!this.running) return
-        if (this.seconds <= 0) {
-          if (this.minutes === 0) {
-            if (this.hours === 0) {
-              this.finish()
-            } else {
-              this.hours--
-              this.minutes = 59
-            }
-          } else {
-            this.minutes--
-          }
-          if(!this.running){
-            this.seconds=0
-            return
-          }
-          this.seconds = 59
-        } else {
-          this.seconds--
-        }
-      },
-      reset (hours = 0, minutes = 0, seconds = 0) {
-        this.totalTime = {
-          hours,
-          minutes,
-          seconds
-        }
-        this.hours = this.totalTime.hours
-        this.minutes = this.totalTime.minutes
-        this.seconds = this.totalTime.seconds
-      },
+      // 时间格式
       displayNum (num) {
         if (num < 10) {
           return '0' + num

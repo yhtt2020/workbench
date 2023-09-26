@@ -1,10 +1,10 @@
 <template>
     <teleport to="body">
-      <img class="popContainer" :style="{ filter: blurs }" src="https://cn.bing.com/th?id=OHR.NorthSeaStairs_ZH-CN7044471948_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp" alt="" />
+      <img class="pop-container" :style="{ filter: blurs }" src="https://cn.bing.com/th?id=OHR.NorthSeaStairs_ZH-CN7044471948_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp" alt="" />
       <div class="box">
         <div style="width: 100%;">
             <div class="title">番茄时间</div>
-            <div class="time">12:59</div>
+            <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
             <div class="title">今日番茄时间</div>
             <div class="tomato-box">
                 <div class="tomato-icon">
@@ -21,14 +21,17 @@
                 </div>
             </div>
         </div>
-
-        <div class="icon-box">
+        <div class="icon-box"> 
           <!-- 开始 -->
-          <div class="icon">
+          <div class="icon" v-if="!isPause" @click="onPause">
             <Icon icon="fluent:play-16-filled" />
           </div>
+          <!-- 暂停 -->
+          <div class="icon" v-if="isPause" @click="onPause">
+            <Icon icon="fluent:play-16-filled" />1
+          </div>
           <!-- 结束 -->
-          <div class="icon">
+          <div class="icon" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
           <!-- 退出全屏 -->
@@ -38,25 +41,24 @@
 
         </div>
       </div>
-
-
     </teleport>
   </template>
-  
   <script>
+  import { tomatoStore } from '../store'
   import { Icon } from '@iconify/vue';
-
-
+  import {mapActions, mapState,mapWritableState} from "pinia";
   export default {
     components: {
         Icon,
     },
-    // emits: ["updateBgZoom", "updateBlur", "updateClockStyle"],
     props: {
 
     },
     watch: {
 
+    },
+    computed: {
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause']),
     },
     mounted() {
 
@@ -71,15 +73,24 @@
       };
     },
     methods: {
-        exit(){
-            this.$emit("exit");
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause']),
+      exit(){
+          this.$emit("exit");
+      },
+      // 时间格式
+      displayNum (num) {
+        if (num < 10) {
+          return '0' + num
+        } else {
+          return num
         }
+      },
     },
   };
   </script>
   
   <style lang="scss" scoped>
-  .popContainer {
+  .pop-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -97,79 +108,71 @@
     -webkit-backdrop-filter: blur(5px);
     transform: scale(1.2);
   }
-  
     .box {
-        z-index: 99919;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        // border: 1px solid #fff;
-        flex-wrap: wrap;
+      z-index: 99919;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
     }
-
     .title{
-        font-family: PingFangSC-Regular;
-        font-size: 24px;
-        color: rgba(255,255,255,0.60);
-        font-weight: 400;
-        width: 100%;
-        text-align: center;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: rgba(255,255,255,0.60);
+      font-weight: 400;
+      width: 100%;
+      text-align: center;
     }
-    
     .time{
-        width: 100%;
-        font-family: Oswald-SemiBold;
-        font-size: 128px;
-        color: rgba(255,255,255,0.85);
-        text-align: center;
-        font-weight: 600;
+      width: 100%;
+      font-family: Oswald-SemiBold;
+      font-size: 128px;
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      font-weight: 600;
     }
-
-
-
-
     .icon-box{
       display: flex;
       justify-content: space-between;
       width: 300px;
     }
     .icon{
-        width: 64px;
-        height: 64px;
-        background: rgba(0,0,0,0.30);
-        border-radius: 35.2px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
+      width: 64px;
+      height: 64px;
+      background: rgba(0,0,0,0.30);
+      border-radius: 35.2px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
     }
     
     .icon:hover{
-        background: rgba(0,0,0,0.60);
+      background: rgba(0,0,0,0.60);
     }
 
     .icon svg{
       font-size: 30px;
     }
     .tomato-box{
-        margin-top: 20px;
-        display: flex;
-        width:100%;
-        justify-content: center;
+      margin-top: 20px;
+      display: flex;
+      width:100%;
+      justify-content: center;
     }
     .tomato-box .tomato-icon{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(0,0,0,0.60);
-        line-height: 40px;
-        margin-left: 20px;
-        text-align: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.60);
+      line-height: 40px;
+      margin-left: 20px;
+      text-align: center;
     }
 
 

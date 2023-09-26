@@ -1,13 +1,14 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t-b-close" >
+    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="font-16">写动态</div>
                 </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer" @click="handleOk" >
-                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross"  />
+                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
+                    @click="handleOk">
+                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
                 </button>
 
             </div>
@@ -17,18 +18,19 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="replyValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                            :bordered="false" />
+                        <a-input v-model:value="titleValue" placeholder="输入标题（不少于5个字）" :bordered="false" />
+                        <a-textarea v-model:value="postValue" placeholder="输入正文（不少于十个字）" :autoSize="{ minRows: 3, maxRows: 8 }"
+                            :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
-                                @preview="handlePreview">
+                                multiple @preview="handlePreview">
                                 <div v-if="fileList.length < 6">
-                                    <plus-outlined style="font-size: 1em;" />
+                                    <plus-outlined style="font-size: 1.2em; " class="xt-text" />
                                 </div>
                             </a-upload>
                         </div>
                         <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                            <img alt="example" style="width: 100%" :src="previewImage" />
+                            <img style="width: 100%" :src="previewImage" />
                         </a-modal>
                     </div>
                     <div class="h-[45px] flex items-center justify-between">
@@ -52,7 +54,7 @@
                                     </template> 表情</a-button>
                             </tippy>
 
-                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible=!imageLoadVisible"
+                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible = !imageLoadVisible"
                                 style="color: var(--secondary-text) !important;"><template #icon>
                                     <PictureOutlined style="" />
                                 </template> 图片</a-button>
@@ -62,14 +64,21 @@
                 </div>
             </div>
             <div class="flex items-center justify-between h-[56px] ">
-                <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button>
+                <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
+                <a-select v-model:value="cascaderValue" :options="options" placeholder="想天工作台/桌面分享" :loadData="loadData" :bordered="false" @change="handleChange"
+                    style="color:var(--primary-text) !important; font-size: 14px; border-radius: 10px; " change-on-select>
+                    <template #suffixIcon>
+                        <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                    </template>
+                </a-select>
                 <div class="flex items-center">
                     <a-button type="text" class=" xt-text xt-bg-2"
                         style="border-radius:10px ; color: var(--secondary-text) !important;"
                         @click="handleOk">取消</a-button>
-                    <a-button type="primary" class="ml-2 xt-text"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;">发布</a-button>
+                    <a-button type="primary" class="ml-2"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;"
+                        @click="publishPost">发布</a-button>
                 </div>
             </div>
         </div>
@@ -77,30 +86,36 @@
     </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
-const imageLoadVisible=ref(true)
+import { fileUpload } from '../../../components/card/hooks/imageProcessing'
+import { useCommunityStore } from '../commun'
+import type { CascaderProps } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
+const useCommunStore = useCommunityStore()
+const imageLoadVisible = ref(true)
 const goYuan = () => {
-    browser.openInUserSelect('https://s.apps.vip/')
+    browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
 // const userName = ref('我是皮克斯呀')
-const replyValue = ref('')
+const postValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
+    forumId: Number
 })
 // 添加表情
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
+    // console.log(emoiiValue);
 
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    replyValue.value += `${key}`
+    postValue.value += `${key}`
 
 }
 const visible = ref(false)
@@ -175,8 +190,45 @@ onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
+    let textareaElement = window.document.querySelector('textarea')
+    // console.log(textareaElement);
+
+    textareaElement?.focus()
+    useCommunStore.getCommunityInfo(props.forumId)
+    useCommunStore.getCommunityCate(props.forumId)
+    // console.log(useCommunStore.communityCate[0].id);
+    // console.log(navigator.plugins);
+
 
 })
+const communCate = computed(() => useCommunStore.communityCate)
+let arr = ref([])
+communCate.value.forEach((item) => {
+    arr.value.push({
+        value: item.id,
+        label: item.name
+    })
+})
+const cascaderValue = reactive([])
+const forumInfo = computed(() => {
+    return useCommunStore.communityInfo.forum
+})
+const options = ref<CascaderProps['options']>([]);
+arr.value.forEach((item) => {
+    options.value.push(item)
+})
+const loadData: CascaderProps['loadData'] = selectedOptions => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+    arr.value.forEach((item) => {
+        targetOption.children?.push(item)
+    })
+    options.value = [...options.value];
+};
+const handleChange = (value) => {
+    cascaderValue.value = value
+    // console.log(value);
+}
 const settingsScroller = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -199,11 +251,46 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
 const handleOk = (e: MouseEvent) => {
-    console.log(e);
+    // console.log(e);
     visible.value = false
     emit('handleOk', visible)
 };
+// 发布帖子
+const titleValue = ref('')
+const publishPost = async () => {
+    let imageUrlList = ref([])
+    // console.log(fileList.value);
 
+    if (postValue.value || fileList.value.length > 0) {
+        fileList.value.forEach(async (item) => {
+            // console.log(item.originFileObj)
+            let url = await fileUpload(item.originFileObj)
+            // console.log(url, 'url')
+            imageUrlList.value.push(url)
+        })
+        // let image = JSON.stringify(imageUrlList.value)
+        let forumId = props.forumId
+        let content = postValue.value
+        let title = computed(() => {
+            if (!titleValue.value) {
+                return postValue.value.slice(0, 5)
+            }
+            return titleValue.value
+        })
+        // console.log(title.value, 'title.value');
+
+
+        setTimeout(() => {
+            // console.log(forumId, content, title.value, image, 'titleValue.value');
+            useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value,cascaderValue)
+            message.success('发布成功')
+            titleValue.value = ''
+            postValue.value = ''
+            fileList.value = []
+        }, 3000);
+
+    }
+}
 </script>
 <style lang='scss' scoped>
 .box {
@@ -238,14 +325,25 @@ const handleOk = (e: MouseEvent) => {
     height: 64px;
 }
 
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
+    // &::placeholder {
+    font-weight: 400;
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+    color: var(--secondary-text);
+    // }
+}
+
 :deep(.ant-input) {
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
         font-family: PingFangSC-Regular;
+        color: var(--secondary-text);
     }
 }
-:deep(.tippy-box){
+
+:deep(.tippy-box) {
     width: 51%;
     margin-left: 35%;
 }
@@ -263,4 +361,5 @@ const handleOk = (e: MouseEvent) => {
             }
         }
     }
-}</style>
+}
+</style>
