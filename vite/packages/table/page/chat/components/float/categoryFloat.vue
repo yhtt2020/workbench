@@ -3,15 +3,16 @@
   <!-- 左侧顶部社群描述 -->
   <div class="w-full mb-2.5 flex justify-between items-center">
    <div class="flex flex-col">
-    <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ floatData.name }}</span>
-    <!-- <div class="font-14" style="color:var(--secondary-text);">
-     {{ summary }}
-    </div> -->
+
+    <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ leftList?.name }}</span>
+    <div class="font-14" style="color:var(--secondary-text);max-width:238px;">
+     {{ leftList?.summary }}
+    </div>
    </div>
    <ChatDropDown @updatePage="updatePage" :list="hideDropList"/>
   </div>
   <div class="ml-1 category-14-400" style="color:var(--primary-text);">
-   社群号：{{ floatData.id }}
+   社群号：{{ communityID?.no }}
   </div>
   <div>
    <a-row :gutter="10">
@@ -29,8 +30,7 @@
 
  <a-divider style="height: 2px;margin: 12px 0; background-color: var(--divider)"/>
 
- 
- <template v-if="floatData?.data?.tree.length === 0">
+ <template v-if="leftList?.tree?.length === 0">
   <div class="flex items-center h-full justify-center flex-col">
    <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
         style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
@@ -40,12 +40,13 @@
   </div>
  </template>
 
- <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
-  <div v-for="item in floatData?.data?.tree">
+  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
+  <div v-for="item in leftList?.tree">
    <ChatFold :title="item.name">
     
     <!-- 单列 -->
     <div class="flex flex-col" v-if="isDoubleColumn === false">
+
      <div v-for="item in item.children" @click="currentItem(item)" 
       :class="{'active-bg': currentID ===item.id}"
       class="flex items-center p-2 rounded-lg pointer group-item"
@@ -65,6 +66,7 @@
       <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
                    v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
      </div>
+
     </div>
 
     <!-- 双列 -->
@@ -96,17 +98,18 @@
 </template>
 
 <script>
-import { hideDropList } from '../../../../js/data/chatList'
+import { hideDropList,chatList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { chatStore } from '../../../../store/chat'
+import { communityStore } from '../../store/communityStore'
 
 import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
 
 export default {
- props:['floatData'],
+ props:[ 'communityID', ],
 
  components:{
   UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined,
@@ -131,20 +134,55 @@ export default {
     wheelPropagation: true
    },
   
-   currentID:''
+   currentID:'',
 
+   receptionData:{}
 
   }
  },
 
  computed:{
   ...mapWritableState(chatStore,['settings']),
+  ...mapWritableState(communityStore,['communityList']),
+
   isDoubleColumn(){
    return this.settings.showDouble
+  },
+  leftList(){
+    // console.log('通过传过来的社群id进行数据判断',this.communityID)
+
+    if(this.communityID.no !== '1'){
+
+      const communityName = this.communityList?.find((item)=>{
+        return String(item.communityInfo.no) === String(this.communityID.no)
+      })
+      this.getTreeList()
+      const changeData = { 
+        name:communityName.communityInfo?.name,
+        summary:communityName.summary ? '' : communityName.summary,
+        tree:this.receptionData?.tree,
+        category: this.receptionData?.category
+      }
+      return changeData
+
+    }
+    else{
+
+      const defaultData = {
+        name:chatList[0].name,
+        summary:chatList[0].summary,
+        tree:chatList[0].channelList,
+        category:[]
+      }
+      return defaultData
+      
+    }
   }
  },
 
  methods:{
+  ...mapActions(communityStore,['getCategoryData']),
+
   // 切换单双列显示
   updatePage(){
    this.$emit('updateColumn')
@@ -159,9 +197,24 @@ export default {
   currentItem(item){
    this.currentID = item.id
    this.$emit('clickItem',item)
-  }
+  },
+
+  // 获取频道目录树状数据,在不是默认数据的情况下
+  async getTreeList(){
+    if(this.communityID.no  !== '1'){
+      const res = await this.getCategoryData(this.communityID.no)
+      if(res){
+       this.receptionData = res
+      }
+    }else{
+      return;
+    }
+  },
+
 
  }
+
+  
 
 }
 </script>

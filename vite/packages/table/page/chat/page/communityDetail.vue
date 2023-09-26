@@ -1,12 +1,13 @@
 <template>
   <a-row class="w-full h-full">
     <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
-      :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
+      :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}"
       style=" border-right:1px solid var(--divider);"
     >
       
-      <CategoryFloat :floatData="channelList" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
-    
+      <CategoryFloat :communityID="routeData"  @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
+
+      
     </a-col>
 
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
@@ -105,10 +106,11 @@ import { chatStore } from '../../../store/chat'
 import _ from 'lodash-es'
 import articleService from '../../../js/service/articleService'
 import browser from '../../../js/common/browser'
+import { checkGroupShip } from '../../../js/common/sns'
+
 import Modal from '../../../components/Modal.vue'
 import CreateNewChannel from '../components/createNewChannel.vue'
 import CreateNewGroup from '../components/createNewCategory.vue'
-// import ChatFold from '../components/float/chatFold.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 
@@ -123,7 +125,6 @@ export default defineComponent({
   setup (props, ctx) {
     const route = useRoute()
     const myCom = communityStore()
-    const { communityList } = myCom
     const chat = chatStore()
 
     const data = reactive({
@@ -131,12 +132,13 @@ export default defineComponent({
         title: '',
         content: ''
       },
-      
       type: '',
       addShow: false, // 点击按钮弹窗
       routeData: {}, // 接收路由参数
       channelList:{},
       currentChannel: {},
+      isChat:'yes',
+      group:[]
 
     })
 
@@ -157,29 +159,46 @@ export default defineComponent({
 
     watchEffect(async () => {
       data.routeData = { no: route.params.no }
-      if (route.params.no !== '') {
-        data.channelList.id = route.params.no
-
-        const communityName = _.find(communityList, function (item) {
-          return String(item.communityInfo.no) === String(route.params.no)
-        })
-        if (communityName && communityName.communityInfo) {
-          data.channelList.name = communityName.communityInfo?.name
-          data.channelList.summary = communityName.summary ? '' : communityName.summary
-        }
-
-        const res =  await myCom.getCategoryData(route.params.no)
-        // console.log('获取数据',res)
-        data.channelList.data = res
-      }
     })
 
     // 选择当前状态
-    const currentItem = (item) => {
+    const currentItem = async (item) => {
+      // 点击链接
       if (item.type === 'link' && item.name !== 'Roadmap') {
         const url = JSON.parse(item.props).url
         browser.openInUserSelect(url)
       }
+
+      // 点击群聊
+      if(item.type === 'group'){
+        const groupId = JSON.parse(item.props).groupID
+        const res = await window.$chat.searchGroupByID(groupId)
+        const enableGroup = await checkGroupShip([`${groupId}`])
+        data.isChat = enableGroup[0]
+        const isDisable = res.data.group.joinOption !== 'DisableApply'
+
+        // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+        if (enableGroup[0] === 'yes') {
+
+          const name = `GROUP${groupId}`
+          window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+            // 通知 TUIConversation 添加当前会话
+            // Notify TUIConversation to toggle the current conversation
+            window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+          })
+
+        }else {
+          // isDisable判断群聊是否禁止加入
+          if (isDisable) {
+            data.group = res.data.group
+            // data.showModal = true
+          } else {
+            message.warn('该群禁止加入')
+          }
+        }
+      }
+
+
       data.currentChannel = item
     }
 
