@@ -64,10 +64,10 @@
                                     class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                             </ul> -->
                             <!-- :options="options" -->
-                            <viewer  :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 ">
-                                <a-row :gutter="[20, 20]"  style="margin-right: 1em" wrap="'true">
-                                    <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in cardData.image_170_170" :span="11" 
-                                        style="">
+                            <viewer :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 ">
+                                <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
+                                    <a-col class="flex flex-wrap mr-2 image-wrapper"
+                                        v-for="(img, index) in cardData.image_170_170" :span="11" style="">
                                         <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm" :src="img.image"
                                             :data-source="cardData.image[index].image" @contextmenu.stop="showMenu(img)"
                                             style="position: relative object-fit: fill;">
@@ -87,7 +87,7 @@
                 <!-- 分隔线 -->
                 <a-divider class="w-full h-[2px] mt-4 xt-bg-2" />
                 <div class="flex mt-4 mb-4 ">
-                    <!-- {{ isLike }} -->
+                    <!-- {{ store.communityCollect.info }} -->
                     <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
                         <button class="mr-3 reply w-[57px] h-[32px]  pl-5 "
                             :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
@@ -107,7 +107,7 @@
                 <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
             </div>
             <a-spin v-else tip="Loading..." size="large"
-                style="margin-top: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
+                style="margin-top: 45%; display: flex; flex-direction: column; justify-content: center; align-items: center"></a-spin>
 
         </div>
 
@@ -123,6 +123,7 @@ import { appStore } from '../../../../table/store'
 import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
+import { message } from "ant-design-vue";
 const useUserStore = appStore()
 let uid = props.cardData.user.uid
 let userInfo = {
@@ -145,15 +146,35 @@ const closeDetail = () => {
 }
 const store = useCommunityStore();
 // 点赞
-const isLike = ref(false)
+const isLike = computed(() => {
+    return store.communityPostDetail.is_support
+})
 // 
-const clickLike = () => {
-    isLike.value = !isLike.value
+const clickLike =async () => {
+    // isLike.value = !isLike.value
+    let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
+    // let thread = thread
+    await store.getCommunityLike("thread" ,tid)
+    message.success(store.communitySupport.info)
+    refresh()
 }
-const isCollect = ref(false)
-// 
-const clickCollect = () => {
-    isCollect.value = !isCollect.value
+const isCollect = computed(() => {
+    return store.communityPostDetail.is_collect
+})
+// 收藏
+const clickCollect = async () => {
+    let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
+    // isCollect.value = !isCollect.value
+    if (store.communityPostDetail.is_collect == 0) {
+        await store.getCommunityCollect(tid)
+        message.success(store.communityCollect.info)
+        refresh()
+    } else {
+        await store.getCommunityCancelCollect(tid)
+        message.success(store.communityCancelCollect.info)
+        refresh()
+    }
+
 }
 const props = defineProps({
     isShow: Boolean,
@@ -170,13 +191,18 @@ const createTime = computed(() => {
 let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
+    let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
     refreshDetailFlag.value = false
-    await store.getCommunityPostDetail(tid)
+    await store.getCommunityPostDetail(Detailtid)
     refreshDetailFlag.value = true
 }
-// onBeforeUpdate(()=>{
-//     store.getCommunityPostDetail(tid)
-// })
+const refresh = async () => {
+    let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
+    // refreshDetailFlag.value = false
+    await store.getCommunityPostDetail(Detailtid)
+    // refreshDetailFlag.value = true
+    await store.getCommunityPostReply(Detailtid)
+}
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
@@ -296,7 +322,8 @@ const showImage = () => {
         white-space: pre-wrap;
         word-wrap: break-word;
         word-break: break-all;
-        & > p img{
+
+        &>p img {
             width: 100%;
         }
     }

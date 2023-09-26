@@ -87,17 +87,18 @@ const props = defineProps({
         default: () => []
     }
 })
-
-let uid = props.cardData.user.uid
+const postData=computed(()=>{
+    return props.cardData
+})
+let uid = postData.value.user.uid
 let userInfo = {
-    uid: props.cardData.user.uid,
-    nickname: props.cardData.user.nickname,
-    avatar: props.cardData.user.avatar_128
+    uid: postData.value.user.uid,
+    nickname: postData.value.user.nickname,
+    avatar: postData.value.user.avatar_128
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
-    // console.log(uid)
-    // console.log(props.cardData);
+    
     
 }
 const createTime = computed(() => {
