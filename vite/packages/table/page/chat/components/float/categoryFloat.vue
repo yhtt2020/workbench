@@ -9,7 +9,7 @@
      {{ leftList?.summary }}
     </div>
    </div>
-   <ChatDropDown @updatePage="updatePage" :list="floatList"/>
+   <ChatDropDown @updatePage="updatePage" :no="communityID.no" :list="floatList"/>
   </div>
   <div class="ml-1 category-14-400" style="color:var(--primary-text);">
    社群号：{{ communityID?.no }}
@@ -165,8 +165,7 @@ export default {
       }
       return changeData
 
-    }
-    else{
+    }else{
 
       const defaultData = {
         name:chatList[0].name,
@@ -174,6 +173,8 @@ export default {
         tree:chatList[0].channelList,
         category:[]
       }
+     console.log('排查数据为空问题',defaultData)
+
       return defaultData
       
     }

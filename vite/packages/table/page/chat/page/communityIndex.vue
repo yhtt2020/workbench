@@ -1,7 +1,7 @@
 <template>
   <a-row class="w-full h-full">
     <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
-      :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
+      :style="doubleCol ? { width:'336px' } :{ width:'240px'}"
       style=" border-right:1px solid var(--divider);"
     >
 
