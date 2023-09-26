@@ -82,7 +82,7 @@
   </Widget>
 
 
-  <a-drawer v-model:visible="visibleDrawer" class="custom-class" style="color: red" title="设置" placement="right" :width="600"
+  <a-drawer v-model:visible="visibleDrawer" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
     @after-visible-change="afterVisibleChange">
     <div class="flex">
       <SetupClock></SetupClock>
