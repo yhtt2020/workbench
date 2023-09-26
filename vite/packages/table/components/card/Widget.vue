@@ -99,7 +99,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {Template, XtButton, HorizontalPanel,BottomEdit,MenuOutlined},
+  components: {Template, XtButton, HorizontalPanel,BottomEdit,MenuOutlined,MyIcon},
 
   name: "Widget",
 
