@@ -1,9 +1,9 @@
 <template>
-  <div  class="top-panel drag w-full flex items-center justify-between" style="width: calc(100%);">
+  <div  class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
 
-    <div @contextmenu.stop="toggleAppStats" class="flex items-center no-drag flex-row">
+    <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
-        <div  class="no-drag mr-2 cursor-pointer" @click="enterClipboard" >
+        <div  class="mr-2 cursor-pointer no-drag" @click="enterClipboard" >
           <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
         </div>
       </a-tooltip>
@@ -22,28 +22,29 @@
       </a-tooltip>
     </div>
     <div class="flex max-search" hidden="">
-      <div hidden="" @click="openGlobalSearch" class="input-box no-drag pointer inline-block"
+      <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
            style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex flex-1 items-end justify-end align-items-end xt-text ">
+    <div class="flex items-end justify-end flex-1 align-items-end xt-text ">
+      <TopClockTimer />
       <TopTomatoTimer />
-      <div  v-if="noticeSettings.show && hasChat"  class="no-drag  flex items-center pointer" @click="messageAlert" style="color: var(--primary-text);">
-        <div class=" flex items-center notification justify-center" style="width: 20px;height: 20px;position: relative;">
-          <img src="/icons/logo128.png" class="w-full h-full object-cover">
+      <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
+        <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
+          <img src="/icons/logo128.png" class="object-cover w-full h-full">
           <div class="new-message-tag"></div>
         </div>
-        <div class="primary-title pointer pl-1" style="color: var(--primary-text);">新消息</div>
+        <div class="pl-1 primary-title pointer" style="color: var(--primary-text);">新消息</div>
         <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
       </div>
 
-      <div v-else class="no-drag  flex items-center pointer justify-center pr-3" @click="messageAlert" style="color: var(--primary-text);">
+      <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
-        <div class="no-drag truncate" v-if="!loading">
+        <div class="truncate no-drag" v-if="!loading">
           <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
             <!-- {{ lockTimeoutDisplay }}后锁屏 -->
           </span>
@@ -56,7 +57,7 @@
       </div>
 
     </div>
-    <div id="windowController" v-if="showWindowController" class="flex s-item s-bg btn-container rounded-bl-lg "
+    <div id="windowController" v-if="showWindowController" class="flex rounded-bl-lg s-item s-bg btn-container "
          style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
       <WindowController></WindowController>
     </div>
@@ -69,13 +70,13 @@
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
     <div class="app-stats">
-      <div @click="enterClipboard" class="app cursor-pointer" v-if="enable">
+      <div @click="enterClipboard" class="cursor-pointer app" v-if="enable">
         <a-row>
           <a-col :span="5">
             <icon style="font-size: 48px;vertical-align: text-top" icon="xiangmu"></icon>
           </a-col>
           <a-col>
-            <div class="app-title font-bold">
+            <div class="font-bold app-title">
               剪切板
             </div>
             <div class="app-des xt-text-2">
@@ -91,7 +92,7 @@
             <a-avatar style="margin-right: 0.5em" :size="48" :src="status.music.cover"></a-avatar>
           </a-col>
           <a-col>
-            <div class="app-title font-bold">
+            <div class="font-bold app-title">
               网易云音乐
             </div>
             <div class="app-des xt-text-2">
@@ -121,6 +122,7 @@ import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
 import { noticeStore } from '../store/notice'
 import TopTomatoTimer from '../../table/apps/tomato/widget/TopTomatoTimer.vue'
+import TopClockTimer from './widgets/TopClockTimer.vue'
 
 export default {
   name: 'TopPanel',
@@ -128,6 +130,7 @@ export default {
     WindowController,
     MessagePopup,
     TopTomatoTimer,
+    TopClockTimer,
   },
   data () {
     return {
