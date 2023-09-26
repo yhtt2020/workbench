@@ -5,7 +5,7 @@
       style=" border-right:1px solid var(--divider);"
     >
       
-      <CategoryFloat :communityID="routeData"  @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
+      <CategoryFloat :communityID="routeData" :float="false"  @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
 
       
     </a-col>

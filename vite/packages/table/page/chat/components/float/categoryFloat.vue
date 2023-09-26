@@ -9,7 +9,7 @@
      {{ leftList?.summary }}
     </div>
    </div>
-   <ChatDropDown @updatePage="updatePage" :list="hideDropList"/>
+   <ChatDropDown @updatePage="updatePage" :list="floatList"/>
   </div>
   <div class="ml-1 category-14-400" style="color:var(--primary-text);">
    社群号：{{ communityID?.no }}
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { hideDropList,chatList } from '../../../../js/data/chatList'
+import { hideDropList,chatList,showDropList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import { mapWritableState, mapActions, mapState } from 'pinia'
@@ -109,7 +109,7 @@ import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
 
 export default {
- props:[ 'communityID', ],
+ props:[ 'communityID','float' ],
 
  components:{
   UserAddOutlined, PlusOutlined, MenuUnfoldOutlined,SelectOutlined,
@@ -158,8 +158,8 @@ export default {
       })
       this.getTreeList()
       const changeData = { 
-        name:communityName.communityInfo?.name,
-        summary:communityName.summary ? '' : communityName.summary,
+        name:communityName?.communityInfo?.name,
+        summary:communityName?.summary ? '' : communityName?.summary,
         tree:this.receptionData?.tree,
         category: this.receptionData?.category
       }
@@ -176,6 +176,14 @@ export default {
       }
       return defaultData
       
+    }
+  },
+
+  floatList(){
+    if(this.float){
+      return showDropList
+    }else{
+      return hideDropList
     }
   }
  },
