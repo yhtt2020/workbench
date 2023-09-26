@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <img class="popContainer" :style="{ filter: blurs }" :src="imgUrl" alt="" />
+    <img class="popContainer" :src="imgUrl" alt="" />
     <div class="box">
       <component
         :is="clock"
@@ -255,7 +255,7 @@ export default {
   height: 56px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
+  // backdrop-filter: blur(20px);
 
   .icon {
     height: 36px;

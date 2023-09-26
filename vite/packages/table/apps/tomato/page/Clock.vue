@@ -1,8 +1,8 @@
 <template>
-    <Widget :options="options" :customIndex="customIndex" :desk="desk"   :menuList="menuList">
+    <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList">
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
-        <div class="title">今日番茄时间1h</div>
+        <div class="title">今日番茄时间 {{ countTime(this.tomatoNum) }} </div>
 
         <div class="icon-box">
           <!-- 开始 -->
@@ -11,7 +11,7 @@
           </div>
           <!-- 暂停 -->
           <div class="icon" v-if="running && !isPause" @click="onPause">
-            <Icon icon="fluent:play-16-filled" />1
+            <Icon icon="akar-icons:pause" />
           </div>
           <!-- 结束 --> 
           <div class="icon" v-if="running" @click="onStop">
@@ -20,16 +20,16 @@
           <div class="icon icon-font" v-if="!running" @click="onPlay">
             <span>立即开始</span>
           </div>
-          <div class="icon" @click="onFullScreen">
+          <div class="icon" @click="this.onFullScreen">
             <!-- 全屏 -->
             <Icon icon="fluent:full-screen-maximize-16-filled" />
           </div>
         </div>
         <!-- 全屏 -->
         <FullScreen
-          v-if="isFullScreen"
-          @exit="isFullScreen = false"
-        >
+          v-if="this.isFullScreen"
+          @exit="this.isFullScreen = false"
+          >
         </FullScreen>
         
 
@@ -90,12 +90,8 @@
     },
     data(){
       return {
-        // 是否全屏
-        isFullScreen:false,
         // 设置
-        settingVisible: false,
-        isFull:false,
-        isState:false,
+        visible:false,
         options:{
           className:'card small',
           title:'TimerClock',
@@ -103,30 +99,33 @@
           noTitle:true,
           background:"#E7763E",
         },
-        // running: false,
         menuList: [
             {
                 icon: 'shezhi1',
                 title: '设置',
                 fn: () => { 
                     this.settingVisible = true; 
-                    this.$refs.dataSlot.visible = false 
+                    this.$refs.clockSlot.visible = false 
                 }
             },
         ],
       }
     },
     mounted(){
-      console.log(this);
+      this.getTomatoNum();
     },
     computed: {
-      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause']),
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
+      
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause']),
-      // 控制是否全屏
-      onFullScreen(){
-        this.isFullScreen = true;
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum']),
+      // 计算今日番茄时间
+      countTime(num){
+        let totalTime = num*25;
+        let hour = totalTime / 60
+        let min = totalTime % 60
+        return Math.trunc(hour) + 'h ' + min + 'm'
       },
       // 时间格式
       displayNum (num) {
