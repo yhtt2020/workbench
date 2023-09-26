@@ -69,7 +69,7 @@ const addEmoji = (item) => {
 }
 
 const emit = defineEmits(['addComment'])
-const addComment = async () => {
+const addComment =() => {
     let imageUrlList: any = ref([])
     let url
     if (value.value || fileList.value.length > 0) {
@@ -79,19 +79,18 @@ const addComment = async () => {
             // console.log(url, 'url')
             imageUrlList.value.push(url)
         })
-        // console.log(imageUrlList.value, 'imageurl')
         let authorid: number = useCommunStore.communityPostDetail.author_uid
         let content: string = value.value
         let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
         // let imageList=JSON.stringify(imageUrlList.value)
         // console.log(threadId, content, authorid, imageUrlList.value);
         // console.log(useCommunStore.communityPostDetail.pay_set.tid,useCommunStore.communityPostDetail.id);
-        setTimeout(async () => {
+        setTimeout(() => {
             // console.log(JSON.stringify(imageList), 'imageurl.value');
             useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value))
             useCommunStore.getCommunityPostDetail(threadId)
             useCommunStore.getCommunityPostReply(threadId)
-        },3000);
+        },550);
 
         value.value = ''
         fileList.value = []

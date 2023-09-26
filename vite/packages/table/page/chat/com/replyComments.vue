@@ -82,7 +82,7 @@ const addEmoji = (item) => {
 }
 const fileList = ref<UploadProps['fileList']>([]);
 const emit = defineEmits(['addComment'])
-const addComment = async () => {
+const addComment =  () => {
     let imageUrlList: any = ref([])
     if (value.value || fileList.value.length > 0) {
         fileList.value.forEach(async (item) => {
@@ -107,7 +107,7 @@ const addComment = async () => {
             useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value), to_reply_id, to_reply_second_id)
             useCommunStore.getCommunityPostDetail(threadId)
             useCommunStore.getCommunityPostReply(threadId)
-        },3000)
+        },550)
 
         // console.log(props.replyCom);
         

@@ -257,7 +257,7 @@ const handleOk = (e: MouseEvent) => {
 };
 // 发布帖子
 const titleValue = ref('')
-const publishPost = async () => {
+const publishPost =  () => {
     let imageUrlList = ref([])
     // console.log(fileList.value);
 
@@ -272,7 +272,7 @@ const publishPost = async () => {
         let forumId = props.forumId
         let content = postValue.value
         let title = computed(() => {
-            if (!titleValue.value) {
+            if (!titleValue.value || titleValue.value.length < 5) {
                 return postValue.value.slice(0, 5)
             }
             return titleValue.value
@@ -280,14 +280,14 @@ const publishPost = async () => {
         // console.log(title.value, 'title.value');
 
 
-        setTimeout(() => {
+        setTimeout( () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             useCommunStore.getCommunityPublishPost(forumId, JSON.stringify(imageUrlList.value), content, title.value,cascaderValue)
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
             fileList.value = []
-        }, 3000);
+        },550);
 
     }
 }
