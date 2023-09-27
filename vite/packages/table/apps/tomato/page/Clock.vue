@@ -3,7 +3,6 @@
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countTime(this.tomatoNum) }} </div>
-        <div class="title" @click="this.addTomatoNum">今日番茄时间</div>
         <div class="icon-box">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
@@ -118,7 +117,7 @@
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','addTomatoNum']),
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum']),
       // 计算今日番茄时间
       countTime(num){
         let totalTime = num*25;
