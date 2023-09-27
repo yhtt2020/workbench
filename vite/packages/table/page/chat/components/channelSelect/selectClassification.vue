@@ -194,8 +194,8 @@
      // 判断是否选择分类
      if(data.statusIndex !== -1){
        const option = { type:props.type,id:data.classItem.id,no:props.no,content:props.data}
-       console.log('获取配置参数',option)
-       console.log('查看状态',)
+      //  console.log('获取配置参数',option)
+      //  console.log('查看状态',)
        const createRes = await channelClass.secondaryChannel(option)
       //  console.log('查看返回状态',createRes)
        if(createRes?.status === 1){

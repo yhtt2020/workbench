@@ -161,7 +161,7 @@ export default {
     })
 
     watch(()=>route?.params?.no,async(newVal,oldVal)=>{
-      console.log('查看路由参数',newVal)
+      // console.log('查看路由参数',newVal)
       if(newVal !== 1){
         await myCom.getCategoryData(newVal)
       }else{

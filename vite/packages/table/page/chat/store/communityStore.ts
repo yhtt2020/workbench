@@ -95,7 +95,7 @@ export const communityStore = defineStore('communityStore',{
         tree:chatList[0]?.channelList,
         category:[]
       }
-      console.log('排查数据',data)
+      // console.log('排查数据',data)
       this.categoryList = data
 
     }
