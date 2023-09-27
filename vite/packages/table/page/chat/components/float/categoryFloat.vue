@@ -36,12 +36,16 @@
   <div class="flex items-center h-full justify-center flex-col" v-if="leftList?.role !== 'member'">
     <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
          style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-      <CommunityIcon :icon="item.icon"></CommunityIcon>
+      <CommunityIcon :icon="item.icon" style="font-size:1.75em;"></CommunityIcon>
       <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
   </div>
-  
+
+  <div v-else  class="flex items-center h-full justify-center">
+    <a-empty :image="emptyImage" description="这里还没有内容"></a-empty>
+  </div>
  </template>
+
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
   <div v-for="item in leftList?.tree">
@@ -137,6 +141,8 @@ export default defineComponent({
        suppressScrollX: true,
        wheelPropagation: true
       },
+      emptyImage:'/img/state/null.png'
+
     })
 
     watchEffect(async ()=>{
