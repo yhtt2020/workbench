@@ -13,7 +13,8 @@ export const newsStore = defineStore("news", {
   actions: {
 
     async getNewsMsg(tag, num) {
-      let newsMsgListCache = localCache.get(`newsMsgList-${tag}`)
+      const  cacheTag='toutiao:cache:'+tag
+      let newsMsgListCache = localCache.get(cacheTag)
       if(newsMsgListCache){
         this.newsMsgList = newsMsgListCache
         console.log(this.newsMsgList);
