@@ -69,7 +69,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       }
       this.running = true;
       this.isPause = false
-      this.reset(0, 0, 5)
+      this.reset(0, 25, 0)
       this.timer = setInterval(this.interval, this.tick)
       this.isColor ="#e5b047";
     },
