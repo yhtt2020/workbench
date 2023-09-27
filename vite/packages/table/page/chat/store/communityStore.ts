@@ -93,6 +93,7 @@ export const communityStore = defineStore('communityStore',{
 
 
    // 删除社群频道
+   
    async removeCategory(id:any){
     return post(deleteCategory,{id:id})
    }

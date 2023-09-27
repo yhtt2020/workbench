@@ -10,7 +10,7 @@
       :class="{'select':dropDownIndex === index}"
       @click="selectMenuItem(item,index)"
      >
-       <DorpIcon :icon="item.icon" style="font-size: 1.75em;"/>
+       <DorpIcon :icon="item.icon" style="font-size: 2em;"/>
        <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
      </a-menu-item>
     </a-menu>
@@ -20,7 +20,7 @@
  
   <teleport to='body' >
    <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:2000 !important;">
-     <UpdateCommunityApply v-if="type === 'apply' " :no="no" @close="categoryShow = false"></UpdateCommunityApply>
+     <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
     </Modal>
   </teleport>
@@ -34,18 +34,20 @@
  import { Icon as DorpIcon } from '@iconify/vue'
  
  import Modal from '../../../../components/Modal.vue'
- import UpdateCommunityApply from '../updateCommunityApply.vue'
  import CreateNewCategory from '../createNewCategory.vue'
+ import MenuCategory from '../menuCategory.vue'
  
  export default defineComponent({
   components:{
-   EllipsisOutlined,DorpIcon,Modal,
-   UpdateCommunityApply,CreateNewCategory,
+   EllipsisOutlined,
+   DorpIcon,Modal,CreateNewCategory,MenuCategory,
+
   },
  
   props:['list','no'],
  
   setup (props,ctx) {
+
    const chat = chatStore()
  
    const data = reactive({

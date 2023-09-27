@@ -1,4 +1,3 @@
-<!-- 更新社群频道,没有分类选择的流程 -->
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
@@ -19,7 +18,7 @@
    <div class="flex flex-col mt-4">
     <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4" 
      style="background: var(--secondary-bg);" :class="{'select-bg':selectIndex === item.type}" @click="selectChannel(item)">
-     <ApplyIcon :icon="item.icon" style="font-size: 2.5em;"></ApplyIcon>
+     <MenuIcon :icon="item.icon" style="font-size: 2.5em;"></MenuIcon>
      <span class="pl-4 font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
    </div>
@@ -35,33 +34,29 @@
 
  </div>
 
- <SelectWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectWebLink>
- <CreateChannelGroup v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelGroup>
- <CreateChannelCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelCommunity>
+ <SelectMenuWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectMenuWebLink>
+ <SelectGroupChat v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectGroupChat>
+ <SelectCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectCommunity>
 </template>
 
 <script>
 import { defineComponent, reactive, toRefs } from 'vue'
-import { Icon as  ApplyIcon } from '@iconify/vue'
+import { Icon as  MenuIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 
-// import CreateChannelLink from './knownCategory/createChannelLink.vue'
-// import CreateChannelLink from './unknownCategory/selectWebLink.vue'
-import SelectWebLink from './channelSelect/selectWebLink.vue'
-import CreateChannelGroup from './knownCategory/createChannelGroup.vue'
-import CreateChannelCommunity from './knownCategory/createChannelCommunity.vue'
+import SelectGroupChat from './channelSelect/selectGroupChat.vue'
+import SelectMenuWebLink from './channelSelect/selectWebLink.vue'
+import SelectCommunity from './channelSelect/selectCommunity.vue'
 
 export default defineComponent({
- props:['no'],
-
  components:{
-  ApplyIcon,CloseOutlined,CreateChannelGroup,
-  CreateChannelCommunity,SelectWebLink
-  // CreateChannelLink,
+  CloseOutlined,
+  MenuIcon,SelectGroupChat,SelectMenuWebLink,SelectCommunity
  },
 
+ props:['no'],
+
  setup (props,ctx) {
-  
   const data = reactive({
    channelList:[
     // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
@@ -69,12 +64,15 @@ export default defineComponent({
     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
     { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
    ],
+
    selectIndex:'community',
+
    nextShow:false, // 选择完第一步的是否进入第二步
+
    type:'',
 
   })
-  
+
 
   // 关闭
   const closeChannel = () =>{
@@ -88,19 +86,22 @@ export default defineComponent({
    data.type = item.type
   }
 
-
+  
+  
   // 选择完进入下一步
   const selectSubmit = () =>{
    data.nextShow = true
   }
 
+
   return {
    ...toRefs(data),closeChannel,selectChannel,selectSubmit
-
   }
  }
 })
 </script>
+
+
 
 <style lang="scss" scoped>
 .font-16-400{

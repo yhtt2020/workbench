@@ -1,11 +1,11 @@
 <template>
- <div class="flex flex-col my-3" style="width:667px;">
+ <div class="flex flex-col my-3" style="width:667px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
     <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择群聊</span>
-   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeGroup">
+   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <CloseOutlined  style="font-size: 1.25em;"/>
    </div>
   </div>
@@ -49,12 +49,12 @@
     </vue-custom-scrollbar>
      
     <div class="flex items-center justify-end">
-     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeGroup">
+     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
       取消
      </XtButton>
  
-     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">
-      确定
+     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectSubmit">
+      选择
      </XtButton>
     </div>
    </div>
@@ -63,19 +63,33 @@
   
 
  </div>
+
+ <SelectClassification v-if="nextShow === true" :no="no"  :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></SelectClassification>
 </template>
 
 <script>
 import { computed, defineComponent,reactive,toRefs} from 'vue'
 import { CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
+import { message } from 'ant-design-vue'
+import { communityStore } from '../../store/communityStore'
+
+
+import SelectClassification from './selectClassification.vue'
+
 
 export default defineComponent({
  components:{
-  CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled
+  CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled,
+  SelectClassification
  },
+
+ props:['no'],
+
  setup (props,ctx) {
+
   const tui = window.$TUIKit
+  const community = communityStore()
 
   const data = reactive({
    settingsScroller: {
@@ -86,6 +100,11 @@ export default defineComponent({
     wheelPropagation: true
    },
    selectGroup:[],
+   nextShow:false,
+   option:{
+    communityNo:props.no,
+    cache:1
+   }
   })
   
   // 返回上一层
@@ -94,7 +113,7 @@ export default defineComponent({
   }
 
   // 关闭和取消
-  const closeGroup = () =>{
+  const closeChannel = () =>{
    ctx.emit('close')
   }
 
@@ -128,10 +147,22 @@ export default defineComponent({
    data.selectGroup.splice(index,1) 
   }
 
+  // 选择下一步
+  const selectSubmit = (evt) =>{
+    if(data.selectGroup.length !== 0){
+      data.nextShow = true
+     //  community.getChannel(data.option)
+    }else{
+      message.warn('没有选择指定的群')
+      evt.preventDefault();
+    }
+  }
+
   return {
    filterList,
    ...toRefs(data),
-   backChannel,closeGroup,leftListClick,isSelected,removeGroup
+   backChannel,closeChannel,leftListClick,isSelected,removeGroup,
+   selectSubmit
   }
  }
 })

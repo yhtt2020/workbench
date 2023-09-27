@@ -78,8 +78,6 @@
   },
   setup (props,ctx) {
  
-   console.log('获取数据',props.no)
- 
    const communityCategory = communityStore()
 
    const data = reactive({
