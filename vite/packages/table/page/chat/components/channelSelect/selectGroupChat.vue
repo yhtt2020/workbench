@@ -29,7 +29,7 @@
  <CreateCommunity v-if="listIndex === 'create' && chatShow === true " @close="closeChannel" id="chat" @back="chatShow = false">
  </CreateCommunity>
  
- <SelectKnownGroup :no="no" v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
+ <SelectKnownGroup :no="no" :type="type" v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
  </SelectKnownGroup>
 
 </template>

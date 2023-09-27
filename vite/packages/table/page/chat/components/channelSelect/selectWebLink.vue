@@ -32,7 +32,7 @@
    </div>
   </div>
  
-  <SelectClassification v-else :no="no"   :data="{name:linkName,props:link,type:'link'}" @classBack="classShow = false"></SelectClassification>
+  <SelectClassification v-else :no="no"  :type="type" :data="{name:linkName,props:link}" @classBack="classShow = false"></SelectClassification>
  </template>
  
  <script>
@@ -44,14 +44,14 @@
  
  export default defineComponent({
  
-  props:['no'],
+  props:['no','type'],
  
   components:{
    CloseOutlined,LeftOutlined,RadioTab,SelectClassification,
   },
  
   setup (props,ctx) {
- 
+
    const data = reactive({
     linkType:[
      { title:'默认',name:'default'},

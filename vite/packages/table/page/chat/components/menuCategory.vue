@@ -34,8 +34,8 @@
 
  </div>
 
- <SelectMenuWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectMenuWebLink>
- <SelectGroupChat v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectGroupChat>
+ <SelectMenuWebLink v-else-if="selectIndex === 'link'" type="link" :no="no" @close="closeChannel" @back="nextShow=false"></SelectMenuWebLink>
+ <SelectGroupChat v-else-if="selectIndex === 'chat'" type="group" :no="no" @close="closeChannel" @back="nextShow=false"></SelectGroupChat>
  <SelectCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectCommunity>
 </template>
 

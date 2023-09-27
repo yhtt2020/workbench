@@ -32,9 +32,9 @@
   </div>
  
   <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
-  <SelectChannel v-if="selectIndex === 'community' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
-  <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
-  <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
+  <SelectChannel v-if="selectIndex === 'community' && nextShow === true"  @close="closeChannel" @back="nextShow = false"></SelectChannel>
+  <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :no="no" type="group" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
+  <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " type="link" :no="no" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
  
  </template>
  

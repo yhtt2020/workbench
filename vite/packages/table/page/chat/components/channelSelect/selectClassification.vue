@@ -71,7 +71,7 @@
  import _ from 'lodash-es'
  
  export default defineComponent({
-  props:['no','data'],
+  props:['no','data','type'],
   components:{
    LeftOutlined,CloseOutlined,PlusOutlined,
    ClassIcon,
@@ -169,6 +169,7 @@
    const deleted = async (item) =>{
     // console.log('测试',item)
     const result = await communityCategory.removeCategory(item.id)
+
     if(result?.status === 1){
       message.success(`${result.info}`)
       await communityCategory.getCategoryData(props.no)
@@ -179,7 +180,6 @@
       
       // }
     }
-    // console.log('返回状态',result)
    }
  
    
@@ -217,12 +217,15 @@
    const createClass = async () =>{
      // 判断是否选择分类
      if(data.statusIndex !== -1){
-       const option = { type:props.data.type,id:data.classItem.id,no:props.no,content:props.data}
+       const option = { type:props.type,id:data.classItem.id,no:props.no,content:props.data}
+       console.log('获取配置参数',option)
+       console.log('查看状态',)
        const createRes = await channelClass.secondaryChannel(option)
-       if(createRes.status === 1){
-         message.success(`${createRes.info}`)
+      //  console.log('查看返回状态',createRes)
+       if(createRes?.status === 1){
+         message.success(`${createRes?.info}`)
         //  communityCategory.getCategoryTreeData(data.option)
-         await communityCategory.getCategoryData(props.no)
+        //  await communityCategory.getCategoryData(props.no)
          closeChannel()
        }
      }

@@ -64,7 +64,7 @@
 
  </div>
 
- <SelectClassification v-if="nextShow === true" :no="no"  :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></SelectClassification>
+ <SelectClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></SelectClassification>
 </template>
 
 <script>
@@ -84,7 +84,7 @@ export default defineComponent({
   SelectClassification
  },
 
- props:['no'],
+ props:['no','type'],
 
  setup (props,ctx) {
 
