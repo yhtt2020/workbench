@@ -166,13 +166,18 @@ export default defineComponent({
     const currentItem = async (item) => {
       // 点击链接
       if (item.type === 'link' && item.name !== 'Roadmap') {
-        const url = JSON.parse(item.props).url
+        // console.log('转换的数据',JSON.parse(item.props))
+        const url = JSON.parse(item.props)
         browser.openInUserSelect(url)
       }
 
       // 点击群聊
       if(item.type === 'group'){
-        const groupId = JSON.parse(item.props).groupID
+        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
+        
+        // console.log('排查',changeData)
+
+        const groupId = changeData.groupID
         const res = await window.$chat.searchGroupByID(groupId)
         const enableGroup = await checkGroupShip([`${groupId}`])
         data.isChat = enableGroup[0]
@@ -198,7 +203,6 @@ export default defineComponent({
           }
         }
       }
-
 
       data.currentChannel = item
     }
