@@ -98,8 +98,8 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted,watch } from 'vue'
+import { useRoute, useRouter,onBeforeRouteUpdate } from 'vue-router'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { SelectOutlined } from '@ant-design/icons-vue'
 import { communityStore } from '../store/communityStore'
@@ -115,7 +115,9 @@ import CreateNewGroup from '../components/createNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 
-export default defineComponent({
+export default {
+  
+
   components: {
     SelectOutlined,
     VueCustomScrollbar, CommunityIcon, Modal,CategoryFloat,
@@ -158,9 +160,16 @@ export default defineComponent({
       // console.log(rs)
     })
 
-    watchEffect(async () => {
-      data.routeData = { no: route.params.no }
+    watch(()=>route?.params?.no,async(newVal,oldVal)=>{
+      console.log('查看路由参数',newVal)
+      if(newVal !== 1){
+        await myCom.getCategoryData(newVal)
+      }else{
+        await myCom.getCategoryData('')
+      }
+      
     })
+
 
     // 选择当前状态
     const currentItem = async (item) => {
@@ -222,7 +231,8 @@ export default defineComponent({
       onMounted
     }
   }
-})
+
+}
 </script>
 
 <style lang="scss" scoped>

@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "../../../store/dbStorage";
 import {sUrl} from "../../../consts";
 import {post} from "../../../js/axios/request";
+import { chatList } from '../../../js/data/chatList'
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -62,43 +63,58 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取社群频道目录
    async getCategoryData(id:any){
+
     // console.log('获取数值',id,)
-   
+
     if(!isNaN(parseInt(id))){
-      const option = {
-        communityNo:parseInt(id),
-        cache:1
-      }
-      const categoryList = await post(getChannelList,option)
+      const option = { communityNo:parseInt(id), cache:1 }
+      const categoryResList = await post(getChannelList,option)
       const categoryTreeList = await post(getChannelTree,option)
-      
-      const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
-  
-      return result
+      const communityName = this.communityList?.find((item:any)=>{
+        return String(item.communityInfo.no) === String(id)
+      })
+      const result = {
+        name:communityName?.communityInfo?.name,
+        role:communityName?.role,
+        no:communityName?.communityInfo?.no,
+        tree:categoryTreeList?.data?.treeList,
+        category:categoryResList?.data?.list,
+        summary:communityName?.summary
+      }
+
+      // console.log('查看数据',result)
+
+      this.categoryList = result
+
     }else{
-      return null;
+      
+      const data = {
+        name:chatList[0]?.name,
+        summary:chatList[0]?.summary,
+        no:1,
+        tree:chatList[0]?.channelList,
+        category:[]
+      }
+      console.log('排查数据',data)
+      this.categoryList = data
+
     }
-
    
-    
-    // if(categoryList?.data?.list){
-    //   this.categoryList.category = categoryList.data.list
-    // }
-
+   
    },
 
-   // 获取频道树状列表
-  //  async getCategoryTreeData(id:any){
-  //   const option = {
-  //     communityNo:id,
-  //     cache:1
-  //   }
-  //   const categoryTreeList = await post(getChannelTree,option)
-  //   if(categoryTreeList?.data?.treeList){
-  //     this.categoryList.tree = categoryTreeList.data.treeList
-  //   }
-  //  },
 
+   // 更新频道数据
+  //  async updateCategoryData(id:any){
+  //    if(!isNaN(parseInt(id))){
+  //     const option = { communityNo:parseInt(id), cache:1 }
+  //     const categoryTreeList = await post(getChannelTree,option)
+  //     this.categoryList.tree = categoryTreeList?.data?.treeList
+  //    }else{
+  //     this.category.tree = chatList[0].channelList   
+  //    }
+  //  },
+ 
 
    // 删除社群频道
    

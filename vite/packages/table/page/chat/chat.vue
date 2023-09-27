@@ -104,9 +104,18 @@ export default {
       info: {},
     })
 
-    const selectTab = (item) => {
+    const selectTab = async (item) => {
       data.index = item.type
+      
+      if(item.route.params.no !== 1){
+        await myCom.getCategoryData(item.route.params.no)
+      }else{
+        await myCom.getCategoryData('')
+      }
+
       router.push(item.route)
+      
+      
     }
 
     const selectDorpTab = (item) => {
