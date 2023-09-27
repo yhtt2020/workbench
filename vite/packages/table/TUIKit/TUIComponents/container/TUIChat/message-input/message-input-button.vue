@@ -1,5 +1,5 @@
 <template>
-  <div :class="['message-input-button', isH5 && 'message-input-button-h5']">
+  <div :class="['message-input-button', isH5 && 'message-input-button-h5']" :style="isChatMain ? {bottom:'20px !important'} : { bottom:'42px !important' } ">
     <button v-if="enableSend" class="message-input-button-cont" data-type="text" @click="sendMessage" :disabled="false">
       <p class="message-input-button-hover">
         {{ $t('TUIChat.按Enter发送，Ctrl+Enter换行') }}
@@ -9,7 +9,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, toRefs, defineEmits, ref } from 'vue';
+import { defineProps, toRefs, defineEmits, ref,computed } from 'vue';
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 const props = defineProps({
   enableSend: {
     type: Boolean,
@@ -29,6 +32,12 @@ const emits = defineEmits(['sendMessage']);
 const sendMessage = () => {
   emits('sendMessage');
 }
+
+const isChatMain = computed(() => {
+  return route.path === '/chatMian'
+})
+
+
 </script>
 <style scoped lang="scss">
 @import url('../../../styles/common.scss');

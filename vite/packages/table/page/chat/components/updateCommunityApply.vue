@@ -35,7 +35,7 @@
 
  </div>
 
- <CreateChannelLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelLink>
+ <SelectWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectWebLink>
  <CreateChannelGroup v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelGroup>
  <CreateChannelCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelCommunity>
 </template>
@@ -45,8 +45,9 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import { Icon as  ApplyIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 
-import CreateChannelLink from './knownCategory/createChannelLink.vue'
+// import CreateChannelLink from './knownCategory/createChannelLink.vue'
 // import CreateChannelLink from './unknownCategory/selectWebLink.vue'
+import SelectWebLink from './channelSelect/selectWebLink.vue'
 import CreateChannelGroup from './knownCategory/createChannelGroup.vue'
 import CreateChannelCommunity from './knownCategory/createChannelCommunity.vue'
 
@@ -54,8 +55,9 @@ export default defineComponent({
  props:['no'],
 
  components:{
-  ApplyIcon,CloseOutlined,CreateChannelLink,CreateChannelGroup,
-  CreateChannelCommunity
+  ApplyIcon,CloseOutlined,CreateChannelGroup,
+  CreateChannelCommunity,SelectWebLink
+  // CreateChannelLink,
  },
 
  setup (props,ctx) {

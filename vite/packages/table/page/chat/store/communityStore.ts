@@ -11,15 +11,14 @@ const searchRecommendCommunity = sUrl("/app/community/searchCommunity") // 搜�
 const getChannelList = sUrl("/app/community/channel/getList") // 获取频道列表
 const getChannelTree = sUrl("/app/community/channel/getTreeList") // 获取树状频道
 const createChannels = sUrl("/app/community/channel/create") // 创建社群频道
-
+const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频道
 
 // @ts-ignore
 export const communityStore = defineStore('communityStore',{
   state: () => ({
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
-    categoryList:[], // 频道目录列表
-    categoryTreeList:[], // 频道树列表
+    categoryList:{}, // 频道目录列表
   }),
 
   actions: {
@@ -61,24 +60,42 @@ export const communityStore = defineStore('communityStore',{
     return await post(createChannels,data)
    },
 
-
-
-   // 获取社群频道列表
-   async getChannel(data:any){
-    const categoryRes = await post(getChannelList,data)
-    if(categoryRes?.data?.list){
-      this.categoryList = categoryRes.data.list
+   // 获取社群频道目录
+   async getCategoryData(id:any){
+    const option = {
+      communityNo:id,
+      cache:1
     }
+    const categoryList = await post(getChannelList,option)
+    const categoryTreeList = await post(getChannelTree,option)
+    
+    const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
+
+    return result
+    
+    // if(categoryList?.data?.list){
+    //   this.categoryList.category = categoryList.data.list
+    // }
+
    },
 
+   // 获取频道树状列表
+  //  async getCategoryTreeData(id:any){
+  //   const option = {
+  //     communityNo:id,
+  //     cache:1
+  //   }
+  //   const categoryTreeList = await post(getChannelTree,option)
+  //   if(categoryTreeList?.data?.treeList){
+  //     this.categoryList.tree = categoryTreeList.data.treeList
+  //   }
+  //  },
 
-   // 获取树状判断列表
-   async getTreeChannelList(data:any){
-    const categoryTreeRef =  await post(getChannelTree,data)
-    if(categoryTreeRef?.data?.treeList){
-      this.categoryTreeList = categoryTreeRef.data.treeList 
-    }
-   },
+
+   // 删除社群频道
+   async removeCategory(id:any){
+    return post(deleteCategory,{id:id})
+   }
 
 
 

@@ -41,7 +41,7 @@
            <span class="font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
            <div class="flex">
             <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click.stop="edit(index)"></ClassIcon>
-            <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted"></ClassIcon>
+            <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted(item)"></ClassIcon>
            </div>
          </div>
        </template>
@@ -61,7 +61,7 @@
  </template>
  
  <script>
- import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed } from 'vue'
+ import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed,watchEffect } from 'vue'
  import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
  import Sortable from 'sortablejs';
  import { Icon as ClassIcon} from '@iconify/vue'
@@ -78,21 +78,10 @@
   },
   setup (props,ctx) {
  
-   // console.log('获取数据',props.data)
+   console.log('获取数据',props.no)
  
    const communityCategory = communityStore()
 
-   const filterList = computed(()=>{
-     if(communityCategory.categoryList.length !== 0){
-       const categoryList = communityCategory.categoryList.filter((item)=>{
-         return item.role === 'category'
-       })
-       return categoryList
-     }else{
-       return []
-     }
-   })
- 
    const data = reactive({
     settingsScroller: {
      useBothWheelAxes: true,
@@ -111,12 +100,41 @@
      communityNo:props.no,
      cache:1,
     },
-    list:filterList.value
+    list:[],
    })
+
+   watchEffect( async ()=>{
+    const res  = await communityCategory.getCategoryData(props.no)
+    
+    const filterCategoryRes = res?.category.filter((item)=>{
+      return item.role === 'category'
+    })
+
+    // await communityCategory.getCategoryData(props.no)
+    // const filterCategoryRes = communityCategory?.categoryList?.category.filter((item)=>{
+    //   return item.role === 'category'
+    // })
+
+    if(filterCategoryRes?.length !== 0){
+      data.list = filterCategoryRes
+    }
+
+   })
+
+  //  const filterList = computed(()=>{
+  //    if(communityCategory.categoryList.length !== 0){
+  //      const categoryList = communityCategory.categoryList.filter((item)=>{
+  //        return item.role === 'category'
+  //      })
+  //      return categoryList
+  //    }else{
+  //      return []
+  //    }
+  //  })
  
   
  
- 
+  
    // 关闭按钮
    const closeChannel = ()=>{
      ctx.emit('close')
@@ -150,7 +168,21 @@
      })
    }
    // 删除列表分类项
-   const deleted = () =>{}
+   const deleted = async (item) =>{
+    // console.log('测试',item)
+    const result = await communityCategory.removeCategory(item.id)
+    if(result?.status === 1){
+      message.success(`${result.info}`)
+      await communityCategory.getCategoryData(props.no)
+
+      // const res = await communityCategory.getCategoryData(props.no)
+      // if(res?.data?.list){
+      //   data.list = res.data.list
+      
+      // }
+    }
+    // console.log('返回状态',result)
+   }
  
    
  
@@ -191,7 +223,8 @@
        const createRes = await channelClass.secondaryChannel(option)
        if(createRes.status === 1){
          message.success(`${createRes.info}`)
-         communityCategory.getTreeChannelList(data.option)
+        //  communityCategory.getCategoryTreeData(data.option)
+         await communityCategory.getCategoryData(props.no)
          closeChannel()
        }
      }
@@ -207,10 +240,11 @@
        onEnd:onSortEnd // 拖拽结束时触发的回调函数
      })
      
+     
    })
  
    return {
-   filterList,
+  //  filterList,
     ...toRefs(data),closeChannel,backButton,addClassItem,
     edit,deleted,listClick,save,exitEdit,createClass,
    }
