@@ -343,9 +343,9 @@ export const useCommunityStore = defineStore('community',{
             } catch (error) {
                 console.error(error)
             }
-            
+
         },
-        // 点赞帖子 
+        // 点赞帖子
         async getCommunityLike(model,id){
             let supportCache=localCache.get(`communitySupport_${model}_${id}`)
             if(supportCache){
@@ -360,9 +360,9 @@ export const useCommunityStore = defineStore('community',{
                 this.communitySupport=res.data
                 localCache.set(`communitySupport_${model}_${id}`,this.communitySupport,60*60*12)
                 // console.log(undefined);
-                
+
             }
-            
+
         },
         // 收藏帖子
         async getCommunityCollect(id){
@@ -378,7 +378,7 @@ export const useCommunityStore = defineStore('community',{
                 this.communityCollect=res.data
                 localCache.set(`communityCollect_${id}`,this.communityCollect,60*60*12)
             }
-            
+
         },
         // 取消收藏帖子
         async getCommunityCancelCollect(id){
@@ -413,7 +413,7 @@ export const useCommunityStore = defineStore('community',{
             })
             // console.log(res,'threadReply');
             // console.log(to_reply_id,to_reply_second_id,authorId,tid);
-            
+
             } catch (error) {
                 console.error(error)
             }
@@ -421,7 +421,7 @@ export const useCommunityStore = defineStore('community',{
         // 发布帖子
         async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1):Promise<IThread>{
             // console.log(fid,image,content,title,'getCommunityPublishPost');
-            
+
             try {
                 let res=await post(threadPost,{
                     fid:fid,
@@ -434,7 +434,7 @@ export const useCommunityStore = defineStore('community',{
                     type:type
                 })
                 // console.log(res,'threadPost');
-                
+
             } catch (error) {
                 console.error(error)
             }

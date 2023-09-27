@@ -28,7 +28,6 @@
       </div>
     </div>
     <div class="flex items-end justify-end flex-1 align-items-end xt-text ">
-      <TopClockTimer />
       <TopTomatoTimer />
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
@@ -368,5 +367,11 @@ export default {
   }
 }
 
-
+.top-state{
+  display: flex;
+  // position: relative;
+  position: absolute;
+  right:158px;
+  top: -5px;
+}
 </style>

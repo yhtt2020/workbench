@@ -250,7 +250,8 @@ export default {
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
-      if(this.customData && this.customData.newsList){
+      if(this.customData && this.customData.newsList.length>0){
+        // console.log(this.customData.newsList,'newsList');
         if(this.customData.newsList.tag){
           this.customData.newsList=this.customData.newsList.tag
           return []

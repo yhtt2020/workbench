@@ -293,7 +293,7 @@ export const guide = {
   ],
   M0303: [
     {
-      type: "message",
+      type: "router message",
       value: "为了引导流程正确进行，将为你添加1个临时的「外部小组件」。",
     },
     {

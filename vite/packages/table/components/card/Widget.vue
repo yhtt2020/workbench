@@ -1,11 +1,11 @@
 <template>
   <div @contextmenu.stop="showDrawer" :class="classes"
-       style=" background: var( --primary-bg); color: var(--primary-text)"
+       style=" color: var(--primary-text)"
        :style="{
       display: options.hide == true ? 'none' : '',
       width: customSize.width,
       height: customSize.height,
-      background:this.options.background
+      background: options.background || 'var( --primary-bg)'
     }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
 
     <!--标题栏start-->
@@ -22,8 +22,11 @@
             </slot>
           </div>
         </div>
-        <div class="z-10 right-title"  v-if="showRightIcon" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
-          <Icon icon="gengduo1" class="title-icon pointer"></Icon>
+        <div class="z-10 right-title "  v-if="showRightIcon">
+
+          <MenuOutlined class="pointer"  @click.stop="showDrawer" @contextmenu.stop="showDrawer"></MenuOutlined>
+          <slot name="right-menu">
+          </slot>
         </div>
       </div>
     </slot>
@@ -68,10 +71,13 @@
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "../../store/card";
 import HorizontalPanel from "../HorizontalPanel.vue";
+import {MenuOutlined} from '@ant-design/icons-vue'
 import _ from "lodash-es";
 import {PropType} from "vue";
 import {Icon as MyIcon} from '@iconify/vue';
 import BottomEdit from "./BottomEdit.vue";
+import XtButton from "../../ui/libs/Button/index.vue";
+import Template from "../../../user/pages/Template.vue";
 //组件选项
 declare interface IOption {
   //类型，字符串
@@ -93,7 +99,7 @@ declare interface IMenuItem {
 }
 
 export default {
-  components: {HorizontalPanel,BottomEdit},
+  components: {Template, XtButton, HorizontalPanel,BottomEdit,MenuOutlined,MyIcon},
 
   name: "Widget",
 
@@ -145,7 +151,7 @@ export default {
     showRightIcon: {
       type: Boolean,
       default: true
-    }
+    },
   },
   data() {
     return {

@@ -1,34 +1,27 @@
 <template>
     <teleport to="body">
-      <img class="pop-container" :style="{ filter: blurs }" src="https://cn.bing.com/th?id=OHR.NorthSeaStairs_ZH-CN7044471948_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp" alt="" />
+      <img class="pop-container" style="filter: blur(1px);" :src="this.backgroundImage.path" alt="" />
       <div class="box">
         <div style="width: 100%;">
             <div class="title">番茄时间</div>
             <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
             <div class="title">今日番茄时间</div>
             <div class="tomato-box">
-                <div class="tomato-icon">
-                    <Icon icon="fluent:play-16-filled" />
-                </div>
-                <div class="tomato-icon">
-                    <Icon icon="fluent:play-16-filled" />
-                </div>
-                <div class="tomato-icon">
-                    <Icon icon="fluent:play-16-filled" />
-                </div>
-                <div class="tomato-icon">
-                    <Icon icon="fluent:play-16-filled" />
-                </div>
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
             </div>
         </div>
         <div class="icon-box"> 
           <!-- 开始 -->
-          <div class="icon" v-if="!isPause" @click="onPause">
-            <Icon icon="fluent:play-16-filled" />
+          <div class="icon" v-if="running && !isPause" @click="onPause">
+            <Icon icon="akar-icons:pause" />
           </div>
           <!-- 暂停 -->
-          <div class="icon" v-if="isPause" @click="onPause">
-            <Icon icon="fluent:play-16-filled" />1
+          <div class="icon" v-else @click="onPause">
+            <Icon icon="fluent:play-16-filled" />
           </div>
           <!-- 结束 -->
           <div class="icon" @click="onStop">
@@ -45,6 +38,8 @@
   </template>
   <script>
   import { tomatoStore } from '../store'
+  import { appStore } from '../../../store'
+  
   import { Icon } from '@iconify/vue';
   import {mapActions, mapState,mapWritableState} from "pinia";
   export default {
@@ -58,7 +53,9 @@
 
     },
     computed: {
-      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause']),
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running']),
+      ...mapState(appStore,['userInfo','backgroundImage'])
+      
     },
     mounted() {
 
@@ -67,16 +64,16 @@
       return {
         optAction: false,
         autoTime: null,
-        src: "https://cn.bing.com/th?id=OHR.NorthSeaStairs_ZH-CN7044471948_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp",
+        src: "",
         blurs: "blur(10px}",
         zoom: "100%",
       };
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause']),
-      exit(){
-          this.$emit("exit");
-      },
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','exit']),
+      // exit(){
+      //     this.$emit("exit");
+      // },
       // 时间格式
       displayNum (num) {
         if (num < 10) {
@@ -104,7 +101,7 @@
     width: 100%;
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     transform: scale(1.2);
   }
@@ -175,39 +172,25 @@
       text-align: center;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  .bottom {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  // .bottom {
+  //   position: absolute;
+  //   bottom: 20px;
+  //   left: 50%;
+  //   transform: translateX(-50%);
+  // }
   
-  .item-icon {
-    z-index: 9999999999999;
-    width: 100px;
-    height: 56px;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(20px);
+  // .item-icon {
+  //   z-index: 9999999999999;
+  //   width: 100px;
+  //   height: 56px;
+  //   border-radius: 12px;
+  //   background: rgba(0, 0, 0, 0.4);
+  //   backdrop-filter: blur(20px);
   
-    .icon {
-      height: 36px;
-      width: 36px;
-    }
-  }
+  //   .icon {
+  //     height: 36px;
+  //     width: 36px;
+  //   }
+  // }
   </style>
   
