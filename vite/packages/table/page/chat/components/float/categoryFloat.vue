@@ -152,6 +152,7 @@ export default defineComponent({
       // console.log('获取数据',chatList[0])
 
       if(props.communityID?.no !== '1'){
+        // console.log('排查::>>',typeof props.communityID.no)
         const res = await leftListCategory.getCategoryData(props.communityID.no)
         
         // await leftListCategory.getCategoryTreeData(props.communityID.no)

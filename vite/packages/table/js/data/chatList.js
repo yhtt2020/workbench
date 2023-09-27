@@ -133,7 +133,7 @@ export const recommendedJoin = [
 
 
 export const hideDropList = [
-  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
   {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
   {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
   {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
@@ -141,7 +141,7 @@ export const hideDropList = [
 ]
 
 export const showDropList = [
-  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
   {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
   {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
   {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
@@ -151,13 +151,13 @@ export const showDropList = [
 ]
 
 export const memberDropList = [
-  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
   {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
 ]
 
 
 export const memberShowList = [
-  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
   {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
 ]
 

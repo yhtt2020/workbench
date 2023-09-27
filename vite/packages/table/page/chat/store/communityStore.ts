@@ -62,16 +62,24 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取社群频道目录
    async getCategoryData(id:any){
-    const option = {
-      communityNo:id,
-      cache:1
+    // console.log('获取数值',id,)
+   
+    if(!isNaN(parseInt(id))){
+      const option = {
+        communityNo:parseInt(id),
+        cache:1
+      }
+      const categoryList = await post(getChannelList,option)
+      const categoryTreeList = await post(getChannelTree,option)
+      
+      const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
+  
+      return result
+    }else{
+      return null;
     }
-    const categoryList = await post(getChannelList,option)
-    const categoryTreeList = await post(getChannelTree,option)
-    
-    const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
 
-    return result
+   
     
     // if(categoryList?.data?.list){
     //   this.categoryList.category = categoryList.data.list

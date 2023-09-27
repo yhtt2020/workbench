@@ -1,7 +1,7 @@
 <template>
   <a-dropdown trigger="click" >
    <div class="flex pointer items-center justify-center">
-    <EllipsisOutlined style="font-size: 1.25em;color:var(--secondary-text);"/>
+    <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/>
    </div>
    <template #overlay>
     <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">

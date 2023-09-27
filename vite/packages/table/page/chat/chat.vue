@@ -6,9 +6,10 @@
     </div>
 
     <template #communityFloat>
-      <div class="flex flex-col" style="height:500px;width:300px;">
+      <div class="flex flex-col" style="height:500px;width:300px;" v-if="communityNo !== 1">
         <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
       </div>
+      
     </template>
 
   </xt-left-menu>
@@ -86,7 +87,7 @@ export default {
       index: 'chat',
       // type:'chat',
       addIndex: '',
-      communityNo:'1',
+      communityNo:'',
       open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
