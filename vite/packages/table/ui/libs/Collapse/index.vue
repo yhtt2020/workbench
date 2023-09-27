@@ -37,6 +37,8 @@ const props = defineProps({
     color: var(--primary-text) !important;
   }
   :deep(.ant-collapse-content-box) {
+    padding-top: 0 !important;
+
     color: var(--primary-text) !important;
   }
 }

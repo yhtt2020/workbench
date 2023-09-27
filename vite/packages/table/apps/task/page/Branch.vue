@@ -7,9 +7,12 @@
         <template #right>1</template>
       </xt-title>
       <xt-collapse v-for="task in currentTask.tasks">
-        <template #title> <xt-title :title="task.title"/></template>
+        <template #title>
+          <xt-title m="0">{{ task.title }} </xt-title></template
+        >
 
-        321 {{ task }}
+        <xt-title type="text" m="mb">{{ task.title }} </xt-title>
+        <xt-button type="theme" style="width: 100%">开始任务</xt-button>
       </xt-collapse>
       {{ currentTask }}
     </div>
