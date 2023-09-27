@@ -2,10 +2,10 @@
   <div class="flex" style="color: var(--primary-text);width: 650px;height: 534px;padding: 16px;">
     <div style="width:293px;">
      <vue-custom-scrollbar :settings="settingsScroller" style="height:100%; margin-bottom: 16px;">
-      <div v-for="item in userList" class="flex pointer"  style="margin-bottom: 16px;" @click="selectAdmin(item)">
-       <div class="flex">
+      <div v-for="(item,index) in userList" class="flex pointer rounded-lg px-4 py-3" :class="{'select-bg':isSelected(index)}" style="margin-bottom: 16px;" @click="selectAdmin(item)">
+       <div class="flex items-center">
         <a-avatar :size="32" :src="item.avatar"></a-avatar>
-        <div class="font-16" style="color: var(--primary-text);margin-left: 16px;">
+        <div class="font-16 flex items-center" style="color: var(--primary-text);margin-left: 16px;">
          {{ item.nick }}
         </div>
        </div>
@@ -18,9 +18,9 @@
     <div class="flex flex-col" style="width: 293px;">
      <vue-custom-scrollbar :settings="settingsScroller" style="height:88%; margin-bottom: 16px;">
       <div v-for="item in adminList" class="flex items-center justify-between pointer" style="margin-bottom: 16px;" >
-       <div class="flex">
+       <div class="flex items-center">
         <a-avatar :size="32" :src="item.avatar"></a-avatar>
-        <div class="font-16" style="color: var(--primary-text);margin-left: 16px;">
+        <div class="font-16 flex items-center" style="color: var(--primary-text);margin-left: 16px;">
          {{ item.nick }}
         </div>
        </div>
@@ -118,10 +118,14 @@ export default defineComponent({
     ctx.emit('closeUser')
   }
 
+  const isSelected = (index) =>{
+    return data.adminList.includes(userList.value[index])
+  }
+
 
   return {
    userList,
-   ...toRefs(data),cancel,selectAdmin,clearAdmin,submit,
+   ...toRefs(data),cancel,selectAdmin,clearAdmin,submit,isSelected
   }
  }
 
@@ -129,5 +133,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-
+.select-bg{
+  background: var(--active-secondary-bg) !important;
+  border:1px solid var(--active-bg) !important;
+}
 </style>

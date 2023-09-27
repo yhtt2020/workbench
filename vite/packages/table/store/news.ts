@@ -13,8 +13,10 @@ export const newsStore = defineStore("news", {
   actions: {
 
     async getNewsMsg(tag, num) {
-      if(localCache.get(tag)){
-        this.newsMsgList = localCache.get(tag)
+      let newsMsgListCache = localCache.get(`newsMsgList-${tag}`)
+      if(newsMsgListCache){
+        this.newsMsgList = newsMsgListCache
+        console.log(this.newsMsgList);
       }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
@@ -23,7 +25,7 @@ export const newsStore = defineStore("news", {
           page_size: num,
         },
         options: {
-          key: 'toutiao.'+tag,
+          key: cacheTag,
           ttl: 300,
           cache: 1
         }
@@ -32,11 +34,11 @@ export const newsStore = defineStore("news", {
       if(response.status){
         if(response.data instanceof Array){
           this.newsMsgList=response.data
-          
+
         }else{
           this.newsMsgList = response.data.result.data
         }
-        localCache.set(tag,this.newsMsgList,300)
+        localCache.set(`newsMsgList-${tag}`,this.newsMsgList,300)
       }
       else{
         return false

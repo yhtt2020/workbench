@@ -1,15 +1,16 @@
 <template>
     <div class="flex items-center justify-between w-full">
-        <a-avatar src="https://up.apps.vip/avatar/003.png" :size="32"></a-avatar>
+        <!-- {{ userUid}} -->
+        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(userUid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false" style="cursor: default;"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
-        <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview">
+        <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview" multiple>
             <div v-if="fileList.length < 3">
-                <plus-outlined style="font-size: 20px;" />
+                <plus-outlined style="font-size: 20px;color: var(--secondary-text);" />
             </div>
         </a-upload>
         <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
@@ -21,7 +22,7 @@
             <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
                     <!-- <div class="w-full"> -->
-                    <vue-custom-scrollbar :settings="settingsScroller" class="w-1/2 h-[150px] xt-bg-2 rounded-lg flex  "
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
                         style="flex-wrap: wrap;">
                         <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
                             @click="addEmoji(item)" :key="index" style="cursor: pointer;">
@@ -30,50 +31,70 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2"
+                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
                     <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 表情
                 </button>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2"
+            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
                 style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
                 @click="imageVisible">
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" /> 图片
             </button>
         </div>
-        <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
-            @click="addComment">回复</a-button>
+        <xt-button type="primary" class=" reply xt-text"
+            style="color: var(--secondary-text) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
+            @click="addComment">回复</xt-button>
     </div>
-    <!-- <tippy trigger="mouseenter click" placement="bottom">
-
-    </tippy> -->
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../../../../table/store'
+import { fileUpload } from '../../../components/card/hooks/imageProcessing'
+import { useCommunityStore } from '../commun'
+const useCommunStore = useCommunityStore()
+const userStore = appStore()
 const value = ref('')
 const commentList = ref([])
 // const emojiVis = ref(false)
-const imageVis = ref(false)
+const imageVis = ref(true)
 // 添加表情
-const addEmoji = ( item) => {
+const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
-    console.log(emoiiValue);
-    
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    value.value +=`${key}`
+    value.value += `${key}`
 
 }
+
 const emit = defineEmits(['addComment'])
-const addComment = () => {
-    if (value.value) {
-        commentList.value.push(value.value)
-        value.value = ''
+const addComment = async () => {
+    if (value.value || fileList.value.length > 0) {
+        const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
+
+        let authorid = useCommunStore.communityPostDetail.author_uid;
+        let content = value.value;
+        let threadId = useCommunStore.communityPostDetail.pay_set.tid || useCommunStore.communityPostDetail.id;
+
+        setTimeout(async () => {
+            const imageList = JSON.stringify(imageUrlList);
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
+            await useCommunStore.getCommunityPostDetail(threadId);
+            await useCommunStore.getCommunityPostReply(threadId);
+
+            value.value = '';
+            fileList.value = [];
+        });
     }
-    emit('addComment', commentList)
+
+    emit('addComment', commentList);
 }
+
 const imageVisible = () => {
     imageVis.value = !imageVis.value
 }
@@ -174,6 +195,23 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
+const userInfo = computed(() => {
+    return userStore.userInfo
+})
+let userUid = userInfo.value.uid
+let Info = {
+    uid: userInfo.uid,
+    nickname: userInfo.nickname,
+    avatar: userInfo.avatar
+}
+const showCard = (userUid, Info) => {
+    userStore.showUserCard(userUid, Info)
+
+}
+onMounted(async () => {
+    await userStore.getUserInfo()
+
+})
 </script>
 <style lang='scss' scoped>
 :deep(.ant-upload.ant-upload-select-picture-card) {
@@ -190,8 +228,13 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     font-size: 8px;
 }
 
+:deep(.tippy-box) {
+    width: 51%;
+    margin-left: 15%;
+}
+
 .btn {
-    border: none;
+    border: 1px solid var(--secondary-text);
 }
 
 .comment-input {
@@ -199,9 +242,12 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     height: 40px;
     // width: 300px;
     width: calc(100% - 45px);
+    // cursor: cursor;
 }
 
 :deep(.ant-input) {
+    color: var(--secondary-text);
+
     &::placeholder {
         font-weight: 400;
         font-size: 16px;

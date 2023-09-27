@@ -1,77 +1,14 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col flex=" 0 1 300px" class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
-           :style="doubleCol ? { maxWidth:'336px' } :{ maxWidth:'240px'}"
-           style=" border-right:1px solid var(--divider);">
-      <div class="flex flex-col">
-        <div class="flex justify-between w-full mb-2.5">
-          <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ groupName }}</span>
-          <ChatDropDown @updatePage="updatePage"  :list="hideDropList"/>
-        </div>
-        <div class="font-14" style="color:var(--secondary-text);">
-          {{ summary }}
-        </div>
-        <div>
-          <a-row :gutter="10">
-            <a-col flex="55px" class="mt-1 text-right">
-              <span class="px-2 rounded-full xt-active-bg">0 级</span>
-            </a-col>
-            <a-col  flex="auto" style="padding-top: 3px">
-              <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="10"></a-progress>
-            </a-col>
+    <a-col  class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
+      style=" border-right:1px solid var(--divider);"
+    >
+    <!-- :style="doubleCol ? { width:'336px' } :{ width:'240px '}" -->
+    <!-- :flex="doubleCol ? 0 1 336 : 0 1 240 "  -->
+    <!-- flex=" 0 1 300px" -->
 
-          </a-row>
+      <CategoryFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
 
-        </div>
-      </div>
-
-      <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
-
-
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        <div v-for="item in list[0].channelList">
-          <ChatFold :title="item.name">
-            <div class="flex flex-col" v-if="doubleCol === false">
-              <div :class="{active:currentChannel.id===item.id}" v-for="item in item.children" class="flex items-center px-4 py-3 rounded-lg pointer group-item"
-                   @click="currentItem(item)"
-              >
-                <template v-if="item.type === 'group'">
-                  <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
-                </template>
-                <template v-if="item.type === 'link'">
-                  <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
-                </template>
-                <template v-if="item.type === 'forum'">
-                  <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                </template>
-                <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                <SelectOutlined class="ml-1 xt-text-2 flip" style="font-size: 14px"
-                                v-if="item.props.openMethod==='userSelect'"/>
-              </div>
-            </div>
-
-            <div class="flex grid grid-cols-2 gap-1" v-else>
-              <div v-for="item in item.children" @click="currentItem(item)"
-                   :class="{active:currentChannel.id===item.id}"   class="flex items-center py-2 rounded-lg pointer group-item">
-                <div class="flex items-center mx-2">
-                  <template v-if="item.type === 'group'">
-                    <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
-                  </template>
-                  <template v-if="item.type === 'link'">
-                    <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
-                  </template>
-                  <template v-if="item.type === 'forum'">
-                    <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                  </template>
-                </div>
-                <span class="ml-1 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
-                                v-if="item.props.openMethod==='userSelect'"/>
-              </div>
-            </div>
-          </ChatFold>
-        </div>
-      </vue-custom-scrollbar>
     </a-col>
 
     <a-col flex=" 1 1 200px" class="flex flex-col h-full">
@@ -137,8 +74,8 @@
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
 import { chatList,hideDropList } from '../../../js/data/chatList'
-import ChatDropDown from '../components/chatDropDown.vue'
-import ChatFold from '../components/chatFold.vue'
+import ChatDropDown from '../components/float/chatDropDown.vue'
+import ChatFold from '../components/float/chatFold.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
@@ -149,14 +86,23 @@ import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
+import CategoryFloat from '../components/float/categoryFloat.vue'
 
 
 export default defineComponent({
   components: {
+    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined,
     Emoji,
     ChatDropDown,
     ChatFold, Commun, Modal, ValidateModal,
-    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined,communityIcon
+    CategoryFloat,
+    communityIcon
+  },
+
+  data(){
+    return{
+      routeData:this.$route.params
+    }
   },
 
   setup () {

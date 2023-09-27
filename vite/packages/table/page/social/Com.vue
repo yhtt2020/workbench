@@ -1,148 +1,68 @@
 <template>
   <div class="ml-3" style="width: 98%;height: 100%">
-    <div style="width: 200px">
-      <HorizontalPanel  :navList="comList" v-model:selectType="currentTab" :height="44" class="mt-3"></HorizontalPanel>
-    </div>
-    <vueCustomScrollbar v-if="currentTab.name === 'com'" :settings="scrollbarSettings"
-      style="height:100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden;display: flex">
-      <div class="card mr-3"
-        style="height: 92%;overflow: hidden ;width: 300px;min-width:300px;vertical-align: top;display: flex;flex-direction: column;background: var(--primary-bg);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);color:var(--primary-text)">
-        <div class="line-title" style="">
-          <HorizontalPanel style="min-width: 100%" v-if="Number(this.myTeamNo) > 0" :navList="channelList" v-model:select-type="currentChannel">
-          </HorizontalPanel>
-          <div v-if="currentChannel.name === 'all'">
-            <span class="ml-2 mt-2" style="font-size: 14px">全网弹幕频道</span>
-            <span class="mt-2" style="float: right;font-weight: normal;font-size: 0.8em">
-              <icon icon="yonghu" />
-              在线：{{ online || '-' }} 人
-            </span>
+    <vue-custom-scrollbar :settings="scrollbarSettings"
+                          style="height: 100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
+      <div style="height: 100%;display: inline-block;">
+        <div class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
+          <div style="width: 280px" class="mr-3">
+            <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
           </div>
-          <div class="pt-2" v-else>
-            <span class="ml-2" style="font-size: 14px;vertical-align: text-bottom">小队弹幕频道</span>
-            <span style="float: right;font-weight: normal;font-size: 0.8em">
-              <a-avatar :size="20" class="mr-2" :src="myTeam.avatar"></a-avatar>{{ myTeam.name }}
 
-            </span>
-          </div>
         </div>
-        <div class="mb-3" style="flex:1;height: 0;display: flex;">
-          <div style="width: 100%">
-            <vueCustomScrollbar :settings="scrollbarSettingsBarrage" style="height:100%;padding-top: 10px;width: 100%">
-<!--              <a-row class="mb-3" v-if="!hideAdmin" :gutter="[10, 10]">-->
-<!--                <a-col :span="4">-->
-<!--                  <a-avatar :size="36" src="/icons/logo128.png"></a-avatar>-->
-<!--                </a-col>-->
-<!--                <a-col :span="20">-->
-<!--                  <div class="barrage-name" style="color:var(&#45;&#45;secondary-text)">-->
-<!--                    弹幕管理员-->
-<!--                  </div>-->
-<!--                  <div class="barrage-content" style="color:var(&#45;&#45;primary-text)">-->
-<!--                    欢迎使用想天工作台弹幕功能，请文明发言。-->
-<!--                  </div>-->
-<!--                </a-col>-->
-<!--              </a-row>-->
+        <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
+          <div class="card mb-3"
+               style="width: 300px;white-space: pre-wrap; background: var(--primary-bg); color: var(--primary-text)">
+            <div>
+              当前版本：<br>
 
+              <div
+                class="bg-indigo-500 w-1/8 inline-block px-4 py-1 text-white text-center font-extrabold rounded-full mt-3 mr-5 ml-5">
+                {{ appVersion }}
+              </div>
+              反馈问题请附版本号
 
-
-                <template v-for="barrage in barrages">
-                  <a-row class="mb-5" :gutter="[10, 15]">
-                  <a-col flex="70px" style="text-align: center;margin-left: -10px;margin-top: 5px">
-                    <FrameAvatar :avatar-size="55" style="zoom:0.65;" @click="showUserCard(barrage.uid)" class=" pointer ml-5" :size="36" :avatar-url="barrage.avatar"
-                                 :frame-url="barrage.userInfo?.equippedItems?.frameDetail?.image"></FrameAvatar>
+              <a-button class="mt-3" block type="primary" @click="checkUpdate" style="color:var(--active-text)">检查更新
+              </a-button>
+            </div>
+          </div>
+<!--          <div class="card mb-3"-->
+<!--               style="width: 300px;background: var(&#45;&#45;primary-bg);color: var(&#45;&#45;primary-text);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">-->
+<!--            <div>-->
+<!--              反馈问题？提交Bug？进入想天浏览器官方版块。-->
+<!--              <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">-->
+<!--                <a-avatar class="mr-2"-->
+<!--                          src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>-->
+<!--                想天工作台-->
+<!--                <a-button size="small" @click="checkUpdate" style="float: right" type="primary">访问社区</a-button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+          <div class="card mb-3" style="width: 300px;background: var(--primary-bg); color: var(--primary-text)">
+            <div class="line-title">
+              成为开发者：
+            </div>
+            <div class="line">我们欢迎每一位前端开发者、独立软件开发者、主题设计师、浏览器插件开发者入驻。我们将对早期开发者提供各项支持与流量奖励。
+              <div class="mt-5">
+                <a-row :gutter="10">
+                  <a-col :span="12">
+                    <a-button style="color:var(--active-text)"
+                              @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary"
+                              block>开发者入驻
+                    </a-button>
                   </a-col>
-                  <a-col flex="auto" :wrap="true" style="width:0">
-                    <div class="barrage-name">
-                      <strong style="color:var(--secondary-text)">{{ barrage.nickname }}</strong> · {{
-                        barrage.create_time_text }}
-                    </div>
-                    <div class="barrage-content" style="color:var(--primary-text)">
-                      {{ barrage.content }}
-                    </div>
-                    <div class="barrage-time">
-
-                    </div>
-
+                  <a-col :span="12">
+                    <a-button class="xt-bg-2 xt-text"
+                              @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习
+                    </a-button>
                   </a-col>
-                  </a-row>
-                </template>
-
-            </vueCustomScrollbar>
-          </div>
-        </div>
-        <div>
-
-          <a-input-group compact>
-
-            <a-input style="width:calc(100% - 60px)" @keyup.enter="postBarrage" v-model:value="postContent"
-              :placeholder="'发送至' + currentChannel.title + '频道'">
-              <template #addonBefore>
-                <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
-              </template>
-            </a-input>
-            <a-button @click="postBarrage" type="primary">发送</a-button>
-          </a-input-group>
-        </div>
-
-      </div>
-      <div style="width: 280px" class="mr-3">
-        <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
-      </div>
-      <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
-        <div class="card mb-3"
-          style="width: 300px;background: var(--primary-bg);color: var(--primary-text);box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);">
-          <div>
-            反馈问题？提交Bug？进入想天浏览器官方版块。
-            <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">
-              <a-avatar class="mr-2"
-                src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
-              想天工作台
-              <a-button size="small" @click="checkUpdate" style="float: right" type="primary">访问社区</a-button>
+                </a-row>
+              </div>
             </div>
           </div>
+
         </div>
 
 
-      </div>
-
-
-    </vueCustomScrollbar>
-    <vue-custom-scrollbar v-else :settings="scrollbarSettings"
-      style="height: 90%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
-      <div class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
-        <div class="card mb-3" style="width: 300px; background: var(--primary-bg); color: var(--primary-text)">
-          <div>
-            当前版本：<br>
-
-            <div
-              class="bg-indigo-500 w-1/8 inline-block px-4 py-1 text-white text-center font-extrabold rounded-full mt-3 mr-5 ml-5">
-              {{ appVersion }}
-            </div>
-            反馈问题请附版本号
-
-            <a-button class="mt-3" block type="primary" @click="checkUpdate" style="color:var(--active-text)">检查更新</a-button>
-          </div>
-        </div>
-        <div class="card mb-3" style="width: 300px;background: var(--primary-bg); color: var(--primary-text)">
-          <div class="line-title">
-            成为开发者：
-          </div>
-          <div class="line">我们欢迎每一位前端开发者、独立软件开发者、主题设计师、浏览器插件开发者入驻。我们将对早期开发者提供各项支持与流量奖励。
-            <div class="mt-5">
-              <a-row :gutter="10">
-                <a-col :span="12">
-                  <a-button style="color:var(--active-text)" @click="openTab('https://www.yuque.com/tswork/mqon1y/hugtrbdiax9863ug')" type="primary"
-                    block >开发者入驻
-                  </a-button>
-                </a-col>
-                <a-col :span="12">
-                  <a-button class="xt-bg-2 xt-text"
-                    @click="openTab('https://www.yuque.com/tswork/mqon1y/ldt3ll8lqoedpo07')" block>前端实习
-                  </a-button>
-                </a-col>
-              </a-row>
-            </div>
-          </div>
-        </div>
       </div>
       <div style="height: 100%;display: inline-block;">
         <div class="line font-bold text-white" style="color: var(--primary-text)">更新日志：</div>
@@ -187,40 +107,10 @@ import FrameAvatar from '../../components/avatar/FrameAvatar.vue'
 export default {
   name: 'Com',
   components: { FrameAvatar, SingIn, VueCustomScrollbar, HorizontalPanel, GradePanel, vuuri },
-  data() {
+  data () {
     return {
-      channelList: [
-        {
-          title: '全网',
-          name: 'all'
-        }, {
-          title: '小队',
-          name: 'team'
-        }
-      ],
-      currentChannel: {
-        name: 'all',
-        title: '全网'
-      },
-      comList: [
-        { title: '社区', name: 'com' },
-        { title: '版本更新', name: 'update' },
-      ],
+
       currentTab: { name: 'com' },
-      barragesAll: [],
-      barragesTeam: [],
-      sendToChannel: {
-        name: 'all',
-        title: '全网'
-      },
-      postContent: '',
-      scrollbarSettingsBarrage: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      },
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -235,19 +125,8 @@ export default {
   },
   computed: {
     ...mapState(teamStore, ['my', 'myTeamNo', 'myTeam']),
-    barrages() {
-      if (this.currentChannel.name === 'all') {
-        return this.barragesAll
-      } else {
-        return this.barragesTeam
-      }
-    }
   },
-  mounted() {
-    this.CONST = tsbApi.barrage.CONST
-    this.loadBarrages().then()
-    this.loadTeamBarrage().then()
-    this.getOnline().then()
+  mounted () {
     this.appVersion = tsbApi.runtime.appVersion
     axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
       this.updateLog = data.data
@@ -257,80 +136,20 @@ export default {
     ...mapActions(appStore, ['showUserCard']),
 
     ...mapActions(teamStore, ['updateMy']),
-    checkUpdate() {
+    checkUpdate () {
       ipc.send('checkUpdate')
     },
-    openTab(url) {
+    openTab (url) {
       browser.openInInner(url)
     },
-    async loadTeamBarrage() {
-      await this.updateMy()
-      if (this.myTeamNo) {
-        tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
-          if (rs.status) {
-            rs.data.forEach(item => {
-              item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
-            })
-            this.barragesTeam = rs.data
-
-          }
-        })
-      } else {
-        this.barragesTeam = []
-      }
-    },
-    async loadBarrages() {
-      tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
-        if (rs.status) {
-          rs.data.forEach(item => {
-            item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
-          })
-          this.barragesAll = rs.data
-
-        }
-      })
-    },
-    async getOnline() {
+    async getOnline () {
       axios.get(Server.baseUrl + '/app/open/usageStats/online').then((rs) => {
         if (rs.data.code === 1000) {
           this.online = rs.data.data
         }
       })
     },
-    async postBarrage() {
-      if (!this.postContent) {
-        message.error('请输入弹幕内容')
-        return
-      } else {
-        let channelType = this.CONST.CHANNEL.PUBLIC
-        let pageUrl = 'table'
-        if (this.currentChannel.name !== 'all') {
-          channelType = this.CONST.CHANNEL.TEAM
-          pageUrl = this.myTeamNo
-        }
-
-        let data = {
-          channel_type: channelType,
-          content: this.postContent,
-          page_url: String(pageUrl),
-        }
-        let rs = await tsbApi.barrage.add(data)
-        if (rs.status) {
-          this.postContent = ''
-          if (!this.hideAdmin) {
-            this.hideAdmin = true
-          }
-          message.success('弹幕发送成功')
-          setTimeout(() => {
-            window.loadBarrage().then()
-          }, 1000)
-        } else {
-          console.error(rs)
-          message.error('弹幕发送失败，失败原因：' + rs)
-        }
-      }
-    },
-    goUrl(url) {
+    goUrl (url) {
       browser.openInInner(url)
     },
   }
@@ -340,20 +159,5 @@ export default {
 <style scoped>
 .card {
   background: #252525;
-}
-
-.barrage-name {
-  font-size: 0.8em;
-}
-
-.barrage-content {
-  color: white;
-  user-select: text;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-.barrage-time {
-  font-size: 0.8em;
 }
 </style>

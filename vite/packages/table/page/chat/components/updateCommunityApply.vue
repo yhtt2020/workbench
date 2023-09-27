@@ -1,3 +1,4 @@
+<!-- 更新社群频道,没有分类选择的流程 -->
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
@@ -6,21 +7,23 @@
     <CloseOutlined  style="font-size: 1.25em;"/>
    </div>
   </div>
-  
+
   <div class="flex flex-col px-6">
    <div class="p-4 flex rounded-lg flex-col" style="background: var(--secondary-bg);">
     <span class="font-16-400 mb-2.5" style="color:var(--primary-text);">选择类型</span>
     <span class="font-14-400" style="color:var(--secondary-text)">
-     你可以选择添加桌面，关联工作台内部的酷应用，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
+     你可以选择添加桌面，关联工作台内部的社区，也可以选择关联你的群聊，还支持自定义添加网页应用链接，把需要的资源全部整合到社群当中，与你的小伙伴们一起分享和协作。
     </span>
    </div>
+
    <div class="flex flex-col mt-4">
     <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4" 
      style="background: var(--secondary-bg);" :class="{'select-bg':selectIndex === item.type}" @click="selectChannel(item)">
-     <ChannelIcon :icon="item.icon" style="font-size: 2.5em;"></ChannelIcon>
+     <ApplyIcon :icon="item.icon" style="font-size: 2.5em;"></ApplyIcon>
      <span class="pl-4 font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
    </div>
+
   </div>
 
   <div class="px-6">
@@ -29,67 +32,71 @@
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectSubmit">选择</XtButton>
    </div>
   </div>
+
  </div>
 
- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk>
- <SelectChannel v-if="selectIndex === 'channel' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectChannel>
- <SelectGroupChat v-if="selectIndex === 'chat' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
- <SelectWebLink v-if="selectIndex === 'web' && nextShow === true " @close="closeChannel" @back="nextShow = false"></SelectWebLink>
-
+ <SelectWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectWebLink>
+ <CreateChannelGroup v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelGroup>
+ <CreateChannelCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelCommunity>
 </template>
 
 <script>
-import { defineComponent, reactive,toRefs } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
+import { Icon as  ApplyIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
-import { Icon as  ChannelIcon } from '@iconify/vue'
 
-
-import Modal from '../../../components/Modal.vue'
-import SelectDesk from './channelSelect/selectDesk.vue'
-import SelectChannel from './channelSelect/selectChannel.vue'
-import SelectGroupChat from './channelSelect/selectGroupChat.vue'
+// import CreateChannelLink from './knownCategory/createChannelLink.vue'
+// import CreateChannelLink from './unknownCategory/selectWebLink.vue'
 import SelectWebLink from './channelSelect/selectWebLink.vue'
+import CreateChannelGroup from './knownCategory/createChannelGroup.vue'
+import CreateChannelCommunity from './knownCategory/createChannelCommunity.vue'
 
 export default defineComponent({
+ props:['no'],
+
  components:{
-  CloseOutlined,
-  ChannelIcon,Modal,SelectDesk,SelectChannel,
-  SelectGroupChat,SelectWebLink,
+  ApplyIcon,CloseOutlined,CreateChannelGroup,
+  CreateChannelCommunity,SelectWebLink
+  // CreateChannelLink,
  },
 
- props:[],
-
  setup (props,ctx) {
-
+  
   const data = reactive({
    channelList:[
-    { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
-    { icon:'fluent-emoji-flat:placard',name:'社区',type:'channel' },
+    // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
+    { icon:'fluent-emoji-flat:placard',name:'社区',type:'community' },
     { icon:'fluent-emoji-flat:thought-balloon',name:'群聊',type:'chat' },
-    { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'web' }
+    { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
    ],
-   selectIndex:'desk',
+   selectIndex:'community',
    nextShow:false, // 选择完第一步的是否进入第二步
+   type:'',
+
   })
   
-  // 创建新频道弹窗
+
+  // 关闭
   const closeChannel = () =>{
-    ctx.emit('close')
+   ctx.emit('close')
   }
+
 
   // 选择频道
   const selectChannel = (item) =>{
    data.selectIndex = item.type
+   data.type = item.type
   }
 
-  // 最后选择按钮
+
+  // 选择完进入下一步
   const selectSubmit = () =>{
-    data.nextShow = true
+   data.nextShow = true
   }
-
 
   return {
-   ...toRefs(data),closeChannel,selectChannel,selectSubmit,
+   ...toRefs(data),closeChannel,selectChannel,selectSubmit
+
   }
  }
 })

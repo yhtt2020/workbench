@@ -9,6 +9,10 @@ export default {
       path: '/',
       name: 'barrage',
       component: Barrage,
+      meta:{
+        tab1:'community',
+        tab2:'barrage'
+      }
     }
   ]
 }

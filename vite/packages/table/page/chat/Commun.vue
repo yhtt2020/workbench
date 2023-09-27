@@ -34,10 +34,11 @@
         <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
           <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
         </a-button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="refreshPost">
+        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost"
+          style="flex-shrink: 0;">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
         </button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan">
+        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan" style="flex-shrink: 0;">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
         </button>
 
@@ -45,14 +46,16 @@
         <!-- </div> -->
 
       </div>
-      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" />
+      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+        :forumId="props.forumId" />
 
     </div>
+    <!-- {{ store.communityPost.count }} -->
     <a-spin tip="Loading..." v-if="refreshFlag" size="large" style=" margin-top: 28%;"></a-spin>
     <div class="flex justify-center flex-auto " style="height: 0;" v-else>
       <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }" class="w-full thread-list"
-        :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
+      <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }"
+        class="w-full thread-list" :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0; "
         :style="{ width: detailVisible ? '40%' : '70%' }">
         <div class="flex justify-center content">
           <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
@@ -61,7 +64,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="50" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -88,8 +91,6 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { Icon } from '@iconify/vue'
 import browser from '../../js/common/browser';
-// import {} from 'pinia'
-// import communityStore  from './community';
 const current = ref(1)
 // 更新帖子列表
 const refreshFlag = ref(false)
@@ -111,14 +112,16 @@ const menuList = ref([
     name: '精华',
     type: 'essence'
   }])
-const createOrder = computed(() => store.communityPost?.list[0].create_time)
-const replyOrder = computed(() => store.communityPost?.list[0].last_post_time)
+const comCards = computed(() => {
+  return store.communityPost
+})
+
 const checkMenuList = ref([{
   type: '最近更新',
-  order: createOrder ? new Date(createOrder).getTime() : 0,
+  order: 'create_time',
 }, {
   type: '最近回复',
-  order: replyOrder
+  order: 'reply_time'
 
 }])
 
@@ -134,9 +137,18 @@ const handleMenuItemClick = (index) => {
 // 选择全部，热门的内容
 const setCurrentIndex = (index) => {
   currentIndex.value = index
-  store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
-  // console.log(menuList.value[currentIndex.value].type,checkMenuList.value[currentIndex.value].order);
-  
+  detailVisible.value = false
+  current.value = 1
+  store.getCommunityPost(
+    props.forumId,
+    current.value,
+    menuList.value[currentIndex.value].type,
+    checkMenuList.value[checkMenuCurrentIndex.value].order)
+  // let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
+  // if (detailVisible.value === true) {
+  //   store.getCommunityPostDetail(tid)
+  // }
+
 }
 const goYuan = () => {
   browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
@@ -151,11 +163,14 @@ const refreshPost = () => {
 }
 const changePage = (page) => {
   refreshFlag.value = true
+  detailVisible.value = false
   current.value = page
   store.getCommunityPost(props.forumId, current.value, menuList.value[currentIndex.value].type, checkMenuList.value[currentIndex.value].order)
   refreshFlag.value = false
 }
-
+const totalPost = computed(() => {
+  return store.communityPost.count
+})
 //当前选中的详情帖子的索引
 let selectedIndex = ref(-1)
 const settingsScroller = reactive({
@@ -173,17 +188,11 @@ watch(() => props.forumId, (newValue) => {
 const showPublishModal = ref(false)
 const modalVisible = (val) => {
   showPublishModal.value = val.value
-  // console.log(val.value);
-  // console.log(showPublishModal.value);
-
-
 }
 const visibleModal = () => {
   showPublishModal.value = !showPublishModal.value
 }
-const comCards = computed(() => {
-  return store.communityPost
-})
+
 const threadListRef = ref()
 function updateScroller() {
   // console.log(threadListRef)
@@ -199,30 +208,21 @@ const showDetail = async (index) => {
   detailVisible.value = true;
   // 切换选中状态
   selectedIndex.value = index;
-  // console.log(selectedIndex)
-  // console.log(comCards);
-  // console.log(store.communityPost.list[selectedIndex].reply_count,'count');
-  
   let tid = store.communityPost.list[index].pay_set.tid ? store.communityPost.list[index].pay_set.tid : store.communityPost.list[index].id
   // console.log(tid);
   await store.getCommunityPostDetail(tid)
+  await store.getCommunityPostReply(tid)
 }
 const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {
     // console.log(detailStorage);
     detailVisible.value = false
-    // console.log(detailVisible.value);
-    // message.info('暂无数据')
     return detailStorage
   } else {
     detailStorage = store.communityPostDetail
     return store.communityPostDetail
   }
 })
-// const detailCurrent = ref(1)
-// const totalReply = computed(() => {
-//   return store.communityPost.list[selectedIndex].reply_count
-// })
 // 关闭详情页
 const closeDetail = (value) => {
   if (detailVisible.value) {
@@ -231,21 +231,23 @@ const closeDetail = (value) => {
   }
   updateScroller()
 }
-onBeforeMount(() => {
+onBeforeMount(async () => {
   NProgress.start()
   NProgress.configure({ showSpinner: false });
+  await NProgress.configure({ parent: '.container' })
 })
 onMounted(() => {
-  setCurrentIndex(0)
-  // NProgress.done()
+  // setCurrentIndex(0)
+  store.getCommunityPost(props.forumId)
+  NProgress.done()
 })
 onBeforeUpdate(() => {
   NProgress.start()
-  NProgress.configure({ showSpinner: false });
+  // NProgress.configure({ showSpinner: false });
 })
 onUpdated(() => {
   NProgress.done()
-  NProgress.configure({ showSpinner: false });
+  // NProgress.configure({ showSpinner: false });
 })
 </script>
 <style lang='scss' scoped>
@@ -394,6 +396,10 @@ onUpdated(() => {
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+
+  :deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link) {
+    color: var(--secondary-text) !important;
   }
 
   .scroll {

@@ -86,7 +86,7 @@ export default {
                 white-space: nowrap;
               "
             >
-              <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);" 
+              <span style="margin-bottom: 0; line-height: 28px;color: var(--primary-text);"
                 ><to-top-outlined v-if="task.isTop" /> {{ task.title }}</span
               >
             </div>
@@ -112,12 +112,17 @@ export default {
             <a-menu-item class="xt-text">删除</a-menu-item>
           </a-menu>
         </span>
-        
+
       </template>
     </a-dropdown>
   </div>
 </template>
 <style scoped lang="scss">
+:deep(.ant-checkbox-inner){
+  border:none
+}
+
+
 .dead-time {
   float: right;
   font-size: 12px;

@@ -1,6 +1,7 @@
 export const chatList = [
   {
     name: '想天工作台官方社群',
+    cno:1,
     summary: '欢迎加入想天工作台官方社群，在这里您可以了解到和产品有关的一切',
     settings: {//用户设置的
       enableColumns: false,
@@ -132,11 +133,31 @@ export const recommendedJoin = [
 
 
 export const hideDropList = [
-  {icon:'MenuUnfoldOutlined',title:'收起边栏',type:'hidden'},
-  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
+  {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
+  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
 ]
 
 export const showDropList = [
-  {icon:'MenuFoldOutlined',title:'展开边栏',type:'show'},
-  {icon:'AppstoreOutlined',title:'切换双/单列',type:'change'}
+  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
+  {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
+  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
+  // {icon:'',title:'社群管理',type:'manage'},
+  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'}
 ]
+
+export const memberDropList = [
+  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+]
+
+
+export const memberShowList = [
+  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+]
+

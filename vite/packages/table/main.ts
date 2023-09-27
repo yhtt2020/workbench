@@ -55,7 +55,9 @@ import dayjs from 'dayjs';
 import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
 import "../../public/css/styleSwitch/toast.scss"
+import "../../public/css/styleSwitch/category.scss"
 import {router} from './router'
+import routerTab from "./js/common/routerTab";
 
 //腾讯IM部分
 import {loadChat, TUIKit} from './chat'
@@ -64,7 +66,7 @@ loadChat()
 
 //socket部分
 import {initSocket} from './js/socket/socket'
-initSocket()
+// initSocket()
 
 import {Notifications} from './js/common/sessionNotice'
 
@@ -103,6 +105,7 @@ const $app = app.use(pinia).use(Antd).use(baseComponents).use(components).use(Co
     }, // => Global default options * see all props
   }
 ).use(Toast, options).use(TUIKit).use(WujieVue).use(VueShepherdPlugin).mount('#app')
+
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

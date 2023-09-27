@@ -55,7 +55,7 @@
                     <span>已售</span>
                     <span>{{item.ownersCount[1]}} 件</span>
                   </div> -->
-                  <div class="text-content">
+                  <div class="text-content" v-if="item.ownersCount">
                     <span>已售</span>
                     <span class="flex items-center">
                       <span class="mr-2">{{item.ownersCount[1]}} 件</span>
@@ -65,7 +65,7 @@
                     </span>
                   </div>
                 </div>
-                
+
                 <a-button v-if="!item.equipped" @click="equip(item)" type="primary" class="rounded-xl h-12 w-full"
                           style="margin-right: 0;color: var(--active-text);">
                   使用
@@ -80,7 +80,7 @@
         </tippy>
       </div>
    </div>
-  </div> 
+  </div>
  </div>
 </template>
 
@@ -160,7 +160,7 @@ export default {
            }
          })
        })
-       
+
      }
    },
  },

@@ -140,18 +140,20 @@ export default {
       icon: 'shouye',
       name: '主页',
       event: 'home',
+      tab:'home'
     },
     {
       'type': 'systemApp',
       'icon': 'youxishoubing',
       'name': '游戏',
-      'event': 'gameIndex'
+      'event': 'gameIndex',
+      tab:'game'
     },
     {
       'type': 'systemApp',
       'icon': 'wangluo',
       'name': '浏览器',
-      'event': 'browser'
+      'event': 'browser',
     },
     {
       'type': 'systemApp',
@@ -163,6 +165,7 @@ export default {
       type:'systemApp',
       icon:'banner',
       name:'壁纸',
+      tab:'paper',
       event:'my',
     },
     {

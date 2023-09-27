@@ -14,25 +14,45 @@ export default {
       path: '',
       name: 'shortcut',
       component: ShortcutKey,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
     },
     {
       path: '',
       name: 'schemeList',
       component: SchemeList,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
     },
     {
       path: '/shareKey',
       name: 'shareKey',
-      component: ShareKey
+      component: ShareKey,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
     },
     {
       path: '/schemeDetail',
       name: 'schemeDetail',
-      component: SchemeDetail
+      component: SchemeDetail,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
     }, {
       path: '/settings',
       name: 'shortcutKeySettings',
-      component: Settings
+      component: Settings,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
     }
   ]
 }

@@ -6,7 +6,9 @@
   <div
     :class="{'ml-2':!fullScreen,'height':fullScreen?'100%':'99%','padding-top':fullScreen?'0':'1em'}"
     class="flex-1 content-view " style="display: flex;flex-direction: column;width: 0">
+    <keep-alive>
     <router-view></router-view>
+    </keep-alive>
   </div>
   </div>
 </template>
@@ -21,6 +23,12 @@ export default defineComponent({
   components: {SecondPanel},
   computed:{
     ...mapWritableState(appStore,['fullScreen'])
+  },
+  created() {
+    const prevRoute = this.$router.currentRoute.value.matched.slice(-2)[0]
+    if (prevRoute && prevRoute.meta.keepAlive ) {
+      this.$router.replace(prevRoute.name)
+    }
   },
   data(){
     return {
@@ -47,6 +55,14 @@ export default defineComponent({
           icon:'jianpan-xianxing',
           route:{
             name:'shortcut'
+          }
+        },
+        {
+          title:'快捷指令',
+          name:'deck',
+          icon:'jianpan-xianxing',
+          route:{
+            name:'deck'
           }
         },
         {

@@ -30,9 +30,9 @@
               </div>
             </div>
           </div>
-          
+
           <div class="center-text" style="transform: translateY(-20px)">
-       
+
             <div class="con-center" v-show="navText && !promptModal" style="width:800px">
                <span class="mt-5 mb-4">本界面不支持触摸，请使用滚轮滚动，支持鼠标拖拽！</span>
 <!--              <div class="   mb-2">
@@ -196,7 +196,7 @@
                     <listItem v-else  :item="item"
                       class=" rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
 </template>
-        
+
 
           </vue-custom-scrollbar>
         </div>
@@ -257,8 +257,9 @@ const suggestNavigationList = [
   {
     type: 'systemApp',
     icon: 'xiaoxi',
-    name: '组织(开发中)',
+    name: '社群(开发中)',
     event:'chat',
+    tab:'community',
    fn:()=>{
      vm.$router.push({ name: 'chat' })
    }
@@ -267,7 +268,8 @@ const suggestNavigationList = [
     type: 'systemApp',
     icon: 'rizhi',
     name: '办公(开发中)',
-    event: 'workDesk',
+    tab:'work',
+    event: 'work',
   },
   {
     type: 'systemApp',
@@ -293,6 +295,7 @@ const suggestNavigationList = [
     type: 'systemApp',
     icon: 'game',
     name: '游戏',
+    tab:'game',
     event: 'gameIndex'
   },
   {
@@ -306,6 +309,7 @@ const suggestNavigationList = [
     type: 'systemApp',
     icon: 'banner',
     name: '壁纸',
+    tab:'paper',
     event: 'my',
   },
 

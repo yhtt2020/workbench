@@ -2,6 +2,7 @@
 
 import { get } from "../js/axios/request"
 import { sUrl } from "../consts"
+import cache from "../components/card/hooks/cache"
 
 
 export async function getHistoryInfo(url){
@@ -16,8 +17,7 @@ export async function getHistoryInfo(url){
     }
     let getData = ""
     await get(sUrl("/app/juhe/get"),params).then(res=>{
-        getData = res.data[0] 
-
+        getData = res.data[0]
     })
     return getData;
 }

@@ -1,49 +1,13 @@
 <template>
-  <xt-left-menu :list="chatLeftList" :index="index" last="3" end="2">
+  <xt-left-menu :list="isFloat" :index="index" last="3" end="2">
+
     <div class="w-full">
-      <MyCommunity v-if="currentCom" :info="info"/>
-      <router-view v-else></router-view>
+      <router-view ></router-view>
     </div>
 
     <template #communityFloat>
-      <div class="flex flex-col p-2 mt-3">
-        <div class="flex flex-col">
-          <div class="flex justify-between mb-2.5">
-            <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
-            <ChatDropDown :list="showDropList"/>
-          </div>
-          <div class="font-14" style="color:var(--secondary-text);">
-            {{ community.summary }}
-          </div>
-        </div>
-
-        <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
-
-        <div style="height:510px;">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-            <div v-for="items in community.channelList">
-              <ChatFold :title="items.name">
-                <div class="flex flex-col">
-                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
-
-                  >
-                    <template v-if="item.type === 'group'">
-                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-                    </template>
-                    <template v-if="item.type === 'link'">
-                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-                    </template>
-                    <template v-if="item.type === 'forum'">
-                      <chatIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                    </template>
-                    <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                  </div>
-                </div>
-              </ChatFold>
-            </div>
-          </vue-custom-scrollbar>
-        </div>
-
+      <div class="flex flex-col" style="height:500px;width:300px;">
+        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
       </div>
     </template>
 
@@ -82,15 +46,17 @@ import _ from 'lodash-es'
 import config from './config'
 import { appStore } from '../../store'
 import { storeToRefs } from 'pinia'
-import { chatList, showDropList } from '../../js/data/chatList'
-import ChatDropDown from './components/chatDropDown.vue'
-import ChatFold from './components/chatFold.vue'
+import { chatList } from '../../js/data/chatList'
+import ChatDropDown from './components/float/chatDropDown.vue'
+import ChatFold from './components/float/chatFold.vue'
 import JoinCommunity from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
-import { myCommunityStore } from './store/myCommunity'
+import { communityStore } from './store/communityStore'
 import { localCache } from '../../js/axios/serverCache'
-import MyCommunity from './page/myCommunity.vue'
+import MyCommunity from './page/communityDetail.vue'
 import { Icon as chatIcon } from '@iconify/vue'
+import { chatStore } from '../../store/chat'
+import CategoryFloat from './components/float/categoryFloat.vue'
 
 export default {
   name: 'App',
@@ -105,20 +71,22 @@ export default {
     AddFriend, CreateGroup,
     Transfer,
     ChatDropDown, ChatFold,
-    CreateCommunity, JoinCommunity, MyCommunity,
+    CreateCommunity, JoinCommunity, MyCommunity,CategoryFloat,
   },
 
   setup () {
-    const myCom = myCommunityStore()
+    const myCom = communityStore()
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const Server = window.$chat
+    const chat  = chatStore()
 
     const data = reactive({
       index: 'chat',
       // type:'chat',
       addIndex: '',
+      communityNo:'1',
       open: false,
       env: TUIServer.TUIEnv,
       needSearch: !TUIServer.isOfficial,
@@ -151,32 +119,35 @@ export default {
       data.open = true
     }
 
-    const selectCommunityTab = (item) => {
-      // console.log('排查问题::>>',item)
-      localCache.set('communityId', item.type)
-      data.index = item.type
-      data.info = item.info
-    }
+    // const selectCommunityTab = (item) => {
+    //   console.log('排查问题::>>',item)
+    //   router.push(item.route)
+    //   // localCache.set('communityId', item.type)
+    //   // data.index = item.type
+    //   // data.info = item.info
+    // }
 
     const appS = appStore()
 
     const { userInfo } = appS
-    const { myCommunityList } = myCom
+    const { communityList } = myCom
 
     const menuCommunityList = []
     // 遍历将社群进行UI层数据替换
-    for (let i = 0; i < myCommunityList.length; i++) {
-      if (myCommunityList[i].communityInfo) {
+    for (let i = 0; i < communityList.length; i++) {
+      if (communityList[i].communityInfo) {
         const item = {
-          name: myCommunityList[i].communityInfo.name,
-          img: myCommunityList[i].communityInfo.icon,
-          type: `community${myCommunityList[i].cno}`,
-          float: 'communityFloat',
+          name: communityList[i].communityInfo.name,
+          img: communityList[i].communityInfo.icon,
+          type: `community${communityList[i].cno}`,
+          float: "",
+          tab:'community_'+ communityList[i].communityInfo.no,
           noBg: true,
-          callBack: selectCommunityTab,
-          info: myCommunityList[i],
-
-          // route:{ name:'defaultCommunity',info:myCommunityList[i]},
+          callBack:(item)=>{
+            selectTab(item)
+            data.communityNo = communityList[i].communityInfo.no
+          } ,
+          route:{ name:'myCommunity',params:{no: communityList[i].communityInfo.no}},
         }
         menuCommunityList.push(item)
       } else {
@@ -194,35 +165,37 @@ export default {
       return data.index === localCache.get('communityId')
     })
 
-    console.log(menuCommunityList, '菜单社群')
-    // console.log('获取我的社群列表',...newArr)
+   
 
     const chatLeftList = ref([
       {
         icon: 'message',
-        type: 'chat',
-        title: '消息',
+        tab: 'session',
         route: {
-          name: 'chatMain'
+          name: 'chatMain',
+          params:{no:'',info:JSON.stringify('')}
         },
         callBack: selectTab,
       },
       {
         icon: 'team',
-        type: 'contact',
+        tab: 'contact',
         callBack: selectTab,
         route: {
-          name: 'contact'
+          name: 'contact',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       ...(config.adminUids.includes(userInfo.uid) ? [
         {
           icon: 'diannao',
           type: 'admin',
+          tab:'admin',
           title: '管理面板(仅管理员可见)',
           callBack: selectTab,
           route: {
-            name: 'chatAdmin'
+            name: 'chatAdmin',
+            params:{no:'',info:JSON.stringify('')}
           }
         }
       ] : []),
@@ -230,9 +203,11 @@ export default {
       {
         icon: 'zhinanzhen',
         type: 'find',
+        tab:'find',
         callBack: selectTab,
         route: {
-          name: 'chatFind'
+          name: 'chatFind',
+          params:{no:'',info:JSON.stringify('')}
         }
       },
       // 写社群相关静态内容时临时打开的路由
@@ -240,11 +215,16 @@ export default {
         icon: '',
         img: '/icons/logo128.png',
         type: 'community',
-        float: 'communityFloat',
+        float: "",
+        // chat.settings.enableHide ? "communityFloat" : 
         noBg: true,
-        callBack: selectTab,
+        callBack: (item)=>{
+          selectTab(item)
+          data.communityNo=1
+        },
+        tab:'community',
         route: {
-          name: 'defaultCommunity'
+          name: 'defaultCommunity',params:{no:1}
         }
       },
 
@@ -295,12 +275,27 @@ export default {
       },
     ])
 
-    onMounted(() => {
-      router.push({ name: 'chatMain' })
-    })
+    // 判断是否展开悬浮模式
+    const isFloat = computed(()=>{
+      // console.log('排查条件',chat.settings.enableHide)
+      // return
+      if(chat.settings.enableHide){
+        const mapList = chatLeftList.value.map((item)=>{
+          return {...item,float:item.float === '' ? "communityFloat" : ''}
+        })
+        // console.log('测试::>>',mapList)
+        return mapList
+      }else{
+        return chatLeftList.value
+      }
+    });
+
+    // onMounted(() => {
+    //   router.push({ name: 'chatMain' })
+    // })
 
     return {
-      chatLeftList, route, router, showDropList, newArr: menuCommunityList, currentCom,
+      chatLeftList,  route, router, newArr: menuCommunityList, currentCom,isFloat,
       ...toRefs(data),
     }
   }
