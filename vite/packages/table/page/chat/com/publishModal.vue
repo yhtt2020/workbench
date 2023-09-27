@@ -18,8 +18,7 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-input v-model:value="titleValue" placeholder="输入标题（不少于五个字）" :bordered="false" />
-                        <a-textarea v-model:value="postValue" placeholder="输入正文（不少于十个字）" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
                             :bordered="false" @keyup.enter="publishPost" />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
@@ -209,7 +208,7 @@ communCate.value.forEach((item) => {
         label: item.name
     })
 })
-let cascaderValue = reactive([])
+let cascaderValue = ref([])
 const options = ref<CascaderProps['options']>([]);
 arr.value.forEach((item) => {
     options.value.push(item)
@@ -223,8 +222,8 @@ const loadData: CascaderProps['loadData'] = selectedOptions => {
     options.value = [...options.value];
 };
 const handleChange = (value) => {
-    cascaderValue = value
-    console.log(value);
+    cascaderValue.value = value
+    console.log(cascaderValue.value);
 }
 const settingsScroller = reactive({
     useBothWheelAxes: true,

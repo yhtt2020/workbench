@@ -419,7 +419,7 @@ export const useCommunityStore = defineStore('community',{
             }
         },
         // 发布帖子
-        async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1):Promise<IThread>{
+        async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1,is_weibo=1):Promise<IThread>{
             // console.log(fid,image,content,title,'getCommunityPublishPost');
 
             try {
@@ -431,7 +431,8 @@ export const useCommunityStore = defineStore('community',{
                     is_close_comment:is_close_comment,
                     from:from,
                     title:title,
-                    type:type
+                    type:type,
+                    is_weibo:is_weibo
                 })
                 // console.log(res,'threadPost');
 

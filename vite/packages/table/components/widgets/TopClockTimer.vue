@@ -34,7 +34,7 @@
                         <div>
                             <div class="mt-4 mb-3 font-16 xt-text">分钟</div>
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
-                            <a-select v-model:value="timeMinute" placeholder="选择分钟"
+                            <a-select v-model:value="timeMinute" placeholder="选择分钟" dropdownSyle="z-index:99999;"
                                 style="width:100%;  height: 40px; border-radius: 10px;">
                                 <a-select-option :value="index" v-for="(i, index) in new Array(60)"
                                     class="xt-active-bg xt-text-2 ">
@@ -50,17 +50,17 @@
                             </div>
                             <a-radio-group v-model:value="clockType" button-style="solid"
                                 class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;"
+                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" :bordered="false"
                                     class="text-center font-16">不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16"
+                                <a-radio-button value="每天" class="text-center font-16" :bordered="false"
                                     style="width: 50%;">每天</a-radio-button>
                             </a-radio-group>
                         </div>
-                        <div class="flex justify-between">
-                            <xt-button type="primary" class=" font-16 xt-text"
+                        <div class="flex justify-between ">
+                            <xt-button type="primary" class="mt-2 font-16 xt-text"
                                 style="width: 48%; height: 40px;border: 1px solid var(--active-bg); "
                                 @click="settingClock">取消</xt-button>
-                            <xt-button type="primary" class=" font-16 xt-text"
+                            <xt-button type="primary" class="mt-2 font-16 xt-text"
                                 style="width: 48%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
                         </div>
@@ -105,8 +105,8 @@
             <div class="w-[320px] h-[320px] relative xt-bg rounded-lg">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
-                        <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg pl-4 pr-4 mb-3"
-                            v-if="useCountDownStore.countDowntime">
+                        <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
+                            v-if="useCountDownStore.countDowntime.hours !== undefined">
                             <div>
                                 <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
                                     @click="stopCountDown" class="xt-text" v-show="!useCountDownStore.countDownBtn">
@@ -133,7 +133,10 @@
                                 <clockIcon class="mr-3 text-base xt-text font-20" icon="fluent:clock-12-regular"
                                     @click="settingCountDown">
                                 </clockIcon>
-                                <clockIcon class=" xt-text font-20" icon="akar-icons:sound-on"></clockIcon>
+                                <clockIcon class=" xt-text font-20" icon="akar-icons:sound-on" v-if="soundVisible"
+                                    @click="changeSoundStatus"></clockIcon>
+                                <clockIcon class=" xt-text font-20" icon="akar-icons:sound-off" v-if="!soundVisible"
+                                    @click="changeSoundStatus"></clockIcon>
                             </div>
                         </div>
                         <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent">
@@ -156,10 +159,22 @@
                     </div>
                 </vue-custom-scrollbar>
             </div>
+            <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+                style="font-size: 8px;color: var(--primary-text); z-index: 200;" :maskClosable="false">
+                <div style="display: flex;flex-direction: column;align-items: center;">
+                    <div style="">自定义倒计时</div>
+                    <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
+                        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" />
+                    </a-space>
+                    <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
+                </div>
+            </a-modal>
         </template>
 
-        <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar " v-if="countDownVisible"
-            style="width: 150px; height: 32px;position: relative;background: var(--warning) !important;">
+        <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar "
+            v-if="useCountDownStore.countDowntime.hours !== undefined"
+            style="width: 150px; height: 32px;position: relative;"
+            :style="{ background: `linear-gradient(to-right,${currentColor.value} 0% ,${targetColor.value} ${progress}%)` }">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
                 <div class="mr-1 xt-text font-14">倒计时</div>
@@ -181,13 +196,15 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch,h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
+import { notification } from 'ant-design-vue';
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
@@ -209,6 +226,12 @@ const timeHour = ref(0)
 const clockType = ref("不重复")
 const timeMinute = ref(0)
 const flag = ref(true)
+const custom = ref(false)
+const soundVisible = ref(true)
+const value1 = ref(dayjs('00:00:00', 'HH:mm'))
+const changeSoundStatus = () => {
+    soundVisible.value = !soundVisible.value
+}
 const changeStutas = () => {
     isStop.value = !isStop.value
 }
@@ -239,8 +262,8 @@ const addSettingClock = () => {
 
 
     useCardStore.addClock({
-        clockType: clockType,
-        eventValue: eventValue,
+        clockType: clockType.value,
+        eventValue: eventValue.value,
         dateValue: timeSpan,
         clockTimeStamp: timeSpan
     });
@@ -254,6 +277,8 @@ const settingCountDown = () => {
         clockSettingVisible.value = false
     }
     countDownVisible.value = !countDownVisible.value
+    // console.log(useCountDownStore.countDowndate);
+
 }
 const settingClock = () => {
     console.log(clockSettingVisible.value);
@@ -290,20 +315,67 @@ const onCountDown = (value) => {
             break
         case 60:
             useCountDownStore.setCountDown({ hours: 1, minutes: 0, seconds: 0 })
+
             break
         case 300:
-            useCountDownStore.custom = true
+            custom.value = true
             break
     }
     //   this.$refs.cardSlot.hideMenu()
     useCountDownStore.countDownBtn = false
 }
+const addCustom = () => {
+    useCountDownStore.setCountDown({
+        hours: parseFloat(value1.value.$H),
+        minutes: parseFloat(value1.value.$m),
+        seconds: parseFloat(value1.value.$s)
+    })
+    custom.value = false
+}
+
+const currentColor = ref('var(--secondary-bg)')
+const targetColor = ref('var(--warning)')
+const progress = ref(0)
+
+const countDowndate = computed(() => useCountDownStore.countDowndate)
+
+watch(countDowndate, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+        console.log(newVal);
+        const remainingTime = newVal * 1000
+        const interval = remainingTime / 100
+        progress.value = 0
+        const intervalId = setInterval(() => {
+            if (progress.value < 100) {
+                progress.value += 1
+            } else {
+                clearInterval(intervalId)
+                currentColor.value = targetColor.value
+                // console.log('everything is ok');
+                notification.open({
+                    message: '计时器',
+                    description:
+                        '五分钟到了',
+                    onClick: () => {
+                        console.log('Notification Clicked!');
+                    },
+                    duration:2,
+                    class:'notification-class',
+                    icon:() => h(CloseCircleOutlined, { style: 'color: #108ee9' }),
+                    // <CloseCircleOutlined />
+                });
+            }
+        }, interval)
+    }
+})
 </script>
 <style lang='scss' scoped>
 :deep(.tippy-content) {
-    padding: 0px;
+    padding: 0px !important;
 }
-
+.notification-class{
+    
+}
 .font-14 {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -320,8 +392,48 @@ const onCountDown = (value) => {
     color: var(--primary-text);
 }
 
+:deep(.anticon.ant-input-clear-icon) {
+    color: var(--secondary-text);
+}
+
+:deep(.ant-select-option) {
+    color: var(--primary-text);
+}
+
+:deep(.ant-select-arrow) {
+    color: var(--primary-text);
+}
+
+:deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
+    // border-radius: 10px !important;
+    height: 100%;
+    border-radius: 10px;
+
+}
+
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
+    line-height: 35px;
+}
+
+:deep(.ant-select-option) {
+    z-index: 999;
+}
+
 .font-12 {
     font-family: PingFangSC-Regular;
     font-size: 12px;
     font-weight: 400;
-}</style>
+}
+
+:deep(.ant-radio-button-wrapper) {
+    padding: 0px;
+}
+
+:deep(.ant-radio-button-wrapper > .ant-radio-button) {
+    border-radius: 10px !important;
+    font-family: Oswald-Regular;
+    font-size: 16px;
+    font-weight: 400;
+
+}
+</style>
