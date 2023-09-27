@@ -6,44 +6,8 @@
     </div>
 
     <template #communityFloat>
-      <div class="flex flex-col p-2 mt-3">
-        <div class="flex flex-col">
-          <div class="flex justify-between mb-2.5">
-            <span class="font-16-500" style="color:var(--primary-text);"> {{ community.name }} </span>
-            <ChatDropDown :list="showDropList"/>
-          </div>
-          <div class="font-14" style="color:var(--secondary-text);">
-            {{ community.summary }}
-          </div>
-        </div>
-
-        <a-divider style="height: 1px;margin: 12px 0; background-color: var(--divider)"/>
-
-        <div style="height:400px;">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height: 388px;">
-            <div v-for="items in community.channelList">
-              <ChatFold :title="items.name">
-                <div class="flex flex-col">
-                  <div v-for="item in items.children" class="flex items-center py-3 px-4 rounded-lg pointer group-item"
-
-                  >
-                    <template v-if="item.type === 'group'">
-                      <chatIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-                    </template>
-                    <template v-if="item.type === 'link'">
-                      <chatIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-                    </template>
-                    <template v-if="item.type === 'forum'">
-                      <chatIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                    </template>
-                    <span class="ml-3 font-16" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                  </div>
-                </div>
-              </ChatFold>
-            </div>
-          </vue-custom-scrollbar>
-        </div>
-
+      <div class="flex flex-col" style="height:500px;width:300px;">
+        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
       </div>
     </template>
 
@@ -82,9 +46,9 @@ import _ from 'lodash-es'
 import config from './config'
 import { appStore } from '../../store'
 import { storeToRefs } from 'pinia'
-import { chatList, showDropList } from '../../js/data/chatList'
-import ChatDropDown from './components/chatDropDown.vue'
-import ChatFold from './components/chatFold.vue'
+import { chatList } from '../../js/data/chatList'
+import ChatDropDown from './components/float/chatDropDown.vue'
+import ChatFold from './components/float/chatFold.vue'
 import JoinCommunity from './components/joinCommunity.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined } from '@ant-design/icons-vue'
 import { communityStore } from './store/communityStore'
@@ -92,6 +56,7 @@ import { localCache } from '../../js/axios/serverCache'
 import MyCommunity from './page/communityDetail.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
+import CategoryFloat from './components/float/categoryFloat.vue'
 
 export default {
   name: 'App',
@@ -106,7 +71,7 @@ export default {
     AddFriend, CreateGroup,
     Transfer,
     ChatDropDown, ChatFold,
-    CreateCommunity, JoinCommunity, MyCommunity,
+    CreateCommunity, JoinCommunity, MyCommunity,CategoryFloat,
   },
 
   setup () {
@@ -330,7 +295,7 @@ export default {
     // })
 
     return {
-      chatLeftList,  route, router, showDropList, newArr: menuCommunityList, currentCom,isFloat,
+      chatLeftList,  route, router, newArr: menuCommunityList, currentCom,isFloat,
       ...toRefs(data),
     }
   }

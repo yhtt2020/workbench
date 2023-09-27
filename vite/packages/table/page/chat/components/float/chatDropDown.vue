@@ -28,14 +28,14 @@
  </template>
  
  <script>
- import { defineComponent, reactive, toRefs} from 'vue'
+ import { defineComponent, reactive, toRefs,watchEffect} from 'vue'
  import { EllipsisOutlined } from '@ant-design/icons-vue'
- import { chatStore } from '../../../store/chat'
+ import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
  
- import Modal from '../../../components/Modal.vue'
- import UpdateCommunityApply from './updateCommunityApply.vue'
- import CreateNewCategory from './createNewCategory.vue'
+ import Modal from '../../../../components/Modal.vue'
+ import UpdateCommunityApply from '../updateCommunityApply.vue'
+ import CreateNewCategory from '../createNewCategory.vue'
  
  export default defineComponent({
   components:{
@@ -49,10 +49,14 @@
    const chat = chatStore()
  
    const data = reactive({
-    dropDownList:props.list,
+    dropDownList:[],
     dropDownIndex:0,
     type:'',
     categoryShow:false,
+   })
+
+   watchEffect(()=>{
+     data.dropDownList = props.list
    })
  
    const selectMenuItem = (item,index) =>{
@@ -61,7 +65,7 @@
     switch (item.type) {
      case 'change':
        chat.setDouble()
-       console.log('测试',11)
+      //  console.log('测试',11)
        ctx.emit('updatePage')
        break;
      case 'show':

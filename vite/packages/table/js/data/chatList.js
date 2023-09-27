@@ -133,19 +133,31 @@ export const recommendedJoin = [
 
 
 export const hideDropList = [
-  {icon:'ic:sharp-format-indent-increase',title:'收起边栏',type:'hidden'},
-  {icon:'ant-design:appstore-twotone',title:'切换双/单列',type:'change'},
-  {icon:'fluent:add-16-filled',title:'添加新应用',type:'apply'},
-  {icon:'ant-design:team-outlined',title:'邀请其他人',type:'invited'},
-  {icon:'ic:sharp-format-indent-increase',title:'添加新分组',type:'category'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
+  {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
+  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
 ]
 
 export const showDropList = [
-  {icon:'material-symbols:format-indent-decrease-rounded',title:'展开边栏',type:'show'},
-  {icon:'ant-design:appstore-twotone',title:'切换双/单列',type:'change'},
-  {icon:'fluent:add-16-filled',title:'添加新应用',type:'apply'},
-  {icon:'ant-design:team-outlined',title:'邀请其他人',type:'invited'},
-  {icon:'ic:sharp-format-indent-increase',title:'添加新分组',type:'category'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
+  {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
+  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
   // {icon:'',title:'社群管理',type:'manage'},
   // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'}
 ]
+
+export const memberDropList = [
+  {icon:'fluent:apps-list-detail-24-regular',title:'收起边栏',type:'hidden'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+]
+
+
+export const memberShowList = [
+  {icon:'fluent:apps-list-detail-24-regular',title:'展开边栏',type:'show'},
+  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+]
+
