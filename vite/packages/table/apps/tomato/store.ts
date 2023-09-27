@@ -33,22 +33,34 @@ export const tomatoStore = defineStore("tomatoStore", {
     // 是否显示在状态栏
     isState:false,
     tomatoNum:0,
+    tomatoList:[0,0,0,0,0,0,0],
+    weekTime:'',
+    maxTomato:0,
   }),
   // getters:{},
   actions: {
     // 加载目前的番茄
     getTomatoNum(){
-      this.tomatoNum = cache.get('tomatoNum');
-      console.log('拿到了？')
+      this.tomatoNum = cache.get('tomatoNum') ? cache.get('tomatoNum') : this.tomatoNum;
+      this.tomatoList = cache.get('tomatoList') ? cache.get('tomatoList') : this.tomatoList;
+      this.countTime(this.tomatoList)
+      this.max(this.tomatoList)
     },
+
     // 添加番茄
     addTomatoNum(){
-      this.tomatoNum++
+      // 计算今日剩余时间戳
       var now = new Date();
       var midnight = new Date();
-      midnight.setHours(23, 59, 59, 999); // 设置时间为今天的最后一秒
-      var remainingTime = midnight.getTime() - now.getTime(); // 计算剩余时间戳
+      midnight.setHours(23, 59, 59, 999);
+      var remainingTime = midnight.getTime() - now.getTime();
+      this.tomatoNum++
+      this.tomatoList[now.getDay()] = this.tomatoNum;
+      // 这个数据今天会过期，用于保存今日番茄
       cache.set("tomatoNum",this.tomatoNum,remainingTime)
+      cache.set("tomatoList",this.tomatoList,remainingTime + (6-now.getDay())*24*60*60*1000)
+      this.countTime(this.tomatoList)
+      this.max(this.tomatoList)
     },
     // 开始
     onPlay(){
@@ -57,7 +69,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       }
       this.running = true;
       this.isPause = false
-      this.reset(0, 25, 0)
+      this.reset(0, 0, 5)
       this.timer = setInterval(this.interval, this.tick)
       this.isColor ="#e5b047";
     },
@@ -92,6 +104,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.clearInterval()
       this.reset()
       this.addTomatoNum()
+      this.isColor ="#E7763E";
     },
     // 设置定时器
     interval () {
@@ -140,7 +153,28 @@ export const tomatoStore = defineStore("tomatoStore", {
     // 退出全屏
     exit(){
       this.isFullScreen = false;
-    }
+    },
+    // 计算本周番茄时间
+    countTime(list){
+      let total = 0;
+      for(let i =0;i<list.length;i++){
+          total += list[i]
+      }
+      let totalTime = total*25;
+      let hour = totalTime / 60
+      let min = totalTime % 60
+      this.weekTime =  Math.trunc(hour) + 'h' + min + 'm'
+    },
+    // 获取本周最大番茄数
+    max(list){
+      let max = list[0];
+      for (let i = 1; i < list.length; i++) {
+          if(list[i] > max){
+            max = list[i]
+          }
+      }
+      this.maxTomato = max
+    },
   },
   persist: {
     enabled: true,

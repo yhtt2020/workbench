@@ -22,7 +22,7 @@
         Icon,
       },
       computed: {
-        ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isColor','isState','tomatoNum']),
+        ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isColor','isState']),
       },
       data(){
         return {

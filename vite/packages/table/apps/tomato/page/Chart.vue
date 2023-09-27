@@ -1,19 +1,23 @@
 <template>
     <Widget :options="options" :customIndex="customIndex" :desk="desk" >
         <div class="title">本周番茄时间</div>
-        <div class="time">4h15m</div>
-        <div class="echarts">
-            <div class="echarts-col" v-for="(item,index) in yTimer" :key="index" 
-            :style="{'height': item/maxTimer*110 + 10 + 'px'}"
-            :class="index == today ? 'active-col':''"
-            :alt="item"
-            ></div>
+        <div class="time">{{ this.weekTime }}</div>
+            <div class="echarts">
+                <div class="echarts-col" v-for="(item,index) in this.tomatoList" :key="index" 
+                :style="{'height': (item? item/this.maxTomato*100 : 0) + 10 + 'px'}"
+                :class="index == activeIndex ? 'active-col':''"
+                @click="onChangeActive(index)" 
+                >
+                <span v-if="index == activeIndex">{{ item }}</span>
+            </div>
         </div>
     </Widget>
 </template>
   
 <script>
-    import Widget from "../../../components/card/Widget.vue";
+    import Widget from "../../../components/card/Widget.vue";  
+    import {mapActions, mapState,mapWritableState} from "pinia";
+    import { tomatoStore } from '../store'
     // import * as echarts from "echarts";
     export default {
         name: "TimerChart",
@@ -34,6 +38,9 @@
                 type: Object,
             }
         },
+        computed: {
+            ...mapWritableState(tomatoStore, ['tomatoList','weekTime','maxTomato']),
+        },
         data(){
             return {
                 options:{
@@ -44,16 +51,18 @@
                     noTitle:true,
                     background:"#24B284",
                 },
-                xTimer:["1","2","3","4","5","6","7"],
-                yTimer:[1,2,5,3,2,4,0],
-                maxTimer:5,
-                today:5,
+                activeIndex:0,
             }
         },
-        async mounted() {
+        mounted() {
+            this.getTomatoNum();
+            this.activeIndex = new Date().getDay()
         },
         methods: {
-
+            ...mapActions(tomatoStore, ['getTomatoNum']),
+            onChangeActive(n){
+                this.activeIndex = n
+            },
         },
     };
 </script>
@@ -68,6 +77,7 @@
         text-align: center;
     }
     .time{
+        letter-spacing: 1px;
         font-family: Oswald-SemiBold;
         font-size: 20px;
         color: rgba(255,255,255,0.85);
@@ -90,7 +100,11 @@
         width: 29px;
         height: 120px;
         cursor: pointer;
-        // min-height: 20px;
+        text-align: center;
+    }
+    .echarts .echarts-col span{
+        position: relative;
+        top: -22px;
     }
     .echarts .echarts-col:hover{
         background: rgba(255,255,255,0.85);

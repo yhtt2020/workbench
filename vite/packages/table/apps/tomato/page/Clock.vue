@@ -3,7 +3,7 @@
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countTime(this.tomatoNum) }} </div>
-
+        <div class="title" @click="this.addTomatoNum">今日番茄时间</div>
         <div class="icon-box">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
@@ -65,8 +65,8 @@
   import Widget from "../../../components/card/Widget.vue";
   import { Icon } from '@iconify/vue';
   import {mapActions, mapState,mapWritableState} from "pinia";
-  import FullScreen from "../components/fullScreen.vue";
   import { tomatoStore } from '../store'
+  import FullScreen from "../components/fullScreen.vue";
 
   export default {
     name: "TimerClock",
@@ -111,21 +111,20 @@
         ],
       }
     },
-    mounted(){
+    mounted(){ 
       this.getTomatoNum();
     },
     computed: {
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
-      
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum']),
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','addTomatoNum']),
       // 计算今日番茄时间
       countTime(num){
         let totalTime = num*25;
         let hour = totalTime / 60
         let min = totalTime % 60
-        return Math.trunc(hour) + 'h ' + min + 'm'
+        return Math.trunc(hour) + 'h' + min + 'm'
       },
       // 时间格式
       displayNum (num) {
@@ -146,6 +145,7 @@
       color: rgba(255,255,255,0.60);
       font-weight: 400;
       text-align: center;
+      letter-spacing: 1px;
     }
     .time{
       font-family: Oswald-SemiBold;
