@@ -104,16 +104,15 @@ export const communityStore = defineStore('communityStore',{
    },
 
 
-   // 更新频道数据
-  //  async updateCategoryData(id:any){
-  //    if(!isNaN(parseInt(id))){
-  //     const option = { communityNo:parseInt(id), cache:1 }
-  //     const categoryTreeList = await post(getChannelTree,option)
-  //     this.categoryList.tree = categoryTreeList?.data?.treeList
-  //    }else{
-  //     this.category.tree = chatList[0].channelList   
-  //    }
-  //  },
+   // 获取频道数据
+   async getChannelList(id:any){
+    if(!isNaN(parseInt(id))){
+      const option = { communityNo:parseInt(id), cache:1 }
+      return await post(getChannelList,option)
+    }else{
+      return null;
+    }
+   },
  
 
    // 删除社群频道

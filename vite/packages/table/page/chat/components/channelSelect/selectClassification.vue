@@ -101,34 +101,15 @@
     list:[],
    })
 
-   watchEffect( async ()=>{
-    const res  = await communityCategory.getCategoryData(props.no)
-    
-    const filterCategoryRes = res?.category.filter((item)=>{
+   onMounted(async ()=>{
+    const res =  await communityCategory.getChannelList(props.no)
+    const filterCategoryRes = res?.data?.list.filter((item)=>{
       return item.role === 'category'
     })
-
-    // await communityCategory.getCategoryData(props.no)
-    // const filterCategoryRes = communityCategory?.categoryList?.category.filter((item)=>{
-    //   return item.role === 'category'
-    // })
-
     if(filterCategoryRes?.length !== 0){
       data.list = filterCategoryRes
     }
-
    })
-
-  //  const filterList = computed(()=>{
-  //    if(communityCategory.categoryList.length !== 0){
-  //      const categoryList = communityCategory.categoryList.filter((item)=>{
-  //        return item.role === 'category'
-  //      })
-  //      return categoryList
-  //    }else{
-  //      return []
-  //    }
-  //  })
  
   
  
@@ -173,12 +154,7 @@
     if(result?.status === 1){
       message.success(`${result.info}`)
       await communityCategory.getCategoryData(props.no)
-
-      // const res = await communityCategory.getCategoryData(props.no)
-      // if(res?.data?.list){
-      //   data.list = res.data.list
-      
-      // }
+      await communityCategory.getChannelList(props.no)
     }
    }
  
@@ -224,8 +200,7 @@
       //  console.log('查看返回状态',createRes)
        if(createRes?.status === 1){
          message.success(`${createRes?.info}`)
-        //  communityCategory.getCategoryTreeData(data.option)
-        //  await communityCategory.getCategoryData(props.no)
+         await communityCategory.getCategoryData(props.no)
          closeChannel()
        }
      }
