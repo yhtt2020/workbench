@@ -28,7 +28,9 @@
       </div>
     </div>
     <div class="flex items-end justify-end flex-1 align-items-end xt-text ">
-      <TopTomatoTimer />
+              <!-- 番茄钟 -->
+              <TopTomato />
+      <TopClockTimer/>
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
@@ -120,7 +122,7 @@ import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
 import { noticeStore } from '../store/notice'
-import TopTomatoTimer from '../../table/apps/tomato/widget/TopTomatoTimer.vue'
+import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 
 export default {
@@ -128,7 +130,7 @@ export default {
   components: {
     WindowController,
     MessagePopup,
-    TopTomatoTimer,
+    TopTomato,
     TopClockTimer,
   },
   data () {
