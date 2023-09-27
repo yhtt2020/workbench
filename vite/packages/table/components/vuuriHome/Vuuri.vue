@@ -132,7 +132,7 @@ export default {
       /*
       * The generated Muuri Options object
       */
-      muuriOptions: { layout:{horizontal: true},}
+      muuriOptions: { }
     }
   },
   watch: {
@@ -265,7 +265,9 @@ export default {
           sortDuringScroll: false,
           syncAfterScroll: false,
         },
-        layout:{horizontal: true},
+        layout:{
+          ...this.options.layout
+        },
 
       }
     },

@@ -84,7 +84,7 @@
             </div>
           </a-tooltip>
           <a-tooltip title="菜单" placement="bottom">
-    
+
               <div class="pl-3">
                 <xt-task :modelValue="getStep" @cb="showMenu">
                 <div
@@ -120,7 +120,7 @@
         :editing="editing"
         ref="currentDeskRef"
         :currentDesk="currentDesk"
-        :settings="currentDesk.settings"
+        v-model:settings="currentDesk.settings"
         :key="key"
       >
         <template #settingsAllAfter>
@@ -322,7 +322,7 @@
     width="500"
     title="添加桌面"
     @close="shareCode = false"
-  >    
+  >
 
   <HorizontalPanel
       :nav-list="currentAddMethod"
@@ -332,7 +332,7 @@
     <xt-task :modelValue="M03023">
     </xt-task>
     <div v-if="currentAddTab.name === 'market'">
-      
+
       <!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
       <!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
@@ -365,7 +365,7 @@
 
     <xt-task :modelValue="M01023">
     </xt-task>
-  
+
 
     <div class="desk-title mt-4">标题</div>
         <a-input
@@ -577,10 +577,10 @@ export default {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) 
+      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1)
       {
         return true;
-      } 
+      }
     },
     M01022() {
       return this.taskID == "M0102" && this.step == 2;
@@ -624,6 +624,7 @@ export default {
       let currentDesk = this.deskList.find((desk) => {
         return desk.id === this.currentDeskId;
       });
+      this.key=Date.now()
       return currentDesk;
     },
 
@@ -762,7 +763,7 @@ export default {
         "title": "自行添加",
         "name": "custom",
         "state": false
-      } 
+      }
       }
 
 
