@@ -197,11 +197,11 @@ const refreshDetail = async () => {
     refreshDetailFlag.value = true
 }
 const refresh = async () => {
-    let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
+    let detailTid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
     // refreshDetailFlag.value = false
-    await store.getCommunityPostDetail(Detailtid)
+    await store.getCommunityPostDetail(detailTid)
     // refreshDetailFlag.value = true
-    await store.getCommunityPostReply(Detailtid)
+    await store.getCommunityPostReply(detailTid)
 }
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
