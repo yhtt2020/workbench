@@ -42,7 +42,7 @@
                       <div class="set-content">开始番茄时间后自动进入全屏模式。</div>
                     </div>
                     <div class="right-box">
-                      <a-switch v-model:checked="isFull" />
+                      <a-switch @change="onChange(this.customIndex,this.desk)"  v-model:checked="isFull" />
                     </div>
                   </div>
                   <div class="setting">
@@ -51,7 +51,7 @@
                       <div class="set-content">开始番茄时间后顶部在状态栏显示。</div>
                     </div>
                     <div class="right-box">
-                      <a-switch v-model:checked="isState" />
+                      <a-switch @change="onChange(this.customIndex,this.desk)" v-model:checked="isState" />
                     </div>
                   </div>
                 </div>
@@ -66,6 +66,7 @@
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { tomatoStore } from '../store'
   import FullScreen from "../components/fullScreen.vue";
+  import { cardStore } from '../../../store/card'
 
   export default {
     name: "TimerClock",
@@ -90,7 +91,7 @@
     data(){
       return {
         // 设置
-        visible:false,
+        settingVisible:false,
         options:{
           className:'card small',
           title:'TimerClock',
@@ -112,12 +113,14 @@
     },
     mounted(){ 
       this.getTomatoNum();
+      this.init(this.customData,this.customIndex,this.desk);
     },
     computed: {
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum']),
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','onChange','init']),
+      ...mapActions(cardStore, ['updateCustomData']),
       // 计算今日番茄时间
       countTime(num){
         let totalTime = num*25;

@@ -1,6 +1,9 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import cache from "../../components/card/hooks/cache";
+// import { cardStore } from '../../../store/card';
+import { cardStore } from '../../store/card';
+import {mapActions, mapState,mapWritableState} from "pinia";
 
 
 // @ts-ignore
@@ -36,9 +39,13 @@ export const tomatoStore = defineStore("tomatoStore", {
     tomatoList:[0,0,0,0,0,0,0],
     weekTime:'',
     maxTomato:0,
+    customIndex:'',
+    desk:'',
+    customData:'',
   }),
   // getters:{},
   actions: {
+    ...mapActions(cardStore, ['updateCustomData']),
     // 加载目前的番茄
     getTomatoNum(){
       this.tomatoNum = cache.get('tomatoNum') ? cache.get('tomatoNum') : this.tomatoNum;
@@ -174,6 +181,25 @@ export const tomatoStore = defineStore("tomatoStore", {
           }
       }
       this.maxTomato = max
+    },
+
+    //初始化状态
+    init(customData,customIndex,desk){
+      if(customData){
+        this.isFull = customData.isFull
+        this.isState = customData.isState
+        let setupList = {
+          isFull:this.isFull,
+          isState:this.isState,
+        }
+        this.updateCustomData(customIndex,setupList,desk)
+      }
+    },
+    onChange(customIndex,desk){
+      this.updateCustomData(customIndex,{
+        isFull:this.isFull,
+        isState:this.isState,
+      },desk)
     },
   },
   persist: {
