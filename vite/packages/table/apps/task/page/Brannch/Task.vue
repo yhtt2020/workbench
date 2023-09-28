@@ -13,7 +13,14 @@
       >
 
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>
-      <xt-button @click="startTak(data)" type="theme" style="width: 100%"
+      <xt-button
+        v-if="taskState(data)"
+        @click="getReceive(data)"
+        type="theme"
+        style="width: 100%"
+        >领取奖励</xt-button
+      >
+      <xt-button v-else @click="startTak(data)" type="theme" style="width: 100%"
         >开始任务</xt-button
       >
     </xt-collapse>
@@ -26,7 +33,7 @@ import { computed, toRefs, ref, reactive } from "vue";
 import Progress from "../../components/progress/index.vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../../store";
-
+import { message } from "ant-design-vue";
 const store = taskStore();
 const { successBranchTask, startBranchTask } = storeToRefs(store);
 
@@ -35,6 +42,7 @@ const props = defineProps({
     default: {},
   },
 });
+const currentId = ref(props.task.id);
 // 开始任务
 const startTak = (data) => {
   /**
@@ -45,17 +53,26 @@ const startTak = (data) => {
    * 5追加 转set 转arr
    */
   const { id, pre } = data;
-  console.log("id :>> ", id);
   // 有前置
   if (pre) {
-    // 完成情况
-    console.log(
-      "startBranchTask.has(id) :>> ",
-      startBranchTask.value.includes(id)
-    );
+    // 没完成
+    if (!successBranchTask.value.has(pre)) {
+      console.log("没完成 :>> ");
+      return;
+    }
   }
-};
 
+  startBranchTask.value.add(id);
+  console.log("  startBranchTask.value :>> ", startBranchTask.value);
+  setTimeout(() => {
+    successBranchTask.value.add(id);
+  }, 3000);
+};
+// 任务完成状态
+const taskState = (data) => {
+  if (successBranchTask.value.has(data.id)) return true;
+  return false;
+};
 /**
  * 布置任务点
  * 定位完成任务函数
@@ -63,6 +80,9 @@ const startTak = (data) => {
  * 执行下一步
  * 抽离为action方法
  */
+const getReceive = () => {
+  message.info("你已完成任务 后续可以一键领取任务奖励");
+};
 </script>
 
 <style lang="scss" scoped></style>

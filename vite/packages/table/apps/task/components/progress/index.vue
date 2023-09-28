@@ -46,7 +46,7 @@ const allTaskId = computed(() => {
 const successTask = computed(() => {
   let num = 0;
   allTaskId.value.forEach((item) => {
-    if (successBranchTask.value.includes(item)) num++;
+    if (successBranchTask.value.has(item)) num++;
   });
   return num;
 });
