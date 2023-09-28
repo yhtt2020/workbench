@@ -70,6 +70,9 @@ import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import { defineComponent, ref, onMounted } from 'vue';
+import {cardStore} from "../../../store/card";
+import {mapActions, mapState,mapWritableState} from "pinia";
+
 export default {
     components:{
         Widget,
@@ -238,12 +241,36 @@ export default {
         };
     },
     async mounted() {
+        this.init()
 
     },
     methods:{
+        ...mapActions(cardStore, ['updateCustomData']),
+        init(){
+            // 
+            // console.log("初始化");
+            // if(!this.customData.mockData){
+            //     this.updateCustomData(this.customIndex,{
+            //         'mockData':this.mockData,
+            //     },this.desk)
+            // }
+            // if(!this.customData.targetKeys){
+            //     this.updateCustomData(this.customIndex,{
+            //         'targetKeys':this.targetKeys,
+            //     },this.desk)
+            // }else{
+            //     this.targetKeys = this.customData,this.targetKeys
+            // }
+
+
+        },
         handleChange(keys, direction, moveKeys){
-            // console.log(keys, direction, moveKeys);
-        }
+            // this.updateCustomData(this.customIndex,{
+            //     'mockData':this.mockData,
+            //     "targetKeys": keys,
+            // },this.desk)
+            
+        },
     }
 };
 </script>
