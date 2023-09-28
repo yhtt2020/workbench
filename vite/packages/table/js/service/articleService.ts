@@ -5,7 +5,6 @@ export default {
     let response = await post(sUrl('/app/article/getOne'), {
       name: name
     })
-    console.log(response)
     if (response.status) {
       return response.data
     }else{
@@ -19,8 +18,9 @@ export default {
     let response = await post(sUrl('/app/article/getMany'), {
       names: names
     })
-    if (response.data.status) {
-      return response.data.data
+    
+    if (response.status) {
+      return response.data
     }
   }
 }

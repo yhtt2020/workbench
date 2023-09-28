@@ -158,19 +158,19 @@
         <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
           <!--  空状态，取文章 -->
           <div class="community-article h-full">
-            <vue-custom-scrollbar class="h-full" :settings=" {
-      default: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      }
-    }">
+            <!-- <vue-custom-scrollbar class="h-full" :settings=" {
+              default: {
+                useBothWheelAxes: true,
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: true
+              }
+            }">
               <h2 v-html="emptyArticle.title"></h2>
               <div v-html="emptyArticle.content"></div>
-            </vue-custom-scrollbar>
-
+            </vue-custom-scrollbar> -->
+            <Article :artName="artName"></Article>
           </div>
 
 
@@ -205,13 +205,14 @@ import CreateNewChannel from '../components/createNewChannel.vue'
 import CreateNewGroup from '../components/createNewCategory.vue'
 import ChatFold from '../components/chatFold.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
+import Article from '../../../components/Article.vue'
 
 export default defineComponent({
   components: {
     VueCustomScrollbar,
     UserAddOutlined, PlusOutlined, MenuUnfoldOutlined, SelectOutlined,
     ChatDropDown, CommunityIcon, Modal, CreateNewChannel,
-    CreateNewGroup, ChatFold,
+    CreateNewGroup, ChatFold,Article,
 
   },
 
@@ -243,6 +244,8 @@ export default defineComponent({
         wheelPropagation: true
       },
       currentChannel: {},
+      //文章名称
+      artName:'community_after_created_empty',
 
     })
 
