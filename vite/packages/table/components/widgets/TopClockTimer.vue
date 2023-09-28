@@ -205,7 +205,8 @@ import dayjs from 'dayjs'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
-import { notification } from 'ant-design-vue';
+import { notification,Button } from 'ant-design-vue';
+import {ClockCircleOutlined} from '@ant-design/icons-vue';
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
@@ -335,8 +336,33 @@ const addCustom = () => {
     custom.value = false
 }
 let notificationShow = false
-const countDownDate = computed(() => useCountDownStore.countDowndate)
-
+// const detailTime=useCountDownStore.countDowntime
+const countDownDate =computed(()=>useCountDownStore.countDowndate)
+const countDownTime=useCountDownStore.regularTime()
+watch(countDownDate, (newVal,oldVal) => {
+    if(newVal<0){
+        const key=`open${Date.now()}`
+        notification.open({
+        message: '倒计时',
+        description:
+          '已到达倒计时结束时间',
+        icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px' }),
+        btn: () =>
+          h(
+            Button,
+            {
+              type: 'primary',
+              onClick: () => notification.close(key),
+              style:'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
+            },
+            { default: () => 'OK' },
+          ),
+          key,
+          onClose:close,
+          
+      });
+    }
+})
 </script>
 <style lang='scss' scoped>
 .tippy-content {
