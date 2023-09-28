@@ -5,7 +5,7 @@
             评论 {{ props.reply }}
         </div>
         <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
-        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible"/>
+        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible" class="xt-text-2"/>
     </div>
 </template>
 
@@ -70,7 +70,9 @@ const getReplyText=(val)=>{
     text-align: center;
 }
 
-
+:deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link){
+    color: var(--secondary-text) !important;
+}
 .input-btm {
     :deep(.ant-button) {
         color: var(--secondary-text) !important;

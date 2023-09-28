@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false"
+        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false" style="cursor: default;"
             @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
@@ -41,8 +41,9 @@
                 <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" />
             </button>
         </div>
-        <a-button type="primary" class=" reply xt-text" style="color: var(--secondary-text) !important; border-radius: 8px;"
-            @click="addComment">回复</a-button>
+        <xt-button type="primary" class=" reply xt-text"
+            style="color: var(--secondary-text) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
+            @click="addComment">回复</xt-button>
     </div>
     <!-- <tippy trigger="mouseenter click" placement="bottom">
 
@@ -66,7 +67,7 @@ const props = defineProps({
     }
 })
 // const emojiVis = ref(false)
-const replyPlaceholder =computed(()=>{
+const replyPlaceholder = computed(() => {
     return `回复${props.replyCom.user.nickname}`
 })
 const imageVis = ref(false)
@@ -83,19 +84,15 @@ const addEmoji = (item) => {
 const fileList = ref<UploadProps['fileList']>([]);
 const emit = defineEmits(['addComment'])
 const addComment = async () => {
-    let imageUrlList: any = ref([])
     if (value.value || fileList.value.length > 0) {
-        fileList.value.forEach(async (item) => {
-            // console.log(item.originFileObj)
-            let url: string = await fileUpload(item.originFileObj)
-            // console.log(url, 'url')
-            imageUrlList.value.push(url)
-
-        })
+        const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
         // console.log(imageUrlList.value, 'imageurl')
         // console.log(props.replyCom,'props');
 
-        let authorid: number = props.replyCom.to_reply_uid===0?  props.replyCom.author_uid : props.replyCom.to_reply_uid
+        let authorid: number = props.replyCom.to_reply_uid === 0 ? props.replyCom.author_uid : props.replyCom.to_reply_uid
         let content: string = value.value
         let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
         // let imageList:Array<string>=imageUrlList.value
@@ -103,16 +100,18 @@ const addComment = async () => {
         let to_reply_second_id = props.replyCom.to_reply_second_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
         // console.log(JSON.stringify(imageUrlList.value), 'image');
         // console.log(props.replyCom.to_reply_id,props.replyCom.id);
-        setTimeout(() => {
-            useCommunStore.getCommunitythreadReply(authorid, content, threadId, JSON.stringify(imageUrlList.value), to_reply_id, to_reply_second_id)
-            useCommunStore.getCommunityPostDetail(threadId)
-            useCommunStore.getCommunityPostReply(threadId)
-        },3000)
+        setTimeout(async () => {
+            const imageList = JSON.stringify(imageUrlList);
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId,imageList, to_reply_id, to_reply_second_id)
+            await useCommunStore.getCommunityPostDetail(threadId)
+            await useCommunStore.getCommunityPostReply(threadId)
+            value.value = ''
+            fileList.value = []
+        })
 
         // console.log(props.replyCom);
-        
-        value.value = ''
-        fileList.value = []
+
+
     }
     emit('addComment', commentList)
 }
@@ -259,6 +258,7 @@ onMounted(async () => {
 }
 
 :deep(.ant-input) {
+    color: var(--secondary-text);
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
