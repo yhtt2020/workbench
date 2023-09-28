@@ -1,6 +1,6 @@
 <template>
     <tippy trigger=" click" placement="bottom" :interactive="true">
-        <template #content>
+        <template #content style="padding: 0 !important;">
             <div v-show="clockSettingVisible" style="position: absolute;left:-330px;top: -1px;"
                 class="p-3 rounded-lg xt-bg-2">
                 <vue-custom-scrollbar :settings="outerSettings"
@@ -34,22 +34,22 @@
                         <div>
                             <div class="mt-4 mb-3 font-16 xt-text">分钟</div>
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
-                            <a-select v-model:value="timeMinute" placeholder="选择分钟" dropdownSyle="z-index:99999;"
-                                style="width:100%;  height: 40px; border-radius: 10px;">
+                            <!-- <a-select v-model:value="timeMinute" placeholder="选择分钟" dropdownSyle=""
+                                style="width:100%;  height: 40px; border-radius: 10px;position: relative;">
                                 <a-select-option :value="index" v-for="(i, index) in new Array(60)"
-                                    class="xt-active-bg xt-text-2 ">
+                                    class="absolute z-auto xt-bg xt-text-2 selsect-options">
                                     {{ index }}
                                 </a-select-option>
-                            </a-select>
+                            </a-select> -->
                             <!-- </div> -->
-
+                            <a-input-number id="inputNumber" v-model:value="timeMinute" :min="0" :max="59" defaultValue="0" style="border-radius: 12px; width: 100%; height: 42px; line-height: 40px;" />
                         </div>
                         <div class="w-full mt-4 mb-3">
                             <div class="mt-4 mb-3 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid"
-                                class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
+                            <a-radio-group v-model:value="clockType" button-style="solid" :bordered="false"
+                                class="flex justify-between w-full rounded-lg xt-bg-2" buttonStyle="solid">
                                 <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" :bordered="false"
                                     class="text-center font-16">不重复</a-radio-button>
                                 <a-radio-button value="每天" class="text-center font-16" :bordered="false"
@@ -102,7 +102,7 @@
                 </vue-custom-scrollbar>
 
             </div>
-            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg">
+            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
@@ -158,23 +158,25 @@
                         </div>
                     </div>
                 </vue-custom-scrollbar>
+                <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+                    style="font-size: 8px;color: var(--primary-text); " :maskClosable="false" zIndex: 999999999999999999;>
+                    <div style="display: flex;flex-direction: column;align-items: center;">
+                        <div style="">自定义倒计时</div>
+                        <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
+                            <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" />
+                        </a-space>
+                        <xt-button type="primary" @click="addCustom"
+                            style="margin: 14px; background: var(--active-bg);">开始倒计时</xt-button>
+                    </div>
+                </a-modal>
             </div>
-            <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
-                style="font-size: 8px;color: var(--primary-text); z-index: 200;" :maskClosable="false">
-                <div style="display: flex;flex-direction: column;align-items: center;">
-                    <div style="">自定义倒计时</div>
-                    <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-                        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" />
-                    </a-space>
-                    <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
-                </div>
-            </a-modal>
-        </template>
 
+        </template>
+        <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
         <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar "
             v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
-            :style="{ background: `linear-gradient(to-right,${currentColor.value} 0% ,${targetColor.value} ${progress}%)` }">
+            :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  `}">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
                 <div class="mr-1 xt-text font-14">倒计时</div>
@@ -188,15 +190,14 @@
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
-                <div class="xt-text font-14">{{ firstClockTime.hours }} : {{ firstClockTime.minutes }} </div>
+                <div class="xt-text font-14" v-if="firstClockTime.hours !== undefined">{{ firstClockTime.hours }} : {{ firstClockTime.minutes }} </div>
             </div>
-
         </xt-button>
     </tippy>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted, watch,h } from 'vue'
+import { ref, reactive, computed, onMounted, watch, h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
@@ -240,7 +241,7 @@ const selectText = () => {
 }
 const addSettingClock = () => {
     if (eventValue.value === "") {
-        if (flag.value !== true) return;
+        if (flag.value !== true  ) return;
         flag.value = false;
         message.info("闹钟名称不可为空！");
         setTimeout(() => {
@@ -319,6 +320,7 @@ const onCountDown = (value) => {
             break
         case 300:
             custom.value = true
+            countDownVisible.value = false
             break
     }
     //   this.$refs.cardSlot.hideMenu()
@@ -332,50 +334,19 @@ const addCustom = () => {
     })
     custom.value = false
 }
+let notificationShow = false
+const countDownDate = computed(() => useCountDownStore.countDowndate)
 
-const currentColor = ref('var(--secondary-bg)')
-const targetColor = ref('var(--warning)')
-const progress = ref(0)
-
-const countDowndate = computed(() => useCountDownStore.countDowndate)
-
-watch(countDowndate, (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-        console.log(newVal);
-        const remainingTime = newVal * 1000
-        const interval = remainingTime / 100
-        progress.value = 0
-        const intervalId = setInterval(() => {
-            if (progress.value < 100) {
-                progress.value += 1
-            } else {
-                clearInterval(intervalId)
-                currentColor.value = targetColor.value
-                // console.log('everything is ok');
-                notification.open({
-                    message: '计时器',
-                    description:
-                        '五分钟到了',
-                    onClick: () => {
-                        console.log('Notification Clicked!');
-                    },
-                    duration:2,
-                    class:'notification-class',
-                    icon:() => h(CloseCircleOutlined, { style: 'color: #108ee9' }),
-                    // <CloseCircleOutlined />
-                });
-            }
-        }, interval)
-    }
-})
 </script>
 <style lang='scss' scoped>
-:deep(.tippy-content) {
+.tippy-content {
     padding: 0px !important;
 }
-.notification-class{
-    
+.notification-class {
+    border-radius: 12px !important;
+    background-color: var(--secondary-bg) !important;
 }
+
 .font-14 {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -435,5 +406,9 @@ watch(countDowndate, (newVal, oldVal) => {
     font-size: 16px;
     font-weight: 400;
 
+}
+:deep(.ant-input-number-handler-wrap){
+    background-color: var(--secondary-bg);
+    border: none !important;
 }
 </style>
