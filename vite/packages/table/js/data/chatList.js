@@ -142,7 +142,7 @@ export const hideDropList = [
 
 export const showDropList = [
   {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
+  // {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
   {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
   {icon:'fluent:people-16-regular',title:'邀请其他人',type:'invited'},
   {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
