@@ -2,16 +2,20 @@
     <Widget :options="options" :customIndex="customIndex" :desk="desk" >
         <div class="title">本周番茄时间</div>
         <div class="time">{{ this.weekTime }}</div>
-            <div class="echarts">
-                <div class="echarts-col" v-for="(item,index) in this.tomatoList" :key="index" 
+       
+        <div class="echarts">
+            <a-tooltip v-for="(item,index) in this.tomatoList" :key="index" placement="top">
+                <div class="echarts-col" 
                 :style="{'height': (item? item/this.maxTomato*100 : 0) + 10 + 'px'}"
                 :class="index == activeIndex ? 'active-col':''"
                 @click="onChangeActive(index)" 
                 >
                 <span v-if="index == activeIndex">{{ item }}</span>
-            </div>
+                </div>
+                <template #title>{{'星期'+ week[index] + ' : ' + item}}</template>
+            </a-tooltip>
         </div>
-    </Widget>
+    </Widget>                                     
 </template>
   
 <script>
@@ -52,6 +56,7 @@
                     background:"#24B284",
                 },
                 activeIndex:0,
+                week:['日','一','二','三','四','五','六']
             }
         },
         mounted() {

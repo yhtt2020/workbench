@@ -35,6 +35,8 @@ export const tomatoStore = defineStore("tomatoStore", {
     isFull:false,
     // 是否显示在状态栏
     isState:false,
+    isFullState:false,
+
     tomatoNum:0,
     tomatoList:[0,0,0,0,0,0,0],
     weekTime:'',
@@ -48,24 +50,32 @@ export const tomatoStore = defineStore("tomatoStore", {
     ...mapActions(cardStore, ['updateCustomData']),
     // 加载目前的番茄
     getTomatoNum(){
-      this.tomatoNum = cache.get('tomatoNum') ? cache.get('tomatoNum') : this.tomatoNum;
-      this.tomatoList = cache.get('tomatoList') ? cache.get('tomatoList') : this.tomatoList;
+      let remainingTime = this.getMainingTime();
+      if(cache.get('tomatoNum')){
+        this.tomatoNum = cache.get('tomatoNum')
+      }else{
+        cache.set("tomatoNum",0,remainingTime)
+        this.tomatoNum = 0
+      }
+      if(cache.get('tomatoList')){
+        this.tomatoList = cache.get('tomatoList')
+      }else{
+        cache.set("tomatoList",[0,0,0,0,0,0,0],remainingTime + (6-new Date().getDay())*24*60*60*1000)
+        this.tomatoList = [0,0,0,0,0,0,0]
+      }
       this.countTime(this.tomatoList)
       this.max(this.tomatoList)
     },
 
     // 添加番茄
     addTomatoNum(){
-      // 计算今日剩余时间戳
-      var now = new Date();
-      var midnight = new Date();
-      midnight.setHours(23, 59, 59, 999);
-      var remainingTime = midnight.getTime() - now.getTime();
+      // 计算今日剩余时间
+      let remainingTime = this.getMainingTime;
       this.tomatoNum++
-      this.tomatoList[now.getDay()] = this.tomatoNum;
+      this.tomatoList[new Date().getDay()] = this.tomatoNum;
       // 这个数据今天会过期，用于保存今日番茄
       cache.set("tomatoNum",this.tomatoNum,remainingTime)
-      cache.set("tomatoList",this.tomatoList,remainingTime + (6-now.getDay())*24*60*60*1000)
+      cache.set("tomatoList",this.tomatoList,remainingTime + (6-new Date().getDay())*24*60*60*1000)
       this.countTime(this.tomatoList)
       this.max(this.tomatoList)
     },
@@ -201,6 +211,20 @@ export const tomatoStore = defineStore("tomatoStore", {
         isState:this.isState,
       },desk)
     },
+    // 计算今日剩余的时间戳
+    getMainingTime(){
+      // 计算今日剩余时间戳
+      var now = new Date();
+      var midnight = new Date();
+      midnight.setHours(23, 59, 59, 999);
+      var remainingTime = midnight.getTime() - now.getTime();
+      return remainingTime
+    },
+    // 切换顶部状态栏是否显示
+    onChangeFull(){
+      this.isFullState = !this.isFullState
+    }
+
   },
   persist: {
     enabled: true,

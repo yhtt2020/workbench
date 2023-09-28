@@ -2,7 +2,7 @@
     <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList">
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
-        <div class="title">今日番茄时间 {{ countTime(this.tomatoNum) }} </div>
+        <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
         <div class="icon-box">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
@@ -122,7 +122,7 @@
       ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','onChange','init']),
       ...mapActions(cardStore, ['updateCustomData']),
       // 计算今日番茄时间
-      countTime(num){
+      countToday(num){
         let totalTime = num*25;
         let hour = totalTime / 60
         let min = totalTime % 60
