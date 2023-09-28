@@ -1,5 +1,10 @@
 <template>
-  <div class="relative no-drag" ref="boxRef" :style="{ width: w, height: h }" style="margin-top: 2px;">
+  <div
+    class="relative no-drag"
+    ref="boxRef"
+    :style="{ width: w, height: h }"
+    style="margin-top: 2px"
+  >
     <slot></slot>
     <svg
       @mousedown.stop
@@ -24,16 +29,22 @@
 export default {
   data() {
     return {
-      w: "100%",
-      h: "100%",
+      w: "280px",
+      h: "204px",
     };
   },
   watch: {
-    w(newV) {
-      this.$emit("update:width", newV);
+    w: {
+      handler(newV) {
+        this.$emit("update:width", newV);
+      },
+      // immediate: true,
     },
-    h(newV) {
-      this.$emit("update:height", newV);
+    h: {
+      handler(newV) {
+        this.$emit("update:height", newV);
+      },
+      // immediate: true,
     },
   },
   props: {

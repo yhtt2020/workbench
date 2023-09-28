@@ -2,7 +2,7 @@
   <template v-if="currentTask">
     <div>
       <xt-title m="">
-        <xt-base-icon icon="xiangzhuo" /> 1 <FlagOutlined />
+        <xt-base-icon icon="xiangzhuo" /> 1 <FlagOutlined @click="back()"/>
         {{ currentTask.chapter }}
         <template #right>1</template>
       </xt-title>
@@ -11,7 +11,7 @@
           <xt-title m="0">{{ task.title }} </xt-title></template
         >
 
-        <xt-title type="text" m="mb">{{ task.title }} </xt-title>
+        <xt-title type="text" m="mb">{{ task.info }} </xt-title>
         <xt-button type="theme" style="width: 100%">开始任务</xt-button>
       </xt-collapse>
       {{ currentTask }}
@@ -62,6 +62,10 @@ const taskClick = (task) => {
   currentTask.value = task;
   console.log("task :>> ", task);
 };
+
+const back = () => {
+  currentTask.value = null
+}
 </script>
 
 <style lang="scss" scoped></style>
