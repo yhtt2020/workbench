@@ -20,7 +20,8 @@ export const communityStore = defineStore('communityStore',{
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
     categoryList:{}, // 频道目录列表
-    categoryClass:[]
+    categoryClass:[],
+    channelList:[],
   }),
 
   actions: {
@@ -87,20 +88,7 @@ export const communityStore = defineStore('communityStore',{
 
       this.categoryList = result
 
-    }else{
-      
-      const data = {
-        name:chatList[0]?.name,
-        summary:chatList[0]?.summary,
-        no:1,
-        tree:chatList[0]?.channelList,
-        category:[]
-      }
-      // console.log('排查数据',data)
-      this.categoryList = data
-
     }
-   
    
    },
 
@@ -115,10 +103,17 @@ export const communityStore = defineStore('communityStore',{
       const filterCategoryRes = res?.data?.list.filter((item:any)=>{
         return item.role === 'category'
       })
+
+      const filterTypeChannel = res?.data?.list.filter((item:any)=>{
+        return item.role === 'channel'
+      })
+
+
       // console.log('排查过滤后的数据',filterCategoryRes)
 
-      if(filterCategoryRes?.length !== 0){
+      if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
         this.categoryClass  = filterCategoryRes
+        this.channelList = filterTypeChannel
       }
 
     }

@@ -71,7 +71,7 @@ import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
 import { communityStore } from '../../store/communityStore'
 import { channelClass } from '../../../../js/chat/createChannelClass' 
-import { message } from 'ant-design-vue'
+import { message,Modal as ClassModal} from 'ant-design-vue'
 import _ from 'lodash-es'
  
 export default {
@@ -165,12 +165,19 @@ export default {
     },
 
 
-    async deleted(item){  // 删除
-      const result = await this.removeCategory(item.id)
-      if(result?.status === 1){
-        await this.getChannelList(this.no)
-        await this.getCategoryData(this.no)
-      }
+    deleted(item){  // 删除
+      ClassModal.confirm({
+        content:'确定要删除该分类吗 !!!',
+        centered:true,
+        onOk: async ()=>{
+          const result = await this.removeCategory(item.id)
+          if(result?.status === 1){
+           await this.getChannelList(this.no)
+           await this.getCategoryData(this.no)
+          }
+        }
+      })
+      
     },
     addClassItem(){  // 新增
 

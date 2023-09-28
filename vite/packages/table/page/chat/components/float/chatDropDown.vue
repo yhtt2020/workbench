@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown trigger="click" >
+  <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
     <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/>
    </div>
@@ -19,7 +19,7 @@
  
  
   <teleport to='body' >
-   <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:2000 !important;">
+   <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:1000 !important;">
      <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
     </Modal>
