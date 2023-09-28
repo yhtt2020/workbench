@@ -20,6 +20,7 @@ export const communityStore = defineStore('communityStore',{
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
     categoryList:{}, // 频道目录列表
+    categoryClass:[]
   }),
 
   actions: {
@@ -108,10 +109,24 @@ export const communityStore = defineStore('communityStore',{
    async getChannelList(id:any){
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
-      return await post(getChannelList,option)
-    }else{
-      return null;
+      const res =  await post(getChannelList,option)
+      // console.log('排查数据',res)
+
+      const filterCategoryRes = res?.data?.list.filter((item:any)=>{
+        return item.role === 'category'
+      })
+      // console.log('排查过滤后的数据',filterCategoryRes)
+
+      if(filterCategoryRes?.length !== 0){
+        this.categoryClass  = filterCategoryRes
+      }
+
     }
+   },
+
+   // 更新频道目录分类选择
+   updateCategoryClass(data:any){
+    this.categoryClass = data
    },
  
 
@@ -132,7 +147,7 @@ export const communityStore = defineStore('communityStore',{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['myCommunityList','recommendCommunityList','categoryList']
+      paths: ['myCommunityList','recommendCommunityList','categoryList','categoryClass']
       // state 中的字段名，按组打包储存
     }]
   }

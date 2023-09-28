@@ -20,8 +20,9 @@
       <span class="font-16-400 ml-2" style="color:var(--primary-text);">添加新分组</span>
      </div>
  
-     <div class="flex flex-col" id="classSortTab">
-       <div v-for="(item,index) in list" class="flex pointer  rounded-lg items-center px-5 mb-4"
+     <div class="flex flex-col" ref="classSortTab">
+      <!-- id="classSortTab" -->
+       <div v-for="(item,index) in categoryClass" class="flex pointer  rounded-lg items-center px-5 mb-4"
         style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
         @click.stop="listClick(item,index)" :key="index"
        >
@@ -30,7 +31,7 @@
          <div class="flex w-full justify-between items-center">
            <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false"></a-input>
            <div class="flex">
-             <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="save"></ClassIcon>
+             <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit"></ClassIcon>
              <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
            </div>
          </div>
@@ -54,178 +55,162 @@
  
    <div class="flex items-center px-6 justify-end mt-4">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="createClass">确定</XtButton>
+     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="finshCategoryCreate">确定</XtButton>
    </div>
  
   </div>
+
+
  </template>
  
  <script>
- import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed,watchEffect } from 'vue'
- import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
- import Sortable from 'sortablejs';
- import { Icon as ClassIcon} from '@iconify/vue'
- import { communityStore } from '../../store/communityStore'
- import { channelClass } from '../../../../js/chat/createChannelClass' 
- import { message } from 'ant-design-vue'
- import _ from 'lodash-es'
+//  import { defineComponent, onMounted, reactive, toRefs,ref,nextTick,computed,watchEffect } from 'vue'
+import { mapActions,mapWritableState } from 'pinia'
+import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
+import Sortable from 'sortablejs';
+import { Icon as ClassIcon} from '@iconify/vue'
+import { communityStore } from '../../store/communityStore'
+import { channelClass } from '../../../../js/chat/createChannelClass' 
+import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
  
- export default defineComponent({
+export default {
   props:['no','data','type'],
   components:{
    LeftOutlined,CloseOutlined,PlusOutlined,
    ClassIcon,
   },
-  setup (props,ctx) {
- 
-   const communityCategory = communityStore()
 
-   const data = reactive({
-    settingsScroller: {
-     useBothWheelAxes: true,
-     swipeEasing: true,
-     suppressScrollY: false,
-     suppressScrollX: true,
-     wheelPropagation: true
-    },
-    isHover:false, // 判断是否悬浮
-    isEditing:false, // 是否这种编辑
-    hoverIndex:-1,
-    editIndex:-1,
-    statusIndex:-1, // 点击选中下标
-    classItem:'', // 接收选中的分组名称
-    option:{  // 请求频道列表和频道树状列表的参数
-     communityNo:props.no,
-     cache:1,
-    },
-    list:[],
-   })
+  async mounted (){
+    await this.getChannelList(this.no)
 
-   onMounted(async ()=>{
-    const res =  await communityCategory.getChannelList(props.no)
-    const filterCategoryRes = res?.data?.list.filter((item)=>{
-      return item.role === 'category'
+    // const el = document.querySelector('#classSortTab')
+    const el = this.$refs.classSortTab
+    new Sortable(el,{
+      group: 'sortableGroup',
+      onEnd:this.onSortEnd // 拖拽结束时触发的回调函数
     })
-    if(filterCategoryRes?.length !== 0){
-      data.list = filterCategoryRes
+
+  },
+
+  data(){
+    return{
+      settingsScroller: {
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
+
+      classItem:'', // 接收选中的分组名称
+      statusIndex:-1, // 点击选中下标
+      isHover:false, // 判断是否悬浮
+      isEditing:false, // 是否这种编辑
+      hoverIndex:-1,
+      editIndex:-1,
+
     }
-   })
- 
-  
- 
-  
-   // 关闭按钮
-   const closeChannel = ()=>{
-     ctx.emit('close')
-   }
-   // 返回按钮
-   const backButton = ()=>{
-     ctx.emit('classBack')
-   }
- 
-   // 点击选中状态
-   const listClick = (item,index) =>{
-     if(data.statusIndex === index){
-       data.statusIndex = -1
-     }else{
-       data.statusIndex = index
-       data.classItem = item
-     }
-   }
- 
-   
-   // 添加新分类
-   const addClassItem = () =>{}
-   // 触发编辑
-   const edit = (index) =>{
-     data.isEditing = true
-     data.editIndex = index
+  },
+
+  computed:{
+    ...mapWritableState(communityStore,['categoryClass'])
+  },
+
+  methods:{
+    ...mapActions(communityStore,[
+      'getChannelList','getCategoryData',
+      'removeCategory','secondaryChannel','updateCategoryClass'
+    ]),
+
+
+    // 拖拽排序
+    onSortEnd(evt){
+      // console.log('排查问题',evt)
+
+      let newIndex = evt.newIndex , oldIndex = evt.oldIndex
+      let newItem = this.$refs.classSortTab.children[newIndex]
+      let oldItem = this.$refs.classSortTab.children[oldIndex]
+      this.$refs.classSortTab.removeChild(newItem)
+
+      if(newIndex > oldIndex){
+       this.$refs.classSortTab.insertBefore(newItem,oldItem)
+      }else{
+       this.$refs.classSortTab.insertBefore(newItem,oldItem.nextSibling)
+      }
+
+      let cloneTemp = [...this.categoryClass]   // 将原数据进行复制
+      let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
+      cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
+      cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
+      this.updateCategoryClass(cloneTemp)
+    },
+
+
+    closeChannel(){  // 关闭
+      this.$emit('close')
+    },
+    backButton(){  // 返回
+      this.$emit('classBack')
+    },
+
+    
+    listClick(item,index){  // 选中当前频道目录分类
+      if(this.statusIndex === index){
+       this.statusIndex = -1
+      }else{
+       this.statusIndex = index
+       this.classItem = item
+      }
+    },
+
+
+    async deleted(item){  // 删除
+      const result = await this.removeCategory(item.id)
+      if(result?.status === 1){
+        await this.getChannelList(this.no)
+        await this.getCategoryData(this.no)
+      }
+    },
+    addClassItem(){  // 新增
+
+    },
+    saveEdit(){  // 保存编辑
+
+    },
+    exitEdit(){  // 退出编辑
+
+    },
+    edit(index){  // 编辑中
+     this.isEditing = true
+     this.editIndex = index
      nextTick(()=>{
        const classRef = document.querySelector('#classInputRef')
        classRef.focus()
        classRef.select()
      })
-   }
-   // 删除列表分类项
-   const deleted = async (item) =>{
-    // console.log('测试',item)
-    const result = await communityCategory.removeCategory(item.id)
+    },
 
-    if(result?.status === 1){
-      message.success(`${result.info}`)
-      await communityCategory.getCategoryData(props.no)
-      await communityCategory.getChannelList(props.no)
+
+
+
+
+    async finshCategoryCreate(){  // 完成频道目录创建
+      const option = { type:this.type,id:this.classItem.id,no:this.no,content:this.data}
+      const createRes = await channelClass.secondaryChannel(option)
+      if(createRes?.status === 1){
+        message.success(`${createRes?.info}`)
+        await this.getCategoryData(this.no)
+        this.closeChannel()
+      }
     }
-   }
- 
-   
- 
- 
-   // 保存编辑数据
-   const save = () =>{
-     data.isEditing = false
-   }
-   // 退出编辑模式
-   const exitEdit = () =>{
-     data.isEditing = false
-   }
-   // 拖拽排序
-   const onSortEnd = (evt) =>{
-     let newIndex = evt.newIndex , oldIndex = evt.oldIndex
-     let newItem = document.querySelector('#classSortTab').children[newIndex]
-     let oldItem = document.querySelector('#classSortTab').children[oldIndex]
-     document.querySelector('#classSortTab').removeChild(newItem)
-     if(newIndex > oldIndex){
-       document.querySelector('#classSortTab').insertBefore(newItem,oldItem)
-     }else{
-       document.querySelector('#classSortTab').insertBefore(newItem,oldItem.nextSibling)
-     }
+    
 
-     let cloneTemp = [...data.list]   // 将原数据进行复制
-     let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
-     cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
-     cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
-     data.list = cloneTemp
-   }
- 
- 
-   // 创建判断最后一步
-   const createClass = async () =>{
-     // 判断是否选择分类
-     if(data.statusIndex !== -1){
-       const option = { type:props.type,id:data.classItem.id,no:props.no,content:props.data}
-      //  console.log('获取配置参数',option)
-      //  console.log('查看状态',)
-       const createRes = await channelClass.secondaryChannel(option)
-      //  console.log('查看返回状态',createRes)
-       if(createRes?.status === 1){
-         message.success(`${createRes?.info}`)
-         await communityCategory.getCategoryData(props.no)
-         closeChannel()
-       }
-     }
-   }
- 
    
- 
-   // 初始化挂载
-   onMounted(()=>{
-     const el = document.querySelector('#classSortTab')
-     new Sortable(el,{
-       group: 'sortableGroup',
-       onEnd:onSortEnd // 拖拽结束时触发的回调函数
-     })
-     
-     
-   })
- 
-   return {
-  //  filterList,
-    ...toRefs(data),closeChannel,backButton,addClassItem,
-    edit,deleted,listClick,save,exitEdit,createClass,
-   }
-  }
- })
+  
+  },
+
+}
  </script>
  
  <style lang="scss" scoped>
