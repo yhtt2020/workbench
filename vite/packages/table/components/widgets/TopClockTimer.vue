@@ -102,7 +102,7 @@
                 </vue-custom-scrollbar>
 
             </div>
-            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0">
+            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0" v-show="customizeSetting">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
@@ -173,7 +173,7 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar "
+        <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar " @click="closeDetail"
             v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  `}">
@@ -185,7 +185,7 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer xt-bg-2 top-bar" v-else
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail"
             style="width: 132px; height: 32px;position: relative;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
@@ -218,7 +218,7 @@ const outerSettings = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 })
-
+const customizeSetting=ref(true)
 const countDownVisible = ref(false)
 const useCountDownStore = countDownStore()
 const isStop = ref(true)
@@ -322,6 +322,7 @@ const onCountDown = (value) => {
         case 300:
             custom.value = true
             countDownVisible.value = false
+            customizeSetting.value=false
             break
     }
     //   this.$refs.cardSlot.hideMenu()
@@ -334,6 +335,12 @@ const addCustom = () => {
         seconds: parseFloat(value1.value.$s)
     })
     custom.value = false
+}
+// 当开启第一个页面时，二级页面应该处于关闭状态
+const closeDetail = () => {
+    countDownVisible.value = false
+    clockSettingVisible.value = false
+    customizeSetting.value=true
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
