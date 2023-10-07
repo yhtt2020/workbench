@@ -3,7 +3,8 @@
         <template #content>
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
-            <div v-show="clockSettingVisible" style="position: absolute;left:-330px;top: -1px;box-shadow: 5px 5px var(--primary-bg); "
+            <div v-show="clockSettingVisible"
+                style="position: absolute;left:-330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2); "
                 class="p-3 rounded-lg xt-bg-2">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: 500px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -72,7 +73,8 @@
                 </vue-custom-scrollbar>
             </div>
             <!-- 倒计时设置界面 -->
-            <div v-show="countDownVisible" style="position: absolute; left:-330px;top: -1px;box-shadow: 5px 5px var(--primary-bg);"
+            <div v-show="countDownVisible"
+                style="position: absolute; left:-330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);"
                 class="p-3 rounded-lg xt-bg-2">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: 400px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -107,7 +109,7 @@
 
             </div>
             <!-- 一级快捷面板 -->
-            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0" v-show="customizeSetting" >
+            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0" v-show="customizeSetting">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
@@ -192,7 +194,8 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar -mt-2" v-else @click="closeDetail"
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar -mt-2" v-else
+            @click="closeDetail"
             style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
@@ -215,6 +218,8 @@ import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
 import { notification, Button } from 'ant-design-vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
+import {Notifications} from '../../js/common/sessionNotice'
+const notifications=new Notifications()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
@@ -361,8 +366,8 @@ const closeDetail = () => {
     clockSettingVisible.value = false
     customizeSetting.value = true
     // console.log(dayjs());
-    
-    
+
+
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
@@ -371,11 +376,11 @@ const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
     if (newVal < 0) {
+        const audio=new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
         notification.open({
-            message: '倒计时',
-            description:
-                '已到达倒计时结束时间',
+            message: '计时器',
+            description:'已到达倒计时结束时间',
             icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px' }),
             btn: () =>
                 h(
@@ -389,15 +394,52 @@ watch(countDownDate, (newVal, oldVal) => {
                 ),
             key,
             // onClose: close,
-
+            class: 'notification-custom-class',
+            style: {
+                width: '400px',
+                height:'130px',
+                borderRadius:'12px',
+                background: 'var(--secondary-bg) !important',
+                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
+            },
         });
+        // notifications.systemToast('111111',null)
+        audio.play()
     }
 })
-const nowDate=dayjs()
-watch(()=>nowDate,(newVal,oldVal)=>{
-    console.log(nowDate);
-    
-})
+const nowDate = dayjs()
+// 当闹钟完成时触发弹窗
+// watch(() => nowDate, (newVal, oldVal) => {
+//     if (newVal < 0) {
+//         const key = `open${Date.now()}`
+//         notification.open({
+//             message: '闹钟',
+//             description:'已到达闹钟设置时间',
+//             icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
+//             btn: () =>
+//                 h(
+//                     Button,
+//                     {
+//                         type: 'primary',
+//                         onClick: () => notification.close(key),
+//                         style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
+//                     },
+//                     { default: () => 'OK' },
+//                 ),
+//             key,
+//             // onClose: close,
+//             class: 'notification-custom-class',
+//             style: {
+//                 width: '400px',
+//                 height:'130px',
+//                 borderRadius:'12px',
+//                 background: 'var(--secondary-bg) !important',
+//                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
+//             },
+//         });
+//     }
+// })
+
 </script>
 <style lang='scss' scoped>
 .tippy-content {
@@ -405,10 +447,12 @@ watch(()=>nowDate,(newVal,oldVal)=>{
 }
 
 
-.notification-class {
-    border-radius: 12px !important;
-    background-color: var(--secondary-bg) !important;
-}
+// .notification-custom-class {
+//     border-radius: 12px !important;
+//     background-color: var(--secondary-bg) !important;
+//     width: 387px;
+//     height: 130px;
+// }
 
 .font-14 {
     font-family: PingFangSC-Medium;
