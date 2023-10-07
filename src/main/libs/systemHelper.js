@@ -54,7 +54,74 @@ async function runExec (cmdStr, cmdPath) {
 }
 
 module.exports = class SystemHelper {
+  /**
+   * 获取桌面上的图标
+   * @returns {Promise<*[]>}
+   */
+  static async getDeskFiles(withIcon=true){
 
+    let apps=[]
+    let path = require('path')
+    function getDesktopFiles (_dir) {
+      const fs = require('fs')
+      var filepaths = []
+      //read directory
+      let files = fs.readdirSync(_dir)
+      files.forEach(_file => {
+        let _p = _dir + '/' + _file
+        //changes slashing for file paths
+        let _path = _p.replace(/\\\\/g, '/')
+        let name = path.parse(_path).name
+
+        try {
+          if (_path.endsWith('.lnk')) {
+            _path = require('electron').shell.readShortcutLink(_path).target
+          }
+        } catch (e) {
+          console.warn('存在失败的', e, _file)
+          _path = '/icons/winapp.png'
+        }
+        filepaths.push({
+          name: name,
+          path: _path,
+          ext: path.parse(_path).ext
+        })
+
+        //console.log(_file);
+
+      })
+      return filepaths
+
+    }
+
+    let filepaths = getDesktopFiles(app.getPath('desktop'))
+
+    for (let file of filepaths) {
+      try {
+        let icon=''
+        if(withIcon){
+         icon = await SystemHelper.extractFileIcon(file.path)
+          apps.push({
+            name: file.name,
+            ext: file.ext,
+            path: file.path,
+            icon:  icon
+          })
+        }else{
+          apps.push({
+            name: file.name,
+            ext: file.ext,
+            path: file.path,
+            icon: ''
+          })
+        }
+      } catch (e) {
+        console.warn('存在导入失败的', e, file)
+      }
+
+    }
+    return apps
+  }
   static async extractFileIcon (uri) {
     let savePath = path.join(app.getPath('userData'), 'icons')
     fs.ensureDirSync(savePath)

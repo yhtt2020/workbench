@@ -4,6 +4,8 @@ const path = require('path')
 const fs = require('fs')
 const TableScreenManager = require('./tableScreenManager')
 const ScreenCaptureManager = require('./screenCaptureManager')
+const { getDeskFiles } = require('./libs/systemHelper')
+const SystemHelper = require('./libs/systemHelper')
 //测试
 const screenCaptureManager = new ScreenCaptureManager()
 
@@ -179,8 +181,26 @@ class TableManager {
     }
     global.tableAppManager.setTableWin(tableWin.window)
     global.tableTabManager.setTableWin(tableWin.window)
+
+     this.ensureDeskIcons().then()
   }
 
+  /**
+   * 确认并获取桌面图标
+   */
+  async ensureDeskIcons(){
+    const fs=require('fs-extra')
+    let savePath = path.join(app.getPath('userData'), 'icons')
+    if(!fs.existsSync(savePath)){
+      //取一次桌面的icons
+      fs.ensureDirSync(savePath)
+      let files=await SystemHelper.getDeskFiles(false)
+      files.forEach(file=>{
+        SystemHelper.extractFileIcon(file.path)
+      })
+    }
+
+  }
   saveBounds () {
     let tableWinSetting = {
       bounds: this.window.getBounds(),
@@ -273,58 +293,7 @@ app.whenReady().then(() => {
 
   ipc.on('getDeskApps', async (e) => {
     let apps = []
-    let path = require('path')
-
-    function getDesktopFiles (_dir) {
-      const fs = require('fs')
-      var filepaths = []
-      //read directory
-      let files = fs.readdirSync(_dir)
-      files.forEach(_file => {
-
-        let _p = _dir + '/' + _file
-        //changes slashing for file paths
-        let _path = _p.replace(/\\\\/g, '/')
-        let name = path.parse(_path).name
-
-        try {
-          if (_path.endsWith('.lnk')) {
-            _path = require('electron').shell.readShortcutLink(_path).target
-          }
-        } catch (e) {
-          console.warn('存在失败的', e, _file)
-          _path = '/icons/winapp.png'
-        }
-        filepaths.push({
-          name: name,
-          path: _path,
-          ext: path.parse(_path).ext
-        })
-
-        //console.log(_file);
-
-      })
-      return filepaths
-
-    }
-
-    let filepaths = getDesktopFiles(app.getPath('desktop'))
-
-    for (let file of filepaths) {
-      try {
-        let icon = await app.getFileIcon(file.path)
-        apps.push({
-          name: file.name,
-          ext: file.ext,
-          path: file.path,
-          icon: icon.toDataURL()
-        })
-
-      } catch (e) {
-        console.warn('存在导入失败的', e, file)
-      }
-
-    }
+    apps=await getDeskFiles()
     e.returnValue = apps
   })
 
