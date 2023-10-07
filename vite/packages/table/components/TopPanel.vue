@@ -33,12 +33,6 @@
         <TopTomato />
         <TopClockTimer v-if="topClockTimerVisible"/>
       </div>
-    <div class="flex items-end justify-end flex-1 align-items-end xt-text ">
-
-              <!-- 番茄钟 -->
-              <TopTomato />
-              <TopClockTimer v-if="topClockTimerVisible"/>
-
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
