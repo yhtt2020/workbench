@@ -13,7 +13,7 @@
           <InfoCircleOutlined />
         </template>
       </xt-left-menu>
-      <div class="w-full xt-scrollbar">
+      <div class="w-full xt-scrollbar xt-text">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
         <Set v-else-if="currentTask == 'Set'"></Set>
@@ -48,11 +48,11 @@ const menus = ref([
     value: "Primary",
     callBack: selectTab,
   },
-  // {
-  //   slot: "flag",
-  //   value: "Branch",
-  //   callBack: selectTab,
-  // },
+  {
+    slot: "flag",
+    value: "Branch",
+    callBack: selectTab,
+  },
   // {
   //   slot: "info",
   //   value: "Branch",
