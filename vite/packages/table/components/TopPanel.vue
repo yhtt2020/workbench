@@ -149,7 +149,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(countDownStore,['countDowndate']),
+    ...mapWritableState(countDownStore,['countDowndate','countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
@@ -297,7 +297,7 @@ export default {
         // console.log(this.clockEvent);
         this.topClockTimerVisible=true
       }
-      else if(this.countDowndate>=0){
+      else if(this.countDowntime.seconds!==undefined){
         // console.log(this.countDowndate);
         this.topClockTimerVisible=true
       }

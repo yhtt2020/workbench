@@ -180,7 +180,7 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-3 rounded-sm clock-timer top-bar -mt-2" @click="closeDetail"
+        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-sm clock-timer top-bar" @click="closeDetail"
             v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
@@ -194,7 +194,7 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar -mt-2" v-else
+        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-md clock-timer top-bar" v-else
             @click="closeDetail"
             style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
             <div class="flex items-center">
@@ -218,8 +218,8 @@ import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
 import { notification, Button } from 'ant-design-vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
-import {Notifications} from '../../js/common/sessionNotice'
-const notifications=new Notifications()
+import { Notifications } from '../../js/common/sessionNotice'
+const notifications = new Notifications()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
@@ -375,13 +375,65 @@ const countDownDate = computed(() => useCountDownStore.countDowndate)
 const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
+    
+    const countDownTotalTime=computed(()=>{
+        let [hour,minute,second]=useCountDownStore.selectValue
+        let totalTime=''
+        if(hour && hour!==0){
+            totalTime +=`${hour}小时`
+        }
+        if(minute && minute!==0){
+            totalTime +=`${minute}分钟`
+        }
+        if(second && second!==0){
+            totalTime +=`${second}秒`
+        }
+        return totalTime.trim()
+    })
     if (newVal < 0) {
-        const audio=new Audio('/sound/message.mp3')
+        console.log(useCountDownStore.selectValue,'value');
+        
+        const audio = new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
         notification.open({
             message: '计时器',
-            description:'已到达倒计时结束时间',
+            description: `${countDownTotalTime.value}到了`,
             icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px' }),
+            btn: () =>
+                h(
+                    Button,
+                    {
+                        type: 'primary',
+                        onClick: () => notification.close(key),
+                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
+                    },
+                    { default: () => 'OK' },
+                ),
+            key,
+            // onClose: close,
+            style: {
+                width: '400px',
+                height: '130px',
+                borderRadius: '12px',
+                background: 'var(--secondary-bg) !important',
+                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
+
+            },
+            class:'font-16'
+        });
+        // notifications.systemToast('111111',null)
+        audio.play()
+    }
+})
+const nowDate = dayjs()
+// 当闹钟完成时触发弹窗
+watch(() => nowDate, (newVal, oldVal) => {
+    if (newVal.$H == clockEvent.value.hours && newVal.$m == clockEvent.value.minutes) {
+        const key = `open${Date.now()}`
+        notification.open({
+            message: '闹钟',
+            description: '已到达闹钟设置时间',
+            icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
             btn: () =>
                 h(
                     Button,
@@ -397,62 +449,20 @@ watch(countDownDate, (newVal, oldVal) => {
             class: 'notification-custom-class',
             style: {
                 width: '400px',
-                height:'130px',
-                borderRadius:'12px',
+                height: '130px',
+                borderRadius: '12px',
                 background: 'var(--secondary-bg) !important',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
             },
         });
-        // notifications.systemToast('111111',null)
-        audio.play()
     }
 })
-const nowDate = dayjs()
-// 当闹钟完成时触发弹窗
-// watch(() => nowDate, (newVal, oldVal) => {
-//     if (newVal < 0) {
-//         const key = `open${Date.now()}`
-//         notification.open({
-//             message: '闹钟',
-//             description:'已到达闹钟设置时间',
-//             icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
-//             btn: () =>
-//                 h(
-//                     Button,
-//                     {
-//                         type: 'primary',
-//                         onClick: () => notification.close(key),
-//                         style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-//                     },
-//                     { default: () => 'OK' },
-//                 ),
-//             key,
-//             // onClose: close,
-//             class: 'notification-custom-class',
-//             style: {
-//                 width: '400px',
-//                 height:'130px',
-//                 borderRadius:'12px',
-//                 background: 'var(--secondary-bg) !important',
-//                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-//             },
-//         });
-//     }
-// })
 
 </script>
 <style lang='scss' scoped>
 .tippy-content {
     padding: 0px !important;
 }
-
-
-// .notification-custom-class {
-//     border-radius: 12px !important;
-//     background-color: var(--secondary-bg) !important;
-//     width: 387px;
-//     height: 130px;
-// }
 
 .font-14 {
     font-family: PingFangSC-Medium;
@@ -464,6 +474,12 @@ const nowDate = dayjs()
     font-family: PingFangSC-Medium;
     font-size: 20px;
     font-weight: 500;
+}
+
+.font-16 {
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    font-weight: 400;
 }
 
 :deep(.ant-input) {
@@ -518,4 +534,5 @@ const nowDate = dayjs()
 :deep(.ant-input-number-handler-wrap) {
     background-color: var(--secondary-bg);
     border: none !important;
-}</style>
+}
+</style>
