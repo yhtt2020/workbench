@@ -20,11 +20,6 @@
     position: absolute;
     top: 1em;
     right: 1em;
-    .title-icon {
-      width: 24px;
-      height: 24px;
-      color: #818181;
-    }
   }
   .no-title {
     .title-icon {
@@ -44,7 +39,8 @@
     .left-title {
 
       display: flex;
-      width: 35%;
+      flex:1;
+
       align-items: center;
 
 

@@ -2,7 +2,7 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
+   <span class="font-16-400" style="color:var(--primary-text);">添加新社群应用</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <CloseOutlined  style="font-size: 1.25em;"/>
    </div>
@@ -17,7 +17,7 @@
    </div>
 
    <div class="flex flex-col mt-4">
-    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4" 
+    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4"
      style="background: var(--secondary-bg);" :class="{'select-bg':selectIndex === item.type}" @click="selectChannel(item)">
      <ApplyIcon :icon="item.icon" style="font-size: 2.5em;"></ApplyIcon>
      <span class="pl-4 font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
@@ -28,14 +28,14 @@
 
   <div class="px-6">
    <div class="flex items-center justify-end">
-    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectSubmit">选择</XtButton>
+<!--    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>-->
+    <XtButton style="width: 84px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectSubmit">选择</XtButton>
    </div>
   </div>
 
  </div>
 
- <CreateChannelLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelLink>
+ <SelectWebLink v-else-if="selectIndex === 'link'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectWebLink>
  <CreateChannelGroup v-else-if="selectIndex === 'chat'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelGroup>
  <CreateChannelCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></CreateChannelCommunity>
 </template>
@@ -45,8 +45,9 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import { Icon as  ApplyIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 
-import CreateChannelLink from './knownCategory/createChannelLink.vue'
+// import CreateChannelLink from './knownCategory/createChannelLink.vue'
 // import CreateChannelLink from './unknownCategory/selectWebLink.vue'
+import SelectWebLink from './channelSelect/selectWebLink.vue'
 import CreateChannelGroup from './knownCategory/createChannelGroup.vue'
 import CreateChannelCommunity from './knownCategory/createChannelCommunity.vue'
 
@@ -54,12 +55,13 @@ export default defineComponent({
  props:['no'],
 
  components:{
-  ApplyIcon,CloseOutlined,CreateChannelLink,CreateChannelGroup,
-  CreateChannelCommunity
+  ApplyIcon,CloseOutlined,CreateChannelGroup,
+  CreateChannelCommunity,SelectWebLink
+  // CreateChannelLink,
  },
 
  setup (props,ctx) {
-  
+
   const data = reactive({
    channelList:[
     // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
@@ -72,7 +74,7 @@ export default defineComponent({
    type:'',
 
   })
-  
+
 
   // 关闭
   const closeChannel = () =>{

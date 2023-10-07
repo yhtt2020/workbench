@@ -1,9 +1,9 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 10em)">
+            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 5em )">
                 <vue-custom-scrollbar :settings="outerSettings"
-                    style="position: relative; height: calc(100vh - 10em);color: var(--primary-text);" class="scroll">
+                    style="position: relative; height: calc(100vh );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
@@ -13,12 +13,11 @@
 
                         <div class="mb-4 font-16 xt-text">小时</div>
                         <div>
-                            <a-radio-group button-style="solid" v-model:value="timeHour" class="rounded-lg xt-bg-2"
+                            <a-radio-group button-style="solid" v-model:value="timeHour" class="flex rounded-lg xt-bg-2 "
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center" style="width: 50px;">{{ index
-                                    }}</a-radio-button>
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{ index }}</a-radio-button>
                                 </template>
                             </a-radio-group>
 
@@ -28,7 +27,7 @@
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
                                 style="width:100%;  height: 40px; border-radius: 10px;">
-                                <a-select-option :value="index" v-for="(i, index) in new Array(60)">
+                                <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2"  >
                                     {{ index }}
                                 </a-select-option>
                             </a-select>
@@ -39,16 +38,15 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 48%;"
-                                    class="text-center font-16" >不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16" style="width: 48%;">每天</a-radio-button>
+                            <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
+                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
+                                <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
                             </a-radio-group>
                         </div>
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
                              -->
-                            <xt-button class="w-full h-[40px] font-16 xt-active-bg"
+                            <xt-button type="primary" class=" font-16 xt-text" style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
                         </div>
                     </div>
@@ -65,7 +63,7 @@
                         <!-- <a-row> -->
                         <div class="flex items-center" v-for="(item, index) in clockEvent">
                             <div class="rounded-lg event-list "
-                                style="background: var(--primary-bg);color: var(--primary-text);width: calc(100% - 20px);height: 56px; ">
+                                style="background: var(--secondary-bg);color: var(--primary-text);width: calc(100% - 20px);height: 56px; ">
                                 <div class="card-list ">
                                     <div class="event-title">
                                         <span class="font-14 xt-text">{{ item.eventValue }}</span>
@@ -75,7 +73,7 @@
                                     <span class="font-20">{{ item.dateValue.hours }}:{{ item.dateValue.minutes }}</span>
                                 </div>
                             </div>
-                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick" class="ml-2 xt-bg-2"
+                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick" class="ml-2 xt-bg xt-text-2"
                                 style="font-size: 18px;">
                             </clockIcon>
                         </div>
@@ -99,7 +97,7 @@ import BackBtn from '../../components/comp/BackBtn.vue'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { Icon as clockIcon } from '@iconify/vue'
 export default {
-    name: "SetupCard",
+    name: "SetupClock",
     components: { BackBtn, clockIcon },
 
     data() {
@@ -319,24 +317,17 @@ export default {
 :deep(.ant-select) {
     border: none !important;
 }
-:deep(.ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child) {
-    border-radius: 8px !important;
-}
-:deep(.ant-radio-button-wrapper:last-child) {
-    border-radius: 8px !important;
-    margin-left: 5px;
-}
-:deep(.ant-radio-button-wrapper:first-child) {
-    border-radius: 8px !important;
-}
 :deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
     // border-radius: 10px !important;
     height: 100%;
     border-radius: 10px;
 
 }
-
+:deep(.ant-select-option){
+    color: var(--primary-text);
+}
 :deep(.ant-input) {
+    color: var(--primary-text);
     &::placeholder {
         font-family: PingFangSC-Regular;
         font-size: 14px;
@@ -344,7 +335,9 @@ export default {
         color:var(--primary-text);
     }
 }
-
+:deep(.ant-select-arrow){
+    color: var(--primary-text);
+}
 :deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
     line-height: 35px;
 }
@@ -357,10 +350,7 @@ export default {
     padding-top: 0px;
 }
 
-:deep(.xt-btn) {
-    width: 100% !important;
-    height: 40px !important;
-}
+
 
 .font-16 {
     font-family: PingFangSC-Regular;

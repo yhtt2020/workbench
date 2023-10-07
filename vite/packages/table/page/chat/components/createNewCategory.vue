@@ -45,7 +45,7 @@ export default defineComponent({
 
   // 创建分组按钮
   const submitCategory = async () =>{
-   if(data.categoryName !== ''){ 
+   if(data.categoryName !== '' && props.no !== '1'){ 
     // 创建频道目录参数
     const option = {   
      name:data.categoryName, communityNo:props.no,
@@ -54,8 +54,8 @@ export default defineComponent({
     const categoryRes =  await category.createChannel(option)
     if(categoryRes.status === 1){
      message.success(`${categoryRes.info}`)
-     const getChannelOption = { communityNo:props.no,cache:1 }
-     category.getChannel(getChannelOption)
+     await category.getCategoryData(props.no)
+     // await category.getCategoryTreeData(props.no)
      closeNewGroup()
     }else{
      message.error(`${categoryRes.info}`)

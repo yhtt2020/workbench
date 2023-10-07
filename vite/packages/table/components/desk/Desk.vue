@@ -26,24 +26,31 @@
       </div>
     </div>
     <vue-custom-scrollbar class="no-drag" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu"
-                          :settings="scrollbarSettings"
-                          style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px">
-      <div id="cardContent" ref="deskContainer" style="
-          white-space: nowrap;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          align-content: center;
-        " :style="{ 'padding-top': this.usingSettings.marginTop + 'px'}"
+                          :settings="{...scrollbarSettings,
+                            suppressScrollY:settings.vDirection?false: true ,
+        suppressScrollX:settings.vDirection?true: false,
+                          }"
+                          style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px;display: flex;flex-direction: row">
+      <div id="cardContent" ref="deskContainer"
+           style="
+          /*display: flex;*/
+          /*align-items: center;*/
+          /*align-content: center;*/
+        " :style="{
+           // 'flex-direction': settings.vDirection?'row':'column',
+           'padding-top': this.usingSettings.marginTop + 'px',
+              width:settings.vDirection?'100%':'auto',
+          height:settings.vDirection?'auto':'100%',
+        }"
            :class="notTrigger ? 'trigger' : '' "
       >
-        <vuuri v-if="currentDesk.cards && !hide" :get-item-margin="() => {
+        <vuuri :key="key" v-if="currentDesk.cards && !hide" :get-item-margin="() => {
             return usingSettings.cardMargin * this.adjustZoom  + 'px';
           }
-          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :key="key" :style="{
 
-      height: '100%',
-      width: '100%',
+          " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards"  :style="{
+          width:settings.vDirection?'100%':'auto',
+          height:settings.vDirection?'auto':'100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
           <template #item="{ item }">
             <div
@@ -76,27 +83,28 @@
     </div>
   </transition>
 
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer" style="z-index: 99999999999;"
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer"
+            style="z-index: 99999999999;"
             placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <div style="height: 200px;" class="mb-3 hidden" >
-</div>
+      <div style="height: 200px;" class="mb-3 hidden">
+      </div>
       <xt-task :modelValue="m01012" to="" @cb="newAddCard()">
-      <a-col>
+        <a-col>
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>添加卡片</span></div>
           </div>
-      </a-col>
-    </xt-task>
-    <xt-task :modelValue="m02012" to="" @cb="newAddIcon()">
-      <a-col>
-        <div @click="newAddIcon" class="btn">
-          <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
-          <div><span>添加图标</span></div>
-        </div>
-      </a-col>
-    </xt-task>
+        </a-col>
+      </xt-task>
+      <xt-task :modelValue="m02012" to="" @cb="newAddIcon()">
+        <a-col>
+          <div @click="newAddIcon" class="btn">
+            <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
+            <div><span>添加图标</span></div>
+          </div>
+        </a-col>
+      </xt-task>
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="line-dragdroptuofang"></Icon>
@@ -107,13 +115,13 @@
         </div>
       </a-col>
       <xt-task :modelValue="m01032" to="" @cb="showSetting">
-      <a-col>
-        <div @click="showSetting" class="btn">
-          <Icon style="font-size: 3em" icon="shezhi1"></Icon>
-          <div><span>设置</span></div>
-        </div>
-      </a-col>
-    </xt-task>
+        <a-col>
+          <div @click="showSetting" class="btn">
+            <Icon style="font-size: 3em" icon="shezhi1"></Icon>
+            <div><span>设置</span></div>
+          </div>
+        </a-col>
+      </xt-task>
       <a-col>
         <div @click="clear" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
@@ -151,13 +159,13 @@
   </a-drawer>
   <a-drawer v-model:visible="settingVisible" placement="right">
     <XtTab class="mb-2"
-         v-if="settingVisible"
-         style="height: 48px"
-         boxClass="p-1 xt-bg-2"
-         v-model="currentSettingTab"
-         :list="settingsTab"
+           v-if="settingVisible"
+           style="height: 48px"
+           boxClass="p-1 xt-bg-2"
+           v-model="currentSettingTab"
+           :list="settingsTab"
     ></XtTab>
-    <template v-if="currentSettingTab==='current'">
+    <template v-if="currentSettingTab==='current' && currentDesk.settings">
       <div class="line-title">基础设置</div>
       <div class="mt-2 line">
         桌面名称：
@@ -188,6 +196,11 @@
           <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
         </div>
       </template>
+
+      <div>
+        桌面垂直布局：
+        <a-switch v-model:checked="currentDesk.settings.vDirection"></a-switch>
+      </div>
 
     </template>
     <template v-else>
@@ -285,7 +298,7 @@ import TimerChart from '../../apps/tomato/page/Chart.vue'
 import TimerClock from '../../apps/tomato/page/Clock.vue'
 
 const NewAddCard = defineAsyncComponent(() => import('../../page/app/card/NewAddCard.vue'))
-import myIcons from '../widgets/myIcons/index.vue'
+import MyIcons from '../widgets/myIcons/index.vue'
 import AggregateSearch from '../widgets/aggregate/AggregateSearch.vue'
 import AggregateSearchFullScreen from '../widgets/aggregate/AggregateSearchFullScreen.vue'
 import GameStrategy from '../widgets/games/GameStrategy.vue'
@@ -304,9 +317,11 @@ import HotSearch from '../widgets/HotSearch.vue'
 import CoolWidget from '../card/CoolWidget.vue'
 import AIaides from '../widgets/AIaides.vue'
 import OilPrices from '../widgets/OilPrices.vue'
-import {taskStore} from "../../apps/task/store"
+import { taskStore } from '../../apps/task/store'
+
 export default {
   name: 'Desk',
+  emits: ['changeEditing'],
   components: {
     GameInformation,
     HistoryInfo,
@@ -361,7 +376,7 @@ export default {
     GameStrategy,
     AggregateSearch,
     AggregateSearchFullScreen,
-    myIcons,
+    MyIcons,
     AddIcon,
     SmallRank,
     Todo,
@@ -398,36 +413,36 @@ export default {
             //   distance: 10,
             //   delay: 1000,
             // },
-            dragAutoScroll: {
-              layout: {
-                fillGaps: true,
-                horizontal: false,
-                alignRight: false,
-                alignBottom: false,
-                rounding: true
-              },
-              targets: [
-                {
-                  element: '#scrollerBar>div',
-                },
-              ],
-              handle: null,
-              threshold: 50,
-              safeZone: 0.2,
-              speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-              sortDuringScroll: true,
-              smoothStop: false,
-              onStart: null,
-              onStop: null,
-              dragSortPredicate: {
-                threshold: 30,
-              },
-              dragSortHeuristics: {
-                sortInterval: 10,
-                minDragDistance: 5,
-                minBounceBackAngle: Math.PI / 2,
-              },
+            dragAutoScroll: {},
+            layout: {
+              // fillGaps: true,
+              // horizontal: false,
+              alignRight: false,
+              alignBottom: false,
+              // rounding: true
             },
+            targets: [
+              {
+                element: '#scrollerBar>div',
+              },
+            ],
+            handle: null,
+            threshold: 50,
+            safeZone: 0.2,
+            speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+            sortDuringScroll: true,
+            smoothStop: false,
+            onStart: null,
+            onStop: null,
+            dragSortPredicate: {
+              threshold: 30,
+            },
+            dragSortHeuristics: {
+              sortInterval: 10,
+              minDragDistance: 5,
+              minBounceBackAngle: Math.PI / 2,
+            },
+
           }
         }
       },
@@ -437,7 +452,8 @@ export default {
         default: {
           cardZoom: 100,
           marginTop: 0,
-          cardMargin: 5//卡片间隙
+          cardMargin: 5,//卡片间隙
+          vDirection: false,
         }
       },
       notTrigger: {
@@ -445,25 +461,63 @@ export default {
         default: () => false
       },
 
-
     }
   ,
 
-  watch:{
-    currentDesk(newVal){
-      newVal.layoutSize=this.getLayoutSize()
+  watch: {
+    currentDesk (newVal) {
+      newVal.layoutSize = this.getLayoutSize()
+      // if (!newVal.settings) {
+      //   newVal.settings=
+      //     .settings = {
+      //     cardZoom: 100,
+      //     marginTop: 0,
+      //     cardMargin: 5,//卡片间隙
+      //     vDirection: false,
+      //   }
+      // }
+      this.muuriOptions.layout.horizontal =! newVal.settings?.vDirection
+    },
+
+    'currentDesk.settings': {
+      handler (newVal) {
+        console.log('更改了方向')
+        console.log()
+        if(!newVal){
+          newVal={
+            cardZoom: 100,
+            marginTop: 0,
+            cardMargin: 5,//卡片间隙
+            vDirection: false,
+          }
+        }
+        this.muuriOptions.layout.horizontal =! newVal.vDirection
+        this.currentDesk.settings=newVal
+        this.update()
+
+      },
+      deep: true,
+      immediate: true,
+    },
+    'currentDesk.settings.vDirection':{
+      handler (newVal) {
+        console.log('更新了方向，重载')
+        this.key=Date.now()
+        console.log(this.muuriOptions.layout,'murri参数')
+      },
+      deep:true
     }
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
-    ...mapWritableState(taskStore, ['taskID','step']),
-    m01012() {
-        return this.taskID == 'M0101' && this.step == 2
+    ...mapWritableState(taskStore, ['taskID', 'step']),
+    m01012 () {
+      return this.taskID == 'M0101' && this.step == 2
     },
-    m01032() {
-        return this.taskID == 'M0103' && this.step == 2
+    m01032 () {
+      return this.taskID == 'M0103' && this.step == 2
     },
-    m02012() {
+    m02012 () {
       return this.taskID == 'M0201' && this.step == 2
     },
     usingSettings () {
@@ -478,7 +532,6 @@ export default {
     return {
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
-
       iconVisible: false,
       settingVisible: false,
       hide: false,
@@ -498,19 +551,19 @@ export default {
         { name: '当前桌面设置', value: 'current' }
       ],
       currentSettingTab: 'all',
-      resizeHandler:null
+      resizeHandler: null
     }
   },
   mounted () {
-    this.resizeHandler=()=>{
-      this.currentDesk.layoutSize=this.getLayoutSize()
+    this.resizeHandler = () => {
+      this.currentDesk.layoutSize = this.getLayoutSize()
     }
     this.getLayoutSize()
 
-    window.addEventListener('resize',this.resizeHandler)
+    window.addEventListener('resize', this.resizeHandler)
   },
   unmounted () {
-    window.removeEventListener('resize',this.resizeHandler)
+    window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
 
@@ -518,7 +571,11 @@ export default {
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },
     update () {
-      this.$refs.grid.update()
+      console.log(this.$refs, '当前的grid组件')
+      if (this.$refs.grid) {
+        this.$refs.grid.update()
+      }
+
     },
     hideMenu () {
       this.menuVisible = false
@@ -528,11 +585,13 @@ export default {
       if (this.editing) {
         message.info('已关闭拖拽调整')
       } else {
-         message.info('您可以直接拖拽图标调整位置')
+        message.info('您可以直接拖拽图标调整位置')
       }
-      this.$emit('changeEditing',this.editing)
+      this.muuriOptions.layout.horizontal = !this.settings.vDirection
+      this.$emit('changeEditing', this.editing)
       this.menuVisible = false
       this.key = Date.now()
+      console.log(this.muuriOptions,'ediingt输出')
     },
     showSetting () {
       this.settingVisible = true
@@ -616,38 +675,37 @@ export default {
      * @returns {{width: number, height: number}}
      */
     getLayoutSize () {
-      this.currentDesk.layoutSize= {
+      this.currentDesk.layoutSize = {
         width: this.$refs.deskContainer.clientWidth,
         height: this.$refs.deskContainer.clientHeight
       }
-      if(this.currentDesk?.settings?.preparing){
-        message.loading({ content: '此桌面为首次使用，正在为您适配您的桌面…', key:'preparing' });
-        this.setFullScreen(true,()=>{
-          setTimeout(()=>{
-            this.$nextTick(()=>{
-              const fullLayoutSize= {
+      if (this.currentDesk?.settings?.preparing) {
+        message.loading({ content: '此桌面为首次使用，正在为您适配您的桌面…', key: 'preparing' })
+        this.setFullScreen(true, () => {
+          setTimeout(() => {
+            this.$nextTick(() => {
+              const fullLayoutSize = {
                 width: this.$refs.deskContainer.clientWidth,
                 height: this.$refs.deskContainer.clientHeight
               }
-              const settings=this.currentDesk.settings
-              const oldLayoutSize=this.settings.layoutSize
-              settings.cardZoom= (settings.cardZoom *fullLayoutSize.height/oldLayoutSize.height/this.adjustZoom).toFixed()
-              settings.cardMargin=(settings.cardMargin *fullLayoutSize.height/oldLayoutSize.height/this.adjustZoom).toFixed()
+              const settings = this.currentDesk.settings
+              const oldLayoutSize = this.settings.layoutSize
+              settings.cardZoom = (settings.cardZoom * fullLayoutSize.height / oldLayoutSize.height / this.adjustZoom).toFixed()
+              settings.cardMargin = (settings.cardMargin * fullLayoutSize.height / oldLayoutSize.height / this.adjustZoom).toFixed()
               //todo竖屏界面不一样
-              message.success({ content: '此桌面为首次使用，已为您适配您的当前窗口。', key:'preparing' });
-              settings.preparing=false
+              message.success({ content: '此桌面为首次使用，已为您适配您的当前窗口。', key: 'preparing' })
+              settings.preparing = false
               this.setFullScreen(false)
               delete settings.layoutSize
             })
-          },1000)
+          }, 1000)
         })
-
 
       }
 
       return this.currentDesk.layoutSize
     },
-    setFullScreen(flag,cb){
+    setFullScreen (flag, cb) {
       this.stashLayout()
       this.fullScreen = flag
       this.$nextTick(() => {
@@ -656,11 +714,11 @@ export default {
         } else {
           this.restoreLayout()
         }
-        if(cb) cb()
+        if (cb) cb()
 
       })
     },
-    getAdjustZoom(){
+    getAdjustZoom () {
       return this.adjustZoom
     }
   }
@@ -670,14 +728,15 @@ export default {
 <style scoped lang="scss">
 .grid {
   position: relative;
-  display: inline-block;
+  //display: inline-block;
+  white-space: pre-wrap;
   border-radius: 4px;
   vertical-align: top;
-  left: 0;
-  right: 0;
+  //left: 0;
+  //right: 0;
   margin-right: 1em;
-  height: 100%;
-  width: 100%;
+  //height:3000px;
+  //max-width: 100%;
 }
 
 .trigger {
@@ -714,12 +773,11 @@ export default {
 <style scoped lang="scss">
 .grid {
   position: relative;
-  display: inline-block;
-  width: 43em;
+  //display: inline-block;
+  //width: 43em;
   border-radius: 4px;
   vertical-align: top;
-  left: 0;
-  right: 0;
+
   margin-right: 1em;
 
   .editing {
@@ -732,24 +790,24 @@ export default {
   text-align: center;
 }
 
-@media screen and (min-height: 1020px) and (max-height: 1600px) {
-  #scrollerBar {
-    height: 880px;
-
-    .grid {
-      height: 880px;
-    }
-  }
-}
-
-@media screen and (max-height: 1021px) {
-  #scrollerBar {
-    height: 438px;
-
-    .grid {
-      height: 438px;
-    }
-  }
-}
+//@media screen and (min-height: 1020px) and (max-height: 1600px) {
+//  #scrollerBar {
+//    height: 880px;
+//
+//    .grid {
+//      height: 880px;
+//    }
+//  }
+//}
+//
+//@media screen and (max-height: 1021px) {
+//  #scrollerBar {
+//    height: 438px;
+//
+//    .grid {
+//      height: 438px;
+//    }
+//  }
+//}
 
 </style>

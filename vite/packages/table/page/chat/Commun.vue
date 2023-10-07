@@ -34,7 +34,8 @@
         <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
           <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
         </a-button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost" style="flex-shrink: 0;">
+        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost"
+          style="flex-shrink: 0;">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
         </button>
         <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan" style="flex-shrink: 0;">
@@ -45,7 +46,8 @@
         <!-- </div> -->
 
       </div>
-      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" :forumId="props.forumId" />
+      <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+        :forumId="props.forumId" />
 
     </div>
     <!-- {{ store.communityPost.count }} -->
@@ -62,7 +64,7 @@
             :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
-          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" />
+          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -396,10 +398,13 @@ onUpdated(() => {
     overflow: hidden;
   }
 
+  :deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link) {
+    color: var(--secondary-text) !important;
+  }
+
   .scroll {
     &::-webkit-scrollbar {
       display: none;
     }
   }
-}
-</style>
+}</style>

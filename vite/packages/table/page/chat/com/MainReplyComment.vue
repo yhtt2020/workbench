@@ -49,7 +49,7 @@
                                     <a-menu-item key="1" class="xt-text">删除</a-menu-item>
                                 </a-menu>
                             </template>
-                            <button class="border-0 xt-bg w-[30px] h-[20px]">
+                            <button class="border-0 xt-bg w-[30px] h-[20px] rounded-md">
                                 <Icon class="text-xl text-center xt-text-2 pointer"
                                     icon="fluent:more-horizontal-16-filled" />
 
