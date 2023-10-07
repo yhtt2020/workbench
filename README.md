@@ -37,7 +37,7 @@ B站账号：
 
 7.复制一个/node_modules下的dragula/dist/dragula.css 到 dragula/dist/dragula.min.css，不然会报这个库缺文件
 
-###启动项目
+## 启动项目
 
 0.hosts下添加映射
 
