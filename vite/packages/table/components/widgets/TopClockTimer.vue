@@ -1,6 +1,6 @@
 <template>
     <tippy trigger=" click" placement="bottom" :interactive="true">
-        <template #content style="padding: 0 !important;">
+        <template #content>
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
             <div v-show="clockSettingVisible" style="position: absolute;left:-330px;top: -1px;box-shadow: 5px 5px var(--primary-bg); "
@@ -106,6 +106,7 @@
                 </vue-custom-scrollbar>
 
             </div>
+            <!-- 一级快捷面板 -->
             <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0" v-show="customizeSetting" >
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
@@ -192,7 +193,7 @@
 
         </xt-button>
         <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar -mt-2" v-else @click="closeDetail"
-            style="width: 132px; height: 32px; position: relative;">
+            style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
@@ -215,12 +216,9 @@ import { timeStamp, transDate } from "../../util";
 import { notification, Button } from 'ant-design-vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
 onMounted(() => {
-    console.log(useCountDownStore.countDowntime,'countDowntime');
-    
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
     }
-
 })
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
@@ -362,7 +360,7 @@ const closeDetail = () => {
     countDownVisible.value = false
     clockSettingVisible.value = false
     customizeSetting.value = true
-    console.log(firstClockTime.value);
+    // console.log(dayjs());
     
     
 }
@@ -390,16 +388,22 @@ watch(countDownDate, (newVal, oldVal) => {
                     { default: () => 'OK' },
                 ),
             key,
-            onClose: close,
+            // onClose: close,
 
         });
     }
+})
+const nowDate=dayjs()
+watch(()=>nowDate,(newVal,oldVal)=>{
+    console.log(nowDate);
+    
 })
 </script>
 <style lang='scss' scoped>
 .tippy-content {
     padding: 0px !important;
 }
+
 
 .notification-class {
     border-radius: 12px !important;

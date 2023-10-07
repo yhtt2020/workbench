@@ -207,21 +207,7 @@ export default {
     hasChat(){
       return this.$route.path !== '/chat'
     },
-    topClockTimerVisibleSetting(){
-      if(this.clockEvent.length>0 ){
-        console.log(this.clockEvent.length,'this.clockEvent.length');
-        console.log(this.countDowndate);
-        this.topClockTimerVisible=true
-      }
-      else if(this.countDowndate!==0){
-        console.log(this.countDowndate);
-        this.topClockTimerVisible=true
-      }
-      else{
-        console.log(this.clockEvent,'clockEvent');
-        this.topClockTimerVisible=false
-      }
-    }
+    
   },
   async mounted () {
     window.onblur = () => {
@@ -306,12 +292,25 @@ export default {
       })
       this.hideNoticeEntry()
     },
-    
+    topClockTimerVisibleSetting(){
+      if(this.clockEvent.length>0 ){
+        // console.log(this.clockEvent);
+        this.topClockTimerVisible=true
+      }
+      else if(this.countDowndate>=0){
+        // console.log(this.countDowndate);
+        this.topClockTimerVisible=true
+      }
+      else{
+        // console.log(this.countDowndate,this.clockEvent);
+        this.topClockTimerVisible=false
+      }
+    }
 
   },
-  // updated() {
-  //   this.topClockTimerVisibleSetting()
-  // },
+  beforeUpdate() {
+    this.topClockTimerVisibleSetting()
+  },
 }
 </script>
 

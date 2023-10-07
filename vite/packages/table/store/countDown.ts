@@ -76,9 +76,11 @@ export const countDownStore = defineStore(
         this.progress=0
         this.progressTimer && clearInterval(this.progressTimer)
         this.countDowntime = {};
-        this.countDowndate=0
+        this.countDowndate=-1000
+        
       },
       startProgressDown() {
+        this.regularTime()
         let remainingTime=this.countDowndate
         let interval=remainingTime/100
         this.progressTimer=setInterval(()=>{
@@ -88,8 +90,8 @@ export const countDownStore = defineStore(
             
           }else{
             this.progress=0
-            this.countDowntime={}
             clearInterval(this.progressTimer)
+            this.countDowntime={}
           }
         },interval)
       }
