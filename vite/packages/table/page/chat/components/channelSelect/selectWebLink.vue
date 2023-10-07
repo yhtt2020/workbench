@@ -18,10 +18,18 @@
      </span>
     </div>
  
-    <a-input class="h-10" v-model:value="linkName" spellcheck="false" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
+    <a-input class="h-10" v-model:value="linkName" spellcheck="false" style="border-radius: 8px; margin-bottom: 12px;" placeholder="链接名称" />
  
-    <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" />
+    <!-- <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" /> -->
     
+    <a-input-group compact>
+      <a-select v-model:value="requestProtocol" style="width:40%;">
+        <a-select-option value="https">https</a-select-option>
+        <a-select-option value="http">http</a-select-option>
+      </a-select>
+      <a-input v-model:value="link" placeholder="请输入" spellcheck="false" style="width: 60%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
+    </a-input-group>
+
     <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
     <RadioTab :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span>
@@ -32,11 +40,11 @@
    </div>
   </div>
  
-  <SelectClassification v-else :no="no"  :type="type" :data="{name:linkName,props:link}" @classBack="classShow = false"></SelectClassification>
+  <SelectClassification v-else :no="no"  :type="type" :data="{name:linkName,props:webLink}" @classBack="classShow = false"></SelectClassification>
  </template>
  
  <script>
- import { defineComponent, reactive,toRefs } from 'vue'
+ import { defineComponent, reactive,toRefs,ref } from 'vue'
  import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
  
  import RadioTab from '../../../../components/RadioTab.vue'
@@ -62,9 +70,13 @@
     link:'',
     linkName:'',
     classShow:false,
+    requestProtocol:'https'
  
    })
    
+
+   const webLink = ref()
+
    // 关闭
    const closeChannel = () => {
     ctx.emit('close')
@@ -77,14 +89,16 @@
  
    // 选择分类
    const submitSelect = () =>{
-     if(data.link !== '' && data.linkName !== ''){
-       data.classShow = true
-     }
+    if(data.link !== '' && data.linkName !== ''){
+      webLink.value = `${data.requestProtocol}://${data.link}`
+      data.classShow = true
+    }
    }
  
    return {
+    webLink,
     ...toRefs(data),
-    closeChannel,backChannel,submitSelect
+    closeChannel,backChannel,submitSelect,
    }
   }
  })
@@ -132,6 +146,15 @@
   &::placeholder{
     color: var(--secondary-text) !important;
   }
+ }
+
+ :deep(.ant-select .ant-select-selector){
+  height:40px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+ }
+ :deep(.ant-select-selection-item){
+  line-height: 40px !important;
  }
  </style>
  
