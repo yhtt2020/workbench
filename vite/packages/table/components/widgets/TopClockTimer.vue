@@ -196,8 +196,8 @@
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
-                <div class="xt-text font-14" v-if="firstClockTime.hours !== undefined">{{ firstClockTime.hours }} : {{
-                    firstClockTime.minutes }} </div>
+                <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">{{ firstClockTime?.hours }} : {{
+                    firstClockTime?.minutes }} </div>
             </div>
         </xt-button>
     </tippy>
@@ -214,14 +214,18 @@ import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
 import { notification, Button } from 'ant-design-vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
-// onMounted(() => {
-//     console.log(useCountDownStore.countDowntime);
+onMounted(() => {
+    console.log(useCountDownStore.countDowntime,'countDowntime');
     
-// })
+    if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
+        useCountDownStore.dCountDown()
+    }
+
+})
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
-const firstClockTime = computed(() => clockEvent.value[0].clockTimeStamp)
+const firstClockTime = computed(() => clockEvent.value[0]?.dateValue)
 const outerSettings = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -358,6 +362,8 @@ const closeDetail = () => {
     countDownVisible.value = false
     clockSettingVisible.value = false
     customizeSetting.value = true
+    console.log(firstClockTime.value);
+    
     
 }
 let notificationShow = false

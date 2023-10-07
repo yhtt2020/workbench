@@ -31,7 +31,7 @@
       
               <!-- 番茄钟 -->
               <TopTomato />
-              <TopClockTimer v-if="TopClockTimerVisible"/>
+              <TopClockTimer v-if="topClockTimerVisible"/>
               
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
@@ -110,6 +110,7 @@
 </template>
 
 <script>
+import { countDownStore } from '../store/countDown'
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
@@ -144,9 +145,11 @@ export default {
       showLockTip: false,
       messageDrawer: false,
       appStats: false,
+      topClockTimerVisible:false,
     }
   },
   computed: {
+    ...mapWritableState(countDownStore,['countDowndate']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
@@ -204,11 +207,19 @@ export default {
     hasChat(){
       return this.$route.path !== '/chat'
     },
-    TopClockTimerVisible(){
-      if(this.clockEvent.length>0 ||  this.countdownDay.seconds!==undefined){
-        return true
-      }else{
-        return false
+    topClockTimerVisibleSetting(){
+      if(this.clockEvent.length>0 ){
+        console.log(this.clockEvent.length,'this.clockEvent.length');
+        console.log(this.countDowndate);
+        this.topClockTimerVisible=true
+      }
+      else if(this.countDowndate!==0){
+        console.log(this.countDowndate);
+        this.topClockTimerVisible=true
+      }
+      else{
+        console.log(this.clockEvent,'clockEvent');
+        this.topClockTimerVisible=false
       }
     }
   },
@@ -294,9 +305,13 @@ export default {
         await this.loadNoticeDB()
       })
       this.hideNoticeEntry()
-    }
+    },
+    
 
   },
+  // updated() {
+  //   this.topClockTimerVisibleSetting()
+  // },
 }
 </script>
 
