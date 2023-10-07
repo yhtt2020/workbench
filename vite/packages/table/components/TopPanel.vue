@@ -29,11 +29,16 @@
     </div>
     <div class="flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
       <div class="top-state">
-
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer />
+        <TopClockTimer v-if="topClockTimerVisible"/>
       </div>
+    <div class="flex items-end justify-end flex-1 align-items-end xt-text ">
+
+              <!-- 番茄钟 -->
+              <TopTomato />
+              <TopClockTimer v-if="topClockTimerVisible"/>
+
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
@@ -111,6 +116,7 @@
 </template>
 
 <script>
+import { countDownStore } from '../store/countDown'
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
@@ -145,9 +151,12 @@ export default {
       showLockTip: false,
       messageDrawer: false,
       appStats: false,
+      topClockTimerVisible:false,
     }
   },
   computed: {
+    ...mapWritableState(countDownStore,['countDowndate','countDowntime']),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
@@ -203,7 +212,8 @@ export default {
 
     hasChat(){
       return this.$route.path !== '/chat'
-    }
+    },
+
   },
   async mounted () {
     window.onblur = () => {
@@ -287,8 +297,25 @@ export default {
         await this.loadNoticeDB()
       })
       this.hideNoticeEntry()
+    },
+    topClockTimerVisibleSetting(){
+      if(this.clockEvent.length>0 ){
+        // console.log(this.clockEvent);
+        this.topClockTimerVisible=true
+      }
+      else if(this.countDowntime.seconds!==undefined){
+        // console.log(this.countDowndate);
+        this.topClockTimerVisible=true
+      }
+      else{
+        // console.log(this.countDowndate,this.clockEvent);
+        this.topClockTimerVisible=false
+      }
     }
 
+  },
+  beforeUpdate() {
+    this.topClockTimerVisibleSetting()
   },
 }
 </script>

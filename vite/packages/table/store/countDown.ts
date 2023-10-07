@@ -13,7 +13,8 @@ export const countDownStore = defineStore(
         countDownBtn: false,
         // 进度条
         progress:0,
-        progressTimer:null
+        progressTimer:null,
+        selectValue:[]
       }
 
     },
@@ -23,6 +24,7 @@ export const countDownStore = defineStore(
         this.hours = value.hours;
         this.minutes = value.minutes;
         this.seconds = value.seconds;
+        this.selectValue=[this.hours,this.minutes,this.seconds]
         this.countDowndate = this.hours * 3600000 + this.minutes * 60000 + this.seconds * 1000
         this.regularTime();
         this.timer && clearInterval(this.timer);
@@ -73,21 +75,25 @@ export const countDownStore = defineStore(
       },
       dCountDown() {
         this.timer && clearInterval(this.timer);
-        this.countDowntime = {};
         this.progress=0
         this.progressTimer && clearInterval(this.progressTimer)
+        this.countDowntime = {};
+        // this.countDowndate=-1000
+        
       },
       startProgressDown() {
+        this.regularTime()
         let remainingTime=this.countDowndate
         let interval=remainingTime/100
         this.progressTimer=setInterval(()=>{
           if(this.progress<100){
             this.progress+=1
-            console.log(this.progress);
+            // console.log(this.progress);
             
           }else{
             this.progress=0
             clearInterval(this.progressTimer)
+            this.countDowntime={}
           }
         },interval)
       }

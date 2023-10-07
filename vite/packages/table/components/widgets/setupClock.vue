@@ -1,9 +1,9 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 5em )">
+            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
                 <vue-custom-scrollbar :settings="outerSettings"
-                    style="position: relative; height: calc(100vh );color: var(--primary-text);" class="scroll">
+                    style="position: relative; height: calc(100vh -5em );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
