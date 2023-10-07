@@ -42,14 +42,23 @@ B站账号：
 0.hosts下添加映射
 
 C:\Windows\System32\drivers\etc\hosts 注意这个文件不能带.txt扩展名，否则不生效
+注意，是每行一个。MD解析可能混在一行上了
 ``
+
 127.0.0.1 table.com
+
 127.0.0.1 1.table.com
+
 127.0.0.1 2.table.com
+
 127.0.0.1 3.table.com
+
 127.0.0.1 4.table.com
+
 127.0.0.1 5.table.com
+
 127.0.0.1 6.table.com
+
 ``
 
 验证方式，使用cmd ping table.com
