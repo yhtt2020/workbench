@@ -54,6 +54,10 @@ export const appStore = defineStore('appStore', {
       openUrlBrowser: 'builtin',//默认打开浏览器
       enableChat: true,//主界面显示聊天，默认开启聊天
       preventLock: false,//阻止锁屏
+      noticeEnable:true, // 社群通知开关
+      enablePlay:true, // 开启消息提示语开关
+      messagePlay:false, // 消息接收提示语播放
+      noticePlay:false, // 通知接收提示语播放
 
       enableBarrage: false, //启用弹幕
       barrage: {
@@ -75,7 +79,8 @@ export const appStore = defineStore('appStore', {
         notInit: true,
         cover: '',
         title: ''
-      }
+      },
+      show:false, // 工作台页面顶部消息图标显示
     },
     backgroundSettings: {
       backGroundImgBlur: 0,
@@ -205,7 +210,29 @@ export const appStore = defineStore('appStore', {
     },
     setSearchUrlOpenType(value:object){  // 设置搜索路径打开方式类型
       this.aggList.type = value
-    }
+    },
+
+    // 修改当前社群消息通知开关
+    setNoticeOnOff(val:boolean){  
+      this.settings.noticeEnable = val
+    },
+
+    showNoticeEntry(){  // 显示消息通知入口
+      this.status.show = true
+    },
+    hideNoticeEntry(){  // 隐藏消息通知入口
+      this.status.show = false
+    },
+    
+    setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
+      this.settings.enablePlay = val
+    },
+    setMessagePlay(){ // 设置消息提示语
+      this.settings.messagePlay = true
+    },
+    setNoticePlay(){  // 设置通知提示语
+      this.settings.noticePlay = true
+    },
 
   },
   persist: {

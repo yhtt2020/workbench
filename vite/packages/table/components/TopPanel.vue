@@ -33,7 +33,8 @@
         <!-- 番茄钟 -->
         <TopTomato />
       </div>
-      <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
+
+      <div  v-if="status.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
           <div class="new-message-tag"></div>
@@ -45,6 +46,7 @@
       <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
+
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="truncate no-drag" v-if="!loading">
@@ -224,8 +226,8 @@ export default {
     getIcon,
     getCover,
     ...mapActions(cardStore, ['setAppDate']),
-    ...mapActions(noticeStore,['hideNoticeEntry','loadNoticeDB']),
-
+    ...mapActions(noticeStore,['loadNoticeDB']),
+    ...mapActions(appStore,['hideNoticeEntry']),
     clearLockTimer () {
       if (this.lockTimer) {
         clearInterval(this.lockTimer)
