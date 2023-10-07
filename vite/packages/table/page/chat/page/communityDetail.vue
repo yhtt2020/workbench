@@ -140,7 +140,7 @@ export default defineComponent({
       channelList:{},
       currentChannel: {},
       isChat:'yes',
-      group:[]
+      group:[],
       //文章名称
       artName:'community_after_created_empty',
 
