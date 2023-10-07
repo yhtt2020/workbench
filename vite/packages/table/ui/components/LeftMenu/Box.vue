@@ -21,10 +21,7 @@ const props = defineProps({
   item: {},
   id: '',
 })
-const emits = defineEmits(['itemClick'])
-const selectClick = () => {
-  emits('itemClick', props.item)
-}
+
 const tabParams = ref(
   {}
 )

@@ -1,21 +1,6 @@
 <template>
   <template v-if="currentTask">
-    <div>
-      <xt-title m="">
-        <xt-base-icon icon="xiangzhuo" /> 1 <FlagOutlined />
-        {{ currentTask.chapter }}
-        <template #right>1</template>
-      </xt-title>
-      <xt-collapse v-for="task in currentTask.tasks">
-        <template #title>
-          <xt-title m="0">{{ task.title }} </xt-title></template
-        >
-
-        <xt-title type="text" m="mb">{{ task.title }} </xt-title>
-        <xt-button type="theme" style="width: 100%">开始任务</xt-button>
-      </xt-collapse>
-      {{ currentTask }}
-    </div>
+    <Task :task="currentTask"> </Task>
   </template>
   <template v-else>
     <xt-title>支线任务</xt-title>
@@ -29,13 +14,15 @@
         class="flex flex-col xt-bg-2 rounded-xl mt-3 p-3"
         @click="taskClick(task)"
       >
-        <xt-title m="">
-          <FlagOutlined /> {{ task.chapter }}
-          <template #right>1</template>
-        </xt-title>
-        <xt-title type="text" m="mt">
-          {{ task.info }}
-        </xt-title>
+      <xt-title m="">
+    <FlagOutlined /> {{ task.chapter }}
+    <template #right
+      ><Progress :task="task" style="width: 68px; height: 20px"
+    /></template>
+  </xt-title>
+  <xt-title type="text" m="mt">
+    {{ task.info }}
+  </xt-title>
       </div>
     </xt-menu>
   </template>
@@ -43,24 +30,27 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { tasks } from "../config/Branch";
+import { tasks } from "../../config/Branch";
+import Task from "./Task.vue";
 import { FlagOutlined } from "@ant-design/icons-vue";
+import Progress from "../../components/progress/index.vue";
 
 const menus = reactive([
   {
     label: "固定到左侧",
     callBack: () => {
-      // store.isTask = false;
       console.log("111111111 :>> ", 111111111);
     },
   },
 ]);
 
-console.log("tasks :>> ", tasks);
 const currentTask = ref(null);
 const taskClick = (task) => {
   currentTask.value = task;
-  console.log("task :>> ", task);
+};
+
+const back = () => {
+  currentTask.value = null;
 };
 </script>
 

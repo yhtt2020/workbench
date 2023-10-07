@@ -108,6 +108,7 @@ export default {
     };
   },
   beforeMount() {
+
     // 是否需要初始化
     let state = false;
     let setData = {};
@@ -135,6 +136,7 @@ export default {
     }
   },
   mounted() {
+
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
