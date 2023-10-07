@@ -6,12 +6,8 @@
             <div class="title">番茄时间</div>
             <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
             <div class="title">今日番茄时间</div>
-            <div class="tomato-box">
-              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
-              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
-              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
-              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
-              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;"/>
+            <div class="tomato-box" >
+              <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;" v-for="index in this.tomatoNum" :key="index"/>
             </div>
         </div>
         <div class="icon-box"> 
@@ -53,7 +49,7 @@
 
     },
     computed: {
-      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running']),
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running','tomatoNum']),
       ...mapState(appStore,['userInfo','backgroundImage'])
       
     },

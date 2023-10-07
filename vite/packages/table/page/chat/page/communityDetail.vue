@@ -66,19 +66,19 @@
         <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
            <!-- 空状态，取文章 -->
           <div class="community-article h-full">
-            <vue-custom-scrollbar class="h-full" :settings=" {
-      default: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      }
-    }">
+            <!-- <vue-custom-scrollbar class="h-full" :settings=" {
+              default: {
+                useBothWheelAxes: true,
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: true
+              }
+            }">
               <h2 v-html="emptyArticle.title"></h2>
               <div v-html="emptyArticle.content"></div>
-            </vue-custom-scrollbar>
-
+            </vue-custom-scrollbar> -->
+            <Article :artName="artName"></Article>
           </div>
 
 
@@ -113,6 +113,7 @@ import Modal from '../../../components/Modal.vue'
 import CreateNewChannel from '../components/createNewChannel.vue'
 import CreateNewGroup from '../components/createNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
+import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 
 export default defineComponent({
@@ -120,7 +121,7 @@ export default defineComponent({
     SelectOutlined,
     VueCustomScrollbar, CommunityIcon, Modal,CategoryFloat,
     CreateNewChannel,CreateNewGroup,
-    //  ChatFold,
+    //  ChatFold,Article,
   },
 
   setup (props, ctx) {
@@ -139,7 +140,9 @@ export default defineComponent({
       channelList:{},
       currentChannel: {},
       isChat:'yes',
-      group:[]
+      group:[],
+      //文章名称
+      artName:'community_after_created_empty',
 
     })
 

@@ -1,11 +1,11 @@
   <template>
-    <div v-if="this.isState" class="tomato-timer pointer no-drag ml-1" :style="{'background' : this.isColor}">
+    <div v-if="this.isState&&this.running" class="tomato-timer pointer no-drag ml-1" :style="{'background' : this.isColor}">
       <div style="display: flex;justify-content: space-evenly;
-        align-items: center;">
+        align-items: center;" @click="onChangeFull">
         <Icon icon="fluent-emoji:tomato" style="font-size: 20px;"/>
           {{ displayNum(minutes) }}:{{ displayNum(seconds) }}
       </div>
-        <div class="tomato-float">
+        <div v-show="isFullState">
             <TomatoTimer  />
         </div>
     </div>
@@ -22,7 +22,7 @@
         Icon,
       },
       computed: {
-        ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isColor','isState','tomatoNum']),
+        ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isColor','isState','running','isFullState']),
       },
       data(){
         return {
@@ -37,6 +37,7 @@
 
       },
       methods:{
+        ...mapActions(tomatoStore,['onChangeFull']),
         // 时间格式
         displayNum (num) {
           if (num < 10) {
@@ -61,12 +62,6 @@
         color: rgba(255,255,255,0.85);
         z-index: 100;
         font-weight: 500;
-    }
-    .tomato-timer .tomato-float{
-        display: none;
-    }
-    .tomato-timer:hover .tomato-float{
-        display: block;
     }
 
 

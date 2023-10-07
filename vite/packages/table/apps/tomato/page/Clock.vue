@@ -2,8 +2,7 @@
     <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList">
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
-        <div class="title">今日番茄时间 {{ countTime(this.tomatoNum) }} </div>
-
+        <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
         <div class="icon-box">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
@@ -43,7 +42,7 @@
                       <div class="set-content">开始番茄时间后自动进入全屏模式。</div>
                     </div>
                     <div class="right-box">
-                      <a-switch v-model:checked="isFull" />
+                      <a-switch @change="onChange(this.customIndex,this.desk)"  v-model:checked="isFull" />
                     </div>
                   </div>
                   <div class="setting">
@@ -52,7 +51,7 @@
                       <div class="set-content">开始番茄时间后顶部在状态栏显示。</div>
                     </div>
                     <div class="right-box">
-                      <a-switch v-model:checked="isState" />
+                      <a-switch @change="onChange(this.customIndex,this.desk)" v-model:checked="isState" />
                     </div>
                   </div>
                 </div>
@@ -65,8 +64,9 @@
   import Widget from "../../../components/card/Widget.vue";
   import { Icon } from '@iconify/vue';
   import {mapActions, mapState,mapWritableState} from "pinia";
-  import FullScreen from "../components/fullScreen.vue";
   import { tomatoStore } from '../store'
+  import FullScreen from "../components/fullScreen.vue";
+  import { cardStore } from '../../../store/card'
 
   export default {
     name: "TimerClock",
@@ -91,7 +91,7 @@
     data(){
       return {
         // 设置
-        visible:false,
+        settingVisible:false,
         options:{
           className:'card small',
           title:'TimerClock',
@@ -111,21 +111,22 @@
         ],
       }
     },
-    mounted(){
+    mounted(){ 
       this.getTomatoNum();
+      this.init(this.customData,this.customIndex,this.desk);
     },
     computed: {
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
-      
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum']),
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','onChange','init']),
+      ...mapActions(cardStore, ['updateCustomData']),
       // 计算今日番茄时间
-      countTime(num){
+      countToday(num){
         let totalTime = num*25;
         let hour = totalTime / 60
         let min = totalTime % 60
-        return Math.trunc(hour) + 'h ' + min + 'm'
+        return Math.trunc(hour) + 'h' + min + 'm'
       },
       // 时间格式
       displayNum (num) {
@@ -146,6 +147,7 @@
       color: rgba(255,255,255,0.60);
       font-weight: 400;
       text-align: center;
+      letter-spacing: 1px;
     }
     .time{
       font-family: Oswald-SemiBold;

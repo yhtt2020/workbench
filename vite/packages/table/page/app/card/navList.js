@@ -889,12 +889,12 @@ export const NavList = [
           {
             name: 'smallCommunityDashboard',
             size: '2x4',
-            zoom: '8'
+            zoom: '30'
           },
           {
             name: 'middleCommunityDashboard',
             size: '4x4',
-            zoom: '8'
+            zoom: '14'
           },
         ],
         time: '2023/9/15'
@@ -908,7 +908,7 @@ export const NavList = [
           {
             name: 'communityTodo',
             size: '2x4',
-            zoom: '30'
+            zoom: '20'
           },
         ],
         time: '2023/9/16'
@@ -950,12 +950,12 @@ export const NavList = [
           {
             name: 'TimerClock',
             size: '2x2',
-            zoom: '24'
+            zoom: '20'
           },
           {
             name: 'TimerChart',
             size: '2x2',
-            zoom: '24'
+            zoom: '20'
           },
         ],
         time: '2023/9/23'
