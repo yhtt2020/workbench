@@ -29,9 +29,10 @@
     </div>
     <div class="flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
       <div class="top-state">
-      <TopClockTimer />
+
         <!-- 番茄钟 -->
         <TopTomato />
+        <TopClockTimer />
       </div>
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">

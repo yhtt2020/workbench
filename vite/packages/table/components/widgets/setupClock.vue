@@ -326,6 +326,9 @@ export default {
 :deep(.ant-select-option){
     color: var(--primary-text);
 }
+:deep(.ant-select-arrow){
+    color: var(--primary-text);
+}
 :deep(.ant-input) {
     color: var(--primary-text);
     &::placeholder {
@@ -335,9 +338,7 @@ export default {
         color:var(--primary-text);
     }
 }
-:deep(.ant-select-arrow){
-    color: var(--primary-text);
-}
+
 :deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
     line-height: 35px;
 }

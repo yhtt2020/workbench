@@ -10,7 +10,10 @@ export const countDownStore = defineStore(
         seconds: 0,
         countDowntime: {},
         timer: null,
-        countDownBtn: false
+        countDownBtn: false,
+        // 进度条
+        progress:0,
+        progressTimer:null
       }
 
     },
@@ -25,10 +28,14 @@ export const countDownStore = defineStore(
         this.timer && clearInterval(this.timer);
         this.timer = setInterval(this.regularTime, 1000)
         this.countDownBtn = false
+        // 进度条
+        this.progressTimer && clearInterval(this.progressTimer)
+        this.startProgressDown()
       },
       stopCountDown() {
         clearInterval(this.timer);
         this.countDownBtn = true
+        clearInterval(this.progressTimer)
       },
       regularTime() {
         if (this.countDowndate < 0) {
@@ -61,10 +68,28 @@ export const countDownStore = defineStore(
         this.timer && clearInterval(this.timer);
         this.timer = setInterval(this.regularTime, 1000);
         this.countDownBtn = false;
+        this.progressTimer && clearInterval(this.progressTimer)
+        this.startProgressDown()
       },
       dCountDown() {
         this.timer && clearInterval(this.timer);
         this.countDowntime = {};
+        this.progress=0
+        this.progressTimer && clearInterval(this.progressTimer)
+      },
+      startProgressDown() {
+        let remainingTime=this.countDowndate
+        let interval=remainingTime/100
+        this.progressTimer=setInterval(()=>{
+          if(this.progress<100){
+            this.progress+=1
+            console.log(this.progress);
+            
+          }else{
+            this.progress=0
+            clearInterval(this.progressTimer)
+          }
+        },interval)
       }
     },
   },
