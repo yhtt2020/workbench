@@ -74,6 +74,9 @@ export default defineComponent({
  components:{
   CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled
  },
+
+ props:['categoryID'],
+
  setup (props,ctx) {
   const tui = window.$TUIKit
 

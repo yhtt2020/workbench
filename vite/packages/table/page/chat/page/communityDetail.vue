@@ -98,8 +98,8 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted,watch } from 'vue'
+import { useRoute, useRouter,onBeforeRouteUpdate } from 'vue-router'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { SelectOutlined } from '@ant-design/icons-vue'
 import { communityStore } from '../store/communityStore'
@@ -116,7 +116,9 @@ import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 
-export default defineComponent({
+export default {
+  
+
   components: {
     SelectOutlined,
     VueCustomScrollbar, CommunityIcon, Modal,CategoryFloat,
@@ -161,21 +163,33 @@ export default defineComponent({
       // console.log(rs)
     })
 
-    watchEffect(async () => {
-      data.routeData = { no: route.params.no }
+    watch(()=>route?.params?.no,async(newVal,oldVal)=>{
+      // console.log('查看路由参数',newVal)
+      if(newVal !== 1){
+        await myCom.getCategoryData(newVal)
+      }else{
+        await myCom.getCategoryData('')
+      }
+      
     })
+
 
     // 选择当前状态
     const currentItem = async (item) => {
       // 点击链接
       if (item.type === 'link' && item.name !== 'Roadmap') {
-        const url = JSON.parse(item.props).url
+        // console.log('转换的数据',JSON.parse(item.props))
+        const url = JSON.parse(item.props)
         browser.openInUserSelect(url)
       }
 
       // 点击群聊
       if(item.type === 'group'){
-        const groupId = JSON.parse(item.props).groupID
+        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
+        
+        // console.log('排查',changeData)
+
+        const groupId = changeData.groupID
         const res = await window.$chat.searchGroupByID(groupId)
         const enableGroup = await checkGroupShip([`${groupId}`])
         data.isChat = enableGroup[0]
@@ -202,7 +216,6 @@ export default defineComponent({
         }
       }
 
-
       data.currentChannel = item
     }
 
@@ -221,7 +234,8 @@ export default defineComponent({
       onMounted
     }
   }
-})
+
+}
 </script>
 
 <style lang="scss" scoped>

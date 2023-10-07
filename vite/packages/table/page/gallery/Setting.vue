@@ -14,7 +14,7 @@
       style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em;color: var(--primary-text);background-color:var(--primary-bg);">
       <div class="line-title ">基础设置</div>
       <div class="line" v-if="!settings.enable">
-        如果您的显示器为OLed面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
+        如果您的显示器为OLED面板，建议启用锁屏壁纸，且轮播不少于3张壁纸，以防止烧屏。
       </div>
       <div class="line">
         使用锁屏壁纸：<a-switch v-model:checked="settings.enable"></a-switch>

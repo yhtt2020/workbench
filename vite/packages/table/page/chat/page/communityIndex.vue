@@ -7,7 +7,7 @@
     <!-- :flex="doubleCol ? 0 1 336 : 0 1 240 "  -->
     <!-- flex=" 0 1 300px" -->
 
-      <CategoryFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
+      <DefaultFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></DefaultFloat>
 
     </a-col>
 
@@ -86,7 +86,7 @@ import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/validationPrompts.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
-import CategoryFloat from '../components/float/categoryFloat.vue'
+import DefaultFloat from '../components/float/defaultFloat.vue'
 
 
 export default defineComponent({
@@ -95,7 +95,7 @@ export default defineComponent({
     Emoji,
     ChatDropDown,
     ChatFold, Commun, Modal, ValidateModal,
-    CategoryFloat,
+    DefaultFloat,
     communityIcon
   },
 

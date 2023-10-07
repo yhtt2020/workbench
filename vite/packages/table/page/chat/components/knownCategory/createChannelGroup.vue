@@ -29,8 +29,8 @@
  <CreateCommunity v-if="listIndex === 'create' && chatShow === true " @close="closeChannel" id="chat" @back="chatShow = false">
  </CreateCommunity>
  
- <AlreadyCreateGroup v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
- </AlreadyCreateGroup>
+ <SelectNoClassGroup :no="no" v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
+ </SelectNoClassGroup>
 
 </template>
 
@@ -39,15 +39,15 @@ import { defineComponent,reactive,toRefs } from 'vue'
 import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
 
 import CreateCommunity from '../createCommunity.vue'
-import AlreadyCreateGroup from './alreadyCreateGroup.vue'
+import SelectNoClassGroup from './selectNoClassGroup.vue'
 
 export default defineComponent({
 
- props:['type'],
+ props:['type','no'],
 
  components:{
   CloseOutlined,LeftOutlined,
-  CreateCommunity,AlreadyCreateGroup,
+  CreateCommunity,SelectNoClassGroup
  },
 
  setup (props,ctx) {
