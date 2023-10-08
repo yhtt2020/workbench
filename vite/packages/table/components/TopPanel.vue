@@ -27,11 +27,11 @@
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
+    <div class="right-area flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible"/>
+        <TopClockTimer v-if="topClockTimerVisible && false"/>
       </div>
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
@@ -316,8 +316,8 @@ export default {
 
 <style lang="scss" scoped>
 .top-panel {
-  padding: 0.8em 0 0.8em 0.8em;
-  padding-bottom: 0;
+  padding: 0.8em 0 0 0.8em;
+  display: flex;
 }
 
 .input-box {
@@ -396,8 +396,10 @@ export default {
 .top-state{
   display: flex;
   // position: relative;
-  position: absolute;
-  right:158px;
-  top: -5px;
+}
+.right-area{
+  display: flex;
+  align-items: center;
+  height: 25px;
 }
 </style>

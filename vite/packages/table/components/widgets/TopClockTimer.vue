@@ -196,7 +196,7 @@
         </xt-button>
         <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-md clock-timer top-bar" v-else
             @click="closeDetail"
-            style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
+            style="width: 132px; position: relative;background-color: transparent !important;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
@@ -375,7 +375,7 @@ const countDownDate = computed(() => useCountDownStore.countDowndate)
 const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
-    
+
     const countDownTotalTime=computed(()=>{
         let [hour,minute,second]=useCountDownStore.selectValue
         let totalTime=''
@@ -392,7 +392,7 @@ watch(countDownDate, (newVal, oldVal) => {
     })
     if (newVal < 0) {
         console.log(useCountDownStore.selectValue,'value');
-        
+
         const audio = new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
         notification.open({
