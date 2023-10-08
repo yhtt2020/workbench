@@ -2,17 +2,23 @@
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
+    <ClassIcon  icon="fluent:chevron-left-16-filled" style="font-size: 2em;" />
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择社区圈子</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+    <ClassIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;"/>
    </div>
   </div>
 
   <div class="flex flex-col px-6">
-   <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子</span>
-   <!-- ({{ createGroup.length }}) -->
+   <span class="font-16-400 mb-4" style="color: var(--primary-text);">我创建的圈子({{ forumList.length }})</span>
+  
+   <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
+    <div v-for="item in forumList" class="flex items-center p-5 rounded-lg" style="background: var(--secondary-bg);" @click="selectForum(item)">
+     <a-avatar :size="40" shape="square" :src="item.logo"></a-avatar>
+     <span class="category-16-400 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
+    </div>
+   </vue-custom-scrollbar>
    
    
 
@@ -27,50 +33,61 @@
    </div>
   </div>
  </div>
+
+
 </template>
 
 <script>
-import { computed, defineComponent, reactive, toRefs } from 'vue'
-import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
-import _ from 'lodash-es'
+import { mapActions,mapWritableState } from 'pinia'
+import { forumStore } from '../../store/forumStore'
+import { Icon as ClassIcon} from '@iconify/vue'
 
-export default defineComponent({
-
- props:['type'],
-
+export default {
  components:{
-  CloseOutlined,LeftOutlined,
+  ClassIcon,
  },
 
- setup (props,ctx) {
-
-  const data = reactive({
+ data(){
+  return{
    settingsScroller: {
     useBothWheelAxes: true,
     swipeEasing: true,
     suppressScrollY: false,
     suppressScrollX: true,
     wheelPropagation: true
-   }
-  })
-
-
-  // 关闭
-  const closeChannel = () => {
-   ctx.emit('close')
+   },
+   
   }
+ },
 
-  // 返回
-  const backChannel = () =>{
-   ctx.emit('back')
-  }
+ computed:{
+  ...mapWritableState(forumStore,['forumList'])
+ },
 
-  return {
-   ...toRefs(data),
-   closeChannel,backChannel
+ async mounted(){
+  await this.getForumData()
+ },
+
+
+ methods:{
+  ...mapActions(forumStore,['getForumData']),
+  closeChannel(){
+   this.$emit('close')
+  },
+  backChannel(){
+   this.$emit('back')
+  },
+
+  // 选择指定的版块
+  selectForum(item){
+    
   }
- }
-})
+ 
+
+ },
+
+
+}
 </script>
 
 <style lang="scss" scoped>
