@@ -1,13 +1,18 @@
 <template>
   <div>
     <xt-title m="mb">
-
-      <xt-base-icon icon="xiangzhuo" />
-      <div @click="back()">返回</div>
-      {{ task.chapter }}
+      <xt-new-icon icon="icon-park-outline:left" />
+      <div class="flex">
+        <!-- <MyIcon
+          icon="icon-park-outline:left"
+          @click="back()"
+          style="height: 24px; font-size: 20px"
+        /> -->
+        {{ task.chapter }}
+      </div>
       <template #right>
-        <Progress style="width: 68px; height: 20px" :task="task"></Progress
-      ></template>
+        <Progress style="width: 68px; height: 20px" :task="task"
+      /></template>
     </xt-title>
     <xt-collapse v-for="data in task.tasks">
       <template #title>
@@ -33,6 +38,7 @@
 import { computed, toRefs, ref, reactive } from "vue";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
+import { Icon as MyIcon } from "@iconify/vue";
 
 import { storeToRefs } from "pinia";
 
@@ -53,7 +59,7 @@ const props = defineProps({
 
 const emits = defineEmits(["back"]);
 const back = () => {
-  console.log('111 :>> ', 111);
+  console.log("111 :>> ", 111);
   emits("back");
 };
 

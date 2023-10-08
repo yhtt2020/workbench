@@ -26,7 +26,7 @@
 import { ref, watch } from "vue";
 import { taskStore } from "../store";
 import Primary from "./Primary.vue";
-import Branch from "./Brannch/index.vue";
+import Branch from "./branch/index.vue";
 import Set from "./Set.vue";
 import {
   StarFilled,
@@ -70,3 +70,4 @@ const menus = ref([
 </script>
 
 <style lang="scss" scoped></style>
+./branch/index.vue

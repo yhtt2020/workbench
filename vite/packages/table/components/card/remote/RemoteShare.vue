@@ -94,7 +94,7 @@
   import cache from '../hooks/cache';
   import {setList} from './testData'
   import {nanoid} from 'nanoid'
-  import { taskStore } from '../../../apps/task/store';
+  import {completeTask } from "../../../apps/task/page/branch/task.ts"
   import { mapActions } from "pinia"
   const Remote = defineAsyncComponent(() => import('../../widgets/custom/Remote.vue'))
   import html2canvas from "html2canvas";
@@ -118,7 +118,6 @@
       }
     },
     methods: {
-      ...mapActions(taskStore, ['completeTask']),
       close(){
         this.$emit('closeShare',false)
       },
@@ -183,7 +182,7 @@
           "avatar": '/icons/logo128.png',
           "nickname": 'Victor Ruiz',
         }
-        this.completeTask('Z0302')
+        completeTask('Z0302')
         setList(cardContent)
 
         message.success('添加成功')

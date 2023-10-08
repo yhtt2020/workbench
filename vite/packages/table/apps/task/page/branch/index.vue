@@ -34,7 +34,6 @@ import { tasks } from "../../config/Branch";
 import Task from "./Task.vue";
 import { FlagOutlined } from "@ant-design/icons-vue";
 import Progress from "../../components/progress/index.vue";
-
 const menus = reactive([
   {
     label: "固定到左侧",

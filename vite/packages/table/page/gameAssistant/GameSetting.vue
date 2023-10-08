@@ -183,7 +183,7 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
-import { taskStore } from '../app/todo/store'
+import {completeTask} from "../../apps/task/page/branch/task"
 const { steamSession, path, https,steamUser } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 
@@ -302,7 +302,6 @@ export default {
   },
   methods: {
     ...mapActions(steamUserStore, ['setSteamLoginData', 'setUserData']),
-    ...mapActions(taskStore,['completeTask']),
     clearRecent () {
       antModal.confirm({
         centered: true,
@@ -330,6 +329,8 @@ export default {
       message.info({
         content: `登录成功用户名 ${session.accountName}`,
       })
+      // 支线任务点
+      completeTask('Z0101')
       this.modalVisibility = false
       this.logUserName= session.accountName
       this.loadingUserInfoVisible=true
@@ -454,7 +455,6 @@ export default {
               this.password = ''
               this.mailBoxAuthCode = ''
               this.authCode = ''
-              this.completeTask('Z0101')
             }).catch(err => {
               console.warn(err)
               message.error({

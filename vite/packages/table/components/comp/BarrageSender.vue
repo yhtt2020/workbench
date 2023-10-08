@@ -14,7 +14,7 @@
 import { message } from 'ant-design-vue'
 import { mapActions, mapState } from 'pinia'
 import { teamStore } from '../../store/team'
-import { taskStore } from '../../apps/task/store'
+import {completeTask} from "../../apps/task/page/branch/task.ts"
 export default {
   name: 'BarrageSender',
   props:['currentChannel'],
@@ -33,14 +33,13 @@ export default {
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
-    ...mapActions(taskStore,['completeTask']),
     async postBarrage () {
 
       if (!this.postContent) {
         message.error('请输入弹幕内容')
         return
       } else {
-        this.completeTask('Z0501')
+        completeTask('Z0501')
         let channelType=this.CONST.CHANNEL.PUBLIC
         let pageUrl='table'
         if(this.currentChannel.name!=='all'){
