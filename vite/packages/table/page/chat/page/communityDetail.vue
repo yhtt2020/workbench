@@ -1,29 +1,31 @@
 <template>
   <a-row class="w-full h-full">
     <a-col  class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
-      style=" border-right:1px solid var(--divider);"
+     style=" border-right:1px solid var(--divider);"
     >
-    <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
-    <!-- flex=" 0 1 300px" -->
-      
-      <CategoryFloat :communityID="routeData" :float="false"  @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></CategoryFloat>
+      <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
+      <!-- flex=" 0 1 300px" -->
 
+      <CategoryFloat :float="false" :communityID="routeData"
+      @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"
+      ></CategoryFloat>
       
     </a-col>
+
 
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <div class="px-4 mb-0 line-title">
         <span style="vertical-align: text-top">
-        <template v-if="currentChannel.type === 'group'">
-          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-        </template>
-        <template v-if="currentChannel.type === 'link'">
-          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-        </template>
+          <template v-if="currentChannel.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="currentChannel.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
           <template v-if="currentChannel.type === 'forum'">
             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
           </template>
-       </span>
+        </span>
         {{ currentChannel.name }}
       </div>
 
@@ -89,25 +91,21 @@
 
   </a-row>
 
-
   <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
-    <CreateNewChannel v-if="type === 'addChannel'" :no="routeData.no" @close="addShow = false"></CreateNewChannel>
-    <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData.no" @close="addShow = false"></CreateNewGroup>
+    <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
+    <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
   </Modal>
-
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, watchEffect, computed, ref, onMounted,watch } from 'vue'
-import { useRoute, useRouter,onBeforeRouteUpdate } from 'vue-router'
-import { Icon as CommunityIcon } from '@iconify/vue'
-import { SelectOutlined } from '@ant-design/icons-vue'
+import { mapActions,mapWritableState } from 'pinia'
 import { communityStore } from '../store/communityStore'
 import { chatStore } from '../../../store/chat'
 import _ from 'lodash-es'
 import articleService from '../../../js/service/articleService'
 import browser from '../../../js/common/browser'
 import { checkGroupShip } from '../../../js/common/sns'
+import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
 import CreateNewChannel from '../components/createNewChannel.vue'
@@ -115,73 +113,62 @@ import CreateNewGroup from '../components/createNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 
-export default {
-  
 
-  components: {
-    SelectOutlined,
-    VueCustomScrollbar, CommunityIcon, Modal,CategoryFloat,
-    CreateNewChannel,CreateNewGroup,
-    //  ChatFold,
+export default {
+  components:{
+    CategoryFloat,Modal,CreateNewChannel,
+    CreateNewGroup,VueCustomScrollbar,CommunityIcon
   },
 
-  setup (props, ctx) {
-    const route = useRoute()
-    const myCom = communityStore()
-    const chat = chatStore()
+  computed:{
+    ...mapWritableState(communityStore,['']),
+    ...mapWritableState(chatStore,['settings']),
+    isFloat(){
+      return this.settings.enableHide
+    },
+    // doubleCol(){
+    //   return this.settings.showDouble
+    // }
+  },
 
-    const data = reactive({
+  async mounted(){
+    console.log('启动')
+    const rs = await articleService.getOne('community_after_created_empty')
+    this.emptyArticle = rs
+    console.log(rs)
+  },
+
+  data(){
+    return{
       emptyArticle: {
         title: '',
         content: ''
       },
       type: '',
       addShow: false, // 点击按钮弹窗
-      routeData: {}, // 接收路由参数
       channelList:{},
       currentChannel: {},
       isChat:'yes',
-      group:[]
-
-    })
-
-    const doubleCol = ref(chat.$state.settings.showDouble)
-
-    const clickEmptyButton = (item) => {
-      // console.log('获取数据',item)
-      data.type = item.type
-      data.addShow = true
+      group:[],
+      routeData:1,
     }
+  },
 
-    onMounted(async () => {
-      console.log('启动')
-      const rs = await articleService.getOne('community_after_created_empty')
-      data.emptyArticle = rs
-      // console.log(rs)
-    })
+  methods:{
+    updateColumn(){},
 
-    watch(()=>route?.params?.no,async(newVal,oldVal)=>{
-      // console.log('查看路由参数',newVal)
-      if(newVal !== 1){
-        await myCom.getCategoryData(newVal)
-      }else{
-        await myCom.getCategoryData('')
-      }
-      
-    })
+    // 当前点击
+    async currentItem(item){
+     // 点击链接
+     if (item.type === 'link' && item.name !== 'Roadmap') {
+      // console.log('转换的数据',JSON.parse(item.props))
+      const url = JSON.parse(item.props)
+      browser.openInUserSelect(url)
+     }
 
-
-    // 选择当前状态
-    const currentItem = async (item) => {
-      // 点击链接
-      if (item.type === 'link' && item.name !== 'Roadmap') {
-        // console.log('转换的数据',JSON.parse(item.props))
-        const url = JSON.parse(item.props)
-        browser.openInUserSelect(url)
-      }
-
-      // 点击群聊
-      if(item.type === 'group'){
+     
+     // 点击群聊
+     if(item.type === 'group'){
         const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
         
         // console.log('排查',changeData)
@@ -189,7 +176,7 @@ export default {
         const groupId = changeData.groupID
         const res = await window.$chat.searchGroupByID(groupId)
         const enableGroup = await checkGroupShip([`${groupId}`])
-        data.isChat = enableGroup[0]
+        this.isChat = enableGroup[0]
         const isDisable = res.data.group.joinOption !== 'DisableApply'
 
         // 判断有没有加入社群, yes表示已经加入, not表示没有加入
@@ -205,35 +192,42 @@ export default {
         }else {
           // isDisable判断群聊是否禁止加入
           if (isDisable) {
-            data.group = res.data.group
+            this.group = res.data.group
             // data.showModal = true
           } else {
             message.warn('该群禁止加入')
           }
         }
-      }
+     }
 
-      data.currentChannel = item
+     this.currentChannel = item
+
+    },
+
+    clickEmptyButton(item){
+      this.type = item.type
+      this.addShow = true
     }
+  },
 
-    // 通过计算属性获取是否收起侧边栏
-    const isFloat = computed(() => {
-      return chat.$state.settings.enableHide
-    })
+  
 
-    const updateColumn = () => {
-      doubleCol.value = chat.$state.settings.showDouble
-    }
-
-    return {
-      isFloat, doubleCol,
-      ...toRefs(data), clickEmptyButton, currentItem, updateColumn,
-      onMounted
+  watch:{
+    // 通过监听方式获取社群号
+    '$route':{
+      handler(to,from){
+       console.log('参数1::>>',to.params.no);
+       //  console.log('参数2::>>',from);
+       this.routeData = to.params.no
+        
+      },
+      immediate:true,
+      deep:true,
     }
   }
-
 }
 </script>
+
 
 <style lang="scss" scoped>
 .font-500 {
@@ -301,3 +295,4 @@ export default {
   }
 }
 </style>
+

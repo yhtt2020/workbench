@@ -45,57 +45,100 @@
 
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
-  <div v-for="item in categoryList?.tree">
-   <ChatFold :title="item.name">
+  <div v-for="item in categoryFilterList">
+    <ChatFold :title="item.name" >
     
-    <div class="flex flex-col" v-if="isDoubleColumn === false">
-
-     <div v-for="item in item.children" @click="currentItem(item)" 
-      :class="{'active-bg': currentID ===item.id}"
-      class="flex items-center rounded-lg p-2 pointer group-item" 
-     >
-      <div class="flex items-center">
-       <template v-if="item.type === 'group'">
-        <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-       </template>
-       <template v-if="item.type === 'link'">
-        <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-       </template>
-       <template v-if="item.type === 'forum'">
-        <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-       </template>
-      </div> 
-      <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-      <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
-                   v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-     </div>
-
-    </div>
-
-    <div class="flex grid grid-cols-2 gap-1" v-else>
-
-     <div v-for="item in item.children" @click="currentItem(item)"
-      :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
-     >
-      <div class="flex items-center">
-       <template v-if="item.type === 'group'">
-        <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-       </template>
-       <template v-if="item.type === 'link'">
-        <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-       </template>
-       <template v-if="item.type === 'forum'">
-        <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-       </template>
+      <div class="flex flex-col" v-if="isDoubleColumn === false">
+  
+       <div v-for="item in item.children" @click="currentItem(item)" 
+        :class="{'active-bg': currentID ===item.id}"
+        class="flex items-center rounded-lg p-2 pointer group-item" 
+       >
+        <div class="flex items-center">
+         <template v-if="item.type === 'group'">
+          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+         </template>
+         <template v-if="item.type === 'link'">
+          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+         </template>
+         <template v-if="item.type === 'forum'">
+          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+         </template>
+        </div> 
+        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
+                     v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+       </div>
+  
       </div>
-      <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-      <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-     </div>
-
-    </div>
-
-   </ChatFold>
+  
+      <div class="flex grid grid-cols-2 gap-1" v-else>
+  
+       <div v-for="item in item.children" @click="currentItem(item)"
+        :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
+       >
+        <div class="flex items-center">
+         <template v-if="item.type === 'group'">
+          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+         </template>
+         <template v-if="item.type === 'link'">
+          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+         </template>
+         <template v-if="item.type === 'forum'">
+          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+         </template>
+        </div>
+        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+       </div>
+  
+      </div>
+  
+    </ChatFold>
   </div>
+  
+  <template v-if="!isDoubleColumn">
+    <div class="flex flex-col">
+      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)">
+        <div class="flex items-center">
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+         </div> 
+         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+         <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
+                      v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+      </div>
+    </div>
+  </template>
+
+  <template v-else>
+    <div class="flex grid grid-cols-2 gap-1">
+       <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
+        <div class="flex items-center">
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+         </div> 
+         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+         <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
+                      v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+       </div>
+    </div>
+  </template>
+
  </vue-custom-scrollbar>
 
 
@@ -107,7 +150,7 @@ import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
 import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-
+import { SelectOutlined } from '@ant-design/icons-vue'
 
 import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
@@ -116,7 +159,7 @@ export default{
   props:[ 'communityID','float' ],
 
   components:{
-    CommunityIcon,ChatDropDown,ChatFold,
+    CommunityIcon,ChatDropDown,ChatFold,SelectOutlined,
   },
 
   data(){
@@ -166,6 +209,20 @@ export default{
           }
         }
       }
+    },
+
+    channelList(){
+      const list = this.categoryList?.tree.filter((item)=>{
+        return item.role !== 'category'
+      })
+      return list
+    },
+
+    categoryFilterList(){
+      const list = this.categoryList?.tree.filter((item)=>{
+        return item.role !== 'channel'
+      })
+      return list
     }
   },
 
@@ -174,9 +231,12 @@ export default{
       this.$emit('createCategory',item)
     },
     currentItem(item){
+      console.log('排查::>',item);
       this.currentID = item.id
       this.$emit('clickItem',item)
-    }
+    },
+
+
   }
 
 }

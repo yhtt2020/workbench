@@ -6,8 +6,12 @@
     </div>
 
     <template #communityFloat>
+      <!-- {{ communityNo }} -->
       <div class="flex flex-col" style="height:500px;width:300px;" v-if="communityNo !== 1">
         <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
+      </div>
+      <div class="flex flex-col" style="height:500px;width:300px;" v-else>
+        <DefaultFloat :float="true"></DefaultFloat>
       </div>
       
     </template>
@@ -58,6 +62,7 @@ import MyCommunity from './page/communityDetail.vue'
 import { Icon as chatIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
 import CategoryFloat from './components/float/categoryFloat.vue'
+import DefaultFloat from './components/float/defaultFloat.vue'
 
 export default {
   name: 'App',
@@ -72,7 +77,7 @@ export default {
     AddFriend, CreateGroup,
     Transfer,
     ChatDropDown, ChatFold,
-    CreateCommunity, JoinCommunity, MyCommunity,CategoryFloat,
+    CreateCommunity, JoinCommunity, MyCommunity,CategoryFloat,DefaultFloat,
   },
 
   setup () {
