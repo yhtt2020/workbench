@@ -40,7 +40,7 @@ export const channelClass = {
       }
 
     }else{
-
+      
       const singleGroup = {
         ...option,
         props:JSON.stringify({...data.content}),
