@@ -88,7 +88,7 @@
       <SetupClock></SetupClock>
     </div>
   </a-drawer>
-  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered
     style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>

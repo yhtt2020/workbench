@@ -38,10 +38,11 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
+                            <!-- <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
                                 <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
                                 <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group>
+                            </a-radio-group> -->
+                            <RadioTab :navList="dataType" v-model:clockType="defaultType"></RadioTab>
                         </div>
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
@@ -96,9 +97,10 @@ import dayjs from "dayjs";
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { Icon as clockIcon } from '@iconify/vue'
+import RadioTab from '../../components/RadioTab.vue'
 export default {
     name: "SetupClock",
-    components: { BackBtn, clockIcon },
+    components: { BackBtn, clockIcon,RadioTab},
 
     data() {
         return {
@@ -111,7 +113,7 @@ export default {
             },
             title: "",
             countdownDayType: "大",
-            clockType: "不重复",
+            clockType: "",
 
             eventValue: "未命名",
             dateValue: null,
@@ -123,7 +125,12 @@ export default {
             timeMinute: 0,//时钟设置的分钟
 
             dateTime: {},//当前时间
-            timer: null //当前时间更新计时器
+            timer: null ,//当前时间更新计时器
+            dataType:[
+                {title:'不重复',name:'不重复'},
+                {title:'每天',name:'每天'}
+            ],
+            defaultType:{title:'不重复',name:'不重复'},
         };
     },
 

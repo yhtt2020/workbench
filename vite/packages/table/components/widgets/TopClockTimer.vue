@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </vue-custom-scrollbar>
-                <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+                <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered
                     style="font-size: 8px;color: var(--primary-text); " :maskClosable="false" zIndex: 999999999999999999;>
                     <div style="display: flex;flex-direction: column;align-items: center;">
                         <div style="">自定义倒计时</div>
@@ -180,7 +180,7 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-sm clock-timer progress-bar"
+        <xt-button class="flex items-center justify-center mr-2 rounded-sm clock-timer progress-bar"
             @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
@@ -194,7 +194,7 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-md clock-timer top-bar" v-else
+        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer top-bar" v-else
             @click="closeDetail"
             style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
             <div class="flex items-center">
@@ -340,7 +340,7 @@ const stopCountDown = () => {
 const startCountDown = () => {
     useCountDownStore.openCountDown()
 }
-// 设置自定义倒计时
+// 设置倒计时
 const onCountDown = (value) => {
     switch (value) {
         case 3:
@@ -386,10 +386,7 @@ const closeDetail = () => {
     clockSettingVisible.value = false
     customizeSetting.value = true
     
-    console.log(clockEvent.value);
-    
-
-
+    // console.log(clockEvent.value);
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
@@ -414,7 +411,7 @@ watch(countDownDate, (newVal, oldVal) => {
         return totalTime.trim()
     })
     if (newVal < 0) {
-        console.log(useCountDownStore.selectValue, 'value');
+        // console.log(useCountDownStore.selectValue, 'value');
 
         const audio = new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
@@ -450,52 +447,47 @@ watch(countDownDate, (newVal, oldVal) => {
     // notification.SystemClockNoticeToast(countDownTotalTime.value)
 })
 // 当闹钟完成时触发弹窗
-watch( clockFlag, (newVal, oldVal) => {
-    const audio = new Audio('/sound/message.mp3')
-    // console.log(clockFlag.value, 'useCardStore.clockFlag');
-    if (newVal===true &&(useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
-    useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined)) {
-        const key = `open${Date.now()}`
-        notification.open({
-            message: '闹钟',
-            description: '已到达闹钟设置时间',
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
-            btn: () =>
-                h(
-                    Button,
-                    {
-                        type: 'primary',
-                        onClick: () => notification.close(key),
-                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-                    },
-                    { default: () => 'OK' },
-                ),
-            key,
-            // onClose: close,
-            class: 'notification-custom-class',
-            style: {
-                width: '400px',
-                height: '130px',
-                borderRadius: '12px',
-                background: 'var(--secondary-bg) !important',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-            },
-        });
-    }
-    setInterval(() => {
-        audio.play()
-    },1000)
-})
+// watch( clockFlag, (newVal, oldVal) => {
+//     const audio = new Audio('/sound/message.mp3')
+//     // console.log(clockFlag.value, 'useCardStore.clockFlag');
+//     if (newVal===true &&(useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
+//     useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined)) {
+//         const key = `open${Date.now()}`
+//         notification.open({
+//             message: '闹钟',
+//             description: '已到达闹钟设置时间',
+//             icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
+//             btn: () =>
+//                 h(
+//                     Button,
+//                     {
+//                         type: 'primary',
+//                         onClick: () => notification.close(key),
+//                         style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
+//                     },
+//                     { default: () => 'OK' },
+//                 ),
+//             key,
+//             // onClose: close,
+//             class: 'notification-custom-class',
+//             style: {
+//                 width: '400px',
+//                 height: '130px',
+//                 borderRadius: '12px',
+//                 background: 'var(--secondary-bg) !important',
+//                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
+//             },
+//         });
+//     }
+//     setInterval(() => {
+//         audio.play()
+//     },1000)
+// })
 watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
-    const audio = new Audio('/sound/message.mp3')
+    const audio = new Audio('/sound/clock.mp3')
     // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
     const firstClock = computed(() => {
         return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
-    })
-    const contentText=computed(()=>{
-        if(clockEvent.value){
-            
-        }
     })
     useCardStore.sortClock()
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
@@ -516,8 +508,6 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
                     { default: () => 'OK' },
                 ),
             key,
-            // onClose: close,
-            class: 'notification-custom-class',
             style: {
                 width: '400px',
                 height: '130px',
@@ -525,17 +515,21 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
                 background: 'var(--secondary-bg) !important',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
             },
-            duration:10,
+            class: 'font-16',
         });
-    }
-    setInterval(() => {
         audio.play()
-    },1000)
+    }
+    // setInterval(() => {
+   
+    // },1000)
     
 })
 
 </script>
 <style lang='scss' scoped>
+:deep(.tippy-box){
+    border-radius: 12px !important;
+}
 .tippy-content {
     padding: 0px !important;
 }
