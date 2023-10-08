@@ -386,7 +386,7 @@ const closeDetail = () => {
     clockSettingVisible.value = false
     customizeSetting.value = true
     
-    console.log(firstClockTime.value.hours);
+    console.log(clockEvent.value);
     
 
 
@@ -452,7 +452,7 @@ watch(countDownDate, (newVal, oldVal) => {
 // 当闹钟完成时触发弹窗
 watch( clockFlag, (newVal, oldVal) => {
     const audio = new Audio('/sound/message.mp3')
-    console.log(clockFlag.value, 'useCardStore.clockFlag');
+    // console.log(clockFlag.value, 'useCardStore.clockFlag');
     if (newVal===true &&(useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
     useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined)) {
         const key = `open${Date.now()}`
@@ -488,13 +488,22 @@ watch( clockFlag, (newVal, oldVal) => {
 })
 watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
     const audio = new Audio('/sound/message.mp3')
-    console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
+    // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
+    const firstClock = computed(() => {
+        return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
+    })
+    const contentText=computed(()=>{
+        if(clockEvent.value){
+            
+        }
+    })
+    useCardStore.sortClock()
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
     useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
         const key = `open${Date.now()}`
         notification.open({
             message: '闹钟',
-            description: '已到达闹钟设置时间',
+            description: `${firstClock.value}到了,${clockEvent.value[0].eventValue}`,
             icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
             btn: () =>
                 h(
@@ -516,11 +525,13 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
                 background: 'var(--secondary-bg) !important',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
             },
+            duration:10,
         });
     }
     setInterval(() => {
         audio.play()
     },1000)
+    
 })
 
 </script>
