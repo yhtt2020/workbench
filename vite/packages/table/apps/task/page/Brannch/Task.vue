@@ -1,8 +1,10 @@
 <template>
   <div>
     <xt-title m="mb">
-      <xt-base-icon icon="xiangzhuo" /> 1 <FlagOutlined @click="back()" />
-      {{ task.chapter }}1
+
+      <xt-base-icon icon="xiangzhuo" />
+      <div @click="back()">返回</div>
+      {{ task.chapter }}
       <template #right>
         <Progress style="width: 68px; height: 20px" :task="task"></Progress
       ></template>
@@ -29,12 +31,18 @@
 
 <script setup>
 import { computed, toRefs, ref, reactive } from "vue";
+import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
+
+import { storeToRefs } from "pinia";
 
 import Progress from "../../components/progress/index.vue";
-import { storeToRefs } from "pinia";
+import { guide } from "./guide";
+
 import { taskStore } from "../../store";
-import { message } from "ant-design-vue";
+
 const store = taskStore();
+const router = useRouter();
 const { successBranchTask, startBranchTask } = storeToRefs(store);
 
 const props = defineProps({
@@ -42,28 +50,37 @@ const props = defineProps({
     default: {},
   },
 });
-const currentId = ref(props.task.id);
+
+const emits = defineEmits(["back"]);
+const back = () => {
+  console.log('111 :>> ', 111);
+  emits("back");
+};
+
 // 开始任务
 const startTak = (data) => {
-  /**
-   * 1获取任务ID
-   * 2判断是否有前置
-   * 3查询完成任务是否存在前置任务
-   * 4拦截或开始
-   * 5追加 转set 转arr
-   */
+  // 1 前置进度校验
   const { id, pre } = data;
-  // 有前置
   if (pre) {
     // 没完成
     if (!successBranchTask.value.has(pre)) {
-      console.log("没完成 :>> ");
+      message.info("需要完成前置任务" + pre);
       return;
     }
   }
-
+  // 2 开始跳转指引
   startBranchTask.value.add(id);
-  console.log("  startBranchTask.value :>> ", startBranchTask.value);
+  let currentGuide = guide[id];
+  console.log("currentGuide :>> ", currentGuide);
+
+  const { type, value } = guide[id];
+  if (type == "router") {
+    router.push({
+      name: value,
+    });
+  }
+  store.isTaskDrawer = false;
+  return;
   setTimeout(() => {
     successBranchTask.value.add(id);
   }, 3000);
@@ -80,6 +97,7 @@ const taskState = (data) => {
  * 执行下一步
  * 抽离为action方法
  */
+// 获取奖励
 const getReceive = () => {
   message.info("你已完成任务 后续可以一键领取任务奖励");
 };

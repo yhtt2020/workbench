@@ -1,6 +1,6 @@
 <template>
   <template v-if="currentTask">
-    <Task :task="currentTask"> </Task>
+    <Task @back="back()" :task="currentTask"> </Task>
   </template>
   <template v-else>
     <xt-title>支线任务</xt-title>
@@ -14,15 +14,15 @@
         class="flex flex-col xt-bg-2 rounded-xl mt-3 p-3"
         @click="taskClick(task)"
       >
-      <xt-title m="">
-    <FlagOutlined /> {{ task.chapter }}
-    <template #right
-      ><Progress :task="task" style="width: 68px; height: 20px"
-    /></template>
-  </xt-title>
-  <xt-title type="text" m="mt">
-    {{ task.info }}
-  </xt-title>
+        <xt-title m="">
+          <FlagOutlined /> {{ task.chapter }}
+          <template #right
+            ><Progress :task="task" style="width: 68px; height: 20px"
+          /></template>
+        </xt-title>
+        <xt-title type="text" m="mt">
+          {{ task.info }}
+        </xt-title>
       </div>
     </xt-menu>
   </template>

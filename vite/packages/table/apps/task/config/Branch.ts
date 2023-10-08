@@ -1,6 +1,7 @@
 export const tasks = [
   {
     chapter: "游戏",
+    name: "game",
     info: "绑定Steam游戏库，一键启动游戏，实时检测系统性能数据，快来了解下都有哪些好用的功能吧。",
     tasks: [
       {

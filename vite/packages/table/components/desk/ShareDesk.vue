@@ -88,7 +88,7 @@ import RadioTab from '../RadioTab.vue'
 import { marketStore } from '../../store/market'
 import { getCurrentInstance } from 'vue'
 import { fileUpload, pathUpload } from '../card/hooks/imageProcessing'
-
+import { taskStore } from '../../apps/task/store'
 export default {
   name: 'ShareDesk',
   components: {
@@ -168,7 +168,7 @@ export default {
   methods: {
     ...mapActions(deskStore, ['setDeskList']),
     ...mapActions(marketStore, ['getCategories', 'addDesk']),
-
+    ...mapActions(taskStore,['completeTask']),
     update () {
       this.deskId = this.$parent.currentDeskId
     },
@@ -268,6 +268,7 @@ export default {
         this.close()
         this.shareModal = true
         this.setInitialData()
+        this.completeTask('Z0301')
       }else{
         message.error('上传失败。')
       }

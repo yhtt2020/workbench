@@ -29,11 +29,11 @@
                   <span v-if="img" @click="delImg"><Icon icon="close-circle-fill" style="font-size: 28px;color: #7A7A7A;"></Icon></span>
                 </div>
                 <a-upload class="pointer" :style="size"
-                @change="uplaodImageChange" 
+                @change="uplaodImageChange"
                 :before-upload="beforeUpload"
                 :show-upload-list="false"
                 >
-                  <div class="pointer xt-bg-2 xt-text flex items-center rounded-lg justify-center mr-3 mt-4" 
+                  <div class="pointer xt-bg-2 xt-text flex items-center rounded-lg justify-center mr-3 mt-4"
                   @click="imageSelect" style="width:100px; height:48px;">上传图片</div>
                 </a-upload>
               </div>
@@ -44,7 +44,7 @@
           </div>
           <!-- <div class="flex my-6">
             <div v-for="(item,index) in remotes" :key="index"
-            :class="activeIndex === index ? 'card-active' : ''" 
+            :class="activeIndex === index ? 'card-active' : ''"
             class="card-item rounded-xl text-xs"
             @click="toggleActive(index)">
               <img :src="getImg(item.name)" alt="" :style="{ zoom: '10%' }"/>
@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -94,6 +94,8 @@
   import cache from '../hooks/cache';
   import {setList} from './testData'
   import {nanoid} from 'nanoid'
+  import { taskStore } from '../../../apps/task/store';
+  import { mapActions } from "pinia"
   const Remote = defineAsyncComponent(() => import('../../widgets/custom/Remote.vue'))
   import html2canvas from "html2canvas";
   export default{
@@ -116,6 +118,7 @@
       }
     },
     methods: {
+      ...mapActions(taskStore, ['completeTask']),
       close(){
         this.$emit('closeShare',false)
       },
@@ -141,10 +144,10 @@
           }
         })
       },
-      beforeUpload(file){  // 上传之前的准备工作 
-        const regex =  /^image\/(jpeg|png|jpg)$/;  // 通过正则表达式匹配是否指定的png jpg jpeg的类型文件  
+      beforeUpload(file){  // 上传之前的准备工作
+        const regex =  /^image\/(jpeg|png|jpg)$/;  // 通过正则表达式匹配是否指定的png jpg jpeg的类型文件
         const isFileType = !regex.test(file.type)
-        if(isFileType){ 
+        if(isFileType){
           message.error('只能上传JPG和PNG格式图片');
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -180,7 +183,9 @@
           "avatar": '/icons/logo128.png',
           "nickname": 'Victor Ruiz',
         }
+        this.completeTask('Z0302')
         setList(cardContent)
+
         message.success('添加成功')
         // if(this.direct){
         //   this.$router.go(-1)
@@ -198,7 +203,7 @@
       const { width, height } = this.$refs.sizeBox.getBoundingClientRect();
       // console.log(deskCard)
       // console.log(width,height)
-      let zoom = JSON.parse(JSON.stringify(this.desk.settings.cardZoom)) 
+      let zoom = JSON.parse(JSON.stringify(this.desk.settings.cardZoom))
       // console.log(this.desk)
       // console.log(zoom)
       if(deskCard.width >= deskCard.height){
@@ -225,7 +230,7 @@
       //   document.body.appendChild(canvas);
       //   const base64 = canvas.toDataURL();	// 可生成base64
       //   console.log(base64)
-      // })  
+      // })
 
       // var htmlcanvas = document.getElementById("capture");
       // html2canvas(htmlcanvas,{
@@ -233,7 +238,7 @@
       //     var img = new Image();
       //     img.src = canvas.toDataURL(); //生成base64图片
       //     console.log(img)
-      //     // document.getElementById("photo").appendChild(img);　    
+      //     // document.getElementById("photo").appendChild(img);　
       //     // base64Canvas = canvas.toDataURL();
       //   }
       // })
@@ -318,7 +323,7 @@
   margin: 0 36px;
 }
 .card-active{
-  border: 1px solid var(--active-bg) !important; 
+  border: 1px solid var(--active-bg) !important;
   background: var(--active-secondary-bg) !important;
 }
 .input{

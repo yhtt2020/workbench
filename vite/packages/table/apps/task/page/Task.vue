@@ -46,10 +46,12 @@ const menus = ref([
   {
     slot: "star",
     value: "Primary",
+    title:"主线任务",
     callBack: selectTab,
   },
   {
     slot: "flag",
+    title:"支线任务",
     value: "Branch",
     callBack: selectTab,
   },
