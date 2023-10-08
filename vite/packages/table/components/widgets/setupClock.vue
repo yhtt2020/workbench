@@ -17,7 +17,8 @@
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{ index }}</a-radio-button>
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{
+                                        index }}</a-radio-button>
                                 </template>
                             </a-radio-group>
 
@@ -27,7 +28,7 @@
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
                                 style="width:100%;  height: 40px; border-radius: 10px;">
-                                <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2"  >
+                                <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2">
                                     {{ index }}
                                 </a-select-option>
                             </a-select>
@@ -49,7 +50,8 @@
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
                              -->
-                            <xt-button type="primary" class=" font-16 xt-text" style="width: 100%; height: 40px; background-color: var(--active-bg);"
+                            <xt-button type="primary" class=" font-16 xt-text"
+                                style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
                         </div>
                     </div>
@@ -60,6 +62,26 @@
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height: calc(100vh - 10em)"
                     class="scroll">
                     <div class="pl-4">
+                        <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
+                            <div class="flex justify-between">
+                                <div class="font-16 xt-text-2">显示在状态栏</div>
+                                <a-switch v-model:checked="checkTopClock" @change="changeSwitchStatus"/>
+                            </div>
+                            <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
+                                在顶部状态栏显示最近闹钟时间。
+                            </div>
+                            <div>
+                                <a-select v-model:value="defaultDataType" :placeholder='defaultDataType' dropdownSyle=""
+                                    style="width:100%;  height: 40px; border-radius: 10px;">
+                                    <a-select-option :value="index" v-for="(item, index) in selectDataType"
+                                        class="xt-bg xt-text-2 selsect-options">
+                                        {{ item }}
+                                    </a-select-option>
+                                </a-select>
+                            </div>
+
+
+                        </div>
                         <div style="color:var(--primary-text)"> 我的闹钟</div>
                         <a-empty v-if="clockEvent.length === 0" description="暂无闹钟" image="/img/test/load-ail.png"
                             style="margin-top: 40%;"></a-empty>
@@ -70,14 +92,14 @@
                                 <div class="card-list ">
                                     <div class="event-title">
                                         <span class="font-14 xt-text">{{ item.eventValue }}</span>
-                                        <span class="font-12 xt-text-2"
-                                            style="color:var(--secondary-text)">{{ item.clockType }}</span>
+                                        <span class="font-12 xt-text-2" style="color:var(--secondary-text)">{{
+                                            item.clockType }}</span>
                                     </div>
                                     <span class="font-20">{{ item.dateValue.hours }}:{{ item.dateValue.minutes }}</span>
                                 </div>
                             </div>
-                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick" class="ml-2 xt-bg xt-text-2"
-                                style="font-size: 18px;">
+                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick"
+                                class="ml-2 xt-bg xt-text-2" style="font-size: 18px;">
                             </clockIcon>
                         </div>
 
@@ -93,6 +115,7 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from '../../store/card'
+import {topClockSettingStore} from '../../store/topClockSetting'
 import { timeStamp, transDate } from "../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
@@ -102,7 +125,7 @@ import { Icon as clockIcon } from '@iconify/vue'
 import RadioTab from '../../components/RadioTab.vue'
 export default {
     name: "SetupClock",
-    components: { BackBtn, clockIcon,RadioTab},
+    components: { BackBtn, clockIcon, RadioTab },
 
     data() {
         return {
@@ -127,12 +150,15 @@ export default {
             timeMinute: 0,//时钟设置的分钟
 
             dateTime: {},//当前时间
-            timer: null ,//当前时间更新计时器
-            dataType:[
-                {title:'不重复',name:'不重复'},
-                {title:'每天',name:'每天'}
+            timer: null,//当前时间更新计时器
+            dataType: [
+                { title: '不重复', name: '不重复' },
+                { title: '每天', name: '每天' }
             ],
-            defaultType:{title:'不重复',name:'不重复'},
+            defaultType: { title: '不重复', name: '不重复' },
+            selectDataType:[ '始终显示','显示30分钟内的闹钟','显示1小时内的闹钟'],
+            defaultDataType:'始终显示'
+            
         };
     },
 
@@ -153,6 +179,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
+        ...mapWritableState(topClockSettingStore,['checkTopClock'])
     },
     methods: {
         dayjs,
@@ -164,6 +191,7 @@ export default {
             "removeCountdownDay",
             "removeClock",
         ]),
+        ...mapActions(topClockSettingStore,['changeTopClockStatus']),
         updateTime() {
             this.dateTime = getDateTime()
         },
@@ -227,6 +255,10 @@ export default {
         onClockMenuClick(e, index) {
             this.removeClock(index, 1);
         },
+        changeSwitchStatus(){
+            this.changeTopClockStatus()
+            // console.log(1111);
+        }
     },
 };
 </script>
@@ -260,7 +292,24 @@ export default {
         }
     }
 }
+:deep(.ant-select-option) {
+    color: var(--primary-text);
+}
 
+:deep(.ant-select-arrow) {
+    color: var(--primary-text);
+}
+
+:deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
+    // border-radius: 10px !important;
+    height: 100%;
+    border-radius: 10px;
+
+}
+
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
+    line-height: 35px;
+}
 .font-14 {
     font-family: PingFangSC-Regular;
     font-size: 14px;
@@ -326,25 +375,30 @@ export default {
 :deep(.ant-select) {
     border: none !important;
 }
+
 :deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
     // border-radius: 10px !important;
     height: 100%;
     border-radius: 10px;
 
 }
-:deep(.ant-select-option){
+
+:deep(.ant-select-option) {
     color: var(--primary-text);
 }
-:deep(.ant-select-arrow){
+
+:deep(.ant-select-arrow) {
     color: var(--primary-text);
 }
+
 :deep(.ant-input) {
     color: var(--primary-text);
+
     &::placeholder {
         font-family: PingFangSC-Regular;
         font-size: 14px;
         font-weight: 400;
-        color:var(--primary-text);
+        color: var(--primary-text);
     }
 }
 

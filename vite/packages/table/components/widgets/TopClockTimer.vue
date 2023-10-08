@@ -119,6 +119,7 @@
                                 <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 24px; vertical-align: sub;"
                                     @click="deleteCountDown" class="ml-2 xt-text">
                                 </clockIcon>
+
                             </div>
                             <div style="font-family: Oswald-Medium;font-size: 20px;color: #FAAD14;font-weight: 500;">
                                 {{ useCountDownStore.countDowntime.hours + ':' + useCountDownStore.countDowntime.minutes +
@@ -139,6 +140,9 @@
                                     @click="changeSoundStatus"></clockIcon>
                                 <clockIcon class=" xt-text font-20" icon="akar-icons:sound-off" v-if="!soundVisible"
                                     @click="changeSoundStatus"></clockIcon>
+                                <clockIcon icon="fluent:settings-16-filled" style="font-size: 24px; vertical-align: sub;"
+                                    @click="changeSettingStatus" class="ml-2 xt-text font-20">
+                                </clockIcon>
                             </div>
                         </div>
                         <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent">
@@ -175,8 +179,8 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-2 rounded-sm clock-timer progress-bar"
-            @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
+        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer progress-bar xt-bg-2" @click="closeDetail"
+            v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
@@ -189,9 +193,8 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer top-bar" v-else
-            @click="closeDetail"
-            style="width: 132px; height: 32px; position: relative;background-color: transparent !important;">
+        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer top-bar" v-else @click="closeDetail"
+            style="width: 132px; height: 32px; position: relative;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
@@ -206,7 +209,9 @@
 import { ref, reactive, computed, onMounted, watch, h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
-import {timerStore} from '../../store/timer'
+import { timerStore } from '../../store/timer'
+// 控制设置顶部按钮显示以及闹钟的筛选
+import {topClockSettingStore} from '../../store/topClockSetting'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { getDateTime } from '../../../../src/util/dateTime'
@@ -217,13 +222,15 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import { Notifications } from '../../js/common/sessionNotice'
 import RadioTab from '../RadioTab.vue';
 const notifications = new Notifications()
+
+const usetopClockSettingStore=topClockSettingStore()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
     }
 })
-const dataType=ref([{title:'不重复',name:'不重复'},{title:'每天',name:'每天'}])
-const defaultType=ref({title:'不重复',name:'不重复'})
+const dataType = ref([{ title: '不重复', name: '不重复' }, { title: '每天', name: '每天' }])
+const defaultType = ref({ title: '不重复', name: '不重复' })
 const useTimerStore = timerStore()
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
@@ -265,7 +272,7 @@ const value1 = ref(dayjs('00:00:00', 'HH:mm'))
 //     ctx.fillStyle = '#4caf50';
 //     const progressWidth = progressBarWidth * progress / total;
 //     ctx.fillRect(0, 0, progressWidth, progressBarHeight);
-    
+
 // }
 const changeSoundStatus = () => {
     soundVisible.value = !soundVisible.value
@@ -383,13 +390,17 @@ const closeDetail = () => {
     countDownVisible.value = false
     clockSettingVisible.value = false
     customizeSetting.value = true
-    
+
     // console.log(clockEvent.value);
+}
+const changeSettingStatus = () => {
+    usetopClockSettingStore.changeSettingStatus()
+    customizeSetting.value=false
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
 const countDownDate = computed(() => useCountDownStore.countDowndate)
-const clockFlag=computed(()=>useCardStore.clockFlag)
+const clockFlag = computed(() => useCardStore.clockFlag)
 const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
@@ -416,7 +427,7 @@ watch(countDownDate, (newVal, oldVal) => {
         notification.open({
             message: '计时器',
             description: `${countDownTotalTime.value}到了`,
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px' }),
+            icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px;background-color:var(--secondary-bg);' }),
             btn: () =>
                 h(
                     Button,
@@ -435,7 +446,7 @@ watch(countDownDate, (newVal, oldVal) => {
                 borderRadius: '12px',
                 background: 'var(--secondary-bg) !important',
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-
+                color:' var(--secondary-text) !important;',
             },
             class: 'font-16'
         });
@@ -481,7 +492,7 @@ watch(countDownDate, (newVal, oldVal) => {
 //         audio.play()
 //     },1000)
 // })
-watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
+watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     const audio = new Audio('/sound/clock.mp3')
     // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
     const firstClock = computed(() => {
@@ -489,7 +500,7 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
     })
     useCardStore.sortClock()
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
-    useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
+        useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
         const key = `open${Date.now()}`
         notification.open({
             message: '闹钟',
@@ -518,16 +529,17 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
         audio.play()
     }
     // setInterval(() => {
-   
+
     // },1000)
-    
+
 })
 
 </script>
 <style lang='scss' scoped>
-:deep(.tippy-box){
+:deep(.tippy-box) {
     border-radius: 12px !important;
 }
+
 .tippy-content {
     padding: 0px !important;
 }
@@ -577,9 +589,6 @@ watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
     line-height: 35px;
 }
 
-:deep(.ant-select-option) {
-    z-index: 999;
-}
 
 .font-12 {
     font-family: PingFangSC-Regular;
