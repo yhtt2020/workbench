@@ -14,6 +14,7 @@ export const countDownStore = defineStore(
         // 进度条
         progress:0,
         progressTimer:null,
+        // 保存倒计时的时间
         selectValue:[]
       }
 
@@ -82,6 +83,10 @@ export const countDownStore = defineStore(
         
       },
       startProgressDown() {
+        if(this.countDowndate<0){
+          this.dCountDown()
+          return
+        }
         this.regularTime()
         let remainingTime=this.countDowndate
         let interval=remainingTime/100
@@ -94,6 +99,7 @@ export const countDownStore = defineStore(
             this.progress=0
             clearInterval(this.progressTimer)
             this.countDowntime={}
+            // this.dCountDown()
           }
         },interval)
       }

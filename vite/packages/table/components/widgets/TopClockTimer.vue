@@ -180,8 +180,8 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-sm clock-timer top-bar" @click="closeDetail"
-            v-if="useCountDownStore.countDowntime.hours !== undefined"
+        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-sm clock-timer progress-bar"
+            @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
@@ -211,6 +211,7 @@
 import { ref, reactive, computed, onMounted, watch, h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
+import {timerStore} from '../../store/timer'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { getDateTime } from '../../../../src/util/dateTime'
@@ -225,6 +226,7 @@ onMounted(() => {
         useCountDownStore.dCountDown()
     }
 })
+const useTimerStore = timerStore()
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
@@ -249,6 +251,24 @@ const flag = ref(true)
 const custom = ref(false)
 const soundVisible = ref(true)
 const value1 = ref(dayjs('00:00:00', 'HH:mm'))
+// const setProgress = () => {
+//     const progressBar = document.querySelector('.progress-bar')
+//     const ctx = progressBar.getContext('2d')
+//     const progressBarWidth = progressBar.width
+//     const progressBarHeight = progressBar.height
+//     const total = 100
+//     ctx.clearRect(0, 0, progressBarWidth, progressBarHeight);
+
+//     // 绘制背景矩形
+//     ctx.fillStyle = '#ccc';
+//     ctx.fillRect(0, 0, progressBarWidth, progressBarHeight);
+
+//     // 绘制进度矩形
+//     ctx.fillStyle = '#4caf50';
+//     const progressWidth = progressBarWidth * progress / total;
+//     ctx.fillRect(0, 0, progressWidth, progressBarHeight);
+    
+// }
 const changeSoundStatus = () => {
     soundVisible.value = !soundVisible.value
 }
@@ -365,34 +385,37 @@ const closeDetail = () => {
     countDownVisible.value = false
     clockSettingVisible.value = false
     customizeSetting.value = true
-    // console.log(dayjs());
+    
+    console.log(firstClockTime.value.hours);
+    
 
 
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
 const countDownDate = computed(() => useCountDownStore.countDowndate)
+const clockFlag=computed(()=>useCardStore.clockFlag)
 const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
-    
-    const countDownTotalTime=computed(()=>{
-        let [hour,minute,second]=useCountDownStore.selectValue
-        let totalTime=''
-        if(hour && hour!==0){
-            totalTime +=`${hour}小时`
+
+    const countDownTotalTime = computed(() => {
+        let [hour, minute, second] = useCountDownStore.selectValue
+        let totalTime = ''
+        if (hour && hour !== 0) {
+            totalTime += `${hour}小时`
         }
-        if(minute && minute!==0){
-            totalTime +=`${minute}分钟`
+        if (minute && minute !== 0) {
+            totalTime += `${minute}分钟`
         }
-        if(second && second!==0){
-            totalTime +=`${second}秒`
+        if (second && second !== 0) {
+            totalTime += `${second}秒`
         }
         return totalTime.trim()
     })
     if (newVal < 0) {
-        console.log(useCountDownStore.selectValue,'value');
-        
+        console.log(useCountDownStore.selectValue, 'value');
+
         const audio = new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
         notification.open({
@@ -419,16 +442,19 @@ watch(countDownDate, (newVal, oldVal) => {
                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
 
             },
-            class:'font-16'
+            class: 'font-16'
         });
         // notifications.systemToast('111111',null)
         audio.play()
     }
+    // notification.SystemClockNoticeToast(countDownTotalTime.value)
 })
-const nowDate = dayjs()
 // 当闹钟完成时触发弹窗
-watch(() => nowDate, (newVal, oldVal) => {
-    if (newVal.$H == clockEvent.value.hours && newVal.$m == clockEvent.value.minutes) {
+watch( clockFlag, (newVal, oldVal) => {
+    const audio = new Audio('/sound/message.mp3')
+    console.log(clockFlag.value, 'useCardStore.clockFlag');
+    if (newVal===true &&(useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
+    useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined)) {
         const key = `open${Date.now()}`
         notification.open({
             message: '闹钟',
@@ -456,6 +482,45 @@ watch(() => nowDate, (newVal, oldVal) => {
             },
         });
     }
+    setInterval(() => {
+        audio.play()
+    },1000)
+})
+watch( ()=>useTimerStore.appDate.minutes, (newVal, oldVal) => {
+    const audio = new Audio('/sound/message.mp3')
+    console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
+    if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
+    useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
+        const key = `open${Date.now()}`
+        notification.open({
+            message: '闹钟',
+            description: '已到达闹钟设置时间',
+            icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
+            btn: () =>
+                h(
+                    Button,
+                    {
+                        type: 'primary',
+                        onClick: () => notification.close(key),
+                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
+                    },
+                    { default: () => 'OK' },
+                ),
+            key,
+            // onClose: close,
+            class: 'notification-custom-class',
+            style: {
+                width: '400px',
+                height: '130px',
+                borderRadius: '12px',
+                background: 'var(--secondary-bg) !important',
+                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
+            },
+        });
+    }
+    setInterval(() => {
+        audio.play()
+    },1000)
 })
 
 </script>
