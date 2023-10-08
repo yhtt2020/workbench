@@ -34,18 +34,28 @@
             </div>
             <a-table 
               :dataSource="detailList.data" 
+              tableLayout='fixed'
               :pagination="{ pageSize: 5 }"
               :columns="detailCol" class="table-box">
               <a-table-column key="tags" title="Tags" data-index="tags">
                 <template #default="{ text: tags }">
                 </template>
               </a-table-column>
+              <template #bodyCell="{ column, record }">              
+                <template v-if="column.key === 'action'">
+                  <span>
+                    <a>推广记录 </a>
+                    <a>口令编辑 </a>
+                  </span>
+                </template>
+              </template>
             </a-table>
       </div>
     </vueCustomScrollbar>
   </template>
   <script>
   import { Icon } from '@iconify/vue';
+    import {mapActions, mapState,mapWritableState} from "pinia";
   import arrowCounterclockwise20Filled from '@iconify-icons/fluent/arrow-counterclockwise-20-filled';
   export default {
     name: 'Promotion',
@@ -86,84 +96,56 @@
           state:"",
           data:[
             {
-              time:"2018-08-03 20:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"完成",
-              remark:"-"
+              user:"jojo",
+              keyCode:"jojo666",
+              total:"1898.0",
+              agentNum:"-",
+              agentIncome:"-",
+              balance:"916",
+              monthIncome:"916",
+              dayIncome:"916",
+              activationRate:"98%",
+              agencyLevel:"二级",
+              cooTime:"2023-08-06 18:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              user:"jojo",
+              keyCode:"jojo777",
+              total:"1898.0",
+              agentNum:"-",
+              agentIncome:"-",
+              balance:"916",
+              monthIncome:"916",
+              dayIncome:"916",
+              activationRate:"98%",
+              agencyLevel:"二级",
+              cooTime:"2023-08-06 18:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              user:"jojo",
+              keyCode:"jojo888",
+              total:"1898.0",
+              agentNum:"-",
+              agentIncome:"-",
+              balance:"916",
+              monthIncome:"916",
+              dayIncome:"916",
+              activationRate:"98%",
+              agencyLevel:"二级",
+              cooTime:"2023-08-06 18:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              user:"jojo",
+              keyCode:"jojo999",
+              total:"1898.0",
+              agentNum:"-",
+              agentIncome:"-",
+              balance:"916",
+              monthIncome:"916",
+              dayIncome:"916",
+              activationRate:"98%",
+              agencyLevel:"二级",
+              cooTime:"2023-08-06 18:12",
             },
           ]
 
@@ -171,34 +153,68 @@
         },
         detailCol:[
           {
-            title:"提现时间",
-            dataIndex:"time",
-            key:"time"
+            title:"用户",
+            dataIndex:"user",
+            key:"user"
           },
           {
-            title:"提现金额（元）",
-            dataIndex:"amount",
-            key:"amount"
+            title:"口令",
+            dataIndex:"keyCode",
+            key:"keyCode"
           },
           {
-            title:"手续费（元）",
-            dataIndex:"commission",
-            key:"commission"
+            title:"总收益",
+            dataIndex:"total",
+            key:"total",
+            width:80,
           },
           {
-            title:"支付宝账号",
-            dataIndex:"Alipay",
-            key:"Alipay"
+            title:"下级代理数",
+            dataIndex:"agentNum",
+            key:"agentNum",
+            width:80,
           },
           {
-            title:"状态",
-            dataIndex:"state",
-            key:"state"
+            title:"下级代理收益",
+            dataIndex:"agentIncome",
+            key:"agentIncome",
+            width:80,
           },
           {
-            title:"备注",
-            dataIndex:"remark",
-            key:"remark"
+            title:"钱包余额",
+            dataIndex:"balance",
+            key:"balance"
+          },
+          {
+            title:"当月收益",
+            dataIndex:"monthIncome",
+            key:"monthIncome"
+          },
+          {
+            title:"当日收益",
+            dataIndex:"dayIncome",
+            key:"dayIncome"
+          },
+          {
+            title:"总激活率",
+            dataIndex:"activationRate",
+            key:"activationRate"
+          },
+          {
+            title:"代理层级",
+            dataIndex:"agencyLevel",
+            key:"agencyLevel"
+          },
+          {
+            title:"合作时间",
+            dataIndex:"cooTime",
+            key:"cooTime",
+            width:180,
+          },
+          {
+            title: '操作',
+            key: 'action',
+            width:150,
           },
         ]
       }
@@ -238,6 +254,8 @@
       width: 100%;
       background-color: none;
       margin-top: 24px;
+      flex:auto;
+      min-width:0;
     }
 
     /* atd table */
@@ -250,6 +268,10 @@
     }
     .table-box :deep(.ant-table){
       background: transparent;
+    }
+
+    .table-box table{
+      min-width:100px !important;
     }
 
 

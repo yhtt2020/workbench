@@ -45,6 +45,7 @@
             <a-table 
               :dataSource="detailList.data" 
               :pagination="{ pageSize: 5 }"
+              tableLayout='fixed'
               :columns="detailCol" class="table-box">
                 <a-table-column key="tags" title="Tags" data-index="tags">
                   <template #default="{ text: tags }">
@@ -122,84 +123,88 @@
           state:"",
           data:[
             {
-              time:"2018-08-03 20:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"完成",
-              remark:"-"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
             {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
-            },
-            {
-              time:"2018-08-03 18:13",
-              amount:"100.0",
-              commission:"0.5",
-              Alipay:"12354156",
-              state:"取消",
-              remark:"账号错误"
+              userId:"jojo",
+              keyCode:"jojo666",
+              promoter:"jojo",
+              income:"0.5",
+              highPromoter:"jojo",
+              highIncome:"0.05",
+              redeemTime:"2023-08-06 13:12",
+              taskProgress:"100%",
+              isActive:"是",
+              activationTime:"2023-08-06 13:12",
             },
           ]
 
@@ -207,34 +212,54 @@
         },
         detailCol:[
           {
-            title:"提现时间",
-            dataIndex:"time",
-            key:"time"
+            title:"用户",
+            dataIndex:"userId",
+            key:"userId",
           },
           {
-            title:"提现金额（元）",
-            dataIndex:"amount",
-            key:"amount"
+            title:"口令",
+            dataIndex:"keyCode",
+            key:"keyCode",
           },
           {
-            title:"手续费（元）",
-            dataIndex:"commission",
-            key:"commission"
+            title:"推广员",
+            dataIndex:"promoter",
+            key:"promoter",
           },
           {
-            title:"支付宝账号",
-            dataIndex:"Alipay",
-            key:"Alipay"
+            title:"收益",
+            dataIndex:"income",
+            key:"income",
           },
           {
-            title:"状态",
-            dataIndex:"state",
-            key:"state"
+            title:"上级推广员",
+            dataIndex:"highPromoter",
+            key:"highPromoter",
           },
           {
-            title:"备注",
-            dataIndex:"remark",
-            key:"remark"
+            title:"上级收益",
+            dataIndex:"highIncome",
+            key:"highIncome",
+          },
+          {
+            title:"兑换时间",
+            dataIndex:"redeemTime",
+            key:"redeemTime",
+          },
+          {
+            title:"任务进度",
+            dataIndex:"taskProgress",
+            key:"taskProgress",
+          },
+          {
+            title:"激活",
+            dataIndex:"isActive",
+            key:"isActive",
+          },
+          {
+            title:"激活时间",
+            dataIndex:"activationTime",
+            key:"activationTime",
           },
         ]
       }
