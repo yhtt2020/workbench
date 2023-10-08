@@ -3,7 +3,7 @@
 
   <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
-    <xt-task :modelValue="M01035"></xt-task>
+
     <div style="margin-bottom:2em;" v-if="gallery === true">
       <div :onClick="goHome" class="second-panel-back s-icon" style="color:var(--primary-text)">
         <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
@@ -16,6 +16,7 @@
       <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="s-text">{{ menu.title }}</span>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
     </div>
+    <xt-task :modelValue="M01035"></xt-task>
   </div>
 </template>
 

@@ -10,7 +10,11 @@ export const countDownStore = defineStore(
         seconds: 0,
         countDowntime: {},
         timer: null,
-        countDownBtn: false
+        countDownBtn: false,
+        // 进度条
+        progress:0,
+        progressTimer:null,
+        selectValue:[]
       }
 
     },
@@ -20,15 +24,20 @@ export const countDownStore = defineStore(
         this.hours = value.hours;
         this.minutes = value.minutes;
         this.seconds = value.seconds;
+        this.selectValue=[this.hours,this.minutes,this.seconds]
         this.countDowndate = this.hours * 3600000 + this.minutes * 60000 + this.seconds * 1000
         this.regularTime();
         this.timer && clearInterval(this.timer);
         this.timer = setInterval(this.regularTime, 1000)
         this.countDownBtn = false
+        // 进度条
+        this.progressTimer && clearInterval(this.progressTimer)
+        this.startProgressDown()
       },
       stopCountDown() {
         clearInterval(this.timer);
         this.countDownBtn = true
+        clearInterval(this.progressTimer)
       },
       regularTime() {
         if (this.countDowndate < 0) {
@@ -61,10 +70,32 @@ export const countDownStore = defineStore(
         this.timer && clearInterval(this.timer);
         this.timer = setInterval(this.regularTime, 1000);
         this.countDownBtn = false;
+        this.progressTimer && clearInterval(this.progressTimer)
+        this.startProgressDown()
       },
       dCountDown() {
         this.timer && clearInterval(this.timer);
+        this.progress=0
+        this.progressTimer && clearInterval(this.progressTimer)
         this.countDowntime = {};
+        // this.countDowndate=-1000
+        
+      },
+      startProgressDown() {
+        this.regularTime()
+        let remainingTime=this.countDowndate
+        let interval=remainingTime/100
+        this.progressTimer=setInterval(()=>{
+          if(this.progress<100){
+            this.progress+=1
+            // console.log(this.progress);
+            
+          }else{
+            this.progress=0
+            clearInterval(this.progressTimer)
+            this.countDowntime={}
+          }
+        },interval)
       }
     },
   },

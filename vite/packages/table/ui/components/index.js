@@ -9,17 +9,9 @@ export default {
       const componentName = "Xt" + component;
       // 3、进行注册
       if (componentName == "XtZoom") {
-        console.log('componentName :>> ', componentName);
-        // app.component(componentName, defineComponent(component));
+        app.component(componentName, defineComponent(fn));
       } else {
-        app.component(
-          componentName,
-          defineAsyncComponent(() =>
-            fn().then((module) => {
-              return module.default;
-            })
-          )
-        );
+        app.component(componentName, defineAsyncComponent(fn));
       }
     }
   },

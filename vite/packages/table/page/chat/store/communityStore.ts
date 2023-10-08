@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "../../../store/dbStorage";
 import {sUrl} from "../../../consts";
 import {post} from "../../../js/axios/request";
+import { chatList } from '../../../js/data/chatList'
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -19,6 +20,8 @@ export const communityStore = defineStore('communityStore',{
     communityList:[], // 接收社群
     recommendCommunityList:[], // 存储推荐社群
     categoryList:{}, // 频道目录列表
+    categoryClass:[],
+    channelList:[],
   }),
 
   actions: {
@@ -62,37 +65,68 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取社群频道目录
    async getCategoryData(id:any){
-    const option = {
-      communityNo:id,
-      cache:1
+
+    // console.log('获取数值',id,)
+
+    if(!isNaN(parseInt(id))){
+      const option = { communityNo:parseInt(id), cache:1 }
+      const categoryResList = await post(getChannelList,option)
+      const categoryTreeList = await post(getChannelTree,option)
+      const communityName = this.communityList?.find((item:any)=>{
+        return String(item.communityInfo.no) === String(id)
+      })
+      const result = {
+        name:communityName?.communityInfo?.name,
+        role:communityName?.role,
+        no:communityName?.communityInfo?.no,
+        tree:categoryTreeList?.data?.treeList,
+        category:categoryResList?.data?.list,
+        summary:communityName?.summary
+      }
+
+      // console.log('查看数据',result)
+
+      this.categoryList = result
+
     }
-    const categoryList = await post(getChannelList,option)
-    const categoryTreeList = await post(getChannelTree,option)
-    
-    const result = { tree:categoryTreeList?.data?.treeList,category:categoryList?.data?.list }
-
-    return result
-    
-    // if(categoryList?.data?.list){
-    //   this.categoryList.category = categoryList.data.list
-    // }
-
+   
    },
 
-   // 获取频道树状列表
-  //  async getCategoryTreeData(id:any){
-  //   const option = {
-  //     communityNo:id,
-  //     cache:1
-  //   }
-  //   const categoryTreeList = await post(getChannelTree,option)
-  //   if(categoryTreeList?.data?.treeList){
-  //     this.categoryList.tree = categoryTreeList.data.treeList
-  //   }
-  //  },
 
+   // 获取频道数据
+   async getChannelList(id:any){
+    if(!isNaN(parseInt(id))){
+      const option = { communityNo:parseInt(id), cache:1 }
+      const res =  await post(getChannelList,option)
+      // console.log('排查数据',res)
+
+      const filterCategoryRes = res?.data?.list.filter((item:any)=>{
+        return item.role === 'category'
+      })
+
+      const filterTypeChannel = res?.data?.list.filter((item:any)=>{
+        return item.role === 'channel'
+      })
+
+
+      // console.log('排查过滤后的数据',filterCategoryRes)
+
+      if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
+        this.categoryClass  = filterCategoryRes
+        this.channelList = filterTypeChannel
+      }
+
+    }
+   },
+
+   // 更新频道目录分类选择
+   updateCategoryClass(data:any){
+    this.categoryClass = data
+   },
+ 
 
    // 删除社群频道
+   
    async removeCategory(id:any){
     return post(deleteCategory,{id:id})
    }
@@ -108,7 +142,7 @@ export const communityStore = defineStore('communityStore',{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['myCommunityList','recommendCommunityList','categoryList']
+      paths: ['myCommunityList','recommendCommunityList','categoryList','categoryClass']
       // state 中的字段名，按组打包储存
     }]
   }

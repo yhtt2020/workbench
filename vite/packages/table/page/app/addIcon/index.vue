@@ -229,15 +229,10 @@ export default {
       }
       for (let key in this.selectApps) {
         this.selectApps[key].forEach(async (item) => {
-          console.log('item :>> ', item);
           let iconOption = { ...this.iconOption };
           iconOption.titleValue = item.name;
           iconOption.link = item.link || "fast";
-          if (this.name !== "Desktop" && this.name !== "MyApps") {
-            iconOption.src = item.icon;
-          } else {
-            iconOption.src = await useBase64AsImage(item.icon);
-          }
+          iconOption.src = item.icon;
           if (item.open) {
             iconOption.open = item.open;
           } else {
