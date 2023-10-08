@@ -1,6 +1,9 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import cache from "../../components/card/hooks/cache";
+// import { cardStore } from '../../../store/card';
+import { cardStore } from '../../store/card';
+import {mapActions, mapState,mapWritableState} from "pinia";
 
 
 // @ts-ignore
@@ -32,23 +35,49 @@ export const tomatoStore = defineStore("tomatoStore", {
     isFull:false,
     // 是否显示在状态栏
     isState:false,
+    isFullState:false,
+
     tomatoNum:0,
+    tomatoList:[0,0,0,0,0,0,0],
+    weekTime:'',
+    maxTomato:0,
+    customIndex:'',
+    desk:'',
+    customData:'',
   }),
   // getters:{},
   actions: {
+    ...mapActions(cardStore, ['updateCustomData']),
     // 加载目前的番茄
     getTomatoNum(){
-      this.tomatoNum = cache.get('tomatoNum');
-      console.log('拿到了？')
+      let remainingTime = this.getMainingTime();
+      if(cache.get('tomatoNum')){
+        this.tomatoNum = cache.get('tomatoNum')
+      }else{
+        cache.set("tomatoNum",0,remainingTime)
+        this.tomatoNum = 0
+      }
+      if(cache.get('tomatoList')){
+        this.tomatoList = cache.get('tomatoList')
+      }else{
+        cache.set("tomatoList",[0,0,0,0,0,0,0],remainingTime + (6-new Date().getDay())*24*60*60*1000)
+        this.tomatoList = [0,0,0,0,0,0,0]
+      }
+      this.countTime(this.tomatoList)
+      this.max(this.tomatoList)
     },
+
     // 添加番茄
     addTomatoNum(){
+      // 计算今日剩余时间
+      let remainingTime = this.getMainingTime;
       this.tomatoNum++
-      var now = new Date();
-      var midnight = new Date();
-      midnight.setHours(23, 59, 59, 999); // 设置时间为今天的最后一秒
-      var remainingTime = midnight.getTime() - now.getTime(); // 计算剩余时间戳
+      this.tomatoList[new Date().getDay()] = this.tomatoNum;
+      // 这个数据今天会过期，用于保存今日番茄
       cache.set("tomatoNum",this.tomatoNum,remainingTime)
+      cache.set("tomatoList",this.tomatoList,remainingTime + (6-new Date().getDay())*24*60*60*1000)
+      this.countTime(this.tomatoList)
+      this.max(this.tomatoList)
     },
     // 开始
     onPlay(){
@@ -92,6 +121,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.clearInterval()
       this.reset()
       this.addTomatoNum()
+      this.isColor ="#E7763E";
     },
     // 设置定时器
     interval () {
@@ -140,7 +170,61 @@ export const tomatoStore = defineStore("tomatoStore", {
     // 退出全屏
     exit(){
       this.isFullScreen = false;
+    },
+    // 计算本周番茄时间
+    countTime(list){
+      let total = 0;
+      for(let i =0;i<list.length;i++){
+          total += list[i]
+      }
+      let totalTime = total*25;
+      let hour = totalTime / 60
+      let min = totalTime % 60
+      this.weekTime =  Math.trunc(hour) + 'h' + min + 'm'
+    },
+    // 获取本周最大番茄数
+    max(list){
+      let max = list[0];
+      for (let i = 1; i < list.length; i++) {
+          if(list[i] > max){
+            max = list[i]
+          }
+      }
+      this.maxTomato = max
+    },
+
+    //初始化状态
+    init(customData,customIndex,desk){
+      if(customData){
+        this.isFull = customData.isFull
+        this.isState = customData.isState
+        let setupList = {
+          isFull:this.isFull,
+          isState:this.isState,
+        }
+        this.updateCustomData(customIndex,setupList,desk)
+      }
+    },
+    onChange(customIndex,desk){
+      this.updateCustomData(customIndex,{
+        isFull:this.isFull,
+        isState:this.isState,
+      },desk)
+    },
+    // 计算今日剩余的时间戳
+    getMainingTime(){
+      // 计算今日剩余时间戳
+      var now = new Date();
+      var midnight = new Date();
+      midnight.setHours(23, 59, 59, 999);
+      var remainingTime = midnight.getTime() - now.getTime();
+      return remainingTime
+    },
+    // 切换顶部状态栏是否显示
+    onChangeFull(){
+      this.isFullState = !this.isFullState
     }
+
   },
   persist: {
     enabled: true,

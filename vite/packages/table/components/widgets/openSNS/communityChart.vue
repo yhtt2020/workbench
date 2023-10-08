@@ -49,9 +49,11 @@
 import axios from "axios";
 import Widget from "../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
-// import RadioTab from "../../RadioTab.vue"
 import RadioTab from "./RadioTab.vue"
 import * as echarts from "echarts";
+import {cardStore} from "../../../store/card";
+import {mapActions, mapState,mapWritableState} from "pinia";
+
 export default {
     components:{
         Widget,
@@ -148,8 +150,24 @@ export default {
     },
     async mounted() {
         this.initEcharts();
+        this.init()
     },
     methods:{
+        ...mapActions(cardStore, ['updateCustomData']),
+        init(){
+            // 初始哈
+            if(!this.customData){
+                this.updateCustomData(this.customIndex,{
+                    "defaultDataType": this.defaultDataType,
+                    "defaultTimeType": this.defaultTimeType,
+                    "defaultPlatType": this.defaultPlatType,
+                },this.desk)
+            }else{
+               this.defaultDataType = this.customData.defaultDataType 
+               this.defaultTimeType = this.customData.defaultTimeType 
+               this.defaultPlatType = this.customData.defaultPlatType 
+            }
+        },
         initEcharts(){
             // 多列柱状图
             const mulColumnZZTData = {
@@ -241,25 +259,30 @@ export default {
                 myChart.resize();
             })
         },
-        onBtnChange(){
-            let str = this.defaultDataType.title + "/" +this.defaultTimeType.title
-            this.options.title = str
-        }
     },
     watch:{
         "defaultDataType": {
             handler(newVal, oldVal){
                 this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+                this.updateCustomData(this.customIndex,{
+                    "defaultDataType": this.defaultDataType,
+                },this.desk)
             }
         },
         "defaultTimeType":{
             handler(newVal, oldVal){
                 this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+                this.updateCustomData(this.customIndex,{
+                    "defaultTimeType": this.defaultTimeType,
+                },this.desk)
             }
         },
         "defaultPlatType":{
             handler(newVal, oldVal){
                 this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
+                this.updateCustomData(this.customIndex,{
+                    "defaultPlatType": this.defaultPlatType,
+                },this.desk)
             }
         }
     }

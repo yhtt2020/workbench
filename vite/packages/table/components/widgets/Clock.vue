@@ -256,4 +256,7 @@ font-16 {
 :deep(.ant-empty-image) {
   height: 60px;
 }
+:deep(.anticon.ant-input-clear-icon){
+    color:var(--secondary-text);
+}
 </style>

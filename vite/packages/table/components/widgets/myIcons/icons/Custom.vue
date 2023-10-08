@@ -1,5 +1,5 @@
 <template>
-  <XtZoom v-model:width="w" v-model:height="h" :style="[size]">
+  <xt-zoom v-model:width="w" v-model:height="h" :style="[size]">
     <div
       class="xt-bg xt-shadow rounded-xl xt-text relative controller"
       :style="[size]"
@@ -51,7 +51,7 @@
         ></div>
       </div>
     </div>
-  </XtZoom>
+  </xt-zoom>
   <XtDrawer v-model="visible">
     <Set
       @editIcons="editIcons(index)"

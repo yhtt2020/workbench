@@ -1,3 +1,7 @@
+此文件为想天工作台最早base的一个国外开源的浏览器项目，我们在此基础上进行了二次完善，得到了想天浏览器部分。
+仅供大家参考，大家如果有兴趣可以自行去看一下这个原始项目。
+
+
 # Min
 
 Min is a fast, minimal browser that protects your privacy. It includes an interface designed to minimize distractions, and features such as:

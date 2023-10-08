@@ -14,9 +14,9 @@ export const newsStore = defineStore("news", {
 
     async getNewsMsg(tag, num) {
       const  cacheTag='toutiao:cache:'+tag
-      let newsMsgListCache = localCache.get(cacheTag)
-      if(newsMsgListCache){
-        this.newsMsgList = newsMsgListCache
+      const cacheData=localCache.get(cacheTag)
+      if(cacheData){
+        this.newsMsgList = cacheData
         console.log(this.newsMsgList);
       }
       let response = await get(juheGet, {
@@ -39,7 +39,7 @@ export const newsStore = defineStore("news", {
         }else{
           this.newsMsgList = response.data.result.data
         }
-        localCache.set(`newsMsgList-${tag}`,this.newsMsgList,300)
+        localCache.set(cacheTag,this.newsMsgList,300)
       }
       else{
         return false

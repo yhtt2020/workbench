@@ -4,11 +4,8 @@
             <CalendarOutlined style="width:20px;height:20px;" />
         </div>
         <div class="box-flex">
-            <div>
-                {{this.history.date}}
-                <br/>
-                {{ this.history.title }}
-            </div>
+            <div>{{this.history.date}}</div> 
+            <div>{{ this.history.title }}</div>
         </div>
     </Widget>
 </template>
@@ -92,34 +89,27 @@ export default {
         top: -21px;
         left: 0;
     }
-
     :deep(.anticon svg){
       width: 18px !important;
       height: 18px !important;
     }
-
     .box-flex{
         display: flex;
         flex-direction: column;
         width: 240px;
+        height: 140px;
         position: relative;
         top: -10px;
-    }
-    .box-flex div{
-        text-align: center;
-        padding: 0 5px;
-        text-align: center;
-        height: 150px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-size: 24px;
         font-family: '优设标题黑';
+        text-align: center;
+        justify-content: space-evenly;
+    }
+    .box-flex div{
+        padding: 0 5px;
         margin-top: -5px;
         white-space: pre-wrap;
     }
-
-
     @font-face {
         font-family: "优设标题黑";
         src: url("../../../../../public/font/优设标题黑.ttf");

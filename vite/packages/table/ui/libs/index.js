@@ -8,17 +8,7 @@ export default {
       const component = fullPath.replace("./", "").split("/")[0];
       const componentName = "Xt" + component;
       // 3、进行注册
-      if (componentName == "XtDrawer1") {
-      } else {
-        app.component(
-          componentName,
-          defineAsyncComponent(() =>
-            fn().then((module) => {
-              return module.default;
-            })
-          )
-        );
-      }
+      app.component(componentName, defineAsyncComponent(fn));
     }
   },
 };

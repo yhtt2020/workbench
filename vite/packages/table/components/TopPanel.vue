@@ -27,11 +27,11 @@
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
+    <div class="right-area flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
       <div class="top-state">
-      <TopClockTimer />
         <!-- 番茄钟 -->
         <TopTomato />
+        <TopClockTimer v-if="topClockTimerVisible && false"/>
       </div>
 
       <div  v-if="status.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { countDownStore } from '../store/countDown'
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
@@ -146,9 +147,12 @@ export default {
       showLockTip: false,
       messageDrawer: false,
       appStats: false,
+      topClockTimerVisible:false,
     }
   },
   computed: {
+    ...mapWritableState(countDownStore,['countDowndate','countDowntime']),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
@@ -204,7 +208,8 @@ export default {
 
     hasChat(){
       return this.$route.path !== '/chat'
-    }
+    },
+
   },
   async mounted () {
     window.onblur = () => {
@@ -288,16 +293,33 @@ export default {
         await this.loadNoticeDB()
       })
       this.hideNoticeEntry()
+    },
+    topClockTimerVisibleSetting(){
+      if(this.clockEvent.length>0 ){
+        // console.log(this.clockEvent);
+        this.topClockTimerVisible=true
+      }
+      else if(this.countDowntime.seconds!==undefined){
+        // console.log(this.countDowndate);
+        this.topClockTimerVisible=true
+      }
+      else{
+        // console.log(this.countDowndate,this.clockEvent);
+        this.topClockTimerVisible=false
+      }
     }
 
+  },
+  beforeUpdate() {
+    this.topClockTimerVisibleSetting()
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .top-panel {
-  padding: 0.8em 0 0.8em 0.8em;
-  padding-bottom: 0;
+  padding: 0.8em 0 0 0.8em;
+  display: flex;
 }
 
 .input-box {
@@ -376,8 +398,10 @@ export default {
 .top-state{
   display: flex;
   // position: relative;
-  position: absolute;
-  right:158px;
-  top: -5px;
+}
+.right-area{
+  display: flex;
+  align-items: center;
+  height: 25px;
 }
 </style>

@@ -1,124 +1,54 @@
 <template>
     <vueCustomScrollbar  :settings="scrollbarSettings"  style="height: 100%;">
       <div class="box-body" style="height: 100%;overflow: auto !important;">
-        <div class="flex-box" v-for="(item,index) in dataList" :key="key">
-          <div class="box-title">{{ item.title }}</div>
-          <div class="box-content">{{ item.content }}</div>
-        </div>
+        <Article :artName="artName" :artNames="artNames" :titleStyle="titleStyle" :contentStyle="contentStyle"></Article>
       </div>
     </vueCustomScrollbar>
   </template>
   <script>
+  import Article from '../../../components/Article.vue'
   export default {
     name: 'Promotion',
     components: { 
+      Article,
     },
     computed: {
 
     },
     data(){
       return {
-      settingsScroller: {  // 滚动条配置 
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      },
-        dataList:[
-          {
-            title:"收益说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-          {
-            title:"下级代理说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-          {
-            title:"推广说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-          {
-            title:"推广说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-          {
-            title:"推广说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-          {
-            title:"推广说明",
-            content:"你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好",
-          },
-        ]
+        artNames:[
+            "promotion_summary",
+            "promotion_affilicate",
+            "promotion_reward"
+        ],
+        // 这里存放样式名 需要去文章组件定义样式
+        titleStyle:'box-title',
+        contentStyle:'box-content',
+        // 滚动条配置 
+        settingsScroller: {  
+          useBothWheelAxes: true,
+          swipeEasing: true,
+          suppressScrollY: false,
+          suppressScrollX: true,
+          wheelPropagation: true
+        },
       }
     },
     mounted(){
-
+      
     },
     watch:{
 
     },
     methods:{
+      
 
     },
   }
   </script>
   
   <style scoped>
-    .flex-box{
-      /* display: flex; */
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding: 0 20px;
-      /* text-overflow: ; */
-    }
-
-    .box-title{
-      height: 22px;
-      line-height: 22px;
-      width: 100%;
-      font-size: 16px;
-      padding-left: 16px;
-      border-left: 4px solid;
-      border-color: var(--active-bg);
-      margin-top: 24px;
-    }
-
-    .box-content{
-      margin-top: 24px;
-      padding: 16px;
-      background: rgba(0,0,0,0.30);
-      border-radius: 12px;
-      min-width: 600px;
-      display: flex;
-      flex-wrap: wrap;
-      white-space: pre-wrap;
-      word-break: break-all;
-      font-size: 16px;
-    }
-    
-
-
-
-    /* // 滚动条 */
-    .box-body::-webkit-scrollbar-track {
-      background: rgba(72, 72, 72, 0.85);
-    }
-    
-    .box-body{
-      flex: 1 1 0%;
-      overflow: hidden;
-      overflow-y: auto;
-    }
-    .box-body::-webkit-scrollbar{
-      width: 3px;
-    }
-    .box-body::-webkit-scrollbar-thumb{
-      background-color: #f1f1f1 !important;
-        border-radius: 3px;
-    }
-
 
   </style>
   
