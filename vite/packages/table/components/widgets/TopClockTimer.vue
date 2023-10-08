@@ -52,13 +52,8 @@
                             <div class="mt-4 mb-3 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid" :bordered="false"
-                                class="flex justify-between w-full rounded-lg xt-bg-2" buttonStyle="solid">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" :bordered="false"
-                                    class="text-center font-16">不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16" :bordered="false"
-                                    style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group>
+                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                            <!-- {{ defaultType }} -->
                         </div>
                         <div class="flex justify-between ">
                             <xt-button type="primary" class="mt-2 font-16 xt-text"
@@ -220,12 +215,15 @@ import { timeStamp, transDate } from "../../util";
 import { notification, Button } from 'ant-design-vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import { Notifications } from '../../js/common/sessionNotice'
+import RadioTab from '../RadioTab.vue';
 const notifications = new Notifications()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
     }
 })
+const dataType=ref([{title:'不重复',name:'不重复'},{title:'每天',name:'每天'}])
+const defaultType=ref({title:'不重复',name:'不重复'})
 const useTimerStore = timerStore()
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
@@ -302,7 +300,7 @@ const addSettingClock = () => {
 
 
     useCardStore.addClock({
-        clockType: clockType.value,
+        clockType: defaultType.value.name,
         eventValue: eventValue.value,
         dateValue: timeSpan,
         clockTimeStamp: timeSpan
@@ -322,7 +320,7 @@ const settingCountDown = () => {
 }
 // 打开闹钟的设置页面
 const settingClock = () => {
-    console.log(clockSettingVisible.value);
+    // console.log(clockSettingVisible.value);
     if (countDownVisible.value) {
         countDownVisible.value = false
     }

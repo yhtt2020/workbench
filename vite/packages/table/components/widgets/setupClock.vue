@@ -42,7 +42,9 @@
                                 <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
                                 <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
                             </a-radio-group> -->
-                            <RadioTab :navList="dataType" v-model:clockType="defaultType"></RadioTab>
+                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                            <!-- {{ selectType }} -->
+                            <!-- {{ defaultType }} -->
                         </div>
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
@@ -113,7 +115,7 @@ export default {
             },
             title: "",
             countdownDayType: "大",
-            clockType: "",
+            clockType: "不重复",
 
             eventValue: "未命名",
             dateValue: null,
@@ -209,7 +211,7 @@ export default {
 
 
             this.addClock({
-                clockType: this.clockType,
+                clockType: this.defaultType.name,
                 eventValue: this.eventValue,
                 dateValue: timeSpan,
                 clockTimeStamp: timeSpan
