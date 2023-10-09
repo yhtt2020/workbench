@@ -152,7 +152,7 @@ export default {
   },
   computed: {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
-    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
@@ -223,6 +223,8 @@ export default {
     if (!this.timer) {
       setInterval(this.getTime, 1000)
     }
+    this.filterClock(this.clockTag)
+    // console.log(this.clockTag);
   },
   created() {
     this.getTime()
@@ -231,7 +233,7 @@ export default {
     getClientIcon,
     getIcon,
     getCover,
-    ...mapActions(cardStore, ['setAppDate']),
+    ...mapActions(cardStore, ['setAppDate','filterClock']),
     ...mapActions(noticeStore, ['hideNoticeEntry', 'loadNoticeDB']),
 
     clearLockTimer() {
@@ -297,8 +299,8 @@ export default {
     },
     topClockTimerVisibleSetting() {
       if(this.checkTopClock===true){
-        if (this.clockEvent.length > 0) {
-          // console.log(this.checkTopClock);
+        if (this.filterClockEvent.length > 0) {
+          // console.log(this.filterClockEvent.length);
           this.topClockTimerVisible = true
         }
         else if (this.countDowntime.seconds !== undefined) {
@@ -417,6 +419,7 @@ export default {
   display: flex;
   // position: relative;
   position: absolute;
-  right: 170px;
+  right: 180px;
   top: -5px;
-}</style>
+}
+</style>

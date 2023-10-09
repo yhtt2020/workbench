@@ -56,6 +56,8 @@ export const cardStore = defineStore(
         }],
         clockEvent: [],
         customComponents: [],
+        clockTag:'always',
+        filterClockEvent: [],
         aidaData: null,
         // navigationList: [
         //   {
@@ -291,6 +293,7 @@ export const cardStore = defineStore(
         clockFlag: false,
         deskSize: {},
         lastHeight: 0,
+        
       };
     },
 
@@ -475,7 +478,6 @@ export const cardStore = defineStore(
           let e = this.clockEvent.shift()
           this.clockEvent.push(e)
         }
-
       },
       removeClock(index, n) {
         if (this.clockEvent[0].clockType !== '每天' || n === 1) {
@@ -488,6 +490,41 @@ export const cardStore = defineStore(
 
         }
         this.clockFlag = !this.clockFlag
+      },
+      filterClock(tag) {
+        // console.log(tag);
+        this.filterClockEvent=this.clockEvent
+        if(tag!==null || undefined){
+          this.clockTag=tag
+        }
+        console.log(this.clockTag);
+        if(this.clockTag=='within30min'){
+          this.filterClockEvent = this.clockEvent.filter((value) => {
+            let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
+            let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
+            let timeDiff=targetTime-totalTime
+            return timeDiff<30 && timeDiff>0
+            
+          })
+          // console.log(this.filterClockEvent);
+          
+        }else if(this.clockTag=='within1hour'){
+          this.filterClockEvent = this.clockEvent.filter((value) => {
+            let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
+            let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
+            let timeDiff=targetTime-totalTime
+            console.log(timeDiff);
+            return timeDiff<60 && timeDiff>0
+          })
+        }else if(this.clockTag=='always'){
+          this.filterClockEvent = this.clockEvent
+        }
+
+      },
+      defaultClock() {
+        if(this.filterClockEvent.length==0){
+          this.filterClockEvent=this.clockEvent
+        }
       },
       addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;

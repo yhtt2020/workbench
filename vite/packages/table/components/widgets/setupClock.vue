@@ -65,17 +65,17 @@
                         <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
                             <div class="flex justify-between">
                                 <div class="font-16 xt-text-2">显示在状态栏</div>
-                                <a-switch v-model:checked="checked"  @change="changeSwitchStatus(checked)"/>
+                                <a-switch v-model:checked="checked" @change="changeSwitchStatus(checked)" />
                             </div>
                             <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
                                 在顶部状态栏显示最近闹钟时间。
                             </div>
                             <div>
-                                <a-select v-model:value="defaultDataType" :placeholder='defaultDataType' dropdownSyle=""
+                                <a-select v-model:value="defaultDataType.title"  dropdownSyle="" @select="changeDataType(defaultDataType)"
                                     style="width:100%;  height: 40px; border-radius: 10px;">
-                                    <a-select-option :value="index" v-for="(item, index) in selectDataType"
+                                    <a-select-option :value="index" v-for="(item, index) in selectDataType" 
                                         class="xt-bg xt-text-2 selsect-options">
-                                        {{ item }}
+                                        {{ item.title }}
                                     </a-select-option>
                                 </a-select>
                             </div>
@@ -115,7 +115,7 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from '../../store/card'
-import {topClockSettingStore} from '../../store/topClockSetting'
+import { topClockSettingStore } from '../../store/topClockSetting'
 import { timeStamp, transDate } from "../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
@@ -156,9 +156,13 @@ export default {
                 { title: '每天', name: '每天' }
             ],
             defaultType: { title: '不重复', name: '不重复' },
-            selectDataType:[ '始终显示','显示30分钟内的闹钟','显示1小时内的闹钟'],
-            defaultDataType:'始终显示',
-            checked:true,
+            selectDataType: [
+                { title: '始终显示', tag: 'always' },
+                { title: '显示30分钟内的闹钟', tag: 'within30min' },
+                { title: '显示1小时内的闹钟', tag: 'within1hour' },
+            ],
+            defaultDataType: { title: '始终显示', tag: 'always' },
+            checked: true,
         };
     },
 
@@ -179,7 +183,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
-        ...mapWritableState(topClockSettingStore,['checkTopClock'])
+        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
     },
     methods: {
         dayjs,
@@ -190,8 +194,9 @@ export default {
             "addCard",
             "removeCountdownDay",
             "removeClock",
+            'filterClock',
         ]),
-        ...mapActions(topClockSettingStore,['changeTopClockStatus']),
+        ...mapActions(topClockSettingStore, ['changeTopClockStatus']),
         updateTime() {
             this.dateTime = getDateTime()
         },
@@ -255,10 +260,15 @@ export default {
         onClockMenuClick(e, index) {
             this.removeClock(index, 1);
         },
-        changeSwitchStatus(value){
+        changeSwitchStatus(value) {
             console.log(this.checked);
             this.changeTopClockStatus(value)
             // console.log(1111);
+        },
+        changeDataType(value) {
+            console.log(this.selectDataType[value.title]);
+            let tag = this.selectDataType[value.title].tag
+            this.filterClock(tag)
         }
     },
 };
@@ -293,6 +303,7 @@ export default {
         }
     }
 }
+
 :deep(.ant-select-option) {
     color: var(--primary-text);
 }
@@ -311,6 +322,7 @@ export default {
 :deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
     line-height: 35px;
 }
+
 .font-14 {
     font-family: PingFangSC-Regular;
     font-size: 14px;
@@ -427,5 +439,6 @@ export default {
     font-family: Oswald-Medium;
     font-size: 20px;
     font-weight: 500;
-}</style>
+}
+</style>
   

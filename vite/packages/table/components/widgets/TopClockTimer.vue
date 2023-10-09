@@ -228,6 +228,7 @@ onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
     }
+    
 })
 const dataType = ref([{ title: '不重复', name: '不重复' }, { title: '每天', name: '每天' }])
 const defaultType = ref({ title: '不重复', name: '不重复' })
