@@ -45,7 +45,51 @@
 
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
-  <div v-for="item in categoryFilterList">
+  <template v-if="!isDoubleColumn">
+    <div class="flex flex-col">
+      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)">
+        <div class="flex items-center">
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+         </div> 
+         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+         v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+         
+      </div>
+    </div>
+  </template>
+
+  <template v-else>
+    <div class="flex grid grid-cols-2 gap-1">
+      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
+        <div class="flex items-center">
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+        </div> 
+        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+      </div>
+    </div>
+  </template>
+
+
+  <div v-for="item in categoryFilterList" class="my-3">
     <ChatFold :title="item.name" >
     
       <div class="flex flex-col" v-if="isDoubleColumn === false">
@@ -66,8 +110,8 @@
          </template>
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
-                     v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
        </div>
   
       </div>
@@ -89,7 +133,9 @@
          </template>
         </div>
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        
+        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
        </div>
   
       </div>
@@ -97,46 +143,6 @@
     </ChatFold>
   </div>
   
-  <template v-if="!isDoubleColumn">
-    <div class="flex flex-col">
-      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)">
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-         </div> 
-         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-         <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
-                      v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-      </div>
-    </div>
-  </template>
-
-  <template v-else>
-    <div class="flex grid grid-cols-2 gap-1">
-      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-        </div> 
-        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-      </div>
-    </div>
-  </template>
 
  </vue-custom-scrollbar>
 
@@ -149,7 +155,6 @@ import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
 import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-import { SelectOutlined } from '@ant-design/icons-vue'
 
 import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
@@ -158,7 +163,7 @@ export default{
   props:[ 'communityID','float' ],
 
   components:{
-    CommunityIcon,ChatDropDown,ChatFold,SelectOutlined,
+    CommunityIcon,ChatDropDown,ChatFold,
   },
 
   data(){
