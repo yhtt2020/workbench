@@ -1,7 +1,7 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
+            <a-col :span="12" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: calc(100vh -5em );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
@@ -17,7 +17,7 @@
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{
                                         index }}</a-radio-button>
                                 </template>
                             </a-radio-group>
@@ -58,7 +58,7 @@
 
                 </vue-custom-scrollbar>
             </a-col>
-            <a-col :span="11">
+            <a-col :span="12">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height: calc(100vh - 10em)"
                     class="scroll">
                     <div class="pl-4">

@@ -31,7 +31,7 @@
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible" @click="change"/>
+        <TopClockTimer v-if="topClockTimerVisible"/>
       </div>
       <div v-if="noticeSettings.show && hasChat" class="flex items-center no-drag pointer" @click="messageAlert"
         style="color: var(--primary-text);">
@@ -224,7 +224,6 @@ export default {
       setInterval(this.getTime, 1000)
     }
     this.filterClock(this.clockTag)
-    // console.log(this.clockTag);
   },
   created() {
     this.getTime()
@@ -324,6 +323,7 @@ export default {
   },
   beforeUpdate() {
     this.topClockTimerVisibleSetting()
+    this.filterClock(this.clockTag)
   },
 }
 </script>
