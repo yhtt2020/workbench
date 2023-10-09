@@ -113,12 +113,12 @@ import CreateNewGroup from '../components/createNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
-
+import Commun from '../Commun.vue'
 
 export default {
   components:{
     CategoryFloat,Modal,CreateNewChannel,
-    CreateNewGroup,VueCustomScrollbar,CommunityIcon
+    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun
   },
 
   computed:{
@@ -133,10 +133,10 @@ export default {
   },
 
   async mounted(){
-    console.log('启动')
+    // console.log('启动')
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
-    console.log(rs)
+    // console.log(rs)
   },
 
   data(){
@@ -152,7 +152,7 @@ export default {
       isChat:'yes',
       group:[],
       //文章名称
-      artName:'community_after_created_empty',,
+      artName:'community_after_created_empty',
       routeData:1,
     }
   },
@@ -202,8 +202,8 @@ export default {
           }
         }
      }
-
-     this.currentChannel = item
+     //  console.log('查看参数',{...item,props:JSON.parse(item.props)})
+     this.currentChannel = {...item,props:JSON.parse(item.props)}
 
     },
 
@@ -219,7 +219,7 @@ export default {
     // 通过监听方式获取社群号
     '$route':{
       handler(to,from){
-       console.log('参数1::>>',to.params.no);
+      //  console.log('参数1::>>',to.params.no);
        //  console.log('参数2::>>',from);
        this.routeData = to.params.no
         

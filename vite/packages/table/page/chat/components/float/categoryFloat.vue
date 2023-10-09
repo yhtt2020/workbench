@@ -120,7 +120,7 @@
 
   <template v-else>
     <div class="flex grid grid-cols-2 gap-1">
-       <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
+      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
         <div class="flex items-center">
           <template v-if="item.type === 'group'">
            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
@@ -131,11 +131,10 @@
           <template v-if="item.type === 'forum'">
            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
           </template>
-         </div> 
-         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-         <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px"
-                      v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-       </div>
+        </div> 
+        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+      </div>
     </div>
   </template>
 

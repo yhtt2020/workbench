@@ -22,7 +22,7 @@
  
      <div class="flex flex-col" ref="classSortTab">
       <!-- id="classSortTab" -->
-       <div v-for="(item,index) in categoryClass" class="flex pointer  rounded-lg items-center px-5 mb-4"
+      <div v-for="(item,index) in categoryClass" class="flex pointer  rounded-lg items-center px-5 mb-4"
         style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
         @click.stop="listClick(item,index)" :key="index"
        >
@@ -31,7 +31,7 @@
          <div class="flex w-full justify-between items-center">
            <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false"></a-input>
            <div class="flex">
-             <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit"></ClassIcon>
+             <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
              <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
            </div>
          </div>
@@ -82,7 +82,8 @@ export default {
   },
 
   async mounted (){
-    await this.getChannelList(this.no)
+    // await this.getChannelList(this.no)
+    this.getChannelList(this.no)
 
     // const el = document.querySelector('#classSortTab')
     const el = this.$refs.classSortTab
@@ -120,7 +121,8 @@ export default {
   methods:{
     ...mapActions(communityStore,[
       'getChannelList','getCategoryData',
-      'removeCategory','secondaryChannel','updateCategoryClass'
+      'removeCategory','secondaryChannel','updateCategoryClass','createChannel',
+      'updateChannel'
     ]),
 
 
@@ -166,32 +168,82 @@ export default {
 
 
     deleted(item){  // 删除
-      ClassModal.confirm({
-        content:'确定要删除该分类吗 !!!',
-        centered:true,
-        onOk: async ()=>{
+      // console.log(item.id);
+      if(item.id){
+        ClassModal.confirm({
+         content:'确定要删除该分类吗 !!!',
+         centered:true,
+         onOk: async ()=>{
           const result = await this.removeCategory(item.id)
           if(result?.status === 1){
            await this.getChannelList(this.no)
            await this.getCategoryData(this.no)
           }
-        }
-      })
+         }
+        })
+      }else{
       
+        const index = this.categoryClass.findIndex((findItem)=>{
+          return findItem.name === item.name
+        })
+        this.categoryClass.splice(index,1)
+      
+      }
+
     },
+
+
     addClassItem(){  // 新增
+      this.categoryClass.push({name:'分类名称'})
 
+      // this.$nextTick(()=>{
+      //  const classRef = document.querySelector('#classInputRef')
+      //  console.log();
+      // //  classRef.focus()
+      // //  classRef.select()
+      // })
+      // console.log(this.categoryClass);
     },
-    saveEdit(){  // 保存编辑
 
+    async saveEdit(item){  // 保存编辑
+      // console.log('获取编辑后的数据',item);
+      if(item.id){
+
+        const res = await this.updateChannel(item)
+        console.log('更新结果',res.data);
+        if(res?.data?.status === 1){
+          message.success(`${res.info}`)
+          this.getChannelList(this.no)
+          this.getCategoryData(this.no)
+          this.isEditing = false
+        }
+
+      }else{
+        const option = {
+        name:item.name,
+        communityNo:this.no,
+        type:'category',
+        role:'category'
+        }
+        // console.log('获取参数::>>',option)
+        const res = await this.createChannel(option)
+        // console.log('返回结果',res);
+        if(res?.status === 1){
+         this.getChannelList(this.no)
+         this.getCategoryData(this.no)
+         this.isEditing = false
+        }
+      }
     },
+
     exitEdit(){  // 退出编辑
-
+      this.isEditing = false
     },
+
     edit(index){  // 编辑中
      this.isEditing = true
      this.editIndex = index
-     nextTick(()=>{
+     this.$nextTick(()=>{
        const classRef = document.querySelector('#classInputRef')
        classRef.focus()
        classRef.select()
