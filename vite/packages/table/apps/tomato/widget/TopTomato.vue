@@ -17,7 +17,7 @@
   import { Icon } from '@iconify/vue';
     export default {
       name: 'Promotion',
-      components: { 
+      components: {
         TomatoTimer,
         Icon,
       },
@@ -49,7 +49,7 @@
       },
     }
   </script>
-  
+
   <style scoped>
 
     .tomato-timer{
@@ -62,8 +62,8 @@
         color: rgba(255,255,255,0.85);
         z-index: 100;
         font-weight: 500;
+         margin-right: 10px;
     }
 
 
   </style>
-  

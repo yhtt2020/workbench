@@ -129,12 +129,6 @@ export default {
         title: false
       })
     },
-    onInit: () => {
-      console.log('lightGallery has been initialized')
-    },
-    onBeforeSlide: () => {
-      console.log('calling before slide')
-    },
     goHome(){
       this.$router.push({
         name:'setting'
