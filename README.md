@@ -1,5 +1,14 @@
 # 项目说明
 ![Picture](https://www.apps.vip/wp-content/uploads/2023/09/1695004332-%E6%A1%8C%E9%9D%A2-1385x800.png)
+![Picture](https://www.apps.vip/wp-content/uploads/2023/06/1687245185-%E7%BC%96%E7%BB%84-16-1400x436.png)
+目前支持在电脑上使用，外接扩展屏的时候，可以实现触摸操作。也可以在主屏中窗口化使用。
+
+也可以结合spacedesk将手机、平板模拟为扩展屏。模拟后可实现相同的功能。相对于直接便携显示器来说，模拟的更加卡一些。
+
+B站开源相关介绍视频：
+[【皮克斯的工作台】写了整整2年，投入超100万的超级缝合怪生产力软件要开源了，前端大礼包](https://www.bilibili.com/video/BV14841117Gp/?spm_id_from=333.999.0.0)
+
+系列视频：[副屏操作系统](https://www.bilibili.com/video/BV1u14y1c7Qu/?spm_id_from=333.999.0.0)
 
 本项目官方主页：[想天浏览器官方主页](https://www.apps.vip)
 

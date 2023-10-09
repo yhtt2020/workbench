@@ -1,5 +1,5 @@
 <template>
-    <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList">
+  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
         <div class="title">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
@@ -57,7 +57,7 @@
                 </div>
           </vue-custom-scrollbar>
       </a-drawer>
-    </Widget>
+    </Widget> 
   </template>
   
 <script>
@@ -98,6 +98,7 @@
           type:'timer',
           noTitle:true,
           background:"#E7763E",
+          beforeDelete:true,
         },
         menuList: [
             {
@@ -121,6 +122,10 @@
     methods: {
       ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','onChange','init']),
       ...mapActions(cardStore, ['updateCustomData']),
+      // 删除 清除定时器
+      clearTime() {
+        this.onStop();
+      },
       // 计算今日番茄时间
       countToday(num){
         let totalTime = num*25;

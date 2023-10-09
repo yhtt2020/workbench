@@ -22,6 +22,7 @@
       />
     </div>
     <!-- icon -->
+    <xt-new-icon size="20" w="40" v-else-if="item.newIcon" :icon="item.newIcon" :bg="bg" :type="newType"/>
     <xt-icon
       @click="itemClick()"
       v-else
@@ -48,6 +49,12 @@ const props = defineProps({
   },
   type: {
     default: "default",
+  },
+  newType:{
+    default: "base",
+  },
+  bg: {
+    default: "var(--secondary-bg)",
   },
   full: {},
 });
