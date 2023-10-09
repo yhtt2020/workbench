@@ -204,6 +204,7 @@ export default {
 
     async finshCategoryCreate(){  // 完成频道目录创建
       const option = { type:this.type,id:this.classItem.id,no:this.no,content:this.data}
+      // console.log('检查',option);
       const createRes = await channelClass.secondaryChannel(option)
       if(createRes?.status === 1){
         message.success(`${createRes?.info}`)
