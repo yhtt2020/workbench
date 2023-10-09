@@ -14,7 +14,7 @@
    <span class="font-16-400 mb-4" style="color: var(--primary-text);">我创建的版块({{ forumList.length }})</span>
   
    <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
-    <div v-for="(item,index) in forumList" class="flex items-center pointer p-5 rounded-lg" :class="{'select-bg':selectIndex === index}"
+    <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg" :class="{'select-bg':selectIndex === index}"
      style="background: var(--secondary-bg);" @click="selectForum(index,item)"
     >
      <a-avatar :size="40" shape="square" :src="item.logo"></a-avatar>
