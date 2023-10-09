@@ -27,13 +27,14 @@
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
+    <div class="right-area flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible"/>
+        <TopClockTimer v-if="topClockTimerVisible && false"/>
       </div>
-      <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
+
+      <div  v-if="status.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
           <div class="new-message-tag"></div>
@@ -45,6 +46,7 @@
       <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
+
       <div class="mr-2"
            style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="truncate no-drag" v-if="!loading">
@@ -229,8 +231,8 @@ export default {
     getIcon,
     getCover,
     ...mapActions(cardStore, ['setAppDate']),
-    ...mapActions(noticeStore,['hideNoticeEntry','loadNoticeDB']),
-
+    ...mapActions(noticeStore,['loadNoticeDB']),
+    ...mapActions(appStore,['hideNoticeEntry']),
     clearLockTimer () {
       if (this.lockTimer) {
         clearInterval(this.lockTimer)
@@ -316,8 +318,8 @@ export default {
 
 <style lang="scss" scoped>
 .top-panel {
-  padding: 0.8em 0 0.8em 0.8em;
-  padding-bottom: 0;
+  padding: 0.8em 0 0 0.8em;
+  display: flex;
 }
 
 .input-box {
@@ -396,8 +398,10 @@ export default {
 .top-state{
   display: flex;
   // position: relative;
-  position: absolute;
-  right:158px;
-  top: -5px;
+}
+.right-area{
+  display: flex;
+  align-items: center;
+  height: 25px;
 }
 </style>

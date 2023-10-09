@@ -40,23 +40,23 @@
 import { defineComponent,ref,toRefs,computed, } from 'vue'
 import { mapWritableState,mapActions} from 'pinia'
 import { formatTime } from '../../util'
-import { noticeStore } from '../../store/notice'
+import { appStore } from '../../store'
 
 export default defineComponent({
  props:['content','noticeType','isPlay'],
 
  computed:{
-  ...mapWritableState(noticeStore,['noticeSettings'])
+  ...mapWritableState(appStore,['settings'])
  },
   methods:{
-    ...mapActions(noticeStore,['setNoticePlay']),
+    ...mapActions(appStore,['setNoticePlay']),
   },
  watch:{
   'noticeType':{
     handler(newVal){
       if(this.noticeType === 'notice' && this.isPlay){
         this.setNoticePlay()
-        if(this.noticeSettings.noticePlay){
+        if(this.settings.noticePlay){
           this.$nextTick(()=>{
           this.$refs.notice.play()
           })

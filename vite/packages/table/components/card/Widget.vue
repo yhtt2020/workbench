@@ -85,7 +85,9 @@ declare interface IOption {
   //是否显示卡片标题
   noTitle: boolean,
   // 是否隐藏组件
-  hide?: boolean
+  hide?: boolean,
+  // 删除前置任务
+  beforeDelete?: boolean
 }
 
 //菜单项
@@ -259,6 +261,8 @@ export default {
       this.menuVisible = true;
     },
     doRemoveCard() {
+      // undefined null false
+      this.options.beforeDelete && this.$emit('delete')
       this.removeCard(
         this.$parent.customIndex ||
         this.$parent.$parent.customIndex ||

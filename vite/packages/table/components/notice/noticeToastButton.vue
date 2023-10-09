@@ -39,11 +39,11 @@ export default defineComponent({
 
   computed:{
     ...mapWritableState(noticeStore,['noticeSettings']),
-    ...mapWritableState(appStore,['styles'])
+    ...mapWritableState(appStore,['styles','settings'])
   },
 
   methods:{
-    ...mapActions(noticeStore,['setMessagePlay'])
+    ...mapActions(appStore,['setMessagePlay'])
   },
 
   watch:{
@@ -51,7 +51,7 @@ export default defineComponent({
       handler(newVal){
         if(this.isPlay && newVal === 'message'){
           this.setMessagePlay()
-          if(this.noticeSettings.messagePlay){
+          if(this.settings.messagePlay){
             this.$nextTick(()=>{
              this.$refs.message.play()
             })

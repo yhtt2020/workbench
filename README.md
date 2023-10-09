@@ -1,7 +1,9 @@
 # 项目说明
 ![Picture](https://www.apps.vip/wp-content/uploads/2023/09/1695004332-%E6%A1%8C%E9%9D%A2-1385x800.png)
 
-本项目官方主页：www.apps.vip
+本项目官方主页：[想天浏览器官方主页](https://www.apps.vip)
+
+文档项目：[XtUI项目主页](https://gitee.com/tsbrowser/xtui) （持续更新中）
 
 ## 开源项目引用说明
 

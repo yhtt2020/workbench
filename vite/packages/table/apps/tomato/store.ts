@@ -4,8 +4,8 @@ import cache from "../../components/card/hooks/cache";
 // import { cardStore } from '../../../store/card';
 import { cardStore } from '../../store/card';
 import {mapActions, mapState,mapWritableState} from "pinia";
-
-
+import { useToast } from "vue-toastification";
+const toast = useToast()
 // @ts-ignore
 export const tomatoStore = defineStore("tomatoStore", {
   state: () => ({
@@ -34,7 +34,7 @@ export const tomatoStore = defineStore("tomatoStore", {
     // 是否自动全屏
     isFull:false,
     // 是否显示在状态栏
-    isState:false,
+    isState:true,
     isFullState:false,
 
     tomatoNum:0,
@@ -122,6 +122,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.reset()
       this.addTomatoNum()
       this.isColor ="#E7763E";
+      toast.success("番茄任务完成");
     },
     // 设置定时器
     interval () {
@@ -195,14 +196,21 @@ export const tomatoStore = defineStore("tomatoStore", {
 
     //初始化状态
     init(customData,customIndex,desk){
-      if(customData){
-        this.isFull = customData.isFull
-        this.isState = customData.isState
-        let setupList = {
-          isFull:this.isFull,
-          isState:this.isState,
+      // 新创建时
+      if (customData) {        
+        if(customData.length){
+          this.isFull = customData.isFull
+          this.isState = customData.isState
+          this.updateCustomData(customIndex,{
+            isFull:this.isFull,
+            isState:this.isState,
+          },desk)
+        }else{
+          this.updateCustomData(customIndex,{
+            isFull:false,
+            isState:true,
+          },desk)
         }
-        this.updateCustomData(customIndex,setupList,desk)
       }
     },
     onChange(customIndex,desk){
