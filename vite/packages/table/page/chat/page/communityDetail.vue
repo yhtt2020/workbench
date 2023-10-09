@@ -9,7 +9,7 @@
       <CategoryFloat :float="false" :communityID="routeData"
       @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"
       ></CategoryFloat>
-      
+
     </a-col>
 
 
@@ -169,11 +169,11 @@ export default {
       browser.openInUserSelect(url)
      }
 
-     
+
      // 点击群聊
      if(item.type === 'group'){
         const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
-        
+
         // console.log('排查',changeData)
 
         const groupId = changeData.groupID
@@ -213,7 +213,7 @@ export default {
     }
   },
 
-  
+
 
   watch:{
     // 通过监听方式获取社群号
@@ -222,7 +222,7 @@ export default {
       //  console.log('参数1::>>',to.params.no);
        //  console.log('参数2::>>',from);
        this.routeData = to.params.no
-        
+
       },
       immediate:true,
       deep:true,

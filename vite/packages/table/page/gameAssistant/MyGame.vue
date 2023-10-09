@@ -251,6 +251,7 @@ import XtButton from '../../ui/libs/Button/index.vue'
 import { MoreOutlined, ShopOutlined } from '@ant-design/icons-vue'
 import ShareToChat from '../../ui/chat/ShareToChat.vue'
 
+import {completeTask } from "../../apps/task/page/branch/task.ts"
 const toast = useToast()
 export default {
   name: 'MyGame',
@@ -387,6 +388,8 @@ export default {
      * 开始steam游戏游玩
      */
     playSteamGame () {
+      // 支线任务点
+      completeTask('Z0102')
       this.playGame(this.currentSteam)
       console.log(toast)
       // toast(JumpNotice)

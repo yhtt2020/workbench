@@ -150,7 +150,7 @@
         required: true,
         default: () => {},
       },
-      //列表类型   默认是社区的  my是我分享的 
+      //列表类型   默认是社区的  my是我分享的
       listType: {
         type: String,
         default: () => '',
@@ -212,14 +212,14 @@
         // let url = this.getUrl(item.detail)
         let size = item.sizes[0].split('x')
         this.addCard(
-          { 
-            name: item.option[index].name, 
-            id: Date.now(), 
+          {
+            name: item.option[index].name,
+            id: Date.now(),
             customData: {
               url:item.url,
               width: (parseInt(size[0]) / 2),
               height:(parseInt(size[1]) / 2)
-            } 
+            }
           },
           this.desk
         );
