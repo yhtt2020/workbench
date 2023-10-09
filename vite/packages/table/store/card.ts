@@ -497,7 +497,7 @@ export const cardStore = defineStore(
         if(tag!==null || undefined){
           this.clockTag=tag
         }
-        console.log(this.clockTag);
+        // console.log(this.clockTag);
         if(this.clockTag=='within30min'){
           this.filterClockEvent = this.clockEvent.filter((value) => {
             let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
@@ -520,11 +520,6 @@ export const cardStore = defineStore(
           this.filterClockEvent = this.clockEvent
         }
 
-      },
-      defaultClock() {
-        if(this.filterClockEvent.length==0){
-          this.filterClockEvent=this.clockEvent
-        }
       },
       addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;

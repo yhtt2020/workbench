@@ -304,6 +304,7 @@ const value1 = ref(dayjs('00:00:00', 'HH:mm'))
 // }
 const changeSoundStatus = () => {
     soundVisible.value = !soundVisible.value
+    usetopClockSettingStore.changeSoundStatus(soundVisible.value)
 }
 const changeStutas = () => {
     isStop.value = !isStop.value
@@ -459,43 +460,7 @@ watch(countDownDate, (newVal, oldVal) => {
 
     
 })
-// 当闹钟完成时触发弹窗
-// watch( clockFlag, (newVal, oldVal) => {
-//     const audio = new Audio('/sound/message.mp3')
-//     // console.log(clockFlag.value, 'useCardStore.clockFlag');
-//     if (newVal===true &&(useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
-//     useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined)) {
-//         const key = `open${Date.now()}`
-//         notification.open({
-//             message: '闹钟',
-//             description: '已到达闹钟设置时间',
-//             icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
-//             btn: () =>
-//                 h(
-//                     Button,
-//                     {
-//                         type: 'primary',
-//                         onClick: () => notification.close(key),
-//                         style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-//                     },
-//                     { default: () => 'OK' },
-//                 ),
-//             key,
-//             // onClose: close,
-//             class: 'notification-custom-class',
-//             style: {
-//                 width: '400px',
-//                 height: '130px',
-//                 borderRadius: '12px',
-//                 background: 'var(--secondary-bg) !important',
-//                 boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-//             },
-//         });
-//     }
-//     setInterval(() => {
-//         audio.play()
-//     },1000)
-// })
+// 闹钟完成时弹出
 watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     // const audio = new Audio('/sound/clock.mp3')
     // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');

@@ -35,8 +35,8 @@
 
  </div>
 
- <audio ref="notice" src="/sound/notice.mp3" v-show="!changeIcon"></audio>
- <audio ref="notice" src="/sound/clock.mp3" v-show="changeIcon"></audio>
+ <!-- <audio ref="notice" src="/sound/notice.mp3" v-show="!changeIcon"></audio> -->
+ <audio ref="notice" src="/sound/clock.mp3" v-if="this.soundVisible"></audio>
  
 </template>
 
@@ -45,6 +45,7 @@ import { defineComponent,ref,toRefs,computed, } from 'vue'
 import { mapWritableState,mapActions} from 'pinia'
 import { formatTime } from '../../util'
 import { noticeStore } from '../../store/notice'
+import {topClockSettingStore} from '../../store/topClockSetting'
 import { Icon as clockIcon } from '@iconify/vue'
 import { title } from 'process'
 export default defineComponent({
@@ -53,7 +54,8 @@ export default defineComponent({
   clockIcon
  },
  computed:{
-  ...mapWritableState(noticeStore,['noticeSettings'])
+  ...mapWritableState(noticeStore,['noticeSettings']),
+  ...mapWritableState(topClockSettingStore,['soundVisible']),
  },
   methods:{
     ...mapActions(noticeStore,['setNoticePlay']),

@@ -6,6 +6,7 @@ export const topClockSettingStore = defineStore("topClockSetting", {
     state: () => ({
         topClockSettingVisible: false,
         checkTopClock:true,
+        soundVisible:true,
     }),
     actions:{
         changeSettingStatus() {
@@ -16,6 +17,9 @@ export const topClockSettingStore = defineStore("topClockSetting", {
             this.checkTopClock = value
             // console.log(this.checkTopClock,'控制顶部按钮的显示与隐藏');
             
+        },
+        changeSoundStatus  (value) {
+            this.soundVisible= value
         }
     }
 })
