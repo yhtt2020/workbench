@@ -73,8 +73,15 @@ export const channelClass = {
     // }
   }
 
-  if(data.type === 'community'){ // 创建社区频道
+  if(data.type === 'forum'){ // 创建社区频道
+    // console.log('查看参数',data);
+    const forumOption = {
+      ...option,
+      name:data.content.name,
+      props:JSON.stringify(data.content)
+    }
 
+    return await community.createChannel(forumOption)
   }
 
   if(data.type === 'desk'){  // 创建桌面频道

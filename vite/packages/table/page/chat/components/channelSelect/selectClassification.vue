@@ -22,7 +22,7 @@
  
      <div class="flex flex-col" ref="classSortTab">
       <!-- id="classSortTab" -->
-       <div v-for="(item,index) in categoryClass" class="flex pointer  rounded-lg items-center px-5 mb-4"
+      <div v-for="(item,index) in categoryClass" class="flex pointer  rounded-lg items-center px-5 mb-4"
         style="background:var(--secondary-bg);height: 60px;" :class="{'select-bg':statusIndex === index}"
         @click.stop="listClick(item,index)" :key="index"
        >
@@ -82,7 +82,8 @@ export default {
   },
 
   async mounted (){
-    await this.getChannelList(this.no)
+    // await this.getChannelList(this.no)
+    this.getChannelList(this.no)
 
     // const el = document.querySelector('#classSortTab')
     const el = this.$refs.classSortTab
@@ -179,15 +180,20 @@ export default {
       })
       
     },
+
+
     addClassItem(){  // 新增
 
     },
+
     saveEdit(){  // 保存编辑
 
     },
+
     exitEdit(){  // 退出编辑
 
     },
+
     edit(index){  // 编辑中
      this.isEditing = true
      this.editIndex = index
