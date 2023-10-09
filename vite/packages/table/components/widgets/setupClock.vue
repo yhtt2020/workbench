@@ -65,7 +65,7 @@
                         <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
                             <div class="flex justify-between">
                                 <div class="font-16 xt-text-2">显示在状态栏</div>
-                                <a-switch v-model:checked="checkTopClock" @change="changeSwitchStatus"/>
+                                <a-switch v-model:checked="checkTopClock" @click="changeSwitchStatus"/>
                             </div>
                             <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
                                 在顶部状态栏显示最近闹钟时间。

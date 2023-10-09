@@ -179,7 +179,7 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer progress-bar xt-bg-2" @click="closeDetail"
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar xt-bg-2" @click="closeDetail"
             v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
@@ -193,7 +193,7 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-2 rounded-md clock-timer top-bar" v-else @click="closeDetail"
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail"
             style="width: 132px; height: 32px; position: relative;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>

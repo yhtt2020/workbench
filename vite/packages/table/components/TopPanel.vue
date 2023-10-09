@@ -31,7 +31,7 @@
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible"/>
+        <TopClockTimer v-if="topClockTimerVisible" />
       </div>
       <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
@@ -58,7 +58,7 @@
           </span>
         </div>
       </div>
-
+      
     </div>
     <div id="windowController" v-if="showWindowController" class="flex rounded-bl-lg s-item s-bg btn-container "
          style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
@@ -397,7 +397,7 @@ export default {
   display: flex;
   // position: relative;
   position: absolute;
-  right:158px;
+  right:170px;
   top: -5px;
 }
 </style>
