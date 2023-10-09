@@ -107,8 +107,8 @@ export const communityStore = defineStore('communityStore',{
         const filterTypeChannel = res?.data?.list.filter((item:any)=>{
          return item.role === 'channel'
         })
-        console.log('排查过滤后的有子级目录数据',filterCategoryRes)
-        console.log('排查过滤后的没有子级目录数据',filterTypeChannel)
+        // console.log('排查过滤后的有子级目录数据',filterCategoryRes)
+        // console.log('排查过滤后的没有子级目录数据',filterTypeChannel)
 
         this.categoryClass  = filterCategoryRes
         this.channelList = filterTypeChannel
@@ -133,16 +133,15 @@ export const communityStore = defineStore('communityStore',{
     }
    },
 
-   // 更新频道目录分类选择
-   updateCategoryClass(data:any){
-    this.categoryClass = data
+   // 更新社群频道
+   async updateChannel(data:any){
+     return  await  post(sUrl("/app/community/channel/updateProfile"),data)
    },
  
 
    // 删除社群频道
-   
    async removeCategory(id:any){
-    return post(deleteCategory,{id:id})
+    return await post(deleteCategory,{id:id})
    }
 
 

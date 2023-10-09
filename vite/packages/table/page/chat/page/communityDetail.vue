@@ -133,10 +133,10 @@ export default {
   },
 
   async mounted(){
-    console.log('启动')
+    // console.log('启动')
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
-    console.log(rs)
+    // console.log(rs)
   },
 
   data(){
@@ -219,7 +219,7 @@ export default {
     // 通过监听方式获取社群号
     '$route':{
       handler(to,from){
-       console.log('参数1::>>',to.params.no);
+      //  console.log('参数1::>>',to.params.no);
        //  console.log('参数2::>>',from);
        this.routeData = to.params.no
         
