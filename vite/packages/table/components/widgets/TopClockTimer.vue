@@ -1,5 +1,5 @@
 <template>
-    <tippy trigger=" click" placement="bottom" :interactive="true">
+    <tippy trigger=" click" placement="bottom" :interactive="true" class="xt-bg tippy-trigger" >
         <template #content>
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
@@ -104,7 +104,7 @@
 
             </div>
             <!-- 一级快捷面板 -->
-            <div class="w-[300px] h-[300px] relative  rounded-lg p-0 tippy-trigger" v-show="customizeSetting">
+            <div class="w-[300px] h-[300px] relative xt-bg  rounded-lg p-0 tippy-trigger" v-show="customizeSetting">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
@@ -131,20 +131,20 @@
                                 我的闹钟
                             </div>
                             <div>
-                                <tippy toggle="hover">
+                                <tippy toggle="mouseenter">
                                     <template #content><div class="xt-text  font-16">添加闹钟</div>
                                     </template>
                                     <clockIcon class="mr-3 xt-text font-20" @click="settingClock" icon="fluent:add-16-filled"></clockIcon>
                                     
                                 </tippy>
-                                <tippy toggle="hover">
+                                <tippy toggle="mouseenter">
                                     <template #content><div class="xt-text  font-16">添加计时器</div>
                                     </template>
                                     <clockIcon class="mr-3 text-base xt-text font-20" icon="fluent:clock-12-regular"
                                         @click="settingCountDown">
                                     </clockIcon>
                                 </tippy>
-                                <tippy toggle="hover">
+                                <tippy toggle="mouseenter">
                                     <template #content>
                                         <div class="xt-text  font-16">
                                             铃声调节
@@ -155,7 +155,7 @@
                                     <clockIcon class=" xt-text font-20" icon="akar-icons:sound-off" v-if="!soundVisible"
                                         @click="changeSoundStatus"></clockIcon>
                                 </tippy>
-                                <tippy toggle="hover">
+                                <tippy toggle="mouseenter">
                                     <template #content>
                                         <div class="xt-text  font-16">
                                             设置
@@ -450,41 +450,14 @@ watch(countDownDate, (newVal, oldVal) => {
         return totalTime.trim()
     })
     if (newVal < 0) {
-        // console.log(useCountDownStore.selectValue, 'value');
-
-
         const key = `open${Date.now()}`
-        notification.open({
-            message: '计时器',
-            description: `${countDownTotalTime.value}到了`,
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px;background-color:var(--secondary-bg);' }),
-            btn: () =>
-                h(
-                    Button,
-                    {
-                        type: 'primary',
-                        onClick: () => notification.close(key),
-                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-                    },
-                    { default: () => 'OK' },
-                ),
-            key,
-            // onClose: close,
-            style: {
-                width: '400px',
-                height: '130px',
-                borderRadius: '12px',
-                background: 'var(--secondary-bg) !important',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-                color: ' var(--secondary-text) !important;',
-            },
-            class: 'font-16'
-        });
-        // notifications.systemToast('111111',null)
-        const audio = new Audio('/sound/message.mp3')
-        audio.play()
+        let message=`${countDownTotalTime.value}到了`
+        notifications.clockToast(message,'计时器',false)
     }
-    // notification.SystemClockNoticeToast(countDownTotalTime.value)
+
+
+
+    
 })
 // 当闹钟完成时触发弹窗
 // watch( clockFlag, (newVal, oldVal) => {
@@ -524,7 +497,7 @@ watch(countDownDate, (newVal, oldVal) => {
 //     },1000)
 // })
 watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
-    const audio = new Audio('/sound/clock.mp3')
+    // const audio = new Audio('/sound/clock.mp3')
     // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
     const firstClock = computed(() => {
         return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
@@ -533,35 +506,9 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
         useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
         const key = `open${Date.now()}`
-        notification.open({
-            message: '闹钟',
-            description: `${firstClock.value}到了,${clockEvent.value[0].eventValue}`,
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
-            btn: () =>
-                h(
-                    Button,
-                    {
-                        type: 'primary',
-                        onClick: () => notification.close(key),
-                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-                    },
-                    { default: () => 'OK' },
-                ),
-            key,
-            style: {
-                width: '400px',
-                height: '130px',
-                borderRadius: '12px',
-                background: 'var(--secondary-bg) !important',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-            },
-            class: 'font-16',
-        });
-        audio.play()
+        let message=`${firstClock.value}到了,${clockEvent.value[0].eventValue}`
+        notifications.clockToast(message,'闹钟',true)
     }
-    // setInterval(() => {
-
-    // },1000)
 
 })
 
