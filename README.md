@@ -1,5 +1,7 @@
 # 项目说明
 ![Picture](https://www.apps.vip/wp-content/uploads/2023/09/1695004332-%E6%A1%8C%E9%9D%A2-1385x800.png)
+![Picture](https://www.apps.vip/wp-content/uploads/2023/06/1687245185-%E7%BC%96%E7%BB%84-16-1400x436.png)
+目前支持在电脑上使用，外接扩展屏的时候，可以实现触摸操作。也可以在主屏中窗口化使用。
 
 本项目官方主页：[想天浏览器官方主页](https://www.apps.vip)
 
