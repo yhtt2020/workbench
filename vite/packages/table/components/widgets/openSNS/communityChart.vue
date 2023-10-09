@@ -262,28 +262,28 @@ export default {
     },
     watch:{
         "defaultDataType": {
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-                this.updateCustomData(this.customIndex,{
-                    "defaultDataType": this.defaultDataType,
-                },this.desk)
-            }
+            // handler(newVal, oldVal){
+            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+            //     this.updateCustomData(this.customIndex,{
+            //         "defaultDataType": this.defaultDataType,
+            //     },this.desk)
+            // }
         },
         "defaultTimeType":{
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-                this.updateCustomData(this.customIndex,{
-                    "defaultTimeType": this.defaultTimeType,
-                },this.desk)
-            }
+            // handler(newVal, oldVal){
+            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+            //     this.updateCustomData(this.customIndex,{
+            //         "defaultTimeType": this.defaultTimeType,
+            //     },this.desk)
+            // }
         },
         "defaultPlatType":{
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
-                this.updateCustomData(this.customIndex,{
-                    "defaultPlatType": this.defaultPlatType,
-                },this.desk)
-            }
+            // handler(newVal, oldVal){
+            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
+            //     this.updateCustomData(this.customIndex,{
+            //         "defaultPlatType": this.defaultPlatType,
+            //     },this.desk)
+            // }
         }
     }
 };
