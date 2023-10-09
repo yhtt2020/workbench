@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {setSupervisoryData} from '../js/action/supervisory'
 import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
+import { completeTask } from "../apps/task/page/branch/task"
 declare interface IDisplayData {
   useGPU: number,
   useCPU: number,
@@ -78,6 +79,8 @@ export const inspectorStore = defineStore(
         this.inspectorTimer = setInterval(() => {
           readAida64()
             .then((res) => {
+              // 性能捕获 支线任务点
+              completeTask('Z0106')
               this.runAida64 = true;
               const newData = setSupervisoryData(res);
               this.aidaData=res

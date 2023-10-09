@@ -11,22 +11,10 @@ export const taskStore = defineStore("taskStore", {
     list: [],
     deskID: 0,
     startBranchTask: new Set([]), // 启动的支线任务
-    successBranchTask: new Set(["Z0101", "Z0201", "Z0202"]), // 完成的支线任务
+    successBranchTask: new Set([]), // 完成的支线任务
   }),
   getters: {},
-  actions: {
-    // 完成任务
-    completeTask(id) {
-      console.log("开始任务 :>> ");
-      if (this.startBranchTask.has(id)) {
-        this.startBranchTask.delete(id);
-        this.successBranchTask.add(id);
-        console.log("任务完成 :>> ");
-      }else {
-        console.log('任务失败了 :>> ', );
-      }
-    },
-  },
+  actions: {},
   persist: {
     enabled: true,
     strategies: [
@@ -37,8 +25,8 @@ export const taskStore = defineStore("taskStore", {
           "firstTask",
           "success",
           "isTask",
-          // "startBranchTask",
-          // "successBranchTask",
+          "startBranchTask",
+          "successBranchTask",
         ],
         storage: localStorage,
       },

@@ -38,6 +38,8 @@ export default defineComponent({
       default: false,
     },
     fn: {},
+    id: {},
+    no: {},
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
@@ -45,17 +47,29 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      return this.modelValue ? true : null;
+      console.log(' this.state  :>> ',  this.state );
+      return this.state ? true : null;
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
       let next = this.step == length ? "完成" : this.task?.next || "下一步";
       return `${next} ${this.step} / ${length}`;
     },
+    //
+    state() {
+      if (this.id && this.no) {
+        let flag = this.taskID == this.id && this.step == this.no;
+        if (flag) this.start();
+        return flag;
+      } else {
+        return this.modelValue;
+      }
+    },
   },
   watch: {
     modelValue: {
       handler(newV) {
+        console.log("newV :>> ", newV);
         this.$nextTick(() => {
           if (newV) {
             this.start();
@@ -80,7 +94,6 @@ export default defineComponent({
       this.tour.next();
       this.step++;
       if (this.task.success) {
-
         this.success = true;
         // 发奖励
       }

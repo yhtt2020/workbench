@@ -6,10 +6,9 @@ export const completeTask = (id) => {
   const { startBranchTask, successBranchTask } = store;
   const toast = useToast();
   if (startBranchTask.has(id)) {
+    console.log('"任务开始" :>> ', "任务开始");
     startBranchTask.delete(id);
     successBranchTask.add(id);
     toast.success("任务完成");
-  } else {
-    toast.error("任务失败");
   }
 };

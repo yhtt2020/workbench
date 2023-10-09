@@ -45,6 +45,7 @@ export default {
         if(this.currentChannel.name!=='all'){
           channelType=this.CONST.CHANNEL.TEAM
           pageUrl=this.myTeamNo
+          completeTask('Z0502')
           if(String(pageUrl).trim()===''){
             await this.updateMy()
             if(String(pageUrl).trim()===''){
@@ -64,6 +65,7 @@ export default {
           if (!this.hideAdmin) {
             this.hideAdmin = true
           }
+          console.log('33233333 :>> ', 33233333);
           message.success('弹幕发送成功')
           setTimeout(() => {
             if(this.currentChannel.name==='all'){

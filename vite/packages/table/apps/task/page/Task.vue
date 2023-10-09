@@ -41,11 +41,11 @@ const menus = ref([
     value: "Branch",
     callBack: selectTab,
   },
-  {
-    newIcon: "fluent-emoji:rainbow",
-    value: "Branch",
-    callBack: selectTab,
-  },
+  // {
+  //   newIcon: "fluent-emoji:rainbow",
+  //   value: "Branch",
+  //   callBack: selectTab,
+  // },
   {
     icon: "shezhi1",
     value: "Set",
