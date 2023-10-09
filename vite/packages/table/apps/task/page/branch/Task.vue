@@ -1,13 +1,13 @@
 <template>
   <div>
     <xt-title m="mb">
-      <xt-new-icon icon="icon-park-outline:left" />
       <div class="flex">
         <!-- <MyIcon
           icon="icon-park-outline:left"
           @click="back()"
           style="height: 24px; font-size: 20px"
         /> -->
+        <xt-new-icon icon="fluent:chevron-left-16-filled" @click="back()" />
         {{ task.chapter }}
       </div>
       <template #right>

@@ -13,15 +13,15 @@ export const guide = {
   },
   Z0104: {
     type: "router",
-    value: "GameCapture",
+    value: "home",
   },
   Z0105: {
     type: "router",
-    value: "GameCapture",
+    value: "home",
   },
   Z0106: {
     type: "router",
-    value: "gameSetting",
+    value: "home",
   },
   Z0201: {},
   Z0202: {},
