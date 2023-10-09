@@ -1,29 +1,29 @@
 <template>
-  <div  class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
+  <div class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
 
     <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
-        <div  class="mr-2 cursor-pointer no-drag" @click="enterClipboard" >
+        <div class="mr-2 cursor-pointer no-drag" @click="enterClipboard">
           <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
         </div>
       </a-tooltip>
 
       <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
-           v-if="runningGame.appid">
-        <a-avatar :size="22" :src=" getClientIcon(this.runningGame.appid,this.runningGame.clientIcon)"></a-avatar>
+        v-if="runningGame.appid">
+        <a-avatar :size="22" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
         {{ runningGame.chineseName }}
       </div>
       <a-tooltip title="音乐播放中，点击进入应用，右键查看全部" v-else-if="status.music.playing && status.music.title && status.music">
-      <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);"
-           @click="enterMusic">
-        <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
-        {{ status.music.title }} {{ status.music.singer }}
-      </div>
+        <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);"
+          @click="enterMusic">
+          <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
+          {{ status.music.title }} {{ status.music.singer }}
+        </div>
       </a-tooltip>
     </div>
     <div class="flex max-search" hidden="">
       <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
-           style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
+        style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
@@ -31,22 +31,24 @@
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible" />
+        <TopClockTimer v-if="topClockTimerVisible" @click="change"/>
       </div>
-      <div  v-if="noticeSettings.show && hasChat"  class="flex items-center no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
+      <div v-if="noticeSettings.show && hasChat" class="flex items-center no-drag pointer" @click="messageAlert"
+        style="color: var(--primary-text);">
         <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
           <img src="/icons/logo128.png" class="object-cover w-full h-full">
           <div class="new-message-tag"></div>
         </div>
         <div class="pl-1 primary-title pointer" style="color: var(--primary-text);">新消息</div>
-        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 "/>
+        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 " />
       </div>
 
-      <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert" style="color: var(--primary-text);">
+      <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert"
+        style="color: var(--primary-text);">
         <Icon icon="notification" style="font-size:1.5em;"></Icon>
       </div>
       <div class="mr-2"
-           style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
+        style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
         <div class="truncate no-drag" v-if="!loading">
           <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
             <!-- {{ lockTimeoutDisplay }}后锁屏 -->
@@ -58,17 +60,17 @@
           </span>
         </div>
       </div>
-      
+
     </div>
     <div id="windowController" v-if="showWindowController" class="flex rounded-bl-lg s-item s-bg btn-container "
-         style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
+      style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
       <WindowController></WindowController>
     </div>
   </div>
 
 
   <a-drawer :width="500" :closable="false" style="z-index:1000;" placement="right" v-model:visible="messageDrawer"
-            :bodyStyle="{padding:'12px 12px 12px 0 ',overflow:'hidden !important',}" @closeMessage="messageDrawer = false">
+    :bodyStyle="{ padding: '12px 12px 12px 0 ', overflow: 'hidden !important', }" @closeMessage="messageDrawer = false">
     <MessagePopup @closeMessage="messageDrawer = false"></MessagePopup>
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
@@ -106,7 +108,6 @@
       </div>
     </div>
   </a-drawer>
-
 </template>
 
 <script>
@@ -114,6 +115,7 @@ import { countDownStore } from '../store/countDown'
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
+import { topClockSettingStore } from '../store/topClockSetting'
 import { mapWritableState, mapState, mapActions } from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
@@ -136,7 +138,7 @@ export default {
     TopTomato,
     TopClockTimer,
   },
-  data () {
+  data() {
     return {
       loading: true,
       dateTime: {},
@@ -145,11 +147,11 @@ export default {
       showLockTip: false,
       messageDrawer: false,
       appStats: false,
-      topClockTimerVisible:false,
+      topClockTimerVisible: false,
     }
   },
   computed: {
-    ...mapWritableState(countDownStore,['countDowndate','countDowntime']),
+    ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
@@ -157,15 +159,16 @@ export default {
     ...mapWritableState(timerStore, ['lockTimeout']),
     ...mapWritableState(steamUserStore, ['runningGame']),
     ...mapState(clipboardStore, ['enable']),
-    ...mapState(noticeStore,['noticeSettings']),
+    ...mapState(noticeStore, ['noticeSettings']),
+    ...mapWritableState(topClockSettingStore, ['checkTopClock']),
     isMain,
-    lockTimeoutDisplay () {
+    lockTimeoutDisplay() {
       // if(this.lockTimeout>=60){
       //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'
       // }else{
       //   return this.lockTimeout+'秒'
       // }
-      function secTotime (s) {
+      function secTotime(s) {
         var t = ''
         if (s > -1) {
           var hour = Math.floor(s / 3600)
@@ -192,7 +195,7 @@ export default {
 
       return secTotime(this.lockTimeout)
     },
-    city () {
+    city() {
       if (this.cities[0]) {
         return this.cities[0]
       } else {
@@ -200,16 +203,16 @@ export default {
       }
 
     },
-    hasWeather () {
+    hasWeather() {
       return this.cities.length > 0
     },
 
-    hasChat(){
+    hasChat() {
       return this.$route.path !== '/chat'
     },
-
+    
   },
-  async mounted () {
+  async mounted() {
     window.onblur = () => {
       this.setLockTimer()
     }
@@ -221,7 +224,7 @@ export default {
       setInterval(this.getTime, 1000)
     }
   },
-  created () {
+  created() {
     this.getTime()
   },
   methods: {
@@ -229,9 +232,9 @@ export default {
     getIcon,
     getCover,
     ...mapActions(cardStore, ['setAppDate']),
-    ...mapActions(noticeStore,['hideNoticeEntry','loadNoticeDB']),
+    ...mapActions(noticeStore, ['hideNoticeEntry', 'loadNoticeDB']),
 
-    clearLockTimer () {
+    clearLockTimer() {
       if (this.lockTimer) {
         clearInterval(this.lockTimer)
         this.lockTimer = null
@@ -239,15 +242,15 @@ export default {
         this.showLockTip = false
       }
     },
-    toggleAppStats () {
+    toggleAppStats() {
       this.appStats = !this.appStats
     },
-    enterClipboard () {
+    enterClipboard() {
       this.$router.push({
         name: 'clipboard'
       })
     },
-    setLockTimer () {
+    setLockTimer() {
       if (this.settings.enable) {
         //只有启用了锁屏才会触发这个效果
         if (this.lockTimer) {
@@ -265,19 +268,19 @@ export default {
         }
       }
     },
-    openGlobalSearch () {
+    openGlobalSearch() {
       ipc.send('openGlobalSearch')
     },
-    getTime () {
+    getTime() {
       this.dateTime = getDateTime()
       this.setAppDate(this.dateTime)
     },
-    enterMusic () {
+    enterMusic() {
       this.$router.push({
         name: 'music',
       })
     },
-    enterGameDesk (appid) {
+    enterGameDesk(appid) {
       this.$router.push({
         name: 'gameIndex',
         params: {
@@ -285,27 +288,36 @@ export default {
         }
       })
     },
-    messageAlert () {
+    messageAlert() {
       this.messageDrawer = true
-      this.$nextTick(async()=>{
+      this.$nextTick(async () => {
         await this.loadNoticeDB()
       })
       this.hideNoticeEntry()
     },
-    topClockTimerVisibleSetting(){
-      if(this.clockEvent.length>0 ){
-        // console.log(this.clockEvent);
-        this.topClockTimerVisible=true
-      }
-      else if(this.countDowntime.seconds!==undefined){
-        // console.log(this.countDowndate);
-        this.topClockTimerVisible=true
-      }
-      else{
-        // console.log(this.countDowndate,this.clockEvent);
+    topClockTimerVisibleSetting() {
+      if(this.checkTopClock===true){
+        if (this.clockEvent.length > 0) {
+          // console.log(this.checkTopClock);
+          this.topClockTimerVisible = true
+        }
+        else if (this.countDowntime.seconds !== undefined) {
+          // console.log(this.countDowndate);
+          this.topClockTimerVisible = true
+        }
+        else {
+          // console.log(this.countDowndate,this.clockEvent);
+          this.topClockTimerVisible = false
+        }
+      }else{
         this.topClockTimerVisible=false
+        
       }
-    }
+        
+      
+
+    },
+    
 
   },
   beforeUpdate() {
@@ -369,16 +381,16 @@ export default {
   }
 }
 
-.new-message-tag::after{
+.new-message-tag::after {
   content: "";
   display: block;
-  width:7px;
+  width: 7px;
   height: 7px;
-  background-color:var(--error);
+  background-color: var(--error);
   border-radius: 50%;
-  position:absolute;
-  top:0px;
-  right:0px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 
@@ -387,17 +399,24 @@ export default {
   animation: blink 1s infinite;
 
   @keyframes blink {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
   }
 }
 
-.top-state{
+.top-state {
   display: flex;
   // position: relative;
   position: absolute;
-  right:170px;
+  right: 170px;
   top: -5px;
-}
-</style>
+}</style>

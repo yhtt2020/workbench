@@ -65,7 +65,7 @@
                         <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
                             <div class="flex justify-between">
                                 <div class="font-16 xt-text-2">显示在状态栏</div>
-                                <a-switch v-model:checked="checkTopClock" @click="changeSwitchStatus"/>
+                                <a-switch v-model:checked="checked"  @change="changeSwitchStatus(checked)"/>
                             </div>
                             <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
                                 在顶部状态栏显示最近闹钟时间。
@@ -157,8 +157,8 @@ export default {
             ],
             defaultType: { title: '不重复', name: '不重复' },
             selectDataType:[ '始终显示','显示30分钟内的闹钟','显示1小时内的闹钟'],
-            defaultDataType:'始终显示'
-            
+            defaultDataType:'始终显示',
+            checked:true,
         };
     },
 
@@ -255,8 +255,9 @@ export default {
         onClockMenuClick(e, index) {
             this.removeClock(index, 1);
         },
-        changeSwitchStatus(){
-            this.changeTopClockStatus()
+        changeSwitchStatus(value){
+            console.log(this.checked);
+            this.changeTopClockStatus(value)
             // console.log(1111);
         }
     },
