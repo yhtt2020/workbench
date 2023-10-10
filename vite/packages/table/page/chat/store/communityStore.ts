@@ -98,7 +98,7 @@ export const communityStore = defineStore('communityStore',{
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const res =  await post(getChannelList,option)
-      console.log('排查数据',res)
+      // console.log('排查数据',res)
       if(res?.data?.list){
         const filterCategoryRes = res?.data?.list.filter((item:any)=>{
          return item.role === 'category'

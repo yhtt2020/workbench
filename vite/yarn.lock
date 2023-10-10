@@ -557,7 +557,14 @@
   resolved "https://registry.npmmirror.com/@floating-ui/utils/-/utils-0.1.1.tgz"
   integrity sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==
 
-"@iconify/types@^2.0.0":
+"@iconify-icons/fluent@^1.2.35":
+  version "1.2.36"
+  resolved "https://registry.npmmirror.com/@iconify-icons/fluent/-/fluent-1.2.36.tgz#c8a79c5b3482ecc33c2ede64a1a4afe3aec226dd"
+  integrity sha512-jwf6TfeVpO5weJhLIbgn6c4n1I1lYA7CVAW4tUqSlxcx1Cw+LD5go8h/LnkDw0msALA/fHDmBdLgSY+4Fr4LFQ==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmmirror.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -3095,11 +3102,6 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
-
-lightgallery@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.npmmirror.com/lightgallery/-/lightgallery-2.7.1.tgz"
-  integrity sha512-NbXOzD2APY1OhOOn464jDsBZBaCRahUoLvBxhDFxvwJeC8hCkCIPYSjGgGTYINxVK09DKMsNDJzRr1ngH5nDdg==
 
 lilconfig@^2.0.5, lilconfig@^2.0.6:
   version "2.1.0"
