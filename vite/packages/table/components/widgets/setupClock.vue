@@ -1,19 +1,19 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="12" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
+            <a-col :span="12" style="border-right: 1px solid var(--divider); height: calc(100vh - 5em )">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: calc(100vh -5em );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
                             <a-input ref="input" allow-clear @click="$refs.input.select()" v-model:value="eventValue"
-                                style="border-radius: 10px;height: 40px; width: 100%;" placeholder="新闹钟" />
+                                style="border-radius: 10px;height: 40px; width: 100%; border:1px solid var(--secondary-text);" placeholder="新闹钟" />
                         </div>
 
                         <div class="mb-4 font-16 xt-text">小时</div>
                         <div>
-                            <a-radio-group button-style="solid" v-model:value="timeHour" class="flex rounded-lg xt-bg-2 "
+                            <a-radio-group button-style="solid " v-model:value="timeHour" class="flex rounded-lg xt-bg-2 " style="1px solid var(--secondary-text);"
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
@@ -27,7 +27,7 @@
                             <div class="mt-4 mb-4 font-16 xt-text">分钟</div>
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
-                                style="width:100%;  height: 40px; border-radius: 10px;">
+                                style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--secondary-text);">
                                 <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2">
                                     {{ index }}
                                 </a-select-option>
