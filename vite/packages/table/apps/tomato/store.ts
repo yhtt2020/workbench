@@ -26,7 +26,7 @@ export const tomatoStore = defineStore("tomatoStore", {
     // 当前是否暂停
     isPause:false,
     // 控制背景
-    isColor:"#E7763E",
+    isColor:"#e5b047",
     // 开关
     isFlag:true,
     // 是否全屏
@@ -88,7 +88,8 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.isPause = false
       this.reset(0, 25, 0)
       this.timer = setInterval(this.interval, this.tick)
-      this.isColor ="#e5b047";
+      // this.isColor ="#e5b047";
+      this.isColor ="#E7763E";
     },
     // 结束
     onStop(){
@@ -96,7 +97,9 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.running = false;
       this.clearInterval()
       this.reset(0, 0, 0)
-      this.isColor ="#E7763E";
+      this.isColor ="#e5b047";
+      this.isFullState=false;
+      // this.isColor ="#E7763E";
     },
     // 暂停
     onPause () {
@@ -121,7 +124,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.clearInterval()
       this.reset()
       this.addTomatoNum()
-      this.isColor ="#E7763E";
+      this.isColor ="#e5b047";
       toast.success("番茄任务完成");
     },
     // 设置定时器
