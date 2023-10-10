@@ -20,6 +20,8 @@ import {CalendarOutlined} from "@ant-design/icons-vue";
 import objectSupport from "dayjs/plugin/objectSupport";
 import TimerSelector from "./TimerSelector.vue";
 import {configStore, listStore} from "../store";
+// import { completeTask } from "../apps/task/page/branch/task"
+ import { completeTask } from "../../../../apps/task/page/branch/task.ts"
 
 dayjs.locale("zh-cn");
 dayjs.extend(objectSupport);
@@ -83,7 +85,8 @@ export default {
       }else{
         task.listNanoid=[]
       }
-
+      // 支线任务点
+      completeTask('Z0203')
 
       task = Object.assign(this.newTask, {});
       this.addTask(task);

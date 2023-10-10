@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-active xt-base-btn" :style="boxStyle">
+  <div class="xt-active xt-base-btn xt-text" :style="boxStyle">
     <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>

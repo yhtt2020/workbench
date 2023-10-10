@@ -89,6 +89,7 @@ import UserAvatar from "../small/UserAvatar.vue";
 import {teamStore} from "../../store/team";
 import {message} from "ant-design-vue";
 import XtButton from '../../ui/libs/Button/index.vue'
+import {completeTask} from "../../apps/task/page/branch/task"
 
 export default {
   name: "TeamDevote",
@@ -149,6 +150,8 @@ export default {
       let rs = await this.exchangeDevote(uid)
       if (rs.status) {
         message.success('兑换成功')
+      // 支线任务点
+      completeTask('Z0402')
         await this.getMemberDevote()
       } else {
         message.error('兑换失败，失败原因：' + rs.info)

@@ -59,7 +59,7 @@
             style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
             ref="content"
           >
-            <xt-task :modelValue="m01041" @cb="showMenu">
+            <xt-task id='M0104' no='1' @cb="showMenu">
               <div
                 style="white-space: nowrap; display: flex; align-items: center"
                 id="bottomContent"
@@ -207,7 +207,7 @@
     <a-row>
       <a-col>
         <div @click="editNavigation" class="btn relative">
-          <xt-task :modelValue="m01042" @cb="editNavigation">
+          <xt-task  id='M0104' no="2" @cb="editNavigation">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>编辑导航</span></div>
           </xt-task>
@@ -291,7 +291,6 @@ import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
-import { taskStore } from '../apps/task/store'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
 
@@ -415,7 +414,6 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(screenStore, ['screens']),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(taskStore, ['taskID', 'step']),
     ...mapWritableState(navStore, [
       'footNavigationList',
       'builtInFeatures',
@@ -424,12 +422,6 @@ export default {
       'rightNavigationList',
       'mainNavigationList',
     ]),
-    m01041 () {
-      return this.taskID == 'M0104' && this.step == 1
-    },
-    m01042 () {
-      return this.taskID == 'M0104' && this.step == 2
-    },
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
