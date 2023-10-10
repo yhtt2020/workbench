@@ -19,9 +19,9 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-      style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+      style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
       >
-      <!-- style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()" -->
+      <!-- style="width: 64px;height: 64px; position:relative"  @click="" onShowSelect -->
      <!--  -->
       <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar>
       <div class="flex items-center rounded-full p-3 justify-center"
@@ -35,7 +35,7 @@
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
 
-    <a-input v-model:value="communityName" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
+    <a-input v-model:value="communityName" spellcheck="false" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
     <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
@@ -55,7 +55,7 @@ import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import { communityStore } from '../store/communityStore'
 import { Icon as communityIcon } from '@iconify/vue'
- import SelectIcon from '../../../components/SelectIcon.vue'
+import SelectIcon from '../../../components/SelectIcon.vue'
 
 export default {
   props:['id'],
@@ -73,6 +73,13 @@ export default {
 
   computed:{
 
+  },
+
+  mounted(){
+    this.$nextTick(()=>{
+      const inputDom = document.querySelector('.search')
+      inputDom.focus()
+    })
   },
 
   methods:{
@@ -130,7 +137,7 @@ export default {
 
       }else{
         evt.preventDefault();
-        message.error('不能超过2-16个汉字')
+        message.error('社群名称长度的范围需要在2-16个字符之间')
       }
 
     }
