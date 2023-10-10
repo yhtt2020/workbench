@@ -3,7 +3,7 @@
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <span class="font-16-400" style="color:var(--primary-text);">添加分组</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeNewGroup">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+    <CategoryIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
    </div>
   </div>
 
@@ -18,89 +18,85 @@
 </template>
 
 <script>
-import { defineComponent, reactive,toRefs,computed,} from 'vue'
-import { CloseOutlined } from '@ant-design/icons-vue'
+import { mapActions,mapWritableState } from 'pinia'
+import { Icon as  CategoryIcon } from '@iconify/vue'
 import { communityStore } from '../store/communityStore'
 import { message } from 'ant-design-vue'
 
+export default {
+  props: ["no"],
 
-export default defineComponent({
- props:['no'],
+  components:{
+   CategoryIcon
+  },
 
- components:{
-  CloseOutlined
- },
-
- setup (props,ctx) {
-
-  const category = communityStore()
-
-  const data = reactive({
-   categoryName:''  // 接收分组名称
-  })
-  
-  const closeNewGroup = () => {
-   ctx.emit('close')
-  }
-
-  // 创建分组按钮
-  const submitCategory = async () =>{
-
-   if(data.categoryName !== '' && props.no !== '1'){ 
-    // 创建频道目录参数
-    const option = {   
-     name:data.categoryName, communityNo:props.no,
-     type:'category',role:'category',parentId:0,
+  data() {
+    return {
+     categoryName:'',
     }
-    const categoryRes =  await category.createChannel(option)
-    if(categoryRes.status === 1){
-     message.success(`${categoryRes.info}`)
-     console.log('排查::>>',props.no)
-     await category.getCategoryData(props.no)
-     closeNewGroup()
-    }else{
-     message.error(`${categoryRes.info}`)
-     closeNewGroup()
+  },
+
+  methods: {
+   ...mapActions(communityStore,['createChannel','getCategoryData']),
+   // 关闭弹窗
+   closeNewGroup(){
+    this.$emit('close')
+   },
+
+   // 创建完成
+   async submitCategory(){
+    if(this.categoryName !== '' && this.no !== '1'){
+     const option = {   
+      name:this.categoryName, communityNo:this.no,
+      type:'category',role:'category',
+     }
+     console.log('排查参数问题',option);
+     
+     const categoryRes =  await this.createChannel(option)
+     console.log('查看状态',categoryRes);
+   
+     if(categoryRes.status === 1){
+      message.success(`${categoryRes.info}`)
+      await this.getCategoryData(this.no)
+      this.closeNewGroup()
+     }else{
+      message.error(`${categoryRes.info}`)
+      this.closeNewGroup()
+     }
+
     }
    }
-  }
 
-
-
-  return {
-   ...toRefs(data), 
-   closeNewGroup,submitCategory,
-  }
- }
-})
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-.font-16-400{
- font-family: PingFangSC-Regular;
- font-size: 16px;
- font-weight: 400;
+.font-16-400 {
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-.close-channel{
- position: absolute;
- top:1px;
- right:12px;
+.close-channel {
+  position: absolute;
+  top: 1px;
+  right: 12px;
 }
 
-.active-button{
- &:active{
-  filter: brightness(0.8);
-  opacity: 0.8;
- }
- &:hover{
-  opacity: 0.8;
- }
+.active-button {
+  &:active {
+    filter: brightness(0.8);
+    opacity: 0.8;
+  }
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
-.font-14-400{
- font-family: PingFangSC-Regular;
- font-size: 14px;
- font-weight: 400;
+.font-14-400 {
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  font-weight: 400;
 }
 </style>

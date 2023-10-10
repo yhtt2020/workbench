@@ -73,9 +73,13 @@ export default defineComponent({
         console.log(src)
         this.showToast(src)
       })
+      // 截图 支线任务点
+
     },
     startRecord(){
+      // console.log('object :>> ', object);
       this.startRecording()
+      // 录制 支线任务点
     },
     stopRecord(){
       this.stopRecording()

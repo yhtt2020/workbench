@@ -98,37 +98,50 @@ export const communityStore = defineStore('communityStore',{
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const res =  await post(getChannelList,option)
-      // console.log('排查数据',res)
+      console.log('排查数据',res)
+      if(res?.data?.list){
+        const filterCategoryRes = res?.data?.list.filter((item:any)=>{
+         return item.role === 'category'
+        })
 
-      const filterCategoryRes = res?.data?.list.filter((item:any)=>{
-        return item.role === 'category'
-      })
+        const filterTypeChannel = res?.data?.list.filter((item:any)=>{
+         return item.role === 'channel'
+        })
+        // console.log('排查过滤后的有子级目录数据',filterCategoryRes)
+        // console.log('排查过滤后的没有子级目录数据',filterTypeChannel)
 
-      const filterTypeChannel = res?.data?.list.filter((item:any)=>{
-        return item.role === 'channel'
-      })
-
-
-      // console.log('排查过滤后的数据',filterCategoryRes)
-
-      if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
         this.categoryClass  = filterCategoryRes
         this.channelList = filterTypeChannel
       }
 
+      // const filterCategoryRes = res?.data?.list.filter((item:any)=>{
+      //   return item.role === 'category'
+      // })
+
+      // const filterTypeChannel = res?.data?.list.filter((item:any)=>{
+      //   return item.role === 'channel'
+      // })
+
+
+      // // console.log('排查过滤后的数据',filterCategoryRes)
+
+      // if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
+        // this.categoryClass  = filterCategoryRes
+        // this.channelList = filterTypeChannel
+      // }
+
     }
    },
 
-   // 更新频道目录分类选择
-   updateCategoryClass(data:any){
-    this.categoryClass = data
+   // 更新社群频道
+   async updateChannel(data:any){
+     return  await  post(sUrl("/app/community/channel/updateProfile"),data)
    },
  
 
    // 删除社群频道
-   
    async removeCategory(id:any){
-    return post(deleteCategory,{id:id})
+    return await post(deleteCategory,{id:id})
    }
 
 

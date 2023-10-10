@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full">
-    <xt-left-menu :list="leftApp" end="2"></xt-left-menu>
+    <xt-left-menu :list="filterLeft" end="2"></xt-left-menu>
     <div class="w-full" v-if="rightVisible !== 'setting'">
       <NoticeRightTop  :appType="rightVisible" :list="appContentList" :appItem="topTitle" @updateNotice="updateNotice"></NoticeRightTop>
       <AllNotice v-if="rightVisible === 'all'" @closeMessage="close" :list="appContentList"></AllNotice>
@@ -28,6 +28,7 @@
 
 <script>
 import { defineComponent,ref,toRefs,reactive,computed,watch } from 'vue'
+import { appStore } from '../../store'
 import { noticeStore } from '../../store/notice'
 import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
@@ -44,15 +45,31 @@ export default defineComponent({
     NoticeDetail
   },
 
-  setup(props,ctx) {
-    const store = noticeStore();
+  setup(props,ctx){
+    const store = appStore();
+    const notice = noticeStore()
+    const { settings } = store
 
     const data = reactive({
       rightVisible:'all', // 切换消息
       topTitle:'',
       otherList:[],
-      promptStatus:store?.$state.noticeSettings.enablePlay
+      promptStatus:settings.enablePlay
     })
+
+
+    const enableNotice = () =>{
+      const enable = settings.noticeEnable = !settings.noticeEnable
+      store.setNoticeOnOff(enable)
+    }
+
+    const clickSetting = (item) => {
+      data.rightVisible = item.alias
+    }
+
+    const changeEnable = (evt)=>{
+      store.setMessagePrompt(evt)
+    }
 
     const selectTab = (item) => {
       data.rightVisible = item.alias
@@ -62,22 +79,10 @@ export default defineComponent({
       }
     };
 
-    const clickSetting = (item) => {
-      data.rightVisible = item.alias
-    };
 
-    const enableNotice = () => {
-      const enable = store.$state.noticeSettings.enable = !store.$state.noticeSettings.enable
-      store.setNoticeOnOff(enable)
-      if(enable){
-        leftApp.value[leftApp.value.length - 2].icon = 'notification'
-      }else{
-        leftApp.value[leftApp.value.length - 2].icon = 'notification-off'
-      }
-    };
 
     const appContentList = computed(()=>{   // 通过计算属性获取消息通知历史数据
-      return store.$state.notice.messageContent
+      return notice.$state.notice.messageContent
     })
 
     watch(()=>data.rightVisible,(newVal)=>{  // 根据不同应用列表类型进行数据分类
@@ -88,27 +93,7 @@ export default defineComponent({
         return;
       }
     })
-
-    watch(()=>store.$state.noticeSettings.enable,(newVal)=>{
-      console.log('坚挺到变化')
-      if(newVal){
-        leftApp.value[leftApp.value.length - 2].icon = 'notification'
-      }else{
-        leftApp.value[leftApp.value.length - 2].icon = 'notification-off'
-      }
-    })
-
-    const changeEnable = (evt)=>{
-      store.setMessagePrompt(evt)
-    }
-
-    const updateNotice = async() =>{
-      await store.loadNoticeDB()
-    }
-
-    const close = ()=>{
-      ctx.emit('closeMessage')
-    }
+  
 
     const leftApp = ref([
       {
@@ -128,6 +113,7 @@ export default defineComponent({
         callBack: selectTab,
       },
       {
+        id:'notice',
         icon:"notification",
         title: "通知",
         callBack: enableNotice,
@@ -140,13 +126,27 @@ export default defineComponent({
       },
     ]);
 
+
+    const filterLeft = computed(()=>{
+      if(settings.noticeEnable){
+        const filterList = leftApp.value.map((item)=>{
+          return {...item,icon:item.id === 'notice' ? 'notification-off' : item.icon}
+        })
+        return filterList
+      }else{
+        return leftApp.value
+      }
+    })
+
     return{
-      leftApp,appContentList,
-      ...toRefs(data),changeEnable,updateNotice,
-      close
+      filterLeft,appContentList,
+      ...toRefs(data),changeEnable,
     }
-  },
+  
+  }
 });
+
+
 </script>
 
 <style lang="scss" scoped>

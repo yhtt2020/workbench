@@ -56,7 +56,7 @@
           :data="item"
         >
           <Box :item="item" :id="currentIndex" class="mt-2">
-            <Item :item="item" type="">
+            <Item :item="item" type="" newType="" bg="">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
               </template>
@@ -97,7 +97,7 @@ const props = defineProps({
   end: {
     default: 1,
   },
-  tabVariables:undefined,
+  tabVariables: undefined,
   modelValue: {},
   index: { default: false },
   list: {
