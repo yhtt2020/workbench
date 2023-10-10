@@ -28,7 +28,7 @@ const props = defineProps({
     default: "var(--secondary-bg)",
   },
   color: {
-    default: "#000",
+    default: "var(--secondary-text)",
   },
 });
 

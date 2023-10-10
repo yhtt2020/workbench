@@ -60,7 +60,7 @@
     "vue": "^3.2.25",
     "vue-justified-layout": "^0.2.0",
     "vue-router": "4",
-    "vue-shepherd": "^3.0.0",
+    "vue-shepherd": "../packages/vue-shepherd",
     "vue-tippy": "v6",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-resize": "^0.2.0",

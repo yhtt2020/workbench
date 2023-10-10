@@ -15,7 +15,23 @@
         @click="taskClick(task)"
       >
         <xt-title m="">
-          <FlagOutlined /> {{ task.chapter }}
+          <div class="flex items-center">
+            <FlagOutlined
+              style="
+                margin-right: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                background: #508bfe;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                font-size: 10px;
+              "
+            />
+            {{ task.chapter }}
+          </div>
           <template #right
             ><Progress :task="task" style="width: 68px; height: 20px"
           /></template>
