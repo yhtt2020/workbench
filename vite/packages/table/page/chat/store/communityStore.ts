@@ -33,6 +33,8 @@ export const communityStore = defineStore('communityStore',{
    // 获取我的社群
    async getMyCommunity(){
     let res = await post(getMyCommunity,{})
+    // console.log('查看返回数据',res);
+    
     if(res?.data?.list){
       this.communityList = res.data.list.filter((item: any) => {
         return item.hasOwnProperty('communityInfo')

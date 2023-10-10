@@ -3,13 +3,14 @@
    <div class="flex w-full h-10 items-center justify-center" style="position: relative;margin-bottom: 46px;">
     <!-- 左侧返回按钮 -->
     <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
-     <LeftOutlined style="font-size: 1.25em;" />
+     <!-- <LeftOutlined  /> -->
+     <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
     </div>
 
     <span class="font-16-400" style="color: var(--primary-text);">创建社群</span>
 
     <div class="flex items-center pointer active-button rounded-lg justify-center close h-10 w-10" @click="closeCreateCom">
-     <CloseOutlined style="font-size: 1.25em;" />
+     <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;"/>
     </div>
    </div>
 
@@ -39,100 +40,105 @@
 
    <div class="flex items-center justify-end ">
      <XtButton style="width:64px;color:var(--secondary-text);" class="h-10 font-16-400" @click="closeCreateCom">取消</XtButton>
-     <XtButton class="h-10 ml-3" style="width:64px;background: var(--active-bg);color:var(--active-text);" @click="createCommunity">确定</XtButton>
+     <XtButton class="h-10 ml-3" style="width:64px;background: var(--active-bg);color:var(--active-text);" @click="finshCreateCommunity">确定</XtButton>
    </div>
 
   </div>
  </template>
 
- <script>
- import { defineComponent, reactive,toRefs } from 'vue'
- import { LeftOutlined, CloseOutlined, CameraOutlined} from '@ant-design/icons-vue'
- import {fileUpload} from '../../../components/card/hooks/imageProcessing'
- import { message } from 'ant-design-vue'
- import { communityStore } from '../store/communityStore'
+<script>
+import { mapActions,mapWritableState } from 'pinia'
+import {fileUpload} from '../../../components/card/hooks/imageProcessing'
+import { message } from 'ant-design-vue'
+import { communityStore } from '../store/communityStore'
+import { Icon as communityIcon } from '@iconify/vue'
 
-
- export default defineComponent({
-  components:{
-   LeftOutlined,CloseOutlined,CameraOutlined
-  },
-
+export default {
   props:['id'],
 
-  setup (props,ctx) {
-   const community = communityStore()
+  components:{
+    communityIcon
+  },
 
-   const data = reactive({
+  data(){
+    return{
      communityName:'',
      avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
-   })
+    }
+  },
 
-   const closeCreateCom = () =>{
-     ctx.emit('close')
-   }
+  computed:{
 
-   // 创建社群
-   const createCommunity = async(evt) =>{
-     const chineseCharReg = /[\u4e00-\u9fa5]/g; // 匹配2-16个汉字
-     const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
-     const chineseCharCount = (data.communityName.match(chineseCharReg) || []).length;
-     const nonCharCount = (data.communityName.match(nonChineseCharReg) || []).length;
-     const totalCount = chineseCharCount + nonCharCount
+  },
 
-     const option = {
-       name:data.communityName,
-       icon:data.avatarUrl
-     }
+  methods:{
+    ...mapActions(communityStore,['createCommunity','getMyCommunity']),
+    closeCreateCom(){
+      this.$emit('close')
+    },
+    backCreate(){
+      this.$emit('back')
+    },
 
-     if((chineseCharCount >= 2 && chineseCharCount <= 16 && totalCount <= 32) || (totalCount >= 4 && totalCount <= 32)){
-       const res = await community.createCommunity(option)
-      //  console.log('排查结果',res)
-       if(res.status === 1){
-        community.getMyCommunity()
-        message.success(`${res.info}`)
-        ctx.emit('close')
-       }else{
+    // 更换头像
+    async updateGroupAvatar(){
+      document.querySelector('#groupFileID').click()
+    },
+    async getFileInfo(evt){
+      const files = evt.target.files[0]
+      const res  = await fileUpload(files)
+      // console.log('获取头像::>>',res)
+      this.avatarUrl = res
+    },
+
+
+    // 创建社群
+    async finshCreateCommunity(evt){
+      const chineseCharReg = /[\u4e00-\u9fa5]/g; // 匹配2-16个汉字
+      // // const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
+      const chineseCharCount = (this.communityName.match(chineseCharReg) || []).length;
+      // // const nonCharCount = (this.communityName.match(nonChineseCharReg) || []).length;
+
+      // console.log('排查问题',chineseCharCount);
+      // console.log('查看条件',chineseCharCount >= 2 && chineseCharCount <= 16);
+
+      // // const totalCount = chineseCharCount + nonCharCount
+      
+      if(chineseCharCount >= 2 && chineseCharCount <= 16){
+        const option = {
+         name:this.communityName,
+         icon:this.avatarUrl
+        }
+       
+        // console.log('查看参数',option);
+
+        const res = await this.createCommunity(option)
+        // console.log('排查结果',res)
+
+        if(res.status === 1){
+         message.success(`${res.info}`)
+         await this.getMyCommunity()
+         this.$emit('close')
+        }else{
+         evt.preventDefault();
+         message.error(`${res.info}`)
+        }
+
+      }else{
         evt.preventDefault();
-        message.error(`${res.info}`)
-       }
-     }else{
-       evt.preventDefault();
-       message.error('不能超过2-16个汉字')
-     }
+        message.error('不能超过2-16个汉字')
+      }
 
-   }
+    }
 
-   // 返回上一层
-   const backCreate = () =>{
-    ctx.emit('back')
-   }
-
-
-   // 获取头像
-   const updateGroupAvatar = async () =>{
-     document.querySelector('#groupFileID').click()
-   }
-
-   // 头像上传后返回
-   const getFileInfo = async(evt) =>{
-     const files = evt.target.files[0]
-     const res  = await fileUpload(files)
-     console.log('获取头像::>>',res)
-     data.avatarUrl = res
-   }
-
-   return {
-     ...toRefs(data),
-    closeCreateCom,createCommunity,updateGroupAvatar,
-    getFileInfo,backCreate
-   }
+    
   }
- })
- </script>
+}
 
- <style lang="scss" scoped>
- .back{
+</script>
+
+<style lang="scss" scoped>
+.back{
   position: absolute;
   top:0;
   left:0;
@@ -165,5 +171,4 @@
     color: var(--secondary-text);
   }
  }
-
- </style>
+</style>
