@@ -7,8 +7,16 @@
           @click="back()"
           style="height: 24px; font-size: 20px"
         /> -->
-        <xt-new-icon icon="fluent:chevron-left-16-filled" @click="back()" />
-        {{ task.chapter }}
+        <div class="flex items-center">
+          <xt-new-icon
+            icon="fluent:chevron-left-16-filled"
+            @click="back()"
+            type="1"
+            class="mr-3"
+            w="40"
+          />
+          {{ task.chapter }}
+        </div>
       </div>
       <template #right>
         <Progress style="width: 68px; height: 20px" :task="task"
@@ -16,7 +24,22 @@
     </xt-title>
     <xt-collapse v-for="data in task.tasks">
       <template #title>
-        <xt-title m="0">{{ data.title }} </xt-title></template
+        <xt-text>
+          <FlagOutlined
+            style="
+              margin-right: 8px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: #fff;
+              background: #508bfe;
+              width: 20px;
+              height: 20px;
+              border-radius: 10px;
+              font-size: 10px;
+            "
+          />{{ data.title }}
+        </xt-text></template
       >
 
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>
@@ -39,6 +62,7 @@ import { computed, toRefs, ref, reactive } from "vue";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 import { Icon as MyIcon } from "@iconify/vue";
+import { FlagOutlined } from "@ant-design/icons-vue";
 
 import { storeToRefs } from "pinia";
 

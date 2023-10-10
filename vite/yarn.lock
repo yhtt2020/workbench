@@ -4773,10 +4773,8 @@ vue-screen-utils@^1.0.0-beta.13:
   resolved "https://registry.npmmirror.com/vue-screen-utils/-/vue-screen-utils-1.0.0-beta.13.tgz"
   integrity sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg==
 
-vue-shepherd@^3.0.0:
+vue-shepherd@../packages/vue-shepherd:
   version "3.0.0"
-  resolved "https://registry.npmmirror.com/vue-shepherd/-/vue-shepherd-3.0.0.tgz"
-  integrity sha512-e5Obzcy0pWUWl1RJjWclrfTvRALqlB5PFqKjoyVNqql8iyQJ+tK9CXN33EnJdxCeOG694Jwr/XlRdBm5O76eLw==
   dependencies:
     shepherd.js "^11.1.0"
 

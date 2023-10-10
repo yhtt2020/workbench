@@ -89,6 +89,8 @@ export default {
               content: '小队创建成功。',
               centered:true
             })
+            // 支线任务点
+            completeTask('Z0401')
             this.updateMy().then(()=>{
               this.$emit('created')
             })

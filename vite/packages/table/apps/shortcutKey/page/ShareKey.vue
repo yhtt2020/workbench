@@ -22,7 +22,6 @@
     </div>
     <div class="flex mt-2 items-center justify-center">
       <div>
-        {{totalKeys}}
         <HorizontalPanel :navList="navType" v-model:selectType="defaultNavType"></HorizontalPanel>
       </div>
 
@@ -329,7 +328,6 @@ export default {
           }
 
         }
-        console.log(item.keys)
       })
       return sum
     }
@@ -880,22 +878,7 @@ export default {
   }
 }
 
-.add-content {
-  height: 90%;
-  width: 480px;
-  margin: 0 auto;
-  overflow-x: hidden;
-  overflow-y: auto;
 
-  > span {
-    font-family: PingFangSC-Medium;
-    font-size: 16px;
-    color: var(--primary-text);
-    font-weight: 500;
-    margin: 21px 0;
-    display: block;
-  }
-}
 
 .avatar {
   width: 100px;

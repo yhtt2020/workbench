@@ -55,7 +55,7 @@ import { mapActions ,mapWritableState,mapGetters,mapState} from 'pinia'
 import { teamStore } from '../../store/team'
 import { Modal } from 'ant-design-vue'
 import { appStore } from '../../store'
-
+import { completeTask } from "../../apps/task/page/branch/task.ts"
 export default {
   name: 'Hall',
   components: { TeamList, HorizontalPanel },
@@ -122,7 +122,8 @@ export default {
           await this.updateMy(0)
           this.teamVisible = true
           Modal.success({ content: '加入小队成功。', centered: true })
-
+          // 支线任务点
+          completeTask('Z0401')
         } else {
           Modal.error({ content: result.info, centered: true })
         }
