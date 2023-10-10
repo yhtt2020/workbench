@@ -80,8 +80,8 @@
       </div>
     </template>
   </Widget>
-
-
+<!-- {{ topClockSettingVisible }} -->
+  <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
   <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
     @after-visible-change="afterVisibleChange">
     <div class="flex">
@@ -109,7 +109,6 @@ import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import SetupClock from './setupClock.vue'
-
 export default {
   name: 'Clock',
   components: { Widget, clockIcon, SetupClock },

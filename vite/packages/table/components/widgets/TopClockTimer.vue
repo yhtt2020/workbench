@@ -1,5 +1,5 @@
 <template>
-    <tippy trigger=" click" placement="bottom" :interactive="true" class="xt-bg tippy-trigger" theme="tippy-trigger">
+    <tippy trigger=" click" placement="bottom" :interactive="true" class=" tippy-trigger" theme="tippy-trigger">
         <template #content theme="tippy-trigger">
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
@@ -104,17 +104,19 @@
 
             </div>
             <!-- 一级快捷面板 -->
-            <div class="w-[300px] h-[300px] relative xt-bg  rounded-lg p-0 tippy-trigger" v-show="customizeSetting" theme="tippy-trigger">
+            <div class="w-[300px] h-[300px] relative xt-bg  rounded-lg p-0 tippy-trigger" v-show="customizeSetting">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
                             v-if="useCountDownStore.countDowntime.hours !== undefined">
                             <div>
                                 <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
-                                    @click="stopCountDown" class="xt-text clock-icon pointer" v-show="!useCountDownStore.countDownBtn">
+                                    @click="stopCountDown" class="xt-text clock-icon pointer"
+                                    v-show="!useCountDownStore.countDownBtn">
                                 </clockIcon>
                                 <clockIcon icon="fluent:play-16-filled" style="font-size: 24px; vertical-align: sub;"
-                                    @click="startCountDown" class="xt-text clock-icon pointer" v-show="useCountDownStore.countDownBtn">
+                                    @click="startCountDown" class="xt-text clock-icon pointer"
+                                    v-show="useCountDownStore.countDownBtn">
                                 </clockIcon>
                                 <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 24px; vertical-align: sub;"
                                     @click="deleteCountDown" class="ml-2 xt-text clock-icon pointer">
@@ -131,41 +133,51 @@
                                 我的闹钟
                             </div>
                             <div>
-                                <tippy toggle="mouseenter">
-                                    <template #content><div class="xt-text font-16">添加闹钟</div>
-                                    </template>
-                                    <clockIcon class="mr-3 xt-text font-20 clock-icon" @click="settingClock" icon="fluent:add-16-filled"></clockIcon>
-                                    
-                                </tippy>
-                                <tippy toggle="mouseenter">
-                                    <template #content><div class="xt-text font-16">添加计时器</div>
-                                    </template>
-                                    <clockIcon class="mr-3 text-base xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
-                                        @click="settingCountDown">
-                                    </clockIcon>
-                                </tippy>
-                                <tippy toggle="mouseenter">
+                                <a-popover arraw="false" toggle="hover" class="xt-bg">
                                     <template #content>
-                                        <div class="xt-text font-16">
+                                        <div class="xt-text font-16 xt-bg">添加闹钟</div>
+                                    </template>
+                                    <button class="mr-1 xt-bg" style="border: none;width: 30px;"><clockIcon class=" xt-text font-20 clock-icon" @click="settingClock"
+                                        icon="fluent:add-16-filled"></clockIcon></button>
+                                </a-popover>
+                                <a-popover toggle="mouseenter">
+                                    <template #content>
+                                        <div class="xt-text font-16 xt-bg">添加计时器</div>
+                                    </template>
+                                    <button class="mr-1 xt-bg" style="border: none;width: 30px;">
+                                    <clockIcon class="text-base xt-text font-20 clock-icon"
+                                        icon="fluent:clock-12-regular" @click="settingCountDown">
+                                    </clockIcon>
+                                </button>
+                                </a-popover>
+                                <a-popover toggle="mouseenter">
+                                    <template #content>
+                                        <div class="xt-text font-16 xt-bg">
                                             铃声调节
                                         </div>
                                     </template>
-                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on" v-if="soundVisible"
-                                        @click="changeSoundStatus"></clockIcon>
-                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-off" v-if="!soundVisible"
-                                        @click="changeSoundStatus"></clockIcon>
-                                </tippy>
-                                <tippy toggle="mouseenter">
+                                    <button class="mr-1 xt-bg" style="border: none;width: 30px;">
+                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on"
+                                        v-if="soundVisible" @click="changeSoundStatus"></clockIcon>
+                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-off"
+                                        v-if="!soundVisible" @click="changeSoundStatus"></clockIcon>
+                                    </button>
+                                    
+                                </a-popover>
+                                <a-popover toggle="mouseenter">
                                     <template #content>
-                                        <div class="xt-text font-16">
+                                        <div class="xt-text font-16 xt-bg">
                                             设置
                                         </div>
                                     </template>
+                                    <button class=" xt-bg" style="border: none;width: 30px;">
                                     <clockIcon icon="fluent:settings-16-regular"
                                         style="font-size: 24px; vertical-align: sub;" @click="changeSettingStatus"
-                                        class="ml-2 xt-text font-20 clock-icon">
+                                        class=" xt-text font-20 clock-icon">
                                     </clockIcon>
-                                </tippy>
+                                    </button>
+                                    
+                                </a-popover>
 
 
 
@@ -230,6 +242,12 @@
             </div>
         </xt-button>
     </tippy>
+    <a-drawer v-model:visible="usetopClockSettingStore.topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"
+        placement="right" :width="600" >
+        <div class="flex">
+            <SetupClock></SetupClock>
+        </div>
+    </a-drawer>
 </template>
 
 <script setup lang='ts'>
@@ -246,6 +264,7 @@ import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
 import { Notifications } from '../../js/common/sessionNotice'
 import RadioTab from '../RadioTab.vue';
+import SetupClock from './setupClock.vue'
 const notifications = new Notifications()
 
 const usetopClockSettingStore = topClockSettingStore()
@@ -450,13 +469,13 @@ watch(countDownDate, (newVal, oldVal) => {
     })
     if (newVal < 0) {
         const key = `open${Date.now()}`
-        let message=`${countDownTotalTime.value}到了`
-        notifications.clockToast(message,'计时器',false)
+        let message = `${countDownTotalTime.value}到了`
+        notifications.clockToast(message, '计时器', false)
     }
 
 
 
-    
+
 })
 // 闹钟完成时弹出
 watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
@@ -469,8 +488,8 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
         useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
         const key = `open${Date.now()}`
-        let message=`${firstClock.value}到了,${clockEvent.value[0].eventValue}`
-        notifications.clockToast(message,'闹钟',true)
+        let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
+        notifications.clockToast(message, '闹钟', true)
     }
 
 })
@@ -480,18 +499,27 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 :deep(.tippy-content) {
     padding: 0px !important;
 }
-.tippy-trigger{
+
+*>>>.tippy-box[data-theme~='tippy-trigger']>.tippy-content {
     padding: 0px !important;
 }
+
+.tippy-trigger {
+    padding: 0px !important;
+}
+
 .clock-icon {
-  cursor: pointer;
-  transition: transform 0.3s; /* 添加一个过渡效果 */
+    cursor: pointer;
+    transition: transform 0.3s;
+    /* 添加一个过渡效果 */
 }
 
 .clock-icon:hover {
-  transform: scale(1.3); /* 鼠标悬停时放大 */
-  background-color: var(--secondary-bg);
+    transform: scale(1.3);
+    /* 鼠标悬停时放大 */
+    background-color: var(--secondary-bg);
 }
+
 .font-14 {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -559,5 +587,4 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 :deep(.ant-input-number-handler-wrap) {
     background-color: var(--secondary-bg);
     border: none !important;
-}
-</style>
+}</style>
