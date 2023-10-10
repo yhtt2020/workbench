@@ -1,6 +1,5 @@
 <template>
     <tippy trigger=" click" placement="bottom" :interactive="true" class=" tippy-trigger" theme="tippy-trigger">
-    <tippy trigger=" click" placement="bottom" :interactive="true" class=" tippy-trigger" theme="tippy-trigger">
         <template #content theme="tippy-trigger">
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
@@ -138,11 +137,12 @@
                                     <template #content>
                                         <div class="xt-text font-16 xt-bg">添加闹钟</div>
                                     </template>
-                                    <clockIcon class="mr-3 xt-text font-20 clock-icon" @click="settingClock" icon="fluent:add-16-filled"></clockIcon>
-                                    
-                                </tippy>
-                                <tippy toggle="mouseenter">
-                                    <template #content><div class="xt-text font-16">添加计时器</div>
+                                    <button class="mr-1 xt-bg" style="border: none;width: 30px;"><clockIcon class=" xt-text font-20 clock-icon" @click="settingClock"
+                                        icon="fluent:add-16-filled"></clockIcon></button>
+                                </a-popover>
+                                <a-popover toggle="mouseenter">
+                                    <template #content>
+                                        <div class="xt-text font-16 xt-bg">添加计时器</div>
                                     </template>
                                     <button class="mr-1 xt-bg" style="border: none;width: 30px;">
                                     <clockIcon class="text-base xt-text font-20 clock-icon"
@@ -220,7 +220,7 @@
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
         <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar xt-bg-2"
             @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
-            style="width: 150px; height: 32px;position: relative;border-radius: 8px"
+            style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
@@ -232,14 +232,8 @@
             </div>
 
         </xt-button>
-<<<<<<<<< Temporary merge branch 1
         <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail"
             style="width: 132px; height: 32px; position: relative;">
-=========
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-md clock-timer top-bar" v-else
-            @click="closeDetail"
-            style="width: 132px; position: relative;background-color: transparent !important;">
->>>>>>>>> Temporary merge branch 2
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
@@ -307,24 +301,6 @@ const flag = ref(true)
 const custom = ref(false)
 const soundVisible = ref(true)
 const value1 = ref(dayjs('00:00:00', 'HH:mm'))
-// const setProgress = () => {
-//     const progressBar = document.querySelector('.progress-bar')
-//     const ctx = progressBar.getContext('2d')
-//     const progressBarWidth = progressBar.width
-//     const progressBarHeight = progressBar.height
-//     const total = 100
-//     ctx.clearRect(0, 0, progressBarWidth, progressBarHeight);
-
-//     // 绘制背景矩形
-//     ctx.fillStyle = '#ccc';
-//     ctx.fillRect(0, 0, progressBarWidth, progressBarHeight);
-
-//     // 绘制进度矩形
-//     ctx.fillStyle = '#4caf50';
-//     const progressWidth = progressBarWidth * progress / total;
-//     ctx.fillRect(0, 0, progressWidth, progressBarHeight);
-
-// }
 const changeSoundStatus = () => {
     soundVisible.value = !soundVisible.value
     usetopClockSettingStore.changeSoundStatus(soundVisible.value)
