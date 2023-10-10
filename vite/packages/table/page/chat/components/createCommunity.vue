@@ -18,9 +18,9 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-      style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+      style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
       >
-      <!-- style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()" -->
+      <!-- style="width: 64px;height: 64px; position:relative"  @click="onShowSelect" -->
      <!--  -->
       <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar>
       <div class="flex items-center rounded-full p-3 justify-center"
@@ -115,10 +115,9 @@
 
    // 获取头像
    const updateGroupAvatar = async () =>{
-    const iconVisible = true
+    // const iconVisible = true
     // console.log(this.iconVisible);
-    //先阻止原来的事件
-    //  document.querySelector('#groupFileID').click()
+     document.querySelector('#groupFileID').click()
    }
 
    // 头像上传后返回
