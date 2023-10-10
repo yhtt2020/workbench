@@ -6,7 +6,6 @@ import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import {appStore} from "../../../store";
 
-const winappIcon = '/icons/winapp.png'
 import '../static/style.scss'
 
 
@@ -23,13 +22,6 @@ export default {
       selectTab: '',
       menuList: [
 
-        // {
-        //   slot: "test",
-        //   callBack: () => {
-        //     this.createChatVisible = true;
-        //   },
-        // },
-
       ],
     }
   },
@@ -42,6 +34,7 @@ export default {
           id: 'list',
           icon: "liebiao",
           title: '我的快捷键',
+          tab:'myList',
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
             this.selectTab = "Chat";
