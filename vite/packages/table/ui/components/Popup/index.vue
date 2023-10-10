@@ -2,14 +2,21 @@
   <teleport to="body">
     <!-- 蒙版 -->
     <transition name="fade">
-      <div v-if="visible" class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0" style="z-index: 999"
-        @click="visible = false"></div>
+      <div
+        v-if="visible"
+        class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"
+        style="z-index: 200"
+        @click="visible = false"
+      ></div>
     </transition>
     <!-- 内容 -->
     <transition name="popup">
-      <!-- top-1/2 -translate-y-1/2 -->
-      <div v-if="visible" class="h-full bg-white-50 fixed  rounded-xl"
-        style="z-index: 9999; box-sizing: border-box;  top: 0; bottom: 0;" :style="{ [position]: '0' }">
+      <div
+        v-if="visible"
+        class="h-full bg-white-50 fixed rounded-xl"
+        style="z-index: 300; box-sizing: border-box; top: 0; bottom: 0"
+        :style="{ [position]: '0' }"
+      >
         <slot> </slot>
       </div>
     </transition>
@@ -35,7 +42,7 @@ watch(
     visible.value = newW;
   },
   {
-    immediate: true
+    immediate: true,
   }
 );
 </script>

@@ -1,18 +1,7 @@
 <template>
   <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
     <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
-      <xt-left-menu :list="menus" last="1">
-        <template #star>
-          <StarFilled  />
-        </template>
-        <template #flag>
-          <FlagOutlined />
-        </template>
-
-        <template #info>
-          <InfoCircleOutlined />
-        </template>
-      </xt-left-menu>
+      <xt-left-menu :list="menus" last="1" />
       <div class="w-full xt-scrollbar xt-text">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
@@ -26,13 +15,8 @@
 import { ref, watch } from "vue";
 import { taskStore } from "../store";
 import Primary from "./Primary.vue";
-import Branch from "./Brannch/index.vue";
+import Branch from "./branch/index.vue";
 import Set from "./Set.vue";
-import {
-  StarFilled,
-  FlagOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons-vue";
 
 let currentTask = ref("Primary");
 const task = taskStore();
@@ -44,23 +28,26 @@ const selectTab = (item) => {
 // 任务配置
 const menus = ref([
   {
-    slot: "star",
+    // slot: "star",
+    newIcon: "fluent-emoji:star",
     value: "Primary",
+    title: "主线任务",
     callBack: selectTab,
   },
   {
-    slot: "flag",
+    // slot: "flag",
+    newIcon: "fluent-emoji:bullseye",
+    title: "支线任务",
     value: "Branch",
     callBack: selectTab,
   },
   // {
-  //   slot: "info",
+  //   newIcon: "fluent-emoji:rainbow",
   //   value: "Branch",
   //   callBack: selectTab,
   // },
   {
     icon: "shezhi1",
-
     value: "Set",
     callBack: selectTab,
   },
@@ -68,3 +55,4 @@ const menus = ref([
 </script>
 
 <style lang="scss" scoped></style>
+./branch/index.vue

@@ -15,18 +15,19 @@ export class Notifications{
   private systemToast(msg:any,conversationID:any){
     toast.info(
       {
-        component:SystemNoticeToast,props:{content:msg,noticeType:'notice',isPlay:noticeStore().$state.noticeSettings.noticePlay},
+        component:SystemNoticeToast,props:{content:msg,noticeType:'notice',isPlay:appStore().$state.settings.noticePlay},
         listeners:{
           'nowCheck':function(){
-            noticeStore().hideNoticeEntry()
+            appStore().hideNoticeEntry()
             noticeStore().putIMChatData(msg,'Notice')
+            noticeStore().loadNoticeDB()
           },
           'systemExamine':function(){
-            router.push({name:'chatMain'})
-            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
+            router.push({name:'chatMain'});
+            (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
-              window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+              (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
             })
           }
         }
@@ -58,19 +59,19 @@ export class Notifications{
   private commonToast(msg:any,conversationID:any){
     toast.info(
       {
-        component:NoticeToastButton,props:{message:msg,messageType:'message',isPlay:noticeStore().$state.noticeSettings.enablePlay},
+        component:NoticeToastButton,props:{message:msg,messageType:'message',isPlay:appStore().$state.settings.enablePlay},
         listeners:{
           'nowCheck':function(){
-            noticeStore().hideNoticeEntry()
-            noticeStore().putIMChatData(msg,'message')
+            appStore().hideNoticeEntry();
+            noticeStore().putIMChatData(msg,'message');
             console.log('检测this',this)
           },
           'examine': function(){
-            router.push({name:'chatMain'})
-            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
+            router.push({name:'chatMain'});
+            (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
               // Notify TUIConversation to toggle the current conversation
-              window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+              (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
             })
           }
         },
@@ -88,7 +89,7 @@ export class Notifications{
   // 获取名称
   private async getName(msg:any){
     if (msg.conversationType === "GROUP") {
-      const res = await window.$chat.getGroupProfile({ groupID: msg.to });
+      const res = await (window as any).$chat.getGroupProfile({ groupID: msg.to });
       return res.data.group.name;
     } else {
       return "";
@@ -98,7 +99,7 @@ export class Notifications{
   // 获取群组头像
   private async getGroupAvatar(val:any){
     if(val.data[0].conversationType === 'GROUP'){
-      const res = await window.$chat.getGroupProfile({ groupID:val.data[0].to })
+      const res = await (window as any).$chat.getGroupProfile({ groupID:val.data[0].to })
       return res.data.group.avatar
     }
   }
@@ -106,7 +107,7 @@ export class Notifications{
   // 根据参数获取用户名称
   private async getUserProfile(msg: any) {
     // 根据用户名称
-    const res = await window.$chat.getUserProfile({
+    const res = await (window as any).$chat.getUserProfile({
       userIDList: [`${msg.operatorID}`],
     });
     return res.data[0].nick;
@@ -188,6 +189,7 @@ export class Notifications{
   // 接收IM聊天消息通知公共方法
   public async receiveNotification(notification:any){
     const store = appStore()
+    const {settings,userInfo} = store
 
     // 创建一个audio标签
     function createOrUpdateAudioElement(): HTMLAudioElement {
@@ -212,23 +214,25 @@ export class Notifications{
     }
     this.noticeObj = c2cData
 
-    const settings = {
-      isStore:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length !== 0, // 判断chat界面缓存不为空
-      isEnable:noticeStore().$state.noticeSettings.enable, // 消息开关
+    const setting = {
+      isStore:Object.keys((window as any).$TUIKit.TUIServer.TUIChat.store.conversation).length !== 0, // 判断chat界面缓存不为空
+      isEnable:settings.noticeEnable, // 消息开关
       isGlobal:router.options.history.state.current !== '/chatMain', // 判断是否在全局页面
-      enablePlay:noticeStore().$state.noticeSettings.enablePlay, // 提示音开关
-      isCurrentChat:window.$TUIKit.TUIServer.TUIChat.store.conversation?.conversationID === data.conversationID, // 判断是否为当前会话
+      enablePlay:settings.enablePlay, // 提示音开关
+      isCurrentChat:(window as any).$TUIKit.TUIServer.TUIChat.store.conversation?.conversationID === data.conversationID, // 判断是否为当前会话
       isAT:data.atUserList.length !== 0, // 判断@消息
-      isAtMe:data.atUserList.includes(String(store.$state.userInfo.uid)),
-      noTrouble:window.$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 是否开启免打扰
-      isEmpty:Object.keys(window.$TUIKit.TUIServer.TUIChat.store.conversation).length === 0, // 为空
+      isAtMe:data.atUserList.includes(String(userInfo.uid)),
+      noTrouble:(window as any).$TUIKit.TUIServer.TUIChat.store.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 是否开启免打扰
+      isEmpty:Object.keys((window as any).$TUIKit.TUIServer.TUIChat.store.conversation).length === 0, // 为空
     }
 
 
     // 判断消息开关和音频开关是否打开
-    if(settings.isEmpty || settings.noTrouble && settings.isEnable && settings.enablePlay){
-      // 根据text判断是否为系统通知
+    if(!setting.isEnable && !setting.noTrouble){
+      // console.log('开启消息通知');
+      // console.log('排查问题::>>');
       const isText = data.payload.hasOwnProperty('text')
+      // 普通文本内容
       if(isText){
         // 好友名称标题
         const friendTitle = data.nick ? `${data.nick}` : ''
@@ -237,11 +241,10 @@ export class Notifications{
         // 获取头像
         const avatar = await this.getGroupAvatar(notification)
 
-
-        // 全局情况下的普通消息弹窗
-        if(settings.isGlobal){
+        // 主页面情况
+        if(setting.isGlobal){
           // 显示消息入口
-          noticeStore().showNoticeEntry()
+          store.showNoticeEntry()
           const newMsg = {
             title:data.conversationType === 'C2C' ? friendTitle : groupTitle,
             icon:data.conversationType === 'C2C' ? data.avatar : avatar,
@@ -253,47 +256,42 @@ export class Notifications{
           }else{
             this.commonToast(newMsg,data.conversationID)
           }
+
         }
 
-        // 非当前会话只提示音频
-        else if(settings.isStore === false && settings.isCurrentChat === false){
-          if(settings.isAtMe){
-            audioElement.play()
-          }else{
-            audioElement.play()
+        // 聊天页面
+        else if(!setting.enablePlay){
+          // 不在当前会话
+          if(!setting.isStore && !setting.isCurrentChat){
+            if(settings.isAtMe){
+              audioElement.play()
+            }else{
+              audioElement.play()
+            }
           }
         }
-
-        // 当前会话没有任何提示
-        else{
-          return;
-        }
       }
-      // 团队系统通知
-      else if(data.payload.description !== ''){
-        const body = await this.getSystemBody(data)
-        if(body !== ''){
-          const notice = {
-            title:'社群沟通',
-            body:body,
-            icon:'/icons/IM.png',
-            time:data.time
+      // 群系统通知
+      else{
+        if(data.payload.description !== ''){
+          const body = await this.getSystemBody(data)
+          if(body !== ''){
+            const notice = {
+              title:'社群沟通',
+              body:body,
+              icon:'/icons/IM.png',
+              time:data.time
+            }
+            this.commonToast(notice,data.conversationID)
           }
-          this.commonToast(notice,data.conversationID)
         }
       }
+      
+    }else{
+      // console.log('关闭消息通知');
+      return;
     }
-    else{
-
-    }
-
-
-
-
+    
   }
-
-
-
-
 
 }

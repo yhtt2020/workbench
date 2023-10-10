@@ -22,6 +22,8 @@
    <Modal v-if="categoryShow" v-model:visible="categoryShow" :blurFlag="true" style="z-index:1000 !important;">
      <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
+     <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
+     
     </Modal>
   </teleport>
  
@@ -36,11 +38,12 @@
  import Modal from '../../../../components/Modal.vue'
  import CreateNewCategory from '../createNewCategory.vue'
  import MenuCategory from '../menuCategory.vue'
+ import InviteOther from '../inviteOther.vue'
  
  export default defineComponent({
   components:{
    EllipsisOutlined,
-   DorpIcon,Modal,CreateNewCategory,MenuCategory,
+   DorpIcon,Modal,CreateNewCategory,MenuCategory,InviteOther,
 
   },
  
@@ -85,7 +88,12 @@
        setTimeout(()=>{
          data.categoryShow = true
        },350)
-       break;
+      break;
+     case 'invited':
+       setTimeout(()=>{
+        data.categoryShow = true
+       },350)
+      break;
     }
   
    }

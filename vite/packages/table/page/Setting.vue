@@ -53,7 +53,7 @@
             <a-col v-if="isMain()" :span="12">
               <div class="btn relative">
                 消息免打扰<br />
-                <a-switch v-model:checked="noticeSettings.enable"></a-switch>
+                <a-switch v-model:checked="settings.noticeEnable"></a-switch>
               </div>
             </a-col>
             <a-col :span="12">

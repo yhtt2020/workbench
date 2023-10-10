@@ -132,13 +132,13 @@
                             </div>
                             <div>
                                 <tippy toggle="mouseenter">
-                                    <template #content><div class="xt-text  font-16">添加闹钟</div>
+                                    <template #content><div class="xt-text font-16">添加闹钟</div>
                                     </template>
                                     <clockIcon class="mr-3 xt-text font-20 clock-icon" @click="settingClock" icon="fluent:add-16-filled"></clockIcon>
                                     
                                 </tippy>
                                 <tippy toggle="mouseenter">
-                                    <template #content><div class="xt-text  font-16">添加计时器</div>
+                                    <template #content><div class="xt-text font-16">添加计时器</div>
                                     </template>
                                     <clockIcon class="mr-3 text-base xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
                                         @click="settingCountDown">
@@ -146,7 +146,7 @@
                                 </tippy>
                                 <tippy toggle="mouseenter">
                                     <template #content>
-                                        <div class="xt-text  font-16">
+                                        <div class="xt-text font-16">
                                             铃声调节
                                         </div>
                                     </template>
@@ -157,7 +157,7 @@
                                 </tippy>
                                 <tippy toggle="mouseenter">
                                     <template #content>
-                                        <div class="xt-text  font-16">
+                                        <div class="xt-text font-16">
                                             设置
                                         </div>
                                     </template>
