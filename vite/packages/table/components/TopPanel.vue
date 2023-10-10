@@ -31,7 +31,7 @@
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible && false"/>
+        <TopClockTimer v-if="topClockTimerVisible"/>
       </div>
 
       <div v-if="status.show && hasChat" class="flex items-center no-drag pointer" @click="messageAlert"

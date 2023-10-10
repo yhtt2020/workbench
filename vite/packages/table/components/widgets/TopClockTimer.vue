@@ -1,5 +1,5 @@
 <template>
-    <tippy trigger=" click" placement="bottom" :interactive="true" class="xt-bg tippy-trigger" theme="tippy-trigger">
+    <tippy trigger=" click" placement="bottom" :interactive="true" class=" tippy-trigger" theme="tippy-trigger">
         <template #content theme="tippy-trigger">
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
@@ -208,7 +208,7 @@
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
         <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar xt-bg-2"
             @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
-            style="width: 150px; height: 32px;position: relative;"
+            style="width: 150px; height: 32px;position: relative;border-radius: 8px"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
@@ -220,8 +220,8 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail"
-            style="width: 132px; position: relative;">
+        <xt-button class="flex items-center justify-center mr-2  rounded-md clock-timer top-bar" v-else @click="closeDetail"
+            style="width: 122px; position: relative;" :h="28">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
