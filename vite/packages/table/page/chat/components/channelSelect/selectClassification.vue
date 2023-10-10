@@ -29,7 +29,7 @@
  
        <template v-if="isEditing && editIndex === index">
          <div class="flex w-full justify-between items-center">
-           <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false"></a-input>
+           <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false" @pressEnter="saveEdit(item)"></a-input>
            <div class="flex">
              <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
              <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
@@ -194,8 +194,8 @@ export default {
 
 
     addClassItem(){  // 新增
-      this.categoryClass.push({name:'分类名称'})
-
+      this.categoryClass.unshift({name:'分类名称'})
+      this.edit(0)
       // this.$nextTick(()=>{
       //  const classRef = document.querySelector('#classInputRef')
       //  console.log();
