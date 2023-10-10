@@ -16,9 +16,11 @@
    <div class="flex items-center flex-col">
 
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
+      <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-      style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
-     >
+      style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+      >
+      <!-- style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()" -->
      <!--  -->
       <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar>
       <div class="flex items-center rounded-full p-3 justify-center"
@@ -26,7 +28,8 @@
       >
        <CameraOutlined style="font-size:1em;"/>
       </div>
-     </div>
+    </div>
+    <SelectIcon v-if="iconVisible"></SelectIcon>
      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
@@ -51,11 +54,12 @@
  import {fileUpload} from '../../../components/card/hooks/imageProcessing'
  import { message } from 'ant-design-vue'
  import { communityStore } from '../store/communityStore'
+ import SelectIcon from '../../../components/SelectIcon.vue'
 
 
  export default defineComponent({
   components:{
-   LeftOutlined,CloseOutlined,CameraOutlined
+   LeftOutlined,CloseOutlined,CameraOutlined,SelectIcon,
   },
 
   props:['id'],
@@ -111,7 +115,10 @@
 
    // 获取头像
    const updateGroupAvatar = async () =>{
-     document.querySelector('#groupFileID').click()
+    const iconVisible = true
+    // console.log(this.iconVisible);
+    //先阻止原来的事件
+    //  document.querySelector('#groupFileID').click()
    }
 
    // 头像上传后返回
@@ -127,7 +134,23 @@
     closeCreateCom,createCommunity,updateGroupAvatar,
     getFileInfo,backCreate
    }
-  }
+  },
+  data(){
+    return{
+      iconVisible:false,
+    }
+  },
+  methods:{
+    // onTest(){
+    //   console.log(this)
+    //   console.log(this.iconVisible)
+    // },
+    onShowSelect(){
+      this.iconVisible = !this.iconVisible;
+    },
+    
+
+  },
  })
  </script>
 

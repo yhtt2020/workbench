@@ -41,27 +41,40 @@
               </template>
             </a-table>
       </div>
+      <!-- div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="shareModal" > -->
+  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="promptVisible" >
+    <div
+      class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center">
+      <Modal blurFlag="true" style="z-index:99999;"  >
+        <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:500px;height:280px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
+          <div  style="width:100%;height:64px;position:relative;">
+            <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>驳回</div>
+            <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+              <Icon :icon="icons.dismiss16Filled" />
+            </div>
+          </div>
+          <a-textarea
+            style='width:452px;height:128px;background: #2A2A2A;border: 1px solid rgba(255,255,255,0.1);border-radius: 10px;padding:9px 15px;'
+            v-model="value2"
+            placeholder="请输入原因"
+          />
+          <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+            <div class='no-drag btn-active input pointer flex justify-center items-center' @click='promptVisible=false' style='width:64px;height:40px;background: #2A2A2A;'>取消</div>
+            <div class='no-drag xt-active-btn input pointer' style='width:64px;height:40px;'>确定</div>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  </div>
     </vueCustomScrollbar>
-    <!-- 删除 -->
-    <Modal blurFlag="true" v-model:visible="promptVisible" v-if="promptVisible" style="z-index:99999;">
-      <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:480px;height:207px;border-radius:16px">
-        <div>
-          <Icon icon="tishi-xianxing" style="font-size: 21px;color: orange"></Icon>
-          <span class="ml-3" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">是否确定删除</span>
-        </div>
-        <span class="mt-6 mb-8" style="font-size: 16px;color: var(--secondary-text);">删除后会同步下架分享在创意市场的小组件方案</span>
-        <div class="modal-btn">
-          <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="promptVisible = false">取消</div>
-          <div class="mr-3 rounded-lg xt-bg-2 pointer" @click="delCard(cardId)">确定</div>
-        </div>
-      </div>
-    </Modal>
+
+    
   </template>
   <script>
   import { Icon } from '@iconify/vue';
-  
   import Modal from '../../../components/Modal.vue'
   import arrowCounterclockwise20Filled from '@iconify-icons/fluent/arrow-counterclockwise-20-filled';
+  import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled';
   export default {
     name: 'Promotion',
     components: { 
@@ -78,6 +91,7 @@
         tableStatus:true,
         icons: {
           arrowCounterclockwise20Filled,
+          dismiss16Filled,
         },
         dataNum:123,
         search:{
@@ -241,6 +255,7 @@
         // console.log(this.tableStatus)
         
         this.promptVisible = true
+        console.log(this.promptVisible)
       },
     },
   }
