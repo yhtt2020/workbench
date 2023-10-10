@@ -2,15 +2,15 @@
 export const guideData = [
   {
     title: '游戏娱乐', url: 'joystick_3d', id: 'gr',
-    explain: '支持同步Steam游戏库，支持一键启动游戏，支持自定义导入其他平台游戏；支持系统CPU、GPU、内存、游戏帧数检测。'
+    explain: '在左侧栏添加游戏助手，支持steam平台游戏，录屏截屏，查看攻略；支持系统CPU、GPU、内存、游戏帧数检测。'
   },
   {
-    title: '效率辅助', url: 'keyboard_3d', id: 'wf',
-    explain: '内置快捷指令方案，自定义编辑指令功能；内置剪切板和快捷键应用，更有待办事项、日历、倒数日等多个内置小组件。'
+    title: '效率办公', url: 'keyboard_3d', id: 'wf',
+    explain: '在左侧栏添加办公应用，支持快捷键、剪切板、AI、待办。'
   },
   {
     title: '极简DIY', url: 'magic_wand_3d', id: 'dy',
-    explain: '无内置推荐数据，仅保留基础核心功能模块，从0开始DIY你的专属工作台。'
+    explain: '无内置推荐数据，仅保留基础核心功能模块，从0开始DIY你的专属工作台。建议老用户选择。'
   }
 ]
 
@@ -36,11 +36,11 @@ export const modeImg = {
 export const teamData = [
   {
     img: 'init', title: '小队',
-    content: '与全网的工作台小伙伴自由组成小队，一同体验“等级加速”、“道具互动”、“桌宠乱斗”等等那些旧时的回忆和乐趣，为你带来一种不一样的陪伴感。'
+    content: '与全网的工作台小伙伴自由组成小队，一同体验“等级加速”、“道具互动”等等那些旧时的回忆和乐趣，为你带来一种不一样的陪伴感。'
   },
   {
     img: 'placard_3d', title: '底部个人信息栏',
-    content: '内置即时通讯应用，同步元社区圈子，创建你的圈子或团队群聊。'
+    content: '内置即时通讯、弹幕应用，同步产品社区，也可以创建你的专属社群。'
   }
 ]
 

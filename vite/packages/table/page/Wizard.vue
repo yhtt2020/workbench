@@ -27,7 +27,7 @@
             <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
               <div class="title">
                 <icon icon="touping" style="font-size: 1.2em"></icon>
-                副屏模式
+                副屏全屏模式
               </div>
               <p>
                 此模式专为副屏优化，将自动放大字体。并提供更适合触摸的交互。
@@ -38,10 +38,10 @@
             <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer">
               <div class="title">
                 <icon icon="kuaijie" style="font-size: 1.2em"></icon>
-                启动器模式
+                窗口模式
               </div>
               <p>
-                隐藏界面，通过默认快捷键<br>Alt+空格<br>呼出界面。
+                在主屏上以窗口模式运行，通过默认快捷键 【Alt】+【Z】 显示/隐藏。
               </p></div>
           </a-col>
         </a-row>
