@@ -23,54 +23,39 @@ export const channelClass = {
   }
 
   if(data.type === 'group' && data?.content){  // 创建群聊频道
-    // console.log('容错',data?.content?.length > 1)
+    if(data?.content.length > 1){
+      console.log('多个',data.content);
+      for(let i=0; i<data.content.length;i++){
+        // const chatOption = {
+        //   ...option,
+        //   props:{groupID:data.content[i].groupID,name:data.content[i].name,avatar:data.content[i].avatar},
+        // }
+        // console.log('提交参数',chatOption);
 
-    if(data?.content?.length > 1){
-
-      for(let i=0;i<data.content.length;i++){
-        const multipleGroup = {
+        const res  = await community.createChannel( {
           ...option,
-          props:JSON.stringify({...data.content[i]}),
+          props:JSON.stringify({groupID:data.content[i].groupID,avatar:data.content[i].avatar}),
           name:data.content[i].name
-        }
-        
-        // console.log('排查问题', multipleGroup)
+        })
 
-        return  community.createChannel(multipleGroup)
+        return res
+        
       }
+
 
     }else{
-      
-      const singleGroup = {
+      console.log('单个',data.content[0]);
+
+      const res  = await community.createChannel( {
         ...option,
-        props:JSON.stringify({...data.content}),
+        props:JSON.stringify({groupID:data.content[0].groupID,avatar:data.content[0].avatar}),
         name:data.content[0].name
-      }
+      })
 
-      // console.log('排查问题', singleGroup)
-
-      return  community.createChannel(singleGroup)
-
+      return res
     }
-
-
-
-    // if(data?.content?.length > 1){
-
-    //  for(let i=0;i<data.content.length;i++){
-      
-    //   console.log('选择多个群聊时',multipleGroup)
-    //   const res = await community.createChannel(multipleGroup)
-    //   console.log('返回状态',res)
-    //   return res
-    //  }
-
-    // }else{
-     
-    //  console.log('选择单个群聊时',singleGroup)
-    //  return await community.createChannel(singleGroup)
-
-    // }
+   
+    
   }
 
   if(data.type === 'forum'){ // 创建社区频道

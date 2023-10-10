@@ -29,7 +29,7 @@
  
        <template v-if="isEditing && editIndex === index">
          <div class="flex w-full justify-between items-center">
-           <a-input style="width:210px;padding: 0;" id="classInputRef" v-model:value="item.name" :bordered="false" @pressEnter="saveEdit(item)"></a-input>
+           <a-input style="width:210px;padding: 0;" id="classInputRef" spellcheck="false" v-model:value="item.name" :bordered="false" @pressEnter.stop="createClass(item)"></a-input>
            <div class="flex">
              <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
              <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
@@ -171,7 +171,7 @@ export default {
       // console.log(item.id);
       if(item.id){
         ClassModal.confirm({
-         content:'确定要删除该分类吗 !!!',
+         content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
          centered:true,
          onOk: async ()=>{
           const result = await this.removeCategory(item.id)
@@ -250,14 +250,35 @@ export default {
      })
     },
 
+    async createClass(item){
+      const option = {
+        name:item.name,
+        communityNo:this.no,
+        type:'category',
+        role:'category'
+      }
+      // console.log('获取参数::>>',option)
+      const res = await this.createChannel(option)
+      // console.log('返回结果',res);
+      if(res?.status === 1){
+        this.getChannelList(this.no)
+        this.getCategoryData(this.no)
+        this.isEditing = false
+      }
+
+    },
+
 
 
 
 
     async finshCategoryCreate(){  // 完成频道目录创建
       const option = { type:this.type,id:this.classItem.id,no:this.no,content:this.data}
-      // console.log('检查',option);
+      // console.log('检查',option.content.length);
       const createRes = await channelClass.secondaryChannel(option)
+
+      console.log('结果',createRes);
+
       if(createRes?.status === 1){
         message.success(`${createRes?.info}`)
         await this.getCategoryData(this.no)

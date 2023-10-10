@@ -2,7 +2,6 @@
   <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
     <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
-    <!-- <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/> -->
    </div>
    <template #overlay>
     <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
@@ -24,7 +23,7 @@
      <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
-     
+     <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
     </Modal>
   </teleport>
  
@@ -32,7 +31,6 @@
  
  <script>
  import { defineComponent, reactive, toRefs,watchEffect} from 'vue'
- import { EllipsisOutlined } from '@ant-design/icons-vue'
  import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
  import { communityStore } from '../../store/communityStore'
@@ -42,13 +40,13 @@
  import CreateNewCategory from '../createNewCategory.vue'
  import MenuCategory from '../menuCategory.vue'
  import InviteOther from '../inviteOther.vue'
+ import PacketSetting from '../knownCategory/packetSetting.vue'
 
  
  export default defineComponent({
   components:{
-   EllipsisOutlined,
    DorpIcon,Modal,CreateNewCategory,MenuCategory,InviteOther,
-
+   PacketSetting,
   },
  
   props:['list','no','data'],
@@ -107,11 +105,12 @@
         await community.getCategoryData(props.no)
         message.success(`${res.info}`)
       }
-    
-      break;
 
+      break;
      case 'packetSet':
-      
+      setTimeout(()=>{
+        data.categoryShow = true
+      },350)
       break;
     }
   
