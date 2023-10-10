@@ -1,6 +1,6 @@
 <template>
-    <tippy trigger=" click" placement="bottom" :interactive="true">
-        <template #content>
+    <tippy trigger=" click" placement="bottom" :interactive="true" class="xt-bg tippy-trigger" theme="tippy-trigger">
+        <template #content theme="tippy-trigger">
             <!-- 闹钟设置界面 -->
             <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
             <div v-show="clockSettingVisible"
@@ -52,13 +52,8 @@
                             <div class="mt-4 mb-3 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid" :bordered="false"
-                                class="flex justify-between w-full rounded-lg xt-bg-2" buttonStyle="solid">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" :bordered="false"
-                                    class="text-center font-16">不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16" :bordered="false"
-                                    style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group>
+                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                            <!-- {{ defaultType }} -->
                         </div>
                         <div class="flex justify-between ">
                             <xt-button type="primary" class="mt-2 font-16 xt-text"
@@ -109,21 +104,22 @@
 
             </div>
             <!-- 一级快捷面板 -->
-            <div class="w-[320px] h-[320px] relative xt-bg rounded-lg p-0" v-show="customizeSetting">
+            <div class="w-[300px] h-[300px] relative xt-bg  rounded-lg p-0 tippy-trigger" v-show="customizeSetting" theme="tippy-trigger">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%" class="scroll">
                     <div class="p-4 ">
                         <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
                             v-if="useCountDownStore.countDowntime.hours !== undefined">
                             <div>
                                 <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
-                                    @click="stopCountDown" class="xt-text" v-show="!useCountDownStore.countDownBtn">
+                                    @click="stopCountDown" class="xt-text clock-icon pointer" v-show="!useCountDownStore.countDownBtn">
                                 </clockIcon>
                                 <clockIcon icon="fluent:play-16-filled" style="font-size: 24px; vertical-align: sub;"
-                                    @click="startCountDown" class="xt-text" v-show="useCountDownStore.countDownBtn">
+                                    @click="startCountDown" class="xt-text clock-icon pointer" v-show="useCountDownStore.countDownBtn">
                                 </clockIcon>
                                 <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 24px; vertical-align: sub;"
-                                    @click="deleteCountDown" class="ml-2 xt-text">
+                                    @click="deleteCountDown" class="ml-2 xt-text clock-icon pointer">
                                 </clockIcon>
+
                             </div>
                             <div style="font-family: Oswald-Medium;font-size: 20px;color: #FAAD14;font-weight: 500;">
                                 {{ useCountDownStore.countDowntime.hours + ':' + useCountDownStore.countDowntime.minutes +
@@ -135,15 +131,45 @@
                                 我的闹钟
                             </div>
                             <div>
-                                <clockIcon class="mr-3 xt-text font-20" @click="settingClock" icon="fluent:add-16-filled">
-                                </clockIcon>
-                                <clockIcon class="mr-3 text-base xt-text font-20" icon="fluent:clock-12-regular"
-                                    @click="settingCountDown">
-                                </clockIcon>
-                                <clockIcon class=" xt-text font-20" icon="akar-icons:sound-on" v-if="soundVisible"
-                                    @click="changeSoundStatus"></clockIcon>
-                                <clockIcon class=" xt-text font-20" icon="akar-icons:sound-off" v-if="!soundVisible"
-                                    @click="changeSoundStatus"></clockIcon>
+                                <tippy toggle="mouseenter">
+                                    <template #content><div class="xt-text  font-16">添加闹钟</div>
+                                    </template>
+                                    <clockIcon class="mr-3 xt-text font-20 clock-icon" @click="settingClock" icon="fluent:add-16-filled"></clockIcon>
+
+                                </tippy>
+                                <tippy toggle="mouseenter">
+                                    <template #content><div class="xt-text  font-16">添加计时器</div>
+                                    </template>
+                                    <clockIcon class="mr-3 text-base xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
+                                        @click="settingCountDown">
+                                    </clockIcon>
+                                </tippy>
+                                <tippy toggle="mouseenter">
+                                    <template #content>
+                                        <div class="xt-text  font-16">
+                                            铃声调节
+                                        </div>
+                                    </template>
+                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on" v-if="soundVisible"
+                                        @click="changeSoundStatus"></clockIcon>
+                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-off" v-if="!soundVisible"
+                                        @click="changeSoundStatus"></clockIcon>
+                                </tippy>
+                                <tippy toggle="mouseenter">
+                                    <template #content>
+                                        <div class="xt-text  font-16">
+                                            设置
+                                        </div>
+                                    </template>
+                                    <clockIcon icon="fluent:settings-16-regular"
+                                        style="font-size: 24px; vertical-align: sub;" @click="changeSettingStatus"
+                                        class="ml-2 xt-text font-20 clock-icon">
+                                    </clockIcon>
+                                </tippy>
+
+
+
+
                             </div>
                         </div>
                         <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent">
@@ -165,7 +191,7 @@
                         </div>
                     </div>
                 </vue-custom-scrollbar>
-                <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+                <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered
                     style="font-size: 8px;color: var(--primary-text); " :maskClosable="false" zIndex: 999999999999999999;>
                     <div style="display: flex;flex-direction: column;align-items: center;">
                         <div style="">自定义倒计时</div>
@@ -180,8 +206,8 @@
 
         </template>
         <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-sm clock-timer top-bar" @click="closeDetail"
-            v-if="useCountDownStore.countDowntime.hours !== undefined"
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar xt-bg-2"
+            @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
             style="width: 150px; height: 32px;position: relative;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
@@ -194,9 +220,8 @@
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 -mt-2 rounded-md clock-timer top-bar" v-else
-            @click="closeDetail"
-            style="width: 132px; position: relative;background-color: transparent !important;">
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail"
+            style="width: 132px; position: relative;">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
                 <div class="mr-2 xt-text font-14">闹钟</div>
@@ -211,20 +236,28 @@
 import { ref, reactive, computed, onMounted, watch, h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
+import { timerStore } from '../../store/timer'
+// 控制设置顶部按钮显示以及闹钟的筛选
+import { topClockSettingStore } from '../../store/topClockSetting'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
-import { notification, Button } from 'ant-design-vue';
-import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import { Notifications } from '../../js/common/sessionNotice'
+import RadioTab from '../RadioTab.vue';
 const notifications = new Notifications()
+
+const usetopClockSettingStore = topClockSettingStore()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
         useCountDownStore.dCountDown()
     }
+
 })
+const dataType = ref([{ title: '不重复', name: '不重复' }, { title: '每天', name: '每天' }])
+const defaultType = ref({ title: '不重复', name: '不重复' })
+const useTimerStore = timerStore()
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
@@ -249,8 +282,27 @@ const flag = ref(true)
 const custom = ref(false)
 const soundVisible = ref(true)
 const value1 = ref(dayjs('00:00:00', 'HH:mm'))
+// const setProgress = () => {
+//     const progressBar = document.querySelector('.progress-bar')
+//     const ctx = progressBar.getContext('2d')
+//     const progressBarWidth = progressBar.width
+//     const progressBarHeight = progressBar.height
+//     const total = 100
+//     ctx.clearRect(0, 0, progressBarWidth, progressBarHeight);
+
+//     // 绘制背景矩形
+//     ctx.fillStyle = '#ccc';
+//     ctx.fillRect(0, 0, progressBarWidth, progressBarHeight);
+
+//     // 绘制进度矩形
+//     ctx.fillStyle = '#4caf50';
+//     const progressWidth = progressBarWidth * progress / total;
+//     ctx.fillRect(0, 0, progressWidth, progressBarHeight);
+
+// }
 const changeSoundStatus = () => {
     soundVisible.value = !soundVisible.value
+    usetopClockSettingStore.changeSoundStatus(soundVisible.value)
 }
 const changeStutas = () => {
     isStop.value = !isStop.value
@@ -282,7 +334,7 @@ const addSettingClock = () => {
 
 
     useCardStore.addClock({
-        clockType: clockType.value,
+        clockType: defaultType.value.name,
         eventValue: eventValue.value,
         dateValue: timeSpan,
         clockTimeStamp: timeSpan
@@ -302,7 +354,7 @@ const settingCountDown = () => {
 }
 // 打开闹钟的设置页面
 const settingClock = () => {
-    console.log(clockSettingVisible.value);
+    // console.log(clockSettingVisible.value);
     if (countDownVisible.value) {
         countDownVisible.value = false
     }
@@ -320,7 +372,7 @@ const stopCountDown = () => {
 const startCountDown = () => {
     useCountDownStore.openCountDown()
 }
-// 设置自定义倒计时
+// 设置倒计时
 const onCountDown = (value) => {
     switch (value) {
         case 3:
@@ -365,105 +417,81 @@ const closeDetail = () => {
     countDownVisible.value = false
     clockSettingVisible.value = false
     customizeSetting.value = true
-    // console.log(dayjs());
 
-
+    // console.log(clockEvent.value);
+}
+const changeSettingStatus = () => {
+    usetopClockSettingStore.changeSettingStatus()
+    customizeSetting.value = false
+    countDownVisible.value = false
+    clockSettingVisible.value = false
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
 const countDownDate = computed(() => useCountDownStore.countDowndate)
+const clockFlag = computed(() => useCardStore.clockFlag)
 const countDownTime = useCountDownStore.regularTime()
 // 当倒计时完成时弹出弹窗
 watch(countDownDate, (newVal, oldVal) => {
 
-    const countDownTotalTime=computed(()=>{
-        let [hour,minute,second]=useCountDownStore.selectValue
-        let totalTime=''
-        if(hour && hour!==0){
-            totalTime +=`${hour}小时`
+    const countDownTotalTime = computed(() => {
+        let [hour, minute, second] = useCountDownStore.selectValue
+        let totalTime = ''
+        if (hour && hour !== 0) {
+            totalTime += `${hour}小时`
         }
-        if(minute && minute!==0){
-            totalTime +=`${minute}分钟`
+        if (minute && minute !== 0) {
+            totalTime += `${minute}分钟`
         }
-        if(second && second!==0){
-            totalTime +=`${second}秒`
+        if (second && second !== 0) {
+            totalTime += `${second}秒`
         }
         return totalTime.trim()
     })
     if (newVal < 0) {
-        console.log(useCountDownStore.selectValue,'value');
-
-        const audio = new Audio('/sound/message.mp3')
         const key = `open${Date.now()}`
-        notification.open({
-            message: '计时器',
-            description: `${countDownTotalTime.value}到了`,
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 20px' }),
-            btn: () =>
-                h(
-                    Button,
-                    {
-                        type: 'primary',
-                        onClick: () => notification.close(key),
-                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-                    },
-                    { default: () => 'OK' },
-                ),
-            key,
-            // onClose: close,
-            style: {
-                width: '400px',
-                height: '130px',
-                borderRadius: '12px',
-                background: 'var(--secondary-bg) !important',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-
-            },
-            class:'font-16'
-        });
-        // notifications.systemToast('111111',null)
-        audio.play()
+        let message=`${countDownTotalTime.value}到了`
+        notifications.clockToast(message,'计时器',false)
     }
+
+
+
+
 })
-const nowDate = dayjs()
-// 当闹钟完成时触发弹窗
-watch(() => nowDate, (newVal, oldVal) => {
-    if (newVal.$H == clockEvent.value.hours && newVal.$m == clockEvent.value.minutes) {
+// 闹钟完成时弹出
+watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
+    // const audio = new Audio('/sound/clock.mp3')
+    // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
+    const firstClock = computed(() => {
+        return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
+    })
+    useCardStore.sortClock()
+    if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
+        useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
         const key = `open${Date.now()}`
-        notification.open({
-            message: '闹钟',
-            description: '已到达闹钟设置时间',
-            icon: () => h(ClockCircleOutlined, { style: 'font-size: 25px' }),
-            btn: () =>
-                h(
-                    Button,
-                    {
-                        type: 'primary',
-                        onClick: () => notification.close(key),
-                        style: 'color:var(--active-bg);border-radius:10px;width:56px;height:32px;'
-                    },
-                    { default: () => 'OK' },
-                ),
-            key,
-            // onClose: close,
-            class: 'notification-custom-class',
-            style: {
-                width: '400px',
-                height: '130px',
-                borderRadius: '12px',
-                background: 'var(--secondary-bg) !important',
-                boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.5)',
-            },
-        });
+        let message=`${firstClock.value}到了,${clockEvent.value[0].eventValue}`
+        notifications.clockToast(message,'闹钟',true)
     }
+
 })
 
 </script>
 <style lang='scss' scoped>
-.tippy-content {
+:deep(.tippy-content) {
     padding: 0px !important;
 }
+.tippy-trigger{
+    padding: 0px !important;
+}
+.clock-icon {
+  cursor: pointer;
+  transition: transform 0.3s; /* 添加一个过渡效果 */
+}
 
+.clock-icon:hover {
+  transform: scale(1.3); /* 鼠标悬停时放大 */
+  background-color: var(--secondary-bg);
+}
 .font-14 {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -509,9 +537,6 @@ watch(() => nowDate, (newVal, oldVal) => {
     line-height: 35px;
 }
 
-:deep(.ant-select-option) {
-    z-index: 999;
-}
 
 .font-12 {
     font-family: PingFangSC-Regular;

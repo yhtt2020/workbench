@@ -1,7 +1,7 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="13" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
+            <a-col :span="12" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: calc(100vh -5em );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
@@ -17,7 +17,8 @@
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{ index }}</a-radio-button>
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{
+                                        index }}</a-radio-button>
                                 </template>
                             </a-radio-group>
 
@@ -27,7 +28,7 @@
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
                                 style="width:100%;  height: 40px; border-radius: 10px;">
-                                <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2"  >
+                                <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2">
                                     {{ index }}
                                 </a-select-option>
                             </a-select>
@@ -38,25 +39,49 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
+                            <!-- <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
                                 <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
                                 <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group>
+                            </a-radio-group> -->
+                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                            <!-- {{ selectType }} -->
+                            <!-- {{ defaultType }} -->
                         </div>
                         <div>
                             <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
                              -->
-                            <xt-button type="primary" class=" font-16 xt-text" style="width: 100%; height: 40px; background-color: var(--active-bg);"
+                            <xt-button type="primary" class=" font-16 xt-text"
+                                style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
                         </div>
                     </div>
 
                 </vue-custom-scrollbar>
             </a-col>
-            <a-col :span="11">
+            <a-col :span="12">
                 <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height: calc(100vh - 10em)"
                     class="scroll">
                     <div class="pl-4">
+                        <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
+                            <div class="flex justify-between">
+                                <div class="font-16 xt-text-2">显示在状态栏</div>
+                                <a-switch v-model:checked="checked" @change="changeSwitchStatus(checked)" />
+                            </div>
+                            <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
+                                在顶部状态栏显示最近闹钟时间。
+                            </div>
+                            <div>
+                                <a-select v-model:value="defaultDataType.title"  dropdownSyle="" @select="changeDataType(defaultDataType)"
+                                    style="width:100%;  height: 40px; border-radius: 10px;">
+                                    <a-select-option :value="index" v-for="(item, index) in selectDataType" 
+                                        class="xt-bg xt-text-2 selsect-options">
+                                        {{ item.title }}
+                                    </a-select-option>
+                                </a-select>
+                            </div>
+
+
+                        </div>
                         <div style="color:var(--primary-text)"> 我的闹钟</div>
                         <a-empty v-if="clockEvent.length === 0" description="暂无闹钟" image="/img/test/load-ail.png"
                             style="margin-top: 40%;"></a-empty>
@@ -67,14 +92,14 @@
                                 <div class="card-list ">
                                     <div class="event-title">
                                         <span class="font-14 xt-text">{{ item.eventValue }}</span>
-                                        <span class="font-12 xt-text-2"
-                                            style="color:var(--secondary-text)">{{ item.clockType }}</span>
+                                        <span class="font-12 xt-text-2" style="color:var(--secondary-text)">{{
+                                            item.clockType }}</span>
                                     </div>
                                     <span class="font-20">{{ item.dateValue.hours }}:{{ item.dateValue.minutes }}</span>
                                 </div>
                             </div>
-                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick" class="ml-2 xt-bg xt-text-2"
-                                style="font-size: 18px;">
+                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick"
+                                class="ml-2 xt-bg xt-text-2" style="font-size: 18px;">
                             </clockIcon>
                         </div>
 
@@ -90,15 +115,17 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from '../../store/card'
+import { topClockSettingStore } from '../../store/topClockSetting'
 import { timeStamp, transDate } from "../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
 import BackBtn from '../../components/comp/BackBtn.vue'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { Icon as clockIcon } from '@iconify/vue'
+import RadioTab from '../../components/RadioTab.vue'
 export default {
     name: "SetupClock",
-    components: { BackBtn, clockIcon },
+    components: { BackBtn, clockIcon, RadioTab },
 
     data() {
         return {
@@ -123,7 +150,19 @@ export default {
             timeMinute: 0,//时钟设置的分钟
 
             dateTime: {},//当前时间
-            timer: null //当前时间更新计时器
+            timer: null,//当前时间更新计时器
+            dataType: [
+                { title: '不重复', name: '不重复' },
+                { title: '每天', name: '每天' }
+            ],
+            defaultType: { title: '不重复', name: '不重复' },
+            selectDataType: [
+                { title: '始终显示', tag: 'always' },
+                { title: '显示30分钟内的闹钟', tag: 'within30min' },
+                { title: '显示1小时内的闹钟', tag: 'within1hour' },
+            ],
+            defaultDataType: { title: '始终显示', tag: 'always' },
+            checked: true,
         };
     },
 
@@ -144,6 +183,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
+        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
     },
     methods: {
         dayjs,
@@ -154,7 +194,9 @@ export default {
             "addCard",
             "removeCountdownDay",
             "removeClock",
+            'filterClock',
         ]),
+        ...mapActions(topClockSettingStore, ['changeTopClockStatus']),
         updateTime() {
             this.dateTime = getDateTime()
         },
@@ -202,7 +244,7 @@ export default {
 
 
             this.addClock({
-                clockType: this.clockType,
+                clockType: this.defaultType.name,
                 eventValue: this.eventValue,
                 dateValue: timeSpan,
                 clockTimeStamp: timeSpan
@@ -218,6 +260,16 @@ export default {
         onClockMenuClick(e, index) {
             this.removeClock(index, 1);
         },
+        changeSwitchStatus(value) {
+            console.log(this.checked);
+            this.changeTopClockStatus(value)
+            // console.log(1111);
+        },
+        changeDataType(value) {
+            console.log(this.selectDataType[value.title]);
+            let tag = this.selectDataType[value.title].tag
+            this.filterClock(tag)
+        }
     },
 };
 </script>
@@ -250,6 +302,25 @@ export default {
             }
         }
     }
+}
+
+:deep(.ant-select-option) {
+    color: var(--primary-text);
+}
+
+:deep(.ant-select-arrow) {
+    color: var(--primary-text);
+}
+
+:deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
+    // border-radius: 10px !important;
+    height: 100%;
+    border-radius: 10px;
+
+}
+
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item) {
+    line-height: 35px;
 }
 
 .font-14 {
@@ -317,25 +388,30 @@ export default {
 :deep(.ant-select) {
     border: none !important;
 }
+
 :deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector) {
     // border-radius: 10px !important;
     height: 100%;
     border-radius: 10px;
 
 }
-:deep(.ant-select-option){
+
+:deep(.ant-select-option) {
     color: var(--primary-text);
 }
-:deep(.ant-select-arrow){
+
+:deep(.ant-select-arrow) {
     color: var(--primary-text);
 }
+
 :deep(.ant-input) {
     color: var(--primary-text);
+
     &::placeholder {
         font-family: PingFangSC-Regular;
         font-size: 14px;
         font-weight: 400;
-        color:var(--primary-text);
+        color: var(--primary-text);
     }
 }
 
@@ -363,5 +439,6 @@ export default {
     font-family: Oswald-Medium;
     font-size: 20px;
     font-weight: 500;
-}</style>
+}
+</style>
   
