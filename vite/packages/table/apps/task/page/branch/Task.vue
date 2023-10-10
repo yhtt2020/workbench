@@ -11,7 +11,8 @@
           <xt-new-icon
             icon="fluent:chevron-left-16-filled"
             @click="back()"
-            type="1"
+            bgClass="xt-text-2"
+
             class="mr-3"
             w="40"
           />

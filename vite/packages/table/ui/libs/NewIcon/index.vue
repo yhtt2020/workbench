@@ -1,5 +1,9 @@
 <template>
-  <div class="xt-active xt-base-btn xt-text" :style="boxStyle">
+  <div
+    class="xt-active xt-base-btn xt-text"
+    :style="[boxStyle, boxBgStyle]"
+    :class="[bgClass]"
+  >
     <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>
@@ -18,14 +22,16 @@ const props = defineProps({
   size: {
     default: "26",
   },
-  type: {
-    default: "",
-  },
   radius: {
     default: "12",
   },
-  bg: {
-    default: "var(--secondary-bg)",
+  bgClass: {
+    // default: "xt-text-2",
+    default: "",
+  },
+  bgStyle: {
+    // default: "var(--secondary-bg)",
+    default: "",
   },
   color: {
     default: "var(--secondary-text)",
@@ -40,18 +46,26 @@ const iconSize = computed(() => {
 });
 
 const boxStyle = computed(() => {
-  if (props.type) {
+  if (props.bgStyle || props.bgClass) {
+    console.log("1111 :>> ", 1111);
     return {
       width: props.w + "px",
       height: props.w + "px",
       "border-radius": props.radius + "px",
-      background: props.bg,
       color: props.color,
     };
   } else {
     return {
       width: props.size + "px",
       color: props.color,
+    };
+  }
+});
+
+const boxBgStyle = computed(() => {
+  if (props.bgStyle) {
+    return {
+      background: props.bgStyle,
     };
   }
 });

@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full flex justify-between" :class="[textClass]">
+  <div class="w-full flex justify-between relative" :class="[textClass]">
+    <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+      <slot name="centet"> {{ title }}</slot>
+    </div>
     <div class="flex items-center">
       <slot></slot>
     </div>
@@ -14,6 +17,9 @@ import { computed } from "vue";
 const props = defineProps({
   type: {
     default: 1,
+  },
+  title: {
+    default: "",
   },
 });
 

@@ -7,6 +7,8 @@ import axios from 'axios'
 import {getConfig} from "./js/axios/serverApi";
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
+import {taskStore} from "./apps/task/store";
+
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
@@ -150,6 +152,12 @@ export const appStore = defineStore('appStore', {
     finishWizard() {
       this.init = true;
       this.agreeTest = true
+       /**
+       * 首次引导任务
+       */
+       const store:any =  taskStore()
+       store.step = 1;
+       store.taskID = "firstTask";
     },
 
     setMusic(status) {
@@ -213,7 +221,7 @@ export const appStore = defineStore('appStore', {
     },
 
     // 修改当前社群消息通知开关
-    setNoticeOnOff(val:boolean){  
+    setNoticeOnOff(val:boolean){
       this.settings.noticeEnable = val
     },
 
@@ -223,7 +231,7 @@ export const appStore = defineStore('appStore', {
     hideNoticeEntry(){  // 隐藏消息通知入口
       this.status.show = false
     },
-    
+
     setMessagePrompt(val:boolean){  // 设置消息通知提示语开关
       this.settings.enablePlay = val
     },
