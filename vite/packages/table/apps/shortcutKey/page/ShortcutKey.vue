@@ -1,7 +1,6 @@
 <template>
 <!--  {{ apps }}-->
 
-<!--  {{ currentWindow }}-->
 
 
   <!-- 有内容 -->

@@ -90,17 +90,18 @@ export default {
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
             this.selectTab = "Chat";
+            this.$router.push({name:'schemeList'})
           },
         },
-        {
-          id: 'shop',
-          icon: "shop",
-          title: '创意市场',
-          // img: "/icons/bg.png",
-          callBack: () => {
-            this.selectTab = "Chat";
-          },
-        },
+        // {
+        //   id: 'shop',
+        //   icon: "shop",
+        //   title: '创意市场',
+        //   // img: "/icons/bg.png",
+        //   callBack: () => {
+        //     this.selectTab = "Chat";
+        //   },
+        // },
 
       ]
       const endMenu = [
@@ -129,29 +130,19 @@ export default {
           },
         },
       ]
-      this.sessionList = this.executedApps.map(app => {
-        return {
-          img: app.software.icon,
-          title: app.software.alias,
-          id: app.exeName,
-          noBg: true,
-          callBack: () => {
-            this.currentApp = app
-            this.$router.push({
-              name: 'schemeList',
-              params: {
-                exeName: app.exeName
-              }
-            })
+      this.syncSessionList((app)=>{
+        this.$router.push({
+          name: 'schemeList',
+          params: {
+            exeName: app.exeName
           }
-        }
+        })
       })
 
       console.log(this.sessionList)
       return [
         ...startMenu,
         ...this.sessionList,
-
         ...endMenu
       ]
     }
@@ -191,7 +182,7 @@ export default {
     this.watchDog.quit()
   },
   methods: {
-    ...mapActions(keyStore, ['getCustomApp']),
+    ...mapActions(keyStore, ['getCustomApp','syncSessionList']),
     async getRepApp(exeName, filePath) {
       let found = appMap.find(app => {
         if (typeof app.exeName == 'string') {
@@ -217,7 +208,7 @@ export default {
   <div :class="{'rounded-lg':!fullScreen}"
        class="flex h-full w-full   py-2" style="">
     <div class="w-full">
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="3" class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="3" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>

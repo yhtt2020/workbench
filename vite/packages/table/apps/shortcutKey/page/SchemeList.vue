@@ -5,31 +5,43 @@ import XtButton from "../../../ui/libs/Button/index.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import NotShortcutKey from "./NotShortcutKey.vue";
-import {PlusOutlined} from '@ant-design/icons-vue'
+import {PlusOutlined,EditOutlined} from '@ant-design/icons-vue'
+import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
+
 export default {
   name: "schemeList",
-  components: {NotShortcutKey, XtButton, Search,PlusOutlined},
+  components: {VueCustomScrollbar, NotShortcutKey, XtButton, Search, PlusOutlined,EditOutlined},
   data() {
     return {
+      loading:true,
       shortcutSchemeList: [],
-      exeName: ''
+      exeName: '',
+      settings: {
+        default: {
+          useBothWheelAxes: true,
+          swipeEasing: true,
+          suppressScrollY: false,
+          suppressScrollX: true,
+          wheelPropagation: true
+        }
+      },
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['shortcutKeyList', 'schemeList', 'currentApp','settings']),
+    ...mapWritableState(keyStore, ['shortcutKeyList', 'schemeList', 'currentApp', 'settings']),
   },
-  watch:{
-     currentApp:{
-       handler(){
-         if(this.settings.enableAutoChange){
-           this.exeName=this.currentApp.exeName
-           this.refreshList()
+  watch: {
+    currentApp: {
+      handler() {
+        if (this.settings.enableAutoChange) {
+          this.exeName = this.currentApp.exeName
+          this.refreshList()
 
-         }
+        }
 
-       },
-       deep:true
-     }
+      },
+      deep: true
+    }
   },
   mounted() {
     this.exeName = this.$route.params.exeName
@@ -42,24 +54,36 @@ export default {
   methods: {
     ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes']),
     async refreshList() {
-      console.log(this.exeName,'查询调节')
+      console.log(this.exeName, '查询调节')
 
       this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
-      if(this.settings.enableAutoEnter && this.shortcutSchemeList.length>0){
-          this.btnDetail(this.shortcutSchemeList[0])
+      if (this.settings.enableAutoEnter && this.shortcutSchemeList.length > 0) {
+        this.btnDetail(this.shortcutSchemeList[0])
       }
+      this.loading=false
     },
-    createScheme(){
-      this.$router.push({name: 'shareKey',params:{
-        exeName:this.exeName
-        }})
-    },
-    btnDetail (item) {
-      this.setRecentlyUsedList(item)
+    createScheme() {
       this.$router.push({
-        name:'schemeDetail'
+        name: 'shareKey', params: {
+          exeName: this.exeName
+        }
       })
     },
+    btnDetail(item) {
+      this.setRecentlyUsedList(item)
+      this.$router.push({
+        name: 'schemeDetail'
+      })
+    },
+    goEdit(app){
+      console.log(app)
+      this.$router.push({
+        name:'editApp',
+        params:{
+          exeName:app.exeName
+        }
+      })
+    }
   }
 }
 </script>
@@ -67,9 +91,13 @@ export default {
 <template>
   <!-- 有内容 -->
 
-  <div class="container rounded-lg w-full px-2">
-    <div class=" m-2   my-1 flex">
-      <div class="  rounded-md px-2 p-2  " :span="12" style="flex: 1">
+  <div class=" flex flex-col rounded-lg w-full px-2 h-full">
+    <div class=" m-2  my-1 flex">
+      <div v-if="!exeName" class="flex-1">
+        <h2>方案列表</h2>
+        <p class="xt-text-2">当前共有 {{ shortcutSchemeList.length }} 个快捷键方案</p>
+      </div>
+      <div v-else="false" class="  rounded-md px-2 p-2  " :span="12" style="flex: 1">
         <div class="flex flex-row">
           <div hidden="">
             - {{ currentApp.pid }} - {{ currentApp.title }}
@@ -85,7 +113,7 @@ export default {
           </div>
           <div class="ml-4">
             <div class="font-16 font-bold">
-              {{ currentApp.software.alias }}
+              {{ currentApp.software.alias }} <EditOutlined class="pointer" @click="goEdit(currentApp)" />
             </div>
             <span class="" style="font-size: 16px;color: var(--secondary-text);">共{{
                 shortcutSchemeList.length
@@ -98,7 +126,10 @@ export default {
       </div>
       <div>
         <div class="btn-item mt-3">
-          <div class="pointer" @click="createScheme"><plus-outlined /> 创建方案</div>
+          <div v-if="exeName" class="pointer" @click="createScheme">
+            <plus-outlined/>
+            创建方案
+          </div>
           <div class="pointer" @click="market">创意市场</div>
 
           <span class="button-active pointer" @click="setShow = true">
@@ -107,33 +138,36 @@ export default {
         </div>
       </div>
     </div>
-    <div class="flex justify-between px-4">
-      <div class="flex items-center">
+    <div class="flex flex-1 justify-between px-4 h-0">
 
-
-      </div>
-
-    </div>
-
-    <div v-if="shortcutSchemeList.length>0" class="main-part item-content"
-         style="flex:1">
-      <div v-for="item in shortcutSchemeList" class="flex items-center pointer" @click="btnDetail(item)">
+      <vue-custom-scrollbar :settings="settings" class="h-full">
+        <div v-if="shortcutSchemeList.length===0 && loading===false" style="flex:1">
+          <NotShortcutKey @createScheme="createScheme"></NotShortcutKey>
+        </div>
+        <div v-else class="main-part item-content"
+             style="flex:1">
+          <div v-for="item in shortcutSchemeList" class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
-        <span class="xt-text">{{ item.name }}</span>
-        <div class="flex flex-col justify-center items-center">
-          <span>{{ item.number }}</span>
-          <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
+            <span class="xt-text">{{ item.name }}</span>
+            <div class="flex flex-col justify-center items-center">
+              <span>{{ item.number }}</span>
+              <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
+            </div>
+          </div>
+          <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
+          <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
         </div>
-      </div>
-      <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
-      <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
+
+      </vue-custom-scrollbar>
+
+
     </div>
+
+
     <!-- 无内容 -->
-    <div v-else style="flex:1">
-      <NotShortcutKey @createScheme="createScheme"></NotShortcutKey>
-    </div>
+
   </div>
 
 </template>
