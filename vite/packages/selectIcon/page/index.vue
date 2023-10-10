@@ -22,9 +22,14 @@
           <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
         </div>
       </div>
+      <!-- <div class="icon-list flex pl-1 pr-2" style="flex-wrap: wrap;">
+        <div v-for="(item,index) in iconList" :key="index" @click="onSelectIcon(index)" class="flex justify-center items-center mt-2 ml-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <img :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias">
+        </div>
+      </div> -->
       <div class="icon-list flex pl-1 pr-2" style="flex-wrap: wrap;">
-        <div v-for="index in 48" :key="index" @click="onSelectIcon(index)" class="flex justify-center items-center mt-2 ml-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
+        <div v-for="(item,index) in emojisList" :key="index" @click="onSelectIcon(index)" class="flex justify-center items-center mt-2 ml-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <img :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32">
         </div>
       </div>
 
@@ -36,10 +41,15 @@
   <script>
   import { Icon } from '@iconify/vue';
   import arrowSync20Filled from '@iconify-icons/fluent/arrow-sync-20-filled';
+  import emojis from '../components/IconListData/emojis'
+  import icon from '../components/IconListData/icon'
   export default {
     name: "SelectIcon",
     components: {
-      Icon
+      Icon,
+      emojis,
+      icon,
+
     },
     data() {
       return {
@@ -49,6 +59,8 @@
         icons:{
           arrowSync20Filled
         },
+        iconList:icon.list,
+        emojisList:emojis.list,
         // release: false,
       }  
     },

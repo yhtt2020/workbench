@@ -18,8 +18,8 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-      style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
-      >
+     style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
+     >
       <!-- style="width: 64px;height: 64px; position:relative"  @click="onShowSelect" -->
      <!--  -->
       <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar>
@@ -54,12 +54,13 @@
  import {fileUpload} from '../../../components/card/hooks/imageProcessing'
  import { message } from 'ant-design-vue'
  import { communityStore } from '../store/communityStore'
- import SelectIcon from '../../../components/SelectIcon.vue'
+ import SelectIcon from '../../../../selectIcon/page/index.vue'
 
 
  export default defineComponent({
   components:{
-   LeftOutlined,CloseOutlined,CameraOutlined,SelectIcon,
+   LeftOutlined,CloseOutlined,CameraOutlined,
+   SelectIcon,
   },
 
   props:['id'],
