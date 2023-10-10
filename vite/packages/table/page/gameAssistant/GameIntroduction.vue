@@ -408,20 +408,31 @@ export default {
       if (clear) {
         this.gameVideoList = []
       }
+      
       // console.log('地址',url);
+
       axios.get(url).then(res => {
+        
+        // console.log('请求结果',res);
+
         try{
           const htmlText = res.data
           // 使用正则表达式匹配 <script> 标签中的 JavaScript 代码
           const regex = /<script.*?>((.|\n)*?)<\/script>/gi;
-          const matches = htmlText.match(regex)[12];
-          const startIndex = matches.indexOf('(');
+          const matches = htmlText.match(regex);
+          
+          // console.log('排查问题::>>',matches[13]);
+
+          const startIndex = matches[13].indexOf('(');
           if(startIndex===-1){
             this.gameVideoList=[]
             return
           }
-          const endIndex = matches.lastIndexOf(')');
-          const jsonString = matches.substring(startIndex, endIndex + 1);
+          const endIndex = matches[13].lastIndexOf(')');
+          const jsonString = matches[13].substring(startIndex, endIndex + 1);
+          
+          // console.log('排查问题::>>',jsonString);
+
           const jsonData=window.eval(jsonString).index.searchAllResponse
           if(Object.keys(jsonData).length===0){
             this.gameVideoList=[]
@@ -435,6 +446,7 @@ export default {
               this.gameVideoList.push(el)
             }
           })
+
         }catch (e) {
           console.error('搜索意外返回',e)
           this.gameVideoList=[]
