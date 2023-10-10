@@ -14,7 +14,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(this.$route.params)
     if (this.$route.params.exeName) {
       this.formApp = await this.getCustomApp(this.$route.params.exeName)
       this.originApp = {...this.formApp}
@@ -31,9 +30,7 @@ export default {
       message.success('保存成功')
     },
     async refresh() {
-      console.log('路径',this.formApp.path)
       let newIcon = await tsbApi.system.extractFileIcon(this.formApp.path)
-      console.log('新图标',newIcon)
       this.formApp.icon=newIcon
     },
     async removeApp() {

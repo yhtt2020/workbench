@@ -93,8 +93,6 @@ export default {
           }
         })
       })
-
-      console.log(this.sessionList)
       return [
         ...startMenu,
         ...this.sessionList,
@@ -105,7 +103,6 @@ export default {
   mounted() {
     this.watchDog = win32.WatchWindowForeground(async (newPoint, oidPoint, Handle) => {
       let {rect, pid, MianPid, title} = Handle
-      console.log({rect, pid, MianPid, title})
       let found = this.executedApps.findIndex(app => {
         return app.pid === pid
       })

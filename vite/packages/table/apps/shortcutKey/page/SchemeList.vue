@@ -54,7 +54,6 @@ export default {
   methods: {
     ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes']),
     async refreshList() {
-      console.log(this.exeName, '查询调节')
 
       this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
       if (this.settings.enableAutoEnter && this.shortcutSchemeList.length > 0) {
@@ -76,7 +75,6 @@ export default {
       })
     },
     goEdit(app){
-      console.log(app)
       this.$router.push({
         name:'editApp',
         params:{

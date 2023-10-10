@@ -328,7 +328,6 @@ export default {
           }
 
         }
-        console.log(item.keys)
       })
       return sum
     }
