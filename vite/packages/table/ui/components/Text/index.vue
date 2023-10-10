@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex justify-between" :class="[textClass]">
-    <div>
+    <div class="flex items-center">
       <slot></slot>
     </div>
     <div>
