@@ -183,6 +183,7 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
+import {completeTask} from "../../apps/task/page/branch/task"
 const { steamSession, path, https,steamUser } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
 
@@ -328,6 +329,8 @@ export default {
       message.info({
         content: `登录成功用户名 ${session.accountName}`,
       })
+      // 支线任务点
+      completeTask('Z0101')
       this.modalVisibility = false
       this.logUserName= session.accountName
       this.loadingUserInfoVisible=true

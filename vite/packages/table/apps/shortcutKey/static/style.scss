@@ -53,12 +53,10 @@
 
 .item-content {
   width: 100%;
-  height: 80%;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   overflow: auto;
-  padding-bottom: 40px;
   justify-content: center;
 }
 
@@ -69,4 +67,20 @@
   background: var(--mask-bg);
   border-radius: 12px;
   height: 56px;
+}
+.add-content {
+  height: 90%;
+  width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  > span {
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 500;
+    margin: 21px 0;
+    display: block;
+  }
 }

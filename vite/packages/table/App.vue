@@ -7,7 +7,7 @@
     </div>
     <Barrage></Barrage>
   </a-config-provider>
-  <a-modal v-model:visible="visible" centered @ok="handleOk" @cancel="handleOk">
+  <!-- <a-modal v-model:visible="visible" centered @ok="handleOk" @cancel="handleOk">
     <template #modalRender="{}">
       <div style="
           height: 14.7em;
@@ -32,18 +32,18 @@
         </div>
       </div>
     </template>
-  </a-modal>
+  </a-modal> -->
   <audio ref="clock" src="/sound/clock.mp3"></audio>
-  <div class="video-container fixed inset-0 " v-if="backgroundImage.runpath && !settings.transparent">
+  <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath && !settings.transparent">
     <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
 
   </div>
-  <div v-else-if="backgroundImage.path && !settings.transparent" class="video-container fixed inset-0 ">
+  <div v-else-if="backgroundImage.path && !settings.transparent" class="fixed inset-0 video-container ">
     <img style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
   </div>
-  <div class="fixed inset-0  background-img-blur-light" style="z-index: -1"></div>
+  <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
@@ -59,7 +59,7 @@
   <Modal v-model:visible="frameStoreVisible" v-if="frameStoreVisible" animationName="b-t"
          :blurFlag="true">
     <slot>
-    <div class="card half mr-3" style="padding:0;width: 370px;background: var(--primary-bg);max-height: 550px;height: 550px;z-index: 9999999;position: relative;overflow: hidden">
+    <div class="mr-3 card half" style="padding:0;width: 370px;background: var(--primary-bg);max-height: 550px;height: 550px;z-index: 9999999;position: relative;overflow: hidden">
       <FrameStoreWidget></FrameStoreWidget>
     </div>
     </slot>

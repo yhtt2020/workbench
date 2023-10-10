@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-active xt-base-btn" :style="boxStyle">
+  <div class="xt-active xt-base-btn xt-text" :style="boxStyle">
     <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>
@@ -28,7 +28,7 @@ const props = defineProps({
     default: "var(--secondary-bg)",
   },
   color: {
-    default: "#000",
+    default: "var(--secondary-text)",
   },
 });
 

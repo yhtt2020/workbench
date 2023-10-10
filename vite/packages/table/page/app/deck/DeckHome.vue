@@ -317,7 +317,7 @@ import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-desi
 import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 import { powerState } from '../../../js/watch/grade'
 import _ from 'lodash-es'
-
+import {} from "../../../apps/task/page/branch/task.ts"
 export default {
   name: 'Deck',
   components: {
@@ -638,6 +638,7 @@ export default {
       message.success('复制按钮成功')
     },
     add(currentGrid) {
+
       let params={}
       if(currentGrid){
         this.currentGrid=currentGrid
@@ -649,6 +650,8 @@ export default {
         message.error('必须选择添加到的分组')
         return
       }
+      // 支线任务点
+      completeTask('Z0201')
       this.currentItem = undefined
       this.$router.push({
         name:'deckAdd',

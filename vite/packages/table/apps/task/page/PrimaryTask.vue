@@ -25,7 +25,6 @@ import { guide } from "../../../ui/components/Task/guide";
 import { lastGuide } from "./lastGuide";
 import { endGuide } from "./endGuide";
 import { taskStore } from "../store";
-
 // 初始化
 const store = taskStore();
 const router = useRouter();
@@ -69,7 +68,7 @@ const taskGuide = () => {
 
 const ok = () => {
   router.push({
-    name: 'home',
+    name: "home",
   });
   store.isTaskDrawer = false;
   //  这里执行fn

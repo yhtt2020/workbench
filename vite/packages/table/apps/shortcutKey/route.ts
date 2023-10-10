@@ -4,11 +4,14 @@ import ShortcutKey from './page/ShortcutKey.vue'
 import ShareKey from "./page/ShareKey.vue"
 import SchemeDetail from './page/SchemeDetail.vue'
 import Settings from './page/Settings.vue'
+import EditApp from './page/EditApp.vue'
+
 
 export default {
   path: '/shortcutKey',
   name: 'shortcutIndex',
   component: ShortcutIndex,
+  redirect:'/schemeList',
   children: [
     {
       path: '',
@@ -20,7 +23,16 @@ export default {
       }
     },
     {
-      path: '',
+      path:'/editApp',
+      name:'editApp',
+      component: EditApp,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut'
+      }
+    },
+    {
+      path: '/schemeList',
       name: 'schemeList',
       component: SchemeList,
       meta:{

@@ -21,7 +21,6 @@ import { taskStore } from "../../store";
 
 const store = taskStore();
 const { successBranchTask } = storeToRefs(store);
-
 const props = defineProps({
   text: {
     default: "进度",

@@ -1,6 +1,6 @@
 <template>
   <template v-if="currentTask">
-    <Task :task="currentTask"> </Task>
+    <Task @back="back()" :task="currentTask"> </Task>
   </template>
   <template v-else>
     <xt-title>支线任务</xt-title>
@@ -14,15 +14,31 @@
         class="flex flex-col xt-bg-2 rounded-xl mt-3 p-3"
         @click="taskClick(task)"
       >
-      <xt-title m="">
-    <FlagOutlined /> {{ task.chapter }}
-    <template #right
-      ><Progress :task="task" style="width: 68px; height: 20px"
-    /></template>
-  </xt-title>
-  <xt-title type="text" m="mt">
-    {{ task.info }}
-  </xt-title>
+        <xt-title m="">
+          <div class="flex items-center">
+            <FlagOutlined
+              style="
+                margin-right: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                background: #508bfe;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                font-size: 10px;
+              "
+            />
+            {{ task.chapter }}
+          </div>
+          <template #right
+            ><Progress :task="task" style="width: 68px; height: 20px"
+          /></template>
+        </xt-title>
+        <xt-title type="text" m="mt">
+          {{ task.info }}
+        </xt-title>
       </div>
     </xt-menu>
   </template>
@@ -34,7 +50,6 @@ import { tasks } from "../../config/Branch";
 import Task from "./Task.vue";
 import { FlagOutlined } from "@ant-design/icons-vue";
 import Progress from "../../components/progress/index.vue";
-
 const menus = reactive([
   {
     label: "固定到左侧",

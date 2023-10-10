@@ -19,7 +19,7 @@
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
                         <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                            :bordered="false" @keyup.enter="publishPost" />
+                            :bordered="false"  />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 multiple @preview="handlePreview">
