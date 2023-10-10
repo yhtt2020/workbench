@@ -51,12 +51,100 @@
               </template>
             </a-table>
       </div>
+      <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="promptVisible" >
+        <div
+        class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center">
+        <!-- 口令编辑 -->
+        <Modal blurFlag="true" style="z-index:99999;"  >
+          <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:800px;height:600px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
+            <div  style="width:100%;height:64px;position:relative;">
+              <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>口令</div>
+              <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+                <Icon :icon="icons.dismiss16Filled" />
+              </div>
+            </div>
+            <div class='flex font-16' style='height:22px;width:100%;justify-content: space-between;'>
+              <div>推广员：米兰小铁匠</div>
+              <div><a>+ 创建口令</a></div>
+            </div>
+            <a-table 
+              :dataSource="keyCodeList" 
+              tableLayout='fixed'
+              :pagination="{ pageSize: 6 }"
+              :columns="keyCodeCol" class="table-box">
+              <template #bodyCell="{ column, record }">              
+                <template v-if="column.key === 'action'">
+                  <span>
+                    <a>编辑 </a>
+                    <a>删除 </a>
+                  </span>
+                </template>
+              </template>
+            </a-table>
+          </div>
+        </Modal>
+        <!-- 创建口令 -->
+        <!-- <Modal blurFlag="true" style="z-index:99999;"  >
+          <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:500px;height:280px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
+            <div  style="width:100%;height:64px;position:relative;">
+              <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>驳回</div>
+              <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+                <Icon :icon="icons.dismiss16Filled" />
+              </div>
+            </div>
+            456
+            <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+              <div class='no-drag btn-active input pointer flex justify-center items-center' @click='promptVisible=false' style='width:64px;height:40px;background: #2A2A2A;'>取消</div>
+              <div class='no-drag xt-active-btn input pointer' style='width:64px;height:40px;'>确定</div>
+            </div>
+          </div>
+        </Modal> -->
+        <!-- 代理层级 -->
+        <!-- <Modal blurFlag="true" style="z-index:99999;"  >
+          <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:500px;height:280px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
+            <div  style="width:100%;height:64px;position:relative;">
+              <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>驳回</div>
+              <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+                <Icon :icon="icons.dismiss16Filled" />
+              </div>
+            </div>
+            123
+            <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+              <div class='no-drag btn-active input pointer flex justify-center items-center' @click='promptVisible=false' style='width:64px;height:40px;background: #2A2A2A;'>取消</div>
+              <div class='no-drag xt-active-btn input pointer' style='width:64px;height:40px;'>确定</div>
+            </div>
+          </div>
+        </Modal> -->
+        <!-- 驳回原因 -->
+        <!-- <Modal blurFlag="true" style="z-index:99999;"  >
+          <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:500px;height:280px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
+            <div  style="width:100%;height:64px;position:relative;">
+              <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>驳回</div>
+              <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+                <Icon :icon="icons.dismiss16Filled" />
+              </div>
+            </div>
+            <a-textarea
+              style='width:452px;height:128px;background: #2A2A2A;border: 1px solid rgba(255,255,255,0.1);border-radius: 10px;padding:9px 15px;'
+              v-model="value2"
+              placeholder="请输入原因"
+            />
+            <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+              <div class='no-drag btn-active input pointer flex justify-center items-center' @click='promptVisible=false' style='width:64px;height:40px;background: #2A2A2A;'>取消</div>
+              <div class='no-drag xt-active-btn input pointer' style='width:64px;height:40px;'>确定</div>
+            </div>
+          </div>
+        </Modal> -->
+      </div>
+    </div>
+
     </vueCustomScrollbar>
   </template>
   <script>
   import { Icon } from '@iconify/vue';
-    import {mapActions, mapState,mapWritableState} from "pinia";
-  import arrowCounterclockwise20Filled from '@iconify-icons/fluent/arrow-counterclockwise-20-filled';
+  import {mapActions, mapState,mapWritableState} from "pinia";
+  import Modal from '../../../components/Modal.vue'
+  import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled';
   export default {
     name: 'Promotion',
     components: { 
@@ -67,10 +155,11 @@
     },
     data(){
       return {
+        promptVisible: true,
         // 推广员 or 待审核
         tableStatus:true,
         icons: {
-          arrowCounterclockwise20Filled,
+          dismiss16Filled,
         },
         dataNum:123,
         search:{
@@ -148,8 +237,6 @@
               cooTime:"2023-08-06 18:12",
             },
           ]
-
-
         },
         detailCol:[
           {
@@ -216,7 +303,84 @@
             key: 'action',
             width:150,
           },
+        ],
+        keyCodeCol:[
+          {
+            title:"口令",
+            dataIndex:"keyCode",
+            key:"keyCode"
+          },
+          {
+            title:"有效期",
+            dataIndex:"validity",
+            key:"validity",
+          },
+          {
+            title:"推广数",
+            dataIndex:"promoNum",
+            key:"promoNum",
+          },
+          {
+            title:"激活率",
+            dataIndex:"activationRate",
+            key:"activationRate",
+          },
+          {
+            title:"操作",
+            key:"action",
+          },
+        ],
+        keyCodeList:[
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
+          {
+            keyCode:'jojo66',
+            validity:'长期',
+            promoNum:'773',
+            activationRate:'50%',
+          },
         ]
+
       }
     },
     mounted(){
