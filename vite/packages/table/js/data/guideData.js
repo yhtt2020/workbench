@@ -54,32 +54,6 @@ export const gamePanel = {
     { 'type': 'systemApp', 'icon': 'banner', 'name': '壁纸', 'event': 'my', }
   ],
   bottom: [
-    {
-      icon: 'http://a.apps.vip/icons/flappy.jpg',
-      type: 'coolApp',
-      name: 'Mlappy Bird',
-      summary: '和小伙伴们一起飞。',
-      needInstall: false,
-      data: {
-        theme: '#030c13',
-        name: 'mlappyBird',
-        url: 'http://bird.apps.vip/?',
-        background: false,
-        type: 'game',
-        scale: 160
-      }
-    },
-    {
-      icon: 'https://a.apps.vip/icons/kook.png',
-      name: 'Kook',
-      type: 'coolApp',
-      summary: '在副屏上使用Kook，一个好用的开黑组团语音沟通工具',
-      needInstall: false,
-      data: {
-        theme: 'rgb(23,24,26)', name: 'kook',
-        url: 'https://www.kookapp.cn/app/discover', background: true, node: false, security: true, fullScreen: false,
-      }
-    },
     { 'type': 'systemApp', 'icon': 'lock', 'name': '锁定屏幕', 'event': 'lock' },
     { 'type': 'systemApp', 'icon': 'laptop', 'name': '设备设置', 'event': 'status' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏显示', 'event': 'fullscreen' },
@@ -92,13 +66,13 @@ export const workPanel = {
   left: [
     { 'type': 'systemApp', 'icon': 'shouye1', 'name': '主页', 'event': 'home' },
     { 'type': 'systemApp', 'icon': 'yingyongzhongxin', 'name': '应用管理', 'event': 'apps' },
-    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
     {
-      type: 'systemApp', icon: 'daibanshixiang',
-      name: '待办',
-      event:'todo'
+      type: 'systemApp',
+      icon: 'rizhi',
+      name: '办公',
+      tab:'work',
+      event: 'work',
     },
-
   ],
   bottom: [
     {
@@ -153,28 +127,18 @@ export const mergePanel = {
   left: [
     { 'type': 'systemApp', 'icon': 'shouye1', 'name': '主页', 'event': 'home' },
     { 'type': 'systemApp', 'icon': 'yingyongzhongxin', 'name': '应用管理', 'event': 'apps' },
-    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
+    {
+      type: 'systemApp',
+      icon: 'rizhi',
+      name: '办公',
+      tab:'work',
+      event: 'work',
+    },
     { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏', 'event': 'gameIndex' },
     { 'type': 'systemApp', 'icon': 'yinle1', 'name': '音乐', 'event': 'music' },
     { 'type': 'systemApp', 'icon': 'banner', 'name': '壁纸', 'event': 'my', },
-    {
-      type: 'systemApp', icon: 'daibanshixiang',
-      name: '待办',
-      event :'todo'
-    },
   ],
   bottom: [
-    {
-      icon: 'https://a.apps.vip/icons/kook.png',
-      name: 'Kook',
-      type: 'coolApp',
-      summary: '在副屏上使用Kook，一个好用的开黑组团语音沟通工具',
-      needInstall: false,
-      data: {
-        theme: 'rgb(23,24,26)', name: 'kook',
-        url: 'https://www.kookapp.cn/app/discover', background: true, node: false, security: true, fullScreen: false,
-      }
-    },
     {
       type: 'systemApp', icon: 'shangchuan', name: '文件传输', event: 'fileHelper',
       data: {

@@ -247,7 +247,7 @@ export default {
       currentListen: 'table',
       step: 0,
       canTouch: true,
-      shortKeysTable: 'alt+space',
+      shortKeysTable: 'alt+z',
       shortKeysSearch: 'alt+f',
       mod: 'second-screen',//bootstrap
       steps: [

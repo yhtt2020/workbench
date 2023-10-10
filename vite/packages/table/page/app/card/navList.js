@@ -361,19 +361,30 @@ export const NavList = [
         time: "2023/5/31",
       },
       {
-        name: "timer",
-        cname: "番茄钟",
-        detail: "快速开启番茄钟时刻，记录每天专注成果。",
-        sizes: ["2x2"],
+        name: 'tomatoTimer',
+        cname: '番茄钟',
+        detail: '快速开启番茄钟时刻，记录每天专注成果。',
+        sizes: ['2x2'],
         option: [
+          {
+            name: 'TimerClock',
+            size: '2x2',
+            zoom: '20'
+          },
+          {
+            name: 'TimerChart',
+            size: '2x2',
+            zoom: '20'
+          },
           {
             name: "timer",
             size: "2x2",
             zoom: "11",
           },
         ],
-        time: "2023/5/31",
+        time: '2023/9/23'
       },
+
       // 未完成
       // {
       //     cname: "待办",
@@ -838,21 +849,6 @@ export const NavList = [
         time: '2023/9/8'
       },
       {
-        name: 'historyInfo',
-        cname: '历史上的今天',
-        detail: '历史上的今天都发生了什么大事呢？',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'historyInfo',
-            size: '2x2',
-            zoom: '40'
-          },
-        ],
-        time: '2023/9/9'
-      },
-
-      {
         name: 'shortcutKey',
         cname: '快捷键小组件(开发中)',
         detail: '在你的桌面上快速访问最近使用的快捷键数据。',
@@ -941,25 +937,7 @@ export const NavList = [
         ],
         time: '2023/9/19'
       },
-      {
-        name: 'tomatoTimer',
-        cname: '番茄钟（开发中）',
-        detail: '快速开启番茄钟时刻，记录每天专注成果。',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'TimerClock',
-            size: '2x2',
-            zoom: '20'
-          },
-          {
-            name: 'TimerChart',
-            size: '2x2',
-            zoom: '20'
-          },
-        ],
-        time: '2023/9/23'
-      },
+
     ]
   },
 ];
