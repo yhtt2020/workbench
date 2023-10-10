@@ -67,7 +67,8 @@ import Todo from '../page/app/todo/App.vue'
 import WorkIndex from '../page/work/WorkIndex.vue'
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-
+/*便签*/
+import Note from '../page/app/note/index.vue'
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
@@ -102,6 +103,12 @@ export default [
         path: '/Tomato',
         name: 'tomato',
         component: Tomato
+      },
+
+      {
+        path: '/Note',
+        name: 'note',
+        component: Note
       },
 
       {
