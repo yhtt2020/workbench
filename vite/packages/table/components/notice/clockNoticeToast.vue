@@ -5,17 +5,17 @@
       <div class="flex items-center">
         <div class="flex items-center justify-center" style="width: 32px;height: 32px;">
           <!-- -->
-          <clockIcon icon="fluent:clock-alarm-16-filled"  class="w-full rounded-full h-full object-cover xt-text" v-show="changeIcon"></clockIcon>
-          <clockIcon icon="fluent:clock-12-regular"  class="w-full rounded-full h-full object-cover xt-text" v-show="!changeIcon"></clockIcon>
+          <clockIcon icon="fluent:clock-alarm-16-filled"  class="object-cover w-full h-full rounded-full xt-text" v-show="changeIcon"></clockIcon>
+          <clockIcon icon="fluent:clock-12-regular"  class="object-cover w-full h-full rounded-full xt-text" v-show="!changeIcon"></clockIcon>
         </div>
-        <div class="font-16 ml-3 xt-text" style="color: var(--primary-text);">{{ title }}</div>
+        <div class="ml-3 font-16 xt-text" style="color: var(--primary-text);">{{ title }}</div>
       </div>
 
-      <div class="flex items-center active-button pointer justify-center" v-if="styles" style="width:21px;height:21px;" @click="viewNow">
-        <img src="/img/icon/close-circle-fill1.png" class="w-full rounded-full h-full object-cover" alt="">
+      <div class="flex items-center justify-center active-button pointer" v-if="styles" style="width:21px;height:21px;" @click="viewNow">
+        <img src="/img/icon/close-circle-fill1.png" class="object-cover w-full h-full rounded-full" alt="">
       </div>
-      <div class="flex items-center pointer active-button justify-center" v-else style="width:21px;height:21px;" @click="viewNow">
-        <img src="/img/icon/close-circle-fill.png" class="w-full rounded-full h-full object-cover" alt="">
+      <div class="flex items-center justify-center pointer active-button" v-else style="width:21px;height:21px;" @click="viewNow">
+        <img src="/img/icon/close-circle-fill.png" class="object-cover w-full h-full rounded-full" alt="">
       </div>
     </div>
     
@@ -23,12 +23,12 @@
 
     <div class="flex items-center justify-between">
       <div class="font-16" style="color:var(--secondary-text);">现在</div>
-      <div class="px-5 py-2 rounded-lg flex pointer items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow" >OK</div>
+      <div class="flex items-center justify-center px-5 py-2 rounded-lg pointer active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow" >OK</div>
     </div>
   </div>
    <!--
      <div class="flex ">
-         <div class="mr-3 px-5 py-2 rounded-lg pointer flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
+         <div class="flex items-center justify-center px-5 py-2 mr-3 rounded-lg pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
          
        </div>
     -->
@@ -45,6 +45,7 @@ import { defineComponent,ref,toRefs,computed, } from 'vue'
 import { mapWritableState,mapActions} from 'pinia'
 import { formatTime } from '../../util'
 import { noticeStore } from '../../store/notice'
+import { appStore } from '../../store'
 import {topClockSettingStore} from '../../store/topClockSetting'
 import { Icon as clockIcon } from '@iconify/vue'
 import { title } from 'process'
@@ -56,16 +57,17 @@ export default defineComponent({
  computed:{
   ...mapWritableState(noticeStore,['noticeSettings']),
   ...mapWritableState(topClockSettingStore,['soundVisible']),
+  ...mapWritableState(appStore,['settings'])
  },
   methods:{
-    ...mapActions(noticeStore,['setNoticePlay']),
+    ...mapActions(appStore,['setNoticePlay']),
   },
  watch:{
   'noticeType':{
     handler(newVal){
       // if(this.noticeType === 'notice' && this.isPlay){
         this.setNoticePlay()
-        if(this.noticeSettings.noticePlay){
+        if(this.settings.noticePlay){
           this.$nextTick(()=>{
           this.$refs.notice.play()
           })
