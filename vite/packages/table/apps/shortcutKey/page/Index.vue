@@ -9,51 +9,6 @@ import {appStore} from "../../../store";
 const winappIcon = '/icons/winapp.png'
 import '../static/style.scss'
 
-const appMap = [
-  {
-    exeName: 'electron.exe',
-    alias: 'Electron调试程序',
-    company: '想天软件',
-    icon: winappIcon,
-    id: 'qq.exe'
-  },
-  {
-    exeName: 'QQ.exe',
-    alias: 'QQ',
-    company: '腾讯',
-    icon: 'https://files.getquicker.net/_icons/C6BA2B955AED4FCBD1A380D29935A284925DDB3D.png',
-    id: 'qq.exe'
-  },
-  {
-    exeName: 'DingTalk.exe',
-    alias: '钉钉',
-    company: '阿里',
-    icon: 'https://files.getquicker.net/_icons/B603BADD00B2814D061195B05941E5F1AA903BA0.png',
-    id: 'explorer.exe'
-  },
-  {
-    exeName: 'msedge.exe',
-    alias: 'Edge浏览器',
-    company: '微软',
-    icon: 'https://files.getquicker.net/_icons/F910EB0222185C4FAF20680B18E989B628B557FD.png',
-    id: 'explorer.exe'
-  },
-  {
-    exeName: 'explorer.exe',
-    alias: '资源管理器',
-    company: '微软',
-    id: 'explorer.exe',
-    icon: 'https://files.getquicker.net/_icons/C10C3344B5B24AD43833A3F5614B5690DF274F4D.png'
-  },
-  {
-    exeName: ['webstorm64.exe', 'webstorm.exe'],
-    alias: 'WebStorm',
-    company: 'idea',
-    icon: 'https://files.getquicker.net/_icons/8CA38E5B25AEF1F7B980CCC72CE0D063FC0254A8.png',
-    id: 'webstorm'
-  },
-
-]
 
 const win32 = window.$models.win32
 export default {
@@ -182,24 +137,8 @@ export default {
     this.watchDog.quit()
   },
   methods: {
-    ...mapActions(keyStore, ['getCustomApp','syncSessionList']),
-    async getRepApp(exeName, filePath) {
-      let found = appMap.find(app => {
-        if (typeof app.exeName == 'string') {
-          return app.exeName === exeName
-        } else {
-          return app.exeName.includes(exeName)
-        }
-      })
+    ...mapActions(keyStore, ['getCustomApp','syncSessionList','getRepApp']),
 
-      console.log('找到',found)
-      if (!found) {
-        console.log('接下来要请求')
-        return await this.getCustomApp(exeName, filePath)
-      }else{
-        return found
-      }
-    }
   }
 }
 </script>

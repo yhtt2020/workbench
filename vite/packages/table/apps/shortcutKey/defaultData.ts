@@ -519,4 +519,48 @@ let keyData = [
     ]
   }
 ]
-export default keyData
+
+const appMap = [
+  {
+    exeName: 'electron.exe',
+    alias: 'Electron调试程序',
+    company: '想天软件',
+    id: 'qq.exe'
+  },
+  {
+    exeName: 'QQ.exe',
+    alias: 'QQ',
+    company: '腾讯',
+    id: 'qq.exe'
+  },
+  {
+    exeName: 'DingTalk.exe',
+    alias: '钉钉',
+    company: '阿里',
+    id: 'explorer.exe'
+  },
+  {
+    exeName: 'msedge.exe',
+    alias: 'Edge浏览器',
+    company: '微软',
+    id: 'explorer.exe'
+  },
+  {
+    exeName: 'explorer.exe',
+    alias: '资源管理器',
+    company: '微软',
+    id: 'explorer.exe',
+  },
+  {
+    exeName: ['webstorm64.exe', 'webstorm.exe'],
+    alias: 'WebStorm',
+    company: 'idea',
+    id: 'webstorm'
+  },
+
+]
+
+export  {
+  keyData,
+  appMap
+}

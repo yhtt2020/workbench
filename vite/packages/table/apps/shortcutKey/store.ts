@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {nanoid} from "nanoid";
 
-import keyData from './defaultData'
+import {keyData,appMap} from './defaultData'
 import {useRouter} from 'vue-router'
 // @ts-ignore
 export const keyStore = defineStore("key", {
@@ -2948,7 +2948,9 @@ export const keyStore = defineStore("key", {
         }
       })
     },
-
+    async getRepApp(exeName, filePath) {
+      return await this.getCustomApp(exeName, filePath)
+    },
     /**
      * 获取应用，如果不存在，则根据filePath自动拉取icon，并创建新的应用信息
      * @param exeName
@@ -2957,15 +2959,24 @@ export const keyStore = defineStore("key", {
       let found = this.customApps.find(item => {
         return item.exeName === exeName
       })
+
       if (found) {
         return found
       } else {
+        let foundRep = appMap.find(app => {
+          if (typeof app.exeName == 'string') {
+            return app.exeName === exeName
+          } else {
+            return app.exeName.includes(exeName)
+          }
+        }) || {}
         let icon = await tsbApi.system.extractFileIcon(filePath)
         let newApp = {
-          exeName: exeName,
-          alias: exeName,
-          icon: icon || '/icons/winapp.png',
           company: '',
+          alias: exeName,
+          exeName: exeName,
+          ...foundRep,
+          icon: icon || '/icons/winapp.png',
           path: filePath,
           id: nanoid(8)
         }
