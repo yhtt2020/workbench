@@ -172,14 +172,7 @@ export default {
           <div class="h-full" style="flex:1;height:0" v-else>
             <RouterView></RouterView>
           </div>
-          <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
-            <strong>常用快捷功能开关：</strong>
-            <a-switch v-model:checked="settings.enableAutoChange"></a-switch>
-            自动切换方案
-            &nbsp;&nbsp;
-            <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
-            自动进入
-          </div>
+
         </div>
       </xt-left-menu>
     </div>

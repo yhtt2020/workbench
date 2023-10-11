@@ -81,6 +81,9 @@
         </div>
       </vue-custom-scrollbar>
     </div>
+    <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
+      <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。"><strong>快速切换：</strong></a-tooltip> <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+    </div>
   </div>
 
   <!-- 最近使用 -->
@@ -162,6 +165,9 @@
       <span>删除</span>
     </div>
   </a-drawer>
+
+
+
 </template>
 
 <script>
@@ -210,7 +216,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme']),
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme','settings']),
     filteredKeyList () {
       console.log(this.keyList)
       console.log(this.keywords,
