@@ -331,6 +331,10 @@ export default {
           {
             key: 'Back',
             checked: false,
+          },
+          {
+            key: 'Enter',
+            checked: false,
           }
         ],
         [
@@ -472,6 +476,10 @@ export default {
           },
           {
             key: '-',
+            checked: false,
+          },
+          {
+            key: '+',
             checked: false,
           },
           {
