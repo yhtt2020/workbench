@@ -12,6 +12,10 @@ export default {
   name: 'shortcutIndex',
   component: ShortcutIndex,
   redirect:'/schemeList',
+  meta:{
+    tab1:'work',
+    tab2:'shortcut'
+  },
   children: [
     {
       path: '',
@@ -37,7 +41,8 @@ export default {
       component: SchemeList,
       meta:{
         tab1:'work',
-        tab2:'shortcut'
+        tab2:'shortcut',
+        tab3:'myList'
       }
     },
     {
