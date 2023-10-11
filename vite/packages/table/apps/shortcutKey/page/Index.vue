@@ -56,17 +56,6 @@ export default {
         },
         {
           flag: true,
-          icon: "tianjia2",
-          id: 'create',
-          title: '创建快捷键方案',
-          // img: "/img/task/star.png",
-
-          callBack: () => {
-            this.createChatVisible = true;
-          },
-        },
-        {
-          flag: true,
           id: 'setting',
           icon: "setting",
           callBack: () => {
@@ -138,7 +127,7 @@ export default {
   <div :class="{'rounded-lg':!fullScreen}"
        class="flex h-full w-full   py-2" style="">
     <div class="w-full">
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="3" class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="2" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>
