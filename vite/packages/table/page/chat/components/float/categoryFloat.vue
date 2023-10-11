@@ -45,31 +45,12 @@
 
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
+
   <template v-if="!isDoubleColumn">
     <div class="flex flex-col">
-      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)">
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-         </div> 
-         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-         v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
-         
-      </div>
-    </div>
-  </template>
-
-  <template v-else>
-    <div class="flex grid grid-cols-2 gap-1">
-      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  @click="currentItem(item)" >
+      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"
+        @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
+      >
         <div class="flex items-center">
           <template v-if="item.type === 'group'">
            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
@@ -86,15 +67,48 @@
         v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
       </div>
     </div>
+    <transition name="slide-fade">
+      <MenuDropdown v-if="showTopMenu" :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" :list="channelMenu" :id="currentID" :no="categoryList.no"></MenuDropdown>
+    </transition>
+  </template>
+
+  <template v-else>
+    <div class="flex grid grid-cols-2 gap-1">
+      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  
+       @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
+      >
+        <div class="flex items-center">
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+        </div> 
+        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+
+       
+      </div>
+    </div>
+
+    <transition name="slide-fade">
+      <!-- :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" -->
+      <MenuDropdown v-if="showTopMenu" :position="position"  :list="channelMenu" :id="currentID" :no="categoryList.no"></MenuDropdown>
+    </transition>
   </template>
 
 
-  <div v-for="item in categoryFilterList" class="my-3" >
+  <div v-for="(item,index) in categoryFilterList" class="my-3" @contextmenu.stop.prevent="topCategory($event,item)">
     <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
     
       <div class="flex flex-col" v-if="isDoubleColumn === false">
   
-       <div v-for="item in item.children" @click="currentItem(item)" 
+       <div v-for="item in item.children" @click="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)" 
         :class="{'active-bg': currentID ===item.id}"
         class="flex items-center rounded-lg p-2 pointer group-item" 
        >
@@ -118,7 +132,7 @@
   
       <div class="flex grid grid-cols-2 gap-1" v-else>
   
-       <div v-for="item in item.children" @click="currentItem(item)"
+       <div v-for="(item,index) in item.children" @click="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
         :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
        >
         <div class="flex items-center">
@@ -136,6 +150,7 @@
         
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
         v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+
        </div>
   
       </div>
@@ -143,10 +158,13 @@
     </ChatFold>
   </div>
   
+  <transition name="slide-fade">
+    <MenuDropdown v-if="categoryShowMenu" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
+  </transition>
 
  </vue-custom-scrollbar>
 
-
+ 
 </template>
 
 <script>
@@ -158,12 +176,14 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 
 import ChatDropDown from './chatDropDown.vue';
 import ChatFold from './chatFold.vue'
+import MenuDropdown from './menuDropdown.vue'
+import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
 
 export default{
   props:[ 'communityID','float' ],
 
   components:{
-    CommunityIcon,ChatDropDown,ChatFold,
+    CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,
   },
 
   data(){
@@ -182,7 +202,17 @@ export default{
        wheelPropagation: true
       },
       emptyImage:'/img/state/null.png',
+      position: { x: 0, y: 0 },
+      categoryShowMenu:false,
+      showTopMenu:false,
+      showMenuIndex:-1,    
+      categoryMenu,  
+      channelMenu
     }
+  },
+
+  mounted(){
+    document.addEventListener('click', this.hideDropdown);
   },
 
   computed:{
@@ -235,14 +265,40 @@ export default{
       this.$emit('createCategory',item)
     },
     currentItem(item){
-      console.log('排查::>',item);
+      // console.log('排查当前点击::>',item);
       this.currentID = item.id
       this.$emit('clickItem',item)
     },
 
+    // 顶级频道鼠标右键点击
+    topChannel(evt,item){
+     //  console.log('顶级频道::>',item.id);
+     this.currentID = item.id
+     this.showTopMenu = true
+     this.position = { x: evt.clientX - 50 , y: evt.clientY + 25 };
+    },
 
-  }
+    // 带有子级的频道的一级目录
+    topCategory(evt,item){
+     //  console.log('带父级的的频道目录',item.id)
+     this.currentID = item.id
+     this.categoryShowMenu = true
+     this.position = { x: evt.clientX - 50 , y: evt.clientY + 10 };
+    },
 
+
+    // 隐藏下拉菜单
+    hideDropdown(evt){
+      evt.preventDefault();
+      this.showTopMenu = false
+      this.categoryShowMenu = false
+    }
+
+  },
+
+  destroyed() {
+    document.removeEventListener('click', this.hideDropdown);
+  },
 }
 
 
@@ -251,5 +307,33 @@ export default{
 <style lang="scss" scoped>
 .active-bg {
  background: var(--active-secondary-bg);
+}
+
+</style>
+
+<style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: transform 0.3s, opacity 0.3s; /* 控制菜单的动画时间 */
+}
+
+.slide-fade-enter {
+  transform: translateY(-20px); /* 菜单初始位置 */
+  opacity: 0;
+}
+
+.slide-fade-enter-to {
+  transform: translateY(0); /* 菜单最终位置 */
+  opacity: 1;
+}
+
+.slide-fade-leave {
+  transform: translateY(0); /* 菜单初始位置 */
+  opacity: 1;
+}
+
+.slide-fade-leave-to {
+  transform: translateY(-20px); /* 菜单最终位置 */
+  opacity: 0;
 }
 </style>

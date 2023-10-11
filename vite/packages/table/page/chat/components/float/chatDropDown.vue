@@ -34,7 +34,7 @@
  import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
  import { communityStore } from '../../store/communityStore'
- import { message } from 'ant-design-vue'
+ import { message,Modal as DownModal } from 'ant-design-vue'
  
  import Modal from '../../../../components/Modal.vue'
  import CreateNewCategory from '../createNewCategory.vue'
@@ -98,13 +98,19 @@
        },350)
       break;
      case 'deletePacket':
-     
-      const res = await community.removeCategory(props.data.id)
-      if(res?.status === 1){
-        await community.getChannelList(props.no)
-        await community.getCategoryData(props.no)
-        message.success(`${res.info}`)
-      }
+      DownModal.confirm({
+        content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
+        centered:true,
+        onOk: async ()=>{
+          const res = await community.removeCategory(props.data.id)
+          if(res?.status === 1){
+           await community.getChannelList(props.no)
+           await community.getCategoryData(props.no)
+           message.success(`${res.info}`)
+          }
+        }
+      })
+      
 
       break;
      case 'packetSet':

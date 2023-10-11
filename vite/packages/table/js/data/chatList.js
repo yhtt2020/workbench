@@ -161,3 +161,13 @@ export const memberShowList = [
   {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
 ]
 
+export const categoryMenu = [
+  { icon:'fluent:settings-16-regular',title:'分组设置',type:'packetSet'},
+  { icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket' }
+ ]
+
+export const channelMenu = [
+  { icon:'fluent:settings-16-regular',title:'链接设置',type:'linkSet'},
+  { icon:'akar-icons:trash-can',title:'删除应用',type:'deleteApp' }
+]
+
