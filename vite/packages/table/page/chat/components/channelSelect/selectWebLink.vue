@@ -23,17 +23,18 @@
     <!-- <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" /> -->
     
     <a-input-group compact>
-      <a-select v-model:value="requestProtocol" style="width:40%;">
+      <a-select v-model:value="requestProtocol" style="width:20%;">
         <a-select-option value="https">https</a-select-option>
         <a-select-option value="http">http</a-select-option>
       </a-select>
-      <a-input v-model:value="link" placeholder="请输入" spellcheck="false" style="width: 60%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
+      <a-input v-model:value="link" placeholder="请输入" spellcheck="false" style="width: 80%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
     </a-input-group>
 
     <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
     <RadioTab :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span>
-    <div class="flex items-center justify-end">
+    
+    <div class="flex items-center justify-end my-3">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">选择</XtButton>
     </div>
@@ -62,7 +63,6 @@
 
    const data = reactive({
     linkType:[
-     { title:'默认',name:'default'},
      { title:'内部浏览器',name:'inter' },
      { title:'系统浏览器',name:'system' }
     ],

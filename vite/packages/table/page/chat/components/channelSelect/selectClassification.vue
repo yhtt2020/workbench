@@ -29,7 +29,7 @@
  
        <template v-if="isEditing && editIndex === index">
          <div class="flex w-full justify-between items-center">
-           <a-input style="width:210px;padding: 0;" id="classInputRef" spellcheck="false" v-model:value="item.name" :bordered="false" @pressEnter.stop="createClass(item)"></a-input>
+           <a-input style="width:210px;padding: 0;" ref="classInputRef" spellcheck="false" v-model:value="item.name" :bordered="false" @pressEnter.stop="createClass(item)"></a-input>
            <div class="flex">
              <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
              <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
@@ -211,7 +211,7 @@ export default {
       if(item.id){
 
         const res = await this.updateChannel(item)
-        console.log('更新结果',res.data);
+        // console.log('更新结果',res.data);
         if(res?.data?.status === 1){
           message.success(`${res.info}`)
           this.getChannelList(this.no)
@@ -246,9 +246,11 @@ export default {
      this.isEditing = true
      this.editIndex = index
      this.$nextTick(()=>{
-       const classRef = document.querySelector('#classInputRef')
-       classRef.focus()
-       classRef.select()
+      //  const classRef = document.querySelector('#classInputRef')
+      const classRef = this.$refs.classInputRef[0]
+      // console.log('获取输入框ref',classRef);
+      classRef.focus()
+      classRef.select()
      })
     },
 
