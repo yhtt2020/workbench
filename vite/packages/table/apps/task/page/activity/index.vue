@@ -1,15 +1,9 @@
 <template>
   <div>
-    <xt-text class="my-3">活动任务</xt-text>
+    <xt-text class="mb-3">活动任务</xt-text>
     <div class="p-3 xt-bg-2 rounded-xl">
       <xt-text class="mb-3">
-        <xt-new-icon
-          icon="fluent-emoji:rainbow"
-          size="10"
-          w="20"
-          bgClass="xt-text-2"
-          bg="#FAAD14"
-        />
+        <xt-new-icon icon="fluent-emoji:rainbow" size="20" class="mr-3" />
         邀请
         <span
           class="flex justify-center items-center ml-2"

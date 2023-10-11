@@ -8,10 +8,10 @@ export const taskStore = defineStore("taskStore", {
     taskID: "M0101", // 任务ID
     success: false,
     step: -1, // 任务步骤
-    list: [],
+    list: [], // 已完成主线
     deskID: 0,
-    startBranchTask: new Set(['Z0000']), // 启动的支线任务
-    successBranchTask: new Set(['Z0000']), // 完成的支线任务
+    startBranchTask: [], // 启动的支线任务
+    successBranchTask: [], // 完成的支线任务
   }),
   getters: {},
   actions: {},
@@ -25,8 +25,8 @@ export const taskStore = defineStore("taskStore", {
           "firstTask",
           "success",
           "isTask",
-          // "startBranchTask",
-          // "successBranchTask",
+          "startBranchTask",
+          "successBranchTask",
         ],
         storage: localStorage,
       },

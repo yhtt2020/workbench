@@ -1,5 +1,4 @@
 <template>
-  <!-- <xt-task :modelValue="firstTask" @cb="resetting"> -->
   <xt-task id="firstTask" no='1' @cb="resetting">
     <xt-menu :menus="menus" style="" v-if="store.isTask">
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
@@ -35,7 +34,7 @@
 <script setup>
 import { reactive, ref, computed } from "vue";
 import { taskStore } from "../store";
-import { tasks } from "../config/Primary";
+import { tasks } from "../page/primary/Primary";
 import Task from "./Task.vue";
 const store = taskStore();
 

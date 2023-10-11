@@ -5,7 +5,7 @@
          v-if="currentDesk.cards.length === 0">
       <div style="width: 100%;height: 100%">
         <a-result class="m-auto rounded-lg s-bg" style="margin: auto" status="success" title="使用卡片桌面"
-                  sub-title="您可以长按空白处、右键添加卡片。">
+                  sub-title="您可以长按空白处、右键添加小组件。">
           <template #extra>
             <a-button style="color: var(--active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
                       type="primary">添加第一张卡片
@@ -93,7 +93,7 @@
         <a-col>
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-            <div><span>添加卡片</span></div>
+            <div><span>添加小组件</span></div>
           </div>
         </a-col>
       </xt-task>
@@ -125,14 +125,14 @@
       <a-col>
         <div @click="clear" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
-          <div><span>清空卡片</span></div>
+          <div><span>清空小组件</span></div>
         </div>
       </a-col>
 
       <a-col>
         <div v-if="!hide" @click="hideDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
-          <div><span>隐藏卡片</span></div>
+          <div><span>隐藏小组件</span></div>
         </div>
         <div v-else @click="showDesk" class="btn">
           <Icon style="font-size: 3em" icon="yanjing"></Icon>

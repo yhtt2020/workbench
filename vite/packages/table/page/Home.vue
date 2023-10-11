@@ -92,7 +92,7 @@
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
         <div class="line flex" v-if="!appSettings.transparent">
-  
+
         <xt-task :modelValue="m01034" to="" @cb="goPaper">
           <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
       </xt-task>

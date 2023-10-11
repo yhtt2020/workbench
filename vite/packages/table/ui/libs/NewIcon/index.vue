@@ -47,7 +47,6 @@ const iconSize = computed(() => {
 
 const boxStyle = computed(() => {
   if (props.bgStyle || props.bgClass) {
-    console.log("1111 :>> ", 1111);
     return {
       width: props.w + "px",
       height: props.w + "px",

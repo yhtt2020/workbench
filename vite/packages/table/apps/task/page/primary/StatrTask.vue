@@ -8,7 +8,7 @@
   ></xt-message>
   <!-- 任务按钮 -->
   <xt-button
-    v-if="store.success"
+    v-if="isFirst && store.success"
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
     >领取奖励</xt-button
@@ -21,15 +21,19 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { guide } from "../../../ui/components/Task/guide";
+import { guide } from "../../../../ui/components/Task/guide";
 import { lastGuide } from "./lastGuide";
 import { endGuide } from "./endGuide";
-import { taskStore } from "../store";
+import { taskStore } from "../../store";
+
 // 初始化
 const store = taskStore();
 const router = useRouter();
 const props = defineProps({
   task: {},
+  isFirst: {
+    default: true,
+  },
 });
 const data = reactive({
   visible: false,
@@ -73,6 +77,7 @@ const ok = () => {
   store.isTaskDrawer = false;
   //  这里执行fn
   let fn = lastGuide[store.taskID];
+  data.visible = false;
   fn && fn();
   init();
 };

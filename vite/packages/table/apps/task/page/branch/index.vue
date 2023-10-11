@@ -1,9 +1,7 @@
 <template>
-  <template v-if="currentTask">
-    <Task @back="back()" :task="currentTask"> </Task>
-  </template>
+  <Task v-if="currentTask" @back="back()" :task="currentTask" :icon="icon" />
   <template v-else>
-    <xt-title>支线任务</xt-title>
+    <xt-text class="mb-3">支线任务</xt-text>
     <div class="xt-bg-2 p-3 rounded-xl">
       <xt-title type="text"
         >你可以自由选择想要了解的功能支线，完成任务即可获得对应奖励。「右键单击」任务可以选择将其「固定在左侧」，方便进行任务追踪。</xt-title
@@ -16,20 +14,7 @@
       >
         <xt-title m="">
           <div class="flex items-center">
-            <FlagOutlined
-              style="
-                margin-right: 8px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #fff;
-                background: #508bfe;
-                width: 20px;
-                height: 20px;
-                border-radius: 10px;
-                font-size: 10px;
-              "
-            />
+            <xt-new-icon :icon="icon" class="mr-3"  size='20'/>
             {{ task.chapter }}
           </div>
           <template #right
@@ -46,10 +31,13 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { tasks } from "../../config/Branch";
 import Task from "./Task.vue";
-import { FlagOutlined } from "@ant-design/icons-vue";
 import Progress from "../../components/progress/index.vue";
+const props = defineProps({
+  tasks: {},
+  icon: {},
+});
+
 const menus = reactive([
   {
     label: "固定到左侧",

@@ -1,32 +1,52 @@
 <template>
-  <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
-    <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
-      <xt-left-menu :list="menus" last="1" />
+  <a-drawer
+    :width="512"
+    :closable="false"
+    style="z-index: 1000"
+    placement="right"
+    v-model:visible="store.isTaskDrawer"
+    :bodyStyle="{ padding: ' 0 ', overflow: 'hidden !important' }"
+    @closeMessage="task.isTaskDrawer = false"
+  >
+    <div class="xt-modal flex py-3" style="width: 500px; height: 100%">
+      <xt-left-menu :list="menus" last="5" model="id" />
       <div class="w-full xt-scrollbar xt-text">
-        <Primary v-if="currentTask == 'Primary'"></Primary>
-        <Branch v-else-if="currentTask == 'Branch'"></Branch>
+        <Primary v-if="currentTask == 'Primary'" />
+        <Branch
+          v-else-if="currentTask == 'Branch'"
+          :tasks="task"
+          :key="Date.now()"
+          :icon="icon"
+        />
         <Activity v-else-if="currentTask == 'Activity'" />
-        <Set v-else-if="currentTask == 'Set'"></Set>
+        <Set v-else-if="currentTask == 'Set'" />
       </div>
     </div>
-  </xt-popup>
+  </a-drawer>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import { taskStore } from "../store";
-import Primary from "./Primary.vue";
+import Primary from "./primary/index.vue";
 import Branch from "./branch/index.vue";
 import Activity from "./activity/index.vue";
 import Set from "./Set.vue";
-
+import { tasks } from "../page/branch/Branch.ts";
 let currentTask = ref("Primary");
-const task = taskStore();
+let task = ref([]);
+let icon = ref("");
+const store = taskStore();
 // 切换任务
 const selectTab = (item) => {
   currentTask.value = item.value;
 };
-
+// 切换不同支线
+const selectBranchTab = (item) => {
+  icon.value = item.newIcon;
+  currentTask.value = "Branch";
+  task.value = tasks[item.value];
+};
 // 任务配置
 const menus = ref([
   {
@@ -36,22 +56,40 @@ const menus = ref([
     title: "主线任务",
     callBack: selectTab,
   },
-  {
-    // slot: "flag",
-    newIcon: "fluent-emoji:bullseye",
-    title: "支线任务",
-    value: "Branch",
-    callBack: selectTab,
-  },
   // {
-  //   newIcon: "fluent-emoji:rainbow",
-  //   value: "Activity",
-  //   title: "活动任务",
+  //   newIcon: "fluent-emoji:bullseye",
+  //   title: "支线任务",
+  //   value: "works",
   //   callBack: selectTab,
   // },
   {
+    newIcon: "fluent-emoji:rocket",
+    title: "效率办公",
+    value: "works",
+    callBack: selectBranchTab,
+  },
+  {
+    newIcon: "fluent-emoji:joystick",
+    title: "游戏辅助",
+    value: "games",
+    callBack: selectBranchTab,
+  },
+  {
+    newIcon: "fluent-emoji:thought-balloon",
+    title: "社群沟通",
+    value: "chats",
+    callBack: selectBranchTab,
+  },
+  {
+    newIcon: "fluent-emoji:rainbow",
+    value: "Activity",
+    title: "活动任务",
+    callBack: selectTab,
+  },
+  {
     icon: "shezhi1",
     value: "Set",
+    title: "设置",
     callBack: selectTab,
   },
 ]);

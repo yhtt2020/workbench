@@ -11,7 +11,7 @@
                style="background: var(--secondary-bg);width:48px;height:48px;font-size: 16px;color: var(--primary-text);">
             <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
           </div>
-          <div class="box-title no-drag">{{ selectNav.name === 'small' ? '小卡片' : '桌面市场' }}</div>
+          <div class="box-title no-drag">{{ selectNav.name === 'small' ? '小组件' : '桌面市场' }}</div>
           <!-- <a-input v-model:value="selectContent" class="search no-drag" placeholder="搜索">
             <template #prefix>
               <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
