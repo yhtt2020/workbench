@@ -183,7 +183,7 @@
 
                         </div>
                     </div>
-                    <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent">
+                    <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent" @contextmenu="deleteClock(index)">
                         <div class="flex items-center rounded-lg event-list"
                             style="background: var(--primary-bg);color: var(--primary-text);width: calc(100% );height: 56px; ">
                             <div class="w-full">
@@ -311,6 +311,10 @@ const changeStutas = () => {
 }
 const selectText = () => {
     inputRef.value.select()
+}
+const deleteClock = (index) => {
+    console.log(index);
+    
 }
 const addSettingClock = () => {
     if (eventValue.value === "") {

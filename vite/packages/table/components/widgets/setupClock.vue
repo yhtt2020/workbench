@@ -13,12 +13,11 @@
 
                         <div class="mb-4 font-16 xt-text">小时</div>
                         <div>
-                            <a-radio-group button-style="solid " v-model:value="timeHour" class="flex rounded-lg xt-bg-2 " style="1px solid var(--secondary-text);"
+                            <a-radio-group button-style="solid " v-model:value="timeHour" class="flex ml-1 rounded-lg xt-bg-2" style="1px solid var(--secondary-text);"
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{
-                                        index }}</a-radio-button>
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{ index }}</a-radio-button>
                                 </template>
                             </a-radio-group>
 
@@ -39,17 +38,9 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <!-- <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group> -->
                             <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
-                            <!-- {{ selectType }} -->
-                            <!-- {{ defaultType }} -->
                         </div>
                         <div>
-                            <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
-                             -->
                             <xt-button type="primary" class=" font-16 xt-text"
                                 style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
@@ -86,7 +77,7 @@
                         <a-empty v-if="clockEvent.length === 0" description="暂无闹钟" image="/img/test/load-ail.png"
                             style="margin-top: 40%;"></a-empty>
                         <!-- <a-row> -->
-                        <div class="flex items-center" v-for="(item, index) in clockEvent">
+                        <div class="flex items-center" v-for="(item, index) in clockEvent" style="margin-top: 0.5em;">
                             <div class="rounded-lg event-list "
                                 style="background: var(--secondary-bg);color: var(--primary-text);width: calc(100% - 20px);height: 56px; ">
                                 <div class="card-list ">
@@ -279,7 +270,7 @@ export default {
     padding: 0.2em 0.5em;
 
     width: 100%;
-    margin-top: 0.5em;
+    
 
     .card-list {
         width: 100%;
