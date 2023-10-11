@@ -6,54 +6,8 @@ import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import {appStore} from "../../../store";
 
-const winappIcon = '/icons/winapp.png'
 import '../static/style.scss'
 
-const appMap = [
-  {
-    exeName: 'electron.exe',
-    alias: 'Electron调试程序',
-    company: '想天软件',
-    icon: winappIcon,
-    id: 'qq.exe'
-  },
-  {
-    exeName: 'QQ.exe',
-    alias: 'QQ',
-    company: '腾讯',
-    icon: 'https://files.getquicker.net/_icons/C6BA2B955AED4FCBD1A380D29935A284925DDB3D.png',
-    id: 'qq.exe'
-  },
-  {
-    exeName: 'DingTalk.exe',
-    alias: '钉钉',
-    company: '阿里',
-    icon: 'https://files.getquicker.net/_icons/B603BADD00B2814D061195B05941E5F1AA903BA0.png',
-    id: 'explorer.exe'
-  },
-  {
-    exeName: 'msedge.exe',
-    alias: 'Edge浏览器',
-    company: '微软',
-    icon: 'https://files.getquicker.net/_icons/F910EB0222185C4FAF20680B18E989B628B557FD.png',
-    id: 'explorer.exe'
-  },
-  {
-    exeName: 'explorer.exe',
-    alias: '资源管理器',
-    company: '微软',
-    id: 'explorer.exe',
-    icon: 'https://files.getquicker.net/_icons/C10C3344B5B24AD43833A3F5614B5690DF274F4D.png'
-  },
-  {
-    exeName: ['webstorm64.exe', 'webstorm.exe'],
-    alias: 'WebStorm',
-    company: 'idea',
-    icon: 'https://files.getquicker.net/_icons/8CA38E5B25AEF1F7B980CCC72CE0D063FC0254A8.png',
-    id: 'webstorm'
-  },
-
-]
 
 const win32 = window.$models.win32
 export default {
@@ -68,13 +22,6 @@ export default {
       selectTab: '',
       menuList: [
 
-        // {
-        //   slot: "test",
-        //   callBack: () => {
-        //     this.createChatVisible = true;
-        //   },
-        // },
-
       ],
     }
   },
@@ -87,20 +34,22 @@ export default {
           id: 'list',
           icon: "liebiao",
           title: '我的快捷键',
+          tab:'myList',
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
             this.selectTab = "Chat";
+            this.$router.push({name:'schemeList'})
           },
         },
-        {
-          id: 'shop',
-          icon: "shop",
-          title: '创意市场',
-          // img: "/icons/bg.png",
-          callBack: () => {
-            this.selectTab = "Chat";
-          },
-        },
+        // {
+        //   id: 'shop',
+        //   icon: "shop",
+        //   title: '创意市场',
+        //   // img: "/icons/bg.png",
+        //   callBack: () => {
+        //     this.selectTab = "Chat";
+        //   },
+        // },
 
       ]
       const endMenu = [
@@ -129,29 +78,17 @@ export default {
           },
         },
       ]
-      this.sessionList = this.executedApps.map(app => {
-        return {
-          img: app.software.icon,
-          title: app.software.alias,
-          id: app.exeName,
-          noBg: true,
-          callBack: () => {
-            this.currentApp = app
-            this.$router.push({
-              name: 'schemeList',
-              params: {
-                exeName: app.exeName
-              }
-            })
+      this.syncSessionList((app)=>{
+        this.$router.push({
+          name: 'schemeList',
+          params: {
+            exeName: app.exeName
           }
-        }
+        })
       })
-
-      console.log(this.sessionList)
       return [
         ...startMenu,
         ...this.sessionList,
-
         ...endMenu
       ]
     }
@@ -159,7 +96,6 @@ export default {
   mounted() {
     this.watchDog = win32.WatchWindowForeground(async (newPoint, oidPoint, Handle) => {
       let {rect, pid, MianPid, title} = Handle
-      console.log({rect, pid, MianPid, title})
       let found = this.executedApps.findIndex(app => {
         return app.pid === pid
       })
@@ -191,24 +127,8 @@ export default {
     this.watchDog.quit()
   },
   methods: {
-    ...mapActions(keyStore, ['getCustomApp']),
-    async getRepApp(exeName, filePath) {
-      let found = appMap.find(app => {
-        if (typeof app.exeName == 'string') {
-          return app.exeName === exeName
-        } else {
-          return app.exeName.includes(exeName)
-        }
-      })
+    ...mapActions(keyStore, ['getCustomApp','syncSessionList','getRepApp']),
 
-      console.log('找到',found)
-      if (!found) {
-        console.log('接下来要请求')
-        return await this.getCustomApp(exeName, filePath)
-      }else{
-        return found
-      }
-    }
   }
 }
 </script>
@@ -217,7 +137,7 @@ export default {
   <div :class="{'rounded-lg':!fullScreen}"
        class="flex h-full w-full   py-2" style="">
     <div class="w-full">
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="3" class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="3" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>

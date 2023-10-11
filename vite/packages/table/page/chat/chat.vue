@@ -185,6 +185,7 @@ export default {
     const chatLeftList = ref([
       {
         icon: 'message',
+        newIcon:'fluent:chat-16-regular',
         tab: 'session',
         route: {
           name: 'chatMain',
@@ -195,6 +196,7 @@ export default {
       {
         icon: 'team',
         tab: 'contact',
+        newIcon:'fluent:people-16-regular',
         callBack: selectTab,
         route: {
           name: 'contact',
@@ -217,6 +219,7 @@ export default {
 
       {
         icon: 'zhinanzhen',
+        newIcon:'eva:compass-outline',
         type: 'find',
         tab:'find',
         callBack: selectTab,
@@ -246,7 +249,7 @@ export default {
       ...menuCommunityList,
 
       {
-        //  icon:'ic:baseline-add',
+        newIcon:'fluent:add-16-filled',
         icon: 'tianjia2',
         callBack: openAddCom,
       },
@@ -254,28 +257,33 @@ export default {
         full: true,
       },
       {
+        newIcon:'fluent:add-16-filled',
         icon: 'tianjia2',
         children: [
           {
             icon: 'message',
+            newIcon:'fluent:chat-16-regular',
             name: '发起群聊',
             index: 'launch',
             callBack: selectDorpTab
           },
           {
             icon: 'team',
+            newIcon:'fluent:people-16-regular',
             name: '加入群聊',
             index: 'addGroup',
             callBack: selectDorpTab
           },
           {
             icon: 'tianjiachengyuan',
+            newIcon:'fluent:people-add-16-regular',
             name: '添加好友',
             index: 'addFriend',
             callBack: selectDorpTab
           },
           {
             icon: 'smile',
+            newIcon:'fluent:emoji-smile-slight-24-regular',
             name: '创建社群',
             index: 'createCom',
             callBack: selectDorpTab
@@ -283,6 +291,7 @@ export default {
           {
             icon: 'team',
             name: '加入社群',
+            newIcon:'fluent:people-16-regular',
             index: 'joinCom',
             callBack: addCom,
           }

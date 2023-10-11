@@ -8,8 +8,8 @@ export const aiStore = defineStore("aiStore", {
     gpt: "gpt-3.5-turbo", // 选中的模型
     temperature: 1, // 联想度
     count: 4, // 上下文长度
-    key: "", // 密钥
-    url: "", // 地址
+    key: "sk-rtW2xHFoijpQ6v1huuJlWM8zJDHVfcpi5jtIigB4c668YeR0", // 密钥
+    url: "https://api.closeai-proxy.xyz", // 地址
     isFull: false, // 组件全屏状态
     selectTab: "Chat", // 左侧tab选中情况
     fullState: {}, // 记录组件展示状态

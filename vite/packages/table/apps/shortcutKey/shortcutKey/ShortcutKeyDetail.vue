@@ -165,7 +165,7 @@ import NotShortcutKey from '../page/NotShortcutKey.vue'
 import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 
 export default {
   name: 'ShortcutKeyDetail',
@@ -256,10 +256,18 @@ export default {
       this.openSet = false
       this.$router.push({ name: 'shareKey', params: { id: this.appContent.id } })
     },
-    btnDel () {
-      this.removeShortcutKeyList(this.appContent)
-      message.success('删除成功')
-      this.onBack()
+    async btnDel () {
+      Modal.confirm({
+        centered:true,
+        content:'是否删除此方案？此操作不可恢复。',
+        onOk:async () => {
+          await this.removeShortcutKeyList(this.appContent)
+          message.success('删除成功')
+          this.onBack()
+        }
+      })
+
+
     },
     updateNavIndex (item, index) {
       let groupId = document.getElementById('groupId_' + item.id)

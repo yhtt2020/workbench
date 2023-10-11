@@ -82,13 +82,13 @@
   </Widget>
 
 
-  <a-drawer v-model:visible="visibleDrawer" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
+  <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
     @after-visible-change="afterVisibleChange">
     <div class="flex">
       <SetupClock></SetupClock>
     </div>
   </a-drawer>
-  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null"
+  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered
     style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
@@ -104,10 +104,12 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { countDownStore } from '../../store/countDown'
 import { cardStore } from '../../store/card'
+import {topClockSettingStore} from '../../store/topClockSetting'
 import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import SetupClock from './setupClock.vue'
+
 export default {
   name: 'Clock',
   components: { Widget, clockIcon, SetupClock },
@@ -141,11 +143,13 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['appDate', 'clockEvent']),
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
+    ...mapWritableState(topClockSettingStore,['topClockSettingVisible'])
   },
 
   methods: {
     ...mapActions(cardStore, ['removeCard']),
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
+    ...mapActions(topClockSettingStore, ['changeSettingStatus']),
     onContextMenuClick(e) {
 
     },
@@ -159,7 +163,8 @@ export default {
       this.visible = false
     },
     onSetup() {
-      this.visibleDrawer = true
+      // this.topClockSettingVisible = true
+      this.changeSettingStatus()
       // this.$router.push({
       //   name: 'addCardSetting',
       //   params: {

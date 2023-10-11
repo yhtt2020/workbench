@@ -3,6 +3,7 @@ import { router } from "../../router";
 import { useToast } from 'vue-toastification'
 import NoticeToastButton from '../../components/notice/noticeToastButton.vue'
 import SystemNoticeToast from '../../components/notice/systemNoticeToast.vue'
+import clockNoticeToast from '../../components/notice/clockNoticeToast.vue'
 import { appStore } from '../../store'
 
 const toast = useToast()
@@ -29,6 +30,22 @@ export class Notifications{
               (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
             })
           }
+        }
+      },
+      {
+        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
+        pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
+      }
+    )
+  }
+  private clockToast(msg:any,title:any,changeIcon:any){
+    toast.info(
+      {
+        component:clockNoticeToast,props:{content:msg,noticeType:'notice',isPlay:noticeStore().$state.noticeSettings.noticePlay,title:title,changeIcon:changeIcon},
+        listeners:{
+          'nowCheck':function(){
+            noticeStore().hideNoticeEntry()
+          },
         }
       },
       {

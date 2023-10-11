@@ -267,7 +267,7 @@ const suggestNavigationList = [
   {
     type: 'systemApp',
     icon: 'rizhi',
-    name: '办公(开发中)',
+    name: '办公',
     tab:'work',
     event: 'work',
   },

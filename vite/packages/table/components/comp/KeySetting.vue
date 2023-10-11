@@ -10,7 +10,7 @@ export default {
     return {
       keys:{//默认键位
         table: {
-          key:'alt+space',
+          key:'alt+z',
           title:'工作台'
         },
         globalSearch: {
