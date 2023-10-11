@@ -164,7 +164,7 @@ export default {
       <div v-if="!exeName" class="flex-1">
         <h2>方案列表</h2>
         <p class="xt-text-2"><span v-if="selecting">已选中 <strong class="xt-active-text">{{ selectedCount }}</strong> 个方案， </span>
-          当前共有 {{ shortcutSchemeList.length }} 个快捷键方案</p>
+          共 {{ shortcutSchemeList.length }} 个方案</p>
       </div>
       <div v-else="false" class="  rounded-md px-2 p-2  " :span="12" style="flex: 1">
         <div class="flex flex-row">
@@ -182,15 +182,15 @@ export default {
           </div>
           <div class="ml-4">
             <div class="font-16 font-bold">
-              {{ currentApp.software.alias }}
-              <EditOutlined class="pointer" @click="goEdit(currentApp)"/>
+              <a-tooltip :title="currentApp.path">
+                {{ currentApp.software.alias }}
+              </a-tooltip>
+
+               <EditOutlined class="pointer ml-2 xt-text-2" @click="goEdit(currentApp)"/>
             </div>
-            <span class="" style="font-size: 16px;color: var(--secondary-text);">共{{
-                shortcutSchemeList.length
-              }}个应用快捷键方案</span>
-            <div class="xt-text-2">
-              {{ currentApp.path }}
-            </div>
+<!--            <span class="" style="font-size: 16px;color: var(&#45;&#45;secondary-text);">共 {{-->
+<!--                shortcutSchemeList.length-->
+<!--              }} 个方案</span>-->
           </div>
         </div>
       </div>
