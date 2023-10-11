@@ -236,7 +236,7 @@
             style="width: 132px; height: 32px;background: rgba(80,139,254,0.20);">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
-                <div class="mr-2 xt-text font-14">闹钟</div>
+                <!-- <div class="mr-2 xt-text font-14">闹钟</div> -->
                 <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">{{ firstClockTime?.hours }} : {{
                     firstClockTime?.minutes }} </div>
             </div>
