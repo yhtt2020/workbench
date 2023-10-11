@@ -93,7 +93,7 @@
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
       <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" />
+        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false"/>
       </a-space>
       <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
     </div>
