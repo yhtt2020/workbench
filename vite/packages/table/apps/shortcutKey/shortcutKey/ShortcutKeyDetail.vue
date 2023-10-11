@@ -9,15 +9,15 @@
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
         </div>
         <div class="flex">
-          <div v-for="(item,index) in appList.slice(0,3)" :key="item.id" class="head-list"
-               :class="navIndex === index ? 'xt-mask-2':''" @click="toggleApp(index,item)">
+          <div v-for="(item,index) in schemeList.slice(0,3)" :key="item.id" class="head-list"
+               :class="navIndex === index ? 'xt-mask-2':''" @click="switchScheme(index,item)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
           </span>
             <span class="ml-2 xt-text" style="font-size: 16px;">{{ item.name }}</span>
           </div>
         </div>
-        <div @click="recentlyUsed = true"
+        <div @click="recentlyUsedVisible = true"
              class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center">
           <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
         </div>
@@ -25,7 +25,7 @@
       <div class="flex">
         <a-tooltip placement="left">
           <template #title>展开或收起分类栏</template>
-          <div @click="showSide = !showSide"
+          <div @click="toggleSlide"
                class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center mr-3">
             <Icon icon="outdent" style="font-size: 1.5em;"></Icon>
           </div>
@@ -38,7 +38,7 @@
     </div>
     <div class="key-list">
       <!-- 侧边栏 -->
-      <div class="side-nav" v-if="showSide">
+      <div class="side-nav" v-if="currentScheme.showSide">
         <Search inputStyle="width:220px;" placeholder="搜索"></Search>
         <div class="nav-box">
           <div class="nav-item"
@@ -81,9 +81,9 @@
   </div>
 
   <!-- 最近使用 -->
-  <a-drawer v-model:visible="recentlyUsed" title="最近使用" width="500" placement="right">
+  <a-drawer v-model:visible="recentlyUsedVisible" title="最近使用" width="500" placement="right">
     <div class="main-part">
-      <div v-for="(item,index) in appList" class="flex items-center mb-4 pointer" @click="toggleApp(index,item)">
+      <div v-for="(item,index) in schemeList" class="flex items-center mb-4 pointer" @click="switchScheme(index,item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
@@ -180,10 +180,10 @@ export default {
     return {
       navIndex: 0,
       keyIndex: 1,
-      recentlyUsed: false,
+      recentlyUsedVisible: false,
       openSet: false,
       //最近使用的方案
-      appList: [],
+      schemeList: [],
       //快捷键列表
       keyList: [],
       isData: true,
@@ -206,7 +206,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings'])
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings','currentScheme'])
   },
   mounted () {
     this.getData()
@@ -227,26 +227,44 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList','loadShortcutSchemes','setRecentlyUsedList']),
+    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList','loadShortcutSchemes','setRecentlyUsedList','saveScheme']),
+    toggleSlide(){
+      this.currentScheme.showSide=!this.currentScheme.showSide
+      this.saveScheme(this.currentScheme)
+    },
     getData () {
-      this.appList = this.recentlyUsedList
-      this.keyList = this.appList[0].keyList
-      this.appContent = this.appList[0]
+      this.schemeList = this.recentlyUsedList
+      this.currentScheme=this.schemeList[0]
+      this.keyList = this.currentScheme.keyList
+      console.log(';keylist',this.keyList)
+      this.appContent = this.schemeList[0]
       if (!this.keyList.length) this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
-
-      if (this.sideNav.length < 4) {
-        this.showSide = false
-      } else {
-        this.showSide = true
+      if(this.currentScheme.showSide===undefined){
+        //如果从未设置是否显示侧边栏，则根据侧边栏的数量，自动给一个值
+        if (this.sideNav.length < 4) {
+          this.currentScheme.showSide = false
+        } else {
+          this.currentScheme.showSide = true
+        }
+        this.saveScheme(this.currentScheme)
       }
+
     },
-    toggleApp (index, item) {
+    /**
+     * 切换方案
+     * @param index
+     * @param item
+     */
+    switchScheme (index, item) {
+      this.currentScheme=item
       this.navIndex = index
       this.keyList = item.keyList
       this.appContent = item
       this.currentIndex = 0
       this.sideNav = this.keyList.filter(i => i.groupName)
+      this.recentlyUsedVisible=false
+
     },
     setKeyItem (id) {
       this.keyIndex = id
