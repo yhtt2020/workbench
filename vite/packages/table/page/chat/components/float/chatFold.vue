@@ -26,6 +26,7 @@
 import { ref,reactive } from 'vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 import ChatDropDown from './chatDropDown.vue';
+import { categoryMenu } from '../../../../js/data/chatList'
 
 export default {
  props:['title','content','show','no'],
@@ -35,10 +36,7 @@ export default {
  setup() {
    const collapsed = ref(false);
    const dorpShow = ref(false)
-   const dorpList = ref([
-    { icon:'fluent:settings-16-regular',title:'分组设置',type:'packetSet'},
-    { icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket' }
-   ])
+   const dorpList = ref(categoryMenu)
 
    const toggleCollapse = () => {
      collapsed.value = !collapsed.value;

@@ -22,7 +22,7 @@
     </XtButton>
 
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">
-     选择
+     确定
     </XtButton>
    </div>
   </div>

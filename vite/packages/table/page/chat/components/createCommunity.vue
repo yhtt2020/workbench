@@ -19,9 +19,9 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-     style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+     style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
      >
-     <!-- style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()" -->
+     <!-- style="width: 64px;height: 64px; position:relative"  @click="" onShowSelect -->
       <!-- style="width: 64px;height: 64px; position:relative"  @click="onShowSelect" -->
 
      <!--头像 -->
@@ -40,7 +40,7 @@
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
 
-    <a-input v-model:value="communityName" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
+    <a-input v-model:value="communityName" spellcheck="false" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
     <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
@@ -72,7 +72,7 @@ export default {
 
   data(){
     return{
-      // 
+      //
       iconVisible:false,
       communityName:'',
       avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn',
@@ -86,6 +86,13 @@ export default {
 
   computed:{
 
+  },
+
+  mounted(){
+    this.$nextTick(()=>{
+      const inputDom = document.querySelector('.search')
+      inputDom.focus()
+    })
   },
 
   methods:{
@@ -140,13 +147,13 @@ export default {
       // console.log('查看条件',chineseCharCount >= 2 && chineseCharCount <= 16);
 
       // // const totalCount = chineseCharCount + nonCharCount
-      
+
       if(chineseCharCount >= 2 && chineseCharCount <= 16){
         const option = {
          name:this.communityName,
          icon:this.avatarUrl
         }
-       
+
         // console.log('查看参数',option);
 
         const res = await this.createCommunity(option)
@@ -163,12 +170,12 @@ export default {
 
       }else{
         evt.preventDefault();
-        message.error('不能超过2-16个汉字')
+        message.error('社群名称长度的范围需要在2-16个字符之间')
       }
 
     }
 
-    
+
   }
 }
 

@@ -164,9 +164,20 @@ export default {
     async currentItem(item){
      // 点击链接
      if (item.type === 'link' && item.name !== 'Roadmap') {
-      // console.log('转换的数据',JSON.parse(item.props))
-      const url = JSON.parse(item.props)
-      browser.openInUserSelect(url)
+      const data = JSON.parse(item.props)
+      // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
+      // console.log('转换的数据',data)  
+      switch (data.openMethod) {
+        case 'currentPage':
+          
+          break;
+        case 'userSelect':
+          browser.openInUserSelect(data.url)
+          break;
+        case 'systemSelect':
+          browser.openInSystem(data.url)
+          break;
+      }
      }
 
 

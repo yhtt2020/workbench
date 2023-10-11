@@ -2,20 +2,29 @@
   <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
     <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
-    <!-- <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/> -->
    </div>
+
+
    <template #overlay>
     <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
-     <a-menu-item v-for="(item,index) in dropDownList"
-      style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
-      :class="{'select':dropDownIndex === index}"
-      @click="selectMenuItem(item,index)"
-     >
-       <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
-       <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
-     </a-menu-item>
+      <template v-for="(item,index) in dropDownList">
+        
+        <a-menu-item v-if=" index <  dropDownList.length - 2 " style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
+        @click="selectMenuItem(item,index)">
+          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+        </a-menu-item>
+        
+        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0; padding:0 8px !important; background-color: var(--divider);"></a-divider>
+        
+        <a-menu-item v-if=" index >= dropDownList.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
+          @click="selectMenuItem(item,index)">
+          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+        </a-menu-item>
+      </template>
     </a-menu>
-  </template>
+   </template>
   </a-dropdown>
  
  
@@ -24,7 +33,7 @@
      <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
-     
+     <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
     </Modal>
   </teleport>
  
@@ -32,23 +41,22 @@
  
  <script>
  import { defineComponent, reactive, toRefs,watchEffect} from 'vue'
- import { EllipsisOutlined } from '@ant-design/icons-vue'
  import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
  import { communityStore } from '../../store/communityStore'
- import { message } from 'ant-design-vue'
+ import { message,Modal as DownModal } from 'ant-design-vue'
  
  import Modal from '../../../../components/Modal.vue'
  import CreateNewCategory from '../createNewCategory.vue'
  import MenuCategory from '../menuCategory.vue'
  import InviteOther from '../inviteOther.vue'
+ import PacketSetting from '../knownCategory/packetSetting.vue'
 
  
  export default defineComponent({
   components:{
-   EllipsisOutlined,
    DorpIcon,Modal,CreateNewCategory,MenuCategory,InviteOther,
-
+   PacketSetting,
   },
  
   props:['list','no','data'],
@@ -60,7 +68,7 @@
  
    const data = reactive({
     dropDownList:[],
-    dropDownIndex:-1,
+    // dropDownIndex:-1,
     type:'',
     categoryShow:false,
    })
@@ -70,7 +78,7 @@
    })
  
    const selectMenuItem = async (item,index) =>{
-    data.dropDownIndex = index;
+    // data.dropDownIndex = index;
     data.type = item.type;
     switch (item.type) {
      case 'change':
@@ -100,18 +108,25 @@
        },350)
       break;
      case 'deletePacket':
-     
-      const res = await community.removeCategory(props.data.id)
-      if(res?.status === 1){
-        await community.getChannelList(props.no)
-        await community.getCategoryData(props.no)
-        message.success(`${res.info}`)
-      }
-    
-      break;
-
-     case 'packetSet':
+      DownModal.confirm({
+        content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
+        centered:true,
+        onOk: async ()=>{
+          const res = await community.removeCategory(props.data.id)
+          if(res?.status === 1){
+           await community.getChannelList(props.no)
+           await community.getCategoryData(props.no)
+           message.success(`${res.info}`)
+          }
+        }
+      })
       
+
+      break;
+     case 'packetSet':
+      setTimeout(()=>{
+        data.categoryShow = true
+      },350)
       break;
     }
   
@@ -130,7 +145,6 @@
   background-color:var(--secondary-bg) !important;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   width: 200px;
-  padding:8px 0;
  }
  
  :deep(.select){
@@ -157,5 +171,15 @@
  }
  
  
+ :deep(.ant-dropdown-menu-item){
+  &:hover{
+    background-color: var(--active-secondary-bg) !important;
+  }
+ }
+
+ :deep(.ant-divider-horizontal){
+  max-width:90% !important;
+  width:90% !important;
+ }
  </style>
  
