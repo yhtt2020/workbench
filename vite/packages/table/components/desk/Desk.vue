@@ -87,7 +87,7 @@
             style="z-index: 99999999999;"
             placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <div style="height: 200px;" class="mb-3 hidden">
+      <div style="height: 200px;" class="hidden mb-3">
       </div>
       <xt-task :modelValue="m01012" to="" @cb="newAddCard()">
         <a-col>
@@ -317,6 +317,7 @@ import HotSearch from '../widgets/HotSearch.vue'
 import CoolWidget from '../card/CoolWidget.vue'
 import AIaides from '../widgets/AIaides.vue'
 import OilPrices from '../widgets/OilPrices.vue'
+import yuanCommunity from '../widgets/yuanCommunity/yuanCommunity.vue'
 import { taskStore } from '../../apps/task/store'
 
 export default {
@@ -383,7 +384,8 @@ export default {
     EatToday,
     HotSearch,
     AIaides,
-    OilPrices
+    OilPrices,
+    yuanCommunity,
   },
   props:
     {

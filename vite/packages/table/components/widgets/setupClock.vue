@@ -1,25 +1,31 @@
 <template>
     <div class="p-0 -mt-8 card content">
         <a-row>
-            <a-col :span="12" style="border-right: 1px solid #454545; height: calc(100vh - 10em )">
+            <a-col :span="12" style="border-right: 1px solid var(--divider); height: calc(100vh - 5em )">
                 <vue-custom-scrollbar :settings="outerSettings"
                     style="position: relative; height: calc(100vh -5em );color: var(--primary-text);" class="scroll">
                     <div class="pr-6">
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
                             <a-input ref="input" allow-clear @click="$refs.input.select()" v-model:value="eventValue"
-                                style="border-radius: 10px;height: 40px; width: 100%;" placeholder="新闹钟" />
+                                style="border-radius: 10px;height: 40px; width: 100%; border:1px solid var(--secondary-text);"
+                                placeholder="新闹钟" />
                         </div>
 
                         <div class="mb-4 font-16 xt-text">小时</div>
                         <div>
-                            <a-radio-group button-style="solid" v-model:value="timeHour" class="flex rounded-lg xt-bg-2 "
+                            <!-- <a-radio-group button-style="solid " v-model:value="timeHour" class="flex ml-1 rounded-lg xt-bg-2" style="1px solid var(--secondary-text);"
                                 option-type="button">
                                 <template
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{
-                                        index }}</a-radio-button>
+                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{ index }}</a-radio-button>
                                 </template>
+                            </a-radio-group> -->
+                            <a-radio-group v-model:value="timeHour" button-style="solid"
+                                class="flex ml-1 rounded-lg xt-bg-2">
+                                <a-radio-button :value="i"
+                                    v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
+                                    style="width: 58px;" class="mb-2 text-center xt-text">{{ index }}</a-radio-button>
                             </a-radio-group>
 
                         </div>
@@ -27,7 +33,7 @@
                             <div class="mt-4 mb-4 font-16 xt-text">分钟</div>
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
-                                style="width:100%;  height: 40px; border-radius: 10px;">
+                                style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--secondary-bg);">
                                 <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2">
                                     {{ index }}
                                 </a-select-option>
@@ -39,17 +45,9 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <!-- <a-radio-group v-model:value="clockType" button-style="solid" class="flex justify-between w-full xt-bg-2" buttonStyle="solid">
-                                <a-radio-button value="不重复" style="color:var(--primary-text);width: 50%;" class="text-center font-16" >不重复</a-radio-button>
-                                <a-radio-button value="每天" class="text-center font-16" style="width: 50%;">每天</a-radio-button>
-                            </a-radio-group> -->
                             <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
-                            <!-- {{ selectType }} -->
-                            <!-- {{ defaultType }} -->
                         </div>
                         <div>
-                            <!-- <xt-button type="primary" class="w-full xt-active-bg" @click="addSettingClock">确认添加</xt-button>
-                             -->
                             <xt-button type="primary" class=" font-16 xt-text"
                                 style="width: 100%; height: 40px; background-color: var(--active-bg);"
                                 @click="addSettingClock">确认添加</xt-button>
@@ -71,9 +69,10 @@
                                 在顶部状态栏显示最近闹钟时间。
                             </div>
                             <div>
-                                <a-select v-model:value="defaultDataType.title"  dropdownSyle="" @select="changeDataType(defaultDataType)"
-                                    style="width:100%;  height: 40px; border-radius: 10px;">
-                                    <a-select-option :value="index" v-for="(item, index) in selectDataType" 
+                                <a-select v-model:value="defaultDataType" dropdownSyle=""
+                                    @select="changeDataType(defaultDataType)"
+                                    style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--secondary-bg);">
+                                    <a-select-option :value="index" v-for="(item, index) in selectDataType"
                                         class="xt-bg xt-text-2 selsect-options">
                                         {{ item.title }}
                                     </a-select-option>
@@ -86,7 +85,7 @@
                         <a-empty v-if="clockEvent.length === 0" description="暂无闹钟" image="/img/test/load-ail.png"
                             style="margin-top: 40%;"></a-empty>
                         <!-- <a-row> -->
-                        <div class="flex items-center" v-for="(item, index) in clockEvent">
+                        <div class="flex items-center" v-for="(item, index) in clockEvent" style="margin-top: 0.5em;">
                             <div class="rounded-lg event-list "
                                 style="background: var(--secondary-bg);color: var(--primary-text);width: calc(100% - 20px);height: 56px; ">
                                 <div class="card-list ">
@@ -99,7 +98,7 @@
                                 </div>
                             </div>
                             <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick"
-                                class="ml-2 xt-bg xt-text-2" style="font-size: 18px;">
+                                class="ml-2 xt-bg xt-text-2 pointer" style="font-size: 18px;">
                             </clockIcon>
                         </div>
 
@@ -161,7 +160,7 @@ export default {
                 { title: '显示30分钟内的闹钟', tag: 'within30min' },
                 { title: '显示1小时内的闹钟', tag: 'within1hour' },
             ],
-            defaultDataType: { title: '始终显示', tag: 'always' },
+            defaultDataType: '始终显示',
             checked: true,
         };
     },
@@ -183,7 +182,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
-        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
+        ...mapWritableState(topClockSettingStore, ['checkTopClock', 'temp'])
     },
     methods: {
         dayjs,
@@ -261,15 +260,30 @@ export default {
             this.removeClock(index, 1);
         },
         changeSwitchStatus(value) {
-            console.log(this.checked);
+            // console.log(this.checked);
             this.changeTopClockStatus(value)
             // console.log(1111);
+            this.checked = this.checkTopClock
         },
         changeDataType(value) {
-            console.log(this.selectDataType[value.title]);
-            let tag = this.selectDataType[value.title].tag
-            this.filterClock(tag)
+            // console.log(this.selectDataType[value.title]);
+            // console.log(value);
+            let tag = this.selectDataType[value].tag
+
+            let temp = this.selectDataType[value].title
+            this.filterClock(tag, temp)
         }
+    },
+    beforeMount() {
+        this.checked = this.checkTopClock
+        // this.defaultDataType=this.temp
+        // if(this.temp==='undefined'){
+        //     this.defaultDataType='始终显示'
+        // }else{
+        //     this.defaultDataType=this.temp
+        // }
+        // console.log(this.defaultDataType)
+
     },
 };
 </script>
@@ -279,7 +293,7 @@ export default {
     padding: 0.2em 0.5em;
 
     width: 100%;
-    margin-top: 0.5em;
+
 
     .card-list {
         width: 100%;
@@ -301,6 +315,34 @@ export default {
                 color: #6a6a6a;
             }
         }
+    }
+}
+
+:deep(.ant-radio-button-wrapper) {
+    // border: 1px solid var(--primary-text);
+    border-bottom: none;
+
+}
+
+:deep(.ant-radio-button-wrapper) {
+    &:nth-child(21) {
+        border-bottom: 1px solid var(--primary-text);
+        // border-left:  solid var(--primary-text);
+    }
+    &:nth-child(22),&:nth-child(23),&:nth-child(24) {
+        border-bottom: 1px solid var(--primary-text);
+    }
+    &:nth-child(1){
+        border-radius:10px 0 0 0;
+    }
+    &:nth-child(4){
+        border-radius:0 10px 0 0;
+    }
+    &:nth-child(21){
+        border-radius:0 0 0 10px ;
+    }
+    &:nth-child(24){
+        border-radius:0 0 10px 0 ;
     }
 }
 
@@ -439,6 +481,5 @@ export default {
     font-family: Oswald-Medium;
     font-size: 20px;
     font-weight: 500;
-}
-</style>
+}</style>
   

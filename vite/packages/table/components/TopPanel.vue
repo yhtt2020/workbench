@@ -27,7 +27,7 @@
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="right-area flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
+    <div class="flex items-end justify-end flex-1 right-area align-items-end xt-text" style="position: relative;">
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />

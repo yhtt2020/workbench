@@ -41,7 +41,7 @@ export class Notifications{
   private clockToast(msg:any,title:any,changeIcon:any){
     toast.info(
       {
-        component:clockNoticeToast,props:{content:msg,noticeType:'notice',isPlay:noticeStore().$state.noticeSettings.noticePlay,title:title,changeIcon:changeIcon},
+        component:clockNoticeToast,props:{content:msg,noticeType:'notice',isPlay:appStore().$state.settings.noticePlay,title:title,changeIcon:changeIcon},
         listeners:{
           'nowCheck':function(){
             noticeStore().hideNoticeEntry()
