@@ -1,7 +1,15 @@
 <template>
-  <xt-popup v-model="task.isTaskDrawer" v-if="task.isTaskDrawer">
-    <div class="xt-modal flex py-3 pr-3" style="width: 500px; height: 100%">
-      <xt-left-menu :list="menus" last="1" />
+  <a-drawer
+    :width="512"
+    :closable="false"
+    style="z-index: 1000"
+    placement="right"
+    v-model:visible="task.isTaskDrawer"
+    :bodyStyle="{ padding: ' 0 ', overflow: 'hidden !important' }"
+    @closeMessage="task.isTaskDrawer = false"
+  >
+    <div class="xt-modal flex py-3" style="width: 500px; height: 100%">
+      <xt-left-menu :list="menus" last="2" />
       <div class="w-full xt-scrollbar xt-text">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
@@ -9,7 +17,7 @@
         <Set v-else-if="currentTask == 'Set'"></Set>
       </div>
     </div>
-  </xt-popup>
+  </a-drawer>
 </template>
 
 <script setup>

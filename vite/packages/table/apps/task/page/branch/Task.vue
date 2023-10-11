@@ -1,28 +1,22 @@
 <template>
   <div>
-    <xt-title m="mb">
-      <div class="flex">
-        <!-- <MyIcon
-          icon="icon-park-outline:left"
-          @click="back()"
-          style="height: 24px; font-size: 20px"
-        /> -->
-        <div class="flex items-center">
-          <xt-new-icon
-            icon="fluent:chevron-left-16-filled"
-            @click="back()"
-            bgClass="xt-text-2"
-
-            class="mr-3"
-            w="40"
-          />
-          {{ task.chapter }}
-        </div>
-      </div>
+    <xt-text m="mb">
+      <!-- <div class="flex">
+        <div class="flex items-center"> -->
+      <xt-new-icon
+        icon="fluent:chevron-left-16-filled"
+        @click="back()"
+        bgClass="xt-bg-2"
+        class="mr-3 my-3"
+        w="40"
+      />
+      {{ task.chapter }}
+      <!-- </div> -->
+      <!-- </div> -->
       <template #right>
         <Progress style="width: 68px; height: 20px" :task="task"
       /></template>
-    </xt-title>
+    </xt-text>
     <xt-collapse v-for="data in task.tasks">
       <template #title>
         <xt-text>
@@ -91,18 +85,17 @@ const back = () => {
 // 开始任务
 const startTak = (data) => {
   // 1 前置进度校验
-  const { id, pre } = data;
+  const { id, pre, title } = data;
   if (pre) {
     // 没完成
     if (!successBranchTask.value.has(pre)) {
-      message.info("需要完成前置任务" + pre);
+      message.info("需要完成前置任务:" + title);
       return;
     }
   }
   // 2 开始跳转指引
   startBranchTask.value.add(id);
   let currentGuide = guide[id];
-  console.log("currentGuide :>> ", currentGuide);
 
   const { type, value } = guide[id];
   if (type == "router") {

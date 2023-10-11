@@ -1,5 +1,4 @@
 <template>
-  <!-- <xt-task :modelValue="firstTask" @cb="resetting"> -->
   <xt-task id="firstTask" no='1' @cb="resetting">
     <xt-menu :menus="menus" style="" v-if="store.isTask">
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->

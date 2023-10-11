@@ -7,7 +7,7 @@
           icon="fluent-emoji:rainbow"
           size="10"
           w="20"
-          bgClass="xt-text-2"
+          bgClass="xt-bg-2"
           bg="#FAAD14"
         />
         邀请
