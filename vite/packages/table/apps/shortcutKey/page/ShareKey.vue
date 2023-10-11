@@ -14,10 +14,10 @@
       <div class="flex btn-item">
         <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑' }}</div>
         <div class="pointer" @click="doSaveScheme">保存</div>
-        <a-tooltip>
-          <template #title>保存并分享到创意市场</template>
-          <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>
-        </a-tooltip>
+<!--        <a-tooltip>-->
+<!--          <template #title>保存并分享到创意市场</template>-->
+<!--          <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>-->
+<!--        </a-tooltip>-->
       </div>
     </div>
     <div class="flex mt-2 items-center justify-center">

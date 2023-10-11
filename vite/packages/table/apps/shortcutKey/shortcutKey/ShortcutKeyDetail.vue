@@ -41,11 +41,15 @@
       <div class="side-nav" v-if="currentScheme.showSide">
         <Search v-model:keywords="keywords" inputStyle="width:220px;" placeholder="搜索"></Search>
         <div class="nav-box">
-          <div class="nav-item"
-               v-for="(item,index) in sideNav" :key="item.id"
-               @click="updateNavIndex(item, index)">
-            {{ item.groupName }}
-          </div>
+          <a-tooltip v-for="(item,index) in sideNav" :title="item.groupName">
+            <div class="nav-item  "
+                 :key="item.id"
+                 @click="updateNavIndex(item, index)">
+              <p>
+                <span> {{ item.groupName }}</span>
+              </p>
+            </div>
+          </a-tooltip>
         </div>
       </div>
       <!-- 快捷键列表 -->
@@ -82,7 +86,9 @@
       </vue-custom-scrollbar>
     </div>
     <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
-      <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。"><strong>快速切换：</strong></a-tooltip> <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+      <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。">
+        <strong>快速切换：</strong></a-tooltip>
+      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
     </div>
   </div>
 
@@ -114,18 +120,19 @@
           <span class="h-14 w-14 flex justify-center items-center">
             <a-avatar shape="square" :src="appContent.icon" :size="48"></a-avatar>
           </span>
-          <span class="flex flex-col ml-4">
-            <span class="xt-text" style="font-size: 18px;font-weight: 500;">{{ appContent.name }}</span>
-            <span class="mt-1 xt-text-2" style="font-size: 16px;">{{ appContent.commonUse }}</span>
+          <span class="flex flex-col ml-4 flex-1">
+            <span class="xt-text truncate" style="font-size: 16px;font-weight: 500;">{{ appContent.name }}</span>
+            <span class="mt-1 xt-text-2 summary">{{ appContent.commonUse }}</span>
           </span>
         </div>
-        <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
+        <div class="flex flex-col justify-center items-center    xt-mask rounded-lg p-5"
+             style="min-width: 100px;height:78px">
           <span class="xt-text"
-                style="font-family: Oswald-SemiBold;font-size: 24px;font-weight: 600;">{{ appContent.number }}</span>
+                style="font-size: 24px;font-weight: 600;">{{ appContent.number }}</span>
           <span>{{ appContent.key }}</span>
         </div>
       </div>
-      <div class="flex justify-between items-center mt-4 xt-text-2" style="font-size: 14px;">
+      <div v-if="false" class="flex justify-between items-center mt-4 xt-text-2" style="font-size: 14px;">
         <span class="flex items-center">
           <div @click="showCard(appContent.id)">
             <a-avatar shape="square" :src="appContent.avatar" :size="32"></a-avatar>
@@ -144,14 +151,14 @@
         </span>
       </div>
     </div>
-    <div class="set-item" v-if="!appContent.isMyCreate">
-      <Icon icon="xiazai" class="mr-2"></Icon>
-      <span>下载更新</span>
-    </div>
-    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare" @click="share">
-      <Icon icon="upload" class="mr-2"></Icon>
-      <span>立即上传</span>
-    </div>
+    <!--    <div class="set-item" v-if="!appContent.isMyCreate">-->
+    <!--      <Icon icon="xiazai" class="mr-2"></Icon>-->
+    <!--      <span>下载更新</span>-->
+    <!--    </div>-->
+    <!--    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare" @click="share">-->
+    <!--      <Icon icon="upload" class="mr-2"></Icon>-->
+    <!--      <span>立即上传</span>-->
+    <!--    </div>-->
     <div class="set-item" v-if="!appContent.isMyCreate">
       <Icon icon="dianzan" class="mr-2"></Icon>
       <span>点赞</span>
@@ -165,7 +172,6 @@
       <span>删除</span>
     </div>
   </a-drawer>
-
 
 
 </template>
@@ -216,15 +222,15 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme','settings']),
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme', 'settings']),
     filteredKeyList () {
       console.log(this.keyList)
       console.log(this.keywords,
         'keywords')
       if (this.keywords) {
-        var regExp=new RegExp(this.keywords,'i')
+        var regExp = new RegExp(this.keywords, 'i')
         return this.keyList.filter(key => {
-          if(key.title){
+          if (key.title) {
             return key.title.match(regExp)
           }
           return false
@@ -405,8 +411,19 @@ export default {
   background: var(--secondary-bg);
   border-radius: 12px;
   // width: 452px;
-  height: 136px;
+  height: 105px;
   padding: 12px;
+
+  .summary {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    margin-right: 10px;
+  }
 }
 
 .set-title {
@@ -455,16 +472,34 @@ export default {
       flex-wrap: wrap;
 
       .nav-item {
+        background: var(--secondary-bg);
         // width: 104px;
-        width: 48%;
+        max-width: 48%;
+        padding-left: 10px;
+        padding-right: 10px;
         height: 48px;
         border-radius: 12px;
         margin: 12px 0 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-size: 16px;
         color: var(--primary-text);
+        word-break: break-all;
+        text-align: center;
+        display: flex;
+        align-items: center;
+
+        p {
+          display: inline-block;
+          text-align: left;
+          margin-bottom: 0;
+
+          span {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
       }
 
       .nav-item:hover {

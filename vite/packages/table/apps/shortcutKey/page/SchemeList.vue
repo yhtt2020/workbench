@@ -231,7 +231,7 @@ export default {
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
-            <span class="xt-text">{{ item.name }}</span>
+            <span class="xt-text truncate" style="max-width: 180px" :title="item.name"> {{ item.name }} </span>
             <div class="flex flex-col justify-center items-center">
               <span>{{ item.number }}</span>
               <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
