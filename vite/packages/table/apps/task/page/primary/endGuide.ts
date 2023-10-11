@@ -1,5 +1,5 @@
-import { cardStore } from "../../../store/card";
-import { taskStore } from "../store";
+import { cardStore } from "../../../../store/card";
+import { taskStore } from "../../store";
 const delDesk = () => {
   const store: any = cardStore();
   const task: any = taskStore();

@@ -17,7 +17,7 @@
           v-for="item in newList.slice(0, last)"
           :data="item"
         >
-          <Box :item="item" :id="currentIndex" class="mb-2">
+          <Box :item="item" :id="currentIndex" class="mb-2" :model="model">
             <Item :item="item">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
@@ -37,7 +37,7 @@
           v-for="item in newList.slice(last, -1 * end)"
           :data="item"
         >
-          <Box :item="item" :id="currentIndex" class="mt-2">
+          <Box :item="item" :id="currentIndex" class="mt-2" :model="model">
             <Item :item="item" w="40">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
@@ -55,7 +55,7 @@
           v-for="item in newList.slice(-1 * end)"
           :data="item"
         >
-          <Box :item="item" :id="currentIndex" class="mt-2">
+          <Box :item="item" :id="currentIndex" class="mt-2" :model="model">
             <Item :item="item" type="" newType="" bg="">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
@@ -97,7 +97,6 @@ const props = defineProps({
   end: {
     default: 1,
   },
-  tabVariables: undefined,
   modelValue: {},
   index: { default: false },
   list: {
@@ -126,6 +125,9 @@ const props = defineProps({
         },
       ];
     },
+  },
+  model: {
+    default: "router",
   },
 });
 const full = ref(false);

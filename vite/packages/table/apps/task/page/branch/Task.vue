@@ -1,18 +1,14 @@
 <template>
   <div>
-    <xt-text m="mb">
-      <!-- <div class="flex">
-        <div class="flex items-center"> -->
+    <xt-text class="mb-3">
       <xt-new-icon
         icon="fluent:chevron-left-16-filled"
         @click="back()"
         bgClass="xt-bg-2"
-        class="mr-3 my-3"
+        class="mr-3"
         w="40"
       />
       {{ task.chapter }}
-      <!-- </div> -->
-      <!-- </div> -->
       <template #right>
         <Progress style="width: 68px; height: 20px" :task="task"
       /></template>
@@ -20,29 +16,15 @@
     <xt-collapse v-for="data in task.tasks">
       <template #title>
         <xt-text>
-          <FlagOutlined
-            style="
-              margin-right: 8px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              color: #fff;
-              background: #508bfe;
-              width: 20px;
-              height: 20px;
-              border-radius: 10px;
-              font-size: 10px;
-            "
-          />{{ data.title }}
+          <xt-new-icon :icon="icon" class="mr-3" size="20" />
+          {{ data.title }}
         </xt-text></template
       >
-
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>
       <xt-button
         v-if="taskState(data)"
         @click="getReceive(data)"
-        type="theme"
-        style="width: 100%"
+        style="background: #faad14 !important; width: 100%"
         >领取奖励</xt-button
       >
       <xt-button v-else @click="startTak(data)" type="theme" style="width: 100%"
@@ -56,9 +38,6 @@
 import { computed, toRefs, ref, reactive } from "vue";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { Icon as MyIcon } from "@iconify/vue";
-import { FlagOutlined } from "@ant-design/icons-vue";
-
 import { storeToRefs } from "pinia";
 
 import Progress from "../../components/progress/index.vue";
@@ -74,6 +53,7 @@ const props = defineProps({
   task: {
     default: {},
   },
+  icon: {},
 });
 
 const emits = defineEmits(["back"]);
@@ -88,13 +68,13 @@ const startTak = (data) => {
   const { id, pre, title } = data;
   if (pre) {
     // 没完成
-    if (!successBranchTask.value.has(pre)) {
+    if (!successBranchTask.value.includes(pre)) {
       message.info("需要完成前置任务:" + title);
       return;
     }
   }
   // 2 开始跳转指引
-  startBranchTask.value.add(id);
+  startBranchTask.value.push(id);
   let currentGuide = guide[id];
 
   const { type, value } = guide[id];
@@ -106,21 +86,15 @@ const startTak = (data) => {
   store.isTaskDrawer = false;
   return;
   setTimeout(() => {
-    successBranchTask.value.add(id);
+    successBranchTask.value.push(id);
   }, 3000);
 };
 // 任务完成状态
 const taskState = (data) => {
-  if (successBranchTask.value.has(data.id)) return true;
+  if (successBranchTask.value.includes(data.id)) return true;
   return false;
 };
-/**
- * 布置任务点
- * 定位完成任务函数
- * 判断是否开启任务
- * 执行下一步
- * 抽离为action方法
- */
+
 // 获取奖励
 const getReceive = () => {
   message.info("你已完成任务 后续可以一键领取任务奖励");

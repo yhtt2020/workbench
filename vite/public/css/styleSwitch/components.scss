@@ -92,8 +92,12 @@
 .xt-scrollbar {
   flex: 1 1 0%;
   overflow: hidden;
-  overflow-y: auto;
+  // overflow-y: auto;
 }
+.xt-scrollbar:hover {
+  overflow: overlay;
+}
+
 .xt-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
@@ -102,7 +106,6 @@
   background: var(--active-bg);
   border-radius: 3px;
 }
-
 
 // 阴影
 .xt-shadow {

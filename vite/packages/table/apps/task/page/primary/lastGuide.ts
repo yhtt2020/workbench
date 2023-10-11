@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import { cardStore } from "../../../store/card";
-import { taskStore } from "../store";
+import { cardStore } from "../../../../store/card";
+import { taskStore } from "../../store";
 
 const getDesk = () => {
   const store: any = cardStore();

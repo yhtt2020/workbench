@@ -34,7 +34,7 @@
 <script setup>
 import { reactive, ref, computed } from "vue";
 import { taskStore } from "../store";
-import { tasks } from "../config/Primary";
+import { tasks } from "../page/primary/Primary";
 import Task from "./Task.vue";
 const store = taskStore();
 
