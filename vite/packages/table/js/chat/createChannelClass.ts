@@ -9,16 +9,21 @@ export const channelClass = {
   const option = {
    communityNo:data.no,
    role:'channel',
-   parentId:data.id,
+   parentId:data.id === undefined ? 0 : data.id,
    type:data.type
   }
   
   if(data.type === 'link'){ // 创建链接频道
+   // console.log('查看参数', data.content)
+
    const linkOption = {
     ...option,
     name:data.content.name,
     props:JSON.stringify(data.content.props),
    }
+   
+   //  console.log('查看参数::>>',linkOption)
+
    return await community.createChannel(linkOption)
   }
 
