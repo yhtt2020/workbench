@@ -62,7 +62,7 @@
                                 在顶部状态栏显示最近闹钟时间。
                             </div>
                             <div>
-                                <a-select v-model:value="defaultDataType.title"  dropdownSyle="" @select="changeDataType(defaultDataType)"
+                                <a-select v-model:value="defaultDataType"  dropdownSyle="" @select="changeDataType(defaultDataType)"
                                     style="width:100%;  height: 40px; border-radius: 10px;">
                                     <a-select-option :value="index" v-for="(item, index) in selectDataType" 
                                         class="xt-bg xt-text-2 selsect-options">
@@ -152,7 +152,7 @@ export default {
                 { title: '显示30分钟内的闹钟', tag: 'within30min' },
                 { title: '显示1小时内的闹钟', tag: 'within1hour' },
             ],
-            defaultDataType: { title: '始终显示', tag: 'always' },
+            defaultDataType: '始终显示',
             checked: true,
         };
     },
@@ -174,7 +174,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
-        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
+        ...mapWritableState(topClockSettingStore, ['checkTopClock','temp'])
     },
     methods: {
         dayjs,
@@ -252,15 +252,30 @@ export default {
             this.removeClock(index, 1);
         },
         changeSwitchStatus(value) {
-            console.log(this.checked);
+            // console.log(this.checked);
             this.changeTopClockStatus(value)
             // console.log(1111);
+            this.checked=this.checkTopClock
         },
         changeDataType(value) {
-            console.log(this.selectDataType[value.title]);
-            let tag = this.selectDataType[value.title].tag
-            this.filterClock(tag)
+            // console.log(this.selectDataType[value.title]);
+            // console.log(value);
+            let tag = this.selectDataType[value].tag
+            
+            let temp=this.selectDataType[value].title
+            this.filterClock(tag,temp)
         }
+    },
+    beforeMount() {
+        this.checked=this.checkTopClock
+        // this.defaultDataType=this.temp
+        // if(this.temp==='undefined'){
+        //     this.defaultDataType='始终显示'
+        // }else{
+        //     this.defaultDataType=this.temp
+        // }
+        // console.log(this.defaultDataType)
+        
     },
 };
 </script>

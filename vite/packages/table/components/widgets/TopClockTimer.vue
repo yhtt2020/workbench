@@ -81,19 +81,19 @@
                         </clockIcon>
                     </div>
                     <div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-2 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-2 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(3)">3分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(5)">5分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(10)">10分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(15)">15分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(30)">30分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(60)">60分钟</div>
-                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg"
+                        <div class="w-full font-16 xt-text h-[40px] text-center xt-bg mt-3 rounded-lg pointer"
                             style="line-height: 40px;" @click="onCountDown(300)">自定义</div>
                     </div>
 
@@ -243,7 +243,7 @@
         </xt-button>
     </div>
 
-    <a-drawer v-model:visible="usetopClockSettingStore.topClockSettingVisible" class="custom-class xt-text"
+    <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text"
         style="color: red" title="设置" placement="right" :width="600">
         <div class="flex">
             <SetupClock></SetupClock>
@@ -275,6 +275,7 @@ onMounted(() => {
     }
 
 })
+const topClockSettingVisible=ref(false)
 const dataType = ref([{ title: '不重复', name: '不重复' }, { title: '每天', name: '每天' }])
 const defaultType = ref({ title: '不重复', name: '不重复' })
 const useTimerStore = timerStore()
@@ -428,10 +429,11 @@ const closeDetail = () => {
     // console.log(customizeSetting.value);
 }
 const changeSettingStatus = () => {
-    usetopClockSettingStore.changeSettingStatus()
+    // usetopClockSettingStore.changeSettingStatus()
     customizeSetting.value = false
     countDownVisible.value = false
     clockSettingVisible.value = false
+    topClockSettingVisible.value=true
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime

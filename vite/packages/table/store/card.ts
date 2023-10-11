@@ -57,6 +57,7 @@ export const cardStore = defineStore(
         clockEvent: [],
         customComponents: [],
         clockTag:'always',
+        temp:'始终显示',
         filterClockEvent: [],
         aidaData: null,
         // navigationList: [
@@ -491,9 +492,11 @@ export const cardStore = defineStore(
         }
         this.clockFlag = !this.clockFlag
       },
-      filterClock(tag) {
+      filterClock(tag,value) {
         // console.log(tag);
         this.filterClockEvent=this.clockEvent
+        // this.temp=value
+        // console.log(value,'this.temp');
         if(tag!==null || undefined){
           this.clockTag=tag
         }
