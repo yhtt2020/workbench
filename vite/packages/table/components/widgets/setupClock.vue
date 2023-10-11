@@ -8,7 +8,7 @@
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
                             <a-input ref="input" allow-clear @click="$refs.input.select()" v-model:value="eventValue"
-                                style="border-radius: 10px;height: 40px; width: 100%; border:1px solid var(--secondary-bg);"
+                                style="border-radius: 10px;height: 40px; width: 100%; border:1px solid var(--secondary-text);"
                                 placeholder="新闹钟" />
                         </div>
 

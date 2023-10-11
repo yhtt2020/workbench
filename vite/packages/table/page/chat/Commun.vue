@@ -60,11 +60,16 @@
         <div class="flex justify-center content">
           <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
           <!-- 循环渲染多个 ComCard -->
-          <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
-            :detailVisible="detailVisible" class="xt-bg"
+          <a-empty v-if="comCards.list?.length === 0" description="暂无内容" image="/img/test/load-ail.png"
+                            style="margin-top: 30%;"></a-empty>
+          <template v-else>
+            <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
+            :detailVisible="detailVisible" class="xt-bg" 
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
           <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
+          </template>
+          
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
