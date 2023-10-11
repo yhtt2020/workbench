@@ -7,7 +7,7 @@
           icon="fluent-emoji:rainbow"
           size="10"
           w="20"
-          type="1"
+          bgClass="xt-text-2"
           bg="#FAAD14"
         />
         邀请
@@ -37,7 +37,7 @@
           >」任务后，即可获得丰厚奖励。
         </span>
       </xt-text>
-      <xt-button class='mt-3' style="width: 100%" type="theme" @click="go()"
+      <xt-button class="mt-3" style="width: 100%" type="theme" @click="go()"
         >前往推广中心</xt-button
       >
     </div>
@@ -47,6 +47,8 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { taskStore } from "../../store.ts";
+import { ref } from "vue";
+const flag = ref(true);
 const store = taskStore();
 const router = useRouter();
 const go = () => {

@@ -1,5 +1,6 @@
 <template>
-  <xt-task :modelValue="firstTask" @cb="resetting">
+  <!-- <xt-task :modelValue="firstTask" @cb="resetting"> -->
+  <xt-task id="firstTask" no='1' @cb="resetting">
     <xt-menu :menus="menus" style="" v-if="store.isTask">
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
       <div
@@ -41,12 +42,12 @@ const store = taskStore();
 /**
  * 首次引导任务
  */
-let firstTask = ref(false);
-if (!store.firstTask) {
-  store.step = 1;
-  store.taskID = "firstTask";
-  firstTask.value = true;
-}
+// let firstTask = ref(false);
+// if (!store.firstTask) {
+//   store.step = 1;
+//   store.taskID = "firstTask";
+//   firstTask.value = true;
+// }
 
 /**
  * 回归主线任务
