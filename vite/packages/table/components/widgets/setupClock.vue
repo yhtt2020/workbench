@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick"
-                                class="ml-2 xt-bg xt-text-2" style="font-size: 18px;">
+                                class="ml-2 xt-bg xt-text-2 pointer" style="font-size: 18px;">
                             </clockIcon>
                         </div>
 
