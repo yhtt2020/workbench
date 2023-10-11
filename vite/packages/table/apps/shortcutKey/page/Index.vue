@@ -20,9 +20,7 @@ export default {
       watchDog: {},//监听狗
       currentWindow: {},//当前窗口
       selectTab: '',
-      menuList: [
-
-      ],
+      menuList: [],
     }
   },
   computed: {
@@ -34,11 +32,11 @@ export default {
           id: 'list',
           icon: "liebiao",
           title: '我的快捷键',
-          tab:'myList',
+          tab: 'myList',
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
             this.selectTab = "Chat";
-            this.$router.push({name:'schemeList'})
+            this.$router.push({name: 'schemeList'})
           },
         },
         // {
@@ -78,7 +76,7 @@ export default {
           },
         },
       ]
-      this.syncSessionList((app)=>{
+      this.syncSessionList((app) => {
         this.$router.push({
           name: 'schemeList',
           params: {
@@ -88,7 +86,9 @@ export default {
       })
       return [
         ...startMenu,
-        ...this.sessionList,
+        ...this.sessionList.filter(item => {
+          return !item.hide
+        }),
         ...endMenu
       ]
     }
@@ -114,6 +114,7 @@ export default {
         title: title,
         path: path,
         lastFocus: Date.now(),
+        hide:software.hide,
         exeName,
         inRep: software.id !== 'unknown',
         software
@@ -127,7 +128,7 @@ export default {
     this.watchDog.quit()
   },
   methods: {
-    ...mapActions(keyStore, ['getCustomApp','syncSessionList','getRepApp']),
+    ...mapActions(keyStore, ['getCustomApp', 'syncSessionList', 'getRepApp']),
 
   }
 }
@@ -164,7 +165,7 @@ export default {
             <!--            </div>-->
             <!--          </div>-->
 
-            <keep-alive >
+            <keep-alive>
               <RouterView></RouterView>
             </keep-alive>
 

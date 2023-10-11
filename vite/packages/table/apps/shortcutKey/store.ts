@@ -29,7 +29,7 @@ export const keyStore = defineStore("key", {
     schemeList: [],
     settings: {
       enableAutoChange: false,
-      enableAutoEnter: false,
+      enableAutoEnter: true,
     }
   }),
   actions: {
@@ -197,7 +197,8 @@ export const keyStore = defineStore("key", {
           ...foundRep,
           icon: icon || '/icons/winapp.png',
           path: filePath,
-          id: nanoid(8)
+          id: nanoid(8),
+          hide:false,
         }
         this.customApps.push(newApp)
         return newApp
@@ -225,6 +226,7 @@ export const keyStore = defineStore("key", {
           img: app.software.icon,
           title: app.software.alias,
           id: app.exeName,
+          hide:app.hide,
           noBg: true,
           callBack: () => {
             this.currentApp = app

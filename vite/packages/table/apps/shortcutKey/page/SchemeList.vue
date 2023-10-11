@@ -193,7 +193,7 @@ export default {
             <plus-outlined/>
             创建方案
           </div>
-          <div v-if="!selecting" class="pointer" @click="market">创意市场</div>
+<!--          <div v-if="!selecting" class="pointer" @click="market">创意市场</div>-->
 
           <!--          <span class="button-active pointer" @click="setShow = true">-->
           <!--                <Icon icon="setting" style="width: 20px;height: 20px;color:var(&#45;&#45;primary-text);"></Icon>-->
