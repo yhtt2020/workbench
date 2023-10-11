@@ -39,7 +39,7 @@
     <div class="key-list">
       <!-- 侧边栏 -->
       <div class="side-nav" v-if="currentScheme.showSide">
-        <Search inputStyle="width:220px;" placeholder="搜索"></Search>
+        <Search v-model:keywords="keywords" inputStyle="width:220px;" placeholder="搜索"></Search>
         <div class="nav-box">
           <div class="nav-item"
                v-for="(item,index) in sideNav" :key="item.id"
@@ -52,14 +52,15 @@
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
                             :style="showSide ? 'width: 80%;' : 'width:100%'">
         <div class="key-box" :style="keyBoxStyle">
-          <div v-for="(item,index) in keyList" :key="item.id">
+          <div v-for="(item,index) in filteredKeyList" :key="item.id">
             <!-- 分组名称 -->
             <div :id="'groupId_' + item.id" class="key-item border-right" v-if="item.groupName"
                  :style="item.id === currentGroup.id ? activeGroup : ''">
               <span class="truncate font-bold">{{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg); border-radius: 10px':''"
+            <div v-else class="border-right key-item"
+                 :style="keyIndex === item.id ? 'background: var(--mask-bg); border-radius: 10px':''"
                  @click="setKeyItem(item.id)">
               <div class="flex w-full">
                 <div v-for="i in item.keys" :key="i" class="flex">
@@ -69,9 +70,11 @@
                 <div class="key-title ">{{ item.title }}</div>
               </div>
 
-              <div>    <div v-if="item.addNote" class="text-note">
-                <span class="note-val">{{ item.noteVal }}</span>
-              </div></div>
+              <div>
+                <div v-if="item.addNote" class="text-note">
+                  <span class="note-val">{{ item.noteVal }}</span>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -181,6 +184,7 @@ export default {
       navIndex: 0,
       keyIndex: 1,
       recentlyUsedVisible: false,
+      keywords: '',//搜索关键词
       openSet: false,
       //最近使用的方案
       schemeList: [],
@@ -206,7 +210,23 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings','currentScheme'])
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme']),
+    filteredKeyList () {
+      console.log(this.keyList)
+      console.log(this.keywords,
+        'keywords')
+      if (this.keywords) {
+        var regExp=new RegExp(this.keywords,'i')
+        return this.keyList.filter(key => {
+          if(key.title){
+            return key.title.match(regExp)
+          }
+          return false
+        })
+      } else {
+        return this.keyList
+      }
+    }
   },
   mounted () {
     this.getData()
@@ -216,31 +236,34 @@ export default {
       async handler () {
         if (this.settings.enableAutoEnter) {
           this.shortcutSchemeList = await this.loadShortcutSchemes(this.currentApp.exeName)
-          if(this.shortcutSchemeList.length>0){
+          if (this.shortcutSchemeList.length > 0) {
             this.setRecentlyUsedList(this.shortcutSchemeList[0])
             this.getData()
           }
 
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
-    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList','loadShortcutSchemes','setRecentlyUsedList','saveScheme']),
-    toggleSlide(){
-      this.currentScheme.showSide=!this.currentScheme.showSide
+    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    /**
+     * 切换侧边导航是否显示
+     */
+    toggleSlide () {
+      this.currentScheme.showSide = !this.currentScheme.showSide
       this.saveScheme(this.currentScheme)
     },
     getData () {
       this.schemeList = this.recentlyUsedList
-      this.currentScheme=this.schemeList[0]
+      this.currentScheme = this.schemeList[0]
       this.keyList = this.currentScheme.keyList
-      console.log(';keylist',this.keyList)
+      console.log(';keylist', this.keyList)
       this.appContent = this.schemeList[0]
       if (!this.keyList.length) this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
-      if(this.currentScheme.showSide===undefined){
+      if (this.currentScheme.showSide === undefined) {
         //如果从未设置是否显示侧边栏，则根据侧边栏的数量，自动给一个值
         if (this.sideNav.length < 4) {
           this.currentScheme.showSide = false
@@ -257,13 +280,13 @@ export default {
      * @param item
      */
     switchScheme (index, item) {
-      this.currentScheme=item
+      this.currentScheme = item
       this.navIndex = index
       this.keyList = item.keyList
       this.appContent = item
       this.currentIndex = 0
       this.sideNav = this.keyList.filter(i => i.groupName)
-      this.recentlyUsedVisible=false
+      this.recentlyUsedVisible = false
 
     },
     setKeyItem (id) {
@@ -278,15 +301,14 @@ export default {
     },
     async btnDel () {
       Modal.confirm({
-        centered:true,
-        content:'是否删除此方案？此操作不可恢复。',
-        onOk:async () => {
+        centered: true,
+        content: '是否删除此方案？此操作不可恢复。',
+        onOk: async () => {
           await this.removeShortcutKeyList(this.appContent)
           message.success('删除成功')
           this.onBack()
         }
       })
-
 
     },
     updateNavIndex (item, index) {
@@ -402,8 +424,8 @@ export default {
 }
 
 .key-list {
-  height:0;
-  flex:1;
+  height: 0;
+  flex: 1;
   background: var(--main-mask-bg);
   margin-bottom: 10px;
   margin-right: 10px;
@@ -467,7 +489,7 @@ export default {
 .key-item {
   padding: 0 12px;
   margin: 0 20px 10px;
-  margin-top:0;
+  margin-top: 0;
   margin-bottom: 0;
   width: 350px;
   line-height: 1.2;
@@ -482,9 +504,10 @@ export default {
   cursor: pointer;
   border-bottom: 1px solid;
   flex-direction: column;
-  border-bottom-color:  var(--secondary-bg);
-  .key-title{
-    flex:1;
+  border-bottom-color: var(--secondary-bg);
+
+  .key-title {
+    flex: 1;
     width: 0;
     padding-top: 4px;
     text-align: right;
@@ -501,7 +524,7 @@ export default {
   position: absolute;
   right: -20px;
   top: 0;
-  height:110%;
+  height: 110%;
   margin-left: 10px;
   // border-right: solid rgba(255, 245, 245, 0.1) 1px;
   border-right: solid 1px var(--divider-solid);
@@ -510,8 +533,6 @@ export default {
 .s-bg {
   box-shadow: none !important;
 }
-
-
 
 
 .text-note {
