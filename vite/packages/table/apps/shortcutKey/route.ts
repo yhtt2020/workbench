@@ -11,7 +11,7 @@ export default {
   path: '/shortcutKey',
   name: 'shortcutIndex',
   component: ShortcutIndex,
-  redirect:'/schemeList',
+  redirect:'/schemeIndex',
   meta:{
     tab1:'work',
     tab2:'shortcut'
@@ -36,13 +36,23 @@ export default {
       }
     },
     {
+      path: '/schemeIndex',
+      name: 'schemeIndex',
+      component: SchemeList,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut',
+        tab3:'schemeIndex'
+      }
+    },
+    {
       path: '/schemeList',
       name: 'schemeList',
       component: SchemeList,
       meta:{
         tab1:'work',
         tab2:'shortcut',
-        tab3:'myList'
+        tab3:'exeName_{exeName}'
       }
     },
     {

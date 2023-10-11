@@ -228,6 +228,7 @@ export const keyStore = defineStore("key", {
           id: app.exeName,
           hide:app.hide,
           noBg: true,
+          tab: 'exeName_'+ app.exeName,
           callBack: () => {
             this.currentApp = app
             if (cb) {

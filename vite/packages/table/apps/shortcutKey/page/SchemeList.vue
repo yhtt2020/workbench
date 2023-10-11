@@ -53,20 +53,27 @@ export default {
 
       },
       deep: true
+    },
+    $route:{
+      handler(){
+        this.reloadData()
+      },
     }
   },
   mounted() {
-    this.exeName = this.$route.params.exeName
-    this.refreshList()
+    this.reloadData()
   },
   beforeRouteUpdate(to) {
-    this.exeName = to.params.exeName
-    this.refreshList()
+   this.reloadData(to.params?.exeName)
   },
   methods: {
     ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes']),
+    reloadData(exeName=this.$route.params?.exeName){
+      this.exeName = exeName
+      this.refreshList()
+    },
     async refreshList() {
-
+      console.log('刷新列表')
       this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
       if (this.settings.enableAutoEnter && this.shortcutSchemeList.length > 0) {
         this.btnDetail(this.shortcutSchemeList[0])

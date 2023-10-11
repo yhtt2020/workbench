@@ -21,7 +21,11 @@ export default {
       currentWindow: {},//当前窗口
       selectTab: '',
       menuList: [],
+      key:Date.now()
     }
+  },
+  watch:{
+
   },
   computed: {
     ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'currentApp', 'settings']),
@@ -31,12 +35,11 @@ export default {
         {
           id: 'list',
           icon: "liebiao",
-          title: '我的快捷键',
-          tab: 'myList',
+          title: '全部快捷键方案',
+          tab: 'schemeIndex',
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
-            this.selectTab = "Chat";
-            this.$router.push({name: 'schemeList'})
+            this.$router.push({name: 'schemeIndex'})
           },
         },
         // {
@@ -160,7 +163,7 @@ export default {
 
           </div>
           <div class="h-full" style="flex:1;height:0" v-else>
-            <RouterView></RouterView>
+            <RouterView :key="key"></RouterView>
           </div>
 
         </div>

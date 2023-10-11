@@ -57,7 +57,7 @@ export default defineComponent({
           icon:'jianpan-xianxing',
           tab:'shortcut',
           route:{
-            name:'shortcut'
+            name:'schemeIndex'
           }
         },
         {
@@ -86,7 +86,7 @@ export default defineComponent({
           }
         },
         {
-          title:'便签',
+          title:'便签(开发)',
           name:'note',
           icon:'check-square',
           route:{

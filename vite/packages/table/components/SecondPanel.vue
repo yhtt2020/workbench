@@ -78,7 +78,6 @@ export default {
   methods: {
     isActive:routerTab.isActive,
     current(menu) {
-      console.log('menu :>> ', menu);
       if(menu.tab){
         return this.isActive(menu.tab,2)
       }else{
