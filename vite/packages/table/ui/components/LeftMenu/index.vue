@@ -68,7 +68,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="w-full flex h-full">
+    <div class="  flex h-full flex-1 w-0">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
