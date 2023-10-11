@@ -478,6 +478,10 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
         const key = `open${Date.now()}`
         let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
         notifications.clockToast(message, '闹钟', true)
+        if(clockEvent.value[0].clockType==='不重复'){
+            // console.log(1111);
+            useCardStore.removeClock(0,1)
+        }
     }
 
 })
