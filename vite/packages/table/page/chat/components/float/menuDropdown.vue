@@ -57,9 +57,9 @@ export default {
       centered:true,
       onOk: async ()=>{
         const result = await this.removeCategory(this.id)
-        console.log('返回结果',result);
+        // console.log('返回结果',result);
         if(result?.status === 1){
-          console.log('查看社群号',this.no);
+          // console.log('查看社群号',this.no);
           await this.getChannelList(this.no)
           await this.getCategoryData(this.no)
         }

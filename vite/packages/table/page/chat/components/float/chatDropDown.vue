@@ -3,18 +3,28 @@
    <div class="flex pointer items-center justify-center">
     <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
    </div>
+
+
    <template #overlay>
     <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
-     <a-menu-item v-for="(item,index) in dropDownList"
-      style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
-      :class="{'select':dropDownIndex === index}"
-      @click="selectMenuItem(item,index)"
-     >
-       <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
-       <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
-     </a-menu-item>
+      <template v-for="(item,index) in dropDownList">
+        
+        <a-menu-item v-if=" index <  dropDownList.length - 2 " style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
+        @click="selectMenuItem(item,index)">
+          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+        </a-menu-item>
+        
+        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0; padding:0 8px !important; background-color: var(--divider);"></a-divider>
+        
+        <a-menu-item v-if=" index >= dropDownList.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
+          @click="selectMenuItem(item,index)">
+          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+        </a-menu-item>
+      </template>
     </a-menu>
-  </template>
+   </template>
   </a-dropdown>
  
  
@@ -58,7 +68,7 @@
  
    const data = reactive({
     dropDownList:[],
-    dropDownIndex:-1,
+    // dropDownIndex:-1,
     type:'',
     categoryShow:false,
    })
@@ -68,7 +78,7 @@
    })
  
    const selectMenuItem = async (item,index) =>{
-    data.dropDownIndex = index;
+    // data.dropDownIndex = index;
     data.type = item.type;
     switch (item.type) {
      case 'change':
@@ -135,7 +145,6 @@
   background-color:var(--secondary-bg) !important;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   width: 200px;
-  padding:8px 0;
  }
  
  :deep(.select){
@@ -162,5 +171,15 @@
  }
  
  
+ :deep(.ant-dropdown-menu-item){
+  &:hover{
+    background-color: var(--active-secondary-bg) !important;
+  }
+ }
+
+ :deep(.ant-divider-horizontal){
+  max-width:90% !important;
+  width:90% !important;
+ }
  </style>
  

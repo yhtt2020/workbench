@@ -36,7 +36,7 @@
     <template v-if="defaultOpen.openMethod === 'outerOpen'">
       <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     </template>
-    <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span>
+    <!-- <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span> -->
     
     <div class="flex items-center justify-end my-3">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
