@@ -105,11 +105,7 @@ export default [
         component: Tomato
       },
 
-      {
-        path: '/Note',
-        name: 'note',
-        component: Note
-      },
+
 
       {
         path: "/inspector",
@@ -425,6 +421,15 @@ export default [
         redirect: '/desk',
         children: [
           {
+            path: '/Note',
+            name: 'note',
+            component: Note,
+            meta:{
+              tab1:'work',
+              tab2:'note'
+            }
+          },
+          {
             path: "/deck",
             name: "deckIndex",
             component: DeckIndex,
@@ -434,7 +439,8 @@ export default [
                 name: 'deck',
                 component: DeckHome,
                 meta:{
-                  tab1:'work'
+                  tab1:'work',
+                  tab2:'deck'
                 }
               },
               {
