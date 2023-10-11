@@ -4,12 +4,14 @@ import {nanoid} from "nanoid";
 
 import {keyData,appMap,marketList} from './defaultData'
 import {useRouter} from 'vue-router'
+
 // @ts-ignore
 export const keyStore = defineStore("key", {
   state: () => ({
     currentApp: {
       software: {}
     },//当前应用
+    currentScheme:{},//当前快捷键方案
     executedApps: [],//运行过的应用
 
     customApps: [],//自定义应用，就是那些我们没定义的应用，已经定义过的也会被存入，只是会优先使用定义的数据
