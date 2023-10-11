@@ -1,7 +1,6 @@
 <template>
 <!--  {{ apps }}-->
 
-<!--  {{ currentWindow }}-->
 
 
   <!-- 有内容 -->
@@ -191,7 +190,6 @@ export default {
   mounted () {
     this.detailToggle = false
     this.loadShortcutSchemes()
-    console.log(this.schemeList,'当前所有的快捷键方案')
 
   },
 

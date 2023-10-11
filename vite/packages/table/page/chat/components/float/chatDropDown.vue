@@ -1,7 +1,8 @@
 <template>
   <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
-    <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/>
+    <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
+    <!-- <EllipsisOutlined style="font-size: 2em;color:var(--secondary-text);"/> -->
    </div>
    <template #overlay>
     <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
@@ -10,7 +11,7 @@
       :class="{'select':dropDownIndex === index}"
       @click="selectMenuItem(item,index)"
      >
-       <DorpIcon :icon="item.icon" style="font-size: 2em;"/>
+       <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
        <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
      </a-menu-item>
     </a-menu>
@@ -34,11 +35,14 @@
  import { EllipsisOutlined } from '@ant-design/icons-vue'
  import { chatStore } from '../../../../store/chat'
  import { Icon as DorpIcon } from '@iconify/vue'
+ import { communityStore } from '../../store/communityStore'
+ import { message } from 'ant-design-vue'
  
  import Modal from '../../../../components/Modal.vue'
  import CreateNewCategory from '../createNewCategory.vue'
  import MenuCategory from '../menuCategory.vue'
  import InviteOther from '../inviteOther.vue'
+
  
  export default defineComponent({
   components:{
@@ -47,15 +51,16 @@
 
   },
  
-  props:['list','no'],
+  props:['list','no','data'],
  
   setup (props,ctx) {
 
    const chat = chatStore()
+   const community = communityStore()
  
    const data = reactive({
     dropDownList:[],
-    dropDownIndex:0,
+    dropDownIndex:-1,
     type:'',
     categoryShow:false,
    })
@@ -64,7 +69,7 @@
      data.dropDownList = props.list
    })
  
-   const selectMenuItem = (item,index) =>{
+   const selectMenuItem = async (item,index) =>{
     data.dropDownIndex = index;
     data.type = item.type;
     switch (item.type) {
@@ -94,6 +99,20 @@
         data.categoryShow = true
        },350)
       break;
+     case 'deletePacket':
+     
+      const res = await community.removeCategory(props.data.id)
+      if(res?.status === 1){
+        await community.getChannelList(props.no)
+        await community.getCategoryData(props.no)
+        message.success(`${res.info}`)
+      }
+    
+      break;
+
+     case 'packetSet':
+      
+      break;
     }
   
    }
@@ -115,7 +134,7 @@
  }
  
  :deep(.select){
-  background: var(--active-bg);
+  background: var(--active-secondary-bg);
   color: var(--active-text) !important;
  }
  

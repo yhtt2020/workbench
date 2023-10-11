@@ -564,6 +564,13 @@
   dependencies:
     "@iconify/types" "*"
 
+"@iconify/types@*", "@iconify-icons/fluent@^1.2.35":
+  version "1.2.36"
+  resolved "https://registry.npmmirror.com/@iconify-icons/fluent/-/fluent-1.2.36.tgz#c8a79c5b3482ecc33c2ede64a1a4afe3aec226dd"
+  integrity sha512-jwf6TfeVpO5weJhLIbgn6c4n1I1lYA7CVAW4tUqSlxcx1Cw+LD5go8h/LnkDw0msALA/fHDmBdLgSY+4Fr4LFQ==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmmirror.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
@@ -4773,10 +4780,8 @@ vue-screen-utils@^1.0.0-beta.13:
   resolved "https://registry.npmmirror.com/vue-screen-utils/-/vue-screen-utils-1.0.0-beta.13.tgz"
   integrity sha512-EJ/8TANKhFj+LefDuOvZykwMr3rrLFPLNb++lNBqPOpVigT2ActRg6icH9RFQVm4nHwlHIHSGm5OY/Clar9yIg==
 
-vue-shepherd@^3.0.0:
+vue-shepherd@../packages/vue-shepherd:
   version "3.0.0"
-  resolved "https://registry.npmmirror.com/vue-shepherd/-/vue-shepherd-3.0.0.tgz"
-  integrity sha512-e5Obzcy0pWUWl1RJjWclrfTvRALqlB5PFqKjoyVNqql8iyQJ+tK9CXN33EnJdxCeOG694Jwr/XlRdBm5O76eLw==
   dependencies:
     shepherd.js "^11.1.0"
 

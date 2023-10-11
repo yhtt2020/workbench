@@ -1,12 +1,17 @@
 <template>
  <div class="collapse-container">
-   <div class="header mb-2" @click="toggleCollapse">
-     <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
-       <CaretRightOutlined style="font-size: 1em;"/>
+   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.prevent="toggleCollapse">
+     <div class="flex items-center">
+      <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
+        <CaretRightOutlined style="font-size: 1em;"/>
+      </div>
+      <span class="font-14 ml-2" style="color:var(--secondary-text);">
+       {{ title }}
+      </span>
      </div>
-     <span class="font-14 ml-2" style="color:var(--secondary-text);">
-      {{ title }}
-     </span>
+
+     <!-- {{ content.id }} -->
+     <ChatDropDown v-if="show " :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
    </div>
    <transition name="collapse">
     <!-- class="content" -->
@@ -18,23 +23,29 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref,reactive } from 'vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
+import ChatDropDown from './chatDropDown.vue';
 
 export default {
- props:['title'],
+ props:['title','content','show','no'],
  components: {
-   CaretRightOutlined
+   CaretRightOutlined,ChatDropDown
  },
  setup() {
    const collapsed = ref(false);
+   const dorpShow = ref(false)
+   const dorpList = ref([
+    { icon:'fluent:settings-16-regular',title:'分组设置',type:'packetSet'},
+    { icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket' }
+   ])
 
    const toggleCollapse = () => {
      collapsed.value = !collapsed.value;
    };
 
    return {
-     collapsed,
+     collapsed,dorpShow,dorpList,
      toggleCollapse
    };
  }
@@ -50,6 +61,9 @@ export default {
  cursor: pointer;
  display: flex;
  align-items: center;
+ &:hover{
+  background: var(--active-secondary-bg);
+ }
 }
 
 .icon {

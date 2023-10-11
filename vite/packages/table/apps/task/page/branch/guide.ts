@@ -27,7 +27,10 @@ export const guide = {
     type: "router",
     value: "deck",
   },
-  Z0202: {},
+  Z0202: {
+    type: "router",
+    value: "shortcut",
+  },
   Z0203: {
     type: "router",
     value: "home",
@@ -41,12 +44,24 @@ export const guide = {
     value: "home",
   },
   Z0401: {},
-  Z0402: {},
+  Z0402: {
+    type: "router",
+    value: "home",
+  },
   Z0501: {
     type: "router",
     value: "barrage",
   },
-  Z0502: {},
-  Z0601: {},
-  Z0602: {},
+  Z0502: {
+    type: "router",
+    value: "barrage",
+  },
+  Z0601: {
+    type: "router",
+    value: "chat",
+  },
+  Z0602: {
+    type: "router",
+    value: "chat",
+  },
 };

@@ -2,7 +2,7 @@
  <div class="flex flex-col">
   <div class="w-full mb-2.5 flex  justify-between items-center">
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ categoryList.name }}</span>
-    <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList"/> 
+    <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList" /> 
   </div>
 
   <div class="font-14 mb-2" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
@@ -89,8 +89,8 @@
   </template>
 
 
-  <div v-for="item in categoryFilterList" class="my-3">
-    <ChatFold :title="item.name" >
+  <div v-for="item in categoryFilterList" class="my-3" >
+    <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
     
       <div class="flex flex-col" v-if="isDoubleColumn === false">
   

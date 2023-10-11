@@ -5,6 +5,7 @@
       <div class="w-full xt-scrollbar xt-text">
         <Primary v-if="currentTask == 'Primary'"></Primary>
         <Branch v-else-if="currentTask == 'Branch'"></Branch>
+        <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'"></Set>
       </div>
     </div>
@@ -16,6 +17,7 @@ import { ref, watch } from "vue";
 import { taskStore } from "../store";
 import Primary from "./Primary.vue";
 import Branch from "./branch/index.vue";
+import Activity from "./activity/index.vue";
 import Set from "./Set.vue";
 
 let currentTask = ref("Primary");
@@ -41,11 +43,12 @@ const menus = ref([
     value: "Branch",
     callBack: selectTab,
   },
-  // {
-  //   newIcon: "fluent-emoji:rainbow",
-  //   value: "Branch",
-  //   callBack: selectTab,
-  // },
+  {
+    newIcon: "fluent-emoji:rainbow",
+    value: "Activity",
+    title: "活动任务",
+    callBack: selectTab,
+  },
   {
     icon: "shezhi1",
     value: "Set",

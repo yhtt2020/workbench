@@ -100,7 +100,7 @@ export default {
       if (this.topicList[this.selectTopicIndex] !== undefined) {
         this.settingVisible = true;
       } else {
-        message.error("你还未选择");
+        message.error("你还未选择对话，请先创建会话");
       }
     },
     searchTopic() {
