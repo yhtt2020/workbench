@@ -1,6 +1,6 @@
 <template>
     <teleport to="body">
-      <img class="pop-container" style="filter: blur(1px);" :src="this.backgroundImage.path" alt="" />
+      <img class="pop-container" :src="this.backgroundImage.path" alt="" />
       <div class="box">
         <div style="width: 100%;">
             <div class="title">番茄时间</div>
@@ -97,8 +97,8 @@
     width: 100%;
     height: 100%;
     // 背景的模糊大小通过下面的属性值大小来调制
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    // backdrop-filter: blur(5px);
+    // -webkit-backdrop-filter: blur(5px);
     transform: scale(1.2);
   }
     .box {

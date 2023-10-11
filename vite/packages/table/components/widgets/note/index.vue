@@ -3,8 +3,9 @@
     :customData="customData"
     :size="reSize"
     :customIndex="customIndex"
-    :options="options"
+    :options="{...this.options,background:this.customData.background}"
     :menuList="menuList"
+    class="test"
     ref="homelSlotRef"
     :desk="desk"
   >
