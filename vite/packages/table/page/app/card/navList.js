@@ -960,6 +960,20 @@ export const NavList = [
         ],
         time: '2023/9/23'
       },
+      {
+        name:'yuanCommunity',
+        cname:'元社区动态(开发中)',
+        detail:'元社区里又发了什么好玩的事情？时刻关注热门和最新动态。',
+        sizes:['4x4','4x6'],
+        option:[
+          {
+            name:'yuanCommunity',
+            size:'4x4',
+            zoom:'24'
+          }
+        ],
+        time:'2023/10/11'
+      }
     ]
   },
 ];
