@@ -384,7 +384,20 @@ export const NavList = [
         ],
         time: '2023/9/23'
       },
-
+      {
+        name: 'shortcutKey',
+        cname: '快捷键小组件',
+        detail: '在你的桌面上快速访问最近使用的快捷键数据，也可以展示单个方案。',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'shortcutKey',
+            size: '4x4',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/13'
+      },
       // 未完成
       // {
       //     cname: "待办",
@@ -848,20 +861,7 @@ export const NavList = [
         ],
         time: '2023/9/8'
       },
-      {
-        name: 'shortcutKey',
-        cname: '快捷键小组件(开发中)',
-        detail: '在你的桌面上快速访问最近使用的快捷键数据。',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'shortcutKey',
-            size: '4x4',
-            zoom: '20'
-          },
-        ],
-        time: '2023/9/13'
-      },
+
       {
         name: 'clipBoard',
         cname: '剪贴板小组件(开发中)',
