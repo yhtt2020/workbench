@@ -176,6 +176,7 @@ export default {
          onOk: async ()=>{
           const result = await this.removeCategory(item.id)
           if(result?.status === 1){
+           message.success(`${result.info}`)
            await this.getChannelList(this.no)
            await this.getCategoryData(this.no)
           }
@@ -229,6 +230,7 @@ export default {
         const res = await this.createChannel(option)
         // console.log('返回结果',res);
         if(res?.status === 1){
+         message.success(`${res.info}`)
          this.getChannelList(this.no)
          this.getCategoryData(this.no)
          this.isEditing = false
@@ -261,6 +263,7 @@ export default {
       const res = await this.createChannel(option)
       // console.log('返回结果',res);
       if(res?.status === 1){
+        message.success(`${res.info}`)
         this.getChannelList(this.no)
         this.getCategoryData(this.no)
         this.isEditing = false
