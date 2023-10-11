@@ -68,7 +68,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="w-full flex h-full">
+    <div class="flex h-full flex-1">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -80,7 +80,6 @@ import { ref, computed, watch } from "vue";
 import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
-import { nanoid } from "nanoid";
 
 const props = defineProps({
   config: {
@@ -144,7 +143,6 @@ const newList = computed(() => {
   let index = -1;
   let res = props.list.map((item) => {
     if (item.full) full.value = true;
-    // let id = item.id ?? nanoid(4);
     let id = item.id ?? ++index;
     return {
       id,
