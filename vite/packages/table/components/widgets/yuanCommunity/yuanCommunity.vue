@@ -5,9 +5,10 @@
             <template #left-title>
                 <div class="icon"
                     style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-                    <YuanIcon icon="fluent:chat-16-regular" style="font-size: 20px;"></YuanIcon>
+                    <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
+            <div v-if="this.showForumList.length>0">
             <!-- 顶部导航栏 -->
             <div class="flex justify-between mt-4">
                 <!-- {{ showForumList[0].id }} -->
@@ -20,9 +21,9 @@
                         {{ this.showForumList[0].name }}
                     </div>
                 </div>
-                <div class="flex  w-[376px] h-[44px] justify-center xt-bg rounded-lg " v-else>
+                <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
                     <div v-for="(item, index) in showForumList" :key="index"
-                        class="w-[123px] h-[36px]  mt-1 mb-1 text-center leading-9 font-16"
+                        class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
                         :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
                         @click="setCurrentIndex(index, item)">{{
                             item.name
@@ -70,16 +71,16 @@
                                 </button>
 
                             </a-tooltip> -->
-                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px] " style="flex-shrink: 0;">
+                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;">
                         <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:add-16-filled" />
                     </button>
-                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" @click="goYuan"
+                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
                         style="flex-shrink: 0;" v-if="false">
                         <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:chat-16-regular" />
                     </button>
-                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" style="flex-shrink: 0;"
+                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
                         @click="refreshPost">
                         <YuanIcon class="text-lg rotate-90 xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
                             icon="akar-icons:arrow-clockwise" />
@@ -87,7 +88,7 @@
                 </div>
             </div>
             <!-- 内容区 -->
-            <div v-if="pageToggle">
+            
                 <div v-if="isLoading">
                     <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                 </div>
@@ -103,6 +104,7 @@
                 </div>
 
             </div>
+            <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <div class="mb-6 xt-text font-16">
@@ -145,6 +147,7 @@ import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import browser from '../../../js/common/browser'
+import DataStatu from "../DataStatu.vue"
 export default {
     name: '元社区',
     components: {
@@ -286,7 +289,7 @@ export default {
     border-radius: 8px;
     cursor: pointer;
     width: 123px;
-    height: 36px;
+    height: 32px;
     border-left: 0px;
     padding: 0px;
     margin-right: 0px;
