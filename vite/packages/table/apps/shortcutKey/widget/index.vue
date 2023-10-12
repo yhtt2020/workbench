@@ -19,14 +19,14 @@
         </div>
 
         <div class="button-bom">
-          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer">
+          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer" style="width:100%;">
             <!-- <icon></icon> -->
             更多快捷键
           </div>
-          <div class="p-second pointer">
+          <!-- <div class="p-second pointer">
             <icon></icon>
             搜索
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- 快捷键详情面板 -->
