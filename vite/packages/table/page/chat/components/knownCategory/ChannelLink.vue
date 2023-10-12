@@ -3,11 +3,12 @@
   <div class="flex flex-col my-3" style="width:500px;">
    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
     <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-     <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
+     <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
     </div>
+    {{ id }}
     <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-     <CloseOutlined  style="font-size: 1.25em;"/>
+      <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
     </div>
    </div>
  
@@ -19,14 +20,24 @@
      </span>
     </div>
  
-    <a-input class="h-10" v-model:value="linkName" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
+    <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
  
-    <a-input class="h-10" v-model:value="link" style="border-radius: 12px;" placeholder="请输入" />
-    
+    <a-input-group compact>
+      <a-select v-model:value="requestProtocol" style="width:20%;">
+        <a-select-option value="https">https</a-select-option>
+        <a-select-option value="http">http</a-select-option>
+      </a-select>
+      <a-input v-model:value="link" ref="linkRef" placeholder="请输入" spellcheck="false" style="width: 80%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
+    </a-input-group>
+
     <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
-    <RadioTab :navList="linkType" v-model:selectType="defaultType"></RadioTab>
-    <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span>
-    <div class="flex items-center justify-end">
+    <RadioTab :navList="openType" class="my-3" v-model:selectType="defaultOpen"></RadioTab>
+    <template v-if="defaultOpen.openMethod === 'outerOpen'">
+      <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
+    </template>
+    
+    
+    <div class="flex items-center justify-end my-3">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
     </div>
@@ -36,59 +47,98 @@
  </template>
  
  <script>
- import { defineComponent, reactive, toRefs } from 'vue'
- import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
+import { mapActions } from 'pinia'
+import { Icon as LinkIcon } from '@iconify/vue'
+import { channelClass } from '../../../../js/chat/createChannelClass'
+import { communityStore } from '../../store/communityStore'
+import { message } from 'ant-design-vue'
 
- import RadioTab from '../../../../components/RadioTab.vue'
+import RadioTab from '../../../../components/RadioTab.vue'
+
+export default {
  
- 
- export default defineComponent({
- 
-  props:['no'],
- 
-  components:{
-   CloseOutlined,LeftOutlined,RadioTab,
-  },
- 
-  setup (props,ctx) {
- 
-   const data = reactive({
+ props:['no','id'],
+
+ components:{
+  LinkIcon,RadioTab,
+ },
+
+ data(){
+   return{
+    requestProtocol:'https',
     linkType:[
-     { title:'默认',name:'default'},
-     { title:'内部浏览器',name:'inter' },
-     { title:'系统浏览器',name:'system' }
+     { title:'内部浏览器',name:'inter',openMethod:'userSelect' },
+     { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
     ],
-    defaultType:{},
+    openType:[
+     {title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
+     {title:'外部跳转打开',name:'outer',openMethod:'outerOpen'},
+    ],
+    defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
+    defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
     link:'',
     linkName:'',
-   })
-   
-   const backChannel = () =>{
-    ctx.emit('back')
    }
- 
-   const closeChannel = () =>{
-    ctx.emit('close')
-   }
- 
-   const submitSelect = () =>{
-    if(data.link === '' && data.linkName !== ''){
-     const option = {
-      name:data.linkName,
-      type:'link',
-      
-     }
+ },
+
+ mounted(){
+  this.$nextTick(()=>{
+    const nameRef = this.$refs.linkNameRef
+    // const linkRef = this.$refs.linkRef
+    nameRef.focus()
+    // linkRef.focus()
+  })
+ },
+
+ methods:{
+  ...mapActions(communityStore,['getCategoryData','getChannelList']),
+
+  backChannel(){
+    this.$emit('back')
+  },
+  closeChannel(){
+    this.$emit('close')
+  },
+
+  async submitSelect(evt){
+    if(this.link !== '' && this.linkName !== ''){
+      const option = { 
+        type:'link', id:this.id, no:this.no,
+        content:{
+          name:this.linkName,
+          props:{
+            url:`${this.requestProtocol}://${this.link}`,
+            openMethod:this.defaultOpen.openMethod === 'currentPage' ? this.defaultOpen.openMethod : this.defaultType.openMethod
+          }
+        } 
+      }
+      // console.log('查看参数',option);
+      const res  = await channelClass.secondaryChannel(option)
+      if(res?.status === 1){
+        message.success(`${res.info}`)
+        await this.getCategoryData(this.no)
+        await this.getChannelList(this.no)
+        this.closeChannel()
+      }
+    }else{
+      evt.preventDefault();
     }
-   }
- 
- 
- 
-   return {
-    ...toRefs(data),
-    backChannel,closeChannel,submitSelect
-   }
   }
- })
+ },
+
+
+ watch:{
+  defaultType(newVal){
+    console.log('监听数据变化',newVal)
+    this.defaultType = newVal
+  },
+  defaultOpen(newVal){
+    console.log('监听数据变化',newVal)
+    this.defaultOpen = newVal
+  }
+ }
+
+}
  </script>
  
  <style lang="scss" scoped>
@@ -132,6 +182,16 @@
   &::placeholder{
     color: var(--secondary-text) !important;
   }
+ }
+
+
+ :deep(.ant-select .ant-select-selector){
+  height:40px !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+ }
+ :deep(.ant-select-selection-item){
+  line-height: 40px !important;
  }
  </style>
  

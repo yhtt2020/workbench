@@ -10,7 +10,7 @@
  <teleport to='body' >
   <Modal v-if="menuDropShow" v-model:visible="menuDropShow" :blurFlag="true" style="z-index:1000 !important;">
     <PacketSetting v-if="type === 'packetSet'" :no="no" @close="menuDropShow = false" ></PacketSetting>
-    <AddLeftChildChannel v-if="type === 'addNewApp'" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
+    <AddLeftChildChannel v-if="type === 'addNewApp'" :id="id" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
   </Modal>
  </teleport>
 </template>

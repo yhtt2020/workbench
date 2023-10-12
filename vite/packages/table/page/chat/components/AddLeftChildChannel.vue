@@ -32,9 +32,9 @@
   </div>
  </div>
 
- <ChannelLink v-if="selectIndex === 'link' && nextShow === true" :no="no" @close="closeChannel" @back="nextShow = false"/>
- <ForumChannel v-if="selectIndex === 'community' && nextShow === true" :no="no" @close="closeChannel" @back="nextShow = false" />
- <ChannelGroup v-if="selectIndex === 'group' && nextShow === true" :no="no" @close="closeChannel" @back="nextShow = false" />
+ <ChannelLink v-if="selectIndex === 'link' && nextShow === true" :id="id" :no="no" @close="closeChannel" @back="nextShow = false"/>
+ <ForumChannel v-if="selectIndex === 'community' && nextShow === true" :no="no" :id="id" @close="closeChannel" @back="nextShow = false" />
+ <ChannelGroup v-if="selectIndex === 'group' && nextShow === true" :id="id" :no="no" @close="closeChannel" @back="nextShow = false" />
 </template>
 
 <script>
@@ -49,7 +49,7 @@ export default {
   ForumChannel,ChannelGroup
  },
 
- props:['no'],
+ props:['no','id'],
 
  data(){
   return{

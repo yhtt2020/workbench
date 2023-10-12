@@ -34,7 +34,7 @@
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
      <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
-     <AddLeftChildChannel :no="no" v-if="type === 'addNewApp'" @close="categoryShow = false"></AddLeftChildChannel>
+     <AddLeftChildChannel :no="no" v-if="type === 'addNewApp'" :id="data.id" @close="categoryShow = false"></AddLeftChildChannel>
     </Modal>
   </teleport>
  
@@ -60,7 +60,7 @@
    PacketSetting,AddLeftChildChannel
   },
  
-  props:['list','no','data'],
+  props:['list','no','data','id'],
  
   setup (props,ctx) {
 
