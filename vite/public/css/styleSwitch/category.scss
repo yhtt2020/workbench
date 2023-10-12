@@ -15,4 +15,21 @@
   font-size: 16px;
   font-weight: 500;
  }
+
+ &-button{
+  &:active{
+   filter: brightness(0.8);
+   opacity: 0.8;
+  }
+  &:hover{
+   opacity: 0.8;
+  }
+ }
+}
+
+.invite{
+ &-bg{
+  background: var(--secondary-bg);
+  border-radius: 12px;
+ }
 }

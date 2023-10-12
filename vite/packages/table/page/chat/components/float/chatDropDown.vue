@@ -110,7 +110,7 @@
       break;
      case 'deletePacket':
       DownModal.confirm({
-        content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
+        content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
         centered:true,
         onOk: async ()=>{
           const res = await community.removeCategory(props.data.id)
