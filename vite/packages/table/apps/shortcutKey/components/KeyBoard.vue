@@ -14,6 +14,7 @@
             <div class="key-box mt-6">
               <div v-for="(item, index) in modifierKeyOne"
                    :key="item"
+                   :style="{backgroundColor:item.color}"
                    :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
                    @click="onKeyDown(item, index, 'modifierKeyOne')"
                    class="key-item">
@@ -21,15 +22,19 @@
               </div>
             </div>
           </div>
-          <div>
-            <span class="title">修饰键2</span>
-            <div class="key-box mt-6">
-              <div v-for="(item, index) in modifierKeyTwo"
-                   :key="item"
-                   :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
-                   @click="onKeyDown(item, index, 'modifierKeyTwo')"
-                   class="key-item px-3">
-                {{ item.key }}
+          <div class="mt-10">
+            <div class="box-foot action-panel"   >
+              <div class="line-title text-center ">按键确认</div>
+              <div class="active">
+
+                <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
+                  <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
+                  <div class="key-item" style="min-width:44px;padding:0 10px;">{{ item.key }}</div>
+                  <span class="mx-3" v-if="keyContent.keyArr.length != (index + 1)">+</span>
+                </div>
+              </div>
+              <div class="btn-box">
+                <xt-button type="theme" style="width:100%"   @click="confirm">确定</xt-button>
               </div>
             </div>
           </div>
@@ -66,29 +71,17 @@
           </div>
         </div>
       </div>
-      <div class="box-foot">
-        <div class="active">
-          <span class="mr-3">当前选择</span>
-          <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
-            <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
-            <div class="key-item" style="min-width:44px;padding:0 10px;">{{ item.key }}</div>
-            <span class="mx-3" v-if="keyContent.keyArr.length != (index + 1)">+</span>
-          </div>
-        </div>
-        <div class="btn-box">
-          <div @click="onBack">取消</div>
-          <div class="ml-3 xt-active-btn" @click="confirm">确定</div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { message } from 'ant-design-vue'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 export default {
   name: 'KeyBoard',
+  components: { XtButton },
   props: {
     //需要修改的内容
     selectKey: {
@@ -105,6 +98,19 @@ export default {
       modifierKeyOne: [
         {
           key: 'Ctrl',
+          color:'rgb(255, 108, 97)',
+          checked: false,
+          isGray: false,
+        },
+        {
+          key: 'Tab',
+          color:'rgb(80, 139, 254)',
+          checked: false,
+          isGray: false,
+        },
+        {
+          key: 'Shift',
+          color:'rgb(251, 114, 153)',
           checked: false,
           isGray: false,
         },
@@ -113,16 +119,8 @@ export default {
           checked: false,
           isGray: false,
         },
-        {
-          key: 'Shift',
-          checked: false,
-          isGray: false,
-        },
-        {
-          key: 'Tab',
-          checked: false,
-          isGray: false,
-        },
+
+
         {
           key: 'Win',
           checked: false,
@@ -143,18 +141,28 @@ export default {
         {
           key: 'Ctrl',
           checked: false,
+          color:'red',
           isGray: false,
         },
+        {
+          key: 'Alt',
+          checked: false,
+          color:'orange',
+          isGray: false,
+        },
+        {
+          color:'blue',
+          key: 'Shift',
+          checked: false,
+          isGray: false,
+        },
+
         {
           key: 'Space',
           checked: false,
           isGray: false,
         },
-        {
-          key: 'Shift',
-          checked: false,
-          isGray: false,
-        },
+
         {
           key: 'Tab',
           checked: false,
@@ -170,11 +178,7 @@ export default {
           checked: false,
           isGray: false,
         },
-        {
-          key: 'Alt',
-          checked: false,
-          isGray: false,
-        }
+
       ],
       keyList: [
         [
@@ -562,7 +566,7 @@ export default {
       let retArr = this.parentKeyList.find(item => {
         return item.keys?.length === arr.length && item.keys?.slice().sort().toString() === arr.slice().sort().toString()
       })
-      if (retArr && retArr.id !== this.keyContent.id) return message.info('组合键重复')
+      if (retArr && retArr.id !== this.keyContent.id && false) return message.info('组合键重复')//取消重复判断
       this.$emit('saveKey', this.keyContent)
       this.$emit('closeKeyBoard')
 
@@ -769,5 +773,10 @@ export default {
 
 .box::-webkit-scrollbar {
   display: none;
+}
+.action-panel{
+  padding:20px;
+  border-radius: 8px;
+  border:1px solid var(--active-bg);background-color:var(--secondary-bg)
 }
 </style>
