@@ -83,10 +83,10 @@ import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
 import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
-import ValidateModal from '../components/validationPrompts.vue'
+import ValidateModal from '../components/ValidationPrompts.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
-import DefaultFloat from '../components/float/defaultFloat.vue'
+import DefaultFloat from '../components/float/DefaultFloat.vue'
 
 
 export default defineComponent({

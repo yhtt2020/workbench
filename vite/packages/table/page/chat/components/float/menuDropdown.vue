@@ -21,7 +21,7 @@ import { Icon as DropIcon } from '@iconify/vue'
 import { message,Modal as DropModal } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
-import PacketSetting from '../knownCategory/packetSetting.vue'
+import PacketSetting from '../knownCategory/PacketSetting.vue'
 import Modal from '../../../../components/Modal.vue'
 import AddLeftChildChannel from '../AddLeftChildChannel.vue'
 

@@ -25,7 +25,7 @@
 <script>
 import { ref,reactive } from 'vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
-import ChatDropDown from './chatDropDown.vue';
+import ChatDropDown from './ChatDropDown.vue';
 import { categoryMenu } from '../../../../js/data/chatList'
 
 export default {

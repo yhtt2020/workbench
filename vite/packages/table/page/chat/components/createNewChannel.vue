@@ -47,9 +47,9 @@
  
  import Modal from '../../../components/Modal.vue'
  // import SelectDesk from './channelSelect/selectDesk.vue'
- import SelectChannel from './channelSelect/selectCommunity.vue'
- import SelectGroupChat from './channelSelect/selectGroupChat.vue'
- import SelectWebLink from './channelSelect/selectWebLink.vue'
+ import SelectChannel from './channelSelect/SelectCommunity.vue'
+ import SelectGroupChat from './channelSelect/SelectGroupChat.vue'
+ import SelectWebLink from './channelSelect/SelectWebLink.vue'
  
  export default defineComponent({
   components:{

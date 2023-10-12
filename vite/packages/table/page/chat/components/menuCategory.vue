@@ -44,9 +44,9 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import { Icon as  MenuIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 
-import SelectGroupChat from './channelSelect/selectGroupChat.vue'
-import SelectMenuWebLink from './channelSelect/selectWebLink.vue'
-import SelectCommunity from './channelSelect/selectCommunity.vue'
+import SelectGroupChat from './channelSelect/SelectGroupChat.vue'
+import SelectMenuWebLink from './channelSelect/SelectWebLink.vue'
+import SelectCommunity from './channelSelect/SelectCommunity.vue'
 
 export default defineComponent({
  components:{

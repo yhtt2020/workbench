@@ -5,7 +5,6 @@
     <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
      <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
     </div>
-    {{ id }}
     <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
       <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
