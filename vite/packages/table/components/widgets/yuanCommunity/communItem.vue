@@ -16,9 +16,16 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive ,computed} from 'vue'
+// const props=defineProps({
+//     showForumPost: {
+//         type: Array,
+//         default: () => []
+//     },
+// })
 const name = ref('阳光彩虹小白马')
 const content = ref('终于通关了一款难度很高的游戏，感觉自己真的很厉害！ #游戏大神# #通关挑战#哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈')
+// const detailPost=computed(() => props.showForumPost)
 </script>
 <style lang='scss' scoped>
 .font-14 {

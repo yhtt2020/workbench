@@ -10,26 +10,36 @@
             </template>
             <!-- 顶部导航栏 -->
             <div class="flex justify-between mt-4">
-                <div class="flex  w-[376px] h-[44px] justify-center xt-bg rounded-lg ">
+                <!-- {{ showForumList[0].id }} -->
+                <div v-if="this.showForumList.length === 1" class="flex items-center">
+                        <div class="w-[44px] h-[44px] rounded-md">
+                            <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+                            
+                        </div>
+                        <div class="font-16 ml-2 xt-text">
+                            {{ this.showForumList[0].name }}
+                        </div>
+                    </div>
+                <div class="flex  w-[376px] h-[44px] justify-center xt-bg rounded-lg " v-else>
                     <div v-for="(item, index) in navTopList" :key="index"
                         class="w-[123px] h-[36px]  mt-1 mb-1 text-center leading-9 font-16"
                         :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-                        @click="setCurrentIndex(index)">{{
+                        @click="setCurrentIndex(index,item)">{{
                             item.name
                         }}</div>
                 </div>
                 <div>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost"
+                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px] " @click="refreshPost"
                         style="flex-shrink: 0;">
                         <YuanIcon class="text-lg xt-text" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:add-16-filled" />
                     </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
+                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" @click="goYuan"
                         style="flex-shrink: 0;">
                         <YuanIcon class="text-lg xt-text" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:chat-16-regular" />
                     </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
+                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" @click="goYuan"
                         style="flex-shrink: 0;">
                         <YuanIcon class="text-lg rotate-90 xt-text" style="vertical-align: sub; font-size: 20px;"
                             icon="akar-icons:arrow-clockwise" />
@@ -44,7 +54,7 @@
                 <div class="content" v-else>
                     <div v-for="(item, index) in copyNum" style="display: flex;" class="">
                         <div class="item">
-                            <communItem :key="index" :copyNum="copyNum" />
+                            <communItem :key="index" :copyNum="copyNum"  />
                         </div>
 
                     </div>
@@ -66,9 +76,7 @@
             </div>
             <div class="xt-bg-2 w-full h-[48px] rounded-xl flex justify-between items-center">
                 <div class="ml-2">
-                    <a-tag closable style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer" >效率圈</a-tag>
-                    <a-tag closable style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer">游戏圈</a-tag>
-                    <a-tag closable style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer">影视圈</a-tag>
+                    <a-tag closable v-for="(item, index) in forumList" style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer" >{{ item.name }}</a-tag>
                 </div>
                 <div>
                     <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
@@ -82,6 +90,8 @@ import Widget from '../../card/Widget.vue';
 import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './communItem.vue'
 import RadioTab from '../../RadioTab.vue';
+import { mapWritableState, mapActions } from 'pinia';
+import {yuanCommunityStore} from '../../../store/yuanCommunity.ts'
 export default {
     name: '元社区',
     components: {
@@ -154,11 +164,21 @@ export default {
         }
     },
     methods: {
-        setCurrentIndex(index) {
+        ...mapActions(yuanCommunityStore, [
+            'getMyForumList',
+            'getCommunityPost',
+        ]),
+        async setCurrentIndex(index,item) {
             this.currentIndex = index
+            await this.communityPost(item.id)
+            console.log(this.showForumPost,'this.showForumList');
+        },
+        refreshPost(){
+            console.log(this.showForumPost);
         }
     },
     computed: {
+        ...mapWritableState(yuanCommunityStore,['communityPost','myForumList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -171,7 +191,30 @@ export default {
             return this.showSize.height == 2 ? 3 : 5
 
         },
-    }
+        forumList(){
+            this.customData.forumList=this.myForumList.joined
+            return this.customData.forumList
+        },
+        showForumList(){
+            if(this.customData && this.customData.forumList){
+                return this.customData.forumList.slice(0,3)
+            }
+            return this.myForumList.joined.slice(0,3)
+        },
+        forumPost(){
+            this.customData.forumPost=this.communityPost.list
+            return this.customData.forumPost
+        },
+        // showForumPost(){
+        //     return this.forumPost.slice(0,this.copyNum)
+        // }
+    },
+    async mounted() {
+        this.isLoading = true
+        await this.getMyForumList()
+        await this.getCommunityPost(this.showForumList[0].id)
+        this.isLoading = false
+    },
 }
 </script>
 <style>
