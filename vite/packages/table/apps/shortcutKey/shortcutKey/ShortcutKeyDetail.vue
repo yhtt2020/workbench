@@ -63,7 +63,7 @@
             <span class="truncate font-bold">  <div class="color-dot" :style="{backgroundColor:getColor(this.filteredKeyList,index)}"></div> {{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" :class="{active:keyIndex === item.id }"
+            <div v-else class="border-right key-item" :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
                  :style="{backgroundColor:getColor(this.filteredKeyList,index)}"
                  @click="setKeyItem(item.id)">
               <div class="flex w-full">
@@ -182,6 +182,7 @@ import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
+import {isGroupLast,isGroupFirst} from '../lib/lib'
 
 export default {
   name: 'ShortcutKeyDetail',
@@ -256,6 +257,7 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    isGroupLast,isGroupFirst,
     getColor(array,index,field='groupName'){
       for(let i=index;i>=0;i--){
         if(array[i][field]){
@@ -607,5 +609,12 @@ export default {
   background: var(--mask-bg);
   border-radius: 10px
 }
-
+.rounded-top{
+  border-top-left-radius:8px;
+  border-top-right-radius: 8px;
+}
+.rounded-bottom{
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 </style>

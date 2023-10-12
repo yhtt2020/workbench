@@ -16,6 +16,7 @@ export default {
     return {
       loading: true,
       shortcutSchemeList: [],
+      app:{},
       exeName: '',
       selecting: false,//选择
       settings: {
@@ -47,17 +48,17 @@ export default {
     }
   },
   watch: {
-    currentApp: {
-      handler() {
-        if (this.settings.enableAutoChange) {
-          this.exeName = this.currentApp.exeName
-          this.refreshList()
-
-        }
-
-      },
-      deep: true
-    },
+    // currentApp: {  暂时不需要自动切换应用
+    //   handler() {
+    //     if (this.settings.enableAutoChange) {
+    //       this.exeName = this.currentApp.exeName
+    //       this.refreshList()
+    //
+    //     }
+    //
+    //   },
+    //   deep: true
+    // },
     $route: {
       handler() {
         this.reloadData()
@@ -71,9 +72,11 @@ export default {
     this.reloadData(to.params?.exeName)
   },
   methods: {
-    ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes', 'import','removeScheme']),
-    reloadData(exeName = this.$route.params?.exeName) {
+    ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes', 'import','removeScheme','getCustomApp']),
+    async reloadData(exeName = this.$route.params?.exeName) {
       this.exeName = exeName
+      this.app = await this.getCustomApp(exeName)
+      console.log(this.app, '找到的应用')
       this.refreshList()
     },
     async refreshList() {
@@ -223,13 +226,9 @@ export default {
       </div>
       <div v-else="false" class="  rounded-md px-2 p-2  " :span="12" style="flex: 1">
         <div class="flex flex-row">
-          <div hidden="">
-            - {{ currentApp.pid }} - {{ currentApp.title }}
-          </div>
-
-          <div hidden="">{{ currentApp.lastFocus }}</div>
+          <div hidden="">{{ app.lastFocus }}</div>
           <div class="    truncate">
-            <a-avatar :size="48" shape="square" :src="currentApp.software.icon"></a-avatar>
+            <a-avatar :size="48" shape="square" :src="app.icon"></a-avatar>
 
             <div v-if="!currentApp.inRep" class="mt-2">
               <xt-button type="theme" size="mini" style="width:100%" :h="36">登记入库</xt-button>
@@ -237,11 +236,11 @@ export default {
           </div>
           <div class="ml-4">
             <div class="font-16 font-bold">
-              <a-tooltip :title="currentApp.path">
-                {{ currentApp.software.alias }}
+              <a-tooltip :title="app.path">
+                {{ app.alias }}
               </a-tooltip>
 
-              <EditOutlined class="pointer ml-2 xt-text-2" @click="goEdit(currentApp)"/>
+              <EditOutlined class="pointer ml-2 xt-text-2" @click="goEdit(app)"/>
             </div>
             <!--            <span class="" style="font-size: 16px;color: var(&#45;&#45;secondary-text);">共 {{-->
             <!--                shortcutSchemeList.length-->

@@ -110,6 +110,8 @@ export default {
         software
       }
       this.executedApps.unshift(currentApp)
+      this.currentApp = currentApp
+
     })
     this.currentIndex = this.currentApp.exeName
   }, unmounted() {

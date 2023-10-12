@@ -372,9 +372,8 @@ export default {
 
       if (this.currentItem) {
         this.lostFocus(this.currentItem, this.currentItem.type || this.currentType)
+        this.currentItem.isEdit=false
       }
-
-      console.log('完成编辑')
     },
     getColor (index) {
       for (let i = index; i >= 0; i--) {
