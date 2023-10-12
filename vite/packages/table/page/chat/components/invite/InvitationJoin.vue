@@ -1,6 +1,6 @@
 <template>
  <div>
-
+   邀请加入
  </div>
 </template>
 

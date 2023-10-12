@@ -33,7 +33,7 @@
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
     <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
          style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-      <CommunityIcon :icon="item.icon" style="font-size:1.75em;"></CommunityIcon>
+      <CommunityIcon :icon="item.icon" style="font-size:1.25rem;"></CommunityIcon>
       <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
   </div>
