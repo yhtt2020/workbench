@@ -1,6 +1,6 @@
 <template>
- <div class="collapse-container">
-   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.stop.prevent="toggleCollapse">
+ <div class="collapse-container" style="position: relative;">
+   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.stop="toggleCollapse">
      <div class="flex items-center">
       <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
         <CaretRightOutlined style="font-size: 1em;"/>
@@ -9,10 +9,10 @@
        {{ title }}
       </span>
      </div>
-
-     <!-- {{ content.id }} -->
-     <ChatDropDown v-if="show " :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
    </div>
+    <div style="position:absolute; top:6px;right:10px;">
+      <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
+    </div>
    <transition name="collapse">
     <!-- class="content" -->
     <div v-if="!collapsed" >

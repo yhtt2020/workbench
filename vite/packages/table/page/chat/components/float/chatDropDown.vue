@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
+  <a-dropdown :trigger="['click']" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
     <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
    </div>

@@ -94,6 +94,7 @@
   <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
     <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
     <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
+    <InviteOther v-if="type === 'inviteOther'" :no="routeData" @close="addShow = false" />
   </Modal>
 </template>
 
@@ -114,11 +115,12 @@ import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/categoryFloat.vue'
 import Commun from '../Commun.vue'
+import InviteOther from '../components/inviteOther.vue'
 
 export default {
   components:{
     CategoryFloat,Modal,CreateNewChannel,
-    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun
+    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun,InviteOther
   },
 
   computed:{
