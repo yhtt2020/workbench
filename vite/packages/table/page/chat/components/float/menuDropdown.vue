@@ -9,7 +9,8 @@
 
  <teleport to='body' >
   <Modal v-if="menuDropShow" v-model:visible="menuDropShow" :blurFlag="true" style="z-index:1000 !important;">
-     <PacketSetting :no="no" @close="menuDropShow = false" v-if="type === 'packetSet'"></PacketSetting>
+    <PacketSetting v-if="type === 'packetSet'" :no="no" @close="menuDropShow = false" ></PacketSetting>
+    <AddLeftChildChannel v-if="type === 'addNewApp'" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
   </Modal>
  </teleport>
 </template>
@@ -22,12 +23,13 @@ import { communityStore } from '../../store/communityStore'
 
 import PacketSetting from '../knownCategory/packetSetting.vue'
 import Modal from '../../../../components/Modal.vue'
+import AddLeftChildChannel from '../AddLeftChildChannel.vue'
 
 export default {
  props:['list','id','no','position'],
 
  components:{
-  DropIcon,PacketSetting,Modal
+  DropIcon,PacketSetting,Modal,AddLeftChildChannel
  },
 
  data(){
@@ -67,7 +69,7 @@ export default {
      })
      break;
     case 'deletePacket':
-    //  console.log('查看id',this.id);
+     //  console.log('查看id',this.id);
      DropModal.confirm({
       content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
       centered:true,
@@ -81,6 +83,9 @@ export default {
       }
      })
      break;
+    case 'addNewApp':
+      this.menuDropShow = true
+      break;
    } 
 
 

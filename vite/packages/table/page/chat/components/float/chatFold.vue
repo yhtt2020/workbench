@@ -1,6 +1,6 @@
 <template>
  <div class="collapse-container">
-   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.prevent="toggleCollapse">
+   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.stop.prevent="toggleCollapse">
      <div class="flex items-center">
       <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
         <CaretRightOutlined style="font-size: 1em;"/>

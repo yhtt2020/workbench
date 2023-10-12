@@ -15,12 +15,12 @@
           <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
         </a-menu-item>
         
-        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0; padding:0 8px !important; background-color: var(--divider);"></a-divider>
+        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0;  background-color: var(--divider);"></a-divider>
         
         <a-menu-item v-if=" index >= dropDownList.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
           @click="selectMenuItem(item,index)">
           <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
-          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+          <span class="pl-4 font-16" :style="item.type === 'deletePacket' ? { color:'var(--error)' } : { color:'var(--primary-text)' }"> {{ item.title }}</span>
         </a-menu-item>
       </template>
     </a-menu>
@@ -34,6 +34,7 @@
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
      <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
+     <AddLeftChildChannel :no="no" v-if="type === 'addNewApp'" @close="categoryShow = false"></AddLeftChildChannel>
     </Modal>
   </teleport>
  
@@ -51,12 +52,12 @@
  import MenuCategory from '../menuCategory.vue'
  import InviteOther from '../inviteOther.vue'
  import PacketSetting from '../knownCategory/packetSetting.vue'
-
+ import AddLeftChildChannel from '../AddLeftChildChannel.vue'
  
  export default defineComponent({
   components:{
    DorpIcon,Modal,CreateNewCategory,MenuCategory,InviteOther,
-   PacketSetting,
+   PacketSetting,AddLeftChildChannel
   },
  
   props:['list','no','data'],
@@ -128,6 +129,11 @@
         data.categoryShow = true
       },350)
       break;
+     case 'addNewApp':
+      setTimeout(()=>{
+        data.categoryShow = true
+      },350)
+      break;
     }
   
    }
@@ -145,6 +151,7 @@
   background-color:var(--secondary-bg) !important;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   width: 200px;
+  padding: 8px 0;
  }
  
  :deep(.select){
@@ -178,8 +185,8 @@
  }
 
  :deep(.ant-divider-horizontal){
-  max-width:90% !important;
-  width:90% !important;
+  min-width:78% !important;
+  width:78% !important;
  }
  </style>
  
