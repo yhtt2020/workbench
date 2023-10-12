@@ -13,7 +13,7 @@
 
             </div>
             <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
-                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
+                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan">元社区</a>
             </div>
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
