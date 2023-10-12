@@ -493,39 +493,39 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 :deep(.tippy-content) {
     padding: 0px !important;
 }
-:deep(.ant-radio-button-wrapper) {
-    // border: 1px solid var(--primary-text);
-    border-bottom: none;
+// :deep(.ant-radio-button-wrapper) {
+//     // border: 1px solid var(--primary-text);
+//     border-bottom: none;
 
-}
+// }
 
-:deep(.ant-radio-button-wrapper) {
-    &:nth-child(21) {
-        border-bottom: 1px solid var(--secondary-text);
-        // border-left:  solid var(--primary-text);
-    }
-    &:nth-child(22),&:nth-child(23),&:nth-child(24),&:nth-child(19),&:nth-child(20) {
-        border-bottom: 1px solid var(--primary-text);
-    }
-    &:nth-child(1){
-        border-radius:10px 0 0 0;
-    }
-    &:nth-child(6){
-        border-radius:0 10px 0 0;
-    }
-    &:nth-child(19){
-        border-radius:0 0 0 10px ;
-    }
-    &:nth-child(24){
-        border-radius:0 0 10px 0 ;
-    }
-    // &:nth-child(7),&:nth-child(13){
-    //     border-left: 1px solid var(--primary-text);
-    // }
-    // &:nth-child(19){
-    //     border-left: 1px solid var(--primary-text);
-    // }
-}
+// :deep(.ant-radio-button-wrapper) {
+//     &:nth-child(21) {
+//         border-bottom: 1px solid var(--secondary-text);
+//         // border-left:  solid var(--primary-text);
+//     }
+//     &:nth-child(22),&:nth-child(23),&:nth-child(24),&:nth-child(19),&:nth-child(20) {
+//         border-bottom: 1px solid var(--primary-text);
+//     }
+//     &:nth-child(1){
+//         border-radius:10px 0 0 0;
+//     }
+//     &:nth-child(6){
+//         border-radius:0 10px 0 0;
+//     }
+//     &:nth-child(19){
+//         border-radius:0 0 0 10px ;
+//     }
+//     &:nth-child(24){
+//         border-radius:0 0 10px 0 ;
+//     }
+//     // &:nth-child(7),&:nth-child(13){
+//     //     border-left: 1px solid var(--primary-text);
+//     // }
+//     // &:nth-child(19){
+//     //     border-left: 1px solid var(--primary-text);
+//     // }
+// }
 .popupClass {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
