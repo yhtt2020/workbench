@@ -68,7 +68,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="flex h-full flex-1">
+    <div class="flex h-full flex-1 w-0">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -77,6 +77,7 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
@@ -105,22 +106,10 @@ const props = defineProps({
           img: "/icons/bg.png",
         },
         {
-          icon: "star",
-        },
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
+          full: true,
         },
         {
           icon: "shezhi1",
-        },
-        {
-          full: true,
         },
       ];
     },
@@ -129,6 +118,8 @@ const props = defineProps({
     default: "router",
   },
 });
+
+// 全屏控制
 const full = ref(false);
 const isFull = ref(false);
 const typeClass = computed(() => {
@@ -138,6 +129,12 @@ const typeClass = computed(() => {
       : "xt-bg pr-3 py-3 rounded-xl";
   }
 });
+const route = useRoute();
+const currentPage = ref(route.path);
+watch(route, (newRoute) => {
+  if (full.value && currentPage !== newRoute.path) isFull.value = false;
+});
+
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;

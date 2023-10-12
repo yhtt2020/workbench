@@ -1,5 +1,5 @@
 <template>
-    <div class="box h-full">
+    <div class="box h-full m-auto mt-10">
       <!-- 无内容 -->
       <div class="container rounded-lg flex flex-col items-center"
       :style="detailJump ? 'height: 90%;' : 'height: 100%;'">
@@ -9,10 +9,10 @@
           </div>
         </div>
         <div class="btn-item flex justify-center">
-          <div class="pointer" @click="market">浏览创意市场</div>
+          <div v-if="false" class="pointer" @click="market">浏览创意市场</div>
           <div class="pointer" @click="share">创建方案</div>
         </div>
-        <div class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
+        <div v-if="false" class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
           <div v-for="item in notAppList" @click="previewKay(item)" :key="item.id" class="pointer recommend">
             <div class="flex justify-between">
                 <div class="flex">

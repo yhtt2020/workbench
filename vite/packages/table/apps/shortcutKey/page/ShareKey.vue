@@ -29,7 +29,7 @@
     </div>
     <!-- 基本信息 -->
     <div class="add-content" v-if="defaultNavType.name === 'message'">
-      <span>图标</span>
+      <span>方案封面</span>
       <div class="flex">
         <div class="avatar">
           <div>
@@ -54,8 +54,8 @@
           </a-upload>
         </div>
       </div>
-      <span>应用名称</span>
-      <a-input v-model:value="applyName"  spellcheck="false" class="input" placeholder="请输入应用名称"
+      <span>方案名称</span>
+      <a-input v-model:value="applyName"  spellcheck="false" class="input" placeholder="请输入方案名称"
                aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text" placeholder="请输入描述"

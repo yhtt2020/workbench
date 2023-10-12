@@ -56,22 +56,24 @@
             <!-- 分组名称 -->
             <div :id="'groupId_' + item.id" class="key-item border-right" v-if="item.groupName"
                  :style="item.id === currentGroup.id ? activeGroup : ''">
-              <span class="truncate">{{ item.groupName }}</span>
+              <span class="truncate font-bold">{{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg);':''"
+            <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg); border-radius: 10px':''"
                  @click="setKeyItem(item.id)">
-              <div class="flex">
+              <div class="flex w-full">
                 <div v-for="i in item.keys" :key="i" class="flex">
                   <span style="min-width:32px;padding:0 8px;"
                         class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
                 </div>
+                <div class="key-title ">{{ item.title }}</div>
               </div>
-              <div class="key-title truncate">{{ item.title }}</div>
+
+              <div>    <div v-if="item.addNote" class="text-note">
+                <span class="note-val">{{ item.noteVal }}</span>
+              </div></div>
             </div>
-            <div v-if="item.addNote" class="text-note">
-              <span class="note-val">{{ item.noteVal }}</span>
-            </div>
+
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -382,7 +384,6 @@ export default {
 }
 
 .key-list {
-
   height:0;
   flex:1;
   background: var(--main-mask-bg);
@@ -447,18 +448,30 @@ export default {
 
 .key-item {
   padding: 0 12px;
-  margin: 0 20px 8px;
+  margin: 0 20px 10px;
+  margin-top:0;
+  margin-bottom: 0;
   width: 350px;
-  height: 48px;
-  line-height: 48px;
+  line-height: 1.2;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  vertical-align: text-top;
   font-size: 16px;
   color: var(--primary-text);
   display: flex;
-  border-radius: 8px;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   cursor: pointer;
-  border-radius: 8px;
+  border-bottom: 1px solid;
+  flex-direction: column;
+  border-bottom-color:  var(--secondary-bg);
+  .key-title{
+    flex:1;
+    width: 0;
+    padding-top: 4px;
+    text-align: right;
+  }
+
 }
 
 .border-right {
@@ -470,36 +483,29 @@ export default {
   position: absolute;
   right: -20px;
   top: 0;
-  height: 56px;
+  height:110%;
   margin-left: 10px;
   // border-right: solid rgba(255, 245, 245, 0.1) 1px;
-  border-right: solid 1px var(--divider);
+  border-right: solid 1px var(--divider-solid);
 }
 
 .s-bg {
   box-shadow: none !important;
 }
 
-.key-title {
-  flex: 1;
-  max-width: 160px;
-  text-align: right;
-}
+
 
 
 .text-note {
-  margin: 0 20px 8px;
-  padding: 0 12px;
-  width: 350px;
-  height: 22px;
-  text-align: right;
-  position: relative;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 0 3px;
+  text-align: left;
 }
 
 .note-val {
   position: relative;
-  top: -14px;
-  font-size: 16px;
+  font-size: 14px;
   color: var(--secondary-text);
 }
 
