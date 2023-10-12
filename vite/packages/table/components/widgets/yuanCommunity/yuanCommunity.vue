@@ -11,37 +11,77 @@
             <!-- 顶部导航栏 -->
             <div class="flex justify-between mt-4">
                 <!-- {{ showForumList[0].id }} -->
-                <div v-if="this.showForumList.length === 1" class="flex items-center">
-                        <div class="w-[44px] h-[44px] rounded-md">
-                            <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
-                            
-                        </div>
-                        <div class="font-16 ml-2 xt-text">
-                            {{ this.showForumList[0].name }}
-                        </div>
+                <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
+                    <div class="w-[40px] h-[40px] rounded-md">
+                        <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+
                     </div>
+                    <div class="ml-2 font-16 xt-text">
+                        {{ this.showForumList[0].name }}
+                    </div>
+                </div>
                 <div class="flex  w-[376px] h-[44px] justify-center xt-bg rounded-lg " v-else>
-                    <div v-for="(item, index) in navTopList" :key="index"
+                    <div v-for="(item, index) in showForumList" :key="index"
                         class="w-[123px] h-[36px]  mt-1 mb-1 text-center leading-9 font-16"
                         :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-                        @click="setCurrentIndex(index,item)">{{
+                        @click="setCurrentIndex(index, item)">{{
                             item.name
                         }}</div>
                 </div>
                 <div>
-                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px] " @click="refreshPost"
-                        style="flex-shrink: 0;">
-                        <YuanIcon class="text-lg xt-text" style="vertical-align: sub;font-size: 20px;"
+                    <!-- <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
+                                <template #title>
+                                    <div class="xt-text font-16 xt-bg">
+                                        设置
+                                    </div>
+                                </template>
+                                <button class=" xt-bg-2" style="border: none;width: 25px;">
+                                    <clockIcon icon="fluent:settings-16-regular"
+                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
+                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
+                                    </clockIcon>
+                                </button>
+
+                            </a-tooltip>
+                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
+                                <template #title>
+                                    <div class="xt-text font-16 xt-bg">
+                                        设置
+                                    </div>
+                                </template>
+                                <button class=" xt-bg-2" style="border: none;width: 25px;">
+                                    <clockIcon icon="fluent:settings-16-regular"
+                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
+                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
+                                    </clockIcon>
+                                </button>
+
+                            </a-tooltip><a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
+                                <template #title>
+                                    <div class="xt-text font-16 xt-bg">
+                                        设置
+                                    </div>
+                                </template>
+                                <button class=" xt-bg-2" style="border: none;width: 25px;">
+                                    <clockIcon icon="fluent:settings-16-regular"
+                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
+                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
+                                    </clockIcon>
+                                </button>
+
+                            </a-tooltip> -->
+                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px] " style="flex-shrink: 0;">
+                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:add-16-filled" />
                     </button>
                     <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" @click="goYuan"
-                        style="flex-shrink: 0;">
-                        <YuanIcon class="text-lg xt-text" style="vertical-align: sub;font-size: 20px;"
+                        style="flex-shrink: 0;" v-if="false">
+                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:chat-16-regular" />
                     </button>
-                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" @click="goYuan"
-                        style="flex-shrink: 0;">
-                        <YuanIcon class="text-lg rotate-90 xt-text" style="vertical-align: sub; font-size: 20px;"
+                    <button class="ml-2 border-0 rounded-md xt-bg pointer w-[44px] h-[44px]" style="flex-shrink: 0;"
+                        @click="refreshPost">
+                        <YuanIcon class="text-lg rotate-90 xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
                             icon="akar-icons:arrow-clockwise" />
                     </button>
                 </div>
@@ -52,9 +92,10 @@
                     <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                 </div>
                 <div class="content" v-else>
-                    <div v-for="(item, index) in copyNum" style="display: flex;" class="">
+                    <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
                         <div class="item">
-                            <communItem :key="index" :copyNum="copyNum"  />
+                            <!-- {{ item.pc_summary }} -->
+                            <communItem :key="index" :copyNum="copyNum" :showForumPost="item" @click="showDetail(item)" />
                         </div>
 
                     </div>
@@ -74,14 +115,25 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
-            <div class="xt-bg-2 w-full h-[48px] rounded-xl flex justify-between items-center">
+            <!-- <div class="xt-bg-2 w-full h-[48px] rounded-xl flex justify-between items-center">
                 <div class="ml-2">
                     <a-tag closable v-for="(item, index) in forumList" style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer" >{{ item.name }}</a-tag>
                 </div>
                 <div>
                     <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
                 </div>
-            </div>
+            </div> -->
+            <a-select v-model:value="value" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange" :bordered="false">
+                <a-select-option :value="index" v-for="(item, index) in forumList" class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                                    {{ item.name }}
+                                </a-select-option>
+                <template #clearIcon>
+                    <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
+                </template>
+                <template #suffixIcon>
+                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
+                </template>
+            </a-select>
         </a-drawer>
     </div>
 </template>
@@ -91,7 +143,8 @@ import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './communItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
-import {yuanCommunityStore} from '../../../store/yuanCommunity.ts'
+import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
+import browser from '../../../js/common/browser'
 export default {
     name: '元社区',
     components: {
@@ -138,29 +191,18 @@ export default {
             },
             menuList: [
                 {
-                    icon: 'shezhi1', 
+                    icon: 'shezhi1',
                     title: '设置',
                     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
                 },
             ],
             currentIndex: 0,
             settingVisible: false,
-            navTopList: [
-                {
-                    name: '影视圈'
-                },
-                {
-                    name: '直播圈',
-                },
-                {
-                    name: '音乐圈'
-                }
-            ],
             currentIndex: 0,
             isLoading: false,
             pageToggle: true,
-            dataType:[{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
-            defaultType:{ title: '我加入的圈子', name: '我加入的圈子' },
+            dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
+            defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
         }
     },
     methods: {
@@ -168,17 +210,23 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
-        async setCurrentIndex(index,item) {
+        async setCurrentIndex(index, item) {
             this.currentIndex = index
             await this.communityPost(item.id)
-            console.log(this.showForumPost,'this.showForumList');
+            console.log(this.showForumPost, 'this.showForumList');
         },
-        refreshPost(){
-            console.log(this.showForumPost);
+        async refreshPost() {
+            this.isLoading = true
+            await this.getCommunityPost(this.showForumList[0].id)
+            this.isLoading = false
+        },
+        showDetail(item) {
+            console.log(item)
+            browser.openInUserSelect(`https://s.apps.vip/post/${item.id}`)
         }
     },
     computed: {
-        ...mapWritableState(yuanCommunityStore,['communityPost','myForumList']),
+        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -191,23 +239,26 @@ export default {
             return this.showSize.height == 2 ? 3 : 5
 
         },
-        forumList(){
-            this.customData.forumList=this.myForumList.joined
+        forumList() {
+            this.customData.forumList = this.myForumList.joined
             return this.customData.forumList
         },
-        showForumList(){
-            if(this.customData && this.customData.forumList){
-                return this.customData.forumList.slice(0,3)
+        showForumList() {
+            if (this.customData && this.customData.forumList) {
+                return this.customData.forumList.slice(0, 3)
             }
-            return this.myForumList.joined.slice(0,3)
+            return this.myForumList.joined.slice(0, 3)
         },
-        forumPost(){
-            this.customData.forumPost=this.communityPost.list
+        async forumPost() {
+            this.customData.forumPost = await this.communityPost.list
             return this.customData.forumPost
         },
-        // showForumPost(){
-        //     return this.forumPost.slice(0,this.copyNum)
-        // }
+        showForumPost() {
+            if (this.customData && this.customData.forumPost) {
+                return this.customData.forumPost.slice(0, this.copyNum)
+            }
+            return this.communityPost.list.slice(0, this.copyNum)
+        }
     },
     async mounted() {
         this.isLoading = true
@@ -218,6 +269,18 @@ export default {
 }
 </script>
 <style>
+.clock-icon {
+    cursor: pointer;
+    transition: transform 0.3s;
+    /* 添加一个过渡效果 */
+}
+
+.clock-icon:hover {
+    transform: scale(1.3);
+    /* 鼠标悬停时放大 */
+    background-color: var(--secondary-bg);
+}
+
 .action {
     background: var(--active-bg);
     border-radius: 8px;
@@ -231,12 +294,18 @@ export default {
     color: var(--active-text);
     border: none;
 }
-:deep(.ant-tag-close-icon){
+
+:deep(.ant-tag-close-icon) {
     color: var(--secondary-text);
     margin-left: 8px;
     font-size: 12px;
 }
-:deep(.ant-drawer-title){
+
+:deep(.ant-drawer-title) {
     color: var(--primary-text) !important;
 }
+:deep(.ant-select-selection-item ){
+    background: rgba(80,139,254,0.20);
+}
+
 </style>

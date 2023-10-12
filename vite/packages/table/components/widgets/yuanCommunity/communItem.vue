@@ -1,15 +1,17 @@
 <template>
-    <div class="w-full h-[96px] pl-3 pr-3 pt-3 pb-2 mb-2">
+    <div class="w-full h-[96px] pl-3 pr-3 pt-3 pb-2 mb-2 pointer">
         <div class="flex items-center justify-between">
             <div class="mr-3">
-                <div class="mb-2 xt-text-2 font-14" style="text-align: left;">
-                    @{{ name }}
+                <!-- {{ showImg }} -->
+                <!-- {{ img }} -->
+                <div class="mb-2 xt-text-2 font-14" style="text-align: left;" >
+                    @{{ detailPost.user.nickname }}
                 </div>
                 <div class="xt-text font-16 content-text" style="text-align: left;">
-                    {{ content }}
+                    {{ detailPost.summary }}
                 </div>
             </div>
-            <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" >
+            <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" >
             </div>
         </div>
     </div>
@@ -17,15 +19,25 @@
 
 <script setup lang='ts'>
 import { ref, reactive ,computed} from 'vue'
-// const props=defineProps({
-//     showForumPost: {
-//         type: Array,
-//         default: () => []
-//     },
-// })
-const name = ref('阳光彩虹小白马')
-const content = ref('终于通关了一款难度很高的游戏，感觉自己真的很厉害！ #游戏大神# #通关挑战#哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈')
-// const detailPost=computed(() => props.showForumPost)
+const props=defineProps({
+    showForumPost: {
+        type: Array,
+        default: () => []
+    },
+})
+const detailPost=computed(() => props.showForumPost)
+const imageList=computed(() => {
+    return detailPost.value.image_170_170
+})
+const showImg=computed(() => {
+    if(imageList.value[0]){
+        return true
+    }
+    return false
+})
+const img=computed(() => {
+    return imageList.value[0].image
+})
 </script>
 <style lang='scss' scoped>
 .font-14 {
@@ -42,7 +54,7 @@ const content = ref('终于通关了一款难度很高的游戏，感觉自己�
 }
 
 .content-text {
-    white-space: pre-wrap;
+    white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -57,5 +69,6 @@ const content = ref('终于通关了一款难度很高的游戏，感觉自己�
     margin-right: 12px;
     background-size: cover;
     cursor: pointer;
+    flex-shrink: 0;
   }
 </style>
