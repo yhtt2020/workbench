@@ -209,6 +209,11 @@ export default {
           message.error('导出失败，请确认文件权限。')
         }
       })
+    },
+    add(){
+      this.$router.push({
+        name:'editScheme'
+      })
     }
   }
 }
@@ -250,15 +255,15 @@ export default {
       </div>
       <div>
         <div class="btn-item mt-3">
-          <div v-if="exeName" class="pointer" @click="createScheme">
-            <plus-outlined/>
-            创建方案
-          </div>
+
           <!--          <div v-if="!selecting" class="pointer" @click="market">创意市场</div>-->
 
           <!--          <span class="button-active pointer" @click="setShow = true">-->
           <!--                <Icon icon="setting" style="width: 20px;height: 20px;color:var(&#45;&#45;primary-text);"></Icon>-->
           <!--            </span>-->
+          <xt-button @click="createScheme">
+            <Icon class="icon" icon="akar-icons:edit"> </Icon> 创建
+          </xt-button>
           <template v-if="selecting">
             <xt-button v-if="selecting" @click="importSchemes">
               <Icon class="icon" icon="akar-icons:download"> </Icon> 导入
@@ -273,9 +278,14 @@ export default {
              <Icon class="icon" icon="akar-icons:x-small"> </Icon>  退出
             </xt-button>
           </template>
-          <xt-button v-if="!selecting" @click="edit">
-            管理
-          </xt-button>
+
+          <template v-if="!selecting">
+
+            <xt-button  @click="edit">
+              <Icon class="icon" icon="akar-icons:chevron-left"> </Icon> 管理
+            </xt-button>
+
+          </template>
 
         </div>
       </div>

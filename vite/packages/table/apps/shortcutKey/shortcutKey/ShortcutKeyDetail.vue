@@ -55,7 +55,13 @@
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
                             :style="showSide ? 'width: 80%;' : 'width:100%'">
+        <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
+          此方案暂时没有任何快捷键 <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
+
+
+        </div>
         <div class="key-box" :style="keyBoxStyle">
+
           <div v-for="(item,index) in filteredKeyList" :key="item.id">
             <!-- 分组名称 -->
             <div :id="'groupId_' + item.id" class="key-item border-right " style="margin-top: 15px" v-if="item.groupName"
@@ -183,10 +189,12 @@ import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
 import {isGroupLast,isGroupFirst} from '../lib/lib'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 export default {
   name: 'ShortcutKeyDetail',
   components: {
+    XtButton,
     NotShortcutKey,
     // ShortcutKeyList,
     Search

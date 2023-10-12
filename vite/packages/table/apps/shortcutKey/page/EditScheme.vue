@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3   box">
+  <div class="p-3   box h-full " style="overflow: hidden">
     <!-- 头部导航栏 -->
 
     <div class="flex    ">
@@ -8,7 +8,6 @@
              class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;color:var(--primary-text)"></Icon>
         </div>
-        <div class="ml-3" style="font-size: 18px;line-height: 40px">关联软件： {{ exeName }}</div>
       </div>
 
       <div class="flex btn-item">
@@ -33,7 +32,7 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar shape="square" :size="100" :src="file.path ? file.path : icon"/>
+            <a-avatar shape="square" :size="100" :src="form.icon"/>
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
@@ -48,14 +47,22 @@
             :beforeUpload="beforeUpload"
             accept="image/jpeg,image/jpg,image/png"
           >
-            <div class="pointer xt-bg-2 xt-text-2 flex items-center rounded-lg justify-center mr-3 mt-2"
-                 @click="imageSelect" style="width:120px; height:48px;">自定义上传
-            </div>
+           <div class="flex mt-2">
+             <xt-button class="mr-2" type="theme"
+                        @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传
+             </xt-button>
+             <xt-button
+               @click.stop="resetIcon" style="width:120px; height:48px;">同软件图标
+             </xt-button>
+           </div>
           </a-upload>
         </div>
       </div>
       <span>方案名称</span>
       <a-input v-model:value="applyName" spellcheck="false" class="input" placeholder="请输入方案名称"
+               aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
+      <span>关联的软件</span>
+      <a-input v-model:value="form.exeName" spellcheck="false" class="input" placeholder="请输入软件程序（形如 explorer.exe）"
                aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text" placeholder="请输入描述"
@@ -281,6 +288,10 @@ export default {
 
   data () {
     return {
+      form:{
+        icon:'',
+        exeName:''
+      },
       saved: true,//是否已经保存
       currentItem: {},//当前在编辑的对象
       currentType: '',
@@ -365,7 +376,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme','getCustomApp']),
     completeEdit () {
       this.saved = false
       message.success('完成编辑')
@@ -390,20 +401,30 @@ export default {
         this.paramsId = this.$route.params.id
         // let usedList = this.deepClone({},this.recentlyUsedList)
         this.recentlyUsedList.find(i => {
-          if (i.id == this.paramsId) {
+          if (i.id === this.paramsId) {
             let item = JSON.parse(JSON.stringify(this.deepClone({}, i)))
+            console.log('找到的item',item)
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
             this.applyName = item.name
             this.introduce = item.commonUse
+            this.form.exeName= item.exeName.join(',')
+            this.form.icon=this.file.path ? this.file.path : this.icon
           }
         })
         //执行添加默认添加一个可编辑的空数据
         this.addShortcutKey()
       } else {
-        this.applyName = this.currentApp.software.alias
-        this.icon = this.currentApp.software.icon
+        if(this.$route.params.exeName){
+
+          let app=await this.getCustomApp(this.$route.params.exeName)
+          console.log('查到app',app)
+          this.applyName =app.alias
+          this.form.icon=app.icon
+          this.form.exeName= app.exeName
+        }
+
       }
     },
     //深拷贝
@@ -430,6 +451,7 @@ export default {
     // 保存
     doSaveScheme () {
       if (!this.applyName) return message.info('名称不能为空')
+      if (!this.form.exeName) return message.info('必须填写方案对应的软件')
       this.delNotData()
 
       let sum = 0
@@ -439,17 +461,18 @@ export default {
         }
       })
       if (this.paramsId !== -1) {
-        this.appContent.icon = this.icon || this.file.path
+        this.appContent.icon =this.form.icon
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
         this.appContent.number = this.keyList.length
+        this.appContent.exeName= this.form.exeName
         this.saveScheme(this.appContent)
       } else {
         const time = new Date().valueOf()
         this.appContent = {
           id: nanoid(),  //唯一标识
-          icon: this.file.path || this.icon, //方案的图片
+          icon: this.form.icon, //方案的图片
           name: this.applyName, //方案名称
           number: this.keyList.length, //快捷键总数
           commonUse: this.introduce, //方案简介
@@ -464,9 +487,9 @@ export default {
           isShare: false, //是否分享到社区
           isCommunity: false, //是否来自社区
           keyList: this.keyList, //快捷键列表
-          exeName: this.exeName,
+          exeName: this.form.exeName,
         }
-        this.addScheme(this.appContent, this.exeName)
+        this.addScheme(this.appContent, this.form.exeName)
       }
       this.saved = true
       message.success('成功保存')
@@ -835,6 +858,9 @@ export default {
       }
       return isJpgOrPng && isLt2M
     },
+    resetIcon(){
+      this.form.icon=''
+    },
     // 上传头像
     uploadImage (file) {
       this.file = file.file
@@ -889,7 +915,8 @@ export default {
 
     //   }
     // }
-  }
+  },
+
 }
 </script>
 
