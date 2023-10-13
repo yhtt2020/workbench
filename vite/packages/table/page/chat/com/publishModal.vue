@@ -13,7 +13,7 @@
 
             </div>
             <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
-                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click="goYuan">元社区</a>
+                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan">元社区</a>
             </div>
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
@@ -65,7 +65,7 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" placeholder="想天工作台/桌面分享" :loadData="loadData" :bordered="false" @change="handleChange"
+                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName.name" :loadData="loadData" :bordered="false" @change="handleChange"
                     style=" font-size: 14px; border-radius: 10px;" change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
@@ -195,7 +195,7 @@ onMounted(() => {
     textareaElement?.focus()
     useCommunStore.getCommunityInfo(props.forumId)
     useCommunStore.getCommunityCate(props.forumId)
-    // console.log(useCommunStore.communityCate[0].id);
+    console.log(useCommunStore.communityInfo.forum.name);
     // console.log(navigator.plugins);
 
 
@@ -225,6 +225,9 @@ const handleChange = (value) => {
     cascaderValue.value = value
     console.log(cascaderValue.value);
 }
+const holderName=computed(() => {
+    return useCommunStore.communityInfo.forum
+})
 const settingsScroller = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,

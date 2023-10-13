@@ -16,39 +16,75 @@
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 10px;"
           placeholder="搜索"
+          v-model:value="searchValue"
+          @change="searchIcon"
         />
         <!-- 随机 -->
-        <div class="flex justify-center items-center pointer"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
-          <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
-        </div>
+        <a-tooltip>
+          <template #title>随机</template>
+          <div class="flex justify-center items-center pointer"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
+            <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
+          </div>
+        </a-tooltip>
         <!-- 颜色选择 -->
         <div v-show="selIndex == 2" class="flex justify-center items-center pointer" style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
-          <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
-          <!--  -->
-          <div class="select-color flex" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;">
-            <div v-for="(item,index) in bgColor" class="flex justify-center items-center pointer mt-3 ml-3" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
-              <div class="circle" :style="{background:bgColor[index]}" @click="onChangeColor"></div>
+          
+          <a-tooltip>
+            <template #title>颜色选择</template>
+            <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
+          </a-tooltip>
+          
+          <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;">
+            <div class="ml-4 mt-2">自定义</div>
+            <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
+              <XtBaseColor v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
+            </div>
+            <div class="ml-4 mt-1">系统预设</div>
+            <div class="flex flex-wrap">
+              <div v-for="(item,index) in bgColor.slice(0,6)" class="flex justify-center items-center pointer mt-2 ml-3" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
+                <div class="circle" :style="{background:bgColor[index]}"></div>
+              </div>
             </div>
           </div>
         </div>
         
 
       </div>
+      <!-- 搜索结果 -->
+      <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
+        <div v-for="(item,index) in searchList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <a-tooltip>
+            <template #title>{{ item.alias }}</template>
+            <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
+            <a-avatar v-show="selIndex==2"  :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20"></a-avatar>
+          </a-tooltip>
+        </div>
+      </div>
       <!-- emojis -->
-      <div v-if="this.selIndex == 1" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
+      <div v-else-if="this.selIndex == 1" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
         <div v-for="(item,index) in emojisList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <img :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32">
+          <a-tooltip>
+            <template #title>{{ item.alias }}</template>
+            <a-avatar :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
+          </a-tooltip>
         </div>
       </div>
       <!-- icon -->
       <div v-else-if="this.selIndex == 2" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
         <div v-for="(item,index) in iconList" :key="index" @click="onSelectIcon(index,'icon',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <img :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20">
+          <a-tooltip>
+            <template #title>{{ item.alias }}</template>
+            <div>
+              <a-avatar :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20"></a-avatar>
+            </div>
+          </a-tooltip>
         </div>
       </div>
       <div v-else class="flex pl-1 pr-1 items-center" style="flex-wrap: wrap;flex-direction:column;">
         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
-        <div v-if="!avatarUrl" class="pointer" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: #2A2A2A;border: 1px solid rgba(255,255,255,0.1);border-radius: 6px;"></div>
+        <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: #2A2A2A;border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
+          <Icon :icon="icons.add16Filled" width="20" height="20"/>
+        </div>
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
         <div class="mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">{{ this.customTitle }}</div>
         <div class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</div>
@@ -62,11 +98,12 @@
 </template>
   
   <script>
+  import icon from '../components/IconListData/icon'
+  import emojis from '../components/IconListData/emojis'
+  import {fileUpload} from '../../table/components/card/hooks/imageProcessing'
   import { Icon } from '@iconify/vue';
   import arrowSync20Filled from '@iconify-icons/fluent/arrow-sync-20-filled';
-  import emojis from '../components/IconListData/emojis'
-  import icon from '../components/IconListData/icon'
-  import {fileUpload} from '../../table/components/card/hooks/imageProcessing'
+  import add16Filled from '@iconify-icons/fluent/add-16-filled';
   export default {
     name: "SelectIcon",
     components: {
@@ -75,77 +112,118 @@
       icon,
     },
     props:{
-      isCustom:String,
+      isCustom:Boolean,
       customTitle:String,
-
     },
-    // props:['isCustom','customTitle'],
     data() {
       return { 
-        // 头像
+        // 上传头像
         avatarUrl:'',
         // 选择图标的类型
         selIndex:1,
+        // 搜索内容
         searchValue:'',
+        // 搜索结果渲染
+        searchList:[],
         // 选择的第几个图标
         selectIcon:-1,
         selBgColor:0,
-        bgColor:['#555555','#666666','#777777','#000000','#222222','#333333'],
+        bgColor:['#508bfe','#ff6c61','#73cf77','#3dffed','#ed7149','#ffffff','#000000'],
         isShowBgColor:false,
         icons:{
-          arrowSync20Filled
+          arrowSync20Filled,
+				  add16Filled,
         },
         iconList:icon.list,
         emojisList:emojis.list,
+        
       }  
     },
     
     methods: {
+
       // 选择图标类型
       onSelChange(n){
         this.selIndex = n
         this.selectIcon = -1
+        this.searchValue = ''
       },
-      // 选择第几个图标
+
+      // 选择图标
       onSelectIcon(n,type,url){
         this.selectIcon = n
-        if(type=='emoji'){
+        if(this.selIndex==1){
           this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+url+'.svg')
-        }else if(type == 'icon'){
-          // console.log(this.bgColor[this.selBgColor]);
+        }else{
           this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+url+'.svg?color=' + this.bgColor[this.selBgColor])
         }
-      },
-      //随机图标 
-      onRandom(){
-        let randomNum = this.selIndex==1?this.emojisList.length:this.iconList.length
-        this.selectIcon = Math.round(Math.random()*48);
-      },
-      setSvgColor(){
+        
+        this.$emit('isIconShow')
 
       },
+
+      //随机图标 
+      onRandom(){
+        let randomLength = this.selIndex==1?this.emojisList.length:this.iconList.length
+        let randomNum = Math.round(Math.random()*randomLength);
+        this.selectIcon = randomNum;
+        if(this.selIndex == 1){
+          this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+this.emojisList[randomNum].name+'.svg')
+        }else{
+          this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+this.iconList[randomNum].name+'.svg?color=' + this.bgColor[this.selBgColor])
+        }
+      },
+
+      // 改变颜色
       changeBgColor(n){
         this.selBgColor = n
+        if(this.selIndex==2){
+          this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+this.iconList[this.selectIcon].name+'.svg?color=' + this.bgColor[this.selBgColor])
+        }
       },
+
       // 上传文件
       async getFileInfo(evt){
         const files = evt.target.files[0]
         const res  = await fileUpload(files)
-        // console.log('获取头像::>>',res)
         this.avatarUrl = res
         this.$emit('getAvatar',this.avatarUrl)
       },
+
       // 更换头像
       async updateGroupAvatar(){
         document.querySelector('#groupFileID').click()
       },
+
       // 清楚已上传信息
       clearAvatar(){
         this.avatarUrl=''
+        this.$emit('getAvatar','https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn')
+
       },
-      // 上传文件确认
+      // 确认
       changeAvatar(){
         this.$emit('getAvatar',this.avatarUrl)
+        this.$emit('isIconShow')
+      },
+
+      // 搜索
+      searchIcon(){
+        let tmpList = []
+        if (this.selIndex == 1) {
+          this.emojisList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }else if(this.selIndex == 2){
+          this.iconList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }
+        this.searchList = tmpList
       },
 
     },
@@ -169,6 +247,15 @@
     z-index: 100;
     top: 50%;
   }
+
+  .float-icon :deep(.ant-avatar){
+    border-radius: 0 !important;
+  }
+  .float-icon :deep(.zs-color-picker-btn-color){
+    border-radius: 50% !important;
+    width: 24px;
+    height: 24px;
+  }
     .top-icon{
       height: 48px;
       border-bottom: 1px solid rgba(255,255,255,0.10);
@@ -176,9 +263,6 @@
       justify-content: space-between;
     }
 
-    .top-icon .type-select{
-      
-    }
     
     .top-icon .type-select span{
       display: flex;
@@ -205,14 +289,14 @@
     }
 
     .circle{
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
     }
 
     .select-color{
       width:166px;
-      height:116px;
+      height:204px;
       background: #212121;
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);

@@ -117,7 +117,7 @@
 <script setup lang='ts'>
 import { ref, computed, reactive } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-import Comment from './comment.vue';
+import Comment from './Comment.vue';
 import { useCommunityStore } from '../commun'
 import { appStore } from '../../../../table/store'
 import { Icon } from '@iconify/vue';

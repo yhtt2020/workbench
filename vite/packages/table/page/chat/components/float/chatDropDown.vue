@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown trigger="click" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
+  <a-dropdown :trigger="['click']" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
    <div class="flex pointer items-center justify-center">
     <DorpIcon icon="fluent:more-horizontal-16-filled" style="font-size: 1.5rem;"></DorpIcon>
    </div>
@@ -15,12 +15,12 @@
           <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
         </a-menu-item>
         
-        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0; padding:0 8px !important; background-color: var(--divider);"></a-divider>
+        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0;  background-color: var(--divider);"></a-divider>
         
         <a-menu-item v-if=" index >= dropDownList.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
           @click="selectMenuItem(item,index)">
           <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
-          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
+          <span class="pl-4 font-16" :style="item.type === 'deletePacket' ? { color:'var(--error)' } : { color:'var(--primary-text)' }"> {{ item.title }}</span>
         </a-menu-item>
       </template>
     </a-menu>
@@ -34,6 +34,7 @@
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
      <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
+     <AddLeftChildChannel :no="no" v-if="type === 'addNewApp'" :id="data.id" @close="categoryShow = false"></AddLeftChildChannel>
     </Modal>
   </teleport>
  
@@ -47,19 +48,19 @@
  import { message,Modal as DownModal } from 'ant-design-vue'
  
  import Modal from '../../../../components/Modal.vue'
- import CreateNewCategory from '../createNewCategory.vue'
- import MenuCategory from '../menuCategory.vue'
- import InviteOther from '../inviteOther.vue'
- import PacketSetting from '../knownCategory/packetSetting.vue'
-
+ import CreateNewCategory from '../CreateNewCategory.vue'
+ import MenuCategory from '../MenuCategory.vue'
+ import InviteOther from '../InviteOther.vue'
+ import PacketSetting from '../knownCategory/PacketSetting.vue'
+ import AddLeftChildChannel from '../AddLeftChildChannel.vue'
  
  export default defineComponent({
   components:{
    DorpIcon,Modal,CreateNewCategory,MenuCategory,InviteOther,
-   PacketSetting,
+   PacketSetting,AddLeftChildChannel
   },
  
-  props:['list','no','data'],
+  props:['list','no','data','id'],
  
   setup (props,ctx) {
 
@@ -109,7 +110,7 @@
       break;
      case 'deletePacket':
       DownModal.confirm({
-        content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
+        content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
         centered:true,
         onOk: async ()=>{
           const res = await community.removeCategory(props.data.id)
@@ -124,6 +125,11 @@
 
       break;
      case 'packetSet':
+      setTimeout(()=>{
+        data.categoryShow = true
+      },350)
+      break;
+     case 'addNewApp':
       setTimeout(()=>{
         data.categoryShow = true
       },350)
@@ -145,6 +151,7 @@
   background-color:var(--secondary-bg) !important;
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
   width: 200px;
+  padding: 8px 0;
  }
  
  :deep(.select){
@@ -178,8 +185,8 @@
  }
 
  :deep(.ant-divider-horizontal){
-  max-width:90% !important;
-  width:90% !important;
+  min-width:78% !important;
+  width:78% !important;
  }
  </style>
  
