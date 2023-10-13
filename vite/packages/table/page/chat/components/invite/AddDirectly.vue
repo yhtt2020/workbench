@@ -1,6 +1,6 @@
 <template>
- <div>
-  
+ <div class="flex flex-col" style="width:667px;">
+   
  </div>
 </template>
 

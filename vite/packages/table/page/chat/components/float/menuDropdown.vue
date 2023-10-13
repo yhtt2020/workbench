@@ -11,6 +11,7 @@
   <Modal v-if="menuDropShow" v-model:visible="menuDropShow" :blurFlag="true" style="z-index:1000 !important;">
     <PacketSetting v-if="type === 'packetSet'" :item="item" :no="no" @close="menuDropShow = false" ></PacketSetting>
     <AddLeftChildChannel v-if="type === 'addNewApp'" :id="id" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
+    <LinkSetting v-if="type === 'linkSet'" :item="item" :no="no" :id="id" @close="menuDropShow = false"/>
   </Modal>
  </teleport>
 </template>
@@ -24,12 +25,14 @@ import { communityStore } from '../../store/communityStore'
 import PacketSetting from '../knownCategory/PacketSetting.vue'
 import Modal from '../../../../components/Modal.vue'
 import AddLeftChildChannel from '../AddLeftChildChannel.vue'
+import LinkSetting from '../knownCategory/LinkSetting.vue'
+
 
 export default {
  props:['list','id','no','position','item'],
 
  components:{
-  DropIcon,PacketSetting,Modal,AddLeftChildChannel
+  DropIcon,PacketSetting,Modal,AddLeftChildChannel,LinkSetting
  },
 
  data(){
@@ -43,14 +46,13 @@ export default {
   ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
 
   selectItem(item){
-   // console.log('测试');
    this.type = item.type
    switch (item.type) {
     case 'packetSet':
      this.menuDropShow = true
      break;
     case 'linkSet':
-
+     this.menuDropShow = true
      break;
     case 'deleteApp':
      //  console.log('获取id::>>',this.id);

@@ -174,9 +174,9 @@ import { communityStore } from '../../store/communityStore'
 import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
-import ChatDropDown from './chatDropDown.vue';
-import ChatFold from './chatFold.vue'
-import MenuDropdown from './menuDropdown.vue'
+import ChatDropDown from './ChatDropDown.vue';
+import ChatFold from './ChatFold.vue'
+import MenuDropdown from './MenuDropdown.vue'
 import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
 
 export default{

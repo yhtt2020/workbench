@@ -14,7 +14,7 @@
 
 
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
-      <div class="px-4 mb-0 line-title">
+      <div class="px-4 mb-0 line-title flex items-center">
         <span style="vertical-align: text-top">
           <template v-if="currentChannel.type === 'group'">
            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
@@ -55,13 +55,17 @@
         <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id"/>
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
-          <div v-if="currentChannel.name !== 'Roadmap'" style="text-align: center;margin-top: 30%">
+          <div v-if="currentChannel.name !== 'Roadmap' && currentChannel.props.openMethod !== 'currentPage'" class="flex items-center justify-center" style="text-align: center;margin-top: 30%">
 
-            当前频道需要浏览器打开。
+            <span class="category-16-400" style="color:var(--primary-text);">当前频道需要浏览器打开。</span>
+            <communityIcon icon="fluent:open-20-filled"  style="font-size: 24px"/>
           </div>
 
-          <iframe v-else :src="JSON.parse(currentChannel.props).url" class="m-2"
-                  style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
+          <iframe v-else :src="currentChannel.props.url"  class="m-2" frameborder="0"
+          allow="encrypted-media" frame-ancestors="*"
+          style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)">
+
+          </iframe>
 
         </template>
 
@@ -170,9 +174,9 @@ export default {
       // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
       // console.log('转换的数据',data)  
       switch (data.openMethod) {
-        case 'currentPage':
-          
-          break;
+        // case 'currentPage':
+        //   browser.openInTable(data.url)
+        //   break;
         case 'userSelect':
           browser.openInUserSelect(data.url)
           break;
