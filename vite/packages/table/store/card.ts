@@ -506,7 +506,7 @@ export const cardStore = defineStore(
             let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
             let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
-            return timeDiff<30 && timeDiff>0
+            return timeDiff<=30 && timeDiff>0
             
           })
           // console.log(this.filterClockEvent);
@@ -517,7 +517,7 @@ export const cardStore = defineStore(
             let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
             // console.log(timeDiff);
-            return timeDiff<60 && timeDiff>0
+            return timeDiff<=60 && timeDiff>0
           })
         }else if(this.clockTag=='always'){
           this.filterClockEvent = this.clockEvent
