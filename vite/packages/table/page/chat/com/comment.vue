@@ -12,7 +12,7 @@
 <script setup lang='ts'>
 import { ref, computed } from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
-import reply from './reply.vue'
+import reply from './Reply.vue'
 import {useCommunityStore} from '../commun'
 const current = ref(1)
 const changePage=(val)=>{

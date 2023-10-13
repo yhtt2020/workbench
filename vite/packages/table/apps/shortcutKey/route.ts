@@ -5,7 +5,7 @@ import ShareKey from "./page/EditScheme.vue"
 import SchemeDetail from './page/SchemeDetail.vue'
 import Settings from './page/Settings.vue'
 import EditApp from './page/EditApp.vue'
-
+import CreativeMarket from './page/CreativeMarket.vue'
 
 export default {
   path: '/shortcutKey',
@@ -24,6 +24,16 @@ export default {
       meta:{
         tab1:'work',
         tab2:'shortcut'
+      }
+    },
+    {
+      path: '',
+      name: 'shortcutStore',
+      component: CreativeMarket,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut',
+        tab3:'store'
       }
     },
     {

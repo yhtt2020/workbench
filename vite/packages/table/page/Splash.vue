@@ -184,7 +184,11 @@ export default {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
       if (localStorage.getItem('wizarded')) {
-        this.$router.replace({ name: 'home' })
+       if(appStore().currentRoute){
+         this.$router.replace(appStore().currentRoute)
+       }else{
+         this.$router.replace({ name: 'home' })
+       }
       } else {
 
       }

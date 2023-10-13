@@ -174,8 +174,8 @@
                                 </template>
                                 <button class=" xt-bg-2" style="border: none;width: 25px;">
                                     <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; background: rgba(80,139,254,0.20);" @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon">
+                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
+                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
                                     </clockIcon>
                                 </button>
 
@@ -233,9 +233,9 @@
 
         </xt-button>
         <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar " v-else @click="closeDetail"
-            style="width: 132px; height: 32px;background: rgba(80,139,254,0.20);">
+            style="width: 82px; height: 32px;background: rgba(80,139,254,0.20);">
             <div class="flex items-center">
-                <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 text-base"></clockIcon>
+                <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
                 <!-- <div class="mr-2 xt-text font-14">闹钟</div> -->
                 <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">{{ firstClockTime?.hours }} : {{
                     firstClockTime?.minutes }} </div>
@@ -493,39 +493,39 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 :deep(.tippy-content) {
     padding: 0px !important;
 }
-:deep(.ant-radio-button-wrapper) {
-    // border: 1px solid var(--primary-text);
-    border-bottom: none;
+// :deep(.ant-radio-button-wrapper) {
+//     // border: 1px solid var(--primary-text);
+//     border-bottom: none;
 
-}
+// }
 
-:deep(.ant-radio-button-wrapper) {
-    &:nth-child(21) {
-        border-bottom: 1px solid var(--primary-text);
-        // border-left:  solid var(--primary-text);
-    }
-    &:nth-child(22),&:nth-child(23),&:nth-child(24),&:nth-child(19),&:nth-child(20) {
-        border-bottom: 1px solid var(--primary-text);
-    }
-    &:nth-child(1){
-        border-radius:10px 0 0 0;
-    }
-    &:nth-child(6){
-        border-radius:0 10px 0 0;
-    }
-    &:nth-child(19){
-        border-radius:0 0 0 10px ;
-    }
-    &:nth-child(24){
-        border-radius:0 0 10px 0 ;
-    }
-    // &:nth-child(7),&:nth-child(13){
-    //     border-left: 1px solid var(--primary-text);
-    // }
-    // &:nth-child(19){
-    //     border-left: 1px solid var(--primary-text);
-    // }
-}
+// :deep(.ant-radio-button-wrapper) {
+//     &:nth-child(21) {
+//         border-bottom: 1px solid var(--secondary-text);
+//         // border-left:  solid var(--primary-text);
+//     }
+//     &:nth-child(22),&:nth-child(23),&:nth-child(24),&:nth-child(19),&:nth-child(20) {
+//         border-bottom: 1px solid var(--primary-text);
+//     }
+//     &:nth-child(1){
+//         border-radius:10px 0 0 0;
+//     }
+//     &:nth-child(6){
+//         border-radius:0 10px 0 0;
+//     }
+//     &:nth-child(19){
+//         border-radius:0 0 0 10px ;
+//     }
+//     &:nth-child(24){
+//         border-radius:0 0 10px 0 ;
+//     }
+//     // &:nth-child(7),&:nth-child(13){
+//     //     border-left: 1px solid var(--primary-text);
+//     // }
+//     // &:nth-child(19){
+//     //     border-left: 1px solid var(--primary-text);
+//     // }
+// }
 .popupClass {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
@@ -613,7 +613,11 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     font-weight: 400;
 
 }
-
+.setting-hover{
+    &:hover{
+        background: rgba(80,139,254,0.20);
+    }
+}
 :deep(.ant-input-number-handler-wrap) {
     background-color: var(--secondary-bg);
     border: none !important;

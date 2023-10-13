@@ -289,11 +289,13 @@ import GameInformation from '../widgets/gameInformation/index.vue'
 import HistoryInfo from '../widgets/historyInfo/index.vue'
 import ShortcutKey from '../../apps/shortcutKey/widget/index.vue'
 import ClipBoard from '../widgets/clipBoard/index.vue'
-import CommunityGuider from '../widgets/openSNS/communityGuider.vue'
-import CommunityTodo from '../widgets/openSNS/communityTodo.vue'
-import SmallCommunityDashboard from '../widgets/openSNS/smallCommunityDashboard.vue'
-import MiddleCommunityDashboard from '../widgets/openSNS/middleCommunityDashboard.vue'
-import CommunityChart from '../widgets/openSNS/communityChart.vue'
+
+import Guider from '../widgets/shortTalk/page/Guider.vue'
+import ShortTodo from '../widgets/shortTalk/page/ShortTodo.vue'
+import SmallDashboard from '../widgets/shortTalk/page/SmallDashboard.vue'
+import MiddleDashboard from '../widgets/shortTalk/page/MiddleDashboard.vue'
+import ShortChart from '../widgets/shortTalk/page/ShortChart.vue'
+
 import TimerChart from '../../apps/tomato/page/Chart.vue'
 import TimerClock from '../../apps/tomato/page/Clock.vue'
 
@@ -328,11 +330,11 @@ export default {
     HistoryInfo,
     ShortcutKey,
     ClipBoard,
-    CommunityGuider,
-    CommunityTodo,
-    SmallCommunityDashboard,
-    MiddleCommunityDashboard,
-    CommunityChart,
+    Guider,
+    ShortTodo,
+    SmallDashboard,
+    MiddleDashboard,
+    ShortChart,
     TimerChart,
     TimerClock,
     News,

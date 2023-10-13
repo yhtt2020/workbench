@@ -4,21 +4,26 @@ import Search from "../../../components/Search.vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
-import NotShortcutKey from "./NotShortcutKey.vue";
 import {PlusOutlined, EditOutlined} from '@ant-design/icons-vue'
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import {message, Modal} from "ant-design-vue";
-import { Icon  } from "@iconify/vue";
+import {Icon} from "@iconify/vue";
+import Preview from "./Preview.vue";
+
 export default {
-  name: "schemeList",
-  components: {VueCustomScrollbar, NotShortcutKey, XtButton, Search, PlusOutlined, EditOutlined,Icon},
+  name: "localSchemeList",
+  components: {Preview, VueCustomScrollbar, XtButton, Search, PlusOutlined, EditOutlined, Icon},
+  props: ['schemes','keywords'],
   data() {
     return {
       loading: true,
       shortcutSchemeList: [],
-      app:{},
+      selectedSchemeIds:[],//选中的schemes
+      app: {},
       exeName: '',
       selecting: false,//选择
+      previewVisible:false,
+      previewKeys:{},
       settings: {
         default: {
           useBothWheelAxes: true,
@@ -32,17 +37,37 @@ export default {
   },
   computed: {
     ...mapWritableState(keyStore, ['shortcutKeyList', 'schemeList', 'currentApp', 'settings']),
+    list(){
+      if(!this.keywords){
+        return this.schemes
+      }else{
+        var regExp = new RegExp(this.keywords, 'i')
+        return this.schemes.filter(item => {
+          let match=false
+          if (item.name) {
+            match=match|| item.name.match(regExp)
+          }
+          if(item.commonUse){
+            match=match || item.commonUse.match(regExp)
+          }
+          if(item.exeName){
+            match=match || item.exeName.match(regExp)
+          }
+          return match
+        })
+      }
+    },
     selectedCount() {
-      return this.selectedSchemes.length
+      return this.schemes.length
     },
     selectedSchemes() {
-      let selected=this.shortcutSchemeList.filter(s => {
+      let selected = this.schemes.filter(s => {
         return s.selected
       })
 
-      if(selected){
+      if (selected) {
         return selected
-      }else{
+      } else {
         return []
       }
     }
@@ -59,56 +84,30 @@ export default {
     //   },
     //   deep: true
     // },
-    $route: {
-      handler() {
-        this.reloadData()
-      },
-    }
   },
   mounted() {
-    this.reloadData()
-  },
-  beforeRouteUpdate(to) {
-    this.reloadData(to.params?.exeName)
   },
   methods: {
-    ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes', 'import','removeScheme','getCustomApp']),
-    async reloadData(exeName = this.$route.params?.exeName) {
-      this.exeName = exeName
-      this.app = await this.getCustomApp(exeName)
-      console.log(this.app, '找到的应用')
-      this.refreshList()
-    },
-    async refreshList() {
-      console.log('刷新列表')
-      this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
-      if (this.settings.enableAutoEnter && this.shortcutSchemeList.length > 0) {
-        this.btnDetail(this.shortcutSchemeList[0])
-      }
-      this.loading = false
-    },
-    createScheme() {
-      this.$router.push({
-        name: 'shareKey', params: {
-          exeName: this.exeName
-        }
-      })
-    },
+    ...mapActions(keyStore, ['setRecentlyUsedList', 'loadShortcutSchemes', 'import', 'removeScheme', 'getCustomApp']),
     btnDetail(item) {
       if (this.selecting) {
         //执行选中事件
+        if(!this.selectedSchemeIds.includes(item.id)){
+          this.selectedSchemeIds.push(item.id)
+        }else{
+          this.splice(this.selectedSchemeIds.indexOf(item.id),1)
+        }
         item.selected = !item.selected
         return
+      }else{
+        console.log(item)
+        this.previewKeys=item
+        this.previewVisible=true
       }
-      this.setRecentlyUsedList(item)
-      this.$router.push({
-        name: 'schemeDetail'
-      })
+
     },
     cancelExport() {
-      this.shortcutSchemeList.forEach(item => {
-        item.selected = false
-      })
+     this.selectedSchemeIds=[]
       this.selecting = false
     },
     goEdit(app) {
@@ -120,49 +119,38 @@ export default {
       })
     },
     async importSchemes() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: '选择导入的文件',
-        message: '选择导入的文件',
-        filters: [{name: '快捷键方案存档', extensions: ['keys']}],
-        properties: [
-          'createDirectory',
-          'showOverwriteConfirmation',
-          'multiSelections'
-        ]
-      })
-      if(!openPath){
+     let downloadSchemes=this.schemes.filter(item=>{
+       return this.selectedSchemeIds.includes(item.id)
+     })
+      if(downloadSchemes.length===0){
+        message.info('至少选择1个方案')
         return
-      }
-      console.log(openPath)
-      for (const path of openPath) {
-        try {
-          console.log(path)
-          let schemes = JSON.parse(require('fs').readFileSync(path, 'utf-8'))
-          let inserted = await this.import(schemes)
-          message.success('成功导入' + inserted.length + '个方案')
-          await this.refreshList()
-          console.log(schemes)
-        } catch (e) {
-          console.error(e)
-        }
-
+      }else{
 
       }
-
-      this.selecting=false
+      try {
+        let inserted = await this.import(downloadSchemes)
+        message.success('成功导入' + inserted.length + '个方案')
+      } catch (e) {
+        console.error(e)
+      }
+      this.selecting = false
 
     },
+    closePreview(){
+      this.previewVisible=false
+    },
     remove() {
-      if(this.selectedCount===0){
+      if (this.selectedCount === 0) {
         message.info('至少选择1个方案。')
         return
       }
       Modal.confirm({
-        centered:true,
-        content:'确认删除这'+this.selectedCount+"个方案？此操作不可撤销。",
-        okText:'确认删除',
-        onOk:()=>{
-          this.selectedSchemes.forEach(async scheme=>{
+        centered: true,
+        content: '确认删除这' + this.selectedCount + "个方案？此操作不可撤销。",
+        okText: '确认删除',
+        onOk: () => {
+          this.selectedSchemes.forEach(async scheme => {
             await this.removeScheme(scheme)
           })
           this.refreshList()
@@ -173,6 +161,7 @@ export default {
     },
     edit() {
       this.selecting = true
+      this.selectedSchemeIds=[]
     },
     async doExport() {
       let selectedSchemes = this.shortcutSchemeList.filter(item => {
@@ -210,10 +199,13 @@ export default {
         }
       })
     },
-    add(){
+    add() {
       this.$router.push({
-        name:'editScheme'
+        name: 'editScheme'
       })
+    },
+    isSelected(id){
+      return this.selectedSchemeIds.includes(id)
     }
   }
 }
@@ -225,33 +217,8 @@ export default {
   <div class=" flex flex-col rounded-lg w-full px-2 h-full">
     <div class=" m-2  my-1 flex">
       <div v-if="!exeName" class="flex-1">
-        <h2>方案列表</h2>
         <p class="xt-text-2"><span v-if="selecting">已选中 <strong class="xt-active-text">{{ selectedCount }}</strong> 个方案， </span>
-          共 {{ shortcutSchemeList.length }} 个方案</p>
-      </div>
-      <div v-else="false" class="  rounded-md px-2 p-2  " :span="12" style="flex: 1">
-        <div class="flex flex-row">
-          <div hidden="">{{ app.lastFocus }}</div>
-          <div class="    truncate">
-            <a-avatar :size="48" shape="square" :src="app.icon"></a-avatar>
-
-            <div v-if="!currentApp.inRep" class="mt-2">
-              <xt-button type="theme" size="mini" style="width:100%" :h="36">登记入库</xt-button>
-            </div>
-          </div>
-          <div class="ml-4">
-            <div class="font-16 font-bold">
-              <a-tooltip :title="app.path">
-                {{ app.alias }}
-              </a-tooltip>
-
-              <EditOutlined class="pointer ml-2 xt-text-2" @click="goEdit(app)"/>
-            </div>
-            <!--            <span class="" style="font-size: 16px;color: var(&#45;&#45;secondary-text);">共 {{-->
-            <!--                shortcutSchemeList.length-->
-            <!--              }} 个方案</span>-->
-          </div>
-        </div>
+          共 {{ list.length }} 个方案</p>
       </div>
       <div>
         <div class="btn-item mt-3">
@@ -261,28 +228,34 @@ export default {
           <!--          <span class="button-active pointer" @click="setShow = true">-->
           <!--                <Icon icon="setting" style="width: 20px;height: 20px;color:var(&#45;&#45;primary-text);"></Icon>-->
           <!--            </span>-->
-          <xt-button @click="createScheme">
-            <Icon class="icon" icon="akar-icons:edit"> </Icon> 创建
-          </xt-button>
+<!--          <xt-button @click="createScheme">-->
+<!--            <Icon class="icon" icon="akar-icons:edit"></Icon>-->
+<!--            创建-->
+<!--          </xt-button>-->
           <template v-if="selecting">
-            <xt-button v-if="selecting" @click="importSchemes">
-              <Icon class="icon" icon="akar-icons:download"> </Icon> 导入
+            <xt-button type="theme" v-if="selecting" @click="importSchemes">
+              <Icon class="icon" icon="akar-icons:download"></Icon>
+              确认下载
             </xt-button>
-            <xt-button type="theme" v-if="selecting" @click="doExport">
-              <Icon class="icon" icon="akar-icons:share-box"> </Icon> 导出
-            </xt-button>
-            <xt-button type="error" v-if="selecting" @click="remove">
-              <Icon class="icon" icon="akar-icons:trash-can"> </Icon>  删除
-            </xt-button>
+<!--            <xt-button type="theme" v-if="selecting" @click="doExport">-->
+<!--              <Icon class="icon" icon="akar-icons:share-box"></Icon>-->
+<!--              导出-->
+<!--            </xt-button>-->
+<!--            <xt-button type="error" v-if="selecting" @click="remove">-->
+<!--              <Icon class="icon" icon="akar-icons:trash-can"></Icon>-->
+<!--              删除-->
+<!--            </xt-button>-->
             <xt-button class="ml-10" v-if="selecting" @click="cancelExport">
-             <Icon class="icon" icon="akar-icons:x-small"> </Icon>  退出
+              <Icon class="icon" icon="akar-icons:x-small"></Icon>
+              退出
             </xt-button>
           </template>
 
           <template v-if="!selecting">
 
-            <xt-button  @click="edit">
-              <Icon class="icon" icon="akar-icons:chevron-left"> </Icon> 管理
+            <xt-button @click="edit">
+              <Icon class="icon" icon="akar-icons:chevron-left"></Icon>
+              批量下载
             </xt-button>
 
           </template>
@@ -293,30 +266,32 @@ export default {
     <div class="flex flex-1 justify-between px-4 h-0">
 
       <vue-custom-scrollbar :settings="settings" class="h-full w-full">
-        <div v-if="shortcutSchemeList.length===0 && loading===false " class="w-full"
+        <div v-if="list.length===0 && loading===false"
              style="flex:1;justify-items: center;justify-content: center">
-          <NotShortcutKey @createScheme="createScheme"></NotShortcutKey>
         </div>
         <div v-else class="main-part item-content"
              style="flex:1">
-          <div :class="{selectable:selecting,selected:item.selected}" v-for="item in shortcutSchemeList"
+          <div :class="{selectable:selecting,selected:isSelected(item.id)}" v-for="item in list"
                class="flex items-center pointer" @click="btnDetail(item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
-            <span class="xt-text truncate" style="max-width: 180px" :title="item.name"> {{ item.name }} </span>
+            <span class="xt-text truncate" style="max-width: 180px" :title="item.name"> {{ item.name }}
+              <div class="xt-text-2">{{item.exeName}}</div></span>
+
             <div class="flex flex-col justify-center items-center">
               <span>{{ item.number }}</span>
               <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
             </div>
           </div>
-          <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
-          <div v-if="shortcutSchemeList.length > 2" style="opacity:0;height: 1px;"></div>
+          <div v-if="list.length > 2" style="opacity:0;height: 1px;"></div>
+          <div v-if="list.length > 2" style="opacity:0;height: 1px;"></div>
         </div>
 
       </vue-custom-scrollbar>
 
-
+      <!-- 预览 -->
+      <Preview :keyScheme="previewKeys" :showModal="previewVisible" @closePreview="closePreview"></Preview>
     </div>
 
 
@@ -333,7 +308,8 @@ export default {
 .selected {
   border: 1px solid var(--active-bg);
 }
-.icon{
+
+.icon {
   font-size: 24px;
   vertical-align: middle;
 }

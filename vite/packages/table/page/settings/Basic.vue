@@ -34,6 +34,13 @@ const menus = [
     }
   },
   {
+    title: '分屏',
+    name: 'screen',
+    route: {
+      name: 'subscreen'
+    }
+  },
+  {
     title: '按键',
     name: 'key',
     route: {

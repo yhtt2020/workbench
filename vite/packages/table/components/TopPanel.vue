@@ -299,6 +299,7 @@ export default {
       this.hideNoticeEntry()
     },
     topClockTimerVisibleSetting() {
+      this.filterClock(this.clockTag)
       if(this.checkTopClock===true){
         if (this.filterClockEvent.length > 0) {
           // console.log(this.filterClockEvent.length);
@@ -316,6 +317,7 @@ export default {
         this.topClockTimerVisible=false
 
       }
+      // console.log(this.clockTag);
 
 
 
@@ -325,7 +327,8 @@ export default {
   },
   beforeUpdate() {
     this.topClockTimerVisibleSetting()
-    this.filterClock(this.clockTag)
+    
+    
   },
 }
 </script>
