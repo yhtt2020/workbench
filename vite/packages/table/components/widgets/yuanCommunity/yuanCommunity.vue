@@ -75,8 +75,11 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
-        <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+        <teleport to="body" :disabled="false">
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
             :forumIndex="currentIndex"></YuanPublishModal>
+        </teleport>
+        
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <div class="mb-6 xt-text font-16">
                 数据来源
@@ -224,8 +227,12 @@ export default {
 
         },
         forumList() {
-            this.customData.forumList = this.myForumList.joined
-            return this.customData.forumList
+            // this.customData.forumList = this.myForumList.joined
+            // return this.customData.forumList
+            if(this.customData && this.customData.forumList){
+                return this.customData.forumList
+            }
+            return this.myForumList.joined
         },
         showForumList() {
             // if (this.customData && this.customData.forumList) {
@@ -248,6 +255,7 @@ export default {
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
+        this.customData.forumList=this.myForumList.joined
         this.isLoading = false
     },
     watch: {
@@ -301,4 +309,8 @@ export default {
 
 :deep(.ant-select-selection-item) {
     background: rgba(80, 139, 254, 0.20);
-}</style>
+}
+:deep(.ant-select-selection-placeholder){
+    color: var(--primary-text) !important;
+}
+</style>
