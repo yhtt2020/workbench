@@ -293,7 +293,7 @@ export default {
     <div class="flex flex-1 justify-between px-4 h-0">
 
       <vue-custom-scrollbar :settings="settings" class="h-full w-full">
-        <div v-if="shortcutSchemeList.length===0 && loading===false"
+        <div v-if="shortcutSchemeList.length===0 && loading===false " class="w-full"
              style="flex:1;justify-items: center;justify-content: center">
           <NotShortcutKey @createScheme="createScheme"></NotShortcutKey>
         </div>
