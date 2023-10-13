@@ -17,8 +17,10 @@
   
 <script>
 import axios from "axios";
-import Widget from "../../card/Widget.vue";
+import Widget from "../../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
+import {mapActions, mapState,mapWritableState} from "pinia";
+import { shortTalkStore } from '../store'
 export default {
     components:{
         Widget,
