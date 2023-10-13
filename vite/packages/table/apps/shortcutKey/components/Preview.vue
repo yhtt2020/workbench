@@ -13,7 +13,7 @@
       <ShortcutKeyList :keyList="keyScheme.keyList" :keyBoxStyle="{background:'var(--primary-bg)'}"></ShortcutKeyList>
     </div>
     <div class="foot">
-      <div>{{ keyScheme.number }}个快捷键</div>
+      <xt-button class="mr-5" :w="140">{{ keyScheme.number }} 个快捷键</xt-button>      <xt-button @click="importScheme" type="theme" :w="140">下载方案</xt-button>
     </div>
   </div>
   <!-- 预览添加抽屉 -->
@@ -32,24 +32,24 @@
       </span>
       <span class="mt-4" style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ keyScheme.name }}</span>
       <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ keyScheme.commonUse }}</span>
-      <span class="flex items-center my-4">
-        <div>
-          <a-avatar size="24">
-              <template #icon><UserOutlined /></template>
-          </a-avatar>
-        </div>
-        <span class="ml-3" style="color: var(--secondary-text);">{{ keyScheme.nickName }}</span>
-      </span>
-      <span style="color: var(--secondary-text);">
-        <span>
-          <Icon icon="dianzan" class="mr-2"></Icon>
-          <span>{{ keyScheme.sumLikes }}</span>
-        </span>
-        <span class="ml-3">
-          <Icon icon="xiazai" class="mr-2"></Icon>
-          <span>{{ keyScheme.download }}</span>
-        </span>
-      </span>
+<!--      <span class="flex items-center my-4">-->
+<!--        <div>-->
+<!--          <a-avatar size="24">-->
+<!--              <template #icon><UserOutlined /></template>-->
+<!--          </a-avatar>-->
+<!--        </div>-->
+<!--        <span class="ml-3" style="color: var(&#45;&#45;secondary-text);">{{ keyScheme.nickName }}</span>-->
+<!--      </span>-->
+<!--      <span style="color: var(&#45;&#45;secondary-text);">-->
+<!--        <span>-->
+<!--          <Icon icon="dianzan" class="mr-2"></Icon>-->
+<!--          <span>{{ keyScheme.sumLikes }}</span>-->
+<!--        </span>-->
+<!--        <span class="ml-3">-->
+<!--          <Icon icon="xiazai" class="mr-2"></Icon>-->
+<!--          <span>{{ keyScheme.download }}</span>-->
+<!--        </span>-->
+<!--      </span>-->
     </div>
   </a-drawer>
 </template>
@@ -96,7 +96,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore,['setShortcutKeyList']),
+    ...mapActions(keyStore,['setShortcutKeyList','import']),
     addPlan(keyScheme){
       this.setShortcutKeyList(keyScheme)
       message.success('添加成功');
@@ -107,6 +107,14 @@ export default {
     close(){
       this.$emit('closePreview',false)
       this.fullScreen = false
+    },
+    async importScheme () {
+      if (await this.import([this.keyScheme])) {
+        message.success('下载方案成功。')
+        this.close()
+      } else {
+        message.error('下载方案失败。')
+      }
     }
   }
 }
@@ -146,16 +154,6 @@ export default {
         display: flex;
         justify-items: center;
         align-items: end;
-        height: 10%;
-        >div{
-          background: var(--mask-bg);
-          border-radius: 12px;
-          height: 48px;
-          line-height: 48px;
-          padding: 0 25px;
-          font-size: 16px;
-          color: var(--secondary-text);
-        }
       }
     }
     .add-scheme{

@@ -42,15 +42,16 @@ export default {
             this.$router.push({name: 'schemeIndex'})
           },
         },
-        // {
-        //   id: 'shop',
-        //   icon: "shop",
-        //   title: '创意市场',
-        //   // img: "/icons/bg.png",
-        //   callBack: () => {
-        //     this.selectTab = "Chat";
-        //   },
-        // },
+        {
+          id: 'store',
+          icon: "shop",
+          title: '创意市场',
+          // img: "/icons/bg.png",
+          tab:'store',
+          callBack: () => {
+            this.$router.push({name: 'shortcutStore'})
+          },
+        },
 
       ]
       const endMenu = [
@@ -128,7 +129,7 @@ export default {
   <div :class="{'rounded-lg':!fullScreen}"
        class="flex h-full w-full   py-2" style="">
     <div class="w-full">
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="2" class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="2" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>
