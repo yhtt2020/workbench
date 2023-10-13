@@ -160,7 +160,7 @@ export default {
                 { title: '显示30分钟内的闹钟', tag: 'within30min' },
                 { title: '显示1小时内的闹钟', tag: 'within1hour' },
             ],
-            defaultDataType: '始终显示',
+            defaultDataType: '显示30分钟内的闹钟',
             checked: true,
         };
     },
@@ -181,8 +181,8 @@ export default {
         clearInterval(this.timer)
     },
     computed: {
-        ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent"]),
-        ...mapWritableState(topClockSettingStore, ['checkTopClock', 'temp'])
+        ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent", 'temp']),
+        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
     },
     methods: {
         dayjs,
@@ -260,10 +260,8 @@ export default {
             this.removeClock(index, 1);
         },
         changeSwitchStatus(value) {
-            // console.log(this.checked);
+            console.log(this.checked);
             this.changeTopClockStatus(value)
-            // console.log(1111);
-            this.checked = this.checkTopClock
         },
         changeDataType(value) {
             // console.log(this.selectDataType[value.title]);
@@ -275,16 +273,49 @@ export default {
         }
     },
     beforeMount() {
+        // console.log(this.checkTopClock,'this.checkTopClock');
         this.checked = this.checkTopClock
-        // this.defaultDataType=this.temp
-        // if(this.temp==='undefined'){
-        //     this.defaultDataType='始终显示'
-        // }else{
-        //     this.defaultDataType=this.temp
-        // }
-        // console.log(this.defaultDataType)
+        if(this.temp==undefined){
+            this.defaultDataType='显示30分钟内的闹钟'
+        }else{
+            this.defaultDataType=this.temp
+        }
 
     },
+    watch: {
+        checkTopClock: {
+            handler(value) {
+                this.checked = value
+            }
+        },
+        temp: {
+            handler(value) {
+                if(value==undefined){
+                    this.defaultDataType='显示30分钟内的闹钟'
+                }
+                else{
+                    this.defaultDataType=value
+                }
+                // switch (value) {
+                //     case undefined:
+                //         this.defaultDataType = '显示30分钟内的闹钟'
+                //         break;
+                //     case '始终显示':
+                //         this.defaultDataType = '始终显示'
+                //         break;
+                //     case '显示30分钟内的闹钟':
+                //         this.defaultDataType = '显示30分钟内的闹钟'
+                //         break;
+                //     case '显示1小时内的闹钟':
+                //         this.defaultDataType = '显示1小时内的闹钟'
+                //         break;
+                //     default:
+                //         this.defaultDataType='显示30分钟内的闹钟'
+                //         break;
+                // }
+            }
+        }
+    }
 };
 </script>
   
