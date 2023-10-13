@@ -33,7 +33,7 @@
      <MenuCategory v-if="type === 'apply' " :no="no" @close="categoryShow = false"></MenuCategory>
      <CreateNewCategory v-if="type === 'category'" :no="no" @close="categoryShow = false"></CreateNewCategory>
      <InviteOther v-if="type === 'invited'" :no="no" @close="categoryShow = false"></InviteOther>
-     <PacketSetting :no="no" v-if="type === 'packetSet'" @close="categoryShow = false"></PacketSetting>
+     <PacketSetting :no="no" v-if="type === 'packetSet'" :item="data" @close="categoryShow = false"></PacketSetting>
      <AddLeftChildChannel :no="no" v-if="type === 'addNewApp'" :id="data.id" @close="categoryShow = false"></AddLeftChildChannel>
     </Modal>
   </teleport>
@@ -127,6 +127,7 @@
      case 'packetSet':
       setTimeout(()=>{
         data.categoryShow = true
+        console.log('获取data',props.data)
       },350)
       break;
      case 'addNewApp':
