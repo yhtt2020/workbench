@@ -17,6 +17,32 @@
         >
           <div class="list w-full h-full" v-resize="handeleDivView">
             <div
+              class="item rounded-xl"
+              v-for="menu in props.menus"
+              :key="menu.label"
+              @click="handleClick(menu)"
+            >
+              <!-- <xt-base-icon v-if="menu.icon" :icon="menu.icon"></xt-base-icon>
+              {{ menu.label }} -->
+              <xt-popover>
+                <xt-text class="w-full h-full">
+                  <Item :data="menu" />
+                  <template #right v-if="menu.children">
+                    <xt-new-icon
+                      icon="fluent:chevron-left-16-filled"
+                      style="transform: rotate(180deg)"
+                    />
+                  </template>
+                </xt-text>
+                <template #content v-if="menu.children">
+                  <div class="item">
+                    <Item :data="data" v-for="data in menu.children" />
+                  </div>
+                </template>
+              </xt-popover>
+            </div>
+
+            <!-- <div
               class="item xt-hover rounded-xl"
               v-for="menu in props.menus"
               :key="menu.label"
@@ -24,7 +50,7 @@
             >
               <xt-base-icon v-if="menu.icon" :icon="menu.icon"></xt-base-icon>
               {{ menu.label }}
-            </div>
+            </div> -->
           </div>
         </div>
       </Transition>
@@ -37,6 +63,8 @@ import { ref, computed } from "vue";
 import useMenus from "./useMenus";
 import useViewport from "./useViewport";
 import { reSize as vResize } from "./useReSize";
+
+import Item from "./Item.vue";
 // 接收父组件传递的菜单项
 const props = defineProps({
   menus: {
@@ -123,11 +151,9 @@ const pos = computed(() => {
     .item {
       box-sizing: border-box;
       height: 44px;
-      text-align: center;
-      line-height: 44px;
-      font-size: 14px;
       overflow: hidden;
       &:hover {
+        background: var(--active-secondary-bg);
         cursor: pointer;
       }
     }

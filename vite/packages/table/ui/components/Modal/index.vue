@@ -8,7 +8,7 @@
     }"
   >
     <!-- 头部 -->
-    <header>
+    <header v-if="isHeader">
       <xt-text>
         <slot name="headerLeft"></slot>
         <template #centet>
@@ -34,7 +34,7 @@
     </main>
     <!-- 尾部 -->
     <slot name="footer">
-      <footer class="flex justify-center items-center mt-3">
+      <footer v-if="isFooter" class="flex justify-center items-center mt-3">
         <xt-button class="mr-3" @click="colseClick()">取消</xt-button>
         <xt-button type="theme" @click="okClick()">确认</xt-button>
       </footer>
@@ -73,6 +73,14 @@ const props = defineProps({
   // 按esc关闭窗口
   esc: {
     default: false,
+  },
+  // 快速关闭底部
+  isFooter: {
+    default: true,
+  },
+  // 快速关闭头部
+  isHeader: {
+    default: true,
   },
 });
 const emits = defineEmits(["close", "ok", "modelValue"]);

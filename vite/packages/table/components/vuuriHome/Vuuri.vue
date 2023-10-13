@@ -12,7 +12,8 @@
       :data-item-key="item[itemKey]"
     >
       <div class="muuri-item-content">
-        <slot name="item" :item="item"/>
+        <!-- {{item}} -->
+        <!-- <slot name="item" :item="item"/> -->
       </div>
     </div>
   </div>

@@ -29,6 +29,7 @@
       :icon="item.newIcon"
       :bgStyle="bg"
       :type="newType"
+      radius="10"
     />
     <xt-icon
       @click="itemClick()"
@@ -44,9 +45,11 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { appStore } from "../../../store";
-
+const store = appStore();
+const { fullScreen } = storeToRefs(store);
 const props = defineProps({
   item: {},
   id: {},
@@ -77,10 +80,9 @@ const imgSize = computed(() => {
 });
 
 // 全屏控制
-const store = appStore();
 const data = ref(false);
 const full = computed(() => {
-  store.fullScreen = data.value ? true : false;
+  fullScreen.value = data.value ? true : false;
   return data.value ? "quxiaoquanping_huaban" : "quanping_huaban";
 });
 const itemClick = () => {
@@ -88,11 +90,12 @@ const itemClick = () => {
     data.value = !data.value;
   }
 };
-const route = useRoute();
-const currentPage = ref(route.path);
-watch(route, (newRoute) => {
-  if ( props.item.full && currentPage !== newRoute.path) data.value = false;
-});
+
+// const route = useRoute();
+// const currentPage = ref(route.path);
+// watch(route, (newRoute) => {
+//   if ( props.item.full && currentPage !== newRoute.path) data.value = false;
+// });
 </script>
 
 <style lang="scss" scoped></style>
