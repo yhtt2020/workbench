@@ -68,7 +68,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <MenuDropdown v-if="showTopMenu"  :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :position="position"  class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
     </transition>
   </template>
 
