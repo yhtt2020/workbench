@@ -27,7 +27,7 @@
 
     </div>
     <!-- 基本信息 -->
-    <div class="add-content" v-if="defaultNavType.name === 'message'">
+    <div class="add-content" v-if="defaultNavType.name === 'info'">
       <span>方案封面</span>
       <div class="flex">
         <div class="avatar">
@@ -47,14 +47,14 @@
             :beforeUpload="beforeUpload"
             accept="image/jpeg,image/jpg,image/png"
           >
-           <div class="flex mt-2">
-             <xt-button class="mr-2" type="theme"
-                        @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传
-             </xt-button>
-             <xt-button
-               @click.stop="resetIcon" style="width:120px; height:48px;">同软件图标
-             </xt-button>
-           </div>
+            <div class="flex mt-2">
+              <xt-button class="mr-2" type="theme"
+                         @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传
+              </xt-button>
+              <xt-button
+                @click.stop="resetIcon" style="width:120px; height:48px;">同软件图标
+              </xt-button>
+            </div>
           </a-upload>
         </div>
       </div>
@@ -62,7 +62,8 @@
       <a-input v-model:value="applyName" spellcheck="false" class="input" placeholder="请输入方案名称"
                aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>关联的软件</span>
-      <a-input v-model:value="form.exeName" spellcheck="false" class="input" placeholder="请输入软件程序（形如 explorer.exe）"
+      <a-input v-model:value="form.exeName" spellcheck="false" class="input"
+               placeholder="请输入软件程序（形如 explorer.exe）"
                aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text" placeholder="请输入描述"
@@ -288,9 +289,9 @@ export default {
 
   data () {
     return {
-      form:{
-        icon:'',
-        exeName:''
+      form: {
+        icon: '',
+        exeName: ''
       },
       saved: true,//是否已经保存
       currentItem: {},//当前在编辑的对象
@@ -304,10 +305,10 @@ export default {
         wheelPropagation: true
       },
       navType: [
-        { title: '基本信息', name: 'message' },
+        { title: '基本信息', name: 'info' },
         { title: '快捷键', name: 'shortcutkey' }
       ],
-      defaultNavType: { title: '基本信息', name: 'shortcutkey' },
+      defaultNavType: { title: '快捷键', name: 'shortcutkey' },
       closePrompt: true, //提示
       keyList: [], //快捷键列表
       imageUrl: '',
@@ -376,14 +377,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme','getCustomApp']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp']),
     completeEdit () {
       this.saved = false
       message.success('完成编辑')
 
       if (this.currentItem) {
         this.lostFocus(this.currentItem, this.currentItem.type || this.currentType)
-        this.currentItem.isEdit=false
+        this.currentItem.isEdit = false
       }
     },
     getColor (index) {
@@ -403,26 +404,30 @@ export default {
         this.recentlyUsedList.find(i => {
           if (i.id === this.paramsId) {
             let item = JSON.parse(JSON.stringify(this.deepClone({}, i)))
-            console.log('找到的item',item)
             this.appContent = item
             this.icon = item.icon
             this.keyList = item.keyList
             this.applyName = item.name
             this.introduce = item.commonUse
-            this.form.exeName= item.exeName.join(',')
-            this.form.icon=this.file.path ? this.file.path : this.icon
+            this.form.exeName =( item.exeName instanceof Array)? item.exeName.join(','):item.exeName
+            this.form.icon = this.file.path ? this.file.path : this.icon
           }
         })
         //执行添加默认添加一个可编辑的空数据
         this.addShortcutKey()
       } else {
-        if(this.$route.params.exeName){
+        //全新创建
+        this.defaultNavType={
+          name: 'info',
+        }
 
-          let app=await this.getCustomApp(this.$route.params.exeName)
-          console.log('查到app',app)
-          this.applyName =app.alias
-          this.form.icon=app.icon
-          this.form.exeName= app.exeName
+        if (this.$route.params.exeName) {
+
+          let app = await this.getCustomApp(this.$route.params.exeName)
+          console.log('查到app', app)
+          this.applyName = app.alias
+          this.form.icon = app.icon
+          this.form.exeName = app.exeName
         }
 
       }
@@ -461,12 +466,12 @@ export default {
         }
       })
       if (this.paramsId !== -1) {
-        this.appContent.icon =this.form.icon
+        this.appContent.icon = this.form.icon
         this.appContent.keyList = this.keyList
         this.appContent.name = this.applyName
         this.appContent.commonUse = this.introduce
         this.appContent.number = this.keyList.length
-        this.appContent.exeName= this.form.exeName
+        this.appContent.exeName = this.form.exeName
         this.saveScheme(this.appContent)
       } else {
         const time = new Date().valueOf()
@@ -858,8 +863,8 @@ export default {
       }
       return isJpgOrPng && isLt2M
     },
-    resetIcon(){
-      this.form.icon=''
+    resetIcon () {
+      this.form.icon = ''
     },
     // 上传头像
     uploadImage (file) {
