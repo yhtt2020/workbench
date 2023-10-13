@@ -84,10 +84,13 @@ export default {
             ]
         };
     },
-    async mounted() {
+    mounted() {
+        // this.init()
+
 
     },
     methods:{
+        ...mapActions(shortTalkStore, ['init']),
 
     }
 };

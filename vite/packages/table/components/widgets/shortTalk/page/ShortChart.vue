@@ -35,6 +35,7 @@
                     <p class="ml-1 mt-3">时间周期</p>
                     <RadioTab :navList="timeType" v-model:selectType="defaultTimeType" ></RadioTab>
                     <div  v-show="this.defaultDataType.name == 'visit'">
+                    <!-- <div > -->
                         <p class="ml-1 mt-3">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type" 
                         v-model:selectType="defaultPlatType"  ></RadioTab>
@@ -82,6 +83,9 @@ export default {
             type: Boolean,
         },
     },
+    computed: {
+        ...mapWritableState(shortTalkStore, ['access','interact']),
+    },
     data() {
         return {
             settingVisible: false,
@@ -92,7 +96,7 @@ export default {
             // 设置中的数组
             dataType: [
                 { title: '社区访问数据', name: 'visit' },
-                { title: '社区互动数据', name: 'inter' },
+                { title: '社区互动数据', name: 'interact' },
             ],
             defaultDataType: { title: '社区访问数据', name: 'visit' },
             timeType: [
@@ -103,12 +107,13 @@ export default {
             defaultTimeType: { title: '每日', name: 'day' },
             platType: [
                 { title: '全部', name: 'all' },
-                { title: 'H5', name: 'H5' },
-                { title: 'PC', name: 'PC' },
-                { title: '小程序', name: '小程序' },
-                { title: 'APP', name: 'APP' },
+                { title: 'H5', name: 'h5' },
+                { title: 'PC', name: 'pc' },
+                { title: '小程序', name: 'xcx' },
+                { title: 'APP', name: 'app' },
             ],
             defaultPlatType: { title: '全部', name: 'all' },
+            // 设置
             menuList: [
                 {
                     icon: 'shezhi1',
@@ -122,11 +127,8 @@ export default {
             options: {
                 className: "card double",
                 title: "社区访问数据/每日/全部",
-                // icon: "bianji",
-                // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
                 rightIcon:"fluent:open-20-filled",
-                // icon: "games-16-filled",
             },
             // 网格数据
 
@@ -134,11 +136,12 @@ export default {
             // yDataFir:[193,283,675,456,856,738,504],
             // yDataSec:[425,394,842,973,776,114,149],
             // yDataThi:[475,123,763,384,235,452,123],
-            
+            // 
             xData:["08-02","08-03","08-04","08-05","08-06"],
+            // visit 次数
             yDataFir:[193,283,675,456,856],
+            // login 人数
             yDataSec:[425,394,842,973,776],
-            yDataThi:[475,123,763,384,235],
             myChartStyle:{
                 float:"left",
                 width:"600px",
@@ -146,18 +149,57 @@ export default {
                 position:"relative",
                 left:"-12px",
                 top:"3px"
-            }
+            },
+            // 柱状图
+            series:[
+                {
+                    type: "bar",
+                    data:this.yDataFir,
+                    name:"访问次数",
+                    label:{
+                        show:true,
+                        position:"top",
+                        // 修改柱状条上方数据
+                        textStyle:{
+                            color: "rgba(255,255,255,0.85)",
+                            fontSize:10,
+                        },
+                    },
+                    itemStyle:{
+                        color: "rgba(91,143,249,0.85)"
+                    }
+                },
+                {
+                    type: "bar",
+                    data:this.yDataSec,
+                    name:"访问人数",
+                    label:{
+                        show:true,
+                        position:"top",
+                        textStyle:{
+                            color: "rgba(255,255,255,0.85)",
+                            fontSize:10,
+                        },
+                    },
+                    itemStyle:{
+                        color: "rgba(90,216,166,0.85)",
+                    },
+                },
+            ],
+            legend:["访问次数","访问人数"],
+            
         };
     },
     async mounted() {
-        this.initEcharts();
+        // this.initEcharts();
         this.init()
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
+        ...mapActions(shortTalkStore, ['getData']),
         init(){
-            // 初始哈
-            if(!this.customData){
+            // 初始
+            if(!this.customData.defaultDataType){
                 this.updateCustomData(this.customIndex,{
                     "defaultDataType": this.defaultDataType,
                     "defaultTimeType": this.defaultTimeType,
@@ -168,7 +210,13 @@ export default {
                this.defaultTimeType = this.customData.defaultTimeType 
                this.defaultPlatType = this.customData.defaultPlatType 
             }
+            this.getData(this.customData)
+            .then(()=>{
+                this.changeBarChart()
+            })
+            
         },
+        // 初始化柱状图
         initEcharts(){
             // 多列柱状图
             const mulColumnZZTData = {
@@ -177,7 +225,7 @@ export default {
                 },
                 // 图例属性
                 legend:{
-                    data:["访问次数","访问人数"],
+                    data:this.legend,
                     top:"0%",
                     itemHeight:10,
                     itemWidth:10,
@@ -185,7 +233,7 @@ export default {
                     left:10,
                     textStyle:{
                         color: "rgba(255,255,255,0.85)",
-                        fontSoze:"12"
+                        fontSize:"12"
                     }
                 },
                 // y轴线条
@@ -200,10 +248,26 @@ export default {
                     }
                 },
                 // 内部属性
-                series:[
+                series:this.series,
+            }
+            const myChart = echarts.init(document.getElementById("mychart"))
+            // myChart.setOption(mulColumnZZTData);
+            myChart.clear()
+            myChart.setOption(mulColumnZZTData);
+            window.addEventListener("resize",()=>{
+                myChart.resize();
+            })
+        },
+        // 修改柱状图数据
+        changeBarChart(){
+            // 社区访问数据
+            if(this.defaultDataType.name == 'visit'){
+                // console.log(this.series);
+                // 内部属性
+                this.series=[                
                     {
                         type: "bar",
-                        data:this.yDataFir,
+                        data:this.access.visit.series,
                         name:"访问次数",
                         label:{
                             show:true,
@@ -220,8 +284,51 @@ export default {
                     },
                     {
                         type: "bar",
-                        data:this.yDataSec,
+                        data:this.access.login.series,
                         name:"访问人数",
+                        label:{
+                            show:true,
+                            position:"top",
+                            textStyle:{
+                                color: "rgba(255,255,255,0.85)",
+                                fontSize:10,
+                            },
+                        },
+                        itemStyle:{
+                            color: "rgba(90,216,166,0.85)",
+                        },
+                    },
+                ],
+                // 图例
+                this.legend=["访问次数","访问人数"]
+                
+                // x轴
+                this.xData = this.interact.post.xAxis
+                // y轴
+            }else{
+                // console.log(this.series);
+                this.series=[                
+                    {
+                        type: "bar",
+                        data:this.interact.post.series,
+                        name:"发布",
+                        label:{
+                            show:true,
+                            position:"top",
+                            // 修改柱状条上方数据
+                            textStyle:{
+                                color: "rgba(255,255,255,0.85)",
+                                fontSize:10,
+                            },
+                        },
+                        itemStyle:{
+                            color: "rgba(91,143,249,0.85)"
+                        }
+                    },
+                    {
+                        type: "bar",
+                        data:this.interact.support.series,
+                        name:"点赞",
                         label:{
                             show:true,
                             position:"top",
@@ -236,7 +343,7 @@ export default {
                     },
                     {
                         type: "bar",
-                        data:this.yDataThi,
+                        data:this.interact.thread.series,
                         name:"评论",
                         label:{
                             show:true,
@@ -251,40 +358,47 @@ export default {
                         },
                     },
                 ],
-                
+                // 图例
+                this.legend=["发布","点赞","评论"]
+                // x轴
+                this.xData = this.interact.post.xAxis
             }
-            const myChart = echarts.init(document.getElementById("mychart"))
+            this.initEcharts()
+        }
 
-            myChart.setOption(mulColumnZZTData);
-            window.addEventListener("resize",()=>{
-                myChart.resize();
-            })
-        },
     },
     watch:{
+        // 修改 名字的
         "defaultDataType": {
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultDataType": this.defaultDataType,
-            //     },this.desk)
-            // }
+            handler(newVal, oldVal){
+                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+
+                this.updateCustomData(this.customIndex,{
+                    "defaultDataType": this.defaultDataType,
+                },this.desk)
+                // 
+                this.init()
+            }
         },
         "defaultTimeType":{
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultTimeType": this.defaultTimeType,
-            //     },this.desk)
-            // }
+            handler(newVal, oldVal){
+                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+                this.updateCustomData(this.customIndex,{
+                    "defaultTimeType": this.defaultTimeType,
+                },this.desk)
+                this.init()
+                // console.log(this.customData);
+            }
         },
         "defaultPlatType":{
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultPlatType": this.defaultPlatType,
-            //     },this.desk)
-            // }
+            handler(newVal, oldVal){
+                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
+                this.updateCustomData(this.customIndex,{
+                    "defaultPlatType": this.defaultPlatType,
+                },this.desk)
+                this.init()
+                // console.log(this.customData);
+            }
         }
     }
 };
