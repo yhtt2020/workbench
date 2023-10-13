@@ -89,8 +89,8 @@ import { chatList,memberDropList,memberShowList } from '../../../../js/data/chat
 import {chatStore} from '../../../../store/chat'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
-import ChatDropDown from './chatDropDown.vue'
-import ChatFold from './chatFold.vue'
+import ChatDropDown from './ChatDropDown.vue'
+import ChatFold from './ChatFold.vue'
 
 
 export default {

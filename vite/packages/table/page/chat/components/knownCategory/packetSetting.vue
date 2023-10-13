@@ -57,10 +57,10 @@ export default {
       name:this.categoryName, communityNo:this.no,
       type:'category',role:'category',
      }
-     console.log('排查参数问题',option);
+    //  console.log('排查参数问题',option);
      
      const categoryRes =  await this.createChannel(option)
-     console.log('查看状态',categoryRes);
+    //  console.log('查看状态',categoryRes);
    
      if(categoryRes.status === 1){
       message.success(`${categoryRes.info}`)

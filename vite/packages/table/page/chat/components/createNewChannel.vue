@@ -3,7 +3,8 @@
    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
     <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-     <CloseOutlined  style="font-size: 1.25em;"/>
+     <!-- <CloseOutlined  style="font-size: 1.25em;"/> -->
+     <ChannelIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
     </div>
    </div>
    
@@ -40,19 +41,19 @@
  
  <script>
  import { defineComponent, reactive,toRefs } from 'vue'
- import { CloseOutlined } from '@ant-design/icons-vue'
+//  import { CloseOutlined } from '@ant-design/icons-vue'
  import { Icon as  ChannelIcon } from '@iconify/vue'
  
  
  import Modal from '../../../components/Modal.vue'
  // import SelectDesk from './channelSelect/selectDesk.vue'
- import SelectChannel from './channelSelect/selectCommunity.vue'
- import SelectGroupChat from './channelSelect/selectGroupChat.vue'
- import SelectWebLink from './channelSelect/selectWebLink.vue'
+ import SelectChannel from './channelSelect/SelectCommunity.vue'
+ import SelectGroupChat from './channelSelect/SelectGroupChat.vue'
+ import SelectWebLink from './channelSelect/SelectWebLink.vue'
  
  export default defineComponent({
   components:{
-   CloseOutlined,
+  //  CloseOutlined,
    ChannelIcon,Modal,
    // SelectDesk,
    SelectChannel,

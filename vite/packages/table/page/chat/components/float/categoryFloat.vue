@@ -33,7 +33,7 @@
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
     <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
          style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-      <CommunityIcon :icon="item.icon" style="font-size:1.75em;"></CommunityIcon>
+      <CommunityIcon :icon="item.icon" style="font-size:1.25rem;"></CommunityIcon>
       <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
   </div>
@@ -68,7 +68,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <MenuDropdown v-if="showTopMenu" :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" :list="channelMenu" :id="currentID" :no="categoryList.no"></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu"  :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
     </transition>
   </template>
 
@@ -98,7 +98,7 @@
 
     <transition name="slide-fade">
       <!-- :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" -->
-      <MenuDropdown v-if="showTopMenu" :position="position"  :list="channelMenu" :id="currentID" :no="categoryList.no"></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
     </transition>
   </template>
 
@@ -108,7 +108,7 @@
     
       <div class="flex flex-col" v-if="isDoubleColumn === false">
   
-       <div v-for="item in item.children" @click="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)" 
+       <div v-for="item in item.children" @click.stop.prevent="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)" 
         :class="{'active-bg': currentID ===item.id}"
         class="flex items-center rounded-lg p-2 pointer group-item" 
        >
@@ -132,7 +132,7 @@
   
       <div class="flex grid grid-cols-2 gap-1" v-else>
   
-       <div v-for="(item,index) in item.children" @click="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
+       <div v-for="(item,index) in item.children" @click.stop.prevent="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
         :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
        >
         <div class="flex items-center">
@@ -207,7 +207,8 @@ export default{
       showTopMenu:false,
       showMenuIndex:-1,    
       categoryMenu,  
-      channelMenu
+      channelMenu,
+      listType:''
     }
   },
 
@@ -272,7 +273,8 @@ export default{
 
     // 顶级频道鼠标右键点击
     topChannel(evt,item){
-     //  console.log('顶级频道::>',item.id);
+      // console.log('顶级频道::>',item);
+     this.listType = item.type
      this.currentID = item.id
      this.showTopMenu = true
      this.position = { x: evt.clientX - 50 , y: evt.clientY + 25 };
