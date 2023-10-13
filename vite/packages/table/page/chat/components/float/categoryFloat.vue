@@ -64,7 +64,7 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
       </div>
     </div>
     <transition name="slide-fade">
@@ -90,7 +90,7 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
 
        
       </div>
@@ -125,7 +125,7 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage' "/>
        </div>
   
       </div>
@@ -149,7 +149,7 @@
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
 
        </div>
   
