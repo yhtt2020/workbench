@@ -9,7 +9,7 @@
 
  <teleport to='body' >
   <Modal v-if="menuDropShow" v-model:visible="menuDropShow" :blurFlag="true" style="z-index:1000 !important;">
-    <PacketSetting v-if="type === 'packetSet'" :no="no" @close="menuDropShow = false" ></PacketSetting>
+    <PacketSetting v-if="type === 'packetSet'" :item="item" :no="no" @close="menuDropShow = false" ></PacketSetting>
     <AddLeftChildChannel v-if="type === 'addNewApp'" :id="id" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
   </Modal>
  </teleport>
@@ -26,7 +26,7 @@ import Modal from '../../../../components/Modal.vue'
 import AddLeftChildChannel from '../AddLeftChildChannel.vue'
 
 export default {
- props:['list','id','no','position'],
+ props:['list','id','no','position','item'],
 
  components:{
   DropIcon,PacketSetting,Modal,AddLeftChildChannel

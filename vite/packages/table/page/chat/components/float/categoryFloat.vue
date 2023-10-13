@@ -68,7 +68,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <MenuDropdown v-if="showTopMenu" :position="position"  class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
     </transition>
   </template>
 
@@ -98,7 +98,7 @@
 
     <transition name="slide-fade">
       <!-- :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" -->
-      <MenuDropdown v-if="showTopMenu" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
     </transition>
   </template>
 
@@ -159,7 +159,7 @@
   </div>
   
   <transition name="slide-fade">
-    <MenuDropdown v-if="categoryShowMenu" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
+    <MenuDropdown v-if="categoryShowMenu" :item="categoryItem" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
   </transition>
 
  </vue-custom-scrollbar>
@@ -208,7 +208,8 @@ export default{
       showMenuIndex:-1,    
       categoryMenu,  
       channelMenu,
-      listType:''
+      listType:'',
+      categoryItem:{}
     }
   },
 
@@ -276,6 +277,7 @@ export default{
       // console.log('顶级频道::>',item);
      this.listType = item.type
      this.currentID = item.id
+     this.categoryItem = item
      this.showTopMenu = true
      this.position = { x: evt.clientX - 50 , y: evt.clientY + 25 };
     },
@@ -284,6 +286,7 @@ export default{
     topCategory(evt,item){
      //  console.log('带父级的的频道目录',item.id)
      this.currentID = item.id
+     this.categoryItem = item
      this.categoryShowMenu = true
      this.position = { x: evt.clientX - 50 , y: evt.clientY + 10 };
     },
