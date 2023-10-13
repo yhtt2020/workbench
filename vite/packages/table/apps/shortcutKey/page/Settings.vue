@@ -9,7 +9,7 @@ export default defineComponent({
   name: "Settings",
   components: {XtButton},
   computed: {
-    ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'customApps']),
+    ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'customApps','recentlyUsedList']),
     hideApps() {
       return this.executedApps.filter(app => app.hide)
     }
@@ -18,6 +18,7 @@ export default defineComponent({
       this.customApps = []
       this.executedApps = []
       this.sessionList = []
+      this.recentlyUsedList=[]
       message.success('清理会话列表成功')
       console.log('当前的会话', this.sessionList)
     },
