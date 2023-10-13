@@ -67,11 +67,12 @@
   
 <script>
 import axios from "axios";
-import Widget from "../../card/Widget.vue";
+import Widget from "../../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import { defineComponent, ref, onMounted } from 'vue';
-import {cardStore} from "../../../store/card";
+import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
+import { shortTalkStore } from '../store'
 
 export default {
     components:{
