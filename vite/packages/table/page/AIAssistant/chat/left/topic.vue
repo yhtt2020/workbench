@@ -45,23 +45,23 @@ export default {
           callBack: this.handleTop,
         },
         { icon: "shanchu", label: "删除", callBack: this.handleDel },
-        {
-          newIcon: "fluent-emoji:star",
-          label: " 新删除",
-          children: [
-            {
-              newIcon: "fluent-emoji:star",
-              label: " 新删除",
-              children: "111111111111111111",
-              callBack: () => {
-                console.log("1111111 :>> ", 1111111);
-              },
-            },
-          ],
-          callBack: () => {
-            console.log("1111111 :>> ", 1111111);
-          },
-        },
+        // {
+        //   newIcon: "fluent-emoji:star",
+        //   label: " 新删除",
+        //   children: [
+        //     {
+        //       newIcon: "fluent-emoji:star",
+        //       label: " 新删除",
+        //       children: "111111111111111111",
+        //       callBack: () => {
+        //         console.log("1111111 :>> ", 1111111);
+        //       },
+        //     },
+        //   ],
+        //   callBack: () => {
+        //     console.log("1111111 :>> ", 1111111);
+        //   },
+        // },
       ],
     };
   },

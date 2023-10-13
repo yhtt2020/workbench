@@ -13,7 +13,7 @@
     </template>
     <template v-else>
       <template v-if="detailShow === false">
-        <div class='w-full xt-theme-b'>
+        <div class='w-full'>
           <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
           <swiper-slide v-for="item in list">
             <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">

@@ -24,7 +24,7 @@ const props = defineProps({
   height: 44px;
   overflow: hidden;
   &:hover {
-    background: var(--active-secondary-bg);
+    // background: var(--active-secondary-bg);
     cursor: pointer;
     border-radius: 10px;
   }

@@ -44,7 +44,8 @@
         }"
            :class="notTrigger ? 'trigger' : '' "
       >
-        <xt-canvas :cards="currentDesk.cards">
+      <!-- 自由布局桌面 -->
+        <!-- <xt-canvas :cards="currentDesk.cards">
           <template #item="{ item }">
             <component
               :desk="currentDesk"
@@ -54,7 +55,7 @@
               :editing="editing"
             />
           </template>
-        </xt-canvas>
+        </xt-canvas> -->
         <vuuri :key="key" v-if=" 1 && currentDesk.cards && !hide" :get-item-margin="() => {
             return usingSettings.cardMargin * this.adjustZoom  + 'px';
           }
