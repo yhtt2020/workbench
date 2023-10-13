@@ -274,25 +274,62 @@ export default {
     },
 
 
-
-
-
     async finshCategoryCreate(){  // 完成频道目录创建
-      const option = { type:this.type,id:this.classItem.id,no:this.no,content:this.data}
-      // console.log('检查',option.content.length);
-      const createRes = await channelClass.secondaryChannel(option)
-
-      console.log('结果',createRes);
-
-      if(createRes?.status === 1){
-        message.success(`${createRes?.info}`)
-        await this.getCategoryData(this.no)
-        this.closeChannel()
+      const option = {
+        type:this.type,
+        id:this.classItem.id,
+        no:this.no
       }
-    }
-    
 
-   
+      if(Array.isArray(this.data)){
+        // console.log('this.data是数组')
+        const resInfo = {}
+
+        for(let i=0;i<this.data.length;i++){
+          const channelOption = {
+            ...option,
+            content:{
+              name:this.data[i].name,
+              props:{
+                groupID:this.data[i].groupID,
+                avatar:this.data[i].avatar
+              }
+            }
+          }
+          // console.log('查看参数',channelOption);
+          const createRes = await channelClass.secondaryChannel(channelOption)
+          resInfo.info = createRes?.info
+          resInfo.status = createRes?.status
+        }
+
+        if(resInfo?.status === 1){
+          message.success(`${resInfo?.info}`)
+          await this.getCategoryData(this.no)
+          this.closeChannel()
+        }
+        
+      }else{
+        // console.log('this.data不是数组');
+        // console.log('查看this.data',this.data);
+
+        const channelsOption = { 
+          ...option,
+          content:{
+            name:this.data.name,
+            props:this.type === 'link' ? this.data.props : this.data
+          }
+        }
+
+        const createRes = await channelClass.secondaryChannel(channelsOption)
+        if(createRes?.status === 1){
+          message.success(`${createRes?.info}`)
+          await this.getCategoryData(this.no)
+          this.closeChannel()
+        }
+
+      }
+  
+    }
   
   },
 
