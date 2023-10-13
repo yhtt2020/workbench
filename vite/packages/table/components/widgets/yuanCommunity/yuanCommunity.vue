@@ -11,9 +11,9 @@
             <div v-if="showForumList.length > 0">
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-4">
-                    <!-- {{ showForumList[0].id }} -->
+                    <!-- {{ showForumList }} -->
                     <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
-                        <div class="w-[40px] h-[40px] rounded-md">
+                        <div class="w-[32px] h-[32px] rounded-md ml-2">
                             <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
 
                         </div>
@@ -26,7 +26,7 @@
                             class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
                             :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
                             @click="setCurrentIndex(index, item)">{{
-                                item.name
+                                item?.name
                             }}</div>
                     </div>
                     <div>
@@ -75,6 +75,7 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
+        
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
             :forumIndex="currentIndex"></YuanPublishModal>
@@ -94,7 +95,7 @@
             <a-select v-model:value="selectValue" mode="multiple"
                 style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子"
                 @change="handleChange(selectValue)" :bordered="false">
-                <a-select-option :value="index" v-for="(item, index) in forumList"
+                <a-select-option :value="index" v-for="(item, index) in customData.selectForumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
                 </a-select-option>
@@ -192,7 +193,6 @@ export default {
         async setCurrentIndex(index, item) {
             this.currentIndex = index
             await this.communityPost(item.id)
-            console.log(this.showForumPost, 'this.showForumList');
         },
         async refreshPost() {
             this.isLoading = true
@@ -204,9 +204,12 @@ export default {
         },
         handleChange(value) {
             this.selectForumList.push(this.forumList[value])
+            let temp=this.selectForumList
+            this.customData.selectForumList=temp
         },
         publishModalVisible() {
             this.showPublishModal = !this.showPublishModal
+            console.log(this.showForumList, 'this.showForumList');
         },
         modalVisible(val) {
             this.showPublishModal = val
@@ -235,10 +238,10 @@ export default {
             return this.myForumList.joined
         },
         showForumList() {
-            // if (this.customData && this.customData.forumList) {
-            //     return this.customData.forumList.slice(0, 3)
-            // }
-            return this.selectForumList.slice(0, 3)
+            if (this.customData && this.customData.selectForumList) {
+                return this.customData.selectForumList.slice(0, 3)
+            }
+            return this.customData.selectForumList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -249,6 +252,10 @@ export default {
                 return this.customData.forumPost.slice(0, this.copyNum)
             }
             return this.communityPost.list.slice(0, this.copyNum)
+        },
+        selectForum(){
+            let temp=this.customData.selectForumList
+            return temp
         }
     },
     async mounted() {
