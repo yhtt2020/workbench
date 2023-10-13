@@ -8,87 +8,56 @@
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
-            <div v-if="showForumList.length>0">
-            <!-- 顶部导航栏 -->
-            <div class="flex justify-between mt-4">
-                <!-- {{ showForumList[0].id }} -->
-                <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
-                    <div class="w-[40px] h-[40px] rounded-md">
-                        <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+            <div v-if="showForumList.length > 0">
+                <!-- 顶部导航栏 -->
+                <div class="flex justify-between mt-4">
+                    <!-- {{ showForumList[0].id }} -->
+                    <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
+                        <div class="w-[40px] h-[40px] rounded-md">
+                            <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+
+                        </div>
+                        <div class="ml-2 font-16 xt-text">
+                            {{ this.showForumList[0].name }}
+                        </div>
+                    </div>
+                    <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
+                        <div v-for="(item, index) in showForumList" :key="index"
+                            class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
+                            :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
+                            @click="setCurrentIndex(index, item)">{{
+                                item.name
+                            }}</div>
+                    </div>
+                    <div>
+                        <!-- <a-tooltip title="发布帖子" autoAdjustOverflow> -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] "
+                                style="flex-shrink: 0;" @click="publishModalVisible">
+                                <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
+                                    icon="fluent:add-16-filled" />
+                            </button>
+                        <!-- </a-tooltip> -->
+
+                        <!-- <a-tooltip title="跳转元社区" placement="bottom"> -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
+                                style="flex-shrink: 0;" v-if="false">
+                                <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
+                                    icon="fluent:chat-16-regular" />
+                            </button>
+                        <!-- </a-tooltip> -->
+
+                        <!-- <a-tooltip title="刷新" placement="bottom" > -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
+                                @click="refreshPost">
+                                <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
+                                    style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" />
+                            </button>
+                        <!-- </a-tooltip> -->
 
                     </div>
-                    <div class="ml-2 font-16 xt-text">
-                        {{ this.showForumList[0].name }}
-                    </div>
                 </div>
-                <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
-                    <div v-for="(item, index) in showForumList" :key="index"
-                        class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
-                        :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-                        @click="setCurrentIndex(index, item)">{{
-                            item.name
-                        }}</div>
-                </div>
-                <div>
-                    <!-- <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
+                <!-- 内容区 -->
 
-                            </a-tooltip>
-                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
-
-                            </a-tooltip><a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
-
-                            </a-tooltip> -->
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;" @click="publishModalVisible">
-                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                            icon="fluent:add-16-filled" />
-                    </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
-                        style="flex-shrink: 0;" v-if="false">
-                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                            icon="fluent:chat-16-regular" />
-                    </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
-                        @click="refreshPost">
-                        <YuanIcon class="text-lg rotate-90 xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
-                            icon="akar-icons:arrow-clockwise" />
-                    </button>
-                </div>
-            </div>
-            <!-- 内容区 -->
-            
                 <div v-if="isLoading">
                     <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                 </div>
@@ -106,7 +75,8 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
-        <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" :forumIndex="currentIndex"></YuanPublishModal>
+        <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+            :forumIndex="currentIndex"></YuanPublishModal>
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <div class="mb-6 xt-text font-16">
                 数据来源
@@ -118,15 +88,19 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
-            <a-select v-model:value="selectValue" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange(selectValue)" :bordered="false">
-                <a-select-option :value="index" v-for="(item, index) in forumList" class="absolute z-auto xt-bg xt-text-2 selsect-options">
-                                    {{ item.name }}
+            <a-select v-model:value="selectValue" mode="multiple"
+                style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子"
+                @change="handleChange(selectValue)" :bordered="false">
+                <a-select-option :value="index" v-for="(item, index) in forumList"
+                    class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                    {{ item.name }}
                 </a-select-option>
                 <template #clearIcon>
                     <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
                 </template>
                 <template #suffixIcon>
-                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
+                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
+                        class="mr-3 rotate-180 xt-text"></YuanIcon>
                 </template>
             </a-select>
         </a-drawer>
@@ -203,8 +177,8 @@ export default {
             dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
             defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
             selectForumList: [],
-            browserUrl:'https://s.apps.vip/post/',
-            showPublishModal:false,
+            browserUrl: 'https://s.apps.vip/post/',
+            showPublishModal: false,
         }
     },
     methods: {
@@ -228,10 +202,10 @@ export default {
         handleChange(value) {
             this.selectForumList.push(this.forumList[value])
         },
-        publishModalVisible(){
-            this.showPublishModal = ! this.showPublishModal
+        publishModalVisible() {
+            this.showPublishModal = !this.showPublishModal
         },
-        modalVisible(val){
+        modalVisible(val) {
             this.showPublishModal = val
         }
     },
@@ -278,12 +252,12 @@ export default {
     },
     watch: {
         showForumList(newValue) {
-            this.isLoading=true
+            this.isLoading = true
             this.getCommunityPost(this.showForumList[0].id)
             setTimeout(() => {
-               this.isLoading=false 
+                this.isLoading = false
             });
-            
+
         }
     }
 }
@@ -324,8 +298,7 @@ export default {
 :deep(.ant-drawer-title) {
     color: var(--primary-text) !important;
 }
-:deep(.ant-select-selection-item ){
-    background: rgba(80,139,254,0.20);
-}
 
-</style>
+:deep(.ant-select-selection-item) {
+    background: rgba(80, 139, 254, 0.20);
+}</style>
