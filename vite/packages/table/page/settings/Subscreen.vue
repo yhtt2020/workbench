@@ -1,56 +1,57 @@
 <template>
-  <div class="mb-3">
-    此功能暂时未完成开发，请勿尝试。
-  </div>
-  <a-tabs v-if="true" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">
-    <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">
-      <div class="line-title">
-        基础设置
-      </div>
-      <div v-if="screen.key !== 'main'" class="line">
-        名称：
-        <a-input class="ml-3" v-model:value="screen.title" style="width: 250px"></a-input>
-      </div>
-      <div class="line">
-        默认进入页面： <a-button type="primary" size="small">选择</a-button>
-      </div>
-      <template v-if="screen.key !== 'main'">
-        <div class="line">
-          开机自启动：
-          <a-switch v-model:checked="screen.settings.autoRun"></a-switch>
-        </div>
-        <!--分屏专属设置项目        -->
+  <ScreenManage></ScreenManage>
+<!--  <div class="mb-3">-->
+<!--    此功能暂时未完成开发，请勿尝试。-->
+<!--  </div>-->
+<!--  <a-tabs v-if="true" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">-->
+<!--    <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">-->
+<!--      <div class="line-title">-->
+<!--        基础设置-->
+<!--      </div>-->
+<!--      <div v-if="screen.key !== 'main'" class="line">-->
+<!--        名称：-->
+<!--        <a-input class="ml-3" v-model:value="screen.title" style="width: 250px"></a-input>-->
+<!--      </div>-->
+<!--      <div class="line">-->
+<!--        默认进入页面： <a-button type="primary" size="small">选择</a-button>-->
+<!--      </div>-->
+<!--      <template v-if="screen.key !== 'main'">-->
+<!--        <div class="line">-->
+<!--          开机自启动：-->
+<!--          <a-switch v-model:checked="screen.settings.autoRun"></a-switch>-->
+<!--        </div>-->
+<!--        &lt;!&ndash;分屏专属设置项目        &ndash;&gt;-->
 
-        <!--分屏专属设置项目end        -->
-      </template>
-      <div class="line-title">
-        系统功能设置
-      </div>
-      <template v-if="this.currentTip && this.tips[this.currentTip]">
-        <a-alert class="mb-3" v-if="this.tips[this.currentTip].status" :message="this.tips[this.currentTip].content"
-          type="info" closable :after-close="closeTip(this.currentTip)" />
-      </template>
+<!--        &lt;!&ndash;分屏专属设置项目end        &ndash;&gt;-->
+<!--      </template>-->
+<!--      <div class="line-title">-->
+<!--        系统功能设置-->
+<!--      </div>-->
+<!--      <template v-if="this.currentTip && this.tips[this.currentTip]">-->
+<!--        <a-alert class="mb-3" v-if="this.tips[this.currentTip].status" :message="this.tips[this.currentTip].content"-->
+<!--          type="info" closable :after-close="closeTip(this.currentTip)" />-->
+<!--      </template>-->
 
-      <template v-if="screen.key !== 'main'">
-        <div v-if="screen.apps" class="line">
-          独立底部导航栏：
-          <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>
-        </div>
-        <div v-if="screen.apps" class="line">
-          独立卡片桌面：
-          <a-switch v-model:checked="screen.apps.home"></a-switch>
-        </div>
-        <div v-if="screen.apps" class="line">
-          独立壁纸：
-          <a-switch v-model:checked="screen.apps.paper"></a-switch>
-        </div>
-        <div v-if="screen.apps" class="line">
-          独立快捷指令：
-          <a-switch v-model:checked="screen.apps.deck"></a-switch>
-        </div>
-      </template>
-    </a-tab-pane>
-  </a-tabs>
+<!--      <template v-if="screen.key !== 'main'">-->
+<!--        <div v-if="screen.apps" class="line">-->
+<!--          独立底部导航栏：-->
+<!--          <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>-->
+<!--        </div>-->
+<!--        <div v-if="screen.apps" class="line">-->
+<!--          独立卡片桌面：-->
+<!--          <a-switch v-model:checked="screen.apps.home"></a-switch>-->
+<!--        </div>-->
+<!--        <div v-if="screen.apps" class="line">-->
+<!--          独立壁纸：-->
+<!--          <a-switch v-model:checked="screen.apps.paper"></a-switch>-->
+<!--        </div>-->
+<!--        <div v-if="screen.apps" class="line">-->
+<!--          独立快捷指令：-->
+<!--          <a-switch v-model:checked="screen.apps.deck"></a-switch>-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </a-tab-pane>-->
+<!--  </a-tabs>-->
 </template>
 
 <script lang="ts">
@@ -58,9 +59,12 @@ import { screenStore } from '../../store/screen'
 import { mapWritableState, mapActions } from 'pinia'
 import { nanoid } from 'nanoid'
 import { Modal } from 'ant-design-vue'
+import ChooseScreen from "../ChooseScreen.vue";
+import ScreenManage from "../../components/bottomPanel/ScreenManage.vue";
 
 export default {
   name: 'subScreen',
+  components: {ScreenManage, ChooseScreen},
   data() {
     return {
       activeKey: 'main',

@@ -98,12 +98,12 @@
               <a-col v-if="simple">
                 <MyAvatar :size="80"></MyAvatar>
               </a-col>
-              <!--              <a-col :span="6">-->
-              <!--                <div v-if="isMain()"  @click="subscreen" class="btn">-->
-              <!--                  <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>-->
-              <!--                  <div > 分屏设置</div>-->
-              <!--                </div>-->
-              <!--              </a-col>-->
+                            <a-col :span="6">
+                              <div v-if="isMain()"  @click="subscreen" class="btn">
+                                <Icon icon="pingmufenge02" style="font-size: 2em"></Icon>
+                                <div > 分屏设置</div>
+                              </div>
+                            </a-col>
             </a-row>
             <div></div>
           </div>
