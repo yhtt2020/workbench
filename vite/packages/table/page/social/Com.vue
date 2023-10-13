@@ -66,14 +66,18 @@
       </div>
       <div style="height: 100%;display: inline-block;">
         <div class="line font-bold text-white" style="color: var(--primary-text)">更新日志：</div>
-        <vuuri v-model="updateLog" style="height: 100%">
+        <vuuri :options="{
+          layout:{
+             horizontal: true,
+          }
+        }"  v-model="updateLog" style="height: 100%">
           <template #item="{ item }">
-            <div class="card mb-3 " style="width: 400px;background: rgba(13,62,227,0.8);color:white;height: auto">
+            <div class="card " style="width: 400px; color:white;height: auto">
               <div class="line-title">
                 {{ item.name }} 更新内容
               </div>
               <div class="line">
-                <div v-for="(li, index) in item.list">
+                <div class="line-text" v-for="(li, index) in item.list">
                   {{ index + 1 }}.{{ li }}
                 </div>
               </div>
@@ -158,6 +162,10 @@ export default {
 
 <style scoped>
 .card {
-  background: #252525;
+  background:var(--active-bg);
+}
+.line-text{
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 </style>
