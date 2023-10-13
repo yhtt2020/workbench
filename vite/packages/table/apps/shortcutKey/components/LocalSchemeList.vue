@@ -95,9 +95,8 @@ export default {
         if(!this.selectedSchemeIds.includes(item.id)){
           this.selectedSchemeIds.push(item.id)
         }else{
-          this.splice(this.selectedSchemeIds.indexOf(item.id),1)
+          this.selectedSchemeIds.splice(this.selectedSchemeIds.indexOf(item.id),1)
         }
-        item.selected = !item.selected
         return
       }else{
         console.log(item)
