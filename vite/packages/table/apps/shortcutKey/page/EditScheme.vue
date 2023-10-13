@@ -8,16 +8,16 @@
              class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
           <Icon icon="xiangzuo" style="font-size: 1.5em;color:var(--primary-text)"></Icon>
         </div>
-        <div class="ml-3" style="font-size: 18px;line-height: 40px">关联软件： {{exeName}}</div>
+        <div class="ml-3" style="font-size: 18px;line-height: 40px">关联软件： {{ exeName }}</div>
       </div>
 
       <div class="flex btn-item">
         <div class="pointer" @click="bulkEdit">{{ bulkEditKey ? '完成编辑' : '批量编辑' }}</div>
         <div class="pointer" @click="doSaveScheme">保存</div>
-<!--        <a-tooltip>-->
-<!--          <template #title>保存并分享到创意市场</template>-->
-<!--          <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>-->
-<!--        </a-tooltip>-->
+        <!--        <a-tooltip>-->
+        <!--          <template #title>保存并分享到创意市场</template>-->
+        <!--          <div class="pointer xt-active-btn" @click="saveShare">保存并分享</div>-->
+        <!--        </a-tooltip>-->
       </div>
     </div>
     <div class="flex mt-2 items-center justify-center">
@@ -55,7 +55,7 @@
         </div>
       </div>
       <span>方案名称</span>
-      <a-input v-model:value="applyName"  spellcheck="false" class="input" placeholder="请输入方案名称"
+      <a-input v-model:value="applyName" spellcheck="false" class="input" placeholder="请输入方案名称"
                aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
       <span>方案简介</span>
       <a-textarea v-model:value="introduce" spellcheck="false" class="input xt-text" placeholder="请输入描述"
@@ -78,27 +78,30 @@
       <!-- 快捷键列表 -->
       <!-- <div :style="closePrompt ? 'height:90%' : 'height:100%'"> -->
       <vue-custom-scrollbar :settings="settingsScroller" :style="closePrompt ? 'height:90%' : 'height:100%'">
-        <div class="key-box" :style="keyBoxStyle" id="keyBox">
+        <div @click.self="completeEdit" class="key-box" :style="keyBoxStyle" id="keyBox">
           <div v-for="(item,index) in keyList" :key="item.id">
             <!-- 分组名称 -->
             <div v-if="!item.keys" class="key-item border-right" @click="editItem(item,index,'name')">
               <div class="flex items-center" v-if="item.isEdit">
-                <a-input class="input"
+                <a-input @focus="currentItem=item" class="input"
                          v-model:value="item.groupName"
                          :ref="`inputNameEdit_${index}`"
                          spellcheck="false"
                          placeholder="分类名称"
-                         style="width:370px;height: 48px;"
-                         @blur="lostFocus(item,'groupName')"
+                         style="width:353px;height: 48px;"
+                         @keydown.enter="completeEdit"
                 />
+                <ColorPicker @click.stop class="ml-2" :w="42" :h="42" v-model:color="item.color"></ColorPicker>
                 <span @click.stop="delKey(index,item)">
                     <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                   </span>
               </div>
-              <span v-else class="truncate">{{ item.groupName }}</span>
+              <span v-else class="truncate">
+                <div class="color-dot" :style="{backgroundColor:getColor(index)}"></div>
+                {{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item"
+            <div :style="{backgroundColor:!item.isEdit?getColor(index):''}" v-else class="border-right key-item"
                  @click="editItem(item,index,'item')">
               <div class="flex">
                 <template v-if="!item.isEdit">
@@ -126,14 +129,14 @@
               </div>
               <div>
                 <div class="key-title truncate" v-if="!item.isEdit">{{ item.title }}</div>
-                <a-input class="input text-right"
+                <a-input @focus="currentItem=item" class="input text-right"
                          v-else
                          v-model:value="item.title"
                          :id="`keyName_${item.id}`"
                          spellcheck="false"
                          placeholder="快捷键名称"
                          style="width:179px;height: 48px;"
-                         @blur="lostFocus(item,'keyName')"
+                         @keydown.enter="completeEdit"
                 />
               </div>
               <span v-if="item.isEdit" class="flex">
@@ -147,6 +150,7 @@
                   <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
                 </span>
               </span>
+
             </div>
             <!-- 备注 -->
             <div v-if="item.addNote" @click="editItem(item,index,'note')">
@@ -158,7 +162,9 @@
                            spellcheck="false"
                            placeholder="备注"
                            style="width:370px;height: 48px;"
-                           @blur="lostFocus(item,'note')"
+                           @focus="currentItem=item;currentType='note'"
+                           @keydown.enter="completeEdit"
+
                   />
                   <span @click.stop="delNote(index,item)">
                       <Icon class="ml-3" icon="close-circle-fill" style="font-size:21px;color: #7A7A7A;"></Icon>
@@ -253,7 +259,8 @@ import ShareModal from '../../../components/ShareModal.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { nanoid } from 'nanoid'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
+import ColorPicker from '../../../ui/components/ColorPicker/ColorPicker.vue'
 
 export default {
   name: 'ShareKey',
@@ -261,7 +268,8 @@ export default {
     HorizontalPanel,
     ShortcutKeyList,
     KeyBoard,
-    ShareModal
+    ShareModal,
+    ColorPicker
   },
   directives: {
     focus: {
@@ -270,10 +278,13 @@ export default {
       }
     }
   },
+
   data () {
     return {
-
-      exeName:'',//当前方案的应用名
+      saved: true,//是否已经保存
+      currentItem: {},//当前在编辑的对象
+      currentType: '',
+      exeName: '',//当前方案的应用名
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -285,7 +296,7 @@ export default {
         { title: '基本信息', name: 'message' },
         { title: '快捷键', name: 'shortcutkey' }
       ],
-      defaultNavType: { title: '基本信息', name: 'message' },
+      defaultNavType: { title: '基本信息', name: 'shortcutkey' },
       closePrompt: true, //提示
       keyList: [], //快捷键列表
       imageUrl: '',
@@ -318,13 +329,13 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList','currentApp']),
-    totalKeys(){
-      let sum=0
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp']),
+    totalKeys () {
+      let sum = 0
       this.keyList.map(item => {
         if (item.keys) {
-          if(item.keys.length>0){
-            sum ++
+          if (item.keys.length > 0) {
+            sum++
           }
 
         }
@@ -333,15 +344,47 @@ export default {
     }
   },
   mounted () {
-    this.exeName=this.$route.params.exeName
+    this.exeName = this.$route.params.exeName
     this.getData()
     this.$nextTick(() => {
       this.keyDrop()
     })
 
   },
+  beforeRouteLeave (to, from, next) {
+    if (!this.saved) {
+      Modal.confirm({
+        content: '尚未保存，是否离开？',
+        centered: true,
+        onOk: () => {
+          next()
+        }
+      })
+    } else {
+      next()
+    }
+  },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty','addScheme','saveScheme']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme']),
+    completeEdit () {
+      this.saved = false
+      message.success('完成编辑')
+
+      if (this.currentItem) {
+        this.lostFocus(this.currentItem, this.currentItem.type || this.currentType)
+        this.currentItem.isEdit=false
+      }
+    },
+    getColor (index) {
+      for (let i = index; i >= 0; i--) {
+        if (this.keyList[i].groupName) {
+          //是组
+          console.log(this.keyList[i], this.keyList[index].title)
+          return this.keyList[i].color
+        }
+      }
+      return index
+    },
     async getData () {
       if (this.$route.params.id) {
         this.paramsId = this.$route.params.id
@@ -358,9 +401,9 @@ export default {
         })
         //执行添加默认添加一个可编辑的空数据
         this.addShortcutKey()
-      }else{
-        this.applyName=this.currentApp.software.alias
-        this.icon=this.currentApp.software.icon
+      } else {
+        this.applyName = this.currentApp.software.alias
+        this.icon = this.currentApp.software.icon
       }
     },
     //深拷贝
@@ -421,12 +464,16 @@ export default {
           isShare: false, //是否分享到社区
           isCommunity: false, //是否来自社区
           keyList: this.keyList, //快捷键列表
-          exeName:this.exeName,
+          exeName: this.exeName,
         }
-        this.addScheme(this.appContent,this.exeName)
+        this.addScheme(this.appContent, this.exeName)
       }
+      this.saved = true
       message.success('成功保存')
-      this.$router.go(-1)
+      setTimeout(() => {
+        this.$router.go(-1)
+      }, 200)
+
     },
     // 保存并分享
     // setMarketList
@@ -545,7 +592,7 @@ export default {
     lostFocus (item, type) {
       setTimeout(() => {
         switch (type) {
-          case 'groupName':
+          case 'group':
             if (!item.groupName.trim()) {
               item.groupName = this.groupName
               return message.info('分组名称不能为空')
@@ -557,7 +604,7 @@ export default {
               }
             }
             break
-          case 'keyName':
+          case 'key':
             if (!item.title.trim()) {
               item.title = this.keyName
               return message.info('快捷键名称不能为空')
@@ -665,6 +712,7 @@ export default {
         keyArr: [],
         title: '',
         isEdit: true,
+        type: 'key'
       })
     },
     // 添加分类名称
@@ -673,6 +721,7 @@ export default {
         id: nanoid(),
         groupName: '',
         isEdit: true,
+        type: 'group'
       },)
       // if(!this.addGroupName.trim()) return message.info("分组名称不能为空")
 
@@ -877,7 +926,6 @@ export default {
     height: 48px;
   }
 }
-
 
 
 .avatar {

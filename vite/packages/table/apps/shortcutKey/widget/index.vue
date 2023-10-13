@@ -7,7 +7,11 @@
       </div>
       <!-- 快捷键列表 更多快捷键 -->
       <div v-show="defaultType.name === 'recent'" class="top-list">
+
         <div style="height: 306px;">
+          <div v-if="displayList.length===0" class="pt-10 text-center">
+            您还未使用过任何快捷键方案，请点击更多快捷键查看方案。
+          </div>
           <div class="card-app pointer" @click="enterDetail(item)" v-for="(item,index) in displayList" :key="index">
             <img :src="item.icon" alt="">
             <div class="title-text">{{ item.name }}</div>
@@ -18,8 +22,8 @@
           </div>
         </div>
 
-        <div class="button-bom">
-          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer" style="width:100%;">
+        <div class="button-bom ">
+          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer" style="width: 100%;">
             <!-- <icon></icon> -->
             更多快捷键
           </div>
@@ -34,20 +38,24 @@
         <div class="p-firse" :class="topBar">
           <div @click="enterDetail(selectedScheme)" class="name-img pointer ">
             <a-avatar shape="square" :src="selectedScheme.icon" alt=""></a-avatar>
-            <span>{{selectedScheme.name}} </span>
+            <span>{{ selectedScheme.name }} </span>
           </div>
           <div class="page-change">
             <!-- 换页 -->
             <left-outlined :class="{disable:page<=1}" @click="onChangePage('before')"/>
-            <right-outlined :class="{disable:!hasNext}"  @click="onChangePage('next')"/>
+            <right-outlined :class="{disable:!hasNext}" @click="onChangePage('next')"/>
           </div>
         </div>
         <div class="key-body">
           <!-- 循环类型 -->
-          <div class="key-flex" v-for="item in keyList" :key="item.id">
+          <div class=" key-wrapper" :style="{backgroundColor:!item.groupName?getColor(currentKeyList,index+(page-1)*12) :'' }"
+               v-for="(item,index) in keyList" :key="item.id">
             <!-- 标题 -->
-            <div class="key-item" v-if="item.groupName !== ''">
-              <div class="key-name truncate">{{ item.groupName }}</div>
+            <div class="key-item" v-if="item.groupName">
+              <div class="key-name truncate">
+                <div class="color-dot" :style="{backgroundColor:getColor(currentKeyList,index+(page-1)*12)}"></div>
+                <strong class="ml-2">{{ item.groupName }}</strong>
+              </div>
             </div>
             <!-- 快捷键 -->
             <div class="key-item" v-if="item.keyStr !== ''">
@@ -94,6 +102,7 @@ import { defineComponent } from 'vue'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { keyStore } from '../store'
 import { mapState, mapActions } from 'pinia'
+import { getColor } from '../lib/lib'
 // import BottomEdit from "..";
 export default {
   components: {
@@ -126,7 +135,7 @@ export default {
   },
   data () {
     return {
-      selectedScheme:{},
+      selectedScheme: {},
       page: 1,
       selValue: '',
       settingVisible: false,
@@ -445,14 +454,14 @@ export default {
       // ],
     }
   },
-  watch:{
-    defaultType:{
-      handler(){
+  watch: {
+    defaultType: {
+      handler () {
         this.saveData()
       }
     },
-    selValue:{
-      handler(){
+    selValue: {
+      handler () {
         this.saveData()
       }
     }
@@ -460,7 +469,11 @@ export default {
   computed: {
     ...mapState(keyStore, ['recentlyUsedList']),
     displayList () {
-      return this.recentlyUsedList.slice(0, 6)
+      if (this.recentlyUsedList) {
+        return this.recentlyUsedList.slice(0, 6)
+      } else {
+        return []
+      }
     },
     selectOptions () {
       return this.recentlyUsedList.map(item => {
@@ -486,7 +499,7 @@ export default {
     hasNext () {
       return this.currentKeyList.slice(this.page * 12, (this.page + 1) * 12).length > 0
     },
-    selectedScheme(){
+    selectedScheme () {
       let found = this.recentlyUsedList.find(item => {
         console.log(item, this.selValue)
         return item.id === this.selValue
@@ -494,27 +507,27 @@ export default {
       console.log(found)
       if (found) {
         return found
-      }else{
+      } else {
         return {}
       }
     }
   },
   async mounted () {
-      this.loadData()
+    this.loadData()
   },
   methods: {
+    getColor,
     ...mapActions(keyStore, ['setRecentlyUsedList']),
-    saveData(){
-      this.customData.defaultType=this.defaultType
-      this.customData.selctedSchemeId=this.selValue
+    saveData () {
+      this.customData.defaultType = this.defaultType
+      this.customData.selctedSchemeId = this.selValue
     },
-    loadData(){
-      if(this.customData.defaultType){
-        this.defaultType=this.customData.defaultType
+    loadData () {
+      if (this.customData.defaultType) {
+        this.defaultType = this.customData.defaultType
       }
-      if(this.customData.selctedSchemeId)
-      {
-        this.selValue=this.customData.selctedSchemeId
+      if (this.customData.selctedSchemeId) {
+        this.selValue = this.customData.selctedSchemeId
       }
 
     },
@@ -533,9 +546,9 @@ export default {
         }
 
       } else {
-          if (this.page > 1) {
-            this.page--
-          }
+        if (this.page > 1) {
+          this.page--
+        }
       }
     },
 
@@ -715,20 +728,9 @@ i:hover {
 
 }
 
-.key-body > div {
-  width: 260px;
-  height: 32px;
-  margin: 0 16px 18px 0px;
-}
-
-.key-flex {
-  display: flex;
-  line-height: 32px;
-}
 
 .key-name {
   font-size: 16px;
-  font-family: PingFangSC-Regular;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
   line-height: 32px;
@@ -743,7 +745,6 @@ i:hover {
 .key-title {
   text-align: right;
   flex: 1;
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   text-align: right;
@@ -753,17 +754,29 @@ i:hover {
 }
 
 
-.key-flex span {
-  width: 32px;
-  height: 32px;
-  background: rgba(0, 0, 0, 0.30);
-  border-radius: 8px;
-  padding: 5px 8px;
-  font-size: 16px;
-  margin-right: 8px;
-}
-
+.key-flex
 .disable {
   opacity: 0.5;
+}
+
+.key-wrapper {
+  padding: 10px;
+  padding-left: 20px;
+  border-radius: 4px;
+  display: flex;
+  width: 260px;
+  max-height: 44px;
+
+  margin: 0 8px 5px 0px;
+
+  span {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.30);
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 16px;
+    margin-right: 8px;
+  }
 }
 </style>

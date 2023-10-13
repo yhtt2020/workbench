@@ -37,7 +37,7 @@ export default defineComponent({
           title:'桌面',
           name:'desk',
           icon:'desktop',
-          tab:'desktop',
+          tab:'workDesk',
           route:{
             name:'workDesk'
           }

@@ -88,15 +88,13 @@ export default {
   mounted() {
     this.watchDog = win32.WatchWindowForeground(async (newPoint, oidPoint, Handle) => {
       let {rect, pid, MianPid, title} = Handle
-      let found = this.executedApps.findIndex(app => {
-        return app.pid === pid
-      })
-
-      if (found > -1) {
-        this.executedApps.splice(found, 1)
-      }
       let path = win32.getProcessidFilePath(pid)
       let exeName = require('path').basename(path)
+      this.executedApps=this.executedApps.filter(item=>{
+        return item.exeName!==exeName
+      })
+
+
       let software = await this.getRepApp(exeName, path)
       if (software.id === 'unknown') {
         software.alias = exeName
