@@ -27,7 +27,7 @@
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="right-area flex items-end justify-end flex-1 align-items-end xt-text" style="position: relative;">
+    <div class="flex items-end justify-end flex-1 right-area align-items-end xt-text" style="position: relative;">
       <div class="top-state">
         <!-- 番茄钟 -->
         <TopTomato />
@@ -299,6 +299,7 @@ export default {
       this.hideNoticeEntry()
     },
     topClockTimerVisibleSetting() {
+      this.filterClock(this.clockTag)
       if(this.checkTopClock===true){
         if (this.filterClockEvent.length > 0) {
           // console.log(this.filterClockEvent.length);
@@ -316,6 +317,7 @@ export default {
         this.topClockTimerVisible=false
 
       }
+      // console.log(this.clockTag);
 
 
 
@@ -325,7 +327,8 @@ export default {
   },
   beforeUpdate() {
     this.topClockTimerVisibleSetting()
-    this.filterClock(this.clockTag)
+    
+    
   },
 }
 </script>

@@ -9,15 +9,15 @@
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
         </div>
         <div class="flex">
-          <div v-for="(item,index) in appList.slice(0,3)" :key="item.id" class="head-list"
-               :class="navIndex === index ? 'xt-mask-2':''" @click="toggleApp(index,item)">
+          <div v-for="(item,index) in schemeList.slice(0,3)" :key="item.id" class="head-list"
+               :class="navIndex === index ? 'xt-mask-2':''" @click="switchScheme(index,item)">
           <span>
             <a-avatar shape="square" :src="item.icon" :size="38"></a-avatar>
           </span>
             <span class="ml-2 xt-text" style="font-size: 16px;">{{ item.name }}</span>
           </div>
         </div>
-        <div @click="recentlyUsed = true"
+        <div @click="recentlyUsedVisible = true"
              class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center">
           <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
         </div>
@@ -25,7 +25,7 @@
       <div class="flex">
         <a-tooltip placement="left">
           <template #title>展开或收起分类栏</template>
-          <div @click="showSide = !showSide"
+          <div @click="toggleSlide"
                class="pointer button-active xt-mask-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center mr-3">
             <Icon icon="outdent" style="font-size: 1.5em;"></Icon>
           </div>
@@ -38,28 +38,39 @@
     </div>
     <div class="key-list">
       <!-- 侧边栏 -->
-      <div class="side-nav" v-if="showSide">
-        <Search inputStyle="width:220px;" placeholder="搜索"></Search>
+      <div class="side-nav" v-if="currentScheme.showSide">
+        <Search v-model:keywords="keywords" inputStyle="width:220px;" placeholder="搜索"></Search>
         <div class="nav-box">
-          <div class="nav-item"
-               v-for="(item,index) in sideNav" :key="item.id"
-               @click="updateNavIndex(item, index)">
-            {{ item.groupName }}
-          </div>
+          <a-tooltip v-for="(item,index) in sideNav" :title="item.groupName">
+            <div class="nav-item  " :style="{backgroundColor:getColor(this.sideNav,index)}"
+                 :key="item.id"
+                 @click="updateNavIndex(item, index)">
+              <p>
+                <span> {{ item.groupName }}</span>
+              </p>
+            </div>
+          </a-tooltip>
         </div>
       </div>
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
                             :style="showSide ? 'width: 80%;' : 'width:100%'">
+        <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
+          此方案暂时没有任何快捷键 <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
+
+
+        </div>
         <div class="key-box" :style="keyBoxStyle">
-          <div v-for="(item,index) in keyList" :key="item.id">
+
+          <div v-for="(item,index) in filteredKeyList" :key="item.id">
             <!-- 分组名称 -->
-            <div :id="'groupId_' + item.id" class="key-item border-right" v-if="item.groupName"
+            <div :id="'groupId_' + item.id" class="key-item border-right " style="margin-top: 15px" v-if="item.groupName"
                  :style="item.id === currentGroup.id ? activeGroup : ''">
-              <span class="truncate font-bold">{{ item.groupName }}</span>
+            <span class="truncate font-bold">  <div class="color-dot" :style="{backgroundColor:getColor(this.filteredKeyList,index)}"></div> {{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" :style="keyIndex === item.id ? 'background: var(--mask-bg); border-radius: 10px':''"
+            <div v-else class="border-right key-item" :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
+                 :style="{backgroundColor:getColor(this.filteredKeyList,index)}"
                  @click="setKeyItem(item.id)">
               <div class="flex w-full">
                 <div v-for="i in item.keys" :key="i" class="flex">
@@ -69,21 +80,27 @@
                 <div class="key-title ">{{ item.title }}</div>
               </div>
 
-              <div>    <div v-if="item.addNote" class="text-note">
-                <span class="note-val">{{ item.noteVal }}</span>
-              </div></div>
+              <div>
+                <div v-if="item.addNote" class="text-note">
+                  <span class="note-val">{{ item.noteVal }}</span>
+                </div>
+              </div>
             </div>
-
           </div>
         </div>
       </vue-custom-scrollbar>
     </div>
+    <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
+      <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。">
+        <strong>快速切换：</strong></a-tooltip>
+      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+    </div>
   </div>
 
   <!-- 最近使用 -->
-  <a-drawer v-model:visible="recentlyUsed" title="最近使用" width="500" placement="right">
+  <a-drawer v-model:visible="recentlyUsedVisible" title="最近使用" width="500" placement="right">
     <div class="main-part">
-      <div v-for="(item,index) in appList" class="flex items-center mb-4 pointer" @click="toggleApp(index,item)">
+      <div v-for="(item,index) in schemeList" class="flex items-center mb-4 pointer" @click="switchScheme(index,item)">
             <span class="mx-4 h-14 w-14 flex justify-center items-center">
                 <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
             </span>
@@ -108,18 +125,19 @@
           <span class="h-14 w-14 flex justify-center items-center">
             <a-avatar shape="square" :src="appContent.icon" :size="48"></a-avatar>
           </span>
-          <span class="flex flex-col ml-4">
-            <span class="xt-text" style="font-size: 18px;font-weight: 500;">{{ appContent.name }}</span>
-            <span class="mt-1 xt-text-2" style="font-size: 16px;">{{ appContent.commonUse }}</span>
+          <span class="flex flex-col ml-4 flex-1">
+            <span class="xt-text truncate" style="font-size: 16px;font-weight: 500;">{{ appContent.name }}</span>
+            <span class="mt-1 xt-text-2 summary">{{ appContent.commonUse }}</span>
           </span>
         </div>
-        <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
+        <div class="flex flex-col justify-center items-center    xt-mask rounded-lg p-5"
+             style="min-width: 100px;height:78px">
           <span class="xt-text"
-                style="font-family: Oswald-SemiBold;font-size: 24px;font-weight: 600;">{{ appContent.number }}</span>
+                style="font-size: 24px;font-weight: 600;">{{ appContent.number }}</span>
           <span>{{ appContent.key }}</span>
         </div>
       </div>
-      <div class="flex justify-between items-center mt-4 xt-text-2" style="font-size: 14px;">
+      <div v-if="false" class="flex justify-between items-center mt-4 xt-text-2" style="font-size: 14px;">
         <span class="flex items-center">
           <div @click="showCard(appContent.id)">
             <a-avatar shape="square" :src="appContent.avatar" :size="32"></a-avatar>
@@ -138,14 +156,14 @@
         </span>
       </div>
     </div>
-    <div class="set-item" v-if="!appContent.isMyCreate">
-      <Icon icon="xiazai" class="mr-2"></Icon>
-      <span>下载更新</span>
-    </div>
-    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare" @click="share">
-      <Icon icon="upload" class="mr-2"></Icon>
-      <span>立即上传</span>
-    </div>
+    <!--    <div class="set-item" v-if="!appContent.isMyCreate">-->
+    <!--      <Icon icon="xiazai" class="mr-2"></Icon>-->
+    <!--      <span>下载更新</span>-->
+    <!--    </div>-->
+    <!--    <div class="set-item" v-if="appContent.isMyCreate && !appContent.isShare" @click="share">-->
+    <!--      <Icon icon="upload" class="mr-2"></Icon>-->
+    <!--      <span>立即上传</span>-->
+    <!--    </div>-->
     <div class="set-item" v-if="!appContent.isMyCreate">
       <Icon icon="dianzan" class="mr-2"></Icon>
       <span>点赞</span>
@@ -159,6 +177,8 @@
       <span>删除</span>
     </div>
   </a-drawer>
+
+
 </template>
 
 <script>
@@ -168,10 +188,13 @@ import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
+import {isGroupLast,isGroupFirst} from '../lib/lib'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 export default {
   name: 'ShortcutKeyDetail',
   components: {
+    XtButton,
     NotShortcutKey,
     // ShortcutKeyList,
     Search
@@ -180,10 +203,11 @@ export default {
     return {
       navIndex: 0,
       keyIndex: 1,
-      recentlyUsed: false,
+      recentlyUsedVisible: false,
+      keywords: '',//搜索关键词
       openSet: false,
       //最近使用的方案
-      appList: [],
+      schemeList: [],
       //快捷键列表
       keyList: [],
       isData: true,
@@ -206,7 +230,20 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings'])
+    ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme', 'settings']),
+    filteredKeyList () {
+      if (this.keywords) {
+        var regExp = new RegExp(this.keywords, 'i')
+        return this.keyList.filter(key => {
+          if (key.title) {
+            return key.title.match(regExp)
+          }
+          return false
+        })
+      } else {
+        return this.keyList
+      }
+    }
   },
   mounted () {
     this.getData()
@@ -216,37 +253,67 @@ export default {
       async handler () {
         if (this.settings.enableAutoEnter) {
           this.shortcutSchemeList = await this.loadShortcutSchemes(this.currentApp.exeName)
-          if(this.shortcutSchemeList.length>0){
+          if (this.shortcutSchemeList.length > 0) {
             this.setRecentlyUsedList(this.shortcutSchemeList[0])
             this.getData()
           }
 
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
-    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList','loadShortcutSchemes','setRecentlyUsedList']),
+    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    isGroupLast,isGroupFirst,
+    getColor(array,index,field='groupName'){
+      for(let i=index;i>=0;i--){
+        if(array[i][field]){
+          //是组
+          return array[i].color
+        }
+      }
+      return index
+    },
+    /**
+     * 切换侧边导航是否显示
+     */
+    toggleSlide () {
+      this.currentScheme.showSide = !this.currentScheme.showSide
+      this.saveScheme(this.currentScheme)
+    },
     getData () {
-      this.appList = this.recentlyUsedList
-      this.keyList = this.appList[0].keyList
-      this.appContent = this.appList[0]
+      this.schemeList = this.recentlyUsedList
+      this.currentScheme = this.schemeList[0]
+      this.keyList = this.currentScheme.keyList
+      this.appContent = this.schemeList[0]
       if (!this.keyList.length) this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
-
-      if (this.sideNav.length < 4) {
-        this.showSide = false
-      } else {
-        this.showSide = true
+      if (this.currentScheme.showSide === undefined) {
+        //如果从未设置是否显示侧边栏，则根据侧边栏的数量，自动给一个值
+        if (this.sideNav.length < 4) {
+          this.currentScheme.showSide = false
+        } else {
+          this.currentScheme.showSide = true
+        }
+        this.saveScheme(this.currentScheme)
       }
+
     },
-    toggleApp (index, item) {
+    /**
+     * 切换方案
+     * @param index
+     * @param item
+     */
+    switchScheme (index, item) {
+      this.currentScheme = item
       this.navIndex = index
       this.keyList = item.keyList
       this.appContent = item
       this.currentIndex = 0
       this.sideNav = this.keyList.filter(i => i.groupName)
+      this.recentlyUsedVisible = false
+
     },
     setKeyItem (id) {
       this.keyIndex = id
@@ -260,15 +327,14 @@ export default {
     },
     async btnDel () {
       Modal.confirm({
-        centered:true,
-        content:'是否删除此方案？此操作不可恢复。',
-        onOk:async () => {
+        centered: true,
+        content: '是否删除此方案？此操作不可恢复。',
+        onOk: async () => {
           await this.removeShortcutKeyList(this.appContent)
           message.success('删除成功')
           this.onBack()
         }
       })
-
 
     },
     updateNavIndex (item, index) {
@@ -359,8 +425,19 @@ export default {
   background: var(--secondary-bg);
   border-radius: 12px;
   // width: 452px;
-  height: 136px;
+  height: 105px;
   padding: 12px;
+
+  .summary {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    margin-right: 10px;
+  }
 }
 
 .set-title {
@@ -384,8 +461,8 @@ export default {
 }
 
 .key-list {
-  height:0;
-  flex:1;
+  height: 0;
+  flex: 1;
   background: var(--main-mask-bg);
   margin-bottom: 10px;
   margin-right: 10px;
@@ -409,16 +486,34 @@ export default {
       flex-wrap: wrap;
 
       .nav-item {
+        background: var(--secondary-bg);
         // width: 104px;
-        width: 48%;
+        max-width: 48%;
+        padding-left: 10px;
+        padding-right: 10px;
         height: 48px;
         border-radius: 12px;
         margin: 12px 0 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-size: 16px;
         color: var(--primary-text);
+        word-break: break-all;
+        text-align: center;
+        display: flex;
+        align-items: center;
+
+        p {
+          display: inline-block;
+          text-align: left;
+          margin-bottom: 0;
+
+          span {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
       }
 
       .nav-item:hover {
@@ -449,7 +544,7 @@ export default {
 .key-item {
   padding: 0 12px;
   margin: 0 20px 10px;
-  margin-top:0;
+  margin-top: 0;
   margin-bottom: 0;
   width: 350px;
   line-height: 1.2;
@@ -464,9 +559,10 @@ export default {
   cursor: pointer;
   border-bottom: 1px solid;
   flex-direction: column;
-  border-bottom-color:  var(--secondary-bg);
-  .key-title{
-    flex:1;
+  border-bottom-color: var(--secondary-bg);
+
+  .key-title {
+    flex: 1;
     width: 0;
     padding-top: 4px;
     text-align: right;
@@ -483,7 +579,7 @@ export default {
   position: absolute;
   right: -20px;
   top: 0;
-  height:110%;
+  height: 110%;
   margin-left: 10px;
   // border-right: solid rgba(255, 245, 245, 0.1) 1px;
   border-right: solid 1px var(--divider-solid);
@@ -492,8 +588,6 @@ export default {
 .s-bg {
   box-shadow: none !important;
 }
-
-
 
 
 .text-note {
@@ -519,5 +613,16 @@ export default {
   border-right: solid rgba(255, 255, 255, 0.1) 1px;
 }
 
-
+.active {
+  background: var(--mask-bg);
+  border-radius: 10px
+}
+.rounded-top{
+  border-top-left-radius:8px;
+  border-top-right-radius: 8px;
+}
+.rounded-bottom{
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 </style>

@@ -81,7 +81,7 @@
 import { ref, reactive, computed,onMounted} from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyComment from './ReplyComment.vue';
-import replyComments from './replyComments.vue'
+import replyComments from './ReplyComments.vue'
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
 import { Icon } from '@iconify/vue'

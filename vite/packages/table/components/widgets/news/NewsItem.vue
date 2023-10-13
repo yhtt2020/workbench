@@ -6,8 +6,8 @@
         {{ newsMsgList.newsMsgList.title }}
       </div>
       <div class="bottom" >
-        <div class="date"  >
-          <span style="color: var(--secondary-text);">{{ timer[0] }} {{ timer[1] }}</span>
+        <div class=" date" style="text-align: left;max-width: 75px;" >
+          <span style="color: var(--secondary-text); ">{{ timer[0] }} {{ timer[1] }}</span>
         </div>
         <div class="name">
           <span style="color: var(--secondary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>
@@ -105,13 +105,12 @@ const img = computed(() => {
         span {
           font-family: PingFangSC-Regular;
           font-size: 12px;
-          color: rgba(255, 255, 255, 0.40);
           font-weight: 400;
         }
         &:after {
           content: '·';
           text-align: center;
-          margin: 0 4px;
+          margin: 0 2px;
         }
       }
 

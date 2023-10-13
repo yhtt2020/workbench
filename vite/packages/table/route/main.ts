@@ -67,7 +67,8 @@ import Todo from '../page/app/todo/App.vue'
 import WorkIndex from '../page/work/WorkIndex.vue'
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
-
+/*便签*/
+import Note from '../page/app/note/index.vue'
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
@@ -103,6 +104,8 @@ export default [
         name: 'tomato',
         component: Tomato
       },
+
+
 
       {
         path: "/inspector",
@@ -418,6 +421,15 @@ export default [
         redirect: '/desk',
         children: [
           {
+            path: '/Note',
+            name: 'note',
+            component: Note,
+            meta:{
+              tab1:'work',
+              tab2:'note'
+            }
+          },
+          {
             path: "/deck",
             name: "deckIndex",
             component: DeckIndex,
@@ -427,7 +439,8 @@ export default [
                 name: 'deck',
                 component: DeckHome,
                 meta:{
-                  tab1:'work'
+                  tab1:'work',
+                  tab2:'deck'
                 }
               },
               {

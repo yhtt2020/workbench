@@ -1,7 +1,7 @@
 import ShortcutIndex from './page/Index.vue'
 import SchemeList from './page/SchemeList.vue'
 import ShortcutKey from './page/ShortcutKey.vue'
-import ShareKey from "./page/ShareKey.vue"
+import ShareKey from "./page/EditScheme.vue"
 import SchemeDetail from './page/SchemeDetail.vue'
 import Settings from './page/Settings.vue'
 import EditApp from './page/EditApp.vue'
@@ -11,7 +11,7 @@ export default {
   path: '/shortcutKey',
   name: 'shortcutIndex',
   component: ShortcutIndex,
-  redirect:'/schemeList',
+  redirect:'/schemeIndex',
   meta:{
     tab1:'work',
     tab2:'shortcut'
@@ -36,13 +36,23 @@ export default {
       }
     },
     {
+      path: '/schemeIndex',
+      name: 'schemeIndex',
+      component: SchemeList,
+      meta:{
+        tab1:'work',
+        tab2:'shortcut',
+        tab3:'schemeIndex'
+      }
+    },
+    {
       path: '/schemeList',
       name: 'schemeList',
       component: SchemeList,
       meta:{
         tab1:'work',
         tab2:'shortcut',
-        tab3:'myList'
+        tab3:'exeName_{exeName}'
       }
     },
     {

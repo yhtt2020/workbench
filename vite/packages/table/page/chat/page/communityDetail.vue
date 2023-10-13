@@ -94,6 +94,7 @@
   <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
     <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
     <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
+    <InviteOther v-if="type === 'inviteOther'" :no="routeData" @close="addShow = false" />
   </Modal>
 </template>
 
@@ -108,17 +109,18 @@ import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
-import CreateNewChannel from '../components/createNewChannel.vue'
-import CreateNewGroup from '../components/createNewCategory.vue'
+import CreateNewChannel from '../components/CreateNewChannel.vue'
+import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
-import CategoryFloat from '../components/float/categoryFloat.vue'
+import CategoryFloat from '../components/float/CategoryFloat.vue'
 import Commun from '../Commun.vue'
+import InviteOther from '../components/InviteOther.vue'
 
 export default {
   components:{
     CategoryFloat,Modal,CreateNewChannel,
-    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun
+    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun,InviteOther
   },
 
   computed:{
@@ -164,9 +166,20 @@ export default {
     async currentItem(item){
      // 点击链接
      if (item.type === 'link' && item.name !== 'Roadmap') {
-      // console.log('转换的数据',JSON.parse(item.props))
-      const url = JSON.parse(item.props)
-      browser.openInUserSelect(url)
+      const data = JSON.parse(item.props)
+      // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
+      // console.log('转换的数据',data)  
+      switch (data.openMethod) {
+        case 'currentPage':
+          
+          break;
+        case 'userSelect':
+          browser.openInUserSelect(data.url)
+          break;
+        case 'systemSelect':
+          browser.openInSystem(data.url)
+          break;
+      }
      }
 
 

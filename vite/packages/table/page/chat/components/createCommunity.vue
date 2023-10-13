@@ -19,23 +19,25 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-      style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
-      >
-      <!-- style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()" -->
-     <!--  -->
-      <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar>
+     style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+     >
+     <!--头像 -->
+      <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
+      <div class="overflow-hidden">
+        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
+      </div>
       <div class="flex items-center rounded-full p-3 justify-center"
        style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
       >
        <CameraOutlined style="font-size:1em;"/>
       </div>
     </div>
-    <SelectIcon v-if="iconVisible"></SelectIcon>
+    <SelectIcon @isIconShow="iconVisible = false" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
 
-    <a-input v-model:value="communityName" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
+    <a-input v-model:value="communityName" spellcheck="false" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
     <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
 
@@ -55,19 +57,27 @@ import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import { communityStore } from '../store/communityStore'
 import { Icon as communityIcon } from '@iconify/vue'
- import SelectIcon from '../../../components/SelectIcon.vue'
+import SelectIcon from '../../../../selectIcon/page/index.vue'
 
 export default {
   props:['id'],
 
   components:{
-    communityIcon
+    communityIcon,
+    SelectIcon,
   },
 
   data(){
     return{
-     communityName:'',
-     avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
+      //
+      iconVisible:false,
+      communityName:'',
+      avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn',
+      //  传入表情选择器
+      isCustom:true,
+      customTitle:'推荐图片尺寸：256*256，不能超过4MB',
+      // 改变图标颜色
+      bgColor:'',
     }
   },
 
@@ -75,8 +85,20 @@ export default {
 
   },
 
+  mounted(){
+    this.$nextTick(()=>{
+      const inputDom = document.querySelector('.search')
+      inputDom.focus()
+    })
+  },
+
   methods:{
     ...mapActions(communityStore,['createCommunity','getMyCommunity']),
+
+    onShowSelect(){
+      this.iconVisible= !this.iconVisible
+    },
+
     closeCreateCom(){
       this.$emit('close')
     },
@@ -95,6 +117,18 @@ export default {
       this.avatarUrl = res
     },
 
+    // 获取头像
+    getAvatar(avatar){
+      if(avatar.indexOf('color=') >= 0){
+        let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
+        this.bgColor = color
+      }else{
+        this.bgColor = ''
+      }
+      this.avatarUrl = avatar
+    },
+    
+
 
     // 创建社群
     async finshCreateCommunity(evt){
@@ -107,17 +141,17 @@ export default {
       // console.log('查看条件',chineseCharCount >= 2 && chineseCharCount <= 16);
 
       // // const totalCount = chineseCharCount + nonCharCount
-      
+
       if(chineseCharCount >= 2 && chineseCharCount <= 16){
         const option = {
          name:this.communityName,
          icon:this.avatarUrl
         }
-       
+
         // console.log('查看参数',option);
 
         const res = await this.createCommunity(option)
-        // console.log('排查结果',res)
+        console.log('排查结果',res)
 
         if(res.status === 1){
          message.success(`${res.info}`)
@@ -130,12 +164,12 @@ export default {
 
       }else{
         evt.preventDefault();
-        message.error('不能超过2-16个汉字')
+        message.error('社群名称长度的范围需要在2-16个字符之间')
       }
 
     }
 
-    
+
   }
 }
 

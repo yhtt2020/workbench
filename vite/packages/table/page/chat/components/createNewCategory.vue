@@ -8,7 +8,7 @@
   </div>
 
   <div class="flex flex-col px-6">
-   <a-input placeholder="分组名称" v-model:value="categoryName" class="h-10" style="border-radius: 8px;text-align: center;"></a-input>
+   <a-input placeholder="分组名称" v-model:value="categoryName" class="h-10 search" style="border-radius: 8px;text-align: center;" @pressEnter="submitCategory"></a-input>
    <div class="mt-4 flex items-center justify-end pt-4">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeNewGroup">取消</XtButton>
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitCategory">确定</XtButton>
@@ -36,6 +36,13 @@ export default {
     }
   },
 
+  mounted(){
+    this.$nextTick(()=>{
+      const inputDom = document.querySelector('.search')
+      inputDom.focus()
+    })
+  },
+
   methods: {
    ...mapActions(communityStore,['createChannel','getCategoryData']),
    // 关闭弹窗
@@ -50,10 +57,10 @@ export default {
       name:this.categoryName, communityNo:this.no,
       type:'category',role:'category',
      }
-     console.log('排查参数问题',option);
+    //  console.log('排查参数问题',option);
      
      const categoryRes =  await this.createChannel(option)
-     console.log('查看状态',categoryRes);
+    //  console.log('查看状态',categoryRes);
    
      if(categoryRes.status === 1){
       message.success(`${categoryRes.info}`)

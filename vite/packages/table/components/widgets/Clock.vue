@@ -80,8 +80,8 @@
       </div>
     </template>
   </Widget>
-
-
+<!-- {{ topClockSettingVisible }} -->
+  <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
   <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
     @after-visible-change="afterVisibleChange">
     <div class="flex">
@@ -93,7 +93,7 @@
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
       <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" />
+        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false"/>
       </a-space>
       <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
     </div>
@@ -109,7 +109,6 @@ import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import SetupClock from './setupClock.vue'
-
 export default {
   name: 'Clock',
   components: { Widget, clockIcon, SetupClock },

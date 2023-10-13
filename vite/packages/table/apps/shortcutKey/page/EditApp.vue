@@ -1,5 +1,5 @@
 <script lang="ts">
-import {mapActions} from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {Modal, message} from "ant-design-vue";
@@ -9,17 +9,25 @@ export default {
   components: {XtButton},
   data() {
     return {
-      formApp: {},
+      formApp: {
+        hide:false,
+      },
       originApp: {}
     }
+  },
+  computed:{
+    ...mapWritableState(keyStore,['executedApps'])
   },
   async mounted() {
     if (this.$route.params.exeName) {
       this.formApp = await this.getCustomApp(this.$route.params.exeName)
+      if(this.formApp.hide===undefined){
+        this.formApp.hide=false
+      }
       this.originApp = {...this.formApp}
     }
   }, methods: {
-    ...mapActions(keyStore, ['getCustomApp','removeCustomApp']),
+    ...mapActions(keyStore, ['getCustomApp','removeCustomApp','syncSessionList']),
     onBack() {
       this.$router.go(-1)
     },
@@ -27,6 +35,14 @@ export default {
       this.originApp.alias=this.formApp.alias
       this.originApp.summary=this.formApp.summary
       this.originApp.icon=this.formApp.icon
+      let found=this.executedApps.find(item=>{
+        return item.exeName===this.$route.params.exeName
+      })
+      if(found){
+        console.log('found=',found)
+        found.hide=this.formApp.hide
+        this.syncSessionList()
+      }
       message.success('保存成功')
     },
     async refresh() {
@@ -72,12 +88,14 @@ export default {
         </div>
       </div>
     </div>
-    <span>应用名称</span>
+    <span>软件名称</span>
     <a-input v-model:value="formApp.alias" spellcheck="false" class="input" placeholder="请输入应用名称"
              aria-placeholder="font-size: 14px;" style="width:480px;height: 48px;"/>
     <span>方案简介</span>
     <a-textarea v-model:value="formApp.summary" spellcheck="false" class="input xt-text" placeholder="请输入描述"
                 aria-placeholder="font-size: 14px;" :rows="4" style="width:480px;height: 100px;"/>
+    <span>隐藏软件</span>
+    <a-switch v-model:checked="formApp.hide"></a-switch>
     <a-row :gutter="10" class="mt-3">
       <a-col :span="16">
         <xt-button @click="save" type="theme" style="width: 100%"

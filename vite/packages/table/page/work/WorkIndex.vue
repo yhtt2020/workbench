@@ -37,6 +37,7 @@ export default defineComponent({
           title:'桌面',
           name:'desk',
           icon:'desktop',
+          tab:'workDesk',
           route:{
             name:'workDesk'
           }
@@ -44,6 +45,7 @@ export default defineComponent({
         {
           title:'AI助手',
           name:'ai',
+          tab:'ai',
           icon:'CPU',
           route:{
             name:'ai'
@@ -53,13 +55,15 @@ export default defineComponent({
           title:'快捷键',
           name:'shortcut',
           icon:'jianpan-xianxing',
+          tab:'shortcut',
           route:{
-            name:'shortcut'
+            name:'schemeIndex'
           }
         },
         {
           title:'快捷指令',
           name:'deck',
+          tab:'deck',
           icon:'jianpan-xianxing',
           route:{
             name:'deck'
@@ -79,6 +83,14 @@ export default defineComponent({
           icon:'check-square',
           route:{
             name:'todo'
+          }
+        },
+        {
+          title:'便签(开发)',
+          name:'note',
+          icon:'check-square',
+          route:{
+            name:'note'
           }
         }
       ]

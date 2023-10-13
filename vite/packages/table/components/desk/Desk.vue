@@ -98,7 +98,7 @@
             style="z-index: 99999999999;"
             placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <div style="height: 200px;" class="mb-3 hidden">
+      <div style="height: 200px;" class="hidden mb-3">
       </div>
       <xt-task :modelValue="m01012" to="" @cb="newAddCard()">
         <a-col>
@@ -298,13 +298,15 @@ import CountdownDay from '../widgets/CountdownDay.vue'
 import Notes from '../widgets/note/index.vue'
 import GameInformation from '../widgets/gameInformation/index.vue'
 import HistoryInfo from '../widgets/historyInfo/index.vue'
-import ShortcutKey from '../widgets/shortcutKey/index.vue'
+import ShortcutKey from '../../apps/shortcutKey/widget/index.vue'
 import ClipBoard from '../widgets/clipBoard/index.vue'
-import CommunityGuider from '../widgets/openSNS/communityGuider.vue'
-import CommunityTodo from '../widgets/openSNS/communityTodo.vue'
-import SmallCommunityDashboard from '../widgets/openSNS/smallCommunityDashboard.vue'
-import MiddleCommunityDashboard from '../widgets/openSNS/middleCommunityDashboard.vue'
-import CommunityChart from '../widgets/openSNS/communityChart.vue'
+
+import Guider from '../widgets/shortTalk/page/Guider.vue'
+import ShortTodo from '../widgets/shortTalk/page/ShortTodo.vue'
+import SmallDashboard from '../widgets/shortTalk/page/SmallDashboard.vue'
+import MiddleDashboard from '../widgets/shortTalk/page/MiddleDashboard.vue'
+import ShortChart from '../widgets/shortTalk/page/ShortChart.vue'
+
 import TimerChart from '../../apps/tomato/page/Chart.vue'
 import TimerClock from '../../apps/tomato/page/Clock.vue'
 
@@ -328,6 +330,7 @@ import HotSearch from '../widgets/HotSearch.vue'
 import CoolWidget from '../card/CoolWidget.vue'
 import AIaides from '../widgets/AIaides.vue'
 import OilPrices from '../widgets/OilPrices.vue'
+import yuanCommunity from '../widgets/yuanCommunity/yuanCommunity.vue'
 import { taskStore } from '../../apps/task/store'
 
 export default {
@@ -338,11 +341,11 @@ export default {
     HistoryInfo,
     ShortcutKey,
     ClipBoard,
-    CommunityGuider,
-    CommunityTodo,
-    SmallCommunityDashboard,
-    MiddleCommunityDashboard,
-    CommunityChart,
+    Guider,
+    ShortTodo,
+    SmallDashboard,
+    MiddleDashboard,
+    ShortChart,
     TimerChart,
     TimerClock,
     News,
@@ -394,7 +397,8 @@ export default {
     EatToday,
     HotSearch,
     AIaides,
-    OilPrices
+    OilPrices,
+    yuanCommunity,
   },
   props:
     {

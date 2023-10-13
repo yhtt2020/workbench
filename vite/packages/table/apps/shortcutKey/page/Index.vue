@@ -20,10 +20,12 @@ export default {
       watchDog: {},//监听狗
       currentWindow: {},//当前窗口
       selectTab: '',
-      menuList: [
-
-      ],
+      menuList: [],
+      key:Date.now()
     }
+  },
+  watch:{
+
   },
   computed: {
     ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'currentApp', 'settings']),
@@ -33,12 +35,11 @@ export default {
         {
           id: 'list',
           icon: "liebiao",
-          title: '我的快捷键',
-          tab:'myList',
+          title: '全部快捷键方案',
+          tab: 'schemeIndex',
           // img: "/icons/bg.png",
           callBack: (id: 'create',) => {
-            this.selectTab = "Chat";
-            this.$router.push({name:'schemeList'})
+            this.$router.push({name: 'schemeIndex'})
           },
         },
         // {
@@ -58,17 +59,6 @@ export default {
         },
         {
           flag: true,
-          icon: "tianjia2",
-          id: 'create',
-          title: '创建快捷键方案',
-          // img: "/img/task/star.png",
-
-          callBack: () => {
-            this.createChatVisible = true;
-          },
-        },
-        {
-          flag: true,
           id: 'setting',
           icon: "setting",
           callBack: () => {
@@ -78,7 +68,7 @@ export default {
           },
         },
       ]
-      this.syncSessionList((app)=>{
+      this.syncSessionList((app) => {
         this.$router.push({
           name: 'schemeList',
           params: {
@@ -88,7 +78,9 @@ export default {
       })
       return [
         ...startMenu,
-        ...this.sessionList,
+        ...this.sessionList.filter(item => {
+          return !item.hide
+        }),
         ...endMenu
       ]
     }
@@ -96,15 +88,13 @@ export default {
   mounted() {
     this.watchDog = win32.WatchWindowForeground(async (newPoint, oidPoint, Handle) => {
       let {rect, pid, MianPid, title} = Handle
-      let found = this.executedApps.findIndex(app => {
-        return app.pid === pid
-      })
-
-      if (found > -1) {
-        this.executedApps.splice(found, 1)
-      }
       let path = win32.getProcessidFilePath(pid)
       let exeName = require('path').basename(path)
+      this.executedApps=this.executedApps.filter(item=>{
+        return item.exeName!==exeName
+      })
+
+
       let software = await this.getRepApp(exeName, path)
       if (software.id === 'unknown') {
         software.alias = exeName
@@ -114,6 +104,7 @@ export default {
         title: title,
         path: path,
         lastFocus: Date.now(),
+        hide:software.hide,
         exeName,
         inRep: software.id !== 'unknown',
         software
@@ -127,7 +118,7 @@ export default {
     this.watchDog.quit()
   },
   methods: {
-    ...mapActions(keyStore, ['getCustomApp','syncSessionList','getRepApp']),
+    ...mapActions(keyStore, ['getCustomApp', 'syncSessionList', 'getRepApp']),
 
   }
 }
@@ -137,7 +128,7 @@ export default {
   <div :class="{'rounded-lg':!fullScreen}"
        class="flex h-full w-full   py-2" style="">
     <div class="w-full">
-      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="3" class="w-full">
+      <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="1" end="2" class="w-full">
         <!--  -->
         <template #test>
           <setting-filled/>
@@ -164,22 +155,15 @@ export default {
             <!--            </div>-->
             <!--          </div>-->
 
-            <keep-alive >
+            <keep-alive>
               <RouterView></RouterView>
             </keep-alive>
 
           </div>
           <div class="h-full" style="flex:1;height:0" v-else>
-            <RouterView></RouterView>
+            <RouterView :key="key"></RouterView>
           </div>
-          <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
-            <strong>常用快捷功能开关：</strong>
-            <a-switch v-model:checked="settings.enableAutoChange"></a-switch>
-            自动切换方案
-            &nbsp;&nbsp;
-            <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
-            自动进入
-          </div>
+
         </div>
       </xt-left-menu>
     </div>

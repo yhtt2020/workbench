@@ -12,7 +12,7 @@
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索">
+    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索" @pressEnter="groupSearch">
      <template #suffix>
        <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
      </template>
@@ -75,7 +75,7 @@ import { message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
 
-import SelectClassification from './selectClassification.vue'
+import SelectClassification from './SelectClassification.vue'
 
 
 export default defineComponent({
@@ -158,11 +158,16 @@ export default defineComponent({
     }
   }
 
+  //群聊搜索
+  const groupSearch = () =>{
+    
+  }
+
   return {
    filterList,
    ...toRefs(data),
    backChannel,closeChannel,leftListClick,isSelected,removeGroup,
-   selectSubmit
+   selectSubmit,groupSearch
   }
  }
 })

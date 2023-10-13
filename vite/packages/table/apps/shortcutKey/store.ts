@@ -2,14 +2,16 @@ import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {nanoid} from "nanoid";
 
-import {keyData,appMap,marketList} from './defaultData'
+import {keyData, appMap, marketList} from './defaultData'
 import {useRouter} from 'vue-router'
+
 // @ts-ignore
 export const keyStore = defineStore("key", {
   state: () => ({
     currentApp: {
       software: {}
     },//当前应用
+    currentScheme: {},//当前快捷键方案
     executedApps: [],//运行过的应用
 
     customApps: [],//自定义应用，就是那些我们没定义的应用，已经定义过的也会被存入，只是会优先使用定义的数据
@@ -23,11 +25,11 @@ export const keyStore = defineStore("key", {
     // sellSchemeList: [...keyData.concat()],
     sellSchemeList: [...keyData.concat()],
     //创意市场列表
-    marketList:marketList,
+    marketList: marketList,
     schemeList: [],
     settings: {
       enableAutoChange: false,
-      enableAutoEnter: false,
+      enableAutoEnter: true,
     }
   }),
   actions: {
@@ -121,7 +123,7 @@ export const keyStore = defineStore("key", {
      * 删除方案
      * @param item
      */
-    async removeShortcutKeyList(item) {
+    async removeScheme(item) {
       await tsbApi.db.remove(item)
       // let itemIndex = this.items.findIndex(li => {
       //   if (li._id === item._id) {
@@ -195,7 +197,8 @@ export const keyStore = defineStore("key", {
           ...foundRep,
           icon: icon || '/icons/winapp.png',
           path: filePath,
-          id: nanoid(8)
+          id: nanoid(8),
+          hide: false,
         }
         this.customApps.push(newApp)
         return newApp
@@ -223,7 +226,9 @@ export const keyStore = defineStore("key", {
           img: app.software.icon,
           title: app.software.alias,
           id: app.exeName,
+          hide: app.hide,
           noBg: true,
+          tab: 'exeName_' + app.exeName,
           callBack: () => {
             this.currentApp = app
             if (cb) {
@@ -239,6 +244,47 @@ export const keyStore = defineStore("key", {
           }
         }
       })
+    },
+    async findScheme(map,size=5){
+      let rsFiltered = await tsbApi.db.find({
+        selector: map,
+        limit:size,
+        sort: [
+          {
+            '_id': 'desc'
+          }
+        ]
+      })
+      return rsFiltered
+    },
+
+    /**
+     * 导入方案
+     * @param schemes
+     */
+    async import(schemes) {
+      const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+      let insertSchemes=[]
+      for (const scheme of schemes) {
+        let foundSchemes = await this.findScheme({
+          _id: scheme._id
+        })
+        if(foundSchemes.docs.length>0){
+          scheme._id=  'shortcut:scheme:' + Date.now()
+        }
+        scheme.id=nanoid()
+        scheme.name=scheme.name+'_'+(scheme.id.slice(0,4))
+
+        scheme.selected=false
+        delete scheme._rev
+        insertSchemes.push(scheme)
+        await tsbApi.db.put(scheme)
+        await sleep(1)//每毫秒执行一次，防止名称冲突
+        console.log(foundSchemes, '找到同名方案')
+      }
+
+      return insertSchemes
+
     }
   },
   persist: {
@@ -247,7 +293,7 @@ export const keyStore = defineStore("key", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['customApps', 'shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList', 'executedApps', 'currentApp'],
+        paths: ['customApps', 'shortcutKeyList', 'recentlyUsedList', 'sellSchemeList', 'marketList', 'sessionList', 'executedApps', 'currentApp', 'settings'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },
