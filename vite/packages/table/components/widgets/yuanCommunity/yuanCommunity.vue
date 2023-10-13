@@ -71,7 +71,7 @@
                                 </button>
 
                             </a-tooltip> -->
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;">
+                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;" @click="publishModalVisible">
                         <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
                             icon="fluent:add-16-filled" />
                     </button>
@@ -106,6 +106,7 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
+        <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" :forumIndex="currentIndex"></YuanPublishModal>
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <div class="mb-6 xt-text font-16">
                 数据来源
@@ -117,14 +118,6 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
-            <!-- <div class="xt-bg-2 w-full h-[48px] rounded-xl flex justify-between items-center">
-                <div class="ml-2">
-                    <a-tag closable v-for="(item, index) in forumList" style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer" >{{ item.name }}</a-tag>
-                </div>
-                <div>
-                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
-                </div>
-            </div> -->
             <a-select v-model:value="selectValue" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange(selectValue)" :bordered="false">
                 <a-select-option :value="index" v-for="(item, index) in forumList" class="absolute z-auto xt-bg xt-text-2 selsect-options">
                                     {{ item.name }}
@@ -148,6 +141,7 @@ import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import browser from '../../../js/common/browser'
 import DataStatu from "../DataStatu.vue"
+import YuanPublishModal from './YuanPublishModal.vue';
 export default {
     name: '元社区',
     components: {
@@ -155,7 +149,8 @@ export default {
         YuanIcon,
         communItem,
         RadioTab,
-        DataStatu
+        DataStatu,
+        YuanPublishModal
     },
     props: {
         customIndex: {
@@ -208,7 +203,8 @@ export default {
             dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
             defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
             selectForumList: [],
-            browserUrl:'https://s.apps.vip/post/'
+            browserUrl:'https://s.apps.vip/post/',
+            showPublishModal:false,
         }
     },
     methods: {
@@ -231,6 +227,12 @@ export default {
         },
         handleChange(value) {
             this.selectForumList.push(this.forumList[value])
+        },
+        publishModalVisible(){
+            this.showPublishModal = ! this.showPublishModal
+        },
+        modalVisible(val){
+            this.showPublishModal = val
         }
     },
     computed: {

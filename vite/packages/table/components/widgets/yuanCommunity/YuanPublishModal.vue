@@ -65,7 +65,7 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName.name" :loadData="loadData" :bordered="false" @change="handleChange"
+                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :loadData="loadData" :bordered="false" @change="handleChange"
                     style=" font-size: 14px; border-radius: 10px;" change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
@@ -92,20 +92,25 @@ import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
 import { Icon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
-import { useCommunityStore } from '../commun'
 import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
+import { yuanCommunityStore } from '../../../store/yuanCommunity'
+import {useCommunityStore} from '../../../page/chat/commun'
 const useCommunStore = useCommunityStore()
+const useYuanCommunityStore = yuanCommunityStore()
 const imageLoadVisible = ref(true)
+const browserUrl=ref('https://s.apps.vip/forum?id=')
+const emoji=ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const goYuan = () => {
-    browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
+    browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
 }
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
-    forumId: Number
+    forumId: Number,
+    forumIndex: Number
 })
 // 添加表情
 const addEmoji = (item) => {
@@ -187,20 +192,20 @@ const fluentEmojis = reactive({
 let folderPath = reactive([])
 onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
-        folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
+        folderPath.push(`${emoji.value}${item}`)
     })
     let textareaElement = window.document.querySelector('textarea')
     // console.log(textareaElement);
 
     textareaElement?.focus()
-    useCommunStore.getCommunityInfo(props.forumId)
-    useCommunStore.getCommunityCate(props.forumId)
-    console.log(useCommunStore.communityInfo.forum.name);
     // console.log(navigator.plugins);
-
+    useYuanCommunityStore.getMyForumList()
+    
+    
 
 })
-const communCate = computed(() => useCommunStore.communityCate)
+// 选择发帖板块
+const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
 let arr = ref([])
 communCate.value.forEach((item) => {
     arr.value.push({
@@ -226,7 +231,7 @@ const handleChange = (value) => {
     console.log(cascaderValue.value);
 }
 const holderName=computed(() => {
-    return useCommunStore.communityInfo.forum
+    return useYuanCommunityStore.myForumList.joined[props.forumIndex].name
 })
 const settingsScroller = reactive({
     useBothWheelAxes: true,
