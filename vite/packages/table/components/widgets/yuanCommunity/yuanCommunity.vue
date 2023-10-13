@@ -8,7 +8,7 @@
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
-            <div v-if="this.showForumList.length>0">
+            <div v-if="showForumList.length>0">
             <!-- 顶部导航栏 -->
             <div class="flex justify-between mt-4">
                 <!-- {{ showForumList[0].id }} -->
@@ -125,10 +125,10 @@
                     <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
                 </div>
             </div> -->
-            <a-select v-model:value="value" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange" :bordered="false">
+            <a-select v-model:value="selectValue" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange(selectValue)" :bordered="false">
                 <a-select-option :value="index" v-for="(item, index) in forumList" class="absolute z-auto xt-bg xt-text-2 selsect-options">
                                     {{ item.name }}
-                                </a-select-option>
+                </a-select-option>
                 <template #clearIcon>
                     <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
                 </template>
@@ -154,7 +154,8 @@ export default {
         Widget,
         YuanIcon,
         communItem,
-        RadioTab
+        RadioTab,
+        DataStatu
     },
     props: {
         customIndex: {
@@ -206,6 +207,8 @@ export default {
             pageToggle: true,
             dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
             defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
+            selectForumList: [],
+            browserUrl:'https://s.apps.vip/post/'
         }
     },
     methods: {
@@ -224,8 +227,10 @@ export default {
             this.isLoading = false
         },
         showDetail(item) {
-            console.log(item)
-            browser.openInUserSelect(`https://s.apps.vip/post/${item.id}`)
+            browser.openInUserSelect(`${this.browserUrl}${item.id}`)
+        },
+        handleChange(value) {
+            this.selectForumList.push(this.forumList[value])
         }
     },
     computed: {
@@ -247,10 +252,10 @@ export default {
             return this.customData.forumList
         },
         showForumList() {
-            if (this.customData && this.customData.forumList) {
-                return this.customData.forumList.slice(0, 3)
-            }
-            return this.myForumList.joined.slice(0, 3)
+            // if (this.customData && this.customData.forumList) {
+            //     return this.customData.forumList.slice(0, 3)
+            // }
+            return this.selectForumList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -266,9 +271,19 @@ export default {
     async mounted() {
         this.isLoading = true
         await this.getMyForumList()
-        await this.getCommunityPost(this.showForumList[0].id)
+        // await this.getCommunityPost(this.showForumList[0].id)
         this.isLoading = false
     },
+    watch: {
+        showForumList(newValue) {
+            this.isLoading=true
+            this.getCommunityPost(this.showForumList[0].id)
+            setTimeout(() => {
+               this.isLoading=false 
+            });
+            
+        }
+    }
 }
 </script>
 <style>
