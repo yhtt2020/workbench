@@ -1,14 +1,14 @@
 <template>
   <div
     @click.stop
-    class="bottom-panel mb-3 flex flex-row items-center justify-center w-full"
+    class="flex flex-row items-center justify-center w-full mb-3 bottom-panel"
     style="text-align: center"
     @contextmenu.stop="showMenu"
   >
     <!-- 快速搜索 底部 用户栏 -->
     <div
       v-if=" (!simple || settings.enableChat)"
-      class="common-panel user s-bg flex flex-row"
+      class="flex flex-row common-panel user s-bg"
       style="
         vertical-align: top;
         margin-top: 0;
@@ -55,7 +55,7 @@
       >
         <div @contextmenu.stop="showMenu" style="height: 56px; width: 100%; overflow: hidden">
           <div
-            class="scroll-content mr-6"
+            class="mr-6 scroll-content"
             style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
             ref="content"
           >
@@ -72,16 +72,16 @@
                 >
          <div
            @contextmenu.stop="enableDrag"
-           class="pointer mr-3 mr-6"
+           class="mr-3 mr-6 pointer"
            style="white-space: nowrap; display: inline-block"
            @click.stop="clickNavigation(item)"
          >
            <div
              style="width: 56px; height: 56px"
              v-if="item.type === 'systemApp'"
-             class="s-item flex justify-center items-center rounded-lg xt-bg-2"
+             class="flex items-center justify-center rounded-lg s-item xt-bg-2"
            >
-             <Icon
+             <navIcon
                :icon="item.icon"
                class="test"
                style="
@@ -89,12 +89,12 @@
                  height: 32px;
                  fill: var(--primary-text);
                "
-             ></Icon>
+             ></navIcon>
            </div>
            <div
              v-else
              style="width: 45px; height: 45px"
-             class="flex justify-center items-center"
+             class="flex items-center justify-center"
            >
              <a-avatar
                :size="40"
@@ -119,18 +119,18 @@
               width: 72px;
               height: 58px;
             "
-            class="flex justify-center items-center h-2/3 pointer"
+            class="flex items-center justify-center h-2/3 pointer"
           >
             <template v-if="!showScreen">
-              <Icon
-                icon="fuzhi"
+              <navIcon
+                icon="fluent:window-multiple-16-filled"
                 style="
                   width: 40px;
                   height: 40px;
                   margin-left: 5px;
                   margin-bottom: 3px;
                 "
-              ></Icon>
+              ></navIcon>
               <span
                 style="
                   position: absolute;
@@ -145,10 +145,10 @@
               >
             </template>
             <template v-else>
-              <Icon
-                icon="touping"
+              <navIcon
+                icon="majesticons:monitor-line"
                 style="width: 40px; height: 40px; margin-left: 2px"
-              ></Icon>
+              ></navIcon>
               <span
                 style="
                   position: absolute;
@@ -206,7 +206,7 @@
   >
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="btn relative">
+        <div @click="editNavigation" class="relative btn">
           <xt-task  id='M0104' no="2" @cb="editNavigation">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
             <div><span>编辑导航</span></div>
@@ -215,11 +215,12 @@
 
         <div
           @click="clickNavigation(item)"
-          class="btn"
+          class=" btn"
           v-for="item in builtInFeatures"
           :key="item.name"
+          
         >
-          <Icon style="font-size: 3em" :icon="item.icon"></Icon>
+          <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
           <div>
             <span>{{ item.name }}</span>
           </div>
@@ -231,7 +232,7 @@
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
-        <div @click="editNavigation" class="btn relative">
+        <div @click="editNavigation" class="relative btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑</span></div>
          <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
@@ -241,13 +242,13 @@
   </a-drawer> -->
 
   <transition name="fade">
-    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
       <EditNavigation @setQuick="setQuick"></EditNavigation>
     </div>
   </transition>
 
   <div
-    class="home-blur fixed inset-0"
+    class="fixed inset-0 home-blur"
     style="z-index: 999; background: var(--mask-background-color)"
     v-if="changeFlag"
     @click="closeChangeApp"
@@ -293,7 +294,7 @@ import { message } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
-
+import {Icon as navIcon} from '@iconify/vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -313,6 +314,7 @@ export default {
     GradeSmallTip,
     Team,
     TaskBox,
+    navIcon,
   },
   data () {
     return {

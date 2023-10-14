@@ -278,14 +278,17 @@ export default {
         this.checked = this.checkTopClock
         if (this.chooseType == undefined) {
             this.defaultDataType = '显示30分钟内的闹钟'
+            this.filterClock(this.selectDataType[1].tag,this.selectDataType[1].type)
         } else {
             let targetType = this.selectDataType.filter((item) => {
                 return item.type == this.chooseType
             })
-            console.log(this.chooseType);
             console.log(targetType, 'targetType');
             this.defaultDataType= targetType[0].title
+            this.filterClock(targetType[0].tag,targetType[0].type)
+            
         }
+        
 
     },
     watch: {
@@ -304,26 +307,11 @@ export default {
                         return item.type == this.chooseType
                     })
                     this.defaultDataType= targetType[0].title
+                    this.filterClock(targetType[0].tag,targetType[0].type)
                 }
-                // switch (value) {
-                //     case undefined:
-                //         this.defaultDataType = '显示30分钟内的闹钟'
-                //         break;
-                //     case '0':
-                //         this.defaultDataType = '始终显示'
-                //         break;
-                //     case '1':
-                //         this.defaultDataType = '显示30分钟内的闹钟'
-                //         break;
-                //     case '2':
-                //         this.defaultDataType = '显示1小时内的闹钟'
-                //         break;
-                //     default:
-                //         this.defaultDataType='显示30分钟内的闹钟'
-                //         break;
-                // }
             }
-        }
+        },
+        
     }
 };
 </script>
@@ -366,14 +354,20 @@ export default {
 
 :deep(.ant-radio-button-wrapper) {
     &:nth-child(21) {
-        border-bottom: 1px solid var(--primary-text);
+        border-bottom: 1px solid var(--divider);
         // border-left:  solid var(--primary-text);
     }
 
     &:nth-child(22),
     &:nth-child(23),
     &:nth-child(24) {
-        border-bottom: 1px solid var(--primary-text);
+        border-bottom: 1px solid var(--divider);
+    }
+    &:nth-child(5),
+    &:nth-child(9),
+    &:nth-child(13),
+    &:nth-child(17) {
+        border-left: 1px solid var(--divider);
     }
 
     &:nth-child(1) {
@@ -385,7 +379,7 @@ export default {
     }
 
     &:nth-child(21) {
-        border-radius: 0 0 0 10px;
+        border-radius: 0 0 0px 10px;
     }
 
     &:nth-child(24) {
