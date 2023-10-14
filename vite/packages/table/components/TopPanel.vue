@@ -154,7 +154,7 @@ export default {
   },
   computed: {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
-    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'temp']),
+    ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
     ...mapWritableState(appStore, ['status', 'showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
@@ -299,8 +299,7 @@ export default {
       this.hideNoticeEntry()
     },
     topClockTimerVisibleSetting() {
-      this.filterClock(this.clockTag,this.temp)
-      console.log(this.temp);
+      this.filterClock(this.clockTag,this.chooseType)
       if(this.checkTopClock===true){
         if (this.filterClockEvent.length > 0) {
           // console.log(this.filterClockEvent.length);

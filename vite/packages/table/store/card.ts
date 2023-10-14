@@ -57,7 +57,7 @@ export const cardStore = defineStore(
         clockEvent: [],
         customComponents: [],
         clockTag:'within30min',
-        temp:'显示30分钟内的闹钟',
+        chooseType:'1',
         filterClockEvent: [],
         aidaData: null,
         // navigationList: [
@@ -498,9 +498,10 @@ export const cardStore = defineStore(
         // this.temp=value
         // console.log(value,'this.temp');
         // if(tag!==null || undefined){
+          // console.log(value);
           
         this.clockTag=tag
-        this.temp=value
+        this.chooseType=value
         // }
         // console.log(this.clockTag);
         if(this.clockTag=='within30min'){

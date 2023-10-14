@@ -8,8 +8,7 @@
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
                             <a-input ref="input" allow-clear @click="$refs.input.select()" v-model:value="eventValue"
-                                style="border-radius: 10px;height: 40px; width: 100%; "
-                                placeholder="新闹钟" />
+                                style="border-radius: 10px;height: 40px; width: 100%; " placeholder="新闹钟" />
                         </div>
 
                         <div class="mb-4 font-16 xt-text">小时</div>
@@ -45,7 +44,7 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                            <RadioTab :navList="dataType" v-model:selectType="chooseType"></RadioTab>
                         </div>
                         <div>
                             <xt-button type="primary" class=" font-16 xt-text"
@@ -156,12 +155,13 @@ export default {
             ],
             defaultType: { title: '不重复', name: '不重复' },
             selectDataType: [
-                { title: '始终显示', tag: 'always' },
-                { title: '显示30分钟内的闹钟', tag: 'within30min' },
-                { title: '显示1小时内的闹钟', tag: 'within1hour' },
+                { title: '始终显示', tag: 'always', type: '0' },
+                { title: '显示30分钟内的闹钟', tag: 'within30min', type: '1' },
+                { title: '显示1小时内的闹钟', tag: 'within1hour', type: '2' },
             ],
             defaultDataType: '显示30分钟内的闹钟',
             checked: true,
+            defaultChooseType: '1'
         };
     },
 
@@ -181,7 +181,7 @@ export default {
         clearInterval(this.timer)
     },
     computed: {
-        ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent", 'temp']),
+        ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent", 'chooseType']),
         ...mapWritableState(topClockSettingStore, ['checkTopClock'])
     },
     methods: {
@@ -268,17 +268,23 @@ export default {
             // console.log(value);
             let tag = this.selectDataType[value].tag
 
-            let temp = this.selectDataType[value].title
-            this.filterClock(tag, temp)
+            let chooseType = this.selectDataType[value].type
+            console.log(chooseType, 'chooseType');
+            this.filterClock(tag, chooseType)
         }
     },
     beforeMount() {
         // console.log(this.checkTopClock,'this.checkTopClock');
         this.checked = this.checkTopClock
-        if(this.temp==undefined){
-            this.defaultDataType='显示30分钟内的闹钟'
-        }else{
-            this.defaultDataType=this.temp
+        if (this.chooseType == undefined) {
+            this.defaultDataType = '显示30分钟内的闹钟'
+        } else {
+            let targetType = this.selectDataType.filter((item) => {
+                return item.type == this.chooseType
+            })
+            console.log(this.chooseType);
+            console.log(targetType, 'targetType');
+            this.defaultDataType= targetType[0].title
         }
 
     },
@@ -288,25 +294,28 @@ export default {
                 this.checked = value
             }
         },
-        temp: {
+        chooseType: {
             handler(value) {
-                if(value==undefined){
-                    this.defaultDataType='显示30分钟内的闹钟'
+                if (value == undefined) {
+                    this.defaultDataType = '显示30分钟内的闹钟'
                 }
-                else{
-                    this.defaultDataType=value
+                else {
+                    let targetType = this.selectDataType.filter((item) => {
+                        return item.type == this.chooseType
+                    })
+                    this.defaultDataType= targetType[0].title
                 }
                 // switch (value) {
                 //     case undefined:
                 //         this.defaultDataType = '显示30分钟内的闹钟'
                 //         break;
-                //     case '始终显示':
+                //     case '0':
                 //         this.defaultDataType = '始终显示'
                 //         break;
-                //     case '显示30分钟内的闹钟':
+                //     case '1':
                 //         this.defaultDataType = '显示30分钟内的闹钟'
                 //         break;
-                //     case '显示1小时内的闹钟':
+                //     case '2':
                 //         this.defaultDataType = '显示1小时内的闹钟'
                 //         break;
                 //     default:
@@ -360,20 +369,27 @@ export default {
         border-bottom: 1px solid var(--primary-text);
         // border-left:  solid var(--primary-text);
     }
-    &:nth-child(22),&:nth-child(23),&:nth-child(24) {
+
+    &:nth-child(22),
+    &:nth-child(23),
+    &:nth-child(24) {
         border-bottom: 1px solid var(--primary-text);
     }
-    &:nth-child(1){
-        border-radius:10px 0 0 0;
+
+    &:nth-child(1) {
+        border-radius: 10px 0 0 0;
     }
-    &:nth-child(4){
-        border-radius:0 10px 0 0;
+
+    &:nth-child(4) {
+        border-radius: 0 10px 0 0;
     }
-    &:nth-child(21){
-        border-radius:0 0 0 10px ;
+
+    &:nth-child(21) {
+        border-radius: 0 0 0 10px;
     }
-    &:nth-child(24){
-        border-radius:0 0 10px 0 ;
+
+    &:nth-child(24) {
+        border-radius: 0 0 10px 0;
     }
 }
 
