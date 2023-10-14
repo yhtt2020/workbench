@@ -52,6 +52,7 @@
           <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;" @click="addGroupMember('add')">
            <Icon icon="tianjia3" style="color: var(--success);"></Icon>
           </div>
+
           <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
             <Icon icon="jinzhi-yin" style="color: var(--error);"></Icon>
           </div>
@@ -337,8 +338,13 @@ const manage = defineComponent({
 
     const addGroupMember = (type) =>{  // 添加群聊成员
       if(props.conversation.inviteOption === 'DisableInvite'){
-        data.enableVisible = false
-        message.error('群管理员开启禁止群成员邀请')
+        if(props.conversation.selfInfo.role === 'Member'){
+          data.enableVisible = false
+          message.error('群管理员开启禁止群成员邀请')
+        }else{
+          data.enableVisible = true
+          data.memeberType = type
+        }
       }else{
         data.enableVisible = true
         data.memeberType = type

@@ -13,7 +13,7 @@
      </div>
     </div>
     <div class="flex items-center justify-center font-16" v-if="groupInfo.role !== 'Member' " style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
-    <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+    <input type="file" ref="groupFileRef" style="display:none;" @change="getFileInfo($event)">
   </div>
   
   <a-input v-model:value="groupRef" :spellcheck="false" :disabled="groupInfo.role === 'Member'" style="color: var(--primary-text);border-radius: 12px !important;"></a-input>
@@ -40,6 +40,7 @@ const groupName =  defineComponent({
  setup(props,ctx){
   const server = props.server.TUICore
   const groupRef = ref(props.groupInfo.groupName);
+  const groupFileRef = ref(null)
   const data = reactive({
     avatar:''
   })
@@ -62,10 +63,14 @@ const groupName =  defineComponent({
 
   // 点击群聊头像更换
   const updateGroupAvatar = async (evt) =>{  
+    // console.log('测试');
     if(props.groupInfo.role === 'Member'){
       evt.preventDefault();
     }else{
-      document.querySelector('#groupFileID').click()
+      // console.log('排查问题',groupFileRef.value.click)
+      groupFileRef.value.click()
+      // document.querySelector('#groupFileID').click()
+     
     }
   }
 
@@ -85,7 +90,7 @@ const groupName =  defineComponent({
   
 
   return{
-   groupRef,
+   groupRef,groupFileRef,
    ...toRefs(data),saveGroupName,updateGroupAvatar,getFileInfo,
   }
  }
