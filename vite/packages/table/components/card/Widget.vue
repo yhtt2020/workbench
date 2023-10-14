@@ -51,14 +51,12 @@
 
     <!-- 右上角抽屉菜单start 遗留 -->
     <template #old>
-
-        <HorizontalPanel
-          :navList="sizeList"
-          v-model:selectType="sizeType"
-          bgColor="drawer-item-select-bg"
-        >
-        </HorizontalPanel>
-      </div>
+      <HorizontalPanel
+        :navList="sizeList"
+        v-model:selectType="sizeType"
+        bgColor="drawer-item-select-bg"
+      >
+      </HorizontalPanel>
     </template>
     <!-- 右上角抽屉菜单end -->
   </RightMenu>
