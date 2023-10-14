@@ -278,11 +278,13 @@ const publishPost = async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
             await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
+            
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
             fileList.value = []
             handleOk()
+            await useCommunStore.getCommunityPost(forumId)
         });
 
     }
