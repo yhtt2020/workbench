@@ -57,7 +57,7 @@ import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import { communityStore } from '../store/communityStore'
 import { Icon as communityIcon } from '@iconify/vue'
-import SelectIcon from '../../../../../packages/selectIcon/page/index.vue'
+import SelectIcon from '../../../../selectIcon/page/index.vue'
 
 export default {
   props:['id'],

@@ -8,7 +8,7 @@
         </template>
       </a-input>
     </div>
-    <div class="ml-3" v-if="isFiltrate">
+    <div class="ml-3" v-if="isFiltrate && showSort">
       <a-select :style="selectStyle"
                 @change="changeSelect($event)"
                 class="select rounded-lg  s-item flex items-center text-center" size="large" :bordered="false"
@@ -30,6 +30,10 @@ export default {
     keywords: {
       type: String,
       default: '',
+    },
+    showSort:{
+      type:Boolean,
+      default:true,
     },
     //下拉的选中值
     order: {

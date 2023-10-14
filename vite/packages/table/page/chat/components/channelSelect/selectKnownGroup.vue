@@ -75,7 +75,7 @@ import { message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
 
-import SelectClassification from './selectClassification.vue'
+import SelectClassification from './SelectClassification.vue'
 
 
 export default defineComponent({

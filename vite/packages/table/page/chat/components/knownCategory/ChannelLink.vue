@@ -1,13 +1,13 @@
+<!-- 更新社群频道链接,在没有选择分类的情况下 -->
 <template>
-  <div class="flex flex-col my-3" style="width:500px;" v-if="classShow === false">
+  <div class="flex flex-col my-3" style="width:500px;">
    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
     <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-     <!-- <LeftOutlined style="font-size: 1.25em;"></LeftOutlined> -->
-     <WebLinKIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+     <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
     </div>
     <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-     <WebLinKIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
+      <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
     </div>
    </div>
  
@@ -19,10 +19,8 @@
      </span>
     </div>
  
-    <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" spellcheck="false" style="border-radius: 8px; margin-bottom: 12px;" placeholder="链接名称" />
+    <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
  
-    <!-- <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" /> -->
-    
     <a-input-group compact>
       <a-select v-model:value="requestProtocol" style="width:20%;">
         <a-select-option value="https">https</a-select-option>
@@ -36,51 +34,50 @@
     <template v-if="defaultOpen.openMethod === 'outerOpen'">
       <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     </template>
-    <!-- <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span> -->
+    
     
     <div class="flex items-center justify-end my-3">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">选择</XtButton>
+     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
     </div>
    </div>
-  </div>
  
-  <SelectClassification v-else :no="no"  :type="type" :data="{name:linkName,props:webLink}" @classBack="classShow = false"></SelectClassification>
+  </div>
  </template>
  
  <script>
- import { mapActions,mapWritableState } from 'pinia'
-  
- import { Icon as WebLinKIcon } from '@iconify/vue'
- import RadioTab from '../../../../components/RadioTab.vue'
- import SelectClassification from './SelectClassification.vue'
+import { mapActions } from 'pinia'
+import { Icon as LinkIcon } from '@iconify/vue'
+import { channelClass } from '../../../../js/chat/createChannelClass'
+import { communityStore } from '../../store/communityStore'
+import { message } from 'ant-design-vue'
 
- export default {
+import RadioTab from '../../../../components/RadioTab.vue'
+
+export default {
  
- props:['no','type'],
+ props:['no','id'],
 
  components:{
-  RadioTab,SelectClassification,WebLinKIcon,
+  LinkIcon,RadioTab,
  },
 
  data(){
-  return{
-   linkType:[
-    { title:'内部浏览器',name:'inter',openMethod:'userSelect' },
-    { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
-   ],
-   openType:[
+   return{
+    requestProtocol:'https',
+    linkType:[
+     { title:'内部浏览器',name:'inter',openMethod:'userSelect' },
+     { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
+    ],
+    openType:[
      {title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
      {title:'外部跳转打开',name:'outer',openMethod:'outerOpen'},
-   ],
-   defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
-   defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
-   link:'',
-   linkName:'',
-   classShow:false,
-   requestProtocol:'https',
-   webLink:{},
-  }
+    ],
+    defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
+    defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
+    link:'',
+    linkName:'',
+   }
  },
 
  mounted(){
@@ -93,39 +90,41 @@
  },
 
  methods:{
-  // 返回
+  ...mapActions(communityStore,['getCategoryData','getChannelList']),
+
   backChannel(){
     this.$emit('back')
   },
-
-  // 关闭
   closeChannel(){
     this.$emit('close')
   },
 
-  // 选择分类
-  submitSelect(){
-    // console.log(this.defaultOpen,this.defaultType);
+  async submitSelect(evt){
     if(this.link !== '' && this.linkName !== ''){
-     // console.log('获取参数',data.defaultOpen,data.defaultType)
-     if(this.defaultOpen.openMethod === 'outerOpen'){
-      //  console.log('外部打开')
-       this.webLink = {url:`${this.requestProtocol}://${this.link}`,openMethod:this.defaultType.openMethod}
-       this.classShow = true
-     }else{
-      //  console.log('当前页面打开')
-       this.webLink = {url:`${this.requestProtocol}://${this.link}`,openMethod:this.defaultOpen.openMethod}
-       this.classShow = true
-     }
-
-    
-   }
+      const option = { 
+        type:'link', id:this.id, no:this.no,
+        content:{
+          name:this.linkName,
+          props:{
+            url:`${this.requestProtocol}://${this.link}`,
+            openMethod:this.defaultOpen.openMethod === 'currentPage' ? this.defaultOpen.openMethod : this.defaultType.openMethod
+          }
+        } 
+      }
+      // console.log('查看参数',option);
+      const res  = await channelClass.secondaryChannel(option)
+      if(res?.status === 1){
+        message.success(`${res.info}`)
+        await this.getCategoryData(this.no)
+        await this.getChannelList(this.no)
+        this.closeChannel()
+      }
+    }else{
+      evt.preventDefault();
+    }
   }
-
-
-
-
  },
+
 
  watch:{
   defaultType(newVal){
@@ -142,7 +141,6 @@
  </script>
  
  <style lang="scss" scoped>
- 
  .font-16-400{
   font-family: PingFangSC-Regular;
   font-size: 16px;
@@ -184,6 +182,7 @@
     color: var(--secondary-text) !important;
   }
  }
+
 
  :deep(.ant-select .ant-select-selector){
   height:40px !important;
