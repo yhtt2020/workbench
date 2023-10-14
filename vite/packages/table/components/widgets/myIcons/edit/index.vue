@@ -42,7 +42,7 @@ import mixins from "./hooks/mixins";
 const { fs } = window.$models;
 
 export default {
-mixins:[mixins],
+  mixins: [mixins],
   props: {
     data: {},
   },
@@ -56,7 +56,6 @@ mixins:[mixins],
     },
 
     async save() {
- 
       // this.edit.linkValue = {
       //   type: "systemApp",
       //   event: "ai",

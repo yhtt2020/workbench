@@ -15,42 +15,41 @@
           class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
           :style="pos"
         >
-          <div class="list w-full h-full" v-resize="handeleDivView">
-            <div
-              class="item rounded-xl"
-              v-for="menu in props.menus"
-              :key="menu.label"
-              @click="handleClick(menu)"
-            >
-              <!-- <xt-base-icon v-if="menu.icon" :icon="menu.icon"></xt-base-icon>
-              {{ menu.label }} -->
-              <xt-popover>
-                <xt-text class="w-full h-full">
-                  <Item :data="menu" />
-                  <template #right v-if="menu.children">
-                    <xt-new-icon
-                      icon="fluent:chevron-left-16-filled"
-                      style="transform: rotate(180deg)"
-                    />
+          <div class="list w-full h-full p-2" v-resize="handeleDivView">
+            <template v-for="menu in props.menus">
+              <slot :name="menu.slot" v-if="menu.slot"></slot>
+              <div
+                v-else
+                class="item rounded-lg"
+                :key="menu[`${name}`]"
+                @click="handleClick(menu)"
+              >
+                <xt-popover>
+                  <xt-text class="w-full h-full">
+                    <Item :data="menu" :name="name" />
+                    <template #right v-if="menu.children">
+                      <xt-new-icon
+                        size="20"
+                        class="mr-3"
+                        icon="fluent:chevron-left-16-filled"
+                        style="transform: rotate(180deg)"
+                      />
+                    </template>
+                  </xt-text>
+                  <template #content v-if="menu.children">
+                    <div class="list w-full h-full p-1">
+                      <div
+                        class="item"
+                        v-for="data in menu.children"
+                        :name="name"
+                      >
+                        <Item :data="data" :isBg="true" />
+                      </div>
+                    </div>
                   </template>
-                </xt-text>
-                <template #content v-if="menu.children">
-                  <div class="item">
-                    <Item :data="data" v-for="data in menu.children" />
-                  </div>
-                </template>
-              </xt-popover>
-            </div>
-
-            <!-- <div
-              class="item xt-hover rounded-xl"
-              v-for="menu in props.menus"
-              :key="menu.label"
-              @click="handleClick(menu)"
-            >
-              <xt-base-icon v-if="menu.icon" :icon="menu.icon"></xt-base-icon>
-              {{ menu.label }}
-            </div> -->
+                </xt-popover>
+              </div>
+            </template>
           </div>
         </div>
       </Transition>
@@ -58,8 +57,30 @@
   </div>
 </template>
 
+<style lang="less" scoped>
+.container {
+  width: 200px;
+  z-index: 999999999999;
+  .list {
+    border-radius: 12px;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+
+    .item {
+      box-sizing: border-box;
+      height: 40px;
+
+      &:hover {
+        background: var(--active-secondary-bg);
+        cursor: pointer;
+      }
+    }
+  }
+}
+</style>
+
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, toRefs } from "vue";
 import useMenus from "./useMenus";
 import useViewport from "./useViewport";
 import { reSize as vResize } from "./useReSize";
@@ -74,14 +95,27 @@ const props = defineProps({
   data: {
     default: "",
   },
+  name: {
+    default: "label",
+  },
+  fn: {
+    default: "callBack",
+  },
+  start: {
+    default: true,
+  },
 });
+
 // 菜单项事件点击 调用回调函数
 const handleClick = (menu: any) => {
-  menu.callBack && menu.callBack(props.data);
+  menu[props.fn] && menu[props.fn](props.data);
 };
 // 获取 菜单坐标 和 是否显示菜单
 const containerRef = ref();
-const { x, y, show } = useMenus(containerRef);
+
+const { start } = toRefs(props);
+
+const { x, y, show } = useMenus(containerRef, start);
 // 获取 视图大小
 const { viewWidth, viewHeight } = useViewport();
 // 获取菜单大小
@@ -107,7 +141,7 @@ const handleEnter = (el: any) => {
   // 该方法需要传入一个回调函数  回调函数会在页面被刷新时前调用
   requestAnimationFrame(() => {
     el.style.height = height + "px";
-    el.style.transition = ".3s";
+    el.style.transition = ".1s";
   });
 };
 // 菜单离开时
@@ -138,25 +172,3 @@ const pos = computed(() => {
   };
 });
 </script>
-
-<style lang="less" scoped>
-.container {
-  width: 184px;
-  z-index: 999999999999;
-  .list {
-    border-radius: 12px;
-    padding: 3px;
-    box-sizing: border-box;
-
-    .item {
-      box-sizing: border-box;
-      height: 44px;
-      overflow: hidden;
-      &:hover {
-        background: var(--active-secondary-bg);
-        cursor: pointer;
-      }
-    }
-  }
-}
-</style>
