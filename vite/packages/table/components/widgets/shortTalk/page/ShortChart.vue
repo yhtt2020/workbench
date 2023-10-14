@@ -8,22 +8,23 @@
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
-                <a-button class="top-btn" type="primary" @click="setVisible = !setVisible">提交</a-button>
+                <div v-show="!this.setVisible"  class="xt-active-btn" style="width:64px;height:40px;" @click="changeAccToken(accToken,accUrl)">提交</div>
+                <div v-show="this.setVisible" class="xt-active-btn" style="width:64px;height:40px;" @click="changeCharts">保存</div>
             </template>
             <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-                <div v-show="!setVisible">
+                <div v-show="!this.setVisible">
                     <div class="text-content">
                         <div>关联短说社区系统</div>
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
                     <p class="ml-1 mt-1">密钥</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secKey" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                     <p class="ml-1 mt-2">管理后台地址</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secAdd" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                 </div>
-                <div v-show="setVisible">
-                    <div class="txt-content pointer" style="height: 48px;" @click="setVisible = !setVisible">
+                <div v-show="this.setVisible">
+                    <div class="txt-content pointer" style="height: 48px;" @click="this.setVisible = !this.setVisible">
                         <div>关联短说社区系统<span>已关联 ></span></div>
                     </div>
                     <div class="txt-content" style="height: 104px;">
@@ -55,6 +56,8 @@ import * as echarts from "echarts";
 import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
+import { useToast } from "vue-toastification";
+const toast = useToast()
 
 export default {
     components:{
@@ -84,15 +87,11 @@ export default {
         },
     },
     computed: {
-        ...mapWritableState(shortTalkStore, ['access','interact']),
+        ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
     },
     data() {
         return {
             settingVisible: false,
-            setVisible: true,
-            // 密钥和地址
-            secKey:"",
-            secAdd:"",
             // 设置中的数组
             dataType: [
                 { title: '社区访问数据', name: 'visit' },
@@ -131,17 +130,6 @@ export default {
                 rightIcon:"fluent:open-20-filled",
             },
             // 网格数据
-
-            // xData:["08-02","08-03","08-04","08-05","08-06","08-07","08-08"],
-            // yDataFir:[193,283,675,456,856,738,504],
-            // yDataSec:[425,394,842,973,776,114,149],
-            // yDataThi:[475,123,763,384,235,452,123],
-            // 
-            xData:["08-02","08-03","08-04","08-05","08-06"],
-            // visit 次数
-            yDataFir:[193,283,675,456,856],
-            // login 人数
-            yDataSec:[425,394,842,973,776],
             myChartStyle:{
                 float:"left",
                 width:"600px",
@@ -150,43 +138,9 @@ export default {
                 left:"-12px",
                 top:"3px"
             },
-            // 柱状图
-            series:[
-                {
-                    type: "bar",
-                    data:this.yDataFir,
-                    name:"访问次数",
-                    label:{
-                        show:true,
-                        position:"top",
-                        // 修改柱状条上方数据
-                        textStyle:{
-                            color: "rgba(255,255,255,0.85)",
-                            fontSize:10,
-                        },
-                    },
-                    itemStyle:{
-                        color: "rgba(91,143,249,0.85)"
-                    }
-                },
-                {
-                    type: "bar",
-                    data:this.yDataSec,
-                    name:"访问人数",
-                    label:{
-                        show:true,
-                        position:"top",
-                        textStyle:{
-                            color: "rgba(255,255,255,0.85)",
-                            fontSize:10,
-                        },
-                    },
-                    itemStyle:{
-                        color: "rgba(90,216,166,0.85)",
-                    },
-                },
-            ],
-            legend:["访问次数","访问人数"],
+            // 密钥和地址
+            accToken:'',
+            accUrl:'',
             
         };
     },
@@ -196,7 +150,7 @@ export default {
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
-        ...mapActions(shortTalkStore, ['getData']),
+        ...mapActions(shortTalkStore, ['getChartData','changeAccToken']),
         init(){
             // 初始
             if(!this.customData.defaultDataType){
@@ -210,7 +164,11 @@ export default {
                this.defaultTimeType = this.customData.defaultTimeType 
                this.defaultPlatType = this.customData.defaultPlatType 
             }
-            this.getData(this.customData)
+
+            this.accToken = this.access_token
+            this.accUrl = this.baseUrl
+
+            this.getChartData(this.customData)
             .then(()=>{
                 this.changeBarChart()
             })
@@ -364,42 +322,56 @@ export default {
                 this.xData = this.interact.post.xAxis
             }
             this.initEcharts()
+        },
+        // 设置保存后修改
+        changeCharts(){
+            this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+            this.updateCustomData(this.customIndex,{
+                "defaultDataType": this.defaultDataType,
+                "defaultTimeType": this.defaultTimeType,
+                "defaultPlatType": this.defaultPlatType,
+            },this.desk)
+            toast.success("保存成功");
+            // this.settingVisible=false
+            setTimeout(()=>{
+                this.init()
+            },500)
         }
 
     },
     watch:{
-        // 修改 名字的
-        "defaultDataType": {
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+        // // 修改 名字的
+        // "defaultDataType": {
+        //     handler(newVal, oldVal){
+        //         this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
 
-                this.updateCustomData(this.customIndex,{
-                    "defaultDataType": this.defaultDataType,
-                },this.desk)
-                // 
-                this.init()
-            }
-        },
-        "defaultTimeType":{
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-                this.updateCustomData(this.customIndex,{
-                    "defaultTimeType": this.defaultTimeType,
-                },this.desk)
-                this.init()
-                // console.log(this.customData);
-            }
-        },
-        "defaultPlatType":{
-            handler(newVal, oldVal){
-                this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
-                this.updateCustomData(this.customIndex,{
-                    "defaultPlatType": this.defaultPlatType,
-                },this.desk)
-                this.init()
-                // console.log(this.customData);
-            }
-        }
+        //         this.updateCustomData(this.customIndex,{
+        //             "defaultDataType": this.defaultDataType,
+        //         },this.desk)
+        //         // 
+        //         this.init()
+        //     }
+        // },
+        // "defaultTimeType":{
+        //     handler(newVal, oldVal){
+        //         this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+        //         this.updateCustomData(this.customIndex,{
+        //             "defaultTimeType": this.defaultTimeType,
+        //         },this.desk)
+        //         this.init()
+        //         // console.log(this.customData);
+        //     }
+        // },
+        // "defaultPlatType":{
+        //     handler(newVal, oldVal){
+        //         this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
+        //         this.updateCustomData(this.customIndex,{
+        //             "defaultPlatType": this.defaultPlatType,
+        //         },this.desk)
+        //         this.init()
+        //         // console.log(this.customData);
+        //     }
+        // }
     }
 };
 </script>

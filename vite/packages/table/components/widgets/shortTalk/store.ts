@@ -3,8 +3,8 @@ import dbStorage from "../../../store/dbStorage";
 import cache from "../../../components/card/hooks/cache";
 import { cardStore } from '../../../store/card';
 import {mapActions, mapState,mapWritableState} from "pinia";
-import { useToast } from "vue-toastification";
 import { post } from "../../../js/axios/request"
+import { useToast } from "vue-toastification";
 const toast = useToast()
 // @ts-ignore
 export const shortTalkStore = defineStore("shortTalkStore", {
@@ -17,8 +17,170 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     access:{},
     // 社区互动数据
     interact:{},
-
-
+    // 社区数据
+    mockData:[
+      {
+          key: 1,
+          title: "今日发布",
+          type:'today_thread',
+          num:0,
+      },
+      {
+          key: 2,
+          title: "今日评论",
+          type:'today_post',
+          num:0,
+      },
+      {
+          key: 3,
+          title: "今日点赞",
+          type:'today_support',
+          num:0,
+      },
+      {
+          key: 4,
+          title: "今日注册",
+          type:'today_register',
+          num:0,
+      },
+      {
+          key: 5,
+          title: "今日访问",
+          type:'today_visit',
+          num:0,
+      },
+      {
+          key: 6,
+          title: "本周发布",
+          type:'week_thread',
+          num:0,
+      },
+      {
+          key: 7,
+          title: "本周评论",
+          type:'week_post',
+          num:0,
+      },
+      {
+          key: 8,
+          title: "本周点赞",
+          type:'week_support',
+          num:0,
+      },
+      {
+          key: 9,
+          title: "本周访问",
+          type:'week_visit',
+          num:0,
+      },
+      {
+          key: 10,
+          title: "本周注册",
+          type:'week_register',
+          num:0,
+      },
+      {
+          key: 11,
+          title: "本月发布",
+          type:'month_thread',
+          num:0,
+      },
+      {
+          key: 12,
+          title: "本月评论",
+          type:'month_post',
+          num:0,
+      },
+      {
+          key: 13,
+          title: "本月点赞",
+          type:'month_support',
+          num:0,
+      },
+      {
+          key: 14,
+          title: "本月注册",
+          type:'month_register',
+          num:0,
+      },
+      {
+          key: 15,
+          title: "本月访问",
+          type:'month_visit',
+          num:0,
+      },
+      {
+          key: 16,
+          title: "总访问数",
+          type:'all_visit',
+          num:0,
+      },
+      {
+          key: 17,
+          title: "总发布",
+          type:'all_thread',
+          num:0,
+      },
+      {
+          key: 18,
+          title: "总评论",
+          type:'all_post',
+          num:0,
+      },
+      {
+          key: 19,
+          title: "总点赞",
+          type:'all_support',
+          num:0,
+      },
+      {
+          key: 20,
+          title: "总注册",
+          type:'all_register',
+          num:0,
+      },
+      {
+          key: 21,
+          title: "我是标题",
+          type:'today_thread',
+          num:0,
+      },
+    ],
+    // 待办数据
+    todoList:[
+      {
+          title:"内容审核",
+          type:'audit_thread',
+          num:0,
+      },
+      {
+          title:"评论审核",
+          type:'audit_post',
+          num:0,
+      },
+      {
+          title:"频道推送审核",
+          type:'audit_channel_post',
+          num:0,
+      },
+      {
+          title:"举报处理",
+          type:'report',
+          num:0,
+      },
+      {
+          title:"版块访问审核",
+          type:'audit_forum_member',
+          num:0,
+      },
+      {
+          title:"版块创建审核",
+          type:'audit_forum',
+          num:0,
+      },
+    ],
+    // 设置状态存储
+    setVisible:false,
   }),    
   // getters:{},
   actions: {
@@ -27,31 +189,73 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       return this.baseUrl + url
     },
     
-    // 初始化 请求数据
-    async getData(customData){
-      // console.log(customData);
-      // console.log(customData.customData.defaultPlatType);
-      
+    // 初始化 图表 请求数据
+    async getChartData(customData){
       await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
         "content":{
-          "sign":"all_visit,week_thread,month_thread,all_thread,week_post,month_post,all_post,week_support,month_support,all_support,month_register,today_visit,week_visit,month_visit ,today_thread ,today_post,today_support,today_register,week_register,all_register,access,interact",
+          "sign":"access,interact",
           "access":{
             "plate":customData.defaultPlatType.name,
             "day_type":customData.defaultTimeType.name,
-            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getTwoMonthsAgoTimestamp(),
+            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
             "end":new Date().getTime()/1000
           },
             "interact":{
             "day_type":customData.defaultTimeType.name,
-            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getTwoMonthsAgoTimestamp(),
+            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
             "end":new Date().getTime()/1000
           }
         }
-        
       }).then((res)=>{
         // console.log(res)
         this.access = res.access
         this.interact = res.interact
+      })
+    },
+    // 初始化 数据板 请求数据
+    async getBoardData(){
+      await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+        "content":{
+          "sign":"all_visit,week_thread,month_thread,all_thread,week_post,month_post,all_post,week_support,month_support,all_support,month_register,today_visit,week_visit,month_visit ,today_thread ,today_post,today_support,today_register,week_register,all_register",
+          "access":{
+            "plate":'all',
+            "day_type":'month',
+            "start":this.getOneMonthAgoTimestamp(),
+            "end":new Date().getTime()/1000
+          },
+          "interact":{
+            "day_type":'month',
+            "start":this.getOneMonthAgoTimestamp(),
+            "end":new Date().getTime()/1000
+          }
+        }
+      }).then((res)=>{
+        this.mockData.forEach(item => {
+          item.num = res[item.type]
+        });
+      })
+    },
+    // 初始化 待办 请求数据
+    async getTodoData(){
+      await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+        "content":{
+          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum",
+          "access":{
+            "plate":'all',
+            "day_type":'month',
+            "start":this.getOneMonthAgoTimestamp(),
+            "end":new Date().getTime()/1000
+          },
+          "interact":{
+            "day_type":'month',
+            "start":this.getOneMonthAgoTimestamp(),
+            "end":new Date().getTime()/1000
+          }
+        }
+      }).then((res)=>{
+        this.todoList.forEach(item => {
+          item.num = res[item.type]
+        });
       })
     },
     getSevenDaysAgoTimestamp() {
@@ -73,6 +277,12 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       currentDate.setHours(0, 0, 0, 0);
       return Math.floor(currentDate.getTime() / 1000);
     },
+    changeAccToken(token,url){
+      this.access_token = token
+      this.baseUrl = url
+      toast.success("修改成功");
+      this.setVisible = !this.setVisible
+    }
 
   
   },
@@ -82,7 +292,7 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: []
+      paths: ['access_token','baseUrl']
       // state 中的字段名，按组打包储存
     }]
   }
