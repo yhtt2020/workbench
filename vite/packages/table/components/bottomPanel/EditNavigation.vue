@@ -156,17 +156,14 @@
                  class="flex flex-row items-center mr-2 flex-nowrap scroll-content" ref="content">
               <div v-for="item in footNavigationList" style="margin: 4px 18px" :key="item.name">
                 <!-- {{ item.type }} -->
-                <!-- 
-                  这里如果添加了dropdown，编辑图标时不会显示图标，但是如果没有dropdown，编辑图标时会显示图标
-                 -->
-                <!-- <a-dropdown :trigger="['contextmenu']"> -->
+                <a-dropdown :trigger="['contextmenu']">
                   <div
                     style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: var(--secondary-bg);border-radius: 12px"
                     v-if="item.type==='systemApp'" @click="clickNavigation(item)">
                     <navIcon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></navIcon>
                   </div>
                   <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
-                <!-- </a-dropdown> -->
+                </a-dropdown>
               </div>
             </div>
           </div>
