@@ -25,7 +25,8 @@
         </div>
       </template>
       <div class="content">
-        <div class="input" style="position: relative">
+        <!-- {{ recentList.slice(0,4).length }} -->
+        <div class="input xt-bg" style="position: relative ">
           <a-input
             placeholder="问我任何问题"
             :bordered="false"
@@ -49,14 +50,15 @@
             text-align: left;
             margin-top: 14px;
             margin-bottom: 12px;
-            color: var(--primary-text);
+            color: var(--primary-text) ;
+            
           "
         >
           最近对话
         </div>
        <template v-if="recentList">
         <div v-for="index in copyNum">
-          <div class="ai-msg" @click="goPage(index)">
+          <div class="ai-msg xt-bg-2" @click="goPage(index)">
             <xt-base-icon
               class="msg-icon"
               :icon="recentList[index]?.icon.name || 'message' "
@@ -64,8 +66,8 @@
             <div
               class="msg-title"
               :style="{
-                height: copyNum == 4 ? '56px' : '48px',
-                lineHeight: copyNum == 4 ? '56px' : '48px',
+                height: copyNum !== 1 ? '56px' : '48px',
+                lineHeight: copyNum !== 1 ? '56px' : '48px',
               }"
             >
               {{ recentList[index]?.name }}
@@ -73,9 +75,7 @@
           </div>
         </div>
        </template>
-       <!-- <template v-else>
-        <div>暂无对话</div>
-       </template> -->
+       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" style="margin-top: 200px;"></DataStatu>
       </div>
     </Widget>
   </div>
@@ -88,7 +88,7 @@ import {
   SendOutlined,
   RobotOutlined,
 } from "@ant-design/icons-vue";
-
+import DataStatu from "./DataStatu.vue"
 import { aiStore } from "../../store/ai";
 import { mapWritableState } from "pinia";
 export default {
@@ -98,6 +98,7 @@ export default {
     MessageOutlined,
     SendOutlined,
     RobotOutlined,
+    DataStatu,
   },
   props: {
     customIndex: {
@@ -157,7 +158,7 @@ export default {
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 1 ? 1 : 4;
+      return this.showSize.height == 1 ? 1 : this.recentList.slice(0,4).length;
     },
   },
 };
@@ -176,18 +177,17 @@ export default {
     align-items: center;
     width: 252px;
     height: 48px;
-    background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     margin-top: -6px;
     // margin: auto 5px;
     :deep(.ant-input) {
+      color: var(--primary-text);
       height: 40px;
       width: 100%;
       padding-left: 16px;
       &::placeholder {
         font-family: PingFangSC-Regular;
         font-size: 16px;
-        color: rgba(255, 255, 255, 0.4);
         font-weight: 400;
         color: var(--primary-text);
       }
@@ -196,14 +196,12 @@ export default {
   .ai-con {
     font-family: PingFangSC-Regular;
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.85);
     font-weight: 400;
     // margin-top: -5px;
   }
   .ai-msg {
     width: 252px;
     // height: 48px;
-    background: rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     display: flex;
     // justify-content: center;
@@ -215,12 +213,17 @@ export default {
       font-size: 18px;
       margin-left: 17.25px;
       margin-right: 13.25px;
+      flex-shrink: 0;
     }
     .msg-title {
       font-family: PingFangSC-Regular;
       font-size: 16px;
-      color: rgba(255, 255, 255, 0.85);
+      // width: 80%;
+      color: var(--primary-text);
       font-weight: 400;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }
