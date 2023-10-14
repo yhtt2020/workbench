@@ -10,12 +10,13 @@
     </div>
   </div>
 
-  <ContactSelector title="最近聊天" :no="no"/>
-  
+  <ContactSelector title="最近聊天" inviteMode="invite" :list="recentlyChatList" :no="no"/>
+
  </div>
 </template>
 
 <script>
+import { ref,reactive,computed,onMounted,toRefs } from 'vue'
 import { Icon as DirectlyIcon } from '@iconify/vue'
 import ContactSelector from '../contact/ContactSelector.vue'
 
@@ -27,22 +28,30 @@ export default {
 
  props:['no'],
 
- data(){
-  return{
+ setup(props,ctx){
+  const server = window.$TUIKit
 
+  const recentlyChatList = computed(()=>{
+    const list = server.store?.store?.TUIConversation?.conversationList
+    const mapList =  list.map((item)=>{ return item.userProfile || item.groupProfile })
+    // console.log('获取最近聊天数据', mapList)
+    return mapList
+  })
+
+  const backButton = () =>{
+    ctx.emit('back')
   }
- },
 
- methods:{
-  backButton(){
-    this.$emit('back')
-  },
-  closeButton(){
-    this.$emit('close')
-  },
+  const closeButton = () =>{
+    ctx.emit('close')
+  }
 
-
+  return{
+    recentlyChatList,
+    backButton,closeButton,
+  }
  }
+
 }
 
 

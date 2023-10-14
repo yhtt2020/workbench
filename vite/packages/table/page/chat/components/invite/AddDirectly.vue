@@ -10,9 +10,9 @@
      </div>
    </div>
 
-   <ContactSelector :list="teamData" title="我的小队" :no="no"/>
+   <ContactSelector inviteMode="direct" :list="teamData" title="我的小队" :no="no"/>
 
- 
+
   </div>
 </template>
  

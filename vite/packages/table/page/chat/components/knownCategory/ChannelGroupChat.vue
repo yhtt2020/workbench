@@ -12,7 +12,7 @@
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索">
+    <a-input class="h-10 search" hidden="" style="border-radius: 12px;" placeholder="搜索">
      <template #suffix>
        <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
      </template>
