@@ -1,15 +1,65 @@
 <template>
- <div>
-   邀请加入
+ <div class="flex flex-col mb-4" style="width:667px;height: 594px;">
+  <div class="flex items-center justify-center" style="position: relative;line-height: 64px;">
+    <div class="back-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="backButton">
+     <DirectlyIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    </div>
+    <span class="category-16-400" style="color:var(--primary-text);">选择联系人</span>
+    <div class="close-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="closeButton">
+     <DirectlyIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
+    </div>
+  </div>
+
+  <ContactSelector title="最近聊天" :no="no"/>
+  
  </div>
 </template>
 
 <script>
- export default {
-  
+import { Icon as DirectlyIcon } from '@iconify/vue'
+import ContactSelector from '../contact/ContactSelector.vue'
+
+export default {
+ components:{
+  DirectlyIcon,
+  ContactSelector,
+ },
+
+ props:['no'],
+
+ data(){
+  return{
+
+  }
+ },
+
+ methods:{
+  backButton(){
+    this.$emit('back')
+  },
+  closeButton(){
+    this.$emit('close')
+  },
+
+
  }
+}
+
+
 </script>
 
 <style lang="scss" scoped>
+.back-button{
+ position: absolute;
+ top: 12px;
+ left: 8px;
+ background: var(--secondary-bg);
+}
 
+.close-button{
+ position: absolute;
+ top: 12px;
+ right:8px;
+ background: var(--secondary-bg);
+}
 </style>

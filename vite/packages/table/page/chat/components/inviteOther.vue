@@ -42,15 +42,17 @@
  </div>
 
 
- <AddDirectly v-if="inviteShow && type === 'directly'"/>
- <InvitationJoin v-if="inviteShow && type === 'inviteJoin'" />
+ <AddDirectly v-if="inviteShow && type === 'directly'" :no="no" @close="closeButton" @back="inviteShow = false"/>
+ <InvitationJoin v-if="inviteShow && type === 'inviteJoin'" :no="no" @close="closeButton" @back="inviteShow = false"/>
 
 </template>
 
 <script>
+import { mapActions,mapWritableState } from 'pinia'
 import { Icon as InviteIcon } from '@iconify/vue'
 import useClipboard from 'vue-clipboard3'
 import { message } from 'ant-design-vue'
+import { teamStore } from '../../../store/team'
 
 import AddDirectly from './invite/AddDirectly.vue'
 import InvitationJoin from './invite/InvitationJoin.vue'
@@ -74,7 +76,18 @@ export default {
   }
  },
 
+ computed:{
+  ...mapWritableState(teamStore,['team']),
+ },
+
+ mounted(){
+  this.$nextTick(()=>{
+    this.getInviteData()
+  })
+ },
+
  methods:{
+  ...mapActions(teamStore,['getTeamLeader','getTeamMembers']),
   closeButton(){
    this.$emit('close')
   },
@@ -91,6 +104,11 @@ export default {
   inviteEnter(item){
     this.type = item.type
     this.inviteShow = true
+  },
+
+  async getInviteData(){
+    await this.getTeamMembers(this.team.no,0,0)
+    await this.getTeamLeader(this.team.no,0,0)
   }
 
 
