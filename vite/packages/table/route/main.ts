@@ -85,6 +85,7 @@ import MyCommunity from '../page/chat/page/communityDetail.vue'
 import ShortcutKeyRoute from '../apps/shortcutKey/route'
 import BarrageRoute from '../apps/barrage/route'
 import ChatAdmin from '../page/chat/page/admin.vue'
+import Power from "../page/Power.vue";
 
 
 export default [
@@ -105,7 +106,12 @@ export default [
         component: Tomato
       },
 
+      {
+        path: '/power',
+        name: 'power',
+        component: Power
 
+      },
 
       {
         path: "/inspector",

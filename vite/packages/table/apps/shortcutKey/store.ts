@@ -37,12 +37,31 @@ export const keyStore = defineStore("key", {
       const dbKey = 'shortcut:scheme:'
 
       let map: any = {
-        _id: {
-          $regex: new RegExp(`^${dbKey}`)
-        },
+        $and: [
+          {
+            _id: {
+              $regex: new RegExp(`^${dbKey}`)
+            }
+          }
+        ]
+
       }
       if (exeName) {
-        map.exeName = exeName
+        map.$and.push({
+          $or:
+            [{
+              exeName: {
+                $elemMatch: {
+                  $regex: new RegExp(exeName)
+                }
+              },
+
+            },
+              {
+                exeName: exeName
+              }
+            ]
+        }) //增设一个数组包含或者字符串相等的条件
       }
       await tsbApi.db.createIndex({
         index: {
@@ -245,10 +264,10 @@ export const keyStore = defineStore("key", {
         }
       })
     },
-    async findScheme(map,size=5){
+    async findScheme(map, size = 5) {
       let rsFiltered = await tsbApi.db.find({
         selector: map,
-        limit:size,
+        limit: size,
         sort: [
           {
             '_id': 'desc'
@@ -264,18 +283,18 @@ export const keyStore = defineStore("key", {
      */
     async import(schemes) {
       const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
-      let insertSchemes=[]
+      let insertSchemes = []
       for (const scheme of schemes) {
         let foundSchemes = await this.findScheme({
           _id: scheme._id
         })
-        if(foundSchemes.docs.length>0){
-          scheme._id=  'shortcut:scheme:' + Date.now()
+        if (foundSchemes.docs.length > 0) {
+          scheme._id = 'shortcut:scheme:' + Date.now()
         }
-        scheme.id=nanoid()
-        scheme.name=scheme.name+'_'+(scheme.id.slice(0,4))
+        scheme.id = nanoid()
+        scheme.name = scheme.name + '_' + (scheme.id.slice(0, 4))
 
-        scheme.selected=false
+        scheme.selected = false
         delete scheme._rev
         insertSchemes.push(scheme)
         await tsbApi.db.put(scheme)
