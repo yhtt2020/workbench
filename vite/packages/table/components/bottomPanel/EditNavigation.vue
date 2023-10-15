@@ -438,6 +438,13 @@ export default {
         }
       })
     })
+    navigationData.systemFillAppList.forEach((item) => {
+      this.rightNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
   },
   methods: {
     scrollNav (refVal, scrollDirection) {
