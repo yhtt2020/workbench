@@ -184,6 +184,7 @@ export default {
             selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
+            selectList:[]
         }
     },
     methods: {
@@ -205,8 +206,7 @@ export default {
         },
         handleChange(value) {
             this.selectForumList.push(this.forumList[value])
-            let temp=this.selectForumList
-            this.customData.selectForumList=temp
+            
         },
         publishModalVisible() {
             this.showPublishModal = !this.showPublishModal
@@ -216,10 +216,19 @@ export default {
             this.showPublishModal = val
         },
         handleDeselect(val){
-            this.customData.selectForumList.slice(val,1)
+            this.selectList.splice(val,1)
+            let temp=this.selectList
+            this.customData.selectList=temp
         },
         handleSelect(val){
-            
+            if(this.selectList.includes(this.forumList[val])){
+                console.log(this.forumList[val]);
+                return
+            }
+            this.selectList.push(this.forumList[val])
+            let temp=this.selectList
+            this.customData.selectList=temp
+            console.log(this.customData.selectList,'this.selectList');
         }
         
     },
@@ -249,7 +258,7 @@ export default {
             // if (this.customData && this.customData.selectForumList) {
             //     return this.customData.selectForumList?.slice(0, 3)
             // }
-            return this.selectForumList.slice(0, 3)
+            return this.selectList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -261,10 +270,6 @@ export default {
             }
             return this.communityPost.list.slice(0, this.copyNum)
         },
-        selectForum(){
-            let temp=this.customData.selectForumList
-            return temp
-        }
     },
     async mounted() {
         this.isLoading = true
