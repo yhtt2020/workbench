@@ -12,7 +12,7 @@
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-4">
                     <!-- {{ showForumList }} -->
-                    <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
+                    <div v-if="this.showForumList.length === 1 " class="flex items-center pointer">
                         <div class="w-[32px] h-[32px] rounded-md ml-2">
                             <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
 
@@ -92,15 +92,21 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
-            <a-select v-model:value="selectValue" mode="multiple"
-                style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子"
-                @change="handleChange(selectValue)" :bordered="false">
-                <a-select-option :value="index" v-for="(item, index) in customData.selectForumList"
+            <!-- {{ selectForumList }} -->
+            <a-select v-model:value="selectValue" mode="multiple" autoClearSearchValue="false"
+                style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" 
+                @change="handleChange(selectValue)" :bordered="false" @deselect="handleDeselect" @select="handleSelect">
+                <a-select-option :value="index" v-for="(item, index) in forumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
                 </a-select-option>
-                <template #clearIcon>
-                    <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
+                <template #placeholder>
+                    <div class="xt-text font-16">
+                        选择您的圈子
+                    </div>
+                </template>
+                <template #removeIcon>
+                    <YuanIcon icon="fluent:dismiss-16-filled" class="mt-1 xt-text" style="font-size: 14px;"></YuanIcon>
                 </template>
                 <template #suffixIcon>
                     <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
@@ -183,6 +189,7 @@ export default {
             selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
+            selectList:[]
         }
     },
     methods: {
@@ -190,30 +197,60 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
+        // 切换圈子
         async setCurrentIndex(index, item) {
             this.currentIndex = index
             await this.communityPost(item.id)
         },
+        // 刷新圈子
         async refreshPost() {
             this.isLoading = true
             await this.getCommunityPost(this.showForumList[0].id)
             this.isLoading = false
         },
+        // 查看内容详情
         showDetail(item) {
             browser.openInUserSelect(`${this.browserUrl}${item.id}`)
         },
+        // 选择板块
         handleChange(value) {
-            this.selectForumList.push(this.forumList[value])
-            let temp=this.selectForumList
-            this.customData.selectForumList=temp
+            this.selectList.push(this.forumList[value])
+            let temp=this.selectList
+            this.customData.selectList=temp
         },
+        // 显示发布页是否可见
         publishModalVisible() {
             this.showPublishModal = !this.showPublishModal
-            console.log(this.showForumList, 'this.showForumList');
         },
+        // 回调
         modalVisible(val) {
             this.showPublishModal = val
-        }
+        },
+        // 删除选择的板块
+        handleDeselect(val){
+            this.selectList=this.selectList.filter((index,item)=>{
+                console.log(index,item,val);
+                return  item!=val
+            })
+            
+            if(this.selectList[0]===undefined){
+                 this.selectList=[]
+            }
+            let temp=this.selectList
+            this.customData.selectList=temp
+            console.log(this.customData.selectList);
+        },
+        // handleSelect(val){
+        //     if(this.selectList.includes(this.forumList[val])){
+        //         console.log(this.forumList[val]);
+        //         return
+        //     }
+        //     // console.log(this.forumList[val],'this.forumList[val]');
+        //     this.selectList.push(this.forumList[val])
+            
+        //     // console.log(this.customData.selectList,'this.selectList');
+        // }
+        
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -238,10 +275,10 @@ export default {
             return this.myForumList.joined
         },
         showForumList() {
-            if (this.customData && this.customData.selectForumList) {
-                return this.customData.selectForumList.slice(0, 3)
+            if (this.customData && this.customData.selectList) {
+                return this.customData.selectList?.slice(0, 3)
             }
-            return this.customData.selectForumList.slice(0, 3)
+            return this.selectList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -249,26 +286,27 @@ export default {
         },
         showForumPost() {
             if (this.customData && this.customData.forumPost) {
-                return this.customData.forumPost.slice(0, this.copyNum)
+                return this.customData.forumPost?.slice(0, this.copyNum)
             }
-            return this.communityPost.list.slice(0, this.copyNum)
+            return this.communityPost.list?.slice(0, this.copyNum)
         },
-        selectForum(){
-            let temp=this.customData.selectForumList
-            return temp
-        }
     },
     async mounted() {
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
+        // this.myForumList.joined
         this.customData.forumList=this.myForumList.joined
         this.isLoading = false
+        console.log(this.customData.selectList,'this.customData.selectList');
     },
     watch: {
         showForumList(newValue) {
             this.isLoading = true
-            this.getCommunityPost(this.showForumList[0].id)
+            if (this.showForumList.length>0 ) {
+                this.getCommunityPost(this.showForumList[0].id)
+            }
+            console.log(this.customData.selectList,'this.customData.selectList');
             setTimeout(() => {
                 this.isLoading = false
             });
@@ -317,7 +355,7 @@ export default {
 :deep(.ant-select-selection-item) {
     background: rgba(80, 139, 254, 0.20);
 }
-:deep(.ant-select-selection-placeholder){
-    color: var(--primary-text) !important;
+:deep(.ant-select-multiple .ant-select-selection-item){
+    background: rgba(80, 139, 254, 0.20) !important;
 }
 </style>

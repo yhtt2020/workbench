@@ -280,7 +280,7 @@ const suggestNavigationList = [
   },
   {
     type: 'systemApp',
-    icon: 'akar-icons:check-box-fill',
+    icon: 'akar-icons:check-box',
     name: '待办(新)',
     event:'todo',
     fn: () => { vm.$router.push({ name: 'todo' })}
@@ -414,6 +414,29 @@ export default {
       this.colDrop()
       this.rightDrop()
       this.mainDrop()
+    }),
+    // 替换原有图标
+    // console.log(this.ClassifyData);
+    navigationData.systemAppList.forEach((item) => {
+      this.ClassifyData.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemFillAppList.forEach((item) => {
+      this.sideNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemAppList.forEach((item) => {
+      this.footNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
     })
   },
   methods: {

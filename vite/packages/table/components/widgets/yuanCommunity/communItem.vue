@@ -7,8 +7,8 @@
                 <div class="mb-2 xt-text-2 font-14" style="text-align: left;" >
                     @{{ detailPost.user.nickname }}
                 </div>
-                <div class="xt-text font-16 content-text" style="text-align: left;">
-                    {{ contentText }}
+                <div class="xt-text font-16 content-text" style="text-align: left;" :innerHTML="contentText">
+                    <!-- {{ contentText }} -->
                 </div>
             </div>
             <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" >
