@@ -88,12 +88,9 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen']),
   },
   watch: {
-    showModal(newVal){
-      if(newVal)this.fullScreen = true
-    }
+
   },
   methods: {
     ...mapActions(keyStore,['setShortcutKeyList','import']),
@@ -102,7 +99,6 @@ export default {
       message.success('添加成功');
       this.openDrawer = false
       this.$emit('closePreview',false)
-      this.fullScreen = false
     },
     close(){
       this.$emit('closePreview',false)
