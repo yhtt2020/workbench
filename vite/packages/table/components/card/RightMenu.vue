@@ -86,36 +86,19 @@ const props = defineProps({
       return [];
     },
   },
+  oldMenuVisible: {},
   sizeType: {},
 });
-const { menus, sizes } = toRefs(props);
+const { menus, sizes, oldMenuVisible } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
-
-const cardSize = ref(props.sizeType);
-watch(cardSize, (newV) => {
-  emits("update:sizeType", newV);
-});
-
-// 旧版菜单展示
-const menuVisible = ref(false);
-
-// 更新卡片大小
-const updateCardSize = (item) => {
-  cardSize.value = item;
-
-  emits("update:sizeType", item);
-};
-// 删除卡片
-const removeCard = () => {
-  emits("removeCard");
-};
 
 // 是否启动跟随菜单
 const menuState = computed(() => {
   return rightModel.value == "follow" ? true : false;
 });
+
 
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
@@ -134,6 +117,38 @@ const menuList = computed(() => {
     return array;
   }
   return menus.value;
+});
+
+// 卡片大小监听
+const cardSize = ref(props.sizeType);
+watch(cardSize, (newV) => {
+  emits("update:sizeType", newV);
+});
+// 旧版菜单展示
+const menuVisible = ref(false);
+watch(menuVisible, (newV) => {
+  emits("update:oldMenuVisible", newV);
+  oldMenuVisible.value = newV;
+});
+// 旧版右键监听
+watch(oldMenuVisible, (newV) => {
+  if (!menuState.value) menuVisible.value = newV;
+});
+
+
+// 更新卡片大小
+const updateCardSize = (item) => {
+  cardSize.value = item;
+
+  emits("update:sizeType", item);
+};
+// 删除卡片
+const removeCard = () => {
+  emits("removeCard");
+};
+
+defineExpose({
+  menuVisible,
 });
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
   >
     <div class="line-title">界面缩放</div>
   <ZoomUI></ZoomUI>
@@ -21,9 +21,12 @@
       在任务栏显示工作台：
       <a-switch v-model:checked="showInTaskBar"></a-switch>
     </div>
+    <div class='line flex w-full'>
+ <div style='width:120px'>  右键菜单模式：{{rightModel}}</div>   <xt-radio  v-model:data='rightModel' :list='rightMenuList'/>
+    </div>
   </template>
   </div>
- 
+
 </template>
 
 <script>
@@ -33,7 +36,7 @@ import { mapWritableState } from 'pinia'
 import AutoRun from '../../components/comp/AutoRun.vue'
 import { isMain } from '../../js/common/screenUtils'
 import Template from '../../../user/pages/Template.vue'
-
+import {useWidgetStore} from "../../components/card/store.ts"
 export default {
   name: 'Common',
   components: { Template, AutoRun, ZoomUI },
@@ -41,10 +44,21 @@ export default {
     return {
       trayOpen: '',
       showInTaskBar: false,
+      rightMenuList:[
+        {
+          name:"主应用",
+        value:  'follow'
+        },
+        {
+          name:"副屏",
+          value:  'defalut'
+        }
+      ]
     }
   },
   computed: {
     ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(useWidgetStore, ['rightModel']),
     isMain
   },
   async mounted() {
