@@ -61,8 +61,7 @@
             <communityIcon icon="fluent:open-20-filled"  style="font-size: 24px"/>
           </div>
 
-          <iframe v-else :src="currentChannel.props.url"  class="m-2" frameborder="0"
-          allow="encrypted-media" frame-ancestors="*"
+          <iframe v-else :src="currentChannel.props.url"  class="m-2" 
           style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)">
 
           </iframe>
@@ -117,7 +116,7 @@ import CreateNewChannel from '../components/CreateNewChannel.vue'
 import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
-import CategoryFloat from '../components/float/CategoryFloat.vue'
+import CategoryFloat from '../components/float/CategorysFloat.vue'
 import Commun from '../Commun.vue'
 import InviteOther from '../components/InviteOther.vue'
 

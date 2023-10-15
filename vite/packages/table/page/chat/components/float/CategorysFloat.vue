@@ -173,11 +173,12 @@ import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
 import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-
-import ChatDropDown from './ChatDropDown.vue';
-import ChatFold from './ChatFold.vue'
-import MenuDropdown from './MenuDropdown.vue'
 import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
+
+import ChatDropDown from './ChatsDropDown.vue';
+import ChatFold from './ChatFolds.vue'
+import MenuDropdown from './MenuDropdowns.vue'
+
 
 export default{
   props:[ 'communityID','float' ],

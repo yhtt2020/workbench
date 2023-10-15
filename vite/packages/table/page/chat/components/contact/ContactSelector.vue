@@ -1,21 +1,25 @@
 <template>
  <div class="flex px-6">
   <div class="flex flex-col" style="width:293px;" >
-   <a-input hidden=""   class="h-11"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search"  style="border-radius: 10px;">
+   <a-input    class="h-11"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search"  style="border-radius: 10px;">
     <template #suffix>
      <DirectlyIcon icon="fluent:search-20-filled" style="font-size: 1.5rem;cursor: pointer;" @click="search"/>
     </template>
    </a-input>
 
-   <div class="flex my-4"  hidden="">
-    <div>我的组织</div>
-    <div>我的好友</div>
+   <div class="flex my-4" >
+      <div class="flex items-center pointer" v-for="item in joinCategory" @click="openCrumbs(item)">
+        <div class="flex items-center rounded-lg w-10 h-10 justify-center" :style="{background:`${item.bgColor}`}">
+          <DirectlyIcon :icon="item.icon" :style="{color:`${item.iconColor}`}" style="font-size: 1.5rem;"/>
+        </div>
+        <span class="ml-3">{{ item.name }}</span>
+      </div>
    </div>
 
    <div class="category-14-400 my-4" style="color: var(--secondary-text);">{{title}}</div>
 
    <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:380px;">
-    <div v-for="(item,index) in list" :class="{'select-bg':isSelect(index)}" 
+    <div v-for="(item,index) in list.teamData" :class="{'select-bg':isSelect(index)}" 
      class="flex rounded-lg items-center pointer mb-2 p-3"
      @click="selectCurrentContact(item)"
     >
@@ -29,9 +33,6 @@
       <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
       <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
      </template>
-
-
-
     </div>
    </vue-custom-scrollbar>
 
@@ -92,6 +93,10 @@ export default {
     wheelPropagation: true
    },
    selectedList:[],
+   joinCategory:[
+    // { icon:'fluent:people-16-regular',name:'我的组织',type:'myOrganize',bgColor:'var(----active-secondary-bg)',iconColor:'var(--active-bg)' },
+    { icon:'fluent:chat-16-regular',name:'我的好友',type:'myFriend',bgColor:'rgba(250,173,20,0.2)',iconColor:'var(--warning)'},
+   ]
   }
  },
 
@@ -147,17 +152,24 @@ export default {
   // 判断有没有选中
   isSelect(index){
    // console.log('查看是否选中',this.selectedList.includes(this.list[index]));
-   return this.selectedList.includes(this.list[index])
+   return this.selectedList.includes(this.list.teamData[index])
   },
 
   // 搜索
   search(){
    if(this.inviteMode === 'direct'){
-    // console.log('搜索直接邀请操作');
+    console.log('搜索直接邀请操作');
+    this.list = []
+
    }else{
     // console.log('搜索最近聊天数据');
    }
   },
+
+  // 开启面包屑
+  openCrumbs(item){
+
+  }
 
  }
  }

@@ -4,13 +4,13 @@
     <div class="back-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="backButton">
      <DirectlyIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
     </div>
-    <span class="category-16-400" style="color:var(--primary-text);">选择联系人</span>
+    <span class="category-16-400" style="color:var(--primary-text);">邀请加入</span>
     <div class="close-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="closeButton">
      <DirectlyIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
     </div>
   </div>
 
-  <ContactSelector title="最近聊天" inviteMode="invite" :list="recentlyChatList" :no="no"/>
+  <ContactSelector title="最近聊天" inviteMode="invite" :list="{teamData:recentlyChatList}" :no="no"/>
 
  </div>
 </template>

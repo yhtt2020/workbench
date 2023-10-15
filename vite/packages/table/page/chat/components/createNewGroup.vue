@@ -117,7 +117,7 @@
    </div>
  </div>
   
- <SelectClassification v-else :no="no" type="group" :data="groupData" @classBack="classShow = false" @close="closeContact"/>
+ <ChannelClassification v-else :no="no" type="group" :data="groupData" @classBack="classShow = false" @close="closeContact"/>
 </template>
 
 <script>
@@ -129,11 +129,11 @@ import _ from 'lodash-es'
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { Icon as NewGroupIcon } from '@iconify/vue'
 
-import SelectClassification from './channelSelect/SelectClassification.vue';
+import ChannelClassification from './channelSelect/ChannelClassification.vue';
 
 export default defineComponent({
  components:{
-  CameraOutlined,NewGroupIcon,SelectClassification
+  CameraOutlined,NewGroupIcon,ChannelClassification
  },
 
  props:['no'],

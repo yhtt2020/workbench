@@ -69,7 +69,8 @@ export default {
     linkValue:'s.apps.vip',
     inviteShow:false,
     inviteMethod:[
-      {title:'直接添加',description:'来自我的小队成员、组织成员和好友，确认选择后自动加入社群。',type:'directly'},
+      {title:'直接添加',description:'来自我的小队成员、好友，确认选择后自动加入社群。',type:'directly'},
+      // 组织成员和
       {title:'邀请加入',description:'支持批量发送邀请信息到群聊或好友，对方接受邀请后即可加入。',type:'inviteJoin'}
     ],
     type:''

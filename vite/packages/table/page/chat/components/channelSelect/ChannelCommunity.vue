@@ -36,7 +36,7 @@
   </div>
  </div>
 
- <SelectClassification v-else  :no="no" type="forum" :data="selectForumItem" @classBack="classShow = false"/>
+ <ChannelClassification v-else  :no="no" type="forum" :data="selectForumItem" @classBack="classShow = false"/>
 </template>
 
 <script>
@@ -44,11 +44,12 @@ import { mapActions,mapWritableState } from 'pinia'
 import { forumStore } from '../../store/forumStore'
 import { Icon as ClassIcon} from '@iconify/vue'
 
-import SelectClassification from './SelectClassification.vue'
+import ChannelClassification from './ChannelClassification.vue'
 
 export default {
  components:{
-  ClassIcon,SelectClassification,
+  ClassIcon,
+  ChannelClassification
  },
 
  props:['no'],

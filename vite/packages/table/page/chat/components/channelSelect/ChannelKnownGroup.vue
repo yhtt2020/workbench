@@ -64,7 +64,7 @@
 
  </div>
 
- <SelectClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></SelectClassification>
+ <ChannelClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></ChannelClassification>
 </template>
 
 <script>
@@ -75,13 +75,13 @@ import { message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
 
-import SelectClassification from './SelectClassification.vue'
+import ChannelClassification from './ChannelClassification.vue'
 
 
 export default defineComponent({
  components:{
   CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled,
-  SelectClassification
+  ChannelClassification
  },
 
  props:['no','type'],

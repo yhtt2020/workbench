@@ -4,14 +4,14 @@
      <div class="back-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="backButton">
       <DirectlyIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
      </div>
-     <span class="category-16-400" style="color:var(--primary-text);">选择联系人</span>
+     <span class="category-16-400" style="color:var(--primary-text);">直接添加</span>
      <div class="close-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="closeButton">
       <DirectlyIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
      </div>
    </div>
 
-   <ContactSelector inviteMode="direct" :list="teamData" title="我的小队" :no="no"/>
-
+   <ContactSelector inviteMode="direct" :list="{friendData,teamData}"  title="我的小队" :no="no"/>
+  
 
   </div>
 </template>
@@ -33,7 +33,7 @@
  
   data(){
    return{
-   
+    friendData:[]
    }
   },
 
@@ -56,6 +56,10 @@
    
   },
 
+  mounted(){
+    this.getFriend()
+  },
+
  
   methods:{
     backButton(){
@@ -64,6 +68,15 @@
     closeButton(){
       this.$emit('close')
     },
+
+    async  getFriend(){
+      const server = window.$TUIKit.tim
+      const res = await server.getFriendList()
+      // console.log('获取数据',res?.data);
+      const list = res?.data.map((item)=>{ return item.profile })
+      console.log('过滤后的数据',list);
+      this.friendData = list
+    }
 
   }
  }
