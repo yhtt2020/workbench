@@ -214,6 +214,13 @@ export default {
       this.$router.push({
         name:'editScheme'
       })
+    },
+    getIcon(item){
+      if(item.icon){
+        return item.icon
+      }else{
+        return item.software?.icon
+      }
     }
   }
 }
@@ -302,11 +309,11 @@ export default {
           <div :class="{selectable:selecting,selected:item.selected}" v-for="item in shortcutSchemeList"
                class="scheme-item     items-center pointer xt-bg-2" @click="btnDetail(item)">
             <div class="mx-4 h-full w-14 flex justify-center items-center cover">
-                <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
+                <a-avatar shape="square" :src="getIcon(item)" :size="48"></a-avatar>
             </div>
-            <div class="description">
+            <div class="description px-2  truncate">
               <div class="xt-text truncate " style="max-width: 180px" :title="item.name"> {{ item.name }} </div>
-              <div class="mt-1 xt-text-2">{{item.exeName}}</div>
+              <div class="mt-1 xt-text-2 truncate">{{item.exeName}}</div>
             </div>
 
 

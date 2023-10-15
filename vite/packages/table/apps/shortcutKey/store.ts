@@ -78,6 +78,10 @@ export const keyStore = defineStore("key", {
       })).docs
 
       let schemes = rs
+
+      for(const scheme of schemes){
+        scheme.software=await this.getCustomApp(scheme.exeName)
+      }
       // if(this.schemeList.length===0){
       //  //  for (const scheme of keyData) {
       //  //    let rs=await tsbApi.db.put({
@@ -93,12 +97,17 @@ export const keyStore = defineStore("key", {
       //
       //  // this.schemeList=[...keyData.concat()]
       // }
+      console.log(schemes,'列表')
       return schemes
     },
-    setRecentlyUsedList(item) {
-      this.recentlyUsedList.forEach((i, index) => {
-        if (i.id === item.id) this.recentlyUsedList.splice(index, 1)
+    async setRecentlyUsedList(item) {
+      this.recentlyUsedList=this.recentlyUsedList.filter(list=>{
+        return list.id!==item.id
       })
+      if(!item.icon){
+        let software=await this.getCustomApp(item.exeName)
+        item.icon=software.icon
+      }
       this.recentlyUsedList.unshift(item)
     },
     setSchemeList(item) {

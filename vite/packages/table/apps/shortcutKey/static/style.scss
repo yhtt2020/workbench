@@ -26,11 +26,13 @@
   display: flex;
   width: 100%;
   flex-wrap: wrap;
-  gap:20px;
   height: auto;
+  justify-content: center;
+  align-content: center;
   .scheme-item{
+    margin: 10px;
     width:calc(350px);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     overflow: hidden;
     &:hover{

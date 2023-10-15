@@ -252,7 +252,8 @@ export default {
         if (this.settings.enableAutoEnter) {
           this.shortcutSchemeList = await this.loadShortcutSchemes(this.currentApp.exeName)
           if (this.shortcutSchemeList.length > 0) {
-            this.setRecentlyUsedList(this.shortcutSchemeList[0])
+            await this.setRecentlyUsedList(this.shortcutSchemeList[0])
+            this.navIndex=0
             this.getData()
           }
 
@@ -302,8 +303,8 @@ export default {
      * 切换方案
      * @param index
      * @param item
-     */
-    switchScheme (index, item) {
+     */ async switchScheme (index, item) {
+      await this.setRecentlyUsedList(item)
       this.currentScheme = item
       this.navIndex = index
       this.keyList = item.keyList
@@ -311,6 +312,8 @@ export default {
       this.currentIndex = 0
       this.sideNav = this.keyList.filter(i => i.groupName)
       this.recentlyUsedVisible = false
+      this.getData()
+      this.navIndex=0
 
     },
     setKeyItem (id) {
