@@ -10,9 +10,9 @@ const toast = useToast()
 export const shortTalkStore = defineStore("shortTalkStore", {
   state: () => ({
     // 密钥
-    access_token:'cd72cb58e42ab9c15a55882e5c71e6d5',
+    access_token:'',
     // 请求地址
-    baseUrl:'https://osxbenew.mark.opensns.cn',
+    baseUrl:'',
     // 社区访问数据 含平台
     access:{},
     // 社区互动数据
@@ -23,127 +23,127 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           key: 1,
           title: "今日发布",
           type:'today_thread',
-          num:0,
+          num:'',
       },
       {
           key: 2,
           title: "今日评论",
           type:'today_post',
-          num:0,
+          num:'',
       },
       {
           key: 3,
           title: "今日点赞",
           type:'today_support',
-          num:0,
+          num:'',
       },
       {
           key: 4,
           title: "今日注册",
           type:'today_register',
-          num:0,
+          num:'',
       },
       {
           key: 5,
           title: "今日访问",
           type:'today_visit',
-          num:0,
+          num:'',
       },
       {
           key: 6,
           title: "本周发布",
           type:'week_thread',
-          num:0,
+          num:'',
       },
       {
           key: 7,
           title: "本周评论",
           type:'week_post',
-          num:0,
+          num:'',
       },
       {
           key: 8,
           title: "本周点赞",
           type:'week_support',
-          num:0,
+          num:'',
       },
       {
           key: 9,
           title: "本周访问",
           type:'week_visit',
-          num:0,
+          num:'',
       },
       {
           key: 10,
           title: "本周注册",
           type:'week_register',
-          num:0,
+          num:'',
       },
       {
           key: 11,
           title: "本月发布",
           type:'month_thread',
-          num:0,
+          num:'',
       },
       {
           key: 12,
           title: "本月评论",
           type:'month_post',
-          num:0,
+          num:'',
       },
       {
           key: 13,
           title: "本月点赞",
           type:'month_support',
-          num:0,
+          num:'',
       },
       {
           key: 14,
           title: "本月注册",
           type:'month_register',
-          num:0,
+          num:'',
       },
       {
           key: 15,
           title: "本月访问",
           type:'month_visit',
-          num:0,
+          num:'',
       },
       {
           key: 16,
           title: "总访问数",
           type:'all_visit',
-          num:0,
+          num:'',
       },
       {
           key: 17,
           title: "总发布",
           type:'all_thread',
-          num:0,
+          num:'',
       },
       {
           key: 18,
           title: "总评论",
           type:'all_post',
-          num:0,
+          num:'',
       },
       {
           key: 19,
           title: "总点赞",
           type:'all_support',
-          num:0,
+          num:'',
       },
       {
           key: 20,
           title: "总注册",
           type:'all_register',
-          num:0,
+          num:'',
       },
       {
           key: 21,
           title: "我是标题",
           type:'today_thread',
-          num:0,
+          num:'',
       },
     ],
     // 待办数据
@@ -191,26 +191,30 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     
     // 初始化 图表 请求数据
     async getChartData(customData){
-      await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
-        "content":{
-          "sign":"access,interact",
-          "access":{
-            "plate":customData.defaultPlatType.name,
-            "day_type":customData.defaultTimeType.name,
-            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
-            "end":new Date().getTime()/1000
-          },
-            "interact":{
-            "day_type":customData.defaultTimeType.name,
-            "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
-            "end":new Date().getTime()/1000
+      if (customData.defaultPlatType) {
+        await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+          "content":{
+            "sign":"access,interact",
+            "access":{
+              "plate":customData.defaultPlatType.name,
+              "day_type":customData.defaultTimeType.name,
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "end":new Date().getTime()/1000
+            },
+              "interact":{
+              "day_type":customData.defaultTimeType.name,
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "end":new Date().getTime()/1000
+            }
           }
-        }
-      }).then((res)=>{
-        // console.log(res)
-        this.access = res.access
-        this.interact = res.interact
-      })
+        }).then((res)=>{
+          this.access = res.access
+          this.interact = res.interact
+        })
+      }else{
+        // console.log('暂时没customData');
+        
+      }
     },
     // 初始化 数据板 请求数据
     async getBoardData(){

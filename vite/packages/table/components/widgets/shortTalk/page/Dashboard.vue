@@ -1,37 +1,37 @@
 <template>
 
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
+    <Widget @click="onHistoryMessage" :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="cardSlot" :desk="desk"  :menuList="menuList">
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
         </div>
-        <div class="dash-board">
-            <div class="dash-cell pointer" v-for="(item,index) in dataList" :key="index">
-                <div class="cell-title">{{ item.title }}</div>
-                <div class="cell-num">{{ item.num }}</div>
+        <div class="dash-board overflow-hidden" style="height: 370px;">
+            <div class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
+                <div class="cell-title">{{ this.mockData[item-1].title }}</div>
+                <div class="cell-num">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
             </div>
         </div>
-        
+
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
-                <a-button class="top-btn" type="primary" @click="setVisible = !setVisible">保存</a-button>
+                <div v-show="this.setVisible"  class="xt-active-btn" style="width:64px;height:40px;" @click="changeAccToken(accToken,accUrl)">提交</div>
             </template>
-            <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-                <div v-show="!setVisible">
+            <vue-custom-scrollbar :settings="settings" style="height: 100%;">
+                <div v-show="this.setVisible ">
                     <div class="text-content">
                         <div>关联短说社区系统</div>
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
                     <p class="ml-1 mt-1">密钥</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secKey" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                     <p class="ml-1">管理后台地址</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secAdd" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                 </div>
-                <div v-show="setVisible">
-                    <div class="text-title">
+                <div v-show="!this.setVisible && this.access_token && this.baseUrl">
+                    <div class="text-title" @click="this.setVisible = !this.setVisible">
                         关联短说社区系统
-                        <span>已关联 ></span>
+                        <span>{{ this.access_token && this.baseUrl ? '已关联 >' : '未关联 >'  }}</span>
                     </div>
                     <div class="text-content">
                         <div>设置小组件数据</div>
@@ -40,13 +40,19 @@
                     </div>
                     <p>小组件名称</p>
                     <p>
-                        <a-input style="border-radius: 10px;" v-model:value="this.options.title" class="search pl-1" maxlength="20"></a-input>
+                        <a-input 
+                        style="border-radius: 10px;" 
+                        v-model:value="this.options.title" 
+                        @change="changeName"
+                        maxlength="8"
+                        class="search pl-1"></a-input>
                     </p>
+                    <!--  穿梭框 -->
                     <p>选择统计数值</p>
-                    <div class="transfer">
+                    <div class="transfer" >
                         <a-transfer
                         v-model:target-keys="targetKeys"
-                        :data-source="mockData"
+                        :data-source="this.mockData"
                         :show-select-all="false"
                         @change="handleChange">
                         <template #render="item">
@@ -66,11 +72,14 @@
 </template>
   
 <script>
+import axios from "axios";
 import Widget from "../../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
+
 export default {
     components:{
         Widget,
@@ -95,12 +104,34 @@ export default {
         },
         editing: {
             type: Boolean,
-        },
+        }, 
+    },
+    computed: {
+        ...mapWritableState(shortTalkStore, ['mockData','access_token','baseUrl','setVisible']),
     },
     data() {
         return {
+            settings: {
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: false,
+            },
+            sizeList: [
+                {
+                title: '2x4',
+                height: 2,
+                width: 1,
+                name: '2x4'
+                },
+                {
+                title: '4x4',
+                height: 2,
+                width: 2,
+                name: '4x4'
+                },
+            ],
             settingVisible: false,
-            setVisible: true,
             // 密钥和地址
             secKey:"",
             secAdd:"",
@@ -110,162 +141,87 @@ export default {
                     title: '设置',
                     fn: () => { 
                         this.settingVisible = true; 
-                        this.$refs.dataSlot.visible = false 
+                        this.$refs.cardSlot.visible = false 
                     }
                 },
             ],
             options: {
-                className: "card double",
+                className: "card",
                 title: "社区数据",
-                // icon: "bianji",
-                // icon: "shezhi1",
-                icon: "iconamoon:history-fill",
+                // 左侧图标
+                // icon: "iconamoon:history-fill",
                 rightIcon:"fluent:open-20-filled",
-                // icon: "games-16-filled",
             },
-            dataList:[
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-                {
-                    title:"今日访问",
-                    num:"123"
-                },
-            ],
-            menuList: [
-                {
-                    icon: 'shezhi1',
-                    title: '设置',
-                    fn: () => { 
-                        this.settingVisible = true; 
-                        this.$refs.dataSlot.visible = false 
-                    }
-                },
-            ],
-            mockData:[
-                {
-                    key: 1,
-                    title: "总访问",
-                },
-                {
-                    key: 2,
-                    title: "本周发布",
-                },
-                {
-                    key: 3,
-                    title: "本月发布",
-                },
-                {
-                    key: 4,
-                    title: "我是标题",
-                },
-                {
-                    key: 5,
-                    title: "我是标题",
-                },
-                {
-                    key: 6,
-                    title: "我是标题",
-                },
-                {
-                    key: 7,
-                    title: "总访问",
-                },
-                {
-                    key: 8,
-                    title: "本周发布",
-                },
-                {
-                    key: 9,
-                    title: "本月发布",
-                },
-                {
-                    key: 10,
-                    title: "我是标题",
-                },
-                {
-                    key: 11,
-                    title: "我是标题",
-                },
-                {
-                    key: 12,
-                    title: "我是标题",
-                },
-                {
-                    key: 13,
-                    title: "我是标题",
-                },
-                {
-                    key: 14,
-                    title: "我是标题",
-                },
-                {
-                    key: 15,
-                    title: "我是标题",
-                },
-                {
-                    key: 16,
-                    title: "总访问",
-                },
-                {
-                    key: 17,
-                    title: "本周发布",
-                },
-                {
-                    key: 18,
-                    title: "本月发布",
-                },
-                {
-                    key: 19,
-                    title: "我是标题",
-                },
-                {
-                    key: 20,
-                    title: "我是标题",
-                },
-                {
-                    key: 21,
-                    title: "我是标题",
-                },
+            targetKeys:[1,2,3,4,5,6,7,8,9],
+            // 密钥和地址
+            accToken:'',
+            accUrl:'',
 
-            ],
-            targetKeys:[5,6],
         };
     },
-    async mounted() {
+    mounted() {
+        // 初始化
+        this.accToken = this.access_token
+        this.accUrl = this.baseUrl
+        this.init()
+
 
     },
     methods:{
+        ...mapActions(cardStore, ['updateCustomData']),
+        ...mapActions(shortTalkStore, ['getBoardData','changeAccToken']),
+        init(){
+            // 初始化设置数组
+            if(!this.customData.targetKeys){
+                this.updateCustomData(this.customIndex,{
+                    "targetKeys": [1,2,3,4,5,6,7,8,9],
+                },this.desk)
+            }else{
+                this.targetKeys = this.customData.targetKeys
+            }
+            // 初始化名称
+            if(!this.customData.optionTitle){
+                this.updateCustomData(this.customIndex,{
+                    "optionTitle": '社区数据',
+                },this.desk)
+            }else{
+                this.options.title = this.customData.optionTitle
+            }
+            // 初始化获取详细数据
+            this.getBoardData()
 
+
+        },
+        // 修改设置的数组
+        handleChange(keys, direction, moveKeys){
+            this.updateCustomData(this.customIndex,{
+                'mockData':this.mockData,
+                "targetKeys": keys,
+            },this.desk)
+            
+        },
+        // 修改小组件名称
+        changeName(){
+            this.updateCustomData(this.customIndex,{
+                "optionTitle": this.options.title,
+            },this.desk)
+        },
+
+    },
+    watch:{
+        // 监听token 跟 url
+        'access_token':{
+            handler(newVal, oldVal){
+            this.accToken = this.access_token
+                this.init()
+            }
+        },
+        'baseUrl':{
+            handler(newVal, oldVal){
+            this.accUrl = this.baseUrl
+                this.init()
+            }
+        }
     }
 };
 </script>
@@ -286,16 +242,17 @@ export default {
         position: relative;
         top: -3px;
         justify-content: space-between;
+        align-content: flex-start;
     }
 
     .dash-cell{
-        width: 173px;
+        width: 32%;
+        min-width:120px;
         height: 112px;
         background: rgba(0,0,0,0.30);
         border-radius: 10px;
         margin-top: 12px;
     }
-
 
     .dash-cell .cell-title{
         font-family: PingFangSC-Regular;
@@ -311,6 +268,7 @@ export default {
         color: rgba(255,255,255,0.85);
         font-weight: 500;
     }
+    
     .transfer ul{
         border-radius: 10px !important;
     }
@@ -339,22 +297,7 @@ export default {
         margin-top: 8px;
     }
 
-    :deep(.ant-transfer-list-content-item){
-        height: 48px;
-    }
 
-    // :deep(.ant-transfer-list-content-item):active {
-    //     // background: #212121;
-    // }
-    :deep(.ant-checkbox-wrapper){
-        margin-left: 5px;
-    }
-    :deep(.ant-transfer-list-content-item-text){
-        margin-left: 5px;
-        font-family: PingFangSC-Regular;
-        font-size: 16px;
-        color: rgba(255,255,255,0.85);
-    }
     
     .text-content{
         width: 100%;
@@ -414,12 +357,19 @@ export default {
         margin-bottom: 12px;
         background-color: #2A2A2A 100%;
     }
-    
+
     :deep(.ant-pagination){
         text-align: center !important;
     }
 
+
+    .ant-transfer-list-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1 !important;
+    }
+
     
+
+
     // 滚动条
     :deep(.ant-transfer-list-content){
         flex: 1 1 0%;
@@ -432,6 +382,20 @@ export default {
     :deep(.ant-transfer-list-content::-webkit-scrollbar-thumb){
         background: #aaa;
         border-radius: 3px;
+    }
+
+    :deep(.ant-transfer-list-content-item){
+        height: 48px;
+    }
+
+    :deep(.ant-checkbox-wrapper){
+        margin-left: 5px;
+    }
+    :deep(.ant-transfer-list-content-item-text){
+        margin-left: 5px;
+        font-family: PingFangSC-Regular;
+        font-size: 16px;
+        color: rgba(255,255,255,0.85);
     }
 </style>
   

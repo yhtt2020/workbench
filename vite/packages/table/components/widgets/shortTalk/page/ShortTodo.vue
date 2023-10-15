@@ -1,13 +1,13 @@
 <template>
 
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk">
         <div class="top-icon">
             <Icon icon="akar-icons:check-box" />
         </div>
         <div class="dash-board">
-            <div class="dash-cell pointer" :class="item.num == 0 || item.num == '-' ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index">
+            <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
-                <div class="cell-num">{{ item.num }}</div>
+                <div class="cell-num">{{ item.num == undefined?'-':item.num }}</div>
             </div>
         </div>
         <!-- 设置面板 -->
@@ -15,10 +15,10 @@
             <template #extra>
                 <div  class="xt-active-btn" style="width:64px;height:40px;" @click="changeVisible">提交</div>
             </template>
-            <vue-custom-scrollbar :settings="settingVisible" style="height: 100%;">
+            <vue-custom-scrollbar :settings="settings" style="height: 100%;">
                 <div>
                     <div class="text-content">
-                        <div>关联短说社区系统1</div>
+                        <div>关联短说社区系统</div>
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
@@ -71,6 +71,12 @@ export default {
     },
     data() {
         return {
+            settings: {
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: false,
+            },
             // 标题样式
             options: {
                 className: "card",
@@ -98,9 +104,9 @@ export default {
     },
     mounted() {
         // 初始化
-        this.getTodoData()
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
+        this.getTodoData()
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
@@ -108,6 +114,21 @@ export default {
         changeVisible(){
             this.settingVisible = false
             this.changeAccToken(this.accToken,this.accUrl)
+        },
+    },
+    watch:{
+        // 监听token 跟 url
+        'access_token':{
+            handler(newVal, oldVal){
+                this.accToken = this.access_token
+                this.getTodoData()
+            }
+        },
+        'baseUrl':{
+            handler(newVal, oldVal){
+                this.accUrl = this.baseUrl
+                this.getTodoData()
+            }
         },
     }
 };

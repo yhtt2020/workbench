@@ -292,8 +292,7 @@ import ClipBoard from '../widgets/clipBoard/index.vue'
 
 import Guider from '../widgets/shortTalk/page/Guider.vue'
 import ShortTodo from '../widgets/shortTalk/page/ShortTodo.vue'
-import SmallDashboard from '../widgets/shortTalk/page/SmallDashboard.vue'
-import MiddleDashboard from '../widgets/shortTalk/page/MiddleDashboard.vue'
+import Dashboard from '../widgets/shortTalk/page/Dashboard.vue'
 import ShortChart from '../widgets/shortTalk/page/ShortChart.vue'
 
 import TimerChart from '../../apps/tomato/page/Chart.vue'
@@ -332,8 +331,7 @@ export default {
     ClipBoard,
     Guider,
     ShortTodo,
-    SmallDashboard,
-    MiddleDashboard,
+    Dashboard,
     ShortChart,
     TimerChart,
     TimerClock,
