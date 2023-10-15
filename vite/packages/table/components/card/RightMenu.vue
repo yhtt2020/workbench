@@ -1,13 +1,13 @@
 <!-- 处理右键菜单内容 -->
 <template>
   <Menu :menus="menuList" name="title" fn="fn" :start="menuState">
-    <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
-    <xt-button @click="rightModel = 'default'">default</xt-button> -->
+    <xt-button @click="rightModel = 'follow'">follow</xt-button>
+    <xt-button @click="rightModel = 'default'">default</xt-button>
     <div @contextmenu.stop="menuVisible = true">
       <slot></slot>
     </div>
-    <template #test v-if="sizes.length > 0">
-      <div class="flex flex-wrap mb-2">
+    <template #cardSize v-if="sizes.length > 0">
+      <div class="flex flex-wrap mb-2 ml-3 my-1">
         <div
           v-for="item in sizes"
           class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-3"
@@ -34,11 +34,11 @@
       v-if="sizes && sizes.length > 0"
     >
       <div class="mr-4">小组件尺寸</div>
-      <!-- <HorizontalPanel
-        :navList="sizeList"
-        v-model:selectType="sizeType"
+      <HorizontalPanel
+        :navList="sizes"
+        v-model:selectType="cardSize"
         bgColor="drawer-item-select-bg"
-      /> -->
+      />
       <slot name="old"></slot>
     </div>
     <hr
@@ -47,6 +47,7 @@
       v-if="sizes && sizes.length > 0"
     />
     <div class="flex flex-row">
+      <slot name="menuExtra"></slot>
       <!-- 根据任务需求 抽离了底部选择区 -->
       <BottomEdit
         :menuList="menuList"
@@ -68,6 +69,7 @@ import { storeToRefs } from "pinia";
 import { useWidgetStore } from "./store.ts";
 import Menu from "../../ui/components/Menu/index.vue";
 import BottomEdit from "./BottomEdit.vue";
+import HorizontalPanel from "../HorizontalPanel.vue";
 
 const emits = defineEmits(["removeCard", "sizeType"]);
 
@@ -93,7 +95,7 @@ const { rightModel } = storeToRefs(widgetStore);
 
 const cardSize = ref(props.sizeType);
 watch(cardSize, (newV) => {
-  console.log("newV :>> ", newV);
+  emits("update:sizeType", newV);
 });
 
 // 旧版菜单展示
@@ -117,10 +119,15 @@ const menuState = computed(() => {
 
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
-  if (rightModel.value == "follow") {
-    const array = [
+  if (rightModel.value == "follow" && sizes.value.length > 0) {
+    let array = [
       {
-        slot: "test",
+        slot: "cardSize",
+        title: "小组件尺寸",
+        newIcon: "fluent:resize-large-16-regular",
+      },
+      {
+        divider: true,
       },
       ...menus.value,
     ];

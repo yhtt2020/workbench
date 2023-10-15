@@ -49,20 +49,14 @@
       <!--  主题内容插槽end  -->
     </div>
 
-    <!-- 右上角抽屉菜单start 遗留 -->
-    <template #old>
-      <HorizontalPanel
-        :navList="sizeList"
-        v-model:selectType="sizeType"
-        bgColor="drawer-item-select-bg"
-      >
-      </HorizontalPanel>
+    <!-- 右上角抽屉菜单扩展 start  -->
+    <template #menuExtra>
+      <slot name="menuExtra"></slot>
     </template>
-    <!-- 右上角抽屉菜单end -->
+    <!-- 右上角抽屉扩展 end -->
   </RightMenu>
 
   <div></div>
-  <!-- </template> -->
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -71,7 +65,6 @@
 <script lang="ts">
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../store/card";
-import HorizontalPanel from "../HorizontalPanel.vue";
 import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
 import { PropType } from "vue";
@@ -104,7 +97,6 @@ declare interface IMenuItem {
 export default {
   components: {
     Template,
-    HorizontalPanel,
     MenuOutlined,
     MyIcon,
     RightMenu,

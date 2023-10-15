@@ -16,11 +16,12 @@
       class="ml-3"
     />
     <div
-      class="truncate w-full flex-1 pl-3"
+      class="truncate w-full flex-1 pl-3 text-base"
       :style="{
         color: data.color ? data.color : color,
       }"
     >
+
       {{ data[`${name}`] }}
     </div>
   </div>
@@ -35,7 +36,9 @@ const props = defineProps({
   color: {
     default: "var(--primary-text)",
   },
-  name: {},
+  name: {
+    default: "name",
+  },
 });
 </script>
 

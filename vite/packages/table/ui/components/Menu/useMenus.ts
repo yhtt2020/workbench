@@ -10,7 +10,6 @@ const useMenus = (containerRef: any, start) => {
     if (!start.value) {
       return;
     }
-    console.log("object :>> ", start);
     e.preventDefault(); // 阻止默认动作
     e.stopPropagation(); // 阻止事件冒泡
     show.value = true;

@@ -17,7 +17,13 @@
         >
           <div class="list w-full h-full p-2" v-resize="handeleDivView">
             <template v-for="menu in props.menus">
-              <slot :name="menu.slot" v-if="menu.slot"></slot>
+              <template v-if="menu.slot">
+                <div class="item rounded-lg">
+                  <Item :data="menu" :name="name" />
+                </div>
+                <slot :name="menu.slot"></slot>
+              </template>
+              <xt-divider v-else-if="menu.divider" class="my-3" />
               <div
                 v-else
                 class="item rounded-lg"
