@@ -224,7 +224,7 @@ export default {
       event: 'deck',
     }, {
       type: 'systemApp',
-      icon: 'fluent:cloud-sync-16-filled',
+      icon: 'fluent:cloud-sync-16-regular',
       name: '文件传输',
       event: 'fileHelper',
       data: {
@@ -237,7 +237,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fluent:grid-16-filled',
+      icon: 'fluent:grid-16-regular',
       name: '应用管理',
       event: 'apps',
     },
@@ -260,7 +260,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fluent:building-shop-16-filled',
+      icon: 'fluent:building-shop-16-regular',
       name: '创意市场',
       event: 'market',
     },

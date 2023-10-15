@@ -220,7 +220,7 @@ let arrData = [
     },
     {
       "type": "systemApp",
-      "icon": "fluent:slide-settings-24-filled",
+      "icon": "fluent:slide-settings-24-regular",
       "name": "设备设置",
       "event": "status"
     },
@@ -258,7 +258,7 @@ export const navStore = defineStore("nav", {
     sideNavigationList: [
         {
             "type": "systemApp",
-            "icon": "fluent:home-16-regular",
+            "icon": "fluent:home-16-filled",
             "name": "主页",
             "event": "home"
         },
@@ -269,17 +269,17 @@ export const navStore = defineStore("nav", {
             "event": "apps"
         },{
             "type": "systemApp",
-            "icon": "fluent:games-16-regular",
+            "icon": "fluent:games-16-filled",
             "name": "游戏",
             "event": "gameIndex"
         },{
             "type": "systemApp",
-            "icon": "fluent:music-note-2-16-regular",
+            "icon": "fluent:music-note-2-16-filled",
             "name": "音乐",
             "event": "music"
         },{
             "type": "systemApp",
-            "icon": "fluent:flash-16-regular",
+            "icon": "fluent:flash-16-filled",
             "name": "快捷指令",
             "event": "deck"
         },
@@ -306,7 +306,7 @@ export const navStore = defineStore("nav", {
       },
       {
         "type": "systemApp",
-        "icon": "fluent:slide-settings-24-filled",
+        "icon": "fluent:slide-settings-24-regular",
         "name": "设备设置",
         "event": "status"
       }

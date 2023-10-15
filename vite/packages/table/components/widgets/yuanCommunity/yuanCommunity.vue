@@ -92,15 +92,16 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
+            <!-- {{ selectForumList }} -->
             <a-select v-model:value="selectValue" mode="multiple"
                 style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子"
-                @change="handleChange(selectValue)" :bordered="false">
-                <a-select-option :value="index" v-for="(item, index) in customData.selectForumList"
+                @change="handleChange(selectValue)" :bordered="false" @deselect="handleDeselect" @select="handleSelect">
+                <a-select-option :value="index" v-for="(item, index) in forumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
                 </a-select-option>
-                <template #clearIcon>
-                    <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
+                <template #removeIcon>
+                    <YuanIcon icon="fluent:dismiss-16-filled" class="mt-1 xt-text" style="font-size: 14px;"></YuanIcon>
                 </template>
                 <template #suffixIcon>
                     <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
@@ -213,7 +214,14 @@ export default {
         },
         modalVisible(val) {
             this.showPublishModal = val
+        },
+        handleDeselect(val){
+            this.customData.selectForumList.slice(val,1)
+        },
+        handleSelect(val){
+            
         }
+        
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -238,10 +246,10 @@ export default {
             return this.myForumList.joined
         },
         showForumList() {
-            if (this.customData && this.customData.selectForumList) {
-                return this.customData.selectForumList.slice(0, 3)
-            }
-            return this.customData.selectForumList.slice(0, 3)
+            // if (this.customData && this.customData.selectForumList) {
+            //     return this.customData.selectForumList?.slice(0, 3)
+            // }
+            return this.selectForumList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -262,6 +270,7 @@ export default {
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
+        // this.myForumList.joined
         this.customData.forumList=this.myForumList.joined
         this.isLoading = false
     },
