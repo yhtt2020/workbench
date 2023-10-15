@@ -199,12 +199,12 @@ export const shortTalkStore = defineStore("shortTalkStore", {
               "plate":customData.defaultPlatType.name,
               "day_type":customData.defaultTimeType.name,
               "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
-              "end":new Date().getTime()/1000
+              "end":this.getYesterdayLastSecondTimestamp()
             },
               "interact":{
               "day_type":customData.defaultTimeType.name,
               "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
-              "end":new Date().getTime()/1000
+              "end":this.getYesterdayLastSecondTimestamp()
             }
           }
         }).then((res)=>{
@@ -286,6 +286,13 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       this.baseUrl = url
       toast.success("修改成功");
       this.setVisible = !this.setVisible
+    },
+    // 获取昨天最后一秒
+    getYesterdayLastSecondTimestamp() {
+      var currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() - 1);
+      currentDate.setHours(23, 59, 59, 0);
+      return Math.floor(currentDate.getTime() / 1000);
     }
 
   
