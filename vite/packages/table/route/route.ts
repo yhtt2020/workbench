@@ -1,5 +1,4 @@
 import Lock from '../page/Lock.vue'
-import Power from '../page/Power.vue'
 import Wizard from '../page/Wizard.vue'
 import main from './main'
 
@@ -25,12 +24,7 @@ const routes = [
     name:'splash',
     component: Splash
   },
-  {
-    path: '/power',
-    name: 'power',
-    component: Power
 
-  },
 
   {
     path:'/wizard',
