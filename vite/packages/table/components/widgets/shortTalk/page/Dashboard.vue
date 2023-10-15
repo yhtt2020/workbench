@@ -7,7 +7,7 @@
         <div class="dash-board overflow-hidden" style="height: 370px;">
             <div class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
                 <div class="cell-title">{{ this.mockData[item-1].title }}</div>
-                <div class="cell-num">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
+                <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
             </div>
         </div>
 

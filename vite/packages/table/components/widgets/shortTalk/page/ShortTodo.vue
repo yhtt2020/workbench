@@ -7,7 +7,7 @@
         <div class="dash-board">
             <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
-                <div class="cell-num">{{ item.num == undefined?'-':item.num }}</div>
+                <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ item.num == undefined?'-':item.num }}</div>
             </div>
         </div>
         <!-- 设置面板 -->
