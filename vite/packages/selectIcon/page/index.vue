@@ -12,8 +12,8 @@
       </div>
       <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != 3">
         <a-input
-          style="width:280px;height:40px;background: #191919;
-          border: 1px solid rgba(255,255,255,0.1);
+          style="height:40px;background: #191919;
+          border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
           border-radius: 10px;"
           placeholder="搜索"
           v-model:value="searchValue"
@@ -22,12 +22,12 @@
         <!-- 随机 -->
         <a-tooltip>
           <template #title>随机</template>
-          <div class="flex justify-center items-center pointer"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
+          <div class="flex justify-center items-center pointer ml-3"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
             <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
           </div>
         </a-tooltip>
         <!-- 颜色选择 -->
-        <div v-show="selIndex == 2" class="flex justify-center items-center pointer" style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
+        <div v-show="selIndex == 2" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
           
           <a-tooltip>
             <template #title>颜色选择</template>
