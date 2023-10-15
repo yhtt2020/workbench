@@ -56,6 +56,7 @@ import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
 import "../../public/css/styleSwitch/toast.scss"
 import "../../public/css/styleSwitch/category.scss"
+import '../../public/css/styleSwitch/font.scss'
 import {router} from './router'
 import routerTab from "./js/common/routerTab";
 

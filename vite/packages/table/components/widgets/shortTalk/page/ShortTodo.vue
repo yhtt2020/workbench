@@ -1,15 +1,34 @@
 <template>
 
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk">
         <div class="top-icon">
             <Icon icon="akar-icons:check-box" />
         </div>
         <div class="dash-board">
-            <div class="dash-cell pointer" :class="item.num == 0 || item.num == '-' ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in dataList" :key="index">
+            <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index">
                 <div class="cell-title">{{ item.title }}</div>
-                <div class="cell-num">{{ item.num }}</div>
+                <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ item.num == undefined?'-':item.num }}</div>
             </div>
         </div>
+        <!-- 设置面板 -->
+        <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
+            <template #extra>
+                <div  class="xt-active-btn" style="width:64px;height:40px;" @click="changeVisible">提交</div>
+            </template>
+            <vue-custom-scrollbar :settings="settings" style="height: 100%;">
+                <div>
+                    <div class="text-content">
+                        <div>关联短说社区系统</div>
+                        <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
+                        <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
+                    </div>
+                    <p class="ml-1 mt-1">密钥</p>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <p class="ml-1 mt-2">管理后台地址</p>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                </div>
+            </vue-custom-scrollbar>
+        </a-drawer>
     </Widget>
 
 
@@ -21,6 +40,7 @@ import Widget from "../../../card/Widget.vue";
 import { Icon } from '@iconify/vue';
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
+import {cardStore} from "../../../../store/card";
 export default {
     components:{
         Widget,
@@ -46,8 +66,17 @@ export default {
             type: Boolean,
         },
     },
+    computed: {
+        ...mapWritableState(shortTalkStore, ['todoList','access_token','baseUrl']),
+    },
     data() {
         return {
+            settings: {
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: false,
+            },
             // 标题样式
             options: {
                 className: "card",
@@ -56,39 +85,51 @@ export default {
                 rightIcon:"fluent:open-20-filled",
                 // icon: "games-16-filled",
             },
-            dataList:[
+            // 设置
+            menuList: [
                 {
-                    title:"内容审核",
-                    num:"0",
+                    icon: 'shezhi1',
+                    title: '设置',
+                    fn: () => { 
+                        this.settingVisible = true; 
+                        this.$refs.dataSlot.visible = false 
+                    }
                 },
-                {
-                    title:"今日注册",
-                    num:"123",
-                },
-                {
-                    title:"今日发布",
-                    num:"12",
-                },
-                {
-                    title:"今日评论",
-                    num:"98",
-                },
-                {
-                    title:"今日访问",
-                    num:"39",
-                },
-                {
-                    title:"今日访问",
-                    num:"-",
-                },
-            ]
+            ],
+            // 密钥和地址
+            accToken:'',
+            accUrl:'',
+            settingVisible:false,
         };
     },
-    async mounted() {
-
+    mounted() {
+        // 初始化
+        this.accToken = this.access_token
+        this.accUrl = this.baseUrl
+        this.getTodoData()
     },
     methods:{
-
+        ...mapActions(cardStore, ['updateCustomData']),
+        ...mapActions(shortTalkStore, ['getTodoData','changeAccToken']),
+        changeVisible(){
+            this.settingVisible = false
+            this.changeAccToken(this.accToken,this.accUrl)
+        },
+    },
+    watch:{
+        // 监听token 跟 url
+        'access_token':{
+            handler(newVal, oldVal){
+                this.accToken = this.access_token
+                this.getTodoData()
+            }
+        },
+        'baseUrl':{
+            handler(newVal, oldVal){
+                this.accUrl = this.baseUrl
+                this.getTodoData()
+            }
+        },
     }
 };
 </script>
@@ -117,7 +158,27 @@ export default {
         border-radius: 10px;
         margin-top: 12px;
     }
-
+    .text-content{
+        width: 100%;
+        min-height: 124px;
+        background: #2A2A2A;
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: rgba(255,255,255,0.60);
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+    .text-content div:nth-of-type(1){
+        font-size: 16px;
+        color: rgba(255,255,255,0.85);
+        margin-bottom: 10px;
+    }
+    
+    .text-content div{
+        margin-bottom: 10px;
+    }
 
     .dash-cell .cell-title{
         margin-top: 22px;

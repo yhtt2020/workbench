@@ -12,7 +12,7 @@
                 >
                 <span v-if="index == activeIndex">{{ item }}</span>
                 </div>
-                <template #title>{{'星期'+ week[index] + ' : ' + item}}</template>
+                <template #title >{{'星期'+ week[index] + ' : ' + countToday(item)}}</template>
             </a-tooltip>
         </div>
     </Widget>                                     
@@ -67,6 +67,13 @@
             ...mapActions(tomatoStore, ['getTomatoNum']),
             onChangeActive(n){
                 this.activeIndex = n
+            },
+            // 计算今日番茄时间
+            countToday(num){
+                let totalTime = num*25;
+                let hour = totalTime / 60
+                let min = totalTime % 60
+                return Math.trunc(hour) + 'h' + min + 'm'
             },
         },
     };

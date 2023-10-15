@@ -296,11 +296,12 @@ export default {
 }
 
 
-  .cardTitle .right-icon svg{
+  .right-icon svg{
     position: relative;
     left: -10px;
-    top: 3px;
-      width: 20px;
-      height: 20px;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
   }
 </style>

@@ -3,28 +3,29 @@
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
         <div class="top-icon">
             <Icon icon="fluent:arrow-trending-lines-20-filled" />
-            <div class="echarts" id="mychart" :style="myChartStyle"></div>
+            <div v-show="this.access" class="echarts" id="mychart" :style="myChartStyle"></div>
         </div>
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
-                <a-button class="top-btn" type="primary" @click="setVisible = !setVisible">提交</a-button>
+                <div v-show="this.setVisible"  class="xt-active-btn" style="width:64px;height:40px;" @click="changeAccToken(accToken,accUrl)">提交</div>
+                <div v-show="!this.setVisible" class="xt-active-btn" style="width:64px;height:40px;" @click="changeCharts(true)">保存</div>
             </template>
-            <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-                <div v-show="!setVisible">
+            <vue-custom-scrollbar :settings="settings" style="height: 100%;">
+                <div v-show="this.setVisible">
                     <div class="text-content">
                         <div>关联短说社区系统</div>
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
                     <p class="ml-1 mt-1">密钥</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secKey" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                     <p class="ml-1 mt-2">管理后台地址</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.secAdd" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                 </div>
-                <div v-show="setVisible">
-                    <div class="txt-content pointer" style="height: 48px;" @click="setVisible = !setVisible">
-                        <div>关联短说社区系统<span>已关联 ></span></div>
+                <div v-show="!this.setVisible">
+                    <div class="txt-content pointer" style="height: 48px;" @click="this.setVisible = !this.setVisible">
+                        <div>关联短说社区系统<span>{{ this.access_token && this.baseUrl ? '已关联 >' : '未关联 >'  }}</span></div>
                     </div>
                     <div class="txt-content" style="height: 104px;">
                         <div>设置小组件数据</div>
@@ -35,6 +36,7 @@
                     <p class="ml-1 mt-3">时间周期</p>
                     <RadioTab :navList="timeType" v-model:selectType="defaultTimeType" ></RadioTab>
                     <div  v-show="this.defaultDataType.name == 'visit'">
+                    <!-- <div > -->
                         <p class="ml-1 mt-3">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type" 
                         v-model:selectType="defaultPlatType"  ></RadioTab>
@@ -54,6 +56,8 @@ import * as echarts from "echarts";
 import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
+import { useToast } from "vue-toastification";
+const toast = useToast()
 
 export default {
     components:{
@@ -82,17 +86,22 @@ export default {
             type: Boolean,
         },
     },
+    computed: {
+        ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
+    },
     data() {
         return {
+            settings: {
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: false,
+            },
             settingVisible: false,
-            setVisible: true,
-            // 密钥和地址
-            secKey:"",
-            secAdd:"",
             // 设置中的数组
             dataType: [
                 { title: '社区访问数据', name: 'visit' },
-                { title: '社区互动数据', name: 'inter' },
+                { title: '社区互动数据', name: 'interact' },
             ],
             defaultDataType: { title: '社区访问数据', name: 'visit' },
             timeType: [
@@ -103,12 +112,13 @@ export default {
             defaultTimeType: { title: '每日', name: 'day' },
             platType: [
                 { title: '全部', name: 'all' },
-                { title: 'H5', name: 'H5' },
-                { title: 'PC', name: 'PC' },
-                { title: '小程序', name: '小程序' },
-                { title: 'APP', name: 'APP' },
+                { title: 'H5', name: 'h5' },
+                { title: 'PC', name: 'pc' },
+                { title: '小程序', name: 'xcx' },
+                { title: 'APP', name: 'app' },
             ],
             defaultPlatType: { title: '全部', name: 'all' },
+            // 设置
             menuList: [
                 {
                     icon: 'shezhi1',
@@ -122,23 +132,10 @@ export default {
             options: {
                 className: "card double",
                 title: "社区访问数据/每日/全部",
-                // icon: "bianji",
-                // icon: "shezhi1",
                 icon: "iconamoon:history-fill",
                 rightIcon:"fluent:open-20-filled",
-                // icon: "games-16-filled",
             },
             // 网格数据
-
-            // xData:["08-02","08-03","08-04","08-05","08-06","08-07","08-08"],
-            // yDataFir:[193,283,675,456,856,738,504],
-            // yDataSec:[425,394,842,973,776,114,149],
-            // yDataThi:[475,123,763,384,235,452,123],
-            
-            xData:["08-02","08-03","08-04","08-05","08-06"],
-            yDataFir:[193,283,675,456,856],
-            yDataSec:[425,394,842,973,776],
-            yDataThi:[475,123,763,384,235],
             myChartStyle:{
                 float:"left",
                 width:"600px",
@@ -146,18 +143,24 @@ export default {
                 position:"relative",
                 left:"-12px",
                 top:"3px"
-            }
+            },
+            // 密钥和地址
+            accToken:'',
+            accUrl:'',
+            
         };
     },
     async mounted() {
-        this.initEcharts();
+        this.accToken = this.access_token
+        this.accUrl = this.baseUrl
         this.init()
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
+        ...mapActions(shortTalkStore, ['getChartData','changeAccToken']),
         init(){
-            // 初始哈
-            if(!this.customData){
+            // 初始
+            if(!this.customData.defaultDataType){
                 this.updateCustomData(this.customIndex,{
                     "defaultDataType": this.defaultDataType,
                     "defaultTimeType": this.defaultTimeType,
@@ -168,7 +171,19 @@ export default {
                this.defaultTimeType = this.customData.defaultTimeType 
                this.defaultPlatType = this.customData.defaultPlatType 
             }
+
+            // this.accToken = this.access_token
+            // this.accUrl = this.baseUrl
+
+            this.getChartData(this.customData)
+            .then(()=>{
+                // 添加判断 如果没有获取到数据就停止
+                // test
+                this.changeBarChart()
+            })
+            
         },
+        // 初始化柱状图
         initEcharts(){
             // 多列柱状图
             const mulColumnZZTData = {
@@ -177,7 +192,7 @@ export default {
                 },
                 // 图例属性
                 legend:{
-                    data:["访问次数","访问人数"],
+                    data:this.legend,
                     top:"0%",
                     itemHeight:10,
                     itemWidth:10,
@@ -185,7 +200,7 @@ export default {
                     left:10,
                     textStyle:{
                         color: "rgba(255,255,255,0.85)",
-                        fontSoze:"12"
+                        fontSize:"12"
                     }
                 },
                 // y轴线条
@@ -200,10 +215,25 @@ export default {
                     }
                 },
                 // 内部属性
-                series:[
+                series:this.series,
+            }
+            const myChart = echarts.init(document.getElementById("mychart"))
+            // myChart.setOption(mulColumnZZTData);
+            myChart.clear()
+            myChart.setOption(mulColumnZZTData);
+            window.addEventListener("resize",()=>{
+                myChart.resize();
+            })
+        },
+        // 修改柱状图数据
+        changeBarChart(){
+            // 社区访问数据
+            if(this.defaultDataType.name == 'visit'){
+                // 内部属性
+                this.series=[                
                     {
                         type: "bar",
-                        data:this.yDataFir,
+                        data:this.access.visit.series,
                         name:"访问次数",
                         label:{
                             show:true,
@@ -220,8 +250,50 @@ export default {
                     },
                     {
                         type: "bar",
-                        data:this.yDataSec,
+                        data:this.access.login.series,
                         name:"访问人数",
+                        label:{
+                            show:true,
+                            position:"top",
+                            textStyle:{
+                                color: "rgba(255,255,255,0.85)",
+                                fontSize:10,
+                            },
+                        },
+                        itemStyle:{
+                            color: "rgba(90,216,166,0.85)",
+                        },
+                    },
+                ],
+                // 图例
+                this.legend=["访问次数","访问人数"]
+                
+                // x轴
+                this.xData = this.interact.post.xAxis
+                // y轴
+            }else{
+                this.series=[                
+                    {
+                        type: "bar",
+                        data:this.interact.post.series,
+                        name:"发布",
+                        label:{
+                            show:true,
+                            position:"top",
+                            // 修改柱状条上方数据
+                            textStyle:{
+                                color: "rgba(255,255,255,0.85)",
+                                fontSize:10,
+                            },
+                        },
+                        itemStyle:{
+                            color: "rgba(91,143,249,0.85)"
+                        }
+                    },
+                    {
+                        type: "bar",
+                        data:this.interact.support.series,
+                        name:"点赞",
                         label:{
                             show:true,
                             position:"top",
@@ -236,7 +308,7 @@ export default {
                     },
                     {
                         type: "bar",
-                        data:this.yDataThi,
+                        data:this.interact.thread.series,
                         name:"评论",
                         label:{
                             show:true,
@@ -251,41 +323,51 @@ export default {
                         },
                     },
                 ],
-                
+                // 图例
+                this.legend=["发布","点赞","评论"]
+                // x轴
+                this.xData = this.interact.post.xAxis
             }
-            const myChart = echarts.init(document.getElementById("mychart"))
-
-            myChart.setOption(mulColumnZZTData);
-            window.addEventListener("resize",()=>{
-                myChart.resize();
-            })
+            this.initEcharts()
         },
+        // 设置保存后修改
+        changeCharts(boolean){
+            this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
+            this.updateCustomData(this.customIndex,{
+                "defaultDataType": this.defaultDataType,
+                "defaultTimeType": this.defaultTimeType,
+                "defaultPlatType": this.defaultPlatType,
+            },this.desk)
+            if(boolean){
+                toast.success("保存成功");
+            }
+            this.settingVisible=false
+            setTimeout(()=>{
+                this.init()
+            },500)
+        },
+
     },
     watch:{
-        "defaultDataType": {
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultDataType": this.defaultDataType,
-            //     },this.desk)
-            // }
+        // 监听token 跟 url
+        'access_token':{
+            handler(newVal, oldVal){
+                this.accToken = this.access_token
+                this.getChartData(this.customData)
+                .then(()=>{
+                    this.changeCharts()
+                })
+            }
         },
-        "defaultTimeType":{
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + (this.defaultDataType.name == "visit"?"/" + this.defaultPlatType.title : "");
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultTimeType": this.defaultTimeType,
-            //     },this.desk)
-            // }
+        'baseUrl':{
+            handler(newVal, oldVal){
+                this.accUrl = this.baseUrl
+                this.getChartData(this.customData)
+                .then(()=>{
+                    this.changeCharts()
+                })
+            }
         },
-        "defaultPlatType":{
-            // handler(newVal, oldVal){
-            //     this.options.title = this.defaultDataType.title + "/" +this.defaultTimeType.title + "/" + this.defaultPlatType.title;
-            //     this.updateCustomData(this.customIndex,{
-            //         "defaultPlatType": this.defaultPlatType,
-            //     },this.desk)
-            // }
-        }
     }
 };
 </script>

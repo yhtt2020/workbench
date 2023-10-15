@@ -883,14 +883,9 @@ export const NavList = [
         sizes: ['2x4','4x4'],
         option: [
           {
-            name: 'smallDashboard',
+            name: 'Dashboard',
             size: '2x4',
             zoom: '30'
-          },
-          {
-            name: 'middleDashboard',
-            size: '4x4',
-            zoom: '14'
           },
         ],
         time: '2023/9/15'
