@@ -11,12 +11,12 @@
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
             {{ item.title }} 
-            ({{ num.groupNum }}个)
+            ({{ groupList?.length }}个)
           </div>
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
             {{ item.title }} 
-            ({{ num.friendNum }}个)
+            ({{ friendLists?.length }}个)
           </div>
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
@@ -138,11 +138,12 @@ const TUIContact = defineComponent({
     })
 
     const friendLists = computed(() =>{
-      const index = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
-      return index
+      const list = data.friendList.filter((item) => { return parseInt(item.userID) !==  parseInt(store.$state?.userInfo?.uid)});
+      return list
     })
 
     const num = computed(()=>{
+      // console.log('排查为什么数据不更新问题',chat.$state.contactsSet)
       return chat.$state.contactsSet
     })
 
@@ -161,7 +162,8 @@ const TUIContact = defineComponent({
     })
 
     return {
-      isNeedPermission,friendLists,num,
+      isNeedPermission,friendLists,
+      num,
       ...toRefs(data),select,handleGroupApplication
     }
   }

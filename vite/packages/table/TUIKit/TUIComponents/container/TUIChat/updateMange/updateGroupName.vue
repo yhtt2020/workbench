@@ -63,14 +63,12 @@ const groupName =  defineComponent({
 
   // 点击群聊头像更换
   const updateGroupAvatar = async (evt) =>{  
-    // console.log('测试');
-    if(props.groupInfo.role === 'Member'){
-      evt.preventDefault();
-    }else{
-      // console.log('排查问题',groupFileRef.value.click)
+    console.log('排查无法点击问题',props.groupInfo.role !== 'Member');
+    if(props.groupInfo.role !== 'Member'){
+      // console.log('获取input节点',groupFileRef.value.click());
       groupFileRef.value.click()
-      // document.querySelector('#groupFileID').click()
-     
+    }else{
+      evt.preventDefault();
     }
   }
 
