@@ -49,9 +49,9 @@ import { message,Modal as DownModal } from 'ant-design-vue'
 
 import Modal from '../../../../components/Modal.vue'
 import CreateNewCategory from '../CreateNewCategory.vue'
-import MenuCategory from '../MenuCategory.vue'
-import InviteOther from '../InviteOther.vue'
-import PacketSetting from '../knownCategory/PacketSetting.vue'
+import MenuCategory from '../MenusCategory.vue'
+import InviteOther from '../InviteOthers.vue'
+import PacketSetting from '../knownCategory/PacketSettings.vue'
 import AddLeftChildChannel from '../AddLeftChildChannel.vue'
 
 export default defineComponent({

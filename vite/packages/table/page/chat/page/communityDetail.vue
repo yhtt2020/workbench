@@ -112,13 +112,13 @@ import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
-import CreateNewChannel from '../components/CreateNewChannel.vue'
+import CreateNewChannel from '../components/CreateNewChannels.vue'
 import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/CategorysFloat.vue'
 import Commun from '../Commun.vue'
-import InviteOther from '../components/InviteOther.vue'
+import InviteOther from '../components/InviteOthers.vue'
 
 export default {
   components:{
