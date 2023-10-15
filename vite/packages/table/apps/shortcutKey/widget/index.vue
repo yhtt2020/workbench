@@ -673,7 +673,7 @@ export default {
   margin-right: 10px;
   font-family: PingFangSC-Regular;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color:var(--primary-text);
 }
 
 
@@ -723,7 +723,7 @@ i:hover {
   align-content: flex-start;
   flex-direction: column;
   height: 330px;
-  color: rgba(255, 255, 255, 0.85);
+  color:var(--primary-text);
   overflow: hidden;
 
 }
@@ -731,7 +731,7 @@ i:hover {
 
 .key-name {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color:var(--primary-text);
   font-weight: 400;
   line-height: 32px;
   padding: 5px;
@@ -746,7 +746,7 @@ i:hover {
   text-align: right;
   flex: 1;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color:var(--primary-text);
   text-align: right;
   font-weight: 400;
   overflow: hidden;
