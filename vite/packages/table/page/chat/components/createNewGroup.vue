@@ -129,7 +129,7 @@ import _ from 'lodash-es'
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { Icon as NewGroupIcon } from '@iconify/vue'
 
-import SelectClassification from './channelSelect/selectClassification.vue';
+import SelectClassification from './channelSelect/SelectClassification.vue';
 
 export default defineComponent({
  components:{

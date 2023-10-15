@@ -1,62 +1,64 @@
 <template>
-    <div class="box h-full m-auto mt-10">
-      <!-- 无内容 -->
-      <div class="container rounded-lg flex flex-col items-center"
-      :style="detailJump ? 'height: 90%;' : 'height: 100%;'">
-        <div class="mt-11">
-          <div class="flex items-center justify-center">
-            <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />
-          </div>
-        </div>
-        <div class="btn-item flex justify-center">
-          <div v-if="false" class="pointer" @click="market">浏览创意市场</div>
-          <div class="pointer" @click="share">创建方案</div>
-        </div>
-        <div v-if="false" class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">
-          <div v-for="item in notAppList" @click="previewKay(item)" :key="item.id" class="pointer recommend">
-            <div class="flex justify-between">
-                <div class="flex">
-                  <span class="h-14 w-14 flex justify-center items-center">
-                    <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
-                  </span>
-                  <span class="flex flex-col ml-4">
-                    <span style="font-size: 18px;color: var(--primary-text);font-weight: 500;">{{ item.name }}</span>
-                    <span class="mt-1" style="font-size: 16px;color: var(--secondary-text);">{{ item.commonUse }}</span>
-                  </span>
-                </div>
-                <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">
-                  <span style="font-family: Oswald-SemiBold;font-size: 24px;color: var(--primary-text);font-weight: 600;">{{ item.number }}</span>
-                  <span class="xt-text-2" style="font-size: 12px">快捷键</span>
-                </div>
-            </div>
-            <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: var(--secondary-text);">
-              <span class="flex items-center">
-                <div @click="showCard(item.id)">
-                  <a-avatar size="24">
-                    <template #icon><UserOutlined /></template>
-                  </a-avatar>
-                </div>
-                <span class="ml-3">{{ item.nickName }}</span>
-              </span>
-              <span>
-                <span>
-                  <Icon icon="dianzan" class="mr-2"></Icon>
-                  <span>{{ item.sumLikes }}</span>
-                </span>
-                <span class="ml-3">
-                  <Icon icon="xiazai" class="mr-2"></Icon>
-                  <span>{{ item.download }}</span>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>
-          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>
-        </div>
-      </div>
-    </div>
-    <!-- 预览 -->
-    <Preview :keyScheme="keyScheme" :showModal="showModal" @closePreview="closePreview"></Preview>
+ <div class="text-center w-full">
+   <xt-button class="m-auto" type="theme" @click="goDownload">去下载</xt-button></div>
+<!--    <div class="box h-full m-auto mt-10">-->
+<!--      &lt;!&ndash; 无内容 &ndash;&gt;-->
+<!--      <div class="container rounded-lg flex flex-col items-center"-->
+<!--      :style="detailJump ? 'height: 90%;' : 'height: 100%;'">-->
+<!--        <div class="mt-11">-->
+<!--          <div class="flex items-center justify-center">-->
+<!--            <a-empty image="/img/test/load-ail.png" description="暂无可用快捷键方案" />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="btn-item flex justify-center">-->
+<!--          <div v-if="false" class="pointer" @click="market">浏览创意市场</div>-->
+<!--          <div class="pointer" @click="share">创建方案</div>-->
+<!--        </div>-->
+<!--        <div v-if="false" class="item-content" :style="detailJump ? 'margin-top:65px;' : 'margin-top:22px;'">-->
+<!--          <div v-for="item in notAppList" @click="previewKay(item)" :key="item.id" class="pointer recommend">-->
+<!--            <div class="flex justify-between">-->
+<!--                <div class="flex">-->
+<!--                  <span class="h-14 w-14 flex justify-center items-center">-->
+<!--                    <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>-->
+<!--                  </span>-->
+<!--                  <span class="flex flex-col ml-4">-->
+<!--                    <span style="font-size: 18px;color: var(&#45;&#45;primary-text);font-weight: 500;">{{ item.name }}</span>-->
+<!--                    <span class="mt-1" style="font-size: 16px;color: var(&#45;&#45;secondary-text);">{{ item.commonUse }}</span>-->
+<!--                  </span>-->
+<!--                </div>-->
+<!--                <div class="flex flex-col justify-center items-center w-16 h-16 xt-mask rounded-lg">-->
+<!--                  <span style="font-family: Oswald-SemiBold;font-size: 24px;color: var(&#45;&#45;primary-text);font-weight: 600;">{{ item.number }}</span>-->
+<!--                  <span class="xt-text-2" style="font-size: 12px">快捷键</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="flex justify-between items-center mt-4" style="font-size: 14px;color: var(&#45;&#45;secondary-text);">-->
+<!--              <span class="flex items-center">-->
+<!--                <div @click="showCard(item.id)">-->
+<!--                  <a-avatar size="24">-->
+<!--                    <template #icon><UserOutlined /></template>-->
+<!--                  </a-avatar>-->
+<!--                </div>-->
+<!--                <span class="ml-3">{{ item.nickName }}</span>-->
+<!--              </span>-->
+<!--              <span>-->
+<!--                <span>-->
+<!--                  <Icon icon="dianzan" class="mr-2"></Icon>-->
+<!--                  <span>{{ item.sumLikes }}</span>-->
+<!--                </span>-->
+<!--                <span class="ml-3">-->
+<!--                  <Icon icon="xiazai" class="mr-2"></Icon>-->
+<!--                  <span>{{ item.download }}</span>-->
+<!--                </span>-->
+<!--              </span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>-->
+<!--          <div v-if="notAppList.length > 2" class="recommend" style="height:1px;opacity:0;"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; 预览 &ndash;&gt;-->
+<!--    <Preview :keyScheme="keyScheme" :showModal="showModal" @closePreview="closePreview"></Preview>-->
 </template>
 
 <script>
@@ -117,6 +119,11 @@ export default {
     },
     closePreview(val){
       this.showModal = val
+    },
+    goDownload(){
+      this.$router.push({
+        name:"shortcutStore"
+      })
     }
   },
   mounted(){

@@ -42,7 +42,7 @@
         <Search v-model:keywords="keywords" inputStyle="width:220px;" placeholder="搜索"></Search>
         <div class="nav-box">
           <a-tooltip v-for="(item,index) in sideNav" :title="item.groupName">
-            <div class="nav-item  "
+            <div class="nav-item  " :style="{backgroundColor:getColor(this.sideNav,index)}"
                  :key="item.id"
                  @click="updateNavIndex(item, index)">
               <p>
@@ -55,16 +55,22 @@
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
                             :style="showSide ? 'width: 80%;' : 'width:100%'">
+        <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
+          此方案暂时没有任何快捷键 <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
+
+
+        </div>
         <div class="key-box" :style="keyBoxStyle">
+
           <div v-for="(item,index) in filteredKeyList" :key="item.id">
             <!-- 分组名称 -->
-            <div :id="'groupId_' + item.id" class="key-item border-right" v-if="item.groupName"
+            <div :id="'groupId_' + item.id" class="key-item border-right " style="margin-top: 15px" v-if="item.groupName"
                  :style="item.id === currentGroup.id ? activeGroup : ''">
-              <span class="truncate font-bold">{{ item.groupName }}</span>
+            <span class="truncate font-bold">  <div class="color-dot" :style="{backgroundColor:getColor(this.filteredKeyList,index)}"></div> {{ item.groupName }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item"
-                 :style="keyIndex === item.id ? 'background: var(--mask-bg); border-radius: 10px':''"
+            <div v-else class="border-right key-item" :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
+                 :style="{backgroundColor:getColor(this.filteredKeyList,index)}"
                  @click="setKeyItem(item.id)">
               <div class="flex w-full">
                 <div v-for="i in item.keys" :key="i" class="flex">
@@ -80,7 +86,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -183,10 +188,13 @@ import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
+import {isGroupLast,isGroupFirst} from '../lib/lib'
+import XtButton from '../../../ui/libs/Button/index.vue'
 
 export default {
   name: 'ShortcutKeyDetail',
   components: {
+    XtButton,
     NotShortcutKey,
     // ShortcutKeyList,
     Search
@@ -224,9 +232,6 @@ export default {
   computed: {
     ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme', 'settings']),
     filteredKeyList () {
-      console.log(this.keyList)
-      console.log(this.keywords,
-        'keywords')
       if (this.keywords) {
         var regExp = new RegExp(this.keywords, 'i')
         return this.keyList.filter(key => {
@@ -260,6 +265,16 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    isGroupLast,isGroupFirst,
+    getColor(array,index,field='groupName'){
+      for(let i=index;i>=0;i--){
+        if(array[i][field]){
+          //是组
+          return array[i].color
+        }
+      }
+      return index
+    },
     /**
      * 切换侧边导航是否显示
      */
@@ -271,7 +286,6 @@ export default {
       this.schemeList = this.recentlyUsedList
       this.currentScheme = this.schemeList[0]
       this.keyList = this.currentScheme.keyList
-      console.log(';keylist', this.keyList)
       this.appContent = this.schemeList[0]
       if (!this.keyList.length) this.isData = false
       this.sideNav = this.keyList.filter(i => i.groupName)
@@ -599,5 +613,16 @@ export default {
   border-right: solid rgba(255, 255, 255, 0.1) 1px;
 }
 
-
+.active {
+  background: var(--mask-bg);
+  border-radius: 10px
+}
+.rounded-top{
+  border-top-left-radius:8px;
+  border-top-right-radius: 8px;
+}
+.rounded-bottom{
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 </style>

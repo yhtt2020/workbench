@@ -53,7 +53,7 @@
   
  import { Icon as WebLinKIcon } from '@iconify/vue'
  import RadioTab from '../../../../components/RadioTab.vue'
- import SelectClassification from './selectClassification.vue'
+ import SelectClassification from './SelectClassification.vue'
 
  export default {
  

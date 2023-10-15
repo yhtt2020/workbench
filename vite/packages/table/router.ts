@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory} from "vue-router";
 import routes from "./route/route";
 import {cardStore} from "./store/card";
+import {appStore} from "./store";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -45,5 +46,10 @@ router.beforeEach((to, from, next) => {
   cardStore().setRouteParams(to.params)
   next()
 })
-
+router.afterEach((to, from) => {
+  appStore().currentRoute={
+    name:to.name,
+    params:to.params
+  }
+})
 export {router}

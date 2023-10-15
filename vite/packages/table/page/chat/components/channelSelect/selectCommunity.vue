@@ -44,7 +44,7 @@ import { mapActions,mapWritableState } from 'pinia'
 import { forumStore } from '../../store/forumStore'
 import { Icon as ClassIcon} from '@iconify/vue'
 
-import SelectClassification from './selectClassification.vue'
+import SelectClassification from './SelectClassification.vue'
 
 export default {
  components:{

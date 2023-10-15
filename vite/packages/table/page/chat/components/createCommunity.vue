@@ -19,23 +19,20 @@
     <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
       <!-- 替换成图标选择器 -->
      <div class="rounded-lg flex pointer items-center justify-center"
-     style="width: 64px;height: 64px; position:relative"  @click="updateGroupAvatar()"
+     style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
      >
-     <!-- style="width: 64px;height: 64px; position:relative"  @click="" onShowSelect -->
-      <!-- style="width: 64px;height: 64px; position:relative"  @click="onShowSelect" -->
-
      <!--头像 -->
       <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
-      <!-- <img :src="avatarUrl" style="height:64px;width: 64px;" :style="{'filter': `drop-shadow(#${bgColor} 80px 0)`,transform:'translateX(-80px)'}"> -->
-      <!-- <img :src="avatarUrl" style="height:64px;width: 64px;" :style="{'filter': `drop-shadow(#${bgColor} 80px 0)`,transform:bgColor?'translateX(-80px)':''}"> -->
-      <img :src="avatarUrl" style="height:64px;width: 64px;">
+      <div class="overflow-hidden">
+        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
+      </div>
       <div class="flex items-center rounded-full p-3 justify-center"
        style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
       >
        <CameraOutlined style="font-size:1em;"/>
       </div>
     </div>
-    <SelectIcon @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+    <SelectIcon @isIconShow="iconVisible = false" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
@@ -60,7 +57,7 @@ import {fileUpload} from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import { communityStore } from '../store/communityStore'
 import { Icon as communityIcon } from '@iconify/vue'
-import SelectIcon from '../../../../../packages/selectIcon/page/index.vue'
+import SelectIcon from '../../../../selectIcon/page/index.vue'
 
 export default {
   props:['id'],
@@ -122,18 +119,15 @@ export default {
 
     // 获取头像
     getAvatar(avatar){
-      console.log(avatar);
       if(avatar.indexOf('color=') >= 0){
-        let color = avatar.substr(avatar.indexOf('color=') + 7 ,5)
-        console.log(color);
+        let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
         this.bgColor = color
-
+      }else{
+        this.bgColor = ''
       }
-
       this.avatarUrl = avatar
-
-
     },
+    
 
 
     // 创建社群
