@@ -8,7 +8,7 @@
                     @{{ detailPost.user.nickname }}
                 </div>
                 <div class="xt-text font-16 content-text" style="text-align: left;">
-                    {{ detailPost.summary }}
+                    {{ contentText }}
                 </div>
             </div>
             <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" >
@@ -19,6 +19,7 @@
 
 <script setup lang='ts'>
 import { ref, reactive ,computed} from 'vue'
+import emojiReplace from '../../../js/chat/emoji'
 const props=defineProps({
     showForumPost: {
         type: Array,
@@ -37,6 +38,9 @@ const showImg=computed(() => {
 })
 const img=computed(() => {
     return imageList.value[0].image
+})
+const contentText=computed(() => {
+    return emojiReplace(detailPost.value.summary)
 })
 </script>
 <style lang='scss' scoped>

@@ -137,40 +137,40 @@ export default {
   systemAppList: [
     {
       type: 'systemApp',
-      icon: 'shouye',
+      icon: 'fluent:home-16-regular',
       name: '主页',
       event: 'home',
       tab:'home'
     },
     {
       'type': 'systemApp',
-      'icon': 'youxishoubing',
+      'icon': 'fluent:games-16-regular',
       'name': '游戏',
       'event': 'gameIndex',
       tab:'game'
     },
     {
       'type': 'systemApp',
-      'icon': 'wangluo',
+      'icon': 'fluent:globe-16-regular',
       'name': '浏览器',
       'event': 'browser',
     },
     {
       'type': 'systemApp',
-      'icon': 'yinle1',
+      'icon': 'fluent:music-note-2-16-regular',
       'name': '音乐',
       'event': 'music'
     },
     {
       type:'systemApp',
-      icon:'banner',
+      icon:'fluent:image-multiple-16-regular',
       name:'壁纸',
       tab:'paper',
       event:'my',
     },
     {
       type: 'systemApp',
-      icon: 'lock',
+      icon: 'fluent:lock-closed-16-regular',
       name: '锁定屏幕',
       event: 'lock',
       fn () {
@@ -178,7 +178,7 @@ export default {
       }
     }, {
       type: 'systemApp',
-      icon: 'desktop',
+      icon: 'fluent:slide-settings-24-regular',
       name: '设备设置',
       event: 'status',
       fn: () => {
@@ -191,7 +191,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fullscreen',
+      icon: 'fluent:full-screen-maximize-16-filled',
       name: '全屏显示',
       event: 'fullscreen',
       fn: () => {
@@ -206,25 +206,25 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'setting',
+      icon: 'fluent:settings-16-regular',
       name: '基础设置',
       event: 'setting',
       fn: () => { vm.$router.push({ name: 'setting' })}
     }, {
       type: 'systemApp',
-      icon: 'tuichu',
+      icon: 'fluent:power-20-filled',
       name: '电源',
       event: 'power',
       fn: () => {vm.$router.push({ path: '/power' })}
     },
     {
       type: 'systemApp',
-      icon: 'thunderbolt',
+      icon: 'fluent:flash-16-regular',
       name: '快捷指令',
       event: 'deck',
     }, {
       type: 'systemApp',
-      icon: 'shangchuan',
+      icon: 'fluent:cloud-sync-16-filled',
       name: '文件传输',
       event: 'fileHelper',
       data: {
@@ -237,13 +237,13 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'yingyongzhongxin',
+      icon: 'fluent:grid-16-filled',
       name: '应用管理',
       event: 'apps',
     },
     {
       type: 'systemApp',
-      icon: 'xuanzhong',
+      icon: 'akar-icons:check-box',
       name: '待办',
       event: 'todo',
       fn: () => { vm.$router.push({ name: 'todo' })}
@@ -260,7 +260,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'shop',
+      icon: 'fluent:building-shop-16-filled',
       name: '创意市场',
       event: 'market',
     },

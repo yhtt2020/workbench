@@ -56,8 +56,8 @@ export const cardStore = defineStore(
         }],
         clockEvent: [],
         customComponents: [],
-        clockTag:'always',
-        temp:'始终显示',
+        clockTag:'within30min',
+        chooseType:'1',
         filterClockEvent: [],
         aidaData: null,
         // navigationList: [
@@ -497,9 +497,13 @@ export const cardStore = defineStore(
         this.filterClockEvent=this.clockEvent
         // this.temp=value
         // console.log(value,'this.temp');
-        if(tag!==null || undefined){
-          this.clockTag=tag
-        }
+        // if(tag!==null || undefined){
+          // console.log(tag);
+          
+        this.clockTag=tag
+        this.chooseType=value
+        
+        // }
         // console.log(this.clockTag);
         if(this.clockTag=='within30min'){
           this.filterClockEvent = this.clockEvent.filter((value) => {
@@ -516,12 +520,15 @@ export const cardStore = defineStore(
             let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
             let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
-            // console.log(timeDiff);
             return timeDiff<=60 && timeDiff>0
           })
         }else if(this.clockTag=='always'){
           this.filterClockEvent = this.clockEvent
         }
+        // console.log(this.clockTag,'this.clockTag');
+        
+        // console.log(this.filterClockEvent);
+        
 
       },
       addCard(value, desk) {
@@ -574,7 +581,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize','lastHeight'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize','lastHeight','clockTag','chooseType'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]
