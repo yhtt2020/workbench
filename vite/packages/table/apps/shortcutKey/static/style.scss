@@ -22,6 +22,43 @@
     text-align: center;
   }
 }
+.scheme-container{
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap:20px;
+  height: auto;
+  .scheme-item{
+    width:calc(350px);
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    &:hover{
+      opacity: 0.8;
+    }
+
+
+  }
+  .cover{
+    width:50px;
+    height: 80px;
+  }
+  .description{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    width: 0;
+  }
+  .key-num{
+    min-width: 80px;
+    height:100%;
+    .num-youshe{
+      font-size: 28px;
+    }
+    background: var(--mask-bg);
+  }
+}
+
 .main-part {
   > div {
     background: var(--mask-bg);
@@ -55,7 +92,6 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
   overflow: auto;
   justify-content: center;
 }
