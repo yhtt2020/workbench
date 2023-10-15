@@ -1,8 +1,8 @@
 <!-- 处理右键菜单内容 -->
 <template>
   <Menu :menus="menuList" name="title" fn="fn" :start="menuState">
-    <xt-button @click="rightModel = 'follow'">follow</xt-button>
-    <xt-button @click="rightModel = 'default'">default</xt-button>
+    <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
+    <xt-button @click="rightModel = 'default'">default</xt-button> -->
     <div @contextmenu.stop="menuVisible = true">
       <slot></slot>
     </div>
