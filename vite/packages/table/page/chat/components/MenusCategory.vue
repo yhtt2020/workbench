@@ -36,7 +36,7 @@
 
  <SelectMenuWebLink v-else-if="selectIndex === 'link'" type="link" :no="no" @close="closeChannel" @back="nextShow=false"></SelectMenuWebLink>
  <SelectGroupChat v-else-if="selectIndex === 'chat'" type="group" :no="no" @close="closeChannel" @back="nextShow=false"></SelectGroupChat>
- <SelectCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></SelectCommunity>
+ <ChannelCommunity v-else-if="selectIndex === 'community'" :no="no" @close="closeChannel" @back="nextShow=false"></ChannelCommunity>
 </template>
 
 <script>
@@ -44,14 +44,15 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import { Icon as  MenuIcon } from '@iconify/vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 
-import SelectGroupChat from './channelSelect/SelectGroupChat.vue'
-import SelectMenuWebLink from './channelSelect/SelectWebLink.vue'
-import SelectCommunity from './channelSelect/SelectCommunity.vue'
+import SelectGroupChat from './channelSelect/ChannelGroupChat.vue'
+import SelectMenuWebLink from './channelSelect/ChannelWebLink.vue'
+import ChannelCommunity from './channelSelect/ChannelCommunity.vue'
 
 export default defineComponent({
  components:{
   CloseOutlined,
-  MenuIcon,SelectGroupChat,SelectMenuWebLink,SelectCommunity
+  MenuIcon,SelectGroupChat,SelectMenuWebLink,
+  ChannelCommunity
  },
 
  props:['no'],

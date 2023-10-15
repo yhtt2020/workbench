@@ -55,8 +55,6 @@ export const chatStore = defineStore('chatStore',{
 
     //通讯录数据存储
     contactsSet:{
-      groupNum:0,
-      friendNum:0,
       noticeNum:0,
     }
 

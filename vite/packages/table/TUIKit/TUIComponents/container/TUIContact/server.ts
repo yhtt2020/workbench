@@ -548,8 +548,6 @@ export default class TUIContactServer extends IComponentServer {
     await this.getFriendList();
 
     const option = {
-      friendNum:params.friendList.length,
-      groupNum:params.groupList.length,
       noticeNum:params.systemMessageList === undefined ? 0 : params.systemMessageList.length
     }
     chat.updateNum(option)

@@ -64,11 +64,11 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
       </div>
     </div>
     <transition name="slide-fade">
-      <MenuDropdown v-if="showTopMenu"  :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
     </transition>
   </template>
 
@@ -90,7 +90,7 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
 
        
       </div>
@@ -98,7 +98,7 @@
 
     <transition name="slide-fade">
       <!-- :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" -->
-      <MenuDropdown v-if="showTopMenu" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
+      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
     </transition>
   </template>
 
@@ -125,7 +125,7 @@
         </div> 
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage' "/>
        </div>
   
       </div>
@@ -149,7 +149,7 @@
         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
         
         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
+        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
 
        </div>
   
@@ -159,7 +159,7 @@
   </div>
   
   <transition name="slide-fade">
-    <MenuDropdown v-if="categoryShowMenu" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
+    <MenuDropdown v-if="categoryShowMenu" :item="categoryItem" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
   </transition>
 
  </vue-custom-scrollbar>
@@ -173,11 +173,12 @@ import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
 import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-
-import ChatDropDown from './chatDropDown.vue';
-import ChatFold from './chatFold.vue'
-import MenuDropdown from './menuDropdown.vue'
 import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
+
+import ChatDropDown from './ChatsDropDown.vue';
+import ChatFold from './ChatFolds.vue'
+import MenuDropdown from './MenuDropdowns.vue'
+
 
 export default{
   props:[ 'communityID','float' ],
@@ -208,7 +209,8 @@ export default{
       showMenuIndex:-1,    
       categoryMenu,  
       channelMenu,
-      listType:''
+      listType:'',
+      categoryItem:{}
     }
   },
 
@@ -276,6 +278,7 @@ export default{
       // console.log('顶级频道::>',item);
      this.listType = item.type
      this.currentID = item.id
+     this.categoryItem = item
      this.showTopMenu = true
      this.position = { x: evt.clientX - 50 , y: evt.clientY + 25 };
     },
@@ -284,6 +287,7 @@ export default{
     topCategory(evt,item){
      //  console.log('带父级的的频道目录',item.id)
      this.currentID = item.id
+     this.categoryItem = item
      this.categoryShowMenu = true
      this.position = { x: evt.clientX - 50 , y: evt.clientY + 10 };
     },

@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <span class="font-16-400" style="color:var(--primary-text);">添加新应用</span>
+   <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <!-- <CloseOutlined  style="font-size: 1.25em;"/> -->
     <ChannelIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
@@ -32,28 +32,39 @@
   </div>
  </div>
 
- <ChannelLink v-if="selectIndex === 'link' && nextShow === true" :id="id" :no="no" @close="closeChannel" @back="nextShow = false"/>
- <ForumChannel v-if="selectIndex === 'community' && nextShow === true" :no="no" :id="id" @close="closeChannel" @back="nextShow = false" />
- <ChannelGroup v-if="selectIndex === 'group' && nextShow === true" :id="id" :no="no" @close="closeChannel" @back="nextShow = false" />
+ <!-- <SelectDesk v-if="selectIndex === 'desk' && nextShow === true" @close="closeChannel" @back="nextShow = false"></SelectDesk> -->
+ <SelectChannel v-if="selectIndex === 'community' && nextShow === true" :no="no" @close="closeChannel" @back="nextShow = false"></SelectChannel>
+ <SelectGroupChat v-if="selectIndex === 'group' && nextShow === true " :no="no" type="group" @close="closeChannel" @back="nextShow = false"></SelectGroupChat>
+ <SelectWebLink v-if="selectIndex === 'link' && nextShow === true " type="link" :no="no" @close="closeChannel" @back="nextShow = false"></SelectWebLink>
+
 </template>
 
 <script>
-import { Icon as ChannelIcon } from '@iconify/vue'
-import ChannelLink from './knownCategory/ChannelLink.vue'
-import ForumChannel from './knownCategory/ForumChannel.vue'
-import ChannelGroup from './knownCategory/ChannelGroup.vue'
+import { defineComponent, reactive,toRefs } from 'vue'
+//  import { CloseOutlined } from '@ant-design/icons-vue'
+import { Icon as  ChannelIcon } from '@iconify/vue'
 
-export default {
+
+import Modal from '../../../components/Modal.vue'
+// import SelectDesk from './channelSelect/selectDesk.vue'
+import SelectChannel from './channelSelect/ChannelCommunity.vue'
+import SelectGroupChat from './channelSelect/ChannelGroupChat.vue'
+import SelectWebLink from './channelSelect/ChannelWebLink.vue'
+
+export default defineComponent({
  components:{
-  ChannelIcon,ChannelLink,
-  ForumChannel,ChannelGroup
+ //  CloseOutlined,
+  ChannelIcon,Modal,
+  // SelectDesk,
+  SelectChannel,
+  SelectGroupChat,SelectWebLink,
  },
 
- props:['no','id'],
+ props:['no'],
 
- data(){
-  return{
-   nextShow:false,
+ setup (props,ctx) {
+
+  const data = reactive({
    channelList:[
     // { icon:'fluent-emoji-flat:desktop-computer',name:'桌面',type:'desk'},
     { icon:'fluent-emoji-flat:placard',name:'社区',type:'community' },
@@ -61,27 +72,32 @@ export default {
     { icon:'fluent-emoji-flat:globe-with-meridians',name:'网页链接',type:'link' }
    ],
    selectIndex:'community',
+   nextShow:false, // 选择完第一步的是否进入第二步
+   type:'',
+  })
+  
+  // 创建新频道弹窗
+  const closeChannel = () =>{
+    ctx.emit('close')
   }
- },
 
-
- methods:{
-  closeChannel(){
-   this.$emit('close')
-  },
-
-  selectChannel(item){
-   this.selectIndex = item.type
-  },
-
-  selectSubmit(){
-   this.nextShow = true
+  // 选择频道
+  const selectChannel = (item) =>{
+   data.selectIndex = item.type
+   data.type = item.type
   }
- },
 
- 
+  // 最后选择按钮
+  const selectSubmit = () =>{
+    data.nextShow = true
+  }
 
-}
+
+  return {
+   ...toRefs(data),closeChannel,selectChannel,selectSubmit,
+  }
+ }
+})
 </script>
 
 <style lang="scss" scoped>

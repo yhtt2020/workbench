@@ -26,8 +26,8 @@
     </div>
   </div>
   
-  <ChannelGroupChat v-if="listIndex === 'already' && chatShow" :no="no" @close="closeChannel"  @back="chatShow = false"/>
-  <ChannelNewGroup v-if="listIndex === 'create' && chatShow" :no="no" @close="closeChannel"  @back="chatShow = false"/>
+  <ChannelGroupChat v-if="listIndex === 'already' && chatShow" :id="id" :no="no" @close="closeChannel"  @back="chatShow = false"/>
+  <ChannelNewGroup v-if="listIndex === 'create' && chatShow" :id="id" :no="no" @close="closeChannel"  @back="chatShow = false"/>
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default {
     ChannelIcon,ChannelGroupChat,ChannelNewGroup,
   },
 
-  props:['no'],
+  props:['no','id'],
 
   data(){
    return{

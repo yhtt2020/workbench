@@ -12,7 +12,7 @@
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索">
+    <a-input class="h-10 search" hidden="" style="border-radius: 12px;" placeholder="搜索">
      <template #suffix>
        <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
      </template>
@@ -53,7 +53,7 @@
       取消
      </XtButton>
  
-     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);">
+     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submit">
       确定
      </XtButton>
     </div>
@@ -69,16 +69,21 @@
 import { computed, defineComponent,reactive,toRefs} from 'vue'
 import { CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
+import { channelClass } from '../../../../js/chat/createChannelClass'
+import { message } from 'ant-design-vue'
+import { communityStore } from '../../store/communityStore'
 
 export default defineComponent({
  components:{
   CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled
  },
 
- props:['categoryID'],
+ props:['no','id'],
 
  setup (props,ctx) {
   const tui = window.$TUIKit
+
+  const community = communityStore()
 
   const data = reactive({
    settingsScroller: {
@@ -131,10 +136,63 @@ export default defineComponent({
    data.selectGroup.splice(index,1) 
   }
 
+  // 创建子频道数据
+  const submit = async() =>{
+    const option = {
+      type:'group',
+      id:props.id,
+      no:props.no
+    }
+    if(data.selectGroup.length > 1){
+
+      // console.log('关联多个群聊');
+      const resultStatus = {}
+      for(let i=0;i<data.selectGroup.length;i++){
+        const groupsOption = {
+          ...option,
+          content:{
+            name:data.selectGroup[i].name,
+            props:{
+              groupID:data.selectGroup[i].groupID,
+              avatar:data.selectGroup[i].avatar
+            }
+          }
+        }
+        const res = await channelClass.secondaryChannel(groupsOption)
+        resultStatus.info = res?.info
+        resultStatus.status = res?.status
+      }
+      if(resultStatus?.status === 1){
+        message.success(`${resultStatus?.info}`)
+        await community.getCategoryData(props.no)
+        ctx.emit('close')
+      }
+
+    }else{
+      // console.log('关联单个群聊');
+      const groupOption = {
+        ...option,
+        content:{
+          name:data.selectGroup[0].name,
+          props:{
+            groupID:data.selectGroup[0].groupID,
+            avatar:data.selectGroup[0].avatar
+          }
+        }
+      }
+      const result = await channelClass.secondaryChannel(groupOption)
+      if(result?.status === 1){
+        message.success(`${result?.info}`)
+        await community.getCategoryData(props.no)
+        ctx.emit('close')
+      }
+    }
+  }
+
   return {
    filterList,
    ...toRefs(data),
-   backChannel,closeGroup,leftListClick,isSelected,removeGroup
+   backChannel,closeGroup,leftListClick,isSelected,removeGroup,submit
   }
  }
 })
