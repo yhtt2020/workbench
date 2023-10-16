@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
-import file from "../../TUIKit/TUIComponents/container/TUIChat/plugin-components/file";
 
 //todo 此处要兼容web版
 const {win32} = window.$models
@@ -261,6 +260,10 @@ export const clipboardStore = defineStore("clipboardStore", {
     },
     changed() {
       console.log('剪切板内容变化')
+      if(!this.settings.enable){
+        console.log('因为没有启用，所以阻止了')
+        return
+      }
       const availableFormats = clipboard.availableFormats()
       const formats = [
         'image/png',
@@ -300,7 +303,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       clipboardChanged = null
     },
     isRunning() {
-      return this.clipboardObserver.isRunning()
+      return !!this.clipboardChanged
     },
     /**
      * 删除剪切板项目

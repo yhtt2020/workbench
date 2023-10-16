@@ -84,6 +84,7 @@ import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
+
 export default {
   name: 'Code',
   components: { RayMedal },
@@ -151,12 +152,11 @@ export default {
     this.getUserInfo()
     this.sortClock()
 
-
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
-    ...mapWritableState(navStore, [ 'sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -188,28 +188,28 @@ export default {
       navigationData.systemFillAppList.forEach((item) => {
         this.sideNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon=item.icon
+            i.icon = item.icon
           }
         })
       })
       navigationData.systemFillAppList.forEach((item) => {
         this.rightNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon=item.icon
+            i.icon = item.icon
           }
         })
       })
       navigationData.systemAppList.forEach((item) => {
         this.footNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon=item.icon
+            i.icon = item.icon
           }
         })
       })
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          if (['lock','power'].includes(currentRoute.name)) {
+          if (['lock', 'power'].includes(currentRoute.name)) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
@@ -272,10 +272,8 @@ export default {
 
       this.bindClientEvents()
 
-      if (clipboardStore().settings.enable) {
-        clipboardStore().prepare()
-        clipboardStore().start()
-      }
+      clipboardStore().prepare()
+      clipboardStore().start()
 
       //执行分屏的启动操作
       this.onTableStarted().then()
