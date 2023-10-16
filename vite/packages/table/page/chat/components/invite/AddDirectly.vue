@@ -74,7 +74,7 @@
       const res = await server.getFriendList()
       // console.log('获取数据',res?.data);
       const list = res?.data.map((item)=>{ return item.profile })
-      console.log('过滤后的数据',list);
+      // console.log('过滤后的数据',list);
       this.friendData = list
     }
 

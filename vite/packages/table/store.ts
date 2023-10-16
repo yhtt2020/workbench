@@ -75,6 +75,7 @@ export const appStore = defineStore('appStore', {
       showButtonTitle: false,
       darkMod: true, //深色模式
       attachScreen: null, //id,bounds
+      isAllSelected:false,
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条
@@ -243,6 +244,11 @@ export const appStore = defineStore('appStore', {
     setNoticePlay(){  // 设置通知提示语
       this.settings.noticePlay = true
     },
+
+    setAllSelectStatus(val:any){
+      // console.log('排查undefined问题',val);
+      this.settings.isAllSelected = val
+    }
 
   },
   persist: {
