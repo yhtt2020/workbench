@@ -5,10 +5,11 @@
             <Icon icon="majesticons:monitor-line" />
         </div>
         <div class="dash-board overflow-hidden" style="height: 370px;">
-            <div class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
+            <!-- <div class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
                 <div class="cell-title">{{ this.mockData[item-1].title }}</div>
                 <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
-            </div>
+            </div> -->
+            <Unusual title="无网络" buttonTitle="刷新" :back="test" ></Unusual>
         </div>
 
         <!-- 设置面板 -->
@@ -79,12 +80,14 @@ import { defineComponent, ref, onMounted } from 'vue';
 import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
+import Unusual from '../../Unusual.vue'
 
 export default {
     components:{
         Widget,
         Icon,
         defineComponent,
+        Unusual,
     },
 
     props: {
@@ -206,6 +209,10 @@ export default {
                 "optionTitle": this.options.title,
             },this.desk)
         },
+
+        test(n){
+            console.log('调用了'+n);
+        }
 
     },
     watch:{
