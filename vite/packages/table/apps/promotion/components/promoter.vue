@@ -55,7 +55,7 @@
         <div
         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center">
         <!-- 口令编辑 -->
-        <Modal blurFlag="true" style="z-index:99999;"  >
+        <Modal blurFlag="false" style="z-index:99999;"  >
           <div class="p-5 xt-modal flex flex-col justify-center items-center" style="width:800px;height:600px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
             <div  style="width:100%;height:64px;position:relative;">
               <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>口令</div>
