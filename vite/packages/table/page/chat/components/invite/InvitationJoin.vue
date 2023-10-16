@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <ContactSelector title="最近聊天" inviteMode="invite" :list="{teamData:recentlyChatList}" :no="no"/>
+  <ContactSelector title="最近聊天" inviteMode="invite" :list="{teamData:recentlyChatList,friendData}" :no="no"/>
 
  </div>
 </template>
@@ -46,8 +46,17 @@ export default {
     ctx.emit('close')
   }
 
+  const friendData = ref([])
+
+  onMounted(async ()=>{
+      const res = await server.tim.getFriendList()
+      // console.log('获取数据',res?.data);
+      const list = res?.data.map((item)=>{ return item.profile })
+      // console.log('过滤后的数据',list);
+      friendData.value = list
+  })
   return{
-    recentlyChatList,
+    recentlyChatList,friendData,
     backButton,closeButton,
   }
  }

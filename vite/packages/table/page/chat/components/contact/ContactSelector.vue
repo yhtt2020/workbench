@@ -45,7 +45,7 @@
     <a-divider type="vertical" style="margin: 0 16px; height: 530px; background-color:var(--divider);" />
   
     <div style="width:293px" class="flex flex-col">
-     <div class="mb-4">已选({{ selectedList.length }}人)</div>
+     <div class="mb-4">已选({{ selectedList.length }}个)</div>
   
      <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:440px;">
       <div v-for="item in selectedList"  class="flex rounded-lg items-center justify-between pointer mb-2 p-3">
@@ -183,30 +183,32 @@ export default {
 
     // 搜索
     search(){
+      // 直接邀请的方式
       if(this.searchKeyword !== '' && this.inviteMode === 'direct'){
-        this.teamTitle = '我的好友'
-        // console.log('获取好友数据',this.list?.friendData);
-        console.log('获取搜索关键字',this.searchKeyword);
         const regex = new RegExp(this.searchKeyword,"i")
-        const list = this.list.friendData
+        this.teamTitle = '我的好友'
+        const list = this.list?.friendData
         const filterList  = list.filter((item)=>{
-          if(item.id){
-           console.log('通过用户id搜索',regex.test(item.id));
-           return regex.test(item.id)
-          }else if(item.nick){
-            console.log('通过昵称搜索',regex.test(item.nick));
-            return regex.test(item.nick)
-          }
+          return regex.test(item.id) || regex.test(item.nick)
         })
-        console.log('返回新的数组',filterList);
         this.teamList = filterList
-
 
       }else{
         this.teamTitle = this.title
         this.teamList = this.list.teamData
       }
+      
+      // 邀请加入的方式
+      if(this.searchKeyword !== '' && this.inviteMode === 'invite'){
+       const regex = new RegExp(this.searchKeyword,"i")
+       const groupList = window.$TUIKit.store.store.TUIGroup.groupList
+       const arrMerge = groupList.concat(this.list?.friendData)
+       const filterLists = arrMerge.filter((item)=>{
+         return regex.test(item.groupID) || regex.test(item.userID) || regex.test(item.nick) || regex.test(item.name)
+       })
+       this.teamList = filterLists
 
+      }
     },
 
     // 全选和反选
