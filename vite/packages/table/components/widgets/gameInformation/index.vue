@@ -78,7 +78,7 @@ export default {
             this.gameData = dataList;
         },
         jump(url){
-            console.log("https:"+url);
+            // console.log("https:"+url);
             browser.openInUserSelect("https:" + url)
         },
         refreshNow(){

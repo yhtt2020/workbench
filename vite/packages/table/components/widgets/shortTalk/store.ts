@@ -139,12 +139,6 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           type:'all_register',
           num:'',
       },
-      {
-          key: 21,
-          title: "我是标题",
-          type:'today_thread',
-          num:'',
-      },
     ],
     // 待办数据
     todoList:[
@@ -181,6 +175,8 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     ],
     // 设置状态存储
     setVisible:false,
+    // 跳转链接
+    admin_url:"https://www.baidu.com",
   }),    
   // getters:{},
   actions: {
@@ -243,7 +239,7 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     async getTodoData(){
       await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
         "content":{
-          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum",
+          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum,admin_url",
           "access":{
             "plate":'all',
             "day_type":'month',
@@ -257,6 +253,7 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           }
         }
       }).then((res)=>{
+        this.admin_url = res.admin_url
         this.todoList.forEach(item => {
           item.num = res[item.type]
         });
