@@ -55,7 +55,7 @@ const resetting = () => {
   store.firstTask = true;
   store.taskID = "M0101";
   store.step = -9;
-  firstTask.value = false;
+  // firstTask.value = false;
 };
 // 主线任务进展
 let width = ref();
