@@ -22,7 +22,7 @@
       <a-switch v-model:checked="showInTaskBar"></a-switch>
     </div>
     <div class='line flex w-full'>
- <div style='width:120px'>  右键菜单模式：{{rightModel}}</div>   <xt-radio  v-model:data='rightModel' :list='rightMenuList'/>
+ <div style='width:120px'>  右键菜单模式：</div>   <xt-radio  v-model:data='rightModel' :list='rightMenuList'/>
     </div>
   </template>
   </div>

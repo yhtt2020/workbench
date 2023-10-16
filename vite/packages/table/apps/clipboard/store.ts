@@ -1,15 +1,20 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
-
-//todo 此处要兼容web版
-const {win32} = window.$models
 let clipboardChanged = null
-win32.watchClipboard(() => {
-  if (clipboardChanged) {
-    clipboardChanged()
-  }
-})
+//todo 此处要兼容web版
+if(process.platform==='win32'){
+  const {win32} = window.$models
+  win32.watchClipboard(() => {
+    if (clipboardChanged) {
+      clipboardChanged()
+    }
+  })
+}
+//todo 此处要兼容mac版
+
+
+
 
 const {fs} = window.$models
 

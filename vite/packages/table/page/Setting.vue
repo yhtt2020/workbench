@@ -77,13 +77,13 @@
             " class="s-bg">
             <h3 style="color: var(--primary-text)">常用</h3>
             <a-row style="font-size: 1.2em; text-align: center">
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && isWin()" :span="6">
                 <div @click="setTouch" class="btn">
                   <Icon icon="Touch" style="font-size: 2em"></Icon>
                   <div>设置触摸屏</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && isWin()" :span="6">
                 <div @click="setPen" class="btn">
                   <Icon icon="icon-checkin" style="font-size: 2em"></Icon>
                   <div>设置笔</div>
@@ -234,7 +234,7 @@ import { mapActions } from "pinia";
 import { codeStore } from "../store/code";
 import SecondPanel from "../components/SecondPanel.vue";
 import GradeSmallTip from "../components/GradeSmallTip.vue";
-import { isMain } from "../js/common/screenUtils";
+import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 import { noticeStore } from '../store/notice'
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
@@ -304,7 +304,7 @@ export default {
   methods: {
     ...mapActions(noticeStore, ['setNoticeOnOff']),
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
-    isMain: isMain,
+    isMain: isMain,isWin,
     editNavigation() {
       this.editNavigationVisible = true
     },
