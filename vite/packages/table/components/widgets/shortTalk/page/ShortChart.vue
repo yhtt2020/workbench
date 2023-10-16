@@ -3,8 +3,9 @@
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
         <div class="top-icon">
             <Icon icon="fluent:arrow-trending-lines-20-filled" />
-            <div v-show="this.access" class="echarts" id="mychart" :style="myChartStyle"></div>
         </div>
+        <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
+        <div v-else class="echarts" id="mychart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
@@ -57,6 +58,7 @@ import {cardStore} from "../../../../store/card";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { shortTalkStore } from '../store'
 import { useToast } from "vue-toastification";
+import Unusual from '../../Unusual.vue'
 const toast = useToast()
 
 export default {
@@ -65,6 +67,7 @@ export default {
         Icon,
         echarts,
         RadioTab,
+        Unusual,
     },
 
     props: {
@@ -126,6 +129,7 @@ export default {
                     fn: () => { 
                         this.settingVisible = true; 
                         this.$refs.dataSlot.visible = false 
+                        this.setVisible = false
                     }
                 },
             ],
@@ -178,7 +182,6 @@ export default {
             this.getChartData(this.customData)
             .then(()=>{
                 // 添加判断 如果没有获取到数据就停止
-                // test
                 this.changeBarChart()
             })
             
@@ -346,6 +349,9 @@ export default {
                 this.init()
             },500)
         },
+        back(){
+            this.settingVisible = true
+        }
 
     },
     watch:{

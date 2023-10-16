@@ -5,7 +5,7 @@
         </div>
         <div class="mt-4">{{ title }}</div>
         <!-- <div class="btn xt-active-btn mt-4" @click="test">{{ buttonTitle }}</div> -->
-        <div class="btn xt-active-btn mt-4" @click="back(123)">{{ buttonTitle }}</div>
+        <div class="btn xt-active-btn mt-4" @click="back">{{ buttonTitle }}</div>
     </div>
 </template>
   <script>
@@ -34,10 +34,6 @@ import sleepingFace from '@iconify-icons/fluent-emoji/sleeping-face';
     },
     watch: {},
     methods: {
-      test(){
-        console.log(this)
-        console.log(this.$props)
-      }
 
     },
   }

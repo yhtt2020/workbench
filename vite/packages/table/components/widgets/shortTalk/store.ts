@@ -206,6 +206,17 @@ export const shortTalkStore = defineStore("shortTalkStore", {
         }).then((res)=>{
           this.access = res.access
           this.interact = res.interact
+        },rej=>{
+          this.access = {
+            login:{series:[],xAxis:[]},
+            visit:{series:[],xAxis:[]},
+          }
+          this.interact = {
+            post:{series:[],xAxis:[]},
+            support:{series:[],xAxis:[]},
+            thread:{series:[],xAxis:[]},
+          }
+          
         })
       }else{
         // console.log('暂时没customData');
@@ -233,6 +244,10 @@ export const shortTalkStore = defineStore("shortTalkStore", {
         this.mockData.forEach(item => {
           item.num = res[item.type]
         });
+      },rej=>{
+        this.mockData.forEach(item => {
+          item.num = 0
+        });
       })
     },
     // 初始化 待办 请求数据
@@ -256,6 +271,11 @@ export const shortTalkStore = defineStore("shortTalkStore", {
         this.admin_url = res.admin_url
         this.todoList.forEach(item => {
           item.num = res[item.type]
+        });
+      },rej=>{
+        this.admin_url = ''
+        this.todoList.forEach(item => {
+          item.num = 0
         });
       })
     },

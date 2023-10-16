@@ -5,11 +5,11 @@
             <Icon icon="majesticons:monitor-line" />
         </div>
         <div class="dash-board overflow-hidden" style="height: 370px;">
-            <!-- <div class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
+            <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
+            <div v-else class="dash-cell pointer" v-for="(item,index) in targetKeys" :key="index">
                 <div class="cell-title">{{ this.mockData[item-1].title }}</div>
                 <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
-            </div> -->
-            <Unusual title="无网络" buttonTitle="刷新" :back="test" ></Unusual>
+            </div>
         </div>
 
         <!-- 设置面板 -->
@@ -145,6 +145,7 @@ export default {
                     fn: () => { 
                         this.settingVisible = true; 
                         this.$refs.cardSlot.visible = false 
+                        this.setVisible = false
                     }
                 },
             ],
@@ -210,8 +211,9 @@ export default {
             },this.desk)
         },
 
-        test(n){
-            console.log('调用了'+n);
+        back(){
+            this.settingVisible = true
+            this.setVisible = true
         }
 
     },
