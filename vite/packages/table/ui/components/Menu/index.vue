@@ -199,8 +199,6 @@ const pos = computed(() => {
   // x 坐标
   posX = posX > vW - w.value ? posX - w.value : posX;
   // Y 坐标
-  console.log('vH - h.value :>> ', vH - h.value);
-  console.log('PosY :>> ', posY);
   posY = posY > vH - h.value ? posY - vH + h.value + 10 : posY;
   return {
     left: posX + "px",
