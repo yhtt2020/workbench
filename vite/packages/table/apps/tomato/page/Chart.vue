@@ -10,9 +10,9 @@
                 :class="index == activeIndex ? 'active-col':''"
                 @click="onChangeActive(index)" 
                 >
-                <span v-if="index == activeIndex">{{ item }}</span>
+                <!-- <span v-if="index == activeIndex">{{ item }}</span> -->
                 </div>
-                <template #title >{{'星期'+ week[index] + ' : ' + countToday(item)}}</template>
+                <template #title style="font-family:Oswald-SemiBold">{{'星期'+ week[index] + ' : ' + countToday(item)}}</template>
             </a-tooltip>
         </div>
     </Widget>                                     
