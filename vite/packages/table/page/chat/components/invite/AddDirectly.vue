@@ -4,7 +4,7 @@
      <div class="back-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="backButton">
       <DirectlyIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
      </div>
-     <span class="category-16-400" style="color:var(--primary-text);">直接添加</span>
+     <span class="category-16-400" style="color:var(--primary-text);">直接邀请联系人</span>
      <div class="close-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="closeButton">
       <DirectlyIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
      </div>

@@ -1,44 +1,77 @@
 <template>
   <div class="flex px-6">
     <div class="flex flex-col" style="width:293px;" >
-     <a-input    class="h-11"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search" @input="search" style="border-radius: 10px;">
+     <a-input    class="h-11 mb-4"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search" @input="search" style="border-radius: 10px;">
       <template #suffix>
        <DirectlyIcon icon="fluent:search-20-filled" style="font-size: 1.5rem;cursor: pointer;" @click="search"/>
       </template>
      </a-input>
-  
-     <div class="flex my-4" v-if="inviteMode === 'direct'">
-        <div class="flex items-center pointer" v-for="item in joinCategory" @click="openCrumbs(item)">
-          <div class="flex items-center rounded-lg w-10 h-10 justify-center" :style="{background:`${item.bgColor}`}">
-            <DirectlyIcon :icon="item.icon" :style="{color:`${item.iconColor}`}" style="font-size: 1.5rem;"/>
+
+     <template v-if="inviteMode === 'direct'">
+      <template v-if="crumbsShow === false">
+        <div class="flex my-4" v-if="inviteMode === 'direct'">
+          <div class="flex items-center pointer" v-for="item in joinCategory" @click="openCrumbs(item)">
+            <div class="flex items-center rounded-lg w-10 h-10 justify-center" :style="{background:`${item.bgColor}`}">
+              <DirectlyIcon :icon="item.icon" :style="{color:`${item.iconColor}`}" style="font-size: 1.5rem;"/>
+            </div>
+            <span class="ml-3 category-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
           </div>
-          <span class="ml-3">{{ item.name }}</span>
         </div>
-     </div>
   
-  
-     <div class="flex items-center justify-between">
-      <div class="category-14-400 my-4" style="color: var(--secondary-text);">{{teamTitle}}</div>
-      <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
-     </div>
-  
-     <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:380px;">
-      <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
-       class="flex rounded-lg items-center pointer mb-2 p-3"
-       @click="selectCurrentContact(item)"
-      >
-       
-       <template v-if="item.userInfo">
-        <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-        <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
-       </template>
-  
-       <template v-else>
-        <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-        <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
-       </template>
+        <div class="flex items-center justify-between">
+         <div class="category-14-400 my-4" style="color: var(--secondary-text);">{{teamTitle}}</div>
+         <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
+        </div>
+    
+        <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:320px;">
+         
+         <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
+          class="flex rounded-lg items-center pointer mb-2 p-3"
+          @click="selectCurrentContact(item)"
+         >
+         
+          <template v-if="item.userInfo">
+           <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
+           <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+          </template>
+          
+          <template v-else>
+           <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
+           <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+          </template>
+         </div>
+        </vue-custom-scrollbar>
+      </template>
+      
+      <FriendCrumb v-else-if="crumbsShow && crumbsType === 'myFriend'" :selectList="selectedList" @currentClick="selectCurrentContact"  @back="crumbsShow = false"/>
+      
+     </template>
+
+     <template v-else>
+      <div class="flex items-center justify-between">
+        <div class="category-14-400 my-4" style="color: var(--secondary-text);">{{teamTitle}}</div>
+        <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
       </div>
-     </vue-custom-scrollbar>
+    
+      <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:430px;">
+        <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
+         class="flex rounded-lg items-center pointer mb-2 p-3"
+         @click="selectCurrentContact(item)"
+        >
+         
+         <template v-if="item.userInfo">
+          <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
+          <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+         </template>
+    
+         <template v-else>
+          <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
+          <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+         </template>
+        </div>
+      </vue-custom-scrollbar>
+     </template>
+  
   
     </div>
     
@@ -80,12 +113,14 @@ import { mapActions,mapWritableState } from 'pinia'
 import { appStore } from '../../../../store'
 import { Icon as DirectlyIcon } from '@iconify/vue'
 
+import FriendCrumb from '../crumb/FriendCrumb.vue'
 
 export default {
   props:['list','title','no','inviteMode'],
 
   components:{
-    DirectlyIcon
+    DirectlyIcon,
+    FriendCrumb
   },
 
   data(){
@@ -109,7 +144,8 @@ export default {
        wheelPropagation: true
       },
 
-      crumbsType:''
+      crumbsType:'',
+      crumbsShow:false,
     }
   },
 
@@ -161,16 +197,23 @@ export default {
         this.selectedList = mapList
        
       }else{
-        const copyList = this.selectedList.map((item)=>{ return item })
-        const index = copyList.findIndex((listItem)=>{ 
-          return String(listItem.groupID) === String(item.groupID) || String(listItem.userID) === String(item.userID) 
-        })
-        copyList.splice(index,1)
-        if(!copyList.length > 0){
-          this.setAllSelectStatus(false)
+        const copyList = [...this.selectedList]
+        if(item.groupID){ // 群聊
+          const index = copyList.findIndex((copy)=>{ 
+           return String(copy.groupID) === String(item.groupID) 
+          })
+          copyList.splice(index,1)
+          this.selectedList = copyList
+        }else{ // 好友
+          const index = copyList.findIndex((copy)=>{ 
+           return String(copy.userID) === String(item.userID) 
+          })
+          copyList.splice(index,1)
+          this.selectedList = copyList
         }
-        this.selectedList = copyList
+       
       }
+     
 
 
     },
@@ -187,10 +230,11 @@ export default {
       if(this.searchKeyword !== '' && this.inviteMode === 'direct'){
         const regex = new RegExp(this.searchKeyword,"i")
         this.teamTitle = '我的好友'
-        const list = this.list?.friendData
+        const list = this.list.friendData
         const filterList  = list.filter((item)=>{
-          return regex.test(item.id) || regex.test(item.nick)
+          return regex.test(item.userID) || regex.test(item.nick)
         })
+        // console.log('获取数据',filterList);
         this.teamList = filterList
 
       }else{
@@ -202,7 +246,7 @@ export default {
       if(this.searchKeyword !== '' && this.inviteMode === 'invite'){
        const regex = new RegExp(this.searchKeyword,"i")
        const groupList = window.$TUIKit.store.store.TUIGroup.groupList
-       const arrMerge = groupList.concat(this.list?.friendData)
+       const arrMerge = groupList.concat(this.list.friendData)
        const filterLists = arrMerge.filter((item)=>{
          return regex.test(item.groupID) || regex.test(item.userID) || regex.test(item.nick) || regex.test(item.name)
        })
@@ -220,6 +264,7 @@ export default {
     // 开启面包屑
     openCrumbs(item){
       this.crumbsType = item.type
+      this.crumbsShow = true
     }
 
   },
