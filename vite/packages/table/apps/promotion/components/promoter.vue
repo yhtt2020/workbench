@@ -36,6 +36,7 @@
               :dataSource="detailList.data" 
               tableLayout='fixed'
               :pagination="{ pageSize: 5 }"
+              :scroll="{ x: 1500 }"
               :columns="detailCol" class="table-box">
               <a-table-column key="tags" title="Tags" data-index="tags">
                 <template #default="{ text: tags }">
@@ -70,6 +71,7 @@
             <a-table 
               :dataSource="keyCodeList" 
               tableLayout='fixed'
+              :scroll="{ x: 1500 }"
               :pagination="{ pageSize: 6 }"
               :columns="keyCodeCol" class="table-box">
               <template #bodyCell="{ column, record }">              
@@ -155,7 +157,7 @@
     },
     data(){
       return {
-        promptVisible: true,
+        promptVisible: false,
         // 推广员 or 待审核
         tableStatus:true,
         icons: {
@@ -302,6 +304,7 @@
             title: '操作',
             key: 'action',
             width:150,
+            fixed:'right',
           },
         ],
         keyCodeCol:[
@@ -465,6 +468,22 @@
     }
     .radio-box>div{
       width:50%;
+    }
+
+    
+    /* // 滚动条 */
+    .table-box :deep(.ant-table-content){
+        flex: 1 1 0%;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar){
+        /* width: 2px; */
+        height: 5px;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar-thumb){
+        background: #aaa !important;
+        border-radius: 3px;
     }
   </style>
   

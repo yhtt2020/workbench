@@ -45,7 +45,7 @@
             <a-table 
               :dataSource="detailList.data" 
               :pagination="{ pageSize: 6 }"
-              :scroll="{ x: 1500, y: 600 }"
+              :scroll="{ x: 1500 }"
               tableLayout='fixed'
               :columns="detailCol" class="table-box">
                 <a-table-column key="tags" title="Tags" data-index="tags">
@@ -89,8 +89,8 @@
         settingsScroller: {  
           useBothWheelAxes: true,
           swipeEasing: true,
-          suppressScrollY: false,
-          suppressScrollX: true,
+          suppressScrollY: true,
+          suppressScrollX: false,
           wheelPropagation: true
         },
         // 卡片列表
@@ -354,6 +354,20 @@
       background: transparent;
     }
 
-
+    /* // 滚动条 */
+    .table-box :deep(.ant-table-content){
+        flex: 1 1 0%;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar){
+        /* width: 2px; */
+        height: 5px;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar-thumb){
+        background: #aaa !important;
+        border-radius: 3px;
+    }
+    
   </style>
   
