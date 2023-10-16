@@ -117,32 +117,32 @@
    </div>
  </div>
   
- <!-- <SelectClassification v-else :no="no" type="group" :data="groupData" @classBack="classShow = false" @close="closeContact"/> -->
 </template>
 
 <script>
-import { defineComponent,ref,reactive,toRefs, onMounted, computed } from 'vue'
+// import { mapActions,mapWritableState } from 'pinia'
+import { reactive,ref,toRefs,computed,onMounted } from 'vue'
 import { message } from 'ant-design-vue';
 import { CameraOutlined  } from '@ant-design/icons-vue';
 import { appStore } from '../../../../store'
+import { communityStore } from '../../store/communityStore'
 import _ from 'lodash-es'
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 import { Icon as NewGroupIcon } from '@iconify/vue'
+import { channelClass } from '../../../../js/chat/createChannelClass'
 
-// import SelectClassification from './channelSelect/selectClassification.vue';
-
-export default defineComponent({
+export default {
  components:{
   CameraOutlined,NewGroupIcon,
-  // SelectClassification
  },
 
- props:['no'],
+ props:['no','id'],
 
  setup(props,ctx){
    const server = window.$TUIKit
   
    const store = appStore()
+   const community = communityStore()
 
    const data = reactive({
      friendList:[],  // 好友列表
@@ -251,36 +251,40 @@ export default defineComponent({
  
 
    const submit = async () => {  // 点击创建群聊
-    // if(validateChinese.value){
-    //   return
-    // }else{
-    //   const option = {
-    //    type:data.public.type,
-    //    groupID:data.groupID,
-    //    memberList:data.selectList,
-    //    name:data.groupName,
-    //    avatar:groupTypeData.value.icon,
-    //   }
+    if(validateChinese.value){
+      return
+    }else{
+      const option = {
+       type:data.public.type,
+       groupID:data.groupID,
+       memberList:data.selectList,
+       name:data.groupName,
+       avatar:groupTypeData.value.icon,
+      }
 
-    //   const res =  await server.tim.createGroup(option)
-      
-    //   console.log('是否创建成功',res);
+      const res =  await server.tim.createGroup(option)
+  
+      // console.log('是否创建成功',res);
 
-    //   if(res.code === 0){
-    //    message.success(`${res.data.group.name}创建成功`)
-    //    groupData.value = [res.data.group]
-    //    data.classShow = true
-    //    // const name = `GROUP${data.groupID}`
-    //    // server.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-    //    //   // 通知 TUIConversation 添加当前会话
-    //    //   // Notify TUIConversation to toggle the current conversation
-    //    //   server.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-    //    // })
-    //   }
-    //   // ctx.emit('close')
+      if(res.code === 0){
+        const data = res?.data?.group
+        // console.log('获取创建的群数据',data,props.id);
+        const option = { type:'group',id:props.id,no:props.no,content:{name:data.name,props:{groupID:data.groupID,avatar:data.avatar}}}
+        const result = await channelClass.secondaryChannel(option)
 
-    // } 
+        console.log('查看返回状态',result);
+
+        if(result?.status === 1){
+          message.success(`${result?.info}`)
+          await community.getCategoryData(props.no)
+          ctx.emit('close')
+        }
+
+      }
+    } 
    }
+
+
 
    // 点击群聊头像更换
    const updateGroupAvatar = async () =>{  
@@ -313,7 +317,9 @@ export default defineComponent({
      isSelected,backButton,
    }
  }
-})
+}
+
+
 </script>
 
 <style lang="scss" scoped>

@@ -38,8 +38,8 @@
 import { defineComponent,reactive,toRefs } from 'vue'
 import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
 
-import CreateCommunity from '../CreateNewGroup.vue'
-import SelectKnownGroup from './SelectKnownGroup.vue'
+import CreateCommunity from '../CreateNewGroups.vue'
+import SelectKnownGroup from './ChannelKnownGroup.vue'
 
 export default defineComponent({
 

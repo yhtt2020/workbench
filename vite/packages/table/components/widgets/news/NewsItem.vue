@@ -6,8 +6,9 @@
         {{ newsMsgList.newsMsgList.title }}
       </div>
       <div class="bottom" >
-        <div class=" date" style="text-align: left;max-width: 75px;" >
-          <span style="color: var(--secondary-text); ">{{ timer[0] }} {{ timer[1] }}</span>
+        <div class="flex date" style="text-align: left; flex-shrink: 0;" >
+          <!-- <span style="color: var(--secondary-text); ">{{ timer[0] }} {{ timer[1] }}</span> -->
+          <div v-for="(item,index) in timer" class="xt-text-2 " style="margin-right: 2px;">{{ item }}</div>
         </div>
         <div class="name">
           <span style="color: var(--secondary-text);" >{{ newsMsgList.newsMsgList.author_name }}</span>

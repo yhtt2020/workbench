@@ -192,7 +192,6 @@ class ApiHandler {
 
     ApiHandler.on('system', 'extractFileIcon', async (event, args) => {
       try {
-        console.log(args,'需要获取icon')
         event.returnValue = await SystemHelper.extractFileIcon(args.uri)
       } catch (e) {
         console.error('获取文件图标失败', e)

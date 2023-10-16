@@ -133,31 +133,20 @@
                             我的闹钟
                         </div>
                         <div>
-                            <a-tooltip arraw="false"  autoAdjustOverflow>
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg ">添加闹钟</div>
-                                </template>
+                            <a-tooltip arraw="false"  autoAdjustOverflow title="添加闹钟">
                                 <button class="mr-2 text-center xt-bg-2" style="border: none;width: 25px;">
                                     <clockIcon class=" xt-text font-20 clock-icon" @click="settingClock"
                                         icon="fluent:add-16-filled"></clockIcon>
                                 </button>
                             </a-tooltip>
-                            <a-tooltip  autoAdjustOverflow>
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">添加计时器</div>
-                                </template>
+                            <a-tooltip  autoAdjustOverflow title="设置定时器">
                                 <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
                                     <clockIcon class=" xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
                                         @click="settingCountDown">
                                     </clockIcon>
                                 </button>
                             </a-tooltip>
-                            <a-tooltip autoAdjustOverflow>
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        铃声调节
-                                    </div>
-                                </template>
+                            <a-tooltip autoAdjustOverflow title="铃声调节">
                                 <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
                                     <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on"
                                         v-if="soundVisible" @click="changeSoundStatus"></clockIcon>
@@ -166,12 +155,7 @@
                                 </button>
 
                             </a-tooltip>
-                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
+                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;" title="设置">
                                 <button class=" xt-bg-2" style="border: none;width: 25px;">
                                     <clockIcon icon="fluent:settings-16-regular"
                                         style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"

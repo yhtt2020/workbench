@@ -202,31 +202,31 @@ let arrData = [
     },
     {
       "type": "systemApp",
-      "icon": "lock",
+      "icon": "fluent:lock-closed-16-regular",
       "name": "锁定屏幕",
       "event": "lock"
     },
     {
       "type": "systemApp",
-      "icon": "setting",
+      "icon": "fluent:settings-16-regular",
       "name": "基础设置",
       "event": "setting"
     },
     {
       "type": "systemApp",
-      "icon": "fullscreen",
+      "icon": "fluent:full-screen-maximize-16-filled",
       "name": "全屏显示",
       "event": "fullscreen"
     },
     {
       "type": "systemApp",
-      "icon": "laptop",
+      "icon": "fluent:slide-settings-24-regular",
       "name": "设备设置",
       "event": "status"
     },
     {
       "type": "systemApp",
-      "icon": "tuichu",
+      "icon": "fluent:power-20-filled",
       "name": "电源",
       "event": "power"
     }
@@ -236,20 +236,20 @@ export const navStore = defineStore("nav", {
     mainNavigationList: [
       {
         type:'systemApp',
-        icon:'shouye',
+        icon:'fluent:home-16-regular',
         name:'主页',
         event:'home',
       },
       {
         type:'systemApp',
-        icon:'setting',
+        icon:'fluent:settings-16-regular',
         name:'基础设置',
         event:'setting',
         fn:()=>{  vm.$router.push({ name: 'setting' })}
       },
       {
         type:'systemApp',
-        icon:'wanggeshitu',
+        icon:'fluent:grid-16-filled',
         name:'应用管理',
         event:'apps',
       },
@@ -258,28 +258,28 @@ export const navStore = defineStore("nav", {
     sideNavigationList: [
         {
             "type": "systemApp",
-            "icon": "shouye1",
+            "icon": "fluent:home-16-filled",
             "name": "主页",
             "event": "home"
         },
         {
             "type": "systemApp",
-            "icon": "yingyongzhongxin",
+            "icon": "fluent:grid-16-filled",
             "name": "应用管理",
             "event": "apps"
         },{
             "type": "systemApp",
-            "icon": "youxishoubing",
+            "icon": "fluent:games-16-filled",
             "name": "游戏",
             "event": "gameIndex"
         },{
             "type": "systemApp",
-            "icon": "yinle1",
+            "icon": "fluent:music-note-2-16-filled",
             "name": "音乐",
             "event": "music"
         },{
             "type": "systemApp",
-            "icon": "kuaijie1",
+            "icon": "fluent:flash-16-filled",
             "name": "快捷指令",
             "event": "deck"
         },
@@ -288,25 +288,25 @@ export const navStore = defineStore("nav", {
     builtInFeatures: [
       {
         "type": "systemApp",
-        "icon": "lock",
+        "icon": "fluent:lock-closed-16-regular",
         "name": "锁定屏幕",
         "event": "lock"
       },
       {
         "type": "systemApp",
-        "icon": "setting",
+        "icon": "fluent:settings-16-regular",
         "name": "基础设置",
         "event": "setting"
       },
       {
         "type": "systemApp",
-        "icon": "fullscreen",
+        "icon": "fluent:full-screen-maximize-16-filled",
         "name": "全屏显示",
         "event": "fullscreen"
       },
       {
         "type": "systemApp",
-        "icon": "laptop",
+        "icon": "fluent:slide-settings-24-regular",
         "name": "设备设置",
         "event": "status"
       }

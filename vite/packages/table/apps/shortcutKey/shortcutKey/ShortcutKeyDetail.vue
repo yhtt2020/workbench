@@ -39,15 +39,13 @@
     <div class="key-list">
       <!-- 侧边栏 -->
       <div class="side-nav" v-if="currentScheme.showSide">
-        <Search v-model:keywords="keywords" inputStyle="width:220px;" placeholder="搜索"></Search>
+        <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
         <div class="nav-box">
           <a-tooltip v-for="(item,index) in sideNav" :title="item.groupName">
-            <div class="nav-item  " :style="{backgroundColor:getColor(this.sideNav,index)}"
+            <div class="nav-item  truncate " :style="{backgroundColor:getColor(this.sideNav,index)}"
                  :key="item.id"
                  @click="updateNavIndex(item, index)">
-              <p>
-                <span> {{ item.groupName }}</span>
-              </p>
+              {{ item.groupName }}
             </div>
           </a-tooltip>
         </div>
@@ -254,7 +252,8 @@ export default {
         if (this.settings.enableAutoEnter) {
           this.shortcutSchemeList = await this.loadShortcutSchemes(this.currentApp.exeName)
           if (this.shortcutSchemeList.length > 0) {
-            this.setRecentlyUsedList(this.shortcutSchemeList[0])
+            await this.setRecentlyUsedList(this.shortcutSchemeList[0])
+            this.navIndex=0
             this.getData()
           }
 
@@ -304,8 +303,8 @@ export default {
      * 切换方案
      * @param index
      * @param item
-     */
-    switchScheme (index, item) {
+     */ async switchScheme (index, item) {
+      await this.setRecentlyUsedList(item)
       this.currentScheme = item
       this.navIndex = index
       this.keyList = item.keyList
@@ -313,6 +312,8 @@ export default {
       this.currentIndex = 0
       this.sideNav = this.keyList.filter(i => i.groupName)
       this.recentlyUsedVisible = false
+      this.getData()
+      this.navIndex=0
 
     },
     setKeyItem (id) {
@@ -470,8 +471,7 @@ export default {
   display: flex;
 
   .side-nav {
-    min-width: 252px;
-    max-width: 253px;
+    width: 200px;
     // width: 20%;
     height: 100%;
     background: var(--mask-bg);
@@ -482,43 +482,28 @@ export default {
     .nav-box {
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
       flex-wrap: wrap;
+      align-content: center;
+      justify-content: flex-start;
+      align-items: center;
 
       .nav-item {
+        width: 100%;
         background: var(--secondary-bg);
         // width: 104px;
-        max-width: 48%;
-        padding-left: 10px;
-        padding-right: 10px;
-        height: 48px;
+        padding: 10px;
         border-radius: 12px;
-        margin: 12px 0 0;
         font-size: 16px;
         color: var(--primary-text);
-        word-break: break-all;
-        text-align: center;
-        display: flex;
-        align-items: center;
-
-        p {
-          display: inline-block;
-          text-align: left;
-          margin-bottom: 0;
-
-          span {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
+        text-align: left;
+        cursor: pointer;
       }
 
       .nav-item:hover {
-        background: var(--active-bg);
-        color: var(--primary-text);
+        opacity: 0.8;
       }
     }
   }

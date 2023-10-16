@@ -12,7 +12,7 @@
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" style="border-radius: 12px;" placeholder="搜索" @pressEnter="groupSearch">
+    <a-input class="h-10 search" hidden="" style="border-radius: 12px;" placeholder="搜索" @pressEnter="groupSearch">
      <template #suffix>
        <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
      </template>
@@ -64,7 +64,7 @@
 
  </div>
 
- <SelectClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></SelectClassification>
+ <ChannelClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false"></ChannelClassification>
 </template>
 
 <script>
@@ -75,13 +75,13 @@ import { message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
 
-import SelectClassification from './SelectClassification.vue'
+import ChannelClassification from './ChannelClassification.vue'
 
 
 export default defineComponent({
  components:{
   CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled,
-  SelectClassification
+  ChannelClassification
  },
 
  props:['no','type'],

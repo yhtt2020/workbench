@@ -1,5 +1,5 @@
 <template>
-  <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menus" ref="cardSlot">
+  <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
     <!-- <div class="flex flex-col items-center"> -->
     <div v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between; "
       class="mt-4">
@@ -133,10 +133,17 @@ export default {
         title: '闹钟',
         noTitle: true
       },
-      menus: [],
+      menuList: [
+                {
+                    icon: 'shezhi1',
+                    title: '设置',
+                    fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+                },
+            ],
       visibleDrawer: false,
       clockValue: '',
       setClockName: '未命名',
+      settingVisible:false,
     }
   },
   computed: {
@@ -152,9 +159,9 @@ export default {
     onContextMenuClick(e) {
 
     },
-    onSetCountDown() {
-      this.$refs.cardSlot.menuVisible=true
-    },
+    // onSetCountDown() {
+    //   this.$refs.cardSlot.menuVisible=true
+    // },
     showDrawer() {
       this.visible = true
     },

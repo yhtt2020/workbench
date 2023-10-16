@@ -37,12 +37,31 @@ export const keyStore = defineStore("key", {
       const dbKey = 'shortcut:scheme:'
 
       let map: any = {
-        _id: {
-          $regex: new RegExp(`^${dbKey}`)
-        },
+        $and: [
+          {
+            _id: {
+              $regex: new RegExp(`^${dbKey}`)
+            }
+          }
+        ]
+
       }
       if (exeName) {
-        map.exeName = exeName
+        map.$and.push({
+          $or:
+            [{
+              exeName: {
+                $elemMatch: {
+                  $regex: new RegExp(exeName)
+                }
+              },
+
+            },
+              {
+                exeName: exeName
+              }
+            ]
+        }) //增设一个数组包含或者字符串相等的条件
       }
       await tsbApi.db.createIndex({
         index: {
@@ -59,6 +78,10 @@ export const keyStore = defineStore("key", {
       })).docs
 
       let schemes = rs
+
+      for(const scheme of schemes){
+        scheme.software=await this.getCustomApp(scheme.exeName)
+      }
       // if(this.schemeList.length===0){
       //  //  for (const scheme of keyData) {
       //  //    let rs=await tsbApi.db.put({
@@ -74,12 +97,17 @@ export const keyStore = defineStore("key", {
       //
       //  // this.schemeList=[...keyData.concat()]
       // }
+      console.log(schemes,'列表')
       return schemes
     },
-    setRecentlyUsedList(item) {
-      this.recentlyUsedList.forEach((i, index) => {
-        if (i.id === item.id) this.recentlyUsedList.splice(index, 1)
+    async setRecentlyUsedList(item) {
+      this.recentlyUsedList=this.recentlyUsedList.filter(list=>{
+        return list.id!==item.id
       })
+      if(!item.icon){
+        let software=await this.getCustomApp(item.exeName)
+        item.icon=software.icon
+      }
       this.recentlyUsedList.unshift(item)
     },
     setSchemeList(item) {
@@ -245,10 +273,10 @@ export const keyStore = defineStore("key", {
         }
       })
     },
-    async findScheme(map,size=5){
+    async findScheme(map, size = 5) {
       let rsFiltered = await tsbApi.db.find({
         selector: map,
-        limit:size,
+        limit: size,
         sort: [
           {
             '_id': 'desc'
@@ -264,18 +292,18 @@ export const keyStore = defineStore("key", {
      */
     async import(schemes) {
       const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
-      let insertSchemes=[]
+      let insertSchemes = []
       for (const scheme of schemes) {
         let foundSchemes = await this.findScheme({
           _id: scheme._id
         })
-        if(foundSchemes.docs.length>0){
-          scheme._id=  'shortcut:scheme:' + Date.now()
+        if (foundSchemes.docs.length > 0) {
+          scheme._id = 'shortcut:scheme:' + Date.now()
         }
-        scheme.id=nanoid()
-        scheme.name=scheme.name+'_'+(scheme.id.slice(0,4))
+        scheme.id = nanoid()
+        scheme.name = scheme.name + '_' + (scheme.id.slice(0, 4))
 
-        scheme.selected=false
+        scheme.selected = false
         delete scheme._rev
         insertSchemes.push(scheme)
         await tsbApi.db.put(scheme)

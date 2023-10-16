@@ -1,6 +1,6 @@
 <template>
-  <div class="main" style="text-align: center;padding-top: 3em">
-    <BackBtn style="background-color:var(--primary-bg) ; color: var(--primary-text);"></BackBtn>
+  <div class="main" style="text-align: center;padding-top: 10em">
+
     <div @click="exit" class="power-btn" style="background-color:var(--primary-bg) ; color: var(--primary-text);">退出
     </div>
     <div style="margin:auto;width: 51em;text-align: center; ">

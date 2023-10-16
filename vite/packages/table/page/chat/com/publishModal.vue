@@ -4,7 +4,7 @@
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
-                    <div class="font-16">写动态</div>
+                    <div class="font-16 xt-text">写动态</div>
                 </div>
                 <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
                     @click="handleOk">
@@ -94,6 +94,7 @@ import { Icon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
 import type { CascaderProps } from 'ant-design-vue';
+import fulentEmojis from '../../../js/chat/fulentEmojis'
 import { message } from 'ant-design-vue'
 const useCommunStore = useCommunityStore()
 const imageLoadVisible = ref(true)
@@ -130,63 +131,63 @@ const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-const fluentEmojis = reactive({
-    "[Kiss]": "Face Blowing a Kiss.png",
-    "[Tears]": "Face with Tears of Joy.png",
-    "[Cry]": "Loudly Crying Face.png",
-    "[Smiling]": "Smiling Face with Open Hands.png",
-    "[Confound]": "Confounded Face.png",
-    "[Mask]": "Face with Medical Mask.png",
-    "[Zany]": "Zany Face.png",
-    "[Vomit]": "Face Vomiting.png",
-    "[Kissing]": "Kissing Face.png",
-    "[Fearful]": "Fearful Face.png",
-    "[Pleading]": "Pleading Face.png",
-    "[Scream]": "Face Screaming in Fear.png",
-    "[AngryFace]": "Angry Face.png",
-    "[Zipper]": "Zipper-Mouth Face.png",
-    "[Expressionless]": "Expressionless Face.png",
-    "[SpiralEyes]": "Face with Spiral Eyes.png",
-    "[Shushing]": "Shushing Face.png",
-    "[MoneyMouth]": "Money-Mouth Face.png",
-    "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
-    "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
-    "[Victory]": "Victory Hand Light Skin Tone.png",
-    "[Ok]": "OK Hand Light Skin Tone.png",
-    "[Pingching]": "Pinching Hand Light Skin Tone.png",
-    "[Hands]": "Folded Hands Light Skin Tone.png",
-    "[Clap]": "Clapping Hands Light Skin Tone.png",
-    "[OpenHands]": "Open Hands Light Skin Tone.png",
-    "[Waing]": "Waving Hand Light Skin Tone.png",
-    "[Writing]": "Writing Hand Light Skin Tone.png",
-    "[PigFace]": "Pig Face.png",
-    "[Cat]": "Cat with Wry Smile.png",
-    "[Blowfish]": "Blowfish.png",
-    "[Yen]": "Yen Banknote.png",
-    "[Triangular]": "Triangular Flag.png",
-    "[Heart]": "Beating Heart.png",
-    "[Broken]": "Broken Heart.png",
-    "[1st]": "1st Place Medal.png",
-    "[2nd]": "2nd Place Medal.png",
-    "[3rd]": "3rd Place Medal.png",
-    "[Selfie]": "Selfie Light Skin Tone.png",
-    "[Teacup]": "Teacup Without Handle.png",
-    "[New]": "New Button.png",
-    "[Check]": "Check Mark Button.png",
-    "[Anger]": "Anger Symbol.png",
-    "[Acceptable]": 'Japanese Acceptable Button.png',
-    "[Hundred]": "Hundred Points.png",
-    "[Crab]": "Crab.png",
-    "[MoneyBag]": "Money Bag.png",
-    "[Zzz]": "Zzz.png",
-    "[Bomb]": "Bomb.png",
-})
+// const fluentEmojis = reactive({
+//     "[Kiss]": "Face Blowing a Kiss.png",
+//     "[Tears]": "Face with Tears of Joy.png",
+//     "[Cry]": "Loudly Crying Face.png",
+//     "[Smiling]": "Smiling Face with Open Hands.png",
+//     "[Confound]": "Confounded Face.png",
+//     "[Mask]": "Face with Medical Mask.png",
+//     "[Zany]": "Zany Face.png",
+//     "[Vomit]": "Face Vomiting.png",
+//     "[Kissing]": "Kissing Face.png",
+//     "[Fearful]": "Fearful Face.png",
+//     "[Pleading]": "Pleading Face.png",
+//     "[Scream]": "Face Screaming in Fear.png",
+//     "[AngryFace]": "Angry Face.png",
+//     "[Zipper]": "Zipper-Mouth Face.png",
+//     "[Expressionless]": "Expressionless Face.png",
+//     "[SpiralEyes]": "Face with Spiral Eyes.png",
+//     "[Shushing]": "Shushing Face.png",
+//     "[MoneyMouth]": "Money-Mouth Face.png",
+//     "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
+//     "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
+//     "[Victory]": "Victory Hand Light Skin Tone.png",
+//     "[Ok]": "OK Hand Light Skin Tone.png",
+//     "[Pingching]": "Pinching Hand Light Skin Tone.png",
+//     "[Hands]": "Folded Hands Light Skin Tone.png",
+//     "[Clap]": "Clapping Hands Light Skin Tone.png",
+//     "[OpenHands]": "Open Hands Light Skin Tone.png",
+//     "[Waing]": "Waving Hand Light Skin Tone.png",
+//     "[Writing]": "Writing Hand Light Skin Tone.png",
+//     "[PigFace]": "Pig Face.png",
+//     "[Cat]": "Cat with Wry Smile.png",
+//     "[Blowfish]": "Blowfish.png",
+//     "[Yen]": "Yen Banknote.png",
+//     "[Triangular]": "Triangular Flag.png",
+//     "[Heart]": "Beating Heart.png",
+//     "[Broken]": "Broken Heart.png",
+//     "[1st]": "1st Place Medal.png",
+//     "[2nd]": "2nd Place Medal.png",
+//     "[3rd]": "3rd Place Medal.png",
+//     "[Selfie]": "Selfie Light Skin Tone.png",
+//     "[Teacup]": "Teacup Without Handle.png",
+//     "[New]": "New Button.png",
+//     "[Check]": "Check Mark Button.png",
+//     "[Anger]": "Anger Symbol.png",
+//     "[Acceptable]": 'Japanese Acceptable Button.png',
+//     "[Hundred]": "Hundred Points.png",
+//     "[Crab]": "Crab.png",
+//     "[MoneyBag]": "Money Bag.png",
+//     "[Zzz]": "Zzz.png",
+//     "[Bomb]": "Bomb.png",
+// })
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
 onMounted(() => {
-    Object.values(fluentEmojis).forEach((item) => {
+    Object.values(fulentEmojis).forEach((item) => {
         folderPath.push(`https://sad.apps.vip/public/static/emoji/emojistatic/${item}`)
     })
     let textareaElement = window.document.querySelector('textarea')
@@ -278,11 +279,13 @@ const publishPost = async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
             await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
+            
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
             fileList.value = []
             handleOk()
+            await useCommunStore.getCommunityPost(forumId)
         });
 
     }

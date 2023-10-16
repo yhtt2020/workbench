@@ -74,8 +74,8 @@
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
 import { chatList,hideDropList } from '../../../js/data/chatList'
-import ChatDropDown from '../components/float/ChatDropDown.vue'
-import ChatFold from '../components/float/ChatFold.vue'
+import ChatDropDown from '../components/float/ChatsDropDown.vue'
+import ChatFold from '../components/float/ChatFolds.vue'
 import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
@@ -86,7 +86,7 @@ import Modal from '../../../components/Modal.vue'
 import ValidateModal from '../components/ValidationPrompts.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
-import DefaultFloat from '../components/float/DefaultFloat.vue'
+import DefaultFloat from '../components/float/DefaultsFloat.vue'
 
 
 export default defineComponent({
