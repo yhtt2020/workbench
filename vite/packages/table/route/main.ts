@@ -100,11 +100,7 @@ export default [
         component: TomatoStart
       },
 
-      {
-        path: '/Tomato',
-        name: 'tomato',
-        component: Tomato
-      },
+
 
       {
         path: '/power',
@@ -455,6 +451,11 @@ export default [
                 component: DeckAdd
               }
             ]
+          },
+          {
+            path: '/Tomato',
+            name: 'tomato',
+            component: Tomato
           },
           {
             path: '/desk',
