@@ -150,27 +150,7 @@ export default {
 
     this.getUserInfo()
     this.sortClock()
-    navigationData.systemFillAppList.forEach((item) => {
-      this.sideNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
-      })
-    })
-    navigationData.systemFillAppList.forEach((item) => {
-      this.rightNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
-      })
-    })
-    navigationData.systemAppList.forEach((item) => {
-      this.footNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
-      })
-    })
+
 
   },
   computed: {
@@ -205,6 +185,27 @@ export default {
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
+      navigationData.systemFillAppList.forEach((item) => {
+        this.sideNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon=item.icon
+          }
+        })
+      })
+      navigationData.systemFillAppList.forEach((item) => {
+        this.rightNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon=item.icon
+          }
+        })
+      })
+      navigationData.systemAppList.forEach((item) => {
+        this.footNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon=item.icon
+          }
+        })
+      })
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
@@ -212,15 +213,13 @@ export default {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
-            this.$router.replace(appStore().currentRoute)
+            this.$router.replace(currentRoute)
           }
-
         } else {
           this.$router.replace({ name: 'home' })
         }
-      } else {
-
       }
+
     },
     bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
