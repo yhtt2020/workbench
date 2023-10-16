@@ -249,7 +249,7 @@ export const navStore = defineStore("nav", {
       },
       {
         type:'systemApp',
-        icon:'fluent:grid-16-filled',
+        icon:'fluent:grid-16-regular',
         name:'应用管理',
         event:'apps',
       },

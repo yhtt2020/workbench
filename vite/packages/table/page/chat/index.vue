@@ -6,7 +6,7 @@
 
     <!-- 右侧内容显示 -->
     <div style="flex: 1;height: 100%;">
-      <div class="   "
+      <div class=""
            style="height: calc(100% - 1em);border-radius: 10px;overflow: hidden;margin-top: 1em;margin: 0.5em">
         <router-view></router-view>
       </div>
@@ -45,6 +45,11 @@ export default defineComponent({
           title: '小队', index: 'team', icon: 'smile',
           route: { name: 'hall' },
           tab: 'team'
+        },
+        {
+          title: '社区', index: 'channel', icon: 'star',
+          route: { name: 'channel' },
+          tab: 'channels'
         },
         {
           title: '弹幕', index: 'barrage', icon: 'text-align-left',

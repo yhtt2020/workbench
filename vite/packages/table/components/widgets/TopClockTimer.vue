@@ -249,7 +249,7 @@ import { countDownStore } from '../../store/countDown'
 import { timeStamp, transDate } from "../../util";
 import { Notifications } from '../../js/common/sessionNotice'
 import RadioTab from '../RadioTab.vue';
-import SetupClock from './setupClock.vue'
+import SetupClock from './setClock.vue'
 const notifications = new Notifications()
 
 const usetopClockSettingStore = topClockSettingStore()
