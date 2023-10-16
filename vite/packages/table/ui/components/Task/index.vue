@@ -68,7 +68,6 @@ export default defineComponent({
   watch: {
     modelValue: {
       handler(newV) {
-        console.log("newV :>> ", newV);
         this.$nextTick(() => {
           if (newV) {
             this.start();
