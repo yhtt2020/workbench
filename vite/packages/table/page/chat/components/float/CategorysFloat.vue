@@ -249,17 +249,19 @@ export default{
     },
 
     channelList(){
-      const list = this.categoryList?.tree.filter((item)=>{
-        return item.role !== 'category'
-      })
-      return list
+      console.log('获取数据',this.categoryList.tree);
+      // const list = this.categoryList?.tree.filter((item)=>{
+      //   return item.role !== 'category'
+      // })
+      // return list
     },
 
     categoryFilterList(){
-      const list = this.categoryList?.tree.filter((item)=>{
-        return item.role !== 'channel'
-      })
-      return list
+      console.log('获取数据',this.categoryList.tree);
+      // const list = this.categoryList?.tree.filter((item)=>{
+      //   return item.role !== 'channel'
+      // })
+      // return list
     }
   },
 
