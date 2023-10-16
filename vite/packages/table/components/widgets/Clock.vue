@@ -61,19 +61,20 @@
   <!-- {{ topClockSettingVisible }} -->
   <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
   <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"
-    placement="right" :width="600" @after-visible-change="afterVisibleChange">
+    placement="right" :width="600" >
     <div class="flex">
       <SetupClock></SetupClock>
     </div>
   </a-drawer>
-  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered
+  <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered popupClassName="{popupClass}"
     style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
       <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
         <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false" />
       </a-space>
-      <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
+      <xt-button type="primary" @click="addCustom"
+                        style="margin: 14px; background: var(--active-bg);">开始倒计时</xt-button>
     </div>
   </a-modal>
 </template>
@@ -86,7 +87,7 @@ import { topClockSettingStore } from '../../store/topClockSetting'
 import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
-import SetupClock from './setupClock.vue'
+import SetupClock from './setClock.vue'
 export default {
   name: 'Clock',
   components: { Widget, clockIcon, SetupClock },
@@ -157,9 +158,9 @@ export default {
     onContextMenuClick(e) {
 
     },
-    // onSetCountDown() {
-    //   this.$refs.cardSlot.menuVisible=true
-    // },
+    onSetCountDown() {
+      this.$refs.cardSlot.menuVisible=true
+    },
     showDrawer() {
       this.visible = true
     },
@@ -268,5 +269,11 @@ font-16 {
 
 :deep(.anticon.ant-input-clear-icon) {
   color: var(--secondary-text);
+}
+.popupClass{
+  background-color: var(--primary-bg);
+}
+:deep( .ant-picker-panel-container ){
+  background-color: var(--primary-bg) !important;
 }
 </style>
