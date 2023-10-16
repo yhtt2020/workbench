@@ -32,7 +32,8 @@
       <div class="flex flex-col items-center justify-center mt-10">
         <xt-button class="rounded-lg  w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16" type="primary"
           @click="onSetup">添加闹钟</xt-button>
-        <xt-button type="text" class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 warn-bg font-16" @click="onSetCountDown">添加定时器</xt-button>
+        <xt-button type="text" class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 warn-bg font-16"
+          @click="onSetCountDown">添加定时器</xt-button>
       </div>
 
     </div>
@@ -56,34 +57,11 @@
         {{ clockEvent[0].eventValue }}
       </div>
     </div>
-    <!-- </div> -->
-    <template #menuExtra>
-      <div class="w-24 h-24 mr-4 option" @click="onCountDown(3)">
-        <clockIcon class="icon" icon="fluent:clock-12-regular"></clockIcon>
-        3分钟
-      </div>
-      <div class="w-24 h-24 mr-4 option" @click="onCountDown(10)">
-        <clockIcon class="icon" icon="fluent:clock-12-regular"></clockIcon>
-        10分钟
-      </div>
-      <div class="w-24 h-24 mr-4 option" @click="onCountDown(30)">
-        <clockIcon class="icon" icon="fluent:clock-12-regular"></clockIcon>
-        30分钟
-      </div>
-      <div class="w-24 h-24 mr-4 option" @click="onCountDown(300)">
-        <clockIcon class="icon" icon="fluent:clock-12-regular"></clockIcon>
-        自定义
-      </div>
-      <div class="w-24 h-24 mr-4 option" @click="onSetup">
-        <Icon class="icon" icon="shezhi1"></Icon>
-        设置
-      </div>
-    </template>
   </Widget>
-<!-- {{ topClockSettingVisible }} -->
+  <!-- {{ topClockSettingVisible }} -->
   <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
-  <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置" placement="right" :width="600"
-    @after-visible-change="afterVisibleChange">
+  <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"
+    placement="right" :width="600" @after-visible-change="afterVisibleChange">
     <div class="flex">
       <SetupClock></SetupClock>
     </div>
@@ -93,7 +71,7 @@
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
       <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false"/>
+        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false" />
       </a-space>
       <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
     </div>
@@ -104,7 +82,7 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { countDownStore } from '../../store/countDown'
 import { cardStore } from '../../store/card'
-import {topClockSettingStore} from '../../store/topClockSetting'
+import { topClockSettingStore } from '../../store/topClockSetting'
 import dayjs from 'dayjs'
 import Widget from '../card/Widget.vue'
 import { Icon as clockIcon } from '@iconify/vue'
@@ -134,22 +112,42 @@ export default {
         noTitle: true
       },
       menuList: [
-                {
-                    icon: 'shezhi1',
-                    title: '设置',
-                    fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
-                },
-            ],
+        {
+          newIcon: 'fluent:clock-12-regular',
+          title: '3分钟',
+          fn: () => { this.onCountDown(3) }
+        },
+        {
+          newIcon: 'fluent:clock-12-regular',
+          title: '10分钟',
+          fn: () => { this.onCountDown(10) }
+        },
+        {
+          newIcon: 'fluent:clock-12-regular',
+          title: '30分钟',
+          fn: () => { this.onCountDown(30) }
+        },
+        {
+          newIcon: 'fluent:clock-12-regular',
+          title: '自定义',
+          fn: () => { this.onCountDown(300) }
+        },
+        {
+          icon: 'shezhi1',
+          title: '设置',
+          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+        },
+      ],
       visibleDrawer: false,
       clockValue: '',
       setClockName: '未命名',
-      settingVisible:false,
+      settingVisible: false,
     }
   },
   computed: {
     ...mapWritableState(cardStore, ['appDate', 'clockEvent']),
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
-    ...mapWritableState(topClockSettingStore,['topClockSettingVisible'])
+    ...mapWritableState(topClockSettingStore, ['topClockSettingVisible'])
   },
 
   methods: {
@@ -267,7 +265,8 @@ font-16 {
 :deep(.ant-empty-image) {
   height: 60px;
 }
-:deep(.anticon.ant-input-clear-icon){
-    color:var(--secondary-text);
+
+:deep(.anticon.ant-input-clear-icon) {
+  color: var(--secondary-text);
 }
 </style>

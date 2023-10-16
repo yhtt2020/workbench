@@ -44,7 +44,7 @@
                             <div class="mt-4 mb-4 font-16 xt-text">
                                 重复
                             </div>
-                            <RadioTab :navList="dataType" v-model:selectType="chooseType"></RadioTab>
+                            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
                         </div>
                         <div>
                             <xt-button type="primary" class=" font-16 xt-text"
@@ -161,7 +161,6 @@ export default {
             ],
             defaultDataType: '显示30分钟内的闹钟',
             checked: true,
-            defaultChooseType: '1'
         };
     },
 
@@ -268,29 +267,31 @@ export default {
             // console.log(value);
             let tag = this.selectDataType[value].tag
 
-            let chooseType = this.selectDataType[value].type
-            console.log(chooseType, 'chooseType');
-            this.filterClock(tag, chooseType)
+            let temp = this.selectDataType[value].type
+            this.filterClock(tag, temp)
         }
     },
-    beforeMount() {
+    mounted() {
+        // console.log(this.chooseType, 'this.chooseType--isUndefined');
         // console.log(this.checkTopClock,'this.checkTopClock');
         this.checked = this.checkTopClock
         if (this.chooseType == undefined) {
             this.defaultDataType = '显示30分钟内的闹钟'
-            this.filterClock(this.selectDataType[1].tag,this.selectDataType[1].type)
         } else {
-            let targetType = this.selectDataType.filter((item) => {
-                return item.type == this.chooseType
-            })
-            console.log(targetType, 'targetType');
-            this.defaultDataType= targetType[0].title
-            this.filterClock(targetType[0].tag,targetType[0].type)
-            
+            let data
+            for (let i = 0; i < this.selectDataType.length; i++) {
+                if (this.selectDataType[i].type == this.chooseType) {
+                    data = this.selectDataType[i].title
+                }
+            }
+            // console.log(data, 'beforeMount');
+            this.defaultDataType = data
         }
-        
 
     },
+    /*
+        目前的主要问题是无法保存正确的页面数据，逻辑是没问题，但是表面的数据无法留存
+    */ 
     watch: {
         checkTopClock: {
             handler(value) {
@@ -303,15 +304,19 @@ export default {
                     this.defaultDataType = '显示30分钟内的闹钟'
                 }
                 else {
-                    let targetType = this.selectDataType.filter((item) => {
-                        return item.type == this.chooseType
-                    })
-                    this.defaultDataType= targetType[0].title
-                    this.filterClock(targetType[0].tag,targetType[0].type)
+                    // let data=this.selectDataType.filter(item=>item.type==value)
+                    let data
+                    for (let i = 0; i < this.selectDataType.length; i++) {
+                        if (this.selectDataType[i].type == value) {
+                            data = this.selectDataType[i].title
+                        }
+                    }
+                    // console.log(data, 'clock-value-change');
+                    this.defaultDataType = data
                 }
-            }
-        },
-        
+            },
+            deep: true
+        }
     }
 };
 </script>
@@ -363,11 +368,12 @@ export default {
     &:nth-child(24) {
         border-bottom: 1px solid var(--divider);
     }
+
     &:nth-child(5),
     &:nth-child(9),
     &:nth-child(13),
     &:nth-child(17) {
-        border-left: 1px solid var(--divider);
+        border-left: 0.1px solid var(--divider);
     }
 
     &:nth-child(1) {
@@ -522,5 +528,6 @@ export default {
     font-family: Oswald-Medium;
     font-size: 20px;
     font-weight: 500;
-}</style>
+}
+</style>
   
