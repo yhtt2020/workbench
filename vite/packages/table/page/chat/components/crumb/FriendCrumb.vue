@@ -1,5 +1,5 @@
 <template>
- <div class="mb-4 flex justify-between">
+ <div class="my-4 flex justify-between">
   <a-breadcrumb :separator="separator">
    <a-breadcrumb-item v-for="(item, index) in breadcrumb" class="pointer " :key="index" @click="backCrumb(item)">
     <span :style="{color:item.color}" class="category-14-400">{{ item.name }}</span>
