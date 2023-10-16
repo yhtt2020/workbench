@@ -1,6 +1,6 @@
 <template>
-  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
-        <div class="title">番茄时间</div>
+  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
+        <div class="title" @click="test">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
         <div class="icon-box">
@@ -86,6 +86,9 @@
       },
       desk: {
         type: Object,
+      },
+      isTop:{
+        type: Boolean,
       }
     },
     data(){
@@ -141,6 +144,9 @@
           return num
         }
       },
+      test(){
+        console.log(this.$props)
+      }
     },
   };
   </script>

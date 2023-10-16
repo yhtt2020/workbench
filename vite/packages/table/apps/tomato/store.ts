@@ -228,7 +228,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       var now = new Date();
       var midnight = new Date();
       midnight.setHours(23, 59, 59, 999);
-      var remainingTime = midnight.getTime() - now.getTime();
+      var remainingTime = midnight.getTime() - now.getTime() +1;
       return remainingTime
     },
     // 切换顶部状态栏是否显示
