@@ -21,8 +21,6 @@ export const appStore = defineStore('appStore', {
     userCardUserInfo: {
       certification: []
     },
-
-
     userInfo: false,
     lvInfo: {},
     myData: {

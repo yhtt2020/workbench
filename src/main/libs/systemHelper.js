@@ -131,16 +131,19 @@ module.exports = class SystemHelper {
        return filePath
     }
     let error = false
-    try {
-      // let icon = fileIcon.getFileIcon(uri,256)  //await require('electron').app.getFileIcon(uri)
-      const exePath = getResPathJoin('extracticon.exe')
-      const cmd = `"${exePath}" "${uri}" "${filePath}"`
-      console.log(cmd, '输出的cmd')
-      await runExec(cmd)
-    } catch (e) {
-      console.error('意外报错', e)
-      error = true
+    if(process.platform==='win32'){
+      try {
+        // let icon = fileIcon.getFileIcon(uri,256)  //await require('electron').app.getFileIcon(uri)
+        const exePath = getResPathJoin('extracticon.exe')
+        const cmd = `"${exePath}" "${uri}" "${filePath}"`
+        console.log(cmd, '输出的cmd')
+        await runExec(cmd)
+      } catch (e) {
+        console.error('意外报错', e)
+        error = true
+      }
     }
+
     if (!fs.existsSync(filePath) || error) {
       let icon = await app.getFileIcon(uri)
       if (!icon) {

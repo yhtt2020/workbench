@@ -17,7 +17,9 @@ function isMain(){
   let sign=getSign()
   return sign === 'table.com';
 }
-
+function isWin(){
+  return process.platform==='win32'
+}
 export {
-  getSign,isMain
+  getSign,isMain,isWin
 }
