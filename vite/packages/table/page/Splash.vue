@@ -3,12 +3,12 @@
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
     <div v-if="launching" style="margin: auto;">
-      <div class="animate-bounce mb-5 ">
+      <div class="mb-5 animate-bounce ">
         <a-avatar :size="60"
                   src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
       </div>
       <div style="font-size: 1.2em;">
-        <svg style="vertical-align: text-bottom" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+        <svg style="vertical-align: text-bottom" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor"
@@ -18,14 +18,14 @@
         欢迎回来，又是元气满满的一天！
       </div>
     </div>
-    <div v-else style="background: #333;width: 100vw;height:auto" class=" ">
-      <div class="no-drag s-bg rounded-lg p-10" style="width: 600px;margin: auto">
+    <div v-else style="background: #333;width: 100vw;height:auto" class="">
+      <div class="p-10 rounded-lg no-drag s-bg" style="width: 600px;margin: auto">
 
         <h3 style="text-align: center;font-size: 1.5em">
           <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar>
           想天工作台
         </h3>
-        <div class="text-center text-md mb-10 ml-40">—— 划时代的副屏效率神器</div>
+        <div class="mb-10 ml-40 text-center text-md">—— 划时代的副屏效率神器</div>
         <p v-if="!userInfo">
           <div class="mb-5 xt-text" style="font-size: 16px">
             由于本产品功能需要借助网络，目前暂未提供离线模式。<br>
@@ -45,11 +45,11 @@
 
         </p>
         <div class="text-center" v-else>
-          <div class="mb-3 mt-3  inline-block">
+          <div class="inline-block mt-3 mb-3">
             <div>
               <a-avatar :size="68" :src="userInfo.avatar"></a-avatar>
             </div>
-            <div class="text-lg mt-4">
+            <div class="mt-4 text-lg">
               你好，{{ userInfo.nickname }}
             </div>
           </div>
@@ -83,6 +83,7 @@ import { clipboardStore } from '../apps/clipboard/store'
 import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
+import navigationData from '../js/data/tableData'
 
 export default {
   name: 'Code',
@@ -155,6 +156,7 @@ export default {
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -183,22 +185,41 @@ export default {
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
+      navigationData.systemFillAppList.forEach((item) => {
+        this.sideNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
+      })
+      navigationData.systemFillAppList.forEach((item) => {
+        this.rightNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
+      })
+      navigationData.systemAppList.forEach((item) => {
+        this.footNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
+      })
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          if (['lock','power'].includes(currentRoute.name)) {
+          if (['lock', 'power'].includes(currentRoute.name)) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
-            this.$router.replace(appStore().currentRoute)
+            this.$router.replace(currentRoute)
           }
-
         } else {
           this.$router.replace({ name: 'home' })
         }
-      } else {
-
       }
+
     },
     bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
@@ -251,10 +272,8 @@ export default {
 
       this.bindClientEvents()
 
-      if (clipboardStore().settings.enable) {
-        clipboardStore().prepare()
-        clipboardStore().start()
-      }
+      clipboardStore().prepare()
+      clipboardStore().start()
 
       //执行分屏的启动操作
       this.onTableStarted().then()

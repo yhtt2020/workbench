@@ -1,6 +1,6 @@
 <template>
   <div
-    class="xt-text flex h-full"
+    class="xt-text flex h-full xt-bg"
     style="box-sizing: border-box"
     :class="[typeClass]"
   >
@@ -9,54 +9,20 @@
       class="flex flex-col items-center h-full xt-br mr-3"
       style="width: 72px; min-width: 72px"
     >
-      <!-- 头部 -->
-      <div>
+      <div v-for="list in listOption" :class="list?.class">
         <Float
           @itemClick="itemClick"
           :list="item.children"
-          v-for="item in newList.slice(0, last)"
+          v-for="item in list.array"
           :data="item"
         >
-          <Box :item="item" :id="currentIndex" class="mb-2" :model="model">
-            <Item :item="item">
-              <template #[item.slot]>
-                <slot :name="item.slot"></slot>
-              </template>
-            </Item>
-          </Box>
-          <template #content> <slot :name="item.float"> </slot> </template>
-        </Float>
-      </div>
-      <!-- 中间 -->
-      <div
-        class="xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1"
-      >
-        <Float
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(last, -1 * end)"
-          :data="item"
-        >
-          <Box :item="item" :id="currentIndex" class="mt-2" :model="model">
-            <Item :item="item" w="40">
-              <template #[item.slot]>
-                <slot :name="item.slot"></slot>
-              </template>
-            </Item>
-          </Box>
-          <template #content> <slot :name="item.float"> </slot> </template>
-        </Float>
-      </div>
-      <!-- 底部 -->
-      <div>
-        <Float
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in newList.slice(-1 * end)"
-          :data="item"
-        >
-          <Box :item="item" :id="currentIndex" class="mt-2" :model="model">
-            <Item :item="item" type="" newType="" bg="">
+          <Box
+            :item="item"
+            :id="currentIndex"
+            :boxClass="list?.boxClass"
+            :model="model"
+          >
+            <Item :item="item" v-bind="list?.itemOption">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
               </template>
@@ -68,7 +34,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="  flex h-full flex-1 w-0">
+    <div class="flex h-full flex-1 w-0">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -77,10 +43,14 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
-import { nanoid } from "nanoid";
+import { appStore } from "../../../store";
+const store = appStore();
+const { fullScreen } = storeToRefs(store);
 
 const props = defineProps({
   config: {
@@ -106,22 +76,10 @@ const props = defineProps({
           img: "/icons/bg.png",
         },
         {
-          icon: "star",
-        },
-        {
-          icon: "smile",
-        },
-        {
-          icon: "aixin",
-        },
-        {
-          icon: "yanjing",
+          full: true,
         },
         {
           icon: "shezhi1",
-        },
-        {
-          full: true,
         },
       ];
     },
@@ -130,21 +88,28 @@ const props = defineProps({
     default: "router",
   },
 });
+// 全屏控制
 const full = ref(false);
 const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
-    return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 xt-bg pr-3 py-3 "
+    return isFull.value && fullScreen.value
+      ? " fixed left-0 right-0 top-0 bottom-0 pr-3 py-3 "
       : "xt-bg pr-3 py-3 rounded-xl";
   }
 });
+
+// const route = useRoute();
+// const currentPage = ref(route.path);
+// watch(route, (newRoute) => {
+//   if (full.value && currentPage !== newRoute.path) isFull.value = false;
+// });
+
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;
   let res = props.list.map((item) => {
     if (item.full) full.value = true;
-    // let id = item.id ?? nanoid(4);
     let id = item.id ?? ++index;
     return {
       id,
@@ -153,6 +118,31 @@ const newList = computed(() => {
   });
   return res;
 });
+
+// 渲染的列表配置项
+const listOption = ref([
+  {
+    boxClass: "mb-2",
+    array: newList.value.slice(0, props.last),
+  },
+  {
+    class: "xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1",
+    boxClass: "mt-2",
+    array: newList.value.slice(props.last, -1 * props.end),
+    itemOption: {
+      w: "40",
+    },
+  },
+  {
+    boxClass: "mt-2",
+    array: newList.value.slice(-1 * props.end),
+    itemOption: {
+      type: "",
+      newType: "",
+      bg: "",
+    },
+  },
+]);
 
 // 动态获取ID
 const index = computed(() => {
@@ -182,6 +172,8 @@ const itemClick = (item) => {
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
+
+
 </script>
 
 <style lang="scss" scoped></style>

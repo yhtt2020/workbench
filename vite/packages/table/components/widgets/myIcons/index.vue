@@ -1,36 +1,72 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-  <div ref="iconRef" class="icon-box box-border" :style="dragStyle" @contextmenu.stop="handleMenu()">
+
+  <div
+    ref="iconRef"
+    class="icon-box box-border"
+    :style="dragStyle"
+    @contextmenu.stop="handleMenu()"
+  >
     <!-- 可放置区域 -->
     <droppable-area @drop="handleDrop">
-      <xt-task :modelValue="m0202"  @cb="handleMenu">
-        <drag-and-follow :isSelect="isSelect" :length="this.iconsRefs.length" @drag-end="handleDragEnd"
-          @drag-start="handleDragStart">
-          <!-- 多图标组件 -->
-          <template v-if="customData.iconList !== undefined &&
-            customData.iconList.length > 1
-            ">
-            <div>
-              <icons v-model:width="customData.size.w" v-model:height="customData.size.h"
-                :groupTitle="customData.groupTitle" :iconList="customData.iconList" :zoom="customData.zoom"
-                @custom-event="handleCustomEvent" @disbandGroup="disbandGroup" @updateGroupTitle="updateGroupTitle"
-                @deleteIcons="deleteIcons" @editIcons="editIcons" @dragAddIcon="dragAddIcon"
-                @iconsRightClick="handleMenu()"></icons>
-            </div>
-          </template>
-          <!-- 单图标组件 -->
-          <template v-else-if="customData.iconList !== undefined &&
-            customData.iconList.length > 0
-            ">
-            <icon v-bind="customData.iconList[0]" @custom-event="handleCustomEvent"></icon>
-          </template>
-        </drag-and-follow>
-      </xt-task>
+
+        <xt-task :modelValue="m0202" @cb="handleMenu">
+          <drag-and-follow
+            :isSelect="isSelect"
+            :length="this.iconsRefs.length"
+            @drag-end="handleDragEnd"
+            @drag-start="handleDragStart"
+          >
+            <!-- 多图标组件 -->
+            <template
+              v-if="
+                customData.iconList !== undefined &&
+                customData.iconList.length > 1
+              "
+            >
+              <div>
+                <icons
+                  v-model:width="customData.size.w"
+                  v-model:height="customData.size.h"
+                  :groupTitle="customData.groupTitle"
+                  :iconList="customData.iconList"
+                  :zoom="customData.zoom"
+                  @custom-event="handleCustomEvent"
+                  @disbandGroup="disbandGroup"
+                  @updateGroupTitle="updateGroupTitle"
+                  @deleteIcons="deleteIcons"
+                  @editIcons="editIcons"
+                  @dragAddIcon="dragAddIcon"
+                  @iconsRightClick="handleMenu()"
+                ></icons>
+              </div>
+            </template>
+            <!-- 单图标组件 -->
+            <template
+              v-else-if="
+                customData.iconList !== undefined &&
+                customData.iconList.length > 0
+              "
+            >
+              <icon
+                v-bind="customData.iconList[0]"
+                @custom-event="handleCustomEvent"
+              ></icon>
+            </template>
+          </drag-and-follow>
+        </xt-task>
     </droppable-area>
     <!-- 卡片核心 -->
-    <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
-      ref="homelSlotRef" :desk="desk">
+    <Widget
+      :customData="customData"
+      :editing="true"
+      :customIndex="customIndex"
+      :options="options"
+      :menuList="menuList"
+      ref="homelSlotRef"
+      :desk="desk"
+    >
     </Widget>
   </div>
   <!-- 图标组件结束 -->
@@ -51,7 +87,11 @@
   </XtDrawer>
   <!-- 底部导航 -->
   <XtDrawer v-model="menuVisible">
-    <BottomEdit :menuList="menuList" :copy="customData.copy" :merge="customData.merge"></BottomEdit>
+    <BottomEdit
+      :menuList="menuList"
+      :copy="customData.copy"
+      :merge="customData.merge"
+    ></BottomEdit>
   </XtDrawer>
 </template>
 <script>
@@ -80,7 +120,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     desk: {
       type: Object,
@@ -105,10 +145,10 @@ export default {
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
       options: { hide: true }, // 卡片核心配置
+
     };
   },
   beforeMount() {
-
     // 是否需要初始化
     let state = false;
     let setData = {};
@@ -136,7 +176,6 @@ export default {
     }
   },
   mounted() {
-
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
@@ -280,7 +319,7 @@ export default {
       this.settingVisible = true;
     },
     // 开启框选
-    dragSelection() { },
+    dragSelection() {},
     // ctrl + 点击
     handleCustomEvent(event) {
       this.iconSelect = true;

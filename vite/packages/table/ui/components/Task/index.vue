@@ -47,7 +47,6 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      console.log(' this.state  :>> ',  this.state );
       return this.state ? true : null;
     },
     currentStep() {

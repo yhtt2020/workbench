@@ -60,17 +60,16 @@
     ></Set>
   </XtDrawer>
   <Teleport to="body">
-    <XtView
-      type="popup"
+    <xt-modal
       v-model="titleVisible"
       @close="titleVisible = false"
       title="修改分组名"
-      :showFull="false"
+      :isFooter="false"
     >
       <div class="h-12" style="width: 400px">
         <XtInput v-model="title" @blur="titleBlur()"></XtInput>
       </div>
-    </XtView>
+    </xt-modal>
   </Teleport>
 </template>
 

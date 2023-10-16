@@ -22,7 +22,15 @@
       />
     </div>
     <!-- icon -->
-    <xt-new-icon size="20" w="40" v-else-if="item.newIcon" :icon="item.newIcon" :bgStyle="bg" :type="newType"/>
+    <xt-new-icon
+      size="20"
+      w="40"
+      v-else-if="item.newIcon"
+      :icon="item.newIcon"
+      :bgStyle="bg"
+      :type="newType"
+      radius="10"
+    />
     <xt-icon
       @click="itemClick()"
       v-else
@@ -36,8 +44,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useRoute, useRouter } from "vue-router";
 import { appStore } from "../../../store";
+const store = appStore();
+const { fullScreen } = storeToRefs(store);
 const props = defineProps({
   item: {},
   id: {},
@@ -50,7 +62,7 @@ const props = defineProps({
   type: {
     default: "default",
   },
-  newType:{
+  newType: {
     default: "base",
   },
   bg: {
@@ -68,10 +80,9 @@ const imgSize = computed(() => {
 });
 
 // 全屏控制
-const store = appStore();
 const data = ref(false);
 const full = computed(() => {
-  store.fullScreen = data.value ? true : false;
+  fullScreen.value = data.value ? true : false;
   return data.value ? "quxiaoquanping_huaban" : "quanping_huaban";
 });
 const itemClick = () => {
@@ -79,6 +90,12 @@ const itemClick = () => {
     data.value = !data.value;
   }
 };
+
+// const route = useRoute();
+// const currentPage = ref(route.path);
+// watch(route, (newRoute) => {
+//   if ( props.item.full && currentPage !== newRoute.path) data.value = false;
+// });
 </script>
 
 <style lang="scss" scoped></style>

@@ -35,7 +35,7 @@ export async function post(url, data, options = {crud: false}) {
       }, conf
     )
   }
-  if (result.data.code === 1000) {
+  if (result.data.code === 1000 || result.data.code == 200) {
     return result.data.data
   } else {
     console.error('接口返回意外错误',result)

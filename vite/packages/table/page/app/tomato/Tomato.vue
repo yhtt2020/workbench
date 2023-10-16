@@ -1,9 +1,9 @@
 <template>
-  <div class="back-btn" @click="goBack" >
-    <Icon icon="xiangzuo"  style="font-size: 2em;"></Icon>
-  </div>
-  <div class="s-bg rounded-lg xt-text" style="height: 100%">
 
+  <div class="s-bg rounded-lg xt-text" style="height: 100%">
+    <div class="back-btn" @click="goBack" >
+      <Icon icon="xiangzuo"  style="font-size: 2em;"></Icon>
+    </div>
     <a-row style="margin-left:5em ">
       <a-col :span="8">
         <a-progress style="margin-top: 8em;" type="circle" :percent="rate" strokeColor="#666" :strokeWidth="15"
@@ -115,32 +115,33 @@ export default {
       }
     }
   },
+  beforeRouteLeave(to,from,next){
+    let isPaused=false
+    if(this.running) {
+      if (!this.timer) {
+        isPaused = true
+      } else {
+        this.pause()
+      }
+      Modal.confirm({
+        centered: true,
+        content: '当前番茄钟正在进行中，退出将损失这个番茄，确定退出？',
+        okText: '强行退出',
+        onOk: () => {
+          this.stop()
+          next()
+        },
+        onCancel: () => {
+          if (!isPaused) {
+            this.pause()
+          }
+        }
+      })
+    }
+  },
   methods: {
     goBack(){
-      let isPaused=false
-      if(this.running){
-        if(!this.timer){
-          isPaused=true
-        }else{
-          this.pause()
-        }
-        Modal.confirm({
-          centered:true,
-          content:'当前番茄钟正在进行中，退出将损失这个番茄，确定退出？',
-          okText:'强行退出',
-          onOk:()=>{
-            this.stop()
-            this.$router.go(-1)
-          },
-          onCancel:()=>{
-            if(!isPaused){
-              this.pause()
-            }
-          }
-        })
-      }else{
         this.$router.go(-1)
-      }
 
     },
     displayNum (num) {

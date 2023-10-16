@@ -1,4 +1,5 @@
 <template>
+  <!-- 已作废 -->
   <!-- 遮罩 -->
   <div
     class="h-full w-full xt-mask fixed top-0 left-0 ring-0 bottom-0"

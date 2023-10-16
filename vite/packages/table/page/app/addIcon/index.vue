@@ -1,5 +1,5 @@
 <template>
-  <XtView type="popup" @close="close()" title="批量添加图标" :showFull="false">
+  <xt-modal @close="close()" title="批量添加图标"  :isFooter="false">
     <main class="flex h-full p-1" style="min-width: 200px !important">
       <div style="" class="h-full">
         <div
@@ -65,7 +65,7 @@
         </XtButton>
       </xt-task>
     </footer>
-  </XtView>
+  </xt-modal>
 </template>
 
 <script>

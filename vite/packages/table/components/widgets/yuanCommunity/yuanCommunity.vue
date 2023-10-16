@@ -8,87 +8,56 @@
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
-            <div v-if="this.showForumList.length>0">
-            <!-- 顶部导航栏 -->
-            <div class="flex justify-between mt-4">
-                <!-- {{ showForumList[0].id }} -->
-                <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
-                    <div class="w-[40px] h-[40px] rounded-md">
-                        <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+            <div v-if="showForumList.length > 0">
+                <!-- 顶部导航栏 -->
+                <div class="flex justify-between mt-4">
+                    <!-- {{ showForumList }} -->
+                    <div v-if="this.showForumList.length === 1 " class="flex items-center pointer">
+                        <div class="w-[32px] h-[32px] rounded-md ml-2">
+                            <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+
+                        </div>
+                        <div class="ml-2 font-16 xt-text">
+                            {{ this.showForumList[0].name }}
+                        </div>
+                    </div>
+                    <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
+                        <div v-for="(item, index) in showForumList" :key="index"
+                            class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
+                            :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
+                            @click="setCurrentIndex(index, item)">{{
+                                item?.name
+                            }}</div>
+                    </div>
+                    <div>
+                        <!-- <a-tooltip title="发布帖子" autoAdjustOverflow> -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] "
+                                style="flex-shrink: 0;" @click="publishModalVisible">
+                                <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
+                                    icon="fluent:add-16-filled" />
+                            </button>
+                        <!-- </a-tooltip> -->
+
+                        <!-- <a-tooltip title="跳转元社区" placement="bottom"> -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
+                                style="flex-shrink: 0;" v-if="false">
+                                <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
+                                    icon="fluent:chat-16-regular" />
+                            </button>
+                        <!-- </a-tooltip> -->
+
+                        <!-- <a-tooltip title="刷新" placement="bottom" > -->
+                            <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
+                                @click="refreshPost">
+                                <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
+                                    style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" />
+                            </button>
+                        <!-- </a-tooltip> -->
 
                     </div>
-                    <div class="ml-2 font-16 xt-text">
-                        {{ this.showForumList[0].name }}
-                    </div>
                 </div>
-                <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
-                    <div v-for="(item, index) in showForumList" :key="index"
-                        class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
-                        :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-                        @click="setCurrentIndex(index, item)">{{
-                            item.name
-                        }}</div>
-                </div>
-                <div>
-                    <!-- <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
+                <!-- 内容区 -->
 
-                            </a-tooltip>
-                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
-
-                            </a-tooltip><a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;">
-                                <template #title>
-                                    <div class="xt-text font-16 xt-bg">
-                                        设置
-                                    </div>
-                                </template>
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
-
-                            </a-tooltip> -->
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;">
-                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                            icon="fluent:add-16-filled" />
-                    </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
-                        style="flex-shrink: 0;" v-if="false">
-                        <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                            icon="fluent:chat-16-regular" />
-                    </button>
-                    <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
-                        @click="refreshPost">
-                        <YuanIcon class="text-lg rotate-90 xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
-                            icon="akar-icons:arrow-clockwise" />
-                    </button>
-                </div>
-            </div>
-            <!-- 内容区 -->
-            
                 <div v-if="isLoading">
                     <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                 </div>
@@ -106,6 +75,12 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
         </Widget>
+        
+        <teleport to="body" :disabled="false">
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+            :forumIndex="currentIndex"></YuanPublishModal>
+        </teleport>
+        
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <div class="mb-6 xt-text font-16">
                 数据来源
@@ -117,23 +92,25 @@
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示3个圈子
             </div>
-            <!-- <div class="xt-bg-2 w-full h-[48px] rounded-xl flex justify-between items-center">
-                <div class="ml-2">
-                    <a-tag closable v-for="(item, index) in forumList" style="width: 76px;height: 36px;border-radius: 8px;text-align: center;line-height: 36px; background: rgba(80,139,254,0.20); border: none;" class="font-14 xt-text pointer" >{{ item.name }}</a-tag>
-                </div>
-                <div>
-                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
-                </div>
-            </div> -->
-            <a-select v-model:value="value" mode="multiple" style="width: 100%;height: 48px;border-radius: 8px;line-height: 46px;" placeholder="选择您的圈子" @change="handleChange" :bordered="false">
-                <a-select-option :value="index" v-for="(item, index) in forumList" class="absolute z-auto xt-bg xt-text-2 selsect-options">
-                                    {{ item.name }}
-                                </a-select-option>
-                <template #clearIcon>
-                    <YuanIcon icon="fluent:dismiss-16-filled" class="xt-text" style="font-size: 12px;"></YuanIcon>
+            <!-- {{ selectForumList }} -->
+            <a-select v-model:value="selectValue" mode="multiple" autoClearSearchValue="false"
+                style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" 
+                @change="handleChange(selectValue)" :bordered="false" @deselect="handleDeselect" @select="handleSelect">
+                <a-select-option :value="index" v-for="(item, index) in forumList"
+                    class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                    {{ item.name }}
+                </a-select-option>
+                <template #placeholder>
+                    <div class="xt-text font-16">
+                        选择您的圈子
+                    </div>
+                </template>
+                <template #removeIcon>
+                    <YuanIcon icon="fluent:dismiss-16-filled" class="mt-1 xt-text" style="font-size: 14px;"></YuanIcon>
                 </template>
                 <template #suffixIcon>
-                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;" class="mr-3 rotate-180 xt-text"></YuanIcon>
+                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
+                        class="mr-3 rotate-180 xt-text"></YuanIcon>
                 </template>
             </a-select>
         </a-drawer>
@@ -148,13 +125,16 @@ import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import browser from '../../../js/common/browser'
 import DataStatu from "../DataStatu.vue"
+import YuanPublishModal from './YuanPublishModal.vue';
 export default {
     name: '元社区',
     components: {
         Widget,
         YuanIcon,
         communItem,
-        RadioTab
+        RadioTab,
+        DataStatu,
+        YuanPublishModal
     },
     props: {
         customIndex: {
@@ -206,6 +186,10 @@ export default {
             pageToggle: true,
             dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
             defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
+            selectForumList: [],
+            browserUrl: 'https://s.apps.vip/post/',
+            showPublishModal: false,
+            selectList:[]
         }
     },
     methods: {
@@ -213,20 +197,60 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
+        // 切换圈子
         async setCurrentIndex(index, item) {
             this.currentIndex = index
             await this.communityPost(item.id)
-            console.log(this.showForumPost, 'this.showForumList');
         },
+        // 刷新圈子
         async refreshPost() {
             this.isLoading = true
             await this.getCommunityPost(this.showForumList[0].id)
             this.isLoading = false
         },
+        // 查看内容详情
         showDetail(item) {
-            console.log(item)
-            browser.openInUserSelect(`https://s.apps.vip/post/${item.id}`)
-        }
+            browser.openInUserSelect(`${this.browserUrl}${item.id}`)
+        },
+        // 选择板块
+        handleChange(value) {
+            this.selectList.push(this.forumList[value])
+            let temp=this.selectList
+            this.customData.selectList=temp
+        },
+        // 显示发布页是否可见
+        publishModalVisible() {
+            this.showPublishModal = !this.showPublishModal
+        },
+        // 回调
+        modalVisible(val) {
+            this.showPublishModal = val
+        },
+        // 删除选择的板块
+        handleDeselect(val){
+            this.selectList=this.selectList.filter((index,item)=>{
+                console.log(index,item,val);
+                return  item!=val
+            })
+            
+            if(this.selectList[0]===undefined){
+                 this.selectList=[]
+            }
+            let temp=this.selectList
+            this.customData.selectList=temp
+            console.log(this.customData.selectList);
+        },
+        // handleSelect(val){
+        //     if(this.selectList.includes(this.forumList[val])){
+        //         console.log(this.forumList[val]);
+        //         return
+        //     }
+        //     // console.log(this.forumList[val],'this.forumList[val]');
+        //     this.selectList.push(this.forumList[val])
+            
+        //     // console.log(this.customData.selectList,'this.selectList');
+        // }
+        
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -243,14 +267,18 @@ export default {
 
         },
         forumList() {
-            this.customData.forumList = this.myForumList.joined
-            return this.customData.forumList
+            // this.customData.forumList = this.myForumList.joined
+            // return this.customData.forumList
+            if(this.customData && this.customData.forumList){
+                return this.customData.forumList
+            }
+            return this.myForumList.joined
         },
         showForumList() {
-            if (this.customData && this.customData.forumList) {
-                return this.customData.forumList.slice(0, 3)
+            if (this.customData && this.customData.selectList) {
+                return this.customData.selectList?.slice(0, 3)
             }
-            return this.myForumList.joined.slice(0, 3)
+            return this.selectList.slice(0, 3)
         },
         async forumPost() {
             this.customData.forumPost = await this.communityPost.list
@@ -258,17 +286,33 @@ export default {
         },
         showForumPost() {
             if (this.customData && this.customData.forumPost) {
-                return this.customData.forumPost.slice(0, this.copyNum)
+                return this.customData.forumPost?.slice(0, this.copyNum)
             }
-            return this.communityPost.list.slice(0, this.copyNum)
-        }
+            return this.communityPost.list?.slice(0, this.copyNum)
+        },
     },
     async mounted() {
         this.isLoading = true
         await this.getMyForumList()
-        await this.getCommunityPost(this.showForumList[0].id)
+        // await this.getCommunityPost(this.showForumList[0].id)
+        // this.myForumList.joined
+        this.customData.forumList=this.myForumList.joined
         this.isLoading = false
+        console.log(this.customData.selectList,'this.customData.selectList');
     },
+    watch: {
+        showForumList(newValue) {
+            this.isLoading = true
+            if (this.showForumList.length>0 ) {
+                this.getCommunityPost(this.showForumList[0].id)
+            }
+            console.log(this.customData.selectList,'this.customData.selectList');
+            setTimeout(() => {
+                this.isLoading = false
+            });
+
+        }
+    }
 }
 </script>
 <style>
@@ -307,8 +351,11 @@ export default {
 :deep(.ant-drawer-title) {
     color: var(--primary-text) !important;
 }
-:deep(.ant-select-selection-item ){
-    background: rgba(80,139,254,0.20);
-}
 
+:deep(.ant-select-selection-item) {
+    background: rgba(80, 139, 254, 0.20);
+}
+:deep(.ant-select-multiple .ant-select-selection-item){
+    background: rgba(80, 139, 254, 0.20) !important;
+}
 </style>

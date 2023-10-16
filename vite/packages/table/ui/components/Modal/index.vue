@@ -8,7 +8,7 @@
     }"
   >
     <!-- 头部 -->
-    <header>
+    <header v-if="isHeader">
       <xt-text>
         <slot name="headerLeft"></slot>
         <template #centet>
@@ -29,21 +29,21 @@
       </xt-text>
     </header>
     <!-- 主体 -->
-    <main class="my-3">
+    <main class="mt-3">
       <slot>主体默认内容</slot>
     </main>
     <!-- 尾部 -->
-    <footer class="flex justify-center items-center">
-      <slot name="footer">
+    <slot name="footer">
+      <footer v-if="isFooter" class="flex justify-center items-center mt-3">
         <xt-button class="mr-3" @click="colseClick()">取消</xt-button>
         <xt-button type="theme" @click="okClick()">确认</xt-button>
-      </slot>
-    </footer>
+      </footer>
+    </slot>
   </div>
   <!-- 遮罩层 -->
   <div
     v-if="modelValue"
-    @click.stop.self="onColse()"
+    @click.stop.self="colseClick()"
     class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
     :style="{
       'z-index': maskIndex,
@@ -73,6 +73,14 @@ const props = defineProps({
   // 按esc关闭窗口
   esc: {
     default: false,
+  },
+  // 快速关闭底部
+  isFooter: {
+    default: true,
+  },
+  // 快速关闭头部
+  isHeader: {
+    default: true,
   },
 });
 const emits = defineEmits(["close", "ok", "modelValue"]);

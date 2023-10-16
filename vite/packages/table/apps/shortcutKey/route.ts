@@ -1,5 +1,5 @@
 import ShortcutIndex from './page/Index.vue'
-import SchemeList from './page/SchemeList.vue'
+import SchemeList from './components/SchemeList.vue'
 import ShortcutKey from './page/ShortcutKey.vue'
 import ShareKey from "./page/EditScheme.vue"
 import SchemeDetail from './page/SchemeDetail.vue'

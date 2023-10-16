@@ -2,7 +2,7 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
 
-    <div @click.stop class="box common-panel hide-scrollbar s-bg  "
+    <div @click.stop class="box common-panel hide-scrollbar s-bg "
          style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
           overflow-x: hidden;
@@ -11,10 +11,10 @@
       <div   style="width: 67px;overflow-x: hidden">
         <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
           <div  v-for="item in sideNavigationList" :key="item.name" @click.stop="clickNavigation(item)">
-            <div  @contextmenu.stop="enableDrag"   class="flex felx-col justify-center items-center item-nav" :class="{ 'active-back': current(item) }">
+            <div  @contextmenu.stop="enableDrag"   class="flex items-center justify-center felx-col item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
-                <Icon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
-                      :class="{ 'active-color': current(item) }"></Icon>
+                <navIcon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
+                      :class="{ 'active-color': current(item) }"></navIcon>
               </div>
               <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
             </div>
@@ -29,13 +29,13 @@
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="btn relative">
+        <div @click="editNavigation" class="relative btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div><span>编辑导航</span></div>
           <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
         <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
-          <Icon style="font-size: 3em" :icon="item.icon"></Icon>
+          <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
           <div><span>{{ item.name }}</span></div>
         </div>
       </a-col>
@@ -43,7 +43,7 @@
   </a-drawer>
 
   <transition name="fade">
-    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
       <EditNavigation @setQuick="setQuick"></EditNavigation>
     </div>
   </transition>
@@ -57,11 +57,12 @@ import { cardStore } from '../store/card';
 import Sortable from 'sortablejs';
 import { message } from 'ant-design-vue';
 import routerTab from '../js/common/routerTab'
-
+import { Icon as navIcon } from '@iconify/vue';
 export default {
   name: 'SidePanel',
   components: {
-    EditNavigation
+    EditNavigation,
+    navIcon
   },
   data() {
     return {

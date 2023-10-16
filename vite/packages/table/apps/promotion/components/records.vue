@@ -1,5 +1,5 @@
 <template>
-    <vueCustomScrollbar  :settings="scrollbarSettings"  style="height: 100%;">
+    <vueCustomScrollbar  :settings="settingsScroller"  style="height: 100%;">
         <div class="flex flex-box" >
             <div class="box-title">推广记录</div>
             <div class="flex" style="width: 100%;justify-content: space-between;">
@@ -44,7 +44,8 @@
             </div>
             <a-table 
               :dataSource="detailList.data" 
-              :pagination="{ pageSize: 5 }"
+              :pagination="{ pageSize: 6 }"
+              :scroll="{ x: 1500, y: 600 }"
               tableLayout='fixed'
               :columns="detailCol" class="table-box">
                 <a-table-column key="tags" title="Tags" data-index="tags">
@@ -352,6 +353,7 @@
     .table-box :deep(.ant-table){
       background: transparent;
     }
+
 
   </style>
   

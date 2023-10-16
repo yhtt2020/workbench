@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
-import file from "../../TUIKit/TUIComponents/container/TUIChat/plugin-components/file";
 
 //todo 此处要兼容web版
 const {win32} = window.$models
@@ -102,7 +101,6 @@ export const clipboardStore = defineStore("clipboardStore", {
           ]
         }
 
-        console.log('查询调节', map)
         let rsFiltered = await tsbApi.db.find({
           selector: map,
           limit: this.settings.pageSize,
@@ -260,7 +258,9 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     changed() {
-      console.log('剪切板内容变化')
+      if(!this.settings.enable){
+        return
+      }
       const availableFormats = clipboard.availableFormats()
       const formats = [
         'image/png',
@@ -300,7 +300,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       clipboardChanged = null
     },
     isRunning() {
-      return this.clipboardObserver.isRunning()
+      return !!this.clipboardChanged
     },
     /**
      * 删除剪切板项目
@@ -326,7 +326,6 @@ export const clipboardStore = defineStore("clipboardStore", {
       collectionItem.createTime = Date.now()
       collectionItem.updateTime = Date.now()
       delete collectionItem._rev
-      console.log('插入的', collectionItem)
 
       let rs = await tsbApi.db.put(collectionItem)
       // if(rs.ok){
@@ -397,7 +396,6 @@ export const clipboardStore = defineStore("clipboardStore", {
       this.removeExpiredItems()//执行清理
     },
     async uriChange(uri) {
-      console.log('uri=', uri)
       if (uri.length === 1) {
         //是单个视频
         let filepath = uri[0]

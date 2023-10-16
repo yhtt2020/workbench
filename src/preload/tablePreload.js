@@ -1,4 +1,3 @@
-const messageModel = require('../model/messageModel')
 const api = require('../browserApi/baseApi')
 window.tsbApi = require('../browserApi/baseApi')
 window.tableApi = require('../tableApi/baseApi')
@@ -17,7 +16,6 @@ window.fs = require('fs-extra')
 const StorageModel=require('../model/storageModel')
 window.$models = {
   appModel: require('../model/appModel'),
-  messageModel,
   axios: require('axios'),
   nanoid:require('nanoid'),
   fs:require('fs-extra'),

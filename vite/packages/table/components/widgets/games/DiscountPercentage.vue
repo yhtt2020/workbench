@@ -13,7 +13,8 @@
     </template>
     <template v-else>
       <template v-if="detailShow === false">
-        <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+        <div class='w-full'>
+          <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
           <swiper-slide v-for="item in list">
             <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
               <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
@@ -21,6 +22,8 @@
             </div>
           </swiper-slide>
         </swiper>
+        </div>
+        <!--  -->
         <!-- <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
           <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
           <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>

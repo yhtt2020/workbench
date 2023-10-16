@@ -4,7 +4,7 @@ import Search from "../../../components/Search.vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
-import NotShortcutKey from "./NotShortcutKey.vue";
+import NotShortcutKey from "../page/NotShortcutKey.vue";
 import {PlusOutlined, EditOutlined} from '@ant-design/icons-vue'
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import {message, Modal} from "ant-design-vue";
@@ -214,6 +214,13 @@ export default {
       this.$router.push({
         name:'editScheme'
       })
+    },
+    getIcon(item){
+      if(item.icon){
+        return item.icon
+      }else{
+        return item.software?.icon
+      }
     }
   }
 }
@@ -225,7 +232,7 @@ export default {
   <div class=" flex flex-col rounded-lg w-full px-2 h-full">
     <div class=" m-2  my-1 flex">
       <div v-if="!exeName" class="flex-1">
-        <h2>方案列表</h2>
+        <h2 class="xt-text">方案列表</h2>
         <p class="xt-text-2"><span v-if="selecting">已选中 <strong class="xt-active-text">{{ selectedCount }}</strong> 个方案， </span>
           共 {{ shortcutSchemeList.length }} 个方案</p>
       </div>
@@ -292,21 +299,26 @@ export default {
     </div>
     <div class="flex flex-1 justify-between px-4 h-0">
 
-      <vue-custom-scrollbar :settings="settings" class="h-full w-full">
+      <vue-custom-scrollbar :settings="settings" class="h-full w-full ">
         <div v-if="shortcutSchemeList.length===0 && loading===false " class="w-full"
              style="flex:1;justify-items: center;justify-content: center">
           <NotShortcutKey @createScheme="createScheme"></NotShortcutKey>
         </div>
-        <div v-else class="main-part item-content"
+        <div v-else class="scheme-container  "
              style="flex:1">
           <div :class="{selectable:selecting,selected:item.selected}" v-for="item in shortcutSchemeList"
-               class="flex items-center pointer" @click="btnDetail(item)">
-            <span class="mx-4 h-14 w-14 flex justify-center items-center">
-                <a-avatar shape="square" :src="item.icon" :size="48"></a-avatar>
-            </span>
-            <span class="xt-text truncate" style="max-width: 180px" :title="item.name"> {{ item.name }} </span>
-            <div class="flex flex-col justify-center items-center">
-              <span>{{ item.number }}</span>
+               class="scheme-item     items-center pointer xt-bg-2" @click="btnDetail(item)">
+            <div class="mx-4 h-full w-14 flex justify-center items-center cover">
+                <a-avatar shape="square" :src="getIcon(item)" :size="48"></a-avatar>
+            </div>
+            <div class="description px-2  truncate">
+              <div class="xt-text truncate " style="max-width: 180px" :title="item.name"> {{ item.name }} </div>
+              <div class="mt-1 xt-text-2 truncate">{{item.exeName}}</div>
+            </div>
+
+
+            <div class="flex flex-col justify-center items-center key-num">
+              <span class="num-youshe">{{ item.number }}</span>
               <span class="xt-text-2" style="font-size: 14px;">快捷键</span>
             </div>
           </div>
