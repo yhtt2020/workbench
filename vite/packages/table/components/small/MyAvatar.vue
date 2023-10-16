@@ -9,7 +9,6 @@ import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
 
-const { messageModel } = window.$models
 
 export default {
   components: {
