@@ -4,6 +4,7 @@
     :sizes="sizeList"
     @removeCard="doRemoveCard"
     v-model:sizeType="sizeType"
+    v-model:oldMenuVisible="menuVisible"
   >
     <div
       :class="classes"

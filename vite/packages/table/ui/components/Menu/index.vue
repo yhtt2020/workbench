@@ -71,6 +71,7 @@
     border-radius: 12px;
     box-sizing: border-box;
     padding-bottom: 10px;
+    overflow: hidden;
 
     .item {
       box-sizing: border-box;
