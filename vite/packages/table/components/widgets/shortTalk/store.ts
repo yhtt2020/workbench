@@ -194,12 +194,12 @@ export const shortTalkStore = defineStore("shortTalkStore", {
             "access":{
               "plate":customData.defaultPlatType.name,
               "day_type":customData.defaultTimeType.name,
-              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getSixMonthsAgoFirstDayTimestamp(),
               "end":this.getYesterdayLastSecondTimestamp()
             },
               "interact":{
               "day_type":customData.defaultTimeType.name,
-              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getSixMonthsAgoFirstDayTimestamp(),
               "end":this.getYesterdayLastSecondTimestamp()
             }
           }
@@ -310,7 +310,14 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       currentDate.setDate(currentDate.getDate() - 1);
       currentDate.setHours(23, 59, 59, 0);
       return Math.floor(currentDate.getTime() / 1000);
-    }
+    },
+    getSixMonthsAgoFirstDayTimestamp() {
+      var currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() - 6);
+      currentDate.setDate(1);
+      currentDate.setHours(0, 0, 0, 0);
+      return Math.floor(currentDate.getTime() / 1000);
+    },
 
   
   },

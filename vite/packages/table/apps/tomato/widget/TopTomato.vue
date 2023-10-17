@@ -2,7 +2,7 @@
   <xt-button @click="onChangeFull" :h="30" :w="80" v-if="this.isState&&this.running" class="tomato-timer pointer no-drag   mr-2 "
              :style="{'background' : this.isColor}">
     <div style="display: flex;justify-content: space-evenly;
-        align-items: center;font-family: Oswald-SemiBold;" >
+        align-items: center;font-family: Oswald-SemiBold;color: rgba(255, 255, 255, 0.85);" >
       <Icon class="mr-1" icon="fluent-emoji:tomato" style="font-size: 20px;"/>
       {{ displayNum(minutes) }}:{{ displayNum(seconds) }}
     </div>

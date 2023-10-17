@@ -3,7 +3,7 @@
         <div class="title" @click="test">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
-        <div class="icon-box">
+        <div class="icon-box" style="color: rgba(255,255,255,0.85);">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
             <Icon icon="fluent:play-16-filled" />
@@ -202,7 +202,8 @@
     }
 
     .setting-box{
-      background: #2A2A2A;
+      // background: #2A2A2A;
+      background: var(--secondary-bg);
       border-radius: 12px;
       padding: 16px;
     }

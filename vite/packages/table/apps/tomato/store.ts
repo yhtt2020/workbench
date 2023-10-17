@@ -18,7 +18,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       seconds: 0
     },
     hours: 0,
-    minutes: 0,
+    minutes: 25,
     seconds: 0,
     tick: 1000,
     // 当前是否运行
@@ -96,7 +96,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.isPause = true
       this.running = false;
       this.clearInterval()
-      this.reset(0, 0, 0)
+      this.reset(0, 25, 0)
       this.isColor ="#e5b047";
       this.isFullState=false;
       // this.isColor ="#E7763E";
@@ -122,7 +122,7 @@ export const tomatoStore = defineStore("tomatoStore", {
     finish () {
       this.running = false
       this.clearInterval()
-      this.reset()
+      this.reset(0,25,0)
       this.addTomatoNum()
       this.isColor ="#e5b047";
       toast.success("番茄任务完成");
