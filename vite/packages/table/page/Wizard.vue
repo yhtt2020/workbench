@@ -373,7 +373,6 @@ export default {
     },
     finish () {
       this.finishWizard()
-      this.replaceIcon()
       this.$router.replace({ name:'home' })
     },
     getKeys (e) {
