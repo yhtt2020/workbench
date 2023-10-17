@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import {mapWritableState} from "pinia"
 export default {
   name: "Classification",
   data(){

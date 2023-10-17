@@ -16,3 +16,19 @@ export async function toggleFullScreen() {
   // this.fullScreen()   //触发全屏的按钮
 }
 
+/**
+ * 渲染图标地址，自动修正协议
+ * @param uri
+ */
+export function renderIcon(uri){
+  try{
+    if(uri.startsWith('http://') || uri.startsWith('https://'))
+    {
+      return uri
+    }else{
+      return 'file://'+uri
+    }
+  }catch (e) {
+    return ''
+  }
+}

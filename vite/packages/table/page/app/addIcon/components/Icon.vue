@@ -2,7 +2,7 @@
   <div>
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
-      <div>总共 {{ appsLenght }} 个应用图标</div>
+      <div>总共 {{ appsLenght }} 个文件</div>
       <XtButton type="theme" @click="selectAllApp()">
         {{ selectAll }}
       </XtButton>
@@ -19,8 +19,8 @@
         @click="selectApp(item, index)"
         :style="[isSelected(index)]"
       >
-        <a-avatar :size="52" shape="square" :src="item.icon"></a-avatar>
-        <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
+        <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+        <div class="w-full text-center truncate mt-3">{{ item.name }}ee{{item.icon}}</div>
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@
 <script>
 import { taskStore } from "../../../../apps/task/store";
 import { mapWritableState } from "pinia";
+import {renderIcon} from '../../../../js/common/common'
 export default {
   inject: ["width", "height"],
   props: {
@@ -140,6 +141,7 @@ export default {
         this.selectedIndexes[this.name].push(index); // 添加选中
       }
     },
+    renderIcon,
     isSelected(index) {
       if (!this.selectedIndexes[this.name])
         this.selectedIndexes[this.name] = [];

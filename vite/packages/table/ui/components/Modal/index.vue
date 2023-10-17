@@ -11,13 +11,13 @@
     <header v-if="isHeader">
       <xt-text>
         <slot name="headerLeft"></slot>
-        <template #centet>
+        <template #center>
           <slot name="header">
             {{ title }}
           </slot>
         </template>
         <template #right>
-          <div class="flex items-center">
+          <div class="flex items-center "    >
             <slot name="headerRight"></slot>
             <xt-new-icon
               icon="fluent:dismiss-16-filled"

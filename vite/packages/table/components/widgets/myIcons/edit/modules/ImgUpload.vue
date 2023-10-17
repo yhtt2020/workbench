@@ -11,7 +11,7 @@
     >
       <img
         v-if="edit.src"
-        :src="edit.src"
+        :src="renderIcon(edit.src)"
         alt="avatar"
         style="width: 100px; height: 100px"
       />
@@ -61,7 +61,7 @@ import {
 import { getHostAddress } from "../hooks/getHostAddress";
 import { message } from "ant-design-vue";
 import editMixins from "../hooks/mixins";
-
+import {renderIcon} from '../../../../../js/common/common'
 export default {
   mixins: [editMixins],
   data() {
@@ -86,6 +86,7 @@ export default {
     },
   },
   methods: {
+    renderIcon,
     imgUp() {
       let imgRef = this.$refs.imgRef;
       imgRef.click();
