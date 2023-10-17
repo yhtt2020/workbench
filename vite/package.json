@@ -1,7 +1,7 @@
 {
   "name": "render",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "dev": "vite",
     "start": "node ./script/dev",
@@ -18,7 +18,7 @@
     "@types/node": "^18.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
-    "ant-design-vue": "^3.2.9",
+    "ant-design-vue": "3.2.20",
     "autoprefixer": "^10.4.14",
     "cheerio": "^1.0.0-rc.12",
     "codemirror": "5.65.13",
@@ -71,8 +71,7 @@
     "wujie-vue3": "^1.0.18",
     "xgplayer": "^2.32.2"
   },
-  "optionalDependencies": {
-  },
+  "optionalDependencies": {},
   "devDependencies": {
     "@iconify-icons/fluent": "^1.2.35",
     "@iconify/vue": "^4.1.1",
