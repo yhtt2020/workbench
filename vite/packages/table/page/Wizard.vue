@@ -124,7 +124,7 @@
 
       </div>
       <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
-        <div class="mb-3 mt-3" style="background: #f15460;padding: 1em;border-radius: 8px 4px;color: white"><AutoRun/></div>
+        <div class="mt-3 mb-3" style="background: #f15460;padding: 1em;border-radius: 8px 4px;color: white"><AutoRun/></div>
         <div style="text-align: center">
           <KeySetting></KeySetting>
         </div>
@@ -174,6 +174,8 @@ import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
 import ZoomUI from '../components/comp/ZoomUI.vue'
 import AutoRun from '../components/comp/AutoRun.vue'
 import browser from '../js/common/browser'
+import navigationData from '../js/data/tableData'
+import { navStore } from '../store/nav'
 import KeySetting from '../components/comp/KeySetting.vue'
 const { settings } = window.$models
 export default {
@@ -186,6 +188,7 @@ export default {
     ChooseScreen,BulbFilled,PlayCircleFilled
   },
   computed: {
+    ...mapWritableState(navStore, [ 'sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(appStore, ['settings', 'init']),
     fitWidth(){
       const width=Number(this.currentWidth)
@@ -370,6 +373,7 @@ export default {
     },
     finish () {
       this.finishWizard()
+      this.replaceIcon()
       this.$router.replace({ name:'home' })
     },
     getKeys (e) {
@@ -386,6 +390,29 @@ export default {
       key += e.code
       return key
     },
+    replaceIcon(){
+      navigationData.systemFillAppList.forEach((item) => {
+      this.sideNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemFillAppList.forEach((item) => {
+      this.rightNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemAppList.forEach((item) => {
+      this.footNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    }
   }
 }
 </script>
