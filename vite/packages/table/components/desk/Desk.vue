@@ -25,8 +25,7 @@
         </a-result>
       </div>
     </div>
-    <RightMenu :deskMenu='deskMenu'   class="w-full h-full xt-theme-b">
-
+    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='deskGroupMenu'  class="w-full h-full xt-theme-b">
     <!-- <div  style='z-index:99999px'> -->
         <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
@@ -404,6 +403,8 @@ export default {
   },
   props:
     {
+      deskGroupMenu:{
+      },
       globalSettings: {
         type: Object,
         default: {}
@@ -537,7 +538,7 @@ export default {
             fn:this.newAddIcon,
           },
           {
-            id:3,
+            id:2,
               newIcon:"fluent:collections-add-24-regular",
             name:"添加小组件",
             fn:this.newAddCard,

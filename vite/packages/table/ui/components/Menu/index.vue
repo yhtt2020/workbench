@@ -46,6 +46,7 @@
                     <div class="list w-full h-full p-1">
                       <div
                         class="item"
+                        @click="handleClick(data)"
                         v-for="data in menu.children"
                         :name="name"
                       >
@@ -127,7 +128,7 @@ const props = defineProps({
 });
 
 const { model, trigger, start, bubble } = toRefs(props);
-console.log('bubble.value :>> ', bubble.value);
+
 const emits = defineEmits("closeMenu");
 // 菜单离开回调
 const handleCloseMenu = () => {

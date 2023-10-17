@@ -115,6 +115,7 @@
       v-if="currentDesk && currentDesk?.cards?.length > 0"
     >
       <Desk
+      :deskGroupMenu='deskGroupMenu'
         @changeEditing="editing = !editing"
         :global-settings="settings"
         :editing="editing"
@@ -248,6 +249,7 @@
         <Desk
           ref="currentDeskRef"
           :currentDesk="currentDesk"
+          :deskGroupMenu='deskGroupMenu'
           :key="key"
           :editing="editing"
         >
@@ -520,10 +522,27 @@ export default {
     return {
       deskGroupMenu:[
         {
+          id:3,
+          newIcon:"fluent:slide-add-16-regular",
+                name:"添加桌面",
+                fn:this.showAddDeskForm
+        },
+        {
           id:9,
             newIcon:"fluent:more-horizontal-16-filled",
             name:"更多",
-            children:[],
+            children:[
+              {
+                newIcon:"fluent:arrow-download-20-filled",
+                name:"导入桌面",
+                fn:this.importDesk
+              },
+              {
+                newIcon:"fluent:open-20-filled",
+                name:"导出桌面",
+                fn:this.exportDesk
+              }
+            ],
         }
       ],
       scrollbarSettings: {
