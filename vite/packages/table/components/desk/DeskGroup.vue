@@ -2,6 +2,7 @@
   <div class="flex flex-col h-full">
     <!--  工具栏-->
     <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
+<!-- {{$refs.currentDeskRef.menus}} -->
       <!-- tabs   -->
       <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
@@ -123,7 +124,9 @@
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
         :key="key"
+
       >
+      <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
         </template>
@@ -408,7 +411,6 @@
 
 
   </a-drawer>
-
   <ShareDesk
     :deskList="deskList"
     ref="shareDeskRef"
@@ -750,7 +752,7 @@ export default {
       });
     },
     showMenu() {
-      this.$refs.currentDeskRef.showMenu();
+     this.$refs.currentDeskRef.showMenu();
     },
     showMore() {
       this.$emit("showMore");
