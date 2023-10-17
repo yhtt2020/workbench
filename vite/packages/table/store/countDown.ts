@@ -77,6 +77,7 @@ export const countDownStore = defineStore(
       dCountDown() {
         this.timer && clearInterval(this.timer);
         this.progress=0
+        this.countDowndate=0
         this.progressTimer && clearInterval(this.progressTimer)
         this.countDowntime = {};
         // this.countDowndate=-1000

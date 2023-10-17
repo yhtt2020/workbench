@@ -79,6 +79,9 @@ import ChatMain from '../page/chat/page/chatMain.vue'
 import CommunityIndex from '../page/chat/page/communityIndex.vue'
 import ChatFind from '../page/chat/page/chatFind.vue'
 import MyCommunity from '../page/chat/page/communityDetail.vue'
+import Channel from '../page/channels/Channels.vue'
+import ChannelIndex from '../page/channels/Channels.vue'
+import Circle from '../page/channels/Groups.vue'
 /**聊天团队模式结束**/
 
 //导入应用路由
@@ -100,11 +103,7 @@ export default [
         component: TomatoStart
       },
 
-      {
-        path: '/Tomato',
-        name: 'tomato',
-        component: Tomato
-      },
+
 
       {
         path: '/power',
@@ -322,6 +321,34 @@ export default [
               },
             ],
           },
+          {
+            path:'/channel',
+            name:'channel',
+            component:Channel,
+            meta:{
+              tab1:'channels'
+            },
+            children:[
+              {
+                path:'',
+                name:'channelsIndex',
+                meta:{
+                  tab1:'community',
+                  tab2:'channel'
+                },
+                component:ChannelIndex
+              },
+              {
+                path:"",
+                name:'circle',
+                meta:{
+                  tab1:'community',
+                  tab2:'channel'
+                },
+                component:Circle
+              }
+            ]
+          }
 
         ]
       },
@@ -455,6 +482,11 @@ export default [
                 component: DeckAdd
               }
             ]
+          },
+          {
+            path: '/Tomato',
+            name: 'tomato',
+            component: Tomato
           },
           {
             path: '/desk',

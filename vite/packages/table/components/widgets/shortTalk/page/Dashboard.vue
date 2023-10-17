@@ -44,8 +44,8 @@
                         style="border-radius: 10px;" 
                         v-model:value="this.options.title" 
                         @change="changeName"
-                        class="search pl-1"></a-input>
                         maxlength="20"
+                        class="search pl-1"></a-input>
                     </p>
                     <!--  穿梭框 -->
                     <p>选择统计数值</p>

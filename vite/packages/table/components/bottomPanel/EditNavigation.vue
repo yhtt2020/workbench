@@ -16,7 +16,7 @@
                   <div v-for="item in sideNavigationList" :key="item.name" style="margin: 20px 0;">
                     <!-- {{ 11111 }} -->
                     <a-dropdown :trigger="['contextmenu']">
-                      
+
                       <div v-if="item.type==='systemApp'"
                            style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
                            <!-- {{ item.icon }} -->
@@ -68,7 +68,7 @@
                   </div>
                 </div>
               </div>
-              <div style="width: 650px;text-align: center;zoom: 0.8;display: flex;flex-direction: column;align-items:center;justify-content: center;justify-items: center;">
+              <div style="width: 600px;text-align: center;zoom: 0.8;display: flex;flex-direction: column;align-items:center;justify-content: center;justify-items: center;">
                 <div class="mt-2 mb-2" style="color:var(--secondary-text);">推荐功能（拖拽添加）</div>
                 <div class="main-nav" id="suggestList" style="width:430px;white-space: pre-wrap;flex-wrap: wrap;">
                   <div v-for="item in suggestNavList" :key="item.name" style="margin:5px">
@@ -280,17 +280,10 @@ const suggestNavigationList = [
   },
   {
     type: 'systemApp',
-    icon: 'akar-icons:check-box',
-    name: '待办(新)',
-    event:'todo',
-    fn: () => { vm.$router.push({ name: 'todo' })}
-  },
-  {
-    type: 'systemApp',
-    icon: 'fluent:flash-16-regular',
-    name: '快捷指令',
-    event: 'deck',
-    fn: () => { vm.$router.push({ name: 'deck' })}
+    icon: 'fluent:games-16-regular',
+    name: '游戏',
+    tab:'game',
+    event: 'gameIndex'
   },
 
   {
@@ -298,13 +291,8 @@ const suggestNavigationList = [
     icon: 'fluent:globe-16-regular',
     name: '浏览器',
     event: 'browser',
-  }, {
-    type: 'systemApp',
-    icon: 'fluent:games-16-regular',
-    name: '游戏',
-    tab:'game',
-    event: 'gameIndex'
   },
+
   {
     type: 'systemApp',
     icon: 'fluent:music-note-2-16-regular',
@@ -433,6 +421,13 @@ export default {
     })
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemFillAppList.forEach((item) => {
+      this.rightNavigationList.forEach((i) => {
         if (item.name === i.name) {
           i.icon=item.icon
         }

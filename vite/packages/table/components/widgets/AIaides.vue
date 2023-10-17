@@ -181,7 +181,7 @@ export default {
     margin-top: -6px;
     // margin: auto 5px;
     :deep(.ant-input) {
-      color: var(--primary-text);
+      color: var(--secondary-text);
       height: 40px;
       width: 100%;
       padding-left: 16px;
@@ -189,7 +189,7 @@ export default {
         font-family: PingFangSC-Regular;
         font-size: 16px;
         font-weight: 400;
-        color: var(--primary-text);
+        color: var(--secondary-text);
       }
     }
   }

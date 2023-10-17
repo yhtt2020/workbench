@@ -35,37 +35,56 @@
       </div>
       <!-- 快捷键详情面板 -->
       <div class="top-list" v-show="defaultType.name === 'showDetail'">
-        <div class="p-firse" :class="topBar">
-          <div @click="enterDetail(selectedScheme)" class="name-img pointer ">
-            <a-avatar shape="square" :src="selectedScheme.icon" alt=""></a-avatar>
-            <span>{{ selectedScheme.name }} </span>
+        <div class="text-center" v-if="!selectedScheme">
+          <div v-if="!selValue">
+            <div class="mt-10 mb-2">
+              请选择方案。
+            </div>
+
+            <xt-button @click="settingVisible=true" class="m-auto" type="theme">选择</xt-button>
           </div>
-          <div class="page-change">
-            <!-- 换页 -->
-            <left-outlined :class="{disable:page<=1}" @click="onChangePage('before')"/>
-            <right-outlined :class="{disable:!hasNext}" @click="onChangePage('next')"/>
+          <div class="text-center" v-else>
+            <div class="mt-10 mb-2">
+              方案已被删除。
+            </div>
+
+            <xt-button @click="settingVisible=true" class="m-auto" type="theme">重新选择</xt-button>
           </div>
         </div>
-        <div class="key-body">
-          <!-- 循环类型 -->
-          <div class=" key-wrapper" :style="{backgroundColor:!item.groupName?getColor(currentKeyList,index+(page-1)*12) :'' }"
-               v-for="(item,index) in keyList" :key="item.id">
-            <!-- 标题 -->
-            <div class="key-item" v-if="item.groupName">
-              <div class="key-name truncate">
-                <div class="color-dot" :style="{backgroundColor:getColor(currentKeyList,index+(page-1)*12)}"></div>
-                <strong class="ml-2">{{ item.groupName }}</strong>
-              </div>
+        <template v-else>
+          <div class="p-firse" :class="topBar">
+            <div @click="enterDetail(selectedScheme)" class="name-img pointer ">
+              <a-avatar shape="square" :src="selectedScheme.icon" alt=""></a-avatar>
+              <span>{{ selectedScheme.name }} </span>
             </div>
-            <!-- 快捷键 -->
-            <div class="key-item" v-if="item.keyStr !== ''">
-              <div class="key-item">
-                <span v-for="(keySpan,index) in item.keys" :key="index">{{ keySpan }}</span>
-              </div>
+            <div class="page-change">
+              <!-- 换页 -->
+              <left-outlined :class="{disable:page<=1}" @click="onChangePage('before')"/>
+              <right-outlined :class="{disable:!hasNext}" @click="onChangePage('next')"/>
             </div>
-            <div class="key-title">{{ item.title }}</div>
           </div>
-        </div>
+          <div class="key-body">
+            <!-- 循环类型 -->
+            <div class=" key-wrapper" :style="{backgroundColor:!item.groupName?getColor(currentKeyList,index+(page-1)*12) :'' }"
+                 v-for="(item,index) in keyList" :key="item.id">
+              <!-- 标题 -->
+              <div class="key-item" v-if="item.groupName">
+                <div class="key-name truncate">
+                  <div class="color-dot" :style="{backgroundColor:getColor(currentKeyList,index+(page-1)*12)}"></div>
+                  <strong class="ml-2">{{ item.groupName }}</strong>
+                </div>
+              </div>
+              <!-- 快捷键 -->
+              <div class="key-item" v-if="item.keyStr !== ''">
+                <div class="key-item">
+                  <span v-for="(keySpan,index) in item.keys" :key="index">{{ keySpan }}</span>
+                </div>
+              </div>
+              <div class="key-title">{{ item.title }}</div>
+            </div>
+          </div>
+        </template>
+
       </div>
     </Widget>
   </div>
@@ -135,7 +154,7 @@ export default {
   },
   data () {
     return {
-      selectedScheme: {},
+      selectedScheme: null,
       page: 1,
       selValue: '',
       settingVisible: false,
@@ -501,14 +520,12 @@ export default {
     },
     selectedScheme () {
       let found = this.recentlyUsedList.find(item => {
-        console.log(item, this.selValue)
         return item.id === this.selValue
       })
-      console.log(found)
       if (found) {
         return found
       } else {
-        return {}
+        return null
       }
     }
   },
