@@ -70,6 +70,7 @@ import { cardStore } from '../store/card'
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
+import axios from 'axios'
 
 export default {
   name: 'Lock',
@@ -89,7 +90,48 @@ export default {
       date: '2023年2月11日 周四',
       time: ' 14:51 ',
       visible: false,
-      wallPaper: 'https://ts1.cn.mm.bing.net/th/id/R-C.653b2eb4ae081875675c6d25a69834b0?rik=p%2fCn01vlMrCUxQ&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1208%2f02%2fc0%2f12659156_1343874598199.jpg&ehk=d8OPA9%2bWy7YX9FLF95st3Rmd8lG6XtopCz0uNZAbebs%3d&risl=&pid=ImgRaw&r=0'
+      wallPaper: 'https://ts1.cn.mm.bing.net/th/id/R-C.653b2eb4ae081875675c6d25a69834b0?rik=p%2fCn01vlMrCUxQ&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1208%2f02%2fc0%2f12659156_1343874598199.jpg&ehk=d8OPA9%2bWy7YX9FLF95st3Rmd8lG6XtopCz0uNZAbebs%3d&risl=&pid=ImgRaw&r=0',
+      lively:[
+        {
+          name: 'abstract-20072.mp4'
+        },
+        {
+          name: 'bible-105673.mp4'
+        },
+        {
+          name: 'car-135728.mp4'
+        },
+        {
+          name: 'cat-65438.mp4'
+        },
+        {
+          name: 'energy-field-74933.mp4'
+        },
+        {
+          name: 'highland-cows-65903.mp4'
+        },
+        {
+          name: 'ink-67358.mp4'
+        },
+        {
+          name: 'lonely-tree-38108.mp4'
+        },
+        {
+          name: 'mountains-31175.mp4'
+        },
+        {
+          name: 'sasuke-146064.mp4'
+        },
+        {
+          name: 'stock.mp4'
+        },
+        {
+          name: 'trees-24540.mp4'
+        },
+        {
+          name: 'trees-98970.mp4'
+        }
+      ]
     }
   },
   mounted () {
@@ -163,48 +205,127 @@ export default {
       this.$router.go(-1)
     },
     playAll () {
-      if (this.myPapers.length === 0) {
-        this.$router.replace({
-          name: 'my'
-        })
-        Modal.error({ content: '请添加我的壁纸后重新锁屏。' })
-        return
-      }
       let LockArr = []
-      this.myPapers.map(el => {
-        if (this.fileImageExtension(el)) {
-          LockArr.push({
-            'src-mp4': el.srcProtocol,
-            media: 'video',
-            poster: el.path
+      if(this.settings.wallSource == 'my'){
+        // 我的收藏
+        if (this.myPapers.length === 0) {
+          this.$router.replace({
+            name: 'my'
           })
-        } else {
-          LockArr.push({
-            src: el.path
-          })
-        }
-      })
-      if (LockArr.length === 1) {
-        if (LockArr[0].media === 'video') {
-          this.singleLively = true
-          this.playing = LockArr
+          Modal.error({ content: '请添加我的壁纸后重新锁屏。' })
           return
         }
-      } else {
-        this.singleLively = false
-      }
-      window.Spotlight.show(LockArr, {
-        control: 'autofit,fullscreen,close,zoom,prev,next',
-        play: true,
-        autoslide: this.settings.interval,
-        infinite: true,
-        progress: this.settings.showProgress,
-        title: false,
-        autoplay: true,
-        onclose: () => {this.enter(false)}
+        this.myPapers.map(el => {
+          if (this.fileImageExtension(el)) {
+            LockArr.push({
+              'src-mp4': el.srcProtocol,
+              media: 'video',
+              poster: el.path
+            })
+          } else {
+            LockArr.push({
+              src: el.path
+            })
+          }
+        })
+        // 处理视频播放
+        if (LockArr.length === 1) {
+          if (LockArr[0].media === 'video') {
+            this.singleLively = true
+            this.playing = LockArr
+            return
+          }
+        } else {
+          this.singleLively = false
+        }
+        window.Spotlight.show(LockArr, {
+          control: 'autofit,fullscreen,close,zoom,prev,next',
+          play: true,
+          autoslide: this.settings.interval,
+          infinite: true,
+          progress: this.settings.showProgress,
+          title: false,
+          autoplay: true,
+          onclose: () => {this.enter(false)}
+        })
+      }else if(this.settings.wallSource == 'bing'){
+        // 必应壁纸
+        let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
+        axios.get(url).then((imagesResult) => {
+        if (imagesResult.status === 200) {
+          let arr = imagesResult.data.images
+          arr.forEach(item=>{
+            LockArr.push({
+              src: 'https://cn.bing.com' + item.url,
+              path: 'https://cn.bing.com' + item.url,
+            })
+          })
+          window.Spotlight.show(LockArr, {
+            control: 'autofit,fullscreen,close,zoom,prev,next',
+            play: true,
+            autoslide: this.settings.interval,
+            infinite: true,
+            progress: this.settings.showProgress,
+            title: false,
+            autoplay: true,
+            onclose: () => {this.enter(false)}
+          })
+        }
+      }).catch((err) => {
       })
+
+      }else if(this.settings.wallSource == 'picking'){
+        // 拾光壁纸
+        const url = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
+        axios.get(url).then(async res => {
+          if (res.data.data.length !== 1) {
+            let arr = res.data.data
+            arr.forEach(item=>{
+              LockArr.push({
+                src:item.imgurl,
+                path:item.imgurl,
+              })
+            })
+            window.Spotlight.show(LockArr, {
+              control: 'autofit,fullscreen,close,zoom,prev,next',
+              play: true,
+              autoslide: this.settings.interval,
+              infinite: true,
+              progress: this.settings.showProgress,
+              title: false,
+              autoplay: true,
+              onclose: () => {this.enter(false)}
+            })
+          } else {
+            return
+          }
+        })
+      }else{
+        // 动态壁纸
+        let url = 'https://up.apps.vip/lively/'
+
+        this.lively.forEach(item=>{
+          LockArr.push({
+            media: 'video',
+            poster:"https://up.apps.vip/lively/mylivewallpapers-com-Arcanine-and-Oddish-Pokemon.jpg",
+            'src-mp4':"https://up.apps.vip/lively/" + item.name
+          })
+        })
+        window.Spotlight.show(LockArr, {
+          control: 'autofit,fullscreen,close,zoom,prev,next',
+          play: true,
+          autoslide: this.settings.interval,
+          infinite: true,
+          progress: this.settings.showProgress,
+          title: false,
+          autoplay: true,
+          onclose: () => {this.enter(false)}
+        })
+      }
+
     },
     playActive () {
+      console.log('playActive');
       if (this.activePapers.length === 0) {
         this.$router.replace({
           name: 'my'
