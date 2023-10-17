@@ -139,12 +139,6 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           type:'all_register',
           num:'',
       },
-      {
-          key: 21,
-          title: "我是标题",
-          type:'today_thread',
-          num:'',
-      },
     ],
     // 待办数据
     todoList:[
@@ -181,6 +175,8 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     ],
     // 设置状态存储
     setVisible:false,
+    // 跳转链接
+    admin_url:"https://www.baidu.com",
   }),    
   // getters:{},
   actions: {
@@ -198,18 +194,29 @@ export const shortTalkStore = defineStore("shortTalkStore", {
             "access":{
               "plate":customData.defaultPlatType.name,
               "day_type":customData.defaultTimeType.name,
-              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getSixMonthsAgoFirstDayTimestamp(),
               "end":this.getYesterdayLastSecondTimestamp()
             },
               "interact":{
               "day_type":customData.defaultTimeType.name,
-              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getOneMonthAgoTimestamp(),
+              "start":customData.defaultTimeType.name == 'day'?this.getSevenDaysAgoTimestamp():customData.defaultTimeType.name=='week'?this.getSixWeeksAgoMondayTimestamp():this.getSixMonthsAgoFirstDayTimestamp(),
               "end":this.getYesterdayLastSecondTimestamp()
             }
           }
         }).then((res)=>{
           this.access = res.access
           this.interact = res.interact
+        },rej=>{
+          this.access = {
+            login:{series:[],xAxis:[]},
+            visit:{series:[],xAxis:[]},
+          }
+          this.interact = {
+            post:{series:[],xAxis:[]},
+            support:{series:[],xAxis:[]},
+            thread:{series:[],xAxis:[]},
+          }
+          
         })
       }else{
         // console.log('暂时没customData');
@@ -237,13 +244,17 @@ export const shortTalkStore = defineStore("shortTalkStore", {
         this.mockData.forEach(item => {
           item.num = res[item.type]
         });
+      },rej=>{
+        this.mockData.forEach(item => {
+          item.num = 0
+        });
       })
     },
     // 初始化 待办 请求数据
     async getTodoData(){
       await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
         "content":{
-          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum",
+          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum,admin_url",
           "access":{
             "plate":'all',
             "day_type":'month',
@@ -257,8 +268,14 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           }
         }
       }).then((res)=>{
+        this.admin_url = res.admin_url
         this.todoList.forEach(item => {
           item.num = res[item.type]
+        });
+      },rej=>{
+        this.admin_url = ''
+        this.todoList.forEach(item => {
+          item.num = 0
         });
       })
     },
@@ -293,7 +310,14 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       currentDate.setDate(currentDate.getDate() - 1);
       currentDate.setHours(23, 59, 59, 0);
       return Math.floor(currentDate.getTime() / 1000);
-    }
+    },
+    getSixMonthsAgoFirstDayTimestamp() {
+      var currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() - 6);
+      currentDate.setDate(1);
+      currentDate.setHours(0, 0, 0, 0);
+      return Math.floor(currentDate.getTime() / 1000);
+    },
 
   
   },
