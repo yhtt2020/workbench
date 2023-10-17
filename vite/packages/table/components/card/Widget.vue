@@ -46,7 +46,8 @@
       </slot>
       <!-- 标题栏end   -->
       <!--  主体内容插槽start  -->
-      <slot :customIndex="customIndex"></slot>
+      <WebState v-if="env[$currentEnv]"></WebState>
+      <slot v-else :customIndex="customIndex"></slot>
       <!--  主题内容插槽end  -->
     </div>
 
@@ -73,6 +74,7 @@ import { Icon as MyIcon } from "@iconify/vue";
 import Template from "../../../user/pages/Template.vue";
 
 import RightMenu from "./RightMenu.vue";
+import WebState from "./WebState.vue";
 //组件选项
 declare interface IOption {
   //类型，字符串
@@ -83,6 +85,15 @@ declare interface IOption {
   hide?: boolean;
   // 删除前置任务
   beforeDelete?: boolean;
+  // web端屏蔽
+  web?: boolean;
+  // 标题
+  title?: string;
+  // 图标
+  icon?: string;
+  rightIcon?: string;
+  // 背景色
+  background?: string;
 }
 
 //菜单项
@@ -150,6 +161,16 @@ export default {
     showRightIcon: {
       type: Boolean,
       default: true,
+    },
+    env: {
+      type: Object,
+      default: () => {
+        return {
+          web: false,
+          mobile: false,
+          client: false,
+        };
+      },
     },
   },
   data() {
