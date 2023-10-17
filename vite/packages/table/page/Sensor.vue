@@ -12,12 +12,15 @@ export default {
   },
   mounted () {
 
-    const readAida64 = require('aida64-to-json')
-    setInterval(()=>{
-      readAida64().then(res => {
-        this.data=JSON.stringify(res, null, '\t')
-      })
-    },1000)
+    if(process.platform==='win32'){
+      const readAida64 = window.readAida64
+      setInterval(()=>{
+        readAida64().then(res => {
+          this.data=JSON.stringify(res, null, '\t')
+        })
+      },1000)
+    }
+
   }
 }
 </script>

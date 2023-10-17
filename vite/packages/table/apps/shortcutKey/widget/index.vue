@@ -520,10 +520,8 @@ export default {
     },
     selectedScheme () {
       let found = this.recentlyUsedList.find(item => {
-        console.log(item, this.selValue)
         return item.id === this.selValue
       })
-      console.log(found)
       if (found) {
         return found
       } else {

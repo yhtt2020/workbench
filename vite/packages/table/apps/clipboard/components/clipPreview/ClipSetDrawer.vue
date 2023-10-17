@@ -127,7 +127,7 @@ export default {
       ],
       // 默认历史记录时间
       defaultCapacity: { title: '1天', name: 'day' },
-      pageSizeTab:{}
+      pageSizeTab: {}
     }
   },
   computed: {
@@ -142,8 +142,8 @@ export default {
     }
   },
   mounted () {
-    this.pageSizeTab=this.pageSizes.find(s=>{
-      return String(s.name)===String(this.settings.pageSize)
+    this.pageSizeTab = this.pageSizes.find(s => {
+      return String(s.name) === String(this.settings.pageSize)
     })
   },
   methods: {
@@ -152,7 +152,7 @@ export default {
         'start', 'stop', 'isRunning', 'prepare',
         'isClipLineNumber', 'isSetCodeHighlight',
         'updateClipSize', 'updateTheme', 'changeClipMode',
-        'clean'
+        'clean','isRunning'
       ]
     ),
     // 通过该方法可以打开弹窗
@@ -208,13 +208,13 @@ export default {
       handler (newVal, oldVal) {
         // console.log('剪切板开关',newVal)
         if (newVal) {
-          // this.prepare()
-          // this.start()
+          //是切换到了启用
+          this.start()
         } else {
-          if (this.clipboardObserver) {
-            if (this.isRunning()) {
-              this.stop()
-            }
+          //切换到了禁止
+          if (this.isRunning()) {
+            console.log('禁用')
+            this.stop()
           }
         }
       }
@@ -231,20 +231,20 @@ export default {
         this.isClipLineNumber(newVal)
       }
     },
-    'pageSizeTab':{
-      handler(newVal){
-        this.settings.pageSize=Number(newVal.name)
+    'pageSizeTab': {
+      handler (newVal) {
+        this.settings.pageSize = Number(newVal.name)
       }
     },
-    'defaultCapacity':{
-      handler(newVal){
-        const values={
-          'day':86400,
-          'week':604800,
-          'month':2678400,
-          'unlimited':0
+    'defaultCapacity': {
+      handler (newVal) {
+        const values = {
+          'day': 86400,
+          'week': 604800,
+          'month': 2678400,
+          'unlimited': 0
         }
-        this.settings.historyCapacity=values[newVal.name]
+        this.settings.historyCapacity = values[newVal.name]
       }
     }
   }

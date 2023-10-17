@@ -33,6 +33,9 @@
     关键词：{{this.searchWords}} <close-circle-filled class="ml-3" @click.stop="this.searchWords='';this.doSearch()" />
   </div>
   <!-- 剪切板列表展示区域开始 -->
+  <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto" v-if="!settings.enable">
+    <div class="float-left mr-2 pt-1" ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 当前剪切板功能未开启，请在设置中开启，或者直接点击</div> <xt-button @click="settings.enable=true" type="theme" size="mini" :w="70" :h="35">开启</xt-button>
+  </div>
   <vue-custom-scrollbar style="width: 100%" @ps-x-reach-end="doLoadNextPage" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         class="mx-4 my-2 py-4 h-full ">
     <ClipList :clipList="clipContents" ></ClipList>
@@ -78,18 +81,21 @@ import {CloseCircleFilled} from '@ant-design/icons-vue'
 
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import ClipItem from '../components/ClipItem.vue'
-
+import XtButton from '../../../ui/libs/Button/index.vue'
+import { Icon as Iconify} from '@iconify/vue';
 export default {
   name: 'Clipboard',
 
   components: {
+    XtButton,
     ClipItem,
     HorzontanlPanelIcon,
     TabSwitching,
     HorizontalDrawer,
     ClipList,
     ClipSetDrawer,
-    CloseCircleFilled
+    CloseCircleFilled,
+    Iconify
   },
 
   data () {
@@ -140,7 +146,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType','tab','searchWords']),
+    ...mapWritableState(clipboardStore, ['loading','clipboardObserver', 'items', 'loadFromDb','totalRows','hasNextPage','filterType','tab','searchWords','settings']),
     // 根据剪切板列表不同状态进行数据显示
     clipContents () {
       let list = []

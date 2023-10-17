@@ -1,8 +1,16 @@
 <!-- 处理右键菜单内容 -->
 <template>
-  <Menu :menus="menuList" name="title" fn="fn" :start="menuState">
-    <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
-    <xt-button @click="rightModel = 'default'">default</xt-button> -->
+  <Menu
+    name="title"
+    fn="fn"
+    v-model:trigger="trigger"
+    :menus="menuList"
+    :model="model"
+    :start="menuState"
+    @closeMenu="close"
+  >
+    <xt-button @click="rightModel = 'follow'">follow</xt-button>
+    <xt-button @click="rightModel = 'default'">default</xt-button>
     <div @contextmenu.stop="menuVisible = true">
       <slot></slot>
     </div>
@@ -14,7 +22,7 @@
           style="border-radius: 16px"
           @click="updateCardSize(item)"
         >
-          {{ item.name }}
+          {{ item.title }}
         </div>
       </div>
     </template>
@@ -48,7 +56,6 @@
     />
     <div class="flex flex-row">
       <slot name="menuExtra"></slot>
-      <!-- 根据任务需求 抽离了底部选择区 -->
       <BottomEdit
         :menuList="menuList"
         @close="menuVisible = false"
@@ -86,32 +93,20 @@ const props = defineProps({
       return [];
     },
   },
+  //
+  event: {
+    default: null,
+  },
+  oldMenuVisible: {},
   sizeType: {},
 });
-const { menus, sizes } = toRefs(props);
+const { menus, sizes, oldMenuVisible, currentEvent, event } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
 
-const cardSize = ref(props.sizeType);
-watch(cardSize, (newV) => {
-  emits("update:sizeType", newV);
-});
-
-// 旧版菜单展示
-const menuVisible = ref(false);
-
-// 更新卡片大小
-const updateCardSize = (item) => {
-  cardSize.value = item;
-
-  emits("update:sizeType", item);
-};
-// 删除卡片
-const removeCard = () => {
-  emits("removeCard");
-};
-
+// 新版右键和点击事件切换
+const model = ref("contextmenu");
 // 是否启动跟随菜单
 const menuState = computed(() => {
   return rightModel.value == "follow" ? true : false;
@@ -134,6 +129,47 @@ const menuList = computed(() => {
     return array;
   }
   return menus.value;
+});
+
+// 卡片大小监听
+const cardSize = ref(props.sizeType);
+watch(cardSize, (newV) => {
+  emits("update:sizeType", newV);
+});
+// 旧版菜单展示
+const menuVisible = ref(false);
+const menuRef = ref();
+// 旧版右键监听
+const trigger = ref(false);
+const close = () => {
+  trigger.value = false;
+};
+watch(oldMenuVisible, (newV) => {
+  // 如果不处于主应用模式
+  if (!menuState.value) menuVisible.value = newV;
+  else if (menuState.value) {
+    trigger.value = true;
+    emits("update:oldMenuVisible", false);
+  }
+});
+watch(menuVisible, (newV) => {
+  emits("update:oldMenuVisible", newV);
+  oldMenuVisible.value = newV;
+});
+
+// 更新卡片大小
+const updateCardSize = (item) => {
+  cardSize.value = item;
+
+  emits("update:sizeType", item);
+};
+// 删除卡片
+const removeCard = () => {
+  emits("removeCard");
+};
+
+defineExpose({
+  menuVisible,
 });
 </script>
 

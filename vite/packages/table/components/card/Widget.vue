@@ -4,6 +4,7 @@
     :sizes="sizeList"
     @removeCard="doRemoveCard"
     v-model:sizeType="sizeType"
+    v-model:oldMenuVisible="menuVisible"
   >
     <div
       :class="classes"
@@ -36,7 +37,7 @@
           <div class="z-10 right-title" v-if="showRightIcon">
             <MenuOutlined
               class="pointer"
-              @click.stop="showDrawer"
+              @click="showDrawer($event)"
               @contextmenu.stop="showDrawer"
             />
             <slot name="right-menu"> </slot>
@@ -256,7 +257,7 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    showDrawer() {
+    showDrawer(e) {
       this.menuVisible = true;
     },
     // 右键删除
@@ -299,8 +300,8 @@ export default {
   position: relative;
   left: -10px;
   top: 4px;
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-  }
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
 </style>
