@@ -1,39 +1,58 @@
 <template>
     <div>
         <div class="flex justify-between">
-            <div class="flex"> 
+            <div class="flex">
                 <HorizontalPanel :navList="groupsList" v-model:selectType="groupsType"></HorizontalPanel>
                 <div>
-                    <a-select v-model:value="value" show-search placeholder="全部" style="width: 160px;height: 46px;margin-left: 12px;line-height: 46px;border-radius: 12px;" :bordered="false"
-                        :options="options"  @change="handleChange"></a-select>
+                    <a-select v-model:value="value"  style="width: 160px;height: 46px;margin-left: 12px;line-height: 46px;border-radius: 12px;"
+                        :bordered="false"  @change="handleChange">
+                        <template #placeholder>
+                            <div class="xt-text font-14">
+                                全部
+                            </div>
+                        </template>
+                        <a-select-option :value="item.tag" v-for="(item, index) in options" :key="index" style="color: var(--primary-text);" >
+                            {{ item.title }}
+                        </a-select-option>
+                    </a-select>
                 </div>
             </div>
             <div>
-                <a-input v-model:value="inputValue" placeholder="搜索" style="width: 244px; height: 46px;border-radius: 12px;">
+                <a-input v-model:value="inputValue" placeholder="搜索"
+                    style="width: 244px; height: 46px;border-radius: 12px;">
                     <template #suffix>
                         <newIcon icon="fluent:search-20-filled" style="font-size: 20px;"></newIcon>
                     </template>
                 </a-input>
             </div>
         </div>
-        <div class="mt-4">
-            <vue-custom-scrollbar :settings="settingsScroller" >
-                <GroupsItem />
+        <!-- 圈子列表 -->
+        <div style="height: 100%;">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;overflow: hidden; ">
+                <div class="flex flex-wrap mt-4">
+                    <GroupsItem v-for="index in 8" :key="index" />
+                </div>
             </vue-custom-scrollbar>
-            
         </div>
+
+        <!-- 翻页 -->
+        <div class="flex justify-center">
+            <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination"/>
+        </div>
+
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
-import {Icon as newIcon} from '@iconify/vue'
+import { Icon as newIcon } from '@iconify/vue'
 import GroupsItem from './components/GroupsItem.vue'
 const groupsList = ref([
     { title: '官方圈子', name: 'official' },
     { title: '用户圈子', name: 'user' }
 ])
+const currentPage=ref(1)
 const groupsType = { title: '官方圈子', name: 'official' }
 const settingsScroller = reactive({
   useBothWheelAxes: true,
@@ -42,5 +61,53 @@ const settingsScroller = reactive({
   suppressScrollX: true,
   wheelPropagation: true,
 });
+const inputValue = ref('')
+const options = ref([
+    {
+        title: '全部',
+        tag: 'all'
+    },
+    {
+        title: '全部',
+        tag: 'all'
+    },
+    {
+        title: '全部',
+        tag: 'all'
+    },
+])
+const handleChange = (value) => {
+    console.log(value);
+
+}
 </script>
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+:deep(.ant-input) {
+    color: var(--primary-text);
+
+    &::placeholder {
+        color: var(--primary-text);
+    }
+}
+:deep(.ant-pagination-item){
+    background: var(--primary-bg);
+    border-radius: 8px;
+    border: none;
+    width: 40px;
+    height: 40px;
+}
+:deep(.ant-pagination-prev ){
+    background: var(--primary-bg);
+    border-radius: 8px;
+    border: none;
+    width: 40px;
+    height: 40px;
+}
+:deep(.ant-pagination-next ){
+    background: var(--primary-bg);
+    border-radius: 8px;
+    border: none;
+    width: 40px;
+    height: 40px;
+}
+</style>

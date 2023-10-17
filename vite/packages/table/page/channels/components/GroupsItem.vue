@@ -1,16 +1,13 @@
 <template>
-    <div class="p-4 mr-3 rounded-lg xt-bg" style="width: 220px; height: 220px;">
+    <div class="p-4 mb-2 mr-2 rounded-lg xt-bg" style="width: 220px; height: 220px;">
         <div class="flex w-full h-[40px] items-center">
-            <a-avatar shape="square" :size="40" style="border-radius: 12px;">
-                <template #icon>
-                    <UserOutlined />
-                </template>
+            <a-avatar shape="square" :size="40" style="border-radius: 12px;" :src="groupMsg[0].logo">
             </a-avatar>
             <div class="ml-3 xt-text font-16">
                 {{ groupMsg[0].name }}
             </div>
         </div>
-        <div class="mt-3 mb-2 xt-text font-14">
+        <div class="mt-3 mb-2 xt-text font-14 limit">
             {{ groupMsg[0].title }}
         </div>
         <div class="flex justify-between">
@@ -26,8 +23,9 @@
 import { ref, reactive } from 'vue'
 const groupMsg = ref([
     {
+        logo:'	https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/e685acf36f7ca13d0a8fbe05f0b21aef.png?imageMogr2/crop/196x196/gravity/center',
         name: '用户圈子',
-        title: '一起打磨出闪闪发光的技术宝石！',
+        title: '一起打磨出闪闪发光的技术宝石其实就是闪闪发光其实就是闪闪发光其实就是闪闪发光其实就是闪闪发光！',
         memeber: 123,
         joined: '公开加入',
     }
@@ -50,5 +48,11 @@ const groupMsg = ref([
     font-family: PingFangSC-Regular;
     font-size: 12px;
     font-weight: 400;
+}
+.limit{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 </style>
