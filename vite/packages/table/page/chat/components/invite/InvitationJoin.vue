@@ -4,13 +4,13 @@
     <div class="back-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="backButton">
      <DirectlyIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
     </div>
-    <span class="category-16-400" style="color:var(--primary-text);">邀请加入</span>
+    <span class="category-16-400" style="color:var(--primary-text);">邀请加入联系人</span>
     <div class="close-button w-10 h-10 pointer rounded-lg category-button flex items-center justify-center" @click="closeButton">
      <DirectlyIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
     </div>
   </div>
 
-  <ContactSelector title="最近聊天" inviteMode="invite" :list="{teamData:recentlyChatList}" :no="no"/>
+  <ContactSelector title="最近聊天" inviteMode="invite" :list="{teamData:recentlyChatList,friendData}" :no="no"/>
 
  </div>
 </template>
@@ -46,8 +46,17 @@ export default {
     ctx.emit('close')
   }
 
+  const friendData = ref([])
+
+  onMounted(async ()=>{
+      const res = await server.tim.getFriendList()
+      // console.log('获取数据',res?.data);
+      const list = res?.data.map((item)=>{ return item.profile })
+      // console.log('过滤后的数据',list);
+      friendData.value = list
+  })
   return{
-    recentlyChatList,
+    recentlyChatList,friendData,
     backButton,closeButton,
   }
  }
