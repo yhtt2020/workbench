@@ -92,7 +92,7 @@ if (typeof window !== 'undefined') {
   window.userLanguage = userLanguage
   window.getCurrentLanguage = getCurrentLanguage
 }
-if(typeof module.exports){
+if(typeof(module) !=='undefined'){
   module.exports={
     l,userLanguage,getCurrentLanguage,init
   }
