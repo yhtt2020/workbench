@@ -21,6 +21,7 @@
             <a-table 
               :dataSource="detailList.data" 
               tableLayout='fixed'
+              :scroll="{ x: 1500 }"
               :pagination="{ pageSize: 5 }"
               :columns="detailCol" class="table-box">
               <a-table-column key="tags" title="Tags" data-index="tags">
@@ -103,13 +104,13 @@
         },
 
         // 滚动条配置 
-        settingsScroller: {  
-          useBothWheelAxes: true,
-          swipeEasing: true,
-          suppressScrollY: false,
-          suppressScrollX: true,
-          wheelPropagation: true
-        },
+        // scrollbarSettings: {  
+        //   useBothWheelAxes: true,
+        //   swipeEasing: true,
+        //   suppressScrollY: false,
+        //   suppressScrollX: true,
+        //   wheelPropagation: true
+        // },
         detailList:{
           title:"提现明细",
           // 搜索条件
@@ -224,6 +225,7 @@
           {
             title:"操作",
             key:"action",
+            fixed:'right',
             // className:'tableHidden',
             // className:this.tableStatus ? 'tableShow':'tableHidden',
             // colSpan:0
@@ -334,6 +336,20 @@
 
     .tableShow{
       display:revert;
+    }
+    /* // 滚动条 */
+    .table-box :deep(.ant-table-content){
+        flex: 1 1 0%;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar){
+        /* width: 2px; */
+        height: 5px;
+    }
+    .table-box :deep(.ant-table-content::-webkit-scrollbar-thumb){
+        background: #aaa !important;
+        border-radius: 3px;
     }
   </style>
   

@@ -26,13 +26,11 @@
       <div class="overflow-hidden">
         <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
       </div>
-      <div class="flex items-center rounded-full p-3 justify-center"
-       style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
-      >
-       <CameraOutlined style="font-size:1em;"/>
-      </div>
+    <communityIcon icon="fluent:add-16-filled" width="20" height="20" style="font-size: 1.5rem;width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--secondary-text);border-radius: 50%;" color="var(--secondary-text)"/>
     </div>
-    <SelectIcon @isIconShow="iconVisible = false" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+
+    <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+
      <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
      <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
     </div>
@@ -71,6 +69,8 @@ export default {
     return{
       //
       iconVisible:false,
+      innerHeight:100,
+
       communityName:'',
       avatarUrl:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn',
       //  传入表情选择器
@@ -97,6 +97,9 @@ export default {
 
     onShowSelect(){
       this.iconVisible= !this.iconVisible
+      // console.log(window);
+      // console.log(window.innerHeight);
+      this.innerHeight = window.innerHeight
     },
 
     closeCreateCom(){

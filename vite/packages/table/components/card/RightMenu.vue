@@ -9,8 +9,8 @@
     :start="menuState"
     @closeMenu="close"
   >
-    <xt-button @click="rightModel = 'follow'">follow</xt-button>
-    <xt-button @click="rightModel = 'default'">default</xt-button>
+    <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
+    <xt-button @click="rightModel = 'default'">default</xt-button> -->
     <div @contextmenu.stop="menuVisible = true">
       <slot></slot>
     </div>

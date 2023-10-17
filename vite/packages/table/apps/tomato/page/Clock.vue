@@ -1,9 +1,9 @@
 <template>
-  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
-        <div class="title">番茄时间</div>
+  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
+        <div class="title" @click="test">番茄时间</div>
         <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
         <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
-        <div class="icon-box">
+        <div class="icon-box" style="color: rgba(255,255,255,0.85);">
           <!-- 开始 -->
           <div class="icon" v-if="running && isPause" @click="onPause">
             <Icon icon="fluent:play-16-filled" />
@@ -86,6 +86,9 @@
       },
       desk: {
         type: Object,
+      },
+      isTop:{
+        type: Boolean,
       }
     },
     data(){
@@ -141,6 +144,9 @@
           return num
         }
       },
+      test(){
+        console.log(this.$props)
+      }
     },
   };
   </script>
@@ -196,7 +202,8 @@
     }
 
     .setting-box{
-      background: #2A2A2A;
+      // background: #2A2A2A;
+      background: var(--secondary-bg);
       border-radius: 12px;
       padding: 16px;
     }
