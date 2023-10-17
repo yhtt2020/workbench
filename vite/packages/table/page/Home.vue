@@ -91,7 +91,7 @@
         <div class="line" @click="setTransparent()">
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
-        <div class="line flex" v-if="!appSettings.transparent">
+        <div class="flex line" v-if="!appSettings.transparent">
 
         <xt-task :modelValue="m01034" to="" @cb="goPaper">
           <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
@@ -260,6 +260,8 @@ import HotSearch from '../components/widgets/HotSearch.vue'
 // import News from "../components/widgets/news/NewsCard.vue";
 import { setTransparent, detTransparent } from "../components/card/hooks/themeSwitch"
 import {taskStore} from "../apps/task/store"
+import navigationData from '../js/data/tableData'
+import { navStore } from '../store/nav'
 
 const { steamUser, steamSession, path, https, steamFs } = $models
 const { LoginSession, EAuthTokenPlatformType } = steamSession
@@ -350,7 +352,9 @@ export default {
         { name: "当前桌面设置", value: "current" }
       ],
       cardSwitch: false,
-      exportModal: false
+      exportModal: false,
+      // 在页面创建的第一次触发，后面就不触发了--替换图标
+      hasTriggered:1
     };
   },
   components: {
@@ -419,6 +423,7 @@ export default {
     HotSearch
   },
   computed: {
+    ...mapWritableState(navStore, [ 'sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
@@ -480,8 +485,16 @@ export default {
       }
     },
   },
+  beforeUpdate(){
+    if(this.hasTriggered<=10){
+      console.log('chufa')
+      this.replaceIcon()
+      this.hasTriggered++
+    }
+    
+  },
   async mounted() {
-
+    // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
@@ -683,6 +696,29 @@ export default {
     newAddIcon() {
       this.iconVisible = true
       this.menuVisible = false;
+    },
+    replaceIcon(){
+      navigationData.systemFillAppList.forEach((item) => {
+      this.sideNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemFillAppList.forEach((item) => {
+      this.rightNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
+    navigationData.systemAppList.forEach((item) => {
+      this.footNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
+    })
     },
     setTransparent() {
       console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);

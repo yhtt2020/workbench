@@ -80,8 +80,9 @@ import CommunityIndex from '../page/chat/page/communityIndex.vue'
 import ChatFind from '../page/chat/page/chatFind.vue'
 import MyCommunity from '../page/chat/page/communityDetail.vue'
 import Channel from '../page/channels/Channels.vue'
-import ChannelIndex from '../page/channels/Channels.vue'
+import ChannelIndex from '../page/channels/ChannelsIndex.vue'
 import Circle from '../page/channels/Groups.vue'
+import CircleDetail from '../page/channels/GroupsDetail.vue'
 /**聊天团队模式结束**/
 
 //导入应用路由
@@ -346,6 +347,15 @@ export default [
                   tab2:'channel'
                 },
                 component:Circle
+              },
+              {
+                path:"",
+                name:'circleDetail',
+                meta:{
+                  tab1:'community',
+                  tab2:'channel'
+                },
+                component:CircleDetail
               }
             ]
           }

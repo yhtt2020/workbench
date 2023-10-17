@@ -9,7 +9,7 @@
     <div class="flex-1 w-0  text-center">
       <slot name="center"> {{ title }}</slot>
     </div>
-    <div  >
+    <div>
       <slot name="right"></slot>
     </div>
   </div>
