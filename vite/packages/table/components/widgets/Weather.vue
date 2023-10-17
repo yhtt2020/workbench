@@ -38,7 +38,7 @@
           <a-row style="margin-top: .5em">
             <a-col :span="12" style="text-align: center">
               <div style="font-size: 1.2em; font-weight: bold">明天</div>
-              <div style="font-size: 1.2em">
+              <div style="font-size: 1.1em">
                 <i
                   style="font-size: 1.2em"
                   :class="'qi-' + defaultCity.d7.daily[1].iconDay + '-fill'"
@@ -49,7 +49,7 @@
             </a-col>
             <a-col :span="12" style="text-align: center">
               <div style="font-size: 1.2em; font-weight: bold">后天</div>
-              <div style="font-size: 1.2em">
+              <div style="font-size: 1.1em">
                 <i
                   style="font-size: 1.2em"
                   :class="'qi-' + defaultCity.d7.daily[2].iconDay + '-fill'"
