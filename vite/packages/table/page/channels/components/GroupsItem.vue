@@ -1,5 +1,6 @@
 <template>
     <div class="p-4 mb-2 mr-2 rounded-lg xt-bg" style="width: 220px; height: 220px;">
+        <!-- <div>111111111111</div> -->
         <div class="flex w-full h-[40px] items-center">
             <a-avatar shape="square" :size="40" style="border-radius: 12px;" :src="groupMsg[0].logo">
             </a-avatar>

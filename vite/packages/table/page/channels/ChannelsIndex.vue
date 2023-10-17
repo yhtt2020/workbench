@@ -24,10 +24,9 @@
                     </xt-button>
                 </div>
             </div>
-            <div style="height: 100%;">
-                <vue-custom-scrollbar ref="threadListRef" :key="current" :class="{ 'detail-visible': detailVisible }"
-                    class="w-full thread-list" :settings="settingsScroller"
-                    style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%; ">
+            <div style="height: calc(100vh - 270px);">
+                <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
+                    :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                     <div class="flex flex-col justify-center content">
                         <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
                         <!-- 循环渲染多个 ComCard -->
@@ -75,7 +74,6 @@
                                 :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
                             </ComList> -->
                         </template>
-
                     </div>
                 </vue-custom-scrollbar>
             </div>
@@ -83,7 +81,7 @@
                 <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
             </div>
         </div>
-
+        <PublishModal v-if="publishVisible" @handle-ok="publishVisible = false" />
     </div>
 </template>
 
@@ -92,6 +90,7 @@ import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import Commun from '../chat/Commun.vue';
 import ComList from '../chat/com/ComList.vue';
+import PublishModal from '../chat/com/PublishModal.vue';
 const selectList = ref([
     {
         name: '推荐',
@@ -118,6 +117,7 @@ const selectList = ref([
         type: 'video'
     }
 ])
+const publishVisible = ref(false)
 const currentPage = ref(1)
 const currentIndex = ref(0)
 const setCurrentIndex = (index, item) => {
@@ -151,9 +151,71 @@ const comCards = ref({
             reply_count: '100',
             image: [],
             image_170_170: []
-        }
+        },
+        {
+            user: {
+                nickname: '摆烂ing',
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+                ip_home: {
+                    region: '未知'
+                },
+
+
+            },
+            create_time: '2022-12-12 12:12:12',
+            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
+            title: '经历了连续的几天的服务器震荡。',
+            view_count: '100',
+            support_count: '100',
+            reply_count: '100',
+            image: [],
+            image_170_170: []
+        },
+        {
+            user: {
+                nickname: '摆烂ing',
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+                ip_home: {
+                    region: '未知'
+                },
+
+
+            },
+            create_time: '2022-12-12 12:12:12',
+            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
+            title: '经历了连续的几天的服务器震荡。',
+            view_count: '100',
+            support_count: '100',
+            reply_count: '100',
+            image: [],
+            image_170_170: []
+        },
+        {
+            user: {
+                nickname: '摆烂ing',
+                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+                ip_home: {
+                    region: '未知'
+                },
+
+
+            },
+            create_time: '2022-12-12 12:12:12',
+            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
+            title: '经历了连续的几天的服务器震荡。',
+            view_count: '100',
+            support_count: '100',
+            reply_count: '100',
+            image: [],
+            image_170_170: []
+        },
     ]
 })
+const visibleModal = () => {
+    console.log(publishVisible.value);
+
+    publishVisible.value = true
+}
 </script>
 <style lang='scss' scoped>
 .font-16 {
@@ -175,21 +237,23 @@ const comCards = ref({
     color: var(--active-text);
     border: none;
 }
-:deep(.ant-pagination-item){
+
+:deep(.ant-pagination-item) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
     width: 40px;
     height: 40px;
-    
-    & a{
+
+    & a {
         display: block;
         height: 40px;
         text-align: center;
         margin-top: 4px;
     }
 }
-:deep(.ant-pagination-prev ){
+
+:deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
@@ -197,7 +261,8 @@ const comCards = ref({
     height: 40px;
     line-height: 40px !important;
 }
-:deep(.ant-pagination-next ){
+
+:deep(.ant-pagination-next) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;

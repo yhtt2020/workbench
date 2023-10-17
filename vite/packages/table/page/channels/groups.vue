@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="h-full">
         <div class="flex justify-between">
             <div class="flex">
                 <HorizontalPanel :navList="groupsList" v-model:selectType="groupsType"></HorizontalPanel>
@@ -27,10 +27,11 @@
             </div>
         </div>
         <!-- 圈子列表 -->
-        <div style="height: 100%;">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;overflow: hidden; ">
+        <div style="height: calc(100vh - 270px)">
+            <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
+                    :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <div class="flex flex-wrap mt-4">
-                    <GroupsItem v-for="index in 8" :key="index" />
+                    <GroupsItem v-for="index in 12" :key="index" />
                 </div>
             </vue-custom-scrollbar>
         </div>
@@ -68,12 +69,12 @@ const options = ref([
         tag: 'all'
     },
     {
-        title: '全部',
-        tag: 'all'
+        title: '热门',
+        tag: 'hot'
     },
     {
-        title: '全部',
-        tag: 'all'
+        title: '精选',
+        tag: 'selected'
     },
 ])
 const handleChange = (value) => {

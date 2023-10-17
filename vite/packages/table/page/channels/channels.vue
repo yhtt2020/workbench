@@ -33,6 +33,7 @@ const leftMenu=ref([
         }
     },
     {
+        // newIcon:'fluent:full-screen-maximize-16-filled',
         full:true
     }
 ])
