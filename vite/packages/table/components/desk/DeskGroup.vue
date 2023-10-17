@@ -518,6 +518,14 @@ export default {
   },
   data() {
     return {
+      deskGroupMenu:[
+        {
+          id:9,
+            newIcon:"fluent:more-horizontal-16-filled",
+            name:"更多",
+            children:[],
+        }
+      ],
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,

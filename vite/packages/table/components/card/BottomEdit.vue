@@ -14,7 +14,7 @@ import BottomEditItem from "./BottomEditItem.vue";
 const props = defineProps({
   menuList: {},
 });
-const emits = defineProps(["close"]);
+const emits = defineEmits(["close"]);
 const close = () => {
   emits("close");
 };

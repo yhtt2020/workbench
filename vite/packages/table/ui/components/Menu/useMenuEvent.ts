@@ -1,12 +1,22 @@
 import { onMounted, onBeforeUnmount, ref } from "vue";
-const useMenuEvent = (container: any, model, start, handleCloseMenu) => {
+const useMenuEvent = (
+  container: any,
+  model,
+  start,
+  handleCloseMenu,
+  bubble
+) => {
   const show = ref(false);
   const menuX = ref(0);
   const menuY = ref(0);
 
   const setup = (e) => {
-    e.preventDefault(); // 阻止默认动作
-    e.stopPropagation(); // 阻止事件冒泡
+
+    if (!bubble.value) {
+      e.preventDefault(); // 阻止默认动作
+      e.stopPropagation(); // 阻止事件冒泡
+    }
+
     menuX.value = e.clientX;
     menuY.value = e.clientY;
     show.value = true;

@@ -120,9 +120,14 @@ const props = defineProps({
   trigger: {
     default: false,
   },
+  // 是否关闭冒泡事件
+  bubble: {
+    default: false,
+  },
 });
 
-const { model, trigger, start } = toRefs(props);
+const { model, trigger, start, bubble } = toRefs(props);
+console.log('bubble.value :>> ', bubble.value);
 const emits = defineEmits("closeMenu");
 // 菜单离开回调
 const handleCloseMenu = () => {
@@ -139,7 +144,8 @@ const { menuX, menuY, show } = useMenuEvent(
   containerRef,
   model,
   start,
-  handleCloseMenu
+  handleCloseMenu,
+  bubble
 );
 // 自定义触发事件
 
