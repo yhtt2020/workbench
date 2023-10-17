@@ -121,14 +121,9 @@ const props = defineProps({
   trigger: {
     default: false,
   },
-  // 是否关闭冒泡事件
-  bubble: {
-    default: false,
-  },
 });
 
-const { model, trigger, start, bubble } = toRefs(props);
-console.log('bubble.value :>> ', bubble.value);
+const { model, trigger, start } = toRefs(props);
 const emits = defineEmits("closeMenu");
 // 菜单离开回调
 const handleCloseMenu = () => {
@@ -145,8 +140,7 @@ const { menuX, menuY, show } = useMenuEvent(
   containerRef,
   model,
   start,
-  handleCloseMenu,
-  bubble
+  handleCloseMenu
 );
 // 自定义触发事件
 
@@ -203,10 +197,11 @@ const pos = computed(() => {
   // 菜单大小
   let menuW = w.value;
   let menuH = h.value;
+
   // x 坐标
-  posX = posX > vW - w.value ? posX - w.value : posX;
+  posX = posX > vW - menuW ? posX - menuW : posX;
   // Y 坐标
-  posY = posY > vH - h.value ? posY - vH + h.value + 10 : posY;
+  posY = posY > vH - menuH ? vH - menuH : posY;
   return {
     left: posX + "px",
     top: posY + "px",

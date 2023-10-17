@@ -25,7 +25,7 @@
         </a-result>
       </div>
     </div>
-    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='newDeskGroupMenu'  class="w-full h-full xt-theme-b">
+    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='newDeskGroupMenu'  class="w-full h-full">
     <!-- <div  style='z-index:99999px'> -->
         <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
