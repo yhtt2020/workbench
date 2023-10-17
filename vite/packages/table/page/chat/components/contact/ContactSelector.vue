@@ -22,8 +22,8 @@
          <div class="category-14-400" style="color: var(--secondary-text);">{{teamTitle}}</div>
          <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
         </div>
-
-        <div class="flex items-center h-full justify-center" v-if="teamList.length === 0">
+  
+        <div class="flex items-center h-full justify-center" v-if="teamList?.length === 0">
           <EmptyStatus />
         </div>
     
@@ -57,7 +57,7 @@
         <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
       </div>
 
-      <div class="flex items-center h-full justify-center" v-if="teamList.length === 0">
+      <div class="flex items-center h-full justify-center" v-if="teamList?.length === 0">
         <EmptyStatus />
       </div>
     
