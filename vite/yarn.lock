@@ -564,6 +564,13 @@
   resolved "https://registry.npmmirror.com/@floating-ui/utils/-/utils-0.1.1.tgz"
   integrity sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==
 
+"@iconify-icons/fluent-emoji@^1.2.10":
+  version "1.2.10"
+  resolved "https://registry.npmmirror.com/@iconify-icons/fluent-emoji/-/fluent-emoji-1.2.10.tgz#842cf06623a9d831501bc8d6b9f14d3ae0444349"
+  integrity sha512-+Ge6tWES2wOmg8VaIAK6Sg1qctw2bCoT2Xpx9Zg6Q+1Q7AY42lVxAjXdP7vHqutEwdUAu/yyjuKn0MVsaLB0QQ==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-icons/fluent@^1.2.35":
   version "1.2.36"
   resolved "https://registry.npmmirror.com/@iconify-icons/fluent/-/fluent-1.2.36.tgz#c8a79c5b3482ecc33c2ede64a1a4afe3aec226dd"
