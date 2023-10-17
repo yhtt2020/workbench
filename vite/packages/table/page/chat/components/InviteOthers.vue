@@ -78,17 +78,19 @@ export default {
  },
 
  computed:{
-  ...mapWritableState(teamStore,['team']),
+  ...mapWritableState(teamStore,['team','my']),
  },
 
  mounted(){
-  this.$nextTick(()=>{
-    this.getInviteData()
-  })
+  
+  this.updateMy(0)
+  this.getTeamMembers(this.team.no,0,0)
+  this.getTeamLeader(this.team.no,0,0)
+ 
  },
 
  methods:{
-  ...mapActions(teamStore,['getTeamLeader','getTeamMembers']),
+  ...mapActions(teamStore,['getTeamLeader','getTeamMembers','updateMy']),
   closeButton(){
    this.$emit('close')
   },
@@ -107,10 +109,6 @@ export default {
     this.inviteShow = true
   },
 
-  async getInviteData(){
-    await this.getTeamMembers(this.team.no,0,0)
-    await this.getTeamLeader(this.team.no,0,0)
-  }
 
 
 

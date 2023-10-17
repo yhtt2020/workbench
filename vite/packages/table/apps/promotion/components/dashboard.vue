@@ -68,13 +68,13 @@
             {
               title:"激活总数",
               num:600,
-              tooltip:"600",
+              tooltip:"完成主线任务第一章为激活用户",
               key:2,
             },
             {
               title:"待激活总数",
               num:693,
-              tooltip:"693",
+              tooltip:"完成主线任务第一章为激活用户",
               key:3,
             },
           ]

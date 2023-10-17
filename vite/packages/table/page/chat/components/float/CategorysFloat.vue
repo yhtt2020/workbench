@@ -249,6 +249,7 @@ export default{
     },
 
     channelList(){
+      // console.log('获取数据::>>111',this.categoryList.tree);
       const list = this.categoryList?.tree.filter((item)=>{
         return item.role !== 'category'
       })
@@ -256,6 +257,7 @@ export default{
     },
 
     categoryFilterList(){
+      // console.log('获取数据::>>222',this.categoryList.tree);
       const list = this.categoryList?.tree.filter((item)=>{
         return item.role !== 'channel'
       })
