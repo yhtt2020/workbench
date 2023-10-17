@@ -80,7 +80,6 @@ export default {
       this.refreshList()
     },
     async refreshList() {
-      console.log('刷新列表')
       this.shortcutSchemeList = await this.loadShortcutSchemes(this.exeName)
       if (this.settings.enableAutoEnter && this.shortcutSchemeList.length > 0) {
         this.btnDetail(this.shortcutSchemeList[0])
@@ -125,6 +124,7 @@ export default {
         message: '选择导入的文件',
         filters: [{name: '快捷键方案存档', extensions: ['keys']}],
         properties: [
+          'openFile',
           'createDirectory',
           'showOverwriteConfirmation',
           'multiSelections'
