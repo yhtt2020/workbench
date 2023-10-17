@@ -2,8 +2,8 @@
   <div class="flex flex-col w-full h-full pl-4">
    <div class="flex items-center">
     <HorizontalPanel :navList="communityList" v-model:selectType="communityDefault" style="height: 40px !important;"/>
-    <a-input v-if="communityDefault.name === 'community'" style="width: 244px;border-radius: 10px;background: var(--secondary-bg);" spellcheck="false" placeholder="搜索"
-     class="h-10 ml-3" @pressEnter="findSearch" @input="findSearch"
+    <a-input v-model:value="searchKeyWord" v-if="communityDefault.name === 'community'" style="width: 244px;border-radius: 10px;background: var(--secondary-bg);" spellcheck="false" placeholder="搜索"
+     class="h-10 ml-3" @pressEnter="findSearch" @input="findSearch" ref="findSearchRef"
     >
       <template #suffix>
         <SearchIcon class="pointer category-button" icon="fluent:search-20-filled" style="font-size: 1.43rem;"  @click="findSearch"/>
@@ -11,16 +11,17 @@
     </a-input>
    </div>
 
-   <CommunityFind v-if="communityDefault.name === 'community'" :dataList="searchList"/>
+   <CommunityFind v-if="communityDefault.name === 'community'" :dataList="searchList" style="width:80%;margin: 16px 0 0 15%;"/>
    <GroupsUserFind v-else/>
    
   </div>
 </template>
 
 <script>
-import { ref,reactive,watch,computed } from 'vue'
+import { mapActions,mapWritableState } from 'pinia'
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import {Icon as SearchIcon} from '@iconify/vue'
+import { communityStore } from '../store/communityStore'
 
 import GroupsUserFind from './find/groupsUserFind.vue'
 import CommunityFind from './find/communityFind.vue'
@@ -41,14 +42,28 @@ export default {
       ],
       communityDefault:{title:'社群',name:'community'},
       isListEmpty:window.$TUIKit.store.store.TUIConversation.conversationList,
-      searchList:[]
+      searchList:[],
+      searchKeyWord:''
     }
   },
 
+  mounted(){
+    this.$nextTick(()=>{
+      this.$refs.findSearchRef.focus()
+    })
+  },
+
   methods:{
+    ...mapActions(communityStore,['searchCommendCommunity']),
     // 社群发现页搜索
-    findSearch(){
-      
+    async findSearch(){
+      if(this.searchKeyWord !== ''){
+        const searchResult = await this.searchCommendCommunity(this.searchKeyWord)
+        // console.log('获取搜索结果',searchResult);
+        this.searchList = searchResult?.data?.list
+      }else{
+        this.searchList = []
+      }
     }
   },
 
