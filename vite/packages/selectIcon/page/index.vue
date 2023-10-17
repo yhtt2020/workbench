@@ -50,7 +50,7 @@
 
       <!-- 搜索结果 -->
       <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
-        <div v-for="(item,index) in searchList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+        <div v-for="(item,index) in searchIcon" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
             <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
@@ -113,6 +113,27 @@
       isCustom:Boolean,
       customTitle:String,
       windowHeight:Number,
+    },
+          
+    computed:{
+      searchIcon(){
+        let tmpList = []
+        if (this.selIndex == 1) {
+          this.emojisList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }else if(this.selIndex == 2){
+          this.iconList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }
+        this.searchList = tmpList
+        return this.searchList
+      },
     },
     data() {
       return { 
@@ -209,25 +230,6 @@
         this.$emit('getAvatar',this.avatarUrl)
         
         this.$emit('isIconShow')
-      },
-
-      // 搜索
-      searchIcon(){
-        let tmpList = []
-        if (this.selIndex == 1) {
-          this.emojisList.forEach((value, index)=>{
-            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
-              tmpList.push(value)
-            }
-          })
-        }else if(this.selIndex == 2){
-          this.iconList.forEach((value, index)=>{
-            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
-              tmpList.push(value)
-            }
-          })
-        }
-        this.searchList = tmpList
       },
 
     },
