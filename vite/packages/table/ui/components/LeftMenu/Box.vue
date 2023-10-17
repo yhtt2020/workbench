@@ -2,7 +2,7 @@
   <!-- 统一选择模板 -->
   <div
     class="xt-base-btn"
-    :class="{ active: activeState }"
+    :class="[{ active: activeState }, boxClass]"
     style="width: 50px; height: 50px; border-radius: 14px"
   >
     <slot></slot>
@@ -22,6 +22,7 @@ const props = defineProps({
   model: {
     default: "router",
   },
+  boxClass: {},
 });
 
 const tabParams = ref({});

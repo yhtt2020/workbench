@@ -47,6 +47,15 @@
     },
     data(){
       return {
+
+        // 滚动条配置 
+        settingsScroller: {  
+          useBothWheelAxes: true,
+          swipeEasing: true,
+          suppressScrollY: false,
+          suppressScrollX: true,
+          wheelPropagation: true
+        },
         inviteList:{
           title:"邀请数据",
           data:[

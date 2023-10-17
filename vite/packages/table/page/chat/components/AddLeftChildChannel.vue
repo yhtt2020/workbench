@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="nextShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
+   <span class="font-16-400" style="color:var(--primary-text);">添加新应用</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <!-- <CloseOutlined  style="font-size: 1.25em;"/> -->
     <ChannelIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>

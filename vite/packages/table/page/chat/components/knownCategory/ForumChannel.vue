@@ -97,10 +97,10 @@ methods:{
 
  async createForumChannel(evt){
   if(this.selectIndex !== -1 && this.selectForumItem !== ''){
-   const option = { type:'forum', id:this.id,  no:this.no,content:this.selectForumItem }
-  //  console.log('查看参数',option)
+   const option = { type:'forum', id:this.id,  no:this.no,content:{name:this.selectForumItem.name,props:this.selectForumItem} }
+   //  console.log('查看参数',option)
    const res = await  channelClass.secondaryChannel(option)
-  //  console.log('查看状态',res)
+   //  console.log('查看状态',res)
    if(res?.status === 1){
     message.success(`${res.info}`)
     this.getChannelList(this.no)

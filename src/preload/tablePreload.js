@@ -1,4 +1,3 @@
-const messageModel = require('../model/messageModel')
 const api = require('../browserApi/baseApi')
 window.tsbApi = require('../browserApi/baseApi')
 window.tableApi = require('../tableApi/baseApi')
@@ -12,12 +11,14 @@ ipc.on('updateMusicStatus', (e, a) => {
 window.loudness = require('loudness')
 window.iconv = require('iconv-lite')
 window.brightness = require('brightness')
-window.readAida64 = require('aida64-to-json')
+if(process.platform==='win32'){
+  window.readAida64 = require('aida64-to-json')
+}
+
 window.fs = require('fs-extra')
 const StorageModel=require('../model/storageModel')
 window.$models = {
   appModel: require('../model/appModel'),
-  messageModel,
   axios: require('axios'),
   nanoid:require('nanoid'),
   fs:require('fs-extra'),
@@ -31,7 +32,6 @@ window.$models = {
   electron:require('electron'),
   osUtils:require('node-os-utils'),
   win32:require('hmc-win32')
-  // hid:require('node-hid')
 }
 window.$models.appModel.initDb()
 // const win32=require('hmc-win32')

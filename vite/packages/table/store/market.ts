@@ -43,7 +43,6 @@ export const marketStore = defineStore('marketStore', {
         let recommendList=[]
         result?.forEach(item=>{
           return item.children.forEach(ch=>{
-            console.log(ch)
             ch.goods.forEach(good=>{
               recommendList.push(good.good)
             })

@@ -47,7 +47,6 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      console.log(' this.state  :>> ',  this.state );
       return this.state ? true : null;
     },
     currentStep() {
@@ -69,7 +68,6 @@ export default defineComponent({
   watch: {
     modelValue: {
       handler(newV) {
-        console.log("newV :>> ", newV);
         this.$nextTick(() => {
           if (newV) {
             this.start();

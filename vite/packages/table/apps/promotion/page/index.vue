@@ -105,7 +105,7 @@
             peopleCommunity16Regular,
             money16Regular,
           },
-          settingsScroller: {
+          scrollbarSettings: {
             useBothWheelAxes: true,
             swipeEasing: true,
             suppressScrollY: false,

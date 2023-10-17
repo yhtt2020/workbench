@@ -25,11 +25,11 @@ import Toast, {PluginOptions} from 'vue-toastification'
 import "vue-toastification/dist/index.css";
 // 注册基础组件
 // import  baseComponents from "./components/card/libs/index"
-import baseComponents from "./ui/libs/index"
+// import baseComponents from "./ui/libs/index"
 // 注册业务组件
 // import components from "./components/card/components/index"
-import components from "./ui/components/index"
-
+// import components from "./ui/components/index.js"
+import registerXTUI from "./ui/index"
 // 注册任务引导
 import VueShepherdPlugin from 'vue-shepherd';
 import 'shepherd.js/dist/css/shepherd.css';
@@ -56,6 +56,7 @@ import "../../public/css/styleSwitch/index.scss"
 import "../../public/css/styleSwitch/codemirror.scss"
 import "../../public/css/styleSwitch/toast.scss"
 import "../../public/css/styleSwitch/category.scss"
+import '../../public/css/styleSwitch/font.scss'
 import {router} from './router'
 import routerTab from "./js/common/routerTab";
 
@@ -91,7 +92,7 @@ pinia.use(piniaPersist)
 // @ts-ignore
 window.$ = $
 const options: PluginOptions = {}
-const $app = app.use(pinia).use(Antd).use(baseComponents).use(components).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar, {}).use(
+const $app = app.use(pinia).use(Antd).use(ColorPicker).use(router).use(VueViewer).use(setupCalendar, {}).use(
   VueTippy,
   // optional
   {
@@ -105,6 +106,7 @@ const $app = app.use(pinia).use(Antd).use(baseComponents).use(components).use(Co
     }, // => Global default options * see all props
   }
 ).use(Toast, options).use(TUIKit).use(WujieVue).use(VueShepherdPlugin).mount('#app')
+registerXTUI(app)
 
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)

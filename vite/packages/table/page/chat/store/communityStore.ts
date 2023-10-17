@@ -139,6 +139,11 @@ export const communityStore = defineStore('communityStore',{
    async updateChannel(data:any){
      return  await  post(sUrl("/app/community/channel/updateProfile"),data)
    },
+
+   // 替换数组
+   updateCategoryClass(val:any){
+    this.categoryClass = val
+   },
  
 
    // 删除社群频道

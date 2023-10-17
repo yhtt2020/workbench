@@ -14,7 +14,7 @@
 
 
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
-      <div class="px-4 mb-0 line-title">
+      <div class="px-4 mb-0 line-title flex items-center">
         <span style="vertical-align: text-top">
           <template v-if="currentChannel.type === 'group'">
            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
@@ -33,7 +33,7 @@
         <ValidateModal :data="group"></ValidateModal>
       </div>
 
-      <div style="height: 0;flex:1" v-else>
+      <div style="height: 0;flex:1;position:relative;" v-else>
         <template v-if="!currentChannel.name && channelList.length>0">
           <div class="flex flex-col items-center justify-center h-full">
             <div style="width:64px;height:64px;" class="rounded-full mb-6">
@@ -55,14 +55,19 @@
         <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id"/>
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
-          <div v-if="currentChannel.name !== 'Roadmap'" style="text-align: center;margin-top: 30%">
+          <div v-if="currentChannel.name !== 'Roadmap' && currentChannel.props.openMethod !== 'currentPage'" class="flex items-center justify-center" style="text-align: center;margin-top: 30%">
 
-            当前频道需要浏览器打开。
+            <span class="category-16-400" style="color:var(--primary-text);">当前频道需要浏览器打开。</span>
+            <communityIcon icon="fluent:open-20-filled"  style="font-size: 24px"/>
           </div>
 
-          <iframe v-else :src="JSON.parse(currentChannel.props).url" class="m-2"
-                  style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
+          <iframe ref="iframe" v-else :src="currentChannel.props.url"  class="m-2"  sandbox="allow-same-origin allow-forms allow-scripts"
+          style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)">
 
+          </iframe>
+          <div  style="position: absolute;top: -40px;right: 0px">
+            <xt-button @click="openLink(currentChannel.props.url)" :w="120" :h="40">浏览器打开</xt-button>
+          </div>
         </template>
 
         <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
@@ -109,13 +114,13 @@ import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
-import CreateNewChannel from '../components/CreateNewChannel.vue'
+import CreateNewChannel from '../components/CreateNewChannels.vue'
 import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
-import CategoryFloat from '../components/float/CategoryFloat.vue'
+import CategoryFloat from '../components/float/CategorysFloat.vue'
 import Commun from '../Commun.vue'
-import InviteOther from '../components/InviteOther.vue'
+import InviteOther from '../components/InviteOthers.vue'
 
 export default {
   components:{
@@ -168,11 +173,11 @@ export default {
      if (item.type === 'link' && item.name !== 'Roadmap') {
       const data = JSON.parse(item.props)
       // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
-      // console.log('转换的数据',data)  
+      // console.log('转换的数据',data)
       switch (data.openMethod) {
-        case 'currentPage':
-          
-          break;
+        // case 'currentPage':
+        //   browser.openInTable(data.url)
+        //   break;
         case 'userSelect':
           browser.openInUserSelect(data.url)
           break;
@@ -223,6 +228,10 @@ export default {
     clickEmptyButton(item){
       this.type = item.type
       this.addShow = true
+    },
+    openLink(url){
+      browser.openInSystem(url)
+     // browser.openInSystem(this.$refs.iframe.contentWindow.location.href) 此次方法跨域
     }
   },
 

@@ -178,21 +178,21 @@ export default {
       desktopApps: [],
       dropFiles: [],
       storeApps: [
-        {
-          icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
-          name: 'AI助手',
-          summary: 'AI助手',
-          needInstall: false,
-          data: {
-            fullScreen: false,
-            theme: '#030c13',
-            name: 'ai',
-            type: 'system',
-            route: JSON.stringify({
-              name: 'ai',
-            })
-          }
-        },
+        // {
+        //   icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
+        //   name: 'AI助手',
+        //   summary: 'AI助手',
+        //   needInstall: false,
+        //   data: {
+        //     fullScreen: false,
+        //     theme: '#030c13',
+        //     name: 'ai',
+        //     type: 'system',
+        //     route: JSON.stringify({
+        //       name: 'ai',
+        //     })
+        //   }
+        // },
         {
           icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
           name: '网页数据监控小助手',
@@ -208,19 +208,19 @@ export default {
             })
           }
         },
-        {
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: 'Mlappy Bird',
-          summary: '和小伙伴们一起飞。',
-          needInstall: false,
-          data: {
-            theme: '#030c13',
-            name: 'mlappyBird',
-            url: 'http://bird.apps.vip/?',
-            background: false,
-            type: 'game'
-          }
-        },
+        // {
+        //   icon: 'http://a.apps.vip/icons/flappy.jpg',
+        //   name: 'Mlappy Bird',
+        //   summary: '和小伙伴们一起飞。',
+        //   needInstall: false,
+        //   data: {
+        //     theme: '#030c13',
+        //     name: 'mlappyBird',
+        //     url: 'http://bird.apps.vip/?',
+        //     background: false,
+        //     type: 'game'
+        //   }
+        // },
         {
           icon: 'https://a.apps.vip/icons/weather.png',
           name: '浏览器',
@@ -253,7 +253,7 @@ export default {
         },
         {
           icon: '/img/game.png',
-          name: '游戏小助手（正在开发中）',
+          name: '游戏小助手',
           summary: '',
           needInstall: false,
           data: {
@@ -458,36 +458,36 @@ export default {
             security: true
           }
         },
-        {
-          icon: '/img/game.png',
-          name: '剪切板（正在开发中）',
-          summary: '',
-          needInstall: false,
-          data: {
-            fullScreen: false,
-            theme: '#030c13',
-            name: 'clipboard',
-            type: 'system',//网页助手
-            route: JSON.stringify({
-              name: 'clipboard',
-            })
-          }
-        },
-        {
-          icon: 'http://a.apps.vip/icons/flappy.jpg',
-          name: '快捷键 （开发中）',
-          summary: '',
-          needInstall: false,
-          data: {
-            fullScreen: false,
-            theme: '#030c13',
-            name: 'shortcutKey',
-            type: 'system',//网页助手
-            route: JSON.stringify({
-              name: 'shortcutKey',
-            })
-          }
-        },
+        // {
+        //   icon: '/img/game.png',
+        //   name: '剪切板（正在开发中）',
+        //   summary: '',
+        //   needInstall: false,
+        //   data: {
+        //     fullScreen: false,
+        //     theme: '#030c13',
+        //     name: 'clipboard',
+        //     type: 'system',//网页助手
+        //     route: JSON.stringify({
+        //       name: 'clipboard',
+        //     })
+        //   }
+        // },
+        // {
+        //   icon: 'http://a.apps.vip/icons/flappy.jpg',
+        //   name: '快捷键 （开发中）',
+        //   summary: '',
+        //   needInstall: false,
+        //   data: {
+        //     fullScreen: false,
+        //     theme: '#030c13',
+        //     name: 'shortcutKey',
+        //     type: 'system',//网页助手
+        //     route: JSON.stringify({
+        //       name: 'shortcutKey',
+        //     })
+        //   }
+        // },
       ]
     }
   },

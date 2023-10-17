@@ -6,8 +6,8 @@
         </div>
         <div class="guider-body">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index">
-                <div class="cell-icon">
-                    <Icon :icon="item.iconUrl" />
+                <div class="cell-icon flex items-center">
+                    <Icon :icon="item.icon"  width="20" height="20" />
                 </div>
                 <span style="margin-left: 10px;">{{ item.title }}</span>
             </div>
@@ -19,11 +19,10 @@
 </template>
   
 <script>
-import axios from "axios";
 import Widget from "../../../card/Widget.vue";     
+// import {mapActions, mapState,mapWritableState} from "pinia";
+// import { shortTalkStore } from '../store'
 import { Icon } from '@iconify/vue';
-import {mapActions, mapState,mapWritableState} from "pinia";
-import { shortTalkStore } from '../store'
 export default {
     components:{
         Widget,
@@ -63,27 +62,27 @@ export default {
             dataList:[
                 {
                     title:"短说社区客服",
-                    iconUrl:"akar-icons:chat-question"
+                    icon:'fluent-emoji-flat:globe-with-meridians',
                 },
                 {
                     title:"短说通用版V4版本使用手册sdadsad",
-                    iconUrl:"akar-icons:chat-question"
+                    icon:'fluent-emoji-flat:thought-balloon',
                 },
                 {
                     title:"短说PC版V2版本使用手册",
-                    iconUrl:"akar-icons:chat-question"
+                    icon:'fluent-emoji-flat:thought-balloon',
                 },
                 {
                     title:"短说企业版差异部分手册",
-                    iconUrl:"akar-icons:chat-question"
+                    icon:'fluent-emoji-flat:thought-balloon',
                 },
                 {
-                    title:"断手二次开发技术文档",
-                    iconUrl:"akar-icons:chat-question"
+                    title:"短说二次开发技术文档",
+                    icon:'fluent-emoji-flat:thought-balloon',
                 },
                 {
                     title:"短说企业文化社区解决方案",
-                    iconUrl:"akar-icons:chat-question"
+                    icon:'fluent-emoji-flat:thought-balloon',
                 },
             ]
         };
@@ -123,19 +122,7 @@ export default {
         display: flex;
         padding: 0 14px;
     }
-    
-    .guider-cell .cell-icon{
-        // margin-left: 14px;
-        position: relative;
-        top: 3px;
-    }
-    
-
-    .guider-cell .cell-icon svg{
-        width: 16px;
-        height: 16px;
-    }
-
+  
     .guider-cell span{
         margin-left: 10px;
         overflow: hidden;

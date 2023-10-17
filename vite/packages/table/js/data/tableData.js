@@ -12,21 +12,21 @@ export default {
     { name: 'lightApp', cname: '轻应用' },
   ],
   coolAppList: [
-    {
-      icon: 'http://a.apps.vip/icons/flappy.jpg',
-      type: 'coolApp',
-      name: 'Mlappy Bird',
-      summary: '和小伙伴们一起飞。',
-      needInstall: false,
-      data: {
-        theme: '#030c13',
-        name: 'mlappyBird',
-        url: 'http://bird.apps.vip/?',
-        background: false,
-        type: 'game',
-        scale: 160
-      }
-    },
+    // {
+    //   icon: 'http://a.apps.vip/icons/flappy.jpg',
+    //   type: 'coolApp',
+    //   name: 'Mlappy Bird',
+    //   summary: '和小伙伴们一起飞。',
+    //   needInstall: false,
+    //   data: {
+    //     theme: '#030c13',
+    //     name: 'mlappyBird',
+    //     url: 'http://bird.apps.vip/?',
+    //     background: false,
+    //     type: 'game',
+    //     scale: 160
+    //   }
+    // },
     {
       icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
       name: '网页数据监控小助手',
@@ -68,7 +68,8 @@ export default {
         node: true,
         security: false
       }
-    }, {
+    },
+    {
       icon: 'https://a.apps.vip/icons/kook.png',
       name: 'Kook',
       type: 'coolApp',
@@ -260,6 +261,13 @@ export default {
     },
     {
       type: 'systemApp',
+      icon: 'fluent:document-bullet-list-multiple-24-regular',
+      name: '办公',
+      tab:'work',
+      event: 'work',
+    },
+    {
+      type: 'systemApp',
       icon: 'fluent:building-shop-16-regular',
       name: '创意市场',
       event: 'market',
@@ -272,6 +280,13 @@ export default {
       name: '主页',
       event: 'home',
       tab:'home'
+    },
+    {
+      type: 'systemApp',
+      icon: 'fluent:document-bullet-list-multiple-24-regular',
+      name: '办公',
+      tab:'work',
+      event: 'work',
     },
     {
       'type': 'systemApp',

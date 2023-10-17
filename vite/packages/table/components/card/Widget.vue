@@ -1,110 +1,119 @@
 <template>
-  <div @contextmenu.stop="showDrawer" :class="classes"
-       style=" color: var(--primary-text)"
-       :style="{
-      display: options.hide == true ? 'none' : '',
-      width: customSize.width,
-      height: customSize.height,
-      background: options.background || 'var( --primary-bg)'
-    }" @mouseleave="onMouseOut" @mouseenter="onMouseOver">
-
-    <!--标题栏start-->
-    <slot name="cardTitle">
-      <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex items-center justify-between">
-        <div class="left-title" v-if="options.noTitle !== true">
-          <slot name="left-title"></slot>
-          <Icon :icon="options.icon" class="title-icon"></Icon>
-          <div class="w-2/3 flex">{{ options.title }}
-            <slot name="left-title" v-if="options.rightIcon">
-              <div class="right-icon">
-                <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
-              </div>
-            </slot>
+  <RightMenu
+    :menus="menus"
+    :sizes="sizeList"
+    @removeCard="doRemoveCard"
+    v-model:sizeType="sizeType"
+    v-model:oldMenuVisible="menuVisible"
+  >
+    <div
+      :class="classes"
+      style="color: var(--primary-text)"
+      :style="{
+        display: options.hide == true ? 'none' : '',
+        width: customSize.width,
+        height: customSize.height,
+        background: options.background || 'var( --primary-bg)',
+      }"
+    >
+      <!--标题栏start-->
+      <slot name="cardTitle">
+        <div
+          :class="options.noTitle === true ? 'no-title' : 'content-title'"
+          class="flex items-center justify-between"
+        >
+          <div class="left-title" v-if="options.noTitle !== true">
+            <slot name="left-title"></slot>
+            <Icon :icon="options.icon" class="title-icon"></Icon>
+            <div class="w-2/3 flex">
+              {{ options.title }}
+              <slot name="left-title" v-if="options.rightIcon">
+                <div class="right-icon">
+                  <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
+                </div>
+              </slot>
+            </div>
+          </div>
+          <div class="z-10 right-title" v-if="showRightIcon">
+            <MenuOutlined
+              class="pointer"
+              @click="showDrawer($event)"
+              @contextmenu.stop="showDrawer"
+            />
+            <slot name="right-menu"> </slot>
           </div>
         </div>
-        <div class="z-10 right-title "  v-if="showRightIcon">
+      </slot>
+      <!-- 标题栏end   -->
+      <!--  主体内容插槽start  -->
+      <WebState v-if="env[$currentEnv]"></WebState>
+      <slot v-else :customIndex="customIndex"></slot>
+      <!--  主题内容插槽end  -->
+    </div>
 
-          <MenuOutlined class="pointer"  @click.stop="showDrawer" @contextmenu.stop="showDrawer"></MenuOutlined>
-          <slot name="right-menu">
-          </slot>
-        </div>
-      </div>
-    </slot>
-    <!-- 标题栏end   -->
-    <!--  主体内容插槽start  -->
-    <slot :customIndex="customIndex"></slot>
-    <!--  主题内容插槽end  -->
-  </div>
-  <!-- 右上角抽屉菜单start -->
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" height="auto" class="drawer"
-            :closable="true" placement="bottom" v-model:visible="menuVisible" @close="onClose">
-    <div class="flex flex-row items-center mb-3 ml-4" v-if="sizeList && sizeList.length > 0">
-      <div class="mr-4">小组件尺寸</div>
-      <HorizontalPanel :navList="sizeList" v-model:selectType="sizeType" bgColor="drawer-item-select-bg">
-      </HorizontalPanel>
-    </div>
-    <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)" class="my-8 ml-4 mr-4"
-        v-if="sizeList && sizeList.length > 0"/>
-    <div class="flex flex-row">
-    <!-- 根据任务需求 抽离了底部选择区 -->
-    <BottomEdit :menuList="menuList" @close="menuVisible = false"/>
+    <!-- 右上角抽屉菜单扩展 start  -->
+    <template #menuExtra>
       <slot name="menuExtra"></slot>
-      <div class="w-24 h-24 ml-4 option" @click="doRemoveCard">
-        <Icon class="icon" icon="guanbi2"></Icon>
-        删除
-      </div>
-      <!--      <div class="w-24 h-24 ml-4 option" @click="onCopy"-->
-      <!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
-      <!--        <Icon class="icon" icon="fuzhi"></Icon>-->
-      <!--        复制数据-->
-      <!--      </div>-->
-    </div>
-  </a-drawer>
-  <!-- 右上角抽屉菜单end -->
+    </template>
+    <!-- 右上角抽屉扩展 end -->
+  </RightMenu>
+
+  <div></div>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
-  <slot name="extra">
-  </slot>
+  <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
 </template>
 
 <script lang="ts">
-import {mapActions, mapWritableState} from "pinia";
-import {cardStore} from "../../store/card";
-import HorizontalPanel from "../HorizontalPanel.vue";
-import {MenuOutlined} from '@ant-design/icons-vue'
+import { mapActions, mapWritableState } from "pinia";
+import { cardStore } from "../../store/card";
+import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
-import {PropType} from "vue";
-import {Icon as MyIcon} from '@iconify/vue';
-import BottomEdit from "./BottomEdit.vue";
-import XtButton from "../../ui/libs/Button/index.vue";
+import { PropType } from "vue";
+import { Icon as MyIcon } from "@iconify/vue";
 import Template from "../../../user/pages/Template.vue";
+
+import RightMenu from "./RightMenu.vue";
+import WebState from "./WebState.vue";
 //组件选项
 declare interface IOption {
   //类型，字符串
-  type: string,
+  type: string;
   //是否显示卡片标题
-  noTitle: boolean,
+  noTitle: boolean;
   // 是否隐藏组件
-  hide?: boolean,
+  hide?: boolean;
   // 删除前置任务
-  beforeDelete?: boolean
+  beforeDelete?: boolean;
+  // web端屏蔽
+  web?: boolean;
+  // 标题
+  title?: string;
+  // 图标
+  icon?: string;
+  rightIcon?: string;
+  // 背景色
+  background?: string;
 }
 
 //菜单项
 declare interface IMenuItem {
   //标题
-  title: string,
+  title: string;
   //函数
-  fn: () => void,
+  fn: () => void;
   //图标
-  icon: string,
+  icon: string;
 }
 
 export default {
-  components: {Template, XtButton, HorizontalPanel,BottomEdit,MenuOutlined,MyIcon},
-
+  components: {
+    Template,
+    MenuOutlined,
+    MyIcon,
+    RightMenu,
+  },
   name: "Widget",
-
   props: {
     //卡片尺寸，这个属性优先级高于下方的sizeList
     size: {
@@ -142,17 +151,26 @@ export default {
     //组件自定义数据，每个卡片独立，并存入桌面数据当中
     customData: {
       type: Object,
-      default: () => {
-      },
+      default: () => {},
     },
     desk: {
       type: Object,
-      required: true
+      required: true,
     },
     //是否显示右上角的图标
     showRightIcon: {
       type: Boolean,
-      default: true
+      default: true,
+    },
+    env: {
+      type: Object,
+      default: () => {
+        return {
+          web: false,
+          mobile: false,
+          client: false,
+        };
+      },
     },
   },
   data() {
@@ -160,7 +178,16 @@ export default {
       //右上角抽屉菜单可见与否的控制
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
-      sizeType: {title: "", height: undefined, width: undefined, name: ""},
+      sizeType: { title: "", height: undefined, width: undefined, name: "" },
+      menus: [
+        ...this.menuList,
+        {
+          icon: "guanbi2",
+          fn: this.doRemoveCard,
+          title: "删除",
+          color: "#FF4D4F",
+        },
+      ],
     };
   },
   computed: {
@@ -226,9 +253,7 @@ export default {
         // console.log(this.$parent.$attrs.onCustomEvent)
       }
     } else {
-
     }
-
   },
 
   watch: {
@@ -236,8 +261,8 @@ export default {
       handler() {
         this.updateCustomData(
           this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex,
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
@@ -247,26 +272,22 @@ export default {
       },
     },
     size: {
-      handler(newVal) {
-      }
-    }
+      handler(newVal) {},
+    },
   },
 
   methods: {
-    ...mapActions(cardStore, [
-      "removeCard",
-      "updateCustomData",
-    ]),
-    showDrawer() {
+    ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
+    showDrawer(e) {
       this.menuVisible = true;
     },
+    // 右键删除
     doRemoveCard() {
-      // undefined null false
-      this.options.beforeDelete && this.$emit('delete')
+      this.options.beforeDelete && this.$emit("delete");
       this.removeCard(
         this.$parent.customIndex ||
-        this.$parent.$parent.customIndex ||
-        this.$parent.$attrs.customIndex,
+          this.$parent.$parent.customIndex ||
+          this.$parent.$attrs.customIndex,
         this.desk
       );
       this.menuVisible = false;
@@ -277,30 +298,31 @@ export default {
     onClose() {
       this.menuVisible = false;
     },
-    hideMenu(){
-      this.menuVisible=false
-    }
+    hideMenu() {
+      this.menuVisible = false;
+    },
   },
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .no-frame {
   background: none !important;
-  .no-title{
+  .no-title {
     position: absolute;
-    right: 20px;top: 10px;
+    right: 20px;
+    top: 10px;
     z-index: 99;
   }
   position: relative;
 }
 
-
-  .cardTitle .right-icon svg{
-    position: relative;
-    left: -10px;
-    top: 3px;
-      width: 20px;
-      height: 20px;
-  }
+.right-icon svg {
+  position: relative;
+  left: -10px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
 </style>

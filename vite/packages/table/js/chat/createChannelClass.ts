@@ -27,39 +27,13 @@ export const channelClass = {
    return await community.createChannel(linkOption)
   }
 
-  if(data.type === 'group' && data?.content){  // 创建群聊频道
-    if(data?.content.length > 1){
-      console.log('多个',data.content);
-      for(let i=0; i<data.content.length;i++){
-        // const chatOption = {
-        //   ...option,
-        //   props:{groupID:data.content[i].groupID,name:data.content[i].name,avatar:data.content[i].avatar},
-        // }
-        // console.log('提交参数',chatOption);
-
-        const res  = await community.createChannel( {
-          ...option,
-          props:JSON.stringify({groupID:data.content[i].groupID,avatar:data.content[i].avatar}),
-          name:data.content[i].name
-        })
-
-        return res
-        
-      }
-
-
-    }else{
-      console.log('单个',data.content[0]);
-
-      const res  = await community.createChannel( {
-        ...option,
-        props:JSON.stringify({groupID:data.content[0].groupID,avatar:data.content[0].avatar}),
-        name:data.content[0].name
-      })
-
-      return res
-    }
-   
+  if(data.type === 'group' ){  // 创建群聊频道
+    const res  = await community.createChannel( {
+      ...option,
+      name:data?.content.name,
+      props:JSON.stringify(data?.content.props)
+    })
+    return res
     
   }
 

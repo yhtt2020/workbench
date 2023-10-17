@@ -86,6 +86,14 @@ export default defineComponent({
           }
         },
         {
+          title:'番茄钟',
+          name:'tomato',
+          icon:'naozhong',
+          route:{
+            name:'tomato'
+          }
+        },
+        {
           title:'便签(开发)',
           name:'note',
           icon:'check-square',

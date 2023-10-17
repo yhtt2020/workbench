@@ -23,13 +23,13 @@
       <XtIcon icon="tianjia2" @click="addModelVisible = true"></XtIcon>
     </div>
   </div>
-  <XtPopup
+  <!-- <XtPopup
     v-if="addModelVisible"
     @close="addModelVisible = false"
     title="新建模板"
   >
     <edit></edit>
-  </XtPopup>
+  </XtPopup> -->
 </template>
 <script>
 import edit from "./edit.vue";
