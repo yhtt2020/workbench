@@ -541,7 +541,6 @@ export default {
 
       arr.sort((a, b) => a.id - b.id);
 
-      console.log('arr :>> ', arr);
       let deskGroupMenu = [...this.deskGroupMenu]
       deskGroupMenu[1].children = arr
   return deskGroupMenu;
