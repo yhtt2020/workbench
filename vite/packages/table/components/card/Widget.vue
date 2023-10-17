@@ -75,6 +75,7 @@ import Template from "../../../user/pages/Template.vue";
 
 import RightMenu from "./RightMenu.vue";
 import WebState from "./WebState.vue";
+
 //组件选项
 declare interface IOption {
   //类型，字符串
@@ -104,6 +105,8 @@ declare interface IMenuItem {
   fn: () => void;
   //图标
   icon: string;
+  // 新图标
+  newIcon?: string;
 }
 
 export default {
