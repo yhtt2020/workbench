@@ -1,4 +1,4 @@
-import { notification } from "ant-design-vue/lib/components";
+import { notification } from "ant-design-vue";
 import {appStore} from "../../store";
 
 export async function toggleFullScreen() {
