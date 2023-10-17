@@ -15,6 +15,8 @@
         height: customSize.height,
         background: options.background || 'var( --primary-bg)',
       }"
+      @mouseleave="isOnCard = false"
+      @mouseover="isOnCard = true"
     >
       <!--标题栏start-->
       <slot name="cardTitle">
@@ -65,16 +67,19 @@
 </template>
 
 <script lang="ts">
-import { mapActions, mapWritableState } from "pinia";
-import { cardStore } from "../../store/card";
-import { MenuOutlined } from "@ant-design/icons-vue";
-import _ from "lodash-es";
 import { PropType } from "vue";
+import { mapActions, mapWritableState } from "pinia";
+import { MenuOutlined } from "@ant-design/icons-vue";
 import { Icon as MyIcon } from "@iconify/vue";
-import Template from "../../../user/pages/Template.vue";
+import _ from "lodash-es";
 
+import { cardStore } from "../../store/card";
+import { useWidgetStore } from "./store.ts";
+
+import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import WebState from "./WebState.vue";
+
 //组件选项
 declare interface IOption {
   //类型，字符串
@@ -104,6 +109,8 @@ declare interface IMenuItem {
   fn: () => void;
   //图标
   icon: string;
+  // 新图标
+  newIcon?: string;
 }
 
 export default {
@@ -192,6 +199,8 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ["customComponents"]),
+    ...mapWritableState(useWidgetStore, ["isOnCard"]),
+
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },

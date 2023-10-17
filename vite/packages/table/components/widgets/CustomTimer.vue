@@ -8,7 +8,7 @@
 
 
       <a-row class="festival mt-4 s-item xt-bg-2 xt-text" style="border-radius: 12px;height: 60px;">
-        <a-col :span="12" class="flex flex-row items-center pl-2 py-2" >
+        <a-col :span="11" class="flex flex-row items-center pl-2 py-2" >
           <a-row>
             <a-col :span="4" class="flex pt-4">
               <div class="round-dot "></div>
@@ -21,7 +21,7 @@
             </a-col>
           </a-row>
         </a-col>
-        <a-col :span="12" class="flex flex-row items-center justify-end pr-2 pt-4" >12月30日~1月1日</a-col>
+        <a-col :span="13" class="flex  flex-row items-center justify-end pr-2 pt-4" >12月30日~1月1日</a-col>
       </a-row>
 <!--      <a-row class="festival mt-2 " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
 <!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->

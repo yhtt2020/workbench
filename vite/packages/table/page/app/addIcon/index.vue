@@ -46,7 +46,7 @@
       >
         <template v-for="(v, k) of selectApps">
           <div v-for="item in selectApps[k]">
-            <img :src="item.icon" class="w-12 h-12 rounded-xl mr-3" alt="" />
+            <img :src="renderIcon(item.icon)" class="w-12 h-12 rounded-xl mr-3" alt="" />
           </div>
         </template>
       </div>
@@ -79,7 +79,7 @@ import { scrollable } from "./hooks/scrollable";
 import { mapActions, mapWritableState } from "pinia";
 import { useBase64AsImage } from "../../../../table/components/card/hooks/base64";
 import { taskStore } from "../../../apps/task/store";
-
+import {renderIcon} from '../../../js/common/common'
 export default {
   emits: ["update:navName"],
   props: {
@@ -208,6 +208,7 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["addCard"]),
+    renderIcon,
     updateData(data) {
       this.selectApps = data;
     },

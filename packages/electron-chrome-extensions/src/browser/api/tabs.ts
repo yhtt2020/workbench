@@ -1,10 +1,26 @@
 import { BrowserWindow } from 'electron'
 import { ExtensionContext } from '../context'
 import { ExtensionEvent } from '../router'
-import { TabContents } from './common'
+import { matchesPattern, matchesTitlePattern, TabContents } from './common'
 import { WindowsAPI } from './windows'
 
 const debug = require('debug')('electron-chrome-extensions:tabs')
+
+const validateExtensionUrl = (url: string, extension: Electron.Extension) => {
+  // Convert relative URLs to absolute if needed
+  try {
+    url = new URL(url, extension.url).href
+  } catch (e) {
+    throw new Error('Invalid URL')
+  }
+
+  // Prevent creating chrome://kill or other debug commands
+  if (url.startsWith('chrome:') || url.startsWith('javascript:')) {
+    throw new Error('Invalid URL')
+  }
+
+  return url
+}
 
 export class TabsAPI {
   static TAB_ID_NONE = -1
@@ -139,7 +155,7 @@ export class TabsAPI {
   }
 
   private getCurrent(event: ExtensionEvent) {
-    const tab = this.ctx.store.getActiveTabFromWebContents(event.sender)
+    const tab = this.ctx.store.getActiveTabOfCurrentWindow()
     return tab ? this.getTabDetails(tab) : undefined
   }
 
@@ -148,7 +164,8 @@ export class TabsAPI {
   }
 
   private async create(event: ExtensionEvent, details: chrome.tabs.CreateProperties = {}) {
-    const tab = await this.ctx.store.createTab(details)
+    const url = details.url ? validateExtensionUrl(details.url, event.extension) : undefined
+    const tab = await this.ctx.store.createTab({ ...details, url })
     const tabDetails = this.getTabDetails(tab)
     if (details.active) {
       queueMicrotask(() => this.onActivated(tab.id))
@@ -184,8 +201,19 @@ export class TabsAPI {
         // if (isSet(info.currentWindow)) return false
         // if (isSet(info.lastFocusedWindow)) return false
         if (isSet(info.status) && info.status !== tab.status) return false
-        if (isSet(info.title) && info.title !== tab.title) return false // TODO: pattern match
-        if (isSet(info.url) && info.url !== tab.url) return false // TODO: match URL pattern
+        if (isSet(info.title) && typeof info.title === 'string' && typeof tab.title === 'string') {
+          if (!matchesTitlePattern(info.title, tab.title)) return false
+        }
+        if (isSet(info.url) && typeof tab.url === 'string') {
+          if (typeof info.url === 'string' && !matchesPattern(info.url, tab.url!)) {
+            return false
+          } else if (
+            Array.isArray(info.url) &&
+            !info.url.some((pattern) => matchesPattern(pattern, tab.url!))
+          ) {
+            return false
+          }
+        }
         if (isSet(info.windowId)) {
           if (info.windowId === TabsAPI.WINDOW_ID_CURRENT) {
             if (this.ctx.store.lastFocusedWindowId !== tab.windowId) return false
@@ -213,8 +241,7 @@ export class TabsAPI {
 
     const tab = tabId
       ? this.ctx.store.getTabById(tabId)
-      : this.ctx.store.getActiveTabFromWebContents(event.sender)
-
+      : this.ctx.store.getActiveTabOfCurrentWindow()
     if (!tab) return
 
     if (reloadProperties?.bypassCache) {
@@ -231,15 +258,15 @@ export class TabsAPI {
 
     const tab = tabId
       ? this.ctx.store.getTabById(tabId)
-      : this.ctx.store.getActiveTabFromWebContents(event.sender)
+      : this.ctx.store.getActiveTabOfCurrentWindow()
     if (!tab) return
 
     tabId = tab.id
 
     const props = updateProperties
 
-    // TODO: validate URL, prevent 'javascript:'
-    if (props.url) await tab.loadURL(props.url)
+    const url = props.url ? validateExtensionUrl(props.url, event.extension) : undefined
+    if (url) await tab.loadURL(url)
 
     if (typeof props.muted === 'boolean') tab.setAudioMuted(props.muted)
 
@@ -264,7 +291,7 @@ export class TabsAPI {
     const tabId = typeof arg1 === 'number' ? arg1 : undefined
     const tab = tabId
       ? this.ctx.store.getTabById(tabId)
-      : this.ctx.store.getActiveTabFromWebContents(event.sender)
+      : this.ctx.store.getActiveTabOfCurrentWindow()
     if (!tab) return
     tab.goForward()
   }
@@ -273,7 +300,7 @@ export class TabsAPI {
     const tabId = typeof arg1 === 'number' ? arg1 : undefined
     const tab = tabId
       ? this.ctx.store.getTabById(tabId)
-      : this.ctx.store.getActiveTabFromWebContents(event.sender)
+      : this.ctx.store.getActiveTabOfCurrentWindow()
     if (!tab) return
     tab.goBack()
   }

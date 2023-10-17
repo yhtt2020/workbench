@@ -25,12 +25,17 @@
         </a-result>
       </div>
     </div>
-    <vue-custom-scrollbar class="no-drag" key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu"
+    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='newDeskGroupMenu'  class="w-full h-full">
+    <!-- <div  style='z-index:99999px'> -->
+        <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
                           }"
                           style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px;display: flex;flex-direction: row">
+
+
+
       <div id="cardContent" ref="deskContainer"
            style="
           /*display: flex;*/
@@ -52,6 +57,8 @@
           width:settings.vDirection?'100%':'auto',
           height:settings.vDirection?'auto':'100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
+
+
           <template #item="{ item }">
             <div
               :class="{editing:editing}"
@@ -65,8 +72,14 @@
 
           </template>
         </vuuri>
+
       </div>
+
+
     </vue-custom-scrollbar>
+    <!-- </div> -->
+  </RightMenu>
+
   </div>
 
   <transition name="fade">
@@ -89,7 +102,7 @@
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <div style="height: 200px;" class="hidden mb-3">
       </div>
-      <xt-task :modelValue="m01012" to="" @cb="newAddCard()">
+      <xt-task id='M0101' no='2' to="" @cb="newAddCard()">
         <a-col>
           <div @click="newAddCard" class="btn">
             <Icon style="font-size: 3em" icon="tianjia1"></Icon>
@@ -97,7 +110,7 @@
           </div>
         </a-col>
       </xt-task>
-      <xt-task :modelValue="m02012" to="" @cb="newAddIcon()">
+      <xt-task   id='M0201' no='2' to="" @cb="newAddIcon()">
         <a-col>
           <div @click="newAddIcon" class="btn">
             <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
@@ -114,7 +127,7 @@
           </div>
         </div>
       </a-col>
-      <xt-task :modelValue="m01032" to="" @cb="showSetting">
+      <xt-task  id='M0103' no='2' to="" @cb="showSetting">
         <a-col>
           <div @click="showSetting" class="btn">
             <Icon style="font-size: 3em" icon="shezhi1"></Icon>
@@ -319,12 +332,13 @@ import CoolWidget from '../card/CoolWidget.vue'
 import AIaides from '../widgets/AIaides.vue'
 import OilPrices from '../widgets/OilPrices.vue'
 import yuanCommunity from '../widgets/yuanCommunity/yuanCommunity.vue'
-import { taskStore } from '../../apps/task/store'
-
+import RightMenu from './RightMenu.vue'
+import {useWidgetStore} from "../card/store.ts"
 export default {
   name: 'Desk',
   emits: ['changeEditing'],
   components: {
+    RightMenu,
     GameInformation,
     HistoryInfo,
     ShortcutKey,
@@ -389,6 +403,8 @@ export default {
   },
   props:
     {
+      deskGroupMenu:{
+      },
       globalSettings: {
         type: Object,
         default: {}
@@ -512,15 +528,62 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
-    ...mapWritableState(taskStore, ['taskID', 'step']),
-    m01012 () {
-      return this.taskID == 'M0101' && this.step == 2
-    },
-    m01032 () {
-      return this.taskID == 'M0103' && this.step == 2
-    },
-    m02012 () {
-      return this.taskID == 'M0201' && this.step == 2
+    ...mapWritableState(useWidgetStore, ['rightModel']),
+
+   newDeskGroupMenu() {
+    let arr = [ ...this.deskGroupMenu[1].children];
+    arr.push({
+            id:4,
+            newIcon:"fluent:circle-off-16-regular",
+            name:"清空桌面",
+            fn:this.clear
+    })
+
+      arr.sort((a, b) => a.id - b.id);
+
+      let deskGroupMenu = [...this.deskGroupMenu]
+      deskGroupMenu[1].children = arr
+  return deskGroupMenu;
+   },
+    deskMenu() {
+      return [
+          {
+            id:1,
+            newIcon:"fluent:add-16-filled",
+            name:"添加图标",
+            fn:this.newAddIcon,
+          },
+          {
+            id:2,
+              newIcon:"fluent:collections-add-24-regular",
+            name:"添加小组件",
+            fn:this.newAddCard,
+          },
+          { id:4,
+            divider:true
+          },
+          {
+            id:5,
+              newIcon:"fluent:window-new-16-regular",
+            name:this.editing ? '停止调整':'调整桌面布局',
+            fn:this.toggleEditing,
+          },
+          {
+            id:6,
+              newIcon:"fluent:eye-off-16-regular",
+            name:this.hide ? '显示小组件':"隐藏小组件",
+            fn: this.hide ? this.showDesk :this.hideDesk
+          },
+          {id:7,
+            divider:true
+          },
+          {
+            id:8,
+              newIcon:"fluent:settings-16-regular",
+            name:"桌面设置",
+            fn:this.showSetting,
+          },
+      ]
     },
     usingSettings () {
       if (this.settings.enableZoom) {
@@ -532,6 +595,7 @@ export default {
   },
   data () {
     return {
+
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
       iconVisible: false,
@@ -637,7 +701,7 @@ export default {
       this.menuVisible = false
     },
     showMenu () {
-      if (!this.notTrigger) this.menuVisible = true
+      if (!this.notTrigger && this.rightModel !== 'follow') this.menuVisible = true
     },
     // 添加图标
     newAddIcon () {
