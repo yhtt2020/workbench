@@ -46,6 +46,7 @@
                     <div class="list w-full h-full p-1">
                       <div
                         class="item"
+                        @click="handleClick(data)"
                         v-for="data in menu.children"
                         :name="name"
                       >
@@ -196,10 +197,11 @@ const pos = computed(() => {
   // 菜单大小
   let menuW = w.value;
   let menuH = h.value;
+
   // x 坐标
-  posX = posX > vW - w.value ? posX - w.value : posX;
+  posX = posX > vW - menuW ? posX - menuW : posX;
   // Y 坐标
-  posY = posY > vH - h.value ? posY - vH + h.value + 10 : posY;
+  posY = posY > vH - menuH ? vH - menuH : posY;
   return {
     left: posX + "px",
     top: posY + "px",

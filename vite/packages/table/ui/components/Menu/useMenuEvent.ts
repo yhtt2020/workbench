@@ -1,5 +1,10 @@
 import { onMounted, onBeforeUnmount, ref } from "vue";
-const useMenuEvent = (container: any, model, start, handleCloseMenu) => {
+const useMenuEvent = (
+  container: any,
+  model,
+  start,
+  handleCloseMenu,
+) => {
   const show = ref(false);
   const menuX = ref(0);
   const menuY = ref(0);
