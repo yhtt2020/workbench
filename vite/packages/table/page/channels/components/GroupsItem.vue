@@ -23,15 +23,7 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { useRouter,useRoute } from 'vue-router'
-const groupMsg = ref([
-    {
-        logo:'	https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/e685acf36f7ca13d0a8fbe05f0b21aef.png?imageMogr2/crop/196x196/gravity/center',
-        name: '用户圈子',
-        title: '一起打磨出闪闪发光的技术宝石其实就是闪闪发光其实就是闪闪发光其实就是闪闪发光其实就是闪闪发光！',
-        memeber: 123,
-        joined: '公开加入',
-    }
-])
+import {groupMsg} from '../domeData'
 const router = useRouter()
 const route = useRoute()
 const goDetail = () => {
