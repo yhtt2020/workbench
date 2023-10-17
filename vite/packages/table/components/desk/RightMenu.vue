@@ -22,7 +22,10 @@ const menuState = computed(() => {
 });
 
 const menu = computed(() => {
-  return [...deskMenu.value, ...deskGroupMenu.value];
+  let arr = [...deskMenu.value, ...deskGroupMenu.value];
+  arr.sort((a, b) => a.id - b.id);
+
+  return arr;
 });
 </script>
 

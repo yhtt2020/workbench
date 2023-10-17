@@ -128,7 +128,7 @@ const props = defineProps({
 });
 
 const { model, trigger, start, bubble } = toRefs(props);
-
+console.log('bubble.value :>> ', bubble.value);
 const emits = defineEmits("closeMenu");
 // 菜单离开回调
 const handleCloseMenu = () => {

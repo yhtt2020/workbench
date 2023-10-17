@@ -11,8 +11,9 @@ const useMenuEvent = (
   const menuY = ref(0);
 
   const setup = (e) => {
-
+    console.log("bubble.value.value:>> ", !bubble.value);
     if (!bubble.value) {
+      console.log("我应该执行了啊 :>> ");
       e.preventDefault(); // 阻止默认动作
       e.stopPropagation(); // 阻止事件冒泡
     }

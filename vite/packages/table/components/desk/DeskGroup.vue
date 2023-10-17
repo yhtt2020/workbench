@@ -533,15 +533,30 @@ export default {
             name:"更多",
             children:[
               {
+                id:1,
                 newIcon:"fluent:arrow-download-20-filled",
                 name:"导入桌面",
                 fn:this.importDesk
               },
               {
+                id:2,
                 newIcon:"fluent:open-20-filled",
                 name:"导出桌面",
                 fn:this.exportDesk
+              },
+              {
+                id:3,
+                newIcon:"fluent:share-android-24-regular",
+                name:"分享桌面",
+                fn:this.shareDesk
+              },
+              {
+                id:5,
+                newIcon:"akar-icons:trash-can",
+                name:"删除桌面",
+                fn:this.delDesk
               }
+
             ],
         }
       ],

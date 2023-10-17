@@ -25,7 +25,7 @@
         </a-result>
       </div>
     </div>
-    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='deskGroupMenu'  class="w-full h-full xt-theme-b">
+    <RightMenu :deskMenu='deskMenu' :deskGroupMenu='newDeskGroupMenu'  class="w-full h-full xt-theme-b">
     <!-- <div  style='z-index:99999px'> -->
         <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
@@ -529,6 +529,23 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
+
+   newDeskGroupMenu() {
+    let arr = [ ...this.deskGroupMenu[1].children];
+    arr.push({
+            id:4,
+            newIcon:"fluent:circle-off-16-regular",
+            name:"清空桌面",
+            fn:this.clear
+    })
+
+      arr.sort((a, b) => a.id - b.id);
+
+      console.log('arr :>> ', arr);
+      let deskGroupMenu = [...this.deskGroupMenu]
+      deskGroupMenu[1].children = arr
+  return deskGroupMenu;
+   },
     deskMenu() {
       return [
           {
