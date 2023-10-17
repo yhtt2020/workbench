@@ -185,27 +185,6 @@ export default {
     enter () {
       clearTimeout(this.timeoutHandler)//清理掉超时提示
       chatStore().login()
-      navigationData.systemFillAppList.forEach((item) => {
-        this.sideNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
-      navigationData.systemFillAppList.forEach((item) => {
-        this.rightNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
-      navigationData.systemAppList.forEach((item) => {
-        this.footNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {

@@ -18,8 +18,8 @@
                 </div>
             </div>
             <div>
-                <a-input v-model:value="inputValue" placeholder="搜索"
-                    style="width: 244px; height: 46px;border-radius: 12px;">
+                <a-input v-model:value="inputValue" placeholder="搜索" 
+                    style="width: 244px; height: 46px;border-radius: 12px;border: 1px solid var(--divider);">
                     <template #suffix>
                         <newIcon icon="fluent:search-20-filled" style="font-size: 20px;"></newIcon>
                     </template>
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,onMounted } from 'vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import GroupsItem from './components/GroupsItem.vue'
@@ -81,6 +81,10 @@ const handleChange = (value) => {
     console.log(value);
 
 }
+onMounted(()=>{
+    console.log(groupsList.value);
+    
+})
 </script>
 <style lang='scss' scoped>
 :deep(.ant-input) {

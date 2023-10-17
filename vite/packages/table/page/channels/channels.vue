@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full">
-        <xt-left-menu  :list="leftMenu" last="2" end="1" class="w-full">
+        <xt-left-menu  :list="leftMenu" last="2" end="1" class="w-full" :index="index">
             <div class="w-full">
                 <router-view></router-view>
             </div>
