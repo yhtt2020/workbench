@@ -95,6 +95,12 @@ const handleChange = (value) => {
     border: none;
     width: 40px;
     height: 40px;
+    & a{
+        display: block;
+        height: 40px;
+        text-align: center;
+        margin-top: 4px;
+    }
 }
 :deep(.ant-pagination-prev ){
     background: var(--primary-bg);
