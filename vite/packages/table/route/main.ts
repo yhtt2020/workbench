@@ -326,8 +326,11 @@ export default [
             path:'/channel',
             name:'channel',
             component:Channel,
-            meta:{
-              tab1:'channels'
+            // meta:{
+            //   tab1:'channel'
+            // },
+            redirect:{
+              name:'channelsIndex'
             },
             children:[
               {

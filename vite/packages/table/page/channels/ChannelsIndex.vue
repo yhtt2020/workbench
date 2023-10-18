@@ -27,7 +27,7 @@
             <div style="height: 100%;">
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
                     :settings="settingsScroller"
-                    style="height: calc(100vh - 16em);overflow: hidden;flex-shrink: 0;width: 100%;">
+                    style="height: calc(100vh - 16em );overflow: hidden;flex-shrink: 0;width: 100%;">
                     <div class="flex flex-col justify-center content">
                         <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
                         <!-- 循环渲染多个 ComCard -->
@@ -90,7 +90,6 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
-import Commun from '../chat/Commun.vue';
 import ComList from '../chat/com/ComList.vue';
 import PublishModal from '../chat/com/PublishModal.vue';
 import { comCards } from './mock';
@@ -167,7 +166,8 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
-
+    color: var(--primary-text) !important;
+    
     & a {
         display: block;
         height: 40px;
@@ -183,6 +183,7 @@ const visibleModal = () => {
     width: 40px;
     height: 40px;
     line-height: 40px !important;
+    color: var(--primary-text) !important;
 }
 
 :deep(.ant-pagination-next) {
@@ -191,5 +192,6 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
+    color: var(--primary-text) !important;
 }
 </style>

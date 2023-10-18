@@ -11,10 +11,10 @@
           <div class="xt-text">
             想天工作台
           </div>
-          <div class="ml-1 xt-bg-2 h-[20px] " style="font-size: 14px; border-radius: 4px;">
+          <div class="ml-1 xt-bg" style="font-size: 14px; border-radius: 4px;" >
             <!-- {{ props.forumId }}
              -->
-             111111
+             11111
           </div>
           
         </div>

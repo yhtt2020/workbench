@@ -403,7 +403,7 @@ onUpdated(() => {
     overflow: hidden;
   }
 
-  :deep(.ant-pagination-simple .ant-pagination-prev .ant-pagination-next .ant-pagination-item-link) {
+  :deep(.ant-pagination-simple  .ant-pagination-item-link) {
     color: var(--secondary-text) !important;
   }
 
