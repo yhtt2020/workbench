@@ -3,7 +3,7 @@
     class="vue-muuri-item item pointer"
     :class="getClass"
     :id="this.uniqueKey"
- 
+
   >
 <!--    <div v-show="editing" class="vue-muuri-header">-->
 <!--&lt;!&ndash;      <span class="text-more">{{ title }}</span>&ndash;&gt;-->
@@ -35,7 +35,7 @@
 <script>
 import { ResizeObserver } from 'vue3-resize'
 import 'vue3-resize/dist/vue3-resize.css'
-import { deckStore } from '../../store/deck'
+import { deckStore } from '../../apps/deck/store'
 import { mapState } from 'pinia'
 
 export default {

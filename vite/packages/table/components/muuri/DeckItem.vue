@@ -11,7 +11,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import { deckStore } from '../../store/deck'
+import { deckStore } from '../../apps/deck/store'
 import {message} from'ant-design-vue'
 import { ActionHandler } from '../../js/action/actionHandler'
 export default {

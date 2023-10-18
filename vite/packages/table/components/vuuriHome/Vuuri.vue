@@ -25,7 +25,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { GridEvent } from './GridEvent'
 import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
-import { deckStore } from '../../store/deck'
+import { deckStore } from '../../apps/deck/store'
 import { message } from 'ant-design-vue'
 export default {
   name: 'Vuuri',

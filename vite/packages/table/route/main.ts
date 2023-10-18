@@ -1,5 +1,5 @@
 import BarrageSetting from "../page/settings/BarrageSetting.vue";
-import DeckHome from "../page/app/deck/DeckHome.vue";
+import DeckHome from "../apps/deck/DeckHome.vue";
 import Setting from "../page/Setting.vue";
 import Weather from "../page/app/Weather.vue";
 import Watch from "../page/app/watch/Index.vue";
@@ -45,8 +45,8 @@ import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
-import DeckAdd from "../page/app/deck/DeckAdd.vue";
-import DeckIndex from "../page/app/deck/DeckIndex.vue";
+import DeckAdd from "../apps/deck/DeckAdd.vue";
+import DeckIndex from "../apps/deck/DeckIndex.vue";
 import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
@@ -98,11 +98,6 @@ export default [
     name: "main",
     component: Main,
     children: [
-      {
-        path: '/TomatoStart',
-        name: 'tomatoStart',
-        component: TomatoStart
-      },
 
 
 
@@ -493,6 +488,12 @@ export default [
               }
             ]
           },
+          {
+            path: '/TomatoStart',
+            name: 'tomatoStart',
+            component: TomatoStart
+          },
+
           {
             path: '/Tomato',
             name: 'tomato',
