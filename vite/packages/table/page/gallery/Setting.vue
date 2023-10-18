@@ -45,7 +45,6 @@
           <a-select-option value="my">我的收藏</a-select-option>
           <a-select-option value="bing">必应壁纸</a-select-option>
           <a-select-option value="picking">拾光壁纸</a-select-option>
-          <a-select-option value="lively">动态壁纸</a-select-option>
         </a-select>
         </div>
         <!--          <div class="line">-->
