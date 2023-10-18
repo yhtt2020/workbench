@@ -23,7 +23,7 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { useRouter,useRoute } from 'vue-router'
-import {groupMsg} from '../domeData'
+import {groupMsg} from '../mock'
 const router = useRouter()
 const route = useRoute()
 const goDetail = () => {
