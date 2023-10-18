@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import Container from './Container.vue'
-import CustomDragLayer from './CustomDragLayer.vue'
-import { ref } from 'vue'
-
-const snapToGridAfterDrop = ref(false)
-const snapToGridWhileDragging = ref(false)
+import Container from "./Container.vue";
+import CustomDragLayer from "./CustomDragLayer.vue";
+import { ref } from "vue";
+const props = defineProps({
+  desk: {},
+  currentDesk: {},
+});
+const snapToGridAfterDrop = ref(false);
+const snapToGridWhileDragging = ref(false);
 
 const handleSnapToGridAfterDropChange = () => {
-  snapToGridAfterDrop.value = !snapToGridAfterDrop.value
-}
+  snapToGridAfterDrop.value = !snapToGridAfterDrop.value;
+};
 
 const handleSnapToGridWhileDraggingChange = () => {
-  snapToGridWhileDragging.value = !snapToGridWhileDragging.value
-}
+  snapToGridWhileDragging.value = !snapToGridWhileDragging.value;
+};
 </script>
 
 <template>
   <div>
-    <Container :snap-to-grid="snapToGridAfterDrop" />
+    <Container
+      :snap-to-grid="snapToGridAfterDrop"
+      :desk="desk"
+      :currentDesk="currentDesk"
+    />
     <CustomDragLayer :snap-to-grid="snapToGridWhileDragging" />
     <p>
       <label for="snapToGridWhileDragging">

@@ -25,18 +25,23 @@
         </a-result>
       </div>
     </div>
-<div  class="w-full xt-theme-b">
-  <FreeDesk></FreeDesk>
-</div>
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full xt-theme-b">
     <!-- <div  style='z-index:99999px'> -->
+      <!-- {{currentDesk.cards}} -->
+      <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
+        <template #item="{ item }">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
+                         :customData="item.customData" :editing="editing"></component>
+          </template>
+      </FreeDesk>
         <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
                           }"
                           style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px;display: flex;flex-direction: row">
+
 
 
 

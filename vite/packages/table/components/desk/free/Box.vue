@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-
+import { computed } from "vue";
+import MyIcons from "../../widgets/myIcons/index.vue";
+import Widget from "../../card/Widget.vue";
 const props = defineProps<{
-  title: string
-  yellow?: boolean
-  preview?: boolean
-}>()
-const backgroundColor = computed(() => (props.yellow ? 'yellow' : 'white'))
+  title: string;
+  yellow?: boolean;
+  preview?: boolean;
+  item?: boolean;
+  currentDesk;
+}>();
+const backgroundColor = computed(() => (props.yellow ? "yellow" : "white"));
 </script>
 
 <template>
@@ -15,7 +18,14 @@ const backgroundColor = computed(() => (props.yellow ? 'yellow' : 'white'))
     :style="{ backgroundColor }"
     :role="preview ? 'BoxPreview' : 'Box'"
   >
-    {{ title }}1
+    <!-- <component
+      :desk="currentDesk"
+      :is="item.name"
+      :customIndex="item.id"
+      :customData="item.customData"
+      :editing="editing"
+    ></component> -->
+    <slot></slot>
   </div>
 </template>
 
