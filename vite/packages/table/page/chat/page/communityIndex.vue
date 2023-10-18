@@ -12,19 +12,19 @@
     </a-col>
 
     <a-col flex=" 1 1 200px" class="flex flex-col h-full">
-      <div class="px-4 mb-0 line-title">
-        <span style="vertical-align: text-top">
-        <template v-if="currentChannel.type === 'group'">
-          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
-        </template>
-        <template v-if="currentChannel.type === 'link'">
-          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
-        </template>
-        <template v-if="currentChannel.type === 'forum'">
-          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-        </template>
-       </span>
-        {{ currentChannel.name }}
+      <div class="flex items-center px-4 mb-0 line-title">
+        <div class="flex items-center justify-center">
+          <template v-if="currentChannel.type === 'group'">
+            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
+          </template>
+          <template v-if="currentChannel.type === 'link'">
+            <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+          </template>
+          <template v-if="currentChannel.type === 'forum'">
+            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+        </div>
+        <span class="ml-2"> {{ currentChannel.name }}</span>
       </div>
 
       <div v-if="isChat === 'not'" class="flex items-center justify-center h-full">
