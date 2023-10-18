@@ -23,8 +23,7 @@ window.$models = {
   nanoid:require('nanoid'),
   fs:require('fs-extra'),
   storageModel:new StorageModel(),
-  steamUser:require('steam-user'),
-  steamSession:require('steam-session'),
+
   path:require('path'),
   https:require('https'),
   steamFs:require('fs'),
@@ -33,11 +32,13 @@ window.$models = {
   osUtils:require('node-os-utils'),
   win32:require('hmc-win32')
 }
+try{
+  window.$models.steamUser=require('steam-user')
+  window.$models.steamSession=require('steam-session')
+}catch (e) {
+  console.error('注册steam包失败，错误信息：',e)
+}
 window.$models.appModel.initDb()
-// const win32=require('hmc-win32')
-// setInterval(()=>{
-//   console.log(win32.getPointWindowName())
-// },1000)
 
 window.$models.storageModel.initDb()
 window.$apis = {
