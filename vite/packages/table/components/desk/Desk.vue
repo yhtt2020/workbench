@@ -267,7 +267,7 @@ import { mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 
 import {useWidgetStore} from "../card/store.ts"
-import {componentsMinis} from "./components.ts"
+import componentsMinis  from "./components.ts"
 export default {
   name: 'Desk',
   emits: ['changeEditing'],
@@ -457,7 +457,7 @@ mixins:[componentsMinis],
       ]
     },
     dropdownMenu() {
-      let arr = [...this.newDeskGroupMenus, ...this.deskMenus];
+      let arr = [...this.deskGroupMenus, ...this.deskMenus];
       arr.sort((a, b) => a.id - b.id);
       return arr;
     },

@@ -2,7 +2,6 @@
   <div class="flex flex-col h-full">
     <!--  工具栏-->
     <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
-<!-- {{$refs.currentDeskRef.menus}} -->
       <!-- tabs   -->
       <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
@@ -88,12 +87,14 @@
 
               <div class="pl-3">
                 <xt-task :modelValue="getStep" @cb="showMenu">
-                <div
-                  @click="showMenu"
-                  class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
-                >
-                  <Icon style="font-size: 18px" icon="gengduo1"></Icon>
-                </div>
+                  <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='click'>
+                    <div
+                        @click="showMenu"
+                        class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+                      >
+                        <xt-new-icon size='18' icon="fluent:more-horizontal-16-filled" />
+                      </div>
+                  </RightMenu>
             </xt-task>
 
               </div>
@@ -472,9 +473,11 @@ import { marketStore } from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
+import RightMenu from "./RightMenu.vue"
 export default {
   name: "DeskGroup",
   components: {
+    RightMenu,
     Emoji,
     VueCustomScrollbar,
     Icon,
@@ -753,6 +756,7 @@ export default {
     },
     showMenu() {
      this.$refs.currentDeskRef.showMenu();
+     console.log('object :>> ',      this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");

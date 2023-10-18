@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent } from "vue";
 
 import Vuuri from "../vuuriHome/Vuuri.vue";
 import CPULineChart from "../widgets/supervisory/CPULineChart.vue";
@@ -70,7 +70,7 @@ import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/yuanCommunity.vue";
 import RightMenu from "./RightMenu.vue";
 
-export default {
+export default  {
   components: {
     RightMenu,
     GameInformation,

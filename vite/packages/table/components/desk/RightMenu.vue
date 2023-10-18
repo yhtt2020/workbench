@@ -1,5 +1,5 @@
 <template>
-  <Menu :menus="menus" name="name" fn="fn" :start="menuState">
+  <Menu :menus="menus" name="name" fn="fn" :start="menuState" :model="model">
     <slot></slot>
   </Menu>
 </template>
@@ -11,8 +11,10 @@ import { useWidgetStore } from "../card/store.ts";
 import Menu from "../../ui/components/Menu/index.vue";
 const props = defineProps({
   menus: {},
+  model: {
+    default: "contextmenu",
+  },
 });
-const { deskMenu, deskGroupMenu } = toRefs(props);
 const widgetStore = useWidgetStore();
 
 const { rightModel, isOnCard } = storeToRefs(widgetStore);
