@@ -403,17 +403,21 @@ mixins:[componentsMinis],
 
    deskGroupMenus() {
     let arr = [ ...this.deskGroupMenu[1].children];
-    arr.push({
-            id:4,
-            newIcon:"fluent:circle-off-16-regular",
-            name:"清空桌面",
-            fn:this.clear
-    })
 
+let exists = arr.some(item => item.id === 4);
+
+  if (!exists) {
+      arr.push({
+          id: 4,
+          newIcon: "fluent:circle-off-16-regular",
+          name: "清空桌面",
+          fn: this.clear
+      });
+  }
+      console.log('2arr :>> ', arr);
       arr.sort((a, b) => a.id - b.id);
-
       let deskGroupMenu = [...this.deskGroupMenu]
-      deskGroupMenu[1].children = arr
+      deskGroupMenu[1].children = [...arr]
   return deskGroupMenu;
    },
     deskMenus() {
@@ -435,13 +439,13 @@ mixins:[componentsMinis],
           },
           {
             id:5,
-              newIcon:"fluent:window-new-16-regular",
+              newIcon:this.editing ? "fluent:record-stop-16-regular":"fluent:window-new-16-regular",
             name:this.editing ? '停止调整':'调整桌面布局',
             fn:this.toggleEditing,
           },
           {
             id:6,
-              newIcon:"fluent:eye-off-16-regular",
+              newIcon:this.hide ? 'fluent:eye-16-regular':"fluent:eye-off-16-regular",
             name:this.hide ? '显示小组件':"隐藏小组件",
             fn: this.hide ? this.showDesk :this.hideDesk
           },
