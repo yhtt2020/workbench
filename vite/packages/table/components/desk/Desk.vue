@@ -25,9 +25,13 @@
         </a-result>
       </div>
     </div>
-    <RightMenu :menus='dropdownMenu'  class="w-full h-full">
+<div  class="w-full xt-theme-b">
+  <FreeDesk></FreeDesk>
+</div>
+
+    <RightMenu :menus='dropdownMenu'  class="w-full h-full xt-theme-b">
     <!-- <div  style='z-index:99999px'> -->
-        <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+        <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
@@ -49,7 +53,7 @@
         }"
            :class="notTrigger ? 'trigger' : '' "
       >
-        <vuuri :key="key" v-if="currentDesk.cards && !hide" :get-item-margin="() => {
+        <vuuri :key="key" v-if=" currentDesk.cards && !hide" :get-item-margin="() => {
             return usingSettings.cardMargin * this.adjustZoom  + 'px';
           }
 
@@ -57,7 +61,6 @@
           width:settings.vDirection?'100%':'auto',
           height:settings.vDirection?'auto':'100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
-
 
           <template #item="{ item }">
             <div
@@ -72,10 +75,7 @@
 
           </template>
         </vuuri>
-
       </div>
-
-
     </vue-custom-scrollbar>
     <!-- </div> -->
   </RightMenu>
@@ -414,7 +414,6 @@ let exists = arr.some(item => item.id === 4);
           fn: this.clear
       });
   }
-      console.log('2arr :>> ', arr);
       arr.sort((a, b) => a.id - b.id);
       let deskGroupMenu = [...this.deskGroupMenu]
       deskGroupMenu[1].children = [...arr]

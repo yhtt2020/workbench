@@ -1,9 +1,13 @@
 <template>
+    <!-- Your Drag-and-Drop Application -->
+
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale">
     <div class="a-container " :class="{ dark: settings ? settings.darkMod : '', 'horse_run': this.settings.houserun }">
+      <DndProvider :backend="HTML5Backend">
       <router-view></router-view>
+    </DndProvider>
     </div>
     <Barrage></Barrage>
   </a-config-provider>
@@ -95,6 +99,8 @@ import {
 } from "./components/card/hooks/themeSwitch/";
 import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
 
+import { DndProvider } from 'vue3-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 window.browser = browser
 const {appModel} = window.$models
 let startX,
@@ -106,9 +112,10 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {FrameStoreWidget, Modal, UserCard, Barrage},
+  components: {FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
   data() {
     return {
+      HTML5Backend,
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
       touchUpRoutes: ["home", "lock"], //支持下滑的页面的白名单
       locale: zhCN,
