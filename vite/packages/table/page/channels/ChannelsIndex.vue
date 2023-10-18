@@ -166,24 +166,24 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
-    color: var(--primary-text) !important;
     
     & a {
         display: block;
         height: 40px;
         text-align: center;
         margin-top: 4px;
+        color: var(--primary-text) !important;
     }
 }
-
+:deep(.ant-pagination-item-active a){
+    color: var(--active-bg) !important;
+}
 :deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
     width: 40px;
     height: 40px;
-    line-height: 40px !important;
-    color: var(--primary-text) !important;
 }
 
 :deep(.ant-pagination-next) {
@@ -192,6 +192,13 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
-    color: var(--primary-text) !important;
+}
+:deep(.ant-pagination-prev .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
+}
+:deep(.ant-pagination-next .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
 }
 </style>

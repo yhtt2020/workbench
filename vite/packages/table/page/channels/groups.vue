@@ -61,9 +61,9 @@
             </vue-custom-scrollbar>
 
         </div>
-        <teleport to="body" :disabled="false">
+        <!-- <teleport to="body" :disabled="false"> -->
             <JoinModal v-if="joinVisible" @handleOk="joinVisible = false" />
-        </teleport>
+        <!-- </teleport> -->
         
     </div>
 </template>
@@ -131,15 +131,18 @@ const handleChange = (value) => {
     border: none;
     width: 40px;
     height: 40px;
-
+    
     & a {
         display: block;
         height: 40px;
         text-align: center;
         margin-top: 4px;
+        color: var(--primary-text) !important;
     }
 }
-
+:deep(.ant-pagination-item-active a){
+    color: var(--active-bg) !important;
+}
 :deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
@@ -154,5 +157,13 @@ const handleChange = (value) => {
     border: none;
     width: 40px;
     height: 40px;
+}
+:deep(.ant-pagination-prev .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
+}
+:deep(.ant-pagination-next .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
 }
 </style>
