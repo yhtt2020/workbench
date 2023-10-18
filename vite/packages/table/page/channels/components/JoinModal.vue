@@ -14,7 +14,7 @@
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-textarea v-model:value="postValue" placeholder="申请理由" :autoSize="{ minRows: 5, maxRows: 8 }"
                             :bordered="false" />
                     </div>
                 </div>
@@ -35,12 +35,153 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import browser from '../../../js/common/browser';
+import Modal from '../../../components/Modal.vue'
+import { Icon } from '@iconify/vue';
+import { message } from 'ant-design-vue'
+const goYuan = () => {
+    browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
+}
+// const userName = ref('我是皮克斯呀')
 const postValue = ref('')
-const emit=defineEmits(['handleOk'])
-const handleOk=()=>{
-    let visible=false
-    emit('handleOk',visible)
+const props = defineProps({
+    replyVisible: Boolean,
+    showPublishModal: Boolean,
+    forumId: Number
+})
+const visible = ref(false)
+const emit = defineEmits(['handleOk'])
+// 用于在动态和评论中使用的表情
+// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
+// https://sad.apps.vip/public/static/emoji/emojistatic/
+onMounted(() => {
+    let textareaElement = window.document.querySelector('textarea')
+    // console.log(textareaElement);
+
+    textareaElement?.focus()
+    // console.log(navigator.plugins);
+
+
+})
+const handleOk = () => {
+    // console.log(e);
+    visible.value = false
+    emit('handleOk', visible)
+};
+// 发布帖子
+const titleValue = ref('')
+const publishPost = async () => {
+    if (postValue.value ) {
+        // let image = JSON.stringify(imageUrlList.value)
+        let forumId = props.forumId
+        let content = postValue.value
+        let title = computed(() => {
+            if (!titleValue.value || titleValue.value.length < 5) {
+                return postValue.value.slice(0, 5)
+            }
+            return titleValue.value
+        })
+        // console.log(title.value, 'title.value');
+
+
+        setTimeout(async () => {
+            
+            message.success('发布成功')
+            titleValue.value = ''
+            postValue.value = ''
+            handleOk()
+        });
+
+    }
 }
 </script>
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.box {
+    border-radius: 12px;
+}
+
+.font-16 {
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    // text-align: center;
+    font-weight: 400;
+}
+
+.font-14 {
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
+    font-size: 8px;
+}
+
+:deep(.ant-upload.ant-upload-select-picture-card) {
+    width: 64px;
+    height: 64px;
+}
+
+:deep(.ant-upload-list-picture-card-container) {
+    width: 64px;
+    height: 64px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+    color: var(--secondary-text);
+}
+:deep(.ant-select-arrow){
+    color: var(--secondary-text);
+    font-size: 16px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
+    // &::placeholder {
+    font-weight: 400;
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+    color: var(--secondary-text);
+    // }
+}
+:deep( .ant-select-open){
+    background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+}
+:deep( .ant-select-focused){
+    background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+}
+:deep( .ant-select-focused .ant-select-open){
+    background: var(--primary-bg) !important;
+    color: var(--primary-text) !important;
+}
+:deep(.ant-input) {
+    color: var(--secondary-text);
+    &::placeholder {
+        font-weight: 400;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: var(--secondary-text);
+    }
+}
+
+:deep(.tippy-box) {
+    width: 51%;
+    margin-left: 35%;
+}
+
+
+.reply-textarea {
+    border-radius: 10px;
+
+    textarea {
+        border-radius: 10px;
+
+        &:deep(.ant-input) {
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}
+</style>

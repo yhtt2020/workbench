@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center">
+    <div class="flex justify-center h-full">
         <div class="" style="margin-top: 54px;">
             <div class="flex flex-col   w-[108px] h-[268px] justify-center items-center xt-bg rounded-lg ">
                 <div v-for="(item, index) in selectList" :key="index"
