@@ -2,8 +2,21 @@
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
-        <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1" style="line-height: 40px;">
-          <span class="mr-1">ID:</span>{{ props.forumId }}
+        <!-- 当是从圈子列表进入的时候，便显示这个回退 -->
+        <button class="mr-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " 
+          style="flex-shrink: 0;" @click="goBack">
+          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="fluent:chevron-left-16-filled" />
+        </button>
+        <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1 flex items-center" style="line-height: 40px;">
+          <div class="xt-text">
+            想天工作台
+          </div>
+          <div class="ml-1 xt-bg" style="font-size: 14px; border-radius: 4px;" >
+            <!-- {{ props.forumId }}
+             -->
+             11111
+          </div>
+          
         </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
@@ -88,14 +101,16 @@
 <script setup lang="ts">
 import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-import ComCard from './com/ComList.vue';
-import DetailCard from './com/Detail.vue';
-import publishModal from './com/PublishModal.vue';
-import { useCommunityStore } from './commun'
+import ComCard from '../../../chat/com/ComList.vue';
+import DetailCard from '../../../chat/com/Detail.vue';
+import publishModal from '../../../chat/com/PublishModal.vue';
+import { useCommunityStore } from '../../../chat/commun'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { Icon } from '@iconify/vue'
-import browser from '../../js/common/browser';
+import browser from '../../../../js/common/browser';
+import { useRouter,useRoute } from 'vue-router'
+const router=useRouter()
 const current = ref(1)
 // 更新帖子列表
 const refreshFlag = ref(false)
@@ -157,6 +172,9 @@ const setCurrentIndex = (index) => {
 }
 const goYuan = () => {
   browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
+}
+const goBack=()=>{
+  router.push({name:'circle'})
 }
 const refreshPost = () => {
   refreshFlag.value = true
@@ -403,7 +421,7 @@ onUpdated(() => {
     overflow: hidden;
   }
 
-  :deep(.ant-pagination-simple  .ant-pagination-item-link) {
+  :deep(.ant-pagination-simple .ant-pagination-prev .ant-pagination-next .ant-pagination-item-link) {
     color: var(--secondary-text) !important;
   }
 

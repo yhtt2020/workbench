@@ -49,7 +49,7 @@ export default defineComponent({
         {
           title: '社区', index: 'channel', icon: 'star',
           route: { name: 'channel' },
-          tab: 'channels'
+          tab: 'channel'
         },
         {
           title: '弹幕', index: 'barrage', icon: 'text-align-left',
