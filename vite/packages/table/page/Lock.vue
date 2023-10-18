@@ -274,7 +274,7 @@ export default {
       }).catch((err) => {
       })
 
-      }else if(this.settings.wallSource == 'picking'){
+      }else{
         // 拾光壁纸
         const url = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
         axios.get(url).then(async res => {
@@ -300,29 +300,7 @@ export default {
             return
           }
         })
-      }else{
-        // 动态壁纸
-        let url = 'https://up.apps.vip/lively/'
-
-        this.lively.forEach(item=>{
-          LockArr.push({
-            media: 'video',
-            poster:"https://up.apps.vip/lively/mylivewallpapers-com-Arcanine-and-Oddish-Pokemon.jpg",
-            'src-mp4':"https://up.apps.vip/lively/" + item.name
-          })
-        })
-        window.Spotlight.show(LockArr, {
-          control: 'autofit,fullscreen,close,zoom,prev,next',
-          play: true,
-          autoslide: this.settings.interval,
-          infinite: true,
-          progress: this.settings.showProgress,
-          title: false,
-          autoplay: true,
-          onclose: () => {this.enter(false)}
-        })
       }
-
     },
     playActive () {
       console.log('playActive');

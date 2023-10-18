@@ -68,7 +68,7 @@ import WorkIndex from '../page/work/WorkIndex.vue'
 import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
 /*便签*/
-import Note from '../page/app/note/index.vue'
+import Note from '../apps/note/index.vue'
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
 import Contact from '../page/chat/contact.vue'
@@ -321,8 +321,11 @@ export default [
             path:'/channel',
             name:'channel',
             component:Channel,
-            meta:{
-              tab1:'channels'
+            // meta:{
+            //   tab1:'channel'
+            // },
+            redirect:{
+              name:'channelsIndex'
             },
             children:[
               {

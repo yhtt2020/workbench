@@ -229,27 +229,14 @@ export default {
         // 删除选择的板块
         handleDeselect(val){
             this.selectList=this.selectList.filter((index,item)=>{
-                console.log(index,item,val);
                 return  item!=val
             })
-            
             if(this.selectList[0]===undefined){
                  this.selectList=[]
             }
             let temp=this.selectList
             this.customData.selectList=temp
-            console.log(this.customData.selectList);
         },
-        // handleSelect(val){
-        //     if(this.selectList.includes(this.forumList[val])){
-        //         console.log(this.forumList[val]);
-        //         return
-        //     }
-        //     // console.log(this.forumList[val],'this.forumList[val]');
-        //     this.selectList.push(this.forumList[val])
-            
-        //     // console.log(this.customData.selectList,'this.selectList');
-        // }
         
     },
     computed: {
@@ -298,7 +285,6 @@ export default {
         // this.myForumList.joined
         this.customData.forumList=this.myForumList.joined
         this.isLoading = false
-        console.log(this.customData.selectList,'this.customData.selectList');
     },
     watch: {
         showForumList(newValue) {
@@ -306,7 +292,6 @@ export default {
             if (this.showForumList.length>0 ) {
                 this.getCommunityPost(this.showForumList[0].id)
             }
-            console.log(this.customData.selectList,'this.customData.selectList');
             setTimeout(() => {
                 this.isLoading = false
             });

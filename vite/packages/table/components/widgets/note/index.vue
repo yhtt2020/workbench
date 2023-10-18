@@ -9,12 +9,22 @@
     ref="homelSlotRef"
     :desk="desk"
   >
+  <!-- 图标 -->
+    <template #left-title>
+        <div class="icon"
+            style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;top:15px;">
+            <Icon :icon="icons.notepad12Regular" width="20" height="20" />
+          </div>
+    </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
+    
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
+        <!-- :style="{ backgroundImage: background, color: fontColor }" -->
         <textarea
           spellcheck="false"
-          :style="{ backgroundImage: background, color: fontColor }"
+          :style="{ backgroundImage: background}"
+          style="color: var(--primary-text);"
           class="box no-drag"
           placeholder="输入卡片内容"
           v-model="text"
@@ -31,8 +41,8 @@
     </template>
 
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
-    <div>文字颜色</div>
-    <div class="item-box">
+    <!-- <div>文字颜色</div> -->
+    <!-- <div class="item-box">
       <div
         class="item"
         :key="item"
@@ -40,14 +50,14 @@
         v-for="item in fontColors"
         @click="updateFontColor(item)"
       ></div>
-    </div>
+    </div> -->
     <div class="text-base" style="margin: 12px 0">背景色</div>
     <div class="item-box">
       <div
         class="item"
         :key="item"
         :style="{ backgroundImage: color[`${'color' + item}`] }"
-        v-for="item in 15"
+        v-for="item in 6"
         @click="updateBackground(color[`${'color' + item}`])"
       ></div>
     </div>
@@ -56,14 +66,20 @@
 
 <script>
 import Widget from "../../card/Widget.vue";
-
 import cardSizeHook from "../../card/hooks/cardSizeHook";
-
 import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 import { message } from "ant-design-vue";
+import { Icon } from '@iconify/vue';
+import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular';
 
 export default {
+  name:'便签', 
+  components: {
+    Widget,
+    Icon,
+    cardDrag,
+  },
   mixins: [cardDragHook, cardSizeHook],
   props: {
     customIndex: {
@@ -94,8 +110,10 @@ export default {
       options: {
         className: "card",
         title: "桌面便签",
-        icon: "bianji",
+        icon: "",
+        // icon: "bianji",
         type: "games",
+        isEdit:true,
       },
       settingVisible: false,
       menuList: [
@@ -109,30 +127,33 @@ export default {
         },
       ],
       color: {
-        color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-        color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
-        color3: "linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)",
-        color4: "linear-gradient(-45deg, #545454 0%, #C0E0FF 0%, #ADC9FF 100%)",
-        color5: "linear-gradient(-45deg, #545454 0%, #89E5FF 0%, #70B3FF 100%)",
-        color6: "linear-gradient(-45deg, #545454 0%, #44D2DE 0%, #558AED 100%)",
-        color7: "linear-gradient(-45deg, #545454 0%, #D9ABE1 0%, #A772FC 100%)",
-        color8: "linear-gradient(-45deg, #545454 0%, #F5BC9A 0%, #D57FE6 100%)",
-        color9: "linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)",
-        color10:
-          "linear-gradient(-45deg, #BA4348 0%, #A466E9 0%, #BA4244 100%)",
-        color11:
-          "linear-gradient(-45deg, #A93AAE 0%, #DA6891 0%, #C987CC 100%)",
-        color12:
-          "linear-gradient(-45deg, #545454 0%, #DA6991 0%, #A73781 100%)",
-        color13:
-          "linear-gradient(-45deg, #545454 0%, #F1EBF9 0%, #F4CFF6 100%)",
-        color14:
-          "linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)",
-        color15:
-          "linear-gradient(-45deg, #252A31 0%, #30373F 0%, #15161A 100%)",
+        color1: "linear-gradient(-33deg, #545454 0%, #AC9555 1%, #A3625D 100%)",
+        color2: "linear-gradient(-53deg, #545454 0%, #ACA955 1%, #A3865D 100%)",
+        color3: "linear-gradient(-33deg, #545454 0%, #90AC55 1%, #5DA36D 100%)",
+        color4: "linear-gradient(-53deg, #545454 0%, #5564AC 1%, #7E5DA3 100%)",
+        color5: "linear-gradient(-64deg, #545454 0%, #55A2AC 1%, #5D7BA3 100%)",
+
+        // color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
+        // color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
+        // color3: "linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)",
+        // color4: "linear-gradient(-45deg, #545454 0%, #C0E0FF 0%, #ADC9FF 100%)",
+        // color5: "linear-gradient(-45deg, #545454 0%, #89E5FF 0%, #70B3FF 100%)",
+        // color6: "linear-gradient(-45deg, #545454 0%, #44D2DE 0%, #558AED 100%)",
+        // color7: "linear-gradient(-45deg, #545454 0%, #D9ABE1 0%, #A772FC 100%)",
+        // color8: "linear-gradient(-45deg, #545454 0%, #F5BC9A 0%, #D57FE6 100%)",
+        // color9: "linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)",
+        // color10:"linear-gradient(-45deg, #BA4348 0%, #A466E9 0%, #BA4244 100%)",
+        // color11:"linear-gradient(-45deg, #A93AAE 0%, #DA6891 0%, #C987CC 100%)",
+        // color12:"linear-gradient(-45deg, #545454 0%, #DA6991 0%, #A73781 100%)",
+        // color13:"linear-gradient(-45deg, #545454 0%, #F1EBF9 0%, #F4CFF6 100%)",
+        // color14:"linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)",
+        // color15:"linear-gradient(-45deg, #252A31 0%, #30373F 0%, #15161A 100%)",
       },
       text: "",
       background: "",
+			icons: {
+				notepad12Regular,
+			},
     };
   },
   created() {
@@ -161,11 +182,7 @@ export default {
       this.fontColor = "white";
     }
   },
-  components: {
-    Widget,
 
-    cardDrag,
-  },
   methods: {
     updateText() {
       this.updateCustomData(
@@ -226,6 +243,10 @@ export default {
       );
       this.fontColor = color;
     },
+
+    test(){
+      console.log(this.icons);
+    }
   },
 };
 </script>
@@ -274,5 +295,9 @@ export default {
   width: 100%;
   height: 20px;
   justify-content: end;
+}
+
+::-webkit-input-placeholder{
+  color: var(--primary-text);
 }
 </style>

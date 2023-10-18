@@ -192,7 +192,7 @@ export default defineComponent({
       if(index === -1 ){
         data.selectList.push(item)
       }else{
-        return;
+        data.selectList.splice(index,1)
       }
     }
 

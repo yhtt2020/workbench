@@ -12,9 +12,9 @@
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" hidden="" style="border-radius: 12px;" placeholder="搜索" @pressEnter="groupSearch">
+    <a-input class="h-10 search" v-model:value="searchKeyWord" style="border-radius: 12px;" placeholder="搜索" @pressEnter="groupSearch" @input="groupSearch">
      <template #suffix>
-       <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
+       <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer" @click="groupSearch"/>
      </template>
     </a-input>
 
@@ -22,7 +22,7 @@
 
     <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
      <div class="flex flex-col">
-       <div v-for="(item,index) in filterList" :class="{'select-bg':isSelected(index)}" class="flex rounded-lg items-center px-4 py-3 mb-3" @click="leftListClick(item)">
+       <div v-for="(item,index) in filterList" :class="{'select-bg':isSelected(index)}" class="flex pointer rounded-lg items-center px-4 py-3 mb-3" @click="leftListClick(item)">
         <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
         <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
        </div>
@@ -104,7 +104,8 @@ export default defineComponent({
    option:{
     communityNo:props.no,
     cache:1
-   }
+   },
+   searchKeyWord:'',
   })
   
   // 返回上一层
@@ -132,7 +133,7 @@ export default defineComponent({
    if(index === -1){
     data.selectGroup.push(item)
    }else{
-    return;
+    data.selectGroup.splice(index,1)
    }
   }
 
@@ -159,8 +160,18 @@ export default defineComponent({
   }
 
   //群聊搜索
-  const groupSearch = () =>{
-    
+  const groupSearch = (evt) =>{
+    /**
+     * 此处需要做两种判断
+     * 第一种:过滤社群中是否关联过得去群聊,需要通过后台接口进行检测
+     * 第二种:过滤自自己是成员的群聊
+     * **/
+    if(this.searchKeyWord !== ''){
+      
+
+    }else{
+      evt.preventDefault()
+    }
   }
 
   return {
