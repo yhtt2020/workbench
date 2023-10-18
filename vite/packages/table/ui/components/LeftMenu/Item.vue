@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <xt-new-icon icon='fluent:full-screen-maximize-16-filled'/> -->
     <!-- antd插槽 -->
     <div
       v-if="item.slot"
@@ -22,24 +23,24 @@
       />
     </div>
     <!-- icon -->
-    <xt-new-icon
-      size="20"
-      w="40"
-      v-else-if="item.newIcon"
-      :icon="item.newIcon"
-      :bgStyle="bg"
-      :type="newType"
-      radius="10"
-    />
     <xt-icon
-      @click="itemClick()"
-      v-else
+      v-else-if="item.icon"
       w="40"
       size="20"
       radius="10"
       :type="type"
-      :icon="item.full ? full : item.icon"
-    ></xt-icon>
+      :icon="item.icon"
+    />
+    <xt-new-icon
+      v-else
+      @click="itemClick()"
+      size="20"
+      w="40"
+      :icon="item.full ? full : item.newIcon"
+      :bgStyle="bg"
+      :type="newType"
+      radius="10"
+    />
   </div>
 </template>
 
@@ -83,7 +84,9 @@ const imgSize = computed(() => {
 const data = ref(false);
 const full = computed(() => {
   fullScreen.value = data.value ? true : false;
-  return data.value ? "quxiaoquanping_huaban" : "quanping_huaban";
+  return data.value
+    ? "fluent:full-screen-minimize-16-filled"
+    : "fluent:full-screen-maximize-16-filled";
 });
 const itemClick = () => {
   if (props.item.full) {
