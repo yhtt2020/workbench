@@ -87,12 +87,14 @@
 
               <div class="pl-3">
                 <xt-task :modelValue="getStep" @cb="showMenu">
-                <div
-                  @click="showMenu"
-                  class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
-                >
-                  <Icon style="font-size: 18px" icon="gengduo1"></Icon>
-                </div>
+                  <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='click'>
+                    <div
+                        @click="showMenu"
+                        class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+                      >
+                        <xt-new-icon size='18' icon="fluent:more-horizontal-16-filled" />
+                      </div>
+                  </RightMenu>
             </xt-task>
 
               </div>
@@ -123,7 +125,9 @@
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
         :key="key"
+
       >
+      <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
         </template>
@@ -408,7 +412,6 @@
 
 
   </a-drawer>
-
   <ShareDesk
     :deskList="deskList"
     ref="shareDeskRef"
@@ -470,9 +473,11 @@ import { marketStore } from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
+import RightMenu from "./RightMenu.vue"
 export default {
   name: "DeskGroup",
   components: {
+    RightMenu,
     Emoji,
     VueCustomScrollbar,
     Icon,
@@ -750,7 +755,8 @@ export default {
       });
     },
     showMenu() {
-      this.$refs.currentDeskRef.showMenu();
+     this.$refs.currentDeskRef.showMenu();
+     console.log('object :>> ',      this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");
