@@ -1,5 +1,5 @@
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
+    <Modal :maskNoClose="true" class="" :animationName="t-b-close">
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
@@ -37,5 +37,10 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 const postValue = ref('')
+const emit=defineEmits(['handleOk'])
+const handleOk=()=>{
+    let visible=false
+    emit('handleOk',visible)
+}
 </script>
 <style lang='scss' scoped></style>

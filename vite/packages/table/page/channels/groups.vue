@@ -2,24 +2,38 @@
     <div class="h-full">
         <div class="flex justify-between">
             <div class="flex">
-                <HorizontalPanel :navList="groupsList" v-model:selectType="groupsType"></HorizontalPanel>
+                <HorizontalPanel :navList="groupsList" v-model:selectType="groupsType" style="height: 40px;"></HorizontalPanel>
                 <div>
-                    <a-select v-model:value="value"  style="width: 160px;height: 46px;margin-left: 12px;line-height: 46px;border-radius: 12px;"
-                        :bordered="false"  @change="handleChange">
+                    <!-- <a-select v-model:value="value"
+                        style="width: 160px;height: 46px;margin-left: 12px;line-height: 46px;border-radius: 12px;"
+                        :bordered="false" @change="handleChange">
                         <template #placeholder>
-                            <div class="xt-text font-14">
+                            <div class=" xt-text font-14">
                                 全部
                             </div>
                         </template>
-                        <a-select-option :value="item.tag" v-for="(item, index) in options" :key="index" style="color: var(--primary-text);" >
+                        <a-select-option :value="item.tag" v-for="(item, index) in options" :key="index"
+                            style="color: var(--primary-text);">
+                            {{ item.title }}
+                        </a-select-option>
+                    </a-select> -->
+                    <a-select style="width:160px;  height: 40px; border-radius: 8px;margin-left: 12px;line-height: 40px;"
+                     :bordered="false" @change="handleChange" class="flex items-center justify-center">
+                        <template #placeholder>
+                            <div class=" xt-text font-14">
+                                全部
+                            </div>
+                        </template>
+                        <a-select-option :value="item.tag" v-for="(item, index) in options" :key="index"
+                            style="color: var(--primary-text);">
                             {{ item.title }}
                         </a-select-option>
                     </a-select>
                 </div>
             </div>
             <div>
-                <a-input v-model:value="inputValue" placeholder="搜索" 
-                    style="width: 244px; height: 46px;border-radius: 12px;border: 1px solid var(--divider);">
+                <a-input v-model:value="inputValue" placeholder="搜索"
+                    style="width: 244px; height: 40px;border-radius: 12px;border: 1px solid var(--divider);">
                     <template #suffix>
                         <newIcon icon="fluent:search-20-filled" style="font-size: 20px;"></newIcon>
                     </template>
@@ -27,41 +41,50 @@
             </div>
         </div>
         <!-- 圈子列表 -->
-        <div style="height: calc(100vh - 270px)">
+        <div style="height: calc(100vh - 16em)">
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
-                    :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
+                :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <div class="flex flex-wrap mt-4">
-                    <GroupsItem v-for="index in 12" :key="index" />
+                    <GroupsItem v-for="(item,index) in groupMsg" :key="index" :circleMsg="item" @goJoin="goJoin"/>
+                </div>
+                <!-- 翻页 -->
+                <div class="flex justify-center">
+                    <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
                 </div>
             </vue-custom-scrollbar>
-        </div>
 
-        <!-- 翻页 -->
-        <div class="flex justify-center">
-            <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination"/>
         </div>
-
+        <JoinModal v-if="joinVisible" @handleOk="joinVisible=false"/>
     </div>
+    
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import GroupsItem from './components/GroupsItem.vue'
+import {groupMsg} from './mock'
+import JoinModal from './components/JoinModal.vue'
+const joinVisible=ref(false)
 const groupsList = ref([
     { title: '官方圈子', name: 'official' },
     { title: '用户圈子', name: 'user' }
 ])
-const currentPage=ref(1)
+const currentPage = ref(1)
 const groupsType = { title: '官方圈子', name: 'official' }
 const settingsScroller = reactive({
-  useBothWheelAxes: true,
-  swipeEasing: true,
-  suppressScrollY: false,
-  suppressScrollX: true,
-  wheelPropagation: true,
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true,
 });
+const goJoin=(value)=>{
+    console.log(value);
+    
+    joinVisible.value=value
+}
 const inputValue = ref('')
 const options = ref([
     {
@@ -81,10 +104,6 @@ const handleChange = (value) => {
     console.log(value);
 
 }
-onMounted(()=>{
-    console.log(groupsList.value);
-    
-})
 </script>
 <style lang='scss' scoped>
 :deep(.ant-input) {
@@ -94,27 +113,31 @@ onMounted(()=>{
         color: var(--primary-text);
     }
 }
-:deep(.ant-pagination-item){
+
+:deep(.ant-pagination-item) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
     width: 40px;
     height: 40px;
-    & a{
+
+    & a {
         display: block;
         height: 40px;
         text-align: center;
         margin-top: 4px;
     }
 }
-:deep(.ant-pagination-prev ){
+
+:deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
     width: 40px;
     height: 40px;
 }
-:deep(.ant-pagination-next ){
+
+:deep(.ant-pagination-next) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
