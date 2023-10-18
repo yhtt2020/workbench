@@ -1,35 +1,28 @@
 @import url(../../../../../../node_modules/ant-design-vue/dist/antd.dark.css);
-.todo-style{
-  ul li {
-    border-radius: 5px;
-    margin: 0 10px;
-  }
-  
-  ul li:hover {
-    background-color: #444444;
-  }
-  
-  .sidebar {
-    background: #2a2a2a;
-    border-right: 1px solid #444444;
-  }
-  
-  .main-content {
-    background: #2A2A2A;
-  }
-  
-  .right-content {
-    background: #323232;
-  }
-  
-  .ant-checkbox {
-    border: 2px solid #DFDFDF;
-  }
-  
-  .select-input {
-    background-color: #555555;
-    border-radius: 5px;
-    padding: 8px;
-  }
-  
+.todo-style ul li {
+  border-radius: 5px;
+  margin: 0 10px;
 }
+.todo-style ul li:hover {
+  background-color: #444444;
+}
+.todo-style .sidebar {
+  background: #2a2a2a;
+  border-right: 1px solid #444444;
+}
+.todo-style .main-content {
+  background: #2A2A2A;
+}
+.todo-style .right-content {
+  background: #323232;
+}
+.todo-style .ant-checkbox {
+  border: 2px solid #DFDFDF;
+}
+.todo-style .select-input {
+  background-color: #555555;
+  border-radius: 5px;
+  padding: 8px;
+}
+
+/*# sourceMappingURL=dark.css.map */

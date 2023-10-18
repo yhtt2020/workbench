@@ -1,7 +1,7 @@
 <template>
 
   <div class="s-bg rounded-lg xt-text" style="height: 100%">
-    <div class="back-btn" @click="goBack" >
+    <div class="back-btn ml-2" @click="goBack" >
       <Icon icon="xiangzuo"  style="font-size: 2em;"></Icon>
     </div>
     <a-row style="margin-left:5em ">
@@ -135,14 +135,16 @@ export default {
           if (!isPaused) {
             this.pause()
           }
+
         }
       })
+    }else{
+      history.go(-1)
     }
   },
   methods: {
     goBack(){
         this.$router.go(-1)
-
     },
     displayNum (num) {
       if (num < 10) {
