@@ -32,6 +32,22 @@
           壁纸保存位置：<a-input placeholder="请选择壁纸保存地址" @click="showSaveDialog" style="width: 15em;color: var(--primary-text);"
             v-model:value="settings.savePath"></a-input>
         </div>
+        <div class="line flex items-center" style="">
+          <div style="width: 115px;">
+            默认锁屏壁纸源：
+          </div>
+        <a-select
+          class="w-full "
+          v-model:value="settings.wallSource"
+          style="width: 120px;background-color: transparent;"
+          @change="handleChange"
+        >
+          <a-select-option value="my">我的收藏</a-select-option>
+          <a-select-option value="bing">必应壁纸</a-select-option>
+          <a-select-option value="picking">拾光壁纸</a-select-option>
+          <a-select-option value="lively">动态壁纸</a-select-option>
+        </a-select>
+        </div>
         <!--          <div class="line">-->
         <!--            解锁需要输入密码：<a-switch v-model:checked="settings.usePassword"></a-switch>-->
         <!--          </div>-->

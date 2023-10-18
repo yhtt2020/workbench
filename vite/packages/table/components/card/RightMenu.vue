@@ -167,10 +167,6 @@ const updateCardSize = (item) => {
 const removeCard = () => {
   emits("removeCard");
 };
-
-defineExpose({
-  menuVisible,
-});
 </script>
 
 <style lang="scss" scoped></style>

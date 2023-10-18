@@ -115,6 +115,7 @@
       v-if="currentDesk && currentDesk?.cards?.length > 0"
     >
       <Desk
+      :deskGroupMenu='deskGroupMenu'
         @changeEditing="editing = !editing"
         :global-settings="settings"
         :editing="editing"
@@ -248,6 +249,7 @@
         <Desk
           ref="currentDeskRef"
           :currentDesk="currentDesk"
+          :deskGroupMenu='deskGroupMenu'
           :key="key"
           :editing="editing"
         >
@@ -518,6 +520,46 @@ export default {
   },
   data() {
     return {
+      deskGroupMenu:[
+        {
+          id:3,
+          newIcon:"fluent:slide-add-16-regular",
+                name:"添加桌面",
+                fn:this.showAddDeskForm
+        },
+        {
+          id:9,
+            newIcon:"fluent:more-horizontal-16-filled",
+            name:"更多",
+            children:[
+              {
+                id:1,
+                newIcon:"fluent:arrow-download-20-filled",
+                name:"导入桌面",
+                fn:this.importDesk
+              },
+              {
+                id:2,
+                newIcon:"fluent:open-20-filled",
+                name:"导出桌面",
+                fn:this.exportDesk
+              },
+              {
+                id:3,
+                newIcon:"fluent:share-android-24-regular",
+                name:"分享桌面",
+                fn:this.shareDesk
+              },
+              {
+                id:5,
+                newIcon:"akar-icons:trash-can",
+                name:"删除桌面",
+                fn:this.delDesk
+              }
+
+            ],
+        }
+      ],
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,

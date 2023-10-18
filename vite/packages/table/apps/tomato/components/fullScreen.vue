@@ -11,8 +11,12 @@
             </div>
         </div>
         <div class="icon-box"> 
+          <!-- 重新开始 -->
+          <div class="icon" v-if="!running" @click="onPlay">
+            <Icon icon="fluent:play-16-filled" />
+          </div>
           <!-- 开始 -->
-          <div class="icon" v-if="running && !isPause" @click="onPause">
+          <div class="icon" v-else-if="running && !isPause" @click="onPause">
             <Icon icon="akar-icons:pause" />
           </div>
           <!-- 暂停 -->
@@ -49,7 +53,7 @@
 
     },
     computed: {
-      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running','tomatoNum']),
+      ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running','tomatoNum','isPause']),
       ...mapState(appStore,['userInfo','backgroundImage'])
       
     },
@@ -66,7 +70,7 @@
       };
     },
     methods: {
-      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','exit']),
+      ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onPlay','exit']),
       // exit(){
       //     this.$emit("exit");
       // },

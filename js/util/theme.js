@@ -1,10 +1,12 @@
 if (typeof require !== 'undefined') {
   if(typeof require('electron').app==='undefined'){
-    var tempSettings = require('util/settings/settings.js')
+    var tempSettings = require('./settings/settings.js')
   }else{
     var tempSettings=global.settings
       //var settings=global.settings
   }
+}else{
+  var tempSettings = window.settings
 }
 
 function systemShouldEnableDarkMode () {

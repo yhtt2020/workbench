@@ -3,7 +3,7 @@
     @click.stop="iconClick($event)" :style="[iconSize]">
     <div class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
       :style="[bgSize, backgroundState]" :data-index="index">
-      <img v-if="src && src.length > 0" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+      <img v-if="src && src.length > 0" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index" />
     </div>
     <div v-if="isTitle" class="text-center xt-text h-5 truncate mx-auto" :style="[textSize]" :data-index="index">
@@ -18,7 +18,7 @@
 import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
-
+import {renderIcon} from '../../../../js/common/common'
 export default {
   mixins: [editProps],
   props: {
@@ -76,6 +76,7 @@ export default {
     imgShape(newV) { },
   },
   methods: {
+    renderIcon,
     getSizeValues(size) {
       if (this.isReSize) {
         size = "mini";

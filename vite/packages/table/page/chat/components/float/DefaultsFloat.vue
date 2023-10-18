@@ -30,7 +30,7 @@
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
   <div v-for="item in defaultCategory?.tree">
-    <ChatFold :title="item.name" :show="false">
+    <ChatFold :title="item.name" :show="false" :no="defaultCategory?.no">
      
      <div class="flex flex-col" v-if="isDoubleColumn === false">
 
