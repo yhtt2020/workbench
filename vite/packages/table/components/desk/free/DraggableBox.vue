@@ -6,7 +6,7 @@ import Box from "./Box.vue";
 import { toRefs } from "@vueuse/core";
 import { onMounted } from "vue";
 import Notes from "../../widgets/note/index.vue";
-
+import test from "./test.vue";
 const props = defineProps<{
   item?: object;
   left: number;
@@ -30,25 +30,19 @@ const { isDragging } = toRefs(collect);
 </script>
 
 <template>
-  <div
-    :ref="drag"
-    :style="{
-      position: 'absolute',
-      transform: `translate3d(${left}px, ${top}px, 0)`,
-      opacity: isDragging ? 0 : 1,
-      height: isDragging ? 0 : '',
-    }"
-    role="DraggableBox"
-  >
+  <div>
+    <test
+      :ref="drag"
+      :style="{
+        position: 'absolute',
+        transform: `translate3d(${left}px, ${top}px, 0)`,
+        opacity: isDragging ? 0 : 1,
+        height: isDragging ? 0 : '',
+      }"
+      role="DraggableBox"
+    ></test>
     <!-- <Box :title="title" /> -->
     <!-- {{item}} -->
-    <Box>
-      <component
-        :desk="currentDesk"
-        is="Notes"
-        :customIndex="item.id"
-        :customData="item.customData"
-      ></component>
-    </Box>
+    <Box> </Box>
   </div>
 </template>
