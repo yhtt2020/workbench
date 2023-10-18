@@ -58,9 +58,9 @@
 </template>
 
 <script lang="ts">
-import BackBtn from '../../../components/comp/BackBtn.vue'
-import ActionBuilder from "../../../components/deck/ActionBuilder.vue";
-import {ActionGroups} from "../../../consts";
+import BackBtn from '../../components/comp/BackBtn.vue'
+import ActionBuilder from "../../components/deck/ActionBuilder.vue";
+import {ActionGroups} from "../../consts";
 import _ from 'lodash-es'
 /**
  * 添加一个新的Tab行为

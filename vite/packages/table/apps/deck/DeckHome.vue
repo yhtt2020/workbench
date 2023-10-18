@@ -301,23 +301,23 @@
 </template>
 
 <script>
-import DeckItem from '../../../components/muuri/DeckItem.vue'
-import { appStore } from '../../../store'
+import DeckItem from '../../components/muuri/DeckItem.vue'
+import { appStore } from '../../store'
 import { mapWritableState, mapActions } from 'pinia'
-import Template from '../../../../user/pages/Template.vue'
+import Template from '../../../user/pages/Template.vue'
 import DeckAdd from './DeckAdd.vue'
 import { message } from 'ant-design-vue'
-import { deckStore } from '../../../store/deck'
-import Widget from '../../../components/muuri/Widget.vue'
-import vuuri from '../../../components/vuuri/Vuuri.vue'
-import Prompt from '../../../components/comp/Prompt.vue'
+import { deckStore } from '../../store/deck'
+import Widget from '../../components/muuri/Widget.vue'
+import vuuri from '../../components/vuuri/Vuuri.vue'
+import Prompt from '../../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
-import BackBtn from '../../../components/comp/BackBtn.vue'
+import BackBtn from '../../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import GradeSmallTip from "../../../components/GradeSmallTip.vue";
-import { powerState } from '../../../js/watch/grade'
+import GradeSmallTip from "../../components/GradeSmallTip.vue";
+import { powerState } from '../../js/watch/grade'
 import _ from 'lodash-es'
-import {} from "../../../apps/task/page/branch/task.ts"
+import {} from "../task/page/branch/task.ts"
 export default {
   name: 'Deck',
   components: {
