@@ -13,7 +13,7 @@
       双击托盘菜单默认打开：
       <a-radio-group v-model:value="trayOpen">
         <!-- 后期可删 -->
-        <a-radio value="worktable" style="color: var(--primary-text)">工作台</a-radio>
+        <a-radio value="table" style="color: var(--primary-text)">工作台</a-radio>
         <a-radio value="browser" style="color: var(--primary-text)">浏览器</a-radio>
       </a-radio-group>
     </div>
@@ -46,12 +46,12 @@ export default {
       showInTaskBar: false,
       rightMenuList:[
         {
-          name:"主应用",
+          name:"下拉菜单",
         value:  'follow'
         },
         {
-          name:"副屏",
-          value:  'defalut'
+          name:"抽屉菜单",
+          value:  'default'
         }
       ]
     }
