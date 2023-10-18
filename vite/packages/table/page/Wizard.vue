@@ -291,10 +291,10 @@ export default {
   },
   async mounted () {
     let keyMap = await tsbApi.settings.get('keyMap')
-    if (keyMap.table) {
+    if (keyMap?.table) {
       this.shortKeysTable = keyMap.table
     }
-    if (keyMap.globalSearch) {
+    if (keyMap?.globalSearch) {
       this.shortKeysSearch = keyMap.globalSearch
     }
 
