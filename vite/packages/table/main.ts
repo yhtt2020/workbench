@@ -1,3 +1,9 @@
+// 注册想天客户端状态
+import currentEnv, { isWeb, isClient ,isMac} from "./ui/hooks/env";
+window.$currentEnv = currentEnv;
+window.$isWeb = isWeb;
+window.$isClient = isClient;
+window.$isMac = isMac;
 import {createApp} from 'vue'
 import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.less';
@@ -85,6 +91,17 @@ window.$notice = notice
 dayjs.locale('zh-cn');
 
 const app = createApp(App)
+
+// 使用 provide 将全局变量作为响应式对象
+app.provide("currentEnv", currentEnv);
+app.provide("isWeb", isWeb);
+app.provide("isClient", isClient);
+app.provide("isMac", isMac);
+// 使用 globalProperties 将全局变量附加到 Vue 实例上
+app.config.globalProperties.$currentEnv = currentEnv;
+app.config.globalProperties.$isWeb = isWeb;
+app.config.globalProperties.$isClient = isClient;
+app.config.globalProperties.$isMac = isMac;
 
 const pinia = createPinia()
 pinia.use(piniaPersist)
