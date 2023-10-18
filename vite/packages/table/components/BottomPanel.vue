@@ -128,7 +128,7 @@
                   width: 40px;
                   height: 40px;
                   margin-left: 5px;
-                  margin-bottom: 3px;
+                  margin-top: 1px;
                 "
               ></navIcon>
               <span
@@ -147,7 +147,7 @@
             <template v-else>
               <navIcon
                 icon="majesticons:monitor-line"
-                style="width: 40px; height: 40px; margin-left: 2px"
+                style="width: 40px; height: 40px; margin-left: 2px;margin-top: 1px;"
               ></navIcon>
               <span
                 style="
