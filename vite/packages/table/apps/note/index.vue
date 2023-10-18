@@ -6,11 +6,8 @@
                 <!-- <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft> -->
                 <LeftSearch></LeftSearch>
                 </div>
-                <div class="flex h-full flex-col w-full">123456
-                    <!-- <img src="https://a.apps.vip/icons/iconSelect/emoji/american-football.svg" /> -->
-                    <!-- <img src="https://a.apps.vip/icons/iconSelect/icon/bank.svg" /> -->
-                <!-- <HeaderView></HeaderView>
-                <Caht></Caht> -->
+                <div class="flex h-full flex-col w-full">
+                  <NodeContent></NodeContent>
                 </div>
             </div>
         </LeftTab>
@@ -21,7 +18,7 @@
   
   <script>
   
-  
+import NodeContent from "./components/nodeContent.vue";
 import LeftTab from "./components/leftTab.vue";
 import LeftSearch from "./components/leftSearch.vue";
   export default {
@@ -29,6 +26,7 @@ import LeftSearch from "./components/leftSearch.vue";
     components:{
         LeftTab,
         LeftSearch,
+        NodeContent,
     },
     data () {
       return {

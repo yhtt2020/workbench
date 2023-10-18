@@ -21,9 +21,6 @@
         <!-- 随机 -->
         <a-tooltip>
           <template #title>随机</template>
-          <!-- <div class="flex justify-center items-center pointer ml-3"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
-            <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
-          </div> -->
           <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: #2A2A2A;border-radius: 10px;" @click="onRandom">
             <Icon class="pointer flex items-center" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
           </xt-button>
