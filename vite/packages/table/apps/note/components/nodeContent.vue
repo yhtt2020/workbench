@@ -1,9 +1,9 @@
  <template>
-    <div class="w-full h-full flex justify-center items-center" style="min-width: 800px;">
-        <div>
+    <div class="w-full h-full flex justify-center items-center">
+        <div class="w-full center" style="max-width: 800px;">
             <!-- <div @click="test">123</div> -->
             <!-- 顶部 -->
-            <div style="width: 800px;justify-content: space-between;" class="flex " >
+            <div style="max-width: 800px;justify-content: space-between;" class="flex w-full" >
                 <div class="flex items-center">
                     <div class="flex justify-center items-center mr-3 pointer" style="background-color: var(--secondary-bg);border-radius:10px;width: 107px;height: 40px;">#日常桌面</div>
                     <div style="font-size: 14px;color: rgba(255,255,255,0.40);">10分钟前编辑</div>
@@ -12,7 +12,7 @@
                     <div  class="flex justify-center items-center mr-3 pointer shadow" style="width:40px;height:40px;border-radius: 10px;" :style="{backgroundImage:this.selNote>=0?this.noteList[this.selNote].backgroundColor:''}" @click="isColor=!isColor"></div>
                     <!-- 颜色选择 -->
                     <div v-show="isColor" style="justify-content: space-around;position: absolute;width: 168px;height: 120px;top: 46px;left: -118px;background-color: #2A2A2A;" class="flex flex-wrap rounded p-3">
-                        <div class="flex rounded-lg pointer" style="height:40px;width:40px;"  v-for="(item,index) in this.noteBgColor" :key="index" :style="{backgroundImage:item}"></div>
+                        <div class="flex rounded-lg pointer" style="height:40px;width:40px;"  v-for="(item,index) in this.noteBgColor" :key="index" :style="{backgroundImage:item}" @click="changeBgColor(index)"></div>
                     </div>
                     <xt-button class="flex justify-center items-center" :w="40" :h="40"><Icon :icon="icons.moreHorizontal16Filled" /></xt-button>
                 </div>
@@ -51,6 +51,10 @@
      };
    },
    methods:{
+    // 修改当前便签颜色
+    changeBgColor(i){
+        this.noteList[this.selNote].backgroundColor = this.noteBgColor[i]
+    },
     test(){
         console.log(this.noteList);
         console.log(this.selNote);

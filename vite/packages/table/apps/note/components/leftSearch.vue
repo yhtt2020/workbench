@@ -21,7 +21,7 @@
                     <span  :style="{background:item.backgroundColor}"></span>
                     <div class="ml-2">{{ item.title }}</div>
                 </div>
-                <div class="mt-2 font-16 two-hidden" style="height:46px;color: var(--secondary-text);">
+                <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
                     {{ item.content }}
                 </div>
                 <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">

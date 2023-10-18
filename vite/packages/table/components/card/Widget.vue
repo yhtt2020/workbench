@@ -28,7 +28,17 @@
             <slot name="left-title"></slot>
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="w-2/3 flex">
-              {{ options.title }}
+              <div v-if="options.isEdit">
+                <a-input
+                  style="border: none;box-shadow: none !important;
+                  position: relative;left: -28px;top: -2px;"
+                  :value="options.title"
+                ></a-input>
+              </div>
+              <div v-else="options.isEdit">
+                {{ options.title }}
+              </div>
+              
               <slot name="left-title" v-if="options.rightIcon">
                 <div class="right-icon">
                   <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>

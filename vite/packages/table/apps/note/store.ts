@@ -75,15 +75,23 @@ export const noteStore = defineStore("noteStore", {
         backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
       },
     ],
+    // 主应用里当前选中
     selNote:-1,
+    // 背景色
     noteBgColor:[
       "linear-gradient(-33deg, #545454 0%, #AC9555 1%, #A3625D 100%)",
       "linear-gradient(-53deg, #545454 0%, #ACA955 1%, #A3865D 100%)",
       "linear-gradient(-33deg, #545454 0%, #90AC55 1%, #5DA36D 100%)",
       "linear-gradient(-53deg, #545454 0%, #5564AC 1%, #7E5DA3 100%)",
       "linear-gradient(-64deg, #545454 0%, #55A2AC 1%, #5D7BA3 100%)",
-      "linear-gradient(-64deg, #545454 0%, #55A2AC 1%, #5D7BA3 100%)",
-    ]
+      // "linear-gradient(-64deg, #545454 0%, #55A2AC 1%, #5D7BA3 100%)",
+    ],
+    // 桌面测试数据
+    noteDesk:[
+      {
+
+      }
+    ],
     
   }),
   // getters:{},
@@ -111,7 +119,7 @@ export const noteStore = defineStore("noteStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: []
+      paths: ['noteList']
       // state 中的字段名，按组打包储存
     }]
   }

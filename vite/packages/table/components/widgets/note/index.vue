@@ -9,12 +9,22 @@
     ref="homelSlotRef"
     :desk="desk"
   >
+  <!-- 图标 -->
+    <template #left-title>
+        <div class="icon"
+            style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;top:15px;">
+            <Icon :icon="icons.notepad12Regular" width="20" height="20" />
+          </div>
+    </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
+    
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
+        <!-- :style="{ backgroundImage: background, color: fontColor }" -->
         <textarea
           spellcheck="false"
-          :style="{ backgroundImage: background, color: fontColor }"
+          :style="{ backgroundImage: background}"
+          style="color: var(--primary-text);"
           class="box no-drag"
           placeholder="输入卡片内容"
           v-model="text"
@@ -31,8 +41,8 @@
     </template>
 
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
-    <div>文字颜色</div>
-    <div class="item-box">
+    <!-- <div>文字颜色</div> -->
+    <!-- <div class="item-box">
       <div
         class="item"
         :key="item"
@@ -40,7 +50,7 @@
         v-for="item in fontColors"
         @click="updateFontColor(item)"
       ></div>
-    </div>
+    </div> -->
     <div class="text-base" style="margin: 12px 0">背景色</div>
     <div class="item-box">
       <div
@@ -56,14 +66,20 @@
 
 <script>
 import Widget from "../../card/Widget.vue";
-
 import cardSizeHook from "../../card/hooks/cardSizeHook";
-
 import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 import { message } from "ant-design-vue";
+import { Icon } from '@iconify/vue';
+import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular';
 
 export default {
+  name:'便签', 
+  components: {
+    Widget,
+    Icon,
+    cardDrag,
+  },
   mixins: [cardDragHook, cardSizeHook],
   props: {
     customIndex: {
@@ -94,8 +110,10 @@ export default {
       options: {
         className: "card",
         title: "桌面便签",
-        icon: "bianji",
+        icon: "",
+        // icon: "bianji",
         type: "games",
+        isEdit:true,
       },
       settingVisible: false,
       menuList: [
@@ -133,6 +151,9 @@ export default {
       },
       text: "",
       background: "",
+			icons: {
+				notepad12Regular,
+			},
     };
   },
   created() {
@@ -161,11 +182,7 @@ export default {
       this.fontColor = "white";
     }
   },
-  components: {
-    Widget,
 
-    cardDrag,
-  },
   methods: {
     updateText() {
       this.updateCustomData(
@@ -226,6 +243,10 @@ export default {
       );
       this.fontColor = color;
     },
+
+    test(){
+      console.log(this.icons);
+    }
   },
 };
 </script>
@@ -274,5 +295,9 @@ export default {
   width: 100%;
   height: 20px;
   justify-content: end;
+}
+
+::-webkit-input-placeholder{
+  color: var(--primary-text);
 }
 </style>
