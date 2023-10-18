@@ -15,6 +15,17 @@
   font-size: 16px;
   font-weight: 500;
  }
+ &-12-400{
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  font-weight: 400;
+ }
+ 
+ &-18-500{
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  font-weight: 500;
+ }
 
  &-button{
   &:active{
@@ -24,6 +35,9 @@
   &:hover{
    opacity: 0.8;
   }
+ }
+ &-bg{
+  background: var(--secondary-bg);
  }
 }
 

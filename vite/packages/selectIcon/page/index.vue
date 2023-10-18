@@ -1,7 +1,6 @@
 <template>
-    <div style='width:400px;height:400px;background: #212121;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon">
+    <div style='width:400px;height:400px;background: #212121;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon" id="selectIcon">
       <!--  -->
-      <!-- <div class="top-triangle"></div> -->
       <div class="top-icon flex">
         <div class="type-select flex">
           <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''">Emojis</span>
@@ -47,12 +46,11 @@
             </div>
           </div>
         </div>
-        
-
       </div>
+
       <!-- 搜索结果 -->
-      <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
-        <div v-for="(item,index) in searchList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+      <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
+        <div v-for="(item,index) in searchIcon" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
             <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
@@ -61,7 +59,7 @@
         </div>
       </div>
       <!-- emojis -->
-      <div v-else-if="this.selIndex == 1" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
+      <div v-else-if="this.selIndex == 1" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
         <div v-for="(item,index) in emojisList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
@@ -70,7 +68,7 @@
         </div>
       </div>
       <!-- icon -->
-      <div v-else-if="this.selIndex == 2" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="flex-wrap: wrap;height: 290px;">
+      <div v-else-if="this.selIndex == 2" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
         <div v-for="(item,index) in iconList" :key="index" @click="onSelectIcon(index,'icon',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
@@ -80,7 +78,7 @@
           </a-tooltip>
         </div>
       </div>
-      <div v-else class="flex pl-1 pr-1 items-center" style="flex-wrap: wrap;flex-direction:column;">
+      <div v-else class="flex pl-1 pr-1 items-center flex-wrap flex-col" style="height:330px;">
         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
         <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: #2A2A2A;border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
           <Icon :icon="icons.add16Filled" width="20" height="20"/>
@@ -114,6 +112,28 @@
     props:{
       isCustom:Boolean,
       customTitle:String,
+      windowHeight:Number,
+    },
+          
+    computed:{
+      searchIcon(){
+        let tmpList = []
+        if (this.selIndex == 1) {
+          this.emojisList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }else if(this.selIndex == 2){
+          this.iconList.forEach((value, index)=>{
+            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
+              tmpList.push(value)
+            }
+          })
+        }
+        this.searchList = tmpList
+        return this.searchList
+      },
     },
     data() {
       return { 
@@ -136,12 +156,16 @@
         },
         iconList:icon.list,
         emojisList:emojis.list,
+        topHeight:0,
         
       }  
     },
+    mounted(){
+      this.topHeight = document.getElementById('selectIcon').getBoundingClientRect().top;
+      console.log(111111111111);
+    },
     
     methods: {
-
       // 选择图标类型
       onSelChange(n){
         this.selIndex = n
@@ -204,26 +228,8 @@
       // 确认
       changeAvatar(){
         this.$emit('getAvatar',this.avatarUrl)
+        
         this.$emit('isIconShow')
-      },
-
-      // 搜索
-      searchIcon(){
-        let tmpList = []
-        if (this.selIndex == 1) {
-          this.emojisList.forEach((value, index)=>{
-            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
-              tmpList.push(value)
-            }
-          })
-        }else if(this.selIndex == 2){
-          this.iconList.forEach((value, index)=>{
-            if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
-              tmpList.push(value)
-            }
-          })
-        }
-        this.searchList = tmpList
       },
 
     },

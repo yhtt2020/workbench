@@ -16,7 +16,7 @@
                 <navIcon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
                       :class="{ 'active-color': current(item) }"></navIcon>
               </div>
-              <a-avatar v-else :size="37" shape="square" :src="item.icon"></a-avatar>
+              <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
             </div>
           </div>
         </div>
@@ -58,6 +58,7 @@ import Sortable from 'sortablejs';
 import { message } from 'ant-design-vue';
 import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
+import {renderIcon} from '../js/common/common'
 export default {
   name: 'SidePanel',
   components: {
@@ -135,6 +136,7 @@ export default {
     }
   },
   methods: {
+    renderIcon,
     disableDrag(){
       if(this.sortable){
         document.removeEventListener('click',this.disableDrag)

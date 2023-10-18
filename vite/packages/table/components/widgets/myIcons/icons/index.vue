@@ -32,7 +32,7 @@
         <img
           v-if="iconList[i - 1]"
           class="img"
-          :src="iconList[i - 1].src"
+          :src="renderIcon(iconList[i - 1].src)"
           style="object-fit: cover"
         />
         <div v-else class="img"></div>
@@ -45,6 +45,7 @@
 <script>
 import IconsFullScreen from "./fullScreen.vue";
 import Custom from "./Custom.vue";
+import {renderIcon} from '../../../../js/common/common'
 export default {
   props: {
     width: {},
@@ -81,6 +82,7 @@ export default {
     },
   },
   methods: {
+    renderIcon,
     iconsRightClick() {
       this.$emit("iconsRightClick");
     },

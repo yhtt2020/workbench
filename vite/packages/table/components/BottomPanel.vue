@@ -99,7 +99,7 @@
              <a-avatar
                :size="40"
                shape="square"
-               :src="item.icon"
+               :src="renderIcon(item.icon)"
              ></a-avatar>
            </div>
                 </div>
@@ -218,7 +218,7 @@
           class=" btn"
           v-for="item in builtInFeatures"
           :key="item.name"
-          
+
         >
           <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
           <div>
@@ -286,7 +286,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
-import { toggleFullScreen } from '../js/common/common'
+import { toggleFullScreen ,renderIcon} from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
@@ -712,6 +712,7 @@ export default {
       })
       message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
+    renderIcon,
     delNavigation (sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
         //如果不是必须的

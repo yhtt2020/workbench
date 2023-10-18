@@ -12,7 +12,7 @@
     <a-dropdown @contextmenu.stop="() => { }" v-for="app in myApps" :trigger="['contextmenu']">
       <div @click="open(app)" class="app">
 
-        <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
+        <a-avatar :size="50" shape="square" :src="renderIcon(app.icon)"></a-avatar>
         <br>
         <div class="name text-more">
           {{ app.name }}
@@ -50,6 +50,7 @@ import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
 const { fs } = window.$models
+import {renderIcon} from '../js/common/common'
 export default {
   name: 'MyApps',
   data() {
@@ -70,6 +71,7 @@ export default {
   },
   methods: {
     ...mapActions(appsStore, ['deleteApp']),
+    renderIcon,
     addIcons(){
       this.$emit("addIcons")
     },

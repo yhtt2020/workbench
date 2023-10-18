@@ -564,6 +564,13 @@
   resolved "https://registry.npmmirror.com/@floating-ui/utils/-/utils-0.1.1.tgz"
   integrity sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==
 
+"@iconify-icons/fluent-emoji@^1.2.10":
+  version "1.2.10"
+  resolved "https://registry.npmmirror.com/@iconify-icons/fluent-emoji/-/fluent-emoji-1.2.10.tgz#842cf06623a9d831501bc8d6b9f14d3ae0444349"
+  integrity sha512-+Ge6tWES2wOmg8VaIAK6Sg1qctw2bCoT2Xpx9Zg6Q+1Q7AY42lVxAjXdP7vHqutEwdUAu/yyjuKn0MVsaLB0QQ==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-icons/fluent@^1.2.35":
   version "1.2.36"
   resolved "https://registry.npmmirror.com/@iconify-icons/fluent/-/fluent-1.2.36.tgz#c8a79c5b3482ecc33c2ede64a1a4afe3aec226dd"
@@ -1544,10 +1551,10 @@ ansi-styles@^4.0.0:
   dependencies:
     color-convert "^2.0.1"
 
-ant-design-vue@^3.2.9:
-  version "3.2.15"
-  resolved "https://registry.npmjs.org/ant-design-vue/-/ant-design-vue-3.2.15.tgz"
-  integrity sha512-sJfE7LWimSdAPe4dzNyQBrmVMnOTNQTkG9oOyr+7W8qIYrX8sYWyC68Nn1uum4KBJUSZUa/BU6dohvTG0urBhA==
+ant-design-vue@3.2.20:
+  version "3.2.20"
+  resolved "https://registry.npmmirror.com/ant-design-vue/-/ant-design-vue-3.2.20.tgz#552f5f08e2acbcc10bd4089145d4cc2b15d4cfec"
+  integrity sha512-YWpMfGaGoRastIXEYfCoJiaRiDHk4chqtYhlKQM5GqPt6NfvrM1Vg2e60yHtjxlZjed91wCMm0rAmyUr7Hwzdg==
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@ant-design/icons-vue" "^6.1.0"

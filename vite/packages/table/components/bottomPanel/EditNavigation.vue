@@ -22,7 +22,7 @@
                            <!-- {{ item.icon }} -->
                         <navIcon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text)"></navIcon>
                       </div>
-                      <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                      <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
                     </a-dropdown>
                   </div>
                 </div>
@@ -137,7 +137,7 @@
                            style="display: flex;justify-content: center;align-items: center;margin: 0 auto;border-radius: 12px">
                         <navIcon :icon="item.icon" style="width: 40px;height: 40px;color:var(--secondary-text);"></navIcon>
                       </div>
-                      <a-avatar v-else :size="40" shape="square" :src="item.icon"></a-avatar>
+                      <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
                     </a-dropdown>
                   </div>
                 </div>
@@ -162,7 +162,7 @@
                     v-if="item.type==='systemApp'" @click="clickNavigation(item)">
                     <navIcon :icon="item.icon" style="width: 32px;height: 32px;color:var(--secondary-text);"></navIcon>
                   </div>
-                  <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
+                  <a-avatar :size="40" shape="square"  :src="renderIcon(item.icon)" v-else></a-avatar>
                 </a-dropdown>
               </div>
             </div>
@@ -258,7 +258,9 @@ import navigationData from '../../js/data/tableData'
 import Classification from '../comp/Classification.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import { message } from 'ant-design-vue'
+import {renderIcon} from '../../js/common/common'
 const { appModel } = window.$models
+
 const suggestNavigationList = [
 
   {
@@ -650,6 +652,7 @@ export default {
       })
 
     },
+    renderIcon,
     /**
      *
      * @param id

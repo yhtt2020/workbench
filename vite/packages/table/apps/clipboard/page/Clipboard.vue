@@ -33,9 +33,17 @@
     关键词：{{this.searchWords}} <close-circle-filled class="ml-3" @click.stop="this.searchWords='';this.doSearch()" />
   </div>
   <!-- 剪切板列表展示区域开始 -->
-  <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto" v-if="!settings.enable">
-    <div class="float-left mr-2 pt-1" ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 当前剪切板功能未开启，请在设置中开启，或者直接点击</div> <xt-button @click="settings.enable=true" type="theme" size="mini" :w="70" :h="35">开启</xt-button>
+  <div v-if="isWin()">
+    <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto" v-if="!settings.enable">
+      <div class="float-left mr-2 pt-1" ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 当前剪切板功能未开启，请在设置中开启，或者直接点击</div> <xt-button @click="settings.enable=true" type="theme" size="mini" :w="70" :h="35">开启</xt-button>
+    </div>
   </div>
+  <template v-else>
+    <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto"  >
+      <div class=" mr-2 pt-1 " ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 暂不支持在非Windows平台上使用剪切板功能。请耐心等待版本更新。</div>
+    </div>
+  </template>
+
   <vue-custom-scrollbar style="width: 100%" @ps-x-reach-end="doLoadNextPage" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         class="mx-4 my-2 py-4 h-full ">
     <ClipList :clipList="clipContents" ></ClipList>
@@ -78,7 +86,7 @@ import { mapWritableState, mapActions } from 'pinia'
 import { clipboardStore } from '../store'
 import _ from 'lodash-es'
 import {CloseCircleFilled} from '@ant-design/icons-vue'
-
+ import {isWin} from '../../../js/common/screenUtils'
 // 引入模拟数据 后期对接数据需要删除 以免影响测试
 import ClipItem from '../components/ClipItem.vue'
 import XtButton from '../../../ui/libs/Button/index.vue'
@@ -168,6 +176,7 @@ export default {
   },
   methods: {
     ...mapActions(clipboardStore,['nextPage','doSearch']),
+    isWin,
     setLoadEvent(){
      this.loadEvent=_.debounce(async () => {
           console.error('触底事件')

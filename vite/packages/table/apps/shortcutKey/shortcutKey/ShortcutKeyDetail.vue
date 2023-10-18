@@ -90,8 +90,8 @@
     </div>
     <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
       <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。">
-        <strong>快速切换：</strong></a-tooltip>
-      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+        <strong>自动切换方案：</strong></a-tooltip>
+      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch> <span class="ml-2" v-if="!isWin()">非Windows平台暂不支持自动切换快捷键方案！</span>
     </div>
   </div>
 
@@ -188,7 +188,7 @@ import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
 import {isGroupLast,isGroupFirst} from '../lib/lib'
 import XtButton from '../../../ui/libs/Button/index.vue'
-
+import { isWin } from '../../../js/common/screenUtils'
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -264,7 +264,7 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
-    isGroupLast,isGroupFirst,
+    isWin,isGroupLast,isGroupFirst,
     getColor(array,index,field='groupName'){
       for(let i=index;i>=0;i--){
         if(array[i][field]){

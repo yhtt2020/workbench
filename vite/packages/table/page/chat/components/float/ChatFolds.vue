@@ -10,9 +10,10 @@
       </span>
      </div>
    </div>
-    <div style="position:absolute; top:6px;right:10px;">
-      <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
-    </div>
+
+   <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
+    <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
+   </div>
    <transition name="collapse">
     <!-- class="content" -->
     <div v-if="!collapsed" >

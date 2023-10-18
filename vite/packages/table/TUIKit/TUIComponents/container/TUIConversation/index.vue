@@ -131,8 +131,8 @@ const TUIConversation = defineComponent({
     onMounted(()=>{
      // 判断会话列表第一次是否为空
      nextTick(()=>{
-      const dataList = (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore.conversationData
-      const dataChat = (window as any).$TUIKit.TUIServer?.TUIChat.currentStore.conversation
+      const dataList = (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore?.conversationData
+      const dataChat = (window as any).$TUIKit.TUIServer?.TUIChat.currentStore?.conversation
       if(dataList.list.length === 0){
         message.warn('温馨提示,当前聊天页没有对话,进入发现页创建聊天会话或者点击左侧栏底部添加按钮创建')
         router.push({name:'chatFind'})
