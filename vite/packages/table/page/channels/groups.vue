@@ -23,7 +23,6 @@
                             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
                             <span class=" ant-dropdown-link" @click.prevent>
                                 {{ options[checkMenuCurrentIndex].title }}
-                                <!-- <DownOutlined class="text-sm" /> -->
                                 <newIcon icon="fluent:chevron-left-16-filled" class="-rotate-90" style="vertical-align: middle;font-size: 20px;"></newIcon>
                             </span>
                             <template #overlay>
@@ -36,6 +35,24 @@
                             </template>
                         </a-dropdown>
                     </div>
+
+                    <!-- <a-select  autoClearSearchValue="false" class="ml-3"
+                        style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;"
+                         :bordered="false" >
+                        <a-select-option :value="index" v-for="(item, index) in options"
+                            class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                            {{ item.title }}
+                        </a-select-option>
+                        <template #placeholder>
+                            <div class="xt-text font-16">
+                                全部
+                            </div>
+                        </template>
+                        <template #suffixIcon>
+                            <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
+                                class="mr-3 rotate-180 xt-text"></YuanIcon>
+                        </template>
+                    </a-select> -->
                 </div>
             </div>
             <div>
@@ -62,9 +79,9 @@
 
         </div>
         <!-- <teleport to="body" :disabled="false"> -->
-            <JoinModal v-if="joinVisible" @handleOk="joinVisible = false" />
+        <JoinModal v-if="joinVisible" @handleOk="joinVisible = false" />
         <!-- </teleport> -->
-        
+
     </div>
 </template>
 
@@ -95,7 +112,7 @@ const goJoin = (value) => {
     joinVisible.value = value
 }
 const inputValue = ref('')
-const checkMenuCurrentIndex=ref(0)
+const checkMenuCurrentIndex = ref(0)
 const options = ref([
     {
         title: '全部',
@@ -111,7 +128,7 @@ const options = ref([
     },
 ])
 const handleChange = (value) => {
-    checkMenuCurrentIndex.value=value
+    checkMenuCurrentIndex.value = value
     console.log(value);
 
 }
@@ -131,7 +148,7 @@ const handleChange = (value) => {
     border: none;
     width: 40px;
     height: 40px;
-    
+
     & a {
         display: block;
         height: 40px;
@@ -140,9 +157,11 @@ const handleChange = (value) => {
         color: var(--primary-text) !important;
     }
 }
-:deep(.ant-pagination-item-active a){
+
+:deep(.ant-pagination-item-active a) {
     color: var(--active-bg) !important;
 }
+
 :deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
@@ -158,12 +177,13 @@ const handleChange = (value) => {
     width: 40px;
     height: 40px;
 }
-:deep(.ant-pagination-prev .ant-pagination-item-link){
+
+:deep(.ant-pagination-prev .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
 }
-:deep(.ant-pagination-next .ant-pagination-item-link){
+
+:deep(.ant-pagination-next .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
-}
-</style>
+}</style>

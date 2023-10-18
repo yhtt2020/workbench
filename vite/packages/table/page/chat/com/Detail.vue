@@ -125,11 +125,12 @@ import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
 const useUserStore = appStore()
-let uid = props.cardData.user.uid
+const store = useCommunityStore();
+let uid = store.communityPostDetail.user?.uid
 let userInfo = {
     uid: uid,
-    nickname: props.cardData.user.nickname,
-    avatar: props.cardData.user.avatar_128
+    nickname: props.cardData.user?.nickname,
+    avatar: props.cardData.user?.avatar_128
 }
 // 弹出用户个人卡片
 const showCard = (uid, userInfo) => {
@@ -144,7 +145,7 @@ const closeDetail = () => {
     detailVisible.value = false
     emit('closeDetail', detailVisible.value)
 }
-const store = useCommunityStore();
+
 // 点赞
 const isLike = computed(() => {
     return store.communityPostDetail.is_support
