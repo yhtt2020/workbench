@@ -16,8 +16,9 @@
             <div class="xt-text-2 font-12">{{ circleMsg.joined }}</div>
         </div>
         <a-divider style="height: 1px; background-color: var(--divider);margin: 0px;margin-top: 12px;"  />
-        <xt-button v-if="circleMsg.way==1" style="width: 100%; height: 40px;margin-top: 12px;background:#508BFE ;" @click="goDetail">立即加入</xt-button>
-        <xt-button v-else style="width: 100%; height: 40px;margin-top: 12px;background:#508BFE ;" @click="goJoin">申请加入</xt-button>
+        <xt-button v-if="circleMsg.join=='1'" style="width: 100%; height: 40px;margin-top: 12px;background:var(--primary-bg);">已经加入</xt-button>
+        <xt-button v-else-if="circleMsg.way==1" style="width: 100%; height: 40px;margin-top: 12px;background:rgba(80,139,254,0.20);" @click="goDetail">立即加入</xt-button>
+        <xt-button v-else style="width: 100%; height: 40px;margin-top: 12px;background:#508BFE ;" @click="goJoin">进入圈子</xt-button>
     </div>
 </template>
 
