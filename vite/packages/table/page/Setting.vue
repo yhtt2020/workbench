@@ -1,7 +1,8 @@
 <template>
-  <div style="display: flex; width: 100%">
-    <vue-custom-scrollbar :settings="scrollbarSettings" style="position: relative; border-radius: 8px; height: 100%">
-      <div style="width: auto; white-space: nowrap">
+
+    <vue-custom-scrollbar :settings="scrollbarSettings" style="position: relative; border-radius: 8px; width: 100%;height: 100%">
+      <div class="setting-menu" style="display: flex; width: 100%;justify-content: center;justify-items: center">
+
         <!-- 快速搜索 快速开关功能 -->
         <div class="s-bg" style="
             margin: 1em;
@@ -101,8 +102,8 @@
                   <div > 分屏设置</div>
                 </div>
               </a-col>
-              <a-col v-if="simple">
-                <MyAvatar :size="80"></MyAvatar>
+              <a-col v-if="simple" :span="6">
+                <MyAvatar :size="37"></MyAvatar>
               </a-col>
 
             </a-row>
@@ -181,9 +182,8 @@
           </div>
         </div>
       </div>
-      <div></div>
     </vue-custom-scrollbar>
-  </div>
+
   <div class="home-blur fixed inset-0" style="z-index: 999" v-if="editNavigationVisible">
     <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>
@@ -252,8 +252,8 @@ export default {
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
-        suppressScrollY: true,
-        suppressScrollX: false,
+        suppressScrollY: false,
+        suppressScrollX: true,
         wheelPropagation: true,
       },
       editNavigationVisible: false,
@@ -445,12 +445,5 @@ export default {
   // height: 100px;
 }
 
-.btn {
-  background: var(--secondary-bg);
-}
 
-.btn:hover {
-  color: var(--primary-text);
-  background: var(--active-secondary-bg);
-}
 </style>
