@@ -264,11 +264,14 @@ import navigationData from '../js/data/tableData'
 import { navStore } from '../store/nav'
 
 const { steamUser, steamSession, path, https, steamFs } = $models
-const { LoginSession, EAuthTokenPlatformType } = steamSession
-let session = new LoginSession(EAuthTokenPlatformType.SteamClient);
-let client = new steamUser({
-  enablePicsCache: true,
-});
+if(steamUser && steamSession){
+  const { LoginSession, EAuthTokenPlatformType } = steamSession
+  var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
+  var client = new steamUser({
+    enablePicsCache: true,
+  });
+}
+
 let List = [];
 
 export default {
@@ -491,7 +494,7 @@ export default {
       this.replaceIcon()
       this.hasTriggered++
     }
-    
+
   },
   async mounted() {
     // this.replaceIcon()
