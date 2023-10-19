@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { join } from 'path'
 
 const path=require('path')
 // https://vitejs.dev/config/
@@ -33,7 +32,7 @@ export default defineConfig({
     require('autoprefixer')],
   base:'./',
   build:{
-    // sourcemap:true,//不打包sourcemap
+    //sourcemap:true,//不打包sourcemap
     rollupOptions:{
 
       input :inputs,
