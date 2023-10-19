@@ -9,74 +9,25 @@ const toast = useToast()
 // @ts-ignore
 export const noteStore = defineStore("noteStore", {
   state: () => ({
+    ...mapWritableState(cardStore, ['desks']),
     // 测试数据
     noteList:[
       {
-        title:'今日事今日毕',
-        content:'今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-      },
-      {
-        title:'今日事今日毕',
-        content:'今日事今日毕',
-        time:'十分钟前',
-        desk:'日常桌面',
-        backgroundColor:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
+        customData:{
+          title:'今日事今日毕',
+          content:'今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕今日事今日毕',
+          time:'十分钟前',
+          desk:'日常桌面',
+          background:"linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
+        },
+        id:"",
+        
       },
     ],
     // 主应用里当前选中
     selNote:-1,
+    selNoteTitle:'',
+    selNoteText:'',
     // 背景色
     noteBgColor:[
       "linear-gradient(-33deg, #545454 0%, #AC9555 1%, #A3625D 100%)",
@@ -92,25 +43,42 @@ export const noteStore = defineStore("noteStore", {
 
       }
     ],
+
     
   }),
   // getters:{},
   actions: {
-    ...mapActions(cardStore, ['updateCustomData']),
 
+    //初始化 从全部桌面读取便签
+    getNotes(){
+      let tmpList = [] as any[]
+      
+      cardStore().desks.forEach((item:any) => {
+        if (item.cards.length) {
+          item.cards.forEach((tmp:any)=>{
+            if (tmp.name == 'notes') {
+              
+              if (!tmp.customData.hasOwnProperty('title')) {
+                tmp.customData.title = '桌面便签'
+              }
+              tmpList.push({
+                ...tmp,
+                deskName:item.name,
+                desk:item
+              })
+            }
+          })
+        }
+      });
 
-    // 添加番茄
-    addTomatoNum(){
-      // 计算今日剩余时间
-      let remainingTime = this.getMainingTime;
-      this.tomatoNum++
-      this.tomatoList[new Date().getDay()] = this.tomatoNum;
-      // 这个数据今天会过期，用于保存今日番茄
-      cache.set("tomatoNum",this.tomatoNum,remainingTime)
-      cache.set("tomatoList",this.tomatoList,remainingTime + (6-new Date().getDay())*24*60*60*1000)
-      this.countTime(this.tomatoList)
-      this.max(this.tomatoList)
+      this.noteList = tmpList
     },
+
+    // this.updateCustomData(customIndex,{
+    //   isFull:this.isFull,
+    //   isState:this.isState,
+    // },desk)
+
 
   },
   persist: {
