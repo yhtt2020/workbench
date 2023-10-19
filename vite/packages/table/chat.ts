@@ -13,7 +13,7 @@ function loadChat(){
 // TUIKit add TUIComponents
     TUIKit.use(TUIComponents);
 // TUIKit add TUICallKit
-    TUIKit.use(TUICallKit);
+    //TUIKit.use(TUICallKit);
 
 
     window.$TUIKit=TUIKit

@@ -68,14 +68,7 @@
           <div></div>
         </div>
         <div style="display: inline-block; vertical-align: top">
-          <div style="
-              margin: 1em;
-              padding: 1em;
-              border-radius: 0.5em;
-              width: 40em;
-              color: var(--primary-text);
-              background: var(--primary-bg);
-            " class="s-bg">
+          <div    class="s-bg menu-block">
             <h3 style="color: var(--primary-text)">常用</h3>
             <a-row style="font-size: 1.2em; text-align: center">
               <a-col v-if="isMain() && isWin()" :span="6">
@@ -105,23 +98,22 @@
               <a-col v-if="simple" :span="6">
                 <MyAvatar :size="37"></MyAvatar>
               </a-col>
-
             </a-row>
             <div></div>
           </div>
-          <div style="
-              margin: 1em;
-              padding: 1em;
-              border-radius: 0.5em;
-              width: 40em;
-              color: var(--primary-text);
-              background: var(--primary-bg);
-            " class="s-bg">
+          <div   class="s-bg menu-block">
+            <h3 style="color: var(--primary-text)">其他</h3>
             <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
                 <div @click="editNavigationVisible = true" class="btn">
                   <Icon icon="Pushpin" style="font-size: 2em"></Icon>
                   <div>导航栏编辑</div>
+                </div>
+              </a-col>
+              <a-col v-if="isMain()" :span="6">
+                <div @click="goApps()" class="btn">
+                  <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
+                  <div>应用管理</div>
                 </div>
               </a-col>
               <a-col v-if="isMain()" :span="6">
@@ -145,12 +137,7 @@
                 </div>
                </xt-task>
               </a-col>
-              <a-col :span="6">
-                <div @click="power" class="btn">
-                  <Icon icon="tuichu" style="font-size: 2em"></Icon>
-                  <div>电源</div>
-                </div>
-              </a-col>
+
               <a-col :span="6">
                 <xt-task :modelValue="m03011" @cb="styleVisible = true">
                   <div @click="styleVisible = true" class="btn">
@@ -175,6 +162,12 @@
                 <div @click="createCodes" class="btn">
                   <Icon icon="shezhi" style="font-size: 2em"></Icon>
                   <div>生成激活码</div>
+                </div>
+              </a-col>
+              <a-col :span="6">
+                <div @click="power" class="btn">
+                  <Icon icon="tuichu" style="font-size: 2em"></Icon>
+                  <div>电源</div>
                 </div>
               </a-col>
             </a-row>
@@ -239,9 +232,10 @@ import MyAvatar from "../components/small/MyAvatar.vue";
 import { noticeStore } from '../store/notice'
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import { taskStore } from "../apps/task/store";
+import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
-  components: { EditNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip },
+  components: { EditNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify },
   data() {
     return {
       bgColor: "",
@@ -305,6 +299,11 @@ export default {
     ...mapActions(noticeStore, ['setNoticeOnOff']),
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,isWin,
+    goApps(){
+      this.$router.push({
+        name:'apps'
+      })
+    },
     editNavigation() {
       this.editNavigationVisible = true
     },
@@ -444,6 +443,13 @@ export default {
   // width: 455px;
   // height: 100px;
 }
-
+.menu-block{
+  margin: 1em;
+  padding: 1em;
+  border-radius: 0.5em;
+  width: 40em;
+  color: var(--primary-text);
+  background: var(--primary-bg);
+}
 
 </style>

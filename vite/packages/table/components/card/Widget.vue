@@ -7,6 +7,7 @@
     v-model:oldMenuVisible="menuVisible"
   >
     <div
+      v-if="!options?.hide"
       :class="classes"
       style="color: var(--primary-text)"
       :style="{
@@ -15,8 +16,6 @@
         height: customSize.height,
         background: options.background || 'var( --primary-bg)',
       }"
-      @mouseleave="isOnCard = false"
-      @mouseover="isOnCard = true"
     >
       <!--标题栏start-->
       <slot name="cardTitle">
@@ -30,15 +29,20 @@
             <div class="w-2/3 flex">
               <div v-if="options.isEdit">
                 <a-input
-                  style="border: none;box-shadow: none !important;
-                  position: relative;left: -28px;top: -2px;"
+                  style="
+                    border: none;
+                    box-shadow: none !important;
+                    position: relative;
+                    left: -28px;
+                    top: -2px;
+                  "
                   :value="options.title"
                 ></a-input>
               </div>
               <div v-else="options.isEdit">
                 {{ options.title }}
               </div>
-              
+
               <slot name="left-title" v-if="options.rightIcon">
                 <div class="right-icon">
                   <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
@@ -62,7 +66,9 @@
       <slot v-else :customIndex="customIndex"></slot>
       <!--  主题内容插槽end  -->
     </div>
-
+    <template v-else>
+      <slot></slot>
+    </template>
     <!-- 右上角抽屉菜单扩展 start  -->
     <template #menuExtra>
       <slot name="menuExtra"></slot>
@@ -84,44 +90,11 @@ import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
-import { useWidgetStore } from "./store.ts";
 
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import WebState from "./WebState.vue";
-
-//组件选项
-declare interface IOption {
-  //类型，字符串
-  type: string;
-  //是否显示卡片标题
-  noTitle: boolean;
-  // 是否隐藏组件
-  hide?: boolean;
-  // 删除前置任务
-  beforeDelete?: boolean;
-  // web端屏蔽
-  web?: boolean;
-  // 标题
-  title?: string;
-  // 图标
-  icon?: string;
-  rightIcon?: string;
-  // 背景色
-  background?: string;
-}
-
-//菜单项
-declare interface IMenuItem {
-  //标题
-  title: string;
-  //函数
-  fn: () => void;
-  //图标
-  icon: string;
-  // 新图标
-  newIcon?: string;
-}
+import { IOption, IMenuItem } from "./types";
 
 export default {
   components: {
@@ -196,7 +169,12 @@ export default {
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
-      menus: [
+    };
+  },
+  computed: {
+    ...mapWritableState(cardStore, ["customComponents"]),
+    menus() {
+      return [
         ...this.menuList,
         {
           icon: "guanbi2",
@@ -204,13 +182,8 @@ export default {
           title: "删除",
           color: "#FF4D4F",
         },
-      ],
-    };
-  },
-  computed: {
-    ...mapWritableState(cardStore, ["customComponents"]),
-    ...mapWritableState(useWidgetStore, ["isOnCard"]),
-
+      ];
+    },
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
