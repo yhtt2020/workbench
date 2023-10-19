@@ -280,6 +280,9 @@ mixins:[componentsMinis],
   props:
     {
       deskGroupMenu:{
+        default: () => {
+          return []
+        }
       },
       globalSettings: {
         type: Object,
@@ -405,25 +408,26 @@ mixins:[componentsMinis],
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-
    deskGroupMenus() {
-    let arr = [ ...this.deskGroupMenu[1].children];
-
-let exists = arr.some(item => item.id === 4);
-
-  if (!exists) {
-      arr.push({
-          id: 4,
-          newIcon: "fluent:circle-off-16-regular",
-          name: "清空桌面",
-          fn: this.clear
-      });
-  }
+    if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
+      let arr = [...this.deskGroupMenu[1].children];
+      let exists = arr.some(item => item.id === 4);
+      if (!exists) {
+          arr.push({
+              id: 4,
+              newIcon: "fluent:circle-off-16-regular",
+              name: "清空桌面",
+              fn: this.clear
+          });
+      }
       arr.sort((a, b) => a.id - b.id);
       let deskGroupMenu = [...this.deskGroupMenu]
       deskGroupMenu[1].children = [...arr]
-  return deskGroupMenu;
-   },
+      return deskGroupMenu;
+     }
+      return []
+  },
+
     deskMenus() {
       return [
           {

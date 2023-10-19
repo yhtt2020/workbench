@@ -40,3 +40,10 @@ const isMac = getMacEnv();
 export default currentEnv;
 
 export { isWeb, isClient, isMac };
+
+module.exports = {
+  currentEnv,
+  isWeb,
+  isClient,
+  isMac,
+};
