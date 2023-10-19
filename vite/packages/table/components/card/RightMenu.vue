@@ -11,7 +11,11 @@
   >
     <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
     <xt-button @click="rightModel = 'default'">default</xt-button> -->
-    <div @contextmenu.stop="menuVisible = true">
+    <div
+      @contextmenu.stop="menuVisible = true"
+      @mouseleave="isOnCard = false"
+      @mouseover="isOnCard = true"
+    >
       <slot></slot>
     </div>
     <template #cardSize v-if="sizes.length > 0">
@@ -103,7 +107,7 @@ const props = defineProps({
 const { menus, sizes, oldMenuVisible, currentEvent, event } = toRefs(props);
 
 const widgetStore = useWidgetStore();
-const { rightModel } = storeToRefs(widgetStore);
+const { rightModel, isOnCard } = storeToRefs(widgetStore);
 
 // 新版右键和点击事件切换
 const model = ref("contextmenu");

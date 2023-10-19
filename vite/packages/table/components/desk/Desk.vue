@@ -25,14 +25,23 @@
         </a-result>
       </div>
     </div>
+
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
     <!-- <div  style='z-index:99999px'> -->
-        <vue-custom-scrollbar @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+      <!-- {{currentDesk.cards}} -->
+      <!-- <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
+        <template #item="{ item }">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
+                         :customData="item.customData" :editing="editing"></component>
+          </template>
+      </FreeDesk> -->
+        <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
                           }"
                           style="position: relative; width: 100%; height: 100%;padding-left: 10px;padding-right: 10px;display: flex;flex-direction: row">
+
 
 
 
@@ -49,7 +58,7 @@
         }"
            :class="notTrigger ? 'trigger' : '' "
       >
-        <vuuri :key="key" v-if="currentDesk.cards && !hide" :get-item-margin="() => {
+        <vuuri :key="key" v-if=" currentDesk.cards && !hide" :get-item-margin="() => {
             return usingSettings.cardMargin * this.adjustZoom  + 'px';
           }
 
@@ -57,7 +66,6 @@
           width:settings.vDirection?'100%':'auto',
           height:settings.vDirection?'auto':'100%',
     }" class="grid home-widgets" ref="grid" :options="muuriOptions">
-
 
           <template #item="{ item }">
             <div
@@ -72,10 +80,7 @@
 
           </template>
         </vuuri>
-
       </div>
-
-
     </vue-custom-scrollbar>
     <!-- </div> -->
   </RightMenu>
@@ -275,6 +280,9 @@ mixins:[componentsMinis],
   props:
     {
       deskGroupMenu:{
+        default: () => {
+          return []
+        }
       },
       globalSettings: {
         type: Object,
@@ -400,26 +408,26 @@ mixins:[componentsMinis],
   computed: {
     ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-
    deskGroupMenus() {
-    let arr = [ ...this.deskGroupMenu[1].children];
-
-let exists = arr.some(item => item.id === 4);
-
-  if (!exists) {
-      arr.push({
-          id: 4,
-          newIcon: "fluent:circle-off-16-regular",
-          name: "清空桌面",
-          fn: this.clear
-      });
-  }
-      console.log('2arr :>> ', arr);
+    if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
+      let arr = [...this.deskGroupMenu[1].children];
+      let exists = arr.some(item => item.id === 4);
+      if (!exists) {
+          arr.push({
+              id: 4,
+              newIcon: "fluent:circle-off-16-regular",
+              name: "清空桌面",
+              fn: this.clear
+          });
+      }
       arr.sort((a, b) => a.id - b.id);
       let deskGroupMenu = [...this.deskGroupMenu]
       deskGroupMenu[1].children = [...arr]
-  return deskGroupMenu;
-   },
+      return deskGroupMenu;
+     }
+      return []
+  },
+
     deskMenus() {
       return [
           {

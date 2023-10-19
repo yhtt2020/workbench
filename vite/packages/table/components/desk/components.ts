@@ -69,9 +69,11 @@ import AIaides from "../widgets/AIaides.vue";
 import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/yuanCommunity.vue";
 import RightMenu from "./RightMenu.vue";
+import FreeDesk from "./free/index";
 
-export default  {
+export default {
   components: {
+    FreeDesk,
     RightMenu,
     GameInformation,
     HistoryInfo,
