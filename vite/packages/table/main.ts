@@ -39,7 +39,8 @@ import registerXTUI from "./ui/index"
 // 注册任务引导
 import VueShepherdPlugin from 'vue-shepherd';
 import 'shepherd.js/dist/css/shepherd.css';
-
+// 注册系统相关样式和字体
+import "../../public/css/index.scss"
 
 // 导入codemirror主题色样式表和语言包
 import 'codemirror/lib/codemirror.css'
@@ -58,11 +59,11 @@ import $ from "jquery";
 
 import dayjs from 'dayjs';
 
-import "../../public/css/styleSwitch/index.scss"
+
 import "../../public/css/styleSwitch/codemirror.scss"
-import "../../public/css/styleSwitch/toast.scss"
-import "../../public/css/styleSwitch/category.scss"
-import '../../public/css/styleSwitch/font.scss'
+import "../../public/css/toast.scss"
+import "../../public/css/category.scss"
+
 import {router} from './router'
 import routerTab from "./js/common/routerTab";
 
