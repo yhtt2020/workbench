@@ -7,10 +7,14 @@
             <div class="flex justify-between mb-2 -mt-3">
                 <span class="xt-text-2 font-16">详情</span>
                 <div class="flex items-center">
-                    <Icon class="text-xl xt-text pointer" icon="fluent:more-horizontal-16-filled" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="majesticons:open" @click="goYuan" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:cross" @click="closeDetail" />
+                    <a-tooltip title="更多操作" placement="bottom">
+                    <Icon class="text-xl xt-text pointer active-icon" icon="fluent:more-horizontal-16-filled" /></a-tooltip>
+                    <a-tooltip title="刷新" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:arrow-clockwise" @click="refreshDetail" /></a-tooltip>
+                    <a-tooltip title="前往元社区" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="majesticons:open" @click="goYuan" /></a-tooltip>
+                    <a-tooltip title="关闭" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:cross" @click="closeDetail" /></a-tooltip>
                 </div>
             </div>
             <div v-if="refreshDetailFlag">
@@ -346,5 +350,11 @@ const showImage = () => {
         }
     }
 
+}
+.active-icon{
+    background:transparent;
+    &:hover{
+        background: var(--secondary-bg);
+    }
 }
 </style>
