@@ -1,16 +1,23 @@
 <!-- 图标组件入口 -->
 <template>
   <!-- 图标组件开始 -->
-
-  <div
-    ref="iconRef"
-    class="icon-box box-border"
-    :style="dragStyle"
-    @contextmenu.stop="handleMenu()"
+  <Widget
+    :customData="customData"
+    :editing="true"
+    :customIndex="customIndex"
+    :options="options"
+    :menuList="menuList"
+    ref="homelSlotRef"
+    :desk="desk"
   >
-    <!-- 可放置区域 -->
-    <droppable-area @drop="handleDrop">
-
+    <div
+      ref="iconRef"
+      class="icon-box box-border"
+      :style="dragStyle"
+      @contextmenu.stop="handleMenu()"
+    >
+      <!-- 可放置区域 -->
+      <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
           <drag-and-follow
             :isSelect="isSelect"
@@ -56,19 +63,11 @@
             </template>
           </drag-and-follow>
         </xt-task>
-    </droppable-area>
-    <!-- 卡片核心 -->
-    <Widget
-      :customData="customData"
-      :editing="true"
-      :customIndex="customIndex"
-      :options="options"
-      :menuList="menuList"
-      ref="homelSlotRef"
-      :desk="desk"
-    >
-    </Widget>
-  </div>
+      </droppable-area>
+      <!-- 卡片核心 -->
+    </div>
+  </Widget>
+
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
@@ -145,7 +144,6 @@ export default {
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
       options: { hide: true }, // 卡片核心配置
-
     };
   },
   beforeMount() {
@@ -247,13 +245,13 @@ export default {
             }
           },
         },
-        {
-          icon: "guanbi2",
-          title: "删除",
-          fn: () => {
-            this.deleteIcon();
-          },
-        },
+        // {
+        //   icon: "guanbi2",
+        //   title: "删除",
+        //   fn: () => {
+        //     this.deleteIcon();
+        //   },
+        // },
         // {
         //   icon: "guanbi2",
         //   title: "长按框选图标（开发中）",
