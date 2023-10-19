@@ -16,8 +16,15 @@ body {
 .xt-active-bg {
   background: var(--active-bg) !important;
 }
+.xt-theme-bg {
+  background: var(--active-bg) !important;
+}
+
 // 主题次要背景色
 .xt-active-bg-2 {
+  background: var(--active-secondary-bg) !important;
+}
+.xt-theme-bg-2 {
   background: var(--active-secondary-bg) !important;
 }
 // 主题字体色
@@ -86,22 +93,12 @@ body {
 .xt-border {
   border: 1px solid var(--divider);
 }
+
 // 新版本
 .xt-b {
   border: 1px solid var(--divider);
 }
-.xt-bl {
-  border-left: 1px solid var(--divider);
-}
-.xt-br {
-  border-right: 1px solid var(--divider);
-}
-.xt-bt {
-  border-top: 1px solid var(--divider);
-}
-.xt-bm {
-  border-bottom: 1px solid var(--divider);
-}
+
 .xt-theme-b {
   border: 1px solid var(--active-bg);
 }
