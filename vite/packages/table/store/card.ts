@@ -294,7 +294,7 @@ export const cardStore = defineStore(
         clockFlag: false,
         deskSize: {},
         lastHeight: 0,
-        
+
       };
     },
 
@@ -499,10 +499,10 @@ export const cardStore = defineStore(
         // console.log(value,'this.temp');
         // if(tag!==null || undefined){
           // console.log(tag);
-          
+
         this.clockTag=tag
         this.chooseType=value
-        
+
         // }
         // console.log(this.clockTag);
         if(this.clockTag=='within30min'){
@@ -511,10 +511,10 @@ export const cardStore = defineStore(
             let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
             return timeDiff<=30 && timeDiff>0
-            
+
           })
           // console.log(this.filterClockEvent);
-          
+
         }else if(this.clockTag=='within1hour'){
           this.filterClockEvent = this.clockEvent.filter((value) => {
             let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
@@ -526,9 +526,9 @@ export const cardStore = defineStore(
           this.filterClockEvent = this.clockEvent
         }
         // console.log(this.clockTag,'this.clockTag');
-        
+
         // console.log(this.filterClockEvent);
-        
+
 
       },
       addCard(value, desk) {
@@ -581,7 +581,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize','lastHeight','clockTag','chooseType'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize','lastHeight','clockTag','chooseType','currentDeskId'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]

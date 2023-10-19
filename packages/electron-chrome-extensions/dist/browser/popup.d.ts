@@ -25,10 +25,12 @@ export declare class PopupView {
     extensionId: string;
     private anchorRect;
     private destroyed;
+    private hidden;
     /** Preferred size changes are only received in Electron v12+ */
     private usingPreferredSize;
     private readyPromise;
     constructor(opts: PopupViewOptions);
+    private show;
     private load;
     destroy: () => void;
     isDestroyed(): boolean;
