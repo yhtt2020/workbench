@@ -187,8 +187,8 @@ export default {
             currentIndex: 0,
             isLoading: false,
             pageToggle: true,
-            dataType: [{ title: '社区频道', name: '社区频道' }, { title: '我加入的圈子', name: '我加入的圈子' }],
-            defaultType: { title: '我加入的圈子', name: '我加入的圈子' },
+            dataType: [{ title: '社区频道', name: 'channel' }, { title: '我加入的圈子', name: 'circle' }],
+            defaultType: { title: '我加入的圈子', name: 'circle' },
             selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
@@ -209,7 +209,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            await this.getCommunityPost(this.showForumList[0].id)
+            await this.getCommunityPost(this.defaultForum.id)
             this.isLoading = false
         },
         // 查看内容详情
@@ -225,7 +225,7 @@ export default {
             this.selectList = Array.from(new Set(this.selectList))
             let temp = this.selectList
             this.customData.selectList = temp
-            console.log(this.selectList, '选择');
+            // console.log(this.selectList, '选择');
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -237,15 +237,15 @@ export default {
         },
         // 删除选择的板块
         handleDeselect(val) {
-            console.log(val);
+            // console.log(val);
             this.selectList = this.selectList.filter((item, index) => {
                 return index !== val;
             });
-            console.log(this.selectList, '删除');
+            // console.log(this.selectList, '删除');
             this.selectList = this.selectList.filter((item, index) => {
                 return item !== undefined
             })
-            console.log(this.selectList, '过滤');
+            // console.log(this.selectList, '过滤');
             let temp = this.selectList
             this.customData.selectList = temp
             
@@ -313,7 +313,16 @@ export default {
         defaultForum(newValue) {
             this.getCommunityPost(newValue?.id)
         },
-        immediate: true
+        immediate: true,
+        // 切换频道和圈子时触发获取
+        defaultType(newValue) {
+            // console.log(newValue.name);
+            if(newValue.name=='circle'){
+                this.getMyForumList()
+            }else{
+                return
+            }
+        }
     }
 }
 </script>

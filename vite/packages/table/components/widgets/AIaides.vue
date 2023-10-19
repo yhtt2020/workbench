@@ -75,7 +75,7 @@
           </div>
         </div>
        </template>
-       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" style="margin-top: 200px;"></DataStatu>
+       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" style="margin-top: 200px;"></DataStatu> -->
       </div>
     </Widget>
   </div>
@@ -182,12 +182,13 @@ export default {
     // margin: auto 5px;
     :deep(.ant-input) {
       color: var(--secondary-text);
+      font-size: 14px;
       height: 40px;
       width: 100%;
       padding-left: 16px;
       &::placeholder {
         font-family: PingFangSC-Regular;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 400;
         color: var(--secondary-text);
       }

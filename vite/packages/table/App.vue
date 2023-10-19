@@ -94,6 +94,7 @@ import {
   initTheme
 } from "./components/card/hooks/themeSwitch/";
 import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
+import {Notifications} from './js/common/sessionNotice'
 
 window.browser = browser
 const {appModel} = window.$models
@@ -115,7 +116,8 @@ export default {
       visible: false,
       dialogVisible: false,
       videoPath: '',
-      frameStoreVisible:false
+      frameStoreVisible:false,
+      notifications:new Notifications(),
     };
   },
 
@@ -174,10 +176,13 @@ export default {
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
+    targetMsg(){
+      return `${this.appDate.hours}:${this.appDate.minutes}到了，`
+    }
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
-    ...mapActions(cardStore, ['sortClock']),
+    ...mapActions(cardStore, ['sortClock','removeClock']),
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
     KeyDown(event) {
@@ -250,25 +255,30 @@ export default {
       }
       // document.body.attributes['background']=''
     },
-    "appDate.minutes": {
-      handler(newVal, oldVal) {
-        this.sortClock()
-        try {
-          if (
-            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
-          ) {
-            this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 1000)
-          }
-        } catch (err) {
+    // 会导致选择小时页面塌陷
+    // "appDate.minutes": {
+    //   handler(newVal, oldVal) {
+    //     this.sortClock()
+    //     try {
+    //       if (
+    //         this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+    //         this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+    //       ) {
+    //         this.notifications.clockToast(`${this.targetMsg}${this.clockEvent[0].eventValue}`, '闹钟', true)
+    //         setTimeout(() => {
+    //           this.$refs.clock.play();
+    //         }, 1000)
+    //         if(this.clockEvent[0].clockType === '不重复'){
+    //           this.removeClock(0,1)
+    //         }
+    //         this.sortClock()
+    //       }
+    //     } catch (err) {
 
-        }
-      },
-      immediate: true,
-    },
+    //     }
+    //   },
+    //   immediate: true,
+    // },
     "clockFlag": {
       handler(newVal, oldVal) {
         try {
