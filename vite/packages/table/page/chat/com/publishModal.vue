@@ -196,7 +196,7 @@ onMounted(() => {
     textareaElement?.focus()
     useCommunStore.getCommunityInfo(props.forumId)
     useCommunStore.getCommunityCate(props.forumId)
-    console.log(useCommunStore.communityInfo.forum.name);
+    console.log(useCommunStore.communityInfo.forum?.name);
     // console.log(navigator.plugins);
 
 
