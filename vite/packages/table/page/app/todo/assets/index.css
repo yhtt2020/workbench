@@ -3,49 +3,64 @@
   .left-sidebar {
     flex: 0 0 100px !important;
     width: 210px !important;
-    min-width: 200px !important; }
-    .left-sidebar .nav-items li {
-      font-size: 14px !important; }
-
+    min-width: 200px !important;
+  }
+  .left-sidebar .nav-items li {
+    font-size: 14px !important;
+  }
   .main-content {
     width: 300px !important;
-    min-width: 300px; } }
+    min-width: 300px;
+  }
+}
 @media screen and (max-width: 600px) {
   .left-sidebar {
     flex: 0 0 100px !important;
     width: 100px !important;
-    min-width: 100px !important; }
-
+    min-width: 100px !important;
+  }
   .main-content {
     width: 210px !important;
-    min-width: 210px; } }
+    min-width: 210px;
+  }
+}
 .todo-style ul li {
   border-radius: 5px;
-  margin: 0 10px; }
-  .todo-style ul li:hover {
-    background-color: #444444; }
+  margin: 0 10px;
+}
+.todo-style ul li:hover {
+  background-color: #444444;
+}
 .todo-style .sidebar {
   background: #2a2a2a;
-  border-right: 1px solid #444444; }
+  border-right: 1px solid #444444;
+}
 .todo-style .main-content {
-  background: #2A2A2A; }
+  background: #2A2A2A;
+}
 .todo-style .right-content {
-  background: #323232; }
+  background: #323232;
+}
 .todo-style .ant-checkbox {
-  border: 2px solid #DFDFDF; }
+  border: 2px solid #DFDFDF;
+}
 .todo-style .select-input {
   background-color: #555555;
   border-radius: 5px;
-  padding: 8px; }
+  padding: 8px;
+}
 
 .main-content {
   padding-left: 10px;
   padding-top: 10px;
-  padding-right: 10px; }
+  padding-right: 10px;
+}
 
 .hover-action {
-  opacity: 0.8; }
-  .hover-action:hover {
-    opacity: 1; }
+  opacity: 0.8;
+}
+.hover-action:hover {
+  opacity: 1;
+}
 
 /*# sourceMappingURL=index.css.map */

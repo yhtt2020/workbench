@@ -11,7 +11,7 @@
     </a-input>
    </div>
 
-   <CommunityFind v-if="communityDefault.name === 'community'" :dataList="searchList" style="width:80%;margin: 16px 0 0 15%;"/>
+   <CommunityFind v-if="communityDefault.name === 'community'" :dataList="searchList"/>
    <GroupsUserFind v-else/>
    
   </div>

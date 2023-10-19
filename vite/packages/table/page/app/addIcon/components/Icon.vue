@@ -20,7 +20,7 @@
         :style="[isSelected(index)]"
       >
         <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"></a-avatar>
-        <div class="w-full text-center truncate mt-3">{{ item.name }}ee{{item.icon}}</div>
+        <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
       </div>
     </div>
   </div>

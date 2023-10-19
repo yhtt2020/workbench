@@ -21,15 +21,16 @@
         <!-- 随机 -->
         <a-tooltip>
           <template #title>随机</template>
-          <div class="flex justify-center items-center pointer ml-3"  style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;" @click="onRandom">
-            <Icon class="pointer" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
-          </div>
+          <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: #2A2A2A;border-radius: 10px;" @click="onRandom">
+            <Icon class="pointer flex items-center" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
+          </xt-button>
         </a-tooltip>
         <!-- 颜色选择 -->
         <div v-show="selIndex == 2" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
           
           <a-tooltip>
             <template #title>颜色选择</template>
+            <!-- <div class="circle" :style="{background:bgColor[selBgColor]}" ></div> -->
             <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
           </a-tooltip>
           
@@ -85,7 +86,7 @@
         </div>
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
         <div class="mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">{{ this.customTitle }}</div>
-        <div class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</div>
+        <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
         
       </div>
 

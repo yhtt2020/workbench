@@ -1,13 +1,21 @@
-import { ipcMain, BrowserWindow, app, Extension } from 'electron'
+import { ipcMain, BrowserWindow, app, Extension, webContents } from 'electron'
 import * as http from 'http'
 import * as path from 'path'
 import { AddressInfo } from 'net'
 import { ElectronChromeExtensions } from '../dist'
 import { emittedOnce } from './events-helpers'
-import { addCrxPreload, createCrxSession } from './crx-helpers'
+import { addCrxPreload, createCrxSession, waitForBackgroundScriptEvaluated } from './crx-helpers'
 
 export const useServer = () => {
-  const emptyPage = '<script>console.log("loaded")</script>'
+  const emptyPage = `<!DOCTYPE html>
+<html>
+  <head>
+    <title>title</title>
+  </head>
+  <body>
+  <script>console.log("loaded")</script>
+  </body>
+</html>`
 
   // NB. extensions are only allowed on http://, https:// and ftp:// (!) urls by default.
   let server: http.Server
@@ -15,11 +23,12 @@ export const useServer = () => {
 
   before(async () => {
     server = http.createServer((req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/html' })
       res.end(emptyPage)
     })
     await new Promise<void>((resolve) =>
       server.listen(0, '127.0.0.1', () => {
-        url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`
+        url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/`
         resolve()
       })
     )
@@ -55,9 +64,17 @@ export const useExtensionBrowser = (opts: {
 
     addCrxPreload(customSession)
 
-    extensions = new ElectronChromeExtensions({ session: customSession })
+    extensions = new ElectronChromeExtensions({
+      session: customSession,
+      async createTab(details) {
+        const tab = (webContents as any).create({ sandbox: true })
+        if (details.url) await tab.loadURL(details.url)
+        return [tab, w!]
+      },
+    })
 
     extension = await customSession.loadExtension(path.join(fixtures, opts.extensionName))
+    await waitForBackgroundScriptEvaluated(extension, customSession)
 
     w = new BrowserWindow({
       show: false,
@@ -110,9 +127,10 @@ export const useExtensionBrowser = (opts: {
     crx: {
       async exec(method: string, ...args: any[]) {
         const p = emittedOnce(ipcMain, 'success')
-        await w.webContents.executeJavaScript(
-          `exec('${JSON.stringify({ type: 'api', method, args })}')`
-        )
+        const rpcStr = JSON.stringify({ type: 'api', method, args })
+        const safeRpcStr = rpcStr.replace(/'/g, "\\'")
+        const js = `exec('${safeRpcStr}')`
+        await w.webContents.executeJavaScript(js)
         const [, result] = await p
         return result
       },

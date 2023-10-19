@@ -54,7 +54,8 @@
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
                             :style="showSide ? 'width: 80%;' : 'width:100%'">
         <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
-          此方案暂时没有任何快捷键 <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
+          此方案暂时没有任何快捷键
+          <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
 
 
         </div>
@@ -62,12 +63,17 @@
 
           <div v-for="(item,index) in filteredKeyList" :key="item.id">
             <!-- 分组名称 -->
-            <div :id="'groupId_' + item.id" class="key-item border-right " style="margin-top: 15px" v-if="item.groupName"
+            <div :id="'groupId_' + item.id" class="key-item border-right " style="margin-top: 15px"
+                 v-if="item.groupName"
                  :style="item.id === currentGroup.id ? activeGroup : ''">
-            <span class="truncate font-bold">  <div class="color-dot" :style="{backgroundColor:getColor(this.filteredKeyList,index)}"></div> {{ item.groupName }}</span>
+              <span class="truncate font-bold">  <div class="color-dot"
+                                                      :style="{backgroundColor:getColor(this.filteredKeyList,index)}"></div> {{
+                  item.groupName
+                }}</span>
             </div>
             <!-- 快捷键 -->
-            <div v-else class="border-right key-item" :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
+            <div v-else class="border-right key-item"
+                 :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
                  :style="{backgroundColor:getColor(this.filteredKeyList,index)}"
                  @click="setKeyItem(item.id)">
               <div class="flex w-full">
@@ -91,7 +97,8 @@
     <div class=" p-2  " style="border-top: 1px solid  var(--divider);margin-left: -12px">
       <a-tooltip title="自动根据当前聚焦窗口切换快捷键方案，仅对具备至少1个快捷键方案的应用有效。">
         <strong>自动切换方案：</strong></a-tooltip>
-      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch> <span class="ml-2" v-if="!isWin()">非Windows平台暂不支持自动切换快捷键方案！</span>
+      <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
+      <span class="ml-2" v-if="!isWin()">非Windows平台暂不支持自动切换快捷键方案！</span>
     </div>
   </div>
 
@@ -186,9 +193,10 @@ import Search from '../../../components/Search.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { keyStore } from '../store'
 import { message, Modal } from 'ant-design-vue'
-import {isGroupLast,isGroupFirst} from '../lib/lib'
+import { isGroupLast, isGroupFirst } from '../lib/lib'
 import XtButton from '../../../ui/libs/Button/index.vue'
 import { isWin } from '../../../js/common/screenUtils'
+
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -253,7 +261,7 @@ export default {
           this.shortcutSchemeList = await this.loadShortcutSchemes(this.currentApp.exeName)
           if (this.shortcutSchemeList.length > 0) {
             await this.setRecentlyUsedList(this.shortcutSchemeList[0])
-            this.navIndex=0
+            this.navIndex = 0
             this.getData()
           }
 
@@ -264,10 +272,10 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
-    isWin,isGroupLast,isGroupFirst,
-    getColor(array,index,field='groupName'){
-      for(let i=index;i>=0;i--){
-        if(array[i][field]){
+    isWin, isGroupLast, isGroupFirst,
+    getColor (array, index, field = 'groupName') {
+      for (let i = index; i >= 0; i--) {
+        if (array[i][field]) {
           //是组
           return array[i].color
         }
@@ -283,7 +291,16 @@ export default {
     },
     getData () {
       this.schemeList = this.recentlyUsedList
+      if (this.schemeList.length === 0) {
+        this.$router.replace({ name: 'home' })
+      return
+      }
       this.currentScheme = this.schemeList[0]
+      if (!!!this.currentScheme){
+        this.$router.replace({ name: 'home' })
+        return
+      }
+
       this.keyList = this.currentScheme.keyList
       this.appContent = this.schemeList[0]
       if (!this.keyList.length) this.isData = false
@@ -313,7 +330,7 @@ export default {
       this.sideNav = this.keyList.filter(i => i.groupName)
       this.recentlyUsedVisible = false
       this.getData()
-      this.navIndex=0
+      this.navIndex = 0
 
     },
     setKeyItem (id) {
@@ -602,11 +619,13 @@ export default {
   background: var(--mask-bg);
   border-radius: 10px
 }
-.rounded-top{
-  border-top-left-radius:8px;
+
+.rounded-top {
+  border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
-.rounded-bottom{
+
+.rounded-bottom {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }

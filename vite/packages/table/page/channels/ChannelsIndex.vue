@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center">
+    <div class="flex justify-center h-full">
         <div class="" style="margin-top: 54px;">
             <div class="flex flex-col   w-[108px] h-[268px] justify-center items-center xt-bg rounded-lg ">
                 <div v-for="(item, index) in selectList" :key="index"
@@ -24,9 +24,10 @@
                     </xt-button>
                 </div>
             </div>
-            <div >
+            <div style="height: 100%;">
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
-                    :settings="settingsScroller" style="height: calc(100vh - 8em);overflow: hidden;flex-shrink: 0;width: 100%;">
+                    :settings="settingsScroller"
+                    style="height: calc(100vh - 16em );overflow: hidden;flex-shrink: 0;width: 100%;">
                     <div class="flex flex-col justify-center content">
                         <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
                         <!-- 循环渲染多个 ComCard -->
@@ -89,9 +90,9 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
-import Commun from '../chat/Commun.vue';
 import ComList from '../chat/com/ComList.vue';
 import PublishModal from '../chat/com/PublishModal.vue';
+import { comCards } from './mock';
 const selectList = ref([
     {
         name: '推荐',
@@ -132,86 +133,6 @@ const settingsScroller = reactive({
     wheelPropagation: true,
 });
 const selectedIndex = ref(-1)
-const comCards = ref({
-    list: [
-        {
-            user: {
-                nickname: '摆烂ing',
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                ip_home: {
-                    region: '未知'
-                },
-
-
-            },
-            create_time: '2022-12-12 12:12:12',
-            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
-            title: '经历了连续的几天的服务器震荡。',
-            view_count: '100',
-            support_count: '100',
-            reply_count: '100',
-            image: [],
-            image_170_170: []
-        },
-        {
-            user: {
-                nickname: '摆烂ing',
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                ip_home: {
-                    region: '未知'
-                },
-
-
-            },
-            create_time: '2022-12-12 12:12:12',
-            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
-            title: '经历了连续的几天的服务器震荡。',
-            view_count: '100',
-            support_count: '100',
-            reply_count: '100',
-            image: [],
-            image_170_170: []
-        },
-        {
-            user: {
-                nickname: '摆烂ing',
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                ip_home: {
-                    region: '未知'
-                },
-
-
-            },
-            create_time: '2022-12-12 12:12:12',
-            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
-            title: '经历了连续的几天的服务器震荡。',
-            view_count: '100',
-            support_count: '100',
-            reply_count: '100',
-            image: [],
-            image_170_170: []
-        },
-        {
-            user: {
-                nickname: '摆烂ing',
-                avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                ip_home: {
-                    region: '未知'
-                },
-
-
-            },
-            create_time: '2022-12-12 12:12:12',
-            summary: '经历了连续的几天的服务器震荡。目前我们已经基本稳定了服务器的表现。接下来应该会更加稳定。阿皮有话说：由…',
-            title: '经历了连续的几天的服务器震荡。',
-            view_count: '100',
-            support_count: '100',
-            reply_count: '100',
-            image: [],
-            image_170_170: []
-        },
-    ]
-})
 const visibleModal = () => {
     console.log(publishVisible.value);
 
@@ -245,22 +166,24 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
-
+    
     & a {
         display: block;
         height: 40px;
         text-align: center;
         margin-top: 4px;
+        color: var(--primary-text) !important;
     }
 }
-
+:deep(.ant-pagination-item-active a){
+    color: var(--active-bg) !important;
+}
 :deep(.ant-pagination-prev) {
     background: var(--primary-bg);
     border-radius: 8px;
     border: none;
     width: 40px;
     height: 40px;
-    line-height: 40px !important;
 }
 
 :deep(.ant-pagination-next) {
@@ -269,5 +192,13 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
+}
+:deep(.ant-pagination-prev .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
+}
+:deep(.ant-pagination-next .ant-pagination-item-link){
+    color: var(--primary-text);
+    border: none;
 }
 </style>

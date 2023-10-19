@@ -1,29 +1,35 @@
 <template>
-  <div v-if="this.grids.length === 0" class=" box p-5" style="max-height: 100%">
-    <a-result class="s-bg rounded-lg " style="background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用快捷指令"
-      sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。">
-      <template #extra>
-        <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
-        <a-button disabled key="buy" @click="learn"
-          style="color:var( --secondary-text); ">学习（课程暂未上线）</a-button>
-      </template>
-      <div class="desc">
-        <p style="font-size: 16px">
-          <strong>您也可以通过多种方式导入别人分享的方案：</strong>
-        </p>
-        <p>
-          <close-circle-outlined />
-          使用分享代码导入
-          <a @click="toggleImport">导入代码 &gt;</a>
-        </p>
-        <p>
-          <close-circle-outlined  />
-          从社区获得分享代码（此功能暂未上线，请耐心等待）
-          <a>从社区导入 &gt;</a>
-        </p>
-      </div>
-    </a-result>
+  <div v-if="!isWin()" class="xt-bg-2 mt-10 rounded-lg p-4 px-5 w-auto m-auto"  >
+    <div class=" mr-2 pt-1 " ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 暂不支持在非Windows平台上使用快捷指令功能。请耐心等待版本更新。</div>
   </div>
+  <template v-else>
+    <div v-if="this.grids.length === 0" class=" box p-5" style="max-height: 100%">
+      <a-result class="s-bg rounded-lg " style="background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用快捷指令"
+                sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。">
+        <template #extra>
+          <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
+          <a-button disabled key="buy" @click="learn"
+                    style="color:var( --secondary-text); ">学习（课程暂未上线）</a-button>
+        </template>
+        <div class="desc">
+          <p style="font-size: 16px">
+            <strong>您也可以通过多种方式导入别人分享的方案：</strong>
+          </p>
+          <p>
+            <close-circle-outlined />
+            使用分享代码导入
+            <a @click="toggleImport">导入代码 &gt;</a>
+          </p>
+          <p>
+            <close-circle-outlined  />
+            从社区获得分享代码（此功能暂未上线，请耐心等待）
+            <a>从社区导入 &gt;</a>
+          </p>
+        </div>
+      </a-result>
+    </div>
+
+  </template>
 
   <div v-if="sharing" style="padding: 2em;padding-left: 4em;padding-bottom: 0">
     <h2>请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</h2>
@@ -301,23 +307,25 @@
 </template>
 
 <script>
-import DeckItem from '../../../components/muuri/DeckItem.vue'
-import { appStore } from '../../../store'
+import DeckItem from '../../components/muuri/DeckItem.vue'
+import { appStore } from '../../store'
 import { mapWritableState, mapActions } from 'pinia'
-import Template from '../../../../user/pages/Template.vue'
+import Template from '../../../user/pages/Template.vue'
 import DeckAdd from './DeckAdd.vue'
 import { message } from 'ant-design-vue'
-import { deckStore } from '../../../store/deck'
-import Widget from '../../../components/muuri/Widget.vue'
-import vuuri from '../../../components/vuuri/Vuuri.vue'
-import Prompt from '../../../components/comp/Prompt.vue'
+import { deckStore } from './store'
+import Widget from '../../components/muuri/Widget.vue'
+import vuuri from '../../components/vuuri/Vuuri.vue'
+import Prompt from '../../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
-import BackBtn from '../../../components/comp/BackBtn.vue'
+import BackBtn from '../../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import GradeSmallTip from "../../../components/GradeSmallTip.vue";
-import { powerState } from '../../../js/watch/grade'
+import GradeSmallTip from "../../components/GradeSmallTip.vue";
+import { powerState } from '../../js/watch/grade'
 import _ from 'lodash-es'
-import {} from "../../../apps/task/page/branch/task.ts"
+import {} from "../task/page/branch/task.ts"
+import { isWin } from '../../js/common/screenUtils'
+import { Icon as Iconify} from '@iconify/vue';
 export default {
   name: 'Deck',
   components: {
@@ -329,7 +337,8 @@ export default {
     Widget: Widget,
     vuuri,
     LeftSquareOutlined, RightSquareOutlined, PlusOutlined,
-    GradeSmallTip
+    GradeSmallTip,
+    Iconify
   },
   data() {
     return {
@@ -400,6 +409,7 @@ export default {
     // })
   },
   methods: {
+    isWin,
     powerState,
     limitTip() {
       this.$refs.smallTip.clickTip()

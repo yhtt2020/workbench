@@ -121,7 +121,7 @@ export default defineComponent({
    if(index === -1){
     data.selectGroup.push(item)
    }else{
-    return;
+    data.selectGroup.splice(index,1)
    }
   }
 

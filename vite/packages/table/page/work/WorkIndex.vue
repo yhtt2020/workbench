@@ -90,7 +90,7 @@ export default defineComponent({
           name:'tomato',
           icon:'naozhong',
           route:{
-            name:'tomato'
+            name:'tomatoStart'
           }
         },
         {

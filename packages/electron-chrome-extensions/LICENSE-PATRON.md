@@ -14,7 +14,7 @@ This license gives everyone patronizing contributors to this software permission
 
 ## Acceptance
 
-In order to agree to these terms and receive a license, you must qualify under [Patrons](#patrons). The rules of these terms are both obligations under your agreement and conditions to your license. That agreement and your license continue only while you qualify as a patron. You must not do anything with this software that triggers a rule that you cannot or will not follow.
+In order to agree to these terms and receive a license, you must qualify under [Patrons](#patrons).  The rules of these terms are both obligations under your agreement and conditions to your license.  That agreement and your license continue only while you qualify as a patron.  You must not do anything with this software that triggers a rule that you cannot or will not follow.
 
 ## Patrons
 
@@ -26,7 +26,7 @@ Except under [Seat](#seat) and [Applications](#applications), you may not sublic
 
 ## Seat
 
-If a legal entity, rather than an individual, accepts these terms, the entity may sublicense one individual employee or independent contractor at any given time. If the employee or contractor breaks any rule of these terms, the entity will stand directly responsible.
+If a legal entity, rather than an individual, accepts these terms, the entity may sublicense one individual employee or independent contractor at any given time.  If the employee or contractor breaks any rule of these terms, the entity will stand directly responsible.
 
 ## Applications
 
@@ -48,7 +48,7 @@ You must ensure that everyone who gets a copy of any part of this software from 
 
 ## Excuse
 
-If anyone notifies you in writing that you have not complied with [Notices](#notices), you can keep your agreement and your license by taking all practical steps to comply within 30 days after the notice. If you do not do so, your agreement under these terms ends immediately, and your license ends with it.
+If anyone notifies you in writing that you have not complied with [Notices](#notices), you can keep your agreement and your license by taking all practical steps to comply within 30 days after the notice.  If you do not do so, your agreement under these terms ends immediately, and your license ends with it.
 
 ## Patent
 
@@ -60,4 +60,4 @@ No contributor can revoke this license, but your license may end if you break an
 
 ## No Liability
 
-**_As far as the law allows, this software comes as is, without any warranty or condition, and no contributor will be liable to anyone for any damages related to this software or this license, under any kind of legal claim._**
+***As far as the law allows, this software comes as is, without any warranty or condition, and no contributor will be liable to anyone for any damages related to this software or this license, under any kind of legal claim.***

@@ -116,13 +116,13 @@
 </template>
 
 <script>
-import IconList from '../../../components/comp/IconList.vue'
-import CustomIcon from '../../../components/comp/CustomIcon.vue'
+import IconList from '../../components/comp/IconList.vue'
+import CustomIcon from '../../components/comp/CustomIcon.vue'
 import DeckAction from './DeckAction.vue'
 import {message} from 'ant-design-vue'
-import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
-import BackBtn from "../../../components/comp/BackBtn.vue";
-import {deckStore} from "../../../store/deck";
+import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
+import BackBtn from "../../components/comp/BackBtn.vue";
+import {deckStore} from "./store";
 import {mapActions, mapWritableState} from 'pinia'
 
 export default {
