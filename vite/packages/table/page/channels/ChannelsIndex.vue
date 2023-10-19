@@ -17,9 +17,9 @@
                 </div>
                 <div class="w-[83px] h-[40px] ">
                     <xt-button
-                        style="color: var(--primary-text); width: 83px;height: 40px;border-radius: 12px;background: rgba(80, 139, 254, 0.20);"
+                        style="color: var(--active-bg); width: 83px;height: 40px;border-radius: 12px;background: rgba(80, 139, 254, 0.20);"
                         @click="visibleModal">
-                        <newIcon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;"
+                        <newIcon class="pr-1 text-xl xt-theme-text " style="vertical-align: sub;font-size: 22px;margin-right: 6px;" 
                             icon="akar-icons:circle-plus-fill" />发布
                     </xt-button>
                 </div>
