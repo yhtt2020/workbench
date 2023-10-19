@@ -51,20 +51,22 @@
       <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"
         @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
       >
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-        </div> 
-        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+        <template v-if="isWorkGroup(item)">
+          <div class="flex items-center">
+            <template v-if="item.type === 'group'">
+             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'link'">
+             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'forum'">
+             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+            </template>
+          </div> 
+          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+        </template>
       </div>
     </div>
     <transition name="slide-fade">
@@ -77,22 +79,22 @@
       <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  
        @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
       >
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-        </div> 
-        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-
-       
+        <template v-if="isWorkGroup(item)">
+          <div class="flex items-center">
+            <template v-if="item.type === 'group'">
+             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'link'">
+             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'forum'">
+             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+            </template>
+          </div> 
+          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+        </template>
       </div>
     </div>
 
@@ -112,47 +114,49 @@
         :class="{'active-bg': currentID ===item.id}"
         class="flex items-center rounded-lg p-2 pointer group-item" 
        >
-        <div class="flex items-center">
-         <template v-if="item.type === 'group'">
-          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-         </template>
-         <template v-if="item.type === 'link'">
-          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-         </template>
-         <template v-if="item.type === 'forum'">
-          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-         </template>
-        </div> 
-        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage' "/>
+        <template v-if="isWorkGroup(item)">
+          <div class="flex items-center">
+            <template v-if="item.type === 'group'">
+             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'link'">
+             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+            </template>
+            <template v-if="item.type === 'forum'">
+             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+            </template>
+          </div> 
+          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage' "/>
+        </template>
+        
        </div>
   
       </div>
   
       <div class="flex grid grid-cols-2 gap-1" v-else>
-  
        <div v-for="(item,index) in item.children" @click.stop.prevent="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
         :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
        >
+        <template v-if="isWorkGroup(item)">
         <div class="flex items-center">
-         <template v-if="item.type === 'group'">
-          <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-         </template>
-         <template v-if="item.type === 'link'">
-          <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-         </template>
-         <template v-if="item.type === 'forum'">
-          <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-         </template>
-        </div>
-        <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-        
-        <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-
+          <template v-if="item.type === 'group'">
+           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'link'">
+           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          </template>
+          <template v-if="item.type === 'forum'">
+           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          </template>
+         </div>
+         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+         
+         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+         v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+        </template>
        </div>
-  
       </div>
   
     </ChatFold>
@@ -178,7 +182,6 @@ import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
 import ChatDropDown from './ChatsDropDown.vue';
 import ChatFold from './ChatFolds.vue'
 import MenuDropdown from './MenuDropdowns.vue'
-
 
 export default{
   props:[ 'communityID','float' ],
@@ -310,7 +313,21 @@ export default{
       evt.preventDefault();
       this.showTopMenu = false
       this.categoryShowMenu = false
+    },
+
+    // 检测群聊是否为好友工作群
+    isWorkGroup(item){
+      // const data = JSON.parse(item.props);
+      // const list = window.$TUIKit.store.store.TUIGroup.groupList
+      // const index = list.findIndex((findItem)=>{ 
+      //   console.log(findItem.type,data.type);
+      //   // return findItem.groupID === data.groupID && findItem.type === data.type
+      // })
+      // return index !== -1
+
+      return true
     }
+
 
   },
 

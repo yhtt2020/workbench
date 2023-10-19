@@ -2,23 +2,23 @@
  <div class="flex flex-col my-3" style="width:667px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
+    <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择群聊</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeGroup">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+    <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
    </div>
   </div>
 
   <div class="flex px-6">
    <div class="flex flex-col" style="width: 293px;">
-    <a-input class="h-10 search" hidden="" style="border-radius: 12px;" placeholder="搜索">
+    <a-input class="h-10 search" ref="searchRef" v-model:value="searchKeyWord" spellcheck="false" style="border-radius: 12px;" placeholder="搜索群名称、ID" @input="searchGroup" @pressEnter="searchGroup">
      <template #suffix>
-       <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" class="pointer"/>
+       <ChatIcon icon="fluent:search-20-filled" style="font-size: 1.25rem;color:var(--secondary-text);" class="pointer" @click="searchGroup"/>
      </template>
     </a-input>
 
-    <span class="my-4 font-14-400" style="color:var(--secondary-text);">我创建的群聊</span>
+    <span class="my-4 font-14-400" style="color:var(--secondary-text);">{{title}}</span>
 
     <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
      <div class="flex flex-col">
@@ -42,7 +42,7 @@
          <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
         </div>
         <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
-         <MinusCircleFilled  style="font-size:1.5em;color:var(--secondary-text);"/>
+         <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color:var(--secondary-text);" />
         </div>
       </div>
      </div>
@@ -66,95 +66,103 @@
 </template>
 
 <script>
-import { computed, defineComponent,reactive,toRefs} from 'vue'
-import { CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled } from '@ant-design/icons-vue'
+import { mapActions,mapWritableState } from 'pinia'
 import _ from 'lodash-es'
 import { channelClass } from '../../../../js/chat/createChannelClass'
 import { message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
+import { Icon as ChatIcon} from '@iconify/vue'
 
-export default defineComponent({
+export default {
  components:{
-  CloseOutlined,LeftOutlined,SearchOutlined,MinusCircleFilled
+  ChatIcon
  },
 
  props:['no','id'],
 
- setup (props,ctx) {
-  const tui = window.$TUIKit
 
-  const community = communityStore()
+ data(){
+  return{
+    settingsScroller: {
+     useBothWheelAxes: true,
+     swipeEasing: true,
+     suppressScrollY: false,
+     suppressScrollX: true,
+     wheelPropagation: true
+    },
+    selectGroup:[],
+    title:'我创建的群聊',
+    server:window.$TUIKit,
+    filterList:[],
+    searchKeyWord:'',
 
-  const data = reactive({
-   settingsScroller: {
-    useBothWheelAxes: true,
-    swipeEasing: true,
-    suppressScrollY: false,
-    suppressScrollX: true,
-    wheelPropagation: true
-   },
-   selectGroup:[],
-  })
-  
-  // 返回上一层
-  const backChannel = ()=>{
-   ctx.emit('back')
   }
+ },
 
-  // 关闭和取消
-  const closeGroup = () =>{
-   ctx.emit('close')
-  }
+ computed:{},
 
-  // 过滤自己创建的群聊
-  const filterList = computed(()=>{
-   const list = tui.TUIServer.TUIGroup.store.groupList
-   const arr = _.filter(list,function(o){
-    return o.selfInfo.role !== 'Member'
-   })
-   return arr
+ mounted(){
+  this.getList()
+  this.$nextTick(()=>{
+    this.$refs.searchRef.focus()
   })
+ },
+
+ methods:{
+  ...mapActions(communityStore,['getCategoryData']),
+  // 返回和关闭
+  backChannel(){
+    this.$emit('back')
+  },
+  closeGroup(){
+    this.$emit('close')
+  },
+
+  // 获取默认群聊数据
+  getList(){
+    const list = this.server.TUIServer.TUIGroup.store.groupList
+    const arr = _.filter(list,function(o){
+     return o.selfInfo.role !== 'Member'
+    })
+    this.filterList = arr
+  },
 
   // 点击左侧选中
-  const leftListClick = (item) =>{
-   const index = _.findIndex(data.selectGroup,function(o){ return o.groupID === item.groupID })
-   if(index === -1){
-    data.selectGroup.push(item)
-   }else{
-    data.selectGroup.splice(index,1)
-   }
-  }
+  leftListClick(item){
+    const index = _.findIndex(this.selectGroup,function(o){ return o.groupID === item.groupID })
+    if(index === -1){
+     this.selectGroup.push(item)
+    }else{
+     this.selectGroup.splice(index,1)
+    }
+  },
 
   // 判断是否选中状态
-  const isSelected = (index)=>{
-   return data.selectGroup.includes(filterList.value[index])
-  }
-  
+  isSelected(index){
+    return this.selectGroup.includes(this.filterList[index])
+  },
+
   // 清除选中的群聊
-  const removeGroup = (item) =>{
-   const index = _.findIndex(data.selectGroup,function(o){ return o.groupID === item.groupID })
-   data.selectGroup.splice(index,1) 
-  }
+  removeGroup(item){
+   const index = _.findIndex(this.selectGroup,function(o){ return o.groupID === item.groupID })
+   this.selectGroup.splice(index,1) 
+  },
 
   // 创建子频道数据
-  const submit = async() =>{
-    const option = {
-      type:'group',
-      id:props.id,
-      no:props.no
-    }
-    if(data.selectGroup.length > 1){
-
+  async submit(){
+    const option = {type:'group', id:this.id, no:this.no }
+    if(this.selectGroup.length > 1){
       // console.log('关联多个群聊');
       const resultStatus = {}
-      for(let i=0;i<data.selectGroup.length;i++){
+      for(let i=0;i<this.selectGroup.length;i++){
         const groupsOption = {
           ...option,
           content:{
-            name:data.selectGroup[i].name,
+            name:this.selectGroup[i].name,
             props:{
-              groupID:data.selectGroup[i].groupID,
-              avatar:data.selectGroup[i].avatar
+              groupID:this.selectGroup[i].groupID,
+              avatar:this.selectGroup[i].avatar,
+              type:this.selectGroup[i].type
             }
           }
         }
@@ -164,38 +172,73 @@ export default defineComponent({
       }
       if(resultStatus?.status === 1){
         message.success(`${resultStatus?.info}`)
-        await community.getCategoryData(props.no)
-        ctx.emit('close')
+        await this.getCategoryData(this.no)
+        this.$emit('close')
       }
-
     }else{
       // console.log('关联单个群聊');
       const groupOption = {
         ...option,
         content:{
-          name:data.selectGroup[0].name,
+          name:this.selectGroup[0].name,
           props:{
-            groupID:data.selectGroup[0].groupID,
-            avatar:data.selectGroup[0].avatar
+            groupID:this.selectGroup[0].groupID,
+            avatar:this.selectGroup[0].avatar
           }
         }
       }
       const result = await channelClass.secondaryChannel(groupOption)
       if(result?.status === 1){
         message.success(`${result?.info}`)
-        await community.getCategoryData(props.no)
-        ctx.emit('close')
+        await this.getCategoryData(this.no)
+        this.$emit('close')
       }
     }
+  },
+
+  // 搜索
+  async searchGroup(evt){
+    /**
+      * 此处需要做两种判断
+      * 第一种:过滤社群中是否关联过得去群聊,需要通过后台接口进行检测
+      * 第二种:过滤自自己是成员的群聊
+      * **/
+      if(this.searchKeyWord !== ''){
+        this.filterList = [];
+
+        const chineseRegex = /[\u4e00-\u9fa5]/;
+
+        // 判断搜索是否为中文
+        if(chineseRegex.test(this.searchKeyWord)){
+          // console.log('测试搜索::>>',this.searchKeyWord);
+          const list = this.server.store.store.TUIGroup.groupList
+          const mapList = list.filter((item)=>{
+            return item.name.includes(this.searchKeyWord)
+          })
+          this.title = '群搜索结果'
+          this.filterList = mapList
+
+        }
+
+        else{
+          // console.log('获取搜索关键字',this.searchKeyWord);
+          const groupID = String(this.searchKeyWord)
+          const res = await this.server.tim.searchGroupByID(groupID)
+          // console.log('获取搜索的群聊',res);
+          this.filterList = [res?.data?.group]
+        }
+
+        
+
+      }else{
+       this.title = '我创建的群聊'
+       this.getList()
+       evt.preventDefault()
+      }
   }
 
-  return {
-   filterList,
-   ...toRefs(data),
-   backChannel,closeGroup,leftListClick,isSelected,removeGroup,submit
-  }
  }
-})
+}
 </script>
 
 <style lang="scss" scoped>

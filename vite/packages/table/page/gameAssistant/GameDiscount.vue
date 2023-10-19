@@ -8,7 +8,7 @@
 
     <template v-if="leftTitleType.name === 'steam' ">
       <a-spin v-if="isLoading === true" />
-      <vue-custom-scrollbar v-else  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 15.8em)">
+      <vue-custom-scrollbar v-else  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 16.5em)">
         <div class="steam-top-content w-full mb-4" >
           <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" 
            class="steam-top-item rounded-lg flex pointer flex-col discount-bg"
@@ -30,8 +30,8 @@
             <img :src="item.header_image" alt="" class="rounded-t-lg mb-3"  style="width:100%;height: 100%;object-fit: cover;">
             <div class="px-3 flex  items-center mb-3">
               <span class="percent-bottom px-1 rounded-md">-{{item.discount_percent}}%</span>
-              <span class="final-price ml-3">{{ currencyFormat(item.final_price,item.currency) }}</span>
-              <span class="line-through old-price ml-3">{{ currencyFormat(item.original_price,item.currency) }}</span>
+              <span class="final-price ml-2">{{ currencyFormat(item.final_price,item.currency) }}</span>
+              <span class="line-through old-price ml-2">{{ currencyFormat(item.original_price,item.currency) }}</span>
             </div>
           </div>
         </div> 
@@ -224,14 +224,14 @@ export default {
 }
 
 .old-price{
-  font-family: Oswald - Google Fonts;
-  font-size: 14px;
-  color:var(--secondary-text);
+  font-family: Oswald ;
+  font-size: 12px;
+  color:var(--disable-text);
   font-weight: 400;
 }
 .final-price{
-  font-family: Oswald-SemiBold;
-  font-size: 18px;
+  font-family: Oswald ;
+  font-size: 14px;
   color: #FF4D4F;
   font-weight: 600;
 }
