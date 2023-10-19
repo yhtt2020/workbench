@@ -157,7 +157,7 @@ export default {
     if (this.customData.zoom == undefined) {
       state = true;
       setData.zoom = {
-        state: false,
+        state: true,
         value: "",
       };
     }
