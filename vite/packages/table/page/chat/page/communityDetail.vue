@@ -169,60 +169,74 @@ export default {
 
     // 当前点击
     async currentItem(item){
-     // 点击链接
-     if (item.type === 'link' && item.name !== 'Roadmap') {
-      const data = JSON.parse(item.props)
-      // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
-      // console.log('转换的数据',data)
-      switch (data.openMethod) {
-        // case 'currentPage':
-        //   browser.openInTable(data.url)
-        //   break;
-        case 'userSelect':
-          browser.openInUserSelect(data.url)
-          break;
-        case 'systemSelect':
-          browser.openInSystem(data.url)
-          break;
-      }
-     }
-
-
-     // 点击群聊
-     if(item.type === 'group'){
-        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
-
-        // console.log('排查',changeData)
-
-        const groupId = changeData.groupID
-        const res = await window.$chat.searchGroupByID(groupId)
-        const enableGroup = await checkGroupShip([`${groupId}`])
-        this.isChat = enableGroup[0]
-        const isDisable = res.data.group.joinOption !== 'DisableApply'
-
-        // 判断有没有加入社群, yes表示已经加入, not表示没有加入
-        if (enableGroup[0] === 'yes') {
-
-          const name = `GROUP${groupId}`
-          window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-            // 通知 TUIConversation 添加当前会话
-            // Notify TUIConversation to toggle the current conversation
-            window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-          })
-
-        }else {
-          // isDisable判断群聊是否禁止加入
-          if (isDisable) {
-            this.group = res.data.group
-            // data.showModal = true
-          } else {
-            message.warn('该群禁止加入')
-          }
+      // 链接
+      if(item.type === 'link' && item.name !== 'Roadmap'){
+        const data = JSON.parse(item.props)
+        // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
+        switch (data.openMethod){
+          case 'userSelect':
+           browser.openInUserSelect(data.url)
+           break;
+          case 'systemSelect':
+           browser.openInSystem(data.url)
+           break;
         }
-     }
-     //  console.log('查看参数',{...item,props:JSON.parse(item.props)})
-     this.currentChannel = {...item,props:JSON.parse(item.props)}
+      }
 
+      // 群聊
+      if(item.type === 'group'){
+        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
+        const groups = window.$TUIKit.store.store.TUIGroup.groupList
+        const index = groups.findIndex((findItem)=>{ return findItem.groupID === changeData.groupID })
+        const enableGroup = await checkGroupShip([`${changeData.groupID}`]) // 有没有添加群聊
+        this.isChat = enableGroup[0]
+
+        // console.log('获取数据',groups[index].type === 'Private');
+        
+        if(groups[index].type === 'Private'){
+          const isDisable = groups[index].joinOption === "DisableApply" 
+          if(enableGroup[0] === 'yes'){
+            const name = `GROUP${changeData.groupID}`
+            window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+             // 通知 TUIConversation 添加当前会话
+             // Notify TUIConversation to toggle the current conversation
+             window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+            })
+          }else{
+            if(isDisable){
+              this.group = groups[index]
+            }else{
+              message.warn('该群禁止加入')
+            }
+          }
+          
+        }else{
+          const res = await window.$chat.searchGroupByID(changeData.groupID)
+          const isDisable = res.data.group.joinOption !== 'DisableApply'
+          // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+          if (enableGroup[0] === 'yes'){
+            const name = `GROUP${changeData.groupID}`
+            window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+              // 通知 TUIConversation 添加当前会话
+              // Notify TUIConversation to toggle the current conversation
+              window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+            })
+          }else{
+            // isDisable判断群聊是否禁止加入
+            if (isDisable) {
+             this.group = res.data.group
+             // data.showModal = true
+            } else {
+              message.warn('该群禁止加入')
+            }
+          } 
+        }
+        
+      }
+
+      // 其他
+      this.currentChannel = {...item,props:JSON.parse(item.props)}
+        
     },
 
     clickEmptyButton(item){
