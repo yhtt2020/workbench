@@ -33,12 +33,14 @@
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14 ml-8">
                 <div class="flex items-center justify-center ">
-                    <div class="flex " @click="clickLike" :class="{ 'xt-theme-text': isLike }">
-                        <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />
+                    <div class="flex items-center" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
+                        <!-- <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />-->
+                        <replyIcon icon="akar-icons:thumbs-up" style="font-size: 16px; " class="mr-1 "></replyIcon>
                         <div class="mr-4 text-center font-14 xt-text-2">{{ supportCount }} 点赞</div>
                     </div>
-                    <div class="flex" @click="replyStatus">
-                        <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
+                    <div class="flex items-center" @click="replyStatus">
+                        <!-- <MessageOutlined style="font-size: 16px;" class="mr-1 " /> -->
+                        <replyIcon icon="fluent:chat-16-regular" style="font-size: 18px;" class="mr-1 "></replyIcon>
                         <div class="font-14 xt-text-2">回复</div>
                     </div>
                     <!-- v-if="props.uid === commentList.user.uid" -->
@@ -50,7 +52,7 @@
                                 </a-menu>
                             </template>
                             <button class="border-0 xt-bg w-[30px] h-[20px] rounded-md">
-                                <Icon class="text-xl text-center xt-text-2 pointer"
+                                <replyIcon class="text-xl text-center xt-text-2 pointer"
                                     icon="fluent:more-horizontal-16-filled" />
 
                             </button>
@@ -87,6 +89,7 @@ import emojiReplace from '../../../js/chat/emoji'
 import { Icon } from '@iconify/vue'
 import { message } from "ant-design-vue";
 import {useCommunityStore} from '../commun'
+import { Icon as replyIcon } from '@iconify/vue';
 const store = useCommunityStore()
 const useUserStore = appStore()
 // 接收评论列表
