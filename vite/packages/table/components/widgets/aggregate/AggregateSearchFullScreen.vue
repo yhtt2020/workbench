@@ -29,11 +29,11 @@
             <template #overlay >
               <a-menu class="custom-dropdown-menu flex items-center flex-col justify-center">
                 <a-menu-item style="color: var(--primary-text);"
-                 :class="{current: openIndex === index }"
                  v-for="(item,index) in linkType" :key="index"
                  @click="changeOpenType(item,index)" class="rounded-lg"
 
                 >
+                <!--  :class="{current: openIndex === index }" -->
                   {{ item.name }}
                 </a-menu-item>
               </a-menu>
@@ -80,7 +80,7 @@
             </li>
           </ul>
           <div v-else class="flex flex-col">
-            <span class="mb-2.5 secondary-title" style="color: var(--secondary-text);">剪切板</span>
+            <span class="mb-2.5 secondary-title" v-if="getClipBoardData.length !== 0"  style="color: var(--secondary-text);">剪切板</span>
             <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"
              :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
              style="color: var(--secondary-text);"
@@ -509,6 +509,13 @@ export default {
   border-radius: 8px !important;
   background-color:var(--secondary-bg) !important;
   box-shadow: none !important;
+ 
+}
+
+:deep(.ant-dropdown-menu-item ){
+  &:hover{
+    background-color:var(--active-secondary-bg) !important ;
+  }
 }
 
 :deep(.current){
