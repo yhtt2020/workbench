@@ -317,10 +317,15 @@ export default{
 
     // 检测群聊是否为好友工作群
     isWorkGroup(item){
-      const data = JSON.parse(item.props);
-      const list = window.$TUIKit.store.store.TUIGroup.groupList
-      const index = list.findIndex((findItem)=>{ return findItem.groupID === data.groupID && findItem.type === data.type })
-      return index !== -1
+      // const data = JSON.parse(item.props);
+      // const list = window.$TUIKit.store.store.TUIGroup.groupList
+      // const index = list.findIndex((findItem)=>{ 
+      //   console.log(findItem.type,data.type);
+      //   // return findItem.groupID === data.groupID && findItem.type === data.type
+      // })
+      // return index !== -1
+
+      return true
     }
 
 
