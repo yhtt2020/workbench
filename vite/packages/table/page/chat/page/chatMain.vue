@@ -61,8 +61,8 @@ export default defineComponent({
    const router = useRouter()
    const store = chatStore()
    const TUIServer = (window as any)?.TUIKitTUICore?.TUIServer;
-   const TIM = TUIServer.TUICallKit.TUICore.TIM
-   const tim = TUIServer.TUICallKit.tim
+   //const TIM = TUIServer.TUICallKit.TUICore.TIM
+   //const tim = TUIServer.TUICallKit.tim
 
    const handleCurrentConversation = (value: string) => {
     //  console.log('检测::>>',value)
