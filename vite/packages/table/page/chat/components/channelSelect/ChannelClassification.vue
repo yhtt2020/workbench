@@ -292,7 +292,8 @@ export default {
              name:this.data[i].name,
              props:{
                groupID:this.data[i].groupID,
-               avatar:this.data[i].avatar
+               avatar:this.data[i].avatar,
+               type:this.data[i].type
              }
            }
          }
@@ -310,7 +311,7 @@ export default {
        
      }else{
        // console.log('this.data不是数组');
-       // console.log('查看this.data',this.data);
+       console.log('查看this.data',this.data);
 
        const channelsOption = { 
          ...option,
