@@ -54,6 +54,7 @@ class TableManager {
       global.tableWin = await windowManager.create({
         name: 'table',
         windowOption: {
+          acceptFirstMouse:true,
           alwaysOnTop: false,
           width: 1098,
           minimizable: false,
