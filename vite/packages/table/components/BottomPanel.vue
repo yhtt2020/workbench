@@ -128,7 +128,7 @@
                   width: 40px;
                   height: 40px;
                   margin-left: 5px;
-                  margin-top: 1px;
+                  margin-top: 2px;
                 "
               ></navIcon>
               <span

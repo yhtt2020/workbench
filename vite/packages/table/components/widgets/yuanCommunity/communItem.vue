@@ -31,7 +31,7 @@ const imageList=computed(() => {
     return detailPost.value.image_170_170
 })
 const showImg=computed(() => {
-    if(imageList.value[0]){
+    if(imageList.value && imageList.value[0]){
         return true
     }
     return false
