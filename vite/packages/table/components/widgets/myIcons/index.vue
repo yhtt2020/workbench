@@ -14,8 +14,8 @@
       ref="iconRef"
       class="icon-box box-border"
       :style="dragStyle"
-      @contextmenu.stop="handleMenu()"
     >
+    <!-- @contextmenu.stop="handleMenu()" -->
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
