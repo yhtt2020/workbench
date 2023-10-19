@@ -8,7 +8,7 @@ import { messageStore } from '../../store/message'
 import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
-
+import {isMain} from '../../js/common/screenUtils'
 
 export default {
   components: {
@@ -38,6 +38,7 @@ export default {
 
   },
   methods: {
+    isMain,
     setMinute () {
       setInterval(() => {
         this.$refs.minute?.classList.add('move')
@@ -124,9 +125,9 @@ export default {
     </div>
   </div>
 
-  <div v-else :style="{ width: '11em'}">
-    <a-row class="pointer" @click="social">
-      <a-col class="user-info" :span="24" style="padding: 0.6em;position:relative;">
+  <div v-else-if="!simple" :style="{ width: '11em'}">
+    <div class="pointer" @click="social">
+      <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10">
           <a-col :span="12" :style="{paddingLeft:simple?'20px':'5px'}">
@@ -171,9 +172,17 @@ export default {
             <!--                </span>-->
           </a-col>
         </a-row>
-      </a-col>
-    </a-row>
+      </div>
+
+    </div>
   </div>
+  <template v-else>
+    <div  class="btn" v-if="isMain()"   @click="social" >
+      <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
+                   :frameUrl="userInfo.frame"></FrameAvatar>
+      <div>我的</div>
+    </div>
+  </template>
 </template>
 
 <style scoped lang="scss">

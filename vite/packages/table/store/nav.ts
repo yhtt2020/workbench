@@ -247,12 +247,6 @@ export const navStore = defineStore("nav", {
         event:'setting',
         fn:()=>{  vm.$router.push({ name: 'setting' })}
       },
-      {
-        type:'systemApp',
-        icon:'fluent:grid-16-regular',
-        name:'应用管理',
-        event:'apps',
-      },
     ],
     footNavigationList: [...arrData],
     sideNavigationList: [
