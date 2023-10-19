@@ -251,7 +251,7 @@ export default {
       }else if(this.settings.wallSource == 'bing'){
         // 必应壁纸
         let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
-        axios.get(url).then((imagesResult) => {
+        axios.get(url).then(imagesResult => {
         if (imagesResult.status === 200) {
           let arr = imagesResult.data.images
           arr.forEach(item=>{
@@ -270,9 +270,16 @@ export default {
             autoplay: true,
             onclose: () => {this.enter(false)}
           })
+        }else{
+          Modal.error({ content: '网络加载错误，请检查设备后重试' })
+          return
         }
-      }).catch((err) => {
-      })
+        },rej=>{
+          Modal.error({ content: '网络加载错误，请检查设备后重试' })
+          return
+        }).catch((err) => {
+          console.log(err);
+        })
 
       }else{
         // 拾光壁纸
@@ -299,6 +306,11 @@ export default {
           } else {
             return
           }
+        },rej=>{
+          Modal.error({ content: '网络加载错误，请检查设备后重试' })
+          return
+        }).catch((err) => {
+          console.log(err);
         })
       }
     },
