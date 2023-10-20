@@ -1,3 +1,4 @@
+<!--  -->
 <script setup lang="ts">
 import Box from './Box.vue'
 import { onMounted, onUnmounted, ref } from 'vue'

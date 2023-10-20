@@ -1,15 +1,14 @@
+<!-- 拖拽盒子展示组件 -->
 <script lang="ts" setup>
-import { computed } from "vue";
-import MyIcons from "../../widgets/myIcons/index.vue";
-import Widget from "../../card/Widget.vue";
+import { computed } from 'vue'
+import test from "./test.vue";
+
 const props = defineProps<{
-  title: string;
-  yellow?: boolean;
-  preview?: boolean;
-  item?: boolean;
-  currentDesk;
-}>();
-const backgroundColor = computed(() => (props.yellow ? "yellow" : "white"));
+  title: string
+  yellow?: boolean
+  preview?: boolean
+}>()
+const backgroundColor = computed(() => (props.yellow ? 'yellow' : 'white'))
 </script>
 
 <template>
@@ -18,20 +17,14 @@ const backgroundColor = computed(() => (props.yellow ? "yellow" : "white"));
     :style="{ backgroundColor }"
     :role="preview ? 'BoxPreview' : 'Box'"
   >
-    <!-- <component
-      :desk="currentDesk"
-      :is="item.name"
-      :customIndex="item.id"
-      :customData="item.customData"
-      :editing="editing"
-    ></component> -->
-    <slot></slot>
+  <test></test>
+
   </div>
 </template>
 
 <style lang="less" scoped>
 .box {
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
   border: 1px dashed gray;
   cursor: move;
 }
