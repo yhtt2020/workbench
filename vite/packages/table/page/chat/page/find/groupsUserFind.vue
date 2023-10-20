@@ -103,6 +103,7 @@ export default {
        suppressScrollX: true,
        wheelPropagation: true
      },
+     server:window.$TUIKit,
    }
  },
 
@@ -120,7 +121,7 @@ export default {
    // await this.getMember()
  },
  methods: {
-   ...mapActions(chatStore, ['getReferData','loadGroupRelationship']),
+   ...mapActions(chatStore, ['getReferData','loadGroupRelationship','updateConversation']),
    openUserCard (uid) {
      this.cardVisible = true
      this.userCardUid = uid
@@ -145,6 +146,7 @@ export default {
    // 进入群聊
    async enterGroup (item) {
      // this.$emit('updateChat',this.$route.meta)
+     this.updateConversation(`GROUP${item.groupID}`)
      this.$router.push({name:'chatMain'})
      const conversationID = `GROUP${item.groupID}`
      // 通知 TUIConversation 添加当前会话
@@ -155,12 +157,12 @@ export default {
    },
 
    enterChatList (uid) {
-     // this.$emit('updateChat')
-     this.$router.push({name:'chatMain'})
-     const name = `C2C${uid}`
-     window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-       window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-     })
+    this.updateConversation(`C2C${uid}`)
+    this.$router.push({name:'chatMain'})
+    const name = `C2C${uid}`
+    window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+      window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+    })
    },
 
  }

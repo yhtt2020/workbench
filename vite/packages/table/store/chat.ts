@@ -43,7 +43,7 @@ export const chatStore = defineStore('chatStore',{
 
     // 存储上一次会话记录
     conversations: {
-      conversationID: undefined,
+      conversationID: (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore?.currentConversationID,
     },
 
     //  开关设置
@@ -258,6 +258,9 @@ export const chatStore = defineStore('chatStore',{
       this.contactsSet = option
     },
 
+    updateConversation(val:any){
+      this.conversations.conversationID = val
+    },
 
 
 

@@ -16,7 +16,7 @@
     </main>
   </div>
 </template>
-<script lang="ts">
+<script>
 import { defineComponent, reactive, toRefs, computed, watch,defineExpose,onMounted,nextTick } from 'vue';
 import TUIConversationList from './components/list';
 import { caculateTimeago, isArrayEqual } from '../utils';
@@ -37,21 +37,21 @@ const TUIConversation = defineComponent({
       default: false,
     },
   },
-  setup(props: any, ctx: any) {
-    const TUIServer: any = TUIConversation?.TUIServer;
+  setup(props, ctx) {
+    const TUIServer = TUIConversation?.TUIServer;
     const router = useRouter()
 
-    const store = chatStore()
+    const chat = chatStore()
 
     const data = reactive({
       currentConversationID: '',
       conversationData: {
         list: [],
-        handleItemAvator: (item: any) => handleAvatar(item),
-        handleItemName: (item: any) => handleName(item),
-        handleShowAt: (item: any) => handleAt(item),
-        handleShowMessage: (item: any) => handleShowLastMessage(item),
-        handleItemTime: (time: number) => {
+        handleItemAvator: (item) => handleAvatar(item),
+        handleItemName: (item) => handleName(item),
+        handleShowAt: (item) => handleAt(item),
+        handleShowMessage: (item) => handleShowLastMessage(item),
+        handleItemTime: (time) => {
           if (time > 0) {
             return caculateTimeago(time * 1000);
           }
@@ -60,7 +60,7 @@ const TUIConversation = defineComponent({
       },
       userIDList: [],
       netWork: '',
-      env: TUIServer.TUICore.TUIEnv,
+      env: TUIServer?.TUICore?.TUIEnv,
       displayOnlineStatus: false,
       userStatusList: new Map(),
     });
@@ -81,7 +81,7 @@ const TUIConversation = defineComponent({
 
     watch(
       () => data.currentConversationID,
-      (newVal: any) => {
+      (newVal) => {
         ctx.emit('current', newVal);
       },
       {
@@ -91,7 +91,7 @@ const TUIConversation = defineComponent({
 
     watch(
       () => props.displayOnlineStatus,
-      async (newVal: any, oldVal: any) => {
+      async (newVal, oldVal) => {
         if (newVal === oldVal) return;
         data.displayOnlineStatus = newVal;
         TUIServer.TUICore.TUIServer.TUIContact.handleUserStatus(data.displayOnlineStatus, [...data.userIDList]);
@@ -101,7 +101,7 @@ const TUIConversation = defineComponent({
 
     watch(
       () => [...data.userIDList],
-      async (newVal: any, oldVal: any) => {
+      async (newVal, oldVal) => {
         if (isArrayEqual(newVal, oldVal)) return;
         TUIServer.TUICore.TUIServer.TUIContact.handleUserStatus(data.displayOnlineStatus, [...data.userIDList]);
       },
@@ -124,43 +124,41 @@ const TUIConversation = defineComponent({
       return disconnected || connecting;
     });
 
-    const handleCurrentConversation = (value: any) => {
+    const handleCurrentConversation = (value) => {
       TUIServer.handleCurrentConversation(value);
     };
   
     onMounted(()=>{
      // 判断会话列表第一次是否为空
      nextTick(()=>{
-      const dataList = (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore?.conversationData
-      const dataChat = (window as any).$TUIKit.TUIServer?.TUIChat.currentStore?.conversation
-      if(dataList.list.length === 0){
-        message.warn('温馨提示,当前聊天页没有对话,进入发现页创建聊天会话或者点击左侧栏底部添加按钮创建')
-        router.push({name:'chatFind'})
-      }else{
-        const conversationName = store.$state.conversations.conversationID;
-        // 会话列表有数据,并且有点击的情况下,就默认选中上次点击的会话列表
-        if(conversationName && conversationName !== undefined){
-          data.currentConversationID = conversationName;
-          (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationName).then((imResponse:any) => {
-            // 通知 TUIConversation 添加当前会话
-            // Notify TUIConversation to toggle the current conversation
-            (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-          })
-        }else{   // 会话列表有数据,用户没有点击的情况下,默认选中会话列表第一个
-          const name = dataList.list[0].conversationID
-          data.currentConversationID = name;
-          (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse:any) => {
-            // 通知 TUIConversation 添加当前会话
-            // Notify TUIConversation to toggle the current conversation
-            (window as any).$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-          })
+      // 检测会话列表是不是为空列表
+      nextTick(()=>{
+        const isEmptySting = chat.conversations.conversationID
+        const isEmptyList = window.$TUIKit.TUIServer?.TUIConversation.currentStore?.conversationData?.list
+        if(isEmptyList.length !== 0){
+          if(isEmptySting !== ''){
+            data.currentConversationID = isEmptySting;
+            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(isEmptySting).then((imResponse) => {
+             // 通知 TUIConversation 添加当前会话
+             // Notify TUIConversation to toggle the current conversation
+             window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+            })
+          }else{
+            // console.log('缓存为空数据',status);
+            const name = isEmptyList[0].conversationID
+            data.currentConversationID = name;
+            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+             // 通知 TUIConversation 添加当前会话
+             // Notify TUIConversation to toggle the current conversation
+             window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+            })
+          }
+        }else{
+          message.warn('温馨提示,当前聊天页没有对话,进入发现页创建聊天会话或者点击左侧栏底部添加按钮创建')
+          router.push({name:'chatFind'})
         }
-        
-       
+      })
 
-        // dataChat.conversationID = store.$state.conversations.conversationID
-        // console.log('获取当前会话ID',);
-      }
      })
 
     })
