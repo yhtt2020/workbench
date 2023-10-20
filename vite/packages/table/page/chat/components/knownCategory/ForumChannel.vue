@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <ForumIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
+    <ForumIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;color: var(--secondary-text);"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择社区版块</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <ForumIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25em;"/>
+    <ForumIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 

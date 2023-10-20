@@ -4,13 +4,13 @@
    <!-- 左侧返回按钮 -->
    <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
     <!-- <LeftOutlined  /> -->
-    <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
 
    <span class="font-16-400" style="color: var(--primary-text);">创建社群</span>
 
    <div class="flex items-center pointer active-button rounded-lg justify-center close h-10 w-10" @click="closeCreateCom">
-    <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;"/>
+    <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
   </div>
 
