@@ -23,12 +23,12 @@
                             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
                             <span class=" ant-dropdown-link" @click.prevent>
                                 {{ options[checkMenuCurrentIndex].title }}
-                                <newIcon icon="fluent:chevron-left-16-filled" class="-rotate-90" style="vertical-align: middle;font-size: 20px;"></newIcon>
+                                <newIcon icon="fluent:chevron-left-16-filled" class="-rotate-90"
+                                    style="vertical-align: middle;font-size: 20px;"></newIcon>
                             </span>
                             <template #overlay>
                                 <a-menu class="text-center xt-bg-2">
-                                    <a-menu-item v-for="(item, index) in options" :key="index"
-                                        @click="handleChange(index)">
+                                    <a-menu-item v-for="(item, index) in options" :key="index" @click="handleChange(index)">
                                         <span class="text-center xt-text">{{ item.title }}</span>
                                     </a-menu-item>
                                 </a-menu>
@@ -65,18 +65,18 @@
             </div>
         </div>
         <!-- 圈子列表 -->
-        <div style="height: calc(100vh - 16em)">
+        <div style="height: calc(100% - 80px)">
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
                 :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <div class="flex flex-wrap mt-4">
                     <GroupsItem v-for="(item, index) in groupMsg" :key="index" :circleMsg="item" @goJoin="goJoin" />
                 </div>
-                <!-- 翻页 -->
-                <div class="flex justify-center">
-                    <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
-                </div>
-            </vue-custom-scrollbar>
 
+            </vue-custom-scrollbar>
+            <!-- 翻页 -->
+            <div class="flex justify-center">
+                <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
+            </div>
         </div>
         <!-- <teleport to="body" :disabled="false"> -->
         <JoinModal v-if="joinVisible" @handleOk="joinVisible = false" />
@@ -186,4 +186,5 @@ const handleChange = (value) => {
 :deep(.ant-pagination-next .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
-}</style>
+}
+</style>
