@@ -3,6 +3,7 @@ import dbStorage from "./dbStorage";
 import {compareTime, cacheRequest, quickRequest} from '../js/axios/api'
 import cheerio from 'cheerio';
 import {serverCache} from "../js/axios/serverCache";
+import axios from "axios";
 
 const url = `https://tophub.today/n/KqndgxeLl9`
 // @ts-ignore
@@ -11,7 +12,7 @@ export const hotStore = defineStore("hot", {
     data: {}
   }),
   actions: {
-    async getData() {
+    async getData(cache=1) {
 
       // if (typeof this.data !== 'object') {
       //     this.data = {}
@@ -23,11 +24,23 @@ export const hotStore = defineStore("hot", {
       //       return
       //     }
       // }
+      let res=null
+      let serverCacheTtl=60*10
+      if(cache){
+         res = await quickRequest(url, {}, {
+          localCache: true,
+          localTtl: 60 * 10
+        })
+      }else{
+        //强制刷新，直接获取并设置服务器缓存
+        let axiosResponse = await axios.get(url,{})
+        if (axiosResponse.status === 200) {
+          // 如果请求到数据，post到serverCache的setCache api
+          await serverCache.set(url, axiosResponse,serverCacheTtl).then()
+        }
+        res=axiosResponse
+      }
 
-      let res = await quickRequest(url, {}, {
-        localCache: true,
-        localTtl: 60 * 10
-      })
       let hotList = []
       const html = res.data
       const dom = cheerio.load(html)
@@ -53,7 +66,7 @@ export const hotStore = defineStore("hot", {
     // },
     refresh() {
       serverCache.removeLocalCache(url)
-      this.getData()
+      this.getData(0)
     }
 
   },

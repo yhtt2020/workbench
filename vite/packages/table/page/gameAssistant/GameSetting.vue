@@ -185,7 +185,13 @@ import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
 import {completeTask} from "../../apps/task/page/branch/task"
 const { steamSession, path, https,steamUser } = $models
-const { LoginSession, EAuthTokenPlatformType } = steamSession
+let LoginSession
+let EAuthTokenPlatformType
+if(steamSession){
+  LoginSession = steamSession.LoginSession
+  EAuthTokenPlatformType= steamSession.EAuthTokenPlatformType
+}
+
 
 export default {
   name: 'gameSetting',
