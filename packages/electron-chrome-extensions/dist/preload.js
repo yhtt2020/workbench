@@ -1,151 +1,55 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/preload.ts");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./src/preload.ts":
-/*!************************!*\
-  !*** ./src/preload.ts ***!
-  \************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderer */ "./src/renderer/index.ts");
-
-
-// Only load within extension page context
-if (location.href.startsWith('chrome-extension://')) {
-  Object(_renderer__WEBPACK_IMPORTED_MODULE_0__["injectExtensionAPIs"])();
-}
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/renderer/event.ts":
 /*!*******************************!*\
   !*** ./src/renderer/event.ts ***!
   \*******************************/
-/*! exports provided: addExtensionListener, removeExtensionListener */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addExtensionListener", function() { return addExtensionListener; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeExtensionListener", function() { return removeExtensionListener; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addExtensionListener: () => (/* binding */ addExtensionListener),
+/* harmony export */   removeExtensionListener: () => (/* binding */ removeExtensionListener)
+/* harmony export */ });
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ "electron");
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);
 
+
 const formatIpcName = name => `crx-${name}`;
+
 const listenerMap = new Map();
 const addExtensionListener = (extensionId, name, callback) => {
   const listenerCount = listenerMap.get(name) || 0;
+
   if (listenerCount === 0) {
     // TODO: should these IPCs be batched in a microtask?
-    electron__WEBPACK_IMPORTED_MODULE_0__["ipcRenderer"].send('crx-add-listener', extensionId, name);
+    electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('crx-add-listener', extensionId, name);
   }
+
   listenerMap.set(name, listenerCount + 1);
-  electron__WEBPACK_IMPORTED_MODULE_0__["ipcRenderer"].addListener(formatIpcName(name), function (event, ...args) {
+  electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.addListener(formatIpcName(name), function (event, ...args) {
     if (true) {
       console.log(name, '(result)', ...args);
     }
+
     callback(...args);
   });
 };
 const removeExtensionListener = (extensionId, name, callback) => {
   if (listenerMap.has(name)) {
     const listenerCount = listenerMap.get(name) || 0;
+
     if (listenerCount <= 1) {
       listenerMap.delete(name);
-      electron__WEBPACK_IMPORTED_MODULE_0__["ipcRenderer"].send('crx-remove-listener', extensionId, name);
+      electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.send('crx-remove-listener', extensionId, name);
     } else {
       listenerMap.set(name, listenerCount - 1);
     }
   }
-  electron__WEBPACK_IMPORTED_MODULE_0__["ipcRenderer"].removeListener(formatIpcName(name), callback);
+
+  electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.removeListener(formatIpcName(name), callback);
 };
 
 /***/ }),
@@ -154,12 +58,12 @@ const removeExtensionListener = (extensionId, name, callback) => {
 /*!*******************************!*\
   !*** ./src/renderer/index.ts ***!
   \*******************************/
-/*! exports provided: injectExtensionAPIs */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "injectExtensionAPIs", function() { return injectExtensionAPIs; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   injectExtensionAPIs: () => (/* binding */ injectExtensionAPIs)
+/* harmony export */ });
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ "electron");
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event */ "./src/renderer/event.ts");
@@ -168,57 +72,65 @@ __webpack_require__.r(__webpack_exports__);
 const injectExtensionAPIs = () => {
   const invokeExtension = async function (extensionId, fnName, options = {}, ...args) {
     const callback = typeof args[args.length - 1] === 'function' ? args.pop() : undefined;
+
     if (true) {
       console.log(fnName, args);
     }
+
     if (options.noop) {
       console.warn(`${fnName} is not yet implemented.`);
       if (callback) callback();
       return;
     }
+
     if (options.serialize) {
       args = options.serialize(...args);
     }
+
     let result;
+
     try {
-      result = await electron__WEBPACK_IMPORTED_MODULE_0__["ipcRenderer"].invoke('crx-msg', extensionId, fnName, ...args);
+      result = await electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.invoke('crx-msg', extensionId, fnName, ...args);
     } catch (e) {
       // TODO: Set chrome.runtime.lastError?
       console.error(e);
       result = undefined;
     }
+
     if (true) {
       console.log(fnName, '(result)', result);
     }
+
     if (callback) {
       callback(result);
     } else {
       return result;
     }
   };
+
   const electronContext = {
     invokeExtension,
-    addExtensionListener: _event__WEBPACK_IMPORTED_MODULE_1__["addExtensionListener"],
-    removeExtensionListener: _event__WEBPACK_IMPORTED_MODULE_1__["removeExtensionListener"]
-  };
-
-  // Function body to run in the main world.
+    addExtensionListener: _event__WEBPACK_IMPORTED_MODULE_1__.addExtensionListener,
+    removeExtensionListener: _event__WEBPACK_IMPORTED_MODULE_1__.removeExtensionListener
+  }; // Function body to run in the main world.
   // IMPORTANT: This must be self-contained, no closure variable will be included!
+
   function mainWorldScript() {
     var _chrome$runtime;
+
     // Use context bridge API or closure variable when context isolation is disabled.
     const electron = window.electron || electronContext;
     const chrome = window.chrome || {};
-    const extensionId = (_chrome$runtime = chrome.runtime) === null || _chrome$runtime === void 0 ? void 0 : _chrome$runtime.id;
-
-    // NOTE: This uses a synchronous IPC to get the extension manifest.
+    const extensionId = (_chrome$runtime = chrome.runtime) === null || _chrome$runtime === void 0 ? void 0 : _chrome$runtime.id; // NOTE: This uses a synchronous IPC to get the extension manifest.
     // To avoid this, JS bindings for RendererExtensionRegistry would be
     // required.
-    const manifest = extensionId && chrome.runtime.getManifest() || {};
 
-    //取回message的内容，替换掉i18n的本地化方法，因为那个方法有问题
+    const manifest = extensionId && chrome.runtime.getManifest() || {}; //取回message的内容，替换掉i18n的本地化方法，因为那个方法有问题
+
     let localeMessages = {};
+
     const invokeExtension = (fnName, opts = {}) => (...args) => electron.invokeExtension(extensionId, fnName, opts, ...args);
+
     invokeExtension('i18n.getAllMessage')(args => {
       localeMessages = args;
     }); //取回全部的message
@@ -232,37 +144,50 @@ const injectExtensionAPIs = () => {
       ctx.putImageData(imageData, 0, 0);
       return canvas.toDataURL();
     }
+
     class ExtensionEvent {
       constructor(name) {
         this.name = name;
       }
+
       addListener(callback) {
         electron.addExtensionListener(extensionId, this.name, callback);
       }
+
       removeListener(callback) {
         electron.removeExtensionListener(extensionId, this.name, callback);
       }
+
       getRules(ruleIdentifiers, callback) {
         throw new Error('Method not implemented.');
       }
+
       hasListener(callback) {
         throw new Error('Method not implemented.');
       }
+
       removeRules(ruleIdentifiers, callback) {
         throw new Error('Method not implemented.');
       }
+
       addRules(rules, callback) {
         throw new Error('Method not implemented.');
       }
+
       hasListeners() {
         throw new Error('Method not implemented.');
       }
+
     }
+
     class ChromeSetting {
       set() {}
+
       get() {}
-      clear() {}
-      // onChange: chrome.types.ChromeSettingChangedEvent
+
+      clear() {} // onChange: chrome.types.ChromeSettingChangedEvent
+
+
     }
 
     /**
@@ -272,8 +197,7 @@ const injectExtensionAPIs = () => {
       browserAction: {
         shouldInject: () => !!manifest.browser_action,
         factory: base => {
-          const api = {
-            ...base,
+          const api = { ...base,
             setTitle: invokeExtension('browserAction.setTitle'),
             getTitle: invokeExtension('browserAction.getTitle'),
             setIcon: invokeExtension('browserAction.setIcon', {
@@ -288,6 +212,7 @@ const injectExtensionAPIs = () => {
                     }, {});
                   }
                 }
+
                 return [details];
               }
             }),
@@ -310,8 +235,7 @@ const injectExtensionAPIs = () => {
       },
       commands: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             getAll: invokeExtension('commands.getAll'),
             onCommand: new ExtensionEvent('commands.onCommand')
           };
@@ -323,6 +247,7 @@ const injectExtensionAPIs = () => {
           const menuCallbacks = {};
           const menuCreate = invokeExtension('contextMenus.create');
           let hasInternalListener = false;
+
           const addInternalListener = () => {
             api.onClicked.addListener((info, tab) => {
               const callback = menuCallbacks[info.menuItemId];
@@ -330,17 +255,19 @@ const injectExtensionAPIs = () => {
             });
             hasInternalListener = true;
           };
-          const api = {
-            ...base,
+
+          const api = { ...base,
             create: function (createProperties, callback) {
               if (typeof createProperties.id === 'undefined') {
                 createProperties.id = `${++menuCounter}`;
               }
+
               if (createProperties.onclick) {
                 if (!hasInternalListener) addInternalListener();
                 menuCallbacks[createProperties.id] = createProperties.onclick;
                 delete createProperties.onclick;
               }
+
               menuCreate(createProperties, callback);
               return createProperties.id;
             },
@@ -356,8 +283,7 @@ const injectExtensionAPIs = () => {
       },
       cookies: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             get: invokeExtension('cookies.get'),
             getAll: invokeExtension('cookies.getAll'),
             set: invokeExtension('cookies.set'),
@@ -367,86 +293,14 @@ const injectExtensionAPIs = () => {
           };
         }
       },
-      //todo 补充权限管理
-      permissions: {
-        factory: base => {
-          return {
-            ...base,
-            contains: invokeExtension('permissions.contains')
-          };
-        }
-      },
-      i18n: {
-        factory: base => {
-          return {
-            ...base,
-            //修复i18n方法
-            getMessage: (messageName, substitutions = []) => {
-              let localeJson = localeMessages;
-              function getMessage(name, substitutions) {
-                let messageKey = localeJson[name];
-                if (typeof messageKey !== 'undefined') {
-                  let result = messageKey['message'];
-                  return result;
-                } else {
-                  return undefined;
-                }
-              }
-              function preMatch(str) {
-                var pattern = /\$.*?\$/g;
-                return pattern.test(str);
-              }
-
-              /**
-               * 匹配变量
-               * @param source
-               * @param scope
-               */
-              function templater(source, scope) {
-                const tokenRegex = /\$.*?\$/g;
-                let i = 0;
-                var result = source.replace(tokenRegex, function (match, key) {
-                  let rs = typeof scope[i] !== 'undefined' ? scope[i] : match;
-                  i++;
-                  return rs;
-                });
-                return result;
-              }
-              if (!messageName) {
-                //如果是数组，则返回一个对应的数组
-                return undefined;
-              } else {
-                //如果不是数组，则直接返回
-                let gotMessage = getMessage(messageName, substitutions);
-                let matches = preMatch(gotMessage);
-                if (matches) {
-                  if (substitutions.length === 0 || substitutions.length > 9) {
-                    //替换数组不符合规定
-                    return undefined;
-                  } else {
-                    return templater(gotMessage, substitutions);
-                  }
-                }
-                return gotMessage;
-              }
-            }
-            // getAcceptLanguages: ()=>{
-            //   return ['zh-CN','zh_CN']
-            // }
-          };
-        }
-      },
-
       extension: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             isAllowedIncognitoAccess: () => false,
             isAllowedFileSchemeAccess: async callback => {
               return true; //todo 此处应该还要兼容一下涉及到的文件协议
               //callback(true)
             },
-
             // TODO: Add native implementation
             getViews: () => []
           };
@@ -454,8 +308,7 @@ const injectExtensionAPIs = () => {
       },
       notifications: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             clear: invokeExtension('notifications.clear'),
             create: invokeExtension('notifications.create'),
             getAll: invokeExtension('notifications.getAll'),
@@ -469,8 +322,7 @@ const injectExtensionAPIs = () => {
       },
       privacy: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             network: {
               networkPredictionEnabled: new ChromeSetting(),
               webRTCIPHandlingPolicy: new ChromeSetting()
@@ -483,22 +335,19 @@ const injectExtensionAPIs = () => {
       },
       runtime: {
         factory: base => {
-          return {
-            ...base,
-            openOptionsPage: invokeExtension('runtime.openOptionsPage')
-            // getManifest:()=>{
+          return { ...base,
+            openOptionsPage: invokeExtension('runtime.openOptionsPage') // getManifest:()=>{
             //   manifest.current_locale='zh_CN'
             //   return manifest
             // }
+
           };
         }
       },
-
       storage: {
         factory: base => {
           const local = base && base.local;
-          return {
-            ...base,
+          return { ...base,
             // TODO: provide a backend for browsers to opt-in to
             managed: local,
             sync: local
@@ -507,8 +356,7 @@ const injectExtensionAPIs = () => {
       },
       tabs: {
         factory: base => {
-          const api = {
-            ...base,
+          const api = { ...base,
             create: invokeExtension('tabs.create'),
             executeScript: function (arg1, arg2, arg3) {
               // Electron's implementation of chrome.tabs.executeScript is in
@@ -550,8 +398,7 @@ const injectExtensionAPIs = () => {
       },
       webNavigation: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             getFrame: invokeExtension('webNavigation.getFrame'),
             getAllFrames: invokeExtension('webNavigation.getAllFrames'),
             onBeforeNavigate: new ExtensionEvent('webNavigation.onBeforeNavigate'),
@@ -568,16 +415,14 @@ const injectExtensionAPIs = () => {
       },
       webRequest: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             onHeadersReceived: new ExtensionEvent('webRequest.onHeadersReceived')
           };
         }
       },
       windows: {
         factory: base => {
-          return {
-            ...base,
+          return { ...base,
             WINDOW_ID_NONE: -1,
             WINDOW_ID_CURRENT: -2,
             getCurrent: invokeExtension('windows.getCurrent'),
@@ -593,24 +438,21 @@ const injectExtensionAPIs = () => {
           };
         }
       }
-    };
+    }; // Initialize APIs
 
-    // Initialize APIs
     Object.keys(apiDefinitions).forEach(key => {
       const apiName = key;
       const baseApi = chrome[apiName];
-      const api = apiDefinitions[apiName];
+      const api = apiDefinitions[apiName]; // Allow APIs to opt-out of being available in this context.
 
-      // Allow APIs to opt-out of being available in this context.
       if (api.shouldInject && !api.shouldInject()) return;
       Object.defineProperty(chrome, apiName, {
         value: api.factory(baseApi),
         enumerable: true,
         configurable: true
       });
-    });
+    }); // Remove access to internals
 
-    // Remove access to internals
     delete window.electron;
     Object.freeze(chrome);
     void 0; // no return
@@ -618,10 +460,9 @@ const injectExtensionAPIs = () => {
 
   try {
     // Expose extension IPC to main world
-    electron__WEBPACK_IMPORTED_MODULE_0__["contextBridge"].exposeInMainWorld('electron', electronContext);
+    electron__WEBPACK_IMPORTED_MODULE_0__.contextBridge.exposeInMainWorld('electron', electronContext); // Mutate global 'chrome' object with additional APIs in the main world.
 
-    // Mutate global 'chrome' object with additional APIs in the main world.
-    electron__WEBPACK_IMPORTED_MODULE_0__["webFrame"].executeJavaScript(`(${mainWorldScript}());`);
+    electron__WEBPACK_IMPORTED_MODULE_0__.webFrame.executeJavaScript(`(${mainWorldScript}());`);
   } catch {
     // contextBridge threw an error which means we're in the main world so we
     // can just execute our function.
@@ -635,12 +476,95 @@ const injectExtensionAPIs = () => {
 /*!***************************!*\
   !*** external "electron" ***!
   \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ ((module) => {
 
 module.exports = require("electron");
 
 /***/ })
 
-/******/ });
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!************************!*\
+  !*** ./src/preload.ts ***!
+  \************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderer */ "./src/renderer/index.ts");
+ // Only load within extension page context
+
+if (location.href.startsWith('chrome-extension://')) {
+  (0,_renderer__WEBPACK_IMPORTED_MODULE_0__.injectExtensionAPIs)();
+}
+})();
+
+/******/ })()
+;
 //# sourceMappingURL=preload.js.map

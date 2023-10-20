@@ -26,7 +26,7 @@
       </template>
       <div class="content">
         <!-- {{ recentList.slice(0,4).length }} -->
-        <div class="input xt-bg" style="position: relative ">
+        <div class="input xt-bg" style="position: relative">
           <a-input
             placeholder="问我任何问题"
             :bordered="false"
@@ -50,32 +50,37 @@
             text-align: left;
             margin-top: 14px;
             margin-bottom: 12px;
-            color: var(--primary-text) ;
-            
+            color: var(--primary-text);
           "
         >
           最近对话
         </div>
-       <template v-if="recentList">
-        <div v-for="index in copyNum">
-          <div class="ai-msg xt-bg-2" @click="goPage(index)">
-            <xt-base-icon
-              class="msg-icon"
-              :icon="recentList[index]?.icon.name || 'message' "
-            ></xt-base-icon>
-            <div
-              class="msg-title"
-              :style="{
-                height: copyNum !== 1 ? '56px' : '48px',
-                lineHeight: copyNum !== 1 ? '56px' : '48px',
-              }"
-            >
-              {{ recentList[index]?.name }}
+        <template v-if="recentList">
+          <div v-for="index in copyNum">
+            <div class="ai-msg xt-bg-2" @click="goPage(index - 1)">
+              <xt-base-icon
+                class="msg-icon"
+                :icon="recentList[index - 1]?.icon.name || 'message'"
+              ></xt-base-icon>
+              <div
+                class="msg-title"
+                :style="{
+                  height: copyNum !== 1 ? '56px' : '48px',
+                  lineHeight: copyNum !== 1 ? '56px' : '48px',
+                }"
+              >
+                {{ recentList[index - 1]?.name }}
+              </div>
             </div>
           </div>
-        </div>
-       </template>
-       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" style="margin-top: 200px;"></DataStatu> -->
+        </template>
+        <DataStatu
+          v-else
+          imgDisplay="/img/test/load-ail.png"
+          :btnToggle="false"
+          textPrompt="暂无数据"
+          style="margin-top: 200px"
+        ></DataStatu>
       </div>
     </Widget>
   </div>
@@ -88,7 +93,7 @@ import {
   SendOutlined,
   RobotOutlined,
 } from "@ant-design/icons-vue";
-import DataStatu from "./DataStatu.vue"
+import DataStatu from "./DataStatu.vue";
 import { aiStore } from "../../store/ai";
 import { mapWritableState } from "pinia";
 export default {
@@ -158,7 +163,7 @@ export default {
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 1 ? 1 : this.recentList.slice(0,4).length;
+      return this.showSize.height == 1 ? 1 : this.recentList.slice(0, 4).length;
     },
   },
 };

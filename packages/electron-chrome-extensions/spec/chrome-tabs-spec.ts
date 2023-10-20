@@ -1,12 +1,15 @@
 import { expect } from 'chai'
-import { BrowserWindow } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { emittedOnce } from './events-helpers'
 
 import { useExtensionBrowser, useServer } from './hooks'
 
 describe('chrome.tabs', () => {
   const server = useServer()
-  const browser = useExtensionBrowser({ url: server.getUrl, extensionName: 'rpc' })
+  const browser = useExtensionBrowser({
+    url: server.getUrl,
+    extensionName: 'rpc',
+  })
 
   describe('get()', () => {
     it('returns tab details', async () => {
@@ -18,21 +21,43 @@ describe('chrome.tabs', () => {
     })
   })
 
-  describe('update()', () => {
-    it('navigates the tab', async () => {
-      const tabId = browser.window.webContents.id
-      const updateUrl = `${server.getUrl()}/foo`
-      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
-      browser.crx.exec('tabs.update', tabId, { url: updateUrl })
-      await navigatePromise
-      expect(browser.window.webContents.getURL()).to.equal(updateUrl)
+  describe('getCurrent()', () => {
+    it('gets details of the active tab', async () => {
+      const result = await browser.crx.exec('tabs.getCurrent')
+      expect(result).to.be.an('object')
     })
   })
 
-  describe('getCurrent()', () => {
-    it('fails to get the active tab from a non-tab context', async () => {
-      const result = await browser.crx.exec('tabs.getCurrent')
-      expect(result).to.not.be.an('object')
+  describe('create()', () => {
+    it('creates a tab', async () => {
+      const wcPromise = emittedOnce(app, 'web-contents-created')
+      const tabInfo = await browser.crx.exec('tabs.create', { url: server.getUrl() })
+      const [, wc] = await wcPromise
+      expect(tabInfo).to.be.an('object')
+      expect(tabInfo.id).to.equal(wc.id)
+      expect(tabInfo.active).to.equal(true)
+      expect(tabInfo.url).to.equal(server.getUrl())
+      expect(tabInfo.windowId).to.equal(browser.window.id)
+      expect(tabInfo.title).to.be.a('string')
+    })
+
+    // TODO: Navigating to chrome-extension:// receives ERR_BLOCKED_BY_CLIENT (-20)
+    it.skip('resolves relative URL', async () => {
+      const relativeUrl = './options.html'
+      const tabInfo = await browser.crx.exec('tabs.create', { url: relativeUrl })
+      const url = new URL(relativeUrl, browser.extension.url).href
+      expect(tabInfo).to.be.an('object')
+      expect(tabInfo.url).to.equal(url)
+    })
+
+    it('fails on chrome:// URLs', async () => {
+      const tabInfo = await browser.crx.exec('tabs.create', { url: 'chrome://kill' })
+      expect(tabInfo).to.be.a('null')
+    })
+
+    it('fails on javascript: URLs', async () => {
+      const tabInfo = browser.crx.exec('tabs.create', { url: "javascript:alert('hacked')" })
+      expect(await tabInfo).to.be.a('null')
     })
   })
 
@@ -62,6 +87,140 @@ describe('chrome.tabs', () => {
       expect(result).to.be.length(2)
       expect(result[0].windowId).to.be.equal(browser.window.id)
       expect(result[1].windowId).to.be.equal(secondWindow.id)
+    })
+
+    it('matches exact title', async () => {
+      const results = await browser.crx.exec('tabs.query', { title: 'title' })
+      expect(results).to.be.an('array')
+      expect(results).to.be.length(1)
+      expect(results[0].title).to.be.equal('title')
+    })
+
+    it('matches title pattern', async () => {
+      const results = await browser.crx.exec('tabs.query', { title: '*' })
+      expect(results).to.be.an('array')
+      expect(results).to.be.length(1)
+      expect(results[0].title).to.be.equal('title')
+    })
+
+    it('matches exact url', async () => {
+      const url = server.getUrl()
+      const results = await browser.crx.exec('tabs.query', { url })
+      expect(results).to.be.an('array')
+      expect(results).to.be.length(1)
+      expect(results[0].url).to.be.equal(url)
+    })
+
+    it('matches wildcard url pattern', async () => {
+      const url = 'http://*/*'
+      const results = await browser.crx.exec('tabs.query', { url })
+      expect(results).to.be.an('array')
+      expect(results).to.be.length(1)
+      expect(results[0].url).to.be.equal(server.getUrl())
+    })
+
+    it('matches either url pattern', async () => {
+      const patterns = ['http://foo.bar/*', `${server.getUrl()}*`]
+      const results = await browser.crx.exec('tabs.query', { url: patterns })
+      expect(results).to.be.an('array')
+      expect(results).to.be.length(1)
+      expect(results[0].url).to.be.equal(server.getUrl())
+    })
+  })
+
+  describe('reload()', () => {
+    it('reloads the active tab', async () => {
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.reload')
+      await navigatePromise
+    })
+
+    it('reloads a specified tab', async () => {
+      const tabId = browser.window.webContents.id
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.reload', tabId)
+      await navigatePromise
+    })
+  })
+
+  describe('update()', () => {
+    it('navigates the tab', async () => {
+      const tabId = browser.window.webContents.id
+      const updateUrl = `${server.getUrl()}foo`
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.update', tabId, { url: updateUrl })
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(updateUrl)
+    })
+
+    it('navigates the active tab', async () => {
+      const updateUrl = `${server.getUrl()}foo`
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.update', { url: updateUrl })
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(updateUrl)
+    })
+
+    it('fails on chrome:// URLs', async () => {
+      const tabId = browser.webContents.id
+      const tabInfo = await browser.crx.exec('tabs.update', tabId, { url: 'chrome://kill' })
+      expect(tabInfo).to.be.a('null')
+    })
+  })
+
+  describe('goForward()', () => {
+    it('navigates the active tab forward', async () => {
+      const initialUrl = browser.window.webContents.getURL()
+      const targetUrl = `${server.getUrl()}foo`
+      await browser.window.webContents.loadURL(targetUrl)
+      expect(browser.window.webContents.canGoBack()).to.be.true
+      browser.window.webContents.goBack()
+      await emittedOnce(browser.window.webContents, 'did-navigate')
+      expect(browser.window.webContents.canGoForward()).to.be.true
+      expect(browser.window.webContents.getURL()).to.equal(initialUrl)
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.goForward')
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(targetUrl)
+    })
+
+    it('navigates a specified tab forward', async () => {
+      const tabId = browser.window.webContents.id
+      const initialUrl = browser.window.webContents.getURL()
+      const targetUrl = `${server.getUrl()}foo`
+      await browser.window.webContents.loadURL(targetUrl)
+      expect(browser.window.webContents.canGoBack()).to.be.true
+      browser.window.webContents.goBack()
+      await emittedOnce(browser.window.webContents, 'did-navigate')
+      expect(browser.window.webContents.canGoForward()).to.be.true
+      expect(browser.window.webContents.getURL()).to.equal(initialUrl)
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.goForward', tabId)
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(targetUrl)
+    })
+  })
+
+  describe('goBack()', () => {
+    it('navigates the active tab back', async () => {
+      const initialUrl = browser.window.webContents.getURL()
+      await browser.window.webContents.loadURL(`${server.getUrl()}foo`)
+      expect(browser.window.webContents.canGoBack()).to.be.true
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.goBack')
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(initialUrl)
+    })
+
+    it('navigates a specified tab back', async () => {
+      const tabId = browser.window.webContents.id
+      const initialUrl = browser.window.webContents.getURL()
+      await browser.window.webContents.loadURL(`${server.getUrl()}foo`)
+      expect(browser.window.webContents.canGoBack()).to.be.true
+      const navigatePromise = emittedOnce(browser.window.webContents, 'did-navigate')
+      browser.crx.exec('tabs.goBack', tabId)
+      await navigatePromise
+      expect(browser.window.webContents.getURL()).to.equal(initialUrl)
     })
   })
 
@@ -94,7 +253,7 @@ describe('chrome.tabs', () => {
       })
       const secondTab = secondWindow.webContents
 
-      const url = `${server.getUrl()}/foo`
+      const url = `${server.getUrl()}foo`
       await secondWindow.loadURL(url)
 
       browser.extensions.addTab(secondTab, secondWindow)

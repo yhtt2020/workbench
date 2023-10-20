@@ -2,9 +2,9 @@
   "name": "tsbworkbench",
   "productName": "想天工作台",
   "author": "Thisky",
-  "version": "7.3.1",
+  "version": "7.5.3",
   "description": "一款针对工作场景的优化的效率工具，帮助你提升效率，保持专注",
-  "electronVersion": "21.4.3",
+  "electronVersion": "26.4.0",
   "main": "main.build.js",
   "standard": {
     "globals": [
@@ -96,7 +96,7 @@
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "decomment": "^0.9.0",
-    "electron": "21.4.3",
+    "electron": "26.4.0",
     "electron-builder": "23.2.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-installer-windows": "^3.0.0",

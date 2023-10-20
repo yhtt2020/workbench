@@ -1,35 +1,55 @@
 <template>
   <div class="flex flex-row items-center pt-3.5" style="margin-left: 1em">
-    <div class="flex flex-row mr-3" v-if="recentGameList.length>0">
+    <div class="flex flex-row mr-3" >
       <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="currentGame.appid"
                 class="w-60 h-12 rounded-lg mr-3 text-xs s-bg right-nav" size="large" :bordered="false">
-        <a-select-option v-for="item in recentGameList" :value="item.appid">{{ item.chineseName }}</a-select-option>
+        <a-select-option v-for="item in selectOptions" :value="item.appid">{{ item.chineseName }}</a-select-option>
       </a-select>
-      <HorizontalPanel :navList="introductionSubList" v-model:selectType="introductionType"></HorizontalPanel>
+      <HorizontalPanel class="ml-2" :navList="introductionSubList" v-model:selectType="introductionType"></HorizontalPanel>
       <!-- <a-select style="border: 1px solid rgba(255, 255, 255, 0.1);" v-model:value="defaultSortType.name"
         @change="selectHotType($event)"
         class="w-60 h-12 ml-3 rounded-lg s-bg text-xs right-nav" size="large" :bordered="false" >
         <a-select-option v-for="item in sortType" :value="item.name">{{item.title}}</a-select-option>
       </a-select> -->
     </div>
-    <div class="flex flex-row " v-if="recentGameList.length>0">
+    <div class="flex flex-row "  >
       <div @click="openDrawer('search')" style="background: var(--primary-bg); color: var(--primary-text);"
-      class="pointer h-12 w-12 rounded-lg flex justify-center items-center">
+           class="pointer h-12 w-12 rounded-lg flex justify-center items-center">
         <Icon icon="sousuo"></Icon>
       </div>
-      <div @click="openDrawer('tip')"  style="background: var(--primary-bg);color: var(--primary-text);"
-       class="pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
-        <Icon  icon="tishi-xianxing"></Icon>
+      <div @click="openDrawer('tip')" style="background: var(--primary-bg);color: var(--primary-text);"
+           class="pointer h-12 w-12 rounded-lg flex justify-center items-center ml-3">
+        <Icon icon="tishi-xianxing"></Icon>
       </div>
     </div>
   </div>
-  <div class="p-5" v-if="recentGameList.length===0" style="text-align: center;margin-top: 10%">
-    <div style="font-size: 32px">您还未游玩过任何游戏库内的游戏。</div>
-    <div class="mt-3"><a-button type="primary" @click="goMyGame">前往游戏库</a-button></div>
+  <div class="p-5" v-if="currentGame.appid==='0' && !displayResult " style="text-align: center;margin-top: 10%">
+    <div style="width: 360px;display: inline-block">
+
+      <div class="flex items-center justify-center">
+        <div class="line">
+          <a-input allow-clear @keydown.enter="searchEnter" v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="搜索"
+                   style="
+    border-radius: 12px;background:var(--secondary-bg);">
+            <template #prefix>
+              <Icon icon="sousuo" style="color: var(--secondary-text);"></Icon>
+            </template>
+          </a-input>
+        </div>
+        <div class="line">
+          <xt-button :w="100" :h="38" type="theme"  class="rounded-lg"   @click="searchEnter"
+                     >搜索
+          </xt-button>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
   <template v-else-if="introductionType.name==='video'">
-    <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em;background: var(--primary-bg);"
+    <vue-custom-scrollbar :settings="settingsScroller"
+                          style="height: calc(100vh - 15.8em);margin-left: 1em;background: var(--primary-bg);"
                           class="mt-3 mr-3  rounded-lg">
       <div class="flex flex-row flex-wrap -ml-3  p-3">
         <div @click="openUrl(item.arcurl)" class="pb-3  pl-3 game-list-item flex-shrink-0"
@@ -41,7 +61,9 @@
                 <div class="flex items-center justify-center">
                   <Icon icon="play-square" class="text-color" style="font-size: 1.2em;"></Icon>
                   <span
-                    class="ml-1 text-color">{{ item.play.toString().slice(0, 2) + '.' + item.play.toString().slice(0, 4).slice(3) }}万</span>
+                    class="ml-1 text-color">{{
+                      item.play.toString().slice(0, 2) + '.' + item.play.toString().slice(0, 4).slice(3)
+                    }}万</span>
                 </div>
                 <div class="mx-2">
                   <Icon icon="detail" class="text-color" style="font-size: 1.2em;"></Icon>
@@ -90,47 +112,82 @@
       <div class="text-center" v-if="drawerType==='search'">搜索</div>
       <div class="text-center" v-else>说明</div>
     </template>
-    <template  v-if="drawerType==='search'" >
-    <div class="line-title">关键词自定义</div>
-      <div class="line">当游戏名存在无法被搜索到的情况时，请手动自定义关键词</div>
-    <div class="line">视频攻略关键词：</div>
-    <div class="line">
-      <a-input v-model:value="currentSearchWords.video" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="视频关键词" style="
+    <template v-if="drawerType==='search'">
+      <template v-if="currentGame.appid!=='0'">
+        <div class="line-title">关键词自定义</div>
+        <div class="line">当游戏名存在无法被搜索到的情况时，请手动自定义关键词</div>
+        <div class="line">视频攻略关键词：</div>
+        <div class="line">
+          <a-input v-model:value="currentSearchWords.video" class="no-drag h-10 w-full" @pressEnter="searchEnter"
+                   placeholder="视频关键词" style="
     border-radius: 12px;background:var(--secondary-bg);" v-if="drawerType==='search'">
-      </a-input>
-    </div>
-    <div class="line">图文攻略关键词：</div>
-    <div class="line">
-      <a-input v-model:value="currentSearchWords.text" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="图文关键词" style="
+          </a-input>
+        </div>
+        <div class="line">图文攻略关键词：</div>
+        <div class="line">
+          <a-input v-model:value="currentSearchWords.text" class="no-drag h-10 w-full" @pressEnter="searchEnter"
+                   placeholder="图文关键词" style="
     border-radius: 12px;background:var(--secondary-bg);" v-if="drawerType==='search'">
-      </a-input>
-    </div>
-    <div class="line-title">
-      搜索
-    </div>
-    <div class="line">
-      <a-input v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="搜索" style="
-    border-radius: 12px;background:var(--secondary-bg);">
-        <template #prefix>
-          <Icon icon="sousuo" style="color: var(--secondary-text);"></Icon>
-        </template>
-      </a-input>
-    </div>
+          </a-input>
+        </div>
+      </template>
+
+      <div class="line-title">
+        搜索
+      </div>
       <div class="line">
-        <a-button type="primary" class="rounded-lg" style="color: var(--active-text);" @click="searchEnter" size="large" block>搜索</a-button>
+        <a-input v-model:value="searchData" class="no-drag h-10 w-full" @pressEnter="searchEnter" placeholder="搜索"
+                 style="
+    border-radius: 12px;background:var(--secondary-bg);">
+          <template #prefix>
+            <Icon icon="sousuo" style="color: var(--secondary-text);"></Icon>
+          </template>
+        </a-input>
+      </div>
+      <div class="line">
+        <a-button type="primary" class="rounded-lg" style="color: var(--active-text);" @click="searchEnter" size="large"
+                  block>搜索
+        </a-button>
       </div>
     </template>
     <div v-else class="px-14">
       <div>视频攻略数据均来自「Bilibili」，本应用不提供任何攻略数据</div>
       <div class="h-10  xt-bg-2 rounded-lg w-20 mx-auto flex justify-center items-center mt-3 pointer"
-           @click="goBil"  style="color:var(--primary-text);">访问官网
+           @click="goBil" style="color:var(--primary-text);">访问官网
       </div>
       <div class="mt-3">图文攻略数据均来自「游民星空」，本应用不提供任何攻略数据</div>
       <div class="h-10 rounded-lg xt-bg-2 w-20 mx-auto flex justify-center items-center mt-3 pointer"
-       style="color:var(--primary-text);" @click="goYm">访问官网
+           style="color:var(--primary-text);" @click="goYm">访问官网
       </div>
     </div>
   </a-drawer>
+<!--  <Modal v-if="addVisible" v-model:visible="addVisible" :blurFlag="true">-->
+<!--    <div class="p-5">-->
+<!--      <div class="line-title">搜索</div>-->
+<!--      <div class="line">当关键词不同的时候，请对输入框单独输入。</div>-->
+<!--      <div class="line">视频攻略关键词：</div>-->
+<!--      <div class="line">-->
+<!--        <a-input v-if="addSearchWords.video!=='undefined'" @change="ensureAddWords"-->
+<!--                 v-model:value.lazy="addSearchWords.video" class="no-drag h-10 w-full"-->
+<!--                 placeholder="视频关键词" style="-->
+<!--    border-radius: 12px;background:var(&#45;&#45;secondary-bg);">-->
+<!--        </a-input>-->
+<!--      </div>-->
+<!--      <div class="line">图文攻略关键词：</div>-->
+<!--      <div class="line">-->
+<!--        <a-input v-if="addSearchWords.text!=='undefined'" @change="ensureAddWords"-->
+<!--                 v-model:value.lazy="addSearchWords.text" class="no-drag h-10 w-full"-->
+<!--                 placeholder="图文关键词" style="-->
+<!--    border-radius: 12px;background:var(&#45;&#45;secondary-bg);">-->
+<!--        </a-input>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="justify-center items-center flex mb-5">-->
+<!--      <xt-button @click="doSearch" class="mr-5" type="theme">添加</xt-button>-->
+<!--      <xt-button @click="addVisible=false" type="default">取消</xt-button>-->
+<!--    </div>-->
+
+<!--  </Modal>-->
 </template>
 
 <script>
@@ -139,21 +196,31 @@ import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import cheerio from 'cheerio'
 import browser from '../../js/common/browser'
 import axios from 'axios'
-import {steamUserStore} from "../../store/steamUser";
-import {mapActions,mapState, mapWritableState} from 'pinia';
+import { steamUserStore } from '../../store/steamUser'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { fixHttp } from '../../util'
+import Modal from '../../components/Modal.vue'
 
 export default {
-  name: "GameIntroduction",
+  name: 'GameIntroduction',
   components: {
+    Modal,
     HorizontalPanel
   },
-  data() {
+  data () {
+
     return {
+      displayResult:false,
+      addVisible: false,
+      customSearchWords: {
+        searchWords:'',
+        text: '',
+        video: ''
+      },
       currentGame: {
         name: '副屏',
-        appid:'0',
-        chineseName:''
+        appid: '0',
+        chineseName: ''
       },
       settingsScroller: {
         useBothWheelAxes: true,
@@ -164,20 +231,20 @@ export default {
       },
       drawerVisible: false,
       drawerType: 'search',
-      introductionType: {title: '视频攻略', name: 'video'},
+      introductionType: { title: '视频攻略', name: 'video' },
       searchData: '',
       gameName: [
-        {title: 'FIFA 23'}
+        { title: 'FIFA 23' }
       ],
       sortType: [
-        {title: '综合排序', name: ''},
-        {title: '最多点击', name: 'click'},
-        {title: '最新发布', name: 'pubdate'},
-        {title: '最多弹幕', name: 'dm'},
-        {title: '最多收藏', name: 'stow'}
+        { title: '综合排序', name: '' },
+        { title: '最多点击', name: 'click' },
+        { title: '最新发布', name: 'pubdate' },
+        { title: '最多弹幕', name: 'dm' },
+        { title: '最多收藏', name: 'stow' }
       ],
-      defaultSortType: {title: '综合排序', name: ''},
-      introductionSubList: [{title: '视频攻略', name: 'video'}, {title: '图文攻略', name: 'textImg'}],
+      defaultSortType: { title: '综合排序', name: '' },
+      introductionSubList: [{ title: '视频攻略', name: 'video' }, { title: '图文攻略', name: 'textImg' }],
       gameVideoList: [],
       gameIntroductionList: [],
       current: 1,
@@ -186,23 +253,40 @@ export default {
   computed: {
     ...mapWritableState(steamUserStore, ['searchWords']),
     ...mapState(steamUserStore, ['recentGameList', 'runningGame']),
-    currentSearchWords:{
-      get(){
+    selectOptions(){
+      return [
+        {
+          appid:'0',
+          name:'自由搜索',
+          chineseName:'自由搜索'
+        },
+        ...this.recentGameList
+
+        ]
+    },
+    currentSearchWords: {
+      get () {
+        if(this.currentGame.appid==='0'){
+          return this.customSearchWords
+        }
         return this.searchWords[this.currentGame.appid]
       },
-      set(val){
-        this.searchWords[this.currentGame.appid]=val
+      set (val) {
+        if(this.currentGame.appid==='0'){
+          return this.customSearchWords
+        }
+        this.searchWords[this.currentGame.appid] = val
       }
     }
   },
-  mounted() {
+  mounted () {
     //this.searchWords={}
-    if(this.recentGameList.length===0){
+    if (this.recentGameList.length === 0) {
       return
     }
     this.currentGame = {
-      appid:this.recentGameList[0].appid,
-      name:this.recentGameList[0].name,
+      appid: this.recentGameList[0].appid,
+      name: this.recentGameList[0].name,
       chineseName: this.recentGameList[0].chineseName
     }
     this.ensureSearchWords()
@@ -212,75 +296,98 @@ export default {
 
   watch: {
     'introductionType.name': {
-      handler() {
+      handler () {
+        if(this.currentGame.appid==='0'){
+          this.displayResult=false
+        }
         this.refreshData()
       }
     },
-    'currentSearchWords.video':{
-      handler(newVal){
-        this.searchData=newVal+' '
+    'currentSearchWords.video': {
+      handler (newVal) {
+        this.searchData = newVal + ' '
       }
     },
-    'currentSearchWords.text':{
-      handler(newVal){
-        this.searchData=newVal
+    'currentSearchWords.text': {
+      handler (newVal) {
+        this.searchData = newVal
       }
     },
     'currentGame.appid': {
-      handler(newVal,oldVal) {
-        let game=this.recentGameList.find(game=>{
-          return game.appid===newVal
+      handler (newVal, oldVal) {
+        let game = this.recentGameList.find(game => {
+          return game.appid === newVal
         })
-        this.currentGame.name=game.name
-        this.currentGame.chineseName=game.chineseName
+        this.currentGame.name = game.name
+        this.currentGame.chineseName = game.chineseName
         this.ensureSearchWords()
         this.refreshData()
       }
     }
   },
   methods: {
-    goMyGame(){
-      this.$router.push({name:'myGame'})
+    // ensureAddWords (e) {
+    //   if (this.addSearchWords.video!=='undefined' && this.addSearchWords.video!=='') {
+    //     this.addSearchWords.text = 'undefined'
+    //   }
+    //   if (this.addSearchWords.text !=='undefined' && this.addSearchWords.text!=='') {
+    //     this.addSearchWords.video = 'undefined'
+    //   }
+    // },
+    goMyGame () {
+      this.$router.push({ name: 'myGame' })
     },
-    ensureSearchWords(){
-      if(!this.searchWords[this.currentGame.appid]){
-        this.searchWords[this.currentGame.appid]={
-          video:this.currentGame.chineseName,
-          text:this.currentGame.chineseName
+    ensureSearchWords () {
+      if(!this.currentGame.appid){
+        return this.customSearchWords={
+          video:'',
+          text:''
+        }
+      }
+      if (!this.searchWords[this.currentGame.appid]) {
+        this.searchWords[this.currentGame.appid] = {
+          video: this.currentGame.chineseName,
+          text: this.currentGame.chineseName
         }
       }
     },
-    refreshData() {
+    refreshData () {
       if (this.introductionType.name === 'video') {
         this.loadBiliData(true)
       } else {
         this.loadArticleData(true)
       }
     },
-    openDrawer(e) {
+    openDrawer (e) {
       this.drawerType = e
       this.drawerVisible = true
-      if (this.searchData === '') {
-        if(this.introductionType.name==='video'){
-          if(this.currentSearchWords.video){
-            this.searchData =this.currentSearchWords.video+' '
-          }
-        }else{
-          if(this.currentSearchWords.text){
-            this.searchData =this.currentSearchWords.text+' '
+      if(this.currentGame.appid ==='0'){
+        //如果当前没有游戏设置了
+
+      }else{
+        if (this.searchData === '') {
+          if (this.introductionType.name === 'video') {
+            if (this.currentSearchWords.video) {
+              this.searchData = this.currentSearchWords.video + ' '
+            }
+          } else {
+            if (this.currentSearchWords.text) {
+              this.searchData = this.currentSearchWords.text + ' '
+            }
           }
         }
       }
+
     },
-    goBil() {
+    goBil () {
       browser.openInTable('https://www.bilibili.com/')
     },
-    goYm() {
+    goYm () {
       browser.openInTable('https://www.gamersky.com/')
     },
     // 初始化数据
-    async loadBiliData(clear = false) {
-      let words=this.encodeBiliWords(this.currentSearchWords.video)
+    async loadBiliData (clear = false) {
+      let words = this.encodeBiliWords(this.currentSearchWords.video || this.customSearchWords.searchWords)
       // https://api.bilibili.com/x/web-interface/search/all/v2?page=1&keyword=${encodeURIComponent(this.defaultRunGame.title)}
       const synUrl = `https://search.bilibili.com/all?keyword=${words}&search_source=1`
       // const synUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.defaultRunGame.title)}`
@@ -294,16 +401,17 @@ export default {
       }
     },
 
-    searchEnter() {
+    searchEnter () {
       this.drawerVisible = false
-      if(this.introductionType.name==='video'){
+      this.displayResult=true
+      if (this.introductionType.name === 'video') {
         this.searchVideoData()
-      }else{
+      } else {
         this.searchArticle()
       }
     },
-    async searchArticle() {
-      this.loadArticleData(true,this.searchData)
+    async searchArticle () {
+      this.loadArticleData(true, this.searchData)
       // try {
       //   const result =  await sendRequest(`https://search.bilibili.com/all?keyword=${encodeURIComponent(this.searchData)}`,{})
       //   const html = result.data
@@ -328,15 +436,15 @@ export default {
      * @param words
      * @returns {string}
      */
-    encodeBiliWords(words){
+    encodeBiliWords (words) {
       return encodeURIComponent(words)
-        .replaceAll('%20','+')
-        .replaceAll("'",'%27')
+        .replaceAll('%20', '+')
+        .replaceAll('\'', '%27')
     },
     // 搜索接口
-    async searchVideoData() {
+    async searchVideoData () {
       this.gameVideoList = []
-      let handledUrl=this.encodeBiliWords(this.searchData)
+      let handledUrl = this.encodeBiliWords(this.searchData)
       const url = `https://search.bilibili.com/all?keyword=${handledUrl}`
       this.dataRequest(url)
 
@@ -361,9 +469,9 @@ export default {
     },
 
     // 游戏图文攻略数据获取
-    async loadArticleData(clear = false,name='') {
+    async loadArticleData (clear = false, name = '') {
       this.gameIntroductionList = []
-      let keywords=name?name:this.currentSearchWords.text
+      let keywords = name ? name : (this.currentSearchWords.text || this.customSearchWords.searchWords)
       const url = `https://so.gamersky.com/all/handbook?s=${keywords}`
       if (clear) {
         this.gameIntroductionList = []
@@ -374,7 +482,7 @@ export default {
         dom('.t2').children().each((i, el) => {
           const href = dom(el).eq(0).attr('href')
           const title = dom(el).eq(0).text()
-          this.gameIntroductionList.push({href, title})
+          this.gameIntroductionList.push({ href, title })
         })
       })
       // try {
@@ -392,74 +500,78 @@ export default {
       // }
     },
 
-    openUrl(url) {
+    openUrl (url) {
       browser.openInTable(url)
     },
-    getVideoCover(url){
-      return fixHttp(url+'@320w_200h')
+    getVideoCover (url) {
+      return fixHttp(url + '@320w_200h')
     },
-    selectHotType(e) {
+    selectHotType (e) {
       // this.defaultSearchType.name = e
       this.loadIllustratedData()
     },
 
     //数据请求
-    dataRequest(url, clear = false) {
+    dataRequest (url, clear = false) {
       if (clear) {
         this.gameVideoList = []
       }
-      
+
       // console.log('地址',url);
 
       axios.get(url).then(res => {
-        
+
         // console.log('请求结果',res);
 
-        try{
+        try {
           const htmlText = res.data
           // 使用正则表达式匹配 <script> 标签中的 JavaScript 代码
-          const regex = /<script.*?>((.|\n)*?)<\/script>/gi;
-          const matches = htmlText.match(regex);
-          
+          const regex = /<script.*?>((.|\n)*?)<\/script>/gi
+          const matches = htmlText.match(regex)
+
           // console.log('排查问题::>>',matches[13]);
 
-          const startIndex = matches[13].indexOf('(');
-          if(startIndex===-1){
-            this.gameVideoList=[]
+          const startIndex = matches[13].indexOf('(')
+          if (startIndex === -1) {
+            this.gameVideoList = []
             return
           }
-          const endIndex = matches[13].lastIndexOf(')');
-          const jsonString = matches[13].substring(startIndex, endIndex + 1);
-          
+          const endIndex = matches[13].lastIndexOf(')')
+          const jsonString = matches[13].substring(startIndex, endIndex + 1)
+
           // console.log('排查问题::>>',jsonString);
 
-          const jsonData=window.eval(jsonString).index.searchAllResponse
-          if(Object.keys(jsonData).length===0){
-            this.gameVideoList=[]
+          console.log(jsonString,window.eval(jsonString))
+          const jsonData = window.eval(jsonString).searchResponse.searchAllResponse
+          if (Object.keys(jsonData).length === 0) {
+            this.gameVideoList = []
             return
-          }else{
-           // console.log('获得的jsondata',jsonData)
+          } else {
+            // console.log('获得的jsondata',jsonData)
           }
-          const data =jsonData.result[11].data
+          const data = jsonData.result[11].data
           data.forEach(el => {
             if (el.title !== '') {
               this.gameVideoList.push(el)
             }
           })
 
-        }catch (e) {
-          console.error('搜索意外返回',e)
-          this.gameVideoList=[]
+        } catch (e) {
+          console.error('搜索意外返回', e)
+          this.gameVideoList = []
         }
 
       })
     },
+    doSearch () {
+
+    },
     // 日期转换
-    changeTime(newDate) {
+    changeTime (newDate) {
       const nowTime = new Date(parseInt(newDate) * 1000)
       return nowTime.toLocaleDateString()
     },
-    getPage(e) {
+    getPage (e) {
       // console.log('页码',e);
       const url = `https://search.bilibili.com/all?keyword=${encodeURIComponent(this.currentGame.name)}&search_source=3&page=${e}&o=36`
       // const url = `https://api.bilibili.com/x/web-interface/search/all/v2?page=${e}&keyword=${encodeURIComponent(this.defaultRunGame.title)}`
@@ -469,6 +581,9 @@ export default {
       // })
       // console.log(url);
       this.dataRequest(url)
+    },
+    addGame () {
+      this.addVisible = true
     }
   },
 }
@@ -478,20 +593,23 @@ export default {
 .nav-top-game {
   max-width: 1050px;
 }
-.my-primary-title{
- font-size: 14px;
- font-weight: 400;
- font-family: PingFangSC;
- color:var(--primary-text);
+
+.my-primary-title {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: PingFangSC;
+  color: var(--primary-text);
 }
-.guide-bg{
+
+.guide-bg {
   background: var(--primary-bg);
 }
-.my-secondary-title{
- font-size: 12px;
- font-weight: 400;
- font-family: PingFangSC;
- color:var(--secondary-text);
+
+.my-secondary-title {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: PingFangSC;
+  color: var(--secondary-text);
 }
 
 .game-list-item {

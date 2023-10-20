@@ -400,22 +400,22 @@ export default {
 
 
 .notification {
-
-  animation: blink 1s infinite;
-
-  @keyframes blink {
-    0% {
-      opacity: 0;
-    }
-
-    50% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0;
-    }
-  }
+  //禁用闪烁特效，减少gpu占用
+  //animation: blink 1s infinite;
+  //
+  //@keyframes blink {
+  //  0% {
+  //    opacity: 0;
+  //  }
+  //
+  //  50% {
+  //    opacity: 1;
+  //  }
+  //
+  //  100% {
+  //    opacity: 0;
+  //  }
+  //}
 }
 
 .top-state {

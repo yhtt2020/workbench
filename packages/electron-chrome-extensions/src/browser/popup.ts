@@ -17,6 +17,11 @@ interface PopupViewOptions {
   anchorRect: PopupAnchorRect
 }
 
+const supportsPreferredSize = () => {
+  const major = parseInt(process.versions.electron.split('.').shift() || '', 10)
+  return major >= 12
+}
+
 export class PopupView {
   static POSITION_PADDING = 5
 
@@ -33,9 +38,10 @@ export class PopupView {
 
   private anchorRect: PopupAnchorRect
   private destroyed: boolean = false
+  private hidden: boolean = true
 
   /** Preferred size changes are only received in Electron v12+ */
-  private usingPreferredSize = false
+  private usingPreferredSize = supportsPreferredSize()
 
   private readyPromise: Promise<void>
 
@@ -59,12 +65,8 @@ export class PopupView {
         sandbox: true,
         nodeIntegration: false,
         nodeIntegrationInWorker: false,
-        nativeWindowOpen: true,
-        worldSafeExecuteJavaScript: true,
         contextIsolation: true,
-        ...({
-          enablePreferredSizeMode: true,
-        } as any),
+        enablePreferredSizeMode: true,
       },
     })
 
@@ -79,6 +81,11 @@ export class PopupView {
     this.readyPromise = this.load(opts.url)
   }
 
+  private show() {
+    this.hidden = false
+    this.browserWindow?.show()
+  }
+
   private async load(url: string): Promise<void> {
     const win = this.browserWindow!
 
@@ -90,7 +97,10 @@ export class PopupView {
 
     if (this.destroyed) return
 
-    if (!this.usingPreferredSize) {
+    if (this.usingPreferredSize) {
+      // Set small initial size so the preferred size grows to what's needed
+      this.setSize({ width: PopupView.BOUNDS.minWidth, height: PopupView.BOUNDS.minHeight })
+    } else {
       // Set large initial size to avoid overflow
       this.setSize({ width: PopupView.BOUNDS.maxWidth, height: PopupView.BOUNDS.maxHeight })
 
@@ -100,9 +110,9 @@ export class PopupView {
 
       await this.queryPreferredSize()
       if (this.destroyed) return
-    }
 
-    win.show()
+      this.show()
+    }
   }
 
   destroy = () => {
@@ -227,5 +237,8 @@ export class PopupView {
     this.usingPreferredSize = true
     this.setSize(size)
     this.updatePosition()
+
+    // Wait to reveal popup until it's sized and positioned correctly
+    if (this.hidden) this.show()
   }
 }

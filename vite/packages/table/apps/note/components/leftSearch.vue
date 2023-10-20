@@ -18,14 +18,15 @@
             <div v-for="(item,index) in this.noteList" @click="changeNote(index)" style="width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
             :class="index == this.selNote?'note-active':''">
                 <div class="flex list-top font-16 items-center" style="color: var(--primary-text);">
-                    <span  :style="{background:item.backgroundColor}"></span>
-                    <div class="ml-2">{{ item.title }}</div>
+                    <span  :style="{background:item.customData.background}"></span>
+                    <div class="ml-2">{{ item.customData.title }}</div>
                 </div>
                 <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
-                    {{ item.content }}
+                    {{ item.customData.text }}
                 </div>
                 <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
-                    {{ item.time }}{{ item.desk?'.'+item.desk:'' }}
+                    <!-- {{ item.id }}{{ item.deskName?'.'+item.deskName:'' }} -->
+                    {{ this.formatTimestamp(item.id) }}{{ item.deskName?'.'+item.deskName:'' }}
                 </div>
                 
             </div>
@@ -53,7 +54,7 @@
       };
     },
     computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote']),
+        ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText']),
     },
     mounted() {
     },
@@ -62,7 +63,17 @@
     methods: {
         changeNote(n){
             this.selNote = n
-        }
+            this.selNoteTitle = this.noteList[n].customData.title
+            this.selNoteText = this.noteList[n].customData.text
+            
+        },
+        formatTimestamp(timestamp) {
+            var date = new Date(timestamp);
+            var year = date.getFullYear();
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            return year + "-" + month + "-" + day;
+        },
     },
   };
   </script>

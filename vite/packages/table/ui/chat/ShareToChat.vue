@@ -5,7 +5,7 @@
         <div class="w-full h-12 flex items-center justify-center font-16" style="color:var(--primary-text)">
           分享{{ alias }}
         </div>
-        <div class="close-button active-button pointer flex rounded-lg items-center justify-center"
+        <div class="close-button active-button pointer flex rounded-lg items-center justify-center  "
              style="background: var(--secondary-bg);" @click="closeForwardModal"
         >
           <CloseOutlined style="font-size: 1.5em;color:var(--secondary-text);"/>
@@ -228,7 +228,7 @@ export default defineComponent({
 
         const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
         const id = item.type  === 'C2C' ? item.userProfile.userID : item.groupProfile.groupID
-      
+
        // const namePinyin = pinyin(item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name,{
       //   style:pinyin.STYLE_NORMAL
       // })
@@ -253,7 +253,7 @@ export default defineComponent({
      }else{
       return;
      }
-    }  
+    }
 
     onMounted(() => {
       getForwardList()

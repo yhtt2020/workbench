@@ -70,7 +70,6 @@ export const injectExtensionAPIs = () => {
     // required.
     const manifest: chrome.runtime.Manifest =
       (extensionId && chrome.runtime.getManifest()) || ({} as any)
-
     //取回message的内容，替换掉i18n的本地化方法，因为那个方法有问题
     let localeMessages:any={}
     const invokeExtension =
@@ -80,7 +79,6 @@ export const injectExtensionAPIs = () => {
     invokeExtension( 'i18n.getAllMessage')((args:[])=>{
       localeMessages=args
     })//取回全部的message
-
     function imageData2base64(imageData: ImageData) {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
@@ -265,80 +263,6 @@ export const injectExtensionAPIs = () => {
             onChanged: new ExtensionEvent('cookies.onChanged'),
           }
         },
-      },
-      //todo 补充权限管理
-      permissions:{
-        factory:(base)=>{
-          return {
-            ...base,
-            contains:invokeExtension('permissions.contains')
-          }
-        }
-      },
-
-      i18n:{
-        factory:(base)=>{
-          return {
-            ...base,
-            //修复i18n方法
-            getMessage: (messageName:String,substitutions:String[]=[])=>{
-                let localeJson=localeMessages
-                function getMessage(name:String,substitutions?:String[]){
-                  let messageKey = localeJson[name as keyof typeof localeJson]
-                  if (typeof messageKey !== 'undefined') {
-                   let result= messageKey['message' as keyof typeof messageKey]
-                    return result
-                  } else {
-                    return undefined
-                  }
-                }
-                function preMatch(str:string){
-                  var pattern = /\$.*?\$/g
-                 return pattern.test(str);
-                }
-
-              /**
-               * 匹配变量
-               * @param source
-               * @param scope
-               */
-              function templater(source:String, scope:String[]){
-                const tokenRegex = /\$.*?\$/g;
-                let i=0
-                var result = source.replace(
-                  tokenRegex,
-                  function(match:String, key:any):any {
-                    let rs=typeof scope[i] !== 'undefined' ? scope[i] : match;
-                    i++
-                    return rs
-                  }
-                );
-                return result;
-              }
-                if(!messageName){
-                  //如果是数组，则返回一个对应的数组
-                  return undefined
-                }else{
-                  //如果不是数组，则直接返回
-                  let gotMessage=getMessage(messageName,substitutions)
-                  let matches=preMatch(gotMessage)
-                  if(matches){
-                    if(substitutions.length===0 || substitutions.length>9){
-                      //替换数组不符合规定
-                      return undefined
-                    }else{
-                      return templater(gotMessage,substitutions)
-
-                    }
-                  }
-                  return gotMessage
-                }
-            }
-            // getAcceptLanguages: ()=>{
-            //   return ['zh-CN','zh_CN']
-            // }
-          }
-        }
       },
 
       extension: {

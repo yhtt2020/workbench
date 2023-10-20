@@ -28,3 +28,4 @@ export declare const getIconImage: (extension: Electron.Extension) => Electron.N
  * @see https://developer.chrome.com/extensions/match_patterns
  */
 export declare const matchesPattern: (pattern: string, url: string) => true | RegExpMatchArray | null;
+export declare const matchesTitlePattern: (pattern: string, title: string) => RegExpMatchArray | null;

@@ -20,6 +20,9 @@ describe('chrome.contextMenus', () => {
       })
     })
 
+    // TODO: why is this needed since upgrading to Electron 22?
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Simulate right-click to create context-menu event.
     const opts = { x: 0, y: 0, button: 'right' as any }
     browser.webContents.sendInputEvent({ ...opts, type: 'mouseDown' })
@@ -47,9 +50,21 @@ describe('chrome.contextMenus', () => {
       const items = await getContextMenuItems()
       expect(items).to.have.lengthOf(1)
       expect(items[0].label).to.equal('parent')
-      expect(items[0].submenu).to.exist
+      expect(items[0].submenu).to.be.an('object')
       expect(items[0].submenu!.items).to.have.lengthOf(1)
       expect(items[0].submenu!.items[0].label).to.equal('child')
+    })
+
+    it('groups multiple top-level items', async () => {
+      await browser.crx.exec('contextMenus.create', { id: uuid(), title: 'one' })
+      await browser.crx.exec('contextMenus.create', { id: uuid(), title: 'two' })
+      const items = await getContextMenuItems()
+      expect(items).to.have.lengthOf(1)
+      expect(items[0].label).to.equal(browser.extension.name)
+      expect(items[0].submenu).to.be.an('object')
+      expect(items[0].submenu!.items).to.have.lengthOf(2)
+      expect(items[0].submenu!.items[0].label).to.equal('one')
+      expect(items[0].submenu!.items[1].label).to.equal('two')
     })
 
     it('invokes the create callback', async () => {

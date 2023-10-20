@@ -1,0 +1,48 @@
+<script setup lang="ts">
+import { useDrag, DragSourceMonitor } from "vue3-dnd";
+import { ItemTypes } from "./ItemTypes";
+import { getEmptyImage } from "react-dnd-html5-backend";
+import Box from "./Box.vue";
+import { toRefs } from "@vueuse/core";
+import { onMounted } from "vue";
+import Notes from "../../widgets/note/index.vue";
+import test from "./test.vue";
+const props = defineProps<{
+  item?: object;
+  left: number;
+  top: number;
+  currentDesk;
+}>();
+
+const [collect, drag, preview] = useDrag(() => ({
+  type: ItemTypes.BOX,
+  item: props,
+  collect: (monitor: DragSourceMonitor) => ({
+    isDragging: monitor.isDragging(),
+  }),
+}));
+
+onMounted(() => {
+  preview(getEmptyImage(), { captureDraggingState: true });
+});
+
+const { isDragging } = toRefs(collect);
+</script>
+
+<template>
+  <div>
+    <test
+      :ref="drag"
+      :style="{
+        position: 'absolute',
+        transform: `translate3d(${left}px, ${top}px, 0)`,
+        opacity: isDragging ? 0 : 1,
+        height: isDragging ? 0 : '',
+      }"
+      role="DraggableBox"
+    ></test>
+    <!-- <Box :title="title" /> -->
+    <!-- {{item}} -->
+    <Box> </Box>
+  </div>
+</template>
