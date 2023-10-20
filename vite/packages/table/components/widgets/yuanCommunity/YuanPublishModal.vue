@@ -4,27 +4,28 @@
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
-                    <div class="font-16 xt-text">写动态</div>
+                    <div class="ml-8 font-16 xt-text">写动态</div>
                 </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
-                    @click="handleOk">
-                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </button>
+                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
+                    @click="handleOk" style="width: 40px;height: 40px;">
+                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                </xt-button>
 
             </div>
-            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
-                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan">元社区</a>
+            <div class="flex items-center justify-start w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] pl-4 ">
+                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan" class="ml-1">元社区</a>
             </div>
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 5, maxRows: 8 }"
                             :bordered="false"  />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                                 multiple @preview="handlePreview">
                                 <div v-if="fileList.length < 6">
-                                    <plus-outlined style="font-size: 1.2em; " class="xt-text" />
+                                    <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
+                                    <newIcon icon="fluent:add-16-filled" style="font-size: 24px;vertical-align: sub;" class="xt-text"></newIcon>
                                 </div>
                             </a-upload>
                         </div>
@@ -47,16 +48,19 @@
                                     </vue-custom-scrollbar>
                                     <!-- </div> -->
                                 </template>
+                                
                                 <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
                                     style="color: var(--secondary-text) !important;"><template #icon>
-                                        <SmileOutlined style="" />
+                                        <!-- <SmileOutlined style="" /> -->
+                                        <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                     </template> 表情</a-button>
                             </tippy>
-
-                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible = !imageLoadVisible"
+                            <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
+                            <a-button type="text" size="small" class="xt-text" 
                                 style="color: var(--secondary-text) !important;"><template #icon>
-                                    <PictureOutlined style="" />
+                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                 </template> 图片</a-button>
+                            </a-upload>
                         </div>
 
                     </div>
@@ -65,18 +69,18 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :loadData="loadData" :bordered="false" @change="handleChange"
-                    style=" font-size: 14px; border-radius: 10px;" change-on-select>
+                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName"  :bordered="false" @change="handleChange"
+                    style=" font-size: 14px; border-radius: 10px;width: 120px;background: var(--secondary-bg);" change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
                     </template>
                 </a-select>
                 <div class="flex items-center">
                     <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 68px; height: 32px;"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
                         @click="handleOk">取消</xt-button>
                     <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 68px; height: 32px;background-color: var(--active-bg);"
+                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
                         @click="publishPost">发布</xt-button>
                 </div>
             </div>
@@ -90,7 +94,7 @@ import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
-import { Icon } from '@iconify/vue';
+import { Icon as newIcon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
@@ -99,7 +103,7 @@ import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import {useCommunityStore} from '../../../page/chat/commun'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-const imageLoadVisible = ref(true)
+// const imageLoadVisible = ref(true)
 const browserUrl=ref('https://s.apps.vip/forum?id=')
 const emoji=ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const goYuan = () => {
@@ -123,6 +127,9 @@ const addEmoji = (item) => {
     postValue.value += `${key}`
 
 }
+const imageLoadVisible=computed(()=>{
+    return fileList.value?.length>0
+})
 const visible = ref(false)
 function getBase64(file: File) {
     return new Promise((resolve, reject) => {
@@ -245,6 +252,9 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
+:deep(.ant-upload-list-text-container){
+    display: none;
+}
 .box {
     border-radius: 12px;
 }
@@ -305,11 +315,13 @@ const publishPost = async () => {
 }
 :deep(.ant-input) {
     color: var(--secondary-text);
+    margin-left: 8px;
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
         font-family: PingFangSC-Regular;
         color: var(--secondary-text);
+        // padding-left: 8px;
     }
 }
 
