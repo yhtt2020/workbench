@@ -28,6 +28,8 @@
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
     <!-- <div  style='z-index:99999px'> -->
+      {{currentDesk}}---
+      {{editing}}
       <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
         <template #item="{ item }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"

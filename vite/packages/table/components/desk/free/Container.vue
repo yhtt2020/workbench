@@ -8,15 +8,25 @@ import { DragItem } from "./interfaces";
 import { snapToGrid as doSnapToGrid } from "./snapToGrid";
 import { cardStore } from "../../../store/card.ts";
 const card = cardStore();
-
+const obj = reactive({});
 const getCurrentDesk = computed(() => {
-  console.log(
-    "card.desks.filter((item) => item.id == card.currentDeskId) :>> ",
-    card.desks.filter((item) => item.id == card.currentDeskId)
+  const currentDesk = card.desks.filter(
+    (item) => item.id == card.currentDeskId
   );
-  const currentDesk = card.desks.filter((item) => item.id == card.currentDeskId);
-  console.log('cards :>> ', currentDesk[0].cards);
-  return currentDesk[0].cards;
+
+  currentDesk[0].cards.forEach((item) => {
+    console.log("item :>> ", item);
+    const { id, name, data, customData } = item;
+    obj[item.id] = {
+      top: 0,
+      left: 0,
+      id,
+      name,
+      data,
+      customData,
+    };
+  });
+  // return currentDesk[0].cards;
 });
 
 const props = defineProps<{
@@ -27,13 +37,18 @@ interface BoxMap {
   [key: string]: { top: number; left: number; title: string };
 }
 
-const boxes = reactive<BoxMap>({
+const boxes = reactive({
   a: { top: 20, left: 80, title: "Drag me around" },
   b: { top: 180, left: 20, title: "Drag me too" },
   d: { top: 180, left: 20, title: "Drag me too" },
 });
+console.log("obj :>> ", obj);
+console.log("boxes :>> ", boxes);
 const moveBox = (id: string, left: number, top: number) => {
-  Object.assign(boxes[id], { left, top });
+  if (!obj[id]) {
+    obj[id] = {}; // 如果obj[id]不存在，先初始化它为一个空对象
+  }
+  Object.assign(obj[id], { left, top }); // 现在我们可以安全地合并对象
 };
 
 const [, drop] = useDrop(() => ({
@@ -49,7 +64,7 @@ const [, drop] = useDrop(() => ({
     if (props.snapToGrid) {
       [left, top] = doSnapToGrid(left, top);
     }
-
+    console.log("item.id :>> ", item.id);
     moveBox(item.id, left, top);
     return undefined;
   },
@@ -60,10 +75,12 @@ const [, drop] = useDrop(() => ({
   {{ getCurrentDesk }}
   <div :ref="drop" class="container">
     <DraggableBox
-      v-for="(value, key) in boxes"
-      :id="key"
-      :key="key"
-      v-bind="value"
+      v-for="data in obj"
+      :id="data.id"
+      :key="data.id"
+      :left="data.left"
+      :top="data.top"
+      :data="data"
     />
   </div>
 </template>
