@@ -17,7 +17,7 @@
 
                     <div class="mb-3 ">
                         <a-input ref="input" allow-clear @click="selectText" v-model:value="eventValue"
-                            style="border-radius: 10px;height: 40px; width: 100%;background-color: var(--primary-bg);"
+                            style="border-radius: 10px;height: 40px; width: 100%;background-color: var(--primary-bg);border: 1px solid var(--divider);"
                             placeholder="新闹钟" />
                     </div>
 
@@ -45,7 +45,7 @@
                             </a-select> -->
                         <!-- </div> -->
                         <a-input-number id="inputNumber" v-model:value="timeMinute" :min="0" :max="59" defaultValue="0"
-                            style="border-radius: 12px; width: 100%; height: 42px; line-height: 40px;background-color: var(--primary-bg);" />
+                            style="border-radius: 12px; width: 100%; height: 42px; line-height: 40px;background-color: var(--primary-bg);border: 1px solid var(--divider);" />
                     </div>
                     <div class="w-full mt-4 mb-3">
                         <div class="mt-4 mb-3 font-16 xt-text">
