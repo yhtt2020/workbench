@@ -4,7 +4,11 @@
     :style="[boxStyle, boxBgStyle]"
     :class="[bgClass]"
   >
-    <myIcon :icon="icon" :style="iconSize"></myIcon>
+    <myIcon
+      :icon="icon"
+      :width="size"
+      :height="size"
+    ></myIcon>
   </div>
 </template>
 
@@ -42,20 +46,24 @@ const iconSize = computed(() => {
   return {
     width: props.size + "px",
     height: props.size + "px",
+    "max-width": props.size + "px",
+    "max-height": props.size + "px",
+    "min-width": props.size + "px",
+    "min-height": props.size + "px",
+    "font-size": props.size + "px",
   };
 });
 
 const boxStyle = computed(() => {
   if (props.bgStyle || props.bgClass) {
     return {
-      width: props.w + "px",
-      height: props.w + "px",
+      ...iconSize.value,
       "border-radius": props.radius + "px",
       color: props.color,
     };
   } else {
     return {
-      width: props.size + "px",
+      ...iconSize.value,
       color: props.color,
     };
   }
