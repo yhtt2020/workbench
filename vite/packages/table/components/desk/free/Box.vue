@@ -1,13 +1,6 @@
 <template>
   <div class="box" :style="{ backgroundColor }" :role="role">
-    <test></test>
-    <div>
-      <!-- <component
-        :is="data.name"
-        :customIndex="data.id"
-        :customData="data.customData"
-      ></component> -->
-    </div>
+    <test :data="data"></test>
   </div>
 </template>
 

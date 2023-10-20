@@ -42,8 +42,6 @@ const boxes = reactive({
   b: { top: 180, left: 20, title: "Drag me too" },
   d: { top: 180, left: 20, title: "Drag me too" },
 });
-console.log("obj :>> ", obj);
-console.log("boxes :>> ", boxes);
 const moveBox = (id: string, left: number, top: number) => {
   if (!obj[id]) {
     obj[id] = {}; // 如果obj[id]不存在，先初始化它为一个空对象
