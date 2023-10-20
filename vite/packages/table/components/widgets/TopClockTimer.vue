@@ -1,5 +1,4 @@
 <template>
-    
     <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
     <div style="position: absolute; top: 31px;z-index: 999999;">
         <!-- 闹钟设置界面 -->
@@ -11,27 +10,27 @@
                 <div class="">
                     <div class="flex justify-between">
                         <div class="mb-3 font-14 xt-text-2">添加闹钟</div>
-                        <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 18px;" class="xt-text-2"
+                        <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 20px;" class="xt-text-2 pointer"
                             @click="settingClock">
                         </clockIcon>
                     </div>
 
                     <div class="mb-3 ">
                         <a-input ref="input" allow-clear @click="selectText" v-model:value="eventValue"
-                            style="border-radius: 10px;height: 40px; width: 100%;" placeholder="新闹钟" />
+                            style="border-radius: 10px;height: 40px; width: 100%;background-color: var(--primary-bg);"
+                            placeholder="新闹钟" />
                     </div>
 
                     <div class="mb-3 font-16 xt-text">小时</div>
-                    <div>
-                        <a-radio-group button-style="solid" v-model:value="timeHour" class="flex rounded-lg xt-bg-2 "
-                            option-type="button">
-                            <template
-                                v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 50px;">{{
-                                    index
-                                }}</a-radio-button>
-                            </template>
-                        </a-radio-group>
+                    <div class="ml-1">
+                        <div class="flex flex-wrap w-[288px]  xt-bg rounded-lg " style="">
+                            <div v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
+                                style="width: 48px;height: 40px;line-height: 40px;text-align: center;flex-shrink: 0;"
+                                class="flex items-center justify-center xt-text-2 pointer setting-hour"
+                                :class="{ 'active': timeHour === index }" @click="timeHour = index">
+                                {{ index }}
+                            </div>
+                        </div>
 
                     </div>
                     <div>
@@ -46,18 +45,18 @@
                             </a-select> -->
                         <!-- </div> -->
                         <a-input-number id="inputNumber" v-model:value="timeMinute" :min="0" :max="59" defaultValue="0"
-                            style="border-radius: 12px; width: 100%; height: 42px; line-height: 40px;" />
+                            style="border-radius: 12px; width: 100%; height: 42px; line-height: 40px;background-color: var(--primary-bg);" />
                     </div>
                     <div class="w-full mt-4 mb-3">
                         <div class="mt-4 mb-3 font-16 xt-text">
                             重复
                         </div>
-                        <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+                        <RadioTab :navList="dataType" v-model:selectType="defaultType" style="background-color: var(--primary-bg);"></RadioTab>
                         <!-- {{ defaultType }} -->
                     </div>
                     <div class="flex justify-between ">
                         <xt-button type="primary" class="mt-2 font-16 xt-text"
-                            style="width: 48%; height: 40px;border: 1px solid var(--active-bg); "
+                            style="width: 48%; height: 40px; background-color: var(--primary-bg); "
                             @click="settingClock">取消</xt-button>
                         <xt-button type="primary" class="mt-2 font-16 xt-text"
                             style="width: 48%; height: 40px; background-color: var(--active-bg);"
@@ -105,69 +104,75 @@
         </div>
         <!-- 一级快捷面板 -->
         <div class="w-[300px] h-[300px] relative xt-bg-2  rounded-lg p-0 " v-show="customizeSetting">
-            <vue-custom-scrollbar :settings="outerSettings" style="position: relative; height:100%;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);" class="scroll">
-                <div class="p-4 ">
-                    <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 mb-3"
-                        v-if="useCountDownStore.countDowntime.hours !== undefined">
-                        <div>
-                            <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
-                                @click="stopCountDown" class="xt-text clock-icon pointer"
-                                v-show="!useCountDownStore.countDownBtn">
-                            </clockIcon>
-                            <clockIcon icon="fluent:play-16-filled" style="font-size: 24px; vertical-align: sub;"
-                                @click="startCountDown" class="xt-text clock-icon pointer"
-                                v-show="useCountDownStore.countDownBtn">
-                            </clockIcon>
-                            <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 24px; vertical-align: sub;"
-                                @click="deleteCountDown" class="ml-2 xt-text clock-icon pointer">
-                            </clockIcon>
+            <div class="pt-4 pl-4 pr-4" style="">
+                <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 "
+                    v-if="useCountDownStore.countDowntime.hours !== undefined">
+                    <div>
+                        <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
+                            @click="stopCountDown" class="xt-text clock-icon pointer"
+                            v-show="!useCountDownStore.countDownBtn">
+                        </clockIcon>
+                        <clockIcon icon="fluent:play-16-filled" style="font-size: 24px; vertical-align: sub;"
+                            @click="startCountDown" class="xt-text clock-icon pointer"
+                            v-show="useCountDownStore.countDownBtn">
+                        </clockIcon>
+                        <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 24px; vertical-align: sub;"
+                            @click="deleteCountDown" class="ml-2 xt-text clock-icon pointer">
+                        </clockIcon>
 
-                        </div>
-                        <div style="font-family: Oswald-Medium;font-size: 20px;color: #FAAD14;font-weight: 500;">
-                            {{ useCountDownStore.countDowntime.hours + ':' + useCountDownStore.countDowntime.minutes +
-                                ':' + useCountDownStore.countDowntime.seconds }}
-                        </div>
                     </div>
-                    <div class="flex justify-between">
-                        <div class="font-14 xt-text">
-                            我的闹钟
-                        </div>
-                        <div>
-                            <a-tooltip arraw="false"  autoAdjustOverflow title="添加闹钟">
-                                <button class="mr-2 text-center xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon class=" xt-text font-20 clock-icon" @click="settingClock"
-                                        icon="fluent:add-16-filled"></clockIcon>
-                                </button>
-                            </a-tooltip>
-                            <a-tooltip  autoAdjustOverflow title="设置定时器">
-                                <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon class=" xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
-                                        @click="settingCountDown">
-                                    </clockIcon>
-                                </button>
-                            </a-tooltip>
-                            <a-tooltip autoAdjustOverflow title="铃声调节">
-                                <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on"
-                                        v-if="soundVisible" @click="changeSoundStatus"></clockIcon>
-                                    <clockIcon class="xt-text font-20 clock-icon" icon="akar-icons:sound-off"
-                                        v-if="!soundVisible" @click="changeSoundStatus"></clockIcon>
-                                </button>
-
-                            </a-tooltip>
-                            <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;" title="设置">
-                                <button class=" xt-bg-2" style="border: none;width: 25px;">
-                                    <clockIcon icon="fluent:settings-16-regular"
-                                        style="font-size: 24px; vertical-align: sub; " @click="changeSettingStatus"
-                                        class="rounded-md xt-text font-20 clock-icon setting-hover">
-                                    </clockIcon>
-                                </button>
-
-                            </a-tooltip>
-
-                        </div>
+                    <div style="font-family: Oswald-Medium;font-size: 20px;color: #FAAD14;font-weight: 500;">
+                        {{ useCountDownStore.countDowntime.hours + ':' + useCountDownStore.countDowntime.minutes +
+                            ':' + useCountDownStore.countDowntime.seconds }}
                     </div>
-                    <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent" @contextmenu="deleteClock(index)">
+                </div>
+                <div class="flex justify-between">
+                    <div class="font-14 xt-text">
+                        我的闹钟
+                    </div>
+                    <div>
+                        <a-tooltip arraw="false" autoAdjustOverflow title="添加闹钟">
+                            <button class="mr-2 text-center xt-bg-2" style="border: none;width: 25px;">
+                                <clockIcon class=" xt-text font-20 clock-icon" @click="settingClock"
+                                    icon="fluent:add-16-filled"></clockIcon>
+                            </button>
+                        </a-tooltip>
+                        <a-tooltip autoAdjustOverflow title="设置定时器">
+                            <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
+                                <clockIcon class=" xt-text font-20 clock-icon" icon="fluent:clock-12-regular"
+                                    @click="settingCountDown">
+                                </clockIcon>
+                            </button>
+                        </a-tooltip>
+                        <a-tooltip autoAdjustOverflow title="铃声调节">
+                            <button class="mr-2 xt-bg-2" style="border: none;width: 25px;">
+                                <clockIcon class=" xt-text font-20 clock-icon" icon="akar-icons:sound-on"
+                                    v-if="soundVisible" @click="changeSoundStatus"></clockIcon>
+                                <clockIcon class="xt-text font-20 clock-icon" icon="akar-icons:sound-off"
+                                    v-if="!soundVisible" @click="changeSoundStatus"></clockIcon>
+                            </button>
+
+                        </a-tooltip>
+                        <a-tooltip autoAdjustOverflow color="var(--primary-bg) !important;" title="设置">
+                            <button class=" xt-bg-2" style="border: none;width: 25px;">
+                                <clockIcon icon="fluent:settings-16-regular" style="font-size: 24px; vertical-align: sub; "
+                                    @click="changeSettingStatus"
+                                    class="rounded-md xt-text font-20 clock-icon setting-hover">
+                                </clockIcon>
+                            </button>
+
+                        </a-tooltip>
+
+                    </div>
+                </div>
+            </div>
+
+            <vue-custom-scrollbar :settings="outerSettings" style="position: relative; "
+                :style="{ height: heightScorll }" 
+                class="scroll">
+                <div class="pl-4 pr-4 ">
+                    <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent"
+                        @contextmenu="deleteClock(index)">
                         <div class="flex items-center rounded-lg event-list"
                             style="background: var(--primary-bg);color: var(--primary-text);width: calc(100% );height: 56px; ">
                             <div class="w-full">
@@ -191,8 +196,8 @@
                 <div style="display: flex;flex-direction: column;align-items: center;">
                     <div style="">自定义倒计时</div>
                     <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-                        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" 
-                        :showNow="false" popupClassName="popupClass" />
+                        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }"
+                            :showNow="false" popupClassName="popupClass" />
                     </a-space>
                     <xt-button type="primary" @click="addCustom"
                         style="margin: 14px; background: var(--active-bg);">开始倒计时</xt-button>
@@ -203,9 +208,8 @@
 
     <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
     <div style="position: relative">
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar "
-            @click="closeDetail" v-if="useCountDownStore.countDowntime.hours !== undefined"
-            style="width: 150px; height: 32px;"
+        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar " @click="closeDetail"
+            v-if="useCountDownStore.countDowntime.hours !== undefined" style="width: 150px; height: 32px;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
@@ -228,8 +232,8 @@
         </xt-button>
     </div>
 
-    <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text"
-        style="color: red" title="设置" placement="right" :width="600">
+    <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"
+        placement="right" :width="600">
         <div class="flex">
             <SetupClock></SetupClock>
         </div>
@@ -260,7 +264,7 @@ onMounted(() => {
     }
 
 })
-const topClockSettingVisible=ref(false)
+const topClockSettingVisible = ref(false)
 const dataType = ref([{ title: '不重复', name: '不重复' }, { title: '每天', name: '每天' }])
 const defaultType = ref({ title: '不重复', name: '不重复' })
 const useTimerStore = timerStore()
@@ -300,8 +304,15 @@ const selectText = () => {
 }
 const deleteClock = (index) => {
     console.log(index);
-    
+
 }
+const heightScorll=computed(()=>{
+    if(useCountDownStore.countDowntime.hours !== undefined){
+        return 'calc(100% - 112px)'
+    }else{
+        return 'calc(100% - 56px)'
+    }
+})
 const addSettingClock = () => {
     if (eventValue.value === "") {
         if (flag.value !== true) return;
@@ -418,7 +429,7 @@ const changeSettingStatus = () => {
     customizeSetting.value = false
     countDownVisible.value = false
     clockSettingVisible.value = false
-    topClockSettingVisible.value=true
+    topClockSettingVisible.value = true
 }
 let notificationShow = false
 // const detailTime=useCountDownStore.countDowntime
@@ -465,9 +476,9 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
         const key = `open${Date.now()}`
         let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
         notifications.clockToast(message, '闹钟', true)
-        if(clockEvent.value[0].clockType==='不重复'){
+        if (clockEvent.value[0].clockType === '不重复') {
             // console.log(1111);
-            useCardStore.removeClock(0,1)
+            useCardStore.removeClock(0, 1)
         }
     }
 
@@ -478,50 +489,71 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 :deep(.tippy-content) {
     padding: 0px !important;
 }
-// :deep(.ant-radio-button-wrapper) {
-//     // border: 1px solid var(--primary-text);
-//     border-bottom: none;
 
-// }
+.active {
+    background: rgba(80, 139, 254, 0.20);
+}
 
-// :deep(.ant-radio-button-wrapper) {
-//     &:nth-child(21) {
-//         border-bottom: 1px solid var(--secondary-text);
-//         // border-left:  solid var(--primary-text);
-//     }
-//     &:nth-child(22),&:nth-child(23),&:nth-child(24),&:nth-child(19),&:nth-child(20) {
-//         border-bottom: 1px solid var(--primary-text);
-//     }
-//     &:nth-child(1){
-//         border-radius:10px 0 0 0;
-//     }
-//     &:nth-child(6){
-//         border-radius:0 10px 0 0;
-//     }
-//     &:nth-child(19){
-//         border-radius:0 0 0 10px ;
-//     }
-//     &:nth-child(24){
-//         border-radius:0 0 10px 0 ;
-//     }
-//     // &:nth-child(7),&:nth-child(13){
-//     //     border-left: 1px solid var(--primary-text);
-//     // }
-//     // &:nth-child(19){
-//     //     border-left: 1px solid var(--primary-text);
-//     // }
-// }
+.setting-hour {
+    font-family: Oswald-Regular;
+
+    &:nth-child(1) {
+        border-radius: 10px 0 0 0;
+    }
+
+    &:nth-child(6) {
+        border-radius: 0 10px 0 0;
+    }
+
+    &:nth-child(19) {
+        border-radius: 0 0 0px 10px;
+    }
+
+    &:nth-child(24) {
+        border-radius: 0 0 10px 0;
+    }
+
+    // &:nth-child(2),
+    // &:nth-child(6),
+    // &:nth-child(10),
+    // &:nth-child(14),
+    // &:nth-child(18),
+    // &:nth-child(22){
+    //     border-right:1px solid var(--divider);
+    //     border-left:1px solid var(--divider);
+    // }
+    // &:nth-child(3),
+    // &:nth-child(7),
+    // &:nth-child(11),
+    // &:nth-child(15),
+    // &:nth-child(19),
+    // &:nth-child(23){
+    //     border-right:1px solid var(--divider);
+    // }
+    // &:not(:nth-child(21),
+    // :nth-child(22),
+    // :nth-child(23),
+    // :nth-child(24)){
+    //     border-bottom:1px solid var(--divider);
+    // }
+
+
+}
+
 .popupClass {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
+
     & .ant-picker-panel {
         background-color: var(--primary-bg) !important;
     }
 }
-:deep(.ant-picker-panel-container){
+
+:deep(.ant-picker-panel-container) {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
 }
+
 *>>>.tippy-box[data-theme~='tippy-trigger']>.tippy-content {
     padding: 0px !important;
 }
@@ -605,13 +637,14 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     font-weight: 400;
 
 }
-.setting-hover{
-    &:hover{
-        background: rgba(80,139,254,0.20);
+
+.setting-hover {
+    &:hover {
+        background: rgba(80, 139, 254, 0.20);
     }
 }
+
 :deep(.ant-input-number-handler-wrap) {
     background-color: var(--secondary-bg);
     border: none !important;
-}
-</style>
+}</style>

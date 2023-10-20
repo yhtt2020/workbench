@@ -20,20 +20,20 @@
                                     <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{ index }}</a-radio-button>
                                 </template>
                             </a-radio-group> -->
-                            <a-radio-group v-model:value="timeHour" button-style="solid"
+                            <!-- <a-radio-group v-model:value="timeHour" button-style="solid"
                                 class="flex ml-1 rounded-lg xt-bg-2">
                                 <a-radio-button :value="i"
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
                                     style="width: 58px;" class="mb-2 text-center xt-text">{{ index }}</a-radio-button>
-                            </a-radio-group>
-                            <!-- <div class="flex flex-wrap w-[235px] h-[180px] xt-bg-2 rounded-lg" style="border: 1px solid var(--divider);">
+                            </a-radio-group> -->
+                            <div class="flex flex-wrap w-[232px] h-[240px] xt-bg-2 rounded-lg " style="">
                                 <div v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
-                                style="width: 58px;height: 30px;line-height: 30px;text-align: center;flex-shrink: 0;"
-                                class="flex items-center justify-center xt-text pointer" :class="{'active': timeHour === index}"
+                                style="width: 58px;height: 40px;line-height: 40px;text-align: center;flex-shrink: 0;"
+                                class="flex items-center justify-center xt-text-2 pointer setting-hour" :class="{'active': timeHour === index}"
                                 @click="timeHour = index">
                                     {{ index }}
                                 </div>
-                            </div> -->
+                            </div>
 
                         </div>
                         <div>
@@ -331,7 +331,50 @@ export default {
   
 <style lang="scss" scoped>
 .active{
-    background-color: var(--active-bg);
+    background: rgba(80,139,254,0.20);
+}
+.setting-hour{
+    font-family: Oswald-Regular;
+    &:nth-child(1) {
+        border-radius: 10px 0 0 0;
+    }
+
+    &:nth-child(4) {
+        border-radius: 0 10px 0 0;
+    }
+
+    &:nth-child(21) {
+        border-radius: 0 0 0px 10px;
+    }
+
+    &:nth-child(24) {
+        border-radius: 0 0 10px 0;
+    }
+    // &:nth-child(2),
+    // &:nth-child(6),
+    // &:nth-child(10),
+    // &:nth-child(14),
+    // &:nth-child(18),
+    // &:nth-child(22){
+    //     border-right:1px solid var(--divider);
+    //     border-left:1px solid var(--divider);
+    // }
+    // &:nth-child(3),
+    // &:nth-child(7),
+    // &:nth-child(11),
+    // &:nth-child(15),
+    // &:nth-child(19),
+    // &:nth-child(23){
+    //     border-right:1px solid var(--divider);
+    // }
+    // &:not(:nth-child(21),
+    // :nth-child(22),
+    // :nth-child(23),
+    // :nth-child(24)){
+    //     border-bottom:1px solid var(--divider);
+    // }
+        
+    
 }
 .event-list {
     padding: 0.2em 0.5em;
