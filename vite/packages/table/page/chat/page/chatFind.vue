@@ -49,7 +49,9 @@ export default {
 
   mounted(){
     this.$nextTick(()=>{
-      this.$refs.findSearchRef.focus()
+      if(this.communityDefault.name === 'community'){
+        this.$refs.findSearchRef.focus()
+      }
     })
   },
 

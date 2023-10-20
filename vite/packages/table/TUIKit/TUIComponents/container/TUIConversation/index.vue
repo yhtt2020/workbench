@@ -129,8 +129,6 @@ const TUIConversation = defineComponent({
     };
   
     onMounted(()=>{
-     // 判断会话列表第一次是否为空
-     nextTick(()=>{
       // 检测会话列表是不是为空列表
       nextTick(()=>{
         const isEmptySting = chat.conversations.conversationID
@@ -158,9 +156,6 @@ const TUIConversation = defineComponent({
           router.push({name:'chatFind'})
         }
       })
-
-     })
-
     })
     
 
