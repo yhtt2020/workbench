@@ -1,5 +1,5 @@
 <template>
-  <!-- <xt-button @click="test()">任务重置</xt-button> -->
+  <xt-button @click="test()">任务重置</xt-button>
   <template v-if="store.taskID">
     <div class="xt-bg-2 rounded-xl p-3">
       <xt-title m="">
@@ -47,7 +47,7 @@ import { ref, reactive, computed } from "vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0103";
+  store.taskID = "M0302";
   store.success = false;
   store.step = -1;
 };
