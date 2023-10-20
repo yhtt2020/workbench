@@ -15,7 +15,6 @@ const getCurrentDesk = computed(() => {
   );
 
   currentDesk[0].cards.forEach((item) => {
-    console.log("item :>> ", item);
     const { id, name, data, customData } = item;
     obj[item.id] = {
       top: 0,
@@ -62,7 +61,6 @@ const [, drop] = useDrop(() => ({
     if (props.snapToGrid) {
       [left, top] = doSnapToGrid(left, top);
     }
-    console.log("item.id :>> ", item.id);
     moveBox(item.id, left, top);
     return undefined;
   },
