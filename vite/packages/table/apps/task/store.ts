@@ -14,7 +14,12 @@ export const taskStore = defineStore("taskStore", {
     successBranchTask: [], // 完成的支线任务
   }),
   getters: {},
-  actions: {},
+  actions: {
+    startfirstTask() {
+      this.step = 1;
+      this.taskID = "firstTask";
+    },
+  },
   persist: {
     enabled: true,
     strategies: [
