@@ -26,6 +26,14 @@
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
                                     style="width: 58px;" class="mb-2 text-center xt-text">{{ index }}</a-radio-button>
                             </a-radio-group>
+                            <!-- <div class="flex flex-wrap w-[235px] h-[180px] xt-bg-2 rounded-lg" style="border: 1px solid var(--divider);">
+                                <div v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
+                                style="width: 58px;height: 30px;line-height: 30px;text-align: center;flex-shrink: 0;"
+                                class="flex items-center justify-center xt-text pointer" :class="{'active': timeHour === index}"
+                                @click="timeHour = index">
+                                    {{ index }}
+                                </div>
+                            </div> -->
 
                         </div>
                         <div>
@@ -322,6 +330,9 @@ export default {
 </script>
   
 <style lang="scss" scoped>
+.active{
+    background-color: var(--active-bg);
+}
 .event-list {
     padding: 0.2em 0.5em;
 
