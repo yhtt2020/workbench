@@ -105,7 +105,7 @@
         <!-- 一级快捷面板 -->
         <div class="w-[300px] h-[300px] relative xt-bg-2  rounded-lg p-0 " v-show="customizeSetting">
             <div class="pt-4 pl-4 pr-4" style="">
-                <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg-2 pl-4 pr-4 "
+                <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg pl-4 pr-4 mb-2"
                     v-if="useCountDownStore.countDowntime.hours !== undefined">
                     <div>
                         <clockIcon icon="akar-icons:pause" style="font-size: 24px; vertical-align: sub;"
