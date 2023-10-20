@@ -14,7 +14,7 @@
                     <!-- {{ showForumList }} -->
                     <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
                         <div class="w-[32px] h-[32px] rounded-md ml-2">
-                            <img :src="this.showForumList[0].value.logo" alt="" class="w-full h-full">
+                            <a-avatar shape="square" :src="this.showForumList[0].value.logo" alt="" class="w-full h-full" />
 
                         </div>
                         <div class="ml-2 font-16 xt-text">

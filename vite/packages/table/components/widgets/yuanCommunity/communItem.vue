@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-[96px] pl-3 pr-3 pt-3 pb-2 mb-2 pointer">
+    <div class="w-full h-[96px] pl-3  pt-3 pb-2 mb-2 pointer">
         <div class="flex items-center justify-between">
             <div class="mr-3">
                 <!-- {{ showImg }} -->
