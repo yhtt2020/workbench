@@ -4,18 +4,13 @@
     :style="[boxStyle, boxBgStyle]"
     :class="[bgClass]"
   >
-    <MyIcons
-      :icon="icon"
-      :width="size"
-      :height="size"
-    ></MyIcons>
+    <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>
 
 <script setup>
+import { Icon as myIcon } from "@iconify/vue";
 import { computed } from "vue";
-
-import { Icon as MyIcons } from "@iconify/vue";
 const props = defineProps({
   icon: {
     type: String,
@@ -47,24 +42,20 @@ const iconSize = computed(() => {
   return {
     width: props.size + "px",
     height: props.size + "px",
-    "max-width": props.size + "px",
-    "max-height": props.size + "px",
-    "min-width": props.size + "px",
-    "min-height": props.size + "px",
-    "font-size": props.size + "px",
   };
 });
 
 const boxStyle = computed(() => {
   if (props.bgStyle || props.bgClass) {
     return {
-      ...iconSize.value,
+      width: props.w + "px",
+      height: props.w + "px",
       "border-radius": props.radius + "px",
       color: props.color,
     };
   } else {
     return {
-      ...iconSize.value,
+      width: props.size + "px",
       color: props.color,
     };
   }
