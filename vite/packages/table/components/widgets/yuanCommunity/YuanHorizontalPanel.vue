@@ -3,7 +3,7 @@
   <div class="flex flex-row justify-center p-1 rounded-lg justify-items-center" :class="bgColor" :style="{ height: itemHeight }"
     style="background: var(--secondary-bg);color: var(--primary-text);min-width: 300px">
     <!-- <div v-for="(item, index) in navList"
-      class="relative flex items-center justify-center w-40 h-full rounded-lg  nav-item btn-active pointer"
+      class="relative flex items-center justify-center w-40 h-full rounded-lg nav-item btn-active pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->
     <template v-for="(item, index) in navList">
 
@@ -11,7 +11,7 @@
           class="relative flex items-center justify-center flex-1 h-full rounded-lg nav-item btn-active pointer "
           @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
           :data-item="JSON.stringify(item)">
-          <span>{{ item.name }}</span>
+          <span>{{ item.value.name }}</span>
           <div v-if="item.state === true" class="ml-2 state-dot"></div>
         </div>
     </template>

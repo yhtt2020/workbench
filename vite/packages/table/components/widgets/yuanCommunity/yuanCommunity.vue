@@ -14,22 +14,15 @@
                     <!-- {{ showForumList }} -->
                     <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
                         <div class="w-[32px] h-[32px] rounded-md ml-2">
-                            <img :src="this.showForumList[0].logo" alt="" class="w-full h-full">
+                            <img :src="this.showForumList[0].value.logo" alt="" class="w-full h-full">
 
                         </div>
                         <div class="ml-2 font-16 xt-text">
-                            {{ this.showForumList[0].name }}
+                            {{ this.showForumList[0].value.name }}
                         </div>
                     </div>
-                    <!-- <div class="flex  w-[376px] h-[40px] justify-center xt-bg rounded-lg " v-else>
-                        <div v-for="(item, index) in showForumList" :key="index"
-                            class="w-[123px] h-[32px]  mt-1 mb-1 text-center leading-8 font-16"
-                            :class="[{ action: currentIndex == index }]" style="cursor: pointer;"
-                            @click="setCurrentIndex(index, item)">{{
-                                item?.name
-                            }}</div>
-                    </div> -->
-                    <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum" style="height: 40px;" v-else @changed="changeContent"></YuanHorizontalPanel>
+                    <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum" style="height: 40px;"
+                        v-else @changed="changeContent"></YuanHorizontalPanel>
                     <div>
                         <!-- <a-tooltip title="发布帖子" autoAdjustOverflow> -->
                         <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " style="flex-shrink: 0;"
@@ -74,7 +67,8 @@
                 </div>
 
             </div>
-            <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
+            <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
+                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
         </Widget>
 
         <teleport to="body" :disabled="false">
@@ -94,9 +88,9 @@
                 最多支持选择在卡片上的展示3个圈子
             </div>
             <!-- {{ selectForumList }}  @change="handleChange(selectValue)" -->
-            <a-select v-model:value="selectValue" mode="multiple" autoClearSearchValue="false"
-                style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" 
-                :bordered="false" @deselect="handleDeselect" @select="handleChange(selectValue)">
+            <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass"
+                style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" :bordered="false"
+                @deselect="handleDeselect((selectValue))" @select="handleChange(selectValue)">
                 <a-select-option :value="index" v-for="(item, index) in forumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
@@ -193,7 +187,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum:' '
+            defaultForum: ' '
         }
     },
     methods: {
@@ -219,13 +213,19 @@ export default {
         // 选择板块
         handleChange(value) {
             value.forEach((item) => {
-                this.selectList.push(this.forumList[item])
-            })
-            // 去重
-            this.selectList = Array.from(new Set(this.selectList))
-            let temp = this.selectList
-            this.customData.selectList = temp
-            // console.log(this.selectList, '选择');
+                // console.log(item);
+                const newItem = {
+                    index: item,
+                    value: this.forumList[item]
+                };
+
+                if (!this.selectList.some((el) => el.value === newItem.value)) {
+                    this.selectList.push(newItem);
+                }
+            });
+            // console.log(this.selectList);
+            let temp = this.selectList;
+            this.customData.selectList = temp;
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -237,18 +237,28 @@ export default {
         },
         // 删除选择的板块
         handleDeselect(val) {
-            // console.log(val);
-            this.selectList = this.selectList.filter((item, index) => {
-                return index !== val;
+            this.selectList = this.selectList.filter((item) => {
+                return val.includes(item.index); // 过滤掉 val 中包含的索引的项目
             });
+
+            // this.selectList = this.selectList.filter((item) => {
+            //     console.log(item);
+            //     val.forEach((index) => {
+            //         console.log(item.index , index , 'from val to item');
+            //         return item.index !== index
+            //     })
+            // })
             // console.log(this.selectList, '删除');
             this.selectList = this.selectList.filter((item, index) => {
-                return item !== undefined
+                return item.value !== undefined
             })
             // console.log(this.selectList, '过滤');
             let temp = this.selectList
             this.customData.selectList = temp
-            
+            // val.forEach((item) => {
+            //     console.log(item, 'from val to item');
+            // })
+
         },
 
     },
@@ -275,9 +285,9 @@ export default {
             return this.myForumList.joined
         },
         showForumList() {
-            // if (this.customData && this.customData.selectList) {
-            //     return this.customData.selectList?.slice(0, 3)
-            // }
+            if (this.customData && this.customData.selectList) {
+                return this.customData.selectList?.slice(0, 3)
+            }
             return this.selectList.slice(0, 3)
         },
         async forumPost() {
@@ -303,7 +313,7 @@ export default {
         showForumList(newValue) {
             this.isLoading = true
             if (this.showForumList.length > 0) {
-                this.getCommunityPost(this.showForumList[0].id)
+                this.getCommunityPost(this.showForumList[0].value.id)
             }
             setTimeout(() => {
                 this.isLoading = false
@@ -311,15 +321,15 @@ export default {
 
         },
         defaultForum(newValue) {
-            this.getCommunityPost(newValue?.id)
+            this.getCommunityPost(newValue.value?.id)
         },
         immediate: true,
         // 切换频道和圈子时触发获取
         defaultType(newValue) {
             // console.log(newValue.name);
-            if(newValue.name=='circle'){
+            if (newValue.name == 'circle') {
                 this.getMyForumList()
-            }else{
+            } else {
                 return
             }
         }
@@ -369,5 +379,11 @@ export default {
 
 :deep(.ant-select-multiple .ant-select-selection-item) {
     background: rgba(80, 139, 254, 0.20) !important;
+}
+
+.optionClass {
+    & .ant-select-selection-item {
+        background-color: red !important;
+    }
 }
 </style>
