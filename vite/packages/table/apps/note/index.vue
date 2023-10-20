@@ -4,7 +4,7 @@
           <div class="h-full w-full flex">
               <div class="flex h-full">
               <!-- <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft> -->
-              <LeftSearch></LeftSearch>
+              <LeftSearch :selDesk="selDesk"></LeftSearch>
               </div>
               <div class="flex h-full flex-col w-full" style="min-width: 400px;">
                 <NodeContent :selDesk="selDesk" v-show="this.selNote>=0"></NodeContent>

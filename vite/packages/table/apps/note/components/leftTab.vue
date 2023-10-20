@@ -1,9 +1,9 @@
 <template>
-   <xt-left-menu :list="menuList" last="1" end="3">
-    <template #test>
+   <xt-left-menu :list="menuList" last="2" end="1">
+    <!-- <template #test>
       1123
       <xt-button @click="showRightPanel = !showRightPanel">Toggle Right Panel</xt-button>
-    </template>
+    </template> -->
     <slot></slot>
   </xt-left-menu>
 <!-- 全屏 -->
@@ -32,6 +32,24 @@ export default {
   },
   data() {
     return {
+      menuList:[
+        {
+          newIcon: "fluent:notepad-12-regular",
+          callBack: () => {
+            this.selectTab = "Chat";
+          },
+        },
+        {
+          flag: true,
+          newIcon: "akar-icons:trash-can",
+          callBack: () => {
+            this.createChatVisible = true;
+          },
+        },
+        {
+          full: true,
+        },
+      ],
 
     };
   },

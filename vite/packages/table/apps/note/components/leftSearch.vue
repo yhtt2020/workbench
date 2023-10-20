@@ -1,7 +1,8 @@
 <template>
     <div class="flex flex-col justify-between h-full xt-br mr-3">
-      <div class="xt-scrollbar" style="width: 308px">
-        <div class="flex w-full pr-3 mt-3 mb-4">
+      <div class="h-full flex" style="width: 308px;flex-direction: column;" >
+        <!-- class="xt-scrollbar" -->
+        <div class="flex w-full pr-3 mt-3 mb-4" style="height: 40px;">
             <a-input
                 style="height:40px;background: var(--secondary-bg);
                 border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
@@ -14,22 +15,51 @@
             <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
           </xt-button>
         </div>
-        <div>
-            <div v-for="(item,index) in this.noteList" @click="changeNote(index)" style="width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
-            :class="index == this.selNote?'note-active':''">
-                <div class="flex list-top font-16 items-center" style="color: var(--primary-text);">
-                    <span  :style="{background:item.customData.background}"></span>
-                    <div class="ml-2">{{ item.customData.title }}</div>
+        <div 
+        class=" xt-scrollbar h-full" 
+        >
+            <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
+                <div @click="changeNote(index)" style="width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
+                class="note-box"
+                :class="index == this.selNote?'note-active':''">
+                    <div class="flex list-top font-16" style="color: var(--primary-text);justify-content: space-between;">
+                        <div class="flex items-center">
+                            <span  :style="{background:item.customData.background}"></span>
+                            <div class="ml-2">{{ item.customData.title }}</div>
+                        </div>
+                        <!-- 菜单 -->
+                        <!-- <a-dropdown> -->
+                        <a-dropdown :trigger="['click']">
+                            <div class="flex items-center pointer note-menu">
+                                <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20" />
+                            </div>
+                            <template #overlay>
+                                <a-menu 
+                                style="padding: 8px;width: 200px;border-radius: 12px;background: #212121;border: 1px solid rgba(255,255,255,0.1);">
+                                    <a-menu-item 
+                                    v-for="(item,index) in menus" 
+                                    :key="index" 
+                                    style="height: 40px;border-radius: 10px;"
+                                    >
+                                        <div class="flex items-center font-16">
+                                            <Icon width="20" height="20" :icon="item.newIcon" />
+                                            <div :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
+                                        </div>
+                                        </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+
+                    </div>
+                    <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
+                        {{ item.customData.text }}
+                    </div>
+                    <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
+                        <!-- {{ item.id }}{{ item.deskName?'.'+item.deskName:'' }} -->
+                        {{ this.formatTimestamp(item.id) }}{{ item.deskName?'.'+item.deskName:'' }}
+                    </div>
                 </div>
-                <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
-                    {{ item.customData.text }}
-                </div>
-                <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
-                    <!-- {{ item.id }}{{ item.deskName?'.'+item.deskName:'' }} -->
-                    {{ this.formatTimestamp(item.id) }}{{ item.deskName?'.'+item.deskName:'' }}
-                </div>
-                
-            </div>
+            </xt-menu>
         </div>
       </div>
     </div>
@@ -45,12 +75,35 @@
     components: {
         Icon
     },
+    props:['selDesk'],
     data() {
       return {  
 			icons: {
 				add16Filled,
 				search20Filled,
 			},
+            menus:[
+                // { 
+                //     label: "小窗模式", 
+                //     // callBack: this.callBack, 
+                //     newIcon: "fluent:window-multiple-16-filled",
+                // },
+                { 
+                    label: "添加到桌面", 
+                    callBack: ()=>{
+                        // console.log('添加');
+                        // console.log(this);
+                        this.selDesk()
+                    }, 
+                    newIcon: "fluent:open-20-filled",
+                },
+                { 
+                    label: "删除便签", 
+                    // callBack: this.callBack, 
+                    newIcon: "akar-icons:trash-can",
+                    color:'#FF4D4F',
+                },
+            ]
       };
     },
     computed: {
@@ -61,6 +114,8 @@
     watch: {
     },
     methods: {
+    //   ...mapActions(noteStore,['test']),
+
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
@@ -97,6 +152,13 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
+    }
+
+    .note-box .note-menu{
+        display: none;
+    }
+    .note-box:hover .note-menu{
+        display: flex;
     }
 </style>
   
