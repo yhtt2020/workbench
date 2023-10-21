@@ -94,7 +94,7 @@
             </div>
             <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
             <div class="mt-6 font-16 xt-text">
-                我加入的圈子
+                {{ defaultType.title }}
             </div>
             <div class="mt-2 mb-4 font-14 xt-text-2">
                 最多支持选择在卡片上的展示5个圈子
@@ -120,6 +120,10 @@
                         class="mr-3 rotate-180 xt-text"></YuanIcon>
                 </template>
             </a-select>
+            <div class="mt-4 mb-4 text-base xt-text">
+                打开方式
+            </div>
+            <RadioTab :navList="openWay" v-model:selectType="defaultOpenWay"></RadioTab>
         </a-drawer>
         
     </div>
@@ -210,6 +214,8 @@ export default {
                 wheelPropagation: true,
             },
             showDetailModal: false,
+            openWay:[{title:'弹窗形式打开',name:"popup"},{title:'在元社区主应用中打开',name:"main"}],
+            defaultOpenWay: {title:'弹窗形式打开',name:"popup"},
         }
     },
     methods: {

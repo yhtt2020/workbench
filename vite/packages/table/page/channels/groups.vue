@@ -44,7 +44,7 @@
                             {{ item.title }}
                         </a-select-option>
                         <template #placeholder>
-                            <div class="xt-text " style="font-size: 16px;">
+                            <div class="ml-3 text-center xt-text" style="font-size: 16px;">
                                 全部
                             </div>
                         </template>
@@ -186,6 +186,8 @@ const handleChange = (value) => {
     color: var(--secondary-text);
     height: 40px;
     line-height: 40px;
+    text-align: center;
+    margin-left: 12px;
 }
 :deep(.ant-pagination-prev .ant-pagination-item-link) {
     color: var(--primary-text);
