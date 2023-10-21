@@ -184,7 +184,7 @@ export default {
 
     const chatLeftList = ref([
       {
-        icon: 'message',
+        // icon: 'message',
         newIcon:'fluent:chat-16-regular',
         tab: 'session',
         route: {
@@ -194,7 +194,7 @@ export default {
         callBack: selectTab,
       },
       {
-        icon: 'team',
+        // icon: 'team',
         tab: 'contact',
         newIcon:'fluent:people-16-regular',
         callBack: selectTab,
@@ -218,7 +218,7 @@ export default {
       ] : []),
 
       {
-        icon: 'zhinanzhen',
+        // icon: 'zhinanzhen',
         newIcon:'eva:compass-outline',
         type: 'find',
         tab:'find',
