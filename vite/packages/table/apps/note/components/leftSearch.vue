@@ -40,6 +40,7 @@
                                     v-for="(item,index) in menus" 
                                     :key="index" 
                                     style="height: 40px;border-radius: 10px;"
+                                    @click="item.callBack"
                                     >
                                         <div class="flex items-center font-16">
                                             <Icon width="20" height="20" :icon="item.newIcon" />
@@ -49,7 +50,6 @@
                                 </a-menu>
                             </template>
                         </a-dropdown>
-
                     </div>
                     <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
                         {{ item.customData.text }}
@@ -91,9 +91,10 @@
                 { 
                     label: "添加到桌面", 
                     callBack: ()=>{
-                        // console.log('添加');
-                        // console.log(this);
+                        // 修改当前选中桌面
                         this.selDesk()
+                        
+                        // console.log('触发了callBack');
                     }, 
                     newIcon: "fluent:open-20-filled",
                 },
@@ -114,8 +115,6 @@
     watch: {
     },
     methods: {
-    //   ...mapActions(noteStore,['test']),
-
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title

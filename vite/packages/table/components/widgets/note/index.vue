@@ -244,9 +244,6 @@ export default {
       this.fontColor = color;
     },
 
-    // test(){
-    //   console.log(this.icons);
-    // }
   },
 };
 </script>

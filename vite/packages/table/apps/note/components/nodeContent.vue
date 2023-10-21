@@ -49,17 +49,6 @@
                         v-model:value="this.selNoteTitle"
                         maxlength="15"
                     ></a-input>
-                    <!-- <a-input
-                        style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
-                        border: none;box-shadow: none;padding: 0;"
-                        :value="this.selNote>=0?this.noteList[this.selNote].customData.title:''"
-                    ></a-input> -->
-                    <!-- <div class="mb-4 " style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;">
-                        {{ this.selNote>=0?this.noteList[this.selNote].customData.title:'' }}
-                    </div> -->
-                    <!-- 正文 -->
-                    <!-- <div class="font-16 mt-4" style="color: var(--primary-text);">{{ this.selNote>=0?this.noteList[this.selNote].customData.text:'' }}</div>
-                    <div class="font-16 mt-4" style="color: var(--primary-text);">??{{ this.selNoteText }}</div> -->
                     <a-textarea
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0;"

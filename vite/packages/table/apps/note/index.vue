@@ -26,7 +26,7 @@
                 style="height: 64px;background: #2A2A2A;justify-content: space-between;padding: 0 24px;" 
                 v-for="(item,index) in this.desks" 
                 :key="index" 
-                :style="{background: selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' ,border:selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
+                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' ,border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
                 'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
                  
                 @click="changeSelIndex(index)">
@@ -40,8 +40,8 @@
             </div>
           </div>
           <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
-            <xt-button style="width: 64px;height:40px;" class="mr-3">取消</xt-button>
-            <xt-button style="width: 64px;height:40px;" class="xt-active-btn">选择</xt-button>
+            <xt-button style="width: 64px;height:40px;" class="mr-3" @click="this.promptVisible = false">取消</xt-button>
+            <xt-button style="width: 64px;height:40px;" class="xt-active-btn" @click="changeDesk">选择</xt-button>
           </div>
         </div>
       </Modal>
@@ -51,8 +51,6 @@
   </template>
   
   <script>
-  
-                  // border:selIndex == index? '1px solid rgba(80,139,254,1)' : ''
   import NodeContent from "./components/nodeContent.vue";
   import LeftTab from "./components/leftTab.vue";
   import LeftSearch from "./components/leftSearch.vue";
@@ -82,8 +80,6 @@
         },
         // 弹窗
         promptVisible:false,
-        // 选中桌面
-        selIndex:-1,
 
       }
     },
@@ -92,27 +88,29 @@
     },
     computed: {
           ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
-          ...mapWritableState(cardStore, ['desks']),
+          ...mapWritableState(cardStore, ['desks','selIndex']),
+          
     },
     methods: {
-      ...mapActions(noteStore,['getNotes']),
+      ...mapActions(noteStore,['getNotes','switchDesk']),
+      // 选择便签
       changeSelIndex(n){
         this.selIndex = n
       },
+      // 选择桌面
       selDesk(){
-        // if (n) {
-        //   this.selIndex = n
-        // }
-        // this.selIndex = this.selNote
         this.desks.forEach((item,index) => {
           if(item.id == this.noteList[this.selNote].desk.id){
             this.selIndex = index
           }
         });
-        // 
-        // this.promptVisible = !this.promptVisible
         this.promptVisible = true
-      }
+      },
+      // 切换便签在不同的桌面
+      changeDesk(){
+        this.promptVisible = false
+        this.switchDesk(this.selNote,this.selIndex)
+      },
       
     }
   }
