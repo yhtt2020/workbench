@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <!-- 内容区 -->
-                <div style="height: calc(100% - 80px)">
+                <div style="height: calc(100% - 200px)">
                     <vue-custom-scrollbar style="overflow: hidden;flex-shrink: 0;width: 100%;height:100%;"
                         :settings="outerSettings">
                         <div v-if="isLoading">
@@ -59,11 +59,12 @@
                                 </div>
 
                             </div>
+                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
+                                <xt-button
+                                    style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
+                            </div>
+                        </div>
 
-                        </div>
-                        <div class="flex items-center justify-center w-full h-[40px] mt-3">
-                            <xt-button style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;">查看更多</xt-button>
-                        </div>
                     </vue-custom-scrollbar>
 
                 </div>
@@ -88,7 +89,12 @@
             <detailModal v-if="showDetailModal" />
         </teleport>
 
-        <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
+        <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
+            <template #extra>
+                <xt-button :w="56" :h="32"
+                    style="background-color: var(--active-bg);color: var(--primary-text);font-size: 16px;border-radius: 8px;"
+                    @click="saveSetting">保存</xt-button>
+            </template>
             <div class="mb-6 xt-text font-16">
                 数据来源
             </div>
@@ -125,7 +131,7 @@
             </div>
             <RadioTab :navList="openWay" v-model:selectType="defaultOpenWay"></RadioTab>
         </a-drawer>
-        
+
     </div>
 </template>
 <script>
@@ -183,7 +189,7 @@ export default {
             ],
             options: {
                 className: 'card double ',
-                title: '元社区',
+                title: this.changeTitle,
                 rightIcon: '',
                 type: 'community'
             },
@@ -214,8 +220,8 @@ export default {
                 wheelPropagation: true,
             },
             showDetailModal: false,
-            openWay:[{title:'弹窗形式打开',name:"popup"},{title:'在元社区主应用中打开',name:"main"}],
-            defaultOpenWay: {title:'弹窗形式打开',name:"popup"},
+            openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
+            defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
         }
     },
     methods: {
@@ -276,7 +282,9 @@ export default {
             let temp = this.selectList
             this.customData.selectList = temp
         },
-
+        saveSetting() {
+            this.settingVisible = false
+        }
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -312,10 +320,17 @@ export default {
         },
         showForumPost() {
             if (this.customData && this.customData.forumPost) {
-                return this.customData.forumPost?.slice(0, this.copyNum)
+                return this.customData.forumPost?.slice(0, 3)
             }
             return this.communityPost.list?.slice(0, 3)
         },
+        changeTitle() {
+            if (this.customData.selectList.length === 1) {
+                this.options.title = this.customData.selectList[0].value.title
+            } else {
+                this.options.title = '元社区'
+            }
+        }
     },
     async mounted() {
         this.isLoading = true
