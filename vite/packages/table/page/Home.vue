@@ -497,6 +497,14 @@ export default {
 
   },
   async mounted() {
+    let counte=0
+    const counter=setInterval(()=>{
+        this.replaceIcon()
+        counte++
+        if(counte>=100){
+          clearInterval(counter)
+        }
+    },300)
     // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
