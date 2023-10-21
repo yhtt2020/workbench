@@ -25,7 +25,7 @@
               </template>
               <xt-divider v-else-if="menu.divider" class="my-3" />
               <div
-                v-else
+                v-else-if="menu.children"
                 class="item rounded-lg"
                 :key="menu[`${name}`]"
                 @click="handleClick(menu)"
@@ -33,7 +33,7 @@
                 <xt-popover>
                   <xt-text class="w-full h-full">
                     <Item :data="menu" :name="name" />
-                    <template #right v-if="menu.children">
+                    <template #right>
                       <xt-new-icon
                         size="20"
                         class="mr-3"
@@ -42,7 +42,7 @@
                       />
                     </template>
                   </xt-text>
-                  <template #content v-if="menu.children">
+                  <template #content>
                     <div class="list w-full h-full p-1">
                       <div
                         class="item"
@@ -55,6 +55,11 @@
                     </div>
                   </template>
                 </xt-popover>
+              </div>
+              <div v-else class="item rounded-lg" @click="handleClick(menu)">
+                <xt-text class="w-full h-full">
+                  <Item :data="menu" :name="name" />
+                </xt-text>
               </div>
             </template>
           </div>
