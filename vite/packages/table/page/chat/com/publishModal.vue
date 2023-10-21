@@ -69,7 +69,7 @@
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
                     <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName?.name" :loadData="loadData" :bordered="false" @change="handleChange"
-                    style=" font-size: 14px; border-radius: 10px;width: 120px" change-on-select>
+                    style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;" change-on-select>
                     <template #suffixIcon>
                         <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
                     </template>
@@ -334,6 +334,13 @@ const publishPost = async () => {
 }
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
     color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
 }
 :deep(.ant-select-arrow){
     color: var(--secondary-text);
