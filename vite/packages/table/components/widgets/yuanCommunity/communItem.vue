@@ -1,45 +1,50 @@
 <template>
-    <div class="w-full h-[96px] pl-3  pt-3 pb-2 mb-2 pointer">
+    <div class="w-full h-[78px] pl-3  pt-3 pb-2 mb-2 pointer">
         <div class="flex items-center justify-between">
             <div class="mr-3">
-                <!-- {{ showImg }} -->
-                <!-- {{ img }} -->
-                <div class="mb-2 xt-text-2 font-14" style="text-align: left;" >
-                    @{{ detailPost.user.nickname }}
+                <div class="flex items-center h-[24px]" style="">
+                    <a-avatar :src="detailPost.user.avatar" :size="24" ></a-avatar>
+                    <div class="ml-2 xt-text-2 font-14 nickname" style="text-align: left;">
+                        {{ detailPost.user.nickname }}
+                    </div>
+                    <div class="xt-text-2 font-14">
+                        {{ detailPost.create_time }}
+                    </div>
                 </div>
+
                 <div class="xt-text font-16 content-text" style="text-align: left;" :innerHTML="contentText">
                     <!-- {{ contentText }} -->
                 </div>
             </div>
-            <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" >
+            <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg">
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive ,computed} from 'vue'
+import { ref, reactive, computed } from 'vue'
 import emojiReplace from '../../../js/chat/emoji'
-const props=defineProps({
+const props = defineProps({
     showForumPost: {
         type: Array,
         default: () => []
     },
 })
-const detailPost=computed(() => props.showForumPost)
-const imageList=computed(() => {
+const detailPost = computed(() => props.showForumPost)
+const imageList = computed(() => {
     return detailPost.value.image_170_170
 })
-const showImg=computed(() => {
-    if(imageList.value && imageList.value[0]){
+const showImg = computed(() => {
+    if (imageList.value && imageList.value[0]) {
         return true
     }
     return false
 })
-const img=computed(() => {
+const img = computed(() => {
     return imageList.value[0].image
 })
-const contentText=computed(() => {
+const contentText = computed(() => {
     return emojiReplace(detailPost.value.summary)
 })
 </script>
@@ -65,6 +70,7 @@ const contentText=computed(() => {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .right {
     border-radius: 10px;
     width: 72px;
@@ -74,5 +80,12 @@ const contentText=computed(() => {
     background-size: cover;
     cursor: pointer;
     flex-shrink: 0;
-  }
+}
+.nickname{
+    &:after{
+        content: '·';
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
 </style>

@@ -54,7 +54,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
         strategies: [
             {
                 storage: dbStorage,
-                paths: ['myForumList'],
+                paths: ['myForumList','communityPost'],
             }
         ]
     }
