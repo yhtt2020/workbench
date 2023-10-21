@@ -495,6 +495,11 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 }
 
 .setting-hour {
+    &:hover{
+        background: rgba(80, 139, 254, 0.20);
+        font-size: 20px;
+    }
+    transform: all 0.3s;
     font-family: Oswald-Regular;
 
     &:nth-child(1) {

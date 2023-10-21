@@ -334,6 +334,11 @@ export default {
     background: rgba(80,139,254,0.20);
 }
 .setting-hour{
+    &:hover{
+        background: rgba(80,139,254,0.20);
+        font-size: 30px;
+    }
+    transform: all 0.3s;
     font-family: Oswald-Regular;
     &:nth-child(1) {
         border-radius: 10px 0 0 0;

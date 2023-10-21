@@ -136,7 +136,7 @@ export default {
         {
           icon: 'shezhi1',
           title: '设置',
-          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false;this.changeSettingStatus() }
         },
       ],
       visibleDrawer: false,
