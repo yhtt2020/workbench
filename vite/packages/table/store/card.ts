@@ -297,7 +297,20 @@ export const cardStore = defineStore(
 
       };
     },
+    getters: {
+      currentDeskCard(){
+        console.log('this.currentDeskId :>> ', this.currentDeskId);
+        console.log(' this.desks :>> ',  this.desks);
+        if ( this.currentDeskId) {
+          const desk = this.desks.filter(
+            (item) => item.id == this.currentDeskId
+          );
+          console.log('desk??????????????????????? :>> ', desk[0]);
+          return desk[0];
+        }
 
+      }
+    },
     actions: {
       switchToDesk(index) {
         let desk = this.desks[index]

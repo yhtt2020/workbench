@@ -28,12 +28,12 @@
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
     <!-- <div  style='z-index:99999px'> -->
-      <!-- <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
+      <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
         <template #item="{ item }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                          :customData="item.customData" :editing="editing"></component>
           </template>
-      </FreeDesk> -->
+      </FreeDesk>
         <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,

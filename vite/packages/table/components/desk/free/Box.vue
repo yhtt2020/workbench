@@ -1,6 +1,12 @@
 <template>
   <div class="box" :style="{ backgroundColor }" :role="role">
-    <test :data="data"></test>
+    <!-- <test :data="data" :role="role"></test> -->
+    <!-- <CPULineChart></CPULineChart> -->
+    <!-- <component
+    :is="data?.name"
+    :customIndex="data?.id"
+    :customData="data?.customData"
+  ></component> -->
   </div>
 </template>
 
@@ -50,5 +56,7 @@ export default {
   border: 1px dashed gray;
   cursor: move;
   padding: 1em;
+  min-height: 100%;
+  min-width: 100%;
 }
 </style>

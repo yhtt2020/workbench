@@ -1,32 +1,19 @@
 <!-- 可拖拽区域组件 -->
 <script setup lang="ts">
-import { reactive, computed } from "vue";
+import { reactive, computed, watch } from "vue";
 import { useDrop } from "vue3-dnd";
 import DraggableBox from "./DraggableBox.vue";
 import { ItemTypes } from "./ItemTypes";
 import { DragItem } from "./interfaces";
 import { snapToGrid as doSnapToGrid } from "./snapToGrid";
-import { cardStore } from "../../../store/card.ts";
-const card = cardStore();
-const obj = reactive({});
-const getCurrentDesk = computed(() => {
-  const currentDesk = card.desks.filter(
-    (item) => item.id == card.currentDeskId
-  );
+import { cardStore } from "../../../store/card";
+import { storeToRefs } from "pinia";
 
-  currentDesk[0].cards.forEach((item) => {
-    const { id, name, data, customData } = item;
-    obj[item.id] = {
-      top: 0,
-      left: 0,
-      id,
-      name,
-      data,
-      customData,
-    };
-  });
-  // return currentDesk[0].cards;
-});
+import { useFreeDeskStore } from "./store";
+const freeDeskStore = useFreeDeskStore();
+const card = cardStore();
+
+const { getCurrentDesk, freeDesk } = storeToRefs(freeDeskStore);
 
 const props = defineProps<{
   snapToGrid: boolean;
@@ -35,17 +22,46 @@ const props = defineProps<{
 interface BoxMap {
   [key: string]: { top: number; left: number; title: string };
 }
+// 获取组件
+const { currentDeskCard, currentDeskId } = storeToRefs(card);
+watch(currentDeskCard.value, (newV) => {
+  if (newV.id == currentDeskId.value) {
+    console.log("freeDesk.value :>> ", freeDesk.value[currentDeskId.value]);
+    console.log("newV :>> ", newV);
+    let obj = {};
+    newV.cards.forEach((item) => {
+      // 现存小组件 匹配 自由桌面的数据 找出存在相
 
+      if (freeDesk.value[currentDeskId.value].hasOwnProperty(item.id)) {
+        obj[item.id] = freeDesk.value[currentDeskId.value][item.id];
+      }
+      // 不存在要追加进去
+      else {
+        console.log("2222 :>> ", 2222);
+        const { id, name, data, customData } = item;
+
+        obj[item.id] = {
+          top: 0,
+          left: 0,
+          id,
+          name,
+          data,
+          customData,
+        };
+      }
+    });
+    console.log("obj :>> ", obj);
+    freeDesk.value[currentDeskId.value] = obj;
+  }
+});
+// 1 缓存下来 如何缓存 怎么实现
 const boxes = reactive({
   a: { top: 20, left: 80, title: "Drag me around" },
   b: { top: 180, left: 20, title: "Drag me too" },
   d: { top: 180, left: 20, title: "Drag me too" },
 });
 const moveBox = (id: string, left: number, top: number) => {
-  if (!obj[id]) {
-    obj[id] = {}; // 如果obj[id]不存在，先初始化它为一个空对象
-  }
-  Object.assign(obj[id], { left, top }); // 现在我们可以安全地合并对象
+  Object.assign(getCurrentDesk.value[id], { left, top }); // 现在我们可以安全地合并对象
 };
 
 const [, drop] = useDrop(() => ({
@@ -71,7 +87,7 @@ const [, drop] = useDrop(() => ({
   {{ getCurrentDesk }}
   <div :ref="drop" class="container">
     <DraggableBox
-      v-for="data in obj"
+      v-for="data in getCurrentDesk"
       :id="data.id"
       :key="data.id"
       :left="data.left"
