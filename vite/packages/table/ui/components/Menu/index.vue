@@ -182,7 +182,7 @@ const handleEnter = (el: any) => {
   // 该方法需要传入一个回调函数  回调函数会在页面被刷新时前调用
   requestAnimationFrame(() => {
     el.style.height = height + "px";
-    el.style.transition = ".3s";
+    el.style.transition = ".1s";
   });
 };
 // 菜单离开时

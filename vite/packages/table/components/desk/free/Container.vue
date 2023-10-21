@@ -37,7 +37,6 @@ watch(currentDeskCard.value, (newV) => {
       }
       // 不存在要追加进去
       else {
-        console.log("2222 :>> ", 2222);
         const { id, name, data, customData } = item;
 
         obj[item.id] = {
@@ -84,7 +83,6 @@ const [, drop] = useDrop(() => ({
 </script>
 
 <template>
-  {{ getCurrentDesk }}
   <div :ref="drop" class="container">
     <DraggableBox
       v-for="data in getCurrentDesk"
