@@ -17,7 +17,7 @@
                             {{ item.title }}
                         </a-select-option>
                     </a-select> -->
-                    <div class="xt-bg-2 w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
+                    <!-- <div class="xt-bg-2 w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
                         style="cursor: pointer">
                         <a-dropdown trigger="click" placement="bottom"
                             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
@@ -34,17 +34,17 @@
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                    </div>
+                    </div> -->
 
-                    <!-- <a-select  autoClearSearchValue="false" class="ml-3"
-                        style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;"
+                    <a-select  autoClearSearchValue="false" class="ml-3"
+                        style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;"
                          :bordered="false" >
                         <a-select-option :value="index" v-for="(item, index) in options"
-                            class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                            class="absolute z-auto xt-bg xt-text-2 selsect-options" style="font-size: 16px;">
                             {{ item.title }}
                         </a-select-option>
                         <template #placeholder>
-                            <div class="xt-text font-16">
+                            <div class="xt-text " style="font-size: 16px;">
                                 全部
                             </div>
                         </template>
@@ -52,7 +52,7 @@
                             <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
                                 class="mr-3 rotate-180 xt-text"></YuanIcon>
                         </template>
-                    </a-select> -->
+                    </a-select>
                 </div>
             </div>
             <div>
@@ -177,7 +177,16 @@ const handleChange = (value) => {
     width: 40px;
     height: 40px;
 }
-
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
 :deep(.ant-pagination-prev .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
