@@ -27,7 +27,10 @@
     </div>
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
-      <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
+      <!-- startFreeDesk() -->
+      <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
+      <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button>
+      <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id) ' >
         <template #item="{ item }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
                          :customData="item.customData" :editing="editing"></component>
@@ -268,10 +271,11 @@
 
 import Muuri from 'muuri'
 import { message, Modal } from 'ant-design-vue'
-import { mapWritableState } from 'pinia'
+import { mapWritableState ,mapActions} from 'pinia'
 import { appStore } from '../../store'
 
 import {useWidgetStore} from "../card/store.ts"
+import {useFreeDeskStore} from './free/store'
 import componentsMinis  from "./components.ts"
 export default {
   name: 'Desk',
@@ -519,7 +523,7 @@ mixins:[componentsMinis],
     window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
-
+    ...mapActions(useFreeDeskStore,['addFreeDeskState','getFreeDeskState','delFreeDeskState']),
     learn () {
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },

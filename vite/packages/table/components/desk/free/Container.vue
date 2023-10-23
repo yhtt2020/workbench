@@ -1,6 +1,6 @@
 <!-- 可拖拽区域组件 -->
 <script setup lang="ts">
-import { reactive, computed, watch } from "vue";
+import { reactive, computed, watch, ref, toRefs } from "vue";
 import { useDrop } from "vue3-dnd";
 import DraggableBox from "./DraggableBox.vue";
 import { ItemTypes } from "./ItemTypes";
@@ -15,44 +15,65 @@ const card = cardStore();
 
 const { getCurrentDesk, freeDesk } = storeToRefs(freeDeskStore);
 
-const props = defineProps<{
-  snapToGrid: boolean;
-}>();
-
-interface BoxMap {
-  [key: string]: { top: number; left: number; title: string };
-}
+const props = defineProps({
+  snapToGrid: {},
+  currentDesk: {},
+});
+const { currentDesk } = toRefs(props);
 // 获取组件
 const { currentDeskCard, currentDeskId } = storeToRefs(card);
-watch(currentDeskCard.value, (newV) => {
-  if (newV.id == currentDeskId.value) {
-    console.log("freeDesk.value :>> ", freeDesk.value[currentDeskId.value]);
-    console.log("newV :>> ", newV);
-    let obj = {};
-    newV.cards.forEach((item) => {
-      // 现存小组件 匹配 自由桌面的数据 找出存在相
+// currentDesk.settings
+const idState = ref("");
 
-      if (freeDesk.value[currentDeskId.value].hasOwnProperty(item.id)) {
-        obj[item.id] = freeDesk.value[currentDeskId.value][item.id];
-      }
-      // 不存在要追加进去
-      else {
-        const { id, name, data, customData } = item;
+function debounce(fn, ms) {
+  let timer = null;
+  return function () {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn();
+    }, ms);
+  };
+}
 
-        obj[item.id] = {
-          top: 0,
-          left: 0,
-          id,
-          name,
-          data,
-          customData,
-        };
-      }
-    });
-    console.log("obj :>> ", obj);
-    freeDesk.value[currentDeskId.value] = obj;
-  }
+function renaw(newV) {
+  let obj = {};
+  newV.cards.forEach((item) => {
+    // 现存小组件 匹配 自由桌面的数据 找出存在相
+
+    if (freeDesk.value[currentDeskId.value]?.hasOwnProperty(item.id)) {
+      obj[item.id] = freeDesk.value[currentDeskId.value][item.id];
+    }
+    // 不存在要追加进去
+    else {
+      const { id, name, data, customData } = item;
+
+      obj[item.id] = {
+        top: 0,
+        left: 0,
+        id,
+        name,
+        data,
+        customData,
+      };
+    }
+  });
+  console.log("obj :>> ", obj);
+  freeDesk.value[currentDeskId.value] = obj;
+}
+let resizeTimer = null; // 用于存储 setTimeout 的返回值
+const updateWindowDimensions = (newV) => {
+  // 在窗口大小变化停止后才更新窗口大小
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    renaw(newV);
+  }, 200); // 设置防抖延迟为200毫秒
+};
+watch(currentDesk.value, (newV) => {
+  updateWindowDimensions(newV);
 });
+
 // 1 缓存下来 如何缓存 怎么实现
 const boxes = reactive({
   a: { top: 20, left: 80, title: "Drag me around" },
@@ -84,6 +105,7 @@ const [, drop] = useDrop(() => ({
 
 <template>
   <div :ref="drop" class="container">
+    freeDesk： {{ getCurrentDesk }}
     <DraggableBox
       v-for="data in getCurrentDesk"
       :id="data.id"

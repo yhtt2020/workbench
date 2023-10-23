@@ -25,7 +25,7 @@ export default {
       "url",
       "key",
       "count",
-      'searchState'
+      "searchState",
     ]),
     currentList() {
       if (this.selectTopicIndex === -1) return [];
@@ -63,7 +63,7 @@ export default {
     async onSearch(search) {
       if (this.check()) return;
       this.isSearch = false;
-      this.searchState = true
+      this.searchState = true;
       //this.selectTopicIndex == -1;
       if (this.selectTopicIndex === -1) {
         this.addTopic();

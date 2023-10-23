@@ -16,52 +16,19 @@ export const useFreeDeskStore = defineStore("useFreeDeskStore", {
     getCurrentDesk() {
       const card: any = cardStore();
       const { currentDeskId, desks, currentDeskCard } = storeToRefs(card);
-
-      // watch(currentDeskCard.value, (newV) => {
-      //   // currentDeskCard.value.forEach((item) => {
-      //   //   console.log("1 :>> ", item);
-      //   // });
-      //   console.log("currentDeskCard.value :>> ", newV.cards);
-
-      //   newV.cards.forEach((item) => {
-      //     console.log("item :>> ", item);
-      //     if (!this.freeDesk.hasOwnProperty(item.id)) {
-      //       console.log("key1 not exists");
-      //       const { id, name, data, customData } = item;
-      //       this.freeDesk[currentDeskId.value][item.id] = {
-      //         top: 0,
-      //         left: 0,
-      //         id,
-      //         name,
-      //         data,
-      //         customData,
-      //       };
-      //     }
-      //   });
-      // });
-      const currentDesk = computed(() => {
-        console.log("更新了 :>> ");
-        const desk = desks.value.filter(
-          (item) => item.id == currentDeskId.value
-        );
-        // console.log("desk :>> ", desk[0].cards);
-        // desk.cards.forEach((item) => {
-        //   console.log("item :>> ", item);
-        // });
-        console.log("desk computed :>> ", desk);
-        return desk[0];
-      });
-
+      const desk = desks.value.filter((item) => item.id == currentDeskId.value);
+      const currentDesk = ref(desk[0]);
       // 属于自由拖拽
-      if (this.isFreeDesk.includes(currentDeskId.value)) {
+      if (this.isFreeDesk?.includes(currentDeskId.value)) {
         // 取出当前的桌面数据
-        return this.freeDesk[currentDeskId.value];
+        // return this.freeDesk[currentDeskId.value];
       }
       // 当前不存在
       else {
         const deskObject = {};
         // 数据改造
-        currentDesk.value.cards.forEach((item) => {
+        if (currentDesk.value?.length <= 0) return;
+        currentDesk.value?.cards.forEach((item) => {
           const { id, name, data, customData } = item;
           deskObject[item.id] = {
             top: 0,
@@ -76,11 +43,68 @@ export const useFreeDeskStore = defineStore("useFreeDeskStore", {
         // 保存数据
         this.freeDesk[card.currentDeskId] = deskObject;
       }
-      console.log(" :>> ", this.freeDesk[card.currentDeskId]);
+
       return this.freeDesk[card.currentDeskId];
     },
   },
-  actions: {},
+  actions: {
+    initFreeDeskState() {
+      console.log("222222222 :>> ", 222222222);
+      const card: any = cardStore();
+      const { currentDeskId, desks, currentDeskCard } = storeToRefs(card);
+      const desk = desks.value.filter((item) => item.id == currentDeskId.value);
+      const currentDesk = ref(desk[0]);
+      // 属于自由拖拽
+      if (this.isFreeDesk?.includes(currentDeskId.value)) {
+        // 取出当前的桌面数据
+        // return this.freeDesk[currentDeskId.value];
+      }
+      // 当前不存在
+      else {
+        const deskObject = {};
+        // 数据改造
+        if (currentDesk.value?.length <= 0) return;
+        currentDesk.value?.cards.forEach((item) => {
+          const { id, name, data, customData } = item;
+          deskObject[item.id] = {
+            top: 0,
+            left: 0,
+            id,
+            name,
+            data,
+            customData,
+          };
+        });
+        this.isFreeDesk.push(card.currentDeskId);
+        // 保存数据
+        this.freeDesk[card.currentDeskId] = deskObject;
+        console.log(
+          "       this.freeDesk[card.currentDeskId] :>> ",
+          this.freeDesk[card.currentDeskId]
+        );
+        return this.freeDesk[card.currentDeskId];
+      }
+    },
+    addFreeDeskState(id) {
+      this.isFreeDesk.push(id);
+      this.isFreeDesk = [...new Set(this.isFreeDesk)];
+      console.log(" this.isFreeDesk :>> ", this.isFreeDesk);
+      this.initFreeDeskState();
+    },
+    getFreeDeskState(id) {
+      if (this.isFreeDesk.includes(id)) return true;
+    },
+    delFreeDeskState(id) {
+      let isFreeDeskSet = new Set(this.isFreeDesk);
+      isFreeDeskSet.delete(id);
+      this.isFreeDesk = [...isFreeDeskSet];
+
+      delete this.freeDesk[id];
+    },
+    renewFreeDeskState(id) {
+
+    },
+  },
   persist: {
     enabled: true,
     strategies: [
