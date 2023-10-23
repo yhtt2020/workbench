@@ -16,8 +16,8 @@
     <template v-if="step === 0">
       <div class="flex flex-col items-center">
         <div class="flex flex-col items-center mb-8">
-          <span class="primary-title mb-3">选择适合你的工作台模式</span>
-          <span class="secondary-title">完成选择后，会内置对应模式的工作功能方案，你仍然可以在后续自定义修改各个功能和布局。</span>
+          <span class="primary-title mb-3">选择适合您的使用场景</span>
+          <span class="secondary-title">完成选择后，会内置对应模式的功能方案，你仍然可以在后续自定义修改各个功能和布局。</span>
         </div>
         <div class="flex relative">
           <div class="guide-divider"></div>
@@ -98,13 +98,13 @@
 
 
    <!-- 上下一步点击按钮 -->
-   <div>
-    <a-button type="primary" class="mr-3 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
+   <div class="flex">
+    <xt-button  class="mr-10 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
       上一步
-    </a-button>
-    <a-button type="primary" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
+    </xt-button>
+    <xt-button type="theme" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
       {{ step === 2 ? 'GO':'下一步' }}
-    </a-button>
+    </xt-button>
    </div>
    <!--
     新用户须知后期需要的话再考虑使用,现在暂时不使用
