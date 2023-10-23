@@ -16,9 +16,9 @@
           <div class="icon" v-if="running" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
-          <div class="icon icon-font" v-if="!running" @click="onPlay">
+          <xt-button>
             <span>立即开始</span>
-          </div>
+          </xt-button>
           <div class="icon" @click="this.onFullScreen">
             <!-- 全屏 -->
             <Icon icon="fluent:full-screen-maximize-16-filled" />
@@ -67,10 +67,12 @@
   import { tomatoStore } from '../store'
   import FullScreen from "../components/fullScreen.vue";
   import { cardStore } from '../../../store/card'
+  import XtButton from '../../../ui/libs/Button/index.vue'
 
   export default {
     name: "TimerClock",
     components:{
+      XtButton,
       Widget,
       Icon,
       FullScreen,

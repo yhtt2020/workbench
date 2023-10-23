@@ -11,12 +11,15 @@
             icon="fanqie1"
           ></Icon>
           <div style="margin-top:20px;font-size: 18px;font-weight: 400;">今日番茄：0</div>
-          <div
-            class="middle-button timer-btn s-item xt-bg-2"
-            @click="start"
-          >
-            立即开始
+          <div class="mt-2 item-content">
+            <xt-button
+              size="small"  :w="100" :h="40" type="theme"
+              @click="start"
+            >
+              立即开始
+            </xt-button>
           </div>
+
         </div>
   </Widget>
 </template>
