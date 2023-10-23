@@ -53,9 +53,11 @@
 </template>
 
 <script>
+import { mapActions,mapWritableState } from 'pinia'
 import { Icon as CreateIcon } from '@iconify/vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
+import { chatStore } from '../../../../store/chat'
 
 import SelectIcon from '../../../../../selectIcon/page/index.vue'
 
@@ -136,6 +138,7 @@ export default {
  },
 
  methods:{
+  ...mapActions(chatStore,['updateConversation']),
   backButton(){
    this.$emit('back')
   },
@@ -190,10 +193,12 @@ export default {
     if(res.code === 0){
      message.success(`${res.data.group.name}创建成功`)
      const name = `GROUP${this.groupID}`
-      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-       // 通知 TUIConversation 添加当前会话
-       // Notify TUIConversation to toggle the current conversation
-       window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+     this.updateConversation(name)
+     this.$router.push({name:'chatMain'})
+     window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+      // 通知 TUIConversation 添加当前会话
+      // Notify TUIConversation to toggle the current conversation
+      window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
      })
      this.$emit('close')
     }
