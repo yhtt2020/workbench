@@ -193,7 +193,7 @@ const createTime = computed(() => {
     return [date, time]
 })
 // const tid=store.communityPostDetail.pay_set.tid 
-let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
+let tid = store.communityPostDetail?.pay_set?.tid || store.communityPostDetail?.id;
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
     let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
