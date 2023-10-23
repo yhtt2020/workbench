@@ -23,7 +23,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
                 this.myForumList=res.data
             }
             localCache.set('myForumList',this.myForumList,60*60*12)
-            console.log(res.data,'myForum');
+            // console.log(res.data,'myForum');
             
         },
         // 获取查询板块下的所有帖子
@@ -41,7 +41,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
                 order:order
             })
             if(res.code===200){
-                console.log(res.data,'返回数据')
+                // console.log(res.data,'返回数据')
                 this.communityPost=res.data
                 // console.log(this.communityPost,'this.communityPost');
                 localCache.set(`communityPost_${id}-${page}-${type}`,this.communityPost,60*60*12)
@@ -54,7 +54,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
         strategies: [
             {
                 storage: dbStorage,
-                paths: ['myForumList'],
+                paths: ['myForumList','communityPost'],
             }
         ]
     }

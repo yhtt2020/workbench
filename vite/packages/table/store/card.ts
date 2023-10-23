@@ -507,8 +507,8 @@ export const cardStore = defineStore(
         // console.log(this.clockTag);
         if(this.clockTag=='within30min'){
           this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
-            let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
+            let totalTime=parseInt(timerStore().appDate.hours)*60+parseInt(timerStore().appDate.minutes)
+            let targetTime=parseInt(value.dateValue.hours)*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
             return timeDiff<=30 && timeDiff>0
 
@@ -517,8 +517,8 @@ export const cardStore = defineStore(
 
         }else if(this.clockTag=='within1hour'){
           this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime=timerStore().appDate.hours*60+timerStore().appDate.minutes
-            let targetTime=value.dateValue.hours*60+parseInt(value.dateValue.minutes)
+            let totalTime=parseInt(timerStore().appDate.hours)*60+parseInt(timerStore().appDate.minutes)
+            let targetTime=parseInt(value.dateValue.hours)*60+parseInt(value.dateValue.minutes)
             let timeDiff=targetTime-totalTime
             return timeDiff<=60 && timeDiff>0
           })
