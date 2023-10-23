@@ -155,7 +155,7 @@
     </div>
 
     <template v-if="index === 1">
-      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
+      <UpdateGroupName @close="updateVisible = false" :info="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
     </template>
 
     <template v-if="index === 2">
