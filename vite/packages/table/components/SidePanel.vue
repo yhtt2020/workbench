@@ -11,7 +11,7 @@
       <div   style="width: 67px;overflow-x: hidden">
         <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
           <div  v-for="item in sideNavigationList" :key="item.name" @click.stop="clickNavigation(item)">
-            <div  @contextmenu.stop="enableDrag"   class="flex items-center justify-center felx-col item-nav" :class="{ 'active-back': current(item) }">
+            <div  @contextmenu.stop="enableDrag"   class="item-content   item-nav" :class="{ 'active-back': current(item) }">
               <div class="icon-color" v-if="item.type === 'systemApp'">
                 <navIcon class="icon-color" :icon="item.icon" style="width:2.5em;height:2.5em;"
                       :class="{ 'active-color': current(item) }"></navIcon>
@@ -342,6 +342,8 @@ export default {
   width: 68px;
   height: 68px;
   margin: 16px auto;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   border-radius: 6px;
 }
@@ -354,7 +356,10 @@ export default {
     }
   }
 }
-
+.icon-color{
+  height: 34px;
+  width: 34px;
+}
 .icon-color:hover {
   color: rgba(255, 255, 255, 0.8) !important;
 }
