@@ -35,8 +35,8 @@
             </div>
             <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px]" style="border: 1px solid var(--divider);"
                 v-if="defaultType.value == 'video'">
-                <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true"
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76" @change="handleChange" @drop="handleDrop">
+                <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
+                    @drop="handleDrop">
                     <div class="flex flex-col items-center justify-center w-full h-full">
                         <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;"></newIcon>
                         <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB</p>
@@ -53,11 +53,12 @@
                         <a-textarea v-model:value="postValue" :placeholder="defaultType.value === 'video' ? '简介' : '请输入'"
                             :autoSize="{ minRows: 5, maxRows: 8 }" :bordered="false" v-if="defaultType.value !== 'post'" />
                         <div class="w-full h-[300px]" v-else-if="defaultType.value == 'post'">
-                            <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef"
+                            <!-- <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef"
                                 :defaultConfig="toolbarConfig" :mode="mode" />
 
                             <Editor style="height: 100% ; overflow-y: hidden; background: var(--primary-bg);"
-                                v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+                                v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" /> -->
+                                <markdown></markdown>
                         </div>
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
@@ -159,7 +160,7 @@
     </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted, computed, shallowRef, onUpdated } from 'vue'
+import { ref, reactive, onMounted, computed, shallowRef, onUpdated, onBeforeUnmount } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
@@ -171,9 +172,7 @@ import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
-import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { DomEditor } from '@wangeditor/editor';
+import markdown from './Detail/markdown.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // const imageLoadVisible = ref(true)
@@ -205,7 +204,7 @@ const handleMenuItemClick = (index) => {
     defaultType.value = publishType.value[index]
 }
 // 视频文件
-const videoList=ref([])
+const videoList = ref([])
 // 封面文件
 const coverList = ref([])
 // 是否全屏
@@ -253,31 +252,7 @@ const previewTitle = ref('');
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
-// wangEditor配置
-const editorRef = shallowRef()
-const toolbarConfig = ref({})
-const mode = ref('default')
-const valueHtml = ref('')
-const editorConfig = { placeholder: '请输入内容...', MENU_CONF: {}, }
-// editorConfig.MENU_CONF['bgColor']={
-//     colors:['#333']
-// }
-// // const editor = new Editor();
 
-// // const toolbar=DomEditor.getToolbar(editorConfig)
-// const handleCreated=(editor) => {
-//     editorRef.value = editor
-// }
-// const toolbar = DomEditor.getToolbar(editor)
-
-// const curToolbarConfig = toolbar.getConfig()
-// console.log(111111111111);
-
-// console.log( curToolbarConfig.toolbarKeys ,'curToolbarConfig') // 当前菜单排序和分组
-
-// console.log(2222222222222)
-
-// console.log()
 onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`${emoji.value}${item}`)
