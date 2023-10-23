@@ -3,7 +3,7 @@
     <!--  工具栏-->
     <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
-      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
+      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs && displayDesks.length>1">
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
         <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
         <!--        主桌面-->
@@ -49,7 +49,7 @@
       </div>
 
       <div v-if="showTools">
-        <div class="flex flex-row">
+        <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
           <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
             <div
