@@ -22,24 +22,10 @@ const props = defineProps({
 const { currentDesk } = toRefs(props);
 // 获取组件
 const { currentDeskCard, currentDeskId } = storeToRefs(card);
-// currentDesk.settings
-const idState = ref("");
-
-function debounce(fn, ms) {
-  let timer = null;
-  return function () {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      fn();
-    }, ms);
-  };
-}
 
 function renaw(cards) {
   let obj = {};
- cards.forEach((item) => {
+  cards.forEach((item) => {
     // 现存小组件 匹配 自由桌面的数据 找出存在相
 
     if (freeDesk.value[currentDeskId.value]?.hasOwnProperty(item.id)) {
@@ -75,13 +61,9 @@ watch(currentDesk.value.cards, (newV) => {
 });
 
 // 1 缓存下来 如何缓存 怎么实现
-const boxes = reactive({
-  a: { top: 20, left: 80, title: "Drag me around" },
-  b: { top: 180, left: 20, title: "Drag me too" },
-  d: { top: 180, left: 20, title: "Drag me too" },
-});
+
 const moveBox = (id: string, left: number, top: number) => {
-  Object.assign(getCurrentDesk.value[id], { left, top }); // 现在我们可以安全地合并对象
+  Object.assign(cards.value[id], { left, top }); // 现在我们可以安全地合并对象
 };
 
 const [, drop] = useDrop(() => ({
@@ -101,6 +83,8 @@ const [, drop] = useDrop(() => ({
     return undefined;
   },
 }));
+
+
 </script>
 
 <template>
