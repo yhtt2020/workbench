@@ -3,7 +3,7 @@
     :customData="customData"
     :size="reSize"
     :customIndex="customIndex"
-    :options="{...this.options,background:this.customData.background}"
+    :options="{...this.options,background:this.customData.background,title:this.customData.title}"
     :menuList="menuList"
     class="test"
     ref="homelSlotRef"
@@ -244,9 +244,6 @@ export default {
       this.fontColor = color;
     },
 
-    test(){
-      console.log(this.icons);
-    }
   },
 };
 </script>

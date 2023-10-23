@@ -36,6 +36,7 @@
       @click="itemClick()"
       size="20"
       w="40"
+      :style="{border: item.isSel?'3px solid rgba(80,139,254,1)':'','border-radius': item.isSel?'14px':''}"
       :icon="item.full ? full : item.newIcon"
       :bgStyle="bg"
       :type="newType"

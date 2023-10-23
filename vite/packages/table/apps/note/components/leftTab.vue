@@ -1,10 +1,8 @@
-<template>
-   <xt-left-menu :list="menuList" last="1" end="3">
-    <template #test>
-      1123
-      <xt-button @click="showRightPanel = !showRightPanel">Toggle Right Panel</xt-button>
-    </template>
+<template>    
+   <xt-left-menu :list="this.menuList" last="2" end="1" >
+
     <slot></slot>
+
   </xt-left-menu>
 <!-- 全屏 -->
 </template>
@@ -15,6 +13,8 @@
 // import { aiStore } from "../../../store/ai";
 // import Edit from "./edit.vue";
 // import { SettingFilled } from "@ant-design/icons-vue";
+  import {mapActions, mapState,mapWritableState} from "pinia";
+  import { noteStore } from '../store'
 export default {
   components: {
     // CreateTopic,
@@ -23,19 +23,42 @@ export default {
     // SettingFilled,
   },
   computed: {
-    // ...mapWritableState(aiStore, [
-    //   "selectTab",
-    //   "isFull",
-    //   "temperature",
-    //   "count",
-    // ]),
-  },
-  data() {
+      ...mapWritableState(noteStore, ['isSelTab']),
+    },
+    data() {
     return {
+      menuList:[
+        {
+          // flag: true,
+          newIcon: "fluent:notepad-12-regular",
+          // isSel:this.isSelTab,
+          isSel:false,
+          callBack: () => {
+            // console.log('便签');
+            this.isSelTab = false
+            this.getNotes()
+          },
+        },
+        {
+          // flag: true,
+          newIcon: "akar-icons:trash-can",
+          isSel:false,
+          callBack: () => {
+            // console.log('回收站');
+            this.isSelTab = true
+            this.getNotes()
+          },
+        },
+        {
+          full: true,
+        },
+      ],
 
     };
   },
   methods:{
+    
+    ...mapActions(noteStore, ['getNotes']),
     formatTimestamp(timestamp) {
       var date = new Date(timestamp * 1000);
       var year = date.getFullYear();
@@ -43,6 +66,7 @@ export default {
       var day = ("0" + date.getDate()).slice(-2);
       return year + "-" + month + "-" + day;
     },
+
   }
 };
 </script>
