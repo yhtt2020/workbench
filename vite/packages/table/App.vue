@@ -6,8 +6,8 @@
   <a-config-provider :locale="locale">
     <div class="a-container " :class="{ dark: settings ? settings.darkMod : '', 'horse_run': this.settings.houserun }">
       <DndProvider :backend="HTML5Backend">
-      <router-view></router-view>
-    </DndProvider>
+        <router-view></router-view>
+      </DndProvider>
     </div>
     <Barrage></Barrage>
   </a-config-provider>

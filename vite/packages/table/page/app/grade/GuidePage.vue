@@ -137,6 +137,7 @@ import {appStore} from '../../../store'
 import { navStore } from '../../../store/nav';
 import { cardStore } from '../../../store/card';
 import {defaultAvatar} from '../../../js/common/teamAvatar'
+import {taskStore} from '../../../apps/task/store'
 // import GradeNotice from './GradeNotice.vue'
 import {
   guideData,workTheme,teamData,modeData,
@@ -181,6 +182,8 @@ export default {
     ...mapActions(appStore,['updateMode','updateSimple','setAgreeTest','setInfoVisible','setSecondaryVisible']),
     ...mapActions(cardStore,['addDesk','switchToDesk']),
     ...mapActions(navStore,['updateLeftNavData','updateBottomNavData']),
+    ...mapActions(taskStore, ['startfirstTask']),
+
     // 点击返回按钮的回调事件
     backSplash(){
       this.$router.replace({name:'splash'})
@@ -241,6 +244,7 @@ export default {
         // 当所有步骤执行完以后
         this.setAgreeTest()
         this.$router.push({ name: 'home'})
+        this.startfirstTask()
         let postTimer = setTimeout(()=>{
          const avatar = this.userInfo.avatar
          const regex = new RegExp(avatar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));

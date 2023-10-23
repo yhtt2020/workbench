@@ -4,7 +4,6 @@ import { ItemTypes } from './ItemTypes'
 import BoxDragPreview from './BoxDragPreview.vue'
 import { snapToGrid } from './snapToGrid'
 import { toRefs } from '@vueuse/core'
-import { onMounted } from 'vue'
 
 function getItemStyles(
   initialOffset: XYCoord | null,
