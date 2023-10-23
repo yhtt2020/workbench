@@ -256,13 +256,15 @@
             <a-row class="text-center" style="margin-top: 20px" :gutter="20">
               <a-col>
                 <div @click="showAddDeskForm" class="btn">
-                  <Icon style="font-size: 3em" icon="desktop"></Icon>
+          <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
+1
                   <div><span>添加桌面</span></div>
                 </div>
               </a-col>
               <a-col>
                 <div @click="importDesk" class="btn">
-                  <Icon style="font-size: 3em" icon="daoru"></Icon>
+          <xt-new-icon  icon='fluent:arrow-download-20-filled' size='42' />
+
                   <div><span>导入桌面</span></div>
                 </div>
               </a-col>
@@ -272,7 +274,8 @@
                   class="btn"
                   style="opacity: 0.5"
                 >
-                  <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <xt-new-icon  icon='akar-icons:trash-can' size='42' />
+
                   <div><span>删除桌面</span></div>
                 </div>
                 <div v-else @click="delDesk" class="btn">
@@ -282,13 +285,13 @@
               </a-col>
               <a-col>
                 <div @click="shareDesk" class="btn">
-                  <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+          <xt-new-icon  icon='fluent:share-android-24-regular' size='42' />
                   <div><span>分享桌面</span></div>
                 </div>
               </a-col>
               <a-col>
                 <div @click="exportDesk" class="btn">
-                  <Icon style="font-size: 3em" icon="upload"></Icon>
+          <xt-new-icon  icon='fluent:open-20-filled' size='42' />
                   <div><span>导出桌面</span></div>
                 </div>
               </a-col>

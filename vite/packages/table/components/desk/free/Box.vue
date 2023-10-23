@@ -1,38 +1,54 @@
-<script lang="ts" setup>
-import { computed } from "vue";
-import MyIcons from "../../widgets/myIcons/index.vue";
-import Widget from "../../card/Widget.vue";
-const props = defineProps<{
-  title: string;
-  yellow?: boolean;
-  preview?: boolean;
-  item?: boolean;
-  currentDesk;
-}>();
-const backgroundColor = computed(() => (props.yellow ? "yellow" : "white"));
-</script>
-
 <template>
-  <div
-    class="box"
-    :style="{ backgroundColor }"
-    :role="preview ? 'BoxPreview' : 'Box'"
-  >
-    <!-- <component
-      :desk="currentDesk"
-      :is="item.name"
-      :customIndex="item.id"
-      :customData="item.customData"
-      :editing="editing"
-    ></component> -->
-    <slot></slot>
+  <div class="box" :style="{ backgroundColor }" :role="role">
+    <test :data="data"></test>
   </div>
 </template>
 
+<script>
+import test from "./test.vue";
+import CPULineChart from "../../widgets/supervisory/CPULineChart.vue";
+import CPUFourCard from "../../widgets/supervisory/CPUFourCard.vue";
+import InternalList from "../../widgets/supervisory/InternalList.vue";
+import SmallCPUCard from "../../widgets/supervisory/SmallCPUCard.vue";
+import SmallGPUCard from "../../widgets/supervisory/SmallGPUCard.vue";
+export default {
+  components: {
+    CPULineChart,
+    CPUFourCard,
+    InternalList,
+    SmallCPUCard,
+    SmallGPUCard,
+    test,
+  },
+  props: {
+    yellow: {
+      type: Boolean,
+      default: false,
+    },
+    preview: {
+      type: Boolean,
+      default: false,
+    },
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    backgroundColor() {
+      return this.yellow ? "yellow" : "white";
+    },
+    role() {
+      return this.preview ? "BoxPreview" : "Box";
+    },
+  },
+};
+</script>
+
 <style lang="less" scoped>
 .box {
-  padding: 0.5rem 1rem;
   border: 1px dashed gray;
   cursor: move;
+  padding: 1em;
 }
 </style>

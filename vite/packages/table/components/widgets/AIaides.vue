@@ -55,7 +55,7 @@
         >
           最近对话
         </div>
-        <template v-if="recentList">
+        <template v-if=" recentList">
           <div v-for="index in copyNum">
             <div class="ai-msg xt-bg-2" @click="goPage(index - 1)">
               <xt-base-icon
@@ -74,13 +74,16 @@
             </div>
           </div>
         </template>
-        <DataStatu
-          v-else
-          imgDisplay="/img/test/load-ail.png"
-          :btnToggle="false"
-          textPrompt="暂无数据"
-          style="margin-top: 200px"
-        ></DataStatu>
+        <template v-else>
+          <div v-if="copyNum == 1">暂无数据</div>
+          <DataStatu
+            v-else
+            imgDisplay="/img/test/load-ail.png"
+            :btnToggle="false"
+            textPrompt="暂无数据"
+            style="margin-top: 200px"
+          ></DataStatu>
+        </template>
       </div>
     </Widget>
   </div>
@@ -163,7 +166,7 @@ export default {
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 1 ? 1 : this.recentList.slice(0, 4).length;
+      return this.showSize.height == 1 ? 1 : this.recentList?.slice(0, 4).length;
     },
   },
 };

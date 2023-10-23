@@ -28,7 +28,6 @@
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
     <!-- <div  style='z-index:99999px'> -->
-      <!-- {{currentDesk.cards}} -->
       <!-- <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
         <template #item="{ item }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
@@ -110,23 +109,23 @@
       <xt-task id='M0101' no='2' to="" @cb="newAddCard()">
         <a-col>
           <div @click="newAddCard" class="btn">
-            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+            <xt-new-icon icon='fluent:collections-add-24-regular' size='42'/>
             <div><span>添加小组件</span></div>
           </div>
         </a-col>
       </xt-task>
       <xt-task   id='M0201' no='2' to="" @cb="newAddIcon()">
         <a-col>
-          <div @click="newAddIcon" class="btn">
-            <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
+          <div @click="newAddIcon" class="btn flex flex-col items-center">
+            <xt-new-icon icon='fluent:add-16-filled' size='42'/>
             <div><span>添加图标</span></div>
           </div>
         </a-col>
       </xt-task>
       <a-col>
         <div @click="toggleEditing" class="btn">
-          <Icon v-if="!this.editing" style="font-size: 3em" icon="line-dragdroptuofang"></Icon>
-          <Icon v-else style="font-size: 3em; color: red" icon="tingzhi"></Icon>
+          <xt-new-icon v-if="!this.editing" icon='fluent:window-new-16-regular' size='42' />
+          <xt-new-icon  v-else  icon='fluent:record-stop-16-regular' size='42' />
           <div>
             <span v-if="!this.editing">调整布局</span><span v-else style="color: red">停止调整</span>
           </div>
@@ -135,26 +134,28 @@
       <xt-task  id='M0103' no='2' to="" @cb="showSetting">
         <a-col>
           <div @click="showSetting" class="btn">
-            <Icon style="font-size: 3em" icon="shezhi1"></Icon>
-            <div><span>设置</span></div>
+          <xt-new-icon  icon='fluent:settings-16-regular' size='42' />
+            <div><span>桌面设置</span></div>
           </div>
         </a-col>
       </xt-task>
       <a-col>
         <div @click="clear" class="btn">
-          <Icon style="font-size: 3em" icon="shanchu"></Icon>
-          <div><span>清空小组件</span></div>
+          <xt-new-icon  icon='fluent:circle-off-16-regular' size='42' />
+
+          <div><span>清空桌面</span></div>
         </div>
       </a-col>
 
       <a-col>
         <div v-if="!hide" @click="hideDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
+          <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
+
           <div><span>隐藏小组件</span></div>
         </div>
         <div v-else @click="showDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing"></Icon>
-          <div><span>显示卡片</span></div>
+          <xt-new-icon  icon='fluent:eye-16-regular' size='42' />
+          <div><span>显示小组件</span></div>
         </div>
       </a-col>
       <!--      <a-col>-->
@@ -740,6 +741,8 @@ mixins:[componentsMinis],
 
 .btn {
   text-align: center;
+display:flex;
+flex-direction: column;align-items: center;
 }
 
 //@media screen and (min-height: 1020px) and (max-height: 1600px) {

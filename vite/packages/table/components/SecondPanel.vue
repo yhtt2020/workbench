@@ -16,7 +16,7 @@
       <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="s-text">{{ menu.title }}</span>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
     </div>
-    <xt-task :modelValue="M01035"></xt-task>
+    <xt-task :modelValue="M01035"></xt-task>1
   </div>
 </template>
 
