@@ -25,6 +25,7 @@ export default {
       "url",
       "key",
       "count",
+      'searchState'
     ]),
     currentList() {
       if (this.selectTopicIndex === -1) return [];
@@ -62,6 +63,7 @@ export default {
     async onSearch(search) {
       if (this.check()) return;
       this.isSearch = false;
+      this.searchState = true
       //this.selectTopicIndex == -1;
       if (this.selectTopicIndex === -1) {
         this.addTopic();
@@ -103,7 +105,7 @@ export default {
           message.error(result.value.error.message);
           return;
         }
-        if (this.flag) {
+        if (!this.searchState) {
           break; // 终止循环
         }
         // 如果返回的结果 ID 与当前对话 ID 相同，则将聊天机器人的回复拼接到当前对话中
