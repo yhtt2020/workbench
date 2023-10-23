@@ -103,6 +103,12 @@
                     // callBack: this.callBack, 
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
+                    callBack:()=>{
+                        // 
+                        // console.log('触发删除');
+                        // console.log(this.selNote);
+                        this.moveNote()
+                    }
                 },
             ]
       };
@@ -115,6 +121,7 @@
     watch: {
     },
     methods: {
+        ...mapActions(noteStore,['moveNote']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
