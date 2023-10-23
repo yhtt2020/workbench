@@ -2,6 +2,7 @@
   <div class="box" :style="{ backgroundColor }" :role="role">
     <!-- <test :data="data" :role="role"></test> -->
     <!-- <CPULineChart></CPULineChart> -->
+    {{ data.name }}
     <!-- <component
     :is="data?.name"
     :customIndex="data?.id"

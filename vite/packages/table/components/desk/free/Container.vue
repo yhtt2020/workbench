@@ -63,7 +63,7 @@ watch(currentDesk.value.cards, (newV) => {
 // 1 缓存下来 如何缓存 怎么实现
 
 const moveBox = (id: string, left: number, top: number) => {
-  Object.assign(cards.value[id], { left, top }); // 现在我们可以安全地合并对象
+  Object.assign(getCurrentDesk.value[id], { left, top }); // 现在我们可以安全地合并对象
 };
 
 const [, drop] = useDrop(() => ({
