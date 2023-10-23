@@ -48,8 +48,12 @@
         
 
         <div class="flex" >
-          <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;" @click="addGroupMember('add')">
+
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom' && conversation?.selfInfo?.role !== 'Member'" 
+           class="flex items-center justify-center active-button rounded-lg" 
+           style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;"
+            @click="addGroupMember('add')"
+          >
            <Icon icon="tianjia3" style="color: var(--success);"></Icon>
           </div>
 
@@ -63,7 +67,7 @@
 
     
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner' && conversation.type !== 'AVChatRoom'"  @click="enterGroupManage">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom' && conversation.type !== 'Private'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
@@ -337,13 +341,11 @@ const manage = defineComponent({
     }
 
     const addGroupMember = (type) =>{  // 添加群聊成员
+      
       if(props.conversation.inviteOption === 'DisableInvite'){
-        if(props.conversation.selfInfo.role === 'Member'){
+        if(props.conversation.selfInfo.role !== 'Member'){
           data.enableVisible = false
-          message.error('群管理员开启禁止群成员邀请')
-        }else{
-          data.enableVisible = true
-          data.memeberType = type
+          message.error('禁止邀请群成员')
         }
       }else{
         data.enableVisible = true

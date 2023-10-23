@@ -3,7 +3,7 @@
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+    <CloseOutlined  style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 

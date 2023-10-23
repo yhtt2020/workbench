@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backButton">
-    <LeftOutlined style="font-size: 1.25em;" />
+    <ClassIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);" />
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择分组</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+     <ClassIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
    </div>
   </div>
 
@@ -16,7 +16,7 @@
      不选择分类默认会将频道添加在最外层第一个位置；支持拖拽排序。
     </div>
     <div class="flex items-center rounded-lg py-3 pointer mb-4 active-button justify-center" style="border: 1px dashed var(--divider);" @click="addClassItem">
-     <PlusOutlined style="font-size: 1.25em;"/>
+     <ClassIcon icon="fluent:add-16-filled" style="font-size: 1.25rem;" />
      <span class="font-16-400 ml-2" style="color:var(--primary-text);">添加新分组</span>
     </div>
 
@@ -29,11 +29,14 @@
 
       <template v-if="isEditing && editIndex === index">
         <div class="flex w-full justify-between items-center">
-          <a-input style="width:210px;padding: 0;" ref="classInputRef" spellcheck="false" v-model:value="item.name" :bordered="false" @pressEnter.stop="createClass(item)"></a-input>
-          <div class="flex">
-            <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
-            <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
-          </div>
+          <a-input style="padding: 0;" ref="classInputRef" spellcheck="false" v-model:value="item.name" :bordered="false" @pressEnter.stop="createClass(item)">
+            <template #suffix>
+              <div class="flex">
+                <ClassIcon icon="fluent:checkmark-16-filled" class="pointer" style="font-size: 1.5em;" @click.stop="saveEdit(item)"></ClassIcon>
+                <ClassIcon icon="fluent:dismiss-16-filled" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="exitEdit"></ClassIcon>
+              </div>
+            </template>
+          </a-input>
         </div>
       </template>
 
@@ -171,7 +174,7 @@ export default {
      // console.log(item.id);
      if(item.id){
        ClassModal.confirm({
-        content:'删除分类操作不可撤销，分类别删除后，子应用将被移动到顶层。是否确定删除？',
+        content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
         centered:true,
         onOk: async ()=>{
          const result = await this.removeCategory(item.id)
@@ -376,5 +379,9 @@ export default {
 .select-bg{
   background: var(--active-secondary-bg) !important;
   border:1px solid var(--active-bg) !important;
+}
+
+:deep(.ant-input){
+  font-size: 1rem;
 }
 </style>

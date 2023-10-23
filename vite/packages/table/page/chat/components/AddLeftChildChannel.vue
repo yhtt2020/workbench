@@ -4,7 +4,7 @@
    <span class="font-16-400" style="color:var(--primary-text);">添加新应用</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <!-- <CloseOutlined  style="font-size: 1.25em;"/> -->
-    <ChannelIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
+    <ChannelIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
   

@@ -4,13 +4,13 @@
    <!-- 左侧返回按钮 -->
    <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
     <!-- <LeftOutlined  /> -->
-    <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
 
    <span class="font-16-400" style="color: var(--primary-text);">创建社群</span>
 
    <div class="flex items-center pointer active-button rounded-lg justify-center close h-10 w-10" @click="closeCreateCom">
-    <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;"/>
+    <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
   </div>
 
@@ -26,7 +26,9 @@
      <div class="overflow-hidden">
        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
      </div>
-   <communityIcon icon="fluent:add-16-filled" width="20" height="20" style="font-size: 1.5rem;width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--secondary-text);border-radius: 50%;" color="var(--secondary-text)"/>
+     <communityIcon icon="akar-icons:cloud-upload" width="20" height="20" 
+     style="font-size: 1.5rem;width:24px;height:24px;background:var(--active-bg);position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);border-radius: 50%;" 
+     color="var(--secondary-text)"/>
    </div>
 
    <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>

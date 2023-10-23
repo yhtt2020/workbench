@@ -541,7 +541,7 @@ export default {
 
           // console.log('排查问题::>>',jsonString);
 
-          console.log(jsonString,window.eval(jsonString))
+          // console.log(jsonString,window.eval(jsonString))
           const jsonData = window.eval(jsonString).searchResponse.searchAllResponse
           if (Object.keys(jsonData).length === 0) {
             this.gameVideoList = []

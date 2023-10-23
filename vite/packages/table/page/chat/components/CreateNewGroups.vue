@@ -3,13 +3,13 @@
    <!-- 顶部关闭 -->
    <div class="top-close" style="margin-bottom: 16px;">
     <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center" style="background: var(--secondary-bg);" @click="backButton">
-     <NewGroupIcon icon="fluent:chevron-left-16-filled" style="font-size: 2em;"/>
+     <NewGroupIcon icon="fluent:chevron-left-16-filled" style="font-size: 2em;color: var(--secondary-text);"/>
     </div>
     <div class="font-16 flex items-center justify-center" style="color:var(--primary-text);width: 95%;">选择联系人</div>
     <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center"
      style="background: var(--secondary-bg);" @click="closeContact"
     >
-     <NewGroupIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;" />
+     <NewGroupIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;color: var(--secondary-text);" />
     </div>
    </div>
 

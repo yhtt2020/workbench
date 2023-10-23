@@ -16,7 +16,7 @@
         </div>
 
         <!-- 添加和删除群管理员按钮 -->
-        <div class="flex" v-if="groupManageInfo.role === 'Owner'">
+        <div class="flex" v-if="groupManageInfo.role !== 'Member'">
          <div class="flex pointer items-center justify-center active-button rounded-lg"   style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addAdmin('addAdmin')">
           <Icon icon="tianjia3" style="color: var(--success);font-size: 1.25em;"></Icon>
          </div>
@@ -49,7 +49,7 @@
           <span class="mt-1"> {{  item.nick }}</span>
         </div>
 
-        <div class="flex" v-if="groupManageInfo.role === 'Owner' || groupManageInfo.role === 'Admin'">
+        <div class="flex" v-if="groupManageInfo.role !== 'Member' ">
           <div class="flex pointer items-center justify-center active-button rounded-lg"   style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:24px;" @click="addMute('addMuteUser')">
            <Icon icon="tianjia3" style="color: var(--success); font-size: 1.25em;"></Icon>
           </div>

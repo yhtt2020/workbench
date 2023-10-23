@@ -52,7 +52,7 @@
             </div>
           </div>
         </template>
-        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id"/>
+        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.props.id "/>
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.name !== 'Roadmap' && currentChannel.props.openMethod !== 'currentPage'" class="flex items-center justify-center" style="text-align: center;margin-top: 30%">

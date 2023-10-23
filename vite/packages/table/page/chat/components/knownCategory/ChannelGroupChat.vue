@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:667px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择群聊</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeGroup">
-    <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
+    <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color: var(--secondary-text);" />
    </div>
   </div>
 
@@ -33,7 +33,7 @@
    <a-divider type="vertical" style="height:442px; margin: 0 16px; background-color:var(--divider);" />
    
    <div class="flex flex-col justify-between" style="width: 293px;">
-    <span class="">已选({{ selectGroup.length }}个)</span>
+    <span class="category-14-400" style="color:var(--secondary-text);">已选({{ selectGroup.length }}个)</span>
     <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
      <div class="flex flex-col">
       <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
@@ -42,7 +42,7 @@
          <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
         </div>
         <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
-         <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color:var(--secondary-text);" />
+         <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color:var(--disable-text);" />
         </div>
       </div>
      </div>
@@ -287,5 +287,6 @@ export default {
  &::placeholder{
    color: var(--secondary-text) !important;
  }
+ color: var(--secondary-text) !important;
 }
 </style>

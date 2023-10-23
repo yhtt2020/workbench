@@ -19,7 +19,7 @@
           <div class="flex items-center justify-center" style="width: 20px;height:20px;">
             <Icon :icon="selectIcon.icon" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
           </div>
-          <a-input  v-model:value="searchKeyWords" placeholder="搜索" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter.stop="enterSearch"></a-input>
+          <a-input  v-model:value="searchKeyWords" placeholder="搜索" spellcheck="false" :bordered="false" class="search" allowClear ref="searchRef"  @input="dataSearch"  @pressEnter.stop="enterSearch"></a-input>
           <a-dropdown v-model:visible="isDropdownVisible" placement="bottomRight" trigger="click">
             <div class="flex pointer items-center justify-center active-button p-2 rounded-lg" style="width:210px; background: var(--active-secondary-bg);"
             >
@@ -80,13 +80,17 @@
             </li>
           </ul>
           <div v-else class="flex flex-col">
-            <span class="mb-2.5 secondary-title" v-if="getClipBoardData.length !== 0"  style="color: var(--secondary-text);">剪切板</span>
-            <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"
-             :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
-             style="color: var(--secondary-text);"
-            >
-              {{ item }}
-            </div>
+            <template v-if="getClipBoardData.length !== 0">
+              <div class="flex flex-col" style="width:483px;">
+                <span class="mb-2.5 secondary-title"   style="color: var(--secondary-text);">剪切板</span>
+                <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"
+                :class="{'active-bg':clipboardIndex === index}" @click="selectClipboardItem(item,index)"
+                style="color: var(--secondary-text);"
+                >
+                 {{ item }}
+                </div>
+              </div>
+            </template>
           </div>
         </vue-custom-scrollbar>
       </div>
@@ -177,7 +181,7 @@ export default {
     getClipBoardData(){  // 获取剪切板数据
       const clipBoardText = clipboard.readText()
       const clipBoardList = clipBoardText.split('\r\n')
-      return clipBoardList
+      return [...clipBoardList]
     }
   },
 
