@@ -20,17 +20,17 @@
      <aside class="left">
       <a-avatar v-if="conversation.type === 'C2C'" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
       <a-avatar v-else shape="square" :size="32" :src="handleConversation?.avator(conversation)"></a-avatar>
-      
+
       <div class="online-status"
        :class="userStatusList?.get(conversation?.userProfile?.userID)?.statusType === 1 ? 'online-status-online' : 'online-status-offline'"
        v-if="showUserOnlineStatus()"
       >
       </div>
-      
+
       <span class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
         {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
       </span>
-      
+
       <span class="num-notify" v-if="conversation.unreadCount > 0 && conversation.messageRemindType === 'AcceptNotNotify'">
       </span>
      </aside>
@@ -232,7 +232,7 @@ export default ListItem;
 }
 
 .conversation-options{
-  font-family: PingFangSC-Regular;
+
   cursor: pointer !important;
   font-size: 16px !important;
   color:var(--primary-text) !important;

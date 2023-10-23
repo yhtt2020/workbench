@@ -347,21 +347,18 @@ export default {
   }
 }
 .primary-title{
-  font-family: PingFangSC-Medium;
   font-size: 18px;
   color: var(--primary-text);
   font-weight: 500;
 }
 
 .primary-text{
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
 }
 
 .secondary-title{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   color:var(--secondary-text);
   font-weight: 400;
@@ -374,7 +371,6 @@ export default {
   -webkit-line-clamp:4;
   white-space: break-spaces;
   margin: 0 !important;
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   color:var(--secondary-text);
   font-weight: 400;

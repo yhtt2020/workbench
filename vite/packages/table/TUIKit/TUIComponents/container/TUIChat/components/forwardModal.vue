@@ -7,13 +7,13 @@
    >
     <CloseOutlined style="font-size: 1.5em;color:var(--secondary-text);"/>
    </div>
-  </div> 
-  
+  </div>
+
   <div class="flex-grow flex justify-between w-full px-1">
     <div class="flex flex-col" style="width: 293px;">
      <a-input class="h-11" :allowClear="true" v-model:value="forwardText" placeholder="搜索好友、群聊" style="color:var(--secondary-text);" @pressEnter="enterSearch($event)" @change="search($event)">
       <template #suffix>
-       <div class="flex items-center justify-center pointer active-button" @click="enterSearch"> 
+       <div class="flex items-center justify-center pointer active-button" @click="enterSearch">
         <SearchOutlined style="font-size: 1.5em;color:var(--secondary-text);" />
        </div>
       </template>
@@ -30,7 +30,7 @@
     </div>
 
     <a-divider type="vertical" style="height: 100%; background-color:var(--divider);" />
-    
+
     <div class="flex flex-col" style="width: 293px;">
       <span class="font-400" style="color:var(--secondary-text);">已选({{ rightSelectList.length }}个)</span>
       <vue-custom-scrollbar :settings="settingsScroller" style="height:371px;">
@@ -39,7 +39,7 @@
           <div class="flex tems-center">
            <a-avatar shape="square" v-if="item.type === 'GROUP'" size="32" :src="item?.groupProfile?.avatar"></a-avatar>
            <a-avatar v-else size="32" :src="item?.userProfile?.avatar"></a-avatar>
-           <span class="ml-4" style="color: var(--primary-text);">{{ item.type === 'C2C' ? item?.userProfile?.nick : item?.groupProfile?.name }}</span>  
+           <span class="ml-4" style="color: var(--primary-text);">{{ item.type === 'C2C' ? item?.userProfile?.nick : item?.groupProfile?.name }}</span>
           </div>
           <div class="flex items-center justify-center pointer active-button" @click="cancelSelect(item)">
            <MinusCircleOutlined style="color: var(--primary-text);"/>
@@ -66,7 +66,7 @@ import { message } from 'ant-design-vue'
 import { pinyin } from 'pinyin-pro'
 
 export default defineComponent({
- components:{ 
+ components:{
   CloseOutlined,SearchOutlined,MinusCircleOutlined
 
  },
@@ -74,7 +74,7 @@ export default defineComponent({
  props:['content'],
 
  setup (props,ctx) {
-  
+
 
   const data = reactive({
    list:[],
@@ -89,7 +89,7 @@ export default defineComponent({
    forwardText:'', // 转发搜索
    allList:[]
   })
-  
+
   // 获取会话列表
   const getForwardList = async()=>{
    const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
@@ -136,7 +136,7 @@ export default defineComponent({
   const forwardSend = async(e) =>{
     if(data.rightSelectList.length !== 0){
      for(let i=0;i<data.rightSelectList.length;i++){
-      await forwardMessage(data.rightSelectList[i])   
+      await forwardMessage(data.rightSelectList[i])
      }
      ctx.emit('close')
     }else{
@@ -164,14 +164,14 @@ export default defineComponent({
       e.stopPropagation();
       // return;
     }
-    
+
     // const inputPinyin = pinyin(data.forwardText,{style:pinyin.STYLE_NORMAL})
     // console.log('拼音结果::>>',inputPinyin);
 
     searchResult = data.allList.filter(item=>{
       const text = item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name
       const id = item.type  === 'C2C' ? item.userProfile.userID : item.groupProfile.groupID
-      
+
       // const namePinyin = pinyin(item.type === 'C2C' ? item.userProfile.nick : item.groupProfile.name,{
       //   style:pinyin.STYLE_NORMAL
       // })
@@ -201,7 +201,7 @@ export default defineComponent({
    getForwardList()
   })
   return {
-  
+
    ...toRefs(data),
    getForwardList,closeForwardModal,
    selectItem,cancelSelect,forwardSend,
@@ -231,7 +231,7 @@ export default defineComponent({
 }
 
 .font-16{
- font-family: PingFangSC-Medium;
+
  font-size: 16px;
  font-weight: 500;
 }
@@ -241,7 +241,7 @@ export default defineComponent({
 }
 
 .font-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }

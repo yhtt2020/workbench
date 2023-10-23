@@ -10,7 +10,7 @@
               <Icon icon="fluent-emoji:tomato" class="ml-2 pointer" style="font-size: 40px;" v-for="index in this.tomatoNum" :key="index"/>
             </div>
         </div>
-        <div class="icon-box"> 
+        <div class="icon-box">
           <!-- 重新开始 -->
           <div class="icon" v-if="!running" @click="onPlay">
             <Icon icon="fluent:play-16-filled" />
@@ -39,7 +39,7 @@
   <script>
   import { tomatoStore } from '../store'
   import { appStore } from '../../../store'
-  
+
   import { Icon } from '@iconify/vue';
   import {mapActions, mapState,mapWritableState} from "pinia";
   export default {
@@ -55,7 +55,7 @@
     computed: {
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','isPause','running','tomatoNum','isPause']),
       ...mapState(appStore,['userInfo','backgroundImage'])
-      
+
     },
     mounted() {
 
@@ -85,7 +85,7 @@
     },
   };
   </script>
-  
+
   <style lang="scss" scoped>
   .pop-container {
     position: fixed;
@@ -118,7 +118,7 @@
       flex-wrap: wrap;
     }
     .title{
-      font-family: PingFangSC-Regular;
+
       font-size: 24px;
       color: rgba(255,255,255,0.60);
       font-weight: 400;
@@ -148,7 +148,7 @@
       align-items: center;
       cursor: pointer;
     }
-    
+
     .icon:hover{
       background: rgba(0,0,0,0.60);
     }
@@ -178,7 +178,7 @@
   //   left: 50%;
   //   transform: translateX(-50%);
   // }
-  
+
   // .item-icon {
   //   z-index: 9999999999999;
   //   width: 100px;
@@ -186,11 +186,10 @@
   //   border-radius: 12px;
   //   background: rgba(0, 0, 0, 0.4);
   //   backdrop-filter: blur(20px);
-  
+
   //   .icon {
   //     height: 36px;
   //     width: 36px;
   //   }
   // }
   </style>
-  

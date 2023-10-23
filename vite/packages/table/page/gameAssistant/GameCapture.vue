@@ -1330,7 +1330,7 @@ export default {
 
 // 各种字体样式
 .title-color {
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 400;
@@ -1344,13 +1344,13 @@ export default {
 }
 
 .fps-t {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
 }
 .fps-sm{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color:var(--secondary-text);
   letter-spacing: 1.14px;
@@ -1365,7 +1365,7 @@ export default {
 }
 
 .btn-text {
-  font-family: PingFangSC-Medium;
+
   font-size: 14px;
   color: var(--primary-text);
   font-weight: 500;

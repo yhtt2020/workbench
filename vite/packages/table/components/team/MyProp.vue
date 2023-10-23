@@ -297,7 +297,7 @@ export default {
 }
 
 .rank-font {
- font-family: PingFangSC-Medium;
+
  font-size: 14px;
  color: var(--primary-text);
  font-weight: 500;

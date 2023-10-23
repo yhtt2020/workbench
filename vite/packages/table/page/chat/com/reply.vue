@@ -108,7 +108,7 @@ const fileList = ref<UploadProps['fileList']>([
 //     // }
 //     imageVis.value = true
 //     console.log(fileList.value?.length, 'fileList');
-    
+
 // }
 const imageVis=computed(()=>{
     return fileList.value?.length>0
@@ -226,7 +226,6 @@ onMounted(async () => {
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
         color: var(--disable-text) !important;
     }
 }</style>

@@ -54,7 +54,7 @@
                         <!-- <div> -->
                             <img :src="item.image" alt="" :key="index"  v-for="(item, index) in cardData.image_170_170" class="object-cover mr-2 overflow-hidden rounded-md cover-sm" >
                         <!-- </div> -->
-                        
+
                     </div>
                 </template>
 
@@ -98,8 +98,8 @@ let userInfo = {
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
-    
-    
+
+
 }
 const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
@@ -164,14 +164,12 @@ const title = computed(() => {
                 margin-left: 8px;
 
                 .user-name {
-                    font-family: PingFangSC-Regular;
                     font-size: 14px;
                     color: rgba(255, 255, 255, 0.85);
                     font-weight: 400;
                 }
 
                 .self-msg {
-                    font-family: PingFangSC-Regular;
                     // font-size: 12px;
                     // color: rgba(255, 255, 255, 0.40);
                     font-weight: 400;
@@ -194,7 +192,6 @@ const title = computed(() => {
         }
 
         .card-content {
-            font-family: PingFangSC-Regular;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.85);
             text-align: justify;
@@ -225,7 +222,6 @@ const title = computed(() => {
         }
 
         #title {
-            font-family: PingFangSC-Regular;
             font-size: 16px;
             // color: rgba(255, 255, 255, 0.85);
             text-align: left;
@@ -236,7 +232,6 @@ const title = computed(() => {
         }
 
         #context {
-            font-family: PingFangSC-Regular;
             font-size: 14px;
             // color: rgba(255, 255, 255, 0.60);
             text-align: left;

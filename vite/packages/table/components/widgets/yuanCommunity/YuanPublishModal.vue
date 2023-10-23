@@ -365,14 +365,14 @@ const publishPost = async () => {
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     // text-align: center;
     font-weight: 400;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
@@ -413,7 +413,7 @@ const publishPost = async () => {
     // &::placeholder {
     font-weight: 400;
     font-size: 16px;
-    font-family: PingFangSC-Regular;
+
     color: var(--secondary-text);
     // }
 }
@@ -440,7 +440,7 @@ const publishPost = async () => {
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+
         color: var(--secondary-text);
         // padding-left: 8px;
     }

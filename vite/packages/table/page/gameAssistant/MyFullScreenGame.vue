@@ -160,7 +160,6 @@ export default {
   color: var(--secondary-text);
 }
 .my-title{
-  font-family: PingFangSC-Semibold;
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 600;

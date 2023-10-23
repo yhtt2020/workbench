@@ -154,7 +154,7 @@ const closeDetail = () => {
 const isLike = computed(() => {
     return store.communityPostDetail.is_support
 })
-// 
+//
 const clickLike =async () => {
     // isLike.value = !isLike.value
     let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
@@ -192,7 +192,7 @@ const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
 })
-// const tid=store.communityPostDetail.pay_set.tid 
+// const tid=store.communityPostDetail.pay_set.tid
 let tid = store.communityPostDetail?.pay_set?.tid || store.communityPostDetail?.id;
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
@@ -256,14 +256,12 @@ const showImage = () => {
                 margin-left: 8px;
 
                 .user-name {
-                    font-family: PingFangSC-Regular;
                     font-size: 14px;
                     color: rgba(255, 255, 255, 0.85);
                     font-weight: 400;
                 }
 
                 .self-msg {
-                    font-family: PingFangSC-Regular;
                     font-size: 12px;
                     color: rgba(255, 255, 255, 0.40);
                     font-weight: 400;
@@ -284,7 +282,6 @@ const showImage = () => {
         }
 
         .card-content {
-            font-family: PingFangSC-Regular;
             font-size: 16px;
             // color: rgba(255, 255, 255, 0.85);
             // text-align: justify;
@@ -307,7 +304,6 @@ const showImage = () => {
     }
 
     #title {
-        font-family: PingFangSC-Regular;
         font-size: 16px;
         color: rgba(255, 255, 255, 0.85);
         text-align: justify;
@@ -318,9 +314,8 @@ const showImage = () => {
     }
 
     #context {
-        font-family: PingFangSC-Regular;
         font-size: 14px;
-        // color: rgba(255, 255, 255, 0.60); 
+        // color: rgba(255, 255, 255, 0.60);
         text-align: justify;
         line-height: 22px;
         font-weight: 400;

@@ -2,24 +2,24 @@
     <Widget :options="options" :customIndex="customIndex" :desk="desk" >
         <div class="title">本周番茄时间</div>
         <div class="time">{{ this.weekTime }}</div>
-       
+
         <div class="echarts">
             <a-tooltip v-for="(item,index) in this.tomatoList" :key="index" placement="top">
-                <div class="echarts-col" 
+                <div class="echarts-col"
                 :style="{'height': (item? item/this.maxTomato*100 : 0) + 10 + 'px'}"
                 :class="index == activeIndex ? 'active-col':''"
-                @click="onChangeActive(index)" 
+                @click="onChangeActive(index)"
                 >
                 <!-- <span v-if="index == activeIndex">{{ item }}</span> -->
                 </div>
                 <template #title style="font-family:Oswald-SemiBold">{{'星期'+ week[index] + ' : ' + countToday(item)}}</template>
             </a-tooltip>
         </div>
-    </Widget>                                     
+    </Widget>
 </template>
-  
+
 <script>
-    import Widget from "../../../components/card/Widget.vue";  
+    import Widget from "../../../components/card/Widget.vue";
     import {mapActions, mapState,mapWritableState} from "pinia";
     import { tomatoStore } from '../store'
     // import * as echarts from "echarts";
@@ -78,11 +78,11 @@
         },
     };
 </script>
-  
+
   <style scoped lang="scss">
 
     .title{
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         color: rgba(255,255,255,0.60);
         font-weight: 400;
@@ -125,4 +125,3 @@
         background: rgba(255,255,255,0.85) !important;
     }
     </style>
-  

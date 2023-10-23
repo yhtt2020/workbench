@@ -192,9 +192,9 @@ export default {
         this.isChat = enableGroup[0]
 
         // console.log('获取数据',groups[index].type === 'Private');
-        
+
         if(groups[index].type === 'Private'){
-          const isDisable = groups[index].joinOption === "DisableApply" 
+          const isDisable = groups[index].joinOption === "DisableApply"
           if(enableGroup[0] === 'yes'){
             const name = `GROUP${changeData.groupID}`
             window.TUIKitTUICore.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
@@ -209,7 +209,7 @@ export default {
               message.warn('该群禁止加入')
             }
           }
-          
+
         }else{
           const res = await window.$chat.searchGroupByID(changeData.groupID)
           const isDisable = res.data.group.joinOption !== 'DisableApply'
@@ -229,14 +229,14 @@ export default {
             } else {
               message.warn('该群禁止加入')
             }
-          } 
+          }
         }
-        
+
       }
 
       // 其他
       this.currentChannel = {...item,props:JSON.parse(item.props)}
-        
+
     },
 
     clickEmptyButton(item){
@@ -270,19 +270,16 @@ export default {
 
 <style lang="scss" scoped>
 .font-500 {
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }
 
 .font-14 {
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
 }
 
 .font-16 {
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }

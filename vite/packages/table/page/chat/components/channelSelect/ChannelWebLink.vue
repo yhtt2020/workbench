@@ -21,7 +21,7 @@
    <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" spellcheck="false" style="border-radius: 8px; margin-bottom: 12px;" placeholder="链接名称" />
 
    <!-- <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" /> -->
-   
+
    <a-input-group compact>
      <a-select v-model:value="requestProtocol" style="width:20%;">
        <a-select-option value="https">https</a-select-option>
@@ -36,7 +36,7 @@
      <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
    </template>
    <!-- <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span> -->
-   
+
    <div class="flex items-center justify-end my-3">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">选择</XtButton>
@@ -49,7 +49,7 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
- 
+
 import { Icon as WebLinKIcon } from '@iconify/vue'
 import RadioTab from '../../../../components/RadioTab.vue'
 import SelectClassification from './ChannelClassification.vue'
@@ -117,7 +117,7 @@ methods:{
       this.classShow = true
     }
 
-   
+
   }
  }
 
@@ -143,7 +143,6 @@ watch:{
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -165,7 +164,6 @@ watch:{
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

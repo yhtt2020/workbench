@@ -231,7 +231,6 @@ onMounted(async () => {
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
         color: var(--disable-text);
     }
 }

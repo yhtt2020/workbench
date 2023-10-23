@@ -4,10 +4,10 @@
      <template v-if="isLoading">
        <a-spin/>
      </template>
- 
+
      <template v-else>
        <div class="flex flex-col">
- 
+
          <span class="font-16 mb-3" style="color:var(--primary-text);">推荐用户</span>
          <div class="content-list">
            <div v-for="item in recommendData.users" class="flex items-center content-item px-4 justify-between py-5 rounded-xl mb-3"
@@ -28,13 +28,13 @@
                                       v-show="item.relationship==='yes'"></SendMessageButton>
                  </a-col>
                </a-row>
- 
+
              </div>
- 
- 
+
+
            </div>
          </div>
- 
+
          <span class="font-16 mb-3" style="color:var(--primary-text);">推荐群聊</span>
          <div class="content-list">
            <div v-for="item in recommendData.groups " class="flex items-center content-item justify-between px-4 py-5 rounded-xl mb-3"
@@ -45,8 +45,8 @@
                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.name }}</span>
                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
              </div>
-             </div>  
-             
+             </div>
+
              <XtButton v-show="item.relationShip ==='yes'" style="width: 96px;background: var(--active-secondary-bg);"
                        @click="enterGroup(item)">
                <icon icon="message"></icon>
@@ -54,12 +54,12 @@
              </XtButton>
              <XtButton v-show="item.relationShip ==='not'" style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">
                加入
-             </XtButton> 
-           </div> 
+             </XtButton>
+           </div>
          </div>
        </div>
- 
- 
+
+
      </template>
    </vue-custom-scrollbar>
  </div>
@@ -165,14 +165,13 @@ export default {
       this.$router.push({name:'chatMain'})
     }
   }
- 
+
  }
 }
 </script>
 
 <style lang="scss" scoped>
 .font-16 {
- font-family: PingFangSC-Medium;
  font-size: 16px;
  font-weight: 500;
 }

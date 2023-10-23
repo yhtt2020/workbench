@@ -31,8 +31,8 @@
    <template v-if="defaultOpen.openMethod === 'outerOpen'">
      <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
    </template>
-   
-   
+
+
    <div class="flex items-center justify-end my-3">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
@@ -112,7 +112,7 @@ methods:{
   // console.log('查看参数',option)
 
    const res = await this.updateChannel(option)
-   
+
    //  console.log('查看状态',res)
 
    if(res?.status === 1){
@@ -163,7 +163,7 @@ watch:{
 
 <style lang="scss" scoped>
 .font-16-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
@@ -185,7 +185,7 @@ watch:{
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

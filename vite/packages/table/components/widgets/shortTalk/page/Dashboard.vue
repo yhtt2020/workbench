@@ -41,9 +41,9 @@
                     </div>
                     <p>小组件名称</p>
                     <p>
-                        <a-input 
-                        style="border-radius: 10px;" 
-                        v-model:value="this.options.title" 
+                        <a-input
+                        style="border-radius: 10px;"
+                        v-model:value="this.options.title"
                         @change="changeName"
                         maxlength="20"
                         class="search pl-1"></a-input>
@@ -62,7 +62,7 @@
                         </a-transfer>
                     </div>
                 </div>
-                
+
 
             </vue-custom-scrollbar>
         </a-drawer>
@@ -71,7 +71,7 @@
 
 
 </template>
-  
+
 <script>
 import axios from "axios";
 import Widget from "../../../card/Widget.vue";
@@ -107,7 +107,7 @@ export default {
         },
         editing: {
             type: Boolean,
-        }, 
+        },
     },
     computed: {
         ...mapWritableState(shortTalkStore, ['mockData','access_token','baseUrl','setVisible']),
@@ -142,9 +142,9 @@ export default {
                 {
                     icon: 'shezhi1',
                     title: '设置',
-                    fn: () => { 
-                        this.settingVisible = true; 
-                        this.$refs.cardSlot.visible = false 
+                    fn: () => {
+                        this.settingVisible = true;
+                        this.$refs.cardSlot.visible = false
                         this.setVisible = false
                     }
                 },
@@ -202,7 +202,7 @@ export default {
                 'mockData':this.mockData,
                 "targetKeys": keys,
             },this.desk)
-            
+
         },
         // 修改小组件名称
         changeName(){
@@ -234,7 +234,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
@@ -264,7 +264,7 @@ export default {
     }
 
     .dash-cell .cell-title{
-        font-family: PingFangSC-Regular;
+
         font-size: 16px;
         color: rgba(255,255,255,0.60);
         font-weight: 400;
@@ -277,27 +277,27 @@ export default {
         color: rgba(255,255,255,0.85);
         font-weight: 500;
     }
-    
+
     .transfer ul{
         border-radius: 10px !important;
     }
     // .transfer .ant-transfer-list{
     //     border-radius: 10px !important;
-        
+
     //     width: 194px;
     //     height: 656px;
     // }
     // .transfer>div{
     //     border-radius: 10px !important;
-        
+
     // }
-    
+
     :deep(.ant-transfer-list){
         border-radius: 3px !important;
         max-height: 564px;
         width: 194px !important;
         height: 656px !important;
-        
+
     }
     :deep(.ant-btn-icon-only.ant-btn-sm){
         width: 40px;
@@ -307,14 +307,14 @@ export default {
     }
 
 
-    
+
     .text-content{
         width: 100%;
         min-height: 124px;
         background: #2A2A2A;
         border-radius: 12px;
         padding: 10px 16px;
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         color: rgba(255,255,255,0.60);
         font-weight: 400;
@@ -325,7 +325,7 @@ export default {
         color: rgba(255,255,255,0.85);
         margin-bottom: 10px;
     }
-    
+
     .text-content div{
         margin-bottom: 10px;
     }
@@ -376,7 +376,7 @@ export default {
         background-color: #f1f1f1 !important;
     }
 
-    
+
 
 
     // 滚动条
@@ -402,9 +402,8 @@ export default {
     }
     :deep(.ant-transfer-list-content-item-text){
         margin-left: 5px;
-        font-family: PingFangSC-Regular;
+
         font-size: 16px;
         color: rgba(255,255,255,0.85);
     }
 </style>
-  

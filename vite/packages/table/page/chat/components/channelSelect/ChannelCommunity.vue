@@ -12,7 +12,7 @@
 
   <div class="flex flex-col px-6">
    <span class="font-16-400 mb-4" style="color: var(--primary-text);">我创建的版块({{ forumList.length }})</span>
-  
+
    <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
     <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg" :class="{'select-bg':selectIndex === index}"
      style="background: var(--secondary-bg);" @click="selectForum(index,item)"
@@ -21,8 +21,8 @@
      <span class="category-16-400 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
    </vue-custom-scrollbar>
-   
-   
+
+
 
    <div class="mt-4 flex items-center justify-end" style="height:40px;">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
@@ -106,7 +106,7 @@ export default {
     evt.preventDefault();
    }
   }
- 
+
 
  },
 
@@ -117,7 +117,7 @@ export default {
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
@@ -139,7 +139,7 @@ export default {
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

@@ -40,7 +40,7 @@
             </div>
           </div>
           </xt-task>
-       
+
         <div v-else class="pointer recommend mb-2" :style="deskItemStyle"
              @click="previewKay(item)">
           <div class=" cover-wrapper" style="">
@@ -74,7 +74,7 @@
           </div>
         </div>
         </template>
-   
+
     </div>
   </div>
   <!-- 预览 -->
@@ -198,7 +198,6 @@ export default {
   overflow: hidden;
 
   .title {
-    font-family: PingFangSC-Medium;
     font-size: 18px;
     color: var(--primary-text);
     margin: 10px 0;

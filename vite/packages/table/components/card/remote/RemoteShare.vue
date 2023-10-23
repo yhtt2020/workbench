@@ -37,7 +37,7 @@
                   @click="imageSelect" style="width:100px; height:48px;">上传图片</div>
                 </a-upload>
               </div>
-              <div class="ml-6 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;color:var(--secondary-text)">
+              <div class="ml-6 xt-text-2" style="font-size: 16px;color:var(--secondary-text)">
                 <div>上传小组件预览图，不要超过2MB（暂时建议手动截取合适的图片）</div>
               </div>
             </div>
@@ -257,7 +257,7 @@
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
-  font-family: PingFangSC-Medium;
+
   div{
     width: 44px;
     height: 44px;

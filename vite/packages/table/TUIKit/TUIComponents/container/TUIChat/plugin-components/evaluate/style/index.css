@@ -2,149 +2,183 @@
 @import url("../../../../../styles/icon.scss");
 .evaluate-main {
   background: #ffffff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); }
-  .evaluate-main header {
-    font-weight: 500;
-    color: #1C1C1C; }
-  .evaluate-main footer {
-    font-weight: 500;
-    color: #999999; }
-    .evaluate-main footer a {
-      color: #006EFF; }
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.evaluate-main header {
+  font-weight: 500;
+  color: #1C1C1C;
+}
+.evaluate-main footer {
+  font-weight: 500;
+  color: #999999;
+}
+.evaluate-main footer a {
+  color: #006EFF;
+}
 .evaluate-content textarea {
   background: #F8F8F8;
-  border: 1px solid #ECECEC; }
+  border: 1px solid #ECECEC;
+}
 .evaluate-content .btn {
   background: #3370FF;
   font-weight: 400;
   color: #FFFFFF;
-  cursor: pointer; }
+  cursor: pointer;
+}
 .evaluate-list-item {
   font-weight: 400;
-  color: #50545C; }
+  color: #50545C;
+}
 .evaluate-H5-main {
-  background: rgba(0, 0, 0, 0.5); }
-  .evaluate-H5-main .evaluate-main-content {
-    background: #FFFFFF; }
-    .evaluate-H5-main .evaluate-main-content p a {
-      color: #3370FF; }
-    .evaluate-H5-main .evaluate-main-content .close {
-      font-family: PingFangSC-Regular;
-      font-weight: 400;
-      color: #3370FF;
-      letter-spacing: 0; }
+  background: rgba(0, 0, 0, 0.5);
+}
+.evaluate-H5-main .evaluate-main-content {
+  background: #FFFFFF;
+}
+.evaluate-H5-main .evaluate-main-content p a {
+  color: #3370FF;
+}
+.evaluate-H5-main .evaluate-main-content .close {
+  font-weight: 400;
+  color: #3370FF;
+  letter-spacing: 0;
+}
 
 .evaluate {
   display: inline-block;
   position: relative;
-  cursor: pointer; }
-  .evaluate .icon-evaluate {
-    margin: 12px 10px 0; }
-  .evaluate-main {
-    position: absolute;
-    z-index: 5;
-    width: 315px;
-    top: -275px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column; }
-    .evaluate-main header h1 {
-      font-size: 12px;
-      text-align: center; }
-    .evaluate-main footer {
-      font-size: 12px;
-      text-align: center; }
-  .evaluate-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px 0;
-    background: url("https://web.sdk.qcloud.com/im/assets/images/login-background.png") no-repeat;
-    background-size: cover;
-    background-position-x: 128px;
-    background-position-y: 77px; }
-    .evaluate-content textarea {
-      box-sizing: border-box;
-      width: 288px;
-      height: 90px;
-      margin: 12px 0;
-      padding: 12px;
-      border-radius: 2px;
-      resize: none; }
-    .evaluate-content .btn {
-      border: none;
-      border-radius: 5px;
-      font-size: 12px;
-      text-align: center;
-      line-height: 24px;
-      padding: 2px 46px;
-      cursor: pointer; }
-  .evaluate-list {
-    flex: 1;
-    display: flex; }
-    .evaluate-list-item {
-      width: 24px;
-      height: 24px;
-      text-align: center;
-      cursor: pointer;
-      padding: 4px 0;
-      font-size: 12px;
-      padding-right: 15px; }
-      .evaluate-list-item:last-child {
-        padding-right: 0 !important; }
+  cursor: pointer;
+}
+.evaluate .icon-evaluate {
+  margin: 12px 10px 0;
+}
+.evaluate-main {
+  position: absolute;
+  z-index: 5;
+  width: 315px;
+  top: -275px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.evaluate-main header h1 {
+  font-size: 12px;
+  text-align: center;
+}
+.evaluate-main footer {
+  font-size: 12px;
+  text-align: center;
+}
+.evaluate-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  background: url("https://web.sdk.qcloud.com/im/assets/images/login-background.png") no-repeat;
+  background-size: cover;
+  background-position-x: 128px;
+  background-position-y: 77px;
+}
+.evaluate-content textarea {
+  box-sizing: border-box;
+  width: 288px;
+  height: 90px;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 2px;
+  resize: none;
+}
+.evaluate-content .btn {
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 24px;
+  padding: 2px 46px;
+  cursor: pointer;
+}
+.evaluate-list {
+  flex: 1;
+  display: flex;
+}
+.evaluate-list-item {
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px 0;
+  font-size: 12px;
+  padding-right: 15px;
+}
+.evaluate-list-item:last-child {
+  padding-right: 0 !important;
+}
 
 .evaluate-H5 {
   display: inline-block;
   position: relative;
-  cursor: auto; }
-  .evaluate-H5 .evaluate-main {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 100vw;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0; }
-    .evaluate-H5 .evaluate-main .evaluate-main-content {
-      background: #FFFFFF;
-      padding: 23px; }
-      .evaluate-H5 .evaluate-main .evaluate-main-content header {
-        display: flex;
-        justify-content: space-between; }
-        .evaluate-H5 .evaluate-main .evaluate-main-content header aside {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          font-size: 16px;
-          line-height: 28px; }
-          .evaluate-H5 .evaluate-main .evaluate-main-content header aside h1 {
-            font-size: 20px; }
-        .evaluate-H5 .evaluate-main .evaluate-main-content header .close {
-          font-size: 18px;
-          line-height: 27px; }
-      .evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-item {
-        width: 40px;
-        height: 24px;
-        text-align: center;
-        cursor: auto;
-        font-size: 12px; }
-      .evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-content {
-        background: none; }
-        .evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-content .evaluate-list-item .icon {
-          transform: scale(1.5); }
-      .evaluate-H5 .evaluate-main .evaluate-main-content textarea {
-        font-size: 16px;
-        width: 100%; }
-    .evaluate-H5 .evaluate-main .evaluate-main-footer {
-      width: 100%;
-      display: flex; }
-      .evaluate-H5 .evaluate-main .evaluate-main-footer .btn {
-        flex: 1;
-        padding: 14px 0;
-        font-size: 18px; }
+  cursor: auto;
+}
+.evaluate-H5 .evaluate-main {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content {
+  background: #FFFFFF;
+  padding: 23px;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content header {
+  display: flex;
+  justify-content: space-between;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content header aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 16px;
+  line-height: 28px;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content header aside h1 {
+  font-size: 20px;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content header .close {
+  font-size: 18px;
+  line-height: 27px;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-item {
+  width: 40px;
+  height: 24px;
+  text-align: center;
+  cursor: auto;
+  font-size: 12px;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-content {
+  background: none;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content .evaluate-content .evaluate-list-item .icon {
+  transform: scale(1.5);
+}
+.evaluate-H5 .evaluate-main .evaluate-main-content textarea {
+  font-size: 16px;
+  width: 100%;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-footer {
+  width: 100%;
+  display: flex;
+}
+.evaluate-H5 .evaluate-main .evaluate-main-footer .btn {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 18px;
+}
 
 /*# sourceMappingURL=index.css.map */

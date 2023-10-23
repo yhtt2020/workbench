@@ -657,7 +657,7 @@ export default {
 }
 
 .button-bom {
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   text-align: center;
@@ -688,7 +688,7 @@ export default {
 
 .name-img span {
   margin-right: 10px;
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color:var(--primary-text);
 }

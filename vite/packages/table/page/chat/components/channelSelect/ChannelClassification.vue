@@ -73,7 +73,7 @@ import { LeftOutlined,CloseOutlined,PlusOutlined } from '@ant-design/icons-vue'
 import Sortable from 'sortablejs';
 import { Icon as ClassIcon} from '@iconify/vue'
 import { communityStore } from '../../store/communityStore'
-import { channelClass } from '../../../../js/chat/createChannelClass' 
+import { channelClass } from '../../../../js/chat/createChannelClass'
 import { message,Modal as ClassModal} from 'ant-design-vue'
 import _ from 'lodash-es'
 
@@ -159,7 +159,7 @@ export default {
      this.$emit('classBack')
    },
 
-   
+
    listClick(item,index){  // 选中当前频道目录分类
      if(this.statusIndex === index){
       this.statusIndex = -1
@@ -186,12 +186,12 @@ export default {
         }
        })
      }else{
-     
+
        const index = this.categoryClass.findIndex((findItem)=>{
          return findItem.name === item.name
        })
        this.categoryClass.splice(index,1)
-     
+
      }
 
    },
@@ -311,12 +311,12 @@ export default {
          await this.getCategoryData(this.no)
          this.closeChannel()
        }
-       
+
      }else{
        // console.log('this.data不是数组');
        console.log('查看this.data',this.data);
 
-       const channelsOption = { 
+       const channelsOption = {
          ...option,
          content:{
            name:this.data.name,
@@ -332,9 +332,9 @@ export default {
        }
 
      }
- 
+
    }
- 
+
  },
 
 }
@@ -343,7 +343,7 @@ export default {
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
@@ -365,7 +365,7 @@ export default {
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

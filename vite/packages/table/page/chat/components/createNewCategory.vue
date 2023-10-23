@@ -53,15 +53,15 @@ export default {
    // 创建完成
    async submitCategory(){
     if(this.categoryName !== '' && this.no !== '1'){
-     const option = {   
+     const option = {
       name:this.categoryName, communityNo:this.no,
       type:'category',role:'category',
      }
     //  console.log('排查参数问题',option);
-     
+
      const categoryRes =  await this.createChannel(option)
     //  console.log('查看状态',categoryRes);
-   
+
      if(categoryRes.status === 1){
       message.success(`${categoryRes.info}`)
       await this.getCategoryData(this.no)
@@ -80,7 +80,6 @@ export default {
 
 <style lang="scss" scoped>
 .font-16-400 {
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
@@ -102,7 +101,6 @@ export default {
 }
 
 .font-14-400 {
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
 }

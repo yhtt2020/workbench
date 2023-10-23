@@ -192,7 +192,7 @@ export default {
       width: 100%;
       padding-left: 16px;
       &::placeholder {
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         font-weight: 400;
         color: var(--secondary-text);
@@ -200,7 +200,7 @@ export default {
     }
   }
   .ai-con {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
     // margin-top: -5px;
@@ -222,7 +222,7 @@ export default {
       flex-shrink: 0;
     }
     .msg-title {
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       // width: 80%;
       color: var(--primary-text);

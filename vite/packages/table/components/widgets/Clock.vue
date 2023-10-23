@@ -252,13 +252,13 @@ font-40 {
 }
 
 font-14 {
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }
 
 font-16 {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }

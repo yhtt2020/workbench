@@ -55,7 +55,7 @@
                             </tippy>
 
                             <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
-                            <a-button type="text" size="small" class="xt-text" 
+                            <a-button type="text" size="small" class="xt-text"
                                 style="color: var(--secondary-text) !important;"><template #icon>
                                     <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                 </template> 图片</a-button>
@@ -285,7 +285,7 @@ const publishPost = async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
             await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
-            
+
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
@@ -306,14 +306,12 @@ const publishPost = async () => {
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
     font-size: 16px;
     // text-align: center;
     font-weight: 400;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
@@ -350,7 +348,7 @@ const publishPost = async () => {
     // &::placeholder {
     font-weight: 400;
     font-size: 16px;
-    font-family: PingFangSC-Regular;
+
     color: var(--secondary-text);
     // }
 }
@@ -373,7 +371,7 @@ const publishPost = async () => {
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+
         color: var(--secondary-text);
         // padding-left: 4px;
     }

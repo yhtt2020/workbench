@@ -272,7 +272,7 @@ export default {
   }
 
   .text {
-    font-family: PingFangSC-Medium;
+
     font-size: 14px;
     color: var(--secondary-text);
     font-weight: 500;

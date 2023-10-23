@@ -448,19 +448,19 @@ export default {
 }
 
 .primary-title{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
 
 .secondary-title{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }
 
 .ping-title{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }
@@ -513,7 +513,7 @@ export default {
   border-radius: 8px !important;
   background-color:var(--secondary-bg) !important;
   box-shadow: none !important;
- 
+
 }
 
 :deep(.ant-dropdown-menu-item ){

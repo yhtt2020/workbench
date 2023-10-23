@@ -215,7 +215,7 @@ export default {
   border-radius: 10px;
   text-align: center;
   line-height: 56px;
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
@@ -246,7 +246,7 @@ export default {
     span {
       position: absolute;
       top: 16px;
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       color: rgba(255, 255, 255, 0.85);
       font-weight: 400;

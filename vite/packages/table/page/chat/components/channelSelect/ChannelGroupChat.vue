@@ -28,7 +28,7 @@
 
  <CreateCommunity v-if="listIndex === 'create' && chatShow === true " :no="no" @close="closeChannel" id="chat" @back="chatShow = false">
  </CreateCommunity>
- 
+
  <SelectKnownGroup :no="no" :type="type" v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
  </SelectKnownGroup>
 
@@ -50,7 +50,7 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
-  
+
   const data = reactive({
     list:[
      { title:'创建新群聊',summary:'选择你的联系人，创建一个新的群聊关联到社群中。',type:'create' },
@@ -78,7 +78,7 @@ export default defineComponent({
   const selectSubmit = () =>{
    data.chatShow = true
   }
- 
+
 
   return {
    ...toRefs(data),
@@ -91,7 +91,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -113,7 +112,6 @@ export default defineComponent({
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

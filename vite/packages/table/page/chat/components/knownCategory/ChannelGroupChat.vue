@@ -29,9 +29,9 @@
      </div>
     </vue-custom-scrollbar>
    </div>
-   
+
    <a-divider type="vertical" style="height:442px; margin: 0 16px; background-color:var(--divider);" />
-   
+
    <div class="flex flex-col justify-between" style="width: 293px;">
     <span class="category-14-400" style="color:var(--secondary-text);">已选({{ selectGroup.length }}个)</span>
     <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
@@ -47,12 +47,12 @@
       </div>
      </div>
     </vue-custom-scrollbar>
-     
+
     <div class="flex items-center justify-end">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeGroup">
       取消
      </XtButton>
- 
+
      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submit">
       确定
      </XtButton>
@@ -60,7 +60,7 @@
    </div>
   </div>
 
-  
+
 
  </div>
 </template>
@@ -145,7 +145,7 @@ export default {
   // 清除选中的群聊
   removeGroup(item){
    const index = _.findIndex(this.selectGroup,function(o){ return o.groupID === item.groupID })
-   this.selectGroup.splice(index,1) 
+   this.selectGroup.splice(index,1)
   },
 
   // 创建子频道数据
@@ -228,7 +228,7 @@ export default {
           this.filterList = [res?.data?.group]
         }
 
-        
+
 
       }else{
        this.title = '我创建的群聊'
@@ -244,7 +244,6 @@ export default {
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -266,7 +265,6 @@ export default {
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

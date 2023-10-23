@@ -2,7 +2,7 @@
   <transition>
     <div class="TUI-contact" :class="[env.isH5 ? 'TUI-contact-H5' : '']">
       <aside class="TUI-contact-left">
-        <div v-for="item in sideList" class="flex pointer items-center"  style="padding: 16px;" 
+        <div v-for="item in sideList" class="flex pointer items-center"  style="padding: 16px;"
         :class="{'active-bg':sideIndex === item.index}" @click="select(item)"
         >
           <div class="flex items-center justify-center rounded-lg w-8 h-8" :style="{background:`${item.color}`}">
@@ -10,17 +10,17 @@
           </div>
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'group' ">
-            {{ item.title }} 
+            {{ item.title }}
             ({{ groupList?.length }}个)
           </div>
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'friend' ">
-            {{ item.title }} 
+            {{ item.title }}
             ({{ friendLists?.length }}个)
           </div>
 
           <div class="font-16" style="color: var(--primary-text);margin-left: 12px;" v-if="item.index === 'system' ">
-            {{ item.title }} 
+            {{ item.title }}
             ({{ num.noticeNum }}个)
           </div>
 
@@ -34,7 +34,7 @@
           <header class="TUI-contact-system-header" v-if="!env.isH5">
             <div class="font-16" style="color:var(--primary-text);">{{ $t('TUIContact.群聊通知') }}</div>
           </header>
-          <MessageSystem :isEmpty="isUndefined"  :isH5="env.isH5" 
+          <MessageSystem :isEmpty="isUndefined"  :isH5="env.isH5"
            :types="types" :data="systemMessageList"  @application="handleGroupApplication"
           />
         </div>
@@ -151,7 +151,7 @@ const TUIContact = defineComponent({
       TUIServer.handleGroupApplication(params);
     }
 
-    
+
 
     onMounted( async ()=>{
       // 解决通讯录初始化
@@ -174,7 +174,7 @@ export default TUIContact
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .font-16{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }

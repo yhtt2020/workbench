@@ -8,12 +8,12 @@
     <template #communityFloat>
       <!-- {{ communityNo }} -->
       <div class="flex flex-col" style="height:500px;width:300px;" v-if="communityNo !== 1">
-        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat> 
+        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat>
       </div>
       <div class="flex flex-col" style="height:500px;width:300px;" v-else>
         <DefaultFloat :float="true"></DefaultFloat>
       </div>
-      
+
     </template>
 
   </xt-left-menu>
@@ -111,7 +111,7 @@ export default {
 
     const selectTab = async (item) => {
       data.index = item.type
-      
+
       if(item.route.params.no !== 1){
         await myCom.getCategoryData(item.route.params.no)
       }else{
@@ -119,8 +119,8 @@ export default {
       }
 
       router.push(item.route)
-      
-      
+
+
     }
 
     const selectDorpTab = (item) => {
@@ -180,7 +180,7 @@ export default {
       return data.index === localCache.get('communityId')
     })
 
-   
+
 
     const chatLeftList = ref([
       {
@@ -234,7 +234,7 @@ export default {
         img: '/icons/logo128.png',
         type: 'community',
         float: "",
-        // chat.settings.enableHide ? "communityFloat" : 
+        // chat.settings.enableHide ? "communityFloat" :
         noBg: true,
         callBack: (item)=>{
           selectTab(item)
@@ -332,13 +332,11 @@ export default {
 }
 
 .font-16-500 {
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }
 
 .font-14 {
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
 }

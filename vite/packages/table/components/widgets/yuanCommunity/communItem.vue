@@ -50,13 +50,13 @@ const contentText = computed(() => {
 </script>
 <style lang='scss' scoped>
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     font-weight: 400;
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     line-height: 26px;
     font-weight: 400;

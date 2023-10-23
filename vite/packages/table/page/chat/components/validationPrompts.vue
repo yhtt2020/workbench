@@ -25,7 +25,7 @@
       </div>
      </div>
    </div>
- 
+
    <div class="flex px-6 items-center justify-center">
 
      <XtButton class="ml-3" v-if="validateObj.joinOption  === 'FreeAccess'"
@@ -35,9 +35,9 @@
       立即加入
      </XtButton>
 
-     <XtButton class="ml-3" v-if="validateObj.joinOption  === 'NeedPermission'" 
+     <XtButton class="ml-3" v-if="validateObj.joinOption  === 'NeedPermission'"
       style="width: 96px;background: var(--active-bg);color:var(--active-text);"
-      @click="joinNow" 
+      @click="joinNow"
      >
       立即申请
      </XtButton>
@@ -69,7 +69,7 @@ export default defineComponent({
       groupID:props.data.groupID
    }
    const res = await window.$chat.joinGroup(option)
-   
+
    if(res.data.status === 'JoinedSuccess'){
       message.success('加群成功')
       router.push({name:'chatMain'})
@@ -94,7 +94,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-16-400{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
@@ -110,13 +109,11 @@ export default defineComponent({
 }
 
 .font-16-500{
- font-family: PingFangSC-Medium;
  font-size: 16px;
  font-weight: 500;
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

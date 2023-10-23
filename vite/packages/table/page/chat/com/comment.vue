@@ -42,13 +42,12 @@ const getReplyText=(val)=>{
     commentList.value=val.value
     // console.log('com',commentList);
     // console.log('comstore',store.communityReply);
-    
+
 }
 
 </script>
 <style lang='scss' scoped>
 .font-14 {
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     font-weight: 400;
 }
@@ -60,7 +59,6 @@ const getReplyText=(val)=>{
 :deep(.ant-input) {
     &::placeholder {
         color: var(--secondary-text) !important;
-        font-family: PingFangSC-Regular;
         font-size: 16px;
         font-weight: 400;
         // margin-left: 3px;

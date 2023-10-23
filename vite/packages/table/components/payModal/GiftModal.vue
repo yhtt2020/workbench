@@ -186,7 +186,7 @@ export default {
 
 <style lang="scss" scoped>
 .avatar-font{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
@@ -208,7 +208,7 @@ export default {
 }
 
 .secondary-title{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   color:var(--secondary-text);
   font-weight: 400;
@@ -221,14 +221,14 @@ export default {
 }
 
 .avatar-nickname{
-  font-family: PingFangSC-Regular;
+
   font-size: 12px;
   color: var(--primary-text);
   font-weight: 400;
 }
 
 .gift-name{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 400;

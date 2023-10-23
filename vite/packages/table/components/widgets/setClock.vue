@@ -117,7 +117,7 @@
         </a-row>
     </div>
 </template>
-  
+
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from '../../store/card'
@@ -299,7 +299,7 @@ export default {
     },
     /*
         目前的主要问题是无法保存正确的页面数据，逻辑是没问题，但是表面的数据无法留存
-    */ 
+    */
     watch: {
         checkTopClock: {
             handler(value) {
@@ -328,7 +328,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
 .active{
     background: rgba(80,139,254,0.20);
@@ -378,8 +378,8 @@ export default {
     // :nth-child(24)){
     //     border-bottom:1px solid var(--divider);
     // }
-        
-    
+
+
 }
 .event-list {
     padding: 0.2em 0.5em;
@@ -472,13 +472,13 @@ export default {
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     font-weight: 400;
 }
 
 .font-12 {
-    font-family: PingFangSC-Regular;
+
     font-size: 12px;
     font-weight: 400;
 }
@@ -556,7 +556,7 @@ export default {
     color: var(--primary-text);
 
     &::placeholder {
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         font-weight: 400;
         color: var(--primary-text);
@@ -578,7 +578,7 @@ export default {
 
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
 }
@@ -589,4 +589,3 @@ export default {
     font-weight: 500;
 }
 </style>
-  

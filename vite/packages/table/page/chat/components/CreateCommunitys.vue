@@ -26,8 +26,8 @@
      <div class="overflow-hidden">
        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
      </div>
-     <communityIcon icon="akar-icons:cloud-upload" width="20" height="20" 
-     style="font-size: 1.5rem;width:24px;height:24px;background:var(--active-bg);position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);border-radius: 50%;" 
+     <communityIcon icon="akar-icons:cloud-upload" width="20" height="20"
+     style="font-size: 1.5rem;width:24px;height:24px;background:var(--active-bg);position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);border-radius: 50%;"
      color="var(--secondary-text)"/>
    </div>
 
@@ -132,7 +132,7 @@ export default {
      }
      this.avatarUrl = avatar
    },
-   
+
 
 
    // 创建社群
@@ -203,7 +203,6 @@ export default {
  }
 }
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }

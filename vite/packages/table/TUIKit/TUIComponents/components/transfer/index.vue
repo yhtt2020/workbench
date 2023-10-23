@@ -27,7 +27,7 @@
           已添加
          </div>
 
-         <div v-else class="active-button flex items-center justify-center pointer rounded-lg" 
+         <div v-else class="active-button flex items-center justify-center pointer rounded-lg"
           style="background: var(--active-bg);color:var(--active-text);padding: 10px;" @click="addFriendButton(item)"
          >
            加好友
@@ -36,18 +36,18 @@
       </div>
 
     </div>
-     
-    
+
+
 
     <div v-else class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;">
       <a-empty :image="simpleImage" />
     </div>
 
-    
+
 
   </div>
-    
-     
+
+
  </div>
 
 
@@ -201,10 +201,10 @@ export default defineComponent({
 
     const TIM = window.$TUIKit.TIM  // 大tim
 
-    const closeAddFriend = () =>{  // 关闭添加好友弹窗  
+    const closeAddFriend = () =>{  // 关闭添加好友弹窗
       ctx.emit('close')
     }
-    
+
     const handleInput = async () => {   // 好友搜索
 
       if(parseInt(friendValue.value) === isSelfUid){
@@ -249,11 +249,11 @@ export default defineComponent({
 
     onMounted(loadFriend)
 
-    
+
 
     return{
-      friendValue,...toRefs(data),isFriend,      
-      
+      friendValue,...toRefs(data),isFriend,
+
       handleInput,closeAddFriend,addFriendButton,loadFriend,
     }
   }
@@ -355,7 +355,7 @@ export default defineComponent({
 <style lang="scss" scoped src="./style/transfer.scss"></style>
 <style lang="scss" scoped>
 .font-16{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
@@ -371,7 +371,7 @@ export default defineComponent({
 }
 
 .font-400{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }
@@ -383,7 +383,7 @@ export default defineComponent({
 }
 
 .font-14{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }

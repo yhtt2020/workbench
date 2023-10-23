@@ -16,7 +16,7 @@
         <img src="/img/icon/close-circle-fill.png" class="w-full rounded-full h-full object-cover" alt="">
       </div>
     </div>
-    
+
     <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">{{content.body}}</div>
 
     <div class="flex items-center justify-between">
@@ -27,7 +27,7 @@
    <!--
      <div class="flex ">
          <div class="mr-3 px-5 py-2 rounded-lg pointer flex items-center justify-center pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
-         
+
        </div>
     -->
 
@@ -73,7 +73,7 @@ export default defineComponent({
  },
 
  setup(props,ctx){
-   
+
    const talkLater = () =>{  // 点击稍后再说按钮
     ctx.emit('closeToast')
     ctx.emit('nowCheck')
@@ -107,7 +107,7 @@ export default defineComponent({
 
 
 .font-16{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }

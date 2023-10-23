@@ -4,23 +4,23 @@
           <div class="flex-box">
               <div class="box-title">{{ keyWord.title }}</div>
               <button class="text-center rounded-lg center pointer sel-btn btn-active " @click="showModal">查询</button>
-              <a-table 
-              :dataSource="keyWord.data" 
+              <a-table
+              :dataSource="keyWord.data"
               :pagination="{ pageSize: 3 }"
               :columns="keyWordCol"
               class="table-box"/>
             </div>
             <div class="flex-box">
               <div class="box-title">{{ detailList.title }}</div>
-              <a-table 
+              <a-table
               :pagination="{ pageSize: 5 }"
-              :dataSource="detailList.data" 
-              :columns="detailCol" 
+              :dataSource="detailList.data"
+              :columns="detailCol"
               class="table-box"/>
           </div>
       </div>
-      <a-modal :visible="visible" title="" @ok="handleOk" 
-      width="600px" 
+      <a-modal :visible="visible" title="" @ok="handleOk"
+      width="600px"
       height="500px"
       centered
       :closable="false"
@@ -41,7 +41,7 @@
           </div>
           <div class="modal-content" v-if="modalState == 1">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex soluta ab enim id numquam laborum error magni adipisci repudiandae culpa, tempore reiciendis itaque, accusamus reprehenderit sit optio inventore quae voluptas.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex soluta ab enim id numquam laborum error magni adipisci repudiandae culpa, tempore reiciendis itaque, accusamus 
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex soluta ab enim id numquam laborum error magni adipisci repudiandae culpa, tempore reiciendis itaque, accusamus
           </div>
           <div class="modal-content content-box" v-if="modalState == 2">
             <a-textarea
@@ -79,18 +79,18 @@
             <button class="btn-active rounded-lg" @click="visible = flase">完成</button>
           </div>
         </div>
-          
+
       </a-modal>
 
     </vueCustomScrollbar>
-  
+
 
   </template>
-  
+
   <script>
 
   // import Modal from "./modal.vue"
-  
+
 import { Modal } from 'ant-design-vue'
 import { Icon } from '@iconify/vue';
 import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
@@ -99,7 +99,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
 
   export default {
     name: 'Promotion',
-    components: { 
+    components: {
       // Modal
       LeftOutlined,
       CloseOutlined,
@@ -212,7 +212,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
               activeTime:"2023-09-20 16:37",
             },
           ]
-          
+
         },
         detailCol:[
           {
@@ -270,7 +270,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
     },
   }
   </script>
-  
+
   <style scoped>
     .flex-box{
       display: flex;
@@ -290,7 +290,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
       border-color: var(--active-bg);
       margin-top: 24px;
     }
-    
+
 
     .table-box{
       width: 100%;
@@ -339,7 +339,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
       border-radius: 12px !important;
     }
     .modal-header{
-      font-family: PingFangSC-Medium;
+
       font-size: 16px;
       color: rgba(255,255,255,0.85);
       font-weight: 500;
@@ -371,7 +371,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
     .modal-content{
       width: 552px;
       height: 348px;
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       color: rgba(255,255,255,0.85);
       text-align: justify;
@@ -387,7 +387,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
    .modal-footer{
       /* height: 10px; */
       /* border: 1px solid #fff; */
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       color: rgba(255,255,255,0.85);
       text-align: center;
@@ -407,7 +407,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
       background: var(--active-bg);
       margin-left: 12px;
     }
-    
+
     .modal-box .content-box{
       background: transparent;
     }
@@ -448,7 +448,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
       height: 80px;
     }
     .modal-success button{
-      
+
       width: 120px;
       height: 44px;
       font-size: 16px;
@@ -459,7 +459,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
     .modal-content::-webkit-scrollbar-track {
       background: rgba(72, 72, 72, 0.85);
     }
-    
+
     .modal-content{
       flex: 1 1 0%;
       overflow: hidden;
@@ -477,4 +477,3 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
 
 
   </style>
-  

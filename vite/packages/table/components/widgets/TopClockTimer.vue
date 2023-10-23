@@ -168,7 +168,7 @@
             </div>
 
             <vue-custom-scrollbar :settings="outerSettings" style="position: relative; "
-                :style="{ height: heightScorll }" 
+                :style="{ height: heightScorll }"
                 class="scroll">
                 <div class="pl-4 pr-4 ">
                     <div class="flex items-center mt-3 overflow-hidden" v-for="(item, index) in clockEvent"
@@ -580,19 +580,19 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 }
 
 .font-14 {
-    font-family: PingFangSC-Medium;
+
     font-size: 14px;
     font-weight: 500;
 }
 
 .font-20 {
-    font-family: PingFangSC-Medium;
+
     font-size: 20px;
     font-weight: 500;
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
 }
@@ -626,7 +626,7 @@ watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
 
 
 .font-12 {
-    font-family: PingFangSC-Regular;
+
     font-size: 12px;
     font-weight: 400;
 }

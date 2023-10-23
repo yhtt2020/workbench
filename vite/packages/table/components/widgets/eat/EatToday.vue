@@ -1,9 +1,9 @@
 <template>
-  <Widget 
-  :options="options" 
+  <Widget
+  :options="options"
   :customData="customData"
-  :desk="desk" 
-  ref="eatSlot" 
+  :desk="desk"
+  ref="eatSlot"
   :menuList="menuList"
   >
   <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
@@ -58,7 +58,7 @@ export default {
 }
   },
   computed: {
-    
+
   },
   mounted() {
     if(this.customData?.title){
@@ -77,7 +77,7 @@ export default {
           this.eatList.map(item => this.eatText += item + "\n")
           return message.info('至少保留一个')
         }
-        
+
         eatVal.map((item,index) => {
           var judgeFn = new RegExp(/\s+/g);
           if (judgeFn.test(item)) {
@@ -98,8 +98,8 @@ export default {
         //   if(eatVal.length >= this.eatList.length && eatVal[eat] !== this.eatList[eat]){
         //     this.eatList.splice(eat,1,eatVal[eat])
         //   }else if(eatVal.length < this.eatList.length){
-        //      eatArr.push(this.eatList.find(item => item === eatVal[eat])) 
-              
+        //      eatArr.push(this.eatList.find(item => item === eatVal[eat]))
+
         //      flag = true;
         //   }
         // }
@@ -138,7 +138,7 @@ export default {
 
 <style scoped lang="scss">
 .drawer-title{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;

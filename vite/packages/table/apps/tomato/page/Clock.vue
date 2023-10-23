@@ -12,7 +12,7 @@
           <div class="icon" v-if="running && !isPause" @click="onPause">
             <Icon icon="akar-icons:pause" />
           </div>
-          <!-- 结束 --> 
+          <!-- 结束 -->
           <div class="icon" v-if="running" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
@@ -30,7 +30,7 @@
           @exit="this.isFullScreen = false"
           >
         </FullScreen>
-        
+
 
       <!-- 设置面板 -->
       <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
@@ -57,9 +57,9 @@
                 </div>
           </vue-custom-scrollbar>
       </a-drawer>
-    </Widget> 
+    </Widget>
   </template>
-  
+
 <script>
   import Widget from "../../../components/card/Widget.vue";
   import { Icon } from '@iconify/vue';
@@ -107,15 +107,15 @@
             {
                 icon: 'shezhi1',
                 title: '设置',
-                fn: () => { 
-                    this.settingVisible = true; 
-                    this.$refs.clockSlot.visible = false 
+                fn: () => {
+                    this.settingVisible = true;
+                    this.$refs.clockSlot.visible = false
                 }
             },
         ],
       }
     },
-    mounted(){ 
+    mounted(){
       this.getTomatoNum();
       this.init(this.customData,this.customIndex,this.desk);
     },
@@ -150,10 +150,10 @@
     },
   };
   </script>
-  
+
   <style scoped lang="scss">
     .title{
-      font-family: PingFangSC-Regular;
+
       font-size: 14px;
       color: rgba(255,255,255,0.60);
       font-weight: 400;
@@ -186,7 +186,7 @@
       align-items: center;
       cursor: pointer;
     }
-    
+
     .icon:hover{
       background: rgba(255,255,255,0.60);
 
@@ -227,4 +227,3 @@
     }
 
   </style>
-  

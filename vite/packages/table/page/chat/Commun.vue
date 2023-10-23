@@ -31,7 +31,7 @@
       </div>
       <div class="flex mr-6 right">
         <!-- <div class="flex items-center"> -->
-        <xt-button type="primary" 
+        <xt-button type="primary"
           style="color: var(--active-bg); width: 83px;height: 40px;background: rgba(80,139,254,0.20);"
           @click="visibleModal">
           <Icon class="pr-1 text-xl xt-theme-text" style="font-size: 22px;vertical-align: sub;margin-right:6px ;" icon="akar-icons:circle-plus-fill" />发布
@@ -298,7 +298,6 @@ onUpdated(() => {
     //当屏幕最大宽度为767px
 
     .font-16 {
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       font-weight: 400;
     }
@@ -344,7 +343,6 @@ onUpdated(() => {
 
     // overflow: scroll;
     .card-content {
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.85);
       text-align: justify;
@@ -363,7 +361,6 @@ onUpdated(() => {
 
       .right {
         .title {
-          font-family: PingFangSC-Medium;
           font-size: 16px;
           color: rgba(255, 255, 255, 0.85);
           text-align: justify;
@@ -379,7 +376,6 @@ onUpdated(() => {
 
         .context {
           margin-top: 8px;
-          font-family: PingFangSC-Regular;
           font-size: 14px;
           color: rgba(255, 255, 255, 0.60);
           text-align: justify;

@@ -196,34 +196,27 @@
             <!--            <p style="font-size: 16px">-->
             <!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
             <!--            </p>-->
-            <div>
-              <a-button
+            <div class="w-full flex justify-items-center justify-center align-items-center ">
+              <xt-button :w="160"
                 style="color: var(--active-text)"
                 @click="moreDesk"
-                class="mr-10 xt-active-bg rounded-full border-none animate-pulse"
+                class="mr-10 xt-active-bg rounded-full border-none  "
                 key="console"
                 type="primary"
                 ><icon class="mr-1" icon="shop" style="font-size: 18px"></icon
                 >&nbsp;查看桌面市场
-              </a-button>
-              <a-button
+              </xt-button>
+              <xt-button :w="140"
                 @click="newAddCard"
                 class="mr-10 rounded-full xt-bg-2 border-none"
                 key="console"
                 ><icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
-              </a-button>
-              <a-button
-                class="xt-bg-2 rounded-full border-none"
-                key="buy"
-                @click="learn"
-                ><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button
-              >
+              </xt-button>
             </div>
           </div>
           <div class="text-center mt-2 xt-text" style="font-size: 18px">
             <icon
               icon="arrowdown"
-              class="animate-bounce"
               style="font-size: 1.2em; vertical-align: text-bottom"
             ></icon>
             为您推荐（左右滑动）
