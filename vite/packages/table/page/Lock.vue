@@ -4,7 +4,7 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle" class="pointer"
+  <div id="displayMiddle"
        style="margin-top: -6em;min-height: 15em; z-index:9999999">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
@@ -49,33 +49,35 @@
       </div>
       <!--      <span class="ml-2">点击屏幕中间解锁，右键进入壁纸设置</span>-->
     </div>
-  </div>
-  <div class=" card half count-downtime" v-if="countDowntime.hours">
-    <div class="left-time">
-      <Icon
-        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
-        icon="zanting"
-        @click="closeCountDown" v-show="!countDownBtn"
-      ></Icon>
-      <Icon
-        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
-        icon="bofang"
-        @click="startCountDown" v-show="countDownBtn"
-      ></Icon>
-      <Icon
-        style="width: 2em; height: 2em;cursor:pointer"
-        icon="guanbi1"
-        @click="deleteCountDown"
-      ></Icon>
+
+    <div class="mt-10 card half count-downtime" v-if="countDowntime.hours">
+      <div class="left-time">
+        <Icon
+          style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+          icon="zanting"
+          @click="closeCountDown" v-show="!countDownBtn"
+        ></Icon>
+        <Icon
+          style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+          icon="bofang"
+          @click="startCountDown" v-show="countDownBtn"
+        ></Icon>
+        <Icon
+          style="width: 2em; height: 2em;cursor:pointer"
+          icon="guanbi1"
+          @click="deleteCountDown"
+        ></Icon>
+      </div>
+      <div class="right-time">
+        <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
+        <span
+          style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{
+            countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds
+          }}</span>
+      </div>
     </div>
-    <div class="right-time">
-      <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
-      <span
-        style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{
-          countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds
-        }}</span>
-    </div>
   </div>
+
   <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="visible">
 
     <div v-if="clockEvent[0]"
@@ -109,6 +111,15 @@ import { paperStore } from '../store/paper'
 import axios from 'axios'
 import { Icon as iconify } from '@iconify/vue'
 
+const spotConfig = {
+  control: '',
+  play: true,
+
+  infinite: true,
+
+  title: false,
+  autoplay: true,
+}
 export default {
   name: 'Lock',
   components: {
@@ -203,6 +214,15 @@ export default {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
     videoPath () {
       return this.playing[0]['src-mp4']
+    },
+    config () {
+      return {
+        ...spotConfig,
+        ...{
+          autoslide: this.settings.interval,
+          progress: this.settings.showProgress,
+        }
+      }
     }
   },
   methods: {
@@ -295,16 +315,7 @@ export default {
         } else {
           this.singleLively = false
         }
-        window.Spotlight.show(LockArr, {
-          control: 'autofit,fullscreen,close,zoom,prev,next',
-          play: true,
-          autoslide: this.settings.interval,
-          infinite: true,
-          progress: this.settings.showProgress,
-          title: false,
-          autoplay: true,
-          // onclose: () => {this.enter(false)}
-        })
+        window.Spotlight.show(LockArr, this.config)
       } else if (this.settings.wallSource == 'bing') {
         // 必应壁纸
         let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
@@ -317,16 +328,7 @@ export default {
                 path: 'https://cn.bing.com' + item.url,
               })
             })
-            window.Spotlight.show(LockArr, {
-              control: 'autofit,fullscreen,close,zoom,prev,next',
-              play: true,
-              autoslide: this.settings.interval,
-              infinite: true,
-              progress: this.settings.showProgress,
-              title: false,
-              autoplay: true,
-              // onclose: () => {this.enter(false)}
-            })
+            window.Spotlight.show(LockArr, this.config)
           } else {
             Modal.error({ content: '网络加载错误，请检查设备后重试' })
             return
@@ -350,16 +352,7 @@ export default {
                 path: item.imgurl,
               })
             })
-            window.Spotlight.show(LockArr, {
-              control: 'autofit,fullscreen,close,zoom,prev,next',
-              play: true,
-              autoslide: this.settings.interval,
-              infinite: true,
-              progress: this.settings.showProgress,
-              title: false,
-              autoplay: true,
-              // onclose: () => {this.enter(false)}
-            })
+            window.Spotlight.show(LockArr, this.config)
           } else {
             return
           }
@@ -405,16 +398,7 @@ export default {
       } else {
         this.singleLively = false
       }
-      window.Spotlight.show(lockActive, {
-        control: 'autofit,fullscreen,close,prev,next',
-        play: true,
-        autoslide: this.settings.interval,
-        infinite: true,
-        progress: this.settings.showProgress,
-        title: false,
-        autoplay: true,
-        // onclose: () => {this.enter(false)}
-      })
+      window.Spotlight.show(lockActive, this.config)
     },
     closeCountDown () {
       this.stopCountDown()
@@ -458,6 +442,11 @@ export default {
   }
 }
 </script>
+<style>
+.spl-header {
+  display: none;
+}
+</style>
 <style lang="scss" scoped>
 .time {
   font-size: 1.5em;
