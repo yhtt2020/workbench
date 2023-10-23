@@ -12,7 +12,7 @@
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-4">
                     <!-- {{ showForumList }} -->
-                    <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
+                    <!-- <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
                         <div class="w-[32px] h-[32px] rounded-md ml-2">
                             <a-avatar shape="square" :src="this.showForumList[0].value.logo" alt="" class="w-full h-full" />
 
@@ -20,9 +20,9 @@
                         <div class="ml-2 font-16 xt-text">
                             {{ this.showForumList[0].value.name }}
                         </div>
-                    </div>
+                    </div> -->
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
-                        style="height: 40px;width: 100%;" v-else @changed="changeContent"></YuanHorizontalPanel>
+                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent"></YuanHorizontalPanel>
                     <div>
 
                         <!-- <a-tooltip title="跳转元社区" placement="bottom"> -->
