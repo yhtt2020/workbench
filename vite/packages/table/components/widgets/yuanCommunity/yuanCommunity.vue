@@ -189,7 +189,7 @@ export default {
             ],
             options: {
                 className: 'card double ',
-                title: this.changeTitle,
+                title: '元社区',
                 rightIcon: '',
                 type: 'community'
             },
@@ -238,13 +238,13 @@ export default {
         async refreshPost() {
             this.isLoading = true
             await this.getCommunityPost(this.defaultForum.value?.id)
-            console.log(this.communityPost.list, 'forumPost');
             this.isLoading = false
         },
         // 查看内容详情
         showDetail(item) {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
+            console.log(this.showDetailModal);
         },
         // 选择板块
         handleChange(value) {
@@ -324,13 +324,12 @@ export default {
             }
             return this.communityPost.list?.slice(0, 3)
         },
-        changeTitle() {
-            if (this.customData.selectList.length === 1) {
-                this.options.title = this.customData.selectList[0].value.title
-            } else {
-                this.options.title = '元社区'
-            }
-        }
+        // changeTitle() {
+        //     if (this.customData.selectList.length === 1) {
+        //         this.options.title = this.customData.selectList[0].value.title
+        //         console.log(this.options.title);
+        //     } 
+        // }
     },
     async mounted() {
         this.isLoading = true
@@ -339,6 +338,7 @@ export default {
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
         this.isLoading = false
+        console.log(this.options.title);
     },
     watch: {
         showForumList(newValue) {
@@ -362,6 +362,17 @@ export default {
                 this.getMyForumList()
             } else {
                 return
+            }
+        },
+        'customData.selectList': {
+            handler(newValue, oldValue) {
+                if(newValue.length===1){
+                    this.options.title=newValue[0].value.name
+                    console.log(this.options.title)
+                }else{
+                    this.options.title='元社区'
+                    console.log(this.options.title);
+                }
             }
         }
     }
