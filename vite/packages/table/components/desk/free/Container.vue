@@ -37,9 +37,9 @@ function debounce(fn, ms) {
   };
 }
 
-function renaw(newV) {
+function renaw(cards) {
   let obj = {};
-  newV.cards.forEach((item) => {
+ cards.forEach((item) => {
     // 现存小组件 匹配 自由桌面的数据 找出存在相
 
     if (freeDesk.value[currentDeskId.value]?.hasOwnProperty(item.id)) {
@@ -70,7 +70,7 @@ const updateWindowDimensions = (newV) => {
     renaw(newV);
   }, 200); // 设置防抖延迟为200毫秒
 };
-watch(currentDesk.value, (newV) => {
+watch(currentDesk.value.cards, (newV) => {
   updateWindowDimensions(newV);
 });
 
@@ -105,7 +105,6 @@ const [, drop] = useDrop(() => ({
 
 <template>
   <div :ref="drop" class="container">
-    freeDesk： {{ getCurrentDesk }}
     <DraggableBox
       v-for="data in getCurrentDesk"
       :id="data.id"
