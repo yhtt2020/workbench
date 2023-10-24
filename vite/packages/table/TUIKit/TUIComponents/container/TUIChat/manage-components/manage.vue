@@ -54,7 +54,7 @@
            style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;"
             @click="addGroupMember('add')"
           >
-           <Icon icon="tianjia3" style="color: var(--success);"></Icon>
+           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
 
           <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
@@ -345,7 +345,7 @@ const manage = defineComponent({
       if(props.conversation.inviteOption === 'DisableInvite'){
         if(props.conversation.selfInfo.role !== 'Member'){
           data.enableVisible = false
-          message.error('禁止邀请群成员')
+          message.error('禁止邀请群成员,群管理员可以通过下方邀请方式按钮进行修改')
         }
       }else{
         data.enableVisible = true
