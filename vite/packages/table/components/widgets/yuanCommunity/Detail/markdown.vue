@@ -24,31 +24,39 @@ const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
     
     // 查看所有的功能选项
-    // console.log(editor.getAllMenuKeys())
+    console.log(editor.getAllMenuKeys())
 };
 const toolbarConfig = ref({
     toolbarKeys: [
-        "color",
+        
         "bold",
         "italic",
-        // "through",
-        // "uploadImage",
         "underline",
+        "divider",
+        "through",
+        {
+            key:"group-text-selcet",
+            title:'文本',
+            menuKeys:["headerSelect","fontSize","color","lineHeight","bgColor","fontFamily","blockquote"],
+        },
         "|",
         "bulletedList",
         "numberedList",
+        "undo",
+        "redo",
+        "insertTable",
         
         {
             key:'group-justify',
             title:'对齐',
-            menuKeys:['justifyLeft','justifyCenter','justifyRight','justifyJustify'],
+            menuKeys:['justifyLeft','justifyCenter','justifyRight','justifyJustify',],
         },
         "|",
         "uploadImage",
         {
             key: "group-more-style",
             title: "更多",
-            menuKeys: ["codeBlock", "emotion", "insertLink","lineHeight","divider","fontSize"],
+            menuKeys: ["code", "emotion", "insertLink","fullScreen",],
         },
         // {
         //     key:"group-font-style",

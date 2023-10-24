@@ -1,8 +1,6 @@
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
-        <div class="w-full h-full card" style="height:auto">
-            <!-- {{ isShow.isShow }} -->
-
+    <Modal :maskNoClose="true" class="" animationName="t-b-close" :centered="true">
+        <div class="w-full h-full card xt-bg" style="height:auto">
             <div class="w-full card-content">
                 <div class="flex justify-between mb-2 -mt-3">
                     <span class="xt-text-2 font-16">详情</span>
@@ -11,7 +9,7 @@
                             <Icon class="text-xl xt-text pointer active-icon" icon="fluent:chat-16-regular" />
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
-                            <Icon class="text-xl xt-text pointer active-icon"
+                            <Icon class="ml-3 text-xl xt-text pointer active-icon"
                                 icon="fluent:full-screen-maximize-16-filled" />
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
@@ -28,8 +26,8 @@
                         </a-tooltip>
                     </div>
                 </div>
-                <div v-if="refreshDetailFlag">
-                    <div>
+                <div v-if="refreshDetailFlag" class="flex w-full xt-bg-2">
+                    <div class="w-1/2 mr-4">
                         <div class="card-top">
                             <div class="top-left">
                                 <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
@@ -105,9 +103,7 @@
                         <!-- 分隔线 -->
                         <a-divider class="h-full mr-4 w-[2px] xt-bg-2" />
                     </div>
-
-
-                    <div>
+                    <div class="w-1/2 ml-4">
                         <div class="flex mt-4 mb-4 ">
                             <!-- {{ store.communityCollect.info }} -->
                             <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
@@ -239,7 +235,8 @@ const refresh = async () => {
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 const content = computed(() => {
-    return emojiReplace(props.cardData.content);
+    return emojiReplace(props.cardData.pc_summary
+);
 });
 const title = computed(() => {
     return emojiReplace(props.cardData.title);

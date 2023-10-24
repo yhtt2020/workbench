@@ -78,10 +78,11 @@
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
                 :forumIndex="currentIndex"></YuanPublishModal>
+                <detailModal v-if="showDetailModal" :cardData="cardData"/>
         </teleport>
-        <teleport to="body" :disabled="false">
-            <detailModal v-if="showDetailModal" :cardData="cardData"/>
-        </teleport>
+        <!-- <teleport to="body" :disabled="false" >
+            
+        </teleport> -->
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
