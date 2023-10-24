@@ -87,7 +87,7 @@ export default {
     const TUIServer = window.$TUIKit
     const Server = window.$chat
     const chat  = chatStore()
-
+    const { settings }=  storeToRefs(chat)
     const data = reactive({
       index: 'chat',
       // type:'chat',
@@ -303,7 +303,7 @@ export default {
     const isFloat = computed(()=>{
       // console.log('排查条件',chat.settings.enableHide)
       // return
-      if(chat.settings.enableHide){
+      if(settings.value.enableHide){
         const mapList = chatLeftList.value.map((item)=>{
           return {...item,float:item.float === '' ? "communityFloat" : ''}
         })
