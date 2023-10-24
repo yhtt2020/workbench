@@ -1,14 +1,16 @@
 <template>
-  <div class="box" :style="{ backgroundColor }" :role="role">
-    <!-- <test :data="data" :role="role"></test> -->
-    <!-- <CPULineChart></CPULineChart> -->
-    {{ data.name }}
-    <!-- <component
+  <!-- <div class="box" :style="{ backgroundColor }" :role="role"> -->
+  <!-- <test :data="data" :role="role"></test> -->
+  <!-- <CPULineChart></CPULineChart> -->
+  <component
+    class="box"
+    :style="{ backgroundColor }"
+    :role="role"
     :is="data?.name"
     :customIndex="data?.id"
     :customData="data?.customData"
-  ></component> -->
-  </div>
+  ></component>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -18,6 +20,7 @@ import CPUFourCard from "../../widgets/supervisory/CPUFourCard.vue";
 import InternalList from "../../widgets/supervisory/InternalList.vue";
 import SmallCPUCard from "../../widgets/supervisory/SmallCPUCard.vue";
 import SmallGPUCard from "../../widgets/supervisory/SmallGPUCard.vue";
+import MyIcons from "../../widgets/myIcons/index.vue";
 export default {
   components: {
     CPULineChart,
@@ -25,6 +28,7 @@ export default {
     InternalList,
     SmallCPUCard,
     SmallGPUCard,
+    MyIcons,
     test,
   },
   props: {

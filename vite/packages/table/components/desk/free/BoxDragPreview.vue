@@ -19,8 +19,7 @@ const tickTock = ref(false);
 
 <template>
   <div class="box-drag-preview">
-    <!-- <Box :title="title" :yellow="tickTock" preview /> -->
-    123
+    <Box :title="title" :yellow="tickTock" preview />
   </div>
 </template>
 

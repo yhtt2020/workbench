@@ -565,6 +565,8 @@ export const cardStore = defineStore(
         desk.cards.splice(desk.cards.findIndex(item => {
           return String(item.id) === String(customIndex)
         }), 1)
+        console.log('删除 卡片:>> ', desk.cards );
+
         // this.customComponents.splice(customIndex,1);
 
       },
