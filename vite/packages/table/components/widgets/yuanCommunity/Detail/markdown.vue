@@ -24,7 +24,7 @@ const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
     
     // 查看所有的功能选项
-    console.log(editor.getAllMenuKeys())
+    // console.log(editor.getAllMenuKeys())
 };
 const toolbarConfig = ref({
     toolbarKeys: [

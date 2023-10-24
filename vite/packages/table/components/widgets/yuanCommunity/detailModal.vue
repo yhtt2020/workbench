@@ -1,6 +1,6 @@
 <template>
-    <Modal :maskNoClose="true" class="" animationName="t-b-close" :centered="true">
-        <div class="w-full h-full card xt-bg" style="height:auto">
+    <Modal :maskNoClose="true" class=""  :centered="true">
+        <div class="w-[600px] h-[600px] card xt-bg " style="overflow: hidden;">
             <div class="w-full card-content">
                 <div class="flex justify-between mb-2 -mt-3">
                     <span class="xt-text-2 font-16">详情</span>
@@ -107,20 +107,19 @@
                         <div class="flex mt-4 mb-4 ">
                             <!-- {{ store.communityCollect.info }} -->
                             <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
-                                <button class="mr-3 reply w-[57px] h-[32px]  pl-5 "
+                                <button class="mr-3 reply w-[57px] h-[32px]  pl-5 flex items-center justify-center"
                                     :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                                    style="position: relative;border: none;cursor: pointer;">{{ cardData.support_count
-                                    }}</button>
-                                <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] "
-                                    style="position: absolute;left:34px;">
+                                    style="position: relative;border: none;cursor: pointer;">
+                                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-3">
+                                    {{ cardData.support_count }}</button>
+                                
                             </div>
                             <div class="flex items-center" style="cursor: pointer;" @click="clickCollect">
-                                <button class="reply w-[57px] h-[32px]  pl-5"
+                                <button class="reply w-[57px] h-[32px]  pl-5 flex items-center justify-center"
                                     :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
-                                    style="position: relative;border: none;cursor: pointer;">{{ cardData.collect_count
-                                    }}</button>
-                                <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px]"
-                                    style="position: absolute;left:102px;">
+                                    style="position: relative;border: none;cursor: pointer;">
+                                <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px] -ml-3 mr-1">
+                                    {{ cardData.collect_count }}</button>
                             </div>
 
                         </div>
