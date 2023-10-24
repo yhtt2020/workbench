@@ -539,6 +539,7 @@ export default {
           id:9,
             newIcon:"fluent:more-horizontal-16-filled",
             name:"更多",
+            lock:true,
             children:[
               {
                 id:1,

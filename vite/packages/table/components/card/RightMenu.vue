@@ -9,12 +9,9 @@
     :start="menuState"
     @closeMenu="close"
   >
-    <!-- <xt-button @click="rightModel = 'follow'">follow</xt-button>
-    <xt-button @click="rightModel = 'default'">default</xt-button> -->
     <div
-      @contextmenu.stop="menuVisible = true"
-      @mouseleave="isOnCard = false"
-      @mouseover="isOnCard = true"
+      @contextmenu="rightMenuState()"
+
     >
       <slot></slot>
     </div>
@@ -107,7 +104,7 @@ const props = defineProps({
 const { menus, sizes, oldMenuVisible, currentEvent, event } = toRefs(props);
 
 const widgetStore = useWidgetStore();
-const { rightModel, isOnCard } = storeToRefs(widgetStore);
+const { rightModel } = storeToRefs(widgetStore);
 
 // 新版右键和点击事件切换
 const model = ref("contextmenu");
@@ -170,6 +167,9 @@ const updateCardSize = (item) => {
 // 删除卡片
 const removeCard = () => {
   emits("removeCard");
+};
+const rightMenuState = () => {
+  if (!menuState.value) menuVisible.value = true;
 };
 </script>
 

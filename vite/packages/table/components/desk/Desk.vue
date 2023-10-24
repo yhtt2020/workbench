@@ -36,7 +36,7 @@
                          :customData="item.customData" :editing="editing"></component>
           </template>
       </FreeDesk>
-        <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+        <vue-custom-scrollbar  @contextmenu="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
