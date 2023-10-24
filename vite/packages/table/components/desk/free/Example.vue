@@ -103,7 +103,6 @@ const [, drop] = useDrop(() => ({
 </script>
 
 <template>
-  <div>
     <div :ref="drop" class="container">
       <!-- <Container
         :snap-to-grid="snapToGridAfterDrop"
@@ -149,14 +148,13 @@ const [, drop] = useDrop(() => ({
         <small>Snap to grid after drop</small>
       </label>
     </p> -->
-  </div>
 </template>
 
 <style scoped lang="less">
 .container {
   position: relative;
   width: 100%;
-  height: 300px;
+  height:  100%;
   border: 1px solid black;
 }
 </style>
