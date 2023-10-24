@@ -190,7 +190,7 @@ export default {
             options: {
                 className: 'card double ',
                 title: '元社区',
-                rightIcon: '',
+                // rightIcon: ' fluent:arrow-counterclockwise-20-filled',
                 type: 'community'
             },
             menuList: [
@@ -337,6 +337,9 @@ export default {
         // await this.getCommunityPost(this.showForumList[0].id)
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
+        if(this.customData && this.customData.defaultForum){
+            this.defaultForum = this.customData.defaultForum
+        }
         this.isLoading = false
         console.log(this.options.title);
     },
@@ -352,7 +355,8 @@ export default {
 
         },
         defaultForum(newValue) {
-            this.getCommunityPost(newValue.value?.id)
+            this.customData.defaultForum = newValue
+            this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
         // 切换频道和圈子时触发获取
