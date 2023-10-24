@@ -58,7 +58,7 @@
 
                             <Editor style="height: 100% ; overflow-y: hidden; background: var(--primary-bg);"
                                 v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" /> -->
-                                <markdown></markdown>
+                                <MarkDown></MarkDown>
                         </div>
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
@@ -143,7 +143,7 @@
                     style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
                     change-on-select>
                     <template #suffixIcon>
-                        <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                        <newIcon icon="fluent:chevron-left-16-filled" class="rotate-180 xt-text-2" style="font-size: 20px;vertical-align: super;margin-top: -3px;"></newIcon>
                     </template>
                 </a-select>
                 <div class="flex items-center">
@@ -160,8 +160,7 @@
     </Modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted, computed, shallowRef, onUpdated, onBeforeUnmount } from 'vue'
-import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
@@ -172,7 +171,7 @@ import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
-import markdown from './Detail/MarkDown.vue';
+import MarkDown from './Detail/MarkDown.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // const imageLoadVisible = ref(true)
@@ -391,7 +390,9 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    padding-right: 0px;
+}
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     color: var(--secondary-text);
     height: 40px;

@@ -1,9 +1,9 @@
 <template>
-    <div class="w-full h-full">
-        <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef" :defaultConfig="toolbarConfig"
+    <div class="w-full h-full" >
+        <Toolbar style="border-bottom: 1px solid var(--divider);background-color: var(--primary-bg) !important;" :editor="editorRef" :defaultConfig="toolbarConfig"
             :mode="mode" />
 
-        <Editor style="height: 100% ; overflow-y: hidden;" v-model="valueHtml"
+        <Editor style="height: 100% ; overflow-y: hidden;background-color: var(--primary-bg) !important;" v-model="valueHtml"
             :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
     </div>
 </template>
@@ -22,7 +22,7 @@ const valueHtml = ref('')
 const editorConfig = { placeholder: '正文', MENU_CONF: {} }
 const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
-    editorRef.value.config.bgColor=['var(--secondary-bg)']
+    
     // 查看所有的功能选项
     // console.log(editor.getAllMenuKeys())
 };
@@ -44,6 +44,7 @@ const toolbarConfig = ref({
             menuKeys:['justifyLeft','justifyCenter','justifyRight','justifyJustify'],
         },
         "|",
+        "uploadImage",
         {
             key: "group-more-style",
             title: "更多",
@@ -97,7 +98,14 @@ editorConfig.MENU_CONF["uploadImage"] = {
 editorConfig.MENU_CONF['bgColor']={
     colors:['#333']
 }
+
 </script>
 <style lang='scss' scoped>
+.w-e-toolbar{
+    background-color: var(--secondary-bg ) !important;
+}
+.w-e-textarea{
+    background-color: var(--secondary-bg ) !important;
+}
 
 </style>
