@@ -1,7 +1,7 @@
 
 <template>
     <Modal :maskNoClose="true" class="" :animationName="t - b - close">
-        <div class="w-[500px] pl-4 pr-4">
+        <div class="w-[500px] pl-4 pr-4 content">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <a-dropdown trigger="click" placement="bottom"
                     overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
@@ -77,7 +77,7 @@
 
                 </div>
             </div>
-            <div class="h-[45px] flex items-center justify-between">
+            <div class="h-[45px] flex items-center justify-between mt-10">
                 <div class="flex items-center justify-center xt-text-2">
                     <tippy trigger=" click" placement="bottom" :interactive="true">
                         <template #content>
@@ -209,9 +209,9 @@ const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
 const handleFullScreen = () => {
-
-    fullScreen.value = !fullScreen.value
-}
+//   const full = document.querySelector('.content');
+  fullScreen.value = !fullScreen.value;
+};
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({

@@ -9,8 +9,11 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
+                <div style="position: absolute;left: 120px;top: 16px;" @click="refreshPost" class="pointer">
+                    <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
+                                style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" /></div>
                 <!-- 顶部导航栏 -->
-                <div class="flex justify-between mt-4">
+                <div class="flex justify-between mt-3">
                     <!-- {{ showForumList }} -->
                     <!-- <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
                         <div class="w-[32px] h-[32px] rounded-md ml-2">
@@ -22,17 +25,9 @@
                         </div>
                     </div> -->
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
-                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent"></YuanHorizontalPanel>
+                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
+                    </YuanHorizontalPanel>
                     <div>
-
-                        <!-- <a-tooltip title="跳转元社区" placement="bottom"> -->
-                        <!-- <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
-                            style="flex-shrink: 0;" v-if="false">
-                            <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                                icon="fluent:chat-16-regular" />
-                        </button> -->
-                        <!-- </a-tooltip> -->
-
                         <!-- <a-tooltip title="刷新" placement="bottom" > -->
                         <!-- <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
                             @click="refreshPost">
@@ -44,18 +39,17 @@
                     </div>
                 </div>
                 <!-- 内容区 -->
-                <div style="height: calc(100% - 200px)">
-                    <vue-custom-scrollbar style="overflow: hidden;flex-shrink: 0;width: 100%;height:100%;"
-                        :settings="outerSettings">
+                <div style="" class="h-full">
+                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" 
+                        :settings="outerSettings" style="height: calc(100% - 580px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
                         <div class="content" v-else>
                             <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
-                                <div class="item">
+                                <div class="item" @click="showDetail(item)">
                                     <!-- {{ item.pc_summary }} -->
-                                    <communItem :key="index" :copyNum="copyNum" :showForumPost="item"
-                                        @click="showDetail(item)" />
+                                    <communItem :key="index" :copyNum="copyNum" :showForumPost="item" />
                                 </div>
 
                             </div>
@@ -86,7 +80,7 @@
                 :forumIndex="currentIndex"></YuanPublishModal>
         </teleport>
         <teleport to="body" :disabled="false">
-            <detailModal v-if="showDetailModal" />
+            <detailModal v-if="showDetailModal" :cardData="cardData"/>
         </teleport>
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
@@ -155,7 +149,8 @@ export default {
         RadioTab,
         DataStatu,
         YuanPublishModal,
-        YuanHorizontalPanel
+        YuanHorizontalPanel,
+        detailModal
     },
     props: {
         customIndex: {
@@ -222,6 +217,7 @@ export default {
             showDetailModal: false,
             openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
+            cardData:null,
         }
     },
     methods: {
@@ -244,7 +240,8 @@ export default {
         showDetail(item) {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
-            console.log(this.showDetailModal);
+            this.cardData=item
+            console.log(this.cardData);
         },
         // 选择板块
         handleChange(value) {
@@ -337,7 +334,7 @@ export default {
         // await this.getCommunityPost(this.showForumList[0].id)
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
-        if(this.customData && this.customData.defaultForum){
+        if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
         }
         this.isLoading = false
@@ -370,13 +367,14 @@ export default {
         },
         'customData.selectList': {
             handler(newValue, oldValue) {
-                if(newValue.length===1){
-                    this.options.title=newValue[0].value.name
-                    console.log(this.options.title)
-                }else{
-                    this.options.title='元社区'
+                if (newValue.length === 1) {
+                    this.options.title = newValue[0].value.name
+                    // console.log(this.options.title)
+                } else if (newValue.length > 1 || newValue.length < 1) {
+                    this.options.title = '元社区'
                     console.log(this.options.title);
                 }
+
             }
         }
     }
