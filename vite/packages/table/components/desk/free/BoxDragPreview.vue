@@ -20,6 +20,7 @@ const tickTock = ref(false);
 
 <template>
   <div class="box-drag-preview">
+    2222222222
     <Box :title="title" :yellow="tickTock" preview  />
   </div>
 </template>

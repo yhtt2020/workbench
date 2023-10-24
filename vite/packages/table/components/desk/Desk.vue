@@ -31,9 +31,11 @@
       <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
       <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button>
       <FreeDesk :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id) ' >
-        <template #item="{ item }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
-                         :customData="item.customData" :editing="editing"></component>
+        <template #item="{ data }">
+          {{ data.data.top }}
+            <component   :desk="currentDesk" :is="data.data.name"  :customIndex="data.data.id" :customData="data.data.customData"  :editing="editing"/>
+            <!-- <component :desk="currentDesk" :is="data.data.name" :customIndex="data.data.id"
+                         :customData="data.data.customData" :editing="editing"></component> -->
           </template>
       </FreeDesk>
         <vue-custom-scrollbar  @contextmenu="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
