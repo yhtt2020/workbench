@@ -172,7 +172,7 @@ import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
-import markdown from './Detail/markdown.vue';
+import markdown from './Detail/MarkDown.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // const imageLoadVisible = ref(true)

@@ -137,7 +137,7 @@
 <script>
 import Widget from '../../card/Widget.vue';
 import { Icon as YuanIcon } from '@iconify/vue'
-import communItem from './communItem.vue'
+import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
@@ -145,7 +145,7 @@ import browser from '../../../js/common/browser'
 import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
-import detailModal from './detailModal.vue'
+import detailModal from './DetailModal.vue'
 export default {
     name: '元社区',
     components: {
