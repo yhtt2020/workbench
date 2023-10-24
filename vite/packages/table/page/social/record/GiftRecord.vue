@@ -24,7 +24,7 @@
           </div>
         </template>
         <template v-if="column.dataIndex === 'controls'">
-          <div class="rounded-xl pointer button-active h-10 flex items-center justify-center" 
+          <div class="rounded-xl pointer button-active h-10 flex items-center justify-center"
            style="background: var(--active-secondary-bg);" @click="receiveGift(record)"
           >
             <span class="secondary-title" style="color: var(--active-bg);">领取</span>
@@ -92,7 +92,6 @@ export default {
 
 <style lang="scss" scoped>
 .secondary-title{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
@@ -109,7 +108,6 @@ export default {
 
 
 .primary-title{
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }

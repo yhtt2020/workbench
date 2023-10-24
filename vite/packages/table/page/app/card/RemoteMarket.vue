@@ -31,7 +31,7 @@
         </div>
           <Market :desk="desk" @closeMarket="close"></Market>
       </div>
-     
+
     </div>
   </div>
   <NewPreviewCardDetails
@@ -132,7 +132,7 @@
     watch: {
       openRemote(val){
         if(val){
-          
+
         }
       }
     }
@@ -261,7 +261,6 @@
     border-radius: 0 12px 12px 0px;
 
     .title {
-      font-family: PingFangSC-Medium;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.85);
       font-weight: 500;
@@ -272,7 +271,6 @@
     .text {
       display: flex;
       align-items: center;
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       font-weight: 400;
       margin: 2px 0;
@@ -295,7 +293,6 @@
         align-items: center;
         padding: 4px 10px;
         border-radius: 4px;
-        font-family: PingFangSC-Medium;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.9);
         font-weight: 500;

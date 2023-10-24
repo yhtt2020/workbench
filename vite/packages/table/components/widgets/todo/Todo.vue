@@ -212,7 +212,7 @@ export default {
 }
 
 .drawer-title {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color: var(--primary-text);
   letter-spacing: 0;

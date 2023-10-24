@@ -2,7 +2,7 @@
   <div class="text-base" style="margin-bottom: 10px">背景图片</div>
   <div
     class="xt-text"
-    style="font-family: PingFangSC-Regular; font-size: 16px; font-weight: 400"
+    style=" font-size: 16px; font-weight: 400"
   >
     支持直接复制粘贴图片到此处
   </div>
@@ -130,7 +130,7 @@ export default {
   background: #2a2a2a;
   border-radius: 12px;
   height: 48px;
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   text-align: center;

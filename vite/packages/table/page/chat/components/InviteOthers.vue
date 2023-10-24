@@ -6,7 +6,7 @@
     style="position: absolute; top:12px;right:8px;background: var(--secondary-bg);"
     @click="closeButton"
    >
-    <InviteIcon  icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;"/>
+    <InviteIcon  icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color: var(--secondary-text);"/>
    </div>
   </div>
 

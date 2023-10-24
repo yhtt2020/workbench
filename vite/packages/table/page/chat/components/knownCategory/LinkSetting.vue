@@ -2,12 +2,9 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <!-- <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
-   </div> -->
    <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-     <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
+     <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 
@@ -34,8 +31,8 @@
    <template v-if="defaultOpen.openMethod === 'outerOpen'">
      <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
    </template>
-   
-   
+
+
    <div class="flex items-center justify-end my-3">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
@@ -115,7 +112,7 @@ methods:{
   // console.log('查看参数',option)
 
    const res = await this.updateChannel(option)
-   
+
    //  console.log('查看状态',res)
 
    if(res?.status === 1){
@@ -134,12 +131,30 @@ methods:{
 
 watch:{
  defaultType(newVal){
-   console.log('监听数据变化',newVal)
    this.defaultType = newVal
  },
  defaultOpen(newVal){
    console.log('监听数据变化',newVal)
    this.defaultOpen = newVal
+ },
+ 'item':{
+  handler(newVal){
+    if(newVal && newVal !== '' && newVal !== undefined){
+      const data = JSON.parse(newVal.props)
+      if(data.openMethod === 'currentPage'){
+       this.defaultType = {title:'当前页面直接打开',name:'current',openMethod:'currentPage'}
+      }else{
+       this.defaultOpen = {title:'外部跳转打开',name:'outer',openMethod:'outerOpen'}
+       if(data.openMethod === 'userSelect'){
+        this.defaultType = { title:'内部浏览器',name:'inter',openMethod:'userSelect' }
+       }else{
+        this.defaultType = { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
+       }
+      }
+    }
+  },
+  immediate:true,
+  deep:true
  }
 }
 
@@ -148,7 +163,7 @@ watch:{
 
 <style lang="scss" scoped>
 .font-16-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
@@ -170,7 +185,7 @@ watch:{
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

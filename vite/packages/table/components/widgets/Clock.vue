@@ -136,7 +136,7 @@ export default {
         {
           icon: 'shezhi1',
           title: '设置',
-          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false;this.changeSettingStatus() }
         },
       ],
       visibleDrawer: false,
@@ -252,13 +252,13 @@ font-40 {
 }
 
 font-14 {
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }
 
 font-16 {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }

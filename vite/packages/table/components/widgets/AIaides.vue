@@ -190,19 +190,20 @@ export default {
     // margin: auto 5px;
     :deep(.ant-input) {
       color: var(--secondary-text);
+      font-size: 14px;
       height: 40px;
       width: 100%;
       padding-left: 16px;
       &::placeholder {
-        font-family: PingFangSC-Regular;
-        font-size: 16px;
+
+        font-size: 14px;
         font-weight: 400;
         color: var(--secondary-text);
       }
     }
   }
   .ai-con {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
     // margin-top: -5px;
@@ -224,7 +225,7 @@ export default {
       flex-shrink: 0;
     }
     .msg-title {
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       // width: 80%;
       color: var(--primary-text);

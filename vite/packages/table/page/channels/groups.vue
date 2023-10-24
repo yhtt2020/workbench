@@ -17,34 +17,34 @@
                             {{ item.title }}
                         </a-select-option>
                     </a-select> -->
-                    <div class="xt-bg-2 w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
+                    <!-- <div class="xt-bg-2 w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
                         style="cursor: pointer">
                         <a-dropdown trigger="click" placement="bottom"
                             overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
                             <span class=" ant-dropdown-link" @click.prevent>
                                 {{ options[checkMenuCurrentIndex].title }}
-                                <newIcon icon="fluent:chevron-left-16-filled" class="-rotate-90" style="vertical-align: middle;font-size: 20px;"></newIcon>
+                                <newIcon icon="fluent:chevron-left-16-filled" class="-rotate-90"
+                                    style="vertical-align: middle;font-size: 20px;"></newIcon>
                             </span>
                             <template #overlay>
                                 <a-menu class="text-center xt-bg-2">
-                                    <a-menu-item v-for="(item, index) in options" :key="index"
-                                        @click="handleChange(index)">
+                                    <a-menu-item v-for="(item, index) in options" :key="index" @click="handleChange(index)">
                                         <span class="text-center xt-text">{{ item.title }}</span>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                    </div>
+                    </div> -->
 
-                    <!-- <a-select  autoClearSearchValue="false" class="ml-3"
-                        style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;"
+                    <a-select  autoClearSearchValue="false" class="ml-3"
+                        style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;"
                          :bordered="false" >
                         <a-select-option :value="index" v-for="(item, index) in options"
-                            class="absolute z-auto xt-bg xt-text-2 selsect-options">
+                            class="absolute z-auto xt-bg xt-text-2 selsect-options" style="font-size: 16px;">
                             {{ item.title }}
                         </a-select-option>
                         <template #placeholder>
-                            <div class="xt-text font-16">
+                            <div class="ml-3 text-center xt-text" style="font-size: 16px;">
                                 全部
                             </div>
                         </template>
@@ -52,7 +52,7 @@
                             <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
                                 class="mr-3 rotate-180 xt-text"></YuanIcon>
                         </template>
-                    </a-select> -->
+                    </a-select>
                 </div>
             </div>
             <div>
@@ -65,18 +65,18 @@
             </div>
         </div>
         <!-- 圈子列表 -->
-        <div style="height: calc(100vh - 16em)">
+        <div style="height: calc(100% - 80px)">
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
                 :settings="settingsScroller" style="height: 100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <div class="flex flex-wrap mt-4">
                     <GroupsItem v-for="(item, index) in groupMsg" :key="index" :circleMsg="item" @goJoin="goJoin" />
                 </div>
-                <!-- 翻页 -->
-                <div class="flex justify-center">
-                    <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
-                </div>
-            </vue-custom-scrollbar>
 
+            </vue-custom-scrollbar>
+            <!-- 翻页 -->
+            <div class="flex justify-center">
+                <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
+            </div>
         </div>
         <!-- <teleport to="body" :disabled="false"> -->
         <JoinModal v-if="joinVisible" @handleOk="joinVisible = false" />
@@ -177,7 +177,18 @@ const handleChange = (value) => {
     width: 40px;
     height: 40px;
 }
-
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-left: 12px;
+}
 :deep(.ant-pagination-prev .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
@@ -186,4 +197,5 @@ const handleChange = (value) => {
 :deep(.ant-pagination-next .ant-pagination-item-link) {
     color: var(--primary-text);
     border: none;
-}</style>
+}
+</style>

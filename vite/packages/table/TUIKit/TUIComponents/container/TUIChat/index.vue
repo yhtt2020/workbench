@@ -3,13 +3,13 @@
     <header class="TUIChat-header">
       <i class="icon icon-back" @click="back" v-if="env.isH5"></i>
       <TypingHeader :needTyping="needTyping" :conversation="conversation" :messageList="messageList" ref="typingRef" />
-      
+
       <div class="flex"  v-if="conversation.groupProfile">
         <div class="flex items-center pointer" @click="openNotice">
           <SoundOutlined style="color: var(--secondary-text);font-size: 1.25em;"/>
           <!-- <Icon icon="akar-icons:sound-on" /> -->
         </div>
-  
+
         <div class="flex items-center pointer " style="margin-left:12px;" @click="openGroup">
           <Icon icon="gengduo1" style="color: var(--secondary-text);"></Icon>
         </div>
@@ -155,17 +155,17 @@
     </div>
 
     <template v-if="index === 1">
-      <UpdateGroupName @close="updateVisible = false" :groupInfo="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
+      <UpdateGroupName @close="updateVisible = false" :info="info"  :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupName>
     </template>
 
     <template v-if="index === 2">
       <UpdateGroupNotice :noticeInfo="info" @close="updateVisible = false" :server="GroupServer" @updateGroupInfo="openGroup"></UpdateGroupNotice>
     </template>
-    
+
     <template v-if="index === 3">
       <UpdateMemeber :memberInfo="info" @close="updateVisible = false" :server="GroupServer"></UpdateMemeber>
     </template>
-    
+
     <template v-if="index === 4">
       <UpdateGroupManage :groupManageInfo="info" :server="GroupServer" @close="updateVisible = false"></UpdateGroupManage>
     </template>
@@ -184,7 +184,7 @@
        <ForwardModal :content="currentMessage" @close="inForward =false"></ForwardModal>
     </Modal>
   </teleport>
-  
+
 
 </template>
 
@@ -235,7 +235,7 @@ import UpdateInviteWay from './updateMange/updateInviteWay.vue'
 import Modal from '../../../../components/Modal.vue';
 import ForwardModal from './components/forwardModal.vue';
 // import { Icon } from '@iconify/vue'
-// 
+//
 
 const TUIChat: any = defineComponent({
   name: 'TUIChat',
@@ -934,21 +934,21 @@ const TUIChat: any = defineComponent({
 
     const openGroup = async () =>{  // 打开右侧抽屉
       data.groupVisible = true
-        
-      const option = {  
+
+      const option = {
         groupID:data.conversation.groupProfile?.groupID
       }
       const options ={
         groupID:data.conversation.groupProfile?.groupID,  // 群组id
-        count: 500,  // 
+        count: 500,  //
         offset: 0
       }
       const res = await TUIServer.TUICore?.tim.getGroupProfile(option)  // 获取群组详细资料
       data.newManagerList = res.data.group
-      
+
       const result = await GroupServer.getGroupMemberList(options)
       // 将群组成员进行排序,将群主和管理员放在最前面
-      const list = result.data.memberList.sort((a: any,b: any)=>{ 
+      const list = result.data.memberList.sort((a: any,b: any)=>{
         if (a.role === 'Owner' && b.role !== 'Owner') {
          return -1; // a 排在 b 前面
         } else if (b.role === 'Owner' && a.role !== 'Owner') {
@@ -1040,7 +1040,7 @@ export default TUIChat;
 }
 
 .font-16{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }

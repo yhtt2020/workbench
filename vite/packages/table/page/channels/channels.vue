@@ -15,7 +15,7 @@ const route=useRoute()
 const router=useRouter()
 const leftMenu=ref([
     {
-        icon: 'message',
+        // icon: 'message',
         newIcon: 'fluent:star-12-regular',
         tab: 'channelsIndex',
         route:{name:'channelsIndex'},
@@ -24,7 +24,7 @@ const leftMenu=ref([
         }
     },
     {
-        icon: 'message',
+        // icon: 'message',
         newIcon: 'eva:compass-outline',
         tab: 'circle',
         route:{name:'circle'},

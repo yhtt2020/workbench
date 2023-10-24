@@ -210,7 +210,7 @@ export default {
 
 <style lang="scss" scoped>
 .avatar-font {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
@@ -227,7 +227,7 @@ export default {
 }
 
 .avatar-pay {
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 400;
 }
@@ -240,7 +240,7 @@ export default {
 }
 
 .success-text {
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--secondary-text);
   font-weight: 400;
@@ -259,7 +259,7 @@ export default {
   }
 
   & > .panel-title {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
   }

@@ -2,8 +2,8 @@
     <div class="flex items-center justify-between w-full mt-2">
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false" style="cursor: default;"
-            @keyup.enter="addComment" />
+        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false"
+            style="cursor: default;" @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
@@ -17,7 +17,7 @@
         </a-modal>
     </div>
     <div class="flex justify-between w-full mt-2 mb-4 font-14 input-btm">
-        <div class="w-full">
+        <div class="flex w-full">
             <tippy trigger=" click" placement="bottom" :interactive="true">
                 <template #content>
                     <!-- <div class="w-full"> -->
@@ -30,16 +30,23 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <button class=" w-[68px] h-[32px]  xt-text-2 ml-9 xt-bg-2 rounded-lg"
-                    style="color: var(--secondary-text) !important; text-align: center !important; border: none;">
-                    <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" />
-                </button>
+                <a-tooltip title="添加表情" placement="bottom">
+                    <xt-button class="rounded-lg xt-text-2 ml-9 active-btn"
+                        style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
+                        <replyIcon icon="fluent:emoji-smile-slight-24-regular"
+                            style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
+                    </xt-button>
+                </a-tooltip>
             </tippy>
-            <button class="w-[68px] h-[32px] xt-text-2 xt-bg-2 rounded-lg ml-1"
-                style="color: var(--secondary-text) !important; text-align: center !important; border: none;"
-                @click="imageVisible">
-                <PictureOutlined style="font-size: 16px !important; margin-right: 4px;" />
-            </button>
+            <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
+            <a-tooltip title="添加图片" placement="bottom">
+                <xt-button class="ml-1 rounded-lg xt-text-2 active-btn"
+                    style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
+                    <replyIcon icon="fluent:image-sparkle-16-regular"
+                        style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
+                </xt-button>
+            </a-tooltip>
+        </a-upload>
         </div>
         <xt-button type="primary" class=" reply xt-text"
             style="color: var(--secondary-text) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
@@ -52,10 +59,12 @@
 
 <script setup lang='ts'>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import {  PlusOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../table/store'
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
+import { Icon as replyIcon } from '@iconify/vue'
+import fluentEmojis from '../../../js/chat/fulentEmojis'
 const useCommunStore = useCommunityStore()
 const userStore = appStore()
 const value = ref('')
@@ -70,7 +79,7 @@ const props = defineProps({
 const replyPlaceholder = computed(() => {
     return `回复${props.replyCom.user.nickname}`
 })
-const imageVis = ref(false)
+// const imageVis = ref(false)
 // 添加表情
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
@@ -102,7 +111,7 @@ const addComment = async () => {
         // console.log(props.replyCom.to_reply_id,props.replyCom.id);
         setTimeout(async () => {
             const imageList = JSON.stringify(imageUrlList);
-            await useCommunStore.getCommunitythreadReply(authorid, content, threadId,imageList, to_reply_id, to_reply_second_id)
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList, to_reply_id, to_reply_second_id)
             await useCommunStore.getCommunityPostDetail(threadId)
             await useCommunStore.getCommunityPostReply(threadId)
             value.value = ''
@@ -115,9 +124,9 @@ const addComment = async () => {
     }
     emit('addComment', commentList)
 }
-const imageVisible = () => {
-    imageVis.value = !imageVis.value
-}
+const imageVis=computed(()=>{
+    return fileList.value?.length>0
+})
 import type { UploadProps } from 'ant-design-vue';
 
 function getBase64(file: File) {
@@ -139,57 +148,6 @@ const settingsScroller = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 });
-const fluentEmojis = reactive({
-    "[Kiss]": "Face Blowing a Kiss.png",
-    "[Tears]": "Face with Tears of Joy.png",
-    "[Cry]": "Loudly Crying Face.png",
-    "[Smiling]": "Smiling Face with Open Hands.png",
-    "[Confound]": "Confounded Face.png",
-    "[Mask]": "Face with Medical Mask.png",
-    "[Zany]": "Zany Face.png",
-    "[Vomit]": "Face Vomiting.png",
-    "[Kissing]": "Kissing Face.png",
-    "[Fearful]": "Fearful Face.png",
-    "[Pleading]": "Pleading Face.png",
-    "[Scream]": "Face Screaming in Fear.png",
-    "[AngryFace]": "Angry Face.png",
-    "[Zipper]": "Zipper-Mouth Face.png",
-    "[Expressionless]": "Expressionless Face.png",
-    "[SpiralEyes]": "Face with Spiral Eyes.png",
-    "[Shushing]": "Shushing Face.png",
-    "[MoneyMouth]": "Money-Mouth Face.png",
-    "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
-    "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
-    "[Victory]": "Victory Hand Light Skin Tone.png",
-    "[Ok]": "OK Hand Light Skin Tone.png",
-    "[Pingching]": "Pinching Hand Light Skin Tone.png",
-    "[Hands]": "Folded Hands Light Skin Tone.png",
-    "[Clap]": "Clapping Hands Light Skin Tone.png",
-    "[OpenHands]": "Open Hands Light Skin Tone.png",
-    "[Waing]": "Waving Hand Light Skin Tone.png",
-    "[Writing]": "Writing Hand Light Skin Tone.png",
-    "[PigFace]": "Pig Face.png",
-    "[Cat]": "Cat with Wry Smile.png",
-    "[Blowfish]": "Blowfish.png",
-    "[Yen]": "Yen Banknote.png",
-    "[Triangular]": "Triangular Flag.png",
-    "[Heart]": "Beating Heart.png",
-    "[Broken]": "Broken Heart.png",
-    "[1st]": "1st Place Medal.png",
-    "[2nd]": "2nd Place Medal.png",
-    "[3rd]": "3rd Place Medal.png",
-    "[Selfie]": "Selfie Light Skin Tone.png",
-    "[Teacup]": "Teacup Without Handle.png",
-    "[New]": "New Button.png",
-    "[Check]": "Check Mark Button.png",
-    "[Anger]": "Anger Symbol.png",
-    "[Acceptable]": 'Japanese Acceptable Button.png',
-    "[Hundred]": "Hundred Points.png",
-    "[Crab]": "Crab.png",
-    "[MoneyBag]": "Money Bag.png",
-    "[Zzz]": "Zzz.png",
-    "[Bomb]": "Bomb.png",
-})
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
@@ -247,9 +205,19 @@ onMounted(async () => {
 }
 
 .btn {
-    border: 1px solid var(--secondary-text);
+    border: 1px solid var(--divider);
 }
 
+.active-btn {
+    background-color: transparent;
+
+    &:hover {
+        background-color: var(--secondary-bg);
+    }
+}
+:deep(.ant-upload-list-text-container){
+    display: none;
+}
 .comment-input {
     border-radius: 8px;
     height: 40px;
@@ -259,10 +227,11 @@ onMounted(async () => {
 
 :deep(.ant-input) {
     color: var(--secondary-text);
+
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+        color: var(--disable-text);
     }
 }
 

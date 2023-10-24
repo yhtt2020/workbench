@@ -207,7 +207,6 @@ import { message } from "ant-design-vue";
       font-size: 16px;
       margin: 16px 0;
       color: var(--primary-text);
-      font-family: PingFangSC-Regular;
       img{
         width: 80px;
         height: 80px;

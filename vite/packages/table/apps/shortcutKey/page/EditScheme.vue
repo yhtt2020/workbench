@@ -36,7 +36,7 @@
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
-        <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
+        <div class="ml-10 xt-text-2" style="font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
 
@@ -941,7 +941,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     color: var(--primary-text);
   }

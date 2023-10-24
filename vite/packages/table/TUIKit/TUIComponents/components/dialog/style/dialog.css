@@ -1,30 +1,37 @@
 @import url("../../../styles/common.scss");
 @import url("../../../styles/icon.scss");
 .dialog {
-  background: rgba(0, 0, 0, 0.3); }
-  .dialog header h1 {
-    font-family: PingFangSC-Medium;
-    font-weight: 500;
-    color: #333333; }
-  .dialog-main {
-    background: #FFFFFF; }
-    .dialog-main header {
-      font-weight: 500;
-      color: #333333; }
-    .dialog-main-content {
-      font-weight: 400;
-      color: #333333; }
+  background: rgba(0, 0, 0, 0.3);
+}
+.dialog header h1 {
+  font-weight: 500;
+  color: #333333;
+}
+.dialog-main {
+  background: #FFFFFF;
+}
+.dialog-main header {
+  font-weight: 500;
+  color: #333333;
+}
+.dialog-main-content {
+  font-weight: 400;
+  color: #333333;
+}
 
 .btn {
   font-weight: 400;
   color: #FFFFFF;
-  letter-spacing: 0; }
-  .btn-cancel {
-    border: 1px solid #dddddd;
-    color: #666666; }
-  .btn-default {
-    background: #006EFF;
-    border: 1px solid #006EFF; }
+  letter-spacing: 0;
+}
+.btn-cancel {
+  border: 1px solid #dddddd;
+  color: #666666;
+}
+.btn-default {
+  background: #006EFF;
+  border: 1px solid #006EFF;
+}
 
 .dialog {
   position: fixed;
@@ -35,26 +42,32 @@
   z-index: 6;
   display: flex;
   justify-content: center;
-  align-items: center; }
-  .dialog header h1 {
-    font-size: 16px;
-    line-height: 30px; }
-  .dialog-main {
-    min-width: 368px;
-    border-radius: 10px;
-    padding: 20px 30px; }
-    .dialog-main header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 16px;
-      line-height: 30px; }
-    .dialog-main-content {
-      padding: 20px 0 40px;
-      font-size: 14px; }
-    .dialog-main footer {
-      display: flex;
-      justify-content: flex-end; }
+  align-items: center;
+}
+.dialog header h1 {
+  font-size: 16px;
+  line-height: 30px;
+}
+.dialog-main {
+  min-width: 368px;
+  border-radius: 10px;
+  padding: 20px 30px;
+}
+.dialog-main header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  line-height: 30px;
+}
+.dialog-main-content {
+  padding: 20px 0 40px;
+  font-size: 14px;
+}
+.dialog-main footer {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .btn {
   padding: 8px 20px;
@@ -63,44 +76,54 @@
   border: none;
   font-size: 14px;
   text-align: center;
-  line-height: 20px; }
-  .btn:disabled {
-    opacity: 0.3; }
-  .btn:last-child {
-    margin-right: 0; }
+  line-height: 20px;
+}
+.btn:disabled {
+  opacity: 0.3;
+}
+.btn:last-child {
+  margin-right: 0;
+}
 
 .dialog-h5 {
   height: 100%;
   top: 0;
-  align-items: inherit; }
-  .dialog-h5 .dialog-main {
-    min-width: 0;
-    min-height: 0;
-    width: 100%;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; }
-    .dialog-h5 .dialog-main-content {
-      flex: 1;
-      padding: 0;
-      min-width: 0;
-      min-height: 0;
-      overflow: hidden; }
-    .dialog-h5 .dialog-main footer {
-      border-top: 1px solid #DDDDDD; }
-      .dialog-h5 .dialog-main footer .btn {
-        flex: 1;
-        margin: 0;
-        background: none;
-        border-right: 1px solid #DDDDDD; }
-        .dialog-h5 .dialog-main footer .btn-default {
-          color: #FF584C;
-          border: none; }
+  align-items: inherit;
+}
+.dialog-h5 .dialog-main {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.dialog-h5 .dialog-main-content {
+  flex: 1;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.dialog-h5 .dialog-main footer {
+  border-top: 1px solid #DDDDDD;
+}
+.dialog-h5 .dialog-main footer .btn {
+  flex: 1;
+  margin: 0;
+  background: none;
+  border-right: 1px solid #DDDDDD;
+}
+.dialog-h5 .dialog-main footer .btn-default {
+  color: #FF584C;
+  border: none;
+}
 
 .center {
   align-items: center;
   padding: 20px;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 /*# sourceMappingURL=dialog.css.map */

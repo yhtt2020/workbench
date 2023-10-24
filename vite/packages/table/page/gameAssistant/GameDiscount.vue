@@ -10,7 +10,7 @@
       <a-spin v-if="isLoading === true" />
       <vue-custom-scrollbar v-else  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" class="mt-3 px-3" style="height: calc(100vh - 16.5em)">
         <div class="steam-top-content w-full mb-4" >
-          <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)" 
+          <div v-for="item in steamList.slice(0,2)" @click="enterDiscountDetail(item)"
            class="steam-top-item rounded-lg flex pointer flex-col discount-bg"
           >
             <img :src="item.header_image" alt="" class="rounded-t-lg"  style="width:100%;height: 100%;object-fit: cover;">
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="steam-bottom-content">
-          <div v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)" 
+          <div v-for="item in steamList.slice(2)" @click="enterDiscountDetail(item)"
            class="steam-bottom-item discount-bg pointer rounded-lg flex flex-col mr-2"
           >
             <img :src="item.header_image" alt="" class="rounded-t-lg mb-3"  style="width:100%;height: 100%;object-fit: cover;">
@@ -34,7 +34,7 @@
               <span class="line-through old-price ml-2">{{ currencyFormat(item.original_price,item.currency) }}</span>
             </div>
           </div>
-        </div> 
+        </div>
       </vue-custom-scrollbar>
     </template>
 
@@ -157,7 +157,7 @@ export default {
       const noResultNull = _.filter(result, function(o) { return o.promotions !== null });
       this.epicList = noResultNull
     },
-    
+
     openEpicStore(v){
       if(v.urlSlug !== null){
         browser.openInInner(`https://store.epicgames.com/zh-CN/p/${v.urlSlug}`)
@@ -269,7 +269,7 @@ export default {
 }
 
 .time-text{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   color:var(--secondary-text);
   font-weight: 400;
@@ -288,7 +288,7 @@ export default {
 
 :deep(.nav-item){
   border-radius: 6px !important;
-} 
+}
 
 
 

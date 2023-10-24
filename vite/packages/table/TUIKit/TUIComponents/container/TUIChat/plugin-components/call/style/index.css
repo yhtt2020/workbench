@@ -1,85 +1,124 @@
-/*
-Error: wrong number of arguments (1 for 3) for `rgb'
-        on line 15 of h5.scss
-        from line 4 of index.scss
+@import url("../../../../../styles/common.scss");
+@import url("../../../../../styles/icon.scss");
+.call {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.call-icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.call-icon .icon-down-arrow {
+  margin: 12px 1px 0;
+}
+.call-main {
+  position: absolute;
+  z-index: 5;
+  background: #ffffff;
+  top: 37px;
+  left: calc(-50% + 20px);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  border: 0.5px solid #e0e0e0;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
+}
+.call-main-voice, .call-main-video {
+  height: 34px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 34px;
+  align-items: center;
+}
+.call-main-voice:hover, .call-main-video:hover {
+  background: #dceafd;
+}
+.call-main:before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: calc(50% - 9px);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #e0e0e0;
+}
+.call-main:after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: calc(50% - 8px);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+}
+.call .uncall-dialog {
+  width: 500px;
+  height: 300px;
+  background: linear-gradient(180deg, #E9F3FF 0%, #F4F8FF 100%);
+  border-radius: 20px;
+}
+.call .uncall-dialog-body a {
+  font-weight: 400;
+  color: #006EFF;
+  letter-spacing: 0;
+}
 
-Backtrace:
-h5.scss:15
-index.scss:4
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:310:in `reformat_argument_error'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:149:in `rescue in _perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:122:in `_perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/node.rb:58:in `perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `block in _perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `_perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/node.rb:58:in `perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:398:in `visit_prop'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block (2 levels) in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:432:in `visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block (2 levels) in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:432:in `visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `block (2 levels) in visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `block in visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:88:in `block in with_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:88:in `with_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:326:in `visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:171:in `block in visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:170:in `visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:190:in `visit_root'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:161:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:10:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/root_node.rb:36:in `css_tree'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/engine.rb:384:in `_render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/engine.rb:301:in `render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/sass_scss.rb:391:in `run'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/sass_scss.rb:63:in `process_result'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/base.rb:52:in `parse'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/base.rb:19:in `parse!'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/bin/sass:13:in `<top (required)>'
-C:/Users/cyx/AppData/Local/Microsoft/WindowsApps/sass:32:in `load'
-C:/Users/cyx/AppData/Local/Microsoft/WindowsApps/sass:32:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: wrong number of arguments (1 for 3) for `rgb'\A         on line 15 of h5.scss\A         from line 4 of index.scss"; }
+.call-kit-container {
+  position: fixed;
+  left: calc(50% - 25rem);
+  top: calc(50% - 18rem);
+  width: 50rem;
+  height: 36rem;
+  border-radius: 16px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.call-kit-container-left {
+  left: calc(50% - 25rem + 150px);
+}
+
+.call-main-h5 {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.call-main-h5 .call-main-content {
+  border-radius: 12px 12px 0 0;
+  background-color: #ffffff;
+}
+.call-main-h5 .call-main-voice,
+.call-main-h5 .call-main-video {
+  height: 30px;
+  padding: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #F7F8FA;
+  display: flex;
+  justify-content: center;
+}
+.call-main-h5 .call-main-voice i,
+.call-main-h5 .call-main-video i {
+  margin-right: 10px;
+}
+.call-main-h5 footer {
+  border-top: 10px solid #F7F8FA;
+  height: 30px;
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+  align-items: center;
+}
+
+/*# sourceMappingURL=index.css.map */

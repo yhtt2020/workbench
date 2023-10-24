@@ -3,7 +3,7 @@
     <!--  工具栏-->
     <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
-      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs">
+      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs && displayDesks.length>1">
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
         <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
         <!--        主桌面-->
@@ -49,7 +49,7 @@
       </div>
 
       <div v-if="showTools">
-        <div class="flex flex-row">
+        <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
           <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
             <div
@@ -85,19 +85,19 @@
           </a-tooltip>
           <a-tooltip title="菜单" placement="bottom">
 
-              <div class="pl-3">
-                <xt-task :modelValue="getStep" @cb="showMenu">
-                  <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='click'>
-                    <div
-                        @click="showMenu"
-                        class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
-                      >
-                        <xt-new-icon size='18' icon="fluent:more-horizontal-16-filled" />
-                      </div>
-                  </RightMenu>
-            </xt-task>
+            <div class="pl-3">
+              <xt-task :modelValue="getStep" @cb="showMenu">
+                <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='click'>
+                  <div
+                    @click="showMenu"
+                    class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+                  >
+                    <xt-new-icon size='18' icon="fluent:more-horizontal-16-filled"/>
+                  </div>
+                </RightMenu>
+              </xt-task>
 
-              </div>
+            </div>
           </a-tooltip>
         </div>
       </div>
@@ -117,7 +117,7 @@
       v-if="currentDesk && currentDesk?.cards?.length > 0"
     >
       <Desk
-      :deskGroupMenu='deskGroupMenu'
+        :deskGroupMenu='deskGroupMenu'
         @changeEditing="editing = !editing"
         :global-settings="settings"
         :editing="editing"
@@ -127,7 +127,7 @@
         :key="key"
 
       >
-      <!-- 拿菜单数据 -->
+        <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
         </template>
@@ -143,7 +143,7 @@
               </a-col>
             </xt-task>
 
-              <a-col>
+            <a-col>
               <div @click="importDesk" class="btn">
                 <Icon style="font-size: 3em" icon="daoru"></Icon>
                 <div><span>导入桌面</span></div>
@@ -196,34 +196,29 @@
             <!--            <p style="font-size: 16px">-->
             <!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
             <!--            </p>-->
-            <div>
-              <a-button
-                style="color: var(--active-text)"
-                @click="moreDesk"
-                class="mr-10 xt-active-bg rounded-full border-none animate-pulse"
-                key="console"
-                type="primary"
-                ><icon class="mr-1" icon="shop" style="font-size: 18px"></icon
-                >&nbsp;查看桌面市场
-              </a-button>
-              <a-button
-                @click="newAddCard"
-                class="mr-10 rounded-full xt-bg-2 border-none"
-                key="console"
-                ><icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
-              </a-button>
-              <a-button
-                class="xt-bg-2 rounded-full border-none"
-                key="buy"
-                @click="learn"
-                ><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button
+            <div class="w-full flex justify-items-center justify-center align-items-center ">
+              <xt-button :w="160"
+                         style="color: var(--active-text)"
+                         @click="moreDesk"
+                         class="mr-10 xt-active-bg rounded-full border-none  "
+                         key="console"
+                         type="primary"
               >
+                <icon class="mr-1" icon="shop" style="font-size: 18px"></icon
+                >&nbsp;查看桌面市场
+              </xt-button>
+              <xt-button :w="140"
+                         @click="newAddCard"
+                         class="mr-10 rounded-full xt-bg-2 border-none"
+                         key="console"
+              >
+                <icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
+              </xt-button>
             </div>
           </div>
           <div class="text-center mt-2 xt-text" style="font-size: 18px">
             <icon
               icon="arrowdown"
-              class="animate-bounce"
               style="font-size: 1.2em; vertical-align: text-bottom"
             ></icon>
             为您推荐（左右滑动）
@@ -333,7 +328,7 @@
     @close="shareCode = false"
   >
 
-  <HorizontalPanel
+    <HorizontalPanel
       :nav-list="currentAddMethod"
       v-model:select-type="currentAddTab"
     >
@@ -354,11 +349,11 @@
           <span class="desk-title mr-2">热门桌面</span>
           <Icon style="font-size: 20px" icon="daohang_remen-xuanzhong"></Icon>
         </span>
-<xt-task :modelValue="M03024" @cb="moreDesk">
-  <div class="btn-item" @click="moreDesk" style="width: 160px">
-          更多桌面分享
-        </div>
-</xt-task>
+        <xt-task :modelValue="M03024" @cb="moreDesk">
+          <div class="btn-item" @click="moreDesk" style="width: 160px">
+            更多桌面分享
+          </div>
+        </xt-task>
       </div>
       <div>
         <DeskMarket
@@ -372,35 +367,35 @@
     </div>
     <div v-else>
 
-    <xt-task :modelValue="M01023">
-    </xt-task>
+      <xt-task :modelValue="M01023">
+      </xt-task>
 
 
-    <div class="desk-title mt-4">标题</div>
-        <a-input
-          v-model:value="deskTitle"
+      <div class="desk-title mt-4">标题</div>
+      <a-input
+        v-model:value="deskTitle"
         spellcheck="false"
         class="input"
         placeholder="请输入"
         aria-placeholder="font-size: 16px;"
       />
       <xt-task :modelValue="M01024" @cb="doAddDesk">
-      <span class="desk-title">初始布局</span>
-      <div class="mt-6">
-        <HorizontalPanel
-          :navList="deskType"
-          v-model:selectType="selectDesk"
-        ></HorizontalPanel>
-      </div>
-      <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
-      <xt-button style="width: 100%;" type="theme" @click="doAddDesk" class="mt-4" >立即添加</xt-button>
-    </xt-task>
+        <span class="desk-title">初始布局</span>
+        <div class="mt-6">
+          <HorizontalPanel
+            :navList="deskType"
+            v-model:selectType="selectDesk"
+          ></HorizontalPanel>
+        </div>
+        <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
+        <xt-button style="width: 100%;" type="theme" @click="doAddDesk" class="mt-4">立即添加</xt-button>
+      </xt-task>
 
       <div>
         <div @click="importDesk" class="btn-item">导入桌面</div>
       </div>
     </div>
-    <template #extra v-if="shareCode"> </template>
+    <template #extra v-if="shareCode"></template>
     <div v-if="!shareCode"></div>
     <div v-else>
       <span class="desk-title">分享码</span>
@@ -455,28 +450,29 @@
 
 <script lang="ts">
 import Desk from "./Desk.vue";
-import { appStore } from "../../store";
-import { taskStore } from "../../apps/task/store";
-import { mapActions, mapWritableState, mapWritableState } from "pinia";
+import {appStore} from "../../store";
+import {taskStore} from "../../apps/task/store";
+import {mapActions, mapWritableState, mapWritableState} from "pinia";
 import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
-import { message, Modal } from "ant-design-vue";
+import {message, Modal, notification} from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
-import { nanoid } from "nanoid";
+import {nanoid} from "nanoid";
 import Template from "../../../user/pages/Template.vue";
 
-import { deskTemplates } from "../../js/data/deskTemplates";
+import {deskTemplates} from "../../js/data/deskTemplates";
 import DeskMarket from "../../page/app/card/DeskMarket.vue";
-import { deskStore } from "../../store/desk";
+import {deskStore} from "../../store/desk";
 import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
-import { marketStore } from "../../store/market";
+import {marketStore} from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
 import RightMenu from "./RightMenu.vue"
+
 export default {
   name: "DeskGroup",
   components: {
@@ -528,45 +524,45 @@ export default {
   },
   data() {
     return {
-      deskGroupMenu:[
+      deskGroupMenu: [
         {
-          id:3,
-          newIcon:"fluent:slide-add-16-regular",
-                name:"添加桌面",
-                fn:this.showAddDeskForm
+          id: 3,
+          newIcon: "fluent:slide-add-16-regular",
+          name: "添加桌面",
+          fn: this.showAddDeskForm
         },
         {
-          id:9,
-            newIcon:"fluent:more-horizontal-16-filled",
-            name:"更多",
+          id: 9,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
             lock:true,
-            children:[
-              {
-                id:1,
-                newIcon:"fluent:arrow-download-20-filled",
-                name:"导入桌面",
-                fn:this.importDesk
-              },
-              {
-                id:2,
-                newIcon:"fluent:open-20-filled",
-                name:"导出桌面",
-                fn:this.exportDesk
-              },
-              {
-                id:3,
-                newIcon:"fluent:share-android-24-regular",
-                name:"分享桌面",
-                fn:this.shareDesk
-              },
-              {
-                id:5,
-                newIcon:"akar-icons:trash-can",
-                name:"删除桌面",
-                fn:this.delDesk
-              }
+          children: [
+            {
+              id: 1,
+              newIcon: "fluent:arrow-download-20-filled",
+              name: "导入桌面",
+              fn: this.importDesk
+            },
+            {
+              id: 2,
+              newIcon: "fluent:open-20-filled",
+              name: "导出桌面",
+              fn: this.exportDesk
+            },
+            {
+              id: 3,
+              newIcon: "fluent:share-android-24-regular",
+              name: "分享桌面",
+              fn: this.shareDesk
+            },
+            {
+              id: 5,
+              newIcon: "akar-icons:trash-can",
+              name: "删除桌面",
+              fn: this.delDesk
+            }
 
-            ],
+          ],
         }
       ],
       scrollbarSettings: {
@@ -577,7 +573,7 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
-      currentAddTab: { name: "market" },
+      currentAddTab: {name: "market"},
       key: Date.now(),
       moreDesksVisible: false, //显示更多桌面
       allDeskListVisible: false,
@@ -586,12 +582,12 @@ export default {
       addDeskVisible: false,
       shareDeskVisible: false,
       deskType: [
-        { title: "日常桌面", name: "daily" },
-        { title: "游戏桌面", name: "game" },
-        { title: "办公桌面", name: "work" },
-        { title: "空白桌面", name: "empty" },
+        {title: "日常桌面", name: "daily"},
+        {title: "游戏桌面", name: "game"},
+        {title: "办公桌面", name: "work"},
+        {title: "空白桌面", name: "empty"},
       ],
-      selectDesk: { title: "日常桌面", name: "daily" },
+      selectDesk: {title: "日常桌面", name: "daily"},
       deskTitle: "",
       hotDesk: [],
       scheme: {},
@@ -599,12 +595,12 @@ export default {
       deskCode: "",
       shareCode: false,
       exportModal: false,
-      layoutSize: { width: 0, height: 0 },
+      layoutSize: {width: 0, height: 0},
       deskMarketVisible: false, //桌面市场
       panelIndex: 0,
       currentAddMethod: [
-        { title: "从市场添加", name: "market" },
-        { title: "自行添加", name: "custom" },
+        {title: "从市场添加", name: "market"},
+        {title: "自行添加", name: "custom"},
       ],
 
       recommendList: [], //推荐桌面
@@ -621,15 +617,14 @@ export default {
     });
 
     this.hotDesk.push(this.apiList[0].children[0]);
-    this.recommendList = await this.getRecommend({ goodType: "desk" });
+    this.recommendList = await this.getRecommend({goodType: "desk"});
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     getStep() {
-      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1)
-      {
+      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) {
         return true;
       }
     },
@@ -675,7 +670,7 @@ export default {
       let currentDesk = this.deskList.find((desk) => {
         return desk.id === this.currentDeskId;
       });
-      this.key=Date.now()
+      this.key = Date.now()
       return currentDesk;
     },
 
@@ -717,7 +712,7 @@ export default {
     afterAdded() {
       this.hideMarket();
     },
-    openPreview({ scheme, showModal }) {
+    openPreview({scheme, showModal}) {
       this.scheme = scheme;
       this.showModal = showModal;
     },
@@ -759,8 +754,8 @@ export default {
       });
     },
     showMenu() {
-     this.$refs.currentDeskRef.showMenu();
-     console.log('object :>> ',      this.$refs.currentDeskRef.dropdownMenu);
+      this.$refs.currentDeskRef.showMenu();
+      console.log('object :>> ', this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");
@@ -774,7 +769,7 @@ export default {
     async importDesk() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
-        filters: [{ name: "desk存档", extensions: ["desk"] }],
+        filters: [{name: "desk存档", extensions: ["desk"]}],
       });
       if (!openPath) {
         return;
@@ -809,13 +804,13 @@ export default {
       }
     },
     showAddDeskForm() {
-      if (this.M01022){
+      if (this.M01022) {
         this.deskTitle = '新桌面'
-        this.currentAddTab =   {
-        "title": "自行添加",
-        "name": "custom",
-        "state": false
-      }
+        this.currentAddTab = {
+          "title": "自行添加",
+          "name": "custom",
+          "state": false
+        }
       }
 
 
@@ -842,8 +837,16 @@ export default {
               }),
               1
             );
-            this.$emit("changeDesk", { id: this.deskList[0].id });
+            this.$emit("changeDesk", {id: this.deskList[0].id});
             this.key = Date.now();
+            if (this.displayDesks.length === 1) {
+              notification.open(
+                {
+                  message: '提示',
+                  description: '当前可用桌面为1个，自动为您隐藏切换桌面菜单。至少有2个桌面的时候才会显示快速切换栏。'
+                }
+              )
+            }
           },
           okText: "删除桌面",
         });
@@ -873,9 +876,9 @@ export default {
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
       };
       console.log('desk :>> ', desk);
-      console.log(' this.deskList :>> ',  this.deskList);
+      console.log(' this.deskList :>> ', this.deskList);
       this.deskList.unshift(desk);
-      this.$emit("changeDesk", { id: desk.id });
+      this.$emit("changeDesk", {id: desk.id});
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;

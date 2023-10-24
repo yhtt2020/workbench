@@ -217,7 +217,7 @@ a {
     main {
       padding-left: 5px;
       p {
-        font-family: PingFangSC-Regular;
+
         width: 145px;
         line-height: 17px;
         font-size: 14px;
@@ -227,7 +227,7 @@ a {
         word-break: break-word;
       }
       span {
-        font-family: PingFangSC-Regular;
+
         line-height: 25px;
         color: #ff7201;
       }

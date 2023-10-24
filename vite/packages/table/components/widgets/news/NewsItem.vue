@@ -84,7 +84,7 @@ const img = computed(() => {
       text-overflow: ellipsis;
       overflow: hidden;
       // overflow-wrap: break-word;
-      font-family: PingFangSC-Regular;
+
       font-size: 14px;
       color: rgba(255, 255, 255, 0.85);
       font-weight: 400;
@@ -104,7 +104,7 @@ const img = computed(() => {
 
       .date {
         span {
-          font-family: PingFangSC-Regular;
+
           font-size: 12px;
           font-weight: 400;
         }
@@ -121,7 +121,7 @@ const img = computed(() => {
         white-space: nowrap;
         text-overflow: ellipsis;
         span {
-          font-family: PingFangSC-Regular;
+
           font-size: 12px;
           color: rgba(255, 255, 255, 0.40);
           font-weight: 400;

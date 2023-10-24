@@ -5,7 +5,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   playType: 'my',
   showTime: true,
   showWeather: true,
-  showProgress: true,
+  showProgress: false,
   usePassword: false,
   password: '',
   showUnreadMessage: true,
@@ -13,7 +13,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   interval: 30,
   savePath: '',
   tipLock: true,//在状态栏提示多久锁屏
-  wallSource:'picking', 
+  wallSource:'picking',
 }
 // @ts-ignore
 export const paperStore = defineStore('paper', {

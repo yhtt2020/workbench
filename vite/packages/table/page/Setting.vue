@@ -4,10 +4,7 @@
       <div class="setting-menu" style="display: flex; width: 100%;justify-content: center;justify-items: center">
 
         <!-- 快速搜索 快速开关功能 -->
-        <div class="s-bg" style="
-            margin: 1em;
-            margin-right: 0em;
-            padding: 1em;
+        <div class="s-bg p-4" style="
             border-radius: 0.5em;
             width: 20em;
             display: inline-block;
@@ -67,8 +64,8 @@
 
           <div></div>
         </div>
-        <div style="display: inline-block; vertical-align: top">
-          <div    class="s-bg menu-block">
+        <div class="" style="display: inline-block; vertical-align: top">
+          <div class="s-bg p-4 ml-4   menu-block">
             <h3 style="color: var(--primary-text)">常用</h3>
             <a-row style="font-size: 1.2em; text-align: center">
               <a-col v-if="isMain() && isWin()" :span="6">
@@ -101,7 +98,7 @@
             </a-row>
             <div></div>
           </div>
-          <div   class="s-bg menu-block">
+          <div   class="s-bg menu-block p-4 ml-4 mt-4">
             <h3 style="color: var(--primary-text)">其他</h3>
             <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
@@ -444,8 +441,6 @@ export default {
   // height: 100px;
 }
 .menu-block{
-  margin: 1em;
-  padding: 1em;
   border-radius: 0.5em;
   width: 40em;
   color: var(--primary-text);

@@ -4,7 +4,7 @@
         <div class="top-icon">
             <Icon icon="akar-icons:check-box" />
         </div>
-        
+
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
         <div v-else class="dash-board">
             <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index" @click="jumpUrl(this.admin_url)">
@@ -35,7 +35,7 @@
 
 
 </template>
-  
+
 <script>
 import axios from "axios";
 import Widget from "../../../card/Widget.vue";
@@ -95,9 +95,9 @@ export default {
                 {
                     icon: 'shezhi1',
                     title: '设置',
-                    fn: () => { 
-                        this.settingVisible = true; 
-                        this.$refs.dataSlot.visible = false 
+                    fn: () => {
+                        this.settingVisible = true;
+                        this.$refs.dataSlot.visible = false
                     }
                 },
             ],
@@ -144,7 +144,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
@@ -175,7 +175,7 @@ export default {
         background: #2A2A2A;
         border-radius: 12px;
         padding: 10px 16px;
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         color: rgba(255,255,255,0.60);
         font-weight: 400;
@@ -186,14 +186,14 @@ export default {
         color: rgba(255,255,255,0.85);
         margin-bottom: 10px;
     }
-    
+
     .text-content div{
         margin-bottom: 10px;
     }
 
     .dash-cell .cell-title{
         margin-top: 22px;
-        font-family: PingFangSC-Regular;
+
         font-size: 16px;
         color: rgba(255,255,255,0.60) !important;
         font-weight: 400;
@@ -219,4 +219,3 @@ export default {
         color: #FAAD14;
     }
 </style>
-  

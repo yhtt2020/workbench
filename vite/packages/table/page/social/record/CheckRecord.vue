@@ -26,9 +26,9 @@
         </template>
       </template>
     </a-table>
-    
+
   </div>
-  
+
   <Modal v-model:visible="checkDetailShow" v-show="checkDetailShow" :blurFlag="true">
     <div style="width: 480px;" class="flex flex-col">
       <div class="w-full flex p-3 mb-6">
@@ -103,13 +103,11 @@ export default {
 
 <style lang="scss" scoped>
 .secondary-title{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
 
 .primary-title{
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }

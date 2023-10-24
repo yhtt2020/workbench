@@ -145,7 +145,6 @@ export default {
             .size {
                 padding: 4px 10px;
                 border-radius: 4px;
-                font-family: PingFangSC-Medium;
                 font-size: 14px;
                 color: rgba(255, 255, 255, 1);
                 font-weight: 500;

@@ -4,43 +4,81 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle" @click.prevent="enter" class="pointer" style="margin-top: -6em;min-height: 15em; z-index:9999999">
+  <div id="displayMiddle"
+       style="margin-top: -6em;min-height: 15em; z-index:9999999">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
       <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
     </div>
     <div id="tip" class="flex items-center justify-center" style="color: white;font-size: 20px;margin-top: 2em">
-      <Icon icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>
-      <span class="ml-2">点击屏幕中间解锁</span>
+      <!--      <Icon icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>-->
+      <div class="flex flex-row tip-items">
+        <div @click.stop="enter" class="tip-item">
+          <div>
+            <iconify class="tip-icon" icon="akar-icons:lock-off"></iconify>
+          </div>
+          <div class="tip-text">
+            解锁
+          </div>
+        </div>
+        <!--        <div>-->
+        <!--          <div>-->
+        <!--            <iconify ></iconify>-->
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            切换-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <div @click.stop="enterGallery" class="tip-item">
+          <div>
+            <iconify class="tip-icon" icon="akar-icons:star"></iconify>
+          </div>
+          <div class="tip-text">
+            壁纸库
+          </div>
+        </div>
+        <div @click.stop="enterSetting" class="tip-item">
+          <div>
+            <iconify class="tip-icon" icon="akar-icons:gear"></iconify>
+          </div>
+          <div class="tip-text">
+            设置
+          </div>
+        </div>
+
+      </div>
+      <!--      <span class="ml-2">点击屏幕中间解锁，右键进入壁纸设置</span>-->
+    </div>
+
+    <div class="mt-10 card half count-downtime" v-if="countDowntime.hours">
+      <div class="left-time">
+        <Icon
+          style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+          icon="zanting"
+          @click="closeCountDown" v-show="!countDownBtn"
+        ></Icon>
+        <Icon
+          style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+          icon="bofang"
+          @click="startCountDown" v-show="countDownBtn"
+        ></Icon>
+        <Icon
+          style="width: 2em; height: 2em;cursor:pointer"
+          icon="guanbi1"
+          @click="deleteCountDown"
+        ></Icon>
+      </div>
+      <div class="right-time">
+        <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
+        <span
+          style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{
+            countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds
+          }}</span>
+      </div>
     </div>
   </div>
-  <div class=" card half count-downtime" v-if="countDowntime.hours">
-    <div class="left-time">
-      <Icon
-        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
-        icon="zanting"
-        @click="closeCountDown" v-show="!countDownBtn"
-      ></Icon>
-      <Icon
-        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
-        icon="bofang"
-        @click="startCountDown" v-show="countDownBtn"
-      ></Icon>
-      <Icon
-        style="width: 2em; height: 2em;cursor:pointer"
-        icon="guanbi1"
-        @click="deleteCountDown"
-      ></Icon>
-    </div>
-    <div class="right-time">
-      <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
-      <span
-        style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{
-          countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds
-        }}</span>
-    </div>
-  </div>
-  <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="visible" >
+
+  <div class="fixed inset-0 home-blur" style="z-index: 999999999999;" v-if="visible">
 
     <div v-if="clockEvent[0]"
          class="fixed text-4xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
@@ -71,9 +109,22 @@ import { mapActions, mapState, mapWritableState } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
 import axios from 'axios'
+import { Icon as iconify } from '@iconify/vue'
 
+const spotConfig = {
+  control: '',
+  play: true,
+
+  infinite: true,
+
+  title: false,
+  autoplay: true,
+}
 export default {
   name: 'Lock',
+  components: {
+    iconify
+  },
   data () {
     return {
       playing: [],
@@ -91,7 +142,7 @@ export default {
       time: ' 14:51 ',
       visible: false,
       wallPaper: 'https://ts1.cn.mm.bing.net/th/id/R-C.653b2eb4ae081875675c6d25a69834b0?rik=p%2fCn01vlMrCUxQ&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1208%2f02%2fc0%2f12659156_1343874598199.jpg&ehk=d8OPA9%2bWy7YX9FLF95st3Rmd8lG6XtopCz0uNZAbebs%3d&risl=&pid=ImgRaw&r=0',
-      lively:[
+      lively: [
         {
           name: 'abstract-20072.mp4'
         },
@@ -139,9 +190,9 @@ export default {
       $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
     })
     $('#displayMiddle').fadeIn(1000)
-    setTimeout(() => {
-      $('#tip').fadeOut(1000)
-    }, 3000)
+    // setTimeout(() => {
+    //   $('#tip').fadeOut(1000)
+    // }, 3000)
     if (this.settings.playType === 'my') {
       this.playAll()
     } else {
@@ -163,16 +214,48 @@ export default {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
     videoPath () {
       return this.playing[0]['src-mp4']
+    },
+    config () {
+      return {
+        ...spotConfig,
+        ...{
+          autoslide: this.settings.interval,
+          progress: this.settings.showProgress,
+        }
+      }
     }
   },
   methods: {
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
     ...mapActions(cardStore, ['removeClock', 'changeClock']),
+    enter (closeSpot = true) {
+      if (closeSpot && !this.singleLively) {
+        window.Spotlight.close()
+      }
+      console.log('处罚顶层返回')
+      this.$router.go(-1)
+    },
+    enterSetting () {
+      if (!this.singleLively) {
+        window.Spotlight.close()
+      }
+      this.$router.go(-1)
+      setTimeout(() => {
+        this.$router.push({
+          name: 'papersSetting'
+        })
+      }, 200)
+    },
     enterGallery () {
-      window.Spotlight.close()
-      this.$router.replace({
-        path: '/gallery'
-      })
+      if (!this.singleLively) {
+        window.Spotlight.close()
+      }
+      this.$router.go(-1)
+      setTimeout(() => {
+        this.$router.push({
+          path: '/gallery'
+        })
+      }, 200)
     },
     handleOk () {
       this.visible = false
@@ -196,17 +279,10 @@ export default {
       this.week = weeks[date.getDay() - 1]
       this.loaded = true
     },
-    enter (closeSpot = true) {
-      if (closeSpot && !this.singleLively)
-      {
-        window.Spotlight.close()
-      }
 
-      this.$router.go(-1)
-    },
     playAll () {
       let LockArr = []
-      if(this.settings.wallSource == 'my'){
+      if (this.settings.wallSource == 'my') {
         // 我的收藏
         if (this.myPapers.length === 0) {
           this.$router.replace({
@@ -220,7 +296,8 @@ export default {
             LockArr.push({
               'src-mp4': el.srcProtocol,
               media: 'video',
-              poster: el.path
+              poster: el.path,
+              controls: false,
             })
           } else {
             LockArr.push({
@@ -238,84 +315,57 @@ export default {
         } else {
           this.singleLively = false
         }
-        window.Spotlight.show(LockArr, {
-          control: 'autofit,fullscreen,close,zoom,prev,next',
-          play: true,
-          autoslide: this.settings.interval,
-          infinite: true,
-          progress: this.settings.showProgress,
-          title: false,
-          autoplay: true,
-          onclose: () => {this.enter(false)}
-        })
-      }else if(this.settings.wallSource == 'bing'){
+        window.Spotlight.show(LockArr, this.config)
+      } else if (this.settings.wallSource == 'bing') {
         // 必应壁纸
         let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
         axios.get(url).then(imagesResult => {
-        if (imagesResult.status === 200) {
-          let arr = imagesResult.data.images
-          arr.forEach(item=>{
-            LockArr.push({
-              src: 'https://cn.bing.com' + item.url,
-              path: 'https://cn.bing.com' + item.url,
+          if (imagesResult.status === 200) {
+            let arr = imagesResult.data.images
+            arr.forEach(item => {
+              LockArr.push({
+                src: 'https://cn.bing.com' + item.url,
+                path: 'https://cn.bing.com' + item.url,
+              })
             })
-          })
-          window.Spotlight.show(LockArr, {
-            control: 'autofit,fullscreen,close,zoom,prev,next',
-            play: true,
-            autoslide: this.settings.interval,
-            infinite: true,
-            progress: this.settings.showProgress,
-            title: false,
-            autoplay: true,
-            onclose: () => {this.enter(false)}
-          })
-        }else{
-          Modal.error({ content: '网络加载错误，请检查设备后重试' })
-          return
-        }
-        },rej=>{
+            window.Spotlight.show(LockArr, this.config)
+          } else {
+            Modal.error({ content: '网络加载错误，请检查设备后重试' })
+            return
+          }
+        }, rej => {
           Modal.error({ content: '网络加载错误，请检查设备后重试' })
           return
         }).catch((err) => {
-          console.log(err);
+          console.log(err)
         })
 
-      }else{
+      } else {
         // 拾光壁纸
         const url = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
         axios.get(url).then(async res => {
           if (res.data.data.length !== 1) {
             let arr = res.data.data
-            arr.forEach(item=>{
+            arr.forEach(item => {
               LockArr.push({
-                src:item.imgurl,
-                path:item.imgurl,
+                src: item.imgurl,
+                path: item.imgurl,
               })
             })
-            window.Spotlight.show(LockArr, {
-              control: 'autofit,fullscreen,close,zoom,prev,next',
-              play: true,
-              autoslide: this.settings.interval,
-              infinite: true,
-              progress: this.settings.showProgress,
-              title: false,
-              autoplay: true,
-              onclose: () => {this.enter(false)}
-            })
+            window.Spotlight.show(LockArr, this.config)
           } else {
             return
           }
-        },rej=>{
+        }, rej => {
           Modal.error({ content: '网络加载错误，请检查设备后重试' })
           return
         }).catch((err) => {
-          console.log(err);
+          console.log(err)
         })
       }
     },
     playActive () {
-      console.log('playActive');
+      console.log('playActive')
       if (this.activePapers.length === 0) {
         this.$router.replace({
           name: 'my'
@@ -330,7 +380,8 @@ export default {
           lockActive.push({
             'src-mp4': el.srcProtocol,
             media: 'video',
-            poster: el.path
+            poster: el.path,
+            controls: false,
           })
         } else {
           lockActive.push({
@@ -347,16 +398,7 @@ export default {
       } else {
         this.singleLively = false
       }
-      window.Spotlight.show(lockActive, {
-        control: 'autofit,fullscreen,close,prev,next',
-        play: true,
-        autoslide: this.settings.interval,
-        infinite: true,
-        progress: this.settings.showProgress,
-        title: false,
-        autoplay: true,
-        onclose: () => {this.enter(false)}
-      })
+      window.Spotlight.show(lockActive, this.config)
     },
     closeCountDown () {
       this.stopCountDown()
@@ -400,6 +442,11 @@ export default {
   }
 }
 </script>
+<style>
+.spl-header {
+  display: none;
+}
+</style>
 <style lang="scss" scoped>
 .time {
   font-size: 1.5em;
@@ -447,7 +494,28 @@ export default {
     align-items: center;
   }
 }
-#displayMiddle{
+
+#displayMiddle {
   z-index: 9999
+}
+
+.tip-items {
+  gap: 40px;
+
+  .tip-item {
+    &:hover {
+      opacity: 0.7;
+    }
+
+    cursor: pointer;
+
+    .tip-icon {
+      font-size: 34px;
+    }
+
+    .tip-text {
+      font-size: 16px;
+    }
+  }
 }
 </style>

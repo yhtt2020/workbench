@@ -61,7 +61,7 @@ export default defineComponent({
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scope>
 .font-16{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }

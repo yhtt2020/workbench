@@ -1,180 +1,225 @@
 @import url("../../../../../styles/common.scss");
 @import url("../../../../../styles/icon.scss");
+.TUI-conversation {
+  /**
+   .pinned {
+    background: #EEF0F3;
+  }
+  **/
+}
 .TUI-conversation-item:hover {
-  background: rgba(0, 110, 255, 0.1); }
+  background: var(--active-secondary-bg);
+}
 .TUI-conversation-item .left .num {
   background: red;
-  color: #ffffff; }
-  .TUI-conversation-item .left .num-notify {
-    background: red;
-    color: #ffffff; }
+  color: #ffffff;
+}
 .TUI-conversation-item .left .num-notify {
   background: red;
-  color: #ffffff; }
+  color: #ffffff;
+}
+.TUI-conversation-item .left .num-notify {
+  background: red;
+  color: #ffffff;
+}
 .TUI-conversation-item .content-header label {
-  color: #000000; }
+  color: #000000;
+}
 .TUI-conversation-item .content-header .name {
   font-weight: 400;
   letter-spacing: 0;
-  color: #000000; }
+  color: #000000;
+}
 .TUI-conversation-item .middle-box span {
-  font-family: PingFangSC-Regular;
   font-weight: 400;
-  color: #999999; }
+  color: var(--secondary-text);
+}
 .TUI-conversation-item .middle-box p {
   font-weight: 400;
-  color: #999999;
-  letter-spacing: 0; }
+  color: var(--secondary-text);
+  letter-spacing: 0;
+}
 .TUI-conversation-item .middle-box-at {
-  color: #FB5059 !important; }
+  color: #FB5059 !important;
+}
 .TUI-conversation-item .content-footer {
-  color: #999999; }
-  .TUI-conversation-item .content-footer .time {
-    color: #BBBBBB; }
+  color: var(--secondary-text);
+}
+.TUI-conversation-item .content-footer .time {
+  color: var(--secondary-text);
+}
 .TUI-conversation .selected {
-  background: rgba(0, 110, 255, 0.1); }
-.TUI-conversation .pinned {
-  background: #EEF0F3; }
+  background: var(--active-secondary-bg);
+}
 .TUI-conversation .dialog {
-  background: #fff; }
-  .TUI-conversation .dialog-item {
-    box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
-    background: #FFFFFF;
-    border: 1px solid #E0E0E0;
-    box-shadow: 0 -4px 12px 0 rgba(0, 0, 0, 0.06); }
-  .TUI-conversation .dialog .conversation-options {
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    color: #4F4F4F;
-    letter-spacing: 0; }
+  background: #fff;
+}
+.TUI-conversation .dialog-item {
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 -4px 12px 0 rgba(0, 0, 0, 0.06);
+}
+.TUI-conversation .dialog .conversation-options {
+  font-weight: 400;
+  color: #4F4F4F;
+  letter-spacing: 0;
+}
 
 .TUI-conversation-content {
-  position: relative; }
+  position: relative;
+}
 .TUI-conversation-item {
   padding: 12px;
   display: flex;
   align-items: center;
-  cursor: pointer; }
-  .TUI-conversation-item .left {
-    position: relative;
-    width: 36px;
-    height: 36px; }
-    .TUI-conversation-item .left .num {
-      position: absolute;
-      display: inline-block;
-      right: 0px;
-      top: -5px;
-      min-width: 10px;
-      width: fit-content;
-      padding: 0 2.5px;
-      height: 15px;
-      font-size: 10px;
-      text-align: center;
-      line-height: 15px;
-      border-radius: 7.5px; }
-    .TUI-conversation-item .left .num-notify {
-      position: absolute;
-      display: inline-block;
-      right: -1px;
-      top: -5px;
-      width: 0.5rem;
-      height: 0.5rem;
-      font-size: 10px;
-      text-align: center;
-      line-height: 15px;
-      border-radius: 65%; }
-    .TUI-conversation-item .left .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 5px; }
-    .TUI-conversation-item .left .online-status {
-      box-sizing: border-box;
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      left: 24px;
-      top: 22px;
-      border: 2px solid #ffffff;
-      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.10261);
-      border-radius: 50%; }
-      .TUI-conversation-item .left .online-status-online {
-        background: #29CC85; }
-      .TUI-conversation-item .left .online-status-offline {
-        background: #A4A4A4; }
-  .TUI-conversation-item .content {
-    display: flex;
-    flex: 1;
-    padding-left: 8px;
-    justify-content: space-between; }
-  .TUI-conversation-item .content-header {
-    flex: 1;
-    display: flex;
-    flex-direction: column; }
-    .TUI-conversation-item .content-header label {
-      flex: 1;
-      font-size: 14px; }
-    .TUI-conversation-item .content-header .name {
-      width: 110px;
-      letter-spacing: 0;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap; }
-  .TUI-conversation-item .middle-box {
-    flex: 1;
-    display: flex;
-    align-items: center; }
-    .TUI-conversation-item .middle-box span {
-      font-size: 12px; }
-    .TUI-conversation-item .middle-box p {
-      flex: 1;
-      width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 12px;
-      line-height: 16px; }
-  .TUI-conversation-item .content-footer {
-    line-height: 16px;
-    display: flex;
-    flex-direction: column; }
-    .TUI-conversation-item .content-footer .time {
-      font-size: 12px;
-      line-height: 16px;
-      display: inline-block;
-      max-width: 75px;
-      white-space: nowrap; }
-    .TUI-conversation-item .content-footer img {
-      width: 16px;
-      height: 16px;
-      margin-top: 5px;
-      align-self: flex-end; }
+  cursor: pointer;
+}
+.TUI-conversation-item .left {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+.TUI-conversation-item .left .num {
+  position: absolute;
+  display: inline-block;
+  right: 0px;
+  top: -5px;
+  min-width: 10px;
+  width: fit-content;
+  padding: 0 2.5px;
+  height: 15px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 15px;
+  border-radius: 7.5px;
+}
+.TUI-conversation-item .left .num-notify {
+  position: absolute;
+  display: inline-block;
+  right: -1px;
+  top: -5px;
+  width: 0.5rem;
+  height: 0.5rem;
+  font-size: 10px;
+  text-align: center;
+  line-height: 15px;
+  border-radius: 65%;
+}
+.TUI-conversation-item .left .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+.TUI-conversation-item .left .online-status {
+  box-sizing: border-box;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 24px;
+  top: 22px;
+  border: 2px solid #ffffff;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.102606);
+  border-radius: 50%;
+}
+.TUI-conversation-item .left .online-status-online {
+  background: #29CC85;
+}
+.TUI-conversation-item .left .online-status-offline {
+  background: #A4A4A4;
+}
+.TUI-conversation-item .content {
+  display: flex;
+  flex: 1;
+  padding-left: 8px;
+  justify-content: space-between;
+}
+.TUI-conversation-item .content-header {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.TUI-conversation-item .content-header label {
+  flex: 1;
+  font-size: 14px;
+}
+.TUI-conversation-item .content-header .name {
+  width: 130px;
+  letter-spacing: 0;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.TUI-conversation-item .middle-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.TUI-conversation-item .middle-box span {
+  font-size: 12px;
+}
+.TUI-conversation-item .middle-box p {
+  flex: 1;
+  width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+}
+.TUI-conversation-item .content-footer {
+  line-height: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.TUI-conversation-item .content-footer .time {
+  font-size: 12px;
+  line-height: 16px;
+  display: inline-block;
+  max-width: 75px;
+  white-space: nowrap;
+}
+.TUI-conversation-item .content-footer img {
+  width: 16px;
+  height: 16px;
+  margin-top: 5px;
+  align-self: flex-end;
+}
 .TUI-conversation .dialog {
   position: absolute;
   z-index: 5;
-  padding: 2px 20px; }
-  .TUI-conversation .dialog-item {
-    top: 30px;
-    left: 164px;
-    border-radius: 8px; }
-  .TUI-conversation .dialog .conversation-options {
-    padding: 5px 0;
-    height: 17px;
-    font-size: 12px;
-    line-height: 17px; }
+  padding: 2px 20px;
+}
+.TUI-conversation .dialog-item {
+  top: 30px;
+  left: 164px;
+  border-radius: 8px;
+}
+.TUI-conversation .dialog .conversation-options {
+  padding: 5px 0;
+  height: 17px;
+  font-size: 12px;
+  line-height: 17px;
+}
 
 .list-item-h5 .dialog {
   left: auto;
   right: 18px;
-  padding: 0; }
-  .list-item-h5 .dialog .conversation-options {
-    padding: 14px;
-    font-size: 16px; }
+  padding: 0;
+}
+.list-item-h5 .dialog .conversation-options {
+  padding: 14px;
+  font-size: 16px;
+}
 .list-item-h5 .TUI-conversation-item .content .name {
-  font-size: 16px; }
+  font-size: 16px;
+}
 .list-item-h5 .TUI-conversation-item .content .middle-box p {
-  font-size: 14px; }
+  font-size: 14px;
+}
 .list-item-h5 .TUI-conversation-item .time {
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 /*# sourceMappingURL=index.css.map */

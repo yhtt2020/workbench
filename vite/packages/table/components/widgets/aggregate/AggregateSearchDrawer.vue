@@ -66,12 +66,12 @@ export default {
 
 <style lang="scss" scoped>
 .primary-title{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
 .secondary-title{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }

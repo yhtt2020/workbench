@@ -22,6 +22,11 @@ export default {
   },
   computed: {
     ...mapState(taskStore, ["activeTask"]),
+    displayList(){
+      return this.data.sort((a,b)=>{
+        return -((a.isTop?1:0)-(b.isTop?1:0))
+      })
+    }
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
@@ -63,7 +68,7 @@ export default {
     <a-empty description=""></a-empty>
   </div>
   <div class="task-list">
-    <a-dropdown :trigger="['contextmenu']" v-for="task in data">
+    <a-dropdown :trigger="['contextmenu']" v-for="task in displayList">
       <div class="task-item" :class="{ active: task === activeTask }" @click="setActiveTask(task)">
         <div class="h-12 flex items-center px-3">
           <div class="todo-style" style="min-width: 32px">

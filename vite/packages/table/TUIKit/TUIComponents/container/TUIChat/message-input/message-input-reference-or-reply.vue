@@ -137,7 +137,7 @@ const close = () => {
 
         span {
           height: 1.25rem;
-          font-family: PingFangSC-Regular;
+
           font-weight: 400;
           font-size: 0.88rem;
           color: #bfc1c5;

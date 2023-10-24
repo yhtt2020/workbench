@@ -152,7 +152,7 @@ export default manageName;
         padding: 10px 12px;
       }
       span {
-        font-family: PingFangSC-Regular;
+
         font-weight: 400;
         font-size: 12px;
         color: #888888;
@@ -166,7 +166,7 @@ export default manageName;
     align-items: center;
     justify-content: space-between;
     .close {
-      font-family: PingFangSC-Regular;
+
       font-weight: 400;
       font-size: 18px;
       color: #3370FF;
@@ -181,7 +181,7 @@ export default manageName;
       border: none;
       background: #147AFF;
       border-radius: 5px;
-      font-family: PingFangSC-Regular;
+
       font-weight: 400;
       font-size: 16px;
       color: #FFFFFF;

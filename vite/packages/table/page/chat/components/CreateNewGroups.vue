@@ -3,13 +3,13 @@
    <!-- 顶部关闭 -->
    <div class="top-close" style="margin-bottom: 16px;">
     <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center" style="background: var(--secondary-bg);" @click="backButton">
-     <NewGroupIcon icon="fluent:chevron-left-16-filled" style="font-size: 2em;"/>
+     <NewGroupIcon icon="fluent:chevron-left-16-filled" style="font-size: 2em;color: var(--secondary-text);"/>
     </div>
     <div class="font-16 flex items-center justify-center" style="color:var(--primary-text);width: 95%;">选择联系人</div>
     <div class="flex rounded-lg active-button pointer items-center w-12 h-12 justify-center"
      style="background: var(--secondary-bg);" @click="closeContact"
     >
-     <NewGroupIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;" />
+     <NewGroupIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;color: var(--secondary-text);" />
     </div>
    </div>
 
@@ -17,11 +17,11 @@
    <div class="flex  justify-between">
      <div class="left-group">
        <div class="font-16" style="color: var(--secondary-text);padding-left: 16px;margin-bottom: 16px;">我的好友</div>
-       
+
        <div class="flex items-center  justify-center" style="color: var(--primary-text);margin-top: 50px;" v-if="friendList.length === 0">
          <a-empty :image="simpleImage" />
        </div>
-       
+
        <vue-custom-scrollbar :settings="settingsScroller" style="height:90%;">
          <div v-for="(item,index) in friendList" :class="{ 'select-bg':isSelected(index) }" class="flex items-center pointer rounded-lg" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);"  @click="selectUser(item)">
            <a-avatar :size="32" :src="item.profile.avatar"></a-avatar>
@@ -36,7 +36,7 @@
 
      <div class="right-group">
        <div style="color: var(--primary-text);margin-bottom: 16px;">已选({{selectList.length}}人)</div>
-       
+
        <vue-custom-scrollbar :settings="settingsScroller" style="height:80%; margin-bottom: 16px;">
          <div v-for="item in selectList" class="flex  justify-between" style="margin-bottom: 8px;padding: 12px;color: var(--primary-text);">
            <div class="flex">
@@ -59,7 +59,7 @@
         <div class="flex items-center rounded-md pointer font-16 active-button justify-center" style="width: 100px;color: var(--active-text);background: var(--active-bg);margin-left: 12px;" @click="enterNextStep">
          确定
         </div>
-       </div>        
+       </div>
      </div>
    </div>
 
@@ -95,9 +95,9 @@
      <a-input :spellcheck="false" v-model:value="groupName" placeholder="群名称" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;margin-bottom: 16px;" />
 
      <a-input :spellcheck="false" v-model:value="groupID" placeholder="群ID" style="margin-top: 16px; text-align: center; width: 320px;color: var(--primary-text); border-radius: 12px; height: 48px;" :style="validateChinese !== true ? {marginBottom:'16px'}: {marginBottom:'8px'}"/>
-     
+
      <div class="font-12" v-if="validateChinese" :style="validateChinese === true ? {marginBottom:'16px'}: {marginBottom:'0'}" style="color:var(--error);">群ID不能为中文名称,重新输入群ID</div>
-     
+
      <a-select style="width: 320px; border-radius: 12px; color: var(--secondary-text);"
       :bordered="false" :dropdownStyle="{boxShadow:'none !important',borderRadius:'12px',color:'var(--secondary-text)'}"
       :showArrow="true" v-model:value="public.type"  @change="getGroupType($event)"
@@ -116,7 +116,7 @@
      <a-button type="primary" style="width: 100px;height: 44px;margin-left: 16px;border-radius: 8px;" @click="submit">确定</a-button>
    </div>
  </div>
-  
+
  <ChannelClassification v-else :no="no" type="group" :data="groupData" @classBack="classShow = false" @close="closeContact"/>
 </template>
 
@@ -140,7 +140,7 @@ export default defineComponent({
 
  setup(props,ctx){
    const server = window.$TUIKit
-  
+
    const store = appStore()
 
    const data = reactive({
@@ -151,7 +151,7 @@ export default defineComponent({
      groupName:'', // 接收群名称
      groupID:'', // 接收群ID
      public:{ type: server.TIM.TYPES.GRP_PUBLIC }, // 获取默认的群组类型
-     settingsScroller: {  // 滚动条配置 
+     settingsScroller: {  // 滚动条配置
        useBothWheelAxes: true,
        swipeEasing: true,
        suppressScrollY: false,
@@ -231,7 +231,7 @@ export default defineComponent({
      const index = _.find(data.groupType,function(o){ return o.type === evt })
      data.public.type = index.type
    }
-  
+
    const groupTypeData = computed(()=>{  // 根据计算属性获取群组类型的描述
      const index = _.find(data.groupType,function(o){ return o.type === data.public.type })
      return index
@@ -247,7 +247,7 @@ export default defineComponent({
      const chineseReg = /^[\u4e00-\u9fa5]+$/;
      return chineseReg.test(data.groupID)
    })
- 
+
 
    const submit = async () => {  // 点击创建群聊
      if(validateChinese.value){
@@ -262,7 +262,7 @@ export default defineComponent({
       }
 
       const res =  await server.tim.createGroup(option)
-      
+
       console.log('是否创建成功',res);
 
       if(res.code === 0){
@@ -278,11 +278,11 @@ export default defineComponent({
       }
       // ctx.emit('close')
 
-     } 
+     }
    }
 
    // 点击群聊头像更换
-   const updateGroupAvatar = async () =>{  
+   const updateGroupAvatar = async () =>{
      document.querySelector('#groupFileID').click()
    }
 
@@ -332,7 +332,7 @@ export default defineComponent({
 }
 
 .font-16{
- font-family: PingFangSC-Medium;
+
  font-size: 16px;
  font-weight: 500
 }
@@ -348,7 +348,7 @@ export default defineComponent({
 }
 
 .font-14{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }
@@ -374,7 +374,7 @@ export default defineComponent({
 }
 
 .font-12{
- font-family: PingFangSC-Regular;
+
  font-size: 12px;
  font-weight: 400;
 }

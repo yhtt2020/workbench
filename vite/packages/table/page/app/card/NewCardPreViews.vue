@@ -398,7 +398,6 @@ export default {
     border-radius: 0 12px 12px 0px;
 
     .title {
-      font-family: PingFangSC-Medium;
       font-size: 18px;
       color: rgba(255, 255, 255, 0.85);
       font-weight: 500;
@@ -409,7 +408,6 @@ export default {
     .text {
       display: flex;
       align-items: center;
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.6);
       font-weight: 400;
@@ -433,7 +431,6 @@ export default {
         align-items: center;
         padding: 4px 10px;
         border-radius: 4px;
-        font-family: PingFangSC-Medium;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.9);
         font-weight: 500;

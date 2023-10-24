@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:667px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择群聊</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeGroup">
-    <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
+    <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color: var(--secondary-text);" />
    </div>
   </div>
 
@@ -29,11 +29,11 @@
      </div>
     </vue-custom-scrollbar>
    </div>
-   
+
    <a-divider type="vertical" style="height:442px; margin: 0 16px; background-color:var(--divider);" />
-   
+
    <div class="flex flex-col justify-between" style="width: 293px;">
-    <span class="">已选({{ selectGroup.length }}个)</span>
+    <span class="category-14-400" style="color:var(--secondary-text);">已选({{ selectGroup.length }}个)</span>
     <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
      <div class="flex flex-col">
       <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
@@ -42,17 +42,17 @@
          <span class="font-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
         </div>
         <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
-         <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color:var(--secondary-text);" />
+         <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color:var(--disable-text);" />
         </div>
       </div>
      </div>
     </vue-custom-scrollbar>
-     
+
     <div class="flex items-center justify-end">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeGroup">
       取消
      </XtButton>
- 
+
      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submit">
       确定
      </XtButton>
@@ -60,7 +60,7 @@
    </div>
   </div>
 
-  
+
 
  </div>
 </template>
@@ -145,7 +145,7 @@ export default {
   // 清除选中的群聊
   removeGroup(item){
    const index = _.findIndex(this.selectGroup,function(o){ return o.groupID === item.groupID })
-   this.selectGroup.splice(index,1) 
+   this.selectGroup.splice(index,1)
   },
 
   // 创建子频道数据
@@ -228,7 +228,7 @@ export default {
           this.filterList = [res?.data?.group]
         }
 
-        
+
 
       }else{
        this.title = '我创建的群聊'
@@ -244,7 +244,6 @@ export default {
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -266,7 +265,6 @@ export default {
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }
@@ -287,5 +285,6 @@ export default {
  &::placeholder{
    color: var(--secondary-text) !important;
  }
+ color: var(--secondary-text) !important;
 }
 </style>

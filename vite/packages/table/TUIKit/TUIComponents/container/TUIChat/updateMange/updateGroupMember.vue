@@ -6,7 +6,7 @@
      <span style="margin-left: 12px;">{{item.nick}}</span>
     </div>
 
-    
+
     <div class="font-14" style="color: var(--secondary-text);">{{ handleRoleName(item) }}</div>
 
    </div>
@@ -23,8 +23,8 @@ export default defineComponent({
  setup(props,ctx){
   const server = props.server.TUICore
   const types = server.TIM.TYPES;
-  
-  
+
+
   const store = appStore()
 
   const handleRoleName = (item) => {  // 区分群组角色
@@ -59,7 +59,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-14{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

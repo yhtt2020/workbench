@@ -81,7 +81,7 @@ export default {
           <a-avatar shape="square" :size="100" :src="formApp.icon"/>
         </div>
       </div>
-      <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
+      <div class="ml-10 xt-text-2" style="font-size: 16px;">
         <div>推荐图片尺寸：256*256，不要超过2MB</div>
         <div class="pointer xt-bg-2 xt-text-2 flex items-center rounded-lg justify-center mr-3 mt-2"
              @click="refresh" style="width:120px; height:48px;">重新获取

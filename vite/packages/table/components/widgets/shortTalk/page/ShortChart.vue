@@ -39,7 +39,7 @@
                     <div  v-show="this.defaultDataType.name == 'visit'">
                     <!-- <div > -->
                         <p class="ml-1 mt-3">平台类型</p>
-                        <RadioTab  :navList="platType"  class="nav-type" 
+                        <RadioTab  :navList="platType"  class="nav-type"
                         v-model:selectType="defaultPlatType"  ></RadioTab>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
         </a-drawer>
     </Widget>
 </template>
-  
+
 <script>
 import axios from "axios";
 import Widget from "../../../card/Widget.vue";
@@ -126,9 +126,9 @@ export default {
                 {
                     icon: 'shezhi1',
                     title: '设置',
-                    fn: () => { 
-                        this.settingVisible = true; 
-                        this.$refs.dataSlot.visible = false 
+                    fn: () => {
+                        this.settingVisible = true;
+                        this.$refs.dataSlot.visible = false
                         this.setVisible = false
                     }
                 },
@@ -151,7 +151,7 @@ export default {
             // 密钥和地址
             accToken:'',
             accUrl:'',
-            
+
         };
     },
     async mounted() {
@@ -171,9 +171,9 @@ export default {
                     "defaultPlatType": this.defaultPlatType,
                 },this.desk)
             }else{
-               this.defaultDataType = this.customData.defaultDataType 
-               this.defaultTimeType = this.customData.defaultTimeType 
-               this.defaultPlatType = this.customData.defaultPlatType 
+               this.defaultDataType = this.customData.defaultDataType
+               this.defaultTimeType = this.customData.defaultTimeType
+               this.defaultPlatType = this.customData.defaultPlatType
             }
 
             // this.accToken = this.access_token
@@ -184,7 +184,7 @@ export default {
                 // 添加判断 如果没有获取到数据就停止
                 this.changeBarChart()
             })
-            
+
         },
         // 初始化柱状图
         initEcharts(){
@@ -233,7 +233,7 @@ export default {
             // 社区访问数据
             if(this.defaultDataType.name == 'visit'){
                 // 内部属性
-                this.series=[                
+                this.series=[
                     {
                         type: "bar",
                         data:this.access.visit.series,
@@ -270,12 +270,12 @@ export default {
                 ],
                 // 图例
                 this.legend=["访问次数","访问人数"]
-                
+
                 // x轴
                 this.xData = this.interact.post.xAxis
                 // y轴
             }else{
-                this.series=[                
+                this.series=[
                     {
                         type: "bar",
                         data:this.interact.post.series,
@@ -377,7 +377,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
@@ -425,14 +425,14 @@ export default {
         padding: 0 16px;
     }
 
-    
+
     .text-content{
         width: 100%;
         min-height: 124px;
         background: #2A2A2A;
         border-radius: 12px;
         padding: 10px 16px;
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         color: rgba(255,255,255,0.60);
         font-weight: 400;
@@ -443,9 +443,8 @@ export default {
         color: rgba(255,255,255,0.85);
         margin-bottom: 10px;
     }
-    
+
     .text-content div{
         margin-bottom: 10px;
     }
 </style>
-  

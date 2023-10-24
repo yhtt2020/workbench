@@ -359,7 +359,7 @@ export default {
   white-space: break-spaces;
   overflow: hidden;
   margin: 0 !important;
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   color: var(--primary-text);
   font-weight: 400;

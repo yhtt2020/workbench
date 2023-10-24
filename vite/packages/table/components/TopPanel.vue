@@ -350,7 +350,7 @@ export default {
 }
 
 .primary-title {
-  font-family: PingFangSC-Medium;
+
   font-size: 14px;
   font-weight: 500;
 }

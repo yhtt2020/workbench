@@ -8,15 +8,15 @@
   <template #overlay>
    <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
      <template v-for="(item,index) in dropDownList">
-       
+
        <a-menu-item v-if=" index <  dropDownList.length - 2 " style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
        @click="selectMenuItem(item,index)">
          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
          <span class="pl-4 font-16" style="color:var(--primary-text);"> {{ item.title }}</span>
        </a-menu-item>
-       
+
        <a-divider v-if="index ===  dropDownList.length - 2 && dropDownList.length === 5" style="height: 1px; margin: 0 0 8px 0;  background-color: var(--divider);"></a-divider>
-       
+
        <a-menu-item v-if=" index >= dropDownList.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
          @click="selectMenuItem(item,index)">
          <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
@@ -121,7 +121,7 @@ export default defineComponent({
          }
        }
      })
-     
+
 
      break;
     case 'packetSet':
@@ -136,7 +136,7 @@ export default defineComponent({
      },350)
      break;
    }
- 
+
   }
 
   return {
@@ -173,7 +173,6 @@ export default defineComponent({
 }
 
 .font-16{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }

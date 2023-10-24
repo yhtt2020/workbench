@@ -14,17 +14,17 @@
      </div>
     </div>
     <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.doc.content.body }}</div>
-    
+
     <div class="flex items-center justify-between">
       <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time) * 1000) }}</span>
       <div class="font-14 rounded-lg pointer px-3.5 py-1.5 active-button" @click="noticeDetail" style="color:var(--active-bg);background: var(--active-secondary-bg);">
         查看
       </div>
     </div>
-    
+
     </div>
   </vue-custom-scrollbar>
- 
+
   <a-menu style="width: 120px;" :style="{position: 'fixed',top:`${contextMenuPosition.y}px`,left:`${contextMenuPosition.x}px`,zIndex: '999'}" class="dropdown-menu rounded-lg flex flex-col items-center justify-center" v-if="showMenu">
     <a-menu-item style="color:var(--secondary-text);" v-for="(item,index) in rightMenuControls" @click="handleMenuItemClick(item)">{{ item.title }}</a-menu-item>
   </a-menu>
@@ -119,13 +119,11 @@ export default {
 
 <style lang="scss" scoped>
 .font-400{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
 
 .font-500{
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }
@@ -165,7 +163,7 @@ export default {
 }
 
 .font-14{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }

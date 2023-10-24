@@ -6,8 +6,8 @@
       <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
         <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
           <a-empty :image="simpleImage"/>
-          <div style="margin-top: -1em">
-            <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+          <div class="item-content">
+            <xt-button size="mini" :w="100" :h="40" type="theme" @click="goGallery">去挑选壁纸</xt-button>
           </div>
         </div>
         <div class="h-full w-full" v-else>
@@ -66,10 +66,12 @@ import { Empty } from 'ant-design-vue'
 import { paperStore } from '../../store/paper'
 import { appStore } from '../../store'
 import { cardStore } from '../../store/card'
+import XtButton from '../../ui/libs/Button/index.vue'
 
 export default {
   name: 'smallWallpaper',
   components: {
+    XtButton,
     Widget
   },
   props: {

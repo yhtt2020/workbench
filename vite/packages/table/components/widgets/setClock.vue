@@ -8,7 +8,7 @@
                         <div class="mb-4 font-16 xt-text">添加闹钟</div>
                         <div class="mb-4 ">
                             <a-input ref="input" allow-clear @click="$refs.input.select()" v-model:value="eventValue"
-                                style="border-radius: 10px;height: 40px; width: 100%; " placeholder="新闹钟" />
+                                style="border-radius: 10px;height: 40px; width: 100%;border: 1px solid var(--divider);background-color: var(--secondary-bg); " placeholder="新闹钟" />
                         </div>
 
                         <div class="mb-4 font-16 xt-text">小时</div>
@@ -20,19 +20,27 @@
                                     <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{ index }}</a-radio-button>
                                 </template>
                             </a-radio-group> -->
-                            <a-radio-group v-model:value="timeHour" button-style="solid"
+                            <!-- <a-radio-group v-model:value="timeHour" button-style="solid"
                                 class="flex ml-1 rounded-lg xt-bg-2">
                                 <a-radio-button :value="i"
                                     v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
                                     style="width: 58px;" class="mb-2 text-center xt-text">{{ index }}</a-radio-button>
-                            </a-radio-group>
+                            </a-radio-group> -->
+                            <div class="flex flex-wrap w-[232px] h-[240px] xt-bg-2 rounded-lg " style="">
+                                <div v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
+                                style="width: 58px;height: 40px;line-height: 40px;text-align: center;flex-shrink: 0;font-size: 16px;"
+                                class="flex items-center justify-center xt-text-2 pointer setting-hour" :class="{'active': timeHour === index}"
+                                @click="timeHour = index">
+                                    {{ index }}
+                                </div>
+                            </div>
 
                         </div>
                         <div>
                             <div class="mt-4 mb-4 font-16 xt-text">分钟</div>
                             <!-- <div class="w-full xt-bg-2" style="border-radius: 10px;border: 1px solid var(--secondary-text);"> -->
                             <a-select v-model:value="timeMinute" placeholder="选择分钟"
-                                style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--secondary-bg);">
+                                style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--divider); " :bordered="false">
                                 <a-select-option :value="index" v-for="(i, index) in new Array(60)" class="xt-bg xt-text-2">
                                     {{ index }}
                                 </a-select-option>
@@ -69,8 +77,8 @@
                             </div>
                             <div>
                                 <a-select v-model:value="defaultDataType" dropdownSyle=""
-                                    @select="changeDataType(defaultDataType)"
-                                    style="width:100%;  height: 40px; border-radius: 10px;border: 1px solid var(--secondary-bg);">
+                                    @select="changeDataType(defaultDataType)" :bordered="false"
+                                    style="width:100%;  height: 40px; border-radius: 10px;background-color: var(--primary-bg);">
                                     <a-select-option :value="index" v-for="(item, index) in selectDataType"
                                         class="xt-bg xt-text-2 selsect-options">
                                         {{ item.title }}
@@ -109,7 +117,7 @@
         </a-row>
     </div>
 </template>
-  
+
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from '../../store/card'
@@ -291,7 +299,7 @@ export default {
     },
     /*
         目前的主要问题是无法保存正确的页面数据，逻辑是没问题，但是表面的数据无法留存
-    */ 
+    */
     watch: {
         checkTopClock: {
             handler(value) {
@@ -320,8 +328,59 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
+.active{
+    background: rgba(80,139,254,0.20);
+}
+.setting-hour{
+    &:hover{
+        background: rgba(80,139,254,0.20);
+        font-size: 30px;
+    }
+    transform: all 0.3s;
+    font-family: Oswald-Regular;
+    &:nth-child(1) {
+        border-radius: 10px 0 0 0;
+    }
+
+    &:nth-child(4) {
+        border-radius: 0 10px 0 0;
+    }
+
+    &:nth-child(21) {
+        border-radius: 0 0 0px 10px;
+    }
+
+    &:nth-child(24) {
+        border-radius: 0 0 10px 0;
+    }
+    // &:nth-child(2),
+    // &:nth-child(6),
+    // &:nth-child(10),
+    // &:nth-child(14),
+    // &:nth-child(18),
+    // &:nth-child(22){
+    //     border-right:1px solid var(--divider);
+    //     border-left:1px solid var(--divider);
+    // }
+    // &:nth-child(3),
+    // &:nth-child(7),
+    // &:nth-child(11),
+    // &:nth-child(15),
+    // &:nth-child(19),
+    // &:nth-child(23){
+    //     border-right:1px solid var(--divider);
+    // }
+    // &:not(:nth-child(21),
+    // :nth-child(22),
+    // :nth-child(23),
+    // :nth-child(24)){
+    //     border-bottom:1px solid var(--divider);
+    // }
+
+
+}
 .event-list {
     padding: 0.2em 0.5em;
 
@@ -413,13 +472,13 @@ export default {
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     font-weight: 400;
 }
 
 .font-12 {
-    font-family: PingFangSC-Regular;
+
     font-size: 12px;
     font-weight: 400;
 }
@@ -497,7 +556,7 @@ export default {
     color: var(--primary-text);
 
     &::placeholder {
-        font-family: PingFangSC-Regular;
+
         font-size: 14px;
         font-weight: 400;
         color: var(--primary-text);
@@ -519,7 +578,7 @@ export default {
 
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
 }
@@ -530,4 +589,3 @@ export default {
     font-weight: 500;
 }
 </style>
-  

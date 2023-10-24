@@ -5,8 +5,8 @@
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
           <a-empty :image="simpleImage" />
-          <div style="margin-top: 2em;">
-            <a-button type="primary" @click="goGallery">去挑选壁纸</a-button>
+          <div class="item-content">
+            <xt-button size="mini" :w="100" :h="40"  type="theme" @click="goGallery">去挑选壁纸</xt-button>
           </div>
         </div>
         <div class="h-full w-full pointer" v-else @click="goSource">
@@ -64,11 +64,13 @@ import { paperStore } from "../../store/paper";
 import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
 import { lively, lively2 } from "../../js/data/livelyData";
+import XtButton from '../../ui/libs/Button/index.vue'
 let fs = require("fs");
 let path = require("path");
 export default {
   name: "MiddleWallpaper",
   components: {
+    XtButton,
     Widget,
   },
   props: {

@@ -1,74 +1,229 @@
-/*
-Error: wrong number of arguments (1 for 3) for `rgb'
-        on line 14 of web.scss
-        from line 1 of index.scss
+@import url("../../../../../styles/common.scss");
+@import url("../../../../../styles/icon.scss");
+.replies {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 400px;
+  overflow-y: auto;
+  border-radius: 8px 0 0 8px;
+  position: absolute;
+  right: 0;
+  height: calc(100% - 40px);
+  z-index: 2;
+  top: 40px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 10px 0 rgba(2, 16, 43, 0.15);
+}
+.replies .header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
+  padding: 10px 0;
+}
+.replies .header-title {
+  width: calc(100% - 40px);
+  text-align: left;
+  height: 30px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 30px;
+}
+.replies .header-close {
+  width: 20px;
+}
+.replies .header-close i {
+  width: 12px;
+  height: 12px;
+}
+.replies .header-back {
+  width: 20px;
+}
+.replies .body {
+  padding: 10px 0;
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.replies .body .body-message {
+  border-bottom: 1px dashed #E0E0E0;
+}
+.replies .body .body-list {
+  width: 100%;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+.replies .body .body-list-item {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.replies .body .body-list-item .replies-item {
+  flex: 1;
+}
+.replies .body .body-list-item .avatar {
+  width: 36px;
+  height: 36px;
+  margin: 10px 10px 10px 0px;
+  border-radius: 10%;
+}
+.replies .body .body-list-item .name {
+  width: calc(100% - 60px);
+  height: 20px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 20px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  letter-spacing: 0;
+}
+.replies .body .body-list .more {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  padding: 10px;
+}
 
-Backtrace:
-web.scss:14
-index.scss:1
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:310:in `reformat_argument_error'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:149:in `rescue in _perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/funcall.rb:122:in `_perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/node.rb:58:in `perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `block in _perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/list_literal.rb:63:in `_perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/script/tree/node.rb:58:in `perform'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:398:in `visit_prop'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block (2 levels) in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:434:in `block in visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:432:in `visit_rule'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `block (2 levels) in visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:329:in `block in visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:88:in `block in with_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:88:in `with_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:326:in `visit_import'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `block in with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:115:in `with_frame'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/stack.rb:79:in `with_base'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:162:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `map'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:171:in `block in visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:170:in `visit_children'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:190:in `visit_root'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/base.rb:36:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:161:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/visitors/perform.rb:10:in `visit'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/root_node.rb:36:in `css_tree'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/engine.rb:384:in `_render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/engine.rb:301:in `render_with_sourcemap'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/sass_scss.rb:391:in `run'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/sass_scss.rb:63:in `process_result'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/base.rb:52:in `parse'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/lib/sass/exec/base.rb:19:in `parse!'
-C:/Users/cyx/.local/share/gem/ruby/3.2.0/gems/sass-3.4.25/bin/sass:13:in `<top (required)>'
-C:/Users/cyx/AppData/Local/Microsoft/WindowsApps/sass:32:in `load'
-C:/Users/cyx/AppData/Local/Microsoft/WindowsApps/sass:32:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: wrong number of arguments (1 for 3) for `rgb'\A         on line 14 of web.scss\A         from line 1 of index.scss"; }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 140px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #d8d8d8;
+}
+
+.replies-H5 {
+  z-index: 5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transform: none;
+  box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+.replies-H5 .header {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.replies-H5 .header-title {
+  text-align: center;
+}
+.replies-H5 .body {
+  padding: 0;
+}
+.replies-H5 .body .body-tab,
+.replies-H5 .body .body-list {
+  width: 100%;
+}
+.replies-H5 .body .body-list-item {
+  background-color: #ffffff;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: row;
+}
+.replies-H5 .body .body-list-item .avatar {
+  border-radius: 10%;
+  padding: 0;
+  margin: 10px;
+}
+.replies-H5 .body .body-list-item .name {
+  width: calc(100% - 40px);
+  height: 56px;
+  line-height: 56px;
+  border-bottom: 1px solid #EFEFEF;
+}
+.replies-H5 .body .body-tab {
+  height: 22px;
+  padding: 15px;
+  width: calc(100% - 30px);
+  border-bottom: none;
+}
+.replies-H5 .body .body-tab .tab-item {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  height: 22px;
+}
+.replies-H5 .body .body-tab .tab-item-title, .replies-H5 .body .body-tab .tab-item-count {
+  height: 22px;
+  font-size: 15px;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 20px;
+  font-weight: 400;
+  color: #8D8D8D;
+}
+.replies-H5 .body .body-tab .tab-item-count {
+  font-size: 17px;
+  font-weight: 800;
+}
+.replies-H5 .body .body-tab .tab-item-now {
+  color: #147AFF;
+  padding-bottom: 3px;
+  border-bottom: 2.6px solid #147AFF;
+}
+.replies-H5 .body .body-tab .tab-item-now .tab-item-title,
+.replies-H5 .body .body-tab .tab-item-now .tab-item-count {
+  color: #147AFF;
+}
+.replies-H5 .body .body-message .message {
+  margin: 10px 0;
+  background-color: #ffffff;
+  padding: 5px;
+}
+.replies-H5 .body .body-message .message .message-info span {
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 94px;
+  height: 30px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #999999;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 30px;
+}
+.replies-H5 .body .body-message .message .message-cont {
+  padding: 0 10px 10px 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #111111;
+  letter-spacing: 0;
+  max-height: 100px;
+}
+.replies-H5 .body .body-message .message .message-cont p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.replies-H5 .body .body-message .message .message-cont-img {
+  max-height: 70px;
+}
+
+/*# sourceMappingURL=index.css.map */

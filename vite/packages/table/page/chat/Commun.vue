@@ -31,16 +31,23 @@
       </div>
       <div class="flex mr-6 right">
         <!-- <div class="flex items-center"> -->
-        <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
-          <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
-        </a-button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " @click="refreshPost"
-          style="flex-shrink: 0;">
-          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
-        </button>
-        <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan" style="flex-shrink: 0;">
-          <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
-        </button>
+        <xt-button type="primary"
+          style="color: var(--active-bg); width: 83px;height: 40px;background: rgba(80,139,254,0.20);"
+          @click="visibleModal">
+          <Icon class="pr-1 text-xl xt-theme-text" style="font-size: 22px;vertical-align: sub;margin-right:6px ;" icon="akar-icons:circle-plus-fill" />发布
+        </xt-button>
+        <a-tooltip  title="刷新" placement="bottom">
+          <xt-button class="ml-3 border-0 rounded-md xt-bg pointer " @click="refreshPost"
+            style="flex-shrink: 0;width: 40px;height: 40px;">
+            <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
+          </xt-button>
+        </a-tooltip>
+        <a-tooltip title="前往元社区" placement="bottom">
+          <xt-button class="ml-3 border-0 rounded-md xt-bg pointer" @click="goYuan"
+            style="flex-shrink: 0;width: 40px;height: 40px;">
+            <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="majesticons:open" />
+          </xt-button>
+        </a-tooltip>
 
 
         <!-- </div> -->
@@ -61,15 +68,15 @@
           <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
           <!-- 循环渲染多个 ComCard -->
           <a-empty v-if="comCards.list?.length === 0" description="暂无内容" image="/img/test/load-ail.png"
-                            style="margin-top: 30%;"></a-empty>
+            style="margin-top: 30%;"></a-empty>
           <template v-else>
             <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
-            :detailVisible="detailVisible" class="xt-bg" 
-            :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
-          </ComCard>
-          <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
+              :detailVisible="detailVisible" class="xt-bg"
+              :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
+            </ComCard>
+            <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
           </template>
-          
+
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -291,7 +298,6 @@ onUpdated(() => {
     //当屏幕最大宽度为767px
 
     .font-16 {
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       font-weight: 400;
     }
@@ -337,7 +343,6 @@ onUpdated(() => {
 
     // overflow: scroll;
     .card-content {
-      font-family: PingFangSC-Regular;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.85);
       text-align: justify;
@@ -356,7 +361,6 @@ onUpdated(() => {
 
       .right {
         .title {
-          font-family: PingFangSC-Medium;
           font-size: 16px;
           color: rgba(255, 255, 255, 0.85);
           text-align: justify;
@@ -372,7 +376,6 @@ onUpdated(() => {
 
         .context {
           margin-top: 8px;
-          font-family: PingFangSC-Regular;
           font-size: 14px;
           color: rgba(255, 255, 255, 0.60);
           text-align: justify;
@@ -403,7 +406,7 @@ onUpdated(() => {
     overflow: hidden;
   }
 
-  :deep(.ant-pagination-simple  .ant-pagination-item-link) {
+  :deep(.ant-pagination-simple .ant-pagination-item-link) {
     color: var(--secondary-text) !important;
   }
 

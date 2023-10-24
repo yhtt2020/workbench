@@ -367,7 +367,7 @@ export default {
 }
 
 .type-text {
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--secondary-text);
   font-weight: 400;
@@ -383,7 +383,7 @@ export default {
 }
 
 .type-right {
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 400;

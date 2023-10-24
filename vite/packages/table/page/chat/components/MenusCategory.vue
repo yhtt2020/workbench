@@ -3,7 +3,7 @@
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <span class="font-16-400" style="color:var(--primary-text);">添加新频道</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+    <CloseOutlined  style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 
@@ -16,7 +16,7 @@
    </div>
 
    <div class="flex flex-col mt-4">
-    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4" 
+    <div v-for="item in channelList" class="flex items-center pointer rounded-lg px-6 py-5 mb-4"
      style="background: var(--secondary-bg);" :class="{'select-bg':selectIndex === item.type}" @click="selectChannel(item)">
      <MenuIcon :icon="item.icon" style="font-size: 2.5em;"></MenuIcon>
      <span class="pl-4 font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
@@ -87,8 +87,8 @@ export default defineComponent({
    data.type = item.type
   }
 
-  
-  
+
+
   // 选择完进入下一步
   const selectSubmit = () =>{
    data.nextShow = true
@@ -106,7 +106,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -128,7 +127,6 @@ export default defineComponent({
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

@@ -14,10 +14,10 @@
       </div>
      </vue-custom-scrollbar>
   </div>
-  
+
 
  </div>
-  
+
  <teleport to='body' >
   <FriendModal v-model:visible="friendShow" v-if="friendShow" :blurFlag="true">
     <UserCard :uid="uid" :userCardUid="userCardUid" :userInfo="info"></UserCard>
@@ -43,7 +43,7 @@ export default defineComponent({
   setup(){
 
    const data = reactive({
-    settingsScroller: {  // 滚动条配置 
+    settingsScroller: {  // 滚动条配置
       useBothWheelAxes: true,
       swipeEasing: true,
       suppressScrollY: false,
@@ -55,7 +55,7 @@ export default defineComponent({
     info:[],
     userCardUid:''
    })
-    
+
    const store = appStore()
    data.userCardUid = store.$state.userCardUid
 
@@ -75,13 +75,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-16{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
 
 .font-14{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }
