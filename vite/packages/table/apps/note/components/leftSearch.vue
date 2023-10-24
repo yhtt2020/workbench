@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-between h-full xt-br mr-3">
-      <div class="h-full flex" style="width: 308px;flex-direction: column;" >
+      <div class="h-full flex" style="max-width: 308px;flex-direction: column;" >
         <!-- class="xt-scrollbar" -->
         <div class="flex w-full pr-3 mt-3 mb-4" style="height: 40px;">
             <a-input
@@ -16,11 +16,13 @@
           </xt-button>
         </div>
         <div 
-        class=" xt-scrollbar h-full" 
+        class=" xt-scrollbar h-full scroll-color pr-3" 
+        style="width: 306px;"
         >
+            <!-- <div @click="this.deTest">清除数据</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
-                <div @click="changeNote(index)" style="width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
-                class="note-box"
+                <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
+                class="note-box w-full"
                 :class="index == this.selNote?'note-active':''">
                     <div class="flex list-top font-16" style="color: var(--primary-text);justify-content: space-between;">
                         <div class="flex items-center">
@@ -56,7 +58,7 @@
                     </div>
                     <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
                         <!-- {{ item.id }}{{ item.deskName?'.'+item.deskName:'' }} -->
-                        {{ this.formatTimestamp(item.id) }}{{ item.deskName?'.'+item.deskName:'' }}
+                        {{ this.formatTimestamp(item.id) }}{{ item.deskName?' · '+item.deskName:'' }}
                     </div>
                 </div>
             </xt-menu>
@@ -104,9 +106,6 @@
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
                     callBack:()=>{
-                        // 
-                        // console.log('触发删除');
-                        // console.log(this.selNote);
                         this.moveNote()
                     }
                 },
@@ -114,14 +113,14 @@
       };
     },
     computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText']),
+        ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab']),
     },
     mounted() {
     },
     watch: {
     },
     methods: {
-        ...mapActions(noteStore,['moveNote']),
+        ...mapActions(noteStore,['moveNote','deTest']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
@@ -165,6 +164,18 @@
     }
     .note-box:hover .note-menu{
         display: flex;
+    }
+    .scroll-color::-webkit-scrollbar-thumb {
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+    
+    .scroll-color::-webkit-scrollbar-thumb:hover {
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+
+    .scroll-color::-webkit-scrollbar-track {
+        border-radius: 6px; /* 轨道圆角 */
     }
 </style>
   
