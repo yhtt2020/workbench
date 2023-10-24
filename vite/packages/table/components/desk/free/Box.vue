@@ -3,6 +3,7 @@
   <!-- <test :data="data" :role="role"></test> -->
   <!-- <CPULineChart></CPULineChart> -->
   <component
+    :desk="currentDesk"
     class="box"
     :style="{ backgroundColor }"
     :role="role"
@@ -42,8 +43,8 @@ export default {
     },
     data: {
       type: Object,
-      required: true,
     },
+    currentDesk: {},
   },
   computed: {
     backgroundColor() {

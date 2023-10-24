@@ -51,7 +51,6 @@ const { itemType, isDragging, item, initialOffset, currentOffset } =
   <div class="layer">
     <div :style="getItemStyles(initialOffset, currentOffset, props.snapToGrid)">
       <BoxDragPreview v-if="itemType === ItemTypes.BOX" :title="item.title" />
-      <xt-button type="theme">22222</xt-button>
     </div>
   </div>
 </template>

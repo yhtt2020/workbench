@@ -13,6 +13,7 @@ const props = defineProps<{
   top: number;
   data: object;
   customData: object;
+  currentDesk: object,
 }>();
 
 const [collect, drag, preview] = useDrag(() => ({
@@ -41,6 +42,6 @@ const { isDragging } = toRefs(collect);
     }"
     role="DraggableBox"
   >
-    <Box :title="title" :data="data" />
+    <Box :currentDesk="currentDesk" :data="data" />
   </div>
 </template>

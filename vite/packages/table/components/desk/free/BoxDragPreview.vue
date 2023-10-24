@@ -3,9 +3,10 @@
 import Box from "./Box.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 
-const props = defineProps<{
-  title: string;
-}>();
+const props = defineProps({
+  title: {},
+  desk: {},
+});
 
 onMounted(() => {
   const interval = setInterval(() => (tickTock.value = !tickTock.value), 500);
@@ -19,7 +20,7 @@ const tickTock = ref(false);
 
 <template>
   <div class="box-drag-preview">
-    <Box :title="title" :yellow="tickTock" preview />
+    <Box :title="title" :yellow="tickTock" preview  />
   </div>
 </template>
 

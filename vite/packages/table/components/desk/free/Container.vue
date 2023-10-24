@@ -10,18 +10,19 @@ import { cardStore } from "../../../store/card";
 import { storeToRefs } from "pinia";
 
 import { useFreeDeskStore } from "./store";
-const freeDeskStore = useFreeDeskStore();
-const card = cardStore();
+const freeDeskStore: any = useFreeDeskStore();
+const card: any = cardStore();
 
 const { getCurrentDesk, freeDesk } = storeToRefs(freeDeskStore);
 
 const props = defineProps({
   snapToGrid: {},
   currentDesk: {},
+  desk: {},
 });
 const { currentDesk } = toRefs(props);
 // 获取组件
-const { currentDeskCard, currentDeskId } = storeToRefs(card);
+const { currentDeskId } = storeToRefs(card);
 
 function renaw(cards) {
   let obj = {};
@@ -48,7 +49,7 @@ function renaw(cards) {
   console.log("obj :>> ", obj);
   freeDesk.value[currentDeskId.value] = obj;
 }
-let resizeTimer = null; // 用于存储 setTimeout 的返回值
+let resizeTimer: any = null; // 用于存储 setTimeout 的返回值
 const updateWindowDimensions = (newV) => {
   // 在窗口大小变化停止后才更新窗口大小
   clearTimeout(resizeTimer);
@@ -56,7 +57,7 @@ const updateWindowDimensions = (newV) => {
     renaw(newV);
   }, 200); // 设置防抖延迟为200毫秒
 };
-watch(currentDesk.value.cards, (newV) => {
+watch(currentDesk?.value.cards, (newV) => {
   updateWindowDimensions(newV);
 });
 
@@ -83,8 +84,6 @@ const [, drop] = useDrop(() => ({
     return undefined;
   },
 }));
-
-
 </script>
 
 <template>
@@ -96,6 +95,7 @@ const [, drop] = useDrop(() => ({
       :left="data.left"
       :top="data.top"
       :data="data"
+      :currentDesk="currentDesk"
     />
   </div>
 </template>
