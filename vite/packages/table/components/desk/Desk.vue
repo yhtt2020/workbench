@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <RightMenu :menus='dropdownMenu'  class="w-full h-full">
+    <RightMenu :menus='dropdownMenu'  class="w-full h-full"  @contextmenu="showMenu">
       <!-- startFreeDesk() -->
       <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
       <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button>
@@ -38,7 +38,7 @@
                          :customData="data.data.customData" :editing="editing"></component> -->
           </template>
       </FreeDesk>
-        <vue-custom-scrollbar  @contextmenu="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+        <vue-custom-scrollbar  class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
