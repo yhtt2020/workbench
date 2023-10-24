@@ -9,39 +9,19 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 120px;top: 16px;" @click="refreshPost" class="pointer">
-                    <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
+                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer">
+                    <YuanIcon class="text-lg xt-text clock-icon"
                                 style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" /></div>
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
-                    <!-- {{ showForumList }} -->
-                    <!-- <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
-                        <div class="w-[32px] h-[32px] rounded-md ml-2">
-                            <a-avatar shape="square" :src="this.showForumList[0].value.logo" alt="" class="w-full h-full" />
-
-                        </div>
-                        <div class="ml-2 font-16 xt-text">
-                            {{ this.showForumList[0].value.name }}
-                        </div>
-                    </div> -->
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
                         style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
                     </YuanHorizontalPanel>
-                    <div>
-                        <!-- <a-tooltip title="刷新" placement="bottom" > -->
-                        <!-- <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
-                            @click="refreshPost">
-                            <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
-                                style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" />
-                        </button> -->
-                        <!-- </a-tooltip> -->
-
-                    </div>
                 </div>
                 <!-- 内容区 -->
                 <div style="" class="h-full">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" 
-                        :settings="outerSettings" style="height: calc(100% - 580px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        :settings="outerSettings" style="height: calc(100% - 80px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>

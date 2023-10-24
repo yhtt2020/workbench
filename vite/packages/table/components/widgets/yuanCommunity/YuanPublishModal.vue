@@ -1,6 +1,6 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t - b - close">
+    <Modal :maskNoClose="true" class="" animationName="t-b-close">
         <div class="w-[500px] pl-4 pr-4 content">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <a-dropdown trigger="click" placement="bottom"
@@ -53,11 +53,6 @@
                         <a-textarea v-model:value="postValue" :placeholder="defaultType.value === 'video' ? '简介' : '请输入'"
                             :autoSize="{ minRows: 5, maxRows: 8 }" :bordered="false" v-if="defaultType.value !== 'post'" />
                         <div class="w-full h-[300px]" v-else-if="defaultType.value == 'post'">
-                            <!-- <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef"
-                                :defaultConfig="toolbarConfig" :mode="mode" />
-
-                            <Editor style="height: 100% ; overflow-y: hidden; background: var(--primary-bg);"
-                                v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" /> -->
                                 <MarkDown></MarkDown>
                         </div>
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
