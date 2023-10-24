@@ -28,8 +28,8 @@
 
     <RightMenu :menus='dropdownMenu'  class="w-full h-full">
       <!-- startFreeDesk() -->
-      <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
-      <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button>
+      <!-- <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
+      <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button> -->
       <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id) ' >
         <template #item="{ item }">
               <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
