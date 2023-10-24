@@ -20,7 +20,7 @@
 
       <a-input v-model:value="groupName" ref="groupRef" :spellcheck="false"  style="color: var(--primary-text); text-align: center; border-radius: 12px !important;"></a-input>
 
-      <a-button  @click="saveGroupName" style="background: var(--active-bg); width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</a-button> 
+      <xt-button  @click="saveGroupName" style="background: var(--active-bg); width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</xt-button> 
     </template>
 
     <template v-else>
@@ -109,7 +109,7 @@ export default {
        name:this.groupName,
        avatar:this.avatar
       }
-      console.log('排查参数是否正确',option);
+      // console.log('排查参数是否正确',option);
       await this.server.tim.updateGroupProfile(option)
       this.$emit('updateGroupInfo')
       this.$emit('close')
