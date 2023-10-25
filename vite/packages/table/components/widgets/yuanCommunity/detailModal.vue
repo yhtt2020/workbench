@@ -1,7 +1,7 @@
 <template>
-    <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered :closable="false"
+    <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered :closable="false" zIndex="9"
         style="font-size: 8px;color: var(--primary-text);width: 1000px;height: 700px !important; overflow: hidden;"
-        :maskClosable="false" :bodyStyle="{ padding: '0px', height: '700px', fontSize: '8px' }">
+        :maskClosable="false" :bodyStyle="{ padding: '0px', height: '700px', fontSize: '8px',svg:{fontSize:'7px'} }">
         <div class="pl-4 pr-4 xt-bg" style="flex-shrink: 0;border-radius: 12px;">
             <div class="w-full pt-2 card-content">
                 <div class="flex justify-between mb-2 ">
@@ -117,31 +117,31 @@
                 <a-divider class="w-[3px] h-[700px] " type="vertical" style="color: var(--divider);" />
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-2 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
-                <div class="mt-4">
-                    <div class="flex mb-4">
-                        <!-- {{ store.communityCollect.info }} -->
-                        <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
-                            <!-- <div class="item-content"> -->
-                            <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
-                                :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                                style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
-                                {{ cardData.support_count }}</xt-button>
-                            <!-- </div> -->
+                    <div class="mt-4">
+                        <div class="flex mb-4">
+                            <!-- {{ store.communityCollect.info }} -->
+                            <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                                <!-- <div class="item-content"> -->
+                                <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
+                                    :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
+                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
+                                    {{ cardData.support_count }}</xt-button>
+                                <!-- </div> -->
 
 
+                            </div>
+                            <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
+                                <xt-button class="flex items-center justify-center pl-5 reply xt-text"
+                                    :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
+                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                    <img src="../../../../../public/icons/collect.png" alt=""
+                                        class="w-[20px] h-[20px] -ml-6 mr-1">
+                                    {{ cardData.collect_count }}</xt-button>
+                            </div>
                         </div>
-                        <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
-                            <xt-button class="flex items-center justify-center pl-5 reply xt-text"
-                                :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
-                                style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                <img src="../../../../../public/icons/collect.png" alt=""
-                                    class="w-[20px] h-[20px] -ml-6 mr-1">
-                                {{ cardData.collect_count }}</xt-button>
-                        </div>
+                        <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
                     </div>
-                    <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
-                </div>
                 </vue-custom-scrollbar>
 
             </div>
@@ -170,6 +170,7 @@ let userInfo = {
 }
 onMounted(() => {
     console.log(props.cardData)
+    refresh()
 })
 const custom = computed(() => {
     return props.showDetailModal
@@ -394,4 +395,5 @@ const showImage = () => {
     &:hover {
         background: var(--secondary-bg);
     }
-}</style>
+}
+</style>
