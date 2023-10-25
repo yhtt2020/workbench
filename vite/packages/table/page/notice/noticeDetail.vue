@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:100%;">
     <div v-for="(item,index) in list" class="flex flex-col mb-3 p-4 rounded-lg"
     style=" background: var(--secondary-bg);position: relative;"
@@ -167,4 +167,4 @@ export default {
   font-size: 14px;
   font-weight: 400;
 }
-</style>
+</style> -->
