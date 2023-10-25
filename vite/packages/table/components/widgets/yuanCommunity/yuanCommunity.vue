@@ -20,7 +20,7 @@
                     </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div :style="{ height: this.customData.height == 2 ? '392px' : '600px' }" >
+                <div :style="{ height:showItem }" >
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
@@ -276,6 +276,12 @@ export default {
                 return { width: this.customData.width, height: this.customData.height }
             }
             return this.sizeList[0]
+        },
+        showItem(){
+          if(this.customData && this.customData.height){
+            return this.customData.height == 2?'392px':'600px'
+          }
+          return '392px'  
         },
         // 判断不同高度返回不同个数
         copyNum() {
