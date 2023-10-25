@@ -60,7 +60,7 @@
                 :forumIndex="currentIndex"></YuanPublishModal>
         </teleport>
         <teleport to="body" :disabled="false" >
-            <detailModal v-if="showDetailModal" :cardData="cardData"/>
+            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail"/>
         </teleport>
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
@@ -222,6 +222,9 @@ export default {
             this.showDetailModal = true
             this.cardData=item
             console.log(this.cardData);
+        },
+        closeDetail(value){
+            this.showDetailModal = value
         },
         // 选择板块
         handleChange(value) {

@@ -1,120 +1,134 @@
 <template>
-    <Modal :maskNoClose="true" class="flex justify-center " >
-        <div class="w-[1000px] pl-4 pr-4 xt-bg " style="flex-shrink: 0;border-radius: 12px;">
+    <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered :closable="false"
+        style="font-size: 8px;color: var(--primary-text);width: 1000px;height: 700px !important; overflow: hidden;"
+        :maskClosable="false" :bodyStyle="{ padding: '0px', height: '700px', fontSize: '8px' }">
+        <div class="pl-4 pr-4 xt-bg" style="flex-shrink: 0;border-radius: 12px;">
             <div class="w-full pt-2 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
                     <div class="flex items-center">
                         <a-tooltip title="前往元社区" placement="bottom">
-                            <Icon class="text-xl xt-text pointer active-icon" icon="fluent:chat-16-regular" />
+                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;"
+                                icon="fluent:chat-16-regular" />
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
-                            <Icon class="ml-3 text-xl xt-text pointer active-icon"
+                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
                                 icon="fluent:full-screen-maximize-16-filled" />
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
-                            <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:arrow-clockwise"
-                                @click="refreshDetail" />
+                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
+                                icon="akar-icons:arrow-clockwise" @click="refresh" />
                         </a-tooltip>
-                        <a-tooltip title="前往元社区" placement="bottom">
-                            <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="majesticons:open"
+                        <a-tooltip title="外部打开" placement="bottom">
+                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;" icon="majesticons:open"
                                 @click="goYuan" />
                         </a-tooltip>
+                        <a-divider class="w-[3px]  " type="vertical" style="color: var(--divider);" />
                         <a-tooltip title="关闭" placement="bottom">
-                            <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:cross"
+                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;" icon="akar-icons:cross"
                                 @click="closeDetail" />
                         </a-tooltip>
                     </div>
                 </div>
             </div>
-            <div class="flex w-full pl-4 pr-4 xt-bg-2" style="border-radius: 12px;">
-                <div class="w-1/2 mt-4" style="flex-shrink: 0;">
-                    <div class="card-top">
-                        <div class="flex items-center">
-                            <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
-                                @click.stop="showCard(uid, userInfo)">
-                                <template #icon>
-                                    <UserOutlined />
-                                </template>
-                            </a-avatar>
-                            <div class="ml-1 user-msg">
-                                <div class="username" style="color: var(--primary-text);">
-                                    {{ cardData.user.nickname }}
-                                </div>
-                                <div class="self-msg " style="color:  var(--secondary-text);">
-                                    <span class="date">{{ createTime[0] }}</span>
-                                    <span class="time">{{ createTime[1] }}</span>
-                                    <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
+            <div class="flex w-full h-[650px] pl-4 pr-4 xt-bg-2" style="border-radius: 12px;">
+                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 thread-list" :settings="settingsScroller"
+                    style="height: 100%;overflow: hidden;flex-shrink: 0; ">
+                    <div class="mt-4 " style="flex-shrink: 0;">
+                        <div class="card-top">
+                            <div class="flex items-center">
+                                <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
+                                    @click.stop="showCard(uid, userInfo)">
+                                    <template #icon>
+                                        <UserOutlined />
+                                    </template>
+                                </a-avatar>
+                                <div class="ml-1 user-msg">
+                                    <div class="username" style="color: var(--primary-text);font-size: 16px;">
+                                        {{ cardData.user.nickname }}
+                                    </div>
+                                    <div class="self-msg " style="color:  var(--secondary-text);font-size: 14px;">
+                                        <span class="date">{{ createTime[0] }}</span>
+                                        <span class="time">{{ createTime[1] }}</span>
+                                        <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="top-right">
-                            <!-- 当展示文章详情时,需要一个返回按钮去返回上一级 -->
-                            <!-- <slot name="top-right"></slot> -->
+                            <div class="top-right">
+                                <!-- 当展示文章详情时,需要一个返回按钮去返回上一级 -->
+                                <!-- <slot name="top-right"></slot> -->
+                            </div>
+
                         </div>
 
-                    </div>
-
-                    <div>
                         <div>
-                            <div class="flex flex-col items-center " v-if="cardData.data?.video">
-                                <video class="object-cover mb-2 rounded-md cover-lm">
-                                    <source :src="cardData.data.video" type="video/mp4" />
-                                    <source :src="cardData.data.video" type="video/webm" />
-                                </video>
-                            </div>
-                            <!-- 正文元素 -->
-                            <div class="mb-2">
-                                <div>
-                                    <div id="title" style="color: var(--primary-text); " v-if="cardData.title"
-                                        :innerHTML="title"></div>
-                                    <div id="context" style="color:  var(--secondary-text); word-break: pre-wrap;"
-                                        :innerHTML="content"></div>
+                            <div>
+                                <div class="flex flex-col items-center " v-if="cardData.data?.video">
+                                    <video class="object-cover mb-2 rounded-md cover-lm">
+                                        <source :src="cardData.data.video" type="video/mp4" />
+                                        <source :src="cardData.data.video" type="video/webm" />
+                                    </video>
                                 </div>
+                                <!-- 正文元素 -->
+                                <div class="mb-2">
+                                    <div>
+                                        <div id="title" style="color: var(--primary-text);font-size: 16px; "
+                                            v-if="cardData.title" :innerHTML="title"></div>
+                                        <div id="context"
+                                            style="color:  var(--secondary-text); word-break: pre-wrap;font-size: 14px;"
+                                            :innerHTML="content"></div>
+                                    </div>
 
-                            </div>
-                            <template v-if="cardData.image_170_170">
-                                <!-- <ul class="flex flex-wrap items-center p-0 mb-0 ">
+                                </div>
+                                <template v-if="cardData.image_170_170">
+                                    <!-- <ul class="flex flex-wrap items-center p-0 mb-0 ">
                                 <img :src="item.image" v-for="(item, index) in cardData.image_170_170" @click="showImage"
                                     class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                             </ul> -->
-                                <!-- :options="options" -->
-                                <viewer :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 ">
-                                    <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
-                                        <a-col class="flex flex-wrap mr-2 image-wrapper"
-                                            v-for="(img, index) in cardData.image_170_170" :span="11" style="">
-                                            <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm" :src="img.image"
-                                                :data-source="cardData.image[index].image" @contextmenu.stop="showMenu(img)"
-                                                style="position: relative object-fit: fill;">
-                                        </a-col>
-                                    </a-row>
-                                </viewer>
-                            </template>
+                                    <!-- :options="options" -->
+                                    <viewer :images="cardData.image_170_170" :options="options"
+                                        class="items-center p-0 mb-0 ">
+                                        <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
+                                            <a-col class="flex flex-wrap mr-2 image-wrapper"
+                                                v-for="(img, index) in cardData.image_170_170" :span="11" style="">
+                                                <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm"
+                                                    :src="img.image" :data-source="cardData.image[index].image"
+                                                    @contextmenu.stop="showMenu(img)"
+                                                    style="position: relative object-fit: fill;">
+                                            </a-col>
+                                        </a-row>
+                                    </viewer>
+                                </template>
 
+                            </div>
+
+                        </div>
+                        <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
+                            <span class="view" style="cursor: pointer; margin-right: 4px;">{{ cardData.view_count }}
+                                浏览</span>
+                            <span class="like" style="cursor: pointer; margin-right: 4px;">{{ cardData.support_count }}
+                                点赞</span>
+                            <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                         </div>
 
                     </div>
-                    <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
-                        <span class="view" style="cursor: pointer;">{{ cardData.view_count }} 浏览</span>
-                        <span class="like" style="cursor: pointer;">{{ cardData.support_count }} 点赞</span>
-                        <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
-                    </div>
-
-                </div>
+                </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[1px] h-full " type="vertical" style="color: var(--divider);"/>
-                <div class="w-1/2 mt-4">
+                <a-divider class="w-[3px] h-[700px] " type="vertical" style="color: var(--divider);" />
+                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-2 thread-list" :settings="settingsScroller"
+                    style="height: 100%;overflow: hidden;flex-shrink: 0; ">
+                <div class="mt-4">
                     <div class="flex mb-4">
                         <!-- {{ store.communityCollect.info }} -->
                         <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
                             <!-- <div class="item-content"> -->
-                                <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
+                            <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
                                 :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
                                 style="width: 57px;height: 32px;border: none;cursor: pointer;">
                                 <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
                                 {{ cardData.support_count }}</xt-button>
                             <!-- </div> -->
-                            
+
 
                         </div>
                         <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
@@ -128,11 +142,11 @@
                     </div>
                     <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
                 </div>
-                
+                </vue-custom-scrollbar>
+
             </div>
         </div>
-
-    </Modal>
+    </a-modal>
 </template>
 
 <script setup lang='ts'>
@@ -145,6 +159,7 @@ import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
+import { html } from 'cheerio/lib/api/manipulation';
 const useUserStore = appStore()
 const store = useCommunityStore();
 let uid = store.communityPostDetail.user?.uid
@@ -155,6 +170,9 @@ let userInfo = {
 }
 onMounted(() => {
     console.log(props.cardData)
+})
+const custom = computed(() => {
+    return props.showDetailModal
 })
 // 弹出用户个人卡片
 const showCard = (uid, userInfo) => {
@@ -169,7 +187,13 @@ const closeDetail = () => {
     detailVisible.value = false
     emit('closeDetail', detailVisible.value)
 }
-
+const settingsScroller = reactive({
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true,
+});
 // 点赞
 const isLike = computed(() => {
     return store.communityPostDetail.is_support
@@ -202,7 +226,7 @@ const clickCollect = async () => {
 
 }
 const props = defineProps({
-    isShow: Boolean,
+    showDetailModal: Boolean,
     cardData: {
         type: Object,
         default: () => []
@@ -232,7 +256,7 @@ const refresh = async () => {
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 const content = computed(() => {
-    return emojiReplace(props.cardData.summary);
+    return emojiReplace(props.cardData.pc_summary);
 });
 const title = computed(() => {
     return emojiReplace(props.cardData.title);
@@ -241,9 +265,6 @@ const title = computed(() => {
 const showMenu = (img) => {
     console.log(img);
 }
-const options = reactive({
-    url: 'data-source',
-})
 // 控制图片画廊的显示
 const vieewerVisible = ref(false)
 const showImage = () => {
@@ -373,5 +394,4 @@ const showImage = () => {
     &:hover {
         background: var(--secondary-bg);
     }
-}
-</style>
+}</style>
