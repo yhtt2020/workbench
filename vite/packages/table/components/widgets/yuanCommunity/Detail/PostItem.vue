@@ -8,11 +8,11 @@
             <div style="font-size: 1rem !important;">
                 <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
                     <!-- 帖子 -->
-                    <div class="w-full h-[250px]">
+                    <div class="w-full h-[300px]" style="overflow: hidden;">
                         <MarkDown></MarkDown>
                     </div>
                     <!-- 动态和帖子 -->
-                    <div style="font-size: 16px !important;" v-if="imageLoadVisible">
+                    <div style="font-size: 16px !important;" v-if="imageLoadVisible" >
                         <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
                             multiple @preview="handlePreview">
                             <div v-if="fileList.length < 6">
@@ -29,7 +29,7 @@
 
             </div>
         </div>
-        <div class="h-[45px] flex items-center justify-between " style="margin-top: 10px;">
+        <div class="h-[45px] flex items-center justify-between " >
             <div class="flex items-center justify-center xt-text-2">
                 <tippy trigger=" click" placement="bottom" :interactive="true">
                     <template #content>
@@ -58,7 +58,7 @@
                                 style="vertical-align: sub;margin-right: 4px;" />
                         </template> 图片</a-button>
                 </a-upload>
-                <div v-if="defaultType.value == 'post'">
+                <div>
                     <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
                         v-show="coverList.length === 0">
                         <a-button type="text" size="small" class="xt-text"

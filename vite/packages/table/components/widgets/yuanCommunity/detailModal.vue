@@ -1,8 +1,6 @@
 <template>
-    <a-modal v-model:visible="custom" title="" @ok="() => { }" :footer="null" centered :closable="false" zIndex="9"
-        style="font-size: 8px;color: var(--primary-text);width: 1000px;height: 700px !important; overflow: hidden;"
-        :maskClosable="false" :bodyStyle="{ padding: '0px', height: '700px', fontSize: '8px',svg:{fontSize:'7px'} }">
-        <div class="pl-4 pr-4 xt-bg" style="flex-shrink: 0;border-radius: 12px;">
+    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true">
+        <div class="w-[1000px] h-[700px] pl-4 pr-4">
             <div class="w-full pt-2 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -43,11 +41,11 @@
                                         <UserOutlined />
                                     </template>
                                 </a-avatar>
-                                <div class="ml-1 user-msg">
-                                    <div class="username" style="color: var(--primary-text);font-size: 16px;">
+                                <div class="ml-3 user-msg">
+                                    <div class="username" style="color: var(--primary-text);font-size: 14px;">
                                         {{ cardData.user.nickname }}
                                     </div>
-                                    <div class="self-msg " style="color:  var(--secondary-text);font-size: 14px;">
+                                    <div class="self-msg " style="color:  var(--secondary-text);font-size: 12px;">
                                         <span class="date">{{ createTime[0] }}</span>
                                         <span class="time">{{ createTime[1] }}</span>
                                         <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
@@ -70,7 +68,7 @@
                                     </video>
                                 </div>
                                 <!-- 正文元素 -->
-                                <div class="mb-2">
+                                <div class="mt-4 mb-2">
                                     <div>
                                         <div id="title" style="color: var(--primary-text);font-size: 16px; "
                                             v-if="cardData.title" :innerHTML="title"></div>
@@ -103,7 +101,7 @@
                             </div>
 
                         </div>
-                        <div class="text-xs card-bottom" style="color:  var(--secondary-text);">
+                        <div class="mt-4 text-xs card-bottom" style="color:  var(--secondary-text);">
                             <span class="view" style="cursor: pointer; margin-right: 4px;">{{ cardData.view_count }}
                                 浏览</span>
                             <span class="like" style="cursor: pointer; margin-right: 4px;">{{ cardData.support_count }}
@@ -115,7 +113,7 @@
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
                 <a-divider class="w-[3px] h-[700px] " type="vertical" style="color: var(--divider);" />
-                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-2 thread-list" :settings="settingsScroller"
+                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4">
                         <div class="flex mb-4">
@@ -146,7 +144,8 @@
 
             </div>
         </div>
-    </a-modal>
+
+    </xt-modal>
 </template>
 
 <script setup lang='ts'>
@@ -273,6 +272,9 @@ const showImage = () => {
 }
 </script>
 <style lang='scss' scoped>
+header{
+    display: none !important;
+}
 .card {
     display: flex;
     // 占满整个父元素

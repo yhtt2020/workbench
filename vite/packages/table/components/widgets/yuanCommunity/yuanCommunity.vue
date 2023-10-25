@@ -22,7 +22,7 @@
                 <!-- 内容区 -->
                 <div style="" class="h-full">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="height: calc(100% - 80px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -178,7 +178,6 @@ export default {
                     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
                 },
             ],
-            currentIndex: 0,
             settingVisible: false,
             currentIndex: 0,
             isLoading: false,
@@ -323,8 +322,9 @@ export default {
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
         }
+        console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
-        console.log(this.options.title);
+        // console.log(this.options.title);
     },
     watch: {
         showForumList(newValue) {

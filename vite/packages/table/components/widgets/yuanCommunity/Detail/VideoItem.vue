@@ -1,7 +1,6 @@
 <template>
     <!-- 视频 -->
-    <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px]" style="border: 1px solid var(--divider);"
-        v-if="defaultType.value == 'video'">
+    <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px]" style="border: 1px solid var(--divider);">
         <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
             @drop="handleDrop">
             <div class="flex flex-col items-center justify-center w-full h-full">
@@ -19,7 +18,7 @@
             <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
                 <!-- 动态和视频 -->
                 <a-textarea v-model:value="postValue" placeholder="简介" :autoSize="{ minRows: 5, maxRows: 8 }"
-                    :bordered="false" v-if="defaultType.value !== 'post'" />
+                    :bordered="false"  />
             </div>
 
         </div>
