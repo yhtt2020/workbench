@@ -8,7 +8,7 @@
             <div style="font-size: 1rem !important;">
                 <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
                     <!-- 帖子 -->
-                    <div class="w-full h-[300px]" style="overflow: hidden;">
+                    <div class="w-full h-[350px]" style="overflow: hidden;">
                         <MarkDown></MarkDown>
                     </div>
                     <!-- 动态和帖子 -->
