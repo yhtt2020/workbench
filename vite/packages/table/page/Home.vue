@@ -498,12 +498,13 @@ export default {
 
   },
   async mounted() {
-    // this.replaceIcon()
-    setTimeout(() => {
-      this.replaceIcon()
-    },500)
+    this.replaceIcon()
+    // setTimeout(() => {
+    //   this.replaceIcon()
+    // },500)
+    let n=0
     if (navigator.connection.downlink < 1) {
-      let n=0
+      
       let timer=setInterval(()=>{
         if(n>3){
           clearInterval(timer)
@@ -512,6 +513,15 @@ export default {
         this.replaceIcon()
         n++
       },3000)
+    }else{
+      let timer=setInterval(()=>{
+        if(n>2){
+          clearInterval(timer)
+          return 
+        }
+        this.replaceIcon()
+        n++
+      },1000)
     }
     
     // let counte=0

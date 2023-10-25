@@ -215,6 +215,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
+            console.log(this.defaultForum.value);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
