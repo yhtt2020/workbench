@@ -80,6 +80,10 @@ export default defineComponent({
       }
     };
 
+    const close = () =>{
+      ctx.emit('closeMessage')
+    }
+
 
 
     const appContentList = computed(()=>{   // 通过计算属性获取消息通知历史数据
@@ -150,7 +154,7 @@ export default defineComponent({
     })
 
     return{
-      filterLeft,appContentList,
+      filterLeft,appContentList,close,
       ...toRefs(data),changeEnable,
     }
   
