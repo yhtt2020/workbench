@@ -357,7 +357,8 @@ export default {
       cardSwitch: false,
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
-      hasTriggered:1
+      hasTriggered:1,
+      replaceFlag:true
     };
   },
   components: {
@@ -497,14 +498,22 @@ export default {
 
   },
   async mounted() {
-    let counte=0
-    const counter=setInterval(()=>{
-        this.replaceIcon()
-        counte++
-        if(counte>=30){
-          clearInterval(counter)
-        }
-    },500)
+    this.replaceIcon()
+    setTimeout(() => {
+      this.replaceIcon()
+    }, 3000);
+    // let counte=0
+    // const counter=setInterval(()=>{
+    //     if(this.replaceFlag==false){
+    //       clearInterval(counter)
+    //     }
+    //     this.replaceIcon()
+    //     console.log(this.replaceFlag,this.footNavigationList,'footNavigationList')
+    //     counte++
+    //     if(counte>=3){
+    //       clearInterval(counter)
+    //     }
+    // },1200)
     // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
@@ -730,6 +739,7 @@ export default {
         }
       })
     })
+    this.replaceFlag=false
     },
     setTransparent() {
       console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);

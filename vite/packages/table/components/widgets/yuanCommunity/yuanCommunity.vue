@@ -9,57 +9,32 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
+                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer" v-if="false">
+                    <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
+                        icon="akar-icons:arrow-clockwise" />
+                </div>
                 <!-- 顶部导航栏 -->
-                <div class="flex justify-between mt-4">
-                    <!-- {{ showForumList }} -->
-                    <!-- <div v-if="this.showForumList.length === 1" class="flex items-center pointer">
-                        <div class="w-[32px] h-[32px] rounded-md ml-2">
-                            <a-avatar shape="square" :src="this.showForumList[0].value.logo" alt="" class="w-full h-full" />
-
-                        </div>
-                        <div class="ml-2 font-16 xt-text">
-                            {{ this.showForumList[0].value.name }}
-                        </div>
-                    </div> -->
+                <div class="flex justify-between mt-3">
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
-                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent"></YuanHorizontalPanel>
-                    <div>
-
-                        <!-- <a-tooltip title="跳转元社区" placement="bottom"> -->
-                        <!-- <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" @click="goYuan"
-                            style="flex-shrink: 0;" v-if="false">
-                            <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub;font-size: 20px;"
-                                icon="fluent:chat-16-regular" />
-                        </button> -->
-                        <!-- </a-tooltip> -->
-
-                        <!-- <a-tooltip title="刷新" placement="bottom" > -->
-                        <!-- <button class="ml-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px]" style="flex-shrink: 0;"
-                            @click="refreshPost">
-                            <YuanIcon class="text-lg rotate-90 xt-text clock-icon"
-                                style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" />
-                        </button> -->
-                        <!-- </a-tooltip> -->
-
-                    </div>
+                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
+                    </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div style="height: calc(100% - 200px)">
-                    <vue-custom-scrollbar style="overflow: hidden;flex-shrink: 0;width: 100%;height:100%;"
-                        :settings="outerSettings">
+                <div :style="{ height: this.customData.height == 2 ? '392px' : '600px' }" >
+                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                        style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
                         <div class="content" v-else>
                             <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
-                                <div class="item">
+                                <div class="item" @click="showDetail(item)">
                                     <!-- {{ item.pc_summary }} -->
-                                    <communItem :key="index" :copyNum="copyNum" :showForumPost="item"
-                                        @click="showDetail(item)" />
+                                    <communItem :key="index" :copyNum="copyNum" :showForumPost="item" />
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
+                            <div class="flex items-center justify-center w-full h-[40px] mt-3" v-if="false">
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
                             </div>
@@ -72,7 +47,7 @@
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible" v-if="false"
                 style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
                 <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;"
                     icon="fluent:add-16-filled" />
@@ -84,10 +59,12 @@
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
                 :forumIndex="currentIndex"></YuanPublishModal>
+            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal"
+                @closeDetail="closeDetail" />
+
         </teleport>
-        <teleport to="body" :disabled="false">
-            <detailModal v-if="showDetailModal" />
-        </teleport>
+        <!-- <teleport to="body" :disabled="false">
+        </teleport> -->
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
@@ -137,7 +114,7 @@
 <script>
 import Widget from '../../card/Widget.vue';
 import { Icon as YuanIcon } from '@iconify/vue'
-import communItem from './communItem.vue'
+import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
@@ -145,7 +122,7 @@ import browser from '../../../js/common/browser'
 import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
-import detailModal from './detailModal.vue'
+import detailModal from './DetailModal.vue'
 export default {
     name: '元社区',
     components: {
@@ -155,7 +132,8 @@ export default {
         RadioTab,
         DataStatu,
         YuanPublishModal,
-        YuanHorizontalPanel
+        YuanHorizontalPanel,
+        detailModal
     },
     props: {
         customIndex: {
@@ -190,7 +168,7 @@ export default {
             options: {
                 className: 'card double ',
                 title: '元社区',
-                rightIcon: '',
+                // rightIcon: ' fluent:arrow-counterclockwise-20-filled',
                 type: 'community'
             },
             menuList: [
@@ -200,7 +178,6 @@ export default {
                     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
                 },
             ],
-            currentIndex: 0,
             settingVisible: false,
             currentIndex: 0,
             isLoading: false,
@@ -222,6 +199,7 @@ export default {
             showDetailModal: false,
             openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
+            cardData: null,
         }
     },
     methods: {
@@ -244,7 +222,11 @@ export default {
         showDetail(item) {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
-            console.log(this.showDetailModal);
+            this.cardData = item
+            console.log(this.cardData);
+        },
+        closeDetail(value) {
+            this.showDetailModal = value
         },
         // 选择板块
         handleChange(value) {
@@ -320,9 +302,9 @@ export default {
         },
         showForumPost() {
             if (this.customData && this.customData.forumPost) {
-                return this.customData.forumPost?.slice(0, 3)
+                return this.customData.forumPost?.slice(0, 10)
             }
-            return this.communityPost.list?.slice(0, 3)
+            return this.communityPost.list?.slice(0, 10)
         },
         // changeTitle() {
         //     if (this.customData.selectList.length === 1) {
@@ -337,8 +319,12 @@ export default {
         // await this.getCommunityPost(this.showForumList[0].id)
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
+        if (this.customData && this.customData.defaultForum) {
+            this.defaultForum = this.customData.defaultForum
+        }
+        console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
-        console.log(this.options.title);
+        // console.log(this.options.title);
     },
     watch: {
         showForumList(newValue) {
@@ -352,7 +338,8 @@ export default {
 
         },
         defaultForum(newValue) {
-            this.getCommunityPost(newValue.value?.id)
+            this.customData.defaultForum = newValue
+            this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
         // 切换频道和圈子时触发获取
@@ -366,13 +353,14 @@ export default {
         },
         'customData.selectList': {
             handler(newValue, oldValue) {
-                if(newValue.length===1){
-                    this.options.title=newValue[0].value.name
-                    console.log(this.options.title)
-                }else{
-                    this.options.title='元社区'
+                if (newValue.length === 1) {
+                    this.options.title = newValue[0].value.name
+                    // console.log(this.options.title)
+                } else if (newValue.length > 1 || newValue.length < 1) {
+                    this.options.title = '元社区'
                     console.log(this.options.title);
                 }
+
             }
         }
     }

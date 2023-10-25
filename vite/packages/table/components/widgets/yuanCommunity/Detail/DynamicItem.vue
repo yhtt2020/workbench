@@ -1,81 +1,75 @@
-
 <template>
-    <Modal :maskNoClose="true" class="" animationName="t-b-close">
-        <div class="w-[500px] pl-4 pr-4 content">
-            <div class="flex justify-between w-full h-[64px] items-center ">
-                <a-dropdown trigger="click" placement="bottom"
-                    overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
-                    <div class="flex items-center justify-center w-full">
-                        <div class="ml-20 font-16 xt-text">{{ defaultType.title }}</div>
-                        <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" />
-                    </div>
-                    <template #overlay>
-                        <a-menu class="text-center xt-bg"
-                            style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
-                            <a-menu-item v-for="(item, index) in publishType" :key="index"
-                                @click="handleMenuItemClick(index)">
-                                <span class="ml-12 text-center xt-text">{{ item.title }}</span>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-
-                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
-                    <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                    <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                </xt-button>
-                <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
-                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </xt-button>
-
-            </div>
-            <component :is="currentComponent"></component>
-            <!-- <DynamicItem v-if="defaultType.value='dynamic'"/>
-            <VideoItem v-if="defaultType.value='video'"/>
-            <PostItem v-if="defaultType.value='post'"/> -->
-            <div class="flex items-center justify-between h-[56px] ">
-                <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :bordered="false"
-                    @change="handleChange"
-                    style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
-                    change-on-select>
-                    <template #suffixIcon>
-                        <newIcon icon="fluent:chevron-left-16-filled" class="rotate-180 xt-text-2" style="font-size: 20px;vertical-align: super;margin-top: -3px;"></newIcon>
-                    </template>
-                </a-select>
-                <div class="flex items-center">
-                    <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
-                        @click="handleOk">取消</xt-button>
-                    <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
-                        @click="publishPost">发布</xt-button>
+    <div class="w-full mt-2 xt-bg box font-16">
+        <div style="font-size: 1rem !important;">
+            <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
+                <!-- 动态和视频 -->
+                <a-textarea v-model:value="postValue" placeholder=" 请输入"
+                    :autoSize="{ minRows: 5, maxRows: 8 }" :bordered="false"  />
+                <!-- 动态和帖子 -->
+                <div style="font-size: 16px !important;" v-if="imageLoadVisible">
+                    <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
+                        multiple @preview="handlePreview">
+                        <div v-if="fileList.length < 6">
+                            <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
+                            <newIcon icon="fluent:add-16-filled" style="font-size: 24px;vertical-align: sub;"
+                                class="xt-text"></newIcon>
+                        </div>
+                    </a-upload>
                 </div>
+                <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                    <img style="width: 100%" :src="previewImage" />
+                </a-modal>
             </div>
+
+        </div>
+    </div>
+    <div class="h-[45px] flex items-center justify-between ">
+        <div class="flex items-center justify-center xt-text-2">
+            <tippy trigger=" click" placement="bottom" :interactive="true">
+                <template #content>
+                    <!-- <div class="w-full"> -->
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
+                        style="flex-wrap: wrap;">
+                        <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
+                            @click="addEmoji(item)" :key="index" style="cursor: pointer;">
+                            <img :src="item" class="w-[32px] h-[32px]">
+                        </div>
+                    </vue-custom-scrollbar>
+                    <!-- </div> -->
+                </template>
+
+                <a-button type="text" size="small" class=" xt-text emojiVis"
+                    style="color: var(--secondary-text) !important;"><template #icon>
+                        <!-- <SmileOutlined style="" /> -->
+                        <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
+                            style="vertical-align: sub;margin-right: 4px;" />
+                    </template> 表情</a-button>
+            </tippy>
+            <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
+                <a-button type="text" size="small" class="xt-text"
+                    style="color: var(--secondary-text) !important;"><template #icon>
+                        <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
+                            style="vertical-align: sub;margin-right: 4px;" />
+                    </template> 图片</a-button>
+            </a-upload>
+
         </div>
 
-    </Modal>
+    </div>
 </template>
+
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed } from 'vue'
 import type { UploadProps } from 'ant-design-vue';
-import browser from '../../../js/common/browser';
-import Modal from '../../../components/Modal.vue'
+import browser from '../../../../js/common/browser';
+import Modal from '../../../../components/Modal.vue'
 import { Icon as newIcon } from '@iconify/vue';
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
-import fluentEmojis from '../../../js/chat/fulentEmojis'
-import { yuanCommunityStore } from '../../../store/yuanCommunity'
-import { useCommunityStore } from '../../../page/chat/commun'
-import PostItem from './Detail/PostItem.vue';
-import VideoItem from './Detail/VideoItem.vue';
-import DynamicItem from './Detail/DynamicItem.vue';
+import fluentEmojis from '../../../../js/chat/fulentEmojis'
+import { yuanCommunityStore } from '../../../../store/yuanCommunity'
+import { useCommunityStore } from '../../../../page/chat/commun'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // const imageLoadVisible = ref(true)
@@ -85,51 +79,12 @@ const goYuan = () => {
     browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
 }
 const titleContent = ref('')
-const publishType = ref([
-    {
-        title: '发动态',
-        value: 'dynamic'
-    },
-    {
-        title: '发帖子',
-        value: 'post'
-    },
-    {
-        title: '发视频',
-        value: 'video'
-    }
-])
-const currentComponent=computed(()=>{
-    switch (defaultType.value.value) {
-        case 'dynamic':
-            return DynamicItem;
-            break;
-        case 'post':
-            return PostItem;
-            break;
-        case 'video':
-            return VideoItem;
-            
-            break;
-    
-        default:
-            return DynamicItem;
-            break;
-    }
-})
 const removeCover = () => {
     coverList.value = []
 }
-let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
 const handleMenuItemClick = (index) => {
     defaultType.value = publishType.value[index]
 }
-// 是否全屏
-const fullScreen = ref(false)
-const handleFullScreen = () => {
-//   const full = document.querySelector('.content');
-  fullScreen.value = !fullScreen.value;
-};
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({
@@ -308,9 +263,11 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
     padding-right: 0px;
 }
+
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     color: var(--secondary-text);
     height: 40px;
