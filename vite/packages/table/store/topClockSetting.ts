@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import dbStorage from "./dbStorage";
 
-
+//@ts-ignore
 export const topClockSettingStore = defineStore("topClockSetting", {
     state: () => ({
         topClockSettingVisible: false,
