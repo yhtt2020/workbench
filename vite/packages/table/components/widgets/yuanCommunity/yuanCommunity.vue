@@ -10,8 +10,9 @@
             </template>
             <div v-if="showForumList.length > 0">
                 <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer">
-                    <YuanIcon class="text-lg xt-text clock-icon"
-                                style="vertical-align: sub; font-size: 20px;" icon="akar-icons:arrow-clockwise" /></div>
+                    <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
+                        icon="akar-icons:arrow-clockwise" />
+                </div>
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
@@ -20,8 +21,8 @@
                 </div>
                 <!-- 内容区 -->
                 <div style="" class="h-full">
-                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" 
-                        :settings="outerSettings" style="height: calc(100% - 80px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
+                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                        style="height: calc(100% - 80px) !important;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -58,10 +59,12 @@
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
                 :forumIndex="currentIndex"></YuanPublishModal>
+            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal"
+                @closeDetail="closeDetail" />
+
         </teleport>
-        <teleport to="body" :disabled="false" >
-            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail"/>
-        </teleport>
+        <!-- <teleport to="body" :disabled="false">
+        </teleport> -->
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
@@ -197,7 +200,7 @@ export default {
             showDetailModal: false,
             openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
-            cardData:null,
+            cardData: null,
         }
     },
     methods: {
@@ -220,10 +223,10 @@ export default {
         showDetail(item) {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
-            this.cardData=item
+            this.cardData = item
             console.log(this.cardData);
         },
-        closeDetail(value){
+        closeDetail(value) {
             this.showDetailModal = value
         },
         // 选择板块
