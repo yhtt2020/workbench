@@ -89,10 +89,10 @@ const publishType = ref([
         title: '发帖子',
         value: 'post'
     },
-    {
-        title: '发视频',
-        value: 'video'
-    }
+    // {
+    //     title: '发视频',
+    //     value: 'video'
+    // }
 ])
 const currentComponent=computed(()=>{
     switch (defaultType.value.value) {
