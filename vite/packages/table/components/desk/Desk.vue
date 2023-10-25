@@ -29,14 +29,12 @@
     <RightMenu :menus='dropdownMenu'  class="w-full h-full"  @contextmenu="showMenu">
       <!-- <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
       <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button> -->
-      <FreeDesk :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id) ' >
+      <FreeDesk :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id)' >
         <template #item="{ data }">
             <component   :desk="currentDesk" :is="data.data.name"  :customIndex="data.data.id" :customData="data.data.customData"  :editing="editing"/>
-            <!-- <component :desk="currentDesk" :is="data.data.name" :customIndex="data.data.id"
-                         :customData="data.data.customData" :editing="editing"></component> -->
           </template>
       </FreeDesk>
-        <vue-custom-scrollbar  v-else class="no-drag" key="scrollbar" id="scrollerBar"
+        <vue-custom-scrollbar  v-show="!getFreeDeskState(currentDesk.id)" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
@@ -372,8 +370,7 @@ mixins:[componentsMinis],
 
   watch: {
     freeDeskState(newV) {
-      if (newV) this.addFreeDeskState(this.currentDesk.id)
-      else this.delFreeDeskState(this.currentDesk.id)
+      this.renewFreeDeskState(this.currentDesk.id)
     },
     currentDesk (newVal) {
       newVal.layoutSize = this.getLayoutSize()
@@ -533,7 +530,7 @@ mixins:[componentsMinis],
     window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
-    ...mapActions(useFreeDeskStore,['addFreeDeskState','getFreeDeskState','delFreeDeskState']),
+    ...mapActions(useFreeDeskStore,['addFreeDeskState','getFreeDeskState','delFreeDeskState','renewFreeDeskState']),
     learn () {
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },

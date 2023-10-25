@@ -6,12 +6,8 @@ import { cardStore } from "../../../store/card";
 // @ts-ignore
 export const useFreeDeskStore = defineStore("useFreeDeskStore", {
   state: () => ({
-    freeDesk: {
-      // id { flag : true}
-    },
-    currentId: "",
-    // 用于记录该桌面是否属于自由拖拽
-    isFreeDesk: [],
+    freeDesk: {},
+    freeDeskState: {},
   }),
   getters: {
     getCurrentDesk() {
@@ -47,42 +43,41 @@ export const useFreeDeskStore = defineStore("useFreeDeskStore", {
             customData,
           };
         });
-        this.isFreeDesk.push(card.currentDeskId);
+        this.freeDeskState[card.currentDeskId] = {
+          disable: false,
+        };
         // 保存数据
         this.freeDesk[card.currentDeskId] = deskObject;
-
       }
 
       return this.freeDesk[card.currentDeskId];
     },
     addFreeDeskState(id) {
-      this.isFreeDesk.push(id);
-      this.isFreeDesk = [...new Set(this.isFreeDesk)];
       this.initFreeDeskState();
-      this.currentId = id;
     },
     getFreeDeskState(id) {
-      if (this.isFreeDesk.includes(id)) {
-        this.currentId = id;
-
-        return true;
-      }
+      return this.freeDeskState[id] && !this.freeDeskState[id]?.disable;
     },
     delFreeDeskState(id) {
-      let isFreeDeskSet = new Set(this.isFreeDesk);
-      isFreeDeskSet.delete(id);
-      this.isFreeDesk = [...isFreeDeskSet];
-
+      console.log('id :>> ', id);
       delete this.freeDesk[id];
+      delete this.freeDeskState[id];
     },
-    renewFreeDeskState(id) {},
+    renewFreeDeskState(id) {
+      if (!this.freeDeskState[id]) {
+        this.initFreeDeskState();
+      } else {
+        this.freeDeskState[id].disable = !this.freeDeskState[id].disable;
+      }
+    },
   },
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: [""],
-        storage: dbStorage,
+        paths: ["freeDesk", "freeDeskState"],
+        // storage: dbStorage,
+        storage: localStorage,
       },
     ],
   },

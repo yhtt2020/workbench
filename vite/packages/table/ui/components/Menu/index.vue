@@ -157,7 +157,7 @@ const setup = (e: any) => {
 
 const handeleCustomTrigger = (e: any) => {
   if (trigger.value) {
-    setup();
+    setup(e);
   }
 };
 // 右键

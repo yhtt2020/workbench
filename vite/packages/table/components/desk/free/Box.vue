@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import test from "./test.vue";
 import CPULineChart from "../../widgets/supervisory/CPULineChart.vue";
 import CPUFourCard from "../../widgets/supervisory/CPUFourCard.vue";
 import InternalList from "../../widgets/supervisory/InternalList.vue";
@@ -31,7 +30,6 @@ export default {
     SmallCPUCard,
     SmallGPUCard,
     MyIcons,
-    test,
   },
   props: {
     yellow: {
