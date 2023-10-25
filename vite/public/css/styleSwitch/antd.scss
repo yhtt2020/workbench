@@ -57,6 +57,9 @@
   opacity: 0.8;
 }
 
+.ant-progress-inner {
+  background: var(--active-secondary-bg) !important;
+}
 // 弹出层body开始
 .ant-drawer-body {
   -ms-overflow-style: none !important; /* IE 和 Edge */
@@ -156,7 +159,7 @@
 .ant-picker-input,
 .ant-input-number-input-wrap {
   input {
-    color: var(--primary-text) !important; 
+    color: var(--primary-text) !important;
   }
 }
 

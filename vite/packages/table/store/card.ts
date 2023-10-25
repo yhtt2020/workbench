@@ -3,6 +3,7 @@ import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
 import {timerStore} from "./timer";
 import {marketStore} from "./market";
+import {watch} from 'vue'
 
 // @ts-ignore
 export const cardStore = defineStore(
@@ -297,7 +298,8 @@ export const cardStore = defineStore(
 
       };
     },
-
+    getters: {
+    },
     actions: {
       switchToDesk(index) {
         let desk = this.desks[index]
@@ -563,6 +565,8 @@ export const cardStore = defineStore(
         desk.cards.splice(desk.cards.findIndex(item => {
           return String(item.id) === String(customIndex)
         }), 1)
+        console.log('删除 卡片:>> ', desk.cards );
+
         // this.customComponents.splice(customIndex,1);
 
       },

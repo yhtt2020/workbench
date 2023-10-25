@@ -26,15 +26,15 @@
       </div>
     </div>
 
-    <RightMenu :menus='dropdownMenu'  class="w-full h-full">
-    <!-- <div  style='z-index:99999px'> -->
-      <!-- <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
-        <template #item="{ item }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
-                         :customData="item.customData" :editing="editing"></component>
+    <RightMenu :menus='dropdownMenu'  class="w-full h-full"  @contextmenu="showMenu">
+      <!-- <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
+      <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button> -->
+      <FreeDesk :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id)' >
+        <template #item="{ data }">
+            <component   :desk="currentDesk" :is="data.data.name"  :customIndex="data.data.id" :customData="data.data.customData"  :editing="editing"/>
           </template>
-      </FreeDesk> -->
-        <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+      </FreeDesk>
+        <vue-custom-scrollbar  v-show="!getFreeDeskState(currentDesk.id)" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
@@ -224,7 +224,12 @@
     </template>
     <template v-else>
       <div class="line-title">卡片设置：</div>
-
+<!-- <xt-text class=" xt-bg-2 rounded-xl p-3 mb-1">
+  <div class=" flex flex-col">
+    <div >自由布局（开发中）：<a-switch v-model:checked="freeDeskState" /></div>
+    <xt-text type="2">该功能尚未完成 可能会产生严重bug，开启需谨慎！！！</xt-text>
+  </div>
+</xt-text> -->
       <template v-if="settings.enableZoom">
         <div class="mb-2" style="color:orangered">
           <icon icon="tishi-xianxing"></icon>
@@ -269,10 +274,11 @@
 
 import Muuri from 'muuri'
 import { message, Modal } from 'ant-design-vue'
-import { mapWritableState } from 'pinia'
+import { mapWritableState ,mapActions} from 'pinia'
 import { appStore } from '../../store'
 
 import {useWidgetStore} from "../card/store.ts"
+import {useFreeDeskStore} from './free/store'
 import componentsMinis  from "./components.ts"
 export default {
   name: 'Desk',
@@ -363,6 +369,9 @@ mixins:[componentsMinis],
   ,
 
   watch: {
+    freeDeskState(newV) {
+      this.renewFreeDeskState(this.currentDesk.id)
+    },
     currentDesk (newVal) {
       newVal.layoutSize = this.getLayoutSize()
       // if (!newVal.settings) {
@@ -484,6 +493,7 @@ mixins:[componentsMinis],
   },
   data () {
     return {
+      freeDeskState:false,
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
       iconVisible: false,
@@ -520,7 +530,7 @@ mixins:[componentsMinis],
     window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
-
+    ...mapActions(useFreeDeskStore,['addFreeDeskState','getFreeDeskState','delFreeDeskState','renewFreeDeskState']),
     learn () {
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },

@@ -1,25 +1,27 @@
 <!--  -->
 <script setup lang="ts">
-import Box from './Box.vue'
-import { onMounted, onUnmounted, ref } from 'vue'
+import Box from "./Box.vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
-const props = defineProps<{
-  title: string
-}>()
+const props = defineProps({
+  title: {},
+  desk: {},
+});
 
 onMounted(() => {
-  const interval = setInterval(() => (tickTock.value = !tickTock.value), 500)
+  const interval = setInterval(() => (tickTock.value = !tickTock.value), 500);
   onUnmounted(() => {
-    clearInterval(interval)
-  })
-})
+    clearInterval(interval);
+  });
+});
 
-const tickTock = ref(false)
+const tickTock = ref(false);
 </script>
 
 <template>
   <div class="box-drag-preview">
-    <Box :title="title" :yellow="tickTock" preview />
+    2222222222
+    <Box :title="title" :yellow="tickTock" preview  />
   </div>
 </template>
 

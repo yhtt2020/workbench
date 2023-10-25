@@ -66,7 +66,12 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(aiStore, ["topicList", "selectTopicIndex", "chatList"]),
+    ...mapWritableState(aiStore, [
+      "topicList",
+      "selectTopicIndex",
+      "chatList",
+      "searchState",
+    ]),
     text() {
       return this.getData().content || "暂无数据";
     },
@@ -120,6 +125,7 @@ export default {
       this.delTopic();
     },
     handleIndex() {
+      this.searchState = false;
       this.selectTopicIndex = this.data.id;
     },
   },
