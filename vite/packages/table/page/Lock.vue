@@ -50,7 +50,7 @@
       <!--      <span class="ml-2">点击屏幕中间解锁，右键进入壁纸设置</span>-->
     </div>
 
-    <div class="mt-10 card half count-downtime" v-if="countDowntime.hours">
+    <div class="mt-2 card half count-downtime item-content" v-if="countDowntime.hours">
       <div class="left-time">
         <Icon
           style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
@@ -468,25 +468,19 @@ export default {
 .count-downtime {
   display: flex;
   flex-direction: row;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  justify-items: center;
   height: 15%;
-  width: 30em;
-  z-index: 999999;
 
   .left-time {
-    flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
   }
 
   .right-time {
-    flex: 3;
+    margin-left: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
