@@ -1,5 +1,5 @@
 <template>    
-   <xt-left-menu :list="this.menuList" last="2" end="1" >
+   <xt-left-menu :list="this.menuList" last="2" model="id" end="1">
 
     <slot></slot>
 
@@ -23,7 +23,7 @@ export default {
     // SettingFilled,
   },
   computed: {
-      ...mapWritableState(noteStore, ['isSelTab']),
+      ...mapWritableState(noteStore, ['isSelTab','selNote']),
     },
     data() {
     return {
@@ -37,6 +37,11 @@ export default {
             // console.log('便签');
             this.isSelTab = false
             this.getNotes()
+            this.menuList[0].isSel=true
+            this.menuList[1].isSel=false
+            this.selNote=-1
+            // console.log(this.selIndex);
+            // console.log(this.menuList);
           },
         },
         {
@@ -47,6 +52,10 @@ export default {
             // console.log('回收站');
             this.isSelTab = true
             this.getNotes()
+            this.menuList[0].isSel=false
+            this.menuList[1].isSel=true
+            this.selNote=-1
+            // console.log(this.menuList);
           },
         },
         {

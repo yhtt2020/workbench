@@ -1,6 +1,6 @@
  <template>
     <div class="w-full h-full flex justify-center items-center">
-        <div class="w-full center" style="max-width: 800px;">
+        <div class="w-full center overflow-hidden"  style="max-width: 800px;max-height: 660px;height: 90%;">
             <!-- 顶部 -->
             <div style="max-width: 800px;justify-content: space-between;" class="flex w-full" >
                 <div class="flex items-center">
@@ -49,13 +49,15 @@
                         v-model:value="this.selNoteTitle"
                         maxlength="15"
                     ></a-input>
-                    <a-textarea
-                        style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
-                        border: none;box-shadow: none;padding: 0;"
-                        v-model:value="this.selNoteText"
-                        placeholder="请输入内容"
-                        :auto-size="{ minRows: 2, maxRows: 5 }"
-                    />
+                    <div class="mt-4 h-full scroll-color">
+                        <a-textarea
+                        class=" scroll-color xt-scrollbar"
+                            style="color: var(--primary-text);font-size: 16px;font-weight: 400;word-wrap: break-word;text-wrap: wrap;
+                            border: none;box-shadow: none;padding: 0;height: 500px;"
+                            v-model:value="this.selNoteText"
+                            :auto-size="{ minRows: 2, maxRows: 20 }"
+                        />
+                    </div>
                 </div>
 
             </div>
@@ -150,10 +152,22 @@
  };
  </script>
  <style lang="scss" scoped>
- .shadow{
-    box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);
-    box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
- }
+    .shadow{
+        box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);
+        box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+    }
+    .scroll-color::-webkit-scrollbar-thumb {
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+    
+    .scroll-color::-webkit-scrollbar-thumb:hover {
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+
+    .scroll-color::-webkit-scrollbar-track {
+        border-radius: 6px; /* 轨道圆角 */
+    }
  </style>
  
