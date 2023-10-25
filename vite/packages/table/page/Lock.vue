@@ -190,9 +190,9 @@ export default {
       $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
     })
     $('#displayMiddle').fadeIn(1000)
-    // setTimeout(() => {
-    //   $('#tip').fadeOut(1000)
-    // }, 3000)
+    setTimeout(() => {
+      $('#tip').fadeOut(1000)
+    }, 3000)
     if (this.settings.playType === 'my') {
       this.playAll()
     } else {
