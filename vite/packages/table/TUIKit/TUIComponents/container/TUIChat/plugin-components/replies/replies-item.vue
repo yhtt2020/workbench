@@ -224,7 +224,7 @@ export default RepliesItem;
   }
   .message-label {
     align-self: flex-end;
-    font-family: PingFangSC-Regular;
+
     font-weight: 400;
     font-size: 12px;
     color: #b6b8ba;

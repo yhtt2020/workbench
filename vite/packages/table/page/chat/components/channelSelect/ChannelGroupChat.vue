@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:500px;" v-if="chatShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <LeftOutlined style="font-size: 1.25em;"></LeftOutlined>
+    <ChatIcon icon="fluent:chevron-left-16-filled" style="color:var(--secondary-text);font-size: 1.5rem;"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">添加群聊</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <CloseOutlined  style="font-size: 1.25em;"/>
+     <ChatIcon icon="fluent:dismiss-16-filled" style="color:var(--secondary-text);font-size: 1.25rem;"/>
    </div>
   </div>
 
@@ -28,7 +28,7 @@
 
  <CreateCommunity v-if="listIndex === 'create' && chatShow === true " :no="no" @close="closeChannel" id="chat" @back="chatShow = false">
  </CreateCommunity>
- 
+
  <SelectKnownGroup :no="no" :type="type" v-if="listIndex === 'already' && chatShow === true" id="contact" @back="chatShow = false" @close="closeChannel">
  </SelectKnownGroup>
 
@@ -36,7 +36,7 @@
 
 <script>
 import { defineComponent,reactive,toRefs } from 'vue'
-import { CloseOutlined,LeftOutlined } from '@ant-design/icons-vue'
+import {Icon as ChatIcon} from '@iconify/vue'
 
 import CreateCommunity from '../CreateNewGroups.vue'
 import SelectKnownGroup from './ChannelKnownGroup.vue'
@@ -46,12 +46,11 @@ export default defineComponent({
  props:['type','no'],
 
  components:{
-  CloseOutlined,LeftOutlined,
-  CreateCommunity,SelectKnownGroup
+  ChatIcon,CreateCommunity,SelectKnownGroup
  },
 
  setup (props,ctx) {
-  
+
   const data = reactive({
     list:[
      { title:'创建新群聊',summary:'选择你的联系人，创建一个新的群聊关联到社群中。',type:'create' },
@@ -79,7 +78,7 @@ export default defineComponent({
   const selectSubmit = () =>{
    data.chatShow = true
   }
- 
+
 
   return {
    ...toRefs(data),
@@ -92,7 +91,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -114,7 +112,6 @@ export default defineComponent({
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

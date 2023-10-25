@@ -2,12 +2,11 @@
  <div class="flex flex-col my-3" style="width:500px;" v-if="classShow === false">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <!-- <LeftOutlined style="font-size: 1.25em;"></LeftOutlined> -->
-    <WebLinKIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;"/>
+    <WebLinKIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <WebLinKIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;" />
+    <WebLinKIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);" />
    </div>
   </div>
 
@@ -22,7 +21,7 @@
    <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" spellcheck="false" style="border-radius: 8px; margin-bottom: 12px;" placeholder="链接名称" />
 
    <!-- <a-input class="h-10" v-model:value="link" spellcheck="false" style="border-radius: 12px;" placeholder="请输入" /> -->
-   
+
    <a-input-group compact>
      <a-select v-model:value="requestProtocol" style="width:20%;">
        <a-select-option value="https">https</a-select-option>
@@ -37,7 +36,7 @@
      <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
    </template>
    <!-- <span class="font-14-400 my-4" style="color:var(--secondary-text)">当前工作台内链接默认使用“内部浏览器”打开。</span> -->
-   
+
    <div class="flex items-center justify-end my-3">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">选择</XtButton>
@@ -50,7 +49,7 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
- 
+
 import { Icon as WebLinKIcon } from '@iconify/vue'
 import RadioTab from '../../../../components/RadioTab.vue'
 import SelectClassification from './ChannelClassification.vue'
@@ -118,7 +117,7 @@ methods:{
       this.classShow = true
     }
 
-   
+
   }
  }
 
@@ -144,7 +143,6 @@ watch:{
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -166,7 +164,6 @@ watch:{
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

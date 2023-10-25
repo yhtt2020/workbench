@@ -55,9 +55,12 @@
           <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
             <!-- {{ lockTimeoutDisplay }}后锁屏 -->
           </span>
-          {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }}
+          <span v-if="appSettings.showTopbarTime">
+               {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }}
           {{ dateTime.week }}
-          <span v-if="hasWeather && city.now">
+          </span>
+
+          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
             <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
           </span>
         </div>
@@ -155,7 +158,10 @@ export default {
   computed: {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
-    ...mapWritableState(appStore, ['status', 'showWindowController']),
+    ...mapWritableState(appStore,['status','showWindowController']),
+    ...mapWritableState(appStore,{
+      appSettings: 'settings'
+    }),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(timerStore, ['lockTimeout']),
@@ -350,7 +356,7 @@ export default {
 }
 
 .primary-title {
-  font-family: PingFangSC-Medium;
+
   font-size: 14px;
   font-weight: 500;
 }

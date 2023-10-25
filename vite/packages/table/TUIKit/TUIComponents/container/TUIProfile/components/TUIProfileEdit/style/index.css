@@ -1,253 +1,312 @@
 @import url("../../../../../styles/common.scss");
 @import url("../../../../../styles/icon.scss");
 .edit-header h1 {
-  font-family: PingFangSC-Medium;
   font-weight: 500;
-  color: #333333; }
+  color: #333333;
+}
 .edit-list-item-content label {
-  font-family: PingFangSC-Regular;
   font-weight: 400;
-  color: #333333; }
+  color: #333333;
+}
 .edit-list-item-content input {
   border: 1px solid rgba(131, 137, 153, 0.4);
-  font-family: PingFangSC-Regular;
   font-weight: 400;
-  color: #596174; }
+  color: #596174;
+}
 .edit-list-item-content .gender-list-item .gender {
-  border: 1px solid rgba(131, 137, 153, 0.4); }
-  .edit-list-item-content .gender-list-item .gender-selected {
-    border: 6px solid #147AFF; }
+  border: 1px solid rgba(131, 137, 153, 0.4);
+}
+.edit-list-item-content .gender-list-item .gender-selected {
+  border: 6px solid #147AFF;
+}
 
 .btn-default {
   background: #FFFFFF;
-  border: 1px solid #DDDDDD; }
+  border: 1px solid #DDDDDD;
+}
 
 .btn-submit {
   background: #3370FF;
   border: 0 solid #2F80ED;
-  color: #FFFFFF; }
+  color: #FFFFFF;
+}
 
 .selected {
   border: 1px solid #006EFF !important;
-  color: #006EFF; }
+  color: #006EFF;
+}
 
 .edit-h5 {
-  background: #EFEFEF; }
-  .edit-h5 .edit-header {
-    background: #FFFFFF; }
-  .edit-h5 .edit-list-item {
-    background: #FFFFFF;
-    border-bottom: 1px solid #EEEEEE; }
-  .edit-h5-header h1 {
-    font-family: PingFangSC-Medium;
-    font-weight: 500;
-    color: #000000;
-    letter-spacing: 0; }
-  .edit-h5-header .close {
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    color: #3370FF;
-    letter-spacing: 0; }
-  .edit-h5-main .list-item span {
-    border: 1px solid #DDDDDD;
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    letter-spacing: 0; }
-  .edit-h5-main .input input, .edit-h5-main .input textarea {
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    color: #000000;
-    letter-spacing: 0;
-    background: #EFEFEF; }
-  .edit-h5-main sub {
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    color: #888888;
-    letter-spacing: 0; }
-  .edit-h5-footer .btn {
-    font-family: PingFangSC-Regular;
-    font-weight: 400;
-    color: #FFFFFF;
-    letter-spacing: 0; }
-    .edit-h5-footer .btn:disabled {
-      opacity: 0.3; }
+  background: #EFEFEF;
+}
+.edit-h5 .edit-header {
+  background: #FFFFFF;
+}
+.edit-h5 .edit-list-item {
+  background: #FFFFFF;
+  border-bottom: 1px solid #EEEEEE;
+}
+.edit-h5-header h1 {
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: 0;
+}
+.edit-h5-header .close {
+  font-weight: 400;
+  color: #3370FF;
+  letter-spacing: 0;
+}
+.edit-h5-main .list-item span {
+  border: 1px solid #DDDDDD;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.edit-h5-main .input input, .edit-h5-main .input textarea {
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0;
+  background: #EFEFEF;
+}
+.edit-h5-main sub {
+  font-weight: 400;
+  color: #888888;
+  letter-spacing: 0;
+}
+.edit-h5-footer .btn {
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: 0;
+}
+.edit-h5-footer .btn:disabled {
+  opacity: 0.3;
+}
 
 .mask {
-  background: rgba(0, 0, 0, 0.5); }
-  .mask-main {
-    background: #FFFFFF; }
+  background: rgba(0, 0, 0, 0.5);
+}
+.mask-main {
+  background: #FFFFFF;
+}
 
 .edit {
   flex: 1;
   display: flex;
-  flex-direction: column; }
-  .edit-header {
-    position: relative;
-    display: flex; }
-    .edit-header h1 {
-      font-size: 16px;
-      line-height: 30px; }
-  .edit-list {
-    padding: 20px 0; }
-    .edit-list-item {
-      display: flex;
-      align-items: center;
-      padding: 10px 0; }
-      .edit-list-item-content {
-        flex: 1;
-        display: flex;
-        align-items: center; }
-        .edit-list-item-content .avatar-list {
-          display: flex;
-          align-items: center; }
-          .edit-list-item-content .avatar-list-item {
-            padding-right: 20px; }
-        .edit-list-item-content img {
-          box-sizing: border-box;
-          width: 36px;
-          height: 36px; }
-        .edit-list-item-content label {
-          width: 60px;
-          padding-right: 20px;
-          font-size: 14px; }
-        .edit-list-item-content input {
-          flex: 1;
-          border-radius: 2px;
-          padding: 6px 10px;
-          font-size: 14px; }
-        .edit-list-item-content span {
-          flex: 1;
-          width: 0;
-          padding: 6px 10px;
-          word-break: keep-all;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis; }
-        .edit-list-item-content .gender-list {
-          display: flex;
-          align-items: center; }
-          .edit-list-item-content .gender-list-item {
-            display: flex;
-            align-items: center;
-            padding-right: 24px; }
-            .edit-list-item-content .gender-list-item:last-child {
-              padding: 0; }
-            .edit-list-item-content .gender-list-item .gender {
-              box-sizing: border-box;
-              width: 16px;
-              height: 16px;
-              border-radius: 45px; }
-            .edit-list-item-content .gender-list-item .name {
-              padding-left: 8px; }
-  .edit-footer {
-    display: flex;
-    justify-content: flex-end; }
+  flex-direction: column;
+}
+.edit-header {
+  position: relative;
+  display: flex;
+}
+.edit-header h1 {
+  font-size: 16px;
+  line-height: 30px;
+}
+.edit-list {
+  padding: 20px 0;
+}
+.edit-list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+.edit-list-item-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.edit-list-item-content .avatar-list {
+  display: flex;
+  align-items: center;
+}
+.edit-list-item-content .avatar-list-item {
+  padding-right: 20px;
+}
+.edit-list-item-content img {
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+}
+.edit-list-item-content label {
+  width: 60px;
+  padding-right: 20px;
+  font-size: 14px;
+}
+.edit-list-item-content input {
+  flex: 1;
+  border-radius: 2px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.edit-list-item-content span {
+  flex: 1;
+  width: 0;
+  padding: 6px 10px;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.edit-list-item-content .gender-list {
+  display: flex;
+  align-items: center;
+}
+.edit-list-item-content .gender-list-item {
+  display: flex;
+  align-items: center;
+  padding-right: 24px;
+}
+.edit-list-item-content .gender-list-item:last-child {
+  padding: 0;
+}
+.edit-list-item-content .gender-list-item .gender {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border-radius: 45px;
+}
+.edit-list-item-content .gender-list-item .name {
+  padding-left: 8px;
+}
+.edit-footer {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .btn-default {
   width: 82px;
   height: 32px;
-  border-radius: 4px; }
+  border-radius: 4px;
+}
 
 .btn-submit {
   width: 82px;
   height: 32px;
   border-radius: 4px;
-  margin-left: 12px; }
+  margin-left: 12px;
+}
 
 .edit-h5 {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1; }
-  .edit-h5 .edit-header {
-    justify-content: center;
-    align-items: center;
-    padding: 15px 18px; }
-    .edit-h5 .edit-header .icon {
-      position: absolute;
-      left: 18px; }
-    .edit-h5 .edit-header-title {
-      color: black; }
-  .edit-h5 .edit-list {
-    padding: 0; }
-    .edit-h5 .edit-list-item {
-      padding: 10px 18px; }
-      .edit-h5 .edit-list-item-content label {
-        width: auto;
-        font-size: 16px;
-        color: black; }
-      .edit-h5 .edit-list-item-content span {
-        text-align: end;
-        font-size: 16px;
-        color: rgba(0, 0, 0, 0.6); }
-        .edit-h5 .edit-list-item-content span img {
-          width: 60px;
-          height: 60px; }
-    .edit-h5 .edit-list .space-top {
-      margin-top: 12px; }
-  .edit-h5-header {
-    display: flex;
-    justify-content: space-between; }
-    .edit-h5-header h1 {
-      font-size: 20px;
-      line-height: 28px; }
-    .edit-h5-header .close {
-      font-size: 18px;
-      line-height: 27px; }
-  .edit-h5-main {
-    padding: 23px 0; }
-    .edit-h5-main .list {
-      display: flex;
-      align-items: center; }
-      .edit-h5-main .list-item {
-        padding-right: 20px; }
-        .edit-h5-main .list-item:last-child {
-          padding: 0; }
-        .edit-h5-main .list-item img {
-          width: 36px;
-          height: 36px; }
-        .edit-h5-main .list-item span {
-          border-radius: 9.4px;
-          padding: 5px 45px;
-          font-size: 16px;
-          text-align: center;
-          line-height: 25px; }
-    .edit-h5-main .input {
-      display: flex;
-      padding-bottom: 10px; }
-      .edit-h5-main .input input,
-      .edit-h5-main .input textarea {
-        flex: 1;
-        padding: 10px 18px;
-        border: none;
-        font-size: 16px;
-        line-height: 27px; }
-      .edit-h5-main .input .datePicker {
-        flex: 1; }
-      .edit-h5-main .input textarea {
-        resize: none; }
-    .edit-h5-main sub {
-      font-size: 15px;
-      line-height: 23px; }
-  .edit-h5-footer {
-    display: flex; }
-    .edit-h5-footer .btn {
-      height: auto;
-      flex: 1;
-      margin: 0;
-      font-size: 20px;
-      line-height: 27px;
-      padding: 13px 0; }
+  z-index: 1;
+}
+.edit-h5 .edit-header {
+  justify-content: center;
+  align-items: center;
+  padding: 15px 18px;
+}
+.edit-h5 .edit-header .icon {
+  position: absolute;
+  left: 18px;
+}
+.edit-h5 .edit-header-title {
+  color: rgb(0, 0, 0);
+}
+.edit-h5 .edit-list {
+  padding: 0;
+}
+.edit-h5 .edit-list-item {
+  padding: 10px 18px;
+}
+.edit-h5 .edit-list-item-content label {
+  width: auto;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+}
+.edit-h5 .edit-list-item-content span {
+  text-align: end;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+.edit-h5 .edit-list-item-content span img {
+  width: 60px;
+  height: 60px;
+}
+.edit-h5 .edit-list .space-top {
+  margin-top: 12px;
+}
+.edit-h5-header {
+  display: flex;
+  justify-content: space-between;
+}
+.edit-h5-header h1 {
+  font-size: 20px;
+  line-height: 28px;
+}
+.edit-h5-header .close {
+  font-size: 18px;
+  line-height: 27px;
+}
+.edit-h5-main {
+  padding: 23px 0;
+}
+.edit-h5-main .list {
+  display: flex;
+  align-items: center;
+}
+.edit-h5-main .list-item {
+  padding-right: 20px;
+}
+.edit-h5-main .list-item:last-child {
+  padding: 0;
+}
+.edit-h5-main .list-item img {
+  width: 36px;
+  height: 36px;
+}
+.edit-h5-main .list-item span {
+  border-radius: 9.4px;
+  padding: 5px 45px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 25px;
+}
+.edit-h5-main .input {
+  display: flex;
+  padding-bottom: 10px;
+}
+.edit-h5-main .input input,
+.edit-h5-main .input textarea {
+  flex: 1;
+  padding: 10px 18px;
+  border: none;
+  font-size: 16px;
+  line-height: 27px;
+}
+.edit-h5-main .input .datePicker {
+  flex: 1;
+}
+.edit-h5-main .input textarea {
+  resize: none;
+}
+.edit-h5-main sub {
+  font-size: 15px;
+  line-height: 23px;
+}
+.edit-h5-footer {
+  display: flex;
+}
+.edit-h5-footer .btn {
+  height: auto;
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  line-height: 27px;
+  padding: 13px 0;
+}
 
 .mask {
   position: fixed;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: flex-end; }
-  .mask-main {
-    flex: 1;
-    padding: 23px;
-    border-radius: 12px 12px 0 0; }
+  align-items: flex-end;
+}
+.mask-main {
+  flex: 1;
+  padding: 23px;
+  border-radius: 12px 12px 0 0;
+}
 
 /*# sourceMappingURL=index.css.map */

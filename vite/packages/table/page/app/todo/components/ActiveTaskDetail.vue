@@ -89,7 +89,7 @@
             </a-button>
             <div class="flex items-center">
               <span class="btn-content" style="background:var(--active-bg)"  v-if="editing"
-                @click="editing = !editing">
+                @click="saveAndExit">
                 <vertical-left-outlined /> 退出
               </span>
               <template v-if="editing">
@@ -240,7 +240,7 @@ import dayjs from "dayjs";
 import TimerSelector from "./TimerSelector.vue";
 
 import { message } from "ant-design-vue";
-import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import {onBeforeUnmount, ref, shallowRef, onMounted, getCurrentInstance} from "vue";
 export default {
   name: "TaskDetail",
   data() {
@@ -251,14 +251,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: false,
       },
-      editing: false,
       MenuState,
       showFormatConvert: false,
       navList: [
         {title: '纯文字',name: 'text'},
         {title: '图文',name: 'rich'}
       ],
-      selectType: {title: '纯文字',name: 'text'},
+
     };
   },
 
@@ -277,6 +276,7 @@ export default {
       deep: true,
       handler(val){
         this.selectType = val
+        this.valueHtml=this.activeTask.description
       }
     }
   },
@@ -341,6 +341,8 @@ export default {
   },
   setup() {
     const editorRef = shallowRef();
+    const editing=ref(false)
+    const selectType=ref({title: '纯文字',name: 'text'})
     const mode = ref("default");
     // 内容 HTML
     const valueHtml = ref("");
@@ -379,6 +381,16 @@ export default {
       editor.destroy();
     });
 
+    const saveAndExit=()=>{
+      editing.value = false;
+      if(selectType.value.name==='rich'){
+        console.log('从富文本退出',selectType.value)
+        taskStore().activeTask.description=valueHtml.value
+        console.log('新描述',valueHtml.value)
+      }else{
+      }
+
+    }
     const handleCreated = (editor) => {
       editorRef.value = editor; // 记录 editor 实例，重要！
     };
@@ -414,7 +426,10 @@ export default {
       mode: "default", // 或 'simple'
       toolbarConfig,
       editorConfig,
+      editing,
       handleCreated,
+      saveAndExit,
+      selectType
     };
   },
 };

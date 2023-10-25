@@ -44,19 +44,19 @@ const goJoin=()=>{
 </script>
 <style lang='scss' scoped>
 .font-16 {
-    font-family: PingFangSC-Medium;
+
     font-size: 16px;
     font-weight: 500;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     font-weight: 400;
 }
 
 .font-12 {
-    font-family: PingFangSC-Regular;
+
     font-size: 12px;
     font-weight: 400;
 }

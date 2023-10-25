@@ -1,102 +1,119 @@
-@import url(../../../node_modules/ant-design-vue/dist/antd.dark.css);
+@import '../../../node_modules/ant-design-vue/dist/antd.dark.css';
 .gradient--0 {
   --gradient-start: #6DE195;
-  --gradient-start-text: '#6DE195';
+  --gradient-start-text: "#6DE195";
   --gradient-end: #C4E759;
-  --gradient-end-text: '#C4E759'; }
+  --gradient-end-text: "#C4E759";
+}
 
 .gradient--1 {
   --gradient-start: #41C7AF;
-  --gradient-start-text: '#41C7AF';
+  --gradient-start-text: "#41C7AF";
   --gradient-end: #54E38E;
-  --gradient-end-text: '#54E38E'; }
+  --gradient-end-text: "#54E38E";
+}
 
 .gradient--2 {
   --gradient-start: #99E5A2;
-  --gradient-start-text: '#99E5A2';
+  --gradient-start-text: "#99E5A2";
   --gradient-end: #D4FC78;
-  --gradient-end-text: '#D4FC78'; }
+  --gradient-end-text: "#D4FC78";
+}
 
 .gradient--3 {
   --gradient-start: #ABC7FF;
-  --gradient-start-text: '#ABC7FF';
+  --gradient-start-text: "#ABC7FF";
   --gradient-end: #C1E3FF;
-  --gradient-end-text: '#C1E3FF'; }
+  --gradient-end-text: "#C1E3FF";
+}
 
 .gradient--4 {
   --gradient-start: #6CACFF;
-  --gradient-start-text: '#6CACFF';
+  --gradient-start-text: "#6CACFF";
   --gradient-end: #8DEBFF;
-  --gradient-end-text: '#8DEBFF'; }
+  --gradient-end-text: "#8DEBFF";
+}
 
 .gradient--5 {
   --gradient-start: #5583EE;
-  --gradient-start-text: '#5583EE';
+  --gradient-start-text: "#5583EE";
   --gradient-end: #41D8DD;
-  --gradient-end-text: '#41D8DD'; }
+  --gradient-end-text: "#41D8DD";
+}
 
 .gradient--6 {
   --gradient-start: #A16BFE;
-  --gradient-start-text: '#A16BFE';
+  --gradient-start-text: "#A16BFE";
   --gradient-end: #DEB0DF;
-  --gradient-end-text: '#DEB0DF'; }
+  --gradient-end-text: "#DEB0DF";
+}
 
 .gradient--7 {
   --gradient-start: #D279EE;
-  --gradient-start-text: '#D279EE';
+  --gradient-start-text: "#D279EE";
   --gradient-end: #F8C390;
-  --gradient-end-text: '#F8C390'; }
+  --gradient-end-text: "#F8C390";
+}
 
 .gradient--8 {
   --gradient-start: #F78FAD;
-  --gradient-start-text: '#F78FAD';
+  --gradient-start-text: "#F78FAD";
   --gradient-end: #FDEB82;
-  --gradient-end-text: '#FDEB82'; }
+  --gradient-end-text: "#FDEB82";
+}
 
 .gradient--9 {
   --gradient-start: #BC3D2F;
-  --gradient-start-text: '#BC3D2F';
+  --gradient-start-text: "#BC3D2F";
   --gradient-end: #A16BFE;
-  --gradient-end-text: '#A16BFE'; }
+  --gradient-end-text: "#A16BFE";
+}
 
 .gradient--10 {
   --gradient-start: #A43AB2;
-  --gradient-start-text: '#A43AB2';
+  --gradient-start-text: "#A43AB2";
   --gradient-end: #E13680;
-  --gradient-end-text: '#E13680'; }
+  --gradient-end-text: "#E13680";
+}
 
 .gradient--11 {
   --gradient-start: #9D2E7D;
-  --gradient-start-text: '#9D2E7D';
+  --gradient-start-text: "#9D2E7D";
   --gradient-end: #E16E93;
-  --gradient-end-text: '#E16E93'; }
+  --gradient-end-text: "#E16E93";
+}
 
 .gradient--12 {
   --gradient-start: #F5CCF6;
-  --gradient-start-text: '#F5CCF6';
+  --gradient-start-text: "#F5CCF6";
   --gradient-end: #F1EEF9;
-  --gradient-end-text: '#F1EEF9'; }
+  --gradient-end-text: "#F1EEF9";
+}
 
 .gradient--13 {
   --gradient-start: #F0EFF0;
-  --gradient-start-text: '#F0EFF0';
+  --gradient-start-text: "#F0EFF0";
   --gradient-end: #FAF8F9;
-  --gradient-end-text: '#FAF8F9'; }
+  --gradient-end-text: "#FAF8F9";
+}
 
 .gradient--14 {
   --gradient-start: #333333;
-  --gradient-start-text: '#121317';
+  --gradient-start-text: "#121317";
   --gradient-end: #212121;
-  --gradient-end-text: '#323B42'; }
+  --gradient-end-text: "#323B42";
+}
 
 .gradient--blur {
-  --gradient: rgba(26, 26, 26, 0.65); }
+  --gradient:rgba(26,26,26,.65) ;
+}
 
 .gradient {
   backdrop-filter: blur(var(--suspensiondBackGroundBlur, 50px));
   display: inline-block;
   background: var(--gradient);
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); }
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
 
 .card {
   border-radius: 8px;
@@ -104,54 +121,69 @@
   width: 280px;
   min-width: 280px;
   display: inline-block;
-  padding: 1em; }
-  .card:hover .right-title {
-    display: inline-block; }
-  .card .right-title {
-    display: none; }
-  .card .right-title {
-    position: absolute;
-    top: 1em;
-    right: 1em; }
-  .card .no-title .title-icon {
-    width: 24px;
-    height: 24px;
-    color: #818181; }
-  .card .content-title {
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between; }
-    .card .content-title .left-title {
-      display: flex;
-      flex: 1;
-      align-items: center; }
-      .card .content-title .left-title .title-icon {
-        width: 24px;
-        height: 24px; }
-      .card .content-title .left-title :last-child {
-        margin-left: .5em; }
-  .card .content {
-    position: relative;
-    text-align: center; }
-    .card .content .title-icon {
-      position: absolute;
-      right: 1em; }
-  .card.auto-height {
-    height: auto; }
-  .card.add-list {
-    width: 476px;
-    height: 520px;
-    margin-left: 17px;
-    margin-bottom: 17px;
-    border-radius: 12px;
-    background: rgba(33, 33, 33, 0.6) !important; }
-  .card .title {
-    font-size: 2em; }
-  .card .sub-card {
-    text-align: center;
-    padding: 1em;
-    border-radius: .3em;
-    font-size: 1.2em; }
+  padding: 1em;
+}
+.card:hover .right-title {
+  display: inline-block;
+}
+.card .right-title {
+  display: none;
+}
+.card .right-title {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+.card .no-title .title-icon {
+  width: 24px;
+  height: 24px;
+  color: #818181;
+}
+.card .content-title {
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+.card .content-title .left-title {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+.card .content-title .left-title .title-icon {
+  width: 24px;
+  height: 24px;
+}
+.card .content-title .left-title :last-child {
+  margin-left: 0.5em;
+}
+.card .content {
+  position: relative;
+  text-align: center;
+}
+.card .content .title-icon {
+  position: absolute;
+  right: 1em;
+}
+.card.auto-height {
+  height: auto;
+}
+.card.add-list {
+  width: 476px;
+  height: 520px;
+  margin-left: 17px;
+  margin-bottom: 17px;
+  border-radius: 12px;
+  background: rgba(33, 33, 33, 0.6) !important;
+}
+.card .title {
+  font-size: 2em;
+}
+.card .sub-card {
+  text-align: center;
+  padding: 1em;
+  border-radius: 0.3em;
+  font-size: 1.2em;
+}
 
 .card-wrapper {
   width: auto;
@@ -159,7 +191,8 @@
   white-space: nowrap;
   vertical-align: middle;
   display: flex;
-  align-items: center; }
+  align-items: center;
+}
 
 .option {
   background: #161616;
@@ -170,87 +203,113 @@
   justify-content: center;
   align-items: center;
   border-radius: 10%;
-  cursor: pointer; }
-  .option .icon {
-    width: 3em;
-    height: 3em;
-    vertical-align: middle; }
+  cursor: pointer;
+}
+.option .icon {
+  width: 3em;
+  height: 3em;
+  vertical-align: middle;
+}
 
 .ant-picker-dropdown, .ant-drawer-content-wrapper {
-  -webkit-app-region: no-drag; }
+  -webkit-app-region: no-drag;
+}
 
 .ant-drawer-close {
   background: #333;
   border-radius: 4px;
-  padding: 10px 10px; }
+  padding: 10px 10px;
+}
 
 .lg .ant-modal-body {
-  font-size: 3em; }
-  .lg .ant-modal-body svg {
-    font-size: 2em; }
-  .lg .ant-modal-body .ant-modal-confirm-content {
-    font-size: 0.5em; }
-  .lg .ant-modal-body .ant-btn {
-    font-size: 16px;
-    height: auto;
-    line-height: 1.5;
-    margin-right: 20px;
-    border-width: 3px;
-    border-radius: 4px; }
+  font-size: 3em;
+}
+.lg .ant-modal-body svg {
+  font-size: 2em;
+}
+.lg .ant-modal-body .ant-modal-confirm-content {
+  font-size: 0.5em;
+}
+.lg .ant-modal-body .ant-btn {
+  font-size: 16px;
+  height: auto;
+  line-height: 1.5;
+  margin-right: 20px;
+  border-width: 3px;
+  border-radius: 4px;
+}
 .lg .ant-slider-dot {
-  top: 0; }
+  top: 0;
+}
 
 .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
-  background: rgba(62, 62, 62, 0.29) !important; }
+  background: rgba(62, 62, 62, 0.29) !important;
+}
 
 .ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y, .ps__thumb-x {
-  background: #5d5d5d !important; }
+  background: #5d5d5d !important;
+}
 
 .ps__rail-y, .ps__rail-x {
   border-radius: 400px;
-  z-index: 99; }
+  z-index: 99;
+}
 
 .ant-picker-dropdown {
-  z-index: 9999999999999 !important; }
+  z-index: 9999999999999 !important;
+}
 
 .ant-drawer-header {
   background: transparent !important;
-  border-bottom: none !important; }
+  border-bottom: none !important;
+}
 
 .light-model .tippy-box {
   background: var(--primary-bg-solid) !important;
-  color: var(--primary-text); }
+  color: var(--primary-text);
+}
 
 .ant-modal-confirm-content {
-  color: var(--primary-text) !important; }
+  color: var(--primary-text) !important;
+}
 
 .dark {
-  color: #b7b7b7; }
-  .dark .key-button {
-    border: 1px solid #3a3a3a;
-    color: #8d8d8d;
-    background: linear-gradient(to right, #494949, #444444, #444444); }
-  .dark .bottom-panel .icon {
-    fill: #797979; }
-  .dark .bottom-panel .item:hover .icon {
-    fill: white !important; }
-  .dark .side-panel .icon {
-    fill: #6e6e6e; }
-  .dark .common-panel .item:hover {
-    background: rgba(255, 255, 255, 0.08); }
-    .dark .common-panel .item:hover .icon {
-      fill: rgba(255, 255, 255, 0.6); }
-  .dark .common-panel .item.active {
-    background: rgba(255, 255, 255, 0.08); }
-    .dark .common-panel .item.active .icon {
-      fill: rgba(255, 255, 255, 0.6); }
-  .dark .input-box {
-    border-color: transparent !important;
-    border-width: 0.15em !important;
-    color: #7a7a7a;
-    background: var(--suspensiondBackGround, rgba(26, 26, 26, 0.65));
-    backdrop-filter: blur(var(--suspensiondBackGroundBlur, 50px));
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); }
+  color: #b7b7b7;
+}
+.dark .key-button {
+  border: 1px solid #3a3a3a;
+  color: #8d8d8d;
+  background: linear-gradient(to right, #494949, #444444, #444444);
+}
+.dark .bottom-panel .icon {
+  fill: #797979;
+}
+.dark .bottom-panel .item:hover .icon {
+  fill: rgb(255, 255, 255) !important;
+}
+.dark .side-panel .icon {
+  fill: #6e6e6e;
+}
+.dark .common-panel .item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark .common-panel .item:hover .icon {
+  fill: rgba(255, 255, 255, 0.6);
+}
+.dark .common-panel .item.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark .common-panel .item.active .icon {
+  fill: rgba(255, 255, 255, 0.6);
+}
+.dark .input-box {
+  border-color: transparent !important;
+  border-width: 0.15em !important;
+  color: #7a7a7a;
+  background: var(--suspensiondBackGround, rgba(26, 26, 26, 0.65));
+  backdrop-filter: blur(var(--suspensiondBackGroundBlur, 50px));
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
 
 .text-icon {
   width: 80px;
@@ -265,7 +324,8 @@
   white-space: pre-wrap;
   justify-content: center;
   display: flex;
-  align-items: center; }
+  align-items: center;
+}
 
 .action {
   border-radius: 0.4em;
@@ -280,40 +340,53 @@
   margin-right: 1em;
   margin-bottom: 1em;
   background: #b9b9b9;
-  cursor: pointer; }
-  .action.active {
-    background: white;
-    font-weight: bold; }
+  cursor: pointer;
+}
+.action.active {
+  background: white;
+  font-weight: bold;
+}
 
 .horse_run {
-  background-image: linear-gradient(90deg, rgba(196, 233, 64, 0) 0%, #3ee054 100%), linear-gradient(0deg, #3ee054 0%, rgba(196, 233, 64, 0) 100%), linear-gradient(-90deg, rgba(196, 233, 64, 0) 0%, #3ee054 100%), linear-gradient(0deg, rgba(196, 233, 64, 0) 0%, #3ee054 100%);
+  background-image: linear-gradient(90deg, rgba(196, 233, 64, 0) 0%, rgb(62, 224, 84) 100%), linear-gradient(0deg, rgb(62, 224, 84) 0%, rgba(196, 233, 64, 0) 100%), linear-gradient(-90deg, rgba(196, 233, 64, 0) 0%, rgb(62, 224, 84) 100%), linear-gradient(0deg, rgba(196, 233, 64, 0) 0%, rgb(62, 224, 84) 100%);
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-size: 100px 4px, 4px 100px, 100px 4px, 4px 100px;
   background-position: -100px 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px 0px;
   animation: moveLine 8s infinite linear;
   height: calc(100% - 2px);
   padding: 1px;
-  background-clip: content-box; }
+  background-clip: content-box;
+}
 
 @keyframes moveLine {
   0% {
-    background-position: -100px 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px 0px; }
+    background-position: -100px 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px 0px;
+  }
   5% {
-    background-position: 0px 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px -100px; }
+    background-position: 0px 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px -100px;
+  }
   30% {
-    background-position: 100% 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px -100px; }
+    background-position: 100% 1px, calc(100% - 1px) -100px, calc(100% + 100px) calc(100% - 1px), 1px -100px;
+  }
   35% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) 0px, calc(100% + 100px) calc(100% - 1px), 1px -100px; }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) 0px, calc(100% + 100px) calc(100% - 1px), 1px -100px;
+  }
   50% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) 100%, calc(100% + 100px) calc(100% - 1px), -100px -100px; }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) 100%, calc(100% + 100px) calc(100% - 1px), -100px -100px;
+  }
   55% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), 100% calc(100% - 1px), -100px calc(100% + 100px); }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), 100% calc(100% - 1px), -100px calc(100% + 100px);
+  }
   80% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), 0px calc(100% - 1px), 1px calc(100% + 100px); }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), 0px calc(100% - 1px), 1px calc(100% + 100px);
+  }
   85% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), -100px calc(100% - 1px), 1px 100%; }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), -100px calc(100% - 1px), 1px 100%;
+  }
   100% {
-    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), -100px calc(100% - 1px), 1px 0px; } }
+    background-position: calc(100% + 100px) 1px, calc(100% - 1px) calc(100% + 100px), -100px calc(100% - 1px), 1px 0px;
+  }
+}
 .snowflake {
   --size: 2vw;
   width: var(--size);
@@ -321,816 +394,921 @@
   background: white;
   border-radius: 50%;
   position: absolute;
-  top: -5vh; }
+  top: -5vh;
+}
 
 @keyframes snowfall {
   0% {
-    transform: translate3d(var(--left-ini), 0, 0); }
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
   100% {
-    transform: translate3d(var(--left-end), 100vh, 0); } }
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
 .snowflake:nth-child(1) {
-  --size: 1.4vw;
-  --left-ini: 1vw;
-  --left-end: -7vw;
-  left: 31vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -5s; }
+  --size: 0.4vw;
+  --left-ini: -1vw;
+  --left-end: 3vw;
+  left: 38vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(2) {
-  --size: 1.8vw;
-  --left-ini: -7vw;
-  --left-end: 0vw;
-  left: 48vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -6s; }
+  --size: 0.6vw;
+  --left-ini: -1vw;
+  --left-end: -5vw;
+  left: 33vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(3) {
-  --size: 0.8vw;
-  --left-ini: -7vw;
-  --left-end: -9vw;
-  left: 34vw;
+  --size: 1.8vw;
+  --left-ini: -2vw;
+  --left-end: -8vw;
+  left: 29vw;
   animation: snowfall 10s linear infinite;
-  animation-delay: -10s; }
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(4) {
-  --size: 0.8vw;
-  --left-ini: 10vw;
-  --left-end: 2vw;
-  left: 79vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -9s; }
+  --size: 1.6vw;
+  --left-ini: 4vw;
+  --left-end: -4vw;
+  left: 93vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -7s;
+}
 
 .snowflake:nth-child(5) {
-  --size: 0.6vw;
-  --left-ini: 9vw;
-  --left-end: -3vw;
-  left: 1vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -3s; }
+  --size: 1.2vw;
+  --left-ini: 3vw;
+  --left-end: -6vw;
+  left: 90vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(6) {
-  --size: 1.6vw;
-  --left-ini: -4vw;
-  --left-end: 7vw;
-  left: 63vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -4s; }
+  --size: 1vw;
+  --left-ini: 0vw;
+  --left-end: 1vw;
+  left: 30vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(7) {
-  --size: 1.8vw;
-  --left-ini: 8vw;
-  --left-end: 4vw;
-  left: 5vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -5s; }
+  --size: 0.2vw;
+  --left-ini: 7vw;
+  --left-end: 9vw;
+  left: 65vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(8) {
-  --size: 1vw;
-  --left-ini: -3vw;
-  --left-end: 10vw;
-  left: 4vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -1s; }
+  --size: 1.6vw;
+  --left-ini: -5vw;
+  --left-end: -9vw;
+  left: 55vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -7s;
+}
 
 .snowflake:nth-child(9) {
   --size: 0.6vw;
-  --left-ini: -3vw;
-  --left-end: 8vw;
-  left: 25vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -5s; }
+  --left-ini: -7vw;
+  --left-end: -5vw;
+  left: 8vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(10) {
-  --size: 1.8vw;
-  --left-ini: 4vw;
-  --left-end: 4vw;
-  left: 66vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -1s; }
+  --size: 0.6vw;
+  --left-ini: -3vw;
+  --left-end: 5vw;
+  left: 65vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -3s;
+}
 
 .snowflake:nth-child(11) {
-  --size: 0.2vw;
-  --left-ini: -2vw;
-  --left-end: -6vw;
-  left: 53vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -5s; }
+  --size: 1vw;
+  --left-ini: -1vw;
+  --left-end: -1vw;
+  left: 73vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(12) {
-  --size: 0.6vw;
-  --left-ini: 6vw;
+  --size: 0.8vw;
+  --left-ini: -5vw;
   --left-end: 3vw;
-  left: 16vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -7s; }
+  left: 31vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -7s;
+}
 
 .snowflake:nth-child(13) {
-  --size: 0.2vw;
+  --size: 0.6vw;
   --left-ini: -3vw;
-  --left-end: 10vw;
-  left: 78vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -1s; }
+  --left-end: 0vw;
+  left: 30vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -8s;
+}
 
 .snowflake:nth-child(14) {
   --size: 0.2vw;
-  --left-ini: 7vw;
-  --left-end: -2vw;
-  left: 85vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -6s; }
+  --left-ini: -8vw;
+  --left-end: -6vw;
+  left: 40vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(15) {
-  --size: 1.2vw;
-  --left-ini: 7vw;
-  --left-end: -7vw;
-  left: 92vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -9s; }
-
-.snowflake:nth-child(16) {
-  --size: 1.8vw;
-  --left-ini: -8vw;
-  --left-end: 9vw;
-  left: 61vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -6s; }
-
-.snowflake:nth-child(17) {
-  --size: 1.4vw;
-  --left-ini: -3vw;
-  --left-end: 2vw;
-  left: 54vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -3s; }
-
-.snowflake:nth-child(18) {
-  --size: 0.6vw;
-  --left-ini: -9vw;
-  --left-end: 8vw;
-  left: 59vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -8s; }
-
-.snowflake:nth-child(19) {
-  --size: 0.8vw;
-  --left-ini: -5vw;
-  --left-end: -8vw;
-  left: 86vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -6s; }
-
-.snowflake:nth-child(20) {
-  --size: 1.8vw;
-  --left-ini: 1vw;
-  --left-end: -9vw;
-  left: 68vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -7s; }
-
-.snowflake:nth-child(21) {
-  --size: 1vw;
-  --left-ini: 7vw;
-  --left-end: -4vw;
-  left: 20vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -7s; }
-
-.snowflake:nth-child(22) {
-  --size: 0.2vw;
-  --left-ini: 10vw;
-  --left-end: 9vw;
-  left: 80vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -5s; }
-
-.snowflake:nth-child(23) {
-  --size: 2vw;
-  --left-ini: -9vw;
-  --left-end: -9vw;
-  left: 94vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -2s; }
-
-.snowflake:nth-child(24) {
-  --size: 1.6vw;
+  --size: 0.4vw;
   --left-ini: -8vw;
   --left-end: -5vw;
-  left: 11vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -10s; }
+  left: 6vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -5s;
+}
+
+.snowflake:nth-child(16) {
+  --size: 0.2vw;
+  --left-ini: 4vw;
+  --left-end: -7vw;
+  left: 30vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -1s;
+}
+
+.snowflake:nth-child(17) {
+  --size: 0.4vw;
+  --left-ini: 3vw;
+  --left-end: 9vw;
+  left: 37vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -5s;
+}
+
+.snowflake:nth-child(18) {
+  --size: 0.8vw;
+  --left-ini: 2vw;
+  --left-end: 8vw;
+  left: 86vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -8s;
+}
+
+.snowflake:nth-child(19) {
+  --size: 1.8vw;
+  --left-ini: -4vw;
+  --left-end: 3vw;
+  left: 32vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.snowflake:nth-child(20) {
+  --size: 1.4vw;
+  --left-ini: 4vw;
+  --left-end: 9vw;
+  left: 57vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -10s;
+}
+
+.snowflake:nth-child(21) {
+  --size: 0.6vw;
+  --left-ini: 6vw;
+  --left-end: 1vw;
+  left: 62vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -6s;
+}
+
+.snowflake:nth-child(22) {
+  --size: 1.2vw;
+  --left-ini: 2vw;
+  --left-end: -9vw;
+  left: 92vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -3s;
+}
+
+.snowflake:nth-child(23) {
+  --size: 0.2vw;
+  --left-ini: 6vw;
+  --left-end: 8vw;
+  left: 60vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -6s;
+}
+
+.snowflake:nth-child(24) {
+  --size: 1.8vw;
+  --left-ini: 4vw;
+  --left-end: 10vw;
+  left: 25vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(25) {
   --size: 1.2vw;
-  --left-ini: 5vw;
-  --left-end: -3vw;
-  left: 63vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 6vw;
+  --left-end: 0vw;
+  left: 5vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(26) {
-  --size: 0.8vw;
-  --left-ini: 6vw;
-  --left-end: -7vw;
-  left: 80vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -4s; }
+  --size: 1.4vw;
+  --left-ini: 7vw;
+  --left-end: 10vw;
+  left: 50vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(27) {
-  --size: 1.6vw;
-  --left-ini: -8vw;
-  --left-end: -3vw;
-  left: 12vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -8s; }
+  --size: 0.4vw;
+  --left-ini: -5vw;
+  --left-end: 4vw;
+  left: 33vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(28) {
   --size: 0.4vw;
   --left-ini: 4vw;
-  --left-end: 8vw;
-  left: 6vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -8s; }
+  --left-end: -4vw;
+  left: 45vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(29) {
-  --size: 0.4vw;
-  --left-ini: 6vw;
-  --left-end: 8vw;
-  left: 75vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(30) {
-  --size: 0.8vw;
-  --left-ini: -5vw;
-  --left-end: 0vw;
-  left: 31vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -3s; }
-
-.snowflake:nth-child(31) {
-  --size: 0.8vw;
-  --left-ini: 7vw;
-  --left-end: -8vw;
-  left: 91vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -7s; }
-
-.snowflake:nth-child(32) {
-  --size: 1.8vw;
-  --left-ini: -5vw;
-  --left-end: -5vw;
-  left: 66vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(33) {
   --size: 1.2vw;
   --left-ini: 8vw;
-  --left-end: -1vw;
-  left: 89vw;
+  --left-end: -4vw;
+  left: 40vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -1s;
+}
+
+.snowflake:nth-child(30) {
+  --size: 1.6vw;
+  --left-ini: -2vw;
+  --left-end: 4vw;
+  left: 30vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -4s;
+}
+
+.snowflake:nth-child(31) {
+  --size: 1.8vw;
+  --left-ini: 5vw;
+  --left-end: -6vw;
+  left: 1vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -3s;
+}
+
+.snowflake:nth-child(32) {
+  --size: 0.4vw;
+  --left-ini: -7vw;
+  --left-end: -9vw;
+  left: 46vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -1s;
+}
+
+.snowflake:nth-child(33) {
+  --size: 1.8vw;
+  --left-ini: -2vw;
+  --left-end: 5vw;
+  left: 37vw;
   animation: snowfall 8s linear infinite;
-  animation-delay: -5s; }
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(34) {
-  --size: 1.4vw;
-  --left-ini: -6vw;
-  --left-end: -9vw;
-  left: 19vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -5s; }
+  --size: 1.6vw;
+  --left-ini: 6vw;
+  --left-end: -1vw;
+  left: 27vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -8s;
+}
 
 .snowflake:nth-child(35) {
-  --size: 1vw;
-  --left-ini: -4vw;
-  --left-end: -6vw;
-  left: 4vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -1s; }
+  --size: 0.6vw;
+  --left-ini: 5vw;
+  --left-end: 9vw;
+  left: 34vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(36) {
-  --size: 1.8vw;
-  --left-ini: 7vw;
-  --left-end: 0vw;
-  left: 37vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -8s; }
+  --size: 0.2vw;
+  --left-ini: -8vw;
+  --left-end: -7vw;
+  left: 13vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(37) {
   --size: 1.4vw;
-  --left-ini: 8vw;
-  --left-end: -8vw;
-  left: 53vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: 6vw;
+  --left-end: 0vw;
+  left: 15vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(38) {
-  --size: 1.4vw;
-  --left-ini: 3vw;
-  --left-end: -4vw;
-  left: 41vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -3s; }
+  --size: 1vw;
+  --left-ini: -4vw;
+  --left-end: -5vw;
+  left: 86vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(39) {
-  --size: 1vw;
-  --left-ini: 2vw;
-  --left-end: 6vw;
-  left: 40vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -10s; }
+  --size: 1.8vw;
+  --left-ini: -8vw;
+  --left-end: -4vw;
+  left: 78vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -5s;
+}
 
 .snowflake:nth-child(40) {
-  --size: 1.6vw;
-  --left-ini: -1vw;
-  --left-end: 5vw;
-  left: 94vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -10s; }
+  --size: 2vw;
+  --left-ini: -9vw;
+  --left-end: 9vw;
+  left: 98vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(41) {
-  --size: 2vw;
-  --left-ini: -2vw;
+  --size: 1vw;
+  --left-ini: -4vw;
   --left-end: 10vw;
-  left: 28vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -6s; }
+  left: 92vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(42) {
-  --size: 2vw;
-  --left-ini: -6vw;
-  --left-end: 8vw;
-  left: 68vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -4s; }
+  --size: 0.2vw;
+  --left-ini: 3vw;
+  --left-end: -8vw;
+  left: 49vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(43) {
-  --size: 0.8vw;
-  --left-ini: -4vw;
-  --left-end: 2vw;
-  left: 69vw;
+  --size: 2vw;
+  --left-ini: -5vw;
+  --left-end: 1vw;
+  left: 78vw;
   animation: snowfall 13s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(44) {
-  --size: 1.6vw;
+  --size: 1.4vw;
   --left-ini: -2vw;
-  --left-end: -8vw;
-  left: 33vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -10s; }
+  --left-end: -7vw;
+  left: 50vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -3s;
+}
 
 .snowflake:nth-child(45) {
-  --size: 1vw;
-  --left-ini: 8vw;
-  --left-end: 2vw;
-  left: 90vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -6s; }
+  --size: 1.6vw;
+  --left-ini: -3vw;
+  --left-end: -5vw;
+  left: 96vw;
+  animation: snowfall 15s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(46) {
-  --size: 0.6vw;
-  --left-ini: -7vw;
-  --left-end: 7vw;
-  left: 92vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -7s; }
+  --size: 0.2vw;
+  --left-ini: 6vw;
+  --left-end: 0vw;
+  left: 12vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(47) {
-  --size: 1.2vw;
-  --left-ini: -5vw;
-  --left-end: 2vw;
-  left: 92vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -3s; }
+  --size: 2vw;
+  --left-ini: 6vw;
+  --left-end: 4vw;
+  left: 22vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -3s;
+}
 
 .snowflake:nth-child(48) {
-  --size: 0.6vw;
-  --left-ini: 2vw;
-  --left-end: 2vw;
-  left: 82vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -5s; }
+  --size: 1.8vw;
+  --left-ini: 4vw;
+  --left-end: 7vw;
+  left: 54vw;
+  animation: snowfall 15s linear infinite;
+  animation-delay: -8s;
+}
 
 .snowflake:nth-child(49) {
-  --size: 0.2vw;
-  --left-ini: 7vw;
-  --left-end: 6vw;
-  left: 38vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -2s; }
+  --size: 2vw;
+  --left-ini: -4vw;
+  --left-end: 3vw;
+  left: 58vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(50) {
-  --size: 1.2vw;
-  --left-ini: -4vw;
-  --left-end: -3vw;
-  left: 30vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -8s; }
+  --size: 0.8vw;
+  --left-ini: -8vw;
+  --left-end: 2vw;
+  left: 79vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(51) {
-  --size: 0.4vw;
-  --left-ini: 0vw;
-  --left-end: 6vw;
-  left: 56vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -6s; }
+  --size: 1.4vw;
+  --left-ini: 10vw;
+  --left-end: 4vw;
+  left: 17vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(52) {
-  --size: 2vw;
+  --size: 1.6vw;
   --left-ini: 5vw;
-  --left-end: -1vw;
-  left: 36vw;
+  --left-end: -5vw;
+  left: 57vw;
   animation: snowfall 6s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(53) {
-  --size: 1.8vw;
-  --left-ini: 6vw;
-  --left-end: 7vw;
-  left: 49vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -5s; }
+  --size: 0.6vw;
+  --left-ini: 0vw;
+  --left-end: 1vw;
+  left: 59vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(54) {
-  --size: 0.4vw;
-  --left-ini: -3vw;
-  --left-end: -5vw;
-  left: 97vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -6s; }
+  --size: 1.6vw;
+  --left-ini: 0vw;
+  --left-end: -7vw;
+  left: 16vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(55) {
-  --size: 1.4vw;
-  --left-ini: 10vw;
-  --left-end: 0vw;
-  left: 72vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -6s; }
+  --size: 0.8vw;
+  --left-ini: -9vw;
+  --left-end: 9vw;
+  left: 19vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(56) {
-  --size: 1vw;
-  --left-ini: 7vw;
-  --left-end: -5vw;
-  left: 8vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -10s; }
+  --size: 0.4vw;
+  --left-ini: 1vw;
+  --left-end: 3vw;
+  left: 33vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(57) {
-  --size: 0.8vw;
-  --left-ini: 1vw;
-  --left-end: -9vw;
-  left: 90vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -3s; }
+  --size: 1.8vw;
+  --left-ini: 2vw;
+  --left-end: 9vw;
+  left: 80vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(58) {
-  --size: 1.2vw;
-  --left-ini: 3vw;
-  --left-end: 4vw;
-  left: 67vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -3s; }
-
-.snowflake:nth-child(59) {
-  --size: 1.2vw;
-  --left-ini: 6vw;
-  --left-end: 9vw;
-  left: 72vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -3s; }
-
-.snowflake:nth-child(60) {
-  --size: 0.4vw;
-  --left-ini: -5vw;
-  --left-end: 1vw;
-  left: 93vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -5s; }
-
-.snowflake:nth-child(61) {
-  --size: 0.2vw;
-  --left-ini: 9vw;
-  --left-end: -8vw;
-  left: 25vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -9s; }
-
-.snowflake:nth-child(62) {
-  --size: 1.8vw;
-  --left-ini: 0vw;
-  --left-end: 1vw;
-  left: 13vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -7s; }
-
-.snowflake:nth-child(63) {
-  --size: 0.2vw;
-  --left-ini: 7vw;
-  --left-end: -7vw;
-  left: 18vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -4s; }
-
-.snowflake:nth-child(64) {
-  --size: 1vw;
-  --left-ini: -3vw;
-  --left-end: 2vw;
-  left: 41vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -8s; }
-
-.snowflake:nth-child(65) {
-  --size: 0.6vw;
-  --left-ini: 0vw;
-  --left-end: 2vw;
-  left: 81vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -4s; }
-
-.snowflake:nth-child(66) {
-  --size: 0.6vw;
-  --left-ini: 7vw;
-  --left-end: -1vw;
-  left: 33vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(67) {
-  --size: 1vw;
-  --left-ini: -1vw;
-  --left-end: -9vw;
-  left: 23vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -6s; }
-
-.snowflake:nth-child(68) {
-  --size: 1vw;
-  --left-ini: -2vw;
-  --left-end: 8vw;
-  left: 16vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -4s; }
-
-.snowflake:nth-child(69) {
   --size: 0.8vw;
   --left-ini: 10vw;
-  --left-end: 0vw;
-  left: 52vw;
+  --left-end: -5vw;
+  left: 41vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -9s;
+}
+
+.snowflake:nth-child(59) {
+  --size: 1vw;
+  --left-ini: 6vw;
+  --left-end: 6vw;
+  left: 69vw;
   animation: snowfall 8s linear infinite;
-  animation-delay: -3s; }
+  animation-delay: -8s;
+}
+
+.snowflake:nth-child(60) {
+  --size: 1vw;
+  --left-ini: 2vw;
+  --left-end: -2vw;
+  left: 66vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -7s;
+}
+
+.snowflake:nth-child(61) {
+  --size: 1.8vw;
+  --left-ini: -1vw;
+  --left-end: 1vw;
+  left: 72vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -8s;
+}
+
+.snowflake:nth-child(62) {
+  --size: 1.2vw;
+  --left-ini: 10vw;
+  --left-end: -6vw;
+  left: 69vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -4s;
+}
+
+.snowflake:nth-child(63) {
+  --size: 1vw;
+  --left-ini: 3vw;
+  --left-end: 1vw;
+  left: 54vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -3s;
+}
+
+.snowflake:nth-child(64) {
+  --size: 0.4vw;
+  --left-ini: -6vw;
+  --left-end: -5vw;
+  left: 96vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -2s;
+}
+
+.snowflake:nth-child(65) {
+  --size: 1.8vw;
+  --left-ini: -5vw;
+  --left-end: 2vw;
+  left: 36vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -9s;
+}
+
+.snowflake:nth-child(66) {
+  --size: 0.2vw;
+  --left-ini: -9vw;
+  --left-end: 0vw;
+  left: 81vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -3s;
+}
+
+.snowflake:nth-child(67) {
+  --size: 0.8vw;
+  --left-ini: 6vw;
+  --left-end: -2vw;
+  left: 91vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -1s;
+}
+
+.snowflake:nth-child(68) {
+  --size: 1.6vw;
+  --left-ini: 10vw;
+  --left-end: 6vw;
+  left: 44vw;
+  animation: snowfall 8s linear infinite;
+  animation-delay: -10s;
+}
+
+.snowflake:nth-child(69) {
+  --size: 0.2vw;
+  --left-ini: -5vw;
+  --left-end: 6vw;
+  left: 9vw;
+  animation: snowfall 9s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(70) {
-  --size: 1.4vw;
-  --left-ini: -7vw;
-  --left-end: 9vw;
+  --size: 0.4vw;
+  --left-ini: -3vw;
+  --left-end: -5vw;
   left: 33vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -10s; }
+  animation: snowfall 15s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(71) {
   --size: 0.4vw;
-  --left-ini: 1vw;
-  --left-end: -7vw;
-  left: 98vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -6s; }
+  --left-ini: -1vw;
+  --left-end: -2vw;
+  left: 55vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(72) {
-  --size: 0.6vw;
-  --left-ini: 9vw;
-  --left-end: -1vw;
-  left: 65vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -5s; }
+  --size: 1.4vw;
+  --left-ini: 0vw;
+  --left-end: 4vw;
+  left: 75vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(73) {
-  --size: 1vw;
-  --left-ini: 0vw;
-  --left-end: 10vw;
-  left: 83vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -4s; }
+  --size: 0.6vw;
+  --left-ini: -4vw;
+  --left-end: -4vw;
+  left: 77vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(74) {
-  --size: 1.2vw;
-  --left-ini: -2vw;
-  --left-end: 1vw;
-  left: 51vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -1s; }
+  --size: 1vw;
+  --left-ini: 8vw;
+  --left-end: 6vw;
+  left: 44vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -1s;
+}
 
 .snowflake:nth-child(75) {
-  --size: 2vw;
-  --left-ini: 6vw;
-  --left-end: 9vw;
-  left: 67vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -9s; }
+  --size: 1.6vw;
+  --left-ini: -2vw;
+  --left-end: -4vw;
+  left: 31vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(76) {
-  --size: 0.6vw;
-  --left-ini: 10vw;
-  --left-end: 3vw;
-  left: 65vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -1s; }
+  --size: 0.2vw;
+  --left-ini: -3vw;
+  --left-end: -3vw;
+  left: 41vw;
+  animation: snowfall 15s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(77) {
-  --size: 1.6vw;
-  --left-ini: 0vw;
-  --left-end: -4vw;
-  left: 89vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -8s; }
+  --size: 2vw;
+  --left-ini: -5vw;
+  --left-end: 8vw;
+  left: 91vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -6s;
+}
 
 .snowflake:nth-child(78) {
-  --size: 1.4vw;
-  --left-ini: -8vw;
-  --left-end: 6vw;
-  left: 10vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -5s; }
-
-.snowflake:nth-child(79) {
-  --size: 1.6vw;
-  --left-ini: -6vw;
-  --left-end: 6vw;
-  left: 9vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -8s; }
-
-.snowflake:nth-child(80) {
-  --size: 1vw;
-  --left-ini: -2vw;
-  --left-end: -1vw;
-  left: 31vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(81) {
   --size: 0.4vw;
   --left-ini: 6vw;
-  --left-end: 0vw;
-  left: 50vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -8s; }
-
-.snowflake:nth-child(82) {
-  --size: 2vw;
-  --left-ini: -7vw;
-  --left-end: -8vw;
-  left: 17vw;
-  animation: snowfall 8s linear infinite;
-  animation-delay: -3s; }
-
-.snowflake:nth-child(83) {
-  --size: 1.2vw;
-  --left-ini: -2vw;
-  --left-end: -9vw;
+  --left-end: -1vw;
   left: 74vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -2s; }
+  animation: snowfall 6s linear infinite;
+  animation-delay: -4s;
+}
 
-.snowflake:nth-child(84) {
-  --size: 1.6vw;
-  --left-ini: -8vw;
-  --left-end: 7vw;
-  left: 89vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -7s; }
-
-.snowflake:nth-child(85) {
-  --size: 0.6vw;
-  --left-ini: -4vw;
-  --left-end: 2vw;
-  left: 38vw;
-  animation: snowfall 7s linear infinite;
-  animation-delay: -5s; }
-
-.snowflake:nth-child(86) {
-  --size: 0.4vw;
-  --left-ini: -7vw;
-  --left-end: 5vw;
-  left: 38vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -2s; }
-
-.snowflake:nth-child(87) {
-  --size: 1.6vw;
-  --left-ini: -9vw;
-  --left-end: 5vw;
-  left: 69vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -8s; }
-
-.snowflake:nth-child(88) {
-  --size: 0.2vw;
-  --left-ini: 7vw;
-  --left-end: 3vw;
-  left: 95vw;
-  animation: snowfall 14s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(89) {
-  --size: 0.4vw;
-  --left-ini: -4vw;
-  --left-end: 5vw;
-  left: 87vw;
-  animation: snowfall 9s linear infinite;
-  animation-delay: -10s; }
-
-.snowflake:nth-child(90) {
+.snowflake:nth-child(79) {
   --size: 0.6vw;
   --left-ini: 4vw;
   --left-end: -6vw;
-  left: 58vw;
+  left: 51vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -2s;
+}
+
+.snowflake:nth-child(80) {
+  --size: 1.2vw;
+  --left-ini: -5vw;
+  --left-end: -1vw;
+  left: 42vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -10s;
+}
+
+.snowflake:nth-child(81) {
+  --size: 1.6vw;
+  --left-ini: -8vw;
+  --left-end: -3vw;
+  left: 55vw;
   animation: snowfall 6s linear infinite;
-  animation-delay: -9s; }
+  animation-delay: -5s;
+}
+
+.snowflake:nth-child(82) {
+  --size: 1.8vw;
+  --left-ini: 4vw;
+  --left-end: -3vw;
+  left: 46vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -2s;
+}
+
+.snowflake:nth-child(83) {
+  --size: 0.8vw;
+  --left-ini: -3vw;
+  --left-end: 9vw;
+  left: 91vw;
+  animation: snowfall 14s linear infinite;
+  animation-delay: -5s;
+}
+
+.snowflake:nth-child(84) {
+  --size: 2vw;
+  --left-ini: 8vw;
+  --left-end: 4vw;
+  left: 19vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -9s;
+}
+
+.snowflake:nth-child(85) {
+  --size: 0.8vw;
+  --left-ini: 9vw;
+  --left-end: 3vw;
+  left: 17vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -1s;
+}
+
+.snowflake:nth-child(86) {
+  --size: 1vw;
+  --left-ini: 1vw;
+  --left-end: 3vw;
+  left: 35vw;
+  animation: snowfall 10s linear infinite;
+  animation-delay: -2s;
+}
+
+.snowflake:nth-child(87) {
+  --size: 0.2vw;
+  --left-ini: 4vw;
+  --left-end: -2vw;
+  left: 87vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -6s;
+}
+
+.snowflake:nth-child(88) {
+  --size: 0.2vw;
+  --left-ini: 10vw;
+  --left-end: 9vw;
+  left: 93vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -4s;
+}
+
+.snowflake:nth-child(89) {
+  --size: 0.4vw;
+  --left-ini: 8vw;
+  --left-end: 0vw;
+  left: 99vw;
+  animation: snowfall 15s linear infinite;
+  animation-delay: -2s;
+}
+
+.snowflake:nth-child(90) {
+  --size: 0.4vw;
+  --left-ini: 5vw;
+  --left-end: -7vw;
+  left: 7vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -9s;
+}
 
 .snowflake:nth-child(91) {
-  --size: 1.2vw;
-  --left-ini: 5vw;
-  --left-end: 3vw;
-  left: 54vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -9s; }
+  --size: 0.2vw;
+  --left-ini: 6vw;
+  --left-end: -2vw;
+  left: 36vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -8s;
+}
 
 .snowflake:nth-child(92) {
-  --size: 1.8vw;
-  --left-ini: -3vw;
+  --size: 0.4vw;
+  --left-ini: -8vw;
   --left-end: 6vw;
-  left: 89vw;
-  animation: snowfall 11s linear infinite;
-  animation-delay: -3s; }
+  left: 30vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(93) {
-  --size: 2vw;
-  --left-ini: -9vw;
+  --size: 0.2vw;
+  --left-ini: -1vw;
   --left-end: -4vw;
-  left: 98vw;
-  animation: snowfall 12s linear infinite;
-  animation-delay: -8s; }
+  left: 74vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -8s;
+}
 
 .snowflake:nth-child(94) {
-  --size: 1.2vw;
-  --left-ini: -3vw;
-  --left-end: 2vw;
-  left: 31vw;
-  animation: snowfall 10s linear infinite;
-  animation-delay: -7s; }
+  --size: 0.8vw;
+  --left-ini: -4vw;
+  --left-end: 3vw;
+  left: 21vw;
+  animation: snowfall 13s linear infinite;
+  animation-delay: -7s;
+}
 
 .snowflake:nth-child(95) {
-  --size: 0.2vw;
-  --left-ini: -2vw;
-  --left-end: -7vw;
-  left: 51vw;
+  --size: 1vw;
+  --left-ini: -6vw;
+  --left-end: 5vw;
+  left: 50vw;
   animation: snowfall 7s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -7s;
+}
 
 .snowflake:nth-child(96) {
   --size: 1.4vw;
   --left-ini: -6vw;
-  --left-end: 4vw;
-  left: 48vw;
-  animation: snowfall 6s linear infinite;
-  animation-delay: -7s; }
+  --left-end: -1vw;
+  left: 46vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -10s;
+}
 
 .snowflake:nth-child(97) {
   --size: 1.2vw;
-  --left-ini: -8vw;
-  --left-end: -6vw;
-  left: 18vw;
-  animation: snowfall 15s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: -2vw;
+  --left-end: -3vw;
+  left: 95vw;
+  animation: snowfall 6s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(98) {
   --size: 0.2vw;
-  --left-ini: 0vw;
-  --left-end: 3vw;
-  left: 48vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -4s; }
+  --left-ini: -2vw;
+  --left-end: -6vw;
+  left: 35vw;
+  animation: snowfall 7s linear infinite;
+  animation-delay: -2s;
+}
 
 .snowflake:nth-child(99) {
-  --size: 0.8vw;
-  --left-ini: -6vw;
-  --left-end: -8vw;
-  left: 11vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -8s; }
+  --size: 0.6vw;
+  --left-ini: -7vw;
+  --left-end: -2vw;
+  left: 21vw;
+  animation: snowfall 12s linear infinite;
+  animation-delay: -4s;
+}
 
 .snowflake:nth-child(100) {
-  --size: 2vw;
-  --left-ini: 5vw;
-  --left-end: -9vw;
-  left: 47vw;
-  animation: snowfall 13s linear infinite;
-  animation-delay: -4s; }
+  --size: 0.2vw;
+  --left-ini: 6vw;
+  --left-end: -4vw;
+  left: 95vw;
+  animation: snowfall 11s linear infinite;
+  animation-delay: -10s;
+}
 
 /* added small blur every 6 snowflakes*/
 .snowflake:nth-child(6n) {
-  filter: blur(1px); }
+  filter: blur(1px);
+}
 
 .rainflake {
   --size: 2px;
@@ -1139,1368 +1317,1524 @@
   border-radius: 200% 200% 0 0;
   position: absolute;
   top: -5vh;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.6)); }
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.6));
+}
 
 @keyframes rainfall {
   0% {
-    transform: translate3d(var(--left-ini), 0, 0); }
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
   75% {
-    transform: translate3d(var(--left-ini), 100vh, 0); }
+    transform: translate3d(var(--left-ini), 100vh, 0);
+  }
   100% {
-    transform: translate3d(var(--left-end), 100vh, 0); } }
+    transform: translate3d(var(--left-end), 200vh, 0);
+  }
+}
 .rainflake:nth-child(1) {
-  --size: 0.2px;
+  --size: 0.4px;
   --hsize: 12px;
-  --left-ini: 0vw;
-  --left-end: 0vw;
-  left: 89vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: -3vw;
+  --left-end: -1vw;
+  left: 92vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(2) {
-  --size: 1.2px;
-  --hsize: 12px;
-  --left-ini: -4vw;
-  --left-end: -3vw;
-  left: 43vw;
+  --size: 0.6px;
+  --hsize: 36px;
+  --left-ini: -2vw;
+  --left-end: -6vw;
+  left: 13vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -10s;
+}
 
 .rainflake:nth-child(3) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: 0vw;
-  --left-end: -2vw;
-  left: 26vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
+  --size: 0.4px;
+  --hsize: 36px;
+  --left-ini: 2vw;
+  --left-end: 5vw;
+  left: 66vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(4) {
-  --size: 0.4px;
-  --hsize: 12px;
-  --left-ini: -7vw;
-  --left-end: -3vw;
-  left: 41vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -5s; }
+  --size: 2px;
+  --hsize: 36px;
+  --left-ini: -3vw;
+  --left-end: -4vw;
+  left: 82vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(5) {
-  --size: 1.2px;
+  --size: 1.8px;
   --hsize: 24px;
-  --left-ini: -6vw;
-  --left-end: -2vw;
-  left: 5vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: -2vw;
+  --left-end: -6vw;
+  left: 58vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(6) {
-  --size: 0.6px;
-  --hsize: 24px;
-  --left-ini: -4vw;
-  --left-end: 1vw;
-  left: 7vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -8s; }
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: 7vw;
+  --left-end: -6vw;
+  left: 3vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(7) {
-  --size: 1px;
+  --size: 1.6px;
   --hsize: 24px;
-  --left-ini: 9vw;
-  --left-end: 8vw;
-  left: 18vw;
+  --left-ini: 8vw;
+  --left-end: 7vw;
+  left: 11vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -2s; }
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(8) {
-  --size: 0.4px;
-  --hsize: 24px;
-  --left-ini: -9vw;
-  --left-end: 5vw;
-  left: 45vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -5s; }
+  --size: 1px;
+  --hsize: 36px;
+  --left-ini: 0vw;
+  --left-end: 7vw;
+  left: 85vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(9) {
-  --size: 1.8px;
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: 5vw;
+  --left-end: 7vw;
+  left: 19vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(10) {
+  --size: 1.4px;
+  --hsize: 36px;
+  --left-ini: -4vw;
+  --left-end: -6vw;
+  left: 52vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(11) {
+  --size: 0.6px;
+  --hsize: 12px;
+  --left-ini: 4vw;
+  --left-end: -3vw;
+  left: 51vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(12) {
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: -1vw;
+  --left-end: -4vw;
+  left: 63vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(13) {
+  --size: 2px;
+  --hsize: 12px;
+  --left-ini: 0vw;
+  --left-end: 1vw;
+  left: 8vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(14) {
+  --size: 0.4px;
+  --hsize: 12px;
+  --left-ini: 9vw;
+  --left-end: 9vw;
+  left: 40vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(15) {
+  --size: 1.4px;
   --hsize: 36px;
   --left-ini: -4vw;
   --left-end: 9vw;
-  left: 7vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -4s; }
-
-.rainflake:nth-child(10) {
-  --size: 0.2px;
-  --hsize: 12px;
-  --left-ini: -9vw;
-  --left-end: 3vw;
-  left: 75vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(11) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: 5vw;
-  --left-end: 1vw;
-  left: 98vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(12) {
-  --size: 1.8px;
-  --hsize: 24px;
-  --left-ini: -6vw;
-  --left-end: 5vw;
-  left: 86vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(13) {
-  --size: 0.4px;
-  --hsize: 12px;
-  --left-ini: 9vw;
-  --left-end: 4vw;
   left: 53vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(14) {
-  --size: 0.2px;
-  --hsize: 36px;
-  --left-ini: 2vw;
-  --left-end: -8vw;
-  left: 74vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(15) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: 6vw;
-  --left-end: 6vw;
-  left: 60vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -5s;
+}
 
 .rainflake:nth-child(16) {
-  --size: 2px;
+  --size: 0.2px;
   --hsize: 36px;
-  --left-ini: 2vw;
-  --left-end: 0vw;
-  left: 46vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -7s; }
+  --left-ini: 5vw;
+  --left-end: -8vw;
+  left: 55vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(17) {
-  --size: 1px;
+  --size: 0.4px;
   --hsize: 36px;
-  --left-ini: -2vw;
-  --left-end: 1vw;
-  left: 6vw;
+  --left-ini: -7vw;
+  --left-end: 7vw;
+  left: 32vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(18) {
   --size: 0.8px;
   --hsize: 12px;
-  --left-ini: 8vw;
-  --left-end: -1vw;
-  left: 50vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: -1vw;
+  --left-end: 4vw;
+  left: 42vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(19) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: 0vw;
-  --left-end: 2vw;
-  left: 98vw;
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: 10vw;
+  --left-end: 8vw;
+  left: 64vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -2s; }
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(20) {
-  --size: 1.6px;
-  --hsize: 36px;
-  --left-ini: -8vw;
-  --left-end: 6vw;
-  left: 18vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -5s; }
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: 9vw;
+  --left-end: -8vw;
+  left: 52vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(21) {
-  --size: 1.8px;
-  --hsize: 24px;
-  --left-ini: -4vw;
-  --left-end: 8vw;
-  left: 44vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
+  --size: 1.4px;
+  --hsize: 12px;
+  --left-ini: -8vw;
+  --left-end: -1vw;
+  left: 92vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(22) {
-  --size: 1.8px;
-  --hsize: 24px;
-  --left-ini: -7vw;
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: 8vw;
   --left-end: 8vw;
-  left: 34vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
+  left: 3vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(23) {
-  --size: 1.6px;
-  --hsize: 36px;
-  --left-ini: 2vw;
-  --left-end: 9vw;
-  left: 12vw;
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: 4vw;
+  --left-end: 5vw;
+  left: 10vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -10s; }
+  animation-delay: -5s;
+}
 
 .rainflake:nth-child(24) {
-  --size: 1.8px;
-  --hsize: 12px;
-  --left-ini: 3vw;
-  --left-end: -8vw;
-  left: 30vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(25) {
-  --size: 0.4px;
-  --hsize: 24px;
-  --left-ini: -8vw;
-  --left-end: 3vw;
-  left: 27vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(26) {
-  --size: 0.4px;
-  --hsize: 36px;
-  --left-ini: 10vw;
-  --left-end: -7vw;
-  left: 63vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(27) {
   --size: 1.4px;
   --hsize: 24px;
-  --left-ini: -2vw;
-  --left-end: 7vw;
-  left: 82vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(28) {
-  --size: 1.6px;
-  --hsize: 36px;
-  --left-ini: 4vw;
-  --left-end: 1vw;
-  left: 76vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(29) {
-  --size: 0.8px;
-  --hsize: 36px;
   --left-ini: 9vw;
-  --left-end: 4vw;
-  left: 40vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -2s; }
+  --left-end: 2vw;
+  left: 64vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -5s;
+}
 
-.rainflake:nth-child(30) {
+.rainflake:nth-child(25) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: 2vw;
+  --left-end: -4vw;
+  left: 39vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(26) {
   --size: 1.6px;
   --hsize: 24px;
-  --left-ini: -6vw;
-  --left-end: 10vw;
-  left: 74vw;
+  --left-ini: -4vw;
+  --left-end: -2vw;
+  left: 64vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -9s; }
+  animation-delay: -8s;
+}
 
-.rainflake:nth-child(31) {
+.rainflake:nth-child(27) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: -4vw;
+  --left-end: -1vw;
+  left: 22vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(28) {
   --size: 1.8px;
   --hsize: 36px;
   --left-ini: 1vw;
-  --left-end: -9vw;
-  left: 56vw;
+  --left-end: 6vw;
+  left: 67vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -6s; }
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(29) {
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: -4vw;
+  --left-end: -1vw;
+  left: 55vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(30) {
+  --size: 1.4px;
+  --hsize: 12px;
+  --left-ini: 6vw;
+  --left-end: 9vw;
+  left: 21vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(31) {
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: -1vw;
+  --left-end: -2vw;
+  left: 46vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(32) {
   --size: 1px;
   --hsize: 24px;
-  --left-ini: -5vw;
-  --left-end: 7vw;
-  left: 41vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
+  --left-ini: -7vw;
+  --left-end: -7vw;
+  left: 32vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(33) {
-  --size: 1px;
+  --size: 1.2px;
   --hsize: 36px;
-  --left-ini: 0vw;
-  --left-end: 5vw;
-  left: 16vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -3s; }
+  --left-ini: 2vw;
+  --left-end: -9vw;
+  left: 12vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(34) {
-  --size: 1.2px;
-  --hsize: 12px;
-  --left-ini: -7vw;
-  --left-end: -1vw;
-  left: 54vw;
+  --size: 1.4px;
+  --hsize: 36px;
+  --left-ini: 5vw;
+  --left-end: -2vw;
+  left: 97vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -3s; }
+  animation-delay: -5s;
+}
 
 .rainflake:nth-child(35) {
   --size: 1.6px;
-  --hsize: 24px;
+  --hsize: 12px;
   --left-ini: -6vw;
-  --left-end: -3vw;
-  left: 90vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
+  --left-end: 9vw;
+  left: 31vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(36) {
-  --size: 0.6px;
-  --hsize: 24px;
-  --left-ini: 6vw;
-  --left-end: -4vw;
-  left: 48vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(37) {
-  --size: 1.2px;
-  --hsize: 36px;
-  --left-ini: -9vw;
-  --left-end: 3vw;
-  left: 26vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(38) {
-  --size: 2px;
-  --hsize: 12px;
-  --left-ini: 5vw;
-  --left-end: -6vw;
-  left: 69vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -9s; }
-
-.rainflake:nth-child(39) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: -7vw;
-  --left-end: 0vw;
-  left: 57vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(40) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: 8vw;
-  --left-end: -6vw;
-  left: 81vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(41) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: 8vw;
-  --left-end: 5vw;
-  left: 53vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(42) {
   --size: 0.8px;
   --hsize: 12px;
-  --left-ini: 1vw;
-  --left-end: 5vw;
-  left: 36vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(43) {
-  --size: 0.6px;
-  --hsize: 36px;
-  --left-ini: -5vw;
-  --left-end: -1vw;
+  --left-ini: 4vw;
+  --left-end: 1vw;
   left: 96vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -2s; }
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -9s;
+}
 
-.rainflake:nth-child(44) {
+.rainflake:nth-child(37) {
   --size: 1.6px;
   --hsize: 24px;
-  --left-ini: -8vw;
+  --left-ini: -3vw;
   --left-end: 6vw;
-  left: 27vw;
+  left: 29vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -7s;
+}
 
-.rainflake:nth-child(45) {
+.rainflake:nth-child(38) {
+  --size: 1px;
+  --hsize: 24px;
+  --left-ini: 3vw;
+  --left-end: 0vw;
+  left: 99vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(39) {
+  --size: 1.8px;
+  --hsize: 36px;
+  --left-ini: 9vw;
+  --left-end: -1vw;
+  left: 72vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(40) {
   --size: 0.2px;
   --hsize: 24px;
-  --left-ini: 9vw;
-  --left-end: 6vw;
-  left: 20vw;
+  --left-ini: 7vw;
+  --left-end: 3vw;
+  left: 99vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(41) {
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: -5vw;
+  --left-end: 6vw;
+  left: 19vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(42) {
+  --size: 1.8px;
+  --hsize: 36px;
+  --left-ini: 6vw;
+  --left-end: 0vw;
+  left: 71vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(43) {
+  --size: 2px;
+  --hsize: 36px;
+  --left-ini: 3vw;
+  --left-end: -3vw;
+  left: 16vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(44) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: -9vw;
+  --left-end: -4vw;
+  left: 25vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(45) {
+  --size: 1px;
+  --hsize: 24px;
+  --left-ini: 6vw;
+  --left-end: -2vw;
+  left: 59vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(46) {
   --size: 0.2px;
-  --hsize: 36px;
-  --left-ini: -5vw;
-  --left-end: -4vw;
-  left: 89vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
+  --hsize: 24px;
+  --left-ini: -8vw;
+  --left-end: 9vw;
+  left: 50vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
 
 .rainflake:nth-child(47) {
-  --size: 1.6px;
-  --hsize: 36px;
-  --left-ini: -7vw;
-  --left-end: 4vw;
-  left: 15vw;
+  --size: 0.8px;
+  --hsize: 24px;
+  --left-ini: -4vw;
+  --left-end: -9vw;
+  left: 71vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -10s; }
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(48) {
-  --size: 1.8px;
-  --hsize: 12px;
-  --left-ini: 2vw;
-  --left-end: 3vw;
-  left: 47vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(49) {
-  --size: 1.4px;
-  --hsize: 36px;
-  --left-ini: 3vw;
-  --left-end: 8vw;
-  left: 56vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(50) {
   --size: 0.4px;
   --hsize: 36px;
+  --left-ini: -3vw;
+  --left-end: -9vw;
+  left: 56vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(49) {
+  --size: 0.8px;
+  --hsize: 24px;
+  --left-ini: -3vw;
+  --left-end: -2vw;
+  left: 77vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(50) {
+  --size: 1.8px;
+  --hsize: 12px;
   --left-ini: 8vw;
   --left-end: 5vw;
-  left: 22vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -7s; }
+  left: 88vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(51) {
-  --size: 0.6px;
-  --hsize: 24px;
-  --left-ini: -3vw;
-  --left-end: 8vw;
-  left: 49vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
+  --size: 1.8px;
+  --hsize: 12px;
+  --left-ini: 5vw;
+  --left-end: -8vw;
+  left: 90vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(52) {
-  --size: 0.8px;
-  --hsize: 12px;
-  --left-ini: -3vw;
-  --left-end: 2vw;
-  left: 13vw;
+  --size: 1.2px;
+  --hsize: 24px;
+  --left-ini: 6vw;
+  --left-end: -8vw;
+  left: 4vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -10s;
+}
 
 .rainflake:nth-child(53) {
-  --size: 1.4px;
-  --hsize: 24px;
-  --left-ini: -1vw;
-  --left-end: 9vw;
-  left: 3vw;
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: 0vw;
+  --left-end: 5vw;
+  left: 77vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(54) {
-  --size: 1.4px;
-  --hsize: 12px;
-  --left-ini: -3vw;
-  --left-end: 5vw;
-  left: 3vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
+  --size: 1.2px;
+  --hsize: 24px;
+  --left-ini: 10vw;
+  --left-end: -3vw;
+  left: 1vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(55) {
   --size: 0.2px;
-  --hsize: 24px;
-  --left-ini: -4vw;
-  --left-end: 7vw;
-  left: 41vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -6s; }
+  --hsize: 12px;
+  --left-ini: -9vw;
+  --left-end: 9vw;
+  left: 61vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(56) {
-  --size: 0.2px;
-  --hsize: 12px;
-  --left-ini: -3vw;
-  --left-end: -1vw;
-  left: 55vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(57) {
-  --size: 0.2px;
-  --hsize: 12px;
-  --left-ini: -9vw;
-  --left-end: -8vw;
-  left: 93vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(58) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: 1vw;
-  --left-end: -7vw;
-  left: 92vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(59) {
-  --size: 0.2px;
-  --hsize: 24px;
-  --left-ini: -1vw;
-  --left-end: 3vw;
-  left: 93vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(60) {
-  --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: 5vw;
-  --left-end: -8vw;
-  left: 24vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -7s; }
-
-.rainflake:nth-child(61) {
   --size: 0.6px;
   --hsize: 12px;
-  --left-ini: -9vw;
-  --left-end: 10vw;
-  left: 72vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
+  --left-ini: -7vw;
+  --left-end: 7vw;
+  left: 63vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(57) {
+  --size: 1.6px;
+  --hsize: 24px;
+  --left-ini: -6vw;
+  --left-end: 0vw;
+  left: 97vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(58) {
+  --size: 1.2px;
+  --hsize: 24px;
+  --left-ini: 9vw;
+  --left-end: 8vw;
+  left: 49vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(59) {
+  --size: 2px;
+  --hsize: 36px;
+  --left-ini: 2vw;
+  --left-end: -5vw;
+  left: 17vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(60) {
+  --size: 1.4px;
+  --hsize: 36px;
+  --left-ini: 8vw;
+  --left-end: -9vw;
+  left: 89vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(61) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: -3vw;
+  --left-end: 3vw;
+  left: 37vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(62) {
   --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: 10vw;
-  --left-end: -4vw;
-  left: 28vw;
+  --hsize: 36px;
+  --left-ini: 1vw;
+  --left-end: -7vw;
+  left: 87vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(63) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: 7vw;
-  --left-end: 3vw;
-  left: 41vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
+  --size: 1px;
+  --hsize: 12px;
+  --left-ini: -9vw;
+  --left-end: 7vw;
+  left: 37vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
 
 .rainflake:nth-child(64) {
-  --size: 0.2px;
-  --hsize: 36px;
-  --left-ini: 9vw;
-  --left-end: -8vw;
-  left: 15vw;
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: 1vw;
+  --left-end: -5vw;
+  left: 79vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(65) {
   --size: 2px;
-  --hsize: 12px;
-  --left-ini: 10vw;
-  --left-end: 10vw;
-  left: 98vw;
+  --hsize: 24px;
+  --left-ini: 4vw;
+  --left-end: 1vw;
+  left: 40vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(66) {
-  --size: 0.2px;
-  --hsize: 24px;
-  --left-ini: 7vw;
-  --left-end: 1vw;
-  left: 8vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(67) {
-  --size: 1.2px;
+  --size: 1px;
   --hsize: 24px;
   --left-ini: 3vw;
-  --left-end: -1vw;
-  left: 64vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
+  --left-end: -3vw;
+  left: 52vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(67) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: 0vw;
+  --left-end: 8vw;
+  left: 32vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(68) {
-  --size: 0.2px;
-  --hsize: 36px;
-  --left-ini: -2vw;
-  --left-end: 7vw;
-  left: 25vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
+  --size: 1.6px;
+  --hsize: 12px;
+  --left-ini: -1vw;
+  --left-end: 8vw;
+  left: 40vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(69) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: -8vw;
-  --left-end: -2vw;
-  left: 44vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -9s; }
+  --size: 1.4px;
+  --hsize: 24px;
+  --left-ini: -9vw;
+  --left-end: 1vw;
+  left: 46vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(70) {
   --size: 0.6px;
   --hsize: 12px;
-  --left-ini: -6vw;
-  --left-end: 7vw;
-  left: 55vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
+  --left-ini: 1vw;
+  --left-end: -5vw;
+  left: 27vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(71) {
-  --size: 1.4px;
-  --hsize: 36px;
-  --left-ini: 1vw;
-  --left-end: -7vw;
-  left: 14vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(72) {
-  --size: 0.8px;
-  --hsize: 12px;
-  --left-ini: 3vw;
-  --left-end: 10vw;
-  left: 61vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
-
-.rainflake:nth-child(73) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: -4vw;
-  --left-end: -8vw;
-  left: 5vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
-
-.rainflake:nth-child(74) {
-  --size: 0.8px;
-  --hsize: 12px;
-  --left-ini: -2vw;
-  --left-end: -5vw;
-  left: 90vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(75) {
   --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: 1vw;
-  --left-end: 6vw;
-  left: 18vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(76) {
-  --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: 8vw;
-  --left-end: 0vw;
-  left: 70vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(77) {
-  --size: 1.8px;
-  --hsize: 24px;
-  --left-ini: 5vw;
-  --left-end: -3vw;
-  left: 53vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(78) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: -2vw;
-  --left-end: -4vw;
-  left: 36vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -3s; }
-
-.rainflake:nth-child(79) {
-  --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: 3vw;
-  --left-end: -9vw;
-  left: 72vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(80) {
-  --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: -9vw;
-  --left-end: 1vw;
-  left: 83vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(81) {
-  --size: 1.8px;
-  --hsize: 24px;
-  --left-ini: 7vw;
-  --left-end: 8vw;
-  left: 74vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(82) {
-  --size: 1.4px;
   --hsize: 12px;
-  --left-ini: -7vw;
-  --left-end: 2vw;
-  left: 42vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -4s; }
-
-.rainflake:nth-child(83) {
-  --size: 1.2px;
-  --hsize: 36px;
   --left-ini: -8vw;
   --left-end: -5vw;
-  left: 7vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -4s; }
+  left: 74vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
 
-.rainflake:nth-child(84) {
+.rainflake:nth-child(72) {
+  --size: 1.4px;
+  --hsize: 36px;
+  --left-ini: -5vw;
+  --left-end: -3vw;
+  left: 36vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(73) {
+  --size: 1.6px;
+  --hsize: 36px;
+  --left-ini: -8vw;
+  --left-end: -1vw;
+  left: 37vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(74) {
+  --size: 0.6px;
+  --hsize: 12px;
+  --left-ini: 9vw;
+  --left-end: 8vw;
+  left: 63vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(75) {
+  --size: 0.2px;
+  --hsize: 24px;
+  --left-ini: 7vw;
+  --left-end: -1vw;
+  left: 46vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(76) {
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: -6vw;
+  --left-end: 6vw;
+  left: 67vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(77) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: 0vw;
+  --left-end: -3vw;
+  left: 88vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(78) {
+  --size: 2px;
+  --hsize: 36px;
+  --left-ini: -3vw;
+  --left-end: 10vw;
+  left: 48vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(79) {
+  --size: 1.4px;
+  --hsize: 24px;
+  --left-ini: 1vw;
+  --left-end: 2vw;
+  left: 53vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(80) {
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: -5vw;
+  --left-end: 4vw;
+  left: 92vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(81) {
   --size: 0.4px;
   --hsize: 24px;
-  --left-ini: -4vw;
-  --left-end: 2vw;
-  left: 14vw;
+  --left-ini: -5vw;
+  --left-end: 7vw;
+  left: 21vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(82) {
+  --size: 1px;
+  --hsize: 36px;
+  --left-ini: 1vw;
+  --left-end: 8vw;
+  left: 85vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(83) {
+  --size: 0.8px;
+  --hsize: 24px;
+  --left-ini: 0vw;
+  --left-end: -5vw;
+  left: 67vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(84) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: -8vw;
+  --left-end: 10vw;
+  left: 43vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(85) {
+  --size: 0.2px;
+  --hsize: 24px;
+  --left-ini: 9vw;
+  --left-end: 6vw;
+  left: 75vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -1s;
+}
+
+.rainflake:nth-child(86) {
+  --size: 2px;
+  --hsize: 12px;
+  --left-ini: 5vw;
+  --left-end: -9vw;
+  left: 80vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(87) {
   --size: 1.8px;
   --hsize: 24px;
   --left-ini: 9vw;
-  --left-end: -5vw;
-  left: 81vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(86) {
-  --size: 1px;
-  --hsize: 24px;
-  --left-ini: 7vw;
-  --left-end: 0vw;
-  left: 45vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(87) {
-  --size: 0.8px;
-  --hsize: 36px;
-  --left-ini: 0vw;
-  --left-end: 0vw;
-  left: 13vw;
+  --left-end: -7vw;
+  left: 55vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -7s;
+}
 
 .rainflake:nth-child(88) {
-  --size: 0.6px;
-  --hsize: 12px;
-  --left-ini: 7vw;
-  --left-end: -8vw;
-  left: 13vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -2s; }
+  --size: 2px;
+  --hsize: 24px;
+  --left-ini: -8vw;
+  --left-end: -6vw;
+  left: 32vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -3s;
+}
 
 .rainflake:nth-child(89) {
-  --size: 1.4px;
+  --size: 0.2px;
   --hsize: 24px;
-  --left-ini: 1vw;
-  --left-end: -5vw;
-  left: 67vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -7s; }
+  --left-ini: -3vw;
+  --left-end: -6vw;
+  left: 98vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(90) {
-  --size: 2px;
-  --hsize: 12px;
-  --left-ini: 2vw;
-  --left-end: 8vw;
-  left: 79vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(91) {
-  --size: 0.4px;
-  --hsize: 24px;
-  --left-ini: 3vw;
-  --left-end: 4vw;
-  left: 22vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -4s; }
-
-.rainflake:nth-child(92) {
-  --size: 1.2px;
-  --hsize: 36px;
-  --left-ini: 6vw;
-  --left-end: 3vw;
-  left: 15vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -4s; }
-
-.rainflake:nth-child(93) {
   --size: 1.6px;
   --hsize: 24px;
-  --left-ini: -5vw;
-  --left-end: 8vw;
-  left: 32vw;
+  --left-ini: -3vw;
+  --left-end: -2vw;
+  left: 75vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(91) {
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: 0vw;
+  --left-end: 6vw;
+  left: 42vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(92) {
+  --size: 1px;
+  --hsize: 24px;
+  --left-ini: 3vw;
+  --left-end: -4vw;
+  left: 64vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(93) {
+  --size: 0.2px;
+  --hsize: 24px;
+  --left-ini: 0vw;
+  --left-end: 1vw;
+  left: 52vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -3s;
+}
 
 .rainflake:nth-child(94) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: -1vw;
-  --left-end: -6vw;
-  left: 45vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
+  --size: 1.8px;
+  --hsize: 36px;
+  --left-ini: -8vw;
+  --left-end: 3vw;
+  left: 74vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(95) {
-  --size: 0.8px;
-  --hsize: 24px;
-  --left-ini: -4vw;
-  --left-end: -1vw;
-  left: 27vw;
+  --size: 1.2px;
+  --hsize: 36px;
+  --left-ini: -5vw;
+  --left-end: -2vw;
+  left: 23vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(96) {
-  --size: 1.4px;
-  --hsize: 36px;
-  --left-ini: -9vw;
-  --left-end: -7vw;
-  left: 52vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -7s; }
+  --size: 2px;
+  --hsize: 24px;
+  --left-ini: -1vw;
+  --left-end: -3vw;
+  left: 87vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(97) {
-  --size: 0.4px;
+  --size: 1.8px;
   --hsize: 24px;
-  --left-ini: 6vw;
+  --left-ini: -8vw;
   --left-end: 5vw;
-  left: 34vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
+  left: 11vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(98) {
   --size: 1px;
-  --hsize: 36px;
-  --left-ini: 3vw;
-  --left-end: -8vw;
-  left: 91vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -6s; }
+  --hsize: 24px;
+  --left-ini: -2vw;
+  --left-end: 5vw;
+  left: 64vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(99) {
-  --size: 0.2px;
-  --hsize: 12px;
-  --left-ini: -3vw;
-  --left-end: -7vw;
-  left: 41vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: -9vw;
+  --left-end: 6vw;
+  left: 76vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(100) {
-  --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: -3vw;
-  --left-end: 3vw;
-  left: 30vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -3s; }
+  --size: 0.4px;
+  --hsize: 36px;
+  --left-ini: -9vw;
+  --left-end: -9vw;
+  left: 92vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
 
 .rainflake:nth-child(101) {
   --size: 1.2px;
   --hsize: 24px;
-  --left-ini: 6vw;
-  --left-end: -8vw;
-  left: 10vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
+  --left-ini: 0vw;
+  --left-end: -4vw;
+  left: 3vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -3s;
+}
 
 .rainflake:nth-child(102) {
-  --size: 0.2px;
+  --size: 1.2px;
   --hsize: 36px;
-  --left-ini: 10vw;
-  --left-end: -8vw;
-  left: 48vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: 4vw;
+  --left-end: -6vw;
+  left: 32vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(103) {
-  --size: 1.4px;
+  --size: 0.2px;
   --hsize: 36px;
-  --left-ini: -5vw;
-  --left-end: -5vw;
-  left: 51vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -6s; }
+  --left-ini: 0vw;
+  --left-end: -7vw;
+  left: 23vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -2s;
+}
 
 .rainflake:nth-child(104) {
-  --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: -7vw;
-  --left-end: 4vw;
-  left: 99vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -2s; }
+  --size: 0.6px;
+  --hsize: 36px;
+  --left-ini: 0vw;
+  --left-end: 7vw;
+  left: 91vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(105) {
-  --size: 1.2px;
-  --hsize: 12px;
-  --left-ini: -5vw;
-  --left-end: -5vw;
-  left: 82vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
+  --size: 0.6px;
+  --hsize: 36px;
+  --left-ini: -6vw;
+  --left-end: 1vw;
+  left: 95vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -4s;
+}
 
 .rainflake:nth-child(106) {
-  --size: 0.2px;
-  --hsize: 24px;
+  --size: 1.2px;
+  --hsize: 36px;
   --left-ini: 6vw;
-  --left-end: 3vw;
+  --left-end: 6vw;
   left: 96vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(107) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: -8vw;
-  --left-end: 9vw;
-  left: 6vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(108) {
-  --size: 0.8px;
-  --hsize: 12px;
-  --left-ini: -6vw;
-  --left-end: 4vw;
-  left: 71vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(109) {
-  --size: 2px;
-  --hsize: 24px;
-  --left-ini: -2vw;
-  --left-end: -5vw;
-  left: 24vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(110) {
-  --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: -6vw;
-  --left-end: 10vw;
-  left: 74vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(111) {
   --size: 0.6px;
-  --hsize: 36px;
-  --left-ini: -2vw;
-  --left-end: 9vw;
-  left: 35vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -7s; }
-
-.rainflake:nth-child(112) {
-  --size: 1.8px;
-  --hsize: 12px;
-  --left-ini: -1vw;
-  --left-end: -5vw;
-  left: 92vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(113) {
-  --size: 1.2px;
-  --hsize: 12px;
-  --left-ini: 2vw;
-  --left-end: 2vw;
-  left: 12vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(114) {
-  --size: 0.4px;
-  --hsize: 36px;
-  --left-ini: 4vw;
-  --left-end: 6vw;
-  left: 50vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -9s; }
-
-.rainflake:nth-child(115) {
-  --size: 1.4px;
-  --hsize: 24px;
-  --left-ini: 9vw;
-  --left-end: -2vw;
-  left: 80vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(116) {
-  --size: 0.4px;
-  --hsize: 12px;
-  --left-ini: 4vw;
-  --left-end: -9vw;
-  left: 75vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(117) {
-  --size: 1.8px;
-  --hsize: 12px;
-  --left-ini: -9vw;
-  --left-end: 10vw;
-  left: 99vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(118) {
-  --size: 1.4px;
-  --hsize: 24px;
-  --left-ini: 9vw;
-  --left-end: -3vw;
-  left: 94vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(119) {
-  --size: 0.6px;
-  --hsize: 12px;
-  --left-ini: -1vw;
-  --left-end: 2vw;
-  left: 70vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(120) {
-  --size: 1.2px;
-  --hsize: 24px;
-  --left-ini: 0vw;
-  --left-end: 3vw;
-  left: 6vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -3s; }
-
-.rainflake:nth-child(121) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: 8vw;
-  --left-end: -6vw;
-  left: 39vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(122) {
-  --size: 0.8px;
-  --hsize: 24px;
-  --left-ini: -5vw;
-  --left-end: -2vw;
-  left: 23vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -9s; }
-
-.rainflake:nth-child(123) {
-  --size: 0.4px;
-  --hsize: 12px;
-  --left-ini: 10vw;
-  --left-end: -6vw;
-  left: 14vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -3s; }
-
-.rainflake:nth-child(124) {
-  --size: 1.8px;
-  --hsize: 36px;
-  --left-ini: 6vw;
-  --left-end: -2vw;
-  left: 61vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(125) {
-  --size: 0.8px;
-  --hsize: 12px;
-  --left-ini: -4vw;
-  --left-end: 8vw;
-  left: 82vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(126) {
-  --size: 0.4px;
-  --hsize: 36px;
-  --left-ini: -8vw;
-  --left-end: -5vw;
-  left: 7vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(127) {
-  --size: 1.8px;
-  --hsize: 12px;
-  --left-ini: -7vw;
-  --left-end: -9vw;
-  left: 97vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -9s; }
-
-.rainflake:nth-child(128) {
-  --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: 9vw;
-  --left-end: 3vw;
-  left: 28vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -5s; }
-
-.rainflake:nth-child(129) {
-  --size: 1.2px;
   --hsize: 24px;
   --left-ini: 7vw;
-  --left-end: 6vw;
-  left: 29vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(130) {
-  --size: 0.6px;
-  --hsize: 12px;
-  --left-ini: 1vw;
-  --left-end: 1vw;
-  left: 48vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(131) {
-  --size: 1.4px;
-  --hsize: 12px;
-  --left-ini: 4vw;
-  --left-end: 9vw;
-  left: 23vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -7s; }
-
-.rainflake:nth-child(132) {
-  --size: 1px;
-  --hsize: 12px;
-  --left-ini: 6vw;
-  --left-end: 6vw;
-  left: 39vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -8s; }
-
-.rainflake:nth-child(133) {
-  --size: 1.6px;
-  --hsize: 24px;
-  --left-ini: -8vw;
-  --left-end: 3vw;
-  left: 64vw;
+  --left-end: 4vw;
+  left: 20vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -3s; }
+  animation-delay: -5s;
+}
 
-.rainflake:nth-child(134) {
-  --size: 2px;
-  --hsize: 36px;
-  --left-ini: 8vw;
-  --left-end: -5vw;
-  left: 71vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
-
-.rainflake:nth-child(135) {
-  --size: 0.2px;
-  --hsize: 36px;
-  --left-ini: 2vw;
-  --left-end: -7vw;
-  left: 16vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(136) {
-  --size: 1.4px;
-  --hsize: 36px;
-  --left-ini: 4vw;
-  --left-end: -7vw;
-  left: 85vw;
+.rainflake:nth-child(108) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: -7vw;
+  --left-end: -2vw;
+  left: 56vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -8s;
+}
 
-.rainflake:nth-child(137) {
+.rainflake:nth-child(109) {
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: 7vw;
+  --left-end: -2vw;
+  left: 66vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(110) {
   --size: 2px;
   --hsize: 12px;
   --left-ini: -3vw;
-  --left-end: -1vw;
-  left: 2vw;
+  --left-end: -9vw;
+  left: 51vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(111) {
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: 7vw;
+  --left-end: 3vw;
+  left: 13vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -9s; }
+  animation-delay: -5s;
+}
 
-.rainflake:nth-child(138) {
-  --size: 1.2px;
-  --hsize: 12px;
-  --left-ini: 4vw;
-  --left-end: -6vw;
-  left: 38vw;
+.rainflake:nth-child(112) {
+  --size: 0.4px;
+  --hsize: 36px;
+  --left-ini: 3vw;
+  --left-end: 8vw;
+  left: 57vw;
   animation: rainfall 3.5s linear infinite;
-  animation-delay: -10s; }
+  animation-delay: -9s;
+}
 
-.rainflake:nth-child(139) {
+.rainflake:nth-child(113) {
+  --size: 2px;
+  --hsize: 12px;
+  --left-ini: 2vw;
+  --left-end: 3vw;
+  left: 55vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(114) {
+  --size: 0.4px;
+  --hsize: 12px;
+  --left-ini: 6vw;
+  --left-end: 9vw;
+  left: 68vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(115) {
+  --size: 1px;
+  --hsize: 12px;
+  --left-ini: 7vw;
+  --left-end: 9vw;
+  left: 36vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(116) {
+  --size: 1.8px;
+  --hsize: 36px;
+  --left-ini: 10vw;
+  --left-end: -6vw;
+  left: 6vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -1s;
+}
+
+.rainflake:nth-child(117) {
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: -4vw;
+  --left-end: -2vw;
+  left: 94vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(118) {
   --size: 1.8px;
   --hsize: 24px;
-  --left-ini: -7vw;
-  --left-end: 5vw;
-  left: 8vw;
+  --left-ini: 7vw;
+  --left-end: 10vw;
+  left: 14vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(119) {
+  --size: 2px;
+  --hsize: 36px;
+  --left-ini: 4vw;
+  --left-end: 6vw;
+  left: 42vw;
   animation: rainfall 2.5s linear infinite;
-  animation-delay: -6s; }
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(120) {
+  --size: 0.4px;
+  --hsize: 12px;
+  --left-ini: -3vw;
+  --left-end: 8vw;
+  left: 38vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(121) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: -1vw;
+  --left-end: -6vw;
+  left: 98vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(122) {
+  --size: 1.2px;
+  --hsize: 12px;
+  --left-ini: 8vw;
+  --left-end: 2vw;
+  left: 19vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(123) {
+  --size: 1px;
+  --hsize: 24px;
+  --left-ini: -2vw;
+  --left-end: 3vw;
+  left: 64vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(124) {
+  --size: 0.8px;
+  --hsize: 24px;
+  --left-ini: 6vw;
+  --left-end: 2vw;
+  left: 45vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(125) {
+  --size: 1.2px;
+  --hsize: 24px;
+  --left-ini: 10vw;
+  --left-end: 0vw;
+  left: 62vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -5s;
+}
+
+.rainflake:nth-child(126) {
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: -1vw;
+  --left-end: 1vw;
+  left: 49vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
+
+.rainflake:nth-child(127) {
+  --size: 1.8px;
+  --hsize: 36px;
+  --left-ini: 6vw;
+  --left-end: -2vw;
+  left: 98vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(128) {
+  --size: 0.6px;
+  --hsize: 24px;
+  --left-ini: 4vw;
+  --left-end: 3vw;
+  left: 70vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -4s;
+}
+
+.rainflake:nth-child(129) {
+  --size: 0.6px;
+  --hsize: 12px;
+  --left-ini: 4vw;
+  --left-end: 8vw;
+  left: 83vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(130) {
+  --size: 1.4px;
+  --hsize: 12px;
+  --left-ini: -9vw;
+  --left-end: -8vw;
+  left: 91vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -3s;
+}
+
+.rainflake:nth-child(131) {
+  --size: 1.2px;
+  --hsize: 36px;
+  --left-ini: 4vw;
+  --left-end: 2vw;
+  left: 42vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -8s;
+}
+
+.rainflake:nth-child(132) {
+  --size: 0.8px;
+  --hsize: 12px;
+  --left-ini: -2vw;
+  --left-end: 7vw;
+  left: 34vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(133) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: 9vw;
+  --left-end: -8vw;
+  left: 82vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(134) {
+  --size: 0.6px;
+  --hsize: 36px;
+  --left-ini: -4vw;
+  --left-end: 10vw;
+  left: 27vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(135) {
+  --size: 1.4px;
+  --hsize: 12px;
+  --left-ini: 9vw;
+  --left-end: 10vw;
+  left: 5vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(136) {
+  --size: 1px;
+  --hsize: 36px;
+  --left-ini: -1vw;
+  --left-end: -2vw;
+  left: 62vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(137) {
+  --size: 0.8px;
+  --hsize: 36px;
+  --left-ini: -8vw;
+  --left-end: 8vw;
+  left: 84vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -1s;
+}
+
+.rainflake:nth-child(138) {
+  --size: 0.2px;
+  --hsize: 12px;
+  --left-ini: -7vw;
+  --left-end: -1vw;
+  left: 21vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -7s;
+}
+
+.rainflake:nth-child(139) {
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: 10vw;
+  --left-end: 2vw;
+  left: 1vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(140) {
-  --size: 1.8px;
+  --size: 0.4px;
   --hsize: 12px;
-  --left-ini: 3vw;
-  --left-end: 7vw;
-  left: 94vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -8s; }
+  --left-ini: 4vw;
+  --left-end: 9vw;
+  left: 4vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -9s;
+}
 
 .rainflake:nth-child(141) {
   --size: 1px;
-  --hsize: 36px;
-  --left-ini: 6vw;
-  --left-end: -7vw;
-  left: 53vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -4s; }
+  --hsize: 24px;
+  --left-ini: -3vw;
+  --left-end: -1vw;
+  left: 12vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(142) {
+  --size: 0.4px;
+  --hsize: 36px;
+  --left-ini: 9vw;
+  --left-end: 2vw;
+  left: 67vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(143) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: 6vw;
+  --left-end: -2vw;
+  left: 44vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -6s;
+}
+
+.rainflake:nth-child(144) {
+  --size: 0.2px;
+  --hsize: 36px;
+  --left-ini: 1vw;
+  --left-end: -8vw;
+  left: 35vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -9s;
+}
+
+.rainflake:nth-child(145) {
+  --size: 1.8px;
+  --hsize: 24px;
+  --left-ini: 5vw;
+  --left-end: 8vw;
+  left: 9vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -2s;
+}
+
+.rainflake:nth-child(146) {
   --size: 0.6px;
   --hsize: 36px;
   --left-ini: 8vw;
-  --left-end: -8vw;
-  left: 27vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -1s; }
-
-.rainflake:nth-child(143) {
-  --size: 0.2px;
-  --hsize: 12px;
-  --left-ini: 5vw;
-  --left-end: -9vw;
-  left: 36vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -2s; }
-
-.rainflake:nth-child(144) {
-  --size: 2px;
-  --hsize: 36px;
-  --left-ini: 9vw;
   --left-end: 1vw;
   left: 3vw;
   animation: rainfall 1.5s linear infinite;
-  animation-delay: -6s; }
-
-.rainflake:nth-child(145) {
-  --size: 0.6px;
-  --hsize: 36px;
-  --left-ini: -9vw;
-  --left-end: 9vw;
-  left: 51vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -3s; }
-
-.rainflake:nth-child(146) {
-  --size: 0.2px;
-  --hsize: 24px;
-  --left-ini: 7vw;
-  --left-end: -9vw;
-  left: 13vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -8s;
+}
 
 .rainflake:nth-child(147) {
   --size: 0.4px;
   --hsize: 36px;
-  --left-ini: -7vw;
-  --left-end: -6vw;
-  left: 10vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -3s; }
+  --left-ini: -5vw;
+  --left-end: 1vw;
+  left: 85vw;
+  animation: rainfall 3.5s linear infinite;
+  animation-delay: -1s;
+}
 
 .rainflake:nth-child(148) {
-  --size: 1.4px;
-  --hsize: 36px;
-  --left-ini: 8vw;
-  --left-end: -3vw;
-  left: 87vw;
-  animation: rainfall 1.5s linear infinite;
-  animation-delay: -4s; }
+  --size: 2px;
+  --hsize: 24px;
+  --left-ini: 0vw;
+  --left-end: 2vw;
+  left: 33vw;
+  animation: rainfall 2.5s linear infinite;
+  animation-delay: -10s;
+}
 
 .rainflake:nth-child(149) {
-  --size: 1.4px;
-  --hsize: 24px;
-  --left-ini: 2vw;
-  --left-end: -8vw;
-  left: 29vw;
-  animation: rainfall 2.5s linear infinite;
-  animation-delay: -9s; }
+  --size: 0.8px;
+  --hsize: 36px;
+  --left-ini: -1vw;
+  --left-end: -7vw;
+  left: 27vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -10s;
+}
 
 .rainflake:nth-child(150) {
-  --size: 1.6px;
+  --size: 0.4px;
   --hsize: 36px;
-  --left-ini: 3vw;
-  --left-end: -8vw;
-  left: 20vw;
-  animation: rainfall 3.5s linear infinite;
-  animation-delay: -9s; }
+  --left-ini: 1vw;
+  --left-end: -4vw;
+  left: 26vw;
+  animation: rainfall 1.5s linear infinite;
+  animation-delay: -8s;
+}
 
 /* added small blur every 6 rainflakes*/
 .rainflake:nth-child(6n) {
-  filter: blur(1px); }
+  filter: blur(1px);
+}
 
 .leafflake {
   --size: 3vw;
@@ -2508,988 +2842,1117 @@
   height: var(--size);
   position: absolute;
   top: -5vh;
-  background-image: linear-gradient(135deg, #e07f7e, #ebbbbe);
-  border-radius: var(--radius); }
+  background-image: linear-gradient(135deg, rgb(224, 127, 126), rgb(235, 187, 190));
+  border-radius: var(--radius);
+}
 
 @keyframes leaffall {
   0% {
-    transform: translate3d(var(--left-ini), 0, 0); }
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
   100% {
-    transform: translate3d(var(--left-end), 100vh, 0); } }
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
 .leafflake:nth-child(1) {
-  --size: 1.2vw;
+  --size: 3vw;
   --radius: 100px 0px;
-  --left-ini: -4vw;
-  --left-end: 5vw;
-  left: 8vw;
+  --left-ini: 10vw;
+  --left-end: -4vw;
+  left: 65vw;
   animation: leaffall 6s linear infinite;
-  animation-delay: -10s; }
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(2) {
   --size: 2.8vw;
   --radius: 0px 100px;
-  --left-ini: 7vw;
-  --left-end: 4vw;
-  left: 81vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: 4vw;
+  --left-end: -1vw;
+  left: 61vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -8s;
+}
 
 .leafflake:nth-child(3) {
-  --size: 1.4vw;
+  --size: 1.6vw;
   --radius: 100px 0px;
-  --left-ini: 2vw;
-  --left-end: -2vw;
-  left: 53vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -4s; }
+  --left-ini: 8vw;
+  --left-end: 3vw;
+  left: 34vw;
+  animation: leaffall 13s linear infinite;
+  animation-delay: -1s;
+}
 
 .leafflake:nth-child(4) {
-  --size: 2.6vw;
+  --size: 2.4vw;
   --radius: 0px 100px;
-  --left-ini: 0vw;
-  --left-end: 2vw;
-  left: 69vw;
-  animation: leaffall 9s linear infinite;
-  animation-delay: -1s; }
+  --left-ini: 3vw;
+  --left-end: 5vw;
+  left: 81vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(5) {
-  --size: 1.2vw;
+  --size: 2vw;
   --radius: 100px 0px;
-  --left-ini: 1vw;
-  --left-end: -8vw;
-  left: 42vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -1s; }
+  --left-ini: -9vw;
+  --left-end: 2vw;
+  left: 86vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(6) {
-  --size: 1.8vw;
+  --size: 2vw;
   --radius: 0px 100px;
   --left-ini: 2vw;
-  --left-end: -6vw;
-  left: 69vw;
+  --left-end: -9vw;
+  left: 85vw;
   animation: leaffall 6s linear infinite;
-  animation-delay: -9s; }
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(7) {
   --size: 2vw;
   --radius: 100px 0px;
-  --left-ini: 1vw;
-  --left-end: 6vw;
-  left: 11vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -9s; }
+  --left-ini: -7vw;
+  --left-end: -2vw;
+  left: 41vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -10s;
+}
 
 .leafflake:nth-child(8) {
-  --size: 3vw;
+  --size: 1.8vw;
   --radius: 0px 100px;
-  --left-ini: 1vw;
-  --left-end: 8vw;
-  left: 80vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -7s; }
+  --left-ini: 2vw;
+  --left-end: 6vw;
+  left: 40vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -5s;
+}
 
 .leafflake:nth-child(9) {
-  --size: 2vw;
+  --size: 2.8vw;
   --radius: 100px 0px;
   --left-ini: 3vw;
-  --left-end: -2vw;
-  left: 9vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -5s; }
+  --left-end: 8vw;
+  left: 16vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -4s;
+}
 
 .leafflake:nth-child(10) {
-  --size: 2.2vw;
+  --size: 1.8vw;
   --radius: 0px 100px;
-  --left-ini: -3vw;
-  --left-end: 8vw;
+  --left-ini: -7vw;
+  --left-end: 7vw;
   left: 27vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -3s; }
+  animation: leaffall 15s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(11) {
-  --size: 2.4vw;
+  --size: 2.2vw;
   --radius: 100px 0px;
-  --left-ini: -2vw;
-  --left-end: 9vw;
-  left: 5vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -6s; }
+  --left-ini: 5vw;
+  --left-end: -6vw;
+  left: 66vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -7s;
+}
 
 .leafflake:nth-child(12) {
-  --size: 1.4vw;
+  --size: 2.8vw;
   --radius: 0px 100px;
   --left-ini: 0vw;
-  --left-end: 6vw;
-  left: 51vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -9s; }
+  --left-end: 1vw;
+  left: 80vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(13) {
-  --size: 2.6vw;
+  --size: 1.2vw;
   --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: 9vw;
-  left: 67vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 9vw;
+  --left-end: 0vw;
+  left: 44vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(14) {
-  --size: 1.4vw;
-  --radius: 0px 100px;
-  --left-ini: -8vw;
-  --left-end: 9vw;
-  left: 6vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -5s; }
-
-.leafflake:nth-child(15) {
-  --size: 1.6vw;
-  --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: -6vw;
-  left: 8vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(16) {
-  --size: 1.2vw;
-  --radius: 0px 100px;
-  --left-ini: -8vw;
-  --left-end: -9vw;
-  left: 59vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(17) {
-  --size: 1.2vw;
-  --radius: 100px 0px;
-  --left-ini: -1vw;
-  --left-end: 6vw;
-  left: 12vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(18) {
-  --size: 3vw;
-  --radius: 0px 100px;
-  --left-ini: -8vw;
-  --left-end: 10vw;
-  left: 26vw;
-  animation: leaffall 6s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(19) {
-  --size: 1.8vw;
-  --radius: 100px 0px;
-  --left-ini: 10vw;
-  --left-end: 8vw;
-  left: 31vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(20) {
-  --size: 1.4vw;
-  --radius: 0px 100px;
-  --left-ini: -8vw;
-  --left-end: -8vw;
-  left: 11vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(21) {
-  --size: 2.4vw;
-  --radius: 100px 0px;
-  --left-ini: 6vw;
-  --left-end: 6vw;
-  left: 54vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(22) {
   --size: 2.6vw;
-  --radius: 0px 100px;
-  --left-ini: 5vw;
-  --left-end: -2vw;
-  left: 24vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(23) {
-  --size: 1.6vw;
-  --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: 5vw;
-  left: 47vw;
-  animation: leaffall 9s linear infinite;
-  animation-delay: -4s; }
-
-.leafflake:nth-child(24) {
-  --size: 2.4vw;
-  --radius: 0px 100px;
-  --left-ini: 5vw;
-  --left-end: 2vw;
-  left: 86vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(25) {
-  --size: 2vw;
-  --radius: 100px 0px;
-  --left-ini: 10vw;
-  --left-end: -4vw;
-  left: 42vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(26) {
-  --size: 1.8vw;
-  --radius: 0px 100px;
-  --left-ini: 0vw;
-  --left-end: 4vw;
-  left: 65vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -5s; }
-
-.leafflake:nth-child(27) {
-  --size: 1.2vw;
-  --radius: 100px 0px;
-  --left-ini: -8vw;
-  --left-end: 8vw;
-  left: 57vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(28) {
-  --size: 2vw;
-  --radius: 0px 100px;
-  --left-ini: -7vw;
-  --left-end: 5vw;
-  left: 3vw;
-  animation: leaffall 6s linear infinite;
-  animation-delay: -6s; }
-
-.leafflake:nth-child(29) {
-  --size: 1.4vw;
-  --radius: 100px 0px;
-  --left-ini: -7vw;
-  --left-end: -8vw;
-  left: 61vw;
-  animation: leaffall 9s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(30) {
-  --size: 1.6vw;
-  --radius: 0px 100px;
-  --left-ini: -6vw;
-  --left-end: -1vw;
-  left: 100vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(31) {
-  --size: 2vw;
-  --radius: 100px 0px;
-  --left-ini: -3vw;
-  --left-end: 3vw;
-  left: 92vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -1s; }
-
-.leafflake:nth-child(32) {
-  --size: 2.4vw;
-  --radius: 0px 100px;
-  --left-ini: -7vw;
-  --left-end: -8vw;
-  left: 7vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -1s; }
-
-.leafflake:nth-child(33) {
-  --size: 2.8vw;
-  --radius: 100px 0px;
-  --left-ini: 2vw;
-  --left-end: 7vw;
-  left: 95vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(34) {
-  --size: 1.2vw;
-  --radius: 0px 100px;
-  --left-ini: -6vw;
-  --left-end: -9vw;
-  left: 37vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(35) {
-  --size: 2.8vw;
-  --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: -4vw;
-  left: 45vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -6s; }
-
-.leafflake:nth-child(36) {
-  --size: 2.6vw;
-  --radius: 0px 100px;
-  --left-ini: 10vw;
-  --left-end: 5vw;
-  left: 10vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -10s; }
-
-.leafflake:nth-child(37) {
-  --size: 3vw;
-  --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: -9vw;
-  left: 40vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(38) {
-  --size: 1.2vw;
-  --radius: 0px 100px;
-  --left-ini: 5vw;
-  --left-end: -2vw;
-  left: 36vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(39) {
-  --size: 2.4vw;
-  --radius: 100px 0px;
-  --left-ini: 3vw;
-  --left-end: 6vw;
-  left: 41vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(40) {
-  --size: 3vw;
   --radius: 0px 100px;
   --left-ini: 7vw;
   --left-end: -5vw;
-  left: 69vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -8s; }
+  left: 5vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -3s;
+}
 
-.leafflake:nth-child(41) {
+.leafflake:nth-child(15) {
+  --size: 1.4vw;
+  --radius: 100px 0px;
+  --left-ini: -1vw;
+  --left-end: -5vw;
+  left: 24vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -9s;
+}
+
+.leafflake:nth-child(16) {
+  --size: 1.8vw;
+  --radius: 0px 100px;
+  --left-ini: 4vw;
+  --left-end: 3vw;
+  left: 54vw;
+  animation: leaffall 12s linear infinite;
+  animation-delay: -7s;
+}
+
+.leafflake:nth-child(17) {
+  --size: 2.2vw;
+  --radius: 100px 0px;
+  --left-ini: -5vw;
+  --left-end: 6vw;
+  left: 67vw;
+  animation: leaffall 12s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(18) {
+  --size: 2.8vw;
+  --radius: 0px 100px;
+  --left-ini: 5vw;
+  --left-end: 4vw;
+  left: 66vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -2s;
+}
+
+.leafflake:nth-child(19) {
+  --size: 2.6vw;
+  --radius: 100px 0px;
+  --left-ini: 9vw;
+  --left-end: 7vw;
+  left: 17vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(20) {
+  --size: 2.4vw;
+  --radius: 0px 100px;
+  --left-ini: 6vw;
+  --left-end: -1vw;
+  left: 64vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(21) {
   --size: 2.8vw;
   --radius: 100px 0px;
-  --left-ini: 7vw;
+  --left-ini: -7vw;
+  --left-end: -5vw;
+  left: 73vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(22) {
+  --size: 3vw;
+  --radius: 0px 100px;
+  --left-ini: 4vw;
+  --left-end: -2vw;
+  left: 84vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(23) {
+  --size: 3vw;
+  --radius: 100px 0px;
+  --left-ini: -4vw;
+  --left-end: 5vw;
+  left: 66vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -9s;
+}
+
+.leafflake:nth-child(24) {
+  --size: 2.6vw;
+  --radius: 0px 100px;
+  --left-ini: -6vw;
   --left-end: 9vw;
-  left: 34vw;
+  left: 99vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -8s;
+}
+
+.leafflake:nth-child(25) {
+  --size: 1.8vw;
+  --radius: 100px 0px;
+  --left-ini: 0vw;
+  --left-end: 2vw;
+  left: 29vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(26) {
+  --size: 2.4vw;
+  --radius: 0px 100px;
+  --left-ini: -7vw;
+  --left-end: 6vw;
+  left: 20vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -2s;
+}
+
+.leafflake:nth-child(27) {
+  --size: 3vw;
+  --radius: 100px 0px;
+  --left-ini: -5vw;
+  --left-end: -2vw;
+  left: 56vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -7s;
+}
+
+.leafflake:nth-child(28) {
+  --size: 1.8vw;
+  --radius: 0px 100px;
+  --left-ini: 3vw;
+  --left-end: -5vw;
+  left: 88vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -9s;
+}
+
+.leafflake:nth-child(29) {
+  --size: 2.2vw;
+  --radius: 100px 0px;
+  --left-ini: 3vw;
+  --left-end: -2vw;
+  left: 2vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -7s;
+}
+
+.leafflake:nth-child(30) {
+  --size: 1.4vw;
+  --radius: 0px 100px;
+  --left-ini: -9vw;
+  --left-end: -5vw;
+  left: 75vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(31) {
+  --size: 3vw;
+  --radius: 100px 0px;
+  --left-ini: -2vw;
+  --left-end: 0vw;
+  left: 26vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(32) {
+  --size: 2.2vw;
+  --radius: 0px 100px;
+  --left-ini: 10vw;
+  --left-end: -3vw;
+  left: 73vw;
   animation: leaffall 7s linear infinite;
-  animation-delay: -3s; }
+  animation-delay: -6s;
+}
+
+.leafflake:nth-child(33) {
+  --size: 1.6vw;
+  --radius: 100px 0px;
+  --left-ini: 9vw;
+  --left-end: -7vw;
+  left: 38vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -5s;
+}
+
+.leafflake:nth-child(34) {
+  --size: 1.6vw;
+  --radius: 0px 100px;
+  --left-ini: -6vw;
+  --left-end: -2vw;
+  left: 16vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -9s;
+}
+
+.leafflake:nth-child(35) {
+  --size: 1.6vw;
+  --radius: 100px 0px;
+  --left-ini: 3vw;
+  --left-end: -8vw;
+  left: 93vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(36) {
+  --size: 3vw;
+  --radius: 0px 100px;
+  --left-ini: 10vw;
+  --left-end: -9vw;
+  left: 50vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -7s;
+}
+
+.leafflake:nth-child(37) {
+  --size: 1.8vw;
+  --radius: 100px 0px;
+  --left-ini: 9vw;
+  --left-end: 10vw;
+  left: 47vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -2s;
+}
+
+.leafflake:nth-child(38) {
+  --size: 1.4vw;
+  --radius: 0px 100px;
+  --left-ini: -1vw;
+  --left-end: 9vw;
+  left: 1vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(39) {
+  --size: 2.6vw;
+  --radius: 100px 0px;
+  --left-ini: 6vw;
+  --left-end: 5vw;
+  left: 37vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -5s;
+}
+
+.leafflake:nth-child(40) {
+  --size: 2.4vw;
+  --radius: 0px 100px;
+  --left-ini: -9vw;
+  --left-end: 2vw;
+  left: 15vw;
+  animation: leaffall 12s linear infinite;
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(41) {
+  --size: 1.2vw;
+  --radius: 100px 0px;
+  --left-ini: 0vw;
+  --left-end: 1vw;
+  left: 54vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(42) {
   --size: 1.8vw;
   --radius: 0px 100px;
-  --left-ini: -5vw;
-  --left-end: -9vw;
-  left: 82vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(43) {
-  --size: 1.6vw;
-  --radius: 100px 0px;
-  --left-ini: 8vw;
-  --left-end: 10vw;
+  --left-ini: 1vw;
+  --left-end: -8vw;
   left: 24vw;
   animation: leaffall 9s linear infinite;
-  animation-delay: -1s; }
+  animation-delay: -7s;
+}
 
-.leafflake:nth-child(44) {
-  --size: 2.2vw;
-  --radius: 0px 100px;
-  --left-ini: -7vw;
-  --left-end: 0vw;
-  left: 2vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(45) {
+.leafflake:nth-child(43) {
   --size: 2.2vw;
   --radius: 100px 0px;
+  --left-ini: -9vw;
+  --left-end: -2vw;
+  left: 44vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -5s;
+}
+
+.leafflake:nth-child(44) {
+  --size: 2.4vw;
+  --radius: 0px 100px;
   --left-ini: 3vw;
-  --left-end: 0vw;
-  left: 7vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -2s; }
+  --left-end: -3vw;
+  left: 78vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(45) {
+  --size: 1.6vw;
+  --radius: 100px 0px;
+  --left-ini: 5vw;
+  --left-end: 8vw;
+  left: 67vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(46) {
   --size: 1.6vw;
   --radius: 0px 100px;
-  --left-ini: 3vw;
-  --left-end: 3vw;
-  left: 96vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -6s; }
+  --left-ini: -6vw;
+  --left-end: -9vw;
+  left: 64vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(47) {
-  --size: 2.8vw;
-  --radius: 100px 0px;
-  --left-ini: 1vw;
-  --left-end: 3vw;
-  left: 58vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -6s; }
-
-.leafflake:nth-child(48) {
-  --size: 2.2vw;
-  --radius: 0px 100px;
-  --left-ini: 7vw;
-  --left-end: -4vw;
-  left: 74vw;
-  animation: leaffall 6s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(49) {
-  --size: 2.2vw;
-  --radius: 100px 0px;
-  --left-ini: 2vw;
-  --left-end: -7vw;
-  left: 11vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -6s; }
-
-.leafflake:nth-child(50) {
-  --size: 2.6vw;
-  --radius: 0px 100px;
-  --left-ini: 2vw;
-  --left-end: -3vw;
-  left: 68vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(51) {
-  --size: 2.8vw;
-  --radius: 100px 0px;
-  --left-ini: 7vw;
-  --left-end: 1vw;
-  left: 89vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(52) {
   --size: 2.4vw;
-  --radius: 0px 100px;
-  --left-ini: 2vw;
-  --left-end: 3vw;
-  left: 74vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(53) {
-  --size: 1.4vw;
-  --radius: 100px 0px;
-  --left-ini: 8vw;
-  --left-end: -4vw;
-  left: 64vw;
-  animation: leaffall 9s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(54) {
-  --size: 2.2vw;
-  --radius: 0px 100px;
-  --left-ini: 10vw;
-  --left-end: -8vw;
-  left: 1vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(55) {
-  --size: 1.8vw;
   --radius: 100px 0px;
   --left-ini: 0vw;
-  --left-end: 2vw;
-  left: 10vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -9s; }
+  --left-end: -1vw;
+  left: 1vw;
+  animation: leaffall 13s linear infinite;
+  animation-delay: -4s;
+}
 
-.leafflake:nth-child(56) {
-  --size: 2.6vw;
+.leafflake:nth-child(48) {
+  --size: 1.2vw;
   --radius: 0px 100px;
   --left-ini: 7vw;
-  --left-end: 2vw;
-  left: 29vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -1s; }
-
-.leafflake:nth-child(57) {
-  --size: 2.2vw;
-  --radius: 100px 0px;
-  --left-ini: 1vw;
-  --left-end: -8vw;
-  left: 54vw;
+  --left-end: -7vw;
+  left: 58vw;
   animation: leaffall 7s linear infinite;
-  animation-delay: -3s; }
+  animation-delay: -7s;
+}
 
-.leafflake:nth-child(58) {
-  --size: 2.2vw;
+.leafflake:nth-child(49) {
+  --size: 2.6vw;
+  --radius: 100px 0px;
+  --left-ini: -9vw;
+  --left-end: 5vw;
+  left: 87vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(50) {
+  --size: 1.2vw;
   --radius: 0px 100px;
   --left-ini: 2vw;
-  --left-end: 4vw;
-  left: 13vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(59) {
-  --size: 2.2vw;
-  --radius: 100px 0px;
-  --left-ini: 6vw;
-  --left-end: 0vw;
-  left: 57vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(60) {
-  --size: 2.4vw;
-  --radius: 0px 100px;
-  --left-ini: -9vw;
-  --left-end: 1vw;
-  left: 18vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -10s; }
-
-.leafflake:nth-child(61) {
-  --size: 2vw;
-  --radius: 100px 0px;
-  --left-ini: -2vw;
   --left-end: -6vw;
-  left: 87vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(62) {
-  --size: 2.2vw;
-  --radius: 0px 100px;
-  --left-ini: -1vw;
-  --left-end: 10vw;
-  left: 15vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(63) {
-  --size: 2vw;
-  --radius: 100px 0px;
-  --left-ini: 4vw;
-  --left-end: -3vw;
-  left: 87vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(64) {
-  --size: 3vw;
-  --radius: 0px 100px;
-  --left-ini: -8vw;
-  --left-end: -7vw;
   left: 16vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -10s; }
+  animation: leaffall 13s linear infinite;
+  animation-delay: -10s;
+}
 
-.leafflake:nth-child(65) {
-  --size: 2.4vw;
-  --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: -2vw;
-  left: 92vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -10s; }
-
-.leafflake:nth-child(66) {
-  --size: 2vw;
-  --radius: 0px 100px;
-  --left-ini: -5vw;
-  --left-end: -9vw;
-  left: 26vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(67) {
+.leafflake:nth-child(51) {
   --size: 1.4vw;
   --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: -8vw;
-  left: 73vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -7s; }
+  --left-ini: -9vw;
+  --left-end: 7vw;
+  left: 20vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -10s;
+}
 
-.leafflake:nth-child(68) {
-  --size: 2.6vw;
+.leafflake:nth-child(52) {
+  --size: 1.4vw;
   --radius: 0px 100px;
-  --left-ini: 8vw;
-  --left-end: 0vw;
-  left: 70vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -5s; }
+  --left-ini: -6vw;
+  --left-end: -7vw;
+  left: 50vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -2s;
+}
 
-.leafflake:nth-child(69) {
-  --size: 3vw;
+.leafflake:nth-child(53) {
+  --size: 1.8vw;
   --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: -9vw;
-  left: 38vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: -7vw;
+  --left-end: 8vw;
+  left: 67vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -1s;
+}
 
-.leafflake:nth-child(70) {
-  --size: 2.6vw;
+.leafflake:nth-child(54) {
+  --size: 2.4vw;
   --radius: 0px 100px;
   --left-ini: 1vw;
-  --left-end: 5vw;
-  left: 88vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(71) {
-  --size: 1.2vw;
-  --radius: 100px 0px;
-  --left-ini: 10vw;
   --left-end: -5vw;
-  left: 73vw;
+  left: 1vw;
   animation: leaffall 7s linear infinite;
-  animation-delay: -8s; }
+  animation-delay: -1s;
+}
 
-.leafflake:nth-child(72) {
-  --size: 2.8vw;
+.leafflake:nth-child(55) {
+  --size: 2.2vw;
+  --radius: 100px 0px;
+  --left-ini: -3vw;
+  --left-end: 2vw;
+  left: 72vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(56) {
+  --size: 3vw;
+  --radius: 0px 100px;
+  --left-ini: 1vw;
+  --left-end: -3vw;
+  left: 38vw;
+  animation: leaffall 13s linear infinite;
+  animation-delay: -2s;
+}
+
+.leafflake:nth-child(57) {
+  --size: 1.8vw;
+  --radius: 100px 0px;
+  --left-ini: 6vw;
+  --left-end: 2vw;
+  left: 73vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -5s;
+}
+
+.leafflake:nth-child(58) {
+  --size: 1.6vw;
   --radius: 0px 100px;
   --left-ini: -5vw;
+  --left-end: -9vw;
+  left: 35vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(59) {
+  --size: 2.4vw;
+  --radius: 100px 0px;
+  --left-ini: -8vw;
   --left-end: -3vw;
-  left: 21vw;
+  left: 77vw;
   animation: leaffall 6s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(60) {
+  --size: 1.6vw;
+  --radius: 0px 100px;
+  --left-ini: -9vw;
+  --left-end: 3vw;
+  left: 86vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(61) {
+  --size: 2.4vw;
+  --radius: 100px 0px;
+  --left-ini: -7vw;
+  --left-end: 0vw;
+  left: 46vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(62) {
+  --size: 1.2vw;
+  --radius: 0px 100px;
+  --left-ini: 4vw;
+  --left-end: -9vw;
+  left: 17vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -6s;
+}
+
+.leafflake:nth-child(63) {
+  --size: 2.4vw;
+  --radius: 100px 0px;
+  --left-ini: 4vw;
+  --left-end: -7vw;
+  left: 2vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(64) {
+  --size: 1.4vw;
+  --radius: 0px 100px;
+  --left-ini: -5vw;
+  --left-end: -4vw;
+  left: 18vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(65) {
+  --size: 2.2vw;
+  --radius: 100px 0px;
+  --left-ini: 9vw;
+  --left-end: 7vw;
+  left: 17vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(66) {
+  --size: 2.6vw;
+  --radius: 0px 100px;
+  --left-ini: -7vw;
+  --left-end: 5vw;
+  left: 57vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -3s;
+}
+
+.leafflake:nth-child(67) {
+  --size: 1.2vw;
+  --radius: 100px 0px;
+  --left-ini: -6vw;
+  --left-end: 0vw;
+  left: 49vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -2s;
+}
+
+.leafflake:nth-child(68) {
+  --size: 2.2vw;
+  --radius: 0px 100px;
+  --left-ini: 1vw;
+  --left-end: -7vw;
+  left: 12vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(69) {
+  --size: 1.4vw;
+  --radius: 100px 0px;
+  --left-ini: -8vw;
+  --left-end: 2vw;
+  left: 62vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(70) {
+  --size: 2.8vw;
+  --radius: 0px 100px;
+  --left-ini: -8vw;
+  --left-end: -5vw;
+  left: 92vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -8s;
+}
+
+.leafflake:nth-child(71) {
+  --size: 2vw;
+  --radius: 100px 0px;
+  --left-ini: -9vw;
+  --left-end: 6vw;
+  left: 66vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(72) {
+  --size: 2.6vw;
+  --radius: 0px 100px;
+  --left-ini: -6vw;
+  --left-end: 6vw;
+  left: 43vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -1s;
+}
 
 .leafflake:nth-child(73) {
   --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: -1vw;
-  left: 26vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -5s; }
+  --left-ini: -2vw;
+  --left-end: -9vw;
+  left: 65vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -8s;
+}
 
 .leafflake:nth-child(74) {
-  --size: 2.6vw;
+  --size: 1.2vw;
   --radius: 0px 100px;
-  --left-ini: 3vw;
-  --left-end: -9vw;
-  left: 37vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 9vw;
+  --left-end: -3vw;
+  left: 2vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(75) {
   --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: 6vw;
-  --left-end: 9vw;
-  left: 70vw;
+  --left-ini: 3vw;
+  --left-end: 1vw;
+  left: 41vw;
   animation: leaffall 8s linear infinite;
-  animation-delay: -7s; }
+  animation-delay: -6s;
+}
 
 .leafflake:nth-child(76) {
-  --size: 2vw;
+  --size: 1.6vw;
   --radius: 0px 100px;
-  --left-ini: 8vw;
-  --left-end: -5vw;
-  left: 40vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -8s; }
+  --left-ini: 9vw;
+  --left-end: 5vw;
+  left: 52vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -2s;
+}
 
 .leafflake:nth-child(77) {
-  --size: 2.4vw;
+  --size: 1.2vw;
   --radius: 100px 0px;
-  --left-ini: 1vw;
-  --left-end: 2vw;
-  left: 75vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 9vw;
+  --left-end: -3vw;
+  left: 62vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
 
 .leafflake:nth-child(78) {
-  --size: 2vw;
-  --radius: 0px 100px;
-  --left-ini: 8vw;
-  --left-end: 8vw;
-  left: 80vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -5s; }
-
-.leafflake:nth-child(79) {
-  --size: 2.4vw;
-  --radius: 100px 0px;
-  --left-ini: 6vw;
-  --left-end: 3vw;
-  left: 66vw;
-  animation: leaffall 11s linear infinite;
-  animation-delay: -7s; }
-
-.leafflake:nth-child(80) {
-  --size: 1.2vw;
-  --radius: 0px 100px;
-  --left-ini: 6vw;
-  --left-end: 1vw;
-  left: 55vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -8s; }
-
-.leafflake:nth-child(81) {
-  --size: 2.4vw;
-  --radius: 100px 0px;
-  --left-ini: -2vw;
-  --left-end: -7vw;
-  left: 79vw;
-  animation: leaffall 6s linear infinite;
-  animation-delay: -5s; }
-
-.leafflake:nth-child(82) {
-  --size: 3vw;
-  --radius: 0px 100px;
-  --left-ini: -5vw;
-  --left-end: 4vw;
-  left: 25vw;
-  animation: leaffall 9s linear infinite;
-  animation-delay: -1s; }
-
-.leafflake:nth-child(83) {
-  --size: 1.4vw;
-  --radius: 100px 0px;
-  --left-ini: 3vw;
-  --left-end: -4vw;
-  left: 72vw;
-  animation: leaffall 12s linear infinite;
-  animation-delay: -3s; }
-
-.leafflake:nth-child(84) {
   --size: 2.2vw;
   --radius: 0px 100px;
-  --left-ini: 6vw;
-  --left-end: -9vw;
-  left: 40vw;
+  --left-ini: -2vw;
+  --left-end: 8vw;
+  left: 45vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -1s;
+}
+
+.leafflake:nth-child(79) {
+  --size: 2.2vw;
+  --radius: 100px 0px;
+  --left-ini: 10vw;
+  --left-end: 2vw;
+  left: 32vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -6s;
+}
+
+.leafflake:nth-child(80) {
+  --size: 2.2vw;
+  --radius: 0px 100px;
+  --left-ini: 3vw;
+  --left-end: -1vw;
+  left: 5vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(81) {
+  --size: 2.6vw;
+  --radius: 100px 0px;
+  --left-ini: -9vw;
+  --left-end: 8vw;
+  left: 69vw;
+  animation: leaffall 15s linear infinite;
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(82) {
+  --size: 1.8vw;
+  --radius: 0px 100px;
+  --left-ini: 4vw;
+  --left-end: 9vw;
+  left: 91vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(83) {
+  --size: 2.6vw;
+  --radius: 100px 0px;
+  --left-ini: -3vw;
+  --left-end: 0vw;
+  left: 60vw;
   animation: leaffall 7s linear infinite;
-  animation-delay: -4s; }
+  animation-delay: -7s;
+}
+
+.leafflake:nth-child(84) {
+  --size: 2.6vw;
+  --radius: 0px 100px;
+  --left-ini: 0vw;
+  --left-end: 7vw;
+  left: 38vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(85) {
-  --size: 3vw;
+  --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: -6vw;
-  --left-end: 9vw;
-  left: 76vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -9s; }
+  --left-ini: -5vw;
+  --left-end: 5vw;
+  left: 87vw;
+  animation: leaffall 9s linear infinite;
+  animation-delay: -6s;
+}
 
 .leafflake:nth-child(86) {
-  --size: 1.4vw;
+  --size: 2vw;
   --radius: 0px 100px;
-  --left-ini: 7vw;
-  --left-end: 3vw;
-  left: 80vw;
-  animation: leaffall 13s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 1vw;
+  --left-end: 5vw;
+  left: 100vw;
+  animation: leaffall 12s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(87) {
-  --size: 1.4vw;
+  --size: 2.2vw;
   --radius: 100px 0px;
-  --left-ini: 4vw;
-  --left-end: 3vw;
-  left: 13vw;
-  animation: leaffall 6s linear infinite;
-  animation-delay: -5s; }
+  --left-ini: 5vw;
+  --left-end: -9vw;
+  left: 99vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
 
 .leafflake:nth-child(88) {
   --size: 1.2vw;
   --radius: 0px 100px;
-  --left-ini: 6vw;
-  --left-end: -5vw;
-  left: 33vw;
+  --left-ini: -6vw;
+  --left-end: 6vw;
+  left: 70vw;
   animation: leaffall 13s linear infinite;
-  animation-delay: -7s; }
+  animation-delay: -3s;
+}
 
 .leafflake:nth-child(89) {
-  --size: 2.2vw;
+  --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: 9vw;
-  --left-end: -1vw;
-  left: 6vw;
+  --left-ini: -8vw;
+  --left-end: 9vw;
+  left: 91vw;
   animation: leaffall 14s linear infinite;
-  animation-delay: -5s; }
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(90) {
-  --size: 2vw;
+  --size: 2.8vw;
   --radius: 0px 100px;
-  --left-ini: -4vw;
+  --left-ini: -7vw;
   --left-end: -2vw;
-  left: 56vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -1s; }
+  left: 89vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
 
 .leafflake:nth-child(91) {
-  --size: 1.4vw;
+  --size: 2.6vw;
   --radius: 100px 0px;
-  --left-ini: 9vw;
-  --left-end: 0vw;
-  left: 31vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -10s; }
+  --left-ini: -5vw;
+  --left-end: 6vw;
+  left: 85vw;
+  animation: leaffall 11s linear infinite;
+  animation-delay: -7s;
+}
 
 .leafflake:nth-child(92) {
-  --size: 2.4vw;
+  --size: 1.6vw;
   --radius: 0px 100px;
-  --left-ini: -1vw;
-  --left-end: 7vw;
-  left: 84vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -2s; }
+  --left-ini: 3vw;
+  --left-end: -2vw;
+  left: 85vw;
+  animation: leaffall 10s linear infinite;
+  animation-delay: -9s;
+}
 
 .leafflake:nth-child(93) {
   --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: -2vw;
-  left: 32vw;
-  animation: leaffall 15s linear infinite;
-  animation-delay: -4s; }
+  --left-ini: 9vw;
+  --left-end: -1vw;
+  left: 2vw;
+  animation: leaffall 13s linear infinite;
+  animation-delay: -10s;
+}
 
 .leafflake:nth-child(94) {
-  --size: 3vw;
-  --radius: 0px 100px;
-  --left-ini: -4vw;
-  --left-end: 7vw;
-  left: 83vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -9s; }
-
-.leafflake:nth-child(95) {
-  --size: 1.4vw;
-  --radius: 100px 0px;
-  --left-ini: 0vw;
-  --left-end: -5vw;
-  left: 93vw;
-  animation: leaffall 14s linear infinite;
-  animation-delay: -2s; }
-
-.leafflake:nth-child(96) {
-  --size: 2vw;
-  --radius: 0px 100px;
-  --left-ini: 7vw;
-  --left-end: -6vw;
-  left: 96vw;
-  animation: leaffall 10s linear infinite;
-  animation-delay: -10s; }
-
-.leafflake:nth-child(97) {
-  --size: 3vw;
-  --radius: 100px 0px;
-  --left-ini: -1vw;
-  --left-end: 4vw;
-  left: 15vw;
-  animation: leaffall 7s linear infinite;
-  animation-delay: -10s; }
-
-.leafflake:nth-child(98) {
   --size: 1.6vw;
   --radius: 0px 100px;
-  --left-ini: -2vw;
-  --left-end: 4vw;
-  left: 76vw;
+  --left-ini: 0vw;
+  --left-end: 3vw;
+  left: 85vw;
+  animation: leaffall 14s linear infinite;
+  animation-delay: -10s;
+}
+
+.leafflake:nth-child(95) {
+  --size: 1.6vw;
+  --radius: 100px 0px;
+  --left-ini: 2vw;
+  --left-end: 10vw;
+  left: 88vw;
+  animation: leaffall 7s linear infinite;
+  animation-delay: -4s;
+}
+
+.leafflake:nth-child(96) {
+  --size: 2.4vw;
+  --radius: 0px 100px;
+  --left-ini: 2vw;
+  --left-end: -4vw;
+  left: 31vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -8s;
+}
+
+.leafflake:nth-child(97) {
+  --size: 1.2vw;
+  --radius: 100px 0px;
+  --left-ini: 3vw;
+  --left-end: -9vw;
+  left: 32vw;
+  animation: leaffall 8s linear infinite;
+  animation-delay: -8s;
+}
+
+.leafflake:nth-child(98) {
+  --size: 2.8vw;
+  --radius: 0px 100px;
+  --left-ini: -5vw;
+  --left-end: -5vw;
+  left: 80vw;
   animation: leaffall 11s linear infinite;
-  animation-delay: -9s; }
+  animation-delay: -3s;
+}
 
 .leafflake:nth-child(99) {
-  --size: 1.8vw;
+  --size: 2.4vw;
   --radius: 100px 0px;
-  --left-ini: -5vw;
-  --left-end: 7vw;
-  left: 77vw;
+  --left-ini: 8vw;
+  --left-end: 3vw;
+  left: 37vw;
   animation: leaffall 6s linear infinite;
-  animation-delay: -2s; }
+  animation-delay: -5s;
+}
 
 .leafflake:nth-child(100) {
-  --size: 1.8vw;
+  --size: 2.4vw;
   --radius: 0px 100px;
-  --left-ini: 4vw;
-  --left-end: 1vw;
-  left: 15vw;
-  animation: leaffall 8s linear infinite;
-  animation-delay: -8s; }
+  --left-ini: -4vw;
+  --left-end: 5vw;
+  left: 11vw;
+  animation: leaffall 6s linear infinite;
+  animation-delay: -6s;
+}
 
 /* added small blur every 6 leafflakes*/
 .leafflake:nth-child(6n) {
-  filter: blur(1px); }
+  filter: blur(1px);
+}
 
 .game-start-button {
   color: white !important;
-  background: linear-gradient(90deg, #4fc730, #19b04e) !important; }
-  .game-start-button.running {
-    background: linear-gradient(90deg, #3a9aec, #235ece) !important; }
+  background: linear-gradient(90deg, #4fc730, #19b04e) !important;
+}
+.game-start-button.running {
+  background: linear-gradient(90deg, #3a9aec, #235ece) !important;
+}
 
 .home-TUIKit-main {
-  height: 100% !important; }
+  height: 100% !important;
+}
 
 .message-input-container ::-webkit-scrollbar {
-  display: none; }
+  display: none;
+}
 
 .home-TUIKit-main .main {
-  position: relative; }
+  position: relative;
+}
 .home-TUIKit-main .collapse {
-  visibility: visible; }
+  visibility: visible;
+}
 
 .TUI-conversation {
-  background: transparent !important; }
-  .TUI-conversation .content-footer .time {
-    color: var(--secondary-text) !important; }
+  background: transparent !important;
+}
+.TUI-conversation .content-footer .time {
+  color: var(--secondary-text) !important;
+}
 
 .TUI-conversation-item .left .avatar {
-  object-fit: cover; }
+  object-fit: cover;
+}
 .TUI-conversation-item .name {
-  color: var(--primary-text) !important; }
+  color: var(--primary-text) !important;
+}
 
 .memberList-box img {
-  height: auto !important; }
+  height: auto !important;
+}
 
 .chat h1 {
-  color: var(--main-text); }
+  color: var(--main-text);
+}
 
 .TUI-search header h1 {
-  color: var(--primary-text) !important; }
+  color: var(--primary-text) !important;
+}
 
 .conversation {
-  border-right-color: var(--secondary-bg) !important; }
+  border-right-color: var(--secondary-bg) !important;
+}
 
 .TUIChat-footer {
-  border-top-color: var(--secondary-bg) !important; }
+  border-top-color: var(--secondary-bg) !important;
+}
 
 .TUIChat-header h1 {
-  color: var(--parimary-text) !important; }
+  color: var(--parimary-text) !important;
+}
 
 body {
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .s-bg {
   background: var(--primary-bg);
   backdrop-filter: blur(var(--suspensiondBackGroundBlur, 50px));
-  box-shadow: var(--suspensiondBackGroundBoxShadow, 0px 0px 10px 0px rgba(0, 0, 0, 0.5)); }
+  box-shadow: var(--suspensiondBackGroundBoxShadow, 0px 0px 10px 0px rgba(0, 0, 0, 0.5));
+}
 
 .s-text {
-  text-shadow: 0 3px 6px #000000; }
+  text-shadow: 0 3px 6px #000000;
+}
 
 .s-icon svg {
-  filter: drop-shadow(0 3px 6px #000000); }
+  filter: drop-shadow(0 3px 6px #000000);
+}
 
 .s-select-bg {
-  background: var(--suspensionSelectBackGround, rgba(255, 255, 255, 0.1)); }
+  background: var(--suspensionSelectBackGround, rgba(255, 255, 255, 0.1));
+}
 
 .s-item {
-  background: var(--suspensionItemBackGround, rgba(0, 0, 0, 0.3)); }
+  background: var(--suspensionItemBackGround, rgba(0, 0, 0, 0.3));
+}
 
 .bottom-panel .item {
-  background: transparent !important; }
+  background: transparent !important;
+}
 
 .video-container {
-  z-index: -100; }
+  z-index: -100;
+}
 
 .video-container:before {
   content: "";
@@ -3501,12 +3964,14 @@ body {
   top: 0;
   left: 0;
   background: rgba(25, 29, 34, 0.65);
-  background-size: cover; }
+  background-size: cover;
+}
 
 .fullscreen-video {
   width: 100%;
   height: 100%;
-  object-fit: cover; }
+  object-fit: cover;
+}
 
 .common-panel {
   list-style: none;
@@ -3514,53 +3979,64 @@ body {
   margin: 10px;
   padding-left: 0;
   padding-bottom: 5px;
-  padding-top: 5px; }
-  .common-panel .icon {
-    display: inline-block;
-    width: 2em;
-    height: 2em; }
-  .common-panel .item {
-    width: 4em;
-    cursor: pointer;
-    padding: 10px;
-    height: 4em;
-    display: inline-block;
-    text-align: center;
-    border-radius: 6px;
-    font-size: 1.2em; }
-  .common-panel .title {
-    font-size: 0.6em; }
+  padding-top: 5px;
+}
+.common-panel .icon {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+}
+.common-panel .item {
+  width: 4em;
+  cursor: pointer;
+  padding: 10px;
+  height: 4em;
+  display: inline-block;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 1.2em;
+}
+.common-panel .title {
+  font-size: 0.6em;
+}
 
 .card-list-icon {
   width: 20px;
-  height: 20px; }
+  height: 20px;
+}
 
 .drag {
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+}
 
 .no-drag {
-  -webkit-app-region: no-drag; }
+  -webkit-app-region: no-drag;
+}
 
 .middle-button {
   width: 120px;
   height: 48px;
-  border-radius: 12px; }
+  border-radius: 12px;
+}
 
 .small-button {
   width: 56px;
   height: 56px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.65); }
+  background: rgba(0, 0, 0, 0.65);
+}
 
 .big-button {
   width: 120px;
   height: 56px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.65); }
+  background: rgba(0, 0, 0, 0.65);
+}
 
 .home-blur {
   background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px); }
+  backdrop-filter: blur(8px);
+}
 
 .key-button {
   border: 1px solid #c1c1c1;
@@ -3568,12 +4044,14 @@ body {
   display: inline-block;
   height: 1.8em;
   line-height: 1.8em;
-  font-size: .8em;
+  font-size: 0.8em;
   width: 1.8em;
-  background: linear-gradient(to right, #ececec, white, #e5e5e5); }
+  background: linear-gradient(to right, #ececec, white, #e5e5e5);
+}
 
 body {
-  user-select: none; }
+  user-select: none;
+}
 
 .round-dot {
   left: 12px;
@@ -3582,85 +4060,110 @@ body {
   height: 10px;
   opacity: 1;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.85); }
+  background: rgba(255, 255, 255, 0.85);
+}
 
 .main {
   position: fixed;
   bottom: 0;
   top: 0;
   left: 0;
-  right: 0; }
+  right: 0;
+}
 
 .btn.sm {
-  padding: 0.4em 0.8em; }
+  padding: 0.4em 0.8em;
+}
 
 .btn {
   cursor: pointer;
   padding: 0.8em;
   background: var(--suspensionItemBackGround, rgba(0, 0, 0, 0.3));
   display: inline-block;
-  border-radius: 0.5em; }
-  .btn:hover, .btn:active {
-    background: rgba(0, 0, 0, 0.2);
-    color: white; }
+  border-radius: 0.5em;
+}
+.btn:hover, .btn:active {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
 
 .text-btn {
   cursor: pointer;
   padding: 0.8em;
   background: rgba(0, 0, 0, 0.3);
   display: inline-block;
-  border-radius: 0.5em; }
-  .text-btn:hover {
-    background: rgba(0, 0, 0, 0.2);
-    color: white; }
+  border-radius: 0.5em;
+}
+.text-btn:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
 
 .pointer {
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .playing {
   animation: rotate 30s linear infinite;
-  -webkit-animation: rotate 30s linear infinite; }
+  -webkit-animation: rotate 30s linear infinite;
+}
 
 .replace-it {
-  animation: rotate .5s linear infinite;
-  -webkit-animation: rotate .5s linear infinite; }
+  animation: rotate 0.5s linear infinite;
+  -webkit-animation: rotate 0.5s linear infinite;
+}
 
 @keyframes rotate {
   0% {
-    transform: rotate(0); }
+    transform: rotate(0);
+  }
   25% {
-    transform: rotate(90deg); }
+    transform: rotate(90deg);
+  }
   50% {
-    transform: rotate(180deg); }
+    transform: rotate(180deg);
+  }
   75% {
-    transform: rotate(270deg); }
+    transform: rotate(270deg);
+  }
   100% {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
 @-webkit-keyframes rotate {
   0% {
-    transform: rotate(0); }
+    transform: rotate(0);
+  }
   25% {
-    transform: rotate(90deg); }
+    transform: rotate(90deg);
+  }
   50% {
-    transform: rotate(180deg); }
+    transform: rotate(180deg);
+  }
   75% {
-    transform: rotate(270deg); }
+    transform: rotate(270deg);
+  }
   100% {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
 .text-more {
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: break-all;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .line, .line-title {
   margin-bottom: 1em;
-  padding-left: 1em; }
+  padding-left: 1em;
+}
 
 .line-title {
   padding-left: 0em;
   font-size: 1.2em;
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .back-btn {
   padding: 0.8em;
@@ -3671,16 +4174,18 @@ body {
   left: 2em;
   top: 2em;
   z-index: 999;
-  cursor: pointer; }
-  .back-btn:hover {
-    background: rgba(0, 0, 0, 0.2);
-    color: white; }
+  cursor: pointer;
+}
+.back-btn:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
 
 .grade-tip {
   width: 64px;
   height: 24px;
   border-radius: 0px 12px 0px 12px;
-  background: #faad14;
+  background: rgb(250, 173, 20);
   position: absolute;
   top: 0;
   right: 0;
@@ -3688,54 +4193,76 @@ body {
   display: flex;
   justify-content: center;
   color: white;
-  align-items: center; }
-  .grade-tip.small-tip {
-    width: 34px;
-    font-size: 10px;
-    border-radius: 0px 4px 0px 4px;
-    height: 18px; }
+  align-items: center;
+}
+.grade-tip.small-tip {
+  width: 34px;
+  font-size: 10px;
+  border-radius: 0px 4px 0px 4px;
+  height: 18px;
+}
 
 .scroll-content {
-  -ms-overflow-style: none; }
+  -ms-overflow-style: none;
+}
 
 .scroll-content {
-  overflow: -moz-scrollbars-none; }
+  overflow: -moz-scrollbars-none;
+}
 
 body {
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover; }
+  background-size: cover;
+}
 
 .background-img-blur-light {
-  background: transparent;
-  backdrop-filter: blur(var(--backGroundImgBlur, 0px)); }
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(var(--backGroundImgBlur, 0px));
+}
 
 .game-page-nav {
-  max-width: 932px; }
+  max-width: 932px;
+}
 
 .game-item-title-bg {
   border-radius: 8px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.3) 100%);
-  color: rgba(255, 255, 255, 0.85); }
-  .game-item-title-bg.first {
-    border-radius: 0 0 12px 12px;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(20px); }
+  color: rgba(255, 255, 255, 0.85);
+}
+.game-item-title-bg.first {
+  border-radius: 0 0 12px 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+}
 
 .bg-mask {
-  background: var(--secondary-bg) !important; }
+  background: var(--secondary-bg) !important;
+}
 
 .drawer-item-bg {
-  background: #2a2a2a; }
+  background: rgb(42, 42, 42);
+}
 
 .drawer-item-select-bg {
-  background: rgba(255, 255, 255, 0.1); }
+  background: rgba(255, 255, 255, 0.1);
+}
 
 .btn-active:active {
   filter: brightness(0.8);
-  background: rgba(42, 42, 42, 0.25); }
+  background: rgba(42, 42, 42, 0.25);
+}
 
 .btn-hover:hover {
-  background: rgba(42, 42, 42, 0.25); }
+  background: rgba(42, 42, 42, 0.25);
+}
+
+.setting-menu .btn {
+  background: var(--secondary-bg);
+}
+.setting-menu .btn:hover {
+  color: var(--primary-text);
+  background: var(--active-secondary-bg);
+}
 
 /*# sourceMappingURL=common.css.map */

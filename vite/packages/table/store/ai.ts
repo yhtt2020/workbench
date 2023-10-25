@@ -13,6 +13,7 @@ export const aiStore = defineStore("aiStore", {
     isFull: false, // 组件全屏状态
     selectTab: "Chat", // 左侧tab选中情况
     fullState: {}, // 记录组件展示状态
+    searchState: true,
     // 模板组件数据------------------------------
     mode: "Default",
     isMode: true, // 模板使用中

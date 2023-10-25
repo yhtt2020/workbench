@@ -4,10 +4,10 @@
      <template v-if="isLoading">
        <a-spin/>
      </template>
- 
+
      <template v-else>
        <div class="flex flex-col">
- 
+
          <span class="font-16 mb-3" style="color:var(--primary-text);">推荐用户</span>
          <div class="content-list">
            <div v-for="item in recommendData.users" class="flex items-center content-item px-4 justify-between py-5 rounded-xl mb-3"
@@ -24,17 +24,17 @@
                  <a-col @click.stop  flex="100px" v-if="item.uid!=userInfo.uid && item.relationship!==undefined">
                    <AddFindButton v-show="item.relationship==='not'" @relationshipChanged="updateRelationship($event,item)" :key="item.uid"
                                   :uid="item.uid"></AddFindButton>
-                   <SendMessageButton :uid="item.uid" :enable="false" @send="enterChatList"
+                   <SendMessageButton :uid="item.uid" :enable="false" @send="enterGroup(item)"
                                       v-show="item.relationship==='yes'"></SendMessageButton>
                  </a-col>
                </a-row>
- 
+
              </div>
- 
- 
+
+
            </div>
          </div>
- 
+
          <span class="font-16 mb-3" style="color:var(--primary-text);">推荐群聊</span>
          <div class="content-list">
            <div v-for="item in recommendData.groups " class="flex items-center content-item justify-between px-4 py-5 rounded-xl mb-3"
@@ -45,8 +45,8 @@
                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.name }}</span>
                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
              </div>
-             </div>  
-             
+             </div>
+
              <XtButton v-show="item.relationShip ==='yes'" style="width: 96px;background: var(--active-secondary-bg);"
                        @click="enterGroup(item)">
                <icon icon="message"></icon>
@@ -54,12 +54,12 @@
              </XtButton>
              <XtButton v-show="item.relationShip ==='not'" style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">
                加入
-             </XtButton> 
-           </div> 
+             </XtButton>
+           </div>
          </div>
        </div>
- 
- 
+
+
      </template>
    </vue-custom-scrollbar>
  </div>
@@ -103,6 +103,7 @@ export default {
        suppressScrollX: true,
        wheelPropagation: true
      },
+     server:window.$TUIKit,
    }
  },
 
@@ -120,7 +121,7 @@ export default {
    // await this.getMember()
  },
  methods: {
-   ...mapActions(chatStore, ['getReferData','loadGroupRelationship']),
+   ...mapActions(chatStore, ['getReferData','loadGroupRelationship','updateConversation']),
    openUserCard (uid) {
      this.cardVisible = true
      this.userCardUid = uid
@@ -142,26 +143,28 @@ export default {
      this.loadGroupRelationship()
    },
 
-   // 进入群聊
-   async enterGroup (item) {
-     // this.$emit('updateChat',this.$route.meta)
-     this.$router.push({name:'chatMain'})
-     const conversationID = `GROUP${item.groupID}`
-     // 通知 TUIConversation 添加当前会话
-     // Notify TUIConversation to toggle the current conversation
-     window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
-       window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-     })
-   },
-
-   enterChatList (uid) {
-     // this.$emit('updateChat')
-     this.$router.push({name:'chatMain'})
-     const name = `C2C${uid}`
-     window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-       window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-     })
-   },
+  // 进入群聊
+  async enterGroup (item){
+    // console.log('排查数据',item);
+    if(item.uid){
+      this.updateConversation(`C2C${item.uid}`)
+      const name = `C2C${item.uid}`
+      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
+        // 通知 TUIConversation 添加当前会话
+        // Notify TUIConversation to toggle the current conversation
+        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+      })
+      this.$router.push({name:'chatMain'})
+    }else{
+      const conversationID = `GROUP${item.groupID}`
+      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+        // 通知 TUIConversation 添加当前会话
+        // Notify TUIConversation to toggle the current conversation
+        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+      })
+      this.$router.push({name:'chatMain'})
+    }
+  }
 
  }
 }
@@ -169,7 +172,6 @@ export default {
 
 <style lang="scss" scoped>
 .font-16 {
- font-family: PingFangSC-Medium;
  font-size: 16px;
  font-weight: 500;
 }

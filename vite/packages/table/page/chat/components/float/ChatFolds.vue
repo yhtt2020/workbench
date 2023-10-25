@@ -12,7 +12,7 @@
    </div>
 
    <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
-    <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown> 
+    <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown>
    </div>
    <transition name="collapse">
     <!-- class="content" -->
@@ -94,7 +94,6 @@ export default {
 }
 
 .font-14{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

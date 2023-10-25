@@ -15,9 +15,11 @@ export function handleAvatar(item: any) {
         : 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png';
       break;
     case TIM.TYPES.CONV_GROUP:
-      avatar = isUrl(item?.groupProfile?.avatar)
-        ? item?.groupProfile?.avatar
-        : 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg';
+      avatar = item?.groupProfile?.avatar
+
+      // avatar = isUrl(item?.groupProfile?.avatar)
+      //   ? item?.groupProfile?.avatar
+      //   : 'https://web.sdk.qcloud.com/im/demo/TUIkit/web/img/constomer.svg';
       break;
     case TIM.TYPES.CONV_SYSTEM:
       avatar = isUrl(item?.groupProfile?.avatar)

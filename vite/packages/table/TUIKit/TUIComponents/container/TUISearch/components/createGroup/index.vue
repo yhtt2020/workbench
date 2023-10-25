@@ -11,7 +11,7 @@
 
     <div style="margin: 24px 0;" >
       <a-input placeholder="输入群ID搜索" :spellcheck="false" v-model:value="searchId" class="h-12" style="border-radius: 12px;"
-        @keyup.enter="searchGroup" 
+        @keyup.enter="searchGroup"
       >
         <template #suffix>
           <SearchOutlined @click="searchGroup"/>
@@ -33,7 +33,7 @@
               <span style="color: var(--primary-text);">{{ total }}人</span>
             </div>
           </div>
-          <div class="flex items-center rounded-lg pointer  justify-center active-button" 
+          <div class="flex items-center rounded-lg pointer  justify-center active-button"
            style="padding: 9px 18px; color: var(--active-text);background: var(--active-bg);"
            @click="joinGroup(item)"
           >
@@ -45,7 +45,7 @@
 
   </div>
 
-  
+
   <!-- <div class="group" :class="[isH5 ? 'group-h5' : '']">
       <div  class="group-box">
         <header>
@@ -158,11 +158,11 @@ const TUISearch = defineComponent({
       default: () => false,
     },
   },
-  
+
   components:{
     SearchOutlined,
   },
- 
+
   setup(props,ctx){
 
     // const TUIServer = TUISearch?.TUIServer?.TUICore.TUIServer.TUIGroup;
@@ -178,7 +178,7 @@ const TUISearch = defineComponent({
       env: Server.TUIEnv,
       searchResult:[],
       simpleImage:'/img/state/null.png',
-      settingsScroller: {  // 滚动条配置 
+      settingsScroller: {  // 滚动条配置
         useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: false,
@@ -187,12 +187,12 @@ const TUISearch = defineComponent({
       },
       total:chat.$state.limitTotal
     })
-    
-    const closeJoinGroup = () =>{  // 关闭加入群聊弹窗  
+
+    const closeJoinGroup = () =>{  // 关闭加入群聊弹窗
       ctx.emit('close')
     }
 
-    const searchGroup = () =>{  // 根据群组id进行群组搜索 
+    const searchGroup = () =>{  // 根据群组id进行群组搜索
       TUIServer.searchGroupByID(data.searchId).then((res=>{
         if(data.searchResult.some(item => item.groupID === res.data.group.groupID)){
          return
@@ -226,7 +226,7 @@ const TUISearch = defineComponent({
         }
         ctx.emit('close')
       }
-      
+
     }
 
     watch(()=>data.searchId,(newVal)=>{
@@ -234,7 +234,7 @@ const TUISearch = defineComponent({
         data.searchResult = []
       }
     })
-   
+
     return{
       closeJoinGroup,...toRefs(data),searchGroup,joinGroup,
     }
@@ -380,7 +380,7 @@ export default TUISearch;
 
 <style lang="scss" scoped>
 .font-16{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500
 }

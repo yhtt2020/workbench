@@ -3,14 +3,14 @@
   <div class="flex flex-col my-3" style="width:500px;">
    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
     <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-     <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
+     <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;color: var(--secondary-text);"/>
     </div>
     <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-      <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;"/>
+      <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;color: var(--secondary-text);"/>
     </div>
    </div>
- 
+
    <div class="flex flex-col px-6">
     <div class="p-4 flex rounded-lg flex-col mb-4" style="background: var(--secondary-bg);">
      <span class="font-16-400 mb-2.5" style="color:var(--primary-text);">操作指南</span>
@@ -18,9 +18,9 @@
       输入带有“https://”或“http://”前缀的，完整的网页地址。支持选择点击链接后的打开方式，默认使用工作台设置。
      </span>
     </div>
- 
+
     <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
- 
+
     <a-input-group compact>
       <a-select v-model:value="requestProtocol" style="width:20%;">
         <a-select-option value="https">https</a-select-option>
@@ -34,17 +34,17 @@
     <template v-if="defaultOpen.openMethod === 'outerOpen'">
       <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     </template>
-    
-    
+
+
     <div class="flex items-center justify-end my-3">
      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
     </div>
    </div>
- 
+
   </div>
  </template>
- 
+
  <script>
 import { mapActions } from 'pinia'
 import { Icon as LinkIcon } from '@iconify/vue'
@@ -55,7 +55,7 @@ import { message } from 'ant-design-vue'
 import RadioTab from '../../../../components/RadioTab.vue'
 
 export default {
- 
+
  props:['no','id'],
 
  components:{
@@ -101,7 +101,7 @@ export default {
 
   async submitSelect(evt){
     if(this.link !== '' && this.linkName !== ''){
-      const option = { 
+      const option = {
         type:'link', id:this.id, no:this.no,
         content:{
           name:this.linkName,
@@ -109,7 +109,7 @@ export default {
             url:`${this.requestProtocol}://${this.link}`,
             openMethod:this.defaultOpen.openMethod === 'currentPage' ? this.defaultOpen.openMethod : this.defaultType.openMethod
           }
-        } 
+        }
       }
       // console.log('查看参数',option);
       const res  = await channelClass.secondaryChannel(option)
@@ -139,20 +139,19 @@ export default {
 
 }
  </script>
- 
+
  <style lang="scss" scoped>
  .font-16-400{
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
  }
- 
+
  .close-channel{
   position: absolute;
   top:1px;
   right:12px;
  }
- 
+
  .active-button{
   &:active{
    filter: brightness(0.8);
@@ -162,19 +161,18 @@ export default {
    opacity: 0.8;
   }
  }
- 
+
  .font-14-400{
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
  }
- 
+
  .back-button{
   position: absolute;
   top: 1px ;
   left: 12px;
  }
- 
+
  :deep(.ant-input){
   color: var(--secondary-text) !important;
   font-size: 1.15em;
@@ -193,4 +191,3 @@ export default {
   line-height: 40px !important;
  }
  </style>
- 

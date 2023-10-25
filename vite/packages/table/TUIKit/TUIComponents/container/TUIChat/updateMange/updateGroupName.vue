@@ -1,101 +1,138 @@
 <template>
- <div class="flex items-center flex-col" style="color: var(--primary-text);">
-  <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
-    <div class="rounded-lg flex items-center justify-center" 
-     style="width: 64px;height: 64px; position:relative" :style="groupInfo.role !== 'Member' ? {cursor:'pointer'}:{}"
-     @click="updateGroupAvatar($event)"
-    >
-     <a-avatar shape="square" :size="64" :src="groupInfo.avatar"></a-avatar>
-     <div class="flex items-center rounded-full p-3 justify-center" v-if="groupInfo.role !== 'Member' "
-      style="width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;background: var(--active-bg);border: 2px solid var(--primary-text);"
-     >
-      <CameraOutlined style="font-size:1em;"/>
-     </div>
-    </div>
-    <div class="flex items-center justify-center font-16" v-if="groupInfo.role !== 'Member' " style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
-    <input type="file" ref="groupFileRef" style="display:none;" @change="getFileInfo($event)">
-  </div>
-  
-  <a-input v-model:value="groupRef" :spellcheck="false" :disabled="groupInfo.role === 'Member'" style="color: var(--primary-text);border-radius: 12px !important;"></a-input>
-  <a-button v-if="groupInfo.role !== 'Member' " @click="saveGroupName" style="background: var(--active-bg); width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</a-button> 
+  <div class="flex items-center flex-col" style="color: var(--primary-text);">
+    <template v-if="isAdmin">
+      <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;position:relative;">
+        <div class="flex items-center flex-col justify-center" style="margin-bottom: 28px;">
+          <!-- 替换成图标选择器 -->
+         <div class="rounded-lg flex pointer items-center justify-center" style="width: 64px;height: 64px; position:relative"  @click="onShowSelect">
+          <!--头像 -->
+          <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
+          <div class="overflow-hidden">
+           <a-avatar :src="avatar" :size="64" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
+          </div>
+          <UpdateIcon icon="akar-icons:cloud-upload" width="20" height="20" style="font-size: 1.5rem;width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);background:var(--active-bg);border-radius: 50%;" color="var(--secondary-text)"/>
+         </div>
+         <SelectIcon @isIconShow="iconVisible = false" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+         <!-- <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div> -->
+         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+         </div>
+      </div>
 
- </div>
+      <a-input v-model:value="groupName" ref="groupRef" :spellcheck="false"  style="color: var(--primary-text); text-align: center; border-radius: 12px !important;"></a-input>
+
+      <xt-button  @click="saveGroupName" style="background: var(--active-bg); width: 100%; height: 48px; margin-top: 24px;border-radius: 12px !important;">保存</xt-button> 
+    </template>
+
+    <template v-else>
+      <div class="flex flex-col w-full items-center justify-center">
+        <a-avatar shape="square" :size="64" :src="info.avatar"></a-avatar>
+        <a-input v-model:value="info.groupName" :spellcheck="false" :disabled="true" style="margin-top: 12px;color: var(--primary-text);border-radius: 12px !important;text-align: center;"></a-input>
+      </div>
+    </template>
+
+  </div>
 </template>
 
 <script>
-// import { mapActions,mapWritableState } from 'pinia'
-import { defineComponent,toRefs,ref,reactive,computed} from 'vue'
-import api from '../../../../../../../src/model/api'
-import { CameraOutlined  } from '@ant-design/icons-vue';
+import {Icon as UpdateIcon} from '@iconify/vue'
+import SelectIcon from '../../../../../../selectIcon/page/index.vue'
 import { fileUpload } from '../../../../../components/card/hooks/imageProcessing'
-import { Upload } from 'ant-design-vue';
 
-const groupName =  defineComponent({
- props:['groupInfo','server'],
- 
- components:{
-  CameraOutlined,Upload
- },
+export default {
+  props:['info'],
 
- setup(props,ctx){
-  const server = props.server.TUICore
-  const groupRef = ref(props.groupInfo.groupName);
-  const groupFileRef = ref(null)
-  const data = reactive({
-    avatar:''
-  })
-  const saveGroupName = async (evt) =>{  // 保存群组名称修改后的数据
-    if(data.avatar !== ''){
-      const option = {
-       groupID:props.groupInfo.groupID,
-       name:groupRef.value,
+  components:{
+    UpdateIcon,SelectIcon
+  },
+  
+  data(){
+    return{
+      avatar:this.info.avatar,
+      iconVisible:false,
+      innerHeight:100,
+      bgColor:'',
+      isCustom:true,
+      groupName:this.info.groupName,
+      server:window.$TUIKit,
+    }
+  },
+
+  mounted(){
+    this.$nextTick(()=>{
+       if(this.isAdmin){
+        console.log('查看问题',this.$refs.groupRef);
+        this.$refs.groupRef.focus()
+       }
+    })
+  },
+
+  computed:{
+    isAdmin(){
+      if(this.info){
+        return this.info.role !== 'Member'
       }
-    
-     await server.tim.updateGroupProfile(option)
-  
-     ctx.emit('updateGroupInfo')
-     ctx.emit('close')
-    }else{
-      evt.preventDefault()
+    }
+  },
+
+  methods:{
+    onShowSelect(){
+      this.iconVisible= !this.iconVisible
+      this.innerHeight = window.innerHeight
+    },
+
+    // 获取头像
+    getAvatar(avatar){
+     if(avatar.indexOf('color=') >= 0){
+      let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
+      this.bgColor = color
+     }else{
+      this.bgColor = ''
+     }
+     this.avatar = avatar
+    },
+
+    // 更换头像
+    async updateGroupAvatar(){
+     document.querySelector('#groupFileID').click()
+    },
+    async getFileInfo(evt){
+     const files = evt.target.files[0]
+     const res  = await fileUpload(files)
+     this.avatar = res
+    },
+
+
+    // 保存进行更改
+    async saveGroupName(){
+      const option = {
+       groupID:this.info.groupID,
+       name:this.groupName,
+       avatar:this.avatar
+      }
+      // console.log('排查参数是否正确',option);
+      await this.server.tim.updateGroupProfile(option)
+      this.$emit('updateGroupInfo')
+      this.$emit('close')
     }
 
-  }
+  },
 
-  // 点击群聊头像更换
-  const updateGroupAvatar = async (evt) =>{  
-    console.log('排查无法点击问题',props.groupInfo.role !== 'Member');
-    if(props.groupInfo.role !== 'Member'){
-      // console.log('获取input节点',groupFileRef.value.click());
-      groupFileRef.value.click()
-    }else{
-      evt.preventDefault();
+  watch:{
+    'info':{
+      handler(newVal){
+        // console.log('排查props参数变化',newVal);
+        this.avatar = newVal.avatar,
+        this.groupName = newVal.groupName
+      },
+      immediate:true,
+      deep:true,
     }
   }
-
-  // 获取上传文件的回调函数
-  const getFileInfo = async(evt) =>{
-    const files = evt.target.files[0]
-    const res  = await fileUpload(files)
-    data.avatar = res
-    const option = {
-      groupID:props.groupInfo.groupID,
-      avatar:`${data.avatar}`,
-    }
-    await server.tim.updateGroupProfile(option)
-    ctx.emit('updateGroupInfo')
-    ctx.emit('close')
-  }
-  
-
-  return{
-   groupRef,groupFileRef,
-   ...toRefs(data),saveGroupName,updateGroupAvatar,getFileInfo,
-  }
- }
-})
-export default groupName
+}
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.float-icon){
+  top:72px !important;
+}
 </style>

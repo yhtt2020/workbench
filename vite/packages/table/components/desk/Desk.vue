@@ -26,16 +26,15 @@
       </div>
     </div>
 
-    <RightMenu :menus='dropdownMenu'  class="w-full h-full">
-    <!-- <div  style='z-index:99999px'> -->
-      <!-- {{currentDesk.cards}} -->
-      <!-- <FreeDesk :desk='currentDesk.cards' :currentDesk="currentDesk" >
-        <template #item="{ item }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"
-                         :customData="item.customData" :editing="editing"></component>
+    <RightMenu :menus='dropdownMenu'  class="w-full h-full"  @contextmenu="showMenu">
+      <!-- <xt-button @click='addFreeDeskState(currentDesk.id)'>自由布局</xt-button>
+      <xt-button @click='delFreeDeskState(currentDesk.id)'>默认布局</xt-button> -->
+      <FreeDesk :currentDesk="currentDesk" v-if='getFreeDeskState(currentDesk.id)' >
+        <template #item="{ data }">
+            <component   :desk="currentDesk" :is="data.data.name"  :customIndex="data.data.id" :customData="data.data.customData"  :editing="editing"/>
           </template>
-      </FreeDesk> -->
-        <vue-custom-scrollbar  @contextmenu.stop="showMenu" class="no-drag" key="scrollbar" id="scrollerBar"
+      </FreeDesk>
+        <vue-custom-scrollbar  v-show="!getFreeDeskState(currentDesk.id)" class="no-drag" key="scrollbar" id="scrollerBar"
                           :settings="{...scrollbarSettings,
                             suppressScrollY:settings.vDirection?false: true ,
         suppressScrollX:settings.vDirection?true: false,
@@ -110,23 +109,23 @@
       <xt-task id='M0101' no='2' to="" @cb="newAddCard()">
         <a-col>
           <div @click="newAddCard" class="btn">
-            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+            <xt-new-icon icon='fluent:collections-add-24-regular' size='42'/>
             <div><span>添加小组件</span></div>
           </div>
         </a-col>
       </xt-task>
       <xt-task   id='M0201' no='2' to="" @cb="newAddIcon()">
         <a-col>
-          <div @click="newAddIcon" class="btn">
-            <Icon style="font-size: 3em" icon="wanggeshitu"></Icon>
+          <div @click="newAddIcon" class="btn flex flex-col items-center">
+            <xt-new-icon icon='fluent:add-16-filled' size='42'/>
             <div><span>添加图标</span></div>
           </div>
         </a-col>
       </xt-task>
       <a-col>
         <div @click="toggleEditing" class="btn">
-          <Icon v-if="!this.editing" style="font-size: 3em" icon="line-dragdroptuofang"></Icon>
-          <Icon v-else style="font-size: 3em; color: red" icon="tingzhi"></Icon>
+          <xt-new-icon v-if="!this.editing" icon='fluent:window-new-16-regular' size='42' />
+          <xt-new-icon  v-else  icon='fluent:record-stop-16-regular' size='42' />
           <div>
             <span v-if="!this.editing">调整布局</span><span v-else style="color: red">停止调整</span>
           </div>
@@ -135,26 +134,28 @@
       <xt-task  id='M0103' no='2' to="" @cb="showSetting">
         <a-col>
           <div @click="showSetting" class="btn">
-            <Icon style="font-size: 3em" icon="shezhi1"></Icon>
-            <div><span>设置</span></div>
+          <xt-new-icon  icon='fluent:settings-16-regular' size='42' />
+            <div><span>桌面设置</span></div>
           </div>
         </a-col>
       </xt-task>
       <a-col>
         <div @click="clear" class="btn">
-          <Icon style="font-size: 3em" icon="shanchu"></Icon>
-          <div><span>清空小组件</span></div>
+          <xt-new-icon  icon='fluent:circle-off-16-regular' size='42' />
+
+          <div><span>清空桌面</span></div>
         </div>
       </a-col>
 
       <a-col>
         <div v-if="!hide" @click="hideDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing-yincang"></Icon>
+          <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
+
           <div><span>隐藏小组件</span></div>
         </div>
         <div v-else @click="showDesk" class="btn">
-          <Icon style="font-size: 3em" icon="yanjing"></Icon>
-          <div><span>显示卡片</span></div>
+          <xt-new-icon  icon='fluent:eye-16-regular' size='42' />
+          <div><span>显示小组件</span></div>
         </div>
       </a-col>
       <!--      <a-col>-->
@@ -223,7 +224,12 @@
     </template>
     <template v-else>
       <div class="line-title">卡片设置：</div>
-
+<!-- <xt-text class=" xt-bg-2 rounded-xl p-3 mb-1">
+  <div class=" flex flex-col">
+    <div >自由布局（开发中）：<a-switch v-model:checked="freeDeskState" /></div>
+    <xt-text type="2">该功能尚未完成 可能会产生严重bug，开启需谨慎！！！</xt-text>
+  </div>
+</xt-text> -->
       <template v-if="settings.enableZoom">
         <div class="mb-2" style="color:orangered">
           <icon icon="tishi-xianxing"></icon>
@@ -268,10 +274,11 @@
 
 import Muuri from 'muuri'
 import { message, Modal } from 'ant-design-vue'
-import { mapWritableState } from 'pinia'
+import { mapWritableState ,mapActions} from 'pinia'
 import { appStore } from '../../store'
 
 import {useWidgetStore} from "../card/store.ts"
+import {useFreeDeskStore} from './free/store'
 import componentsMinis  from "./components.ts"
 export default {
   name: 'Desk',
@@ -362,6 +369,9 @@ mixins:[componentsMinis],
   ,
 
   watch: {
+    freeDeskState(newV) {
+      this.renewFreeDeskState(this.currentDesk.id)
+    },
     currentDesk (newVal) {
       newVal.layoutSize = this.getLayoutSize()
       // if (!newVal.settings) {
@@ -483,6 +493,7 @@ mixins:[componentsMinis],
   },
   data () {
     return {
+      freeDeskState:false,
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
       iconVisible: false,
@@ -519,7 +530,7 @@ mixins:[componentsMinis],
     window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
-
+    ...mapActions(useFreeDeskStore,['addFreeDeskState','getFreeDeskState','delFreeDeskState','renewFreeDeskState']),
     learn () {
       browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
     },
@@ -740,6 +751,8 @@ mixins:[componentsMinis],
 
 .btn {
   text-align: center;
+display:flex;
+flex-direction: column;align-items: center;
 }
 
 //@media screen and (min-height: 1020px) and (max-height: 1600px) {

@@ -3,7 +3,7 @@
     :customData="customData"
     :size="reSize"
     :customIndex="customIndex"
-    :options="{...this.options,background:this.customData.background}"
+    :options="{...this.options,background:this.customData.background,title:this.customData.title}"
     :menuList="menuList"
     class="test"
     ref="homelSlotRef"
@@ -12,7 +12,7 @@
   <!-- 图标 -->
     <template #left-title>
         <div class="icon"
-            style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;top:15px;">
+            style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 1px;top:14px;">
             <Icon :icon="icons.notepad12Regular" width="20" height="20" />
           </div>
     </template>
@@ -244,9 +244,6 @@ export default {
       this.fontColor = color;
     },
 
-    test(){
-      console.log(this.icons);
-    }
   },
 };
 </script>
@@ -261,8 +258,11 @@ export default {
   border-radius: 8px;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 12px;
+  // padding: 12px;
   font-size: 16px;
+  // border: 1PX solid RED;
+  position: relative;
+  top: -11px;
 }
 
 .box::-webkit-scrollbar {

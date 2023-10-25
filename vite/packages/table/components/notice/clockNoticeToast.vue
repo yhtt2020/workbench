@@ -18,7 +18,7 @@
         <img src="/img/icon/close-circle-fill.png" class="object-cover w-full h-full rounded-full" alt="">
       </div>
     </div>
-    
+
     <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">{{content}}</div>
 
     <div class="flex items-center justify-between">
@@ -29,7 +29,7 @@
    <!--
      <div class="flex ">
          <div class="flex items-center justify-center px-5 py-2 mr-3 rounded-lg pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
-         
+
        </div>
     -->
 
@@ -37,7 +37,7 @@
 
  <!-- <audio ref="notice" src="/sound/notice.mp3" v-show="!changeIcon"></audio> -->
  <audio ref="notice" src="/sound/clock.mp3" v-if="this.soundVisible"></audio>
- 
+
 </template>
 
 <script>
@@ -76,7 +76,7 @@ export default defineComponent({
           this.$refs.notice.pause()
          })
         }
-      
+
     },
     immediate:true,
     deep:true,
@@ -84,7 +84,7 @@ export default defineComponent({
  },
 
  setup(props,ctx){
-   
+
    const talkLater = () =>{  // 点击稍后再说按钮
     ctx.emit('closeToast')
     ctx.emit('nowCheck')
@@ -117,7 +117,7 @@ export default defineComponent({
 
 
 .font-16{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }

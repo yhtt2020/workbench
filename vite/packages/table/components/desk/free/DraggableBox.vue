@@ -1,3 +1,4 @@
+<!-- 拖拽层 -->
 <script setup lang="ts">
 import { useDrag, DragSourceMonitor } from "vue3-dnd";
 import { ItemTypes } from "./ItemTypes";
@@ -5,13 +6,15 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 import Box from "./Box.vue";
 import { toRefs } from "@vueuse/core";
 import { onMounted } from "vue";
-import Notes from "../../widgets/note/index.vue";
-import test from "./test.vue";
+
 const props = defineProps<{
-  item?: object;
+  id: string;
+  title: string;
   left: number;
   top: number;
-  currentDesk;
+  data: object;
+  customData: object;
+  currentDesk: object;
 }>();
 
 const [collect, drag, preview] = useDrag(() => ({
@@ -30,19 +33,20 @@ const { isDragging } = toRefs(collect);
 </script>
 
 <template>
-  <div>
-    <test
-      :ref="drag"
-      :style="{
-        position: 'absolute',
-        transform: `translate3d(${left}px, ${top}px, 0)`,
-        opacity: isDragging ? 0 : 1,
-        height: isDragging ? 0 : '',
-      }"
-      role="DraggableBox"
-    ></test>
-    <!-- <Box :title="title" /> -->
-    <!-- {{item}} -->
-    <Box> </Box>
+  <div
+    :ref="drag"
+    :style="{
+      position: 'absolute',
+      transform: `translate3d(${left}px, ${top}px, 0)`,
+      opacity: isDragging ? 0 : 1,
+      height: isDragging ? 0 : '',
+    }"
+    role="DraggableBox"
+  >
+    <slot
+      name="item"
+      :data="data"
+    />
+
   </div>
 </template>

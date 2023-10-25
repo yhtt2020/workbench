@@ -21,7 +21,7 @@
     <Modal v-if="open" v-model:visible="open" :blurFlag="true">
       <CreateGroup v-if="addIndex === 1" @submit="create" @close="close" @cancel="toggleOpen" :isH5="env.isH5" />
       <AddFriend v-if="addIndex === 0" @close="close"></AddFriend>
-      <Transfer :server="TUIServer" :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/> 
+      <Transfer :server="TUIServer" :isSearch="needSearch" @close="close" :title="showTitle" :list="searchUserList" :isH5="env.isH5" :isRadio="createConversationType === 'isC2C'" @search="handleSearch" @submit="submit" @cancel="toggleOpen" v-if="addIndex === 2"/>
     </Modal>
   </teleport>
 
@@ -53,9 +53,9 @@ const TUISearch = defineComponent({
   components: {
     Transfer,Modal,
     CreateGroup,AddFriend
-  
+
     // Dialog,
-  
+
   },
 
 
@@ -219,7 +219,7 @@ const TUISearch = defineComponent({
             return data.showTitle;
         }
       },100)
-     
+
       // data.open = true;
       // data.searchUserList = [...data.allUserList];
       // switch (type) {
@@ -261,7 +261,7 @@ const TUISearch = defineComponent({
     const close = () => { // 关闭弹窗回调函数
       data.open = false
     }
-  
+
 
     return {
       ...toRefs(data), toggleOpen, handleSearch, submit, create,
@@ -275,7 +275,7 @@ export default TUISearch
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .font-12{
-  font-family: PingFangSC-Regular;
+
   font-size: 12px;
   font-weight: 400;
 }

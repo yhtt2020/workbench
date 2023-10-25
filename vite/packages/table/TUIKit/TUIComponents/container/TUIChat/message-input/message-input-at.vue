@@ -271,7 +271,7 @@ export { MessageInputAtSuggestion, MessageInputAtComponent };
     }
   }
   span {
-    font-family: PingFangSC-Regular;
+
     font-weight: 400;
     font-size: 0.88rem;
     color: #000000;

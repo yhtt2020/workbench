@@ -295,6 +295,7 @@ import TaskBox from '../apps/task/page/TaskBox.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
 import {Icon as navIcon} from '@iconify/vue'
+import navigationData from '../js/data/tableData'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -408,6 +409,13 @@ export default {
       event.preventDefault()
       // console.log('wheel',event)
       content.scrollLeft += event.deltaY
+    })
+    navigationData.systemAppList.forEach((item) => {
+      this.footNavigationList.forEach((i) => {
+        if (item.name === i.name) {
+          i.icon=item.icon
+        }
+      })
     })
   },
   computed: {

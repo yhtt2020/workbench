@@ -889,7 +889,6 @@ export default {
   background: var(--modal-bg);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
-  font-family: PingFangSC-Semibold;
   font-size: 10px;
   color: var(-secondary-text);
   height: 16px;

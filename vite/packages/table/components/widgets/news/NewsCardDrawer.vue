@@ -14,12 +14,12 @@
               <span>{{ item.title }}</span>
             </div>
           </div>
-        </div>   
+        </div>
       </transition>
     </div>
-  
+
   </template>
-  
+
   <script>
   import { HolderOutlined } from '@ant-design/icons-vue'
   import Sortable from 'sortablejs';
@@ -41,7 +41,7 @@
       })
     },
     methods:{
-  
+
       onSortEnd(evt){
         let newIndex = evt.newIndex , oldIndex = evt.oldIndex
         let newItem = this.$refs.aggDropRef.children[newIndex]
@@ -61,33 +61,33 @@
         cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
         this.$emit('setSortedList',cloneTemp)  // 将替换后数据进行回传
       }
-  
+
     }
-  
-  
+
+
   }
   </script>
-  
+
   <style lang="scss" scoped>
   .primary-title{
-    font-family: PingFangSC-Medium;
+
     font-size: 16px;
     font-weight: 500;
   }
   .secondary-title{
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
   }
   .agg-set{
     background: var(--secondary-bg);
   }
-  
+
   :deep(.nav-item){
     width: 50% !important;
     border-radius: 8px !important;
   }
-  
+
   :deep(.ps__rail-y){
     display: none !important;
   }

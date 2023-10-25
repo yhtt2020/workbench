@@ -17,9 +17,9 @@
                 </div>
                 <div class="w-[83px] h-[40px] ">
                     <xt-button
-                        style="color: var(--primary-text); width: 83px;height: 40px;border-radius: 12px;background: rgba(80, 139, 254, 0.20);"
+                        style="color: var(--active-bg); width: 83px;height: 40px;border-radius: 12px;background: rgba(80, 139, 254, 0.20);"
                         @click="visibleModal">
-                        <newIcon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;"
+                        <newIcon class="pr-1 text-xl xt-theme-text " style="vertical-align: sub;font-size: 22px;margin-right: 6px;"
                             icon="akar-icons:circle-plus-fill" />发布
                     </xt-button>
                 </div>
@@ -27,7 +27,7 @@
             <div style="height: 100%;">
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" class="w-full thread-list"
                     :settings="settingsScroller"
-                    style="height: calc(100vh - 16em );overflow: hidden;flex-shrink: 0;width: 100%;">
+                    style="height: calc(100% - 90px );overflow: hidden;flex-shrink: 0;width: 100%;">
                     <div class="flex flex-col justify-center content">
                         <!-- {{ checkMenuList.value[currentIndex.value].order }} -->
                         <!-- 循环渲染多个 ComCard -->
@@ -76,10 +76,11 @@
                             </ComList> -->
                         </template>
                     </div>
-                    <div class="flex justify-center">
-                        <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
-                    </div>
+
                 </vue-custom-scrollbar>
+                <div class="flex justify-center">
+                        <a-pagination v-model:current="currentPage" :total="50" show-less-items class="pagination" />
+                </div>
             </div>
 
         </div>
@@ -141,7 +142,7 @@ const visibleModal = () => {
 </script>
 <style lang='scss' scoped>
 .font-16 {
-    font-family: PingFangSC-Medium;
+
     font-size: 16px;
     font-weight: 500;
 }
@@ -166,7 +167,7 @@ const visibleModal = () => {
     border: none;
     width: 40px;
     height: 40px;
-    
+
     & a {
         display: block;
         height: 40px;

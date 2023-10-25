@@ -133,3 +133,9 @@ body {
 .warn {
   color: var(--warning);
 }
+
+
+// 禁用背景色
+.xt-divider-bg{
+  background: var(--disable-text) !important;
+}

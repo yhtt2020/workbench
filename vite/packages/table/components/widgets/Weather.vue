@@ -7,14 +7,14 @@
       <div v-if="!cities.length">
         <div>
           <a-col style="text-align: center; margin-top: 1em">
-            <Icon style=" width: 5em;  height: 5em;  margin-right: 10px;   vertical-align: middle; " icon="icon_qingtian"></Icon>
+            <Icon style=" width: 5em;  height: 5em;    vertical-align: middle; " icon="icon_qingtian"></Icon>
           </a-col>
         </div>
-        <div style="text-align: center;" >
-          <div class="btn" @click.stop="add" style=" background:var(--primary-bg);color:var(--primary-text);font-size: 1.3em; font-weight: bold; margin-top: 1em; width: 12em; display: inline-block; " >
+        <div class="item-content" >
+          <xt-button class="mt-4" size="mini" :w="120" :h="40"  @click.stop="add"  >
             <Icon icon="tianjia1"></Icon>
             添加城市
-          </div>
+          </xt-button>
         </div>
       </div>
       <div @click="enterWeather" v-else>
@@ -80,6 +80,7 @@ import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
 import Widget from "../card/Widget.vue";
 import HorizontalDrawer from '../HorizontalDrawer.vue';
+import XtButton from '../../ui/libs/Button/index.vue'
 export default {
   name: "Weather",
   props:{
@@ -110,6 +111,7 @@ export default {
   },
 
   components:{
+    XtButton,
     Widget,
     HorizontalDrawer
   },

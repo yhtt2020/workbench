@@ -1131,7 +1131,7 @@ export default {
     font-size: 18px;
     font-weight: 500;
     color: var(--primary-text);
-    font-family: PingFangSC-Medium;
+
   }
 
   > span:nth-child(2),
@@ -1140,7 +1140,7 @@ export default {
     // width: 65%;
     // text-align: center;
     color: var(--secondary-text);
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
   }
 }

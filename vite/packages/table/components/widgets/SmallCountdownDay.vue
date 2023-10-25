@@ -6,7 +6,10 @@
   >
     <div style="text-align: center; ">暂无纪念日</div>
     <a-empty :description="null" :image="simpleImage" style="margin: 15px;" />
-    <a-button type="primary" style="background:var(--primary-bg) ;color: var(--primary-text);border: none" @click="onSetup">立即添加</a-button>
+      <div class="item-content">
+        <xt-button size="mini" :w="100" :h="40"   @click="onSetup">立即添加</xt-button>
+      </div>
+
   </div>
     <div class="content"  v-else>
     <div
@@ -62,6 +65,7 @@ import { transDate } from "../../../../src/util/dateTime";
 import Widget from "../card/Widget.vue";
 import {timeStamp} from "../../util";
 import { timerStore } from '../../store/timer'
+import XtButton from '../../ui/libs/Button/index.vue'
 export default {
   name: "SmallCountdownDay",
   props:{
@@ -73,7 +77,7 @@ export default {
       type:Object
     }
   },
-  components:{Widget},
+  components:{ XtButton, Widget},
   data() {
     return {
       simpleImage: '/public/img/test/load-ail.png',

@@ -133,7 +133,7 @@ export default defineComponent({
   border-radius: 5px;
   padding: 10px 15px;
   span {
-    font-family: PingFangSC-Regular;
+
     font-weight: 400;
     font-size: 14px;
     letter-spacing: 0;

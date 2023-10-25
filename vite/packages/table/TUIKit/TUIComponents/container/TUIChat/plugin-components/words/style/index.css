@@ -2,107 +2,131 @@
 @import url("../../../../../styles/icon.scss");
 .words-main {
   background: #ffffff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); }
-  .words-main header aside {
-    font-weight: 500;
-    color: #000000; }
-    .words-main header aside h1 {
-      font-weight: 500;
-      color: #000000; }
-    .words-main header aside a {
-      color: #006EFF; }
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.words-main header aside {
+  font-weight: 500;
+  color: #000000;
+}
+.words-main header aside h1 {
+  font-weight: 500;
+  color: #000000;
+}
+.words-main header aside a {
+  color: #006EFF;
+}
 .words-list-item {
   cursor: pointer;
   font-weight: 400;
-  color: #50545C; }
-  .words-list-item:hover {
-    color: #006EFF; }
+  color: #50545C;
+}
+.words-list-item:hover {
+  color: #006EFF;
+}
 
 .words-H5-main {
-  background: rgba(0, 0, 0, 0.5); }
-  .words-H5-main .words-main-content {
-    background: #FFFFFF; }
-    .words-H5-main .words-main-content .words-list-item {
-      border-bottom: 1px solid #EEEEEE;
-      font-family: PingFangSC-Regular;
-      font-weight: 400;
-      color: #333333;
-      letter-spacing: 0; }
-    .words-H5-main .words-main-content .close {
-      font-family: PingFangSC-Regular;
-      font-weight: 400;
-      color: #3370FF;
-      letter-spacing: 0; }
+  background: rgba(0, 0, 0, 0.5);
+}
+.words-H5-main .words-main-content {
+  background: #FFFFFF;
+}
+.words-H5-main .words-main-content .words-list-item {
+  border-bottom: 1px solid #EEEEEE;
+  font-weight: 400;
+  color: #333333;
+  letter-spacing: 0;
+}
+.words-H5-main .words-main-content .close {
+  font-weight: 400;
+  color: #3370FF;
+  letter-spacing: 0;
+}
 
 .words {
   display: inline-block;
   position: relative;
-  cursor: pointer; }
-  .words .icon {
-    margin: 12px 10px 0; }
-  .words-main {
-    position: absolute;
-    z-index: 5;
-    width: 315px;
-    top: -200px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    width: 19.13rem;
-    height: 12.44rem;
-    overflow-y: auto; }
-    .words-main header {
-      display: flex;
-      justify-content: space-between; }
-      .words-main header aside {
-        display: flex;
-        align-items: center;
-        font-size: 12px; }
-        .words-main header aside h1 {
-          font-size: 12px; }
-  .words-list {
-    flex: 1;
-    display: flex;
-    flex-direction: column; }
-    .words-list-item {
-      cursor: pointer;
-      padding: 4px 0;
-      font-size: 12px; }
+  cursor: pointer;
+}
+.words .icon {
+  margin: 12px 10px 0;
+}
+.words-main {
+  position: absolute;
+  z-index: 5;
+  width: 315px;
+  top: -200px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  width: 19.13rem;
+  height: 12.44rem;
+  overflow-y: auto;
+}
+.words-main header {
+  display: flex;
+  justify-content: space-between;
+}
+.words-main header aside {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.words-main header aside h1 {
+  font-size: 12px;
+}
+.words-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.words-list-item {
+  cursor: pointer;
+  padding: 4px 0;
+  font-size: 12px;
+}
 
 .words-H5 {
   display: inline-block;
   position: relative;
-  cursor: auto; }
-  .words-H5 .words-H5-main {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 100vw;
-    height: auto;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0; }
-    .words-H5 .words-H5-main .words-main-content {
-      padding: 23px 27px 12px;
-      border-radius: 12px 12px 0 0; }
-      .words-H5 .words-H5-main .words-main-content header {
-        padding: 0; }
-        .words-H5 .words-H5-main .words-main-content header aside {
-          flex-direction: column;
-          align-items: flex-start;
-          font-size: 16px;
-          line-height: 28px; }
-          .words-H5 .words-H5-main .words-main-content header aside h1 {
-            font-size: 20px; }
-        .words-H5 .words-H5-main .words-main-content header .close {
-          font-size: 18px;
-          line-height: 27px; }
-      .words-H5 .words-H5-main .words-main-content .words-list-item {
-        padding: 12px 0;
-        font-size: 18px;
-        line-height: 25px; }
+  cursor: auto;
+}
+.words-H5 .words-H5-main {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0;
+}
+.words-H5 .words-H5-main .words-main-content {
+  padding: 23px 27px 12px;
+  border-radius: 12px 12px 0 0;
+}
+.words-H5 .words-H5-main .words-main-content header {
+  padding: 0;
+}
+.words-H5 .words-H5-main .words-main-content header aside {
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 16px;
+  line-height: 28px;
+}
+.words-H5 .words-H5-main .words-main-content header aside h1 {
+  font-size: 20px;
+}
+.words-H5 .words-H5-main .words-main-content header .close {
+  font-size: 18px;
+  line-height: 27px;
+}
+.words-H5 .words-H5-main .words-main-content .words-list-item {
+  padding: 12px 0;
+  font-size: 18px;
+  line-height: 25px;
+}
 
 /*# sourceMappingURL=index.css.map */

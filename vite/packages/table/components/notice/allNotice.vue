@@ -12,11 +12,11 @@
           <div class="flex items-center pointer active-button" @click="delNotice(item)">
             <Icon icon="close-circle-fill" style="font-size: 1.5em;color: var(--secondary-text);"></Icon>
           </div>
-         
+
         </div>
-  
+
         <div class="font-400 mb-1" style="color: var(--secondary-text);">{{ item.doc.content.body }}</div>
-        
+
         <!-- <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time)*1000) }}</span> -->
         <div class="flex items-center justify-between">
           <span class="font-400" style="color:var(--secondary-text);">{{ formatTime(parseInt(item.doc.content.time) * 1000) }}</span>
@@ -31,9 +31,9 @@
 
   <a-menu v-if="toggle"  style="width: 120px;" :style="{position: 'fixed',top:`${contextMenuPosition.y}px`,left:`${contextMenuPosition.x}px`,zIndex: '999'}" class="dropdown-menu rounded-lg flex flex-col items-center justify-center" >
     <a-menu-item style="color:var(--secondary-text);" class="active-button" v-for="(item,index) in rightMenuControls" @click="handleMenuItemClick(item,index)">{{ item.title }}</a-menu-item>
-  </a-menu> 
+  </a-menu>
 
- 
+
 </template>
 
 <script>
@@ -66,7 +66,7 @@ export default defineComponent({
 
    const dialog = ref()
    const content = ref()
-   
+
 
    // 鼠标右键点击
    const handleRightKey = (item,e) =>{
@@ -84,7 +84,7 @@ export default defineComponent({
     // 点击其他地方时隐藏右键菜单
     document.addEventListener('click', removeContextmenu);
    }
-   
+
    const removeContextmenu = () =>{  // 移除隐藏鼠标右键下拉菜单
     data.toggle = false
     document.removeEventListener('click', removeContextmenu);
@@ -99,10 +99,10 @@ export default defineComponent({
 
     }
   }
-  
+
 
    // 根据指定消息通知进行删除
-   const delNotice = (item) =>{  
+   const delNotice = (item) =>{
     store.removeIMChatData(item)
     store.loadNoticeDB()
    }
@@ -159,7 +159,7 @@ export default defineComponent({
 //       evt.preventDefault();
 //       this.delId = index
 
-      
+
 //     },
 
     // handleOutsideClick() {
@@ -195,13 +195,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-400{
- font-family: PingFangSC-Regular;
+
  font-size: 16px;
  font-weight: 400;
 }
 
 .font-500{
- font-family: PingFangSC-Medium;
+
  font-size: 16px;
  font-weight: 500;
 }
@@ -242,13 +242,13 @@ export default defineComponent({
 
 
 .dialog{
-  width: 120px; 
+  width: 120px;
   position: absolute;
   z-index: 5;
   padding: 2px 20px;
 }
 .font-14{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }

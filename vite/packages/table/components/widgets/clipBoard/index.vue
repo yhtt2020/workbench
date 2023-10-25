@@ -14,10 +14,10 @@
                     剪贴板历史</span>
                 <span class="flex-1 h-full nav-item flex justify-center items-center relative pointer span-flex"  :class="['item', { action: actionIndex == 2 }]" @click="onChangeTopIndex(2)">
                     <div class="span-icon">
-                        <star-outlined /> 
+                        <star-outlined />
                     </div>
                     收藏</span>
-                </div> 
+                </div>
                 <div class="col-right">
                     <!-- 菜单 -->
                     <div class="icon-right" @click = "settingVisible = !settingVisible">
@@ -40,7 +40,7 @@
                 </div>
 
                 <!-- 图片框 -->
-                <div class="col" v-if="item.type == 'image'"> 
+                <div class="col" v-if="item.type == 'image'">
                     <div class="icon-sign active-index">
                         <PictureOutlined />
                         图片
@@ -89,12 +89,12 @@
                         <VideoCameraOutlined />
                         视频
                     </div>
-                    <ClipVideo :videoUrl="item.videoUrl" 
+                    <ClipVideo :videoUrl="item.videoUrl"
                     style="width: 266px;height: 127px;"></ClipVideo>
                 </div>
             </div>
-            
-           
+
+
 
         </div>
 
@@ -104,7 +104,7 @@
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        
+
         <span v-for="(item, index) in todoList" :key="index"
         :class="selectTodo.id === item.id ? 'active-index':''"
         class="span-list mb-4 text-center pointer h-12 xt-bg-2 rounded-lg py-3"
@@ -115,7 +115,7 @@
       </vue-custom-scrollbar>
     </a-drawer>
 </template>
-  
+
 <script>
 import axios from "axios";
 import Widget from "../../card/Widget.vue";
@@ -142,12 +142,12 @@ export default {
         AlignLeftOutlined,
         PictureOutlined,
         FileOutlined,
-        VideoCameraOutlined, 
+        VideoCameraOutlined,
         CustomerServiceOutlined,
         ClipVideo,
         ClipAudio,
         VueCustomScrollbar,
-        
+
     },
     props: {
         customIndex: {
@@ -264,7 +264,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
 
     .icon-topline{
@@ -310,14 +310,14 @@ export default {
       }
 
     .col-left span {
-        font-family: PingFangSC-Regular;
+
         font-size: 16px;
         color: rgba(255, 255, 255, 0.85);
         text-align: center;
         font-weight: 400;
         // line-height: 44px;
     }
-    
+
     .span-flex{
         display: flex !important;
         flex-wrap: nowrap;
@@ -340,7 +340,7 @@ export default {
         padding: 0.3em 0;
         align-self: center;
     }
-    
+
     .col-right{
         display: flex;
     }
@@ -362,9 +362,9 @@ export default {
     }
     .clip-body>div:nth-of-type(2n){
         margin-left: 12px;
-        
+
     }
-    
+
     .clip-body .col{
         width: 266px;
         height: 144px;
@@ -402,7 +402,7 @@ export default {
 
     .col>span{
         display: block;
-        font-family: PingFangSC-Regular;
+
         font-size: 16px;
         color: rgba(255,255,255,0.85);
         text-align: center;
@@ -410,7 +410,7 @@ export default {
         overflow: hidden;
         width: 226px;
         max-height: 88px;
-        word-wrap: break-word; 
+        word-wrap: break-word;
         white-space: pre-wrap;
         display: flex;
         display: -webkit-box;
@@ -454,4 +454,3 @@ export default {
 
     }
 </style>
-  

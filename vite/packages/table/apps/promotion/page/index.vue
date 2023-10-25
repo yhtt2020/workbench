@@ -30,16 +30,16 @@
         </div>
       </div>
     </vueCustomScrollbar>
-  
+
 
   </template>
-  
+
   <script>
 
-  
 
-  // import { 
-  //   FileDoneOutlined, 
+
+  // import {
+  //   FileDoneOutlined,
   //   DashboardOutlined,
   //   GiftOutlined,
   //   ClusterOutlined,
@@ -66,12 +66,12 @@
   import appsListDetail24Regular from '@iconify-icons/fluent/apps-list-detail-24-regular';
   import peopleCommunity16Regular from '@iconify-icons/fluent/people-community-16-regular';
   import money16Regular from '@iconify-icons/fluent/money-16-regular';
-  
+
   const { appModel } = window.$models
 
     export default {
       name: 'Promotion',
-      components: { 
+      components: {
         // FileDoneOutlined,
         // DashboardOutlined,
         // GiftOutlined,
@@ -89,9 +89,9 @@
       },
       computed: {
       //   ...mapState(appStore, ['userInfo','secondaryVisible'])
-      
+
         ...mapState(appStore, ['userInfo']),
-      
+
       },
       data(){
         return {
@@ -149,7 +149,7 @@
               title:"推广记录",
               key:6,
               isAdmin:true,
-              
+
             },
             {
               icon:peopleCommunity16Regular,
@@ -184,7 +184,7 @@
       },
     }
   </script>
-  
+
   <style scoped>
 
     .box-body{
@@ -216,7 +216,7 @@
         background: #aaa !important;
         border-radius: 3px;
     }
-    
+
     .left-box .head-user{
       /* border: 1px solid #fff; */
       height: 24%;
@@ -225,9 +225,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      
+
     }
-    
+
     .head-user img{
       /* border: 1px solid #fff; */
       width: 100px;
@@ -237,12 +237,12 @@
     }
     .head-user p{
       margin-top: 12px;
-      font-family: PingFangSC-Medium;
+
       font-size: 16px;
       color: rgba(255,255,255,0.85);
       font-weight: 500;
     }
-    
+
     .nav-list{
       width: 100%;
       display: flex;
@@ -258,7 +258,7 @@
       position:relative;
     }
 
-    .nav-col span{   
+    .nav-col span{
       position: absolute;
       right: 18px;
       background: rgba(80,139,254,0.20);
@@ -272,7 +272,7 @@
     .nav-list>div:hover{
       background: rgba(80,139,254,0.20);
     }
-    
+
     .active-list{
       background: rgba(80,139,254,0.20);
     }
@@ -287,6 +287,5 @@
 
 
 
-    
+
   </style>
-  

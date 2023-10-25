@@ -30,12 +30,12 @@
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">
                 <div class="flex items-center justify-center ">
-                    <div class="flex" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
-                        <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />
+                    <div class="flex items-center" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
+                        <replyIcon icon="akar-icons:thumbs-up" style="font-size: 18px; " class="mr-1 "></replyIcon>
                         <div class="mr-4 text-center">{{ replyCom.support_count }} </div>
                     </div>
-                    <div class="flex" @click="replyStatus">
-                        <MessageOutlined style="font-size: 16px;" class="mt-1 mr-1" />
+                    <div class="flex items-center" @click="replyStatus">
+                        <replyIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-1 "></replyIcon>
                         <!-- <div>回复</div> -->
                     </div>
                     <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid=== replyCom.user.uid">
@@ -46,7 +46,7 @@
                                 </a-menu>
                             </template>
                             <button class="border-0 xt-bg w-[30px] h-[20px]">
-                                <Icon class="text-xl text-center xt-text-2 pointer"
+                                <replyIcon class="text-xl text-center xt-text-2 pointer"
                                     icon="fluent:more-horizontal-16-filled" />
 
                             </button>
@@ -75,7 +75,7 @@ import ReplyCommentLite from './ReplyCommentLite.vue';
 import replyComments from './ReplyComments.vue';
 import { appStore } from '../../../../table/store'
 import emojiReplace from '../../../js/chat/emoji'
-import { Icon } from '@iconify/vue'
+import { Icon as replyIcon } from '@iconify/vue'
 import {message} from 'ant-design-vue'
 import {useCommunityStore} from '../commun'
 const store=useCommunityStore()
@@ -144,20 +144,17 @@ onMounted(()=>{
 }
 
 .font-16 {
-    font-family: PingFangSC-Medium;
     font-size: 16px;
     font-weight: 500;
 }
 
 .font-12 {
-    font-family: PingFangSC-Regular;
     font-size: 12px;
     font-weight: 400;
     text-align: center;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     font-weight: 400;
 }

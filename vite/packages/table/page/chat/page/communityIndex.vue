@@ -189,19 +189,16 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .font-500 {
-  font-family: PingFangSC-Medium;
   font-size: 16px;
   font-weight: 500;
 }
 
 .font-14 {
-  font-family: PingFangSC-Regular;
   font-size: 14px;
   font-weight: 400;
 }
 
 .font-16 {
-  font-family: PingFangSC-Regular;
   font-size: 16px;
   font-weight: 400;
 }
@@ -227,7 +224,6 @@ export default defineComponent({
 }
 
 .font-24-500{
-  font-family: PingFangSC-Medium;
   font-size: 24px;
   font-weight: 500;
 }

@@ -2,11 +2,11 @@
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <ForumIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;"/>
+    <ForumIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;color: var(--secondary-text);"/>
    </div>
    <span class="font-16-400" style="color:var(--primary-text);">选择社区版块</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <ForumIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25em;"/>
+    <ForumIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 
@@ -20,8 +20,8 @@
      <span class="category-16-400 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
     </div>
    </vue-custom-scrollbar>
-   
-   
+
+
 
    <div class="mt-4 flex items-center justify-end" style="height:40px;">
     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
@@ -41,7 +41,7 @@ import { mapActions,mapWritableState } from 'pinia'
 import { Icon as ForumIcon } from '@iconify/vue'
 import { forumStore } from '../../store/forumStore'
 import { communityStore } from '../../store/communityStore'
-import { channelClass } from '../../../../js/chat/createChannelClass' 
+import { channelClass } from '../../../../js/chat/createChannelClass'
 import { message } from 'ant-design-vue'
 
 export default {
@@ -120,7 +120,6 @@ methods:{
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -142,7 +141,7 @@ methods:{
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
+
  font-size: 14px;
  font-weight: 400;
 }

@@ -136,7 +136,7 @@ export default MessageReference;
     }
   }
   p {
-    font-family: PingFangSC-Regular;
+
     font-weight: 400;
     font-size: 12px;
     color: #999999;
@@ -151,7 +151,7 @@ export default MessageReference;
   }
   span {
     line-height: 20px;
-    font-family: PingFangSC-Regular;
+
     font-weight: 400;
     font-size: 12px;
     color: #999999;

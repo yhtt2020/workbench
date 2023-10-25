@@ -1,82 +1,59 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" :animationName="t-b-close">
-        <div class="w-[500px] pl-4 pr-4">
+    <Modal :maskNoClose="true" class="" animationName="t-b-close">
+        <div class="w-[500px] pl-4 pr-4 content">
             <div class="flex justify-between w-full h-[64px] items-center ">
-                <div class="flex justify-center w-full">
-                    <div class="font-16 xt-text">写动态</div>
-                </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
-                    @click="handleOk">
-                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </button>
-
-            </div>
-            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
-                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan">元社区</a>
-            </div>
-            <div class="w-full mt-2 xt-bg box font-16">
-                <div style="font-size: 1rem !important;">
-                    <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
-                            :bordered="false"  />
-                        <div style="font-size: 16px !important;" v-if="imageLoadVisible">
-                            <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
-                                multiple @preview="handlePreview">
-                                <div v-if="fileList.length < 6">
-                                    <plus-outlined style="font-size: 1.2em; " class="xt-text" />
-                                </div>
-                            </a-upload>
-                        </div>
-                        <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                            <img style="width: 100%" :src="previewImage" />
-                        </a-modal>
+                <a-dropdown trigger="click" placement="bottom"
+                    overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
+                    <div class="flex items-center justify-center w-full">
+                        <div class="ml-20 font-16 xt-text">{{ defaultType.title }}</div>
+                        <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" />
                     </div>
-                    <div class="h-[45px] flex items-center justify-between">
-                        <div class="flex items-center justify-center xt-text-2">
-                            <tippy trigger=" click" placement="bottom" :interactive="true">
-                                <template #content>
-                                    <!-- <div class="w-full"> -->
-                                    <vue-custom-scrollbar :settings="settingsScroller"
-                                        class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
-                                        <div v-for="(item, index) in folderPath"
-                                            class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
-                                            :key="index" style="cursor: pointer;">
-                                            <img :src="item" class="w-[32px] h-[32px]">
-                                        </div>
-                                    </vue-custom-scrollbar>
-                                    <!-- </div> -->
-                                </template>
-                                <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
-                                    style="color: var(--secondary-text) !important;"><template #icon>
-                                        <SmileOutlined style="" />
-                                    </template> 表情</a-button>
-                            </tippy>
+                    <template #overlay>
+                        <a-menu class="text-center xt-bg"
+                            style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
+                            <a-menu-item v-for="(item, index) in publishType" :key="index"
+                                @click="handleMenuItemClick(index)">
+                                <span class="ml-12 text-center xt-text">{{ item.title }}</span>
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
 
-                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible = !imageLoadVisible"
-                                style="color: var(--secondary-text) !important;"><template #icon>
-                                    <PictureOutlined style="" />
-                                </template> 图片</a-button>
-                        </div>
+                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
+                    @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
+                    <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
+                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
+                    <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
+                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
+                </xt-button>
+                <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
+                    @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
+                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                </xt-button>
 
-                    </div>
-                </div>
             </div>
+            <component :is="currentComponent"></component>
+            <!-- <DynamicItem v-if="defaultType.value='dynamic'"/>
+            <VideoItem v-if="defaultType.value='video'"/>
+            <PostItem v-if="defaultType.value='post'"/> -->
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :loadData="loadData" :bordered="false" @change="handleChange"
-                    style=" font-size: 14px; border-radius: 10px;" change-on-select>
+                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :bordered="false"
+                    @change="handleChange"
+                    style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
+                    change-on-select>
                     <template #suffixIcon>
-                        <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                        <newIcon icon="fluent:chevron-left-16-filled" class="rotate-180 xt-text-2" style="font-size: 20px;vertical-align: super;margin-top: -3px;"></newIcon>
                     </template>
                 </a-select>
                 <div class="flex items-center">
                     <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 68px; height: 32px;"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
                         @click="handleOk">取消</xt-button>
                     <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 68px; height: 32px;background-color: var(--active-bg);"
+                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
                         @click="publishPost">发布</xt-button>
                 </div>
             </div>
@@ -86,25 +63,73 @@
 </template>
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed } from 'vue'
-import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
-import { Icon } from '@iconify/vue';
+import { Icon as newIcon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
-import {useCommunityStore} from '../../../page/chat/commun'
+import { useCommunityStore } from '../../../page/chat/commun'
+import PostItem from './Detail/PostItem.vue';
+import VideoItem from './Detail/VideoItem.vue';
+import DynamicItem from './Detail/DynamicItem.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-const imageLoadVisible = ref(true)
-const browserUrl=ref('https://s.apps.vip/forum?id=')
-const emoji=ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
+// const imageLoadVisible = ref(true)
+const browserUrl = ref('https://s.apps.vip/forum?id=')
+const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const goYuan = () => {
     browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
 }
+const titleContent = ref('')
+const publishType = ref([
+    {
+        title: '发动态',
+        value: 'dynamic'
+    },
+    {
+        title: '发帖子',
+        value: 'post'
+    },
+    {
+        title: '发视频',
+        value: 'video'
+    }
+])
+const currentComponent=computed(()=>{
+    switch (defaultType.value.value) {
+        case 'dynamic':
+            return DynamicItem;
+            break;
+        case 'post':
+            return PostItem;
+            break;
+        case 'video':
+            return VideoItem;
+            
+            break;
+    
+        default:
+            return DynamicItem;
+            break;
+    }
+})
+const removeCover = () => {
+    coverList.value = []
+}
+let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
+const handleMenuItemClick = (index) => {
+    defaultType.value = publishType.value[index]
+}
+// 是否全屏
+const fullScreen = ref(false)
+const handleFullScreen = () => {
+//   const full = document.querySelector('.content');
+  fullScreen.value = !fullScreen.value;
+};
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({
@@ -123,6 +148,9 @@ const addEmoji = (item) => {
     postValue.value += `${key}`
 
 }
+const imageLoadVisible = computed(() => {
+    return fileList.value?.length > 0
+})
 const visible = ref(false)
 function getBase64(file: File) {
     return new Promise((resolve, reject) => {
@@ -141,6 +169,7 @@ const previewTitle = ref('');
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
+
 onMounted(() => {
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`${emoji.value}${item}`)
@@ -151,8 +180,7 @@ onMounted(() => {
     textareaElement?.focus()
     // console.log(navigator.plugins);
     useYuanCommunityStore.getMyForumList()
-    
-    
+
 
 })
 // 选择发帖板块
@@ -181,7 +209,7 @@ const handleChange = (value) => {
     cascaderValue.value = value
     console.log(cascaderValue.value);
 }
-const holderName=computed(() => {
+const holderName = computed(() => {
     return useYuanCommunityStore.myForumList.joined[props.forumIndex].name
 })
 const settingsScroller = reactive({
@@ -233,7 +261,7 @@ const publishPost = async () => {
         setTimeout(async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
-            await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
+            await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value, cascaderValue)
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
@@ -245,19 +273,23 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
+:deep(.ant-upload-list-text-container) {
+    display: none;
+}
+
 .box {
     border-radius: 12px;
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     // text-align: center;
     font-weight: 400;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
+
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
@@ -276,40 +308,60 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
-    color: var(--secondary-text);
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    padding-right: 0px;
 }
-:deep(.ant-select-arrow){
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+
+:deep(.ant-select-arrow) {
     color: var(--secondary-text);
     font-size: 16px;
 }
+
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     // &::placeholder {
     font-weight: 400;
     font-size: 16px;
-    font-family: PingFangSC-Regular;
+
     color: var(--secondary-text);
     // }
 }
-:deep( .ant-select-open){
+
+:deep(.ant-select-open) {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
 }
-:deep( .ant-select-focused){
+
+:deep(.ant-select-focused) {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
 }
-:deep( .ant-select-focused .ant-select-open){
+
+:deep(.ant-select-focused .ant-select-open) {
     background: var(--primary-bg) !important;
     color: var(--primary-text) !important;
 }
+
 :deep(.ant-input) {
     color: var(--secondary-text);
+    margin-left: 8px;
+
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+
         color: var(--secondary-text);
+        // padding-left: 8px;
     }
 }
 

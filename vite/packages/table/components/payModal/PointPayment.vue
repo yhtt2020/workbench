@@ -21,7 +21,7 @@
     <a-button type="primary" v-if="isEnough" style="border-radius: 12px; margin-right: 0;height: 48px; width: 400px;color: var(--active-text);" @click="integralEnough">
       立即兑换
     </a-button>
-    <a-button v-else  disabled style="border:none;border-radius: 12px; height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);" 
+    <a-button v-else  disabled style="border:none;border-radius: 12px; height: 48px; margin-right: 0;width: 400px;background: var(--secondary-bg);color: var(--secondary-text);"
      @click="notEnoughPoint"
     >
       积分不足
@@ -48,8 +48,8 @@ export default {
     integralEnough(){},
     // 积分不足的情况下回调事件
     notEnoughPoint(){},
-  
-    
+
+
   }
 
 }
@@ -57,7 +57,7 @@ export default {
 
 <style lang="scss" scoped>
 .avatar-font{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 500;
 }
@@ -70,7 +70,7 @@ export default {
 }
 
 .avatar-size{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }

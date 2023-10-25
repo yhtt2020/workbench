@@ -7,7 +7,6 @@ import axios from 'axios'
 import {getConfig} from "./js/axios/serverApi";
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
-import {taskStore} from "./apps/task/store";
 
 // @ts-ignore
 export const appStore = defineStore('appStore', {
@@ -51,6 +50,8 @@ export const appStore = defineStore('appStore', {
         count: 100,
         type: 'rain'
       },
+      showTopbarTime:true,
+      showTopbarWeather:true,
       houserun: false,//rgb跑马灯
       zoomFactor: 100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器
@@ -153,12 +154,7 @@ export const appStore = defineStore('appStore', {
     finishWizard() {
       this.init = true;
       this.agreeTest = true
-       /**
-       * 首次引导任务
-       */
-       const store:any =  taskStore()
-       store.step = 1;
-       store.taskID = "firstTask";
+
     },
 
     setMusic(status) {

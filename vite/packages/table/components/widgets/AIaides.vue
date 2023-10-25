@@ -55,7 +55,7 @@
         >
           最近对话
         </div>
-        <template v-if="recentList">
+        <template v-if=" recentList">
           <div v-for="index in copyNum">
             <div class="ai-msg xt-bg-2" @click="goPage(index - 1)">
               <xt-base-icon
@@ -74,13 +74,16 @@
             </div>
           </div>
         </template>
-        <DataStatu
-          v-else
-          imgDisplay="/img/test/load-ail.png"
-          :btnToggle="false"
-          textPrompt="暂无数据"
-          style="margin-top: 200px"
-        ></DataStatu>
+        <template v-else>
+          <div v-if="copyNum == 1">暂无数据</div>
+          <DataStatu
+            v-else
+            imgDisplay="/img/test/load-ail.png"
+            :btnToggle="false"
+            textPrompt="暂无数据"
+            style="margin-top: 200px"
+          ></DataStatu>
+        </template>
       </div>
     </Widget>
   </div>
@@ -163,7 +166,7 @@ export default {
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 1 ? 1 : this.recentList.slice(0, 4).length;
+      return this.showSize.height == 1 ? 1 : this.recentList?.slice(0, 4).length;
     },
   },
 };
@@ -187,19 +190,20 @@ export default {
     // margin: auto 5px;
     :deep(.ant-input) {
       color: var(--secondary-text);
+      font-size: 14px;
       height: 40px;
       width: 100%;
       padding-left: 16px;
       &::placeholder {
-        font-family: PingFangSC-Regular;
-        font-size: 16px;
+
+        font-size: 14px;
         font-weight: 400;
         color: var(--secondary-text);
       }
     }
   }
   .ai-con {
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     font-weight: 400;
     // margin-top: -5px;
@@ -221,7 +225,7 @@ export default {
       flex-shrink: 0;
     }
     .msg-title {
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       // width: 80%;
       color: var(--primary-text);

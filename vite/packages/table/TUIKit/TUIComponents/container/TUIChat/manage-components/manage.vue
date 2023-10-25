@@ -45,12 +45,16 @@
             <div class="font-12 truncate" style="max-width:48px;color: var(-primary-text);">{{ item.nick }}</div>
           </div>
         </template>
-        
+
 
         <div class="flex" >
-          <!-- v-if="conversation?.selfInfo?.role !== 'Member'" -->
-          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;" @click="addGroupMember('add')">
-           <Icon icon="tianjia3" style="color: var(--success);"></Icon>
+
+          <div v-if="conversation.inviteOption !== 'DisableApply' &&  conversation.type !== 'AVChatRoom' && conversation?.selfInfo?.role !== 'Member'"
+           class="flex items-center justify-center active-button rounded-lg"
+           style="width: 32px; height: 32px; background: rgba(80,139,254,0.2);margin-right:8px;"
+            @click="addGroupMember('add')"
+          >
+           <Icon icon="tianjia3" style="color: var(--active-bg);"></Icon>
           </div>
 
           <div v-if="conversation?.selfInfo?.role !== 'Member'" class="flex items-center justify-center active-button rounded-lg" style="width: 32px; height: 32px; background: rgba(255,77,79,0.2);" @click="deleteMember('remove')">
@@ -61,9 +65,9 @@
     </div>
 
 
-    
+
     <div class="rounded-lg pointer" style="background: var(--secondary-bg);padding: 14px 16px !important;margin-bottom: 16px !important;">
-      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role === 'Owner' && conversation.type !== 'AVChatRoom'"  @click="enterGroupManage">
+      <div class="flex items-center justify-between" style="margin-bottom: 11px;" v-if="conversation?.selfInfo?.role !== 'Member' && conversation.type !== 'AVChatRoom' && conversation.type !== 'Private'"  @click="enterGroupManage">
         <span class="font-14" style="color: var(--primary-text);">群管理</span>
         <Icon icon="xiangyou"></Icon>
       </div>
@@ -121,16 +125,16 @@
         </div>
       </div>
     </div>
-     
+
     <template v-if="conversation?.selfInfo?.role === 'Owner'">
       <div class="flex items-center justify-between" style="padding-bottom: 10px;">
-         <div class="flex  rounded-lg pointer  active-button items-center justify-center" 
+         <div class="flex  rounded-lg pointer  active-button items-center justify-center"
           style="width: 220px;height: 48px; background: var(--secondary-bg);color:var(--primary-text);"
           @click="changeOwner('change')"
          >
           转让群聊
         </div>
-        <div  class="flex  rounded-lg pointer active-button items-center justify-center" 
+        <div  class="flex  rounded-lg pointer active-button items-center justify-center"
          style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
          @click="dismiss"
         >
@@ -140,28 +144,28 @@
     </template>
 
     <template v-else>
-      <div class="flex items-center justify-center" style="padding-bottom: 10px;">    
-        <div class="flex  rounded-lg pointer active-button items-center justify-center" 
+      <div class="flex items-center justify-center" style="padding-bottom: 10px;">
+        <div class="flex  rounded-lg pointer active-button items-center justify-center"
           style="width: 220px;height: 48px; background: var(--error);color:var(--active-text);"
           @click="exitGroupChat"
         >
           退出群聊
         </div>
       </div>
-       
+
     </template>
 
   </div>
 
  <ChangeModal v-model:visible="isChangeOwner" v-if="isChangeOwner" :blurFlag="true">
-    <UserSelect :type="type" :list="type === 'change' ?  memberList : '' " 
+    <UserSelect :type="type" :list="type === 'change' ?  memberList : '' "
     :groupID="conversation.groupID"  @closeUser="close"
     >
     </UserSelect>
  </ChangeModal>
 
  <!-- type === 'addMember' ? friendList : memberList -->
- 
+
  <ChangeModal v-model:visible="enableVisible" v-if="enableVisible" :blurFlag="true">
    <AddMemeber :type="memeberType" @closeUser="enableVisible = false"
     :list="memeberType === 'remove' ? memberList : friendList" :groupID="conversation.groupID"
@@ -213,7 +217,7 @@ const manage = defineComponent({
       friendList:[], // 获取好友数据
     })
 
-    const handleGroupIDCopy = async () => {  // 复制群组id 
+    const handleGroupIDCopy = async () => {  // 复制群组id
       const { toClipboard } = useClipboard();
       const res = await toClipboard(props.conversation.groupID);
       if(res.text !== ""){
@@ -221,7 +225,7 @@ const manage = defineComponent({
       }
     }
 
-    const enterGroupManage = () =>{  // 进入群管理详情界面  
+    const enterGroupManage = () =>{  // 进入群管理详情界面
       ctx.emit('updateName',{title:'群管理',id:4,
        info:{
         groupID:props.conversation.groupID,
@@ -233,7 +237,7 @@ const manage = defineComponent({
     }
 
     const enterUpdateGroupName = () =>{  // 进入群管理名称编辑界面
-      
+
       ctx.emit('updateName',
         {
          title:'群信息',id:1,
@@ -256,7 +260,7 @@ const manage = defineComponent({
       }})
     }
 
-    const enterGroupNotice = () =>{  // 进入群公告界面 
+    const enterGroupNotice = () =>{  // 进入群公告界面
       const info = {
         groupID:props.conversation.groupID,
         notification:props.conversation.notification !== '' ? props.conversation.notification : '',
@@ -273,7 +277,7 @@ const manage = defineComponent({
     }
 
 
-    const exitGroupChat = () =>{  // 退出群聊 
+    const exitGroupChat = () =>{  // 退出群聊
       Modal.confirm({
         content: '确定退出该群聊吗',
         okText: '确认',
@@ -290,8 +294,8 @@ const manage = defineComponent({
       manage.TUIServer.store.conversation = {};
     }
 
- 
-    const deleteMember = (type) => {  // 删除群组成员 
+
+    const deleteMember = (type) => {  // 删除群组成员
       if(props.memberList.length > 1){
         data.enableVisible = true
         data.memeberType = type
@@ -300,7 +304,7 @@ const manage = defineComponent({
       }
     }
 
-    const dismiss = async () =>{  // 解散群聊 
+    const dismiss = async () =>{  // 解散群聊
       Modal.confirm({
         content:'是否确认操作',
         okText:'确认',
@@ -310,7 +314,7 @@ const manage = defineComponent({
           ctx.emit('close')
         }
       })
-      
+
     }
 
     const dismissGroup = async () =>{
@@ -328,7 +332,7 @@ const manage = defineComponent({
       }else{
         data.isChangeOwner =  false
       }
-      
+
     }
 
     const close = () =>{
@@ -337,13 +341,11 @@ const manage = defineComponent({
     }
 
     const addGroupMember = (type) =>{  // 添加群聊成员
+
       if(props.conversation.inviteOption === 'DisableInvite'){
-        if(props.conversation.selfInfo.role === 'Member'){
+        if(props.conversation.selfInfo.role !== 'Member'){
           data.enableVisible = false
-          message.error('群管理员开启禁止群成员邀请')
-        }else{
-          data.enableVisible = true
-          data.memeberType = type
+          message.error('禁止邀请群成员,群管理员可以通过下方邀请方式按钮进行修改')
         }
       }else{
         data.enableVisible = true
@@ -367,7 +369,7 @@ const manage = defineComponent({
     }
 
 
-  
+
 
 
     const updateGroupJoinWay = () =>{  // 修改加群方式
@@ -459,7 +461,7 @@ const manage = defineComponent({
     MemeberProfile,
     Dialog,
   },
-  
+
   setup(props: any, ctx: any){
     const types: any = manage.TUIServer.TUICore.TIM.TYPES;
     const { GroupServer } = manage;
@@ -683,7 +685,7 @@ const manage = defineComponent({
       (window as any)?.TUIKitTUICore?.isOfficial && VuexStore?.commit && VuexStore?.commit('handleTask', 5);
     };
 
-    
+
     const handleAdmin = async (user: any) => {
       const { conversation } = data;
       let role = '';
@@ -956,8 +958,8 @@ const manage = defineComponent({
       handleGroupIDCopy, handleMemberProfileShow,
     }
   }
-  
-  
+
+
 })
 
 export default manage;
@@ -967,13 +969,13 @@ export default manage;
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .font-14{
-  font-family: PingFangSC-Regular;
+
   font-size: 14px;
   font-weight: 400;
 }
 
 .font-12{
-  font-family: PingFangSC-Regular;
+
   font-size: 12px;
   font-weight: 400;
 }

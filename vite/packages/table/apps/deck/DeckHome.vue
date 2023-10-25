@@ -7,9 +7,12 @@
       <a-result class="s-bg rounded-lg " style="background: var(--primary-bg);color: var(--primary-text);" status="success" title="使用快捷指令"
                 sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。">
         <template #extra>
-          <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
-          <a-button disabled key="buy" @click="learn"
-                    style="color:var( --secondary-text); ">学习（课程暂未上线）</a-button>
+          <div class="item-content">
+            <xt-button type="theme" :w="140" @click="initGrids" class="mr-10" key="console" >以示例方案启动</xt-button>
+          </div>
+
+<!--          <a-button disabled key="buy" @click="learn"-->
+<!--                    style="color:var( &#45;&#45;secondary-text); ">学习（课程暂未上线）</a-button>-->
         </template>
         <div class="desc">
           <p style="font-size: 16px">

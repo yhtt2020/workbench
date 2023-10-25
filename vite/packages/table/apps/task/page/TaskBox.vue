@@ -1,5 +1,5 @@
 <template>
-  <xt-task id="firstTask" no='1' @cb="resetting">
+  <xt-task id="firstTask" no="1" @cb="resetting">
     <xt-menu :menus="menus" style="" v-if="store.isTask">
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
       <div
@@ -66,6 +66,7 @@ const progress = computed(() => {
   let flag = ref(true);
   tasks.forEach((item) => {
     item.tasks.forEach((task) => {
+      if (task.id == "firstTask") return;
       if (store.taskID == task.id) {
         flag.value = false;
       }

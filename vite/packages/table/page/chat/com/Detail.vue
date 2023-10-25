@@ -7,10 +7,14 @@
             <div class="flex justify-between mb-2 -mt-3">
                 <span class="xt-text-2 font-16">详情</span>
                 <div class="flex items-center">
-                    <Icon class="text-xl xt-text pointer" icon="fluent:more-horizontal-16-filled" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:arrow-clockwise" @click="refreshDetail" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="majesticons:open" @click="goYuan" />
-                    <Icon class="ml-3 text-xl xt-text pointer" icon="akar-icons:cross" @click="closeDetail" />
+                    <a-tooltip title="更多操作" placement="bottom">
+                    <Icon class="text-xl xt-text pointer active-icon" icon="fluent:more-horizontal-16-filled" /></a-tooltip>
+                    <a-tooltip title="刷新" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:arrow-clockwise" @click="refreshDetail" /></a-tooltip>
+                    <a-tooltip title="前往元社区" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="majesticons:open" @click="goYuan" /></a-tooltip>
+                    <a-tooltip title="关闭" placement="bottom">
+                    <Icon class="ml-3 text-xl xt-text pointer active-icon" icon="akar-icons:cross" @click="closeDetail" /></a-tooltip>
                 </div>
             </div>
             <div v-if="refreshDetailFlag">
@@ -150,7 +154,7 @@ const closeDetail = () => {
 const isLike = computed(() => {
     return store.communityPostDetail.is_support
 })
-// 
+//
 const clickLike =async () => {
     // isLike.value = !isLike.value
     let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
@@ -188,8 +192,8 @@ const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
 })
-// const tid=store.communityPostDetail.pay_set.tid 
-let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
+// const tid=store.communityPostDetail.pay_set.tid
+let tid = store.communityPostDetail?.pay_set?.tid || store.communityPostDetail?.id;
 const refreshDetailFlag = ref(true)
 const refreshDetail = async () => {
     let Detailtid=props.cardData.pay_set.tid?props.cardData.pay_set.tid:props.cardData.id
@@ -252,14 +256,12 @@ const showImage = () => {
                 margin-left: 8px;
 
                 .user-name {
-                    font-family: PingFangSC-Regular;
                     font-size: 14px;
                     color: rgba(255, 255, 255, 0.85);
                     font-weight: 400;
                 }
 
                 .self-msg {
-                    font-family: PingFangSC-Regular;
                     font-size: 12px;
                     color: rgba(255, 255, 255, 0.40);
                     font-weight: 400;
@@ -280,7 +282,6 @@ const showImage = () => {
         }
 
         .card-content {
-            font-family: PingFangSC-Regular;
             font-size: 16px;
             // color: rgba(255, 255, 255, 0.85);
             // text-align: justify;
@@ -303,7 +304,6 @@ const showImage = () => {
     }
 
     #title {
-        font-family: PingFangSC-Regular;
         font-size: 16px;
         color: rgba(255, 255, 255, 0.85);
         text-align: justify;
@@ -314,9 +314,8 @@ const showImage = () => {
     }
 
     #context {
-        font-family: PingFangSC-Regular;
         font-size: 14px;
-        // color: rgba(255, 255, 255, 0.60); 
+        // color: rgba(255, 255, 255, 0.60);
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
@@ -346,5 +345,11 @@ const showImage = () => {
         }
     }
 
+}
+.active-icon{
+    background:transparent;
+    &:hover{
+        background: var(--secondary-bg);
+    }
 }
 </style>

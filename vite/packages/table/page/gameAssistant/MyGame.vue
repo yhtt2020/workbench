@@ -561,14 +561,12 @@ export default {
 }
 
 .my-item {
-  font-family: PingFangSC-Semibold;
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 600;
 }
 
 .my-num {
-  font-family: PingFangSC-Regular;
   font-size: 13px;
   color: var(--secondary-text);
   font-weight: 400;

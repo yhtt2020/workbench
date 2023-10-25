@@ -15,9 +15,9 @@
           <img src="/img/icon/close-circle-fill.png" class="w-full rounded-full h-full object-cover" alt="">
         </div>
       </div>
-     
+
       <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">{{message.body}}</div>
-      
+
       <div class="flex items-center justify-between">
         <div class="font-16" style="color:var(--secondary-text);">{{formatTime(parseInt(message.time) * 1000)}}</div>
         <div class="px-5 py-2 rounded-lg flex pointer items-center justify-center active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow" >立即查看</div>
@@ -60,7 +60,7 @@ export default defineComponent({
              this.$refs.message.pause()
             })
           }
-        }        
+        }
       },
       immediate:true,
       deep:true,
@@ -104,7 +104,7 @@ export default defineComponent({
 
 
 .font-16{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   font-weight: 400;
 }

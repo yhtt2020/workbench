@@ -36,7 +36,7 @@
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
-        <div class="ml-10 xt-text-2" style="font-family: PingFangSC-Regular;font-size: 16px;">
+        <div class="ml-10 xt-text-2" style="font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
 
@@ -377,7 +377,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp','getScheme']),
     completeEdit () {
       this.saved = false
       message.success('完成编辑')
@@ -391,7 +391,6 @@ export default {
       for (let i = index; i >= 0; i--) {
         if (this.keyList[i].groupName) {
           //是组
-          console.log(this.keyList[i], this.keyList[index].title)
           return this.keyList[i].color
         }
       }
@@ -401,17 +400,29 @@ export default {
       if (this.$route.params.id) {
         this.paramsId = this.$route.params.id
         // let usedList = this.deepClone({},this.recentlyUsedList)
-        this.recentlyUsedList.find(i => {
+        this.recentlyUsedList.find(async i => {
           if (i.id === this.paramsId) {
             let item = JSON.parse(JSON.stringify(this.deepClone({}, i)))
-            this.appContent = item
+            //this.appContent = item
+            let data = await this.getScheme(item._id)
+            if(data?.docs.length>0){
+              console.log(data.docs[0],'找到的方案')
+              this.appContent=data.docs[0]
+             // this.appContent=
+            }else{
+              message.error('方案不存在')
+              this.$router.go(-1)
+              return
+            }
+
             this.icon = item.icon
             this.keyList = item.keyList
             this.applyName = item.name
             this.introduce = item.commonUse
-            this.form.exeName =( item.exeName instanceof Array)? item.exeName.join(','):item.exeName
+            this.form.exeName = (item.exeName instanceof Array) ? item.exeName.join(',') : item.exeName
             this.form.icon = this.file.path ? this.file.path : this.icon
           }
+
         })
         //执行添加默认添加一个可编辑的空数据
         this.addShortcutKey()
@@ -449,58 +460,73 @@ export default {
     delNotData () {
       // 检测快捷键列表中的空数据后进行删除操作
       this.keyList = this.keyList.filter(item => {
-        return item.keyStr !== '' && item.groupName !== '' && item.title !== ''
+        const avaliable=item.keyStr !== '' || item.groupName !== '' || item.title !== '' //只要存在其中一项就当做不是空的
+        if(!avaliable){
+          console.error('无效的键位',item)
+        }
+        return avaliable
       })
       this.delRecentlyEmpty({ keyList: this.keyList, id: this.paramsId })
     },
     // 保存
-    doSaveScheme () {
+    async doSaveScheme () {
       if (!this.applyName) return message.info('名称不能为空')
       if (!this.form.exeName) return message.info('必须填写方案对应的软件')
-      this.delNotData()
+      let saveResult = false
+      try {
+        this.delNotData()
+        let sum = 0
+        this.keyList.map(item => {
+          if (item.keys) {
+            sum += item.keys.length
+          }
+        })
+        if (this.paramsId !== -1) {
+          this.appContent.icon = this.form.icon
+          this.appContent.keyList = this.keyList
+          this.appContent.name = this.applyName
+          this.appContent.commonUse = this.introduce
+          this.appContent.number = this.keyList.length
+          this.appContent.exeName = this.form.exeName
+          saveResult = await this.saveScheme(this.appContent)
+        } else {
+          const time = new Date().valueOf()
+          this.appContent = {
+            id: nanoid(),  //唯一标识
+            icon: this.form.icon, //方案的图片
+            name: this.applyName, //方案名称
+            number: this.keyList.length, //快捷键总数
+            commonUse: this.introduce, //方案简介
+            avatar: '/icons/logo128.png', //方案人
+            nickName: 'Victor Ruiz', //头像
+            sumLikes: 0, //总赞数
+            download: 0, //下载次数
+            key: '快捷键',
+            time, //时间轴
+            isLike: false,  //是否点赞
+            isMyCreate: true, //是否是自己创建
+            isShare: false, //是否分享到社区
+            isCommunity: false, //是否来自社区
+            keyList: this.keyList, //快捷键列表
+            exeName: this.form.exeName,
+          }
+          saveResult=await this.addScheme(this.appContent, this.form.exeName)
+        }
 
-      let sum = 0
-      this.keyList.map(item => {
-        if (item.keys) {
-          sum += item.keys.length
+        if(saveResult){
+          this.saved = true
+          message.success('成功保存')
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 200)
+        }else{
+          message.error('方案保存失败。')
         }
-      })
-      if (this.paramsId !== -1) {
-        this.appContent.icon = this.form.icon
-        this.appContent.keyList = this.keyList
-        this.appContent.name = this.applyName
-        this.appContent.commonUse = this.introduce
-        this.appContent.number = this.keyList.length
-        this.appContent.exeName = this.form.exeName
-        this.saveScheme(this.appContent)
-      } else {
-        const time = new Date().valueOf()
-        this.appContent = {
-          id: nanoid(),  //唯一标识
-          icon: this.form.icon, //方案的图片
-          name: this.applyName, //方案名称
-          number: this.keyList.length, //快捷键总数
-          commonUse: this.introduce, //方案简介
-          avatar: '/icons/logo128.png', //方案人
-          nickName: 'Victor Ruiz', //头像
-          sumLikes: 0, //总赞数
-          download: 0, //下载次数
-          key: '快捷键',
-          time, //时间轴
-          isLike: false,  //是否点赞
-          isMyCreate: true, //是否是自己创建
-          isShare: false, //是否分享到社区
-          isCommunity: false, //是否来自社区
-          keyList: this.keyList, //快捷键列表
-          exeName: this.form.exeName,
-        }
-        this.addScheme(this.appContent, this.form.exeName)
+      } catch (e) {
+        console.error(e)
+        message.error('存储方案意外失败，失败原因：', e )
+        console.log(this.appContent)
       }
-      this.saved = true
-      message.success('成功保存')
-      setTimeout(() => {
-        this.$router.go(-1)
-      }, 200)
 
     },
     // 保存并分享
@@ -941,7 +967,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: PingFangSC-Regular;
+
     font-size: 16px;
     color: var(--primary-text);
   }

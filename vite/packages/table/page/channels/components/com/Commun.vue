@@ -3,7 +3,7 @@
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
         <!-- 当是从圈子列表进入的时候，便显示这个回退 -->
-        <button class="mr-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] " 
+        <button class="mr-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] "
           style="flex-shrink: 0;" @click="goBack">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="fluent:chevron-left-16-filled" />
         </button>
@@ -16,7 +16,7 @@
              -->
              11111
           </div>
-          
+
         </div>
         <div class="flex  w-[200px] h-[40px] justify-center xt-bg rounded-lg">
           <div v-for="(item, index) in menuList" :key="index"
@@ -77,12 +77,12 @@
                             style="margin-top: 30%;"></a-empty>
           <template v-else>
             <ComCard v-for="(card, index) in comCards.list" :key="index" :cardData="card" @click="showDetail(index)"
-            :detailVisible="detailVisible" class="xt-bg" 
+            :detailVisible="detailVisible" class="xt-bg"
             :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
           </ComCard>
           <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
           </template>
-          
+
         </div>
       </vue-custom-scrollbar>
       <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
@@ -309,7 +309,7 @@ onUpdated(() => {
     //当屏幕最大宽度为767px
 
     .font-16 {
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       font-weight: 400;
     }
@@ -355,7 +355,7 @@ onUpdated(() => {
 
     // overflow: scroll;
     .card-content {
-      font-family: PingFangSC-Regular;
+
       font-size: 16px;
       color: rgba(255, 255, 255, 0.85);
       text-align: justify;
@@ -374,7 +374,7 @@ onUpdated(() => {
 
       .right {
         .title {
-          font-family: PingFangSC-Medium;
+
           font-size: 16px;
           color: rgba(255, 255, 255, 0.85);
           text-align: justify;
@@ -390,7 +390,7 @@ onUpdated(() => {
 
         .context {
           margin-top: 8px;
-          font-family: PingFangSC-Regular;
+
           font-size: 14px;
           color: rgba(255, 255, 255, 0.60);
           text-align: justify;

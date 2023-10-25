@@ -10,7 +10,7 @@
    </div>
   </div>
 
-  
+
  </div>
 </template>
 
@@ -27,7 +27,7 @@ export default defineComponent({
  },
 
  setup (props,ctx) {
-  
+
   // 关闭
   const closeChannel = () => {
    ctx.emit('close')
@@ -48,7 +48,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 
 .font-16-400{
- font-family: PingFangSC-Regular;
  font-size: 16px;
  font-weight: 400;
 }
@@ -70,7 +69,6 @@ export default defineComponent({
 }
 
 .font-14-400{
- font-family: PingFangSC-Regular;
  font-size: 14px;
  font-weight: 400;
 }

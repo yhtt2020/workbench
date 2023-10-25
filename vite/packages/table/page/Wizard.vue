@@ -15,8 +15,11 @@
         <div style="margin-bottom: 2em;margin-top:1em" v-if="true">
           如果您正在使用副屏，则推荐您使用副屏模式获得最佳体验。
           <div style="color:#999;font-size: 0.9em">
-            <bulb-filled /> 还没有扩展屏？
-            <br/><a @click="openVideo"><play-circle-filled /> 点击了解</a> Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！
+            <bulb-filled/>
+            还没有扩展屏？
+            <br/><a @click="openVideo">
+            <play-circle-filled/>
+            点击了解</a> Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！
           </div>
         </div>
         <div style="margin-bottom: 1em" v-else>
@@ -106,7 +109,8 @@
         </div>
 
 
-        <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">选择您要显示工作台的屏幕，直接点击屏幕即可。
+        <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">
+          选择您要显示工作台的屏幕，直接点击屏幕即可。
           <a-button style="margin-bottom: 2em" v-if="canTouch" type="primary">
             <Icon icon="touping"/>
             矫正屏幕
@@ -124,7 +128,9 @@
 
       </div>
       <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
-        <div class="mt-3 mb-3" style="background: #f15460;padding: 1em;border-radius: 8px 4px;color: white"><AutoRun/></div>
+        <div class="mt-3 mb-3" style="background: #f15460;padding: 1em;border-radius: 8px 8px;color: white">
+          <AutoRun/>
+        </div>
         <div style="text-align: center">
           <KeySetting></KeySetting>
         </div>
@@ -139,14 +145,14 @@
       </div>
 
 
-      <div style="position: fixed;bottom: 1em;left: calc(50% - 8em)">
-        <div v-if="screenSettingTab==='none'">
-          <a-button v-if="step!==0" @click="prevStep" style=""  size="large">上一步</a-button>
-          <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em"  size="large"
-                    type="primary">下一步
-          </a-button>
-          <a-button v-else @click="finish" style="margin-left: 6em" size="large" type="primary">完成
-          </a-button>
+      <div style="position: fixed;bottom: 1em;width:100%;left: 0;right: 0">
+        <div class="flex item-content" v-if="screenSettingTab==='none'">
+          <xt-button v-if="step!==0" @click="prevStep" style="" size="large">上一步</xt-button>
+          <xt-button v-if="(mod==='second-screen' && step!==2 ) || (mod==='bootstrap' && step!==1) " @click="nextStep"   size="large"
+                    type="theme">下一步
+          </xt-button>
+          <xt-button type="theme" v-else @click="finish" style="margin-left: 6em" size="large" >完成
+          </xt-button>
         </div>
         <div v-else class="pl-20">
           <a-button @click="screenSettingTab='none'" type="primary" size="large">
@@ -170,13 +176,15 @@ import { mapWritableState, mapActions } from 'pinia'
 import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
 import { message } from 'ant-design-vue'
-import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
+import { BulbFilled, PlayCircleFilled } from '@ant-design/icons-vue'
 import ZoomUI from '../components/comp/ZoomUI.vue'
 import AutoRun from '../components/comp/AutoRun.vue'
 import browser from '../js/common/browser'
 import navigationData from '../js/data/tableData'
 import { navStore } from '../store/nav'
 import KeySetting from '../components/comp/KeySetting.vue'
+import { useWidgetStore } from '../components/card/store'
+
 const { settings } = window.$models
 export default {
   name: 'Wizard',
@@ -185,52 +193,53 @@ export default {
     AutoRun,
     ZoomUI,
     KeyInput,
-    ChooseScreen,BulbFilled,PlayCircleFilled
+    ChooseScreen, BulbFilled, PlayCircleFilled
   },
   computed: {
-    ...mapWritableState(navStore, [ 'sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(appStore, ['settings', 'init']),
-    fitWidth(){
-      const width=Number(this.currentWidth)
-      if(width<800){
+    ...mapWritableState(useWidgetStore, ['rightModel']),
+    fitWidth () {
+      const width = Number(this.currentWidth)
+      if (width < 800) {
         return {
-          status:-1,//适合
-          text:'过小',
-          suggest:800
+          status: -1,//适合
+          text: '过小',
+          suggest: 800
         }
 
-      }else if(width>2000){
+      } else if (width > 2000) {
         return {
-          status:1,//适合
-          text:'过大',
-          suggest:2000
+          status: 1,//适合
+          text: '过大',
+          suggest: 2000
         }
-      }else{
+      } else {
         return {
-          status:0,//适合
-          text:'适合'
+          status: 0,//适合
+          text: '适合'
         }
       }
     },
-    fitHeight(){
-      const height=Number(this.currentHeight)
-      if(height<480){
+    fitHeight () {
+      const height = Number(this.currentHeight)
+      if (height < 480) {
         return {
-          status:-1,//适合
-          text:'过小',
-          suggest:480
+          status: -1,//适合
+          text: '过小',
+          suggest: 480
         }
 
-      }else if(height>1500){
+      } else if (height > 1500) {
         return {
-          status:1,//适合
-          text:'过大',
-          suggest:1500
+          status: 1,//适合
+          text: '过大',
+          suggest: 1500
         }
-      }else{
+      } else {
         return {
-          status:0,//适合
-          text:'适合'
+          status: 0,//适合
+          text: '适合'
         }
       }
     }
@@ -238,10 +247,8 @@ export default {
   data () {
     return {
       screenSettingTab: 'none',
-      currentWidth:'-',
-      currentHeight:'-',
-
-
+      currentWidth: '-',
+      currentHeight: '-',
 
       ctrl: false,
       shift: false,
@@ -267,11 +274,9 @@ export default {
         {
           title: '设置模式'
 
-        }, {
-          title: '基础配置'
         },
         {
-          title: '完成'
+          title: '基础配置'
         }
       ],
       stepsSecond: [
@@ -298,7 +303,7 @@ export default {
       this.shortKeysSearch = keyMap.globalSearch
     }
 
-    this.settings.zoomFactor=await tsbApi.window.getZoomFactor()*100
+    this.settings.zoomFactor = await tsbApi.window.getZoomFactor() * 100
     this.getSize()
 
   },
@@ -306,26 +311,26 @@ export default {
   },
 
   methods: {
-    ...mapActions(appStore, ['finishWizard','settings']),
+    ...mapActions(appStore, ['finishWizard', 'settings']),
 
-    async restore(){
+    async restore () {
       await tsbApi.window.setZoomFactor(1)
-      setTimeout(()=>{
-        this.settings.zoomFactor=100
+      setTimeout(() => {
+        this.settings.zoomFactor = 100
         this.getSize()
-      },300)
+      }, 300)
     },
-     getSize(){
-      this.currentWidth=document.body.offsetWidth
-      this.currentHeight=document.body.offsetHeight
+    getSize () {
+      this.currentWidth = document.body.offsetWidth
+      this.currentHeight = document.body.offsetHeight
     },
     async setZoomFactor () {
-      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)
-      setTimeout(()=> {
+      await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)
+      setTimeout(() => {
         this.getSize()
-      },300)
+      }, 300)
     },
-    openVideo(){
+    openVideo () {
       browser.openInUserSelect('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
     },
     setTableKeys (args) {
@@ -365,15 +370,17 @@ export default {
     },
     nextStep () {
       if (this.mod === 'second-screen') {
+        this.rightModel = 'default'
         this.steps = this.stepsSecond
       } else {
+        this.rightModel =  'follow'
         this.steps = this.stepsBoot
       }
       this.step++
     },
     finish () {
       this.finishWizard()
-      this.$router.replace({ name:'home' })
+      this.$router.replace({ name: 'home' })
     },
     getKeys (e) {
       let key = ''
@@ -389,28 +396,28 @@ export default {
       key += e.code
       return key
     },
-    replaceIcon(){
+    replaceIcon () {
       navigationData.systemFillAppList.forEach((item) => {
-      this.sideNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+        this.sideNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
-    navigationData.systemFillAppList.forEach((item) => {
-      this.rightNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+      navigationData.systemFillAppList.forEach((item) => {
+        this.rightNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
-    navigationData.systemAppList.forEach((item) => {
-      this.footNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+      navigationData.systemAppList.forEach((item) => {
+        this.footNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
     }
   }
 }
@@ -444,8 +451,8 @@ export default {
   margin-bottom: 1em;
 }
 
-.unfit{
-  color:orangered
+.unfit {
+  color: orangered
 }
 
 </style>

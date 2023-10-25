@@ -12,17 +12,23 @@
         :class="[icon ? 'mr-1' : '']"
         :style="iconSize"
       ></XtBaseIcon>
+      <xt-new-icon
+        v-if="newIicon"
+        :icon="newIicon"
+        :class="[newIicon ? 'mr-1' : '']"
+        :style="iconSize"
+      />
     </template>
     <div :style="textSize">
       <slot>{{ text }}</slot>
     </div>
     <template v-if="iconPosition == 'postfix'">
-      <XtBaseIcon
-        v-if="icon"
-        :icon="icon"
-        :class="[icon ? 'ml-1' : '']"
+      <xt-new-icon
+        v-if="newIicon"
+        :icon="newIicon"
+        :class="[newIicon ? 'ml-1' : '']"
         :style="iconSize"
-      ></XtBaseIcon>
+      />
     </template>
   </div>
 </template>

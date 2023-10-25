@@ -10,7 +10,7 @@
       <i class="icon icon-call" title="通话"></i>
       <i class="icon icon-down-arrow" title="通话"></i>
     </div> -->
-   
+
     <div class="call-main" :class="[isH5 && 'call-main-h5']" v-show="showSelectDialog">
       <div class="call-main-content" ref="dialog">
         <div class="call-main-voice call-main-font" @click="onClickCall(1)">
@@ -26,7 +26,7 @@
         </footer>
       </div>
     </div>
-    
+
     <Dialog
       :show="showGroupUserDialog"
       :isH5="isH5"
@@ -342,7 +342,7 @@ export default Call;
   }
 }
 .call-main-font{
-  font-family: PingFangSC-Regular;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 400;

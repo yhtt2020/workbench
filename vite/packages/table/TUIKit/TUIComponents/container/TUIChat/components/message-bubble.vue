@@ -6,7 +6,7 @@
       onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
      />
     </div>
-    
+
     <!-- <img
       class="avatar"
       :src="message?.avatar || 'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
@@ -46,7 +46,7 @@
     </main>
 
     <label class="message-label fail" v-if="message.status === 'fail'" @click="resendMessage(message)">!</label>
-    
+
     <label
       class="message-label"
       :class="readReceiptStyle(message)"
@@ -152,7 +152,7 @@ const messageBubble = defineComponent({
   },
 
   emits: ['jumpID', 'resendMessage', 'showReadReceiptDialog', 'showRepliesDialog', 'dropDownOpen'],
- 
+
   components: {
     MessageReference,
     // MemberInfo,
@@ -417,19 +417,19 @@ const messageBubble = defineComponent({
       }
     };
 
-    const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息  
+    const clickPersonalInfo = async(message:Message) => {  // 点击消息列表头像显示用户信息
       data.userCardVisible = true
-      
-      const uid = message.from 
+
+      const uid = message.from
       const userResult = await post(userCardUrl,{uid:uid}) // 用户基本信息
       const gradeRes = await get(getUserGradeUrl,{uid:uid}) // 用户等级信息
       const medalRes = await get(getUserMedalUrl,{uid:uid}) // 用户排名信息
-      
+
       data.uid = uid
 
       data.memberInfo = {
         userinfo:{
-        avatar:userResult.data.user.avatar, 
+        avatar:userResult.data.user.avatar,
         nickname:userResult.data.user.nickname,
         uid:userResult.data.user.uid
       },
@@ -438,7 +438,7 @@ const messageBubble = defineComponent({
         medal:medalRes,
         add:message,
       }
-      
+
     }
 
     return {
@@ -499,7 +499,7 @@ export default messageBubble;
     justify-content: center;
     padding: 6px;
     p {
-      font-family: PingFangSC-Regular;
+
       font-weight: 400;
       font-size: 0.88rem;
       color: #999999;
@@ -509,7 +509,7 @@ export default messageBubble;
     }
     span {
       height: 1.25rem;
-      font-family: PingFangSC-Regular;
+
       font-weight: 400;
       font-size: 0.88rem;
       color: #999999;
@@ -667,7 +667,7 @@ export default messageBubble;
 }
 .message-label {
   align-self: flex-end;
-  font-family: PingFangSC-Regular;
+
   font-weight: 400;
   font-size: 12px;
   color: #b6b8ba;

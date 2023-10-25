@@ -207,14 +207,14 @@ export default {
 
 
 .update-title{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
 }
 
 .com-title{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   font-weight: 400;
 }
@@ -240,7 +240,7 @@ export default {
 }
 
 .go-com{
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color:var(--active-bg);
   font-weight: 500;

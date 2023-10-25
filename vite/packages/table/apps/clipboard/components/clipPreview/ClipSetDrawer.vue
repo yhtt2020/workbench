@@ -253,14 +253,14 @@ export default {
 
 <style lang="scss" scoped>
 .secondary-title { // 次要标题
-  font-family: PingFangSC-Medium;
+
   font-size: 14px;
   color: var(--secondary-text);
   font-weight: 500;
 }
 
 .primary-title { // 主要标题
-  font-family: PingFangSC-Medium;
+
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;

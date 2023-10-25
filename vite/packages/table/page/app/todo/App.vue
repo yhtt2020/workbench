@@ -363,7 +363,6 @@ export default {
   font-size: 16px;
   color: var(--primary-text);
   font-weight: 500;
-  font-family: PingFangSC-Medium;
   div{
     width: 44px;
     height: 44px;

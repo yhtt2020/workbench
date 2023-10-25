@@ -4,21 +4,21 @@
         <div class="w-[500px] pl-4 pr-4">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full">
-                    <div class="font-16 xt-text">写动态</div>
+                    <div class="ml-8 font-16 xt-text">写动态</div>
                 </div>
-                <button class="flex items-center border-0 rounded-md xt-bg-2 w-[40px] h-[40px] justify-center pointer"
-                    @click="handleOk">
-                    <Icon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </button>
+                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
+                    @click="handleOk" style="width: 40px;height: 40px;">
+                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                </xt-button>
 
             </div>
-            <div class="flex items-center justify-center w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px]  mb-2">
-                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan">元社区</a>
+            <div class="flex items-center justify-start w-full rounded-lg font-14 xt-text-2 xt-bg-2 h-[54px] pl-4 ">
+                分享你的动态，如需更多发布类型（视频，文章等）请前往<a href="" @click.prevent="goYuan" class="ml-1">元社区</a>
             </div>
             <div class="w-full mt-2 xt-bg box font-16">
                 <div style="font-size: 1rem !important;">
                     <div class="mt-3 mb-2 xt-bg-2 reply-textarea">
-                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 3, maxRows: 8 }"
+                        <a-textarea v-model:value="postValue" placeholder="输入" :autoSize="{ minRows: 5, maxRows: 8 }"
                             :bordered="false"  />
                         <div style="font-size: 16px !important;" v-if="imageLoadVisible">
                             <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
@@ -49,14 +49,17 @@
                                 </template>
                                 <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
                                     style="color: var(--secondary-text) !important;"><template #icon>
-                                        <SmileOutlined style="" />
+                                        <!-- <SmileOutlined style="" /> -->
+                                        <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                     </template> 表情</a-button>
                             </tippy>
 
-                            <a-button type="text" size="small" class="xt-text" @click="imageLoadVisible = !imageLoadVisible"
+                            <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
+                            <a-button type="text" size="small" class="xt-text"
                                 style="color: var(--secondary-text) !important;"><template #icon>
-                                    <PictureOutlined style="" />
+                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                 </template> 图片</a-button>
+                            </a-upload>
                         </div>
 
                     </div>
@@ -65,18 +68,18 @@
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName?.name" :loadData="loadData" :bordered="false" @change="handleChange"
-                    style=" font-size: 14px; border-radius: 10px;" change-on-select>
+                    <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName?.name" :loadData="loadData" :bordered="false" @change="handleChange"
+                    style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;" change-on-select>
                     <template #suffixIcon>
-                        <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                        <newIcon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></newIcon>
                     </template>
                 </a-select>
                 <div class="flex items-center">
                     <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 68px; height: 32px;"
+                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
                         @click="handleOk">取消</xt-button>
                     <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 68px; height: 32px;background-color: var(--active-bg);"
+                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
                         @click="publishPost">发布</xt-button>
                 </div>
             </div>
@@ -90,17 +93,20 @@ import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
-import { Icon } from '@iconify/vue';
+import { Icon as newIcon } from '@iconify/vue';
 import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
 import type { CascaderProps } from 'ant-design-vue';
 import fulentEmojis from '../../../js/chat/fulentEmojis'
 import { message } from 'ant-design-vue'
 const useCommunStore = useCommunityStore()
-const imageLoadVisible = ref(true)
+// const imageLoadVisible = ref(true)
 const goYuan = () => {
     browser.openInUserSelect(`https://s.apps.vip/forum?id=${props.forumId}`)
 }
+const imageLoadVisible=computed(()=>{
+    return fileList.value?.length>0
+})
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({
@@ -131,57 +137,6 @@ const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-// const fluentEmojis = reactive({
-//     "[Kiss]": "Face Blowing a Kiss.png",
-//     "[Tears]": "Face with Tears of Joy.png",
-//     "[Cry]": "Loudly Crying Face.png",
-//     "[Smiling]": "Smiling Face with Open Hands.png",
-//     "[Confound]": "Confounded Face.png",
-//     "[Mask]": "Face with Medical Mask.png",
-//     "[Zany]": "Zany Face.png",
-//     "[Vomit]": "Face Vomiting.png",
-//     "[Kissing]": "Kissing Face.png",
-//     "[Fearful]": "Fearful Face.png",
-//     "[Pleading]": "Pleading Face.png",
-//     "[Scream]": "Face Screaming in Fear.png",
-//     "[AngryFace]": "Angry Face.png",
-//     "[Zipper]": "Zipper-Mouth Face.png",
-//     "[Expressionless]": "Expressionless Face.png",
-//     "[SpiralEyes]": "Face with Spiral Eyes.png",
-//     "[Shushing]": "Shushing Face.png",
-//     "[MoneyMouth]": "Money-Mouth Face.png",
-//     "[ThumbsUp]": "Thumbs Up Light Skin Tone.png",
-//     "[ThumbsDown]": "Thumbs Down Light Skin Tone.png",
-//     "[Victory]": "Victory Hand Light Skin Tone.png",
-//     "[Ok]": "OK Hand Light Skin Tone.png",
-//     "[Pingching]": "Pinching Hand Light Skin Tone.png",
-//     "[Hands]": "Folded Hands Light Skin Tone.png",
-//     "[Clap]": "Clapping Hands Light Skin Tone.png",
-//     "[OpenHands]": "Open Hands Light Skin Tone.png",
-//     "[Waing]": "Waving Hand Light Skin Tone.png",
-//     "[Writing]": "Writing Hand Light Skin Tone.png",
-//     "[PigFace]": "Pig Face.png",
-//     "[Cat]": "Cat with Wry Smile.png",
-//     "[Blowfish]": "Blowfish.png",
-//     "[Yen]": "Yen Banknote.png",
-//     "[Triangular]": "Triangular Flag.png",
-//     "[Heart]": "Beating Heart.png",
-//     "[Broken]": "Broken Heart.png",
-//     "[1st]": "1st Place Medal.png",
-//     "[2nd]": "2nd Place Medal.png",
-//     "[3rd]": "3rd Place Medal.png",
-//     "[Selfie]": "Selfie Light Skin Tone.png",
-//     "[Teacup]": "Teacup Without Handle.png",
-//     "[New]": "New Button.png",
-//     "[Check]": "Check Mark Button.png",
-//     "[Anger]": "Anger Symbol.png",
-//     "[Acceptable]": 'Japanese Acceptable Button.png',
-//     "[Hundred]": "Hundred Points.png",
-//     "[Crab]": "Crab.png",
-//     "[MoneyBag]": "Money Bag.png",
-//     "[Zzz]": "Zzz.png",
-//     "[Bomb]": "Bomb.png",
-// })
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
@@ -196,7 +151,7 @@ onMounted(() => {
     textareaElement?.focus()
     useCommunStore.getCommunityInfo(props.forumId)
     useCommunStore.getCommunityCate(props.forumId)
-    console.log(useCommunStore.communityInfo.forum.name);
+    console.log(useCommunStore.communityInfo.forum?.name);
     // console.log(navigator.plugins);
 
 
@@ -279,7 +234,7 @@ const publishPost = async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
             await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value,cascaderValue)
-            
+
             message.success('发布成功')
             titleValue.value = ''
             postValue.value = ''
@@ -292,19 +247,20 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
+:deep(.ant-upload-list-text-container){
+    display: none;
+}
 .box {
     border-radius: 12px;
 }
 
 .font-16 {
-    font-family: PingFangSC-Regular;
     font-size: 16px;
     // text-align: center;
     font-weight: 400;
 }
 
 .font-14 {
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
@@ -325,6 +281,16 @@ const publishPost = async () => {
 }
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder){
     color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    padding-right: 0px;
+}
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+    color: var(--secondary-text);
+    height: 40px;
+    line-height: 40px;
 }
 :deep(.ant-select-arrow){
     color: var(--secondary-text);
@@ -334,7 +300,7 @@ const publishPost = async () => {
     // &::placeholder {
     font-weight: 400;
     font-size: 16px;
-    font-family: PingFangSC-Regular;
+
     color: var(--secondary-text);
     // }
 }
@@ -352,11 +318,14 @@ const publishPost = async () => {
 }
 :deep(.ant-input) {
     color: var(--secondary-text);
+    // padding-left: 8px;
+    margin-left: 4px;
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+
         color: var(--secondary-text);
+        // padding-left: 4px;
     }
 }
 
