@@ -103,7 +103,6 @@ const [, drop] = useDrop(() => ({
 </script>
 
 <template>
-  {{ freeDesk }}
     <div :ref="drop" class="container">
       <!-- <Container
         :snap-to-grid="snapToGridAfterDrop"
