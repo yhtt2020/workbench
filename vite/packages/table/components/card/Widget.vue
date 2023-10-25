@@ -38,7 +38,8 @@
                   "
                   :value="options.title"
                 ></a-input> -->
-                <div style="position: relative;left:-25px;">桌面便签</div>
+                <!-- <div style="position: relative;left:-25px;">桌面便签</div> -->
+                <div style="position: relative;left:-25px;">{{ options.title }}</div>
                 <!-- {{ options.title }} -->
               </div>
               <div v-else="options.isEdit">

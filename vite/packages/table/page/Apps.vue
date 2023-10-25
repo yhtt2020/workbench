@@ -311,21 +311,21 @@ export default {
             })
           }
         },
-        // {
-        //   icon: 'https://a.apps.vip/icons/tomato.png',
-        //   name: '便签',
-        //   summary: '便签工具',
-        //   needInstall: false,
-        //   data: {
-        //     fullScreen: false,
-        //     theme: '#030c13',
-        //     name: 'note',
-        //     type: 'system',//网页助手
-        //     route: JSON.stringify({
-        //       name: 'note',
-        //     })
-        //   }
-        // },
+        {
+          icon: 'https://a.apps.vip/icons/tomato.png',
+          name: '便签',
+          summary: '便签工具',
+          needInstall: false,
+          data: {
+            fullScreen: false,
+            theme: '#030c13',
+            name: 'note',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'note',
+            })
+          }
+        },
         {
           icon: 'https://a.apps.vip/icons/ppet.png',
           name: 'PPet桌面宠物',

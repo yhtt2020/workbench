@@ -93,14 +93,14 @@ export default defineComponent({
             name:'tomatoStart'
           }
         },
-        // {
-        //   title:'便签(开发)',
-        //   name:'note',
-        //   icon:'check-square',
-        //   route:{
-        //     name:'note'
-        //   }
-        // }
+        {
+          title:'便签(开发)',
+          name:'note',
+          icon:'check-square',
+          route:{
+            name:'note'
+          }
+        }
       ]
     }
   },

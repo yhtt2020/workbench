@@ -74,7 +74,7 @@
    },
    props:['selDesk'],
    computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText']),
+        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList']),
         deskName(){
             if (this.noteList.length) {
                 return this.selNote>=0?this.noteList[this.selNote].deskName:"" 
@@ -112,14 +112,19 @@
                     color:'#FF4D4F',
 
                 },
-            ]
+            ],
+            timer:setTimeout(()=>{
+                this.timeout();
+            },2000),
             
         };
     },
     mounted(){
+        this.getNotes()
     },
    methods:{
     ...mapActions(cardStore, ['updateCustomData']),
+    ...mapActions(noteStore, ['saveNoteDb','getNotes']),
     // 修改当前便签颜色
     changeBgColor(i){
         this.noteList[this.selNote].customData.background = this.noteBgColor[i]
@@ -128,24 +133,54 @@
         },this.noteList[this.selNote].desk)
         this.isColor=false
     },
+    timeout(){
+        console.log('到时间了，开始保存');
+        console.log(this.deskList);
+        // 这里将数据自动保存到桌面
+        if (this.selNoteTitle) {
+            console.log(1);
+            if (this.noteList[this.selNote].desk!='') {
+                let n = -1;
+                this.deskList.forEach((item,index)=>{
+                    if (item.name == this.noteList[this.selNote].deskName) {
+                        n = index
+                    }
+                })
+                console.log(n);
+                console.log(this.deskList);
+                this.noteList[this.selNote].customData.title=this.selNoteTitle
+                this.noteList[this.selNote].customData.text=this.selNoteText
+                this.updateCustomData(this.noteList[this.selNote].id,{
+                    title:this.selNoteTitle,
+                    text:this.selNoteText
+                },this.deskList[n])
+                // 这里将数据保存到tsbApi
+                console.log(2);
+                this.saveNoteDb()
+            }
+        }
+    },
+    clear(){
+        console.log('清除定时器')
+        clearTimeout(this.timer)
+        this.timer=null
+    }
    },
    watch:{
     selNoteTitle(newval,oldval){
-        this.noteList[this.selNote].customData.title = newval
-        if (this.noteList[this.selNote].desk!='') {
-            this.updateCustomData(this.noteList[this.selNote].id,{
-                title:newval
-            },this.noteList[this.selNote].desk)
-        }
+        // 先清除后添加 
+        this.clear()
+        this.timer=setTimeout(()=>{
+            this.timeout();
+            this.clear()
+        },2000)
     },
     selNoteText(newval,oldval){
-        this.noteList[this.selNote].customData.text = newval
-        
-        if (this.noteList[this.selNote].desk!='') {
-            this.updateCustomData(this.noteList[this.selNote].id,{
-                text:newval
-            },this.noteList[this.selNote].desk)
-        }
+        this.clear()
+        this.timer=setTimeout(()=>{
+            this.timeout();
+            this.clear()
+        },2000)
     },
    }
  };

@@ -140,7 +140,7 @@
             return year + "-" + month + "-" + day;
         },
         showData(){
-            // console.log(this.noteList);
+            console.log(this.noteList);
         }
     },
   };
