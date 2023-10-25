@@ -4,8 +4,8 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle"
-       style="margin-top: -6em;min-height: 15em; z-index:9999999">
+  <div id="displayMiddle" class="pointer item-content" @click="enter"
+       style="">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
       <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
@@ -456,15 +456,13 @@ export default {
 }
 
 #displayMiddle {
-  display: none;
   position: fixed;
-  left: calc(25%);
-  width: 50%;
-  text-align: center;
+  left: 10vw;
+  top: 10vh;
+  height: 80vh;
+  width: 80vw;
   z-index: 9999999;
-  /*background: rgba(0, 0, 0, 0.3);*/
-  padding: 1em;
-  border-radius: 2em;
+  flex-direction: column;
 }
 
 .count-downtime {
@@ -493,10 +491,6 @@ export default {
     justify-content: center;
     align-items: center;
   }
-}
-
-#displayMiddle {
-  z-index: 9999
 }
 
 .tip-items {
