@@ -30,7 +30,6 @@ onMounted(() => {
 });
 
 const { isDragging } = toRefs(collect);
-import test from "./test.vue";
 </script>
 
 <template>
@@ -48,8 +47,6 @@ import test from "./test.vue";
       name="item"
       :data="data"
     />
-    <!-- 33333333333 -->
-    <!-- <test></test> -->
-    <!-- <Box :currentDesk="currentDesk" :data="data" /> -->
+
   </div>
 </template>

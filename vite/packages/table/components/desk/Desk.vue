@@ -224,12 +224,12 @@
     </template>
     <template v-else>
       <div class="line-title">卡片设置：</div>
-<xt-text class=" xt-bg-2 rounded-xl p-3 mb-1">
+<!-- <xt-text class=" xt-bg-2 rounded-xl p-3 mb-1">
   <div class=" flex flex-col">
     <div >自由布局（开发中）：<a-switch v-model:checked="freeDeskState" /></div>
     <xt-text type="2">该功能尚未完成 可能会产生严重bug，开启需谨慎！！！</xt-text>
   </div>
-</xt-text>
+</xt-text> -->
       <template v-if="settings.enableZoom">
         <div class="mb-2" style="color:orangered">
           <icon icon="tishi-xianxing"></icon>

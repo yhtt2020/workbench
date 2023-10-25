@@ -105,11 +105,12 @@ const [, drop] = useDrop(() => ({
 <template>
     <div :ref="drop" class="container">
       <!-- <Container
-        :snap-to-grid="snapToGridAfterDrop"
+
         :desk="desk"
         :currentDesk="currentDesk"
       /> -->
       <DraggableBox
+      :snap-to-grid="snapToGridAfterDrop"
         v-for="data in getCurrentDesk"
         :id="data.id"
         :key="data.id"
@@ -127,7 +128,7 @@ const [, drop] = useDrop(() => ({
       </DraggableBox>
     </div>
     <CustomDragLayer :snap-to-grid="snapToGridWhileDragging" />
-    <!-- <p>
+    <p>
       <label for="snapToGridWhileDragging">
         <input
           id="snapToGridWhileDragging"
@@ -147,14 +148,14 @@ const [, drop] = useDrop(() => ({
         />
         <small>Snap to grid after drop</small>
       </label>
-    </p> -->
+    </p>
 </template>
 
 <style scoped lang="less">
 .container {
   position: relative;
   width: 100%;
-  height:  100%;
+  height:  90%;
   border: 1px solid black;
 }
 </style>
