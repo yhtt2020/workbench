@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full">
-    <xt-left-menu :list="filterLeft" end="2"></xt-left-menu>
+    <xt-left-menu :list="filterLeft" model="id" end="2"></xt-left-menu>
     <div class="w-full" v-if="rightVisible !== 'setting'">
       <NoticeRightTop  :appType="rightVisible" :list="appContentList" :appItem="topTitle" @updateNotice="updateNotice"></NoticeRightTop>
       <AllNotice v-if="rightVisible === 'all'" @closeMessage="close" :list="appContentList"></AllNotice>
@@ -30,6 +30,7 @@
 import { defineComponent,ref,toRefs,reactive,computed,watch } from 'vue'
 import { appStore } from '../../store'
 import { noticeStore } from '../../store/notice'
+import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 import NoticeRightTop from '../../components/notice/noticeRightTop.vue'
 import AllNotice from '../../components/notice/allNotice.vue'
@@ -48,7 +49,7 @@ export default defineComponent({
   setup(props,ctx){
     const store = appStore();
     const notice = noticeStore()
-    const { settings } = store
+    const { settings } = storeToRefs(store)
 
     const data = reactive({
       rightVisible:'all', // 切换消息
@@ -78,6 +79,10 @@ export default defineComponent({
         title:item.title
       }
     };
+
+    const close = () =>{
+      ctx.emit('closeMessage')
+    }
 
 
 
@@ -116,30 +121,40 @@ export default defineComponent({
         id:'notice',
         icon:"notification",
         title: "通知",
+        flag: true,
         callBack: enableNotice,
       },
       {
         icon: "shezhi",
         alias:'setting',
         title: "设置",
+        flag: true,
         callBack: clickSetting,
       },
     ]);
 
 
     const filterLeft = computed(()=>{
-      if(settings.noticeEnable){
-        const filterList = leftApp.value.map((item)=>{
+      
+      const copyList = [...leftApp.value]
+      if(settings.value.noticeEnable){
+    
+        const openList = copyList.map((item)=>{
           return {...item,icon:item.id === 'notice' ? 'notification-off' : item.icon}
         })
-        return filterList
+        return openList
+
       }else{
-        return leftApp.value
+        const closeList = copyList.map((item)=>{
+          return {...item,icon:item.id === 'notice' ? 'notification' : item.icon}
+        })
+        return closeList
       }
+
     })
 
     return{
-      filterLeft,appContentList,
+      filterLeft,appContentList,close,
       ...toRefs(data),changeEnable,
     }
   
