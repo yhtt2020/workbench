@@ -7,7 +7,7 @@
                     <div 
                     class="flex justify-center items-center mr-3 pointer" style="background-color: var(--secondary-bg);border-radius:10px;width: 107px;height: 40px;"
                     @click="selDesk"
-                    >#{{ deskName}}</div>
+                    >{{ '#' + deskName}}</div>
                     <div style="font-size: 14px;color: rgba(255,255,255,0.40);">10分钟前编辑</div>
                 </div>
                 <div class="flex" style="position: relative;">
@@ -36,13 +36,11 @@
                                 </a-menu>
                             </template>
                         </a-dropdown>
-                    <!-- <xt-button class="flex justify-center items-center" :w="40" :h="40"><Icon :icon="icons.moreHorizontal16Filled" /></xt-button> -->
                 </div>
             </div>
             <!-- 主体 -->
             <div>
                 <div class="mt-4 shadow" style="height: 600px;border-radius: 12px;padding: 24px;" :style="{backgroundImage:backgroundImage}">
-                    <!-- 标题 -->
                     <a-input
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0;"
@@ -59,7 +57,6 @@
                         />
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -104,8 +101,6 @@
                 { 
                     label: "添加到桌面", 
                     callBack: ()=>{
-                        // console.log('添加');
-                        // console.log(this);
                         this.selDesk()
                     }, 
                     newIcon: "fluent:open-20-filled",
@@ -137,16 +132,20 @@
    watch:{
     selNoteTitle(newval,oldval){
         this.noteList[this.selNote].customData.title = newval
-        this.updateCustomData(this.noteList[this.selNote].id,{
-            title:newval
-        },this.noteList[this.selNote].desk)
+        if (this.noteList[this.selNote].desk!='') {
+            this.updateCustomData(this.noteList[this.selNote].id,{
+                title:newval
+            },this.noteList[this.selNote].desk)
+        }
     },
     selNoteText(newval,oldval){
-        // console.log(newval);
         this.noteList[this.selNote].customData.text = newval
-        this.updateCustomData(this.noteList[this.selNote].id,{
-            text:newval
-        },this.noteList[this.selNote].desk)
+        
+        if (this.noteList[this.selNote].desk!='') {
+            this.updateCustomData(this.noteList[this.selNote].id,{
+                text:newval
+            },this.noteList[this.selNote].desk)
+        }
     },
    }
  };

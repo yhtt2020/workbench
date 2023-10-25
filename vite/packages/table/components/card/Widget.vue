@@ -28,7 +28,7 @@
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="w-2/3 flex">
               <div v-if="options.isEdit">
-                <a-input
+                <!-- <a-input
                   style="
                     border: none;
                     box-shadow: none !important;
@@ -37,7 +37,9 @@
                     top: -3px;
                   "
                   :value="options.title"
-                ></a-input>
+                ></a-input> -->
+                <div style="position: relative;left:-25px;">桌面便签</div>
+                <!-- {{ options.title }} -->
               </div>
               <div v-else="options.isEdit">
                 {{ options.title }}

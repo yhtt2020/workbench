@@ -19,15 +19,16 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <!-- <div @click="this.deTest">清除数据</div> -->
+            <!-- <div @click="this.deTest">清除数据</div>
+            <div @click="showData">目前数据</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
                 <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
                 :class="index == this.selNote?'note-active':''">
                     <div class="flex list-top font-16" style="color: var(--primary-text);justify-content: space-between;">
                         <div class="flex items-center">
-                            <span  :style="{background:item.customData.background}"></span>
-                            <div class="ml-2">{{ item.customData.title }}</div>
+                            <span  :style="{background:item.hasOwnProperty('customData')?item.customData.background:''}"></span>
+                            <div class="ml-2">{{ item.hasOwnProperty('customData')?item.customData.title:'' }}</div>
                         </div>
                         <!-- 菜单 -->
                         <!-- <a-dropdown> -->
@@ -54,10 +55,9 @@
                         </a-dropdown>
                     </div>
                     <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
-                        {{ item.customData.text }}
+                        {{ item.hasOwnProperty('customData')?item.customData.text:'' }}
                     </div>
                     <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
-                        <!-- {{ item.id }}{{ item.deskName?'.'+item.deskName:'' }} -->
                         {{ this.formatTimestamp(item.id) }}{{ item.deskName?' · '+item.deskName:'' }}
                     </div>
                 </div>
@@ -96,17 +96,21 @@
                         // 修改当前选中桌面
                         this.selDesk()
                         
-                        // console.log('触发了callBack');
                     }, 
                     newIcon: "fluent:open-20-filled",
                 },
                 { 
                     label: "删除便签", 
-                    // callBack: this.callBack, 
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
                     callBack:()=>{
-                        this.moveNote()
+                        // this.menus.
+                        if (!this.isSelTab) {
+                            this.moveNote()
+                        }else{
+                            // console.log('准备还原');
+                            this.returnCard()
+                        }
                     }
                 },
             ]
@@ -114,13 +118,14 @@
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab']),
+
     },
     mounted() {
     },
     watch: {
     },
     methods: {
-        ...mapActions(noteStore,['moveNote','deTest']),
+        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
@@ -134,6 +139,9 @@
             var day = ("0" + date.getDate()).slice(-2);
             return year + "-" + month + "-" + day;
         },
+        showData(){
+            // console.log(this.noteList);
+        }
     },
   };
   </script>

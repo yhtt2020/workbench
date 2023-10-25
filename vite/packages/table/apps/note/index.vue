@@ -26,7 +26,7 @@
                 style="height: 64px;background: #2A2A2A;justify-content: space-between;padding: 0 24px;" 
                 v-for="(item,index) in this.desks" 
                 :key="index" 
-                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' ,border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
+                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
                 'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
                  
                 @click="changeSelIndex(index)">
@@ -84,11 +84,26 @@
       }
     },
     mounted () {
-      this.getNotes()
+      // this.getNotes()
     },
     computed: {
           ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
           ...mapWritableState(cardStore, ['desks','selIndex']),
+          // backgroundImage(){
+          //   if (this.noteList.length) {
+          //     return this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' 
+          //   }
+          // },
+          // border(){
+          //   if (this.noteList.length) {
+          //     return this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' 
+          //   }
+          // },
+          // marginBottom(){
+          //   if (this.noteList.length) {
+          //     return index == this.desks.length-1? '0' : '16px'
+          //   }
+          // },
           
     },
     methods: {

@@ -111,6 +111,7 @@ export default {
         className: "card",
         title: "桌面便签",
         icon: "",
+        newIcon:'fluent:notepad-12-regular',
         // icon: "bianji",
         type: "games",
         isEdit:true,
