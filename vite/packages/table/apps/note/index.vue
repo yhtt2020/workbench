@@ -1,5 +1,5 @@
 <template>
-    <div class="mr-3 h-full" style="min-width: 400px;">
+    <div class="mr-3 h-full overflow-hidden" style="min-width: 400px;">
       <LeftTab>
           <div class="h-full w-full flex">
               <div class="flex h-full">

@@ -51,7 +51,7 @@ export const noteStore = defineStore("noteStore", {
     deskList:[],
     // 选中桌面
     selIndex:-1,
-    // 选中左侧便签
+    // 选中左侧便签 true 回收站
     isSelTab:false,
 
     
@@ -76,57 +76,49 @@ export const noteStore = defineStore("noteStore", {
           isDelete:this.isSelTab,
         },
       })
-      // console.log('从那里拿的');
-      
-      // console.log(getDb);
-      // tmpList = getDb.docs
-      
+      tmpList = getDb.docs
+      this.deskList = cardStore().desks
 
       // 需要进行判断 如果用户已经初始化了
 
-      // if (getDb.docs.length) {
-      // }
-      // this.noteList = getDb.docs
-      // console.log(this.noteList);
-
-      if (!this.isSelTab) {
-        
-        
-        this.deskList = cardStore().desks
-        this.deskList.forEach((item:any) => {
-          if (item.cards.length) {
-            item.cards.forEach((tmp:any)=>{
-              if (tmp.name == 'notes') {
-                if (!tmp.customData.hasOwnProperty('title')) {
-                  tmp.customData.title = '桌面便签'
+      if (getDb.docs.length) {
+        // console.log('有数据了，不用初始化');
+        this.noteList = getDb.docs
+      }else{
+        // console.log('没数据，需要初始化');
+        if (!this.isSelTab) {
+          this.deskList.forEach((item:any) => {
+            if (item.cards.length) {
+              item.cards.forEach((tmp:any)=>{
+                if (tmp.name == 'notes') {
+                  if (!tmp.customData.hasOwnProperty('title')) {
+                    tmp.customData.title = '桌面便签'
+                  }
+                  // 这个属性会卡住存储
+                  delete tmp._$muuri_id
+                  tmpList.push({
+                    ...tmp,
+                    deskName:item.name,
+                    desk:item,
+                    notes:'notes',
+                    createTime:tmp.id,
+                    _id:'note:' +  tmp.id.toString(),
+                    isDelete:false,
+                  })
                 }
-                // 这个属性会卡住存储
-                delete tmp._$muuri_id
-                tmpList.push({
-                  ...tmp,
-                  deskName:item.name,
-                  desk:item,
-                  notes:'notes',
-                  createTime:tmp.id,
-                  _id:'note:' +  tmp.id.toString(),
-                  isDelete:false,
-                })
-              }
-            })
-          }
-        });
+              })
+            }
+          });
+        }
+        // 根据时间进行排序
+        this.sortByTimestamp(tmpList)
+        this.noteList = tmpList
+        // console.log('排序好的');
+        // console.log(tmpList);
+        await tsbApi.db.bulkDocs(tmpList)
       }
-      
-      // 根据时间进行排序
-      this.sortByTimestamp(tmpList)
-      this.noteList = tmpList
-      // console.log(tmpList);
-      
 
-      await tsbApi.db.bulkDocs(tmpList)
 
-      
-      
       
 
     },
@@ -138,130 +130,34 @@ export const noteStore = defineStore("noteStore", {
     },
 
     // 测试tsbApi
-    async test(){
-      // 测试添加删除桌面便签
-      // 先获取desk
-      // console.log('出发了')
-      // 测试添加成功
-      let getDb = await tsbApi.db.find({
-        selector: { 
-          notes:"notes"
-        },
-      })
+    // async test(){
+    //   // 测试添加删除桌面便签
+    //   // 先获取desk
+    //   // console.log('出发了')
+    //   // 测试添加成功
+    //   let getDb = await tsbApi.db.find({
+    //     selector: { 
+    //       notes:"notes"
+    //     },
+    //   })
+    //   // console.log(getDb);
+    //   // tsbApi.db.remove(getDb.docs[0])
+      
+    //   getDb = await tsbApi.db.find({
+    //     selector: { 
+    //       notes:"notes"
+    //     },
+    //   })
+    // },
+
+    async findAll(){
+      // console.log(await tsbApi.db.allDocs('note:'))
+      // console.log('全部数据');
       // console.log(getDb);
-      tsbApi.db.remove(getDb.docs[0])
-      
-      getDb = await tsbApi.db.find({
-        selector: { 
-          notes:"notes"
-        },
-      })
-      // console.log(getDb);
-
-
-      // await tsbApi.db.createIndex({
-      //   index: {
-      //     fields: ['isDelete']
-      //   }
-      // })
-
-
-
-
-
-
-      // 切换桌面就是先添加后删除
-
-      // console.log('开始添加');
-      // 新建
-      // cardStore().addCard(
-      //   {
-      //     name: "notes",
-      //     id: Date.now(),
-      //     customData: {...this.templateObj},
-      //   },this.deskList[3]
-      // )
-
-      // console.log(this.noteList);
-      // console.log('准备删除');
-      
-      
-      // await tsbApi.db.remove(1697613776946)
-      // await tsbApi.db.remove('1697613776946')
-      // let tt = await tsbApi.db.allDocs("notes")  //查不出来
-      // let tt = await tsbApi.db.allDocs("notes")
-      // let tt = await tsbApi.db.allDocs("1697693345942")   //能查出来
-      // console.log('ceshi',tt); 
-      
-      // await tsbApi.db.remove("  ")
-      // console.log('删除结束，开始读取');
-      // console.log();
-      // let getDb = await tsbApi.db.find({
-      //   selector: { 
-      //     notes:"notes"
-      //   },
-      // })
-      // console.log('读取结束');
-
-      // console.log('getDb');
-      
-      
-      // 
-      // 测试 产尝试创建新索引
-      // await tsbApi.db.createIndex({
-      //   index: {
-      //     fields: ['notes']
-      //   }
-      // })
-
-      // console.log('触发了');
-
-      // 测试 获取数据
-      // let rs = await tsbApi.db.find({
-      //   selector: { 
-      //     notes:"notes"
-      //   },
-      //   sort: [
-      //     {
-      //       '_id': 'desc'
-      //     }
-      //   ]
-      // })
-      // console.log(rs);
-
-      // 测试 删除数据
-      
-
-      // let rs = await tsbApi.db.put({
-      //   notes:'123',
-      //   _id:new Date().getTime().toString(),
-      //   data:{
-      //     a:1,
-      //     b:2,
-      //   }
-      // })
-      // if (rs.ok) {
-      //   return rs.doc
-      // }
-
-
-      // console.log(tsbApi.db);
-      // console.log(rs);
-      
-      // console.log(tsbApi.db.find({
-      //   selector: map,
-      //   limit: size,
-      //   sort: [
-      //     {
-      //       '_id': 'desc'
-      //     }
-      //   ]
-      // }));
-      
     },
 
     // 便签切换桌面
-    switchDesk(selNote, selIndex){
+    async switchDesk(selNote, selIndex){
       let nowIndex = 0;
       this.deskList.forEach((item,index)=>{
         if (item.id ==this.noteList[selNote].desk.id) {
@@ -269,13 +165,17 @@ export const noteStore = defineStore("noteStore", {
         }
       })
       //先添加后删除
-      cardStore().addCard(
-        {...this.noteList[selNote]},this.deskList[selIndex]
-      )
+      // console.log(this.noteList[selNote].id,this.deskList[nowIndex]);
       
-      cardStore().removeCard(
-        this.noteList[selNote].id,this.deskList[nowIndex]
-      )
+      cardStore().addCard({...this.noteList[selNote]},this.deskList[selIndex])
+      cardStore().removeCard(this.noteList[selNote].id,this.deskList[nowIndex])
+      let tmp = await this.findId(this.noteList[selNote]._id,false)      
+      await tsbApi.db.put({
+        ...tmp[0],
+        desk:this.deskList[selIndex],
+        deskName:this.deskList[selIndex].name,
+        
+      })
       this.getNotes()
     },
 
@@ -293,60 +193,50 @@ export const noteStore = defineStore("noteStore", {
 
 
     // 将便签移动到回收站
-    async moveNote(n){
-      await tsbApi.db.createIndex({
-        index: {
-          fields: ['notes','isDelete','_id']
+    async moveNote(){
+      // console.log(this.noteList);
+      
+      // console.log( this.noteList[this.selNote].id);
+      
+      // console.log(this.deskList);
+      // console.log(this.selIndex);
+
+      let n = 0
+      this.deskList.forEach((item,index)=>{
+        if (item.id == this.noteList[this.selNote].desk.id) {
+          n = index
         }
       })
-      let getDb = await tsbApi.db.find({
-        selector: { 
-          notes:"notes",
-          _id:this.noteList[this.selNote]._id,
-          // isDelete:this.isSelTab,
-        },
-      })
       
-      let  tmp = {
-        // ...this.noteList[this.selNote],
-        // notes:'notes',
-        _id:this.noteList[this.selNote]._id,
-        _rev:getDb.docs[0]._rev,
+      // console.log(this.deskList[n]);
+      
+      cardStore().removeCard(
+        this.noteList[this.selNote].id,this.deskList[n]
+      )
+      let tmp = await this.findId(this.noteList[this.selNote]._id,false)
+      let rs= await tsbApi.db.put({
+        ...tmp[0],
         isDelete:true,
-      };
-      // console.log(tmp);
-      let rs= await tsbApi.db.put(tmp)
-      // console.log(rs);
-
-
-      let getDb2 = await tsbApi.db.find({
-        selector: { 
-          notes:"notes",
-          _id:this.noteList[this.selNote]._id
-          // isDelete:this.isSelTab,
-        },
       })
-      // console.log(getDb2);
-      
+      this.getNotes()
+      this.selNote=-1
 
-
-      // let rs= await tsbApi.db.put(tmp)
-      // console.log(rs);
-      
-      // console.log(1);
-      // 删除桌面卡片并给=修改isDelete数据
-      // cardStore().removeCard(
-      // this.noteList[this.selNote].id,this.deskList[this.nowIndex]
-      // )
-      // console.log(2);
-
-
-      
-
-      // console.log(n);zz
-      
-      
     },
+    // 将回收站的数据还原到桌面中
+
+
+
+    // 测试 一键删除错误数据
+    async deTest(){
+      // console.log(this.deskList);
+      
+      let tt = await tsbApi.db.allDocs('note:')
+      // console.log(tt);
+      for(let i = 0;i<tt.rows.length;i++){
+        await tsbApi.db.remove(tt.rows[i].doc)
+      }
+    },
+
     async deleteNote(){
       // 彻底remove tsbApi中的数据
       // console.log('触发删除');
@@ -368,6 +258,28 @@ export const noteStore = defineStore("noteStore", {
     // 测试删除数据
     deleteTest(){
 
+    },
+
+    // 根据_id搜索数据库中的对象
+    async findId(id,isDelete){
+      // console.log(id,isDelete);
+      
+      let getDb = await tsbApi.db.find({
+        selector: { 
+          // notes:"notes",
+          _id: id,
+          isDelete:isDelete,
+        },
+      })
+      
+      // console.log(getDb.docs);
+      if (getDb.docs.length) {
+        
+        return getDb.docs
+      }else{
+        console.log('error');
+        return 
+      }
     }
 
   },
