@@ -9,13 +9,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, shallowRef, onBeforeUnmount,watch,onMounted } from 'vue'
+import { ref, reactive, shallowRef, onBeforeUnmount, watch, onMounted } from 'vue'
 import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
-import {yuanCommunityStore} from '../../../../store/yuanCommunity'
+import { yuanCommunityStore } from '../../../../store/yuanCommunity'
 const useYuanCommunityStore = yuanCommunityStore()
 // wangEditor配置
 const editorRef = shallowRef()
@@ -34,28 +34,28 @@ const toolbarConfig = ref({
         "bold",
         "italic",
         "underline",
-        
+
         {
             key: "group-text-selcet",
             title: '文本',
-            menuKeys: ["headerSelect", "fontSize", "color", "lineHeight", "bgColor", "fontFamily","through",],
+            menuKeys: ["headerSelect", "fontSize", "color", "lineHeight", "bgColor", "fontFamily", "through",],
         },
         "|",
-        
+
         "undo",
         "redo",
 
         {
             key: 'group-justify',
             title: '对齐',
-            menuKeys: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyJustify',"insertTable","bulletedList","numberedList",],
+            menuKeys: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyJustify', "insertTable", "bulletedList", "numberedList",],
         },
         "|",
         "uploadImage",
         {
             key: "group-more-style",
             title: "更多",
-            menuKeys: ["code", "emotion", "insertLink", "fullScreen", "blockquote","divider",],
+            menuKeys: ["code", "emotion", "insertLink", "fullScreen", "blockquote", "divider",],
         },
         // {
         //     key:"group-font-style",
@@ -74,10 +74,10 @@ onBeforeUnmount(() => {
     if (editor == null) return;
     editor.destroy();
 });
-const saveText=()=>{
-    useYuanCommunityStore.saveContent=valueHtml.value
+const saveText = () => {
+    useYuanCommunityStore.saveContent = valueHtml.value
 }
-// 监听富文本内容,停止写后保存
+// 监听富文本内容
 watch(valueHtml, _.debounce(saveText, 500));
 
 editorConfig.MENU_CONF["uploadImage"] = {
@@ -109,15 +109,14 @@ editorConfig.MENU_CONF["uploadImage"] = {
 editorConfig.MENU_CONF['bgColor'] = {
     colors: ['#333']
 }
-onMounted(()=>{
-    
-    
-    if(useYuanCommunityStore.saveContent){
-        valueHtml.value=useYuanCommunityStore.saveContent
-        return 
+onMounted(() => {
+    if (useYuanCommunityStore.saveContent) {
+        valueHtml.value = useYuanCommunityStore.saveContent
+    }else{
+        valueHtml.value = ''
     }
-    valueHtml.value=''
     
+
 })
 
 </script>

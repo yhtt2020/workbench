@@ -60,7 +60,7 @@
 
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                :forumIndex="currentIndex"></YuanPublishModal>
+                :forum="customData.defaultForum.value"></YuanPublishModal>
             <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal"
                 @closeDetail="closeDetail" />
 
@@ -87,7 +87,7 @@
             <!-- {{ selectForumList }}  @change="handleChange(selectValue)" -->
             <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass"
                 style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" :bordered="false"
-                @deselect="handleDeselect((selectValue))" @select="handleChange(selectValue)">
+                @deselect="handleDeselect(selectValue)" @select="handleChange(selectValue)">
                 <a-select-option :value="index" v-for="(item, index) in forumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
@@ -323,6 +323,7 @@ export default {
         // }
     },
     async mounted() {
+        console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
@@ -331,7 +332,7 @@ export default {
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
         }
-        console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
+        // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
         // console.log(this.options.title);
         // console.log(navigator.connection.downlink,'navigator.connection');
@@ -368,7 +369,7 @@ export default {
                     // console.log(this.options.title)
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
-                    console.log(this.options.title);
+                    // console.log(this.options.title);
                 }
 
             }
@@ -423,7 +424,8 @@ export default {
 
 .optionClass {
     & .ant-select-selection-item {
-        background-color: red !important;
+        background-color: rgba(80,139,254,0.20) !important;
+        height: 28px;
     }
 }
 </style>

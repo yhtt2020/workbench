@@ -1,7 +1,7 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true">
-        <div class="w-[1000px] h-[700px] pl-4 pr-4">
-            <div class="w-full pt-2 card-content">
+        <div class="w-[1000px] h-[700px]">
+            <div class="w-full pt-2 pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
                     <div class="flex items-center">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex w-full h-[650px] pl-4 pr-4 xt-bg-2" style="border-radius: 12px;">
+            <div class="flex w-full h-[650px] xt-bg-2" style="border-radius: 12px;">
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4 " style="flex-shrink: 0;">
