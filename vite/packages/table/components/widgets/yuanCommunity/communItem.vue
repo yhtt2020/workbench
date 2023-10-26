@@ -1,8 +1,8 @@
 <template>
-    <div class="w-full h-[78px] pl-3  pt-3 pb-2 mb-2 pointer">
-        <div class="flex items-center justify-between">
+    <div class="w-[542px] h-[78px] pl-3  pt-3 pb-2 mb-2 pointer">
+        <div class="flex justify-between w-full h-full" >
             <div class="mr-3">
-                <div class="flex items-center h-[24px]" style="">
+                <div class="flex items-center h-[24px]" >
                     <a-avatar :src="detailPost.user.avatar" :size="24" ></a-avatar>
                     <div class="ml-2 xt-text-2 font-14 nickname" style="text-align: left;">
                         {{ detailPost.user.nickname }}
@@ -12,7 +12,7 @@
                     </div>
                 </div>
 
-                <div class="xt-text font-16 content-text" style="text-align: left;" :innerHTML="contentText">
+                <div class="mt-1 xt-text font-16 content-text" style="text-align: left;" :innerHTML="contentText">
                     <!-- {{ contentText }} -->
                 </div>
             </div>

@@ -23,7 +23,6 @@ const editorConfig = { placeholder: '正文', MENU_CONF: {} }
 const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
     editor.config.bgColor = [
-        'var(--primary-text)',
         'var(--secondary-bg)',
     ]
     // 查看所有的功能选项
@@ -35,31 +34,28 @@ const toolbarConfig = ref({
         "bold",
         "italic",
         "underline",
-        "divider",
-        "through",
+        
         {
             key: "group-text-selcet",
             title: '文本',
-            menuKeys: ["headerSelect", "fontSize", "color", "lineHeight", "bgColor", "fontFamily", "blockquote"],
+            menuKeys: ["headerSelect", "fontSize", "color", "lineHeight", "bgColor", "fontFamily","through",],
         },
         "|",
-        "bulletedList",
-        "numberedList",
+        
         "undo",
         "redo",
-        "insertTable",
 
         {
             key: 'group-justify',
             title: '对齐',
-            menuKeys: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyJustify',],
+            menuKeys: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyJustify',"insertTable","bulletedList","numberedList",],
         },
         "|",
         "uploadImage",
         {
             key: "group-more-style",
             title: "更多",
-            menuKeys: ["code", "emotion", "insertLink", "fullScreen",],
+            menuKeys: ["code", "emotion", "insertLink", "fullScreen", "blockquote","divider",],
         },
         // {
         //     key:"group-font-style",

@@ -9,7 +9,7 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer" v-if="false">
+                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer"  >
                     <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
                         icon="akar-icons:arrow-clockwise" />
                 </div>
@@ -20,7 +20,7 @@
                     </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div :style="{ height: this.customData.height == 2 ? '392px' : '600px' }" >
+                <div :style="{ height:showItem }" >
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
@@ -34,7 +34,7 @@
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3" v-if="false">
+                            <div class="flex items-center justify-center w-full h-[40px] mt-3"  >
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
                             </div>
@@ -47,9 +47,9 @@
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible" v-if="false"
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"  
                 style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
-                <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;"
+                <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
                     icon="fluent:add-16-filled" />
             </xt-button>
 
@@ -215,6 +215,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
+            console.log(this.customData.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
@@ -277,6 +278,12 @@ export default {
             }
             return this.sizeList[0]
         },
+        showItem(){
+          if(this.customData && this.customData.height){
+            return this.customData.height == 2?'392px':'600px'
+          }
+          return '392px'  
+        },
         // 判断不同高度返回不同个数
         copyNum() {
             return this.showSize.height == 2 ? 3 : 5
@@ -325,6 +332,7 @@ export default {
         console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
         // console.log(this.options.title);
+        // console.log(navigator.connection.downlink,'navigator.connection');
     },
     watch: {
         showForumList(newValue) {
