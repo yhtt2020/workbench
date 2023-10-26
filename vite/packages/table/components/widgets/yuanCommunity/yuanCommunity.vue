@@ -9,7 +9,7 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer"  >
+                <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer"  >
                     <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
                         icon="akar-icons:arrow-clockwise" />
                 </div>

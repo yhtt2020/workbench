@@ -1,6 +1,7 @@
 <template>
-    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true">
-        <div class="w-[1000px] h-[700px]">
+    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+        :esc="true">
+        <div class="w-[1000px] h-[700px] maxDetail">
             <div class="w-full pt-2 pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -112,7 +113,7 @@
                     </div>
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[3px] h-[700px] " type="vertical" style="color: var(--divider);" />
+                <a-divider class="w-[3px] h-[700px] detele-line" type="vertical" style="color: var(--divider);" />
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4">
@@ -144,6 +145,10 @@
 
             </div>
         </div>
+        <div class="minDetail">
+            <Detail :cardData="props.cardData"/>
+        </div>
+        
 
     </xt-modal>
 </template>
@@ -158,7 +163,7 @@ import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
-import { html } from 'cheerio/lib/api/manipulation';
+import Detail from '../../../page/chat/com/Detail.vue';
 const useUserStore = appStore()
 const store = useCommunityStore();
 let uid = store.communityPostDetail.user?.uid
@@ -272,9 +277,23 @@ const showImage = () => {
 }
 </script>
 <style lang='scss' scoped>
-header{
-    display: none !important;
+@media screen and (max-width: 1000px) {
+
+    .detail {
+        // width: 100%;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .minDetail {
+        display: block;
+    }
+    .maxDetail {
+        display: none;
+    }
 }
+
 .card {
     display: flex;
     // 占满整个父元素
@@ -395,5 +414,4 @@ header{
     &:hover {
         background: var(--secondary-bg);
     }
-}
-</style>
+}</style>
