@@ -9,11 +9,14 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, shallowRef, onBeforeUnmount } from 'vue'
+import { ref, reactive, shallowRef, onBeforeUnmount,watch,onMounted } from 'vue'
 import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
+import {yuanCommunityStore} from '../../../../store/yuanCommunity'
+const useYuanCommunityStore = yuanCommunityStore()
 // wangEditor配置
 const editorRef = shallowRef()
 // default---wangEditor全部功能  simple---部分功能
@@ -22,9 +25,6 @@ const valueHtml = ref('')
 const editorConfig = { placeholder: '正文', MENU_CONF: {} }
 const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
-    editor.config.bgColor = [
-        'var(--secondary-bg)',
-    ]
     // 查看所有的功能选项
     // console.log(editor.getAllMenuKeys())
 };
@@ -74,7 +74,11 @@ onBeforeUnmount(() => {
     if (editor == null) return;
     editor.destroy();
 });
-
+const saveText=()=>{
+    useYuanCommunityStore.saveContent=valueHtml.value
+}
+// 监听富文本内容,停止写后保存
+watch(valueHtml, _.debounce(saveText, 500));
 
 editorConfig.MENU_CONF["uploadImage"] = {
     maxFileSize: 10 * 1024 * 1024,
@@ -105,6 +109,16 @@ editorConfig.MENU_CONF["uploadImage"] = {
 editorConfig.MENU_CONF['bgColor'] = {
     colors: ['#333']
 }
+onMounted(()=>{
+    
+    
+    if(useYuanCommunityStore.saveContent){
+        valueHtml.value=useYuanCommunityStore.saveContent
+        return 
+    }
+    valueHtml.value=''
+    
+})
 
 </script>
 <style lang='scss' scoped>

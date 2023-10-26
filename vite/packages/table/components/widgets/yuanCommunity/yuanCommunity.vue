@@ -20,7 +20,7 @@
                     </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div :style="{ height:showItem }" >
+                <div :style="{ height:showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
@@ -43,6 +43,8 @@
                     </vue-custom-scrollbar>
 
                 </div>
+                <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
+                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
