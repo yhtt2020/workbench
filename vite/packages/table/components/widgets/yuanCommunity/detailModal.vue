@@ -70,9 +70,9 @@
                                 <!-- 正文元素 -->
                                 <div class="mt-4 mb-2">
                                     <div>
-                                        <div id="title" style="color: var(--primary-text);font-size: 16px; "
+                                        <div class="title" style="color: var(--primary-text);font-size: 16px; "
                                             v-if="cardData.title" :innerHTML="title"></div>
-                                        <div id="context"
+                                        <div class="context"
                                             style="color:  var(--secondary-text); word-break: pre-wrap;font-size: 14px;"
                                             :innerHTML="content"></div>
                                     </div>
@@ -347,9 +347,8 @@ header{
         border-radius: 8px;
     }
 
-    #title {
+    .title {
         font-size: 16px;
-        color: rgba(255, 255, 255, 0.85);
         text-align: justify;
         line-height: 22px;
         font-weight: 400;
@@ -357,9 +356,8 @@ header{
         word-wrap: break-word;
     }
 
-    #context {
+    .context {
         font-size: 14px;
-        // color: rgba(255, 255, 255, 0.60);
         text-align: justify;
         line-height: 22px;
         font-weight: 400;

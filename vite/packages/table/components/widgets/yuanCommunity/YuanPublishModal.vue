@@ -34,12 +34,7 @@
 
             </div>
             <component :is="currentComponent"></component>
-            <!-- <DynamicItem v-if="defaultType.value='dynamic'"/>
-            <VideoItem v-if="defaultType.value='video'"/>
-            <PostItem v-if="defaultType.value='post'"/> -->
             <div class="flex items-center justify-between h-[56px] ">
-                <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
                 <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :bordered="false"
                     @change="handleChange"
                     style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
@@ -94,10 +89,10 @@ const publishType = ref([
         title: '发帖子',
         value: 'post'
     },
-    {
-        title: '发视频',
-        value: 'video'
-    }
+    // {
+    //     title: '发视频',
+    //     value: 'video'
+    // }
 ])
 const currentComponent=computed(()=>{
     switch (defaultType.value.value) {

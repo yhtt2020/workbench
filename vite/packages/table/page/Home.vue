@@ -85,17 +85,17 @@
     <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
-        <xt-task :modelValue="m01033" to="" >
-            </xt-task>
-        <div class="line-title xt-text" >背景设置：</div>
+        <xt-task :modelValue="m01033" to="">
+        </xt-task>
+        <div class="line-title xt-text">背景设置：</div>
         <div class="line" @click="setTransparent()">
           透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
         </div>
         <div class="flex line" v-if="!appSettings.transparent">
 
-        <xt-task :modelValue="m01034" to="" @cb="goPaper">
-          <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
-      </xt-task>
+          <xt-task :modelValue="m01034" to="" @cb="goPaper">
+            <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+          </xt-task>
           <a-button @click="clearWallpaper" class="xt-text">清除背景</a-button>
         </div>
         <div v-if="!appSettings.transparent" class="line">
@@ -187,7 +187,7 @@
 </template>
 
 <script>
-import  { onMounted } from 'vue'
+import { onMounted } from 'vue'
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
@@ -259,12 +259,12 @@ import EatToday from '../components/widgets/eat/EatToday.vue'
 import HotSearch from '../components/widgets/HotSearch.vue'
 // import News from "../components/widgets/news/NewsCard.vue";
 import { setTransparent, detTransparent } from "../components/card/hooks/themeSwitch"
-import {taskStore} from "../apps/task/store"
+import { taskStore } from "../apps/task/store"
 import navigationData from '../js/data/tableData'
 import { navStore } from '../store/nav'
 
 const { steamUser, steamSession, path, https, steamFs } = $models
-if(steamUser && steamSession){
+if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession
   var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
   var client = new steamUser({
@@ -357,8 +357,8 @@ export default {
       cardSwitch: false,
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
-      hasTriggered:1,
-      replaceFlag:true
+      hasTriggered: 1,
+      replaceFlag: true
     };
   },
   components: {
@@ -427,7 +427,7 @@ export default {
     HotSearch
   },
   computed: {
-    ...mapWritableState(navStore, [ 'sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
@@ -453,12 +453,12 @@ export default {
       appSettings: "settings",
     }),
     ...mapWritableState(deskStore, ['deskList']),
-    ...mapWritableState(taskStore, ['taskID','step']),
-    m01033(){
-        return this.taskID == "M0103" && this.step == 3
+    ...mapWritableState(taskStore, ['taskID', 'step']),
+    m01033() {
+      return this.taskID == "M0103" && this.step == 3
     },
-    m01034(){
-        return this.taskID == "M0103" && this.step == 4;
+    m01034() {
+      return this.taskID == "M0103" && this.step == 4;
     },
     desksList() {
       return this.desks.map((desk) => {
@@ -489,8 +489,8 @@ export default {
       }
     },
   },
-  beforeUpdate(){
-    if(this.hasTriggered<=10){
+  beforeUpdate() {
+    if (this.hasTriggered <= 10) {
       console.log('chufa')
       this.replaceIcon()
       this.hasTriggered++
@@ -499,9 +499,31 @@ export default {
   },
   async mounted() {
     this.replaceIcon()
-    setTimeout(() => {
-      this.replaceIcon()
-    }, 3000);
+    // setTimeout(() => {
+    //   this.replaceIcon()
+    // },500)
+    let n=0
+    if (navigator.connection.downlink < 1) {
+      
+      let timer=setInterval(()=>{
+        if(n>3){
+          clearInterval(timer)
+          return
+        }
+        this.replaceIcon()
+        n++
+      },3000)
+    }else{
+      let timer=setInterval(()=>{
+        if(n>2){
+          clearInterval(timer)
+          return 
+        }
+        this.replaceIcon()
+        n++
+      },1000)
+    }
+    
     // let counte=0
     // const counter=setInterval(()=>{
     //     if(this.replaceFlag==false){
@@ -717,29 +739,29 @@ export default {
       this.iconVisible = true
       this.menuVisible = false;
     },
-    replaceIcon(){
+    replaceIcon() {
       navigationData.systemFillAppList.forEach((item) => {
-      this.sideNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+        this.sideNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
-    navigationData.systemFillAppList.forEach((item) => {
-      this.rightNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+      navigationData.systemFillAppList.forEach((item) => {
+        this.rightNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
-    navigationData.systemAppList.forEach((item) => {
-      this.footNavigationList.forEach((i) => {
-        if (item.name === i.name) {
-          i.icon=item.icon
-        }
+      navigationData.systemAppList.forEach((item) => {
+        this.footNavigationList.forEach((i) => {
+          if (item.name === i.name) {
+            i.icon = item.icon
+          }
+        })
       })
-    })
-    this.replaceFlag=false
+      this.replaceFlag = false
     },
     setTransparent() {
       console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);
