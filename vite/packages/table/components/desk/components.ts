@@ -67,7 +67,7 @@ import HotSearch from "../widgets/HotSearch.vue";
 import CoolWidget from "../card/CoolWidget.vue";
 import AIaides from "../widgets/AIaides.vue";
 import OilPrices from "../widgets/OilPrices.vue";
-import yuanCommunity from "../widgets/yuanCommunity/yuanCommunity.vue";
+import yuanCommunity from "../widgets/yuanCommunity/YuanCommunity.vue";
 import RightMenu from "./RightMenu.vue";
 import FreeDesk from "./free/index";
 

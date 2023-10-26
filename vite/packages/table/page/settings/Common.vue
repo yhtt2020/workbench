@@ -3,7 +3,15 @@
   >
     <div class="line-title">界面缩放</div>
   <ZoomUI></ZoomUI>
-
+    <div class="line-title" >工作台界面</div>
+      <div class="line">
+        顶部栏显示日期时间：
+        <a-switch v-model:checked="settings.showTopbarTime"></a-switch>
+      </div>
+    <div class="line">
+      顶部栏显示天气（需先设置城市）：
+      <a-switch v-model:checked="settings.showTopbarWeather"></a-switch>
+    </div>
   <template v-if="isMain">
     <div class="line-title" >使用习惯</div>
     <div class="line">

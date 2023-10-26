@@ -1,3 +1,4 @@
+<!-- 拖拽层 -->
 <script setup lang="ts">
 import { useDrag, DragSourceMonitor } from "vue3-dnd";
 import { ItemTypes } from "./ItemTypes";
@@ -13,6 +14,7 @@ const props = defineProps<{
   top: number;
   data: object;
   customData: object;
+  currentDesk: object;
 }>();
 
 const [collect, drag, preview] = useDrag(() => ({
@@ -41,6 +43,10 @@ const { isDragging } = toRefs(collect);
     }"
     role="DraggableBox"
   >
-    <Box :title="title" :data="data" />
+    <slot
+      name="item"
+      :data="data"
+    />
+
   </div>
 </template>

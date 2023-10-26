@@ -1,5 +1,9 @@
 <template>
-  <div ref="containerRef" @click="handeleCustomTrigger($event)">
+  <div
+    ref="containerRef"
+    @click.stop.prevent="handleClickMenu($event)"
+    @contextmenu.stop.prevent="handleContextMenu($event)"
+  >
     <!-- 展开菜单的范围 -->
     <slot></slot>
     <!-- 将菜单传递到body -->
@@ -15,7 +19,12 @@
           class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
           :style="pos"
         >
-          <div class="list w-full h-full p-2" v-resize="handeleMenuViewport">
+          <div
+            class="list w-full h-full p-2"
+            v-resize="handeleMenuViewport"
+            @mouseleave="handeleCloseLock()"
+            @mouseover="handeleStartLock()"
+          >
             <template v-for="menu in props.menus">
               <template v-if="menu.slot">
                 <div class="item rounded-lg">
@@ -25,7 +34,7 @@
               </template>
               <xt-divider v-else-if="menu.divider" class="my-3" />
               <div
-                v-else
+                v-else-if="menu.children"
                 class="item rounded-lg"
                 :key="menu[`${name}`]"
                 @click="handleClick(menu)"
@@ -33,7 +42,7 @@
                 <xt-popover>
                   <xt-text class="w-full h-full">
                     <Item :data="menu" :name="name" />
-                    <template #right v-if="menu.children">
+                    <template #right>
                       <xt-new-icon
                         size="20"
                         class="mr-3"
@@ -42,7 +51,7 @@
                       />
                     </template>
                   </xt-text>
-                  <template #content v-if="menu.children">
+                  <template #content>
                     <div class="list w-full h-full p-1">
                       <div
                         class="item"
@@ -56,6 +65,11 @@
                   </template>
                 </xt-popover>
               </div>
+              <div v-else class="item rounded-lg" @click="handleClick(menu)">
+                <xt-text class="w-full h-full">
+                  <Item :data="menu" :name="name" />
+                </xt-text>
+              </div>
             </template>
           </div>
         </div>
@@ -64,7 +78,7 @@
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .container {
   width: 200px;
   z-index: 999999999999;
@@ -88,12 +102,11 @@
 </style>
 
 <script setup lang="ts">
-import { ref, computed, toRefs } from "vue";
-import useMenuEvent from "./useMenuEvent";
+import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
-
 import Item from "./Item.vue";
+
 // 接收父组件传递的菜单项
 const props = defineProps({
   menus: {
@@ -113,6 +126,9 @@ const props = defineProps({
   start: {
     default: true,
   },
+  lock: {
+    default: true,
+  },
   // 展开触发模式
   model: {
     default: "contextmenu",
@@ -123,34 +139,69 @@ const props = defineProps({
   },
 });
 
-const { model, trigger, start } = toRefs(props);
-const emits = defineEmits("closeMenu");
-// 菜单离开回调
-const handleCloseMenu = () => {
-  emits("closeMenu");
+const { model, trigger, start, lock } = toRefs(props);
+const emits = defineEmits(["closeMenu"]);
+
+/**
+ * 打开菜单
+ */
+const show = ref(false);
+const menuX = ref(0);
+const menuY = ref(0);
+
+const setup = (e: any) => {
+  menuX.value = e.clientX;
+  menuY.value = e.clientY;
+  show.value = true;
+};
+
+const handeleCustomTrigger = (e: any) => {
+  if (trigger.value) {
+    setup(e);
+  }
+};
+// 右键
+const handleContextMenu = (e: any) => {
+  handeleCustomTrigger(e);
+  if (!start.value || model.value != "contextmenu") return;
+  setup(e);
+};
+// 左键
+const handleClickMenu = (e: any) => {
+  handeleCustomTrigger(e);
+  if (trigger.value) {
+    setup(e);
+  }
+  if (!start.value || model.value != "click") return;
+  setup(e);
 };
 // 菜单项事件点击 调用回调函数
 const handleClick = (menu: any) => {
+  if (!menu?.lock) {
+    show.value = false;
+  }
   menu[props.fn] && menu[props.fn](props.data);
 };
-
-// 获取菜单坐标
-const containerRef = ref();
-const { menuX, menuY, show } = useMenuEvent(
-  containerRef,
-  model,
-  start,
-  handleCloseMenu
-);
-// 自定义触发事件
-
-const handeleCustomTrigger = (e) => {
-  if (trigger.value) {
-    menuX.value = e.clientX;
-    menuY.value = e.clientY;
-    show.value = true;
-  }
+/**
+ * 关闭菜单
+ */
+let lockState = ref(false);
+const handeleStartLock = () => {
+  if (lock.value) lockState.value = true;
 };
+const handeleCloseLock = () => {
+  if (lock.value) lockState.value = false;
+};
+const handleCloseMenuCore = () => {
+  show.value = false;
+  emits("closeMenu");
+};
+
+const handleCloseMenu = () => {
+  if (lockState.value) return;
+  handleCloseMenuCore();
+};
+
 // 获取 视图大小
 const { windowWidth, windowHeight } = useWindowViewport();
 // 获取菜单大小
@@ -159,7 +210,6 @@ const h = ref(0);
 
 const handeleMenuViewport = (size: any) => {
   w.value = size.width;
-  // 这里没获取h 是因为加了过渡 高度会一直更新
   h.value = size.height;
 };
 
@@ -177,7 +227,7 @@ const handleEnter = (el: any) => {
   // 该方法需要传入一个回调函数  回调函数会在页面被刷新时前调用
   requestAnimationFrame(() => {
     el.style.height = height + "px";
-    el.style.transition = ".3s";
+    el.style.transition = ".2s";
   });
 };
 // 菜单离开时
@@ -206,5 +256,14 @@ const pos = computed(() => {
     left: posX + "px",
     top: posY + "px",
   };
+});
+
+onMounted(() => {
+  window.addEventListener("click", handleCloseMenu, { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+});
+onBeforeUnmount(() => {
+  window.addEventListener("click", handleCloseMenu, { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
 </script>

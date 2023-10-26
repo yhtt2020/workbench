@@ -35,6 +35,9 @@
 </template>
 
 <script>
+import { mapWritableState, mapActions } from "pinia";
+import { cardStore } from "../../../../store/card";
+import { useFreeDeskStore } from "../../../desk/free/store";
 export default {
   emits: ["drag-start", "drag-end", "click"],
   data() {
@@ -52,9 +55,14 @@ export default {
     isSelect: { type: Boolean },
     length: { type: Number },
   },
+  computed: {
+    ...mapWritableState(cardStore, ["currentDeskId"]),
+  },
   methods: {
+    ...mapActions(useFreeDeskStore, ["getFreeDeskState"]),
     // 鼠标按下事件处理方法
     handleMouseDown(event) {
+      if (this.getFreeDeskState(this.currentDeskId)) return;
       this.followPosition = { x: event.clientX, y: event.clientY }; // 初始化拖拽元素坐标
       event.preventDefault();
       event.stopPropagation();

@@ -1,7 +1,7 @@
 import {netWorkDownUp} from '../../util'
 export function setSupervisoryData(res){
   const {down,up} = netWorkDownUp(res) //上传和下载
-  let {SGPU1UTI,TGPU1DIO,SMEMUTI,SCPUUTI,TCPUPKG,SRTSSFPS,SGPU1USEDDEMEM,TGPU1HOT,TGPUDIO,TCPUDIO} = res || {}
+  let {SGPU1UTI,TGPU1DIO,SMEMUTI,SCPUUTI,TCPUPKG,SRTSSFPS,SGPU1USEDDEMEM,TGPU1HOT,TGPUDIO,TCPUDIO,TGPU1} = res || {}
   let data = {
     useGPU: { value: 0 },//GPU占用
     warmGPU: { value: 0 },//GPU温度
@@ -15,8 +15,8 @@ export function setSupervisoryData(res){
   }
   if(down)data.down = down
   if(up) data.up = up
-  if(TGPU1DIO || TGPU1HOT || TGPUDIO){
-     const warmGPU = TGPU1DIO || TGPU1HOT || TGPUDIO  //替换数据
+  if(TGPU1DIO || TGPU1HOT || TGPUDIO || TGPU1){
+     const warmGPU = TGPU1DIO || TGPU1HOT || TGPUDIO || TGPU1 //替换数据
      data = {...data,warmGPU} //warmGPU为温度固定名称
   }
   if(SGPU1UTI){

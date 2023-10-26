@@ -1,76 +1,69 @@
-
 <template>
-    <Modal :maskNoClose="true" class="" animationName="t-b-close">
-        <div class="w-[500px] pl-4 pr-4 content">
-            <div class="flex justify-between w-full h-[64px] items-center ">
-                <a-dropdown trigger="click" placement="bottom"
-                    overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
-                    <div class="flex items-center justify-center w-full">
-                        <div class="ml-20 font-16 xt-text">{{ defaultType.title }}</div>
-                        <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" />
-                    </div>
-                    <template #overlay>
-                        <a-menu class="text-center xt-bg"
-                            style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
-                            <a-menu-item v-for="(item, index) in publishType" :key="index"
-                                @click="handleMenuItemClick(index)">
-                                <span class="ml-12 text-center xt-text">{{ item.title }}</span>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-
-                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
-                    <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                    <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                </xt-button>
-                <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
-                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </xt-button>
-
+    <!-- 视频 -->
+    <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px]" style="border: 1px solid var(--divider);">
+        <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
+            @drop="handleDrop">
+            <div class="flex flex-col items-center justify-center w-full h-full">
+                <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;"></newIcon>
+                <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB</p>
             </div>
-            <component :is="currentComponent"></component>
-            <div class="flex items-center justify-between h-[56px] ">
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :bordered="false"
-                    @change="handleChange"
-                    style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
-                    change-on-select>
-                    <template #suffixIcon>
-                        <newIcon icon="fluent:chevron-left-16-filled" class="rotate-180 xt-text-2" style="font-size: 20px;vertical-align: super;margin-top: -3px;"></newIcon>
-                    </template>
-                </a-select>
-                <div class="flex items-center">
-                    <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
-                        @click="handleOk">取消</xt-button>
-                    <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
-                        @click="publishPost">发布</xt-button>
-                </div>
+        </a-upload-dragger>
+    </div>
+    <!-- 视频和帖子 -->
+    <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);">
+        <a-input v-model:value="titleContent" placeholder="标题" :bordered="false" />
+    </div>
+    <div class="w-full mt-2 xt-bg box font-16">
+        <div style="font-size: 1rem !important;">
+            <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
+                <!-- 动态和视频 -->
+                <a-textarea v-model:value="postValue" placeholder="简介" :autoSize="{ minRows: 5, maxRows: 8 }"
+                    :bordered="false"  />
             </div>
+
+        </div>
+    </div>
+    <div class="h-[45px] flex items-center justify-between ">
+        <div class="flex items-center justify-center xt-text-2">
+            <tippy trigger=" click" placement="bottom" :interactive="true">
+                <template #content>
+                    <!-- <div class="w-full"> -->
+                    <vue-custom-scrollbar :settings="settingsScroller" class="w-full h-[150px] xt-bg-2 rounded-lg flex  "
+                        style="flex-wrap: wrap;">
+                        <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
+                            @click="addEmoji(item)" :key="index" style="cursor: pointer;">
+                            <img :src="item" class="w-[32px] h-[32px]">
+                        </div>
+                    </vue-custom-scrollbar>
+                    <!-- </div> -->
+                </template>
+
+                <a-button type="text" size="small" class=" xt-text emojiVis"
+                    style="color: var(--secondary-text) !important;"><template #icon>
+                        <!-- <SmileOutlined style="" /> -->
+                        <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
+                            style="vertical-align: sub;margin-right: 4px;" />
+                    </template> 表情</a-button>
+            </tippy>
+
         </div>
 
-    </Modal>
+    </div>
 </template>
+
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed } from 'vue'
 import type { UploadProps } from 'ant-design-vue';
-import browser from '../../../js/common/browser';
-import Modal from '../../../components/Modal.vue'
+import browser from '../../../../js/common/browser';
+import Modal from '../../../../components/Modal.vue'
 import { Icon as newIcon } from '@iconify/vue';
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
 import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
-import fluentEmojis from '../../../js/chat/fulentEmojis'
-import { yuanCommunityStore } from '../../../store/yuanCommunity'
-import { useCommunityStore } from '../../../page/chat/commun'
-import PostItem from './Detail/PostItem.vue';
-import VideoItem from './Detail/VideoItem.vue';
-import DynamicItem from './Detail/DynamicItem.vue';
+import fluentEmojis from '../../../../js/chat/fulentEmojis'
+import { yuanCommunityStore } from '../../../../store/yuanCommunity'
+import { useCommunityStore } from '../../../../page/chat/commun'
+import MarkDown from './MarkDown.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // const imageLoadVisible = ref(true)
@@ -89,29 +82,11 @@ const publishType = ref([
         title: '发帖子',
         value: 'post'
     },
-    // {
-    //     title: '发视频',
-    //     value: 'video'
-    // }
-])
-const currentComponent=computed(()=>{
-    switch (defaultType.value.value) {
-        case 'dynamic':
-            return DynamicItem;
-            break;
-        case 'post':
-            return PostItem;
-            break;
-        case 'video':
-            return VideoItem;
-            
-            break;
-    
-        default:
-            return DynamicItem;
-            break;
+    {
+        title: '发视频',
+        value: 'video'
     }
-})
+])
 const removeCover = () => {
     coverList.value = []
 }
@@ -119,11 +94,15 @@ let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
 const handleMenuItemClick = (index) => {
     defaultType.value = publishType.value[index]
 }
+// 视频文件
+const videoList = ref([])
+// 封面文件
+const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
 const handleFullScreen = () => {
-//   const full = document.querySelector('.content');
-  fullScreen.value = !fullScreen.value;
+    //   const full = document.querySelector('.content');
+    fullScreen.value = !fullScreen.value;
 };
 // const userName = ref('我是皮克斯呀')
 const postValue = ref('')
@@ -303,9 +282,11 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
     padding-right: 0px;
 }
+
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     color: var(--secondary-text);
     height: 40px;

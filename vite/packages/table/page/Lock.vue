@@ -4,8 +4,8 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle"
-       style="margin-top: -6em;min-height: 15em; z-index:9999999">
+  <div id="displayMiddle" class="pointer item-content" @click="enter"
+       style="">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
       <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
@@ -50,7 +50,7 @@
       <!--      <span class="ml-2">点击屏幕中间解锁，右键进入壁纸设置</span>-->
     </div>
 
-    <div class="mt-10 card half count-downtime" v-if="countDowntime.hours">
+    <div class="mt-2 card half count-downtime item-content" v-if="countDowntime.hours">
       <div class="left-time">
         <Icon
           style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
@@ -190,9 +190,9 @@ export default {
       $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
     })
     $('#displayMiddle').fadeIn(1000)
-    // setTimeout(() => {
-    //   $('#tip').fadeOut(1000)
-    // }, 3000)
+    setTimeout(() => {
+      $('#tip').fadeOut(1000)
+    }, 3000)
     if (this.settings.playType === 'my') {
       this.playAll()
     } else {
@@ -456,47 +456,35 @@ export default {
 }
 
 #displayMiddle {
-  display: none;
   position: fixed;
-  left: calc(25%);
-  width: 50%;
-  text-align: center;
+  left: 10vw;
+  top: 10vh;
+  height: 80vh;
+  width: 80vw;
   z-index: 9999999;
-  /*background: rgba(0, 0, 0, 0.3);*/
-  padding: 1em;
-  border-radius: 2em;
+  flex-direction: column;
 }
 
 .count-downtime {
   display: flex;
   flex-direction: row;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  justify-items: center;
   height: 15%;
-  width: 30em;
-  z-index: 999999;
 
   .left-time {
-    flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
   }
 
   .right-time {
-    flex: 3;
+    margin-left: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-}
-
-#displayMiddle {
-  z-index: 9999
 }
 
 .tip-items {
