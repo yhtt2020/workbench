@@ -686,9 +686,11 @@ const TUIChat: any = defineComponent({
       if (!message || !type) return;
       switch (type) {
         case 'reference':
+          messageInput?.value?.reEdit();
           referOrReplyMessage(message, type);
           break;
         case 'reply':
+          messageInput?.value?.reEdit();
           referOrReplyMessage(message, type);
           break;
         case 'reedit':

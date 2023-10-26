@@ -1,9 +1,7 @@
 <template>
   <div class="h-full w-full">
     <!-- <Main></Main> -->
-    <div>
-     
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -12,11 +10,10 @@ import Main from "./main/index.vue";
 import { mapWritableState } from "pinia";
 import { aiStore } from "../../../store/ai";
 export default {
-
   data() {
     return {
-      showRightPanel: false
-    }
+      showRightPanel: false,
+    };
   },
   computed: {
     ...mapWritableState(aiStore, ["isFull"]),
@@ -24,7 +21,6 @@ export default {
   components: {
     Main,
   },
-  async mounted() { },
 };
 </script>
 
@@ -37,4 +33,5 @@ export default {
 .slide-right-enter,
 .slide-right-leave-to {
   transform: translateX(100%);
-}</style>
+}
+</style>

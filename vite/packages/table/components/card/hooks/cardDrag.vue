@@ -95,12 +95,14 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-  color: #a09898;
+  color: var(--primary-text);
   cursor: move;
+  display: none;
 }
 
-.drag-boxs:hover {
-  color: #fff;
+
+.boxs:hover .drag-boxs{
+  display: block;
 }
 
 .boxs {

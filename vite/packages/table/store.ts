@@ -50,6 +50,8 @@ export const appStore = defineStore('appStore', {
         count: 100,
         type: 'rain'
       },
+      showTopbarTime:true,
+      showTopbarWeather:true,
       houserun: false,//rgb跑马灯
       zoomFactor: 100,//缩放比
       openUrlBrowser: 'builtin',//默认打开浏览器

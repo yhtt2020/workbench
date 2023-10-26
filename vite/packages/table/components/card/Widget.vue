@@ -33,8 +33,8 @@
                     border: none;
                     box-shadow: none !important;
                     position: relative;
-                    left: -28px;
-                    top: -2px;
+                    left: -32px;
+                    top: -3px;
                   "
                   :value="options.title"
                 ></a-input>

@@ -17,9 +17,9 @@ const props = defineProps({
 });
 const widgetStore = useWidgetStore();
 
-const { rightModel, isOnCard } = storeToRefs(widgetStore);
+const { rightModel } = storeToRefs(widgetStore);
 const menuState = computed(() => {
-  return rightModel.value == "follow" && !isOnCard.value ? true : false;
+  return rightModel.value == "follow";
 });
 </script>
 
