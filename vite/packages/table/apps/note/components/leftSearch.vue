@@ -9,7 +9,7 @@
                 border-radius: 10px;"
                 placeholder="搜索"
                 v-model:value="searchValue"
-                @change="searchIcon"
+                @change="this.searchNote(searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
             <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background:var(--secondary-bg);border-radius: 10px;" @click="addNote">
             <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
@@ -40,25 +40,25 @@
                                 <a-menu 
                                 style="padding: 8px;width: 200px;border-radius: 12px;background: #212121;border: 1px solid rgba(255,255,255,0.1);">
                                     <a-menu-item 
-                                    v-for="(item,index) in menus" 
-                                    :key="index" 
-                                    style="height: 40px;border-radius: 10px;"
-                                    @click="item.callBack"
-                                    >
+                                        v-for="(item,index) in menus" 
+                                        :key="index" 
+                                        style="height: 40px;border-radius: 10px;"
+                                        @click="item.callBack">
                                         <div class="flex items-center font-16">
                                             <Icon width="20" height="20" :icon="item.newIcon" />
                                             <div :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
                                         </div>
-                                        </a-menu-item>
+
+                                    </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
                     </div>
-                    <div class="mt-2 two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;">
+                    <div class="mt-2 w-full two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
                         {{ item.hasOwnProperty('customData')?item.customData.text:'' }}
                     </div>
                     <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
-                        {{ this.formatTimestamp(item.id) }}{{ item.deskName?' · '+item.deskName:'' }}
+                        {{ this.formatTimestamp(item.id) }}{{ item.deskName!=''?' · '+item.deskName:'' }}
                     </div>
                 </div>
             </xt-menu>
@@ -125,7 +125,7 @@
     watch: {
     },
     methods: {
-        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard']),
+        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title

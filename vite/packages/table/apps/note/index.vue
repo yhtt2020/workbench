@@ -34,7 +34,7 @@
                   <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" class="mr-4"/>
                   {{ item.name }}
                 </div>
-                <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div>
+                <!-- <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div> -->
                 
               </div>
             </div>

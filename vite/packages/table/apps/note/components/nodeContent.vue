@@ -124,18 +124,29 @@
     },
    methods:{
     ...mapActions(cardStore, ['updateCustomData']),
-    ...mapActions(noteStore, ['saveNoteDb','getNotes']),
+    ...mapActions(noteStore, ['saveNoteDb','getNotes','addNoteToDesk','changeBg']),
     // 修改当前便签颜色
     changeBgColor(i){
         this.noteList[this.selNote].customData.background = this.noteBgColor[i]
-        this.updateCustomData(this.noteList[this.selNote].id,{
-            background:this.noteBgColor[i]
-        },this.noteList[this.selNote].desk)
+        if (this.noteList[this.selNote].deskName != '') {
+            console.log('改变了');
+            let nowIndex = -1;
+            this.deskList.forEach((item,index)=>{
+                if (item.id ==this.noteList[this.selNote].desk.id) {
+                nowIndex = index
+                }
+            })
+            this.updateCustomData(this.noteList[this.selNote].id,{
+                background:this.noteBgColor[i]
+            },this.deskList[nowIndex])
+        }
+        // 改变db中的颜色
+        this.changeBg(this.noteBgColor[i])
         this.isColor=false
     },
     timeout(){
         console.log('到时间了，开始保存');
-        console.log(this.deskList);
+        // console.log(this.deskList);
         // 这里将数据自动保存到桌面
         if (this.selNoteTitle) {
             console.log(1);
@@ -146,17 +157,15 @@
                         n = index
                     }
                 })
-                console.log(n);
-                console.log(this.deskList);
                 this.noteList[this.selNote].customData.title=this.selNoteTitle
                 this.noteList[this.selNote].customData.text=this.selNoteText
                 this.updateCustomData(this.noteList[this.selNote].id,{
                     title:this.selNoteTitle,
                     text:this.selNoteText
                 },this.deskList[n])
-                // 这里将数据保存到tsbApi
-                console.log(2);
                 this.saveNoteDb()
+            }else{
+                console.log(3)
             }
         }
     },
@@ -169,18 +178,22 @@
    watch:{
     selNoteTitle(newval,oldval){
         // 先清除后添加 
+        this.noteList[this.selNote].customData.title=this.selNoteTitle
+                this.noteList[this.selNote].customData.text=this.selNoteText
         this.clear()
         this.timer=setTimeout(()=>{
             this.timeout();
             this.clear()
-        },2000)
+        },10000)
     },
     selNoteText(newval,oldval){
         this.clear()
+        this.noteList[this.selNote].customData.title=this.selNoteTitle
+                this.noteList[this.selNote].customData.text=this.selNoteText
         this.timer=setTimeout(()=>{
             this.timeout();
             this.clear()
-        },2000)
+        },10000)
     },
    }
  };

@@ -192,6 +192,7 @@ export default {
           text: this.text,
         },
         this.desk
+        // 将text存入db
       );
     },
     updateBackground(backgroundColor) {
