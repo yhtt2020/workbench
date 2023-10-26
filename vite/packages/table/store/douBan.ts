@@ -1,13 +1,25 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {compareTime, cacheRequest} from '../js/axios/api'
+import axios from "axios";
+import {serverCache} from "../js/axios/serverCache";
 // @ts-ignore
 export const filmStore = defineStore("film", {
   state: () => ({
     data: {}
   }),
   actions: {
-    async getData() {
+    async getData(cache=1) {
+      const url = `https://m.maoyan.com/ajax/movieOnInfoList`
+      if (!cache) {
+        let axiosResponse = await axios.get(url, {})
+        if (axiosResponse.status === 200) {
+          // 如果请求到数据，post到serverCache的setCache api
+          await serverCache.set(url, axiosResponse, 60 * 60 * 12).then()
+        }
+        this.data = axiosResponse.data
+        return
+      } else {
         if (typeof this.data !== 'object') {
           this.data = {}
         }
@@ -18,36 +30,38 @@ export const filmStore = defineStore("film", {
             return
           }
         }
-      let res = await cacheRequest(`https://m.maoyan.com/ajax/movieOnInfoList`,{},{
-        localCache:true,
-        localTtl:60*60*12
-      })
-      if(res.data.code){
-        this.data = res.data
-        return
-      }else{
-        if (res && res.headers) {
-          const date = new Date(res.headers.Date)
-          const requestObj = {
-            expiresDate: date,
-            list: res.data.movieList
+        let res = await cacheRequest(url, {}, {
+          localCache: true,
+          localTtl: 60 * 60 * 12
+        })
+        if (res.data.code) {
+          this.data = res.data
+          return
+        } else {
+          if (res && res.headers) {
+            const date = new Date(res.headers.Date)
+            const requestObj = {
+              expiresDate: date,
+              list: res.data.movieList
+            }
+            this.updateGameData(requestObj)
           }
-          this.updateGameData(requestObj)
+          this.data.list.forEach(item => {
+            item.img = item.img.replace('2500x2500', '240x354')
+            item.comingDate = item.comingTitle.split(' ')[0]
+            item.score = this.priceFormat(item.sc)
+          });
         }
-        this.data.list.forEach(item => {
-          item.img = item.img.replace('2500x2500','240x354')
-          item.comingDate = item.comingTitle.split(' ')[0]
-          item.score = this.priceFormat(item.sc)
-        });
       }
+
     },
-    priceFormat(num){
-      if(!isNaN(num)){
-        return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);   
+    priceFormat(num) {
+      if (!isNaN(num)) {
+        return ((num + '').indexOf('.') != -1) ? num : num.toFixed(1);
       }
     },
     //  通过时间更新数据
-    updateGameData( value) {
+    updateGameData(value) {
       // console.log('更新数据=', value)
       this.data = value
     },

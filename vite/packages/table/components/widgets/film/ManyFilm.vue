@@ -8,7 +8,7 @@
     :menuList="menuList"
     v-if="!detailToggle"
     >
-      <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
+      <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div class="example" v-if="isLoading">
           <a-spin />
@@ -119,8 +119,9 @@
           this.filmArrange = this.filmPart
         }
       },
-      refreshPage(){
+      async refreshPage () {
         this.filmPart = _.sampleSize(this.filmList, 8)
+        await this.getData(0)
         this.getDoubanList()
       },
       btnDetail(id){
@@ -191,9 +192,9 @@
     }
     .title-refresh{
       position: absolute;
-      left: 15px;
+      left: 20px;
       top:10px;
-      width: 200px;
+      width: 230px;
       height: 40px;
     }
     .example {

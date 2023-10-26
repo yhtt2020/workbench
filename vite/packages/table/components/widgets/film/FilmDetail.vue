@@ -106,7 +106,7 @@
           return ( (num + '').indexOf('.') != -1 ) ? num: num.toFixed(1);
         }
       },
-      async getfilmDetail(){
+      async getFilmDetail(){
         let detail = await cacheRequest(`https://m.maoyan.com/ajax/detailmovie?movieId=${this.detailId}`,{},{
           localCache:true,
           localTtl:60*60*12
@@ -132,7 +132,7 @@
     },
     async mounted() {
       this.isLoading = true
-      await this.getfilmDetail()
+      await this.getFilmDetail()
       setTimeout(() => {
         this.isLoading = false
       })
