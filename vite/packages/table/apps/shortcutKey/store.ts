@@ -122,11 +122,15 @@ export const keyStore = defineStore("key", {
      * @param scheme
      */
     async saveScheme(scheme) {
+      console.error('执行了一次保存操作')
       let rs = await tsbApi.db.put({
         ...scheme
       })
+      console.log('保存结果',rs)
       if (rs.ok) {
-        return rs.doc
+        return rs
+      }else{
+        return false
       }
     },
     /**
@@ -193,6 +197,11 @@ export const keyStore = defineStore("key", {
         if (item.id == id) {
           this.recentlyUsedList[index].keyList = keyList
         }
+      })
+    },
+    async getScheme(id){
+      return await  this.findScheme({
+        _id: id
       })
     },
     async getRepApp(exeName, filePath) {

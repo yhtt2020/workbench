@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import Float from "./Float.vue";
@@ -104,11 +104,11 @@ const typeClass = computed(() => {
 // watch(route, (newRoute) => {
 //   if (full.value && currentPage !== newRoute.path) isFull.value = false;
 // });
-
+const { list } = toRefs(props);
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;
-  let res = props.list.map((item) => {
+  let res = list.value.map((item) => {
     if (item.full) full.value = true;
     let id = item.id ?? ++index;
     return {
@@ -120,29 +120,32 @@ const newList = computed(() => {
 });
 
 // 渲染的列表配置项
-const listOption = ref([
-  {
-    boxClass: "mb-2",
-    array: newList.value.slice(0, props.last),
-  },
-  {
-    class: "xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1",
-    boxClass: "mt-2",
-    array: newList.value.slice(props.last, -1 * props.end),
-    itemOption: {
-      w: "40",
+const listOption = computed(() => {
+  return [
+    {
+      boxClass: "mb-2",
+      array: newList.value.slice(0, props.last),
     },
-  },
-  {
-    boxClass: "mt-2",
-    array: newList.value.slice(-1 * props.end),
-    itemOption: {
-      type: "",
-      newType: "",
-      bg: "",
+    {
+      class:
+        "xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1",
+      boxClass: "mt-2",
+      array: newList.value.slice(props.last, -1 * props.end),
+      itemOption: {
+        w: "40",
+      },
     },
-  },
-]);
+    {
+      boxClass: "mt-2",
+      array: newList.value.slice(-1 * props.end),
+      itemOption: {
+        type: "",
+        newType: "",
+        bg: "",
+      },
+    },
+  ];
+});
 
 // 动态获取ID
 const index = computed(() => {
@@ -172,8 +175,6 @@ const itemClick = (item) => {
   emit("update:modelValue", item);
   item.callBack && item.callBack(item);
 };
-
-
 </script>
 
 <style lang="scss" scoped></style>

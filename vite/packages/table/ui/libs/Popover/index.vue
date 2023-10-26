@@ -9,7 +9,7 @@
         'padding-left': '20px',
       }"
     >
-      <template #content>
+      <template #content >
         <slot name="content"></slot>
       </template>
 

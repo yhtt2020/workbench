@@ -1,10 +1,10 @@
 <template>
     <div class="w-full h-full">
-        <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef" :defaultConfig="toolbarConfig"
-            :mode="mode" />
+        <Toolbar style="border-bottom: 1px solid var(--divider);background-color: var(--primary-bg) !important;"
+            :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
 
-        <Editor style="height: 100% ; overflow-y: hidden;" v-model="valueHtml"
-            :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+        <Editor style="height: 100% ; overflow-y: hidden;background-color: var(--primary-bg) !important;"
+            v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
     </div>
 </template>
 
@@ -12,8 +12,8 @@
 import { ref, reactive, shallowRef, onBeforeUnmount } from 'vue'
 import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import {fileUpload} from '../../../../components/card/hooks/imageProcessing'
-import {message} from 'ant-design-vue'
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
+import { message } from 'ant-design-vue'
 // wangEditor配置
 const editorRef = shallowRef()
 // default---wangEditor全部功能  simple---部分功能
@@ -22,32 +22,44 @@ const valueHtml = ref('')
 const editorConfig = { placeholder: '正文', MENU_CONF: {} }
 const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
-    editorRef.value.config.bgColor=['var(--secondary-bg)']
+    editor.config.bgColor = [
+        'var(--primary-text)',
+        'var(--secondary-bg)',
+    ]
     // 查看所有的功能选项
     // console.log(editor.getAllMenuKeys())
 };
 const toolbarConfig = ref({
     toolbarKeys: [
-        "color",
+
         "bold",
         "italic",
-        // "through",
-        // "uploadImage",
         "underline",
+        "divider",
+        "through",
+        {
+            key: "group-text-selcet",
+            title: '文本',
+            menuKeys: ["headerSelect", "fontSize", "color", "lineHeight", "bgColor", "fontFamily", "blockquote"],
+        },
         "|",
         "bulletedList",
         "numberedList",
-        
+        "undo",
+        "redo",
+        "insertTable",
+
         {
-            key:'group-justify',
-            title:'对齐',
-            menuKeys:['justifyLeft','justifyCenter','justifyRight','justifyJustify'],
+            key: 'group-justify',
+            title: '对齐',
+            menuKeys: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyJustify',],
         },
         "|",
+        "uploadImage",
         {
             key: "group-more-style",
             title: "更多",
-            menuKeys: ["codeBlock", "emotion", "insertLink","lineHeight","divider","fontSize"],
+            menuKeys: ["code", "emotion", "insertLink", "fullScreen",],
         },
         // {
         //     key:"group-font-style",
@@ -56,8 +68,8 @@ const toolbarConfig = ref({
         // }
         // "fontSize",
         // "lineHeight",
-        
-        
+
+
     ],
 })
 // 组件销毁时，也及时销毁编辑器
@@ -94,10 +106,17 @@ editorConfig.MENU_CONF["uploadImage"] = {
         }
     },
 };
-editorConfig.MENU_CONF['bgColor']={
-    colors:['#333']
+editorConfig.MENU_CONF['bgColor'] = {
+    colors: ['#333']
 }
+
 </script>
 <style lang='scss' scoped>
+.w-e-bar {
+    background-color: var(--secondary-bg) !important;
+}
 
+.w-e-textarea {
+    background-color: var(--secondary-bg) !important;
+}
 </style>
