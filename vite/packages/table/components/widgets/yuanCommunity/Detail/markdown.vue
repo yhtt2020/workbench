@@ -27,6 +27,11 @@ const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
     // 查看所有的功能选项
     // console.log(editor.getAllMenuKeys())
+    if (useYuanCommunityStore.saveContent) {
+        valueHtml.value = useYuanCommunityStore.saveContent
+    }else{
+        valueHtml.value = ''
+    }
 };
 const toolbarConfig = ref({
     toolbarKeys: [

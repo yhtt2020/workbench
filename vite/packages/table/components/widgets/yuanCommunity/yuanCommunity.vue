@@ -22,7 +22,7 @@
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        style="height: calc(100% - 40px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -210,6 +210,7 @@ export default {
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
             cardData: null,
             toggleDetail: true,
+            selectValue: [],
         }
     },
     methods: {
@@ -225,7 +226,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.customData.defaultForum);
+            // console.log(this.customData.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
@@ -234,7 +235,7 @@ export default {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
             this.cardData = item
-            console.log(this.cardData);
+            // console.log(this.cardData);
         },
         closeDetail(value) {
             this.showDetailModal = value

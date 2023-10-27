@@ -1,5 +1,5 @@
 <template>
-    <div class="w-[542px] h-[78px] pl-3  pt-3 pb-2 mb-2 pointer">
+    <div class="w-[542px] h-[78px] pl-3  pt-3 pb-2 mb-4 pointer">
         <div class="flex justify-between w-full h-full" >
             <div class="mr-3">
                 <div class="flex items-center h-[24px]" >

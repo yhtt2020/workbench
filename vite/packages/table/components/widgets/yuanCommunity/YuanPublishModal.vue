@@ -5,9 +5,9 @@
             :style="{ height: fullScreen ? '700px' : 'auto', width: fullScreen ? '1000px' : '500px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full ">
-                    <div class="flex justify-center ml-8">
-                        <a-select autoClearSearchValue="false" class="xt-bg"
-                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;"
+                    <div class="flex justify-center ml-12">
+                        <a-select autoClearSearchValue="false" 
+                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;"
                             :bordered="false" @change="changeItem">
                             <a-select-option :value="index" v-for="(item, index) in publishType"
                                 class="absolute z-auto xt-bg xt-text-2 selsect-options"
@@ -389,10 +389,7 @@ const publishPost = async () => {
             const url = await fileUpload(item.originFileObj);
             return url;
         }));
-        const coverUrlList = await Promise.all(coverList.value.map(async (item) => {
-            const url = await fileUpload(item.originFileObj);
-            return url;
-        }));
+        const coverUrlList = await fileUpload(coverList.value[0].originFileObj)
         // const coverUrlList = await fileUpload(coverList.value.originFileObj)
         // console.log(coverUrlList);
 
@@ -421,13 +418,13 @@ const publishPost = async () => {
 
         setTimeout(async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
-            const imageList = JSON.stringify(imageUrlList);
-            const coverImage = JSON.stringify(coverUrlList);
-            // console.log(coverImage,'coverImage');
+            const imageList =await JSON.stringify(imageUrlList);
+            const coverImage =await JSON.stringify(coverUrlList);
             // console.log(forumId, imageList, content.value, title.value, is_weibo, coverImage);
             if(defaultType.value.value=='dynamic'){
               await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)  
             }else if(defaultType.value.value=='post'){
+              console.log(forumId, imageList, content.value, title.value, coverImage);
               await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)  
             }
             

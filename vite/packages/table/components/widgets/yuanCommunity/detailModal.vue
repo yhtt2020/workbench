@@ -1,7 +1,7 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
         :esc="true">
-        <div class="w-[1000px] h-[700px] maxDetail">
+        <div class="w-[1000px] h-[700px] maxDetail" :style="{width:isFullScreen?'100%':'1000px'}">
             <div class="w-full pt-2 pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -12,7 +12,9 @@
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
                             <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
-                                icon="fluent:full-screen-maximize-16-filled" />
+                                icon="fluent:full-screen-maximize-16-filled" @click="fullScreen" v-if="!isFullScreen"/>
+                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
+                                icon="fluent:full-screen-minimize-16-filled" @click="fullScreen" v-else/>
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
                             <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
@@ -271,6 +273,10 @@ const showMenu = (img) => {
 const vieewerVisible = ref(false)
 const showImage = () => {
     vieewerVisible.value = !vieewerVisible.value
+}
+const isFullScreen=ref(false)
+const fullScreen = () => {
+    isFullScreen.value=!isFullScreen.value
 }
 </script>
 <style lang='scss' scoped>
