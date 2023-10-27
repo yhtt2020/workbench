@@ -20,7 +20,10 @@
 
 
       <template v-else>
-        <div>设置</div>
+        <div class="flex flex-col w-full">
+          <span class="category-16-500 mb-3 xt-text xt-font">设置</span>
+          <NoticeSetting />
+        </div>
       </template>
     </xt-left-menu>
   </div>
@@ -34,6 +37,7 @@ import { appStore } from "../../store";
 import { Icon as NoticeIcon } from '@iconify/vue'
 
 import NoticeDetail from "./noticeDetail.vue";
+import NoticeSetting from "./noticeSetting.vue";
 
 const app = appStore()
 const notice = noticeStore()
