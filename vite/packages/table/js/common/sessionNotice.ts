@@ -41,7 +41,7 @@ export class Notifications{
         listeners:{
           'putNotice':function(){
             console.log('关闭并存储数据',msg);
-            noticeStore().putNoticeData(msg,'message');
+            noticeStore().putNoticeData(msg,'weak');
           },
 
           // 'nowCheck':function(){
@@ -83,7 +83,7 @@ export class Notifications{
         listeners:{
           'putNotice':function(){
             console.log('关闭并存储数据',msg);
-            noticeStore().putNoticeData(msg,'system');
+            noticeStore().putNoticeData(msg,'strong');
           },
 
           // 'nowCheck':function(){
@@ -184,7 +184,7 @@ export class Notifications{
     const username = userinfo === undefined ? message.nick : userinfo?.nick;
     // console.log('查看用户昵称',username);
     
-    // console.log('验证通知消息类型',message.payload.operationType);
+    console.log('验证通知消息类型',message.payload.operationType);
 
     switch (message.payload.operationType){
       case TIM.TYPES.GRP_TIP_MBR_JOIN:
@@ -251,7 +251,9 @@ export class Notifications{
           icon:data.avatar,
           title:`好友${data.nick}的消息`,
           body: `${data.nick}：${data.payload.text}`,
-          time:data.time
+          time:data.time,
+          conversationID:data.conversationID,
+          type:'message'
         }
         // 全局
         if(config.global && config.enable && config.cue && !config.currentDisturb){ 
@@ -273,7 +275,9 @@ export class Notifications{
           icon:findItem.avatar,
           title:findItem.name,
           body:`${data.nick}：${data.payload.text}`,
-          time:data.time
+          time:data.time,
+          conversationID:data.conversationID,
+          type:'message'
         }
         
 
@@ -313,7 +317,7 @@ export class Notifications{
         const systemText = await this.translateGroupSystemNotice(data)  
         // 通知、提示音开关是否打开
         if(config.enable && config.cue || !config.currentDisturb){
-          const systemContent = { title:'社群沟通', icon:'/icons/IM.png',  time:data.time, body:systemText, }
+          const systemContent = { title:'社群沟通', icon:'/icons/IM.png',  time:data.time, body:systemText,type:'system',conversationID:data.conversationID, }
           this.messageWeak(systemContent,data?.conversationID)
         }
       }

@@ -9,19 +9,91 @@ export const noticeStore = defineStore('notice',{
  
  actions:{
   // 获取db数据库中的数据
-  getNoticeList(){
-    console.log('读取存储数据');
+  async getNoticeList(){
+    // console.log('读取存储数据');
+    // const msgRes = await tsbApi.db.allDocs('weakMessage:')
+    // const systemRes = await tsbApi.db.allDocs('weakSystem:')
+    // const strongRes = await tsbApi.db.allDocs('strongSystem:')
 
+    // 将数据多次转换成一次性请求,并且把数组进行解构
+    
+    const data = await Promise.all([
+      ...(await tsbApi.db.allDocs('weakMessage:')).rows,
+      ...(await tsbApi.db.allDocs('weakSystem:')).rows,
+      ...(await tsbApi.db.allDocs('strongSystem:')).rows
+    ])
+    console.log('返回数据',data);
+    
+    const mapData = data?.map((item)=>{
+      return item.doc
+    })
+    // console.log('将数据进行拷贝修改',mapData);
+    
+    this.detailList = mapData
+    
   },
 
   // 将忽略的消息通知进行数据库存储
-  putNoticeData(data:any,type:any){
-    if(type === 'system'){
-     console.log('存储系统通知数据',data);
+  async putNoticeData(data:any,type:any){
+    if(type === 'strong'){
+    //  console.log('存储强通知数据',data);
+    //  console.log('查看',data.type);
+     
+     const strongNotice = {
+      _id:`strongNotice:${Date.now()}`,
+      category:`strong:${Date.now()}`,
+      content:{...data},
+      createTime:Date.now(),
+      updateTime:Date.now()
+     }
+    //  console.log('强消息通知',strongNotice);
+     
+    const res =  await  tsbApi.db.put(strongNotice)
+    console.log('查看状态1',res);
     }else{
-     console.log('存储聊天消息数据',data);
+    //  console.log('存储弱消息通知数据',data);
+    //  console.log('查看',data.type);
+
+     if(data.type === 'message'){
+      
+      const weakMessageOption = {
+        _id:`weakMessage:${Date.now()}`,
+        category:`weak${Date.now()}`,
+        content:{...data},
+        createTime: Date.now(),
+        updateTime:Date.now()
+      }
+      //  console.log('查看数据参数',weakMessageOption);
+      const res =  await  tsbApi.db.put(weakMessageOption)
+      console.log('查看状态2',res);
+     }else{ 
+
+      const weakSystemOption = {
+        _id:`weakSystem:${Date.now()}`,
+        category:`weak${Date.now()}`,
+        content:{...data},
+        createTime: Date.now(),
+        updateTime:Date.now()
+      }
+      // console.log('查看数据结构',weakSystemOption);
+      const res =  await tsbApi.db.put(weakSystemOption)
+      console.log('查看状态3',res);
+      
+     }
+
     }
+    this.getNoticeList()
   },
+
+  // 将全部历史消息通知进行清除
+  async delAllHistoryNotice(){
+    console.log('全部清空',1122363);
+  },
+
+  // 将单个历史消息通知进行删除
+  async delSingleHistoryNotice(){
+
+  }
 
 
 
