@@ -13,7 +13,11 @@
                 <div class="flex" style="position: relative;">
                     <div  class="flex justify-center items-center mr-3 pointer shadow" style="width:40px;height:40px;border-radius: 10px;" :style="{backgroundImage:backgroundImage}" @click="isColor=!isColor"></div>
                     <!-- 颜色选择 -->
-                    <div v-show="isColor" style="justify-content: space-around;position: absolute;width: 168px;height: 120px;top: 46px;left: -118px;background-color: #2A2A2A;z-index: 100;" class="flex flex-wrap rounded p-3">
+                    <div v-show="isColor" 
+                    style="justify-content: space-around;position: absolute;
+                    width: 146px;height: 103px;top: 46px;left: -118px;
+                    background-color: #2A2A2A;z-index: 100;
+                    padding: 8px 5px 4px 5px;border-radius: 12px;" class="flex flex-wrap">
                         <div class="flex rounded-lg pointer" style="height:40px;width:40px;"  v-for="(item,index) in this.noteBgColor" :key="index" :style="{backgroundImage:item}" @click="changeBgColor(index)"></div>
                     </div>
                     <a-dropdown :trigger="['click']">
@@ -40,21 +44,22 @@
             </div>
             <!-- 主体 -->
             <div>
-                <div class="mt-4 shadow" style="height: 600px;border-radius: 12px;padding: 24px;" :style="{backgroundImage:backgroundImage}">
+                <div class="mt-4 shadow" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{backgroundImage:backgroundImage}">
                     <a-input
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
-                        border: none;box-shadow: none;padding: 0;"
+                        border: none;box-shadow: none;padding: 0 0 0 24px; "
                         v-model:value="this.selNoteTitle"
                         maxlength="15"
                     ></a-input>
-                    <div class="mt-4 h-full scroll-color">
-                        <a-textarea
+                    <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">
+                        <!-- <a-textarea
                         class=" scroll-color xt-scrollbar"
                             style="color: var(--primary-text);font-size: 16px;font-weight: 400;word-wrap: break-word;text-wrap: wrap;
                             border: none;box-shadow: none;padding: 0;height: 500px;"
                             v-model:value="this.selNoteText"
                             :auto-size="{ minRows: 2, maxRows: 20 }"
-                        />
+                        /> -->
+                        <Markdown></Markdown>
                     </div>
                 </div>
             </div>
@@ -68,13 +73,15 @@
     import {mapActions, mapState,mapWritableState} from "pinia";
     import { noteStore } from '../store'
     import { cardStore } from '../../../store/card';
+    import Markdown from "./markdown.vue";
  export default {
    components: {
-    Icon
+    Icon,
+    Markdown,
    },
    props:['selDesk'],
    computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList']),
+        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
         deskName(){
             if (this.noteList.length) {
                 return this.selNote>=0?this.noteList[this.selNote].deskName:"" 
@@ -93,11 +100,6 @@
             },
             isColor:false,
             menus:[
-                // { 
-                //     label: "小窗模式", 
-                //     // callBack: this.callBack, 
-                //     newIcon: "fluent:window-multiple-16-filled",
-                // },
                 { 
                     label: "添加到桌面", 
                     callBack: ()=>{
@@ -145,11 +147,8 @@
         this.isColor=false
     },
     timeout(){
-        console.log('到时间了，开始保存');
-        // console.log(this.deskList);
         // 这里将数据自动保存到桌面
-        if (this.selNoteTitle) {
-            console.log(1);
+        if (this.selNoteTitle ) {
             if (this.noteList[this.selNote].desk!='') {
                 let n = -1;
                 this.deskList.forEach((item,index)=>{
@@ -157,16 +156,12 @@
                         n = index
                     }
                 })
-                this.noteList[this.selNote].customData.title=this.selNoteTitle
-                this.noteList[this.selNote].customData.text=this.selNoteText
                 this.updateCustomData(this.noteList[this.selNote].id,{
                     title:this.selNoteTitle,
                     text:this.selNoteText
                 },this.deskList[n])
-                this.saveNoteDb()
-            }else{
-                console.log(3)
             }
+            this.saveNoteDb()
         }
     },
     clear(){
@@ -179,7 +174,7 @@
     selNoteTitle(newval,oldval){
         // 先清除后添加 
         this.noteList[this.selNote].customData.title=this.selNoteTitle
-                this.noteList[this.selNote].customData.text=this.selNoteText
+        this.noteList[this.selNote].customData.text=this.selNoteText
         this.clear()
         this.timer=setTimeout(()=>{
             this.timeout();
@@ -189,11 +184,41 @@
     selNoteText(newval,oldval){
         this.clear()
         this.noteList[this.selNote].customData.title=this.selNoteTitle
-                this.noteList[this.selNote].customData.text=this.selNoteText
+        this.noteList[this.selNote].customData.text=this.selNoteText
         this.timer=setTimeout(()=>{
             this.timeout();
             this.clear()
         },10000)
+    },
+    selNote(newval,oldval){
+        console.log('切换了selNote');
+        this.clear()
+        console.log('oldval',oldval);
+        console.log(this.selNoteTitle);
+        console.log(this.selNoteText);
+        console.log(this.noteList);
+        console.log(this.selNote);
+        if (oldval>=0) {
+            if(this.noteList[oldval].deskName){
+                // 有桌面 处理卡片
+                let n = -1;
+                this.deskList.forEach((item,index)=>{
+                    if (item.name == this.noteList[oldval].deskName) {
+                        n = index
+                    }
+                })
+                this.updateCustomData(this.noteList[oldval].id,{
+                    title:this.selNoteTitle,
+                    text:this.selNoteText
+                },this.deskList[n])
+            }
+            this.saveNoteDb(oldval)
+            
+        }
+        // 处理tsb存储
+        
+
+        
     },
    }
  };

@@ -8,8 +8,8 @@
                 border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
                 border-radius: 10px;"
                 placeholder="搜索"
-                v-model:value="searchValue"
-                @change="this.searchNote(searchValue)"
+                v-model:value="this.searchValue"
+                @change="this.searchNote(this.searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
             <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background:var(--secondary-bg);border-radius: 10px;" @click="addNote">
             <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
@@ -20,7 +20,9 @@
         style="width: 306px;"
         >
             <!-- <div @click="this.deTest">清除数据</div>
-            <div @click="showData">目前数据</div> -->
+            <div @click="showData">目前数据</div>
+            <div @click="showDesk">桌面数据</div>
+            <div @click="this.findAll">db数据</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
                 <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
@@ -108,7 +110,6 @@
                         if (!this.isSelTab) {
                             this.moveNote()
                         }else{
-                            // console.log('准备还原');
                             this.returnCard()
                         }
                     }
@@ -117,7 +118,7 @@
       };
     },
     computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab']),
+        ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
 
     },
     mounted() {
@@ -125,7 +126,7 @@
     watch: {
     },
     methods: {
-        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote']),
+        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote','findAll']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
@@ -141,7 +142,10 @@
         },
         showData(){
             console.log(this.noteList);
-        }
+        },
+        showDesk(){
+            console.log(this.deskList);
+        },
     },
   };
   </script>
