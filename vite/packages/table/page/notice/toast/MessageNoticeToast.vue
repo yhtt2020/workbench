@@ -8,10 +8,10 @@
          </div>
          <div class="font-16 ml-3" style="color: var(--primary-text);">{{ msg.title }}</div>
        </div>
-       <div class="flex items-center active-button pointer justify-center" v-if="styles" style="width:21px;height:21px;" @click="talkLater">
+       <div class="flex items-center active-button pointer justify-center" v-if="styles" style="width:21px;height:21px;" @click="closeMessage">
          <img src="/img/icon/close-circle-fill1.png" class="w-full rounded-full h-full object-cover" alt="">
        </div>
-       <div class="flex items-center pointer active-button justify-center" v-else style="width:21px;height:21px;" @click="talkLater">
+       <div class="flex items-center pointer active-button justify-center" v-else style="width:21px;height:21px;" @click="closeMessage">
          <img src="/img/icon/close-circle-fill.png" class="w-full rounded-full h-full object-cover" alt="">
        </div>
      </div>
@@ -67,21 +67,28 @@ export default defineComponent({
  },
 
  setup(props,ctx){
-   const talkLater = () =>{  // 点击稍后再说按钮
-     ctx.emit('closeToast')
-     ctx.emit('nowCheck')
-   }
+  //  const talkLater = () =>{  // 点击稍后再说按钮
+  //    ctx.emit('closeToast')
+  //    ctx.emit('nowCheck')
+  //  }
+
+  const closeMessage = () =>{
+    ctx.emit('closeToast')
+    ctx.emit('putNotice')
+  }
+
+
 
    const viewNow = () =>{  // 点击立即查看
      ctx.emit('closeToast')
-     ctx.emit('examine')
+     ctx.emit('messageExamine')
    }
 
 
 
    return{
-     formatTime,
-     talkLater,
+     formatTime,closeMessage,
+    //  talkLater,
      viewNow
    }
  }

@@ -1,16 +1,21 @@
 <template>
   <div class="w-full h-full xt-bg py-2">
-    <xt-left-menu :list="filterList" model="id" end="2"></xt-left-menu>
+    <xt-left-menu :list="filterList" model="id" end="2">
+      <NoticeDetail />
+    </xt-left-menu>
   </div>
 </template>
 
 <script setup >
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed,onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { noticeStore } from "./store/noticeStore";
 import { appStore } from "../../store";
 
+import NoticeDetail from "./noticeDetail.vue";
+
 const app = appStore()
+const notice = noticeStore()
 const { settings } = storeToRefs(app)
 
 const data = reactive({
@@ -18,7 +23,7 @@ const data = reactive({
 })
 
 const selectTab = (item) =>{
-  console.log('查看数据',item);
+  // console.log('查看数据',item);
 }
 
 const clickSetting = () =>{
@@ -88,6 +93,10 @@ const filterList = computed(() => {
     return closeList
   }
 
+})
+
+onMounted(()=>{
+  notice.getNoticeList()
 })
 </script>
 

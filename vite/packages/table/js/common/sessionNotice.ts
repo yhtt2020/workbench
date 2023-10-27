@@ -1,5 +1,7 @@
 import { useToast } from 'vue-toastification'
 import { appStore } from '../../store'
+import { chatStore } from '../../store/chat'
+import { noticeStore } from '../../page/notice/store/noticeStore'
 import { storeToRefs } from 'pinia'
 import { router } from "../../router";
 import _ from 'lodash-es'
@@ -37,12 +39,19 @@ export class Notifications{
       {
         component:MessageNoticeToast,props:{msg,type:'message',play:settings.value.enablePlay},
         listeners:{
-          'nowCheck':function(){
-            appStore().hideNoticeEntry();
-            // noticeStore().putIMChatData(msg,'message');
-            // console.log('检测this',this)
+          'putNotice':function(){
+            console.log('关闭并存储数据',msg);
+            noticeStore().putNoticeData(msg,'message');
           },
-          'examine': function(){
+
+          // 'nowCheck':function(){
+          //   appStore().hideNoticeEntry();
+          //   noticeStore().putNoticeData(msg,'message');
+          // },
+
+          'messageExamine': function(){
+            chatStore().updateConversation(conversationID)
+            appStore().hideNoticeEntry();
             router.push({name:'chatMain'});
             (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
@@ -72,10 +81,17 @@ export class Notifications{
         component:SystemNoticeToast,
         props:{msg,type:'notice',play:settings.value.noticePlay},
         listeners:{
-          'nowCheck':function(){
-            appStore().hideNoticeEntry();
+          'putNotice':function(){
+            console.log('关闭并存储数据',msg);
+            noticeStore().putNoticeData(msg,'system');
           },
+
+          // 'nowCheck':function(){
+          //   appStore().hideNoticeEntry();
+          // },
+          
           'systemExamine':function(){
+            chatStore().updateConversation(conversationID)
             router.push({name:'chatMain'});
             (window as any).$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse:any) => {
               // 通知 TUIConversation 添加当前会话
@@ -99,6 +115,18 @@ export class Notifications{
     if (!audioElement) {
       audioElement = document.createElement('audio');
       audioElement.src = '/sound/message.mp3'
+      audioElement.setAttribute('id', 'messageAudio');
+      document.body.appendChild(audioElement);
+    }
+    return audioElement;
+  }
+
+  // 创建音频强提醒
+  private createSoundStrongElement(): HTMLAudioElement{
+    let audioElement = document.getElementById('messageAudio') as HTMLAudioElement;
+    if (!audioElement) {
+      audioElement = document.createElement('audio');
+      audioElement.src = '/sound/notice.mp3'
       audioElement.setAttribute('id', 'messageAudio');
       document.body.appendChild(audioElement);
     }
@@ -196,6 +224,7 @@ export class Notifications{
 
     const data = {...msg.data[0]}
     const { settings,userInfo  } = storeToRefs(appStore())
+    const app = appStore()
     const server = (window as any).$TUIKit.TUIServer.TUIChat.store
 
     const config = {
@@ -208,98 +237,89 @@ export class Notifications{
       currentDisturb:server.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 免打扰
       emptyData:Object.keys(server.conversation).length === 0 // 空数据
     }
+
+    app.showNoticeEntry()
     
-    // 好友聊天
-    if(data.conversationType === 'C2C'){
-      if(config.global && config.enable && !config.currentDisturb){
-        
+    // 消息内容为text是否存在
+    const isText = data.payload.hasOwnProperty('text')
+  
+    if(isText){
+      // 好友消息
+      if(data.conversationType === 'C2C'){
+        // 好友消息内容
         const friendContent = {
           icon:data.avatar,
           title:`好友${data.nick}的消息`,
           body: `${data.nick}：${data.payload.text}`,
           time:data.time
         }
-        // console.log('查看',data);
-        this.messageWeak(friendContent,data.conversationID)
-
-      }else if(!config.global && !config.currentSession && config.cue  && config.enable && !config.currentDisturb){
-        const playElement: HTMLAudioElement = this.createSoundElement();
-        playElement.play()
+        // 全局
+        if(config.global && config.enable && config.cue && !config.currentDisturb){ 
+          this.messageWeak(friendContent,data.conversationID)
+        }
+        // 所属应用中(非当前会话)
+        else if(!config.global && config.enable && config.cue && !config.currentSession && !config.currentDisturb){  
+          const playElement: HTMLAudioElement = this.createSoundElement();
+          playElement.play()
+        }
       }
-    }
 
-    // 群聊消息
-    else{
-
-     // 将群聊通知的用户uid进行中文昵称显示
-     const systemText = await this.translateGroupSystemNotice(data)  
-
-     // @消息
-     if(config.atMeMsg || config.atMsg){
-      const atContent = {}
-      // 全局
-      if(config.global){}
-
-      // 所属应用中(非当前会话)
-      else if(!config.global && !config.currentSession){ }
-
-      // 所属应用中(当前会话)
-      else{}
-
-
-     }
-
-     const isText = data.payload.hasOwnProperty('text')
-     
-     // 普通聊天消息
-     if(isText){
-      
-      if(data.conversationType === 'GROUP'){
-        
+      // 群聊消息
+      else{
         const groupResult = await (window as any).$TUIKit.tim.getGroupList();
         const groupList = groupResult?.data?.groupList
         const findItem = groupList.find((item:any)=>{ return String(item.groupID) === String(data.to) })
-        // console.log('排查::>>',findItem);
-        
         const textContent = {
           icon:findItem.avatar,
           title:findItem.name,
           body:`${data.nick}：${data.payload.text}`,
           time:data.time
         }
-        // console.log('查看',textContent,config.global && config.enable && config.cue && !config.currentDisturb);
         
-        // 全局
-        if(config.global && config.enable && config.cue && !config.currentDisturb){
-          this.messageWeak(textContent,data?.conversationID)
-        }
-  
-        // 所属应用中(非当前会话)
-        else if(!config.global && !config.currentSession){ 
-          if(!config.enable && !config.cue && !config.currentSession){
-            const playEl: HTMLAudioElement = this.createSoundElement();
-            playEl.play()
+
+        // 群聊消息全局情况下
+        if(config.global && config.enable && config.cue || !config.currentDisturb){
+          // @我和@所有人的消息
+          if(config.atMeMsg && config.atMsg){  // 强提醒
+            this.messageStrong(textContent,data.conversationID)
+          }else{
+            this.messageWeak(textContent,data.conversationID)
           }
         }
-  
-        // 所属应用中(当前会话)
-        else{
-  
+
+        // 所属应用中(非当前会话)
+        else if(!config.global && config.enable && config.cue && !config.currentSession || !config.currentDisturb){
+          // @我和@所有人的消息
+          if(config.atMeMsg && config.atMsg){  // 强提醒
+            const strongEl:HTMLAudioElement = this.createSoundStrongElement()
+            strongEl.play()
+          }else{
+            const playElement: HTMLAudioElement = this.createSoundElement();
+            playElement.play()
+          }
+        } 
+
+
+      }
+    }
+
+    else{
+      // console.log('查看情况',data);
+      // console.log('查看判断条件',config.enable && config.cue || !config.currentDisturb);
+      
+      
+      if(data.conversationType !== 'C2C'){
+        // 将群聊通知的用户uid进行中文昵称显示
+        const systemText = await this.translateGroupSystemNotice(data)  
+        // 通知、提示音开关是否打开
+        if(config.enable && config.cue || !config.currentDisturb){
+          const systemContent = { title:'社群沟通', icon:'/icons/IM.png',  time:data.time, body:systemText, }
+          this.messageWeak(systemContent,data?.conversationID)
         }
       }
-    
-     }
-
-     // 通知类的消息 例如:加入群聊,拒绝申请等等
-     else{
-      if(config.enable && config.cue && config.currentDisturb){
-        const systemContent = { title:'社群沟通', icon:'/icons/IM.png',  time:data.time, body:systemText, }
-        this.messageWeak(systemContent,data?.conversationID)
-      }
-     } 
 
     }
-  
+
   }
 
 }

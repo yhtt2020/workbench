@@ -75,7 +75,7 @@
 
 
   <a-drawer :width="500" :closable="false" style="z-index:1000;" placement="right" v-model:visible="messageDrawer"
-    :bodyStyle="{ padding: '12px 12px 12px 0 ', overflow: 'hidden !important', }" @closeMessage="messageDrawer = false">
+    :bodyStyle="{ padding: '0', overflow: 'hidden !important', }" @closeMessage="messageDrawer = false">
     <MessagePopup @closeMessage="messageDrawer = false"></MessagePopup>
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
@@ -131,7 +131,6 @@ import MessagePopup from '../page/notice/noticeIndex.vue'
 import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
-import { noticeStore } from '../store/notice'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 
@@ -167,7 +166,6 @@ export default {
     ...mapWritableState(timerStore, ['lockTimeout']),
     ...mapWritableState(steamUserStore, ['runningGame']),
     ...mapState(clipboardStore, ['enable']),
-    ...mapState(noticeStore, ['noticeSettings']),
     ...mapWritableState(topClockSettingStore, ['checkTopClock']),
     isMain,
     lockTimeoutDisplay() {
@@ -216,7 +214,7 @@ export default {
     },
 
     hasChat() {
-      return this.$route.path !== '/chat'
+      return this.$route.path !== '/chatMain'
     },
 
   },
@@ -241,7 +239,6 @@ export default {
     getIcon,
     getCover,
     ...mapActions(cardStore, ['setAppDate','filterClock']),
-    ...mapActions(noticeStore, ['loadNoticeDB']),
     ...mapActions(appStore,['hideNoticeEntry']),
     clearLockTimer() {
       if (this.lockTimer) {
@@ -297,13 +294,13 @@ export default {
         }
       })
     },
+
     messageAlert() {
+      this.hideNoticeEntry();
       this.messageDrawer = true
-      this.$nextTick(async () => {
-        await this.loadNoticeDB()
-      })
-      this.hideNoticeEntry()
     },
+
+
     topClockTimerVisibleSetting() {
       this.filterClock(this.clockTag,this.chooseType)
       if(this.checkTopClock===true){
