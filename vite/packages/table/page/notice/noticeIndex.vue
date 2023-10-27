@@ -1,16 +1,27 @@
 <template>
-  <div class="w-full h-full xt-bg py-2 pr-2">
+  <div class="w-full h-full xt-bg py-2 pr-3">
     <xt-left-menu :list="filterList" model="id" end="2">
-      <div class="flex flex-col w-full">
-        <div class="flex w-full h-11 mb-4 items-center justify-between">
-          <div class="flex items-center">
-            <NoticeIcon v-if="top.type === 'system'" icon="fluent:alert-16-regular" style="font-size: 1.5rem;"/>
-            <span class="category-16-500 xt-text ml-3 xt-font">{{ top.title }}</span>
+
+      <template v-if="top.type !== 'setting'">
+        <div class="flex flex-col w-full" >
+          <div class="flex w-full h-11 mb-4 items-center justify-between">
+            <div class="flex items-center">
+              <NoticeIcon v-if="top.type === 'system'" icon="fluent:alert-16-regular" style="font-size: 1.5rem;"/>
+              <div v-else class="w-8 h-8">
+                <img :src="top.img" class="w-full h-full object-cover">
+              </div>
+              <span class="category-16-500 xt-text ml-3 xt-font">{{ top.title }}</span>
+            </div>
+            <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll(top.type)"/>
           </div>
-          <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll(top.type)"/>
+          <NoticeDetail :type="top.type" :list="detailList"  @close="close"/>
         </div>
-        <NoticeDetail :type="top.type" :list="detailList" />
-      </div>
+      </template>
+
+
+      <template v-else>
+        <div>设置</div>
+      </template>
     </xt-left-menu>
   </div>
 </template>
@@ -29,6 +40,8 @@ const notice = noticeStore()
 const { settings } = storeToRefs(app)
 const { detailList } = storeToRefs(notice)
 
+const emits = defineEmits(["closeMessage"])
+
 const top = ref({
   newIcon:"fluent:alert-16-regular",
   img:'',
@@ -41,8 +54,8 @@ const selectTab = (item) =>{
   top.value = item
 }
 
-const clickSetting = () =>{
-
+const clickSetting = (item) =>{
+  top.value = item
 }
 
 const enableNotice = () =>{
@@ -51,8 +64,12 @@ const enableNotice = () =>{
 }
 
 
-const clearAll = () =>{
-  notice.delAllHistoryNotice()
+const clearAll = (item) =>{
+  notice.delAllHistoryNotice(item)
+}
+
+const close = () =>{
+  emits('closeMessage')
 }
 
 
@@ -93,9 +110,9 @@ const leftList = ref([
     newIcon:"fluent:settings-16-regular",
     alias: "setting",
     title: "设置",
-    flag: true,
-    callBack:()=>{
-      clickSetting()
+    type:'setting',
+    callBack:(item)=>{
+      clickSetting(item)
     },
   }
 ])

@@ -86,8 +86,15 @@ export const noticeStore = defineStore('notice',{
   },
 
   // 将全部历史消息通知进行清除
-  async delAllHistoryNotice(){
-    console.log('全部清空',1122363);
+  async delAllHistoryNotice(data:any){
+    console.log('全部清空',data);
+    for(let i=0;i<this.detailList.length;i++){
+      if(this.detailList[i].content.type === data){
+        const res =  await tsbApi.db.remove(this.detailList[i])
+        console.log('查看结果',res);
+      }
+    }
+    this.getNoticeList()
   },
 
   // 将单个历史消息通知进行删除

@@ -3,7 +3,7 @@
     <EmptyStatus text="暂时没有消息通知"/>
   </div>
   <div class="w-full h-full  xt-text" v-else>
-    <template  v-for="item in filterList">
+    <div  v-for="item in filterList" class="mb-3">
       <xt-menu name="name" @contextmenu="revID = item._rev" :menus="menus">
         <div class="w-full h-full  flex flex-col p-4 xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-3">
@@ -20,19 +20,22 @@
           </div> 
           <div class="flex justify-between">
             <div class="">{{formatTime(item.createTime)}}</div>
-            <xt-button style="width: 56px;height: 32px;background: var(--active-secondary-bg);color:var(--active-bg);">查看</xt-button>
+            <xt-button style="width: 56px;height: 32px;background: var(--active-secondary-bg);color:var(--active-bg);" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
           </div>
         </div>
       </xt-menu>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions,mapWritableState } from 'pinia'
 import { formatTime } from '../../util';
 import { Icon as DetailIcon } from '@iconify/vue'
+import { chatStore } from '../../store/chat'
 
 import EmptyStatus from '../chat/components/empty/EmptyStatus.vue';
+
 
 export default {
   props: ["list","type"],
@@ -86,6 +89,17 @@ export default {
 
   methods:{
     formatTime,
+    ...mapActions(chatStore,['updateConversation']),
+    reviewMessage(conversationID){
+      this.updateConversation(conversationID),
+      this.$emit('close')
+      this.$router.push({name:'chatMain'});
+      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+        // 通知 TUIConversation 添加当前会话
+        // Notify TUIConversation to toggle the current conversation
+        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+      })
+    }
   }
 }
 </script>
