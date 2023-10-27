@@ -9,7 +9,7 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer"  >
+                <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
                     <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
                         icon="akar-icons:arrow-clockwise" />
                 </div>
@@ -20,7 +20,7 @@
                     </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div :style="{ height:showItem }" v-if="this.showForumPost?.length > 0">
+                <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <div v-if="isLoading">
@@ -34,7 +34,7 @@
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3"  >
+                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
                             </div>
@@ -44,12 +44,12 @@
 
                 </div>
                 <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
-                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
+                    @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"  
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
                 style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
                 <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
                     icon="fluent:add-16-filled" />
@@ -61,8 +61,12 @@
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
                 :forum="customData.defaultForum.value"></YuanPublishModal>
-            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal"
+            <div v-if="showDetailModal">
+                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
+                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal"
                 @closeDetail="closeDetail" />
+            </div>
+
 
         </teleport>
         <!-- <teleport to="body" :disabled="false">
@@ -125,6 +129,7 @@ import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
 import detailModal from './DetailModal.vue'
+import MinDetailModal from './MinDetailModal.vue';
 export default {
     name: '元社区',
     components: {
@@ -135,7 +140,8 @@ export default {
         DataStatu,
         YuanPublishModal,
         YuanHorizontalPanel,
-        detailModal
+        detailModal,
+        MinDetailModal
     },
     props: {
         customIndex: {
@@ -171,7 +177,8 @@ export default {
                 className: 'card double ',
                 title: '元社区',
                 // rightIcon: ' fluent:arrow-counterclockwise-20-filled',
-                type: 'community'
+                type: 'community',
+                // isEdit: true
             },
             menuList: [
                 {
@@ -202,6 +209,7 @@ export default {
             openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
             cardData: null,
+            toggleDetail: true,
         }
     },
     methods: {
@@ -280,11 +288,11 @@ export default {
             }
             return this.sizeList[0]
         },
-        showItem(){
-          if(this.customData && this.customData.height){
-            return this.customData.height == 2?'392px':'600px'
-          }
-          return '392px'  
+        showItem() {
+            if (this.customData && this.customData.height) {
+                return this.customData.height == 2 ? '392px' : '600px'
+            }
+            return '392px'
         },
         // 判断不同高度返回不同个数
         copyNum() {
@@ -315,11 +323,8 @@ export default {
             }
             return this.communityPost.list?.slice(0, 10)
         },
-        // changeTitle() {
-        //     if (this.customData.selectList.length === 1) {
-        //         this.options.title = this.customData.selectList[0].value.title
-        //         console.log(this.options.title);
-        //     } 
+        // isShow(){
+        //     return window.innerWidth > 1200
         // }
     },
     async mounted() {
@@ -336,6 +341,14 @@ export default {
         this.isLoading = false
         // console.log(this.options.title);
         // console.log(navigator.connection.downlink,'navigator.connection');
+        // console.log(window.innerWidth, 'window.innerWidth');
+    },
+    beforeUpdate() {
+        if(window.innerWidth > 1200){
+            this.toggleDetail=true
+        }else{
+            this.toggleDetail=false
+        }
     },
     watch: {
         showForumList(newValue) {
@@ -373,11 +386,22 @@ export default {
                 }
 
             }
-        }
+        },
     }
-}
+    }
 </script>
 <style>
+@media screen and (max-width: 1000px) {
+    .mood {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+}
+
+
 .clock-icon {
     cursor: pointer;
     transition: transform 0.3s;
@@ -424,7 +448,7 @@ export default {
 
 .optionClass {
     & .ant-select-selection-item {
-        background-color: rgba(80,139,254,0.20) !important;
+        background-color: rgba(80, 139, 254, 0.20) !important;
         height: 28px;
     }
 }

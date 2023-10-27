@@ -1,7 +1,7 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
         :esc="true">
-        <div class="w-[1000px] h-[700px] maxDetail">
+        <div class="w-[600px] h-[700px] maxDetail ">
             <div class="w-full pt-2 pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="flex w-full h-[650px] xt-bg-2 pl-4 pr-4" style="border-radius: 12px;">
-                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 thread-list" :settings="settingsScroller"
+                <vue-custom-scrollbar ref="threadListRef" class="w-full thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4 " style="flex-shrink: 0;">
                         <div class="card-top">
@@ -109,49 +109,51 @@
                                 点赞</span>
                             <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                         </div>
+                        <a-divider class="w-full h-[2px] " type="vertical" style="color: var(--divider);" />
+                        <div class="mt-4">
+                            <div class="flex mb-4">
+                                <!-- {{ store.communityCollect.info }} -->
+                                <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                                    <!-- <div class="item-content"> -->
+                                    <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
+                                        :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
+                                        style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                        <img src="../../../../../public/icons/like.png" alt=""
+                                            class="w-[20px] h-[20px] -ml-6">
+                                        {{ cardData.support_count }}</xt-button>
+                                    <!-- </div> -->
+
+
+                                </div>
+                                <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
+                                    <xt-button class="flex items-center justify-center pl-5 reply xt-text"
+                                        :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
+                                        style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                        <img src="../../../../../public/icons/collect.png" alt=""
+                                            class="w-[20px] h-[20px] -ml-6 mr-1">
+                                        {{ cardData.collect_count }}</xt-button>
+                                </div>
+                            </div>
+                            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
+                        </div>
 
                     </div>
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[3px] h-[700px] detele-line" type="vertical" style="color: var(--divider);" />
-                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
+                <!-- <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
-                    <div class="mt-4">
-                        <div class="flex mb-4">
-                            <!-- {{ store.communityCollect.info }} -->
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
-                                <!-- <div class="item-content"> -->
-                                <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
-                                    :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
-                                    {{ cardData.support_count }}</xt-button>
-                                <!-- </div> -->
 
-
-                            </div>
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
-                                <xt-button class="flex items-center justify-center pl-5 reply xt-text"
-                                    :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/collect.png" alt=""
-                                        class="w-[20px] h-[20px] -ml-6 mr-1">
-                                    {{ cardData.collect_count }}</xt-button>
-                            </div>
-                        </div>
-                        <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
-                    </div>
-                </vue-custom-scrollbar>
+                </vue-custom-scrollbar> -->
 
             </div>
         </div>
-        
+
 
     </xt-modal>
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, reactive, onMounted,watch } from 'vue'
+import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from '../../../page/chat/com/Comment.vue';
 import { useCommunityStore } from '../../../page/chat/commun'
@@ -270,27 +272,14 @@ const showMenu = (img) => {
 // 控制图片画廊的显示
 const vieewerVisible = ref(false)
 const showImage = () => {
+
     vieewerVisible.value = !vieewerVisible.value
 }
+watch(() => window.innerWidth, (newVal) => {
+    console.log(newVal, 'newVal')
+})
 </script>
 <style lang='scss' scoped>
-@media screen and (max-width: 1000px) {
-
-    .detail {
-        // width: 100%;
-        width: 600px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .minDetail {
-        display: block;
-    }
-    .maxDetail {
-        display: none;
-    }
-}
-
 .card {
     display: flex;
     // 占满整个父元素
@@ -411,4 +400,5 @@ const showImage = () => {
     &:hover {
         background: var(--secondary-bg);
     }
-}</style>
+}
+</style>
