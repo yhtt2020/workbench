@@ -6,19 +6,49 @@
                 style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
                 <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
             </div>
-            
+
         </template>
+        <div style="position: absolute;left: 124px;top: 16px;" @click="refreshPost" class="pointer" v-if="courierList.length>0">
+            <newIcon class="text-lg xt-text clock-icon " style=" font-size: 20px;margin-top: 1px;"
+                icon="akar-icons:arrow-clockwise" />
+        </div>
+        <div v-if="showWay">
+            <MinEmpty v-if="courierList.length<0"/>
+            <MinCourierItem v-else></MinCourierItem>
+        </div>
+        <template v-else>
+            <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                <CourierItem v-for="(item, index) in courierList" :key="index" :courier="item" />
+            </vue-custom-scrollbar>
+            <xt-button :w="40" :h="40" type="theme" @click="settingVisible"
+                style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
+                <newIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
+                    icon="fluent:add-16-filled" />
+            </xt-button>
+        </template> 
+        <Empty v-if="courierList.length<0 && !showWay"/>
+        
 
     </Widget>
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
 import { Icon as newIcon } from '@iconify/vue'
+import CourierItem from './CourierItem.vue';
+import { courier } from './mock'
+import MinCourierItem from './MinCourierItem.vue';
+import Empty from './Empty.vue'
+import MinEmpty from './MinEmpty.vue';
 export default {
     name: '我的快递',
     components: {
         Widget,
-        newIcon
+        newIcon,
+        CourierItem,
+        MinCourierItem,
+        Empty,
+        MinEmpty
     },
     props: {
         customIndex: {
@@ -70,8 +100,36 @@ export default {
                     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
                 },
             ],
+            courierList: courier,
+            outerSettings: {
+                useBothWheelAxes: true,
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: true,
+            },
+        }
+    },
+    methods: {
+
+    },
+    computed: {
+        // 判断尺寸大小
+        showSize() {
+            if (this.customData && this.customData.width && this.customData.height) {
+                return { width: this.customData.width, height: this.customData.height }
+            }
+            return this.sizeList[2]
+        },
+        showWay() {
+            if (this.showSize.height === 1) {
+                return true
+            } else {
+                return false
+            }
         }
     }
+
 }
 </script>
 <style lang="scss"></style>
