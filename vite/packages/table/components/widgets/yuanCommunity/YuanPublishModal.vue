@@ -398,20 +398,16 @@ const publishPost = async () => {
 
         // let image = JSON.stringify(imageUrlList.value)
         let forumId = cascaderValue.value
-        let is_weibo
         let content = computed(() => {
             switch (defaultType.value.value) {
                 case 'dynamic':
-                    is_weibo = 1
                     return postValue.value
                     break;
                 case 'post':
-                    is_weibo = ''
                     return useYuanCommunityStore.saveContent
                     break;
 
                 default:
-                    is_weibo = 1
                     return postValue.value
                     break;
             }
@@ -422,16 +418,19 @@ const publishPost = async () => {
             }
             return titleValue.value
         })
-        // console.log(content.value, 'content.value');
-
 
         setTimeout(async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
             const imageList = JSON.stringify(imageUrlList);
             const coverImage = JSON.stringify(coverUrlList);
             // console.log(coverImage,'coverImage');
-
-            await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)
+            // console.log(forumId, imageList, content.value, title.value, is_weibo, coverImage);
+            if(defaultType.value.value=='dynamic'){
+              await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)  
+            }else if(defaultType.value.value=='post'){
+              await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)  
+            }
+            
             message.success('发布成功')
             titleValue.value = ''
             useYuanCommunityStore.saveDynamic = ''
