@@ -333,7 +333,8 @@ export default [
                 name:'channelsIndex',
                 meta:{
                   tab1:'community',
-                  tab2:'channel'
+                  tab2:'channel',
+                  tab3:'channelsIndex'
                 },
                 component:ChannelIndex
               },
@@ -342,7 +343,8 @@ export default [
                 name:'circle',
                 meta:{
                   tab1:'community',
-                  tab2:'channel'
+                  tab2:'channel',
+                  tab3:'circle'
                 },
                 component:Circle
               },
