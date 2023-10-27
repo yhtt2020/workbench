@@ -22,7 +22,7 @@ export const noticeStore = defineStore('notice',{
       ...(await tsbApi.db.allDocs('weakSystem:')).rows,
       ...(await tsbApi.db.allDocs('strongSystem:')).rows
     ])
-    console.log('返回数据',data);
+    // console.log('返回数据',data);
     
     const mapData = data?.map((item)=>{
       return item.doc
@@ -87,19 +87,21 @@ export const noticeStore = defineStore('notice',{
 
   // 将全部历史消息通知进行清除
   async delAllHistoryNotice(data:any){
-    console.log('全部清空',data);
+    // console.log('全部清空',data);
     for(let i=0;i<this.detailList.length;i++){
       if(this.detailList[i].content.type === data){
-        const res =  await tsbApi.db.remove(this.detailList[i])
-        console.log('查看结果',res);
+        await tsbApi.db.remove(this.detailList[i])
+        // const res =  await tsbApi.db.remove(this.detailList[i])
+        // console.log('查看结果',res);
       }
     }
     this.getNoticeList()
   },
 
   // 将单个历史消息通知进行删除
-  async delSingleHistoryNotice(){
-
+  async delSingleHistoryNotice(item:any){
+    await tsbApi.db.remove(item)
+    this.getNoticeList()
   }
 
 
