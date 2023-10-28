@@ -10,7 +10,7 @@
 import { courierDetailList } from '../modalMock'
 
 import Modal from '../../../Modal.vue';
-import SmallCourierModal from './SmallCourierModal.vue';
+import SmallCourierModal from '../SmallCourierModal.vue';
 
 export default {
  components:{

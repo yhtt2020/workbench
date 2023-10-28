@@ -66,11 +66,11 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import { courierType } from '../modalMock'
+import { courierType } from './modalMock'
 
-import TopDrop from '../dropdown/index.vue';
-import AddCourierModal from '../AddCourierModal.vue';
-import LogisticsDetail from './LogisticsDetail.vue';
+import TopDrop from './dropdown/index.vue';
+import AddCourierModal from './AddCourierModal.vue';
+import LogisticsDetail from './content/LogisticsDetail.vue';
 
 export default {
  components:{
