@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <xt-button :w="95" :h="40" style="background: #508BFE;">添加快递</xt-button>
+            <xt-button :w="95" :h="40" style="background: #508BFE;color: var(--primary-text) !important;" class="xt-text">添加快递</xt-button>
         </div>
     </div>
 </template>
