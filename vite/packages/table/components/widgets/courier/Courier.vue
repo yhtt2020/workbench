@@ -95,10 +95,20 @@ export default {
             },
             menuList: [
                 {
-                    icon: 'shezhi1',
-                    title: '设置',
-                    fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+                    newIcon:'fluent:add-16-filled',
+                    title:'添加快递',
+                    fn:()=>{console.log(1)}
                 },
+                {
+                    newIcon:'fluent:box-16-regular',
+                    title:'全部快递',
+                    fn:()=>{console.log(1)}
+                },
+                // {
+                //     icon: 'shezhi1',
+                //     title: '设置',
+                //     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+                // },
             ],
             courierList: courier,
             outerSettings: {

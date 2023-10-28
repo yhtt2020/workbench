@@ -13,7 +13,7 @@
                         <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                             {{ courier[0].company }}
                         </div>
-                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" style="background: #43CADE;">
+                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColor }">
                             {{ courier[0].status }}
                         </div>
                     </div>
@@ -23,7 +23,7 @@
                 <div class="xt-text-2 ">
                     {{ courier[0].time }}
                 </div>
-                <div class="mt-1 xt-text">
+                <div class="mt-1 xt-text omit">
                     {{ courier[0].road }}
                 </div>
             </div>
@@ -33,9 +33,32 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
-
+const stateColor = computed(() => {
+    switch (courier[0].state) {
+        case 0:
+            return '';
+        case 1:
+            return '#43CADE';
+        case 2:
+            return '#508BFE';
+        case 3:
+            return '#FA7B14';
+        case 4:
+            return '#52C41A';
+        default:
+            return '';
+    }
+})
 </script>
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.omit{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
