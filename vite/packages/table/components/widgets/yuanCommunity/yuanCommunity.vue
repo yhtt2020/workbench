@@ -338,7 +338,7 @@ export default {
         }
     },
     async mounted() {
-        console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
+        // console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
@@ -346,6 +346,12 @@ export default {
         this.customData.forumList = this.myForumList.joined
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
+        }
+        if(this.customData && this.customData.selectList){
+            this.selectValue = this.customData.selectList.map((item)=>{
+                return item.value.name
+            })
+            // console.log(this.selectValue);
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false

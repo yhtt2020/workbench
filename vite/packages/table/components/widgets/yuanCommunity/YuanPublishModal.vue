@@ -128,19 +128,19 @@
                         <div v-if="defaultType.value == 'post'">
                             <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
                                 v-show="coverList.length === 0">
-                                <a-button type="text" size="small" class="xt-text"
-                                    style="color: var(--secondary-text) !important;"><template #icon>
-                                        <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
-                                            style="vertical-align: sub;margin-right: 4px;" />
-                                    </template> 设置封面</a-button>
-
-
-                            </a-upload>
-                            <a-button type="text" size="small" class="xt-text" v-show="coverList.length > 0"
-                                @click="removeCover" style="color: var(--secondary-text) !important;"><template #icon>
-                                    <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                <xt-button type="text" :w="118" :h="32" class="xt-text"
+                                    style="color: var(--secondary-text) !important;">
+                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
                                         style="vertical-align: sub;margin-right: 4px;" />
-                                </template> 移除封面</a-button>
+                                    设置封面
+                                </xt-button>
+                            </a-upload>
+                            <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
+                                @click="removeCover" style="color: var(--secondary-text) !important;">
+                                <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                    style="vertical-align: sub;margin-right: 4px;" />
+                                移除封面
+                            </xt-button>
                         </div>
 
                     </div>
@@ -396,11 +396,12 @@ const publishPost = async () => {
             const url = await fileUpload(item.originFileObj);
             return url;
         }));
-        const coverUrlList = await fileUpload(coverList.value[0].originFileObj)
-        // const coverUrlList = await fileUpload(coverList.value.originFileObj)
-        // console.log(coverUrlList);
+        let coverImage
+        if (coverList.value.length > 0) {
+            const coverUrlList = await fileUpload(coverList.value[0].originFileObj)
+            coverImage = await JSON.stringify(coverUrlList);
 
-        // let image = JSON.stringify(imageUrlList.value)
+        }
         let forumId = cascaderValue.value
         let content = computed(() => {
             switch (defaultType.value.value) {
@@ -422,22 +423,19 @@ const publishPost = async () => {
             }
             return titleValue.value
         })
-
+        const imageList = await JSON.stringify(imageUrlList);
         setTimeout(async () => {
-            // console.log(forumId, content, title.value, image, 'titleValue.value');
-            const imageList = await JSON.stringify(imageUrlList);
-            const coverImage = await JSON.stringify(coverUrlList);
-            // console.log(forumId, imageList, content.value, title.value, is_weibo, coverImage);
             if (defaultType.value.value == 'dynamic') {
-                await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)
+                let is_weibo=1
+                await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo)
             } else if (defaultType.value.value == 'post') {
                 console.log(forumId, imageList, content.value, title.value, coverImage);
                 await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
             }
-
             message.success('发布成功')
             titleValue.value = ''
             useYuanCommunityStore.saveDynamic = ''
+            useYuanCommunityStore.saveContent = ''
             postValue.value = ''
             fileList.value = []
             coverList.value = []
@@ -448,7 +446,6 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
-.selsect-options {}
 
 :deep(.ant-upload-list-text-container) {
     display: none;
