@@ -7,7 +7,7 @@
               <LeftSearch :selDesk="selDesk"></LeftSearch>
               </div>
               <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-                <NodeContent :selDesk="selDesk" v-show="this.selNote>=0"></NodeContent>
+                <NodeContent :selDesk="selDesk" v-show="this.selNote>=0 && this.noteList.length >0"></NodeContent>
               </div>
           </div>
       </LeftTab>

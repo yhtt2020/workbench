@@ -39,8 +39,6 @@ export default {
             this.getNotes()
             this.menuList[0].isSel=true
             this.menuList[1].isSel=false
-            //需要保存当前数据
-            
 
             this.selNote=-1
             this.searchValue = ''
@@ -51,15 +49,14 @@ export default {
           newIcon: "akar-icons:trash-can",
           isSel:false,
           callBack: () => {
-            this.searchValue = ''
             // console.log('回收站');
             this.isSelTab = true
             this.getNotes()
             this.menuList[0].isSel=false
             this.menuList[1].isSel=true
-
+            
             this.selNote=-1
-            // console.log(this.menuList);
+            this.searchValue = ''
           },
         },
         {

@@ -21,7 +21,7 @@
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <!-- :style="{ backgroundImage: background, color: fontColor }" -->
-        <textarea
+        <!-- <textarea
           spellcheck="false"
           :style="{ backgroundImage: background}"
           style="color: var(--primary-text);"
@@ -30,7 +30,8 @@
           v-model="text"
           @blur="updateText"
         >
-        </textarea>
+        </textarea> -->
+        <Markdown :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
       </template>
     </cardDrag>
   </Widget>
@@ -56,7 +57,7 @@
       <div
         class="item"
         :key="item"
-        :style="{ backgroundImage: color[`${'color' + item}`] }"
+        :style="{ background: color[`${'color' + item}`] }"
         v-for="item in 6"
         @click="updateBackground(color[`${'color' + item}`])"
       ></div>
@@ -72,6 +73,7 @@ import cardDragHook from "../../card/hooks/cardDragHook";
 import { message } from "ant-design-vue";
 import { Icon } from '@iconify/vue';
 import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular';
+import Markdown from "./markdown.vue";
 
 export default {
   name:'便签', 
@@ -79,6 +81,7 @@ export default {
     Widget,
     Icon,
     cardDrag,
+    Markdown,
   },
   mixins: [cardDragHook, cardSizeHook],
   props: {
@@ -128,12 +131,12 @@ export default {
         },
       ],
       color: {
-        color1: "linear-gradient(-33deg, #545454 0%, #AC9555 1%, #A3625D 100%)",
-        color2: "linear-gradient(-53deg, #545454 0%, #ACA955 1%, #A3865D 100%)",
-        color3: "linear-gradient(-33deg, #545454 0%, #90AC55 1%, #5DA36D 100%)",
-        color4: "linear-gradient(-53deg, #545454 0%, #5564AC 1%, #7E5DA3 100%)",
-        color5: "linear-gradient(-64deg, #545454 0%, #55A2AC 1%, #5D7BA3 100%)",
-
+        color1: "#57BF60",
+        color2: "#815BD0",
+        color3: "#C8BF55",
+        color4: "#DE5D5D",
+        color5: "#5898CB",
+        color6: "#DE5DB2",
         // color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
         // color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
         // color3: "linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)",
@@ -185,16 +188,16 @@ export default {
   },
 
   methods: {
-    updateText() {
-      this.updateCustomData(
-        this.customIndex,
-        {
-          text: this.text,
-        },
-        this.desk
-        // 将text存入db
-      );
-    },
+    // updateText() {
+    //   this.updateCustomData(
+    //     this.customIndex,
+    //     {
+    //       text: this.text,
+    //     },
+    //     this.desk
+    //     // 将text存入db
+    //   );
+    // },
     updateBackground(backgroundColor) {
       message.success({
         content: "设置卡片背景成功",

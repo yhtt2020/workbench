@@ -22,7 +22,8 @@
             <!-- <div @click="this.deTest">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div> -->
+            <div @click="this.findAll">db数据</div>
+            <div>{{ this.isSelTab }}</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
                 <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
@@ -93,24 +94,41 @@
                 //     newIcon: "fluent:window-multiple-16-filled",
                 // },
                 { 
+                    // label: this.isSelTab?'添加到桌面':'还原', 
                     label: "添加到桌面", 
                     callBack: ()=>{
                         // 修改当前选中桌面
-                        this.selDesk()
-                        
+                        if (!this.isSelTab) {
+                            // 添加到桌面
+                            //console.log('切换桌面');
+                            this.selDesk()
+                        }else{
+                            
+                            // 还原
+                            //console.log('还原');
+                            this.returnCard()
+                        }
                     }, 
                     newIcon: "fluent:open-20-filled",
                 },
                 { 
+                    // label: this.isSelTab?"删除便签":"彻底删除", 
+                    // name:"删除便签",
                     label: "删除便签", 
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
                     callBack:()=>{
                         // this.menus.
                         if (!this.isSelTab) {
+                            
+                            // 删除
+                            //console.log('删除');
                             this.moveNote()
                         }else{
-                            this.returnCard()
+                            // 彻底删除
+                            //console.log('彻底删除');
+                            this.deleteNote()
+
                         }
                     }
                 },
@@ -124,9 +142,20 @@
     mounted() {
     },
     watch: {
+        isSelTab(newval,oldval){
+            //console.log('监听到了');
+            //console.log(newval);
+            if (newval) {
+                this.menus[0].label = '还原'
+                this.menus[1].label = '彻底删除'
+            }else{
+                this.menus[0].label = '添加到桌面'
+                this.menus[1].label = '删除便签'
+            }
+        }
     },
     methods: {
-        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote','findAll']),
+        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote','findAll','deleteNote']),
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
@@ -141,10 +170,10 @@
             return year + "-" + month + "-" + day;
         },
         showData(){
-            console.log(this.noteList);
+            //console.log(this.noteList);
         },
         showDesk(){
-            console.log(this.deskList);
+            //console.log(this.deskList);
         },
     },
   };
