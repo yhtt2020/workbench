@@ -2,16 +2,15 @@
 <template>
     <Modal :maskNoClose="true" class="">
         <div class="w-full pl-4 pr-4"
-            :style="{ height: fullScreen ? '700px' : 'auto', width: fullScreen ? '100%' : '500px' }">
+            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full ">
                     <div class="flex justify-center ml-12">
-                        <a-select autoClearSearchValue="false" 
-                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;" :showArrow="true"
-                            :bordered="false" @change="changeItem" >
+                        <a-select autoClearSearchValue="false"
+                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;"
+                            :showArrow="true" :bordered="false" @change="changeItem">
                             <a-select-option :value="index" v-for="(item, index) in publishType"
-                                class=" xt-text selsect-options"
-                                style="font-size: 16px;text-align: center;">
+                                class=" xt-text selsect-options" style="font-size: 16px;text-align: center;">
                                 {{ item.title }}
                                 <!-- <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" /> -->
                             </a-select-option>
@@ -21,7 +20,8 @@
                                 </div>
                             </template>
                             <template #suffixIcon>
-                                <newIcon icon="fluent:caret-down-12-filled" style="font-size: 20px;margin-top: -2px;margin-left: -8px;" class=" xt-text"></newIcon>
+                                <newIcon icon="fluent:caret-down-12-filled"
+                                    style="font-size: 20px;margin-top: -2px;margin-left: -8px;" class=" xt-text"></newIcon>
                             </template>
                         </a-select>
                     </div>
@@ -44,138 +44,139 @@
 
 
             </div>
-            <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
-                style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px]" style="border: 1px solid var(--divider);"
-                    v-if="defaultType.value == 'video'">
-                    <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
-                        @drop="handleDrop">
-                        <div class="flex flex-col items-center justify-center w-full h-full">
-                            <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;"></newIcon>
-                            <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB</p>
-                        </div>
-                    </a-upload-dragger>
-                </div>
-                <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);"
-                    v-if="defaultType.value !== 'dynamic'">
-                    <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
-                </div>
-                <div class="w-full mt-2 h-3/4 xt-bg box font-16">
-                    <div style="font-size: 1rem !important;" class="w-full h-full">
-                        <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea"
-                            style="border: 1px solid var(--divider);">
-                            <a-textarea v-model:value="postValue"
-                                :placeholder="defaultType.value === 'video' ? '简介' : '请输入'" :autoSize="dynamicSize"
-                                :bordered="false" v-if="defaultType.value !== 'post'" />
-                            <div class="w-full " :style="{ height: fullScreen ? '400px' : '300px' }"
-                                v-else-if="defaultType.value == 'post'" style="overflow: hidden;">
-                                <!-- <Toolbar style="border-bottom: 1px solid var(--divider)" :editor="editorRef"
-                                :defaultConfig="toolbarConfig" :mode="mode" />
-
-                            <Editor style="height: 100% ; overflow-y: hidden; background: var(--primary-bg);"
-                                v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" /> -->
-                                <markdown></markdown>
+            <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings" 
+                style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
+                <!-- <div class="" style="max-width: 1000px !important;"> -->
+                    <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px] " style="border: 1px solid var(--divider);"
+                        v-if="defaultType.value == 'video'">
+                        <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
+                            @drop="handleDrop">
+                            <div class="flex flex-col items-center justify-center w-full h-full">
+                                <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;">
+                                </newIcon>
+                                <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB
+                                </p>
                             </div>
-                            <div style="font-size: 16px !important; " v-if="imageLoadVisible">
-                                <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base"
-                                    list-type="picture-card" multiple @preview="handlePreview">
-                                    <div v-if="fileList.length < 6">
-                                        <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
-                                        <newIcon icon="fluent:add-16-filled" style="font-size: 24px;vertical-align: sub;"
-                                            class="xt-text"></newIcon>
-                                    </div>
-                                </a-upload>
-                            </div>
-                            <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                                <img style="width: 100%" :src="previewImage" />
-                            </a-modal>
-                        </div>
-
+                        </a-upload-dragger>
                     </div>
-                </div>
-                <div class="h-[45px] flex items-center justify-between">
-                    <div class="flex items-center justify-center xt-text-2">
-                        <tippy trigger=" click" placement="bottom" :interactive="true">
-                            <template #content>
-                                <!-- <div class="w-full"> -->
-                                <vue-custom-scrollbar :settings="settingsScroller"
-                                    class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
-                                    <div v-for="(item, index) in folderPath"
-                                        class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
-                                        :key="index" style="cursor: pointer;">
-                                        <img :src="item" class="w-[32px] h-[32px]">
-                                    </div>
-                                </vue-custom-scrollbar>
-                                <!-- </div> -->
-                            </template>
+                    <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);"
+                        v-if="defaultType.value !== 'dynamic'">
+                        <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
+                    </div>
+                    <div class="w-full mt-2 h-3/4 xt-bg box font-16">
+                        <div style="font-size: 1rem !important;" class="w-full h-full">
+                            <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea"
+                                style="border: 1px solid var(--divider);">
+                                <a-textarea v-model:value="postValue" maxWidth="450px"
+                                    :placeholder="defaultType.value === 'video' ? '简介' : '请输入'" :autoSize="dynamicSize"
+                                    :bordered="false" v-if="defaultType.value !== 'post'" />
+                                <div class="w-full " :style="{ height: fullScreen ? '450px' : '300px' }"
+                                    v-else-if="defaultType.value == 'post'" style="overflow: hidden;">
+                                    <markdown></markdown>
+                                </div>
+                                <div style="font-size: 16px !important; " v-if="imageLoadVisible">
+                                    <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base"
+                                        list-type="picture-card" multiple @preview="handlePreview">
+                                        <div v-if="fileList.length < 6">
+                                            <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
+                                            <newIcon icon="fluent:add-16-filled"
+                                                style="font-size: 24px;vertical-align: sub;" class="xt-text"></newIcon>
+                                        </div>
+                                    </a-upload>
+                                </div>
+                                <a-modal :visible="previewVisible" :title="previewTitle" :footer="null"
+                                    @cancel="handleCancel">
+                                    <img style="width: 100%" :src="previewImage" />
+                                </a-modal>
+                            </div>
 
-                            <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
-                                style="color: var(--secondary-text) !important;">
-                                <!-- <SmileOutlined style="" /> -->
-                                <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
-                                表情
-                            </xt-button>
-                        </tippy>
-                        <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
-                            <xt-button type="text" :w="72" :h="32" class="xt-text" v-if="defaultType.value !== 'video'"
-                                style="color: var(--secondary-text) !important;">
-                                <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
-                                图片
-                            </xt-button>
-                        </a-upload>
-                        <div v-if="defaultType.value == 'post'">
-                            <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
-                                v-show="coverList.length === 0">
-                                <a-button type="text" size="small" class="xt-text"
-                                    style="color: var(--secondary-text) !important;"><template #icon>
-                                        <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
-                                            style="vertical-align: sub;margin-right: 4px;" />
-                                    </template> 设置封面</a-button>
+                        </div>
+                    </div>
+                    <div class="h-[45px] flex items-center justify-between">
+                        <div class="flex items-center justify-center xt-text-2">
+                            <tippy trigger=" click" placement="bottom" :interactive="true">
+                                <template #content>
+                                    <!-- <div class="w-full"> -->
+                                    <vue-custom-scrollbar :settings="settingsScroller"
+                                        class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
+                                        <div v-for="(item, index) in folderPath"
+                                            class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
+                                            :key="index" style="cursor: pointer;">
+                                            <img :src="item" class="w-[32px] h-[32px]">
+                                        </div>
+                                    </vue-custom-scrollbar>
+                                    <!-- </div> -->
+                                </template>
 
-
-                            </a-upload>
-                            <a-button type="text" size="small" class="xt-text" v-show="coverList.length > 0"
-                                @click="removeCover" style="color: var(--secondary-text) !important;"><template #icon>
-                                    <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
+                                    style="color: var(--secondary-text) !important;">
+                                    <!-- <SmileOutlined style="" /> -->
+                                    <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
                                         style="vertical-align: sub;margin-right: 4px;" />
-                                </template> 移除封面</a-button>
+                                    表情
+                                </xt-button>
+                            </tippy>
+                            <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
+                                <xt-button type="text" :w="72" :h="32" class="xt-text" v-if="defaultType.value !== 'video'"
+                                    style="color: var(--secondary-text) !important;">
+                                    <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
+                                        style="vertical-align: sub;margin-right: 4px;" />
+                                    图片
+                                </xt-button>
+                            </a-upload>
+                            <div v-if="defaultType.value == 'post'">
+                                <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
+                                    v-show="coverList.length === 0">
+                                    <a-button type="text" size="small" class="xt-text"
+                                        style="color: var(--secondary-text) !important;"><template #icon>
+                                            <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
+                                                style="vertical-align: sub;margin-right: 4px;" />
+                                        </template> 设置封面</a-button>
+
+
+                                </a-upload>
+                                <a-button type="text" size="small" class="xt-text" v-show="coverList.length > 0"
+                                    @click="removeCover" style="color: var(--secondary-text) !important;"><template #icon>
+                                        <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                            style="vertical-align: sub;margin-right: 4px;" />
+                                    </template> 移除封面</a-button>
+                            </div>
+
                         </div>
 
                     </div>
-
-                </div>
-                <div style="font-size: 16px !important;" v-if="coverList.length > 0">
-                    <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
-                        @preview="handlePreview">
-                    </a-upload>
-                    <!-- <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                    <div style="font-size: 16px !important;" v-if="coverList.length > 0">
+                        <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
+                            @preview="handlePreview">
+                        </a-upload>
+                        <!-- <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
                     <img style="width: 100%" :src="previewImage" />
                 </a-modal> -->
-                </div>
-                <div class="flex items-center justify-between h-[56px] ">
-                    <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择板块" :bordered="false"
-                        @change="handleChange"
-                        style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
-                        dropdownMenuStyle="{background: 'var(--primary-bg)'}"
-                        change-on-select>
-                        
-                        <template #suffixIcon>
-                            <newIcon icon="fluent:chevron-left-16-filled" class="text-base rotate-180 " style="margin-top: -1px;"></newIcon>
-                        </template>
-                    </a-select>
-                    <div class="flex items-center">
-                        <xt-button type="text" class=" xt-text xt-bg-2"
-                            style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
-                            @click="handleOk">取消</xt-button>
-                        <xt-button type="primary" class="ml-2"
-                            style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
-                            @click="publishPost">发布</xt-button>
                     </div>
-                </div>
+                    <div class="flex items-center justify-between h-[56px] ">
+                        <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
+                        <a-select v-model:value="cascaderValue" :options="options" placeholder="选择板块" :bordered="false"
+                            @change="handleChange"
+                            style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
+                            dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
+
+                            <template #suffixIcon>
+                                <newIcon icon="fluent:chevron-left-16-filled" class="text-base rotate-180 "
+                                    style="margin-top: -1px;"></newIcon>
+                            </template>
+                        </a-select>
+                        <div class="flex items-center">
+                            <xt-button type="text" class=" xt-text xt-bg-2"
+                                style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
+                                @click="handleOk">取消</xt-button>
+                            <xt-button type="primary" class="ml-2"
+                                style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
+                                @click="publishPost">发布</xt-button>
+                        </div>
+                    </div>
+                <!-- </div> -->
+
             </vue-custom-scrollbar>
         </div>
 
@@ -295,7 +296,8 @@ const previewTitle = ref('');
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 // 表情保存
 let folderPath = reactive([])
-
+let windoWidth = ref()
+let windowHeight = ref()
 onMounted(() => {
     // 表情转换
     Object.values(fluentEmojis).forEach((item) => {
@@ -309,6 +311,8 @@ onMounted(() => {
     //     inputElement?.focus()
     // }else{
     textareaElement?.focus()
+    windoWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
     // }
     // 获取编辑文本
     if (defaultType.value.value == 'dynamic' && useYuanCommunityStore.saveDynamic) {
@@ -420,16 +424,16 @@ const publishPost = async () => {
 
         setTimeout(async () => {
             // console.log(forumId, content, title.value, image, 'titleValue.value');
-            const imageList =await JSON.stringify(imageUrlList);
-            const coverImage =await JSON.stringify(coverUrlList);
+            const imageList = await JSON.stringify(imageUrlList);
+            const coverImage = await JSON.stringify(coverUrlList);
             // console.log(forumId, imageList, content.value, title.value, is_weibo, coverImage);
-            if(defaultType.value.value=='dynamic'){
-              await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)  
-            }else if(defaultType.value.value=='post'){
-              console.log(forumId, imageList, content.value, title.value, coverImage);
-              await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)  
+            if (defaultType.value.value == 'dynamic') {
+                await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo, coverImage)
+            } else if (defaultType.value.value == 'post') {
+                console.log(forumId, imageList, content.value, title.value, coverImage);
+                await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
             }
-            
+
             message.success('发布成功')
             titleValue.value = ''
             useYuanCommunityStore.saveDynamic = ''
@@ -443,9 +447,8 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
-.selsect-options{
-    
-}
+.selsect-options {}
+
 :deep(.ant-upload-list-text-container) {
     display: none;
 }

@@ -126,11 +126,9 @@ onMounted(() => {
 
 </script>
 <style lang='scss' scoped>
-.w-e-bar {
-    background-color: var(--secondary-bg) !important;
-}
-
-.w-e-textarea {
-    background-color: var(--secondary-bg) !important;
+html.dark {
+    --w-e-textarea-bg-color: var(--primary-bg);
+    --w-e-textarea-color: var(--primary-text);
+    --w-e-bar-bg-color:var(--primary-bg)
 }
 </style>
