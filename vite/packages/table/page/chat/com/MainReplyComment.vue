@@ -33,12 +33,12 @@
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14 ml-8">
                 <div class="flex items-center justify-center ">
-                    <div class="flex items-center" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
+                    <div class="flex items-center pointer"  @click="clickLike" :class="{ 'xt-theme-text': isLike }">
                         <!-- <LikeOutlined style="font-size: 16px;" class="mt-1 mr-1" />-->
                         <replyIcon icon="akar-icons:thumbs-up" style="font-size: 16px; " class="mr-1 "></replyIcon>
                         <div class="mr-4 text-center font-14 xt-text-2">{{ supportCount }} 点赞</div>
                     </div>
-                    <div class="flex items-center" @click="replyStatus">
+                    <div class="flex items-center pointer" @click="replyStatus">
                         <!-- <MessageOutlined style="font-size: 16px;" class="mr-1 " /> -->
                         <replyIcon icon="fluent:chat-16-regular" style="font-size: 18px;" class="mr-1 "></replyIcon>
                         <div class="font-14 xt-text-2">回复</div>

@@ -1,7 +1,7 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
         :esc="true">
-        <div class="w-[1000px] h-[700px] maxDetail" :style="{ width: isFullScreen ? '100%' : '1000px' }">
+        <div class=" maxDetail" :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
             <div class="w-full pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -184,8 +184,12 @@ let userInfo = {
     nickname: props.cardData.user?.nickname,
     avatar: props.cardData.user?.avatar_128
 }
+let windowHeight=ref()
+let windoWidth=ref()
 onMounted(() => {
-    console.log(props.cardData)
+    windoWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+    // console.log(props.cardData)
     refresh()
 })
 const custom = computed(() => {
