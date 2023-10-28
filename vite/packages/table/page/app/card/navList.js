@@ -950,7 +950,7 @@ export const NavList = [
         name:'Courier',
         cname:'我的快递',
         detail:"在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标",
-        size:['2x2','4x4','4x6'],
+        sizes:['2x2','4x4','4x6'],
         option:[
           {
             name:'Courier',

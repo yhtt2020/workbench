@@ -10,8 +10,10 @@
             </template>
             <div v-if="showForumList.length > 0">
                 <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
-                    <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
-                        icon="akar-icons:arrow-clockwise" />
+                    <xt-button :w="22" :h="22" style="background: transparent;">
+                        <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                            icon="akar-icons:arrow-clockwise" />
+                    </xt-button>
                 </div>
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
@@ -22,7 +24,7 @@
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="height: calc(100% - 40px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{height:scrollBarHeight}">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -60,11 +62,11 @@
 
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                :forum="customData.defaultForum.value"></YuanPublishModal>
+                :forum="customData.defaultForum?.value"></YuanPublishModal>
             <div v-if="showDetailModal">
-                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
-                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal"
-                @closeDetail="closeDetail" />
+                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
+                    @closeDetail="closeDetail" />
+                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
             </div>
 
 
@@ -327,6 +329,13 @@ export default {
         // isShow(){
         //     return window.innerWidth > 1200
         // }
+        scrollBarHeight() {
+            if(this.showForumList.length>1){
+                return 'calc(100% - 65px)'
+            }else{
+                return 'calc(100% - 40px)'
+            }
+        }
     },
     async mounted() {
         console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
@@ -345,10 +354,10 @@ export default {
         // console.log(window.innerWidth, 'window.innerWidth');
     },
     beforeUpdate() {
-        if(window.innerWidth > 1200){
-            this.toggleDetail=true
-        }else{
-            this.toggleDetail=false
+        if (window.innerWidth > 1200) {
+            this.toggleDetail = true
+        } else {
+            this.toggleDetail = false
         }
     },
     watch: {
@@ -389,7 +398,7 @@ export default {
             }
         },
     }
-    }
+}
 </script>
 <style>
 @media screen and (max-width: 1000px) {

@@ -1,18 +1,19 @@
 
 <template>
     <Modal :maskNoClose="true" class="">
-        <div class="w-[500px] pl-4 pr-4"
-            :style="{ height: fullScreen ? '700px' : 'auto', width: fullScreen ? '1000px' : '500px' }">
+        <div class="w-full pl-4 pr-4"
+            :style="{ height: fullScreen ? '700px' : 'auto', width: fullScreen ? '100%' : '500px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full ">
                     <div class="flex justify-center ml-12">
                         <a-select autoClearSearchValue="false" 
-                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;"
-                            :bordered="false" @change="changeItem">
+                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;" :showArrow="true"
+                            :bordered="false" @change="changeItem" >
                             <a-select-option :value="index" v-for="(item, index) in publishType"
-                                class="absolute z-auto xt-bg xt-text-2 selsect-options"
+                                class=" xt-text selsect-options"
                                 style="font-size: 16px;text-align: center;">
                                 {{ item.title }}
+                                <!-- <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" /> -->
                             </a-select-option>
                             <template #placeholder>
                                 <div class="ml-3 text-center xt-text" style="font-size: 16px;">
@@ -20,8 +21,7 @@
                                 </div>
                             </template>
                             <template #suffixIcon>
-                                <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
-                                    class="mr-3 rotate-180 xt-text"></YuanIcon>
+                                <newIcon icon="fluent:caret-down-12-filled" style="font-size: 20px;margin-top: -2px;margin-left: -8px;" class=" xt-text"></newIcon>
                             </template>
                         </a-select>
                     </div>
@@ -159,10 +159,12 @@
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
                     <a-select v-model:value="cascaderValue" :options="options" placeholder="选择板块" :bordered="false"
                         @change="handleChange"
-                        style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
+                        style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
+                        dropdownMenuStyle="{background: 'var(--primary-bg)'}"
                         change-on-select>
+                        
                         <template #suffixIcon>
-                            <Icon icon="fluent:chevron-left-16-filled" class="text-base rotate-180"></Icon>
+                            <newIcon icon="fluent:chevron-left-16-filled" class="text-base rotate-180 " style="margin-top: -1px;"></newIcon>
                         </template>
                     </a-select>
                     <div class="flex items-center">
@@ -441,6 +443,9 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
+.selsect-options{
+    
+}
 :deep(.ant-upload-list-text-container) {
     display: none;
 }
