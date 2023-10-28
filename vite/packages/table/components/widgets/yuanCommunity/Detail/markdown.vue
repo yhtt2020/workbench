@@ -115,11 +115,11 @@ editorConfig.MENU_CONF['bgColor'] = {
     colors: ['#333']
 }
 onMounted(() => {
-    if (useYuanCommunityStore.saveContent) {
-        valueHtml.value = useYuanCommunityStore.saveContent
-    }else{
-        valueHtml.value = ''
-    }
+    // const editor=editorRef.value
+    // if (useYuanCommunityStore.saveContent) {
+    //     editor.dangerouslyInsertHtml(useYuanCommunityStore.saveContent)
+    // }
+    
     
 
 })
