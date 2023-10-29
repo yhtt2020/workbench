@@ -321,6 +321,13 @@ onMounted(() => {
     } else {
         postValue.value = ''
     }
+    // 获取标题
+    if (defaultType.value.value == 'post' && useYuanCommunityStore.saveTitle) {
+        titleValue.value = useYuanCommunityStore.saveTitle
+    } else {
+        titleValue.value = ''
+        
+    }
     // console.log(postValue.value,'postValue.value');
 
     // console.log(navigator.plugins);
@@ -360,6 +367,10 @@ watch(postValue, _.debounce(savaDynamic, 500))
 // const holder = computed(() => {
 //     return props.forum.name
 // })
+const saveTitle = () => {
+    useYuanCommunityStore.saveTitle = titleValue.value
+}
+watch(titleValue, _.debounce(saveTitle, 500))
 // 滚动条设置
 const settingsScroller = reactive({
     useBothWheelAxes: true,

@@ -11,7 +11,8 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
         myForumList: [],
         communityPost: [],
         saveContent:'',
-        saveDynamic:''
+        saveDynamic:'',
+        saveTitle:''
     }),
     actions: {
         // 获取我的圈子

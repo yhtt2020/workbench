@@ -8,6 +8,14 @@
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
+            <!-- <template #left-title v-if="showForumList.length > 0">
+                <div @click="refreshPost">
+                    <xt-button :w="22" :h="22" style="background: transparent;">
+                        <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                            icon="akar-icons:arrow-clockwise" />
+                    </xt-button>
+                </div>
+            </template> -->
             <div v-if="showForumList.length > 0">
                 <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
                     <xt-button :w="22" :h="22" style="background: transparent;">
@@ -346,6 +354,7 @@ export default {
         this.customData.forumList = this.myForumList.joined
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
+            console.log(this.defaultForum);
         }
         if(this.customData && this.customData.selectList){
             this.selectValue = this.customData.selectList.map((item)=>{
