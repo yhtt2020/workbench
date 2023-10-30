@@ -108,11 +108,18 @@ editorConfig.MENU_CONF['bgColor'] = {
 
 </script>
 <style lang='scss' scoped>
-.w-e-bar {
-    background-color: var(--secondary-bg) !important;
-}
+// .w-e-bar {
+//     background-color: var(--secondary-bg) !important;
+// }
 
-.w-e-textarea {
-    background-color: var(--secondary-bg) !important;
-}
+// .w-e-textarea {
+//     background-color: var(--secondary-bg) !important;
+// }
+
+  :deep(.w-e-text-container){
+    background-color: red !important;
+  }
+  :deep(.w-e-bar){
+    background-color: transparent !important;
+  }
 </style>

@@ -19,11 +19,11 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <!-- <div @click="this.deTest">清除数据</div>
+            <div @click="this.deTest">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
             <div @click="this.findAll">db数据</div>
-            <div>{{ this.isSelTab }}</div> -->
+            <div>{{ this.isSelTab }}</div>
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
                 <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
@@ -100,12 +100,9 @@
                         // 修改当前选中桌面
                         if (!this.isSelTab) {
                             // 添加到桌面
-                            //console.log('切换桌面');
                             this.selDesk()
                         }else{
-                            
                             // 还原
-                            //console.log('还原');
                             this.returnCard()
                         }
                     }, 
@@ -170,10 +167,10 @@
             return year + "-" + month + "-" + day;
         },
         showData(){
-            //console.log(this.noteList);
+            console.log(this.noteList);
         },
         showDesk(){
-            //console.log(this.deskList);
+            console.log(this.deskList);
         },
     },
   };

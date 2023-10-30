@@ -533,11 +533,42 @@ export const cardStore = defineStore(
 
 
       },
-      addCard(value, desk) {
+      async addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
         // })
+
+        // 便签卡片需要进行db存储
+        // if (value.name == 'notes') {
+        //   let obj:any ={
+        //     ...value,
+        //     customData:{
+        //       ...value.customData,
+        //       title:'桌面便签'
+        //     },
+        //     createTime:value.id,
+        //     updateTime:value.id,
+        //     _id:'note:' + value.id,
+        //     name:'notes',
+        //     isDelete:false,
+        //     desk:desk,
+        //     deskName:desk.name,
+            
+        //   }
+        //   console.log(value);
+        //   console.log(obj);
+          
+        //   desk.cards.push(obj)
+        //   await tsbApi.db.put({
+        //     ...obj,
+        //     // // 删属性 
+        //     // delete obj._$muuri_id
+        //   })
+        // }else{
+        //   desk.cards.push(value)
+        // }
+        
         desk.cards.push(value)
       },
       /**

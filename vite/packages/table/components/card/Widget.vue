@@ -28,18 +28,20 @@
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="w-2/3 flex">
               <div v-if="options.isEdit">
-                <!-- <a-input
+                <a-input
                   style="
                     border: none;
                     box-shadow: none !important;
                     position: relative;
-                    left: -32px;
-                    top: -3px;
+                    left: -25px;
+                    font-size: 16px;
+                    padding: 0;
                   "
-                  :value="options.title"
-                ></a-input> -->
+                  v-model:value="noteTitle"
+                  @blur="options.changeNoteTitle"
+                ></a-input>
                 <!-- <div style="position: relative;left:-25px;">桌面便签</div> -->
-                <div style="position: relative;left:-25px;">{{ options.title }}</div>
+                <!-- <div style="position: relative;left:-25px;">{{ options.title }}</div> -->
                 <!-- {{ options.title }} -->
               </div>
               <div v-else="options.isEdit">
@@ -172,6 +174,8 @@ export default {
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
+      // 便签标题
+      noteTitle:this.options.title,
     };
   },
   computed: {

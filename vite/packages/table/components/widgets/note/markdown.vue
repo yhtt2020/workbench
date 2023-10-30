@@ -86,19 +86,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
         background: transparent;
     }
 
-    // :deep(.vditor-ir)::-webkit-scrollbar-thumb {
-    //     // background-color: #ccc !important; /* 滚动条颜色 */
-    //     background-color: red !important; /* 滚动条颜色 */
-    //     border-radius: 6px !important; /* 滚动条圆角 */
-    // }
-    
-    // :deep(.vditor-ir)::-webkit-scrollbar-thumb:hover {
-    //     background-color: #999 !important; /* 悬停时滚动条颜色 */
-    // }
 
-    // :deep(.vditor-irx)::-webkit-scrollbar-track {
-    //     border-radius: 6px !important; /* 轨道圆角 */
-    // }
 
     :deep(.hljs){
         color: #fff;

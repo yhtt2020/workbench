@@ -29,6 +29,7 @@
     mounted(){
         this.contentEditor = new Vditor('vditor', {
             height: '100%',
+            mode:'drak',
             // width:500,
             toolbarConfig: {
                 pin: true,
@@ -51,13 +52,15 @@
                             n = index
                             }
                         })
-                        this.updateCustomData(
-                            this.noteList[this.selNote].id,
-                            {
-                            text: value,
-                            },
-                            this.deskList[n]
-                        );
+                        if (n>=0) {
+                            this.updateCustomData(
+                                this.noteList[this.selNote].id,
+                                {
+                                    text: value,
+                                },
+                                this.deskList[n]
+                            );
+                        }
                     }
 
                     this.noteList[this.selNote].customData.text = value
@@ -79,6 +82,7 @@
         //console.log(this.noteList);
         if(newval>=0){
             this.contentEditor.setValue(this.noteList[newval].customData.text)
+            this.tmpData = this.noteList[newval].customData.text
         }
     }
    }
@@ -92,15 +96,15 @@
     :deep(.vditor-toolbar){
         border: none;
         padding: 0 10px !important;
-        background: transparent;
+        // background: transparent;
     }
     :deep(.vditor-reset){
-        color: #fff !important;
+        // color: #fff !important;
         // padding: 5px 10px !important;
     }
     :deep(.vditor-ir pre.vditor-reset){
         // background: rgba(255,255,255,0.5);
-            background: transparent;
+            // background: transparent;
     }
     // :deep(.vditor-ir pre.vditor-reset:focus){
         //     // background: transparent;
@@ -108,7 +112,7 @@
     // }
 
     :deep(.vditor-tooltipped){
-        color: #fff !important;
+        // color: #fff !important;
     }
  </style>
  

@@ -8,7 +8,7 @@
                     class="flex justify-center items-center mr-3 pointer" style="background-color: var(--secondary-bg);border-radius:10px;width: 107px;height: 40px;"
                     @click="selDesk"
                     >{{ '#' + deskName}}</div>
-                    <div style="font-size: 14px;color: rgba(255,255,255,0.40);">10分钟前编辑</div>
+                    <div style="font-size: 14px;color: rgba(255,255,255,0.40);">{{ time }}</div>
                 </div>
                 <div class="flex" style="position: relative;">
                     <div  class="flex justify-center items-center mr-3 pointer shadow" style="width:40px;height:40px;border-radius: 10px;" :style="{background:background}" @click="isColor=!isColor"></div>
@@ -31,10 +31,14 @@
                                     v-for="(item,index) in menus" 
                                     :key="index" 
                                     style="height: 40px;border-radius: 10px;"
+                                    @click="item.callBack"
                                     >
-                                        <div class="flex items-center font-16">
+                                        <div
+                                        class="flex items-center font-16">
                                             <Icon width="20" height="20" :icon="item.newIcon" />
-                                            <div :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
+                                            <div 
+                                            
+                                            :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
                                         </div>
                                         </a-menu-item>
                                 </a-menu>
@@ -50,6 +54,7 @@
                         border: none;box-shadow: none;padding: 0 0 0 24px; "
                         v-model:value="this.selNoteTitle"
                         maxlength="15"
+                        @blur="changeNoteTitle"
                     ></a-input>
                     <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">
                         <!-- <a-textarea
@@ -68,12 +73,13 @@
  </template>
  
  <script>
-    import { Icon } from '@iconify/vue';
-    import moreHorizontal16Filled from '@iconify-icons/fluent/more-horizontal-16-filled';
-    import {mapActions, mapState,mapWritableState} from "pinia";
-    import { noteStore } from '../store'
-    import { cardStore } from '../../../store/card';
-    import Markdown from "./markdown.vue";
+ import { Icon } from '@iconify/vue';
+ import moreHorizontal16Filled from '@iconify-icons/fluent/more-horizontal-16-filled';
+ import {mapActions, mapState,mapWritableState} from "pinia";
+ import { noteStore } from '../store'
+ import { cardStore } from '../../../store/card';
+ import Markdown from "./markdown.vue";
+ import dayjs from "dayjs";
  export default {
    components: {
     Icon,
@@ -91,7 +97,36 @@
             if (this.noteList.length) {
                 return this.selNote>=0?this.noteList[this.selNote].customData.background:''
             }
-        }
+        },
+
+
+        time() {
+            // console.log(this.selNote,this.noteList);
+            // return 
+            if (this.selNote>=0 && this.noteList) {
+                let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
+                const targetDate = dayjs(timestamp);
+                const now = dayjs();
+                const diffMinutes = now.diff(targetDate, "minute");
+    
+                if (diffMinutes < 3) {
+                    return "刚刚";
+                } else if (diffMinutes < 60) {
+                    return `${diffMinutes}分钟前`;
+                } else if (diffMinutes < 1440) {
+                    const diffHours = Math.floor(diffMinutes / 60);
+                    return `${diffHours}小时前`;
+                } else if (now.isSame(targetDate, "day")) {
+                    return `今天 ${targetDate.format("HH:mm")}`;
+                } else if (now.subtract(1, "day").isSame(targetDate, "day")) {
+                    return `昨天 ${targetDate.format("HH:mm")}`;
+                } else {
+                    return targetDate.format("MM-DD");
+                }
+            }else{
+                return
+            }
+        },
    },
    data() {
        return {
@@ -102,16 +137,34 @@
             menus:[
                 { 
                     label: "添加到桌面", 
-                    callBack: ()=>{
-                        this.selDesk()
-                    }, 
                     newIcon: "fluent:open-20-filled",
+                    callBack: ()=>{
+                        // 修改当前选中桌面
+                        if (!this.isSelTab) {
+                            // 添加到桌面
+                            this.selDesk()
+                        }else{
+                            // 还原
+                            this.returnCard()
+                        }
+                    }, 
+                    
                 },
                 { 
                     label: "删除便签", 
-                    // callBack: this.callBack, 
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
+                    callBack:()=>{
+                        // this.menus.
+                        if (!this.isSelTab) {
+                            // 删除
+                            this.moveNote()
+                        }else{
+                            // 彻底删除
+                            this.deleteNote()
+
+                        }
+                    }
 
                 },
             ],
@@ -126,7 +179,7 @@
     },
    methods:{
     ...mapActions(cardStore, ['updateCustomData']),
-    ...mapActions(noteStore, ['saveNoteDb','getNotes','addNoteToDesk','changeBg']),
+    ...mapActions(noteStore, ['saveNoteDb','getNotes','addNoteToDesk','changeBg','moveNote','returnCard','deleteNote']),
     // 修改当前便签颜色
     changeBgColor(i){
         this.noteList[this.selNote].customData.background = this.noteBgColor[i]
@@ -165,52 +218,54 @@
         }
     },
     clear(){
-        // console.log('清除定时器')
         clearTimeout(this.timer)
         this.timer=null
+    },
+    changeNoteTitle(e){
+        console.log(e.target.value);
+        if (this.noteList[this.selNote].customData.title != e.target.value) {
+            console.log('开始保存');
+            let n = -1;
+            this.deskList.forEach((item,index)=>{
+                if (item.name == this.noteList[this.selNote].deskName) {
+                    n = index
+                }
+            })
+            if (n>=0) {
+                this.updateCustomData(this.noteList[this.selNote].id,{
+                    title:e.target.value,
+                },this.deskList[n])
+            }
+            this.noteList[this.selNote].customData.title = e.target.value
+            this.saveNoteDb()
+        }
     }
    },
    watch:{
-    selNoteTitle(newval,oldval){
-        // 先清除后添加 
-        this.noteList[this.selNote].customData.title=this.selNoteTitle
-        this.noteList[this.selNote].customData.text=this.selNoteText
-        this.clear()
-        // this.timer=setTimeout(()=>{
-        //     this.timeout();
-        //     this.clear()
-        // },10000)
-    },
-    selNoteText(newval,oldval){
-        this.clear()
-        this.noteList[this.selNote].customData.title=this.selNoteTitle
-        this.noteList[this.selNote].customData.text=this.selNoteText
-        // this.timer=setTimeout(()=>{
-        //     this.timeout();
-        //     this.clear()
-        // },10000)
-    },
-    // selNote(newval,oldval){
+    // selNoteTitle(newval,oldval){
+    //     // 先清除后添加 
+    //     this.noteList[this.selNote].customData.title=this.selNoteTitle
+    //     this.noteList[this.selNote].customData.text=this.selNoteText
     //     this.clear()
-    //     if (oldval>=0) {
-    //         if(this.noteList[oldval].deskName){
-    //             // 有桌面 处理卡片
-    //             let n = -1;
-    //             this.deskList.forEach((item,index)=>{
-    //                 if (item.name == this.noteList[oldval].deskName) {
-    //                     n = index
-    //                 }
-    //             })
-    //             this.updateCustomData(this.noteList[oldval].id,{
-    //                 title:this.selNoteTitle,
-    //                 text:this.selNoteText
-    //             },this.deskList[n])
-    //         }
-    //         this.saveNoteDb(oldval)
-    //     }
-    //     // 处理tsb存储
-        
+
     // },
+    // selNoteText(newval,oldval){
+    //     this.clear()
+    //     this.noteList[this.selNote].customData.title=this.selNoteTitle
+    //     this.noteList[this.selNote].customData.text=this.selNoteText
+    // },
+    
+    isSelTab(newval,oldval){
+        console.log('监听到了');
+        console.log(newval);
+        if (newval) {
+            this.menus[0].label = '还原'
+            this.menus[1].label = '彻底删除'
+        }else{
+            this.menus[0].label = '添加到桌面'
+            this.menus[1].label = '删除便签'
+        }
+    }
    }
  };
  </script>

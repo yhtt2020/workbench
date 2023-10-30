@@ -40,7 +40,7 @@ export const noteStore = defineStore("noteStore", {
     ],
     // 创建修改卡片新数据
     templateObj :{
-      background:"linear-gradient(-33deg, #545454 0%, #AC9555 1%, #A3625D 100%)",
+      background:"#57BF60",
       cardSize:"card",
       colors:'#fff',
       height:2,
@@ -76,20 +76,23 @@ export const noteStore = defineStore("noteStore", {
       // //console.log(getDb.docs);
       
       if (getDb.docs.length) {
-        //console.log('走上面');
+        console.log('走上面');
         
         tmpList = getDb.docs
         this.sortByTimestamp(tmpList)
         this.noteList = getDb.docs
       }else{
-        //console.log('走下面');
+        console.log('走下面');
         
         // 判断是否是回收站
         if (!this.isSelTab) {
+          
           this.deskList.forEach((item:any) => {
             if (item.cards.length) {
+              
               item.cards.forEach((tmp:any)=>{
                 if (tmp.name == 'notes') {
+                  
                   if (!tmp.customData.hasOwnProperty('title')) {
                     tmp.customData.title = '桌面便签'
                   }
@@ -106,7 +109,7 @@ export const noteStore = defineStore("noteStore", {
                     notes:'notes',
                     createTime:tmp.id,
                     _id:'note:' +  tmp.id.toString(),
-                    '$muuri_id': uuidv4(),
+                    // '_$muuri_id': uuidv4(),
                     isDelete:false,
                   })
                 }
@@ -114,14 +117,14 @@ export const noteStore = defineStore("noteStore", {
             }
           });
         }
-        //console.log('tmpList');
-        //console.log(tmpList);
+        console.log('tmpList');
+        console.log(tmpList);
         
         // 根据时间进行排序
         this.sortByTimestamp(tmpList)
         this.noteList = tmpList
-        //console.log('this.noteList');
-        //console.log(this.noteList);
+        console.log('this.noteList');
+        console.log(this.noteList);
         
         await tsbApi.db.bulkDocs(tmpList)
         
@@ -137,7 +140,7 @@ export const noteStore = defineStore("noteStore", {
     },
     //测试用 取出全部数据 
     async findAll(){
-      //console.log(await tsbApi.db.allDocs('note:'))
+      console.log(await tsbApi.db.allDocs('note:'))
     },
 
     // 便签切换桌面
@@ -164,7 +167,7 @@ export const noteStore = defineStore("noteStore", {
           // 先添加后删除
           cardStore().addCard({
             ...this.noteList[selNote],
-            '$muuri_id': uuidv4(),
+            // '$muuri_id': uuidv4(),
           },this.deskList[selIndex])
           cardStore().removeCard(this.noteList[selNote].id,this.deskList[nowIndex])
           let tmp = await this.findId(this.noteList[selNote]._id,false)      
@@ -189,9 +192,28 @@ export const noteStore = defineStore("noteStore", {
           updateTime:now,
         }
       })
-      this.findAll()
     },
     // 改变桌面卡片颜色
+    async changeDeskBg(id,backgroundColor){
+      console.log(id,backgroundColor);
+      
+      let now = new Date().getTime()
+      let tmp = await this.findId('note:'+id,false)
+      console.log(tmp);
+      if (tmp) {
+        await tsbApi.db.put({
+          ...tmp[0],
+          customData:{
+            ...tmp[0].customData,
+            background:backgroundColor,
+            updateTime:now,
+          }
+        })
+      
+      }
+      
+    },
+
     // async
     // 修改卡片内容
     async saveDeskNote(id,value){
@@ -224,7 +246,7 @@ export const noteStore = defineStore("noteStore", {
           id:now,
           notes:'notes',
           _id:'note:' + now,
-          '$muuri_id': uuidv4(),
+          // '$muuri_id': uuidv4(),
           isDelete:false,
           createTime:now,
           updateTime:now,
@@ -260,6 +282,26 @@ export const noteStore = defineStore("noteStore", {
         })
       }
     },
+
+    // 修改桌面便签标题
+    async saveDeskTitle(id,value){
+      let tmp = [{}]
+      
+      tmp =  await this.findId('note:'+id,false)
+      console.log(id,value,tmp);
+      if (tmp) {
+        let now = new Date().getTime()
+        await tsbApi.db.put({
+          ...tmp[0],
+          customData:{
+            ...tmp[0].customData,
+            title:value,
+            updateTime:now,
+          }
+        })
+      }
+    },
+
 
     // 将便签移动到回收站 删除
     async moveNote(){

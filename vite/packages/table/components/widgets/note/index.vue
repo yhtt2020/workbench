@@ -74,6 +74,8 @@ import { message } from "ant-design-vue";
 import { Icon } from '@iconify/vue';
 import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular';
 import Markdown from "./markdown.vue";
+import {mapActions, mapState,mapWritableState} from "pinia";
+import { noteStore } from '../../../apps/note/store';
 
 export default {
   name:'便签', 
@@ -118,6 +120,14 @@ export default {
         // icon: "bianji",
         type: "games",
         isEdit:true,
+        changeNoteTitle:(e)=>{
+          if (e.target.value != this.customData.title) {
+            this.updateCustomData(this.customIndex,{
+                title:e.target.value,
+            },this.desk)
+            this.saveDeskTitle(this.customIndex,e.target.value)
+          }
+        }
       },
       settingVisible: false,
       menuList: [
@@ -188,6 +198,8 @@ export default {
   },
 
   methods: {
+    
+    ...mapActions(noteStore, ['changeDeskBg','saveDeskTitle']),
     // updateText() {
     //   this.updateCustomData(
     //     this.customIndex,
@@ -210,6 +222,9 @@ export default {
         },
         this.desk
       );
+
+      this.changeDeskBg(this.customIndex,backgroundColor);
+
       this.background = backgroundColor;
       if (
         backgroundColor ==
