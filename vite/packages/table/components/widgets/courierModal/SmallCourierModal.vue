@@ -27,7 +27,7 @@
       <template v-else>
         <div class="px-6 flex flex-col" style="height: 510px;">
           <vue-custom-scrollbar :settings="settingsScroller">
-            <div v-for="item in filterList" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
+            <div v-for="item in filterList" :class="{'select':currentID === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
               <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
                 <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
               </div>
@@ -81,8 +81,8 @@ export default {
  
  data(){
   return{
-   typeList:courierType,
-   currentType:{title:'全部',name:'all'},
+  //  typeList:courierType,
+   currentType:{title:`全部${this.list.length !== 0 ? `(${this.list.length})` : '' }`,name:'all'},
 
    // 滚动条配置
    settingsScroller: { 
@@ -94,7 +94,8 @@ export default {
    },
 
    seeShow:false,
-   seeItem:{}
+   seeItem:{},
+   currentID:this.list[0].id
   }
  },
 
@@ -113,6 +114,29 @@ export default {
       return this.list.filter((item)=>{ return item.status === 'signed' });
      }
   },
+  typeList(){
+    const allLength = this.list.length;
+    const received = this.list.filter((item)=>{ return item.status === 'collect' })
+    const hasSigned = this.list.filter((item)=>{ return item.status === 'signed' })
+    const onWay = this.list.filter((item)=>{ return item.status === 'enRoute' })
+    const outDelivery = this.list.filter((item)=>{ return item.status === 'delivery' })
+    const list = [...courierType]
+    const filterList = list.map((item)=>{ 
+      switch (item.name) {
+        case 'all':
+          return {title:`${item.title}${allLength.length !== 0 ? `(${allLength})`:''}`,name:item.name,type:item.type}
+        case 'collect':
+          return {title:`${item.title}${received.length !== 0 ? `(${received.length})`:''}`,name:item.name,type:item.type}
+        case 'enRoute':
+          return {title:`${item.title}${onWay.length !== 0 ? `(${onWay.length})`:''}`,name:item.name,type:item.type}
+        case 'delivery':
+          return {title:`${item.title}${outDelivery.length !== 0 ? `(${outDelivery.length})` : ''}`,name:item.name,type:item.type}
+        case 'signed':
+          return {title:`${item.title}${hasSigned.length !== 0 ? `(${hasSigned.length})`:''}`,name:item.name,type:item.type}
+      }
+    })
+    return filterList
+  }
  },
 
  methods:{
@@ -134,6 +158,7 @@ export default {
   // 查看快递详情
   seeDetail(data){
     this.seeShow = true
+    this.currentID = data.id
     this.seeItem = data
   }
  }
@@ -149,11 +174,13 @@ export default {
  right: 16px;
 }
 
+/**
 :deep(.courier-item){
   &:hover{
     background: var(--active-secondary-bg) !important;
   }
 }
+**/
 
 .small-description{
   display: -webkit-box;
@@ -166,5 +193,9 @@ export default {
   font-size: 14px;
   color: var(--primary-text);
   font-weight: 400;
+}
+
+.select{
+  background: var(--active-secondary-bg) !important;
 }
 </style>

@@ -5,7 +5,7 @@
     <DropIcon icon="fluent:caret-down-12-filled" style="font-size: 1.25rem;"/> 
   </div>
   <template #overlay>
-   <a-menu class="flex flex-col items-center xt-bg justify-center" style="width: 180px;border-radius: 8px; padding: 8px;">
+   <a-menu class="flex flex-col items-center justify-center" style="width: 180px;border-radius: 8px; padding: 8px;">
     <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col items-center justify-center"
      @click="selectNav(item)"
     >

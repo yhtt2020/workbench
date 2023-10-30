@@ -101,7 +101,8 @@ export default {
 
 :deep(.ant-input){
  color: var(--secondary-text) !important;
- font-size: 1rem;
+ font-size: 14px;
+ font-weight: 400;
  &::placeholder{
   color: var(--secondary-text) !important;
  }
