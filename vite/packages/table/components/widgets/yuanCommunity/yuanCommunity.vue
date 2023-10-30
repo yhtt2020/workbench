@@ -2,27 +2,27 @@
     <div>
         <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"
             :sizeList="sizeList" :customData="customData">
-            <template #left-title>
+            <template #left-title-icon>
                 <div class="icon"
                     style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
-            <!-- <template #left-title v-if="showForumList.length > 0">
+            <template #left-title v-if="showForumList.length > 0">
                 <div @click="refreshPost">
-                    <xt-button :w="22" :h="22" style="background: transparent;">
-                        <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                    <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
+                        <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
                             icon="akar-icons:arrow-clockwise" />
-                    </xt-button>
+                    <!-- </xt-button> -->
                 </div>
-            </template> -->
+            </template>
             <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
+                <!-- <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
                     <xt-button :w="22" :h="22" style="background: transparent;">
                         <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
                             icon="akar-icons:arrow-clockwise" />
                     </xt-button>
-                </div>
+                </div> -->
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
@@ -186,7 +186,7 @@ export default {
             options: {
                 className: 'card double ',
                 title: '元社区',
-                // rightIcon: ' fluent:arrow-counterclockwise-20-filled',
+                rightIcon: ' fluent:arrow-counterclockwise-20-filled',
                 type: 'community',
                 // isEdit: true
             },
@@ -371,9 +371,6 @@ export default {
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
-        // console.log(this.options.title);
-        // console.log(navigator.connection.downlink,'navigator.connection');
-        // console.log(window.innerWidth, 'window.innerWidth');
     },
     beforeUpdate() {
         // this.changeTag()

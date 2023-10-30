@@ -1,7 +1,7 @@
 <template>
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
         ref="cardSlot">
-        <template #left-title>
+        <template #left-title-icon>
             <div class="icon"
                 style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
                 <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
