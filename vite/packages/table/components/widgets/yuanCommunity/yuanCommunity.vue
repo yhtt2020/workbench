@@ -60,7 +60,7 @@
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
-                style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
+                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
                 <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
                     icon="fluent:add-16-filled" />
             </xt-button>

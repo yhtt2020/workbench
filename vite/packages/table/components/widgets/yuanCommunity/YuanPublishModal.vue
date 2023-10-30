@@ -2,7 +2,7 @@
 <template>
     <Modal :maskNoClose="true" class="">
         <div class="w-full pl-4 pr-4"
-            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px' }">
+            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen? '0px' : '12px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full ">
                     <div class="flex justify-center ml-12">
