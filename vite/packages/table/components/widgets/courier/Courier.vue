@@ -7,34 +7,34 @@
                 <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
             </div>
         </template>
-        <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier" class="pointer"
-            v-if="courierList.length > 0">
-            <xt-button :w="22" :h="22" style="background: transparent;">
-                <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                    icon="akar-icons:arrow-clockwise" />
-            </xt-button>
-        </div>
-        <!-- {{ courierList.length }} -->
-        <div v-if="showWay">
-            <MinEmpty v-if="courierList.length <= 0" />
-            <MinCourierItem v-else></MinCourierItem>
-        </div>
-        <template v-else>
-            <Empty v-if="courierList.length <= 0" />
-            <template v-else>
-                <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                    style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                    <CourierItem v-for="(item, index) in courierList" :key="index" :courier="item" />
-                </vue-custom-scrollbar>
-                <xt-button :w="40" :h="40" type="theme" @click="settingVisible"
-                    style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
-                    <newIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
-                        icon="fluent:add-16-filled" />
+        <div class="w-full h-full courier">
+            <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier" class="pointer"
+                v-if="courierList.length > 0">
+                <xt-button :w="22" :h="22" style="background: transparent;">
+                    <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                        icon="akar-icons:arrow-clockwise" />
                 </xt-button>
+            </div>
+            <!-- {{ courierList.length }} -->
+            <div v-if="showWay">
+                <MinEmpty v-if="courierList.length <= 0" />
+                <MinCourierItem v-else></MinCourierItem>
+            </div>
+            <template v-else>
+                <Empty v-if="courierList.length <= 0" />
+                <template v-else>
+                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                        style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        <CourierItem v-for="(item, index) in courierList" :key="index" :courier="item" />
+                    </vue-custom-scrollbar>
+                    <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
+                        style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+                        <newIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                            icon="fluent:add-16-filled" />
+                    </xt-button>
+                </template>
             </template>
-        </template>
-
-
+        </div>
 
     </Widget>
 </template>
@@ -152,6 +152,18 @@ export default {
 .refresh {
     &:hover {
         background-color: var(--secondary-bg);
+    }
+}
+
+.courier {
+    .add-courier {
+        display: none;
+
+    }
+    &:hover{
+        .add-courier{
+            display: block;
+        }
     }
 }
 </style>

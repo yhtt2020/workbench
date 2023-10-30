@@ -116,14 +116,17 @@ editorConfig.MENU_CONF['bgColor'] = {
 }
 
 </script>
-<style lang='scss' >
+<style lang='scss' scoped>
 /* 暗色主题 */
 html.dark {
     --w-e-textarea-bg-color: #333;
     --w-e-textarea-color: #fff;
     /* ...其他... */
 }
-:deep(.w-e-text-container) {
-    background-color: transparent;
-}
+:deep(.w-e-text-container){
+    background-color: transparent !important;
+  }
+  :deep(.w-e-bar){
+    background-color: transparent !important;
+  }
 </style>

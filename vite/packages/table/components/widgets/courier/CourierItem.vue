@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-full mt-3 mb-5 pointer">
+    <div class="flex w-full mt-2 pointer courier ">
         <div class="mr-4">
             <div class="w-[56px] h-[56px] rounded-xl xt-bg-2 flex justify-center items-center pointer">
                 <newIcon icon="fluent-emoji:package" style="font-size: 32px;text-align: center;"></newIcon>
@@ -55,5 +55,15 @@ const stateColor = computed(() => {
     -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.courier {
+    // border: 1px solid var(--divider);
+    border-radius: 12px;
+    padding: 12px;
+    transform: all 0.3s;
+    &:hover {
+        background-color: var(--active-secondary-bg);
+    }
 }
 </style>
