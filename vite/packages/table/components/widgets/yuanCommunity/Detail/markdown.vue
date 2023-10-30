@@ -1,10 +1,10 @@
 <template>
     <div class="w-full h-full">
-        <Toolbar style="border-bottom: 1px solid var(--divider);"
-            :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+        <Toolbar style="border-bottom: 1px solid var(--divider);" :editor="editorRef" :defaultConfig="toolbarConfig"
+            :mode="mode" />
 
-        <Editor style="height: 100% ; overflow-y: hidden;"
-            v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+        <Editor style="height: 100% ; overflow-y: hidden;" v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode"
+            @onCreated="handleCreated" />
     </div>
 </template>
 
@@ -29,7 +29,7 @@ const handleCreated = (editor) => {
     // console.log(editor.getAllMenuKeys())
     if (useYuanCommunityStore.saveContent) {
         valueHtml.value = useYuanCommunityStore.saveContent
-    }else{
+    } else {
         valueHtml.value = ''
     }
 };
@@ -117,16 +117,14 @@ editorConfig.MENU_CONF['bgColor'] = {
 
 </script>
 <style lang='scss' scoped>
-/* 暗色主题 */
-html.dark {
-    --w-e-textarea-bg-color: #333;
-    --w-e-textarea-color: #fff;
-    /* ...其他... */
+:deep(.w-e-text-container) {
+    background-color: transparent !important;
 }
-:deep(.w-e-text-container){
+
+:deep(.w-e-bar) {
     background-color: transparent !important;
-  }
-  :deep(.w-e-bar){
-    background-color: transparent !important;
-  }
+}
+:deep(.w-e-scroll){
+    color: var(--primary-text);
+}
 </style>
