@@ -8,7 +8,7 @@
    </div>
 
    <div class="xt-text category-16-400 ">物流详情</div>
-
+    
    <div class="top-right flex">
     <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
        <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;"/>
@@ -21,26 +21,7 @@
   </div>
 
    <div class="px-6 flex flex-col">
-    <div class="flex mb-5 justify-between">
-      <div class="flex">
-        <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
-          <SmallIcon :icon="orderNum?.icon" style="font-size: 2rem;"/>
-        </div>
-        <div class="flex flex-col">
-          <div class="flex mb-1.5 items-center ">
-            <span class="xt-font category-16-600 xt-text mr-1">{{ orderNum?.goodName }}</span>
-            <SmallIcon icon="akar-icons:edit" class="xt-text" style="font-size: 1.5rem;"/>
-          </div>
-          <div class="rounded-lg xt-bg-2 py-0.5 px-1.5">
-            <span class="xt-font xt-text-2 category-14-400">{{ orderNum?.shipWay }}</span>
-            <span class="xt-font xt-text-2 category-14-400 ml-1">{{ orderNum?.orderID }}</span> 
-          </div>
-        </div>
-      </div>
-      <div class="flex items-center h-8 w-8 justify-center category-button pointer rounded-lg xt-bg-2">
-        <SmallIcon icon="akar-icons:trash-can" style="font-size: 1rem;"/>
-      </div>
-    </div>
+    <UpdateIcon :orderData="orderNum"/>
     <div class="xt-bg-2 px-4 rounded-lg">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
         <TimeLine :list="orderNum?.flowDetail"/>
@@ -58,13 +39,15 @@ import { Icon as SmallIcon } from '@iconify/vue'
 
 import AddCourierModal from '../AddCourierModal.vue'
 import TimeLine from '../timeLine/index.vue'
+import UpdateIcon from '../updateIcon/index.vue'
 
 export default {
  props:['orderNum'],
  
  components:{
   SmallIcon,AddCourierModal,
-  TimeLine
+  TimeLine,
+  UpdateIcon
  },
 
  data(){

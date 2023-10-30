@@ -41,26 +41,7 @@
       </vue-custom-scrollbar>
     </div>
     <div style="width: 452px;">
-      <div class="flex mb-3 justify-between">
-        <div class="flex">
-          <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
-            <SmallIcon :icon="rightList?.icon" style="font-size: 2rem;"/>
-          </div>
-          <div class="flex flex-col">
-            <div class="flex mb-1.5 items-center ">
-              <span class="xt-font category-16-600 xt-text mr-1">{{ rightList?.goodName }}</span>
-              <SmallIcon icon="akar-icons:edit" class="xt-text" style="font-size: 1.5rem;"/>
-            </div>
-            <div class="rounded-lg xt-bg-2 py-0.5 px-1.5">
-              <span class="xt-font xt-text-2 category-14-400">{{ rightList?.shipWay }}</span>
-              <span class="xt-font xt-text-2 category-14-400 ml-1">{{ rightList?.orderID }}</span> 
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center h-8 w-8 justify-center category-button pointer rounded-lg xt-bg-2">
-          <SmallIcon icon="akar-icons:trash-can" style="font-size: 1rem;"/>
-        </div>
-      </div>
+      <UpdateIcon :orderData="rightList"/>
       <div class="xt-bg-2 px-4 rounded-lg">
         <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
           <TimeLine :list="rightList?.flowDetail"/>
@@ -80,10 +61,11 @@ import { courierDetailList, courierType} from '../modalMock'
 import HorizontalPanel from '../../../HorizontalPanel.vue'
 import TimeLine from '../timeLine/index.vue'
 import AddCourierModal from '../AddCourierModal.vue'
+import UpdateIcon from '../updateIcon/index.vue'
 
 export default {
  components:{
-  SmallIcon,HorizontalPanel,TimeLine, AddCourierModal
+  SmallIcon,HorizontalPanel,TimeLine, AddCourierModal,UpdateIcon
  },
 
  data(){
