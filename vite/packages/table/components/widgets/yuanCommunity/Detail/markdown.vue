@@ -114,21 +114,16 @@ editorConfig.MENU_CONF["uploadImage"] = {
 editorConfig.MENU_CONF['bgColor'] = {
     colors: ['#333']
 }
-onMounted(() => {
-    // const editor=editorRef.value
-    // if (useYuanCommunityStore.saveContent) {
-    //     editor.dangerouslyInsertHtml(useYuanCommunityStore.saveContent)
-    // }
-    
-    
-
-})
 
 </script>
-<style lang='scss' scoped>
+<style lang='scss' >
+/* 暗色主题 */
 html.dark {
-    --w-e-textarea-bg-color: var(--primary-bg);
-    --w-e-textarea-color: var(--primary-text);
-    --w-e-bar-bg-color:var(--primary-bg)
+    --w-e-textarea-bg-color: #333;
+    --w-e-textarea-color: #fff;
+    /* ...其他... */
+}
+:deep(.w-e-text-container) {
+    background-color: transparent;
 }
 </style>

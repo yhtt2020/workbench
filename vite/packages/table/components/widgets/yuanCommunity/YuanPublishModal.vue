@@ -407,7 +407,10 @@ const publishPost = async () => {
         }));
         let coverImage
         if (coverList.value.length > 0) {
-            const coverUrlList = await fileUpload(coverList.value[0].originFileObj)
+            const coverUrlList = await Promise.all(coverList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
             coverImage = await JSON.stringify(coverUrlList);
 
         }
@@ -442,14 +445,16 @@ const publishPost = async () => {
                 await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
             }
             message.success('发布成功')
+            handleOk()
+        });
+        setTimeout(() => {
             titleValue.value = ''
             useYuanCommunityStore.saveDynamic = ''
             useYuanCommunityStore.saveContent = ''
             postValue.value = ''
             fileList.value = []
-            coverList.value = []
-            handleOk()
-        });
+            coverList.value = []   
+        },1000);
 
     }
 }

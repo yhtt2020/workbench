@@ -297,23 +297,7 @@ const fullScreen = () => {
 }
 </script>
 <style lang='scss' scoped>
-@media screen and (max-width: 1000px) {
 
-    .detail {
-        // width: 100%;
-        width: 600px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .minDetail {
-        display: block;
-    }
-
-    .maxDetail {
-        display: none;
-    }
-}
 
 .card {
     display: flex;
