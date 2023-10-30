@@ -1,5 +1,5 @@
 <template>
-    <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
+    <Widget :desk="desk" :size="size" :options="options" :customIndex="customIndex" :menuList="menuList"
         ref="cardSlot">
         <template #left-title-icon>
             <div class="icon"
@@ -74,24 +74,12 @@ export default {
     data() {
         return {
             settingVisible: false,
-            sizeList: [
-                {
-                    title: '2x2',
-                    height: 1,
-                    width: 1,
-                    name: '2x2'
-                },
+            size: [
                 {
                     title: '4x4',
                     height: 2,
                     width: 2,
                     name: '4x4'
-                },
-                {
-                    title: '4x6',
-                    height: 3,
-                    width: 2,
-                    name: '4x6'
                 },
 
             ],
