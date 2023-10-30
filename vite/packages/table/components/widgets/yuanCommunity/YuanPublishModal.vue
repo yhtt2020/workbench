@@ -63,7 +63,7 @@
                     v-if="defaultType.value !== 'dynamic'">
                     <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
                 </div>
-                <div class="w-full mt-2 h-3/4 xt-bg box font-16">
+                <div class="w-full mt-2 text-base h-3/4 xt-bg box ">
                     <div style="font-size: 1rem !important;" class="w-full h-full">
                         <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea"
                             style="border: 1px solid var(--divider);">
@@ -147,12 +147,10 @@
 
                 </div>
                 <div style="font-size: 16px !important;" v-if="coverList.length > 0">
-                    <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
+                    <!-- <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
                         @preview="handlePreview">
-                    </a-upload>
-                    <!-- <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                    <img style="width: 100%" :src="previewImage" />
-                </a-modal> -->
+                    </a-upload> -->
+                    <a-image :width="200"  :src="coverList[0]?.originFileObj.path" />
                 </div>
                 <div class="flex items-center justify-between h-[56px] ">
                     <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
@@ -291,7 +289,8 @@ const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-
+// 发布帖子
+const titleValue = ref('')
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
@@ -326,7 +325,7 @@ onMounted(() => {
         titleValue.value = useYuanCommunityStore.saveTitle
     } else {
         titleValue.value = ''
-        
+
     }
     // console.log(postValue.value,'postValue.value');
 
@@ -367,10 +366,10 @@ watch(postValue, _.debounce(savaDynamic, 500))
 // const holder = computed(() => {
 //     return props.forum.name
 // })
-const saveTitle = () => {
+const saveTitleText = () => {
     useYuanCommunityStore.saveTitle = titleValue.value
 }
-watch(titleValue, _.debounce(saveTitle, 500))
+watch(titleValue, _.debounce(saveTitleText, 500))
 // 滚动条设置
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -399,8 +398,7 @@ const handleOk = () => {
     visible.value = false
     emit('handleOk', visible)
 };
-// 发布帖子
-const titleValue = ref('')
+
 const publishPost = async () => {
     if (postValue.value || fileList.value.length > 0 || useYuanCommunityStore.saveContent) {
         const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
@@ -437,7 +435,7 @@ const publishPost = async () => {
         const imageList = await JSON.stringify(imageUrlList);
         setTimeout(async () => {
             if (defaultType.value.value == 'dynamic') {
-                let is_weibo=1
+                let is_weibo = 1
                 await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo)
             } else if (defaultType.value.value == 'post') {
                 console.log(forumId, imageList, content.value, title.value, coverImage);
@@ -457,7 +455,6 @@ const publishPost = async () => {
 }
 </script>
 <style lang='scss' scoped>
-
 :deep(.ant-upload-list-text-container) {
     display: none;
 }
@@ -473,12 +470,6 @@ const publishPost = async () => {
     font-weight: 400;
 }
 
-.font-14 {
-
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
-}
 
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;

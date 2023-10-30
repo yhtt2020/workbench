@@ -277,7 +277,7 @@ export default {
         },
         // 删除选择的板块
         handleDeselect(val) {
-            this.selectList = this.selectList.filter((item) => {
+            this.selectList = this.customData.selectList.filter((item) => {
                 return val.includes(item.index); // 过滤掉 val 中包含的索引的项目
             });
             this.selectList = this.selectList.filter((item, index) => {
@@ -288,7 +288,14 @@ export default {
         },
         saveSetting() {
             this.settingVisible = false
-        }
+        },
+        // changeTag() {
+        //     if(this.customData.selectList.length==1){
+        //         this.options.title=this.customData.selectList[0].value.name
+        //     }else{
+        //         this.options.title='元社区'
+        //     }
+        // }
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -354,11 +361,11 @@ export default {
         this.customData.forumList = this.myForumList.joined
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
-            console.log(this.defaultForum);
+            // console.log(this.defaultForum);
         }
         if(this.customData && this.customData.selectList){
             this.selectValue = this.customData.selectList.map((item)=>{
-                return item.value.name
+                return item.index
             })
             // console.log(this.selectValue);
         }
@@ -369,6 +376,7 @@ export default {
         // console.log(window.innerWidth, 'window.innerWidth');
     },
     beforeUpdate() {
+        // this.changeTag()
         if (window.innerWidth > 1200) {
             this.toggleDetail = true
         } else {

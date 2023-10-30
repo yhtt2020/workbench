@@ -1,9 +1,9 @@
 <template>
     <div class="w-full h-full">
-        <Toolbar style="border-bottom: 1px solid var(--divider);background-color: var(--primary-bg) !important;"
+        <Toolbar style="border-bottom: 1px solid var(--divider);"
             :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
 
-        <Editor style="height: 100% ; overflow-y: hidden;background-color: var(--primary-bg) !important;"
+        <Editor style="height: 100% ; overflow-y: hidden;"
             v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
     </div>
 </template>
