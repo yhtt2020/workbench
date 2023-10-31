@@ -3,7 +3,7 @@
 
   <div class="flex">
    <div class="w-14 h-14 flex items-center justify-center pointer category-button xt-bg-2 rounded-lg" @click="onUpdateImg">
-    <a-avatar :size="32" :src="avatar"></a-avatar>
+    <a-avatar :size="32" :src="detailAvatar"></a-avatar>
    </div>
    <div class="flex flex-col ml-3">
     <div class="flex ">
@@ -63,9 +63,15 @@ export default {
  },
  data(){
   return{
-   avatar:`https://a.apps.vip/icons/goodSelect/${this.orderData.icon.split(':')[1]}.svg`,
+  //  avatar:`https://a.apps.vip/icons/goodSelect/${this.orderData.icon.split(':')[1]}.svg`,
    goodIconVisible:false,
    innerHeight:100,
+  }
+ },
+
+ computed:{
+  detailAvatar(){
+    return `https://a.apps.vip/icons/goodSelect/${this.orderData.icon.split(':')[1]}.svg`;
   }
  },
 
@@ -76,13 +82,13 @@ export default {
   },
   // 获取头像
   getAvatar(avatar){
-     if(avatar.indexOf('color=') >= 0){
-       let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
-       this.bgColor = color
-     }else{
-       this.bgColor = ''
-     }
-     this.avatar = avatar
+    if(avatar.indexOf('color=') >= 0){
+      let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
+      this.bgColor = color
+    }else{
+      this.bgColor = ''
+    }
+    this.detailAvatar = avatar
    },
  }
 }

@@ -9,6 +9,7 @@
     </div>
     <div class="font-14 font-400 xt-text-2">{{ item.content }}</div>
   </a-timeline-item>
+  <div style="height: 10px;"></div>
  </a-timeline>
 </template>
 
