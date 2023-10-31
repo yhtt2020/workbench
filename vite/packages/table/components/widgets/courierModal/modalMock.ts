@@ -159,3 +159,4 @@ export const courierType = [
  {title:'派送中',name:'delivery',color:'var(--warning)'},
  {title:'已签收',name:'signed',color:'var(--success)'}
 ]
+
