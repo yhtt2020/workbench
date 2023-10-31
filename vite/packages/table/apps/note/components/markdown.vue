@@ -1,6 +1,6 @@
  <template>    
  <div class="h-full w-full" style="">
-    <div id="vditor" class="h-full" style="border-radius:10px;" ></div>
+    <div ref="vditor" class="h-full" style="border-radius:10px;" ></div>
  </div>
 
  </template>
@@ -27,18 +27,22 @@
         };
     },
     mounted(){
-        this.contentEditor = new Vditor('vditor', {
+        this.contentEditor = new Vditor(this.$refs.vditor, {
+        // this.contentEditor = new Vditor(vditor, {
             height: '100%',
-            mode:'drak',
-            // width:500,
+            mode:'ir',
+            // theme:"dark",
             toolbarConfig: {
                 pin: true,
             },
             cache: {
                 enable: false,
             }, 
+            // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
+
+            toolbar:['emoji','headings','bold','italic','strike','|','line','quote','ordered-list','check','outdent','indent','code','inline-code','insert-before','undo','redo','link','table','insert-after','preview','devtools','help','br'],
             after: () => {
-                if (this.selNote>=0) {
+                if (this.selNote>=0 && this.noteList.length) {
                     this.contentEditor.setValue(this.noteList[this.selNote].customData.text)
                 }
             },
@@ -48,8 +52,8 @@
                     if(this.noteList[this.selNote].deskName != ''){
                         let n = -1
                         this.deskList.forEach((item,index)=>{
-                            if (item.id == this.noteList[this.selNote].desk.id) {
-                            n = index
+                            if (item.id == this.noteList[this.selNote].deskId) {
+                                n = index
                             }
                         })
                         if (n>=0) {
@@ -62,14 +66,13 @@
                             );
                         }
                     }
-
                     this.noteList[this.selNote].customData.text = value
 
                     this.saveDeskNote(this.noteList[this.selNote].id,value)
                 }
             }
         })
-        // this.contentEditor.setValue('f5f5a4')x
+        // this.contentEditor.setValue('f5f5a4')
     },
    methods:{
         ...mapActions(cardStore, ['updateCustomData']),
@@ -78,11 +81,9 @@
    },
    watch:{
     selNote(newval,oldval){
-        //console.log('new',newval);
-        //console.log(this.noteList);
-        if(newval>=0){
-            this.contentEditor.setValue(this.noteList[newval].customData.text)
+        if(newval>=0 && this.noteList.length>=0){
             this.tmpData = this.noteList[newval].customData.text
+            this.contentEditor.setValue(this.noteList[newval].customData.text)
         }
     }
    }
@@ -107,7 +108,7 @@
             // background: transparent;
     }
     // :deep(.vditor-ir pre.vditor-reset:focus){
-        //     // background: transparent;
+    //         // background: transparent;
     //     background: rgba(255,255,255,0.4);
     // }
 

@@ -168,9 +168,9 @@
 
                 },
             ],
-            timer:setTimeout(()=>{
-                this.timeout();
-            },2000),
+            // timer:setTimeout(()=>{
+            //     this.timeout();
+            // },2000),
             
         };
     },
@@ -187,7 +187,7 @@
             // console.log('改变了');
             let nowIndex = -1;
             this.deskList.forEach((item,index)=>{
-                if (item.id ==this.noteList[this.selNote].desk.id) {
+                if (item.id ==this.noteList[this.selNote].deskId) {
                 nowIndex = index
                 }
             })
@@ -199,32 +199,32 @@
         this.changeBg(this.noteBgColor[i])
         this.isColor=false
     },
-    timeout(){
-        // 这里将数据自动保存到桌面
-        if (this.selNoteTitle ) {
-            if (this.noteList[this.selNote].desk!='') {
-                let n = -1;
-                this.deskList.forEach((item,index)=>{
-                    if (item.name == this.noteList[this.selNote].deskName) {
-                        n = index
-                    }
-                })
-                this.updateCustomData(this.noteList[this.selNote].id,{
-                    title:this.selNoteTitle,
-                    text:this.selNoteText
-                },this.deskList[n])
-            }
-            this.saveNoteDb()
-        }
-    },
-    clear(){
-        clearTimeout(this.timer)
-        this.timer=null
-    },
+    // timeout(){
+    //     // 这里将数据自动保存到桌面
+    //     if (this.selNoteTitle ) {
+    //         if (this.noteList[this.selNote].desk!='') {
+    //             let n = -1;
+    //             this.deskList.forEach((item,index)=>{
+    //                 if (item.name == this.noteList[this.selNote].deskName) {
+    //                     n = index
+    //                 }
+    //             })
+    //             this.updateCustomData(this.noteList[this.selNote].id,{
+    //                 title:this.selNoteTitle,
+    //                 text:this.selNoteText
+    //             },this.deskList[n])
+    //         }
+    //         this.saveNoteDb()
+    //     }
+    // },
+    // clear(){
+    //     clearTimeout(this.timer)
+    //     this.timer=null
+    // },
     changeNoteTitle(e){
-        console.log(e.target.value);
+        // console.log(e.target.value);
         if (this.noteList[this.selNote].customData.title != e.target.value) {
-            console.log('开始保存');
+            // console.log('开始保存');
             let n = -1;
             this.deskList.forEach((item,index)=>{
                 if (item.name == this.noteList[this.selNote].deskName) {
@@ -256,8 +256,8 @@
     // },
     
     isSelTab(newval,oldval){
-        console.log('监听到了');
-        console.log(newval);
+        // console.log('监听到了');
+        // console.log(newval);
         if (newval) {
             this.menus[0].label = '还原'
             this.menus[1].label = '彻底删除'

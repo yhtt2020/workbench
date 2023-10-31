@@ -20,8 +20,9 @@
             </div>
           </div>
           <div style="height: 428px;" >
-            <div class="mb-4">我的桌面（{{ this.desks.length }}）</div>
-            <div class="overflow-hidden xt-scrollbar" style="height: 336px;">
+            <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
+            <div style="background: #2A2A2A;border-radius: 10px; padding: 10px 12px;">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
+            <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
               <div class="w-full flex items-center rounded-lg" 
                 style="height: 64px;background: #2A2A2A;justify-content: space-between;padding: 0 24px;" 
                 v-for="(item,index) in this.desks" 
@@ -84,7 +85,8 @@
       }
     },
     mounted () {
-      // this.getNotes()
+      // console.log('初始化');
+      this.getNotes()
     },
     computed: {
           ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
@@ -115,7 +117,7 @@
       // 选择桌面
       selDesk(){
         this.desks.forEach((item,index) => {
-          if(item.id == this.noteList[this.selNote].desk.id){
+          if(item.id == this.noteList[this.selNote].deskId){
             this.selIndex = index
           }
         });

@@ -1,6 +1,6 @@
  <template>    
  <div class="h-full w-full " style="">
-    <div id="vditor" class="h-full xt-scroll " style="border-radius:10px;padding: 0;" ></div>
+    <div ref="vditor" class="h-full " style="border-radius:10px;padding: 0;" ></div>
  </div>
 
  </template>
@@ -11,7 +11,6 @@
 import {cardStore} from "../../../store/card";
 import {noteStore} from "../../../apps/note/store";
 import {mapActions, mapState,mapWritableState} from "pinia";
-//  import 
 
  export default {
    components: {
@@ -28,7 +27,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
         };
     },
     mounted(){
-        this.contentEditor = new Vditor('vditor', {
+        this.contentEditor = new Vditor(this.$refs.vditor, {
             height: '100%',
             toolbarConfig: {
                 pin: true,
@@ -43,7 +42,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
             toolbar:[],
             blur:(value)=>{
                 // console.log(this.customData.text);
-                console.log(this.desk);
+                // console.log(this.desk);
 
                 if (this.tmpData != value) {
                     this.updateCustomData(
@@ -85,12 +84,31 @@ import {mapActions, mapState,mapWritableState} from "pinia";
     :deep(.vditor-ir pre.vditor-reset:focus){
         background: transparent;
     }
-
-
-
     :deep(.hljs){
         color: #fff;
         background: transparent;
+    }
+
+    :deep(.vditor-ir::-webkit-scrollbar-thumb){
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+    :deep(.vditor-ir::-webkit-scrollbar-thumb:hover){
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+    :deep(.vditor-ir::-webkit-scrollbar-track){
+        border-radius: 6px; /* 轨道圆角 */
+    }
+
+    :deep(.vditor-reset::-webkit-scrollbar-thumb){
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+    :deep(.vditor-reset::-webkit-scrollbar-thumb:hover){
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+    :deep(.vditor-reset::-webkit-scrollbar-track){
+        border-radius: 6px; /* 轨道圆角 */
     }
 
     

@@ -25,7 +25,7 @@
             <div @click="this.findAll">db数据</div>
             <div>{{ this.isSelTab }}</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
-                <div @click="changeNote(index)" style="min-width: 296px;height:134px;;border-radius: 10px;padding: 12px;"
+                <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
                 :class="index == this.selNote?'note-active':''">
                     <div class="flex list-top font-16" style="color: var(--primary-text);justify-content: space-between;">
@@ -57,7 +57,7 @@
                             </template>
                         </a-dropdown>
                     </div>
-                    <div class="mt-2 w-full two-hidden" style="height:46px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
+                    <div class="mt-2 w-full two-hidden" style="min-height:22px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
                         {{ item.hasOwnProperty('customData')?item.customData.text:'' }}
                     </div>
                     <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
