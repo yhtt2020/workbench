@@ -25,7 +25,7 @@
                 <template v-else>
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                        <CourierItem   :courier="this.courierMsg" />
+                        <CourierItem v-for="(item,index) in courierDetailList" :key="index"   :courier="item" />
                     </vue-custom-scrollbar>
                     <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
                         style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
@@ -130,10 +130,13 @@ export default {
     },
     methods: {
         ...mapActions(courierStore, ['getCourierMsg']),
+        refreshCourier() {
+            this.getCourierMsg('YD','463193332336436')
+        }
 
     },
     computed: {
-        ...mapWritableState(courierStore,['courierMsgList']),
+        ...mapWritableState(courierStore,['courierMsgList','courierDetailList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -152,9 +155,9 @@ export default {
             return this.courierMsgList
         }
     },
-    mounted() {
-        this.getCourierMsg('YD','463193332336436')
-    },
+    // mounted() {
+    //     this.getCourierMsg('YD','463193332336436')
+    // },
 
 }
 </script>

@@ -8,6 +8,12 @@ const kdniao=sUrl('/app/kdniao/realTimeQuery')
 export const courierStore = defineStore("courier", {
     state: () => ({
         courierMsgList: [],
+        courierDetailList: [
+            {
+                shipperCode:'YD',
+                logisticCode:'463193332336436',
+            }
+        ],
     }),
     actions: {
         async getCourierMsg(shipperCode,logisticCode,customerName='') {
@@ -22,7 +28,7 @@ export const courierStore = defineStore("courier", {
                 logisticCode,
                 customerName
             })
-            console.log(response,'response');
+            // console.log(response,'response');
             
             if (response.Success) {
                 this.courierMsgList = response
@@ -31,6 +37,15 @@ export const courierStore = defineStore("courier", {
             
             localCache.set(cacheTag,this.courierMsgList,24*60*60)
         },
+        addCourierEvent(event){
+            this.courierDetailList.push(event)
+        },
+        removeCourierEvent(event){
+            this.courierDetailList=this.courierDetailList.filter(item=>{
+                return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
+            })
+        },
+
     },
     persist: {
         enabled: true,

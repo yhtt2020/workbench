@@ -92,9 +92,6 @@ export const kdCompany=(shipperCode)=>{
         case 'STO':
             return '申通快递';
             break;
-        case 'YUNDA':
-            return '韵达快递';
-            break;
         case 'YZPY':
             return '邮政快递包裹';
             break;

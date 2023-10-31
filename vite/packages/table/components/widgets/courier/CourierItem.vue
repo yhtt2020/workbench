@@ -7,7 +7,7 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ props.courier.LogisticCode }}</div>
+                <div style="font-size: 16px;" class="xt-text">{{ useCourierStore.courierMsgList.LogisticCode }}</div>
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
@@ -21,47 +21,64 @@
                 {{ lastTraces.AcceptTime }}
             </div>
             <div class="mt-2 xt-text omit" style="font-size: 14px;">
-                {{ lastTraces.AcceptStation}}
+                {{ lastTraces.AcceptStation }}
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed,onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
-import {courierStore} from '../../../store/courier'
-import {kdCompany,kdState} from './mock'
+import { courierStore } from '../../../store/courier'
+import { kdCompany, kdState } from './mock'
+const useCourierStore = courierStore()
 const props = defineProps({ courier: Object })
 const stateColor = computed(() => {
-    switch (props.courier.State) {
+    switch (useCourierStore.courierMsgList.State) {
         case "0":
-            return '';
+            return '#508BFE';
+            break;
         case "1":
             return '#43CADE';
+            break;
         case "2":
             return '#508BFE';
+            break;
         case "3":
             return '#FA7B14';
+            break;
         case "4":
             return '#52C41A';
+            break;
+        case "5":
+            return '#508BFE';
+            break;
+        case "6":
+            return '#508BFE';
+            break;
+
         default:
-            return '';
+            return '#508BFE';
     }
 })
-const switchCompany=computed(()=>{
-    return kdCompany(props.courier.ShipperCode)
-    
+const switchCompany = computed(() => {
+    return kdCompany(useCourierStore.courierMsgList.ShipperCode)
+
 })
-const switchState=computed(()=>{
-    return kdState(props.courier.State)
+const switchState = computed(() => {
+    return kdState(useCourierStore.courierMsgList.State)
 })
-const lastTraces=computed(()=>{
-    return props.courier.Traces[props.courier.Traces.length-1]
+const lastTraces = ref({AcceptTime:null,AcceptStation:null})
+onMounted(() => {
+    useCourierStore.getCourierMsg(props.courier.shopperCode, props.courier.logisticCode)
+    setTimeout(() => {
+        lastTraces.value = useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
+    });
 })
 </script>
 <style lang='scss' scoped>
-.omit{
+.omit {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -74,6 +91,7 @@ const lastTraces=computed(()=>{
     border-radius: 12px;
     padding: 12px;
     transform: all 0.3s;
+
     &:hover {
         background-color: var(--active-secondary-bg);
     }
