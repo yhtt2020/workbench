@@ -30,6 +30,7 @@
 <script setup lang='ts'>
 import { ref, reactive,computed } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
+import {courierStore} from '../../../store/courier'
 const props = defineProps({ courier: Object })
 const stateColor = computed(() => {
     switch (props.courier.state) {

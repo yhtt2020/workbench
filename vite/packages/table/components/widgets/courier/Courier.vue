@@ -133,6 +133,7 @@ export default {
 
     },
     computed: {
+        ...mapWritableState(courier,['courierMsgList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
