@@ -7,24 +7,24 @@
                 </div>
                 <div class="ml-2 flex flex-col justify-between h-[56px]" >
                     <div class="text-base xt-text pointer">
-                        {{ courier[0].name }}
+                        {{ courierCode }}
                     </div>
                     <div class="flex xt-text-2 h-[24px]" style="font-size: 14px;text-align: center;">
                         <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                            {{ courier[0].company }}
+                            {{switchCompany }}
                         </div>
                         <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColor }">
-                            {{ courier[0].status }}
+                            {{ switchState }}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="w-full h-[84px] xt-bg rounded-xl p-3 pt-2 mt-2 pointer" style="text-align: left;">
                 <div class="xt-text-2 ">
-                    {{ courier[0].time }}
+                    {{ lastTraces.AcceptTime }}
                 </div>
                 <div class="mt-1 xt-text omit">
-                    {{ courier[0].road }}
+                    {{ lastTraces.AcceptStation }}
                 </div>
             </div>
         </div>
@@ -33,24 +33,59 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive,computed,onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
-import { courier } from './mock'
+import { courierStore } from '../../../store/courier'
+import { kdCompany, kdState } from './mock'
+const useCourierStore = courierStore()
+const props = defineProps({ courier: Object })
 const stateColor = computed(() => {
-    switch (courier[0].state) {
-        case 0:
-            return '';
-        case 1:
-            return '#43CADE';
-        case 2:
+    switch (useCourierStore.courierMsgList.State) {
+        case "0":
             return '#508BFE';
-        case 3:
+            break;
+        case "1":
+            return '#43CADE';
+            break;
+        case "2":
+            return '#508BFE';
+            break;
+        case "3":
             return '#FA7B14';
-        case 4:
+            break;
+        case "4":
             return '#52C41A';
+            break;
+        case "5":
+            return '#508BFE';
+            break;
+        case "6":
+            return '#508BFE';
+            break;
+
         default:
-            return '';
+            return '#508BFE';
     }
+})
+const courierCode=computed(()=>{
+    const code=useCourierStore.courierMsgList.LogisticCode
+    let start=code.substring(0,4)
+    let end=code.substring(code.length-4)
+    return ` ${start} - ${end}`
+})
+const switchCompany = computed(() => {
+    return kdCompany(useCourierStore.courierMsgList.ShipperCode)
+
+})
+const switchState = computed(() => {
+    return kdState(useCourierStore.courierMsgList.State)
+})
+const lastTraces = ref({AcceptTime:null,AcceptStation:null})
+onMounted(() => {
+    useCourierStore.getCourierMsg(props.courier.shopperCode, props.courier.logisticCode)
+    setTimeout(() => {
+        lastTraces.value = useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
+    });
 })
 </script>
 <style lang='scss' scoped>

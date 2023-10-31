@@ -18,7 +18,7 @@
             <!-- {{ courierList.length }} -->
             <div v-if="showWay">
                 <MinEmpty v-if="courierList.length <= 0" />
-                <MinCourierItem v-else></MinCourierItem>
+                <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
             </div>
             <template v-else>
                 <Empty v-if="courierList.length <= 0" />

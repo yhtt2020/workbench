@@ -7,7 +7,7 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ useCourierStore.courierMsgList.LogisticCode }}</div>
+                <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
@@ -61,6 +61,12 @@ const stateColor = computed(() => {
         default:
             return '#508BFE';
     }
+})
+const courierCode=computed(()=>{
+    const code=useCourierStore.courierMsgList.LogisticCode
+    let start=code.substring(0,4)
+    let end=code.substring(code.length-4)
+    return ` ${start} - ${end}`
 })
 const switchCompany = computed(() => {
     return kdCompany(useCourierStore.courierMsgList.ShipperCode)
