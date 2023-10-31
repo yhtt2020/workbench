@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center w-full">
+    <div class="flex flex-col items-center w-full" style="margin: 0 auto;">
         <div class="w-[452px] flex flex-col items-center  mt-3">
             <div>
                 <newIcon icon="fluent-emoji:package" style="font-size: 56px;" />

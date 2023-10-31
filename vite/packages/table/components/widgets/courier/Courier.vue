@@ -17,11 +17,11 @@
             </div>
             <!-- {{ courierList.length }} -->
             <div v-if="showWay">
-                <MinEmpty v-if="courierList.length <= 0" />
+                <MinEmpty v-if="courierDetailList.length <= 0" />
                 <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
             </div>
             <template v-else>
-                <Empty v-if="courierList.length <= 0" />
+                <Empty v-if="courierDetailList.length <= 0" />
                 <template v-else>
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">

@@ -12,7 +12,15 @@ export const courierStore = defineStore("courier", {
             {
                 shipperCode:'YD',
                 logisticCode:'463193332336436',
-            }
+            },
+            {
+                shipperCode:'YD',
+                logisticCode:'463193332336436',
+            },
+            {
+                shipperCode:'YD',
+                logisticCode:'463193332336436',
+            },
         ],
     }),
     actions: {
