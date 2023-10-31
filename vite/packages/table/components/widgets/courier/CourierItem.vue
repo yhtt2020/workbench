@@ -7,46 +7,57 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ props.courier.name }}</div>
+                <div style="font-size: 16px;" class="xt-text">{{ props.courier.LogisticCode }}</div>
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ props.courier.company }}
+                        {{ switchCompany }}
                     </div>
                     <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor }">
-                        {{ props.courier.status }}
+                        {{ switchState }}
                     </div>
                 </div>
             </div>
             <div class="mt-2 xt-text-2" style="font-size: 14px;">
-                {{ props.courier.time }}
+                {{ lastTraces.AcceptTime }}
             </div>
             <div class="mt-2 xt-text omit" style="font-size: 14px;">
-                {{ props.courier.road }}
+                {{ lastTraces.AcceptStation}}
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive,computed,onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
 import {courierStore} from '../../../store/courier'
+import {kdCompany,kdState} from './mock'
 const props = defineProps({ courier: Object })
 const stateColor = computed(() => {
-    switch (props.courier.state) {
-        case 0:
+    switch (props.courier.State) {
+        case "0":
             return '';
-        case 1:
+        case "1":
             return '#43CADE';
-        case 2:
+        case "2":
             return '#508BFE';
-        case 3:
+        case "3":
             return '#FA7B14';
-        case 4:
+        case "4":
             return '#52C41A';
         default:
             return '';
     }
+})
+const switchCompany=computed(()=>{
+    return kdCompany(props.courier.ShipperCode)
+    
+})
+const switchState=computed(()=>{
+    return kdState(props.courier.State)
+})
+const lastTraces=computed(()=>{
+    return props.courier.Traces[props.courier.Traces.length-1]
 })
 </script>
 <style lang='scss' scoped>

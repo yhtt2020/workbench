@@ -1,3 +1,5 @@
+import exp from "constants"
+
 export const courier=([
     {
         name:'ZT00003618100',
@@ -72,4 +74,74 @@ export const courier=([
         state:3
     },
 ])
+
+export const kdCompany=(shipperCode)=>{
+    switch (shipperCode) {
+        case 'SF':
+            return '顺丰快递';
+            break;
+        case 'ZTO':
+            return '中通快递';
+            break;
+        case 'YTO':
+            return '圆通快递';
+            break;
+        case 'HTKY':
+            return '百世快递';
+            break;
+        case 'STO':
+            return '申通快递';
+            break;
+        case 'YUNDA':
+            return '韵达快递';
+            break;
+        case 'YZPY':
+            return '邮政快递包裹';
+            break;
+        case 'EMS':
+            return 'EMS';
+            break;
+        case 'JD':
+            return '京东快递';
+            break;
+        case 'YD':
+            return '韵达快递';
+            break;
+        case 'JTSD':
+            return '极兔速递';
+            break;
+        case 'CNSD':
+            return '菜鸟直送';
+            break;
+        case 'CNCY':
+            return '菜鸟橙运';
+            break;
+    }
+}
+
+export const kdState=(state)=>{
+    switch (state) {
+        case "0":
+            return '暂无轨迹信息';
+            break;
+        case "1":
+            return '已揽收';
+            break;
+        case "2":
+            return '在途中';
+            break;
+        case "3":
+            return '已签收';
+            break;
+        case "4":
+            return '问题件';
+            break;
+        case "5":
+            return '转寄';
+            break;
+        case "6":
+            return '清关';
+            break;
+    }
+}
 

@@ -25,7 +25,7 @@
                 <template v-else>
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                        <CourierItem v-for="(item, index) in courierList" :key="index" :courier="item" />
+                        <CourierItem   :courier="this.courierMsg" />
                     </vue-custom-scrollbar>
                     <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
                         style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
@@ -133,7 +133,7 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courier,['courierMsgList']),
+        ...mapWritableState(courierStore,['courierMsgList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -147,6 +147,9 @@ export default {
             } else {
                 return false
             }
+        },
+        courierMsg(){
+            return this.courierMsgList
         }
     },
     mounted() {
