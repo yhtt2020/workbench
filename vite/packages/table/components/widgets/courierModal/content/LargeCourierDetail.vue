@@ -22,7 +22,7 @@
           </div>
           <div class="flex flex-col" style="width: calc(100% - 84px);">
             <div class="flex items-center justify-between ">
-              <span class="xt-font category-16-600">
+              <span class="xt-font font-16 font-600">
                 {{ item.goodName }}
               </span>
               <div class="flex">
@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="my-2">{{ item.time }}</div>
-            <div class="small-description">
+            <div class="summary">
               {{ item.goodDescription }}
             </div>
           </div>
@@ -168,7 +168,7 @@ export default {
   width: 96px;
   border-radius: 8px !important;
 }
-.small-description{
+.summary{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;

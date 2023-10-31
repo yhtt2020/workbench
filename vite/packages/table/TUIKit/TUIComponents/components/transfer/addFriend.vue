@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col mb-3" style="padding: 12px; width: 650px; height: 530px;" v-if="isNextShow === false">
     <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-      <div class="category-16-400 flex items-center justify-center" style="color:var(--primary-text);">选择联系人</div>
+      <div class="font-16 font-400 flex items-center justify-center" style="color:var(--primary-text);">选择联系人</div>
       <div class="flex rounded-lg close-button category-button pointer items-center w-12 h-12 justify-center"
        style="background: var(--secondary-bg);" @click="closeContact" 
       >
@@ -46,10 +46,10 @@
         </vue-custom-scrollbar>
 
         <div class="flex justify-end" style="height: 40px;">
-          <div class="flex items-center rounded-md pointer category-16-400 category-button justify-center"  style="width: 100px;color: var(--secondary-text); background: var(--secondary-bg);" @click="closeContact">
+          <div class="flex items-center rounded-md pointer font-16 font-400 category-button justify-center"  style="width: 100px;color: var(--secondary-text); background: var(--secondary-bg);" @click="closeContact">
             取消
            </div>
-           <div class="flex items-center rounded-md pointer category-16-400 category-button justify-center" style="width: 100px;color: var(--active-text);background: var(--active-bg);margin-left: 12px;" @click="enterNextStep">
+           <div class="flex items-center rounded-md pointer font-16 font-400 category-button justify-center" style="width: 100px;color: var(--active-text);background: var(--active-bg);margin-left: 12px;" @click="enterNextStep">
             确定
            </div>
         </div>

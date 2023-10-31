@@ -10,7 +10,7 @@
               <div v-else class="w-8 h-8">
                 <img :src="top.img" class="w-full h-full object-cover">
               </div>
-              <span class="category-16-500 xt-text ml-3 xt-font">{{ top.title }}</span>
+              <span class="font-16 font-500 xt-text ml-3 xt-font">{{ top.title }}</span>
             </div>
             <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll(top.type)"/>
           </div>
@@ -21,7 +21,7 @@
 
       <template v-else>
         <div class="flex flex-col w-full">
-          <span class="category-16-500 mb-3 xt-text xt-font">设置</span>
+          <span class="font-16 font-500 mb-3 xt-text xt-font">设置</span>
           <NoticeSetting />
         </div>
       </template>

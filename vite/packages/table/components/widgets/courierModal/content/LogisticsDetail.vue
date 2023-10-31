@@ -7,7 +7,7 @@
      </div>
    </div>
 
-   <div class="xt-text category-16-400 ">物流详情</div>
+   <div class="xt-text font-16 font-400 ">物流详情</div>
     
    <div class="top-right flex">
     <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">

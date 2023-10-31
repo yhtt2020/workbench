@@ -10,13 +10,13 @@
           <div class="flex justify-between mb-3">
             <div class="flex">
               <a-avatar :size="24" shape="circle"  :src="item.content.icon"></a-avatar>
-              <div class="category-16-400 xt-font xt-text ml-3">
+              <div class="font-16 font-400 xt-font xt-text ml-3">
                 {{ item.content.title }}
               </div>
             </div>
             <DetailIcon icon="akar-icons:circle-x-fill" class="category-button pointer" style="font-size: 1.25rem;color:var(--secondary-text);" @click="delSingleHistoryNotice(item)"/>
           </div>
-          <div class="category-16-400 xt-font xt-text mb-2">
+          <div class="font-16 font-400 xt-font xt-text mb-2">
             {{ item.content.body }}
           </div> 
           <div class="flex justify-between">

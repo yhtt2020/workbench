@@ -57,7 +57,7 @@
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.name !== 'Roadmap' && currentChannel.props.openMethod !== 'currentPage'" class="flex items-center justify-center" style="text-align: center;margin-top: 30%">
 
-            <span class="category-16-400" style="color:var(--primary-text);">当前频道需要浏览器打开。</span>
+            <span class="font-16 font-400" style="color:var(--primary-text);">当前频道需要浏览器打开。</span>
             <communityIcon icon="fluent:open-20-filled"  style="font-size: 24px"/>
           </div>
 
@@ -269,21 +269,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.font-500 {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.font-14 {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.font-16 {
-  font-size: 16px;
-  font-weight: 400;
-}
-
 .group-item {
   &:active {
     filter: brightness(0.8);
@@ -302,17 +287,6 @@ export default {
 
 .flip {
   transform: rotateY(180deg)
-}
-
-.active-button {
-  &:active {
-    filter: brightness(0.8);
-    opacity: 0.8;
-  }
-
-  &:hover {
-    opacity: 0.8;
-  }
 }
 
 .active-bg {

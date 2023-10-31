@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col" style="width:500px;">
   <div class="w-full flex items-center justify-center py-5" style="position: relative;">
-   <span class="xt-text xt-font category-16-400">添加快递</span>
+   <span class="xt-text xt-font font-16 font-400">添加快递</span>
    <div class="flex close-button pointer items-center justify-center p-2 category-button rounded-xl xt-bg-2" @click="close">
     <CourierIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25rem;color:var(--secondary-text);"/>
    </div>

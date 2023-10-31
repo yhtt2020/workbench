@@ -3,11 +3,11 @@
   <a-timeline-item v-for="item in list" class="item-time">
     <div class="flex">
      <template v-if="item.title !==''">
-      <div  class="category-16-600 xt-font mr-4" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'"> {{ item.title }}</div>
+      <div  class="font-16 font-600 xt-font mr-4" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'"> {{ item.title }}</div>
      </template>
-     <div class="category-14-400 xt-font" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'">{{ item.time }}</div>
+     <div class="font-14 font-400 xt-font" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'">{{ item.time }}</div>
     </div>
-    <div class="category-14-400 xt-text-2">{{ item.content }}</div>
+    <div class="font-14 font-400 xt-text-2">{{ item.content }}</div>
   </a-timeline-item>
  </a-timeline>
 </template>

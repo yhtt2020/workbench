@@ -7,13 +7,13 @@
    </div>
    <div class="flex flex-col ml-3">
     <div class="flex ">
-      <span class="xt-font category-16-600 xt-text mr-1">{{ orderData?.goodName }}</span>
+      <span class="xt-font font-16 font-600 xt-text mr-1">{{ orderData?.goodName }}</span>
       <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
     </div>
 
     <div class="px-1.5 py-0.5">
-     <span class="xt-font xt-text-2 category-14-400">{{ orderData?.shipWay }}</span>
-     <span class="xt-font xt-text-2 category-14-400 ml-1">{{ orderData?.orderID }}</span>
+     <span class="xt-font xt-text-2 font-14 font-400">{{ orderData?.shipWay }}</span>
+     <span class="xt-font xt-text-2 font-14 font-400 ml-1">{{ orderData?.orderID }}</span>
     </div>
 
    </div>
