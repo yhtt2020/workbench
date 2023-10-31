@@ -1,4 +1,4 @@
-export const goodIcon = [
+export const goodList = [
  {
   name:'package',
   alias:'包裹'

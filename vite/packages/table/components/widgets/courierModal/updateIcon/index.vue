@@ -19,7 +19,7 @@
    </div>
   </div>
 
-  <GoodIcon v-show="goodIconVisible" :windowHeight="innerHeight" @getAvatar="getAvatar" />
+  <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar" />
 
   <div class="flex items-center h-8 w-8 justify-center category-button pointer rounded-lg xt-bg-2">
    <SmallIcon icon="akar-icons:trash-can" style="font-size: 1rem;"/>
@@ -53,12 +53,13 @@
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
 
-import GoodIcon from '../../../../../selectIcon/page/good.vue'
+import GoodIcon from '../../../../../selectIcon/page/index.vue'
 
 export default {
  props:['orderData'],
  components:{
-  SmallIcon,GoodIcon
+  SmallIcon,
+  GoodIcon
  },
  data(){
   return{
@@ -88,5 +89,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.float-icon){
+  top:125px !important;
+}
 </style>

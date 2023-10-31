@@ -4,7 +4,7 @@
       <div class="top-icon flex">
         <div class="type-select flex">
           <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''">Emojis</span>
-          <span @click="onSelChange(2)" :class="selIndex == 2 ? 'active':''">Icons</span>
+          <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''">Icons</span>
           <span @click="onSelChange(3)" v-if="this.isCustom" :class="selIndex == 3 ? 'active':''">自定义</span>
         </div>
         <div class="flex items-center pointer" @click="clearAvatar">移除</div>
@@ -52,10 +52,14 @@
       <!-- 搜索结果 -->
       <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
         <div v-for="(item,index) in searchIcon" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <a-tooltip>
+          <a-tooltip v-if="goodVisible">
             <template #title>{{ item.alias }}</template>
             <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
             <a-avatar v-show="selIndex==2"  :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20"></a-avatar>
+          </a-tooltip>
+          <a-tooltip v-else>
+            <template #title>{{ item.alias }}</template>
+            <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/goodSelect/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
           </a-tooltip>
         </div>
       </div>
@@ -64,7 +68,8 @@
         <div v-for="(item,index) in emojisList" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
-            <a-avatar :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
+            <a-avatar v-if="goodVisible" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
+            <a-avatar v-else :src="'https://a.apps.vip/icons/goodSelect/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
           </a-tooltip>
         </div>
       </div>
@@ -99,6 +104,7 @@
   <script>
   import icon from '../components/IconListData/icon'
   import emojis from '../components/IconListData/emojis'
+  import { goodList } from '../components/goods'
   import {fileUpload} from '../../table/components/card/hooks/imageProcessing'
   import { Icon } from '@iconify/vue';
   import arrowSync20Filled from '@iconify-icons/fluent/arrow-sync-20-filled';
@@ -114,6 +120,7 @@
       isCustom:Boolean,
       customTitle:String,
       windowHeight:Number,
+      goodVisible:Boolean,
     },
           
     computed:{
@@ -125,7 +132,9 @@
               tmpList.push(value)
             }
           })
-        }else if(this.selIndex == 2){
+
+        }
+        else if(this.selIndex == 2){
           this.iconList.forEach((value, index)=>{
             if ((value.alias.indexOf(this.searchValue) >= 0)  || (value.name.indexOf(this.searchValue) >= 0)) {
               tmpList.push(value)
@@ -156,7 +165,7 @@
 				  add16Filled,
         },
         iconList:icon.list,
-        emojisList:emojis.list,
+        emojisList:this.goodVisible ?  emojis.list : goodList,
         topHeight:0,
         
       }  
@@ -178,7 +187,12 @@
       onSelectIcon(n,type,url){
         this.selectIcon = n
         if(this.selIndex==1){
-          this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+url+'.svg')
+          
+          if(this.goodVisible){
+            this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+url+'.svg')
+          }else{
+            this.$emit('getAvatar','https://a.apps.vip/icons/goodSelect/'+url+'.svg')
+          }
         }else{
           this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+url+'.svg?color=' + this.bgColor[this.selBgColor])
         }
@@ -193,7 +207,11 @@
         let randomNum = Math.round(Math.random()*randomLength);
         this.selectIcon = randomNum;
         if(this.selIndex == 1){
-          this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+this.emojisList[randomNum].name+'.svg')
+          if(this.goodVisible){
+            this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+this.emojisList[randomNum].name+'.svg')
+          }else{
+            this.$emit('getAvatar','https://a.apps.vip/icons/goodSelect/'+this.emojisList[randomNum].name+'.svg')
+          }
         }else{
           this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+this.iconList[randomNum].name+'.svg?color=' + this.bgColor[this.selBgColor])
         }
