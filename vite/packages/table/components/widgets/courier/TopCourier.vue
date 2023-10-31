@@ -79,7 +79,7 @@
             </vue-custom-scrollbar>
         </div>
     </div>
-    <xt-button :w="60" :h="32" v-if="courierDetailList.length > 0"
+    <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
         style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
         @click="showTopCourier">
         <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />

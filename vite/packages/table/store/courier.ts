@@ -41,7 +41,7 @@ export const courierStore = defineStore("courier", {
             if (response.Success) {
                 this.courierMsgList = response
             }
-            console.log(this.courierMsgList,'this.courierMsgList');
+            // console.log(this.courierMsgList,'this.courierMsgList');
             
             localCache.set(cacheTag,this.courierMsgList,24*60*60)
         },
