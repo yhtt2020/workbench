@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import dbStorage from '../../../store/dbStorage'
+import dbStorage from '../../../../store/dbStorage'
 
 // @ts-ignore
 export const courierModalStore = defineStore('courierModal',{

@@ -44,6 +44,8 @@
         </div>
 
     </Widget>
+    <LargeCourierModal />
+    <SmallCourierModal />
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
@@ -55,6 +57,8 @@ import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
+import LargeCourierModal from './courierModal/LargeCourierModal.vue';
+import SmallCourierModal from './courierModal/SmallCourierModal.vue';
 export default {
     name: '我的快递',
     components: {
@@ -63,7 +67,9 @@ export default {
         CourierItem,
         MinCourierItem,
         Empty,
-        MinEmpty
+        MinEmpty,
+        LargeCourierModal,
+        SmallCourierModal
     },
     props: {
         customIndex: {
@@ -139,7 +145,7 @@ export default {
     methods: {
         ...mapActions(courierStore, ['getCourierMsg']),
         refreshCourier() {
-            this.getCourierMsg('YD', '463193332336436')
+            // this.getCourierMsg('YD', '463193332336436')
         }
 
     },

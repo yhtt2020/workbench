@@ -1,9 +1,9 @@
 <template>
  <div class="flex flex-col" style="width: 976px;height: 600px;">
-  <div class="w-full py-4 flex items-center justify-center" style="position: relative;">
+  <div class="flex items-center justify-center w-full py-4" style="position: relative;">
    <HorizontalPanel :navList="flowType" v-model:selectType="defaultFlow"/>
 
-   <div class="right-button flex">
+   <div class="flex right-button">
     <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
      <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;"/>
     </div>
@@ -13,16 +13,16 @@
     </div>
 
 
-    <div class="flex ml-3 items-center justify-center category-button pointer rounded-lg w-8 h-8 xt-bg-2" @click="close">
+    <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2" @click="close">
      <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
     </div>
    </div>
   </div>
 
   <template v-if="largeList?.length === 0">
-   <div class="flex flex-col items-center h-full justify-center px-6">
+   <div class="flex flex-col items-center justify-center h-full px-6">
      <SmallIcon icon="fluent-emoji:package" style="font-size: 3.5rem;"/>
-     <div class="my-4 xt-bg-2 xt-text rounded-lg px-4 py-3">
+     <div class="px-4 py-3 my-4 rounded-lg xt-bg-2 xt-text">
        在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标。
      </div>
      <xt-button w="95" type="theme" h="40" @click="addCourier">添加快递</xt-button>
@@ -30,14 +30,14 @@
   </template>
 
   <template v-else>
-   <div class="px-6 flex justify-between">
+   <div class="flex justify-between px-6">
 
     <SortList v-if="allVisible" :list="filterList"  @rightSelect="getRightItem"/>
 
     <div style="width: 452px;" v-else class="flex flex-col">
      <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-      <div v-for="item in otherList" :class="{'select':currentID === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
-       <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
+      <div v-for="item in otherList" :class="{'select':currentID === item.id}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+       <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
         <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
        </div>
 
@@ -48,8 +48,8 @@
          </span>
 
          <div class="flex">
-          <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
-          <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
+          <div class="rounded-lg xt-bg xt-text" style="padding: 2px 6px;">{{ item.shipWay }}</div>
+          <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="ml-2 rounded-lg xt-active-text">
            {{ getBgColor(item).title }}
           </div>
          </div>
@@ -66,7 +66,7 @@
 
     <div style="width: 452px;">
      <UpdateIcon :orderData="rightList"/>
-     <div class="xt-bg-2 px-4 rounded-lg">
+     <div class="px-4 rounded-lg xt-bg-2">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
        <TimeLine :list="rightList?.flowDetail"/>
       </vue-custom-scrollbar>
@@ -86,7 +86,7 @@ import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierDetailList, courierType} from '../modalMock'
 
-import HorizontalPanel from '../../../HorizontalPanel.vue'
+import HorizontalPanel from '../../../../HorizontalPanel.vue'
 import TimeLine from '../timeLine/index.vue'
 import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'

@@ -1,14 +1,14 @@
 <template>
  <div class="flex flex-col" style="width:500px;">
-  <div class="w-full flex items-center justify-center py-5" style="position: relative;">
+  <div class="flex items-center justify-center w-full py-5" style="position: relative;">
    <span class="xt-text xt-font font-16 font-400">添加快递</span>
-   <div class="flex close-button pointer items-center justify-center p-2 category-button rounded-xl xt-bg-2" @click="close">
+   <div class="flex items-center justify-center p-2 close-button pointer category-button rounded-xl xt-bg-2" @click="close">
     <CourierIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25rem;color:var(--secondary-text);"/>
    </div>
   </div>
   
-  <div class="px-6 flex flex-col py-4">
-   <div class="xt-bg-2 xt-text xt-font rounded-xl category-14-400 px-4 py-3">
+  <div class="flex flex-col px-6 py-4">
+   <div class="px-4 py-3 xt-bg-2 xt-text xt-font rounded-xl category-14-400">
     支持批量添加快递单号，每行一个单号，按下回车换行。「顺丰快递」和「菜鸟橙运」需要填写额外信息。
    </div>
 
@@ -32,7 +32,7 @@
     </div>
    </template>
 
-   <div class="flex w-full justify-end">
+   <div class="flex justify-end w-full">
     <xt-button w="64" @click="close">取消</xt-button>
     <xt-button w="64" type="theme" class="ml-3" @click="queryCourier">确定</xt-button>
    </div> 
@@ -44,7 +44,7 @@
 <script>
 import { Icon as CourierIcon } from '@iconify/vue'
 
-import RadioTab from '../../../RadioTab.vue'
+import RadioTab from '../../../../RadioTab.vue'
 
 export default {
  components:{
