@@ -21,6 +21,7 @@ export const courierStore = defineStore("courier", {
                 customerName:'6654'
             }
         ],
+        couriersDetailMsg:[]
     }),
     actions: {
         async getCourierMsg(shipperCode,logisticCode,customerName='') {
@@ -43,6 +44,7 @@ export const courierStore = defineStore("courier", {
             // console.log(this.courierMsgList,'this.courierMsgList');
             
             localCache.set(cacheTag,this.courierMsgList,24*60*60)
+            return this.courierMsgList
         },
         // addCourierEvent(event){
         //     this.courierDetailList.push(event)
@@ -52,6 +54,13 @@ export const courierStore = defineStore("courier", {
         //         return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
         //     })
         // },
+        getCouriersDetail(){
+            this.couriersDetailMsg=Promise.all(this.courierDetailList.map( (item) => {
+                let res =  this.getCourierMsg(item.shipperCode, item.logisticCode, item.customerName);
+                return res;
+            }));
+            // console.log(this.couriersDetailMsg,'couriersDetailMsg');
+        }
 
     },
     persist: {

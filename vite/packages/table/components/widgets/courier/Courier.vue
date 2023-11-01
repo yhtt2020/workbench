@@ -41,8 +41,8 @@
                 </template>
             </template>
             <template v-if="allCourierVisible">
-                <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
-                <SmallCourierModal v-else  :show="allCourierVisible" @close-modal="changeState"/>
+                <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
+                <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
             </template>
         </div>
 
@@ -142,24 +142,25 @@ export default {
             },
             isLoading: false,
             allCourierVisible: false,
-            courierShow: true
+            courierShow: true,
+            deliveryDetails: []
         }
     },
     methods: {
-        ...mapActions(courierStore, ['getCourierMsg']),
+        ...mapActions(courierStore, ['getCourierMsg','getCouriersDetail']),
         refreshCourier() {
             // this.getCourierMsg('YD', '463193332336436')
         },
         // changeState() {
         //     this.allCourierVisible = true
         // }
-        changeState(){
-            this.allCourierVisible=false
+        changeState() {
+            this.allCourierVisible = false
         }
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList']),
+        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList','couriersDetailMsg']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -178,17 +179,19 @@ export default {
             return this.courierMsgList
         }
     },
-    mounted() {
+    async mounted() {
         this.isLoading = true
+        await this.getCouriersDetail()
+        // console.log(this.deliveryDetails,'deliveryDetails');
         setTimeout(() => {
             this.isLoading = false
         });
     },
     beforeCreate() {
-        if(window.innerWidth<1200){
-            this.courierShow=false
-        }else{
-            this.courierShow=true
+        if (window.innerWidth < 1200) {
+            this.courierShow = false
+        } else {
+            this.courierShow = true
         }
     },
 
