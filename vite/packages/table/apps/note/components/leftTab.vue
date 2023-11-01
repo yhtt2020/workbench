@@ -23,7 +23,7 @@ export default {
     // SettingFilled,
   },
   computed: {
-      ...mapWritableState(noteStore, ['isSelTab','selNote']),
+      ...mapWritableState(noteStore, ['isSelTab','selNote','searchValue']),
     },
     data() {
     return {
@@ -39,9 +39,9 @@ export default {
             this.getNotes()
             this.menuList[0].isSel=true
             this.menuList[1].isSel=false
+
             this.selNote=-1
-            // console.log(this.selIndex);
-            // console.log(this.menuList);
+            this.searchValue = ''
           },
         },
         {
@@ -54,8 +54,9 @@ export default {
             this.getNotes()
             this.menuList[0].isSel=false
             this.menuList[1].isSel=true
+            
             this.selNote=-1
-            // console.log(this.menuList);
+            this.searchValue = ''
           },
         },
         {
