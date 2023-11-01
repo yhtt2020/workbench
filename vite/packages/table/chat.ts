@@ -21,6 +21,7 @@ function loadChat(){
 
 
     window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
+      // console.log('检测重复问题',event);
       window.$notice.receiveNotification(event)
     })
   }catch (e) {

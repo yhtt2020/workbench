@@ -80,7 +80,7 @@
             </li>
           </ul>
           <div v-else class="flex flex-col">
-            <template v-if="getClipBoardData.length !== 0">
+            <template v-if="!getClipBoardData.includes('')">
               <div class="flex flex-col" style="width:483px;">
                 <span class="mb-2.5 secondary-title"   style="color: var(--secondary-text);">剪切板</span>
                 <div v-for="(item,index) in getClipBoardData" class="flex primary-title rounded-lg flex-col p-3 pointer"

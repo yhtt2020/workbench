@@ -6,7 +6,7 @@
         <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);"/>
       </div>
 
-      <span class="category-16-400" style="color:var(--primary-text);">选择群聊</span>
+      <span class="font-16 font-400" style="color:var(--primary-text);">选择群聊</span>
 
       <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
         <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
@@ -23,13 +23,13 @@
           </template>
         </a-input>
 
-        <span class="my-4 category-14-400" style="color:var(--secondary-text);">{{title}}</span>
+        <span class="my-4 font-14 font-400" style="color:var(--secondary-text);">{{title}}</span>
 
         <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
           <div class="flex flex-col">
             <div v-for="(item,index) in filterList" :class="{'select-bg':isSelected(index)}" class="flex pointer rounded-lg items-center px-4 py-3 mb-3" @click="leftListClick(item)">
              <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
-             <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
+             <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
             </div>
           </div>
         </vue-custom-scrollbar>
@@ -45,7 +45,7 @@
            <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
              <div class="flex items-center">
               <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
-              <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
+              <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
              </div>
 
              <div class="flex items-center pointer justify-center" @click="removeGroup(item)">

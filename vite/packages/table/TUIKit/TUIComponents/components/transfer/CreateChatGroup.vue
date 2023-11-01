@@ -4,7 +4,7 @@
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backButton">
     <CreateIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);" />
    </div>
-   <span class="category-16-400" style="color:var(--primary-text);">发起群聊</span>
+   <span class="font-16 font-400" style="color:var(--primary-text);">发起群聊</span>
    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeCreate">
     <CreateIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
    </div>
