@@ -7,30 +7,33 @@
   </div>
   <vue-custom-scrollbar :settings="settingsScroller">
   <div style="height:480px;" ref="dropRef">
-   <div v-for="item in list"  :class="{'select':currentID === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
-    <div class="rounded-lg w-14 flex items-center mr-4 justify-center w-14 h-14" style="background: var(--mask-bg);">
-     <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
-    </div>
-
-    <div class="flex flex-col" style="width: calc(100% - 84px);">
-     <div class="flex items-center justify-between ">
-      <span class="xt-font font-16 font-600">
-       {{ item.goodName }}
-      </span>
-
-      <div class="flex">
-       <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
-       <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
-         {{ getBgColor(item).title }}
-       </div>
+   <div v-for="item in list"  class="rounded-lg"  >
+    <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
+      <div :class="{'select':sortItem?.id === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
+        <div class="rounded-lg w-14 flex items-center mr-4 justify-center w-14 h-14" style="background: var(--mask-bg);">
+          <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
+        </div>
+        <div class="flex flex-col" style="width: calc(100% - 84px);">
+          <div class="flex items-center justify-between ">
+           <span class="xt-font font-16 font-600">
+            {{ item.goodName }}
+           </span>
+     
+           <div class="flex">
+            <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
+            <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
+              {{ getBgColor(item).title }}
+            </div>
+           </div>
+          </div>
+     
+          <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.time }}</div>
+          <div class="summary">
+           {{ item.summary }}
+          </div>
+        </div>
       </div>
-     </div>
-
-     <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.time }}</div>
-     <div class="summary">
-      {{ item.summary }}
-     </div>
-    </div>
+    </xt-menu>
    </div>
    <div style="height: 12px;"></div>
   </div>
@@ -46,7 +49,7 @@ import { courierType } from '../modalMock'
 import Sortable from 'sortablejs'
 
 export default {
- props: ["list"],
+ props: ["list","sortItem"],
 
  components:{
   SmallIcon
@@ -62,7 +65,33 @@ export default {
     wheelPropagation: true
    },
    
-   currentID:this.list[0].id,
+  //  currentID:this.list[0].id,
+
+   revID:'',
+   menus:[
+    {
+      name:'查看详情',
+      callBack:()=>{
+
+      },
+      newIcon:'fluent:apps-list-detail-24-regular'
+    },
+    {
+      name:'订阅物流',
+      callBack:()=>{
+
+      },
+      newIcon:'fluent:star-12-regular'
+    },
+    {
+      name:'删除快递',
+      callBack:()=>{
+
+      },
+      newIcon:'akar-icons:trash-can',
+      color:'var(--error)'
+    },
+   ]
    
   }
  },
@@ -107,7 +136,7 @@ export default {
   },
 
   seeDetail(data){
-   this.currentID = data.id
+  //  this.currentID = data.id
    this.$emit('rightSelect',data)
   },
 

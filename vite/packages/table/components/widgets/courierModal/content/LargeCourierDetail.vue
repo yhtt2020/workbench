@@ -32,34 +32,38 @@
   <template v-else>
    <div class="px-6 flex justify-between">
 
-    <SortList v-if="allVisible" :list="filterList"  @rightSelect="getRightItem"/>
+    <SortList v-if="allVisible" :list="filterList" :sortItem="sortItem"  @rightSelect="getRightItem"/>
 
     <div style="width: 452px;" v-else class="flex flex-col">
      <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-      <div v-for="item in otherList" :class="{'select':currentID === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
-       <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
-        <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
-       </div>
-
-       <div class="flex flex-col" style="width: calc(100% - 84px);">
-        <div class="flex items-center justify-between ">
-         <span class="xt-font font-16 font-600">
-          {{ item.goodName }}
-         </span>
-
-         <div class="flex">
-          <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
-          <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
-           {{ getBgColor(item).title }}
+      <div v-for="item in otherList" :class="{'select':currentID === item.id}" class="rounded-lg"  @click="seeDetail(item)">
+        <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
+          <div class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3">
+            <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
+              <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
+            </div>
+    
+            <div class="flex flex-col" style="width: calc(100% - 84px);">
+              <div class="flex items-center justify-between ">
+               <span class="xt-font font-16 font-600">
+                {{ item.goodName }}
+               </span>
+      
+               <div class="flex">
+                <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
+                <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
+                 {{ getBgColor(item).title }}
+                </div>
+               </div>
+              </div>
+      
+              <div class="my-2">{{ item.time }}</div>
+              <div class="summary">
+               {{ item.summary }}
+              </div>
+            </div>
           </div>
-         </div>
-        </div>
-
-        <div class="my-2">{{ item.time }}</div>
-        <div class="summary">
-         {{ item.summary }}
-        </div>
-       </div>
+        </xt-menu>
       </div>
      </vue-custom-scrollbar>
     </div>
@@ -116,6 +120,35 @@ export default {
    currentID:courierDetailList[0].id,
 
    rightList:courierDetailList[0], // 接收选中的详情
+
+   revID:'',
+
+   menus:[
+    {
+      name:'查看详情',
+      callBack:()=>{
+
+      },
+      newIcon:'fluent:apps-list-detail-24-regular'
+    },
+    {
+      name:'订阅物流',
+      callBack:()=>{
+
+      },
+      newIcon:'fluent:star-12-regular'
+    },
+    {
+      name:'删除快递',
+      callBack:()=>{
+
+      },
+      newIcon:'akar-icons:trash-can',
+      color:'var(--error)'
+    },
+   ],
+   
+   sortItem:{},
   }
  },
 
@@ -209,6 +242,7 @@ export default {
 
 
   getRightItem(data){
+   this.sortItem = data
    this.rightList = data
   }
  }
