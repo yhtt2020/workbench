@@ -8,7 +8,7 @@
       ref="cardSlot"
       :customData="customData"
     >
-      <template #left-title>
+      <template #left-title-icon>
         <div
           class="icon"
           style="

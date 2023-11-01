@@ -64,9 +64,9 @@ export default {
   methods: {
     posType() {
       if (this.selectType) {
-        if (this.selectType.name && this.navList.length > 0) {
+        if (this.selectType.value && this.navList.length > 0) {
           this.activeIndex = this.navList.findIndex(item => {
-            return item.name === this.selectType.name
+            return item.value.name === this.selectType.value.name
           })
         }
       }

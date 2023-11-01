@@ -70,7 +70,7 @@ import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/YuanCommunity.vue";
 import RightMenu from "./RightMenu.vue";
 import FreeDesk from "./free/index";
-
+import Courier from '../widgets/courier/Courier.vue'
 export default {
   components: {
     FreeDesk,
@@ -136,5 +136,6 @@ export default {
     AIaides,
     OilPrices,
     yuanCommunity,
+    Courier
   },
 };

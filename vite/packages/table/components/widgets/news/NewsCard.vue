@@ -3,7 +3,7 @@
 
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
       ref="cardSlot" :customData="customData">
-      <template #left-title>
+      <template #left-title-icon>
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
           <FileSearchOutlined style="font-size: 20px;" />
