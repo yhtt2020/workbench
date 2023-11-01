@@ -5,6 +5,7 @@ import {post} from "../js/axios/kdniaoPost";
 import {localCache} from '../js/axios/serverCache'
 const kdniao=sUrl('/app/kdniao/realTimeQuery')
 
+// @ts-ignore
 export const courierStore = defineStore("courier", {
     state: () => ({
         courierMsgList: [],

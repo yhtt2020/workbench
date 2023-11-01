@@ -27,7 +27,7 @@
                         style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                         <CourierItem v-for="(item,index) in courierDetailList" :key="index"   :courier="item" />
                     </vue-custom-scrollbar>
-                    <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
+                    <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
                         style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
                         <newIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
                             icon="fluent:add-16-filled" />
@@ -37,17 +37,24 @@
         </div>
 
     </Widget>
+
+  <AddCourierModal  ref="addCourierRef" />
 </template>
+
 <script>
 import Widget from '../../card/Widget.vue';
 import { Icon as newIcon } from '@iconify/vue'
-import CourierItem from './CourierItem.vue';
+import {courierStore} from '../../../store/courier.ts'
+import {mapWritableState, mapActions} from 'pinia'
 import { courier } from './mock'
+
+import CourierItem from './CourierItem.vue';
 import MinCourierItem from './MinCourierItem.vue';
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
-import {courierStore} from '../../../store/courier.ts'
-import {mapWritableState, mapActions} from 'pinia'
+import AddCourierModal from '../courierModal/AddCourierModal.vue';
+
+
 export default {
     name: '我的快递',
     components: {
@@ -56,7 +63,8 @@ export default {
         CourierItem,
         MinCourierItem,
         Empty,
-        MinEmpty
+        MinEmpty,
+        AddCourierModal
     },
     props: {
         customIndex: {
@@ -105,7 +113,10 @@ export default {
                 {
                     newIcon: 'fluent:add-16-filled',
                     title: '添加快递',
-                    fn: () => { console.log(1) }
+                    fn: () => { 
+                        // console.log(1)
+                        this.$refs.addCourierRef.openCourierModel()
+                    }
                 },
                 {
                     newIcon: 'fluent:box-16-regular',
@@ -132,6 +143,9 @@ export default {
         ...mapActions(courierStore, ['getCourierMsg']),
         refreshCourier() {
             this.getCourierMsg('YD','463193332336436')
+        },
+        addCourier(){
+          this.$refs.addCourierRef.openCourierModel()
         }
 
     },

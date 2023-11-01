@@ -33,14 +33,23 @@
                     </div>
                 </div>
             </div>
-            <xt-button :w="95" :h="40" style="background: #508BFE;color: var(--primary-text) !important;" class="xt-text">添加快递</xt-button>
+            <xt-button :w="95" :h="40" style="background: #508BFE;" class="xt-text"  @click="addCourier">添加快递</xt-button>
         </div>
     </div>
+
+    <AddCourierModal ref="addCourierRef"/>
 </template>
 
-<script setup lang='ts'>
+<script setup>
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
+import AddCourierModal from '../courierModal/AddCourierModal.vue';
+
+const addCourierRef = ref(null)
+
+const addCourier = () =>{
+  addCourierRef?.value.openCourierModel()
+}
 
 </script>
 <style lang='scss' scoped></style>
