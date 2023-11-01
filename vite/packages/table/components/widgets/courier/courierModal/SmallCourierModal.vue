@@ -1,37 +1,47 @@
 <template>
-  <teleport to='body' >
+  <teleport to='body'>
     <Modal v-if="courierShow" v-model:visible="courierShow" :blurFlag="true">
-     <SmallCourierDetail :list="list" @close="courierShow = false"/>
+      <SmallCourierDetail :list="list" @close="handleClose" />
     </Modal>
   </teleport>
- </template>
+</template>
  
- <script>       
- import { courierDetailList } from './modalMock'
- 
- import Modal from '../../Modal.vue';
- import SmallCourierDetail from './content/SmallCourierDetail.vue';
- 
- export default {
-  components:{
-   Modal,SmallCourierDetail
+<script>
+import { courierDetailList } from './modalMock'
+
+import Modal from '../../../Modal.vue';
+import SmallCourierDetail from './content/SmallCourierDetail.vue';
+
+export default {
+  components: {
+    Modal, SmallCourierDetail
   },
- 
-  data(){
-   return{
-    courierShow:false,
-    list:courierDetailList,
+
+  data() {
+    return {
+      // courierShow: true,
+      list: courierDetailList,
+    }
+  },
+  props: {
+    show: Boolean
+  },
+  methods: {
+    openSmallCourierDetail() {
+      this.courierShow = true
+    },
+    handleClose(){
+     let closeModal=false
+     this.$emit('close-modal',closeModal)
    }
+
   },
- 
-  methods:{
-    openSmallCourierDetail(){
-     this.courierShow = true
+  computed:{
+    courierShow(){
+      return this.show
     }
   }
- }
- </script>
+}
+</script>
  
- <style lang="scss" scoped>
- 
- </style>
+<style lang="scss" scoped></style>

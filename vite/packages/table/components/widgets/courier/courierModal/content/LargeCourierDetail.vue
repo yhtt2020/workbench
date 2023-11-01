@@ -86,7 +86,7 @@ import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierDetailList, courierType} from '../modalMock'
 
-import HorizontalPanel from '../../../HorizontalPanel.vue'
+import HorizontalPanel from '../../../../HorizontalPanel.vue'
 import TimeLine from '../timeLine/index.vue'
 import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'

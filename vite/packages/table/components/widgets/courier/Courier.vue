@@ -40,12 +40,13 @@
                     </template>
                 </template>
             </template>
-
+            <template v-if="allCourierVisible">
+                <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
+                <SmallCourierModal v-else  :show="allCourierVisible" @close-modal="changeState"/>
+            </template>
         </div>
 
     </Widget>
-    <LargeCourierModal />
-    <SmallCourierModal />
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
@@ -123,7 +124,7 @@ export default {
                 {
                     newIcon: 'fluent:box-16-regular',
                     title: '全部快递',
-                    fn: () => { console.log(1) }
+                    fn: () => { this.allCourierVisible = true }
                 },
                 // {
                 //     icon: 'shezhi1',
@@ -140,12 +141,20 @@ export default {
                 wheelPropagation: true,
             },
             isLoading: false,
+            allCourierVisible: false,
+            courierShow: true
         }
     },
     methods: {
         ...mapActions(courierStore, ['getCourierMsg']),
         refreshCourier() {
             // this.getCourierMsg('YD', '463193332336436')
+        },
+        // changeState() {
+        //     this.allCourierVisible = true
+        // }
+        changeState(){
+            this.allCourierVisible=false
         }
 
     },
@@ -170,10 +179,17 @@ export default {
         }
     },
     mounted() {
-        this.isLoading=true
+        this.isLoading = true
         setTimeout(() => {
-         this.isLoading=false   
+            this.isLoading = false
         });
+    },
+    beforeCreate() {
+        if(window.innerWidth<1200){
+            this.courierShow=false
+        }else{
+            this.courierShow=true
+        }
     },
 
 }
