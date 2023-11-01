@@ -146,31 +146,37 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           title:"内容审核",
           type:'audit_thread',
           num:0,
+          url:'',
       },
       {
           title:"评论审核",
           type:'audit_post',
           num:0,
+          url:'',
       },
       {
           title:"频道推送审核",
           type:'audit_channel_post',
           num:0,
+          url:'',
       },
       {
           title:"举报处理",
           type:'report',
           num:0,
+          url:'',
       },
       {
           title:"版块访问审核",
           type:'audit_forum_member',
           num:0,
+          url:'',
       },
       {
           title:"版块创建审核",
           type:'audit_forum',
           num:0,
+          url:'',
       },
     ],
     // 设置状态存储
@@ -254,7 +260,7 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     async getTodoData(){
       await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
         "content":{
-          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum,admin_url",
+          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum,audit_thread_url,audit_post_url,audit_channel_post_url,report_url,audit_forum_member_url,audit_forum_url,",
           "access":{
             "plate":'all',
             "day_type":'month',
@@ -268,9 +274,10 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           }
         }
       }).then((res)=>{
-        this.admin_url = res.admin_url
+
         this.todoList.forEach(item => {
           item.num = res[item.type]
+          item.url = res[`${item.type}_url`]
         });
       },rej=>{
         this.admin_url = ''

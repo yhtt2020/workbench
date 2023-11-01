@@ -7,7 +7,7 @@
 
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
         <div v-else class="dash-board">
-            <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index" @click="jumpUrl(this.admin_url)">
+            <div class="dash-cell pointer" :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red'" v-for="(item, index) in this.todoList" :key="index" @click="jumpUrl(item.url)">
                 <div class="cell-title">{{ item.title }}</div>
                 <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ item.num == undefined?'-':item.num }}</div>
             </div>
@@ -121,6 +121,7 @@ export default {
             this.changeAccToken(this.accToken,this.accUrl)
         },
         jumpUrl(url){
+            // console.log(this.todoList);
             browser.openInUserSelect(url)
         },
         back(){
