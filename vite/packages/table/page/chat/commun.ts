@@ -319,7 +319,7 @@ export const useCommunityStore = defineStore('forumStore',{
             // console.log('datail', res);
             if(res.code===200){
                 this.communityPostDetail=res.data
-                console.log('chakan',this.communityPostDetail);
+                // console.log('chakan',this.communityPostDetail);
                 localCache.set(`communityPostDetail_${id}`,this.communityPostDetail,60*60*12)
             }
         },
@@ -339,7 +339,7 @@ export const useCommunityStore = defineStore('forumStore',{
             // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
-                console.log(this.communityReply,'res');
+                // console.log(this.communityReply,'res');
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
             } catch (error) {
@@ -420,8 +420,8 @@ export const useCommunityStore = defineStore('forumStore',{
                 console.error(error)
             }
         },
-        // 发布帖子
-        async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1,is_weibo=1):Promise<IThread>{
+        // 发布动态
+        async getCommunityPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1,is_weibo=1,cover=''):Promise<IThread>{
             // console.log(fid,image,content,title,'getCommunityPublishPost');
 
             try {
@@ -434,7 +434,29 @@ export const useCommunityStore = defineStore('forumStore',{
                     from:from,
                     title:title,
                     type:type,
-                    is_weibo:is_weibo
+                    is_weibo:is_weibo,
+                    cover:cover,
+                })
+                // console.log(res,'threadPost');
+
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async getPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1,cover=''):Promise<IThread>{
+            console.log(fid,image,content,title,classId=67,is_close_comment=1,from='PC',type=1,cover,'getCommunityPublishPost');
+
+            try {
+                let res=await post(threadPost,{
+                    fid:fid,
+                    image:image,
+                    content:content,
+                    class_id:classId,
+                    is_close_comment:is_close_comment,
+                    from:from,
+                    title:title,
+                    type:type,
+                    cover:cover,
                 })
                 // console.log(res,'threadPost');
 

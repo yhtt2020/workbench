@@ -20,6 +20,7 @@
           {{ status.music.title }} {{ status.music.singer }}
         </div>
       </a-tooltip>
+      <TopCourier />
     </div>
     <div class="flex max-search" hidden="">
       <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
@@ -133,6 +134,7 @@ import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
+import TopCourier from './widgets/courier/TopCourier.vue'
 
 export default {
   name: 'TopPanel',
@@ -141,6 +143,7 @@ export default {
     MessagePopup,
     TopTomato,
     TopClockTimer,
+    TopCourier
   },
   data() {
     return {

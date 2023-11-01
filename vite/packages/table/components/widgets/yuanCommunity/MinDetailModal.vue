@@ -1,7 +1,7 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
         :esc="true">
-        <div class=" maxDetail" :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
+        <div class="w-[600px] h-[700px] maxDetail " :style="{ width: isFullScreen ? `${windoWidth}px` : '600px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
             <div class="w-full pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
@@ -46,9 +46,9 @@
                 </div>
             </div>
             <div class="flex w-full h-[650px]  pl-4 pr-4" style="border-radius: 12px;">
-                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 thread-list" :settings="settingsScroller"
-                    style="height: 100%;overflow: hidden;flex-shrink: 0;border-right: 1px solid var(--divider); margin-right: -8px; ">
-                    <div class="pr-2 mt-4 " style="flex-shrink: 0; ">
+                <vue-custom-scrollbar ref="threadListRef" class="w-full thread-list" :settings="settingsScroller"
+                    style="height: 100%;overflow: hidden;flex-shrink: 0; ">
+                    <div class="mt-4 " style="flex-shrink: 0;">
                         <div class="card-top">
                             <div class="flex items-center">
                                 <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
@@ -124,39 +124,41 @@
                                 点赞</span>
                             <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                         </div>
+                        <a-divider class="w-full h-[2px] " type="vertical" style="color: var(--divider);" />
+                        <div class="mt-4">
+                            <div class="flex mb-4">
+                                <!-- {{ store.communityCollect.info }} -->
+                                <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                                    <!-- <div class="item-content"> -->
+                                    <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
+                                        :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
+                                        style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                        <img src="../../../../../public/icons/like.png" alt=""
+                                            class="w-[20px] h-[20px] -ml-6">
+                                        {{ cardData.support_count }}</xt-button>
+                                    <!-- </div> -->
+
+
+                                </div>
+                                <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
+                                    <xt-button class="flex items-center justify-center pl-5 reply xt-text"
+                                        :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
+                                        style="width: 57px;height: 32px;border: none;cursor: pointer;">
+                                        <img src="../../../../../public/icons/collect.png" alt=""
+                                            class="w-[20px] h-[20px] -ml-6 mr-1">
+                                        {{ cardData.collect_count }}</xt-button>
+                                </div>
+                            </div>
+                            <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
+                        </div>
 
                     </div>
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[5px] h-full detele-line" type="vertical"  />
-                <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
+                <!-- <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
-                    <div class="mt-4">
-                        <div class="flex mb-4">
-                            <!-- {{ store.communityCollect.info }} -->
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
-                                <!-- <div class="item-content"> -->
-                                <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
-                                    :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
-                                    {{ cardData.support_count }}</xt-button>
-                                <!-- </div> -->
 
-
-                            </div>
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
-                                <xt-button class="flex items-center justify-center pl-5 reply xt-text"
-                                    :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/collect.png" alt=""
-                                        class="w-[20px] h-[20px] -ml-6 mr-1">
-                                    {{ cardData.collect_count }}</xt-button>
-                            </div>
-                        </div>
-                        <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
-                    </div>
-                </vue-custom-scrollbar>
+                </vue-custom-scrollbar> -->
 
             </div>
         </div>
@@ -176,6 +178,10 @@ import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
 import Detail from '../../../page/chat/com/Detail.vue';
+const isFullScreen = ref(false)
+const fullScreen = () => {
+    isFullScreen.value = !isFullScreen.value
+}
 const useUserStore = appStore()
 const store = useCommunityStore();
 let uid = store.communityPostDetail.user?.uid
@@ -184,8 +190,8 @@ let userInfo = {
     nickname: props.cardData.user?.nickname,
     avatar: props.cardData.user?.avatar_128
 }
-let windowHeight=ref()
-let windoWidth=ref()
+const windoWidth=ref()
+const windowHeight=ref()
 onMounted(() => {
     windoWidth.value = window.innerWidth
     windowHeight.value = window.innerHeight
@@ -289,16 +295,14 @@ const showMenu = (img) => {
 // 控制图片画廊的显示
 const vieewerVisible = ref(false)
 const showImage = () => {
+
     vieewerVisible.value = !vieewerVisible.value
 }
-const isFullScreen = ref(false)
-const fullScreen = () => {
-    isFullScreen.value = !isFullScreen.value
-}
+watch(() => window.innerWidth, (newVal) => {
+    console.log(newVal, 'newVal')
+})
 </script>
 <style lang='scss' scoped>
-
-
 .card {
     display: flex;
     // 占满整个父元素
@@ -419,4 +423,5 @@ const fullScreen = () => {
     &:hover {
         background: var(--secondary-bg);
     }
-}</style>
+}
+</style>

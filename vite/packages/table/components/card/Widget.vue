@@ -24,9 +24,9 @@
           class="flex items-center justify-between"
         >
           <div class="left-title" v-if="options.noTitle !== true">
-            <slot name="left-title"></slot>
+            <slot name="left-title-icon"></slot>
             <Icon :icon="options.icon" class="title-icon"></Icon>
-            <div class="w-2/3 flex">
+            <div class="flex w-2/3">
               <div v-if="options.isEdit">
                 <a-input
                   style="

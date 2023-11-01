@@ -2,17 +2,27 @@
     <div>
         <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"
             :sizeList="sizeList" :customData="customData">
-            <template #left-title>
+            <template #left-title-icon>
                 <div class="icon"
                     style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
                     <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
                 </div>
             </template>
-            <div v-if="showForumList.length > 0">
-                <div style="position: absolute;left: 126px;top: 16px;" @click="refreshPost" class="pointer"  >
-                    <YuanIcon class="text-lg xt-text clock-icon" style="vertical-align: sub; font-size: 20px;"
-                        icon="akar-icons:arrow-clockwise" />
+            <template #left-title v-if="showForumList.length > 0">
+                <div @click="refreshPost">
+                    <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
+                        <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                            icon="akar-icons:arrow-clockwise" />
+                    <!-- </xt-button> -->
                 </div>
+            </template>
+            <div v-if="showForumList.length > 0">
+                <!-- <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
+                    <xt-button :w="22" :h="22" style="background: transparent;">
+                        <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                            icon="akar-icons:arrow-clockwise" />
+                    </xt-button>
+                </div> -->
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
@@ -20,9 +30,9 @@
                     </YuanHorizontalPanel>
                 </div>
                 <!-- 内容区 -->
-                <div :style="{ height:showItem }" >
+                <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{height:scrollBarHeight}">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -34,7 +44,7 @@
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3"  >
+                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
                             </div>
@@ -43,12 +53,14 @@
                     </vue-custom-scrollbar>
 
                 </div>
+                <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
+                    @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"  
-                style="flex-shrink: 0;position: absolute;right: 20px;bottom: 10px">
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
+                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
                 <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
                     icon="fluent:add-16-filled" />
             </xt-button>
@@ -58,9 +70,13 @@
 
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                :forumIndex="currentIndex"></YuanPublishModal>
-            <detailModal v-if="showDetailModal" :cardData="cardData" :showDetailModal="showDetailModal"
-                @closeDetail="closeDetail" />
+                :forum="customData.defaultForum?.value"></YuanPublishModal>
+            <div v-if="showDetailModal">
+                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
+                    @closeDetail="closeDetail" />
+                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
+            </div>
+
 
         </teleport>
         <!-- <teleport to="body" :disabled="false">
@@ -85,7 +101,7 @@
             <!-- {{ selectForumList }}  @change="handleChange(selectValue)" -->
             <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass"
                 style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" :bordered="false"
-                @deselect="handleDeselect((selectValue))" @select="handleChange(selectValue)">
+                @deselect="handleDeselect(selectValue)" @select="handleChange(selectValue)">
                 <a-select-option :value="index" v-for="(item, index) in forumList"
                     class="absolute z-auto xt-bg xt-text-2 selsect-options">
                     {{ item.name }}
@@ -123,6 +139,7 @@ import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
 import detailModal from './DetailModal.vue'
+import MinDetailModal from './MinDetailModal.vue';
 export default {
     name: '元社区',
     components: {
@@ -133,7 +150,8 @@ export default {
         DataStatu,
         YuanPublishModal,
         YuanHorizontalPanel,
-        detailModal
+        detailModal,
+        MinDetailModal
     },
     props: {
         customIndex: {
@@ -168,8 +186,9 @@ export default {
             options: {
                 className: 'card double ',
                 title: '元社区',
-                // rightIcon: ' fluent:arrow-counterclockwise-20-filled',
-                type: 'community'
+                rightIcon: ' fluent:arrow-counterclockwise-20-filled',
+                type: 'community',
+                // isEdit: true
             },
             menuList: [
                 {
@@ -200,6 +219,8 @@ export default {
             openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
             defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
             cardData: null,
+            toggleDetail: true,
+            selectValue: [],
         }
     },
     methods: {
@@ -215,7 +236,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.customData.defaultForum);
+            // console.log(this.customData.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
@@ -224,7 +245,7 @@ export default {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
             this.cardData = item
-            console.log(this.cardData);
+            // console.log(this.cardData);
         },
         closeDetail(value) {
             this.showDetailModal = value
@@ -256,7 +277,7 @@ export default {
         },
         // 删除选择的板块
         handleDeselect(val) {
-            this.selectList = this.selectList.filter((item) => {
+            this.selectList = this.customData.selectList.filter((item) => {
                 return val.includes(item.index); // 过滤掉 val 中包含的索引的项目
             });
             this.selectList = this.selectList.filter((item, index) => {
@@ -267,7 +288,14 @@ export default {
         },
         saveSetting() {
             this.settingVisible = false
-        }
+        },
+        // changeTag() {
+        //     if(this.customData.selectList.length==1){
+        //         this.options.title=this.customData.selectList[0].value.name
+        //     }else{
+        //         this.options.title='元社区'
+        //     }
+        // }
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -278,11 +306,11 @@ export default {
             }
             return this.sizeList[0]
         },
-        showItem(){
-          if(this.customData && this.customData.height){
-            return this.customData.height == 2?'392px':'600px'
-          }
-          return '392px'  
+        showItem() {
+            if (this.customData && this.customData.height) {
+                return this.customData.height == 2 ? '392px' : '600px'
+            }
+            return '392px'
         },
         // 判断不同高度返回不同个数
         copyNum() {
@@ -313,14 +341,19 @@ export default {
             }
             return this.communityPost.list?.slice(0, 10)
         },
-        // changeTitle() {
-        //     if (this.customData.selectList.length === 1) {
-        //         this.options.title = this.customData.selectList[0].value.title
-        //         console.log(this.options.title);
-        //     } 
+        // isShow(){
+        //     return window.innerWidth > 1200
         // }
+        scrollBarHeight() {
+            if(this.showForumList.length>1){
+                return 'calc(100% - 65px)'
+            }else{
+                return 'calc(100% - 40px)'
+            }
+        }
     },
     async mounted() {
+        // console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
         this.isLoading = true
         await this.getMyForumList()
         // await this.getCommunityPost(this.showForumList[0].id)
@@ -328,11 +361,24 @@ export default {
         this.customData.forumList = this.myForumList.joined
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
+            // console.log(this.defaultForum);
         }
-        console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
+        if(this.customData && this.customData.selectList){
+            this.selectValue = this.customData.selectList.map((item)=>{
+                return item.index
+            })
+            // console.log(this.selectValue);
+        }
+        // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
-        // console.log(this.options.title);
-        // console.log(navigator.connection.downlink,'navigator.connection');
+    },
+    beforeUpdate() {
+        // this.changeTag()
+        if (window.innerWidth > 1200) {
+            this.toggleDetail = true
+        } else {
+            this.toggleDetail = false
+        }
     },
     watch: {
         showForumList(newValue) {
@@ -366,15 +412,26 @@ export default {
                     // console.log(this.options.title)
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
-                    console.log(this.options.title);
+                    // console.log(this.options.title);
                 }
 
             }
-        }
+        },
     }
 }
 </script>
 <style>
+@media screen and (max-width: 1000px) {
+    .mood {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+}
+
+
 .clock-icon {
     cursor: pointer;
     transition: transform 0.3s;
@@ -421,7 +478,8 @@ export default {
 
 .optionClass {
     & .ant-select-selection-item {
-        background-color: red !important;
+        background-color: rgba(80, 139, 254, 0.20) !important;
+        height: 28px;
     }
 }
 </style>
