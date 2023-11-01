@@ -2,7 +2,7 @@
   <div>
     <Widget :options="options" :customIndex="customIndex" :customData="customData" :menuList="menuList" ref="cardSlot"
       :desk="desk" :size="size">
-      <template #left-title>
+      <template #left-title-icon>
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
           <LineChartOutlined style="font-size: 20px;" />

@@ -14,7 +14,7 @@
    class="flex rounded-lg items-center pointer mb-2 p-3" @click="currentFriend(item)"
   >
    <a-avatar :size="32" shape="circle" :src="item.avatar"></a-avatar>
-   <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick }}</span> 
+   <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick }}</span> 
   </div>
  </vue-custom-scrollbar>
 </template>

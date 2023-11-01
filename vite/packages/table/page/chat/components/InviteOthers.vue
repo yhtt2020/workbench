@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col mb-6" style="width:500px;" v-if="inviteShow === false">
   <div class="flex w-full items-center justify-center h-10 m-3">
-   <span class="category-16-400" style="color:var(--primary-text);">邀请其他人</span>
+   <span class="font-16 font-400" style="color:var(--primary-text);">邀请其他人</span>
    <div class="flex items-center category-button pointer rounded-lg justify-center w-10 h-10" 
     style="position: absolute; top:12px;right:8px;background: var(--secondary-bg);"
     @click="closeButton"
@@ -13,17 +13,17 @@
   <div class="px-6 flex flex-col">
    <div class="invite-bg p-4 flex flex-col pointer mb-4" v-for="item in inviteMethod" @click.stop="inviteEnter(item)">
     <div class="flex w-full justify-between items-center mb-2.5">
-      <span class="category-16-400" style="color: var(--primary-text);">{{ item.title }}</span>
+      <span class="font-16 font-400" style="color: var(--primary-text);">{{ item.title }}</span>
       <InviteIcon icon="fluent:chevron-right-16-filled"  style="font-size:20px;color:var(--secondary-text);"/>
     </div>
-    <div class="category-14-400" style="color: var(--secondary-text);">
+    <div class="font-14 font-400" style="color: var(--secondary-text);">
      {{ item.description }}
     </div>
    </div>
 
    <div class="invite-bg p-4 flex flex-col">
-    <span class="category-16-400" style="color:var(--primary-text);">邀请链接</span>
-    <span class="category-14-400 mt-2.5 mb-3" style="color:var(--secondary-text);">
+    <span class="font-16 font-400" style="color:var(--primary-text);">邀请链接</span>
+    <span class="font-14 font-400 mt-2.5 mb-3" style="color:var(--secondary-text);">
       通过链接邀请新成员，访问链接即可加入。链接支持外部浏览器访问。
     </span>
     
@@ -36,7 +36,7 @@
       </div>
     </div>
   
-    <div class="category-16-400 pointer category-button" style="color:var(--active-bg);">重置链接</div>
+    <div class="font-16 font-400 pointer category-button" style="color:var(--active-bg);">重置链接</div>
    </div>
   </div>
  </div>

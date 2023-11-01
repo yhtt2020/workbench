@@ -1,63 +1,189 @@
 
 <template>
-    <Modal :maskNoClose="true" class="" animationName="t-b-close">
-        <div class="w-[500px] pl-4 pr-4 content">
+    <xt-modal  title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+        :esc="true">
+        <div class="w-full pl-4 pr-4"
+            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen? '0px' : '12px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
-                <a-dropdown trigger="click" placement="bottom"
-                    overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;">
-                    <div class="flex items-center justify-center w-full">
-                        <div class="ml-20 font-16 xt-text">{{ defaultType.title }}</div>
-                        <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" />
+                <div class="flex justify-center w-full ">
+                    <div class="flex justify-center ml-12">
+                        <a-select autoClearSearchValue="false"
+                            style="width: 120px;height: 40px;border-radius: 8px;line-height: 46px;margin-left: 12px;font-size: 16px;background: transparent;"
+                            :showArrow="true" :bordered="false" @change="changeItem">
+                            <a-select-option :value="index" v-for="(item, index) in publishType"
+                                class=" xt-text selsect-options" style="font-size: 16px;text-align: center;">
+                                {{ item.title }}
+                                <!-- <newIcon icon="fluent:caret-down-12-filled" class="ml-1 xt-text" style="font-size: 20px;" /> -->
+                            </a-select-option>
+                            <template #placeholder>
+                                <div class="ml-3 text-center xt-text" style="font-size: 16px;">
+                                    {{ defaultType.title }}
+                                </div>
+                            </template>
+                            <template #suffixIcon>
+                                <newIcon icon="fluent:caret-down-12-filled"
+                                    style="font-size: 20px;margin-top: -2px;margin-left: -8px;" class=" xt-text"></newIcon>
+                            </template>
+                        </a-select>
                     </div>
-                    <template #overlay>
-                        <a-menu class="text-center xt-bg"
-                            style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
-                            <a-menu-item v-for="(item, index) in publishType" :key="index"
-                                @click="handleMenuItemClick(index)">
-                                <span class="ml-12 text-center xt-text">{{ item.title }}</span>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-
-                <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
-                    <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                    <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
-                        class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                </xt-button>
-                <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
-                    @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
-                    <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
-                </xt-button>
-
-            </div>
-            <component :is="currentComponent"></component>
-            <div class="flex items-center justify-between h-[56px] ">
-                <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName" :bordered="false"
-                    @change="handleChange"
-                    style=" font-size: 16px; border-radius: 10px;width: 120px;background: var(--secondary-bg);height: 40px;"
-                    change-on-select>
-                    <template #suffixIcon>
-                        <newIcon icon="fluent:chevron-left-16-filled" class="rotate-180 xt-text-2" style="font-size: 20px;vertical-align: super;margin-top: -3px;"></newIcon>
-                    </template>
-                </a-select>
-                <div class="flex items-center">
-                    <xt-button type="text" class=" xt-text xt-bg-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
-                        @click="handleOk">取消</xt-button>
-                    <xt-button type="primary" class="ml-2"
-                        style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
-                        @click="publishPost">发布</xt-button>
                 </div>
+
+
+                <div class="flex items-center">
+                    <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
+                        @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
+                        <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
+                            class="mt-1 text-xl text-center xt-text pointer"></newIcon>
+                        <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
+                            class="mt-1 text-xl text-center xt-text pointer"></newIcon>
+                    </xt-button>
+                    <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
+                        @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
+                        <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                    </xt-button>
+                </div>
+
+
             </div>
+            <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
+                style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
+                <!-- <div class="" style="max-width: 1000px !important;"> -->
+                <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px] " style="border: 1px solid var(--divider);"
+                    v-if="defaultType.value == 'video'">
+                    <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
+                        @drop="handleDrop">
+                        <div class="flex flex-col items-center justify-center w-full h-full">
+                            <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;">
+                            </newIcon>
+                            <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB
+                            </p>
+                        </div>
+                    </a-upload-dragger>
+                </div>
+                <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);"
+                    v-if="defaultType.value !== 'dynamic'">
+                    <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
+                </div>
+                <div class="w-full mt-2 text-base h-3/4 xt-bg box ">
+                    <div style="font-size: 1rem !important;" class="w-full h-full">
+                        <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea"
+                            style="border: 1px solid var(--divider);">
+                            <a-textarea v-model:value="postValue"
+                                :placeholder="defaultType.value === 'video' ? '简介' : '请输入'" :autoSize="dynamicSize"
+                                :bordered="false" v-if="defaultType.value !== 'post'" />
+                            <div class="w-full " :style="{ height: fullScreen ? '100%' : '300px' }"
+                                v-else-if="defaultType.value == 'post'" style="overflow: hidden;">
+                                <markdown></markdown>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div style="font-size: 16px !important; " v-if="imageLoadVisible">
+                    <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
+                        multiple @preview="handlePreview">
+                        <div v-if="fileList.length < 6">
+                            <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
+                            <newIcon icon="fluent:add-16-filled" style="font-size: 24px;vertical-align: sub;"
+                                class="xt-text"></newIcon>
+                        </div>
+                    </a-upload>
+                </div>
+                <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                    <img style="width: 100%" :src="previewImage" />
+                </a-modal>
+                <div class="h-[45px] flex items-center justify-between">
+                    <div class="flex items-center justify-center xt-text-2">
+                        <tippy trigger=" click" placement="bottom" :interactive="true">
+                            <template #content>
+                                <!-- <div class="w-full"> -->
+                                <vue-custom-scrollbar :settings="settingsScroller"
+                                    class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
+                                    <div v-for="(item, index) in folderPath"
+                                        class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
+                                        :key="index" style="cursor: pointer;">
+                                        <img :src="item" class="w-[32px] h-[32px]">
+                                    </div>
+                                </vue-custom-scrollbar>
+                                <!-- </div> -->
+                            </template>
+
+                            <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
+                                style="color: var(--secondary-text) !important;">
+                                <!-- <SmileOutlined style="" /> -->
+                                <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
+                                    style="vertical-align: sub;margin-right: 4px;" />
+                                表情
+                            </xt-button>
+                        </tippy>
+                        <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
+                            <xt-button type="text" :w="72" :h="32" class="xt-text" v-if="defaultType.value !== 'video'"
+                                style="color: var(--secondary-text) !important;">
+                                <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
+                                    style="vertical-align: sub;margin-right: 4px;" />
+                                图片
+                            </xt-button>
+                        </a-upload>
+                        <div v-if="defaultType.value == 'post'">
+                            <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
+                                v-show="coverList.length === 0">
+                                <xt-button type="text" :w="118" :h="32" class="xt-text"
+                                    style="color: var(--secondary-text) !important;">
+                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
+                                        style="vertical-align: sub;margin-right: 4px;" />
+                                    设置封面
+                                </xt-button>
+                            </a-upload>
+                            <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
+                                @click="removeCover" style="color: var(--secondary-text) !important;">
+                                <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                    style="vertical-align: sub;margin-right: 4px;" />
+                                移除封面
+                            </xt-button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div style="font-size: 16px !important;" v-if="coverList.length > 0">
+                    <!-- <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
+                        @preview="handlePreview">
+                    </a-upload> -->
+                    <a-image :width="200"  :src="coverList[0]?.originFileObj.path" />
+                </div>
+                <div class="flex items-center justify-between h-[56px] ">
+                    <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
+                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择板块" :bordered="false"
+                        @change="handleChange"
+                        style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
+                        dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
+
+                        <template #suffixIcon>
+                            <newIcon icon="fluent:chevron-left-16-filled" class="text-base rotate-180 "
+                                style="margin-top: -1px;"></newIcon>
+                        </template>
+                    </a-select>
+                    <div class="flex items-center">
+                        <xt-button type="text" class=" xt-text xt-bg-2"
+                            style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
+                            @click="handleOk">取消</xt-button>
+                        <xt-button type="primary" class="ml-2"
+                            style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
+                            @click="publishPost">发布</xt-button>
+                    </div>
+                </div>
+                <!-- </div> -->
+
+            </vue-custom-scrollbar>
         </div>
 
-    </Modal>
+    </xt-modal>
 </template>
 <script setup lang='ts'>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../js/common/browser';
 import Modal from '../../../components/Modal.vue'
@@ -68,18 +194,12 @@ import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
-import PostItem from './Detail/PostItem.vue';
-import VideoItem from './Detail/VideoItem.vue';
-import DynamicItem from './Detail/DynamicItem.vue';
+import markdown from './Detail/MarkDown.vue';
+import _ from 'lodash-es'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-// const imageLoadVisible = ref(true)
-const browserUrl = ref('https://s.apps.vip/forum?id=')
 const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
-const goYuan = () => {
-    browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
-}
-const titleContent = ref('')
+// 下拉框选项
 const publishType = ref([
     {
         title: '发动态',
@@ -94,44 +214,51 @@ const publishType = ref([
     //     value: 'video'
     // }
 ])
-const currentComponent=computed(()=>{
-    switch (defaultType.value.value) {
-        case 'dynamic':
-            return DynamicItem;
-            break;
-        case 'post':
-            return PostItem;
-            break;
-        case 'video':
-            return VideoItem;
-            
-            break;
-    
-        default:
-            return DynamicItem;
-            break;
-    }
-})
+// 清除封面
 const removeCover = () => {
     coverList.value = []
 }
+// 默认选项
 let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
-const handleMenuItemClick = (index) => {
+// 修改发布框
+const changeItem = (index) => {
     defaultType.value = publishType.value[index]
+
 }
+const outerSettings = reactive({
+    useBothWheelAxes: true,
+    swipeEasing: true,
+    suppressScrollY: false,
+    suppressScrollX: true,
+    wheelPropagation: true,
+})
+// 视频文件
+const videoList = ref([])
+// 封面文件
+const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
+// 全屏状态修改
 const handleFullScreen = () => {
-//   const full = document.querySelector('.content');
-  fullScreen.value = !fullScreen.value;
-};
+
+    fullScreen.value = !fullScreen.value
+}
+const dynamicSize = computed(() => {
+    if (fullScreen.value) {
+        return { minRows: 20, maxRows: 30 }
+    } else {
+        return { minRows: 5, maxRows: 8 }
+    }
+})
 // const userName = ref('我是皮克斯呀')
+// 正文内容
 const postValue = ref('')
+// 
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
     forumId: Number,
-    forumIndex: Number
+    forum: Array
 })
 // 添加表情
 const addEmoji = (item) => {
@@ -143,10 +270,13 @@ const addEmoji = (item) => {
     postValue.value += `${key}`
 
 }
+// 图片添加是否可见
 const imageLoadVisible = computed(() => {
     return fileList.value?.length > 0
 })
+// 关闭发布框的状态判断
 const visible = ref(false)
+// 图片转base64
 function getBase64(file: File) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -155,29 +285,57 @@ function getBase64(file: File) {
         reader.onerror = error => reject(error);
     });
 }
+
 const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-
+// 发布帖子
+const titleValue = ref('')
 // 用于在动态和评论中使用的表情
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
+// 表情保存
 let folderPath = reactive([])
-
+let windoWidth = ref()
+let windowHeight = ref()
 onMounted(() => {
+    // 表情转换
     Object.values(fluentEmojis).forEach((item) => {
         folderPath.push(`${emoji.value}${item}`)
     })
+    // 聚焦第一个文本框
+    // let inputElement = window.document.querySelector('input')
     let textareaElement = window.document.querySelector('textarea')
     // console.log(textareaElement);
-
+    // if(inputElement){
+    //     inputElement?.focus()
+    // }else{
     textareaElement?.focus()
+    windoWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+    // }
+    // 获取编辑文本
+    if (defaultType.value.value == 'dynamic' && useYuanCommunityStore.saveDynamic) {
+        postValue.value = useYuanCommunityStore.saveDynamic
+    } else {
+        postValue.value = ''
+    }
+    // 获取标题
+    if (defaultType.value.value == 'post' && useYuanCommunityStore.saveTitle) {
+        titleValue.value = useYuanCommunityStore.saveTitle
+    } else {
+        titleValue.value = ''
+
+    }
+    // console.log(postValue.value,'postValue.value');
+
     // console.log(navigator.plugins);
     useYuanCommunityStore.getMyForumList()
 
-
+    // console.log(useYuanCommunityStore.saveContent, 'useYuanCommunityStore.saveContent');
 })
+
 // 选择发帖板块
 const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
 let arr = ref([])
@@ -192,21 +350,28 @@ const options = ref<CascaderProps['options']>([]);
 arr.value.forEach((item) => {
     options.value.push(item)
 })
-const loadData: CascaderProps['loadData'] = selectedOptions => {
-    const targetOption = selectedOptions[selectedOptions.length - 1];
-    targetOption.loading = true;
-    arr.value.forEach((item) => {
-        targetOption.children?.push(item)
-    })
-    options.value = [...options.value];
-};
+// 修改发帖板块
 const handleChange = (value) => {
+    // console.log(value, 'value');
     cascaderValue.value = value
-    console.log(cascaderValue.value);
+    // console.log(cascaderValue.value,'cascaderValue.value');
+    // console.log(arr.value);
+
 }
-const holderName = computed(() => {
-    return useYuanCommunityStore.myForumList.joined[props.forumIndex].name
-})
+// 暂存动态文本
+const savaDynamic = () => {
+    useYuanCommunityStore.saveDynamic = postValue.value
+}
+// 监听文本
+watch(postValue, _.debounce(savaDynamic, 500))
+// const holder = computed(() => {
+//     return props.forum.name
+// })
+const saveTitleText = () => {
+    useYuanCommunityStore.saveTitle = titleValue.value
+}
+watch(titleValue, _.debounce(saveTitleText, 500))
+// 滚动条设置
 const settingsScroller = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -214,6 +379,7 @@ const settingsScroller = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 });
+// 图片暂存
 const fileList = ref<UploadProps['fileList']>([]);
 
 const handleCancel = () => {
@@ -233,36 +399,63 @@ const handleOk = () => {
     visible.value = false
     emit('handleOk', visible)
 };
-// 发布帖子
-const titleValue = ref('')
+
 const publishPost = async () => {
-    if (postValue.value || fileList.value.length > 0) {
+    if (postValue.value || fileList.value.length > 0 || useYuanCommunityStore.saveContent) {
         const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
             const url = await fileUpload(item.originFileObj);
             return url;
         }));
-        // let image = JSON.stringify(imageUrlList.value)
-        let forumId = props.forumId
-        let content = postValue.value
+        let coverImage
+        if (coverList.value.length > 0) {
+            const coverUrlList = await Promise.all(coverList.value.map(async (item) => {
+            const url = await fileUpload(item.originFileObj);
+            return url;
+        }));
+            coverImage = await JSON.stringify(coverUrlList);
+
+        }
+        let forumId = cascaderValue.value
+        let content = computed(() => {
+            switch (defaultType.value.value) {
+                case 'dynamic':
+                    return postValue.value
+                    break;
+                case 'post':
+                    return useYuanCommunityStore.saveContent
+                    break;
+
+                default:
+                    return postValue.value
+                    break;
+            }
+        })
         let title = computed(() => {
             if (!titleValue.value || titleValue.value.length < 5) {
                 return postValue.value.slice(0, 5)
             }
             return titleValue.value
         })
-        // console.log(title.value, 'title.value');
-
-
+        const imageList = await JSON.stringify(imageUrlList);
         setTimeout(async () => {
-            // console.log(forumId, content, title.value, image, 'titleValue.value');
-            const imageList = JSON.stringify(imageUrlList);
-            await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value, cascaderValue)
+            if (defaultType.value.value == 'dynamic') {
+                let is_weibo = 1
+                await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo)
+            } else if (defaultType.value.value == 'post') {
+                console.log(forumId, imageList, content.value, title.value, coverImage);
+                await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
+            }
             message.success('发布成功')
-            titleValue.value = ''
-            postValue.value = ''
-            fileList.value = []
             handleOk()
         });
+        setTimeout(() => {
+            titleValue.value = ''
+            useYuanCommunityStore.saveDynamic = ''
+            useYuanCommunityStore.saveContent = ''
+            postValue.value = ''
+            fileList.value = []
+            coverList.value = []   
+        },1000);
 
     }
 }
@@ -283,12 +476,6 @@ const publishPost = async () => {
     font-weight: 400;
 }
 
-.font-14 {
-
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
-}
 
 :deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
     font-size: 8px;
@@ -303,9 +490,11 @@ const publishPost = async () => {
     width: 64px;
     height: 64px;
 }
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item){
+
+:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
     padding-right: 0px;
 }
+
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
     color: var(--secondary-text);
     height: 40px;
@@ -316,6 +505,7 @@ const publishPost = async () => {
     color: var(--secondary-text);
     height: 40px;
     line-height: 40px;
+    text-align: center;
 }
 
 :deep(.ant-select-arrow) {
