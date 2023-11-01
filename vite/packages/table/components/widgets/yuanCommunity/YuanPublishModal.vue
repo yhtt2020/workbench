@@ -1,6 +1,7 @@
 
 <template>
-    <Modal :maskNoClose="true" class="">
+    <xt-modal  title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+        :esc="true">
         <div class="w-full pl-4 pr-4"
             :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen? '0px' : '12px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
@@ -179,7 +180,7 @@
             </vue-custom-scrollbar>
         </div>
 
-    </Modal>
+    </xt-modal>
 </template>
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed, watch } from 'vue'

@@ -16,24 +16,31 @@
                 </xt-button>
             </div>
             <!-- {{ courierList.length }} -->
-            <div v-if="showWay">
-                <MinEmpty v-if="courierDetailList.length <= 0" />
-                <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
+            <div v-if="isLoading">
+                <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
             </div>
             <template v-else>
-                <Empty v-if="courierDetailList.length <= 0" />
+                <div v-if="showWay">
+                    <MinEmpty v-if="courierDetailList.length <= 0" />
+                    <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
+                </div>
                 <template v-else>
-                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                        <CourierItem v-for="(item,index) in courierDetailList" :key="index"   :courier="item" />
-                    </vue-custom-scrollbar>
-                    <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
-                        style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
-                        <newIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
-                            icon="fluent:add-16-filled" />
-                    </xt-button>
+                    <Empty v-if="courierDetailList.length <= 0" />
+                    <template v-else>
+                        <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                            style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                            <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item" />
+                        </vue-custom-scrollbar>
+                        <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
+                            style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+                            <newIcon class="text-lg xt-text "
+                                style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                                icon="fluent:add-16-filled" />
+                        </xt-button>
+                    </template>
                 </template>
             </template>
+
         </div>
 
     </Widget>
@@ -46,8 +53,8 @@ import { courier } from './mock'
 import MinCourierItem from './MinCourierItem.vue';
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
-import {courierStore} from '../../../store/courier.ts'
-import {mapWritableState, mapActions} from 'pinia'
+import { courierStore } from '../../../store/courier.ts'
+import { mapWritableState, mapActions } from 'pinia'
 export default {
     name: '我的快递',
     components: {
@@ -126,17 +133,18 @@ export default {
                 suppressScrollX: true,
                 wheelPropagation: true,
             },
+            isLoading: false,
         }
     },
     methods: {
         ...mapActions(courierStore, ['getCourierMsg']),
         refreshCourier() {
-            this.getCourierMsg('YD','463193332336436')
+            this.getCourierMsg('YD', '463193332336436')
         }
 
     },
     computed: {
-        ...mapWritableState(courierStore,['courierMsgList','courierDetailList']),
+        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -151,13 +159,16 @@ export default {
                 return false
             }
         },
-        courierMsg(){
+        courierMsg() {
             return this.courierMsgList
         }
     },
-    // mounted() {
-    //     this.getCourierMsg('YD','463193332336436')
-    // },
+    mounted() {
+        this.isLoading=true
+        setTimeout(() => {
+         this.isLoading=false   
+        });
+    },
 
 }
 </script>
@@ -173,8 +184,9 @@ export default {
         display: none;
 
     }
-    &:hover{
-        .add-courier{
+
+    &:hover {
+        .add-courier {
             display: block;
         }
     }

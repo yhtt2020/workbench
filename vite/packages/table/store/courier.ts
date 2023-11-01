@@ -9,18 +9,17 @@ export const courierStore = defineStore("courier", {
     state: () => ({
         courierMsgList: [],
         courierDetailList: [
+            
             {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
+                shipperCode:'ZTO',
+                logisticCode:'78376829849713',
+                customerName:''
             },
             {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
-            },
-            {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
-            },
+                shipperCode:'SF',
+                logisticCode:'SF1672404324049',
+                customerName:'6654'
+            }
         ],
     }),
     actions: {
@@ -29,7 +28,7 @@ export const courierStore = defineStore("courier", {
             const cacheData=localCache.get(cacheTag)
             if(cacheData){
                 this.courierMsgList = cacheData
-                console.log(this.courierMsgList);
+                // console.log(this.courierMsgList);
             }
             let response = await post(kdniao, {
                 shipperCode,
@@ -45,14 +44,14 @@ export const courierStore = defineStore("courier", {
             
             localCache.set(cacheTag,this.courierMsgList,24*60*60)
         },
-        addCourierEvent(event){
-            this.courierDetailList.push(event)
-        },
-        removeCourierEvent(event){
-            this.courierDetailList=this.courierDetailList.filter(item=>{
-                return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
-            })
-        },
+        // addCourierEvent(event){
+        //     this.courierDetailList.push(event)
+        // },
+        // removeCourierEvent(event){
+        //     this.courierDetailList=this.courierDetailList.filter(item=>{
+        //         return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
+        //     })
+        // },
 
     },
     persist: {
