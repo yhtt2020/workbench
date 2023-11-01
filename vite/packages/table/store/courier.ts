@@ -28,7 +28,7 @@ export const courierStore = defineStore("courier", {
             const cacheData=localCache.get(cacheTag)
             if(cacheData){
                 this.courierMsgList = cacheData
-                console.log(this.courierMsgList);
+                // console.log(this.courierMsgList);
             }
             let response = await post(kdniao, {
                 shipperCode,
@@ -40,7 +40,7 @@ export const courierStore = defineStore("courier", {
             if (response.Success) {
                 this.courierMsgList = response
             }
-            console.log(this.courierMsgList,'this.courierMsgList');
+            // console.log(this.courierMsgList,'this.courierMsgList');
             
             localCache.set(cacheTag,this.courierMsgList,24*60*60)
         },

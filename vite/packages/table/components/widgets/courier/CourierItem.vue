@@ -7,7 +7,7 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ props.courier.logisticCode }}</div>
+                <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
@@ -78,7 +78,7 @@ const switchState = computed(() => {
 const lastTraces = ref({AcceptTime:null,AcceptStation:null})
 onMounted( async () => {
     await useCourierStore.getCourierMsg(props.courier.shipperCode, props.courier.logisticCode,props.courier.customerName)
-    console.log(props.courier.shipperCode, props.courier.logisticCode);
+    // console.log(props.courier.shipperCode, props.courier.logisticCode);
     
     // setTimeout(() => {
         lastTraces.value = await useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
