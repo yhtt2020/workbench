@@ -31,7 +31,7 @@
         // this.contentEditor = new Vditor(vditor, {
             height: '100%',
             mode:'ir',
-            // theme:"dark",
+            theme:"dark",
             toolbarConfig: {
                 pin: true,
             },
@@ -40,7 +40,7 @@
             }, 
             // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
 
-            toolbar:['emoji','headings','bold','italic','strike','|','line','quote','ordered-list','check','outdent','indent','code','inline-code','insert-before','undo','redo','link','table','insert-after','preview','devtools','help','br'],
+            toolbar:['emoji','headings','bold','italic','strike','|','line','quote','ordered-list','check','outdent','indent','code','inline-code','insert-before','link','table','insert-after','preview','fullscreen','devtools','help','br'],
             after: () => {
                 if (this.selNote>=0 && this.noteList.length) {
                     this.contentEditor.setValue(this.noteList[this.selNote].customData.text)
@@ -49,6 +49,11 @@
             blur:(value)=>{
                 if (this.tmpData != value && this.noteList.length>0) {
                     // 存在桌面就去修改
+                    // 定义一个虚拟元素提取文本
+                    let tmpDiv = document.createElement('div')
+                    tmpDiv.innerHTML = this.contentEditor.getHTML()
+                    let content = tmpDiv.textContent || tmpDiv.innerText || ''
+
                     if(this.noteList[this.selNote].deskName != ''){
                         let n = -1
                         this.deskList.forEach((item,index)=>{
@@ -68,11 +73,10 @@
                     }
                     this.noteList[this.selNote].customData.text = value
 
-                    this.saveDeskNote(this.noteList[this.selNote].id,value)
+                    this.saveDeskNote(this.noteList[this.selNote].id,value,content)
                 }
             }
         })
-        // this.contentEditor.setValue('f5f5a4')
     },
    methods:{
         ...mapActions(cardStore, ['updateCustomData']),
@@ -100,7 +104,10 @@
         // background: transparent;
     }
     :deep(.vditor-reset){
-        // color: #fff !important;
+        color: #fff !important;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        height: 101% !important;
         // padding: 5px 10px !important;
     }
     :deep(.vditor-ir pre.vditor-reset){
