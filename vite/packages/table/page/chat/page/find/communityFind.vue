@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center justify-center mt-4" style="height:89%;" v-if="searchShow === false">
     <vue-custom-scrollbar :settings="settingsScroller">
       <div class="flex flex-col ">
-        <span class="category-16-500 mb-4" style="color: var(--primary-text);">官方推荐</span>
+        <span class="font-16 font-500 mb-4" style="color: var(--primary-text);">官方推荐</span>
         <div class="content-list">
           <div v-for="item in findList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" style="position: relative;">
             <div style="height:150px;margin-bottom: 30px;">
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <span class="category-16-500 mb-4" style="color: var(--primary-text);">热门社群</span>
+        <span class="font-16 font-500 mb-4" style="color: var(--primary-text);">热门社群</span>
         <div class="content-list">
           <div v-for="item in hotList" class="category-bg pointer content-item  pb-4 rounded-xl  mb-4" style="position: relative;">
             <div style="height:150px;margin-bottom: 30px;">
@@ -74,7 +74,7 @@
   <div class="flex flex-col items-center justify-start mt-4" style="height:89%;" v-else>
     <vue-custom-scrollbar :settings="settingsScroller">
       <div class="flex flex-col " style="width: 1184px;">
-        <span class="category-16-500 my-4" style="color: var(--primary-text);">搜索结果</span>
+        <span class="font-16 font-500 my-4" style="color: var(--primary-text);">搜索结果</span>
         <div class="content-list">
           <div v-for="item in searchResList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" style="position: relative;">
             

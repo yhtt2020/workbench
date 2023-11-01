@@ -4,7 +4,6 @@
     <div class="flex items-center justify-between" style="margin-bottom: 13px;">
       <div class="flex items-center">
         <div class="flex items-center justify-center" style="width: 32px;height: 32px;">
-          <!-- -->
           <clockIcon icon="fluent:clock-alarm-16-filled"  class="object-cover w-full h-full rounded-full xt-text" v-show="changeIcon"></clockIcon>
           <clockIcon icon="fluent:clock-12-regular"  class="object-cover w-full h-full rounded-full xt-text" v-show="!changeIcon"></clockIcon>
         </div>
@@ -26,16 +25,9 @@
       <div class="flex items-center justify-center px-5 py-2 rounded-lg pointer active-button" style="background: var(--active-bg);color: var(--active-text);" @click="viewNow" >OK</div>
     </div>
   </div>
-   <!--
-     <div class="flex ">
-         <div class="flex items-center justify-center px-5 py-2 mr-3 rounded-lg pointer active-button" style="background: var(--secondary-bg);color: var(--primary-text);"  @click="talkLater">稍后再说</div>
-
-       </div>
-    -->
 
  </div>
 
- <!-- <audio ref="notice" src="/sound/notice.mp3" v-show="!changeIcon"></audio> -->
  <audio ref="notice" src="/sound/clock.mp3" v-if="this.soundVisible"></audio>
 
 </template>
@@ -43,19 +35,20 @@
 <script>
 import { defineComponent,ref,toRefs,computed, } from 'vue'
 import { mapWritableState,mapActions} from 'pinia'
-import { formatTime } from '../../util'
-import { noticeStore } from '../../store/notice'
-import { appStore } from '../../store'
-import {topClockSettingStore} from '../../store/topClockSetting'
+import { formatTime } from '../../../util'
+// import { noticeStore } from '../../store/notice'
+import { appStore } from '../../../store'
+import {topClockSettingStore} from '../../../store/topClockSetting'
 import { Icon as clockIcon } from '@iconify/vue'
 import { title } from 'process'
+
 export default defineComponent({
  props:['content','noticeType','isPlay','title','changeIcon'],
  components:{
   clockIcon
  },
  computed:{
-  ...mapWritableState(noticeStore,['noticeSettings']),
+  // ...mapWritableState(noticeStore,['noticeSettings']),
   ...mapWritableState(topClockSettingStore,['soundVisible']),
   ...mapWritableState(appStore,['settings'])
  },
@@ -69,7 +62,9 @@ export default defineComponent({
         this.setNoticePlay()
         if(this.settings.noticePlay){
           this.$nextTick(()=>{
-          this.$refs.notice.play()
+            if(this.soundVisible){
+              this.$refs.notice.play()
+            }
           })
         }else{
          this.$nextTick(()=>{

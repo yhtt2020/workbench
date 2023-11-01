@@ -1,17 +1,17 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
+   <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
     <ForumIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;color: var(--secondary-text);"/>
    </div>
-   <span class="font-16-400" style="color:var(--primary-text);">选择社区版块</span>
-   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
+   <span class="font-16 font-400" style="color:var(--primary-text);">选择社区版块</span>
+   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
     <ForumIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25em;color: var(--secondary-text);"/>
    </div>
   </div>
 
   <div class="flex flex-col px-6">
-   <span class="px-4 font-16-400 mb-4" style="color: var(--primary-text);">我创建的版块({{forumList.length}})</span>
+   <span class="px-4 font-16 font-400 mb-4" style="color: var(--primary-text);">我创建的版块({{forumList.length}})</span>
    <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
     <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg" :class="{'select-bg':selectIndex === index}"
      style="background: var(--secondary-bg);" @click="selectForum(index,item)"
@@ -118,32 +118,10 @@ methods:{
 </script>
 
 <style lang="scss" scoped>
-
-.font-16-400{
- font-size: 16px;
- font-weight: 400;
-}
-
 .close-channel{
  position: absolute;
  top:1px;
  right:12px;
-}
-
-.active-button{
- &:active{
-  filter: brightness(0.8);
-  opacity: 0.8;
- }
- &:hover{
-  opacity: 0.8;
- }
-}
-
-.font-14-400{
-
- font-size: 14px;
- font-weight: 400;
 }
 
 .back-button{

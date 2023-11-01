@@ -2,7 +2,7 @@
  <div class="flex flex-col rounded-md p-2 dropdown-container" :style="`top: ${position.y}px; left: ${position.x}px`">
   <div class="p-3 pointer dropdown-item rounded-md flex items-center " v-for="item in list" @click.stop="selectItem(item)">
    <DropIcon :icon="item.icon" style="font-size: 1.25rem;"></DropIcon>
-   <span class="pl-3 category-16-400" :style="item.type === 'deletePacket' || item.type === 'deleteApp' ? {color:'var(--error)'} :{color:'var(--primary-text)'}">{{ item.title }}</span>
+   <span class="pl-3 font-16 font-400" :style="item.type === 'deletePacket' || item.type === 'deleteApp' ? {color:'var(--error)'} :{color:'var(--primary-text)'}">{{ item.title }}</span>
   </div> 
  </div>
  
