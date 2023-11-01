@@ -185,11 +185,6 @@ export default {
 }
 </script>
 <style lang="scss">
-.refresh {
-    &:hover {
-        background-color: var(--secondary-bg);
-    }
-}
 
 .courier {
     .add-courier {
