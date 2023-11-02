@@ -1,32 +1,4 @@
 .category{
- &-14-400{
-
-  font-size: 14px;
-  font-weight: 400
- }
- &-16-400{
-
-  font-size: 16px;
-  font-weight: 400;
- }
-
- &-16-500{
-
-  font-size: 16px;
-  font-weight: 500;
- }
- &-12-400{
-
-  font-size: 12px;
-  font-weight: 400;
- }
-
- &-18-500{
-
-  font-size: 18px;
-  font-weight: 500;
- }
-
  &-button{
   &:active{
    filter: brightness(0.8);
@@ -45,5 +17,31 @@
  &-bg{
   background: var(--secondary-bg);
   border-radius: 12px;
+ }
+}
+
+.font{
+ &-14{
+  font-size: 14px;
+ }
+ &-16{
+  font-size: 16px;
+ }
+ &-12{
+  font-size: 12px;
+ }
+ &-18{
+  font-size: 18px;
+ }
+
+ &-400{
+  font-weight: 400;
+ }
+ &-500{
+  font-weight: 500;
+ }
+
+ &-600{
+  font-weight: 600;
  }
 }

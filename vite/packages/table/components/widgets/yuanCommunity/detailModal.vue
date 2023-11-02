@@ -1,38 +1,54 @@
 <template>
-    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true">
-        <div class="w-[1000px] h-[700px] pl-4 pr-4">
-            <div class="w-full pt-2 card-content">
+    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+        :esc="true">
+        <div class=" maxDetail" :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
+            <div class="w-full pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
                     <div class="flex items-center">
                         <a-tooltip title="前往元社区" placement="bottom">
-                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;"
-                                icon="fluent:chat-16-regular" />
+                            <xt-button :w="22" :h="22" style="background: transparent;">
+                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="fluent:chat-16-regular" />
+                            </xt-button>
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
-                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
-                                icon="fluent:full-screen-maximize-16-filled" />
+                            <xt-button :w="22" :h="22" style="background: transparent;" @click="fullScreen" class="ml-3">
+                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
+                                icon="fluent:full-screen-maximize-16-filled"  v-if="!isFullScreen" />
+                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
+                                icon="fluent:full-screen-minimize-16-filled"  v-else />
+                            </xt-button>
+                            
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
-                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;"
-                                icon="akar-icons:arrow-clockwise" @click="refresh" />
+                            <xt-button :w="22" :h="22" style="background: transparent;" @click="refresh" class="ml-3">
+                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
+                                icon="akar-icons:arrow-clockwise"  />
+                            </xt-button>
+                            
                         </a-tooltip>
                         <a-tooltip title="外部打开" placement="bottom">
-                            <Icon class="ml-3 xt-text pointer active-icon" style="font-size: 20px;" icon="majesticons:open"
-                                @click="goYuan" />
+                            <xt-button :w="22" :h="22" style="background: transparent;" @click="goYuan" class="ml-3">
+                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="majesticons:open"
+                                 />
+                            </xt-button>
+                            
                         </a-tooltip>
                         <a-divider class="w-[3px]  " type="vertical" style="color: var(--divider);" />
-                        <a-tooltip title="关闭" placement="bottom">
-                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;" icon="akar-icons:cross"
-                                @click="closeDetail" />
+                        <a-tooltip title="关闭" placement="bottom" >
+                            <xt-button :w="22" :h="22" style="background: transparent;" @click="closeDetail" >
+                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:cross"
+                                 />
+                            </xt-button>
+                            
                         </a-tooltip>
                     </div>
                 </div>
             </div>
-            <div class="flex w-full h-[650px] pl-4 pr-4 xt-bg-2" style="border-radius: 12px;">
+            <div class="flex w-full h-[650px]  pl-4 pr-4" style="border-radius: 12px;">
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 thread-list" :settings="settingsScroller"
-                    style="height: 100%;overflow: hidden;flex-shrink: 0; ">
-                    <div class="mt-4 " style="flex-shrink: 0;">
+                    style="height: 100%;overflow: hidden;flex-shrink: 0;border-right: 1px solid var(--divider); margin-right: -8px; ">
+                    <div class="pr-2 mt-4 " style="flex-shrink: 0; ">
                         <div class="card-top">
                             <div class="flex items-center">
                                 <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
@@ -112,7 +128,7 @@
                     </div>
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[3px] h-[700px] " type="vertical" style="color: var(--divider);" />
+                <a-divider class="w-[5px] h-full detele-line" type="vertical"  />
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4">
@@ -145,11 +161,12 @@
             </div>
         </div>
 
+
     </xt-modal>
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from '../../../page/chat/com/Comment.vue';
 import { useCommunityStore } from '../../../page/chat/commun'
@@ -158,7 +175,7 @@ import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
-import { html } from 'cheerio/lib/api/manipulation';
+import Detail from '../../../page/chat/com/Detail.vue';
 const useUserStore = appStore()
 const store = useCommunityStore();
 let uid = store.communityPostDetail.user?.uid
@@ -167,8 +184,12 @@ let userInfo = {
     nickname: props.cardData.user?.nickname,
     avatar: props.cardData.user?.avatar_128
 }
+let windowHeight=ref()
+let windoWidth=ref()
 onMounted(() => {
-    console.log(props.cardData)
+    windoWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+    // console.log(props.cardData)
     refresh()
 })
 const custom = computed(() => {
@@ -270,11 +291,14 @@ const vieewerVisible = ref(false)
 const showImage = () => {
     vieewerVisible.value = !vieewerVisible.value
 }
+const isFullScreen = ref(false)
+const fullScreen = () => {
+    isFullScreen.value = !isFullScreen.value
+}
 </script>
 <style lang='scss' scoped>
-header{
-    display: none !important;
-}
+
+
 .card {
     display: flex;
     // 占满整个父元素
@@ -395,5 +419,4 @@ header{
     &:hover {
         background: var(--secondary-bg);
     }
-}
-</style>
+}</style>

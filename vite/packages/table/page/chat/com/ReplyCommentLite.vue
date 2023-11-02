@@ -30,11 +30,11 @@
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">
                 <div class="flex items-center justify-center ">
-                    <div class="flex items-center" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
+                    <div class="flex items-center pointer" @click="clickLike" :class="{ 'xt-theme-text': isLike }">
                         <replyIcon icon="akar-icons:thumbs-up" style="font-size: 18px; " class="mr-1 "></replyIcon>
                         <div class="mr-4 text-center">{{ replyCom.support_count }} </div>
                     </div>
-                    <div class="flex items-center" @click="replyStatus">
+                    <div class="flex items-center pointer" @click="replyStatus">
                         <replyIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-1 "></replyIcon>
                         <!-- <div>回复</div> -->
                     </div>

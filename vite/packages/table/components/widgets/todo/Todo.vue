@@ -8,14 +8,15 @@
     :menuList="toggleTodoList"
   >
     <template #right-menu>
-      <div @click="todoPage" class="pointer float-right" style=" z-index: 0;  margin-left: 10px">
+      <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px">
         <RightOutlined />
       </div>
     </template>
 
     <div style="height:100%;">
       <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
-        <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon>
+        <!-- <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon> -->
+        <newIcon icon="fluent:checkmark-square-24-regular" style="color:var(--secondary-text);font-size:24px"/>
       </div>
 
       <div class="head-title">
@@ -56,14 +57,14 @@
       <span v-for="(item,index) in todoType" :key="index"
             @click.stop="getTodoType(item)"
             :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
-            class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
+            class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
          {{ item.title }}
       </span>
       <span class="drawer-title">清单</span>
       <span v-for="(item,index) in listType" :key="index"
             @click.stop="getTodoType(item,index)"
             :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
-            class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
+            class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
          {{ item.title }}
       </span>
     </div>
@@ -81,6 +82,7 @@ import Modal from "../../Modal.vue";
 import TaskInput from "../../../page/app/todo/components/TaskInput.vue";
 import {Tippy} from "vue-tippy";
 import {message} from 'ant-design-vue'
+import {Icon as newIcon} from '@iconify/vue'
 export default {
   name: 'Todo',
   components: {
@@ -90,6 +92,7 @@ export default {
     XtButton, PlusOutlined, LeftOutlined,RightOutlined,
     Widget,
     Tasklist,
+    newIcon
   },
   props: {
     customIndex: {

@@ -228,6 +228,14 @@ export default {
           detail:'元社区里又发了什么好玩的事情？时刻关注热门和最新动态。',
           images:['yuanCommunity'],
           size:['4x4']
+        },
+        {
+          name:'Courier',
+          cname:'我的快递',
+          icon:"time-circle",
+          detail:"在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标",
+          images:['courier'],
+          size:['4x6']
         }
       ],
       cardType: {},

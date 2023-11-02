@@ -226,7 +226,6 @@ import SecondPanel from "../components/SecondPanel.vue";
 import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
-import { noticeStore } from '../store/notice'
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import { taskStore } from "../apps/task/store";
 import {Icon as Iconify} from '@iconify/vue'
@@ -279,7 +278,6 @@ export default {
       "showWindowController",
     ]),
     ...mapWritableState(appStore, ["userInfo"]),
-    ...mapWritableState(noticeStore, ['noticeSettings']),
     ...mapWritableState(taskStore, ["taskID", "step"]),
 
     m03011() {
@@ -293,7 +291,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions(noticeStore, ['setNoticeOnOff']),
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     isMain: isMain,isWin,
     goApps(){

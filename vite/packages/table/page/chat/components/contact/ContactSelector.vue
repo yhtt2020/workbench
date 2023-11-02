@@ -14,12 +14,12 @@
             <div class="flex items-center rounded-lg w-10 h-10 justify-center" :style="{background:`${item.bgColor}`}">
               <DirectlyIcon :icon="item.icon" :style="{color:`${item.iconColor}`}" style="font-size: 1.5rem;"/>
             </div>
-            <span class="ml-3 category-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
+            <span class="ml-3 font-16 font-400" style="color:var(--primary-text);">{{ item.name }}</span>
           </div>
         </div>
   
         <div class="flex items-center justify-between mb-2">
-         <div class="category-14-400" style="color: var(--secondary-text);">{{teamTitle}}</div>
+         <div class="font-14 font-400" style="color: var(--secondary-text);">{{teamTitle}}</div>
          <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
         </div>
   
@@ -36,12 +36,12 @@
          
           <template v-if="item.userInfo">
            <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-           <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
           </template>
           
           <template v-else>
            <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-           <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
           </template>
          </div>
         </vue-custom-scrollbar>
@@ -53,7 +53,7 @@
 
      <template v-else>
       <div class="flex items-center justify-between">
-        <div class="category-14-400 my-3" style="color: var(--secondary-text);">{{teamTitle}}</div>
+        <div class="font-14 font-400 my-3" style="color: var(--secondary-text);">{{teamTitle}}</div>
         <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
       </div>
 
@@ -69,12 +69,12 @@
          
          <template v-if="item.userInfo">
           <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-          <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
          </template>
     
          <template v-else>
           <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-          <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
          </template>
         </div>
       </vue-custom-scrollbar>
@@ -93,12 +93,12 @@
       <div v-for="item in selectedList"  class="flex rounded-lg items-center justify-between pointer mb-2 p-3">
        <div class="flex items-center" v-if="item.userInfo">
         <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-        <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span>
+        <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span>
        </div>
   
        <div class="flex items-center" v-else>
         <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-        <span class="category-16-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span>
+        <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span>
        </div>
   
   
