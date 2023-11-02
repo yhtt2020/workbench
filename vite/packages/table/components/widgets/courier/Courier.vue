@@ -21,15 +21,15 @@
             </div>
             <template v-else>
                 <div v-if="showWay">
-                    <MinEmpty v-if="courierDetailList.length <= 0" />
-                    <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
+                    <MinEmpty v-if="this.deliveryDetails.length <= 0" />
+                    <MinCourierItem v-else :courier="this.deliveryDetails[0]"></MinCourierItem>
                 </div>
                 <template v-else>
-                    <Empty v-if="courierDetailList.length <= 0" />
+                    <Empty v-if="this.deliveryDetails.length <= 0" />
                     <template v-else>
                         <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                             style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                            <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item" />
+                            <CourierItem v-for="(item, index) in deliveryDetails" :key="index" :courier="item" @click="viewDeliveryDetails(item)"/>
                         </vue-custom-scrollbar>
                         <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
                             style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
@@ -44,6 +44,12 @@
                 <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
                 <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
             </template>
+            <teleport to='body' >
+                <Modal v-if="showCourierDetail" v-model:visible="showCourierDetail">
+                    <LogisticsDetail :orderNum="orderNum" />
+                </Modal>
+                
+            </teleport>
         </div>
 
     </Widget>
@@ -60,6 +66,7 @@ import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import LargeCourierModal from './courierModal/LargeCourierModal.vue';
 import SmallCourierModal from './courierModal/SmallCourierModal.vue';
+import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 export default {
     name: '我的快递',
     components: {
@@ -70,7 +77,8 @@ export default {
         Empty,
         MinEmpty,
         LargeCourierModal,
-        SmallCourierModal
+        SmallCourierModal,
+        LogisticsDetail
     },
     props: {
         customIndex: {
@@ -143,7 +151,9 @@ export default {
             isLoading: false,
             allCourierVisible: false,
             courierShow: true,
-            deliveryDetails: []
+            deliveryDetails: [],
+            orderNum:[],
+            showCourierDetail:false,
         }
     },
     methods: {
@@ -156,6 +166,10 @@ export default {
         // }
         changeState() {
             this.allCourierVisible = false
+        },
+        viewDeliveryDetails(item) {
+            this.showCourierDetail=true
+            this.orderNum = item
         }
 
     },
@@ -189,8 +203,10 @@ export default {
         setTimeout(() => {
             this.isLoading = false
         });
+        console.log(window.innerWidth)
     },
-    beforeCreate() {
+    beforeUpdate() {
+        console.log(window.innerWidth);
         if (window.innerWidth < 1200) {
             this.courierShow = false
         } else {

@@ -3,7 +3,7 @@
     <div class="flex flex-col" style="width: 500px; height: 600px">
       <div  class="flex items-center justify-center h-16" style="position: relative">
         <TopDrop :navList="typeList" v-model:selectType="currentType" />
-        <div class="top-right flex">
+        <div class="flex top-right">
           <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
            <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;"/>
           </div>
@@ -12,7 +12,7 @@
            <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;"/>
           </div>
           
-          <div class="flex ml-3 items-center justify-center category-button pointer rounded-lg w-8 h-8 xt-bg-2" @click="close">
+          <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2" @click="close">
            <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
           </div>
    
@@ -21,7 +21,7 @@
       <template v-if="filterList?.length === 0 && otherList?.length === 0">
         <div class="flex flex-col items-center justify-center px-6" style="height:calc(100% - 64px)">
           <SmallIcon icon="fluent-emoji:package" style="font-size: 3.5rem;"/>
-          <div class="my-4 font-14 font-400 xt-bg-2 xt-text rounded-lg px-4 py-3">
+          <div class="px-4 py-3 my-4 rounded-lg font-14 font-400 xt-bg-2 xt-text">
             在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标。
           </div>
           <xt-button w="95" type="theme" h="40" @click="addCourier">添加快递</xt-button>
@@ -31,28 +31,32 @@
       <template v-else>
         <SortList :list="filterList" v-if="allVisible" :sortItem="sortItem" @rightSelect="getSmallItem" />
         <vue-custom-scrollbar :settings="settingsScroller" v-else>
-          <div class="px-6 flex flex-col" ref="smallSortRef" style="height:calc(100% - 64px);">
-            <div v-for="item in otherList"  class="rounded-lg">
+          <div class="flex flex-col px-6" ref="smallSortRef" style="height:calc(100% - 64px);">
+            <div v-for="(item,index) in otherList"  class="rounded-lg">
               <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-                <div :class="{'select':currentID === item.id}" class="xt-text flex pointer rounded-lg xt-bg-2 courier-item mb-3 p-3" @click="seeDetail(item)">
-                  <div class="rounded-lg w-14 flex items-center mr-4 justify-center  h-14" style="background: var(--mask-bg);">
-                    <SmallIcon :icon="item.icon" style="font-size: 2rem;"/>
+                <div :class="{'select':currentID === item.id}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+                  <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                    <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
                   </div>
                   <div class="flex flex-col" style="width: calc(100% - 84px);">
                     <div class="flex items-center justify-between ">
                       <span class="xt-font font-16 font-600">
-                        {{ item.goodName }}
+                        {{ item.LogisticCode }}
                       </span>
                       <div class="flex">
-                        <div class="xt-bg xt-text rounded-lg" style="padding: 2px 6px;">{{ item.shipWay }}</div>
-                        <div :style="{background:`${getBgColor(item).color}`,padding:'2px 6px'}" class="rounded-lg xt-active-text ml-2">
-                          {{ getBgColor(item).title }}
-                        </div>
+                    <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
+                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
+                        {{ switchCompany[index] }}
+                      </div>
+                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
+                        {{ switchState[index] }}
                       </div>
                     </div>
-                    <div class="my-2">{{ item.time }}</div>
+                  </div>
+                    </div>
+                    <div class="my-2">{{ item.Traces[item.Traces.length - 1].AcceptTime  }}</div>
                     <div class="summary">
-                      {{ item.summary }}
+                      {{ item.Traces[item.Traces.length - 1].AcceptStation }}
                     </div>
                   </div>
                 </div>
@@ -63,11 +67,9 @@
       </template>
     </div>
   </template>
-
   <template v-else> 
     <LogisticsDetail :orderNum="seeItem" @close="close" @back="detailVisible = false"/>
   </template>
-
   <AddCourierModal ref="addCourierRef"/>
 </template>
 
@@ -81,7 +83,7 @@ import TopDrop from "../dropdown/index.vue";
 import SortList from "../dropdown/SmallSortList.vue";
 import AddCourierModal from '../AddCourierModal.vue';
 import LogisticsDetail from '../content/LogisticsDetail.vue';
-
+import { kdCompany, kdState, switchColor } from '../../mock'
 export default {
   props: ["list"],
 
@@ -98,7 +100,7 @@ export default {
       detailVisible: false,
       currentType:{title:`全部${this.list.length !== 0 ? `(${this.list.length})` : '' }`,name:'all'},
       seeItem:{},
-      currentID:this.list[0].id,
+      // currentID:this.list[0].id,
 
       settingsScroller: { 
        useBothWheelAxes: true,
@@ -138,18 +140,14 @@ export default {
 
     typeList() {
       const allLength = this.list.length;
-      const received = this.list.filter((item) => {
-        return item.status === "collect";
-      });
-      const hasSigned = this.list.filter((item) => {
-        return item.status === "signed";
-      });
-      const onWay = this.list.filter((item) => {
-        return item.status === "enRoute";
-      });
-      const outDelivery = this.list.filter((item) => {
-        return item.status === "delivery";
-      });
+      //  揽收
+      const received = this.list.filter((item) => { return item.State === '1' })
+      //  签收
+      const hasSigned = this.list.filter((item) => { return item.State === '3' })
+      //  在途中--包括在途中，问题件，转寄，清关的快递件
+      const onWay = this.list.filter((item) => { return item.State !== '1' && item.StateEx !== '202' && item.State !== '3' })
+      //  派件中
+      const outDelivery = this.list.filter((item) => { return item.StateEx === '202' })
       const list = [...courierType];
       const filterList = list.map((item) => {
         switch (item.name) {
@@ -215,14 +213,32 @@ export default {
     otherList(){
       switch (this.currentType.name){
         case 'collect':
-         return  this.list.filter((item)=>{ return item.status === 'collect' });
+         return  this.list.filter((item)=>{ return item.State === '1' });
         case 'enRoute':
-         return this.list.filter((item)=>{ return item.status === 'enRoute' });
+         return this.list.filter((item)=>{ return item.State !== '1' && item.StateEx !== '202' && item.State !== '3' });
         case 'delivery':
-         return this.list.filter((item)=>{ return item.status === 'delivery' });
+         return this.list.filter((item)=>{ return item.StateEx === '202' });
         case 'signed':
-         return this.list.filter((item)=>{ return item.status === 'signed' });
+         return this.list.filter((item)=>{ return item.State === '3' });
       }
+    },
+    stateColor() {
+      let colorList = this.otherList.map((item) => {
+        return switchColor(item.State)
+      })
+      return colorList
+    },
+    switchState() {
+      let stateList = this.otherList.map((item) => {
+        return kdState(item.State)
+      })
+      return stateList
+    },
+    switchCompany() {
+      let companyList = this.otherList.map((item) => {
+        return kdCompany(item.ShipperCode)
+      })
+      return companyList
     },
   },
 

@@ -8,7 +8,8 @@
  
 <script>
 import { courierDetailList } from './modalMock'
-
+import { courierStore } from '../../../../store/courier.ts'
+import {mapActions,mapWritableState} from 'pinia'
 import Modal from '../../../Modal.vue';
 import SmallCourierDetail from './content/SmallCourierDetail.vue';
 
@@ -20,7 +21,7 @@ export default {
   data() {
     return {
       // courierShow: true,
-      list: courierDetailList,
+      list: [],
     }
   },
   props: {
@@ -37,9 +38,14 @@ export default {
 
   },
   computed:{
+    ...mapWritableState(courierStore, ['couriersDetailMsg']),
     courierShow(){
       return this.show
     }
+  },
+  async mounted() {
+    this.list=await this.couriersDetailMsg
+    console.log(this.list,'this.list');
   }
 }
 </script>

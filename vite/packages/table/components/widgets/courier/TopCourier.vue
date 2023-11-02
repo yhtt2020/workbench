@@ -75,7 +75,7 @@
             </div>
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item" />
+                <CourierItem v-for="(item, index) in couriersList" :key="index" :courier="item" />
             </vue-custom-scrollbar>
         </div>
     </div>
@@ -156,7 +156,6 @@ export default {
                 //     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
                 // },
             ],
-            courierList: courier,
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -164,7 +163,8 @@ export default {
                 suppressScrollX: true,
                 wheelPropagation: true,
             },
-            topCourierVisible: false
+            topCourierVisible: false,
+            couriersList:[]
         }
     },
     methods: {
@@ -175,11 +175,12 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierDetailList']),
+        ...mapWritableState(courierStore, ['courierDetailList','couriersDetailMsg']),
 
     },
-    mounted() {
-        this.getCourierMsg('YD', '463193332336436')
+    async mounted() {
+        // this.getCourierMsg('YD', '463193332336436')
+      this.couriersList=await this.couriersDetailMsg  
     },
 
 }

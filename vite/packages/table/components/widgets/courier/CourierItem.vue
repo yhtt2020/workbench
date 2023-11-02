@@ -18,10 +18,10 @@
                 </div>
             </div>
             <div class="mt-2 xt-text-2" style="font-size: 14px;">
-                {{ lastTraces.AcceptTime }}
+                {{ props.courier.Traces[props.courier.Traces.length-1].AcceptTime }}
             </div>
             <div class="mt-2 xt-text omit" style="font-size: 14px;">
-                {{ lastTraces.AcceptStation }}
+                {{ props.courier.Traces[props.courier.Traces.length-1].AcceptStation }}
             </div>
         </div>
     </div>
@@ -35,30 +35,29 @@ import { kdCompany, kdState,switchColor } from './mock'
 const useCourierStore = courierStore()
 const props = defineProps({ courier: Object })
 const stateColor = computed(() => {
-    return switchColor(useCourierStore.courierMsgList.State)
+    return switchColor(props.courier.State)
 })
 const courierCode=computed(()=>{
-    const code=props.courier.logisticCode
+    const code=props.courier.LogisticCode
     let start=code.substring(0,4)
     let end=code.substring(code.length-4)
     return ` ${start} - ${end}`
 })
 const switchCompany = computed(() => {
-    return kdCompany(props.courier.shipperCode)
-
+    return kdCompany(props.courier.ShipperCode)
 })
 const switchState = computed(() => {
-    return kdState(useCourierStore.courierMsgList.State)
+    return kdState(props.courier.State)
 })
-const lastTraces = ref({AcceptTime:null,AcceptStation:null})
-onMounted( async () => {
-    await useCourierStore.getCourierMsg(props.courier.shipperCode, props.courier.logisticCode,props.courier.customerName)
-    // console.log(props.courier.shipperCode, props.courier.logisticCode);
+// const lastTraces = ref({AcceptTime:null,AcceptStation:null})
+// onMounted( async () => {
+//     await useCourierStore.getCourierMsg(props.courier.shipperCode, props.courier.logisticCode,props.courier.customerName)
+//     // console.log(props.courier.shipperCode, props.courier.logisticCode);
     
-    // setTimeout(() => {
-        lastTraces.value = await useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
-    // });
-})
+//     // setTimeout(() => {
+//         lastTraces.value = await useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
+//     // });
+// })
 </script>
 <style lang='scss' scoped>
 .omit {
