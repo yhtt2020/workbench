@@ -46,9 +46,9 @@
                 <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
             </template>
             <teleport to='body'>
-                <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" 
-                title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="11" :maskIndex="10">
-                    <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
+                <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+                    :isHeader="false" :boxIndex="11" :maskIndex="10">
+                    <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
                 </xt-modal>
             </teleport>
         </div>
@@ -182,8 +182,17 @@ export default {
             this.orderNum = item
             console.log(this.orderNum)
         },
-        closeCourierDetail(){
-            this.showCourierDetail=false
+        closeCourierDetail() {
+            this.showCourierDetail = false
+        },
+        handleResize() {
+            let windoWidth = window.innerWidth
+            if (windoWidth > 1200) {
+                this.courierShow = true
+            } else {
+                this.courierShow = false
+            }
+            // console.log(windoWidth,'windoWidth')
         }
 
     },
@@ -219,14 +228,18 @@ export default {
         });
         // await this.refreshCourier()
         // console.log(window.innerWidth)
+        window.addEventListener('resize', this.handleResize);
     },
-    beforeUpdate() {
-        // console.log(window.innerWidth);
-        if (window.innerWidth > 1200) {
-            this.toggleDetail = true
-        } else {
-            this.toggleDetail = false
-        }
+    // beforeUpdate() {
+    //     // this.changeTag()
+    //     if (window.innerWidth > 1200) {
+    //         this.toggleDetail = true
+    //     } else {
+    //         this.toggleDetail = false
+    //     }
+    // },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleResize);
     },
 
 }
@@ -249,5 +262,9 @@ export default {
             display: block;
         }
     }
+}
+
+.xt-modal {
+    padding: 0px !important;
 }
 </style>

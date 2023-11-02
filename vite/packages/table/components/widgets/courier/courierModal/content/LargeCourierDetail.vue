@@ -35,7 +35,7 @@
     <template v-else>
       <div class="flex justify-between px-6">
 
-        <SortList v-if="allVisible" :list="this.couriersList" @rightSelect="getRightItem" />
+        <SortList v-if="allVisible" :list="this.filterList" @rightSelect="getRightItem" />
         <div style="width: 452px;" v-else class="flex flex-col">
           <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
             <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
@@ -168,7 +168,7 @@ export default {
         if (this.sortList.length !== 0) {
           return this.sortList
         } else {
-          return courierDetailList
+          return this.couriersList
         }
       }
     },
