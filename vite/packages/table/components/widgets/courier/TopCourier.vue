@@ -103,14 +103,14 @@ export default {
             this.topCourierVisible = false
             this.$refs.addCourierRef.openCourierModel()
         },
-        async refreshExpress() {
-            this.isLoading=true
-            this.couriersList = await this.couriersDetailMsg
-            setTimeout(() => {
-                this.isLoading=false
-            });
+        // async refreshExpress() {
+        //     this.isLoading=true
+        //     this.couriersList = await this.couriersDetailMsg
+        //     setTimeout(() => {
+        //         this.isLoading=false
+        //     });
             
-        }
+        // }
 
     },
     computed: {

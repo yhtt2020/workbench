@@ -9,7 +9,7 @@
       <div style="height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
           <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-            <div :class="{ 'select': sortItem?.id === item.id }"
+            <div :class="{ 'select': sortItem?.LogisticCode === item.LogisticCode }"
               class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />

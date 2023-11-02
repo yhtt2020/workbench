@@ -46,10 +46,10 @@
                 <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
             </template>
             <teleport to='body'>
-                <Modal v-if="showCourierDetail" v-model:visible="showCourierDetail">
-                    <LogisticsDetail :orderNum="orderNum" />
-                </Modal>
-
+                <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" 
+                title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="11" :maskIndex="10">
+                    <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
+                </xt-modal>
             </teleport>
         </div>
 
@@ -159,18 +159,18 @@ export default {
     },
     methods: {
         ...mapActions(courierStore, ['getCourierMsg', 'getCouriersDetail']),
-        async refreshCourier() {
-            // this.getCourierMsg('YD', '463193332336436')
-            this.isLoading = true
-            await this.getCouriersDetail()
-            // console.log(this.couriersDetailMsg);
-            this.deliveryDetails = await this.couriersDetailMsg
+        // async refreshCourier() {
+        //     // this.getCourierMsg('YD', '463193332336436')
+        //     this.isLoading = true
+        //     await this.getCouriersDetail()
+        //     // console.log(this.couriersDetailMsg);
+        //     this.deliveryDetails = await this.couriersDetailMsg
 
-            // console.log(this.deliveryDetails, 'deliveryDetails');
-            setTimeout(() => {
-                this.isLoading = false
-            });
-        },
+        //     // console.log(this.deliveryDetails, 'deliveryDetails');
+        //     setTimeout(() => {
+        //         this.isLoading = false
+        //     });
+        // },
         // changeState() {
         //     this.allCourierVisible = true
         // }
@@ -180,6 +180,10 @@ export default {
         viewDeliveryDetails(item) {
             this.showCourierDetail = true
             this.orderNum = item
+            console.log(this.orderNum)
+        },
+        closeCourierDetail(){
+            this.showCourierDetail=false
         }
 
     },
@@ -204,24 +208,24 @@ export default {
         }
     },
     async mounted() {
-        // this.isLoading = true
-        // await this.getCouriersDetail()
-        // // console.log(this.couriersDetailMsg);
-        // this.deliveryDetails = await this.couriersDetailMsg
+        this.isLoading = true
+        await this.getCouriersDetail()
+        // console.log(this.couriersDetailMsg);
+        this.deliveryDetails = await this.couriersDetailMsg
 
         // console.log(this.deliveryDetails, 'deliveryDetails');
-        // setTimeout(() => {
-        //     this.isLoading = false
-        // });
-        await this.refreshCourier()
+        setTimeout(() => {
+            this.isLoading = false
+        });
+        // await this.refreshCourier()
         // console.log(window.innerWidth)
     },
     beforeUpdate() {
-        console.log(window.innerWidth);
-        if (window.innerWidth < 1200) {
-            this.courierShow = false
+        // console.log(window.innerWidth);
+        if (window.innerWidth > 1200) {
+            this.toggleDetail = true
         } else {
-            this.courierShow = true
+            this.toggleDetail = false
         }
     },
 

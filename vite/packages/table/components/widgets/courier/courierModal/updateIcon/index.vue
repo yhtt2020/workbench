@@ -19,7 +19,7 @@
    </div>
   </div>
 
-  <!-- <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar" /> -->
+  <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar" />
 
   <div class="flex items-center justify-center w-8 h-8 rounded-lg category-button pointer xt-bg-2">
    <SmallIcon icon="akar-icons:trash-can" style="font-size: 1rem;"/>
