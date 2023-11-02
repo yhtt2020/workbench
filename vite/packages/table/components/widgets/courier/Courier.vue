@@ -15,13 +15,12 @@
                         icon="akar-icons:arrow-clockwise" />
                 </xt-button>
             </div>
-            <!-- {{ courierList.length }} -->
             <div v-if="showWay">
-                <MinEmpty v-if="courierDetailList.length <= 0" />
+                <MinEmpty v-if="courierDetailList.length === 0" />
                 <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
             </div>
             <template v-else>
-                <Empty v-if="courierDetailList.length <= 0" />
+                <Empty v-if="courierDetailList.length === 0" />
                 <template v-else>
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                         style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
@@ -140,9 +139,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(courierStore, ['getCourierMsg']),
+        ...mapActions(courierStore, [
+            // 'getCourierMsg',
+            'getDbCourier'
+        ]),
         refreshCourier() {
-            this.getCourierMsg('YD','463193332336436')
+            // this.getCourierMsg('YD','463193332336436')
+            this.getDbCourier()
         },
         addCourier(){
           this.$refs.addCourierRef.openCourierModel()
@@ -169,9 +172,10 @@ export default {
             return this.courierMsgList
         }
     },
-    // mounted() {
-    //     this.getCourierMsg('YD','463193332336436')
-    // },
+    mounted() {
+        // this.getCourierMsg('YD','463193332336436')
+        this.getDbCourier()
+    },
 
 }
 </script>

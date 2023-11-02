@@ -32,61 +32,37 @@
     </div>
 </template>
 
-<script setup lang='ts'>
+<script setup>
 import { ref, reactive,computed,onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import { courierStore } from '../../../store/courier'
-import { kdCompany, kdState } from './mock'
+import { kdCompany, kdState,stateColor } from './mock'
 const useCourierStore = courierStore()
+
 const props = defineProps({ courier: Object })
-const stateColor = computed(() => {
-    switch (useCourierStore.courierMsgList.State) {
-        case "0":
-            return '#508BFE';
-            break;
-        case "1":
-            return '#43CADE';
-            break;
-        case "2":
-            return '#508BFE';
-            break;
-        case "3":
-            return '#FA7B14';
-            break;
-        case "4":
-            return '#52C41A';
-            break;
-        case "5":
-            return '#508BFE';
-            break;
-        case "6":
-            return '#508BFE';
-            break;
 
-        default:
-            return '#508BFE';
-    }
+stateColor(props?.courier?.State)
+
+const courierCode = computed(()=>{
+    const orderNum = props.courier?.LogisticCode
+    const changCode = `${orderNum.slice(0,4)}-${orderNum.slice(-4)}`
+    return changCode
 })
-const courierCode=computed(()=>{
-    const code=useCourierStore.courierMsgList.LogisticCode
-    let start=code.substring(0,4)
-    let end=code.substring(code.length-4)
-    return ` ${start} - ${end}`
-})
+
+
 const switchCompany = computed(() => {
-    return kdCompany(useCourierStore.courierMsgList.ShipperCode)
-
+    return kdCompany(props?.courier?.ShipperCode)
 })
 const switchState = computed(() => {
-    return kdState(useCourierStore.courierMsgList.State)
+    return kdState(props?.courier?.State)
 })
-const lastTraces = ref({AcceptTime:null,AcceptStation:null})
-onMounted(() => {
-    useCourierStore.getCourierMsg(props.courier.shopperCode, props.courier.logisticCode)
-    setTimeout(() => {
-        lastTraces.value = useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
-    });
-})
+const lastTraces = ref(null);
+
+lastTraces.value = {
+    AcceptStation:props.courier?.Traces[0]?.AcceptStation,
+    AcceptTime:props.courier?.Traces[0]?.AcceptTime
+}
+
 </script>
 <style lang='scss' scoped>
 .omit{

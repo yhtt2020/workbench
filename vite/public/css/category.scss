@@ -22,26 +22,26 @@
 
 .font{
  &-14{
-  font-size: 14px;
+  font-size: 14px !important;
  }
  &-16{
-  font-size: 16px;
+  font-size: 16px !important;
  }
  &-12{
-  font-size: 12px;
+  font-size: 12px !important;
  }
  &-18{
-  font-size: 18px;
+  font-size: 18px !important;
  }
 
  &-400{
-  font-weight: 400;
+  font-weight: 400 !important;
  }
  &-500{
-  font-weight: 500;
+  font-weight: 500 !important;
  }
 
  &-600{
-  font-weight: 600;
+  font-weight: 600 !important;
  }
 }

@@ -8,52 +8,61 @@ const kdniao=sUrl('/app/kdniao/realTimeQuery')
 // @ts-ignore
 export const courierStore = defineStore("courier", {
     state: () => ({
-        courierMsgList: [],
-        courierDetailList: [
-            {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
-            },
-            {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
-            },
-            {
-                shipperCode:'YD',
-                logisticCode:'463193332336436',
-            },
-        ],
+      courierMsgList: [],
+      courierDetailList: [],
     }),
     actions: {
-        async getCourierMsg(shipperCode,logisticCode,customerName='') {
-            const cacheTag='kdniao:cache:'+shipperCode+logisticCode
-            const cacheData=localCache.get(cacheTag)
-            if(cacheData){
-                this.courierMsgList = cacheData
-                console.log(this.courierMsgList);
+        // addCourierEvent(event){
+        //     this.courierDetailList.push(event)
+        // },
+        // removeCourierEvent(event){
+        //     this.courierDetailList=this.courierDetailList.filter(item=>{
+        //         return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
+        //     })
+        // },
+
+        // 根据订单号来存储快递数据
+        
+        async putCourierInfo(code:any,order:any,customerName:any){
+          //   console.log('查看情况',code,order);
+          const option = {
+            shipperCode:code,
+            logisticCode: order,
+            customerName:customerName
+          }
+          let response = await post(kdniao, option)
+          const dbData = {
+            _id:`courier:${Date.now()}`,
+            content:response,
+            category:`courier:${Date.now()}`,
+            createTime:Date.now(),
+            updateTime:Date.now()
+          }
+          //console.log('查看db存储的数据',dbData);
+          await tsbApi.db.put(dbData)
+          // const res  = await tsbApi.db.put(dbData)
+          // console.log('查看结果',res);
+          this.getDbCourier();
+        },
+
+        // 获取db中存储的快递数据
+        async getDbCourier(){
+          const getResult  = await tsbApi.db.allDocs('courier:')
+          const rowList = getResult.rows
+          // 将getResult.rows列表的doc进行解构
+          const docList = rowList.map((item:any)=>{ return item.doc }) 
+          // 将docList中的content进行解构
+          const contentList = docList.map((item:any)=>{ return item.content})
+          const filterList = contentList.filter((item:any)=>{
+            // console.log('查看',item.Traces.length);
+            if(item.Traces.length !== 0){
+              return item
             }
-            let response = await post(kdniao, {
-                shipperCode,
-                logisticCode,
-                customerName
-            })
-            // console.log(response,'response');
-            
-            if (response.Success) {
-                this.courierMsgList = response
-            }
-            // console.log(this.courierMsgList,'this.courierMsgList');
-            
-            localCache.set(cacheTag,this.courierMsgList,24*60*60)
-        },
-        addCourierEvent(event){
-            this.courierDetailList.push(event)
-        },
-        removeCourierEvent(event){
-            this.courierDetailList=this.courierDetailList.filter(item=>{
-                return item.shipperCode!=event.shipperCode && item.logisticCode!=event.logisticCode
-            })
-        },
+          })
+          // console.log('获取列表中的doc',filterList);
+          this.courierDetailList = filterList
+        }
+
 
     },
     persist: {

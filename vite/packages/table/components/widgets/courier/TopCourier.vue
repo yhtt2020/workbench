@@ -168,7 +168,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(courierStore, ['getCourierMsg']),
+        ...mapActions(courierStore, [
+            // 'getCourierMsg',
+            'getDbCourier'
+        ]),
         showTopCourier() {
             this.topCourierVisible = !this.topCourierVisible
         }
@@ -179,7 +182,7 @@ export default {
 
     },
     mounted() {
-        this.getCourierMsg('YD', '463193332336436')
+        this. getDbCourier()
     },
 
 }

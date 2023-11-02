@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
 import dbStorage from '../../../store/dbStorage'
+import { courierStore } from '../../../store/courier'
 
 // @ts-ignore
 export const courierModalStore = defineStore('courierModal',{
  state:()=>({
   sortList:[], // 组件大尺寸下的数据
   smallSortList:[], // 组件小尺寸下的数据
+  infoList:[], 
  }),
 
  actions:{
@@ -14,8 +16,9 @@ export const courierModalStore = defineStore('courierModal',{
   },
   updateSmallSortList(data:any){
     this.smallSortList = data
-  }
+  },
 
+  
  },
  
  persist:{
