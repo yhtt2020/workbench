@@ -10,14 +10,11 @@
     :desk="desk"
   >
   <!-- 图标 -->
-    <template #left-title>
-        <div class="icon"
-            style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 1px;top:14px;">
-            <Icon :icon="icons.notepad12Regular" width="20" height="20" />
-          </div>
-    </template>
+    <div class="icon flex justify-center align-center"
+      style="width: 35px;height: 24px;position: absolute;left: 7px;top:15px;">
+      <Icon :icon="icons.notepad12Regular" width="20" height="20" />
+    </div>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
-    
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <!-- :style="{ backgroundImage: background, color: fontColor }" -->
@@ -108,6 +105,9 @@ export default {
   directives: {
     // reSize,
   },
+  computed:{
+    ...mapWritableState(noteStore, ['selNoteText']),
+  },
   data() {
     return {
       fontColors: ["white", "black", "red", "green", "blue"],
@@ -116,8 +116,11 @@ export default {
         className: "card",
         title: "桌面便签",
         icon: "",
-        newIcon:'fluent:notepad-12-regular',
-        // icon: "bianji",
+        isCopy:true,
+        copyContent:()=>{
+          require('electron').clipboard.writeText(this.customData.text)
+          message.success("已成功复制到剪切板");
+        },
         type: "games",
         isEdit:true,
         changeNoteTitle:(e)=>{

@@ -31,7 +31,7 @@
      color="var(--secondary-text)"/>
    </div>
 
-   <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+   <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :goodVisible="true" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
 
     <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
     <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
