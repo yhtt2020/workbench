@@ -36,7 +36,7 @@
             <template v-else>
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                     style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                    <CourierItem v-for="(item, index) in couriersList" :key="index" :courier="item" />
+                    <CourierItem v-for="(item, index) in couriersList" :key="index" :courier="item" @click="viewDeliveryDetails(item)" />
                 </vue-custom-scrollbar>
             </template>
 
@@ -53,6 +53,12 @@
     <teleport to='body'>
         <AddCourierModal ref="addCourierRef" />
     </teleport>
+    <teleport to='body'>
+        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+            :isHeader="false" :boxIndex="11" :maskIndex="10">
+            <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+        </xt-modal>
+    </teleport>
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
@@ -65,6 +71,7 @@ import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
+import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 export default {
     name: '我的快递',
     components: {
@@ -74,7 +81,8 @@ export default {
         MinCourierItem,
         Empty,
         MinEmpty,
-        AddCourierModal
+        AddCourierModal,
+        LogisticsDetail
     },
     data() {
         return {
@@ -88,7 +96,8 @@ export default {
             },
             topCourierVisible: false,
             couriersList: [],
-            isLoading: false
+            isLoading: false,
+            showCourierDetail: false,
         }
     },
     methods: {
@@ -109,8 +118,17 @@ export default {
         //     setTimeout(() => {
         //         this.isLoading=false
         //     });
-            
+
         // }
+        viewDeliveryDetails(item) {
+            this.showCourierDetail = true
+            this.orderNum = item
+            this.topCourierVisible=false
+            console.log(this.orderNum)
+        },
+        closeCourierDetail(){
+            this.showCourierDetail=false
+        }
 
     },
     computed: {
