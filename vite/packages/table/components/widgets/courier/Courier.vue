@@ -66,6 +66,7 @@ import MinEmpty from './MinEmpty.vue'
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
+import grab from './grab'
 
 export default {
   name: '我的快递',
@@ -155,42 +156,68 @@ export default {
     },
 
     bindJd () {
-      Modal.confirm({
-        centered: true,
-        content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
-        onOk: () => {
-          tsbApi.web.openPreloadWindow({
-            width: 1200,
-            height: 800,
-            background: false,
-            url: 'https://passport.jd.com/uc/login',
-            preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-            callback: (data) => {
+      if (!this.storeInfo.jd.nickname) {
+        Modal.confirm({
+          centered: true,
+          content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
+          onOk: () => {
+
+            grab.jd.login((data) => {
+              this.storeInfo.jd.nickname = data.nickname
               message.loading({
                 content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
                 key: 'loadingTip',
-                duration:0
+                duration: 0
               })
-              console.log('登录成功了，接下来进行下一步')
-              //todo 获取到登录成功的信号
-              tsbApi.web.openPreloadWindow({
-                background: true,
-                url: 'https://order.jd.com/center/list.action',
-                preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-                callback: (data) => {
-                  message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-                  console.log(data)
-                }
+              grab.jd.getOrder((data) => {
+                message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
+                console.log(data)
               })
-            }
-          })
+            })
 
-        }
-      })
+            // tsbApi.web.openPreloadWindow({
+            //   width: 1200,
+            //   height: 800,
+            //   background: false,
+            //   url: 'https://passport.jd.com/uc/login',
+            //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
+            //   callback: (data) => {
+            //     this.loginInfo.jd.nickname=data.nickname
+            //     message.loading({
+            //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
+            //       key: 'loadingTip',
+            //       duration:0
+            //     })
+            //     console.log('登录成功了，接下来进行下一步')
+            //     //todo 获取到登录成功的信号
+            //     tsbApi.web.openPreloadWindow({
+            //       background: true,
+            //       url: 'https://order.jd.com/center/list.action',
+            //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
+            //       callback: (data) => {
+            //
+            //       }
+            //     })
+            //   }
+            // })
+
+          }
+        })
+      } else {
+        message.loading({
+          content: '已绑定账号：' + this.storeInfo.jd.nickname + '，正在为您更新订单信息，请稍候…',
+          key: 'loadingTip',
+          duration: 0
+        })
+        grab.jd.getOrder((data) => {
+          message.success({ content: '更新订单成功!本次共更新：'+data.orders.length+'条订单信息', key: 'loadingTip', duration: 3 })
+          console.log(data)
+        })
+      }
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList']),
+    ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList', 'storeInfo']),
     // 判断尺寸大小
     showSize () {
       if (this.customData && this.customData.width && this.customData.height) {
