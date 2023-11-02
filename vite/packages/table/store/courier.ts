@@ -61,14 +61,27 @@ export const courierStore = defineStore("courier", {
           const contentList = docList.map((item:any)=>{ return item.content})
           const filterList = contentList.filter((item:any)=>{
             // console.log('查看',item.Traces.length);
-            if(item.Traces.length !== 0){
-              return item
-            }
+            // if(item.Traces.length !== 0){
+            //   return item
+            // }
+            return item
           })
           // console.log('获取列表中的doc',filterList);
           this.courierDetailList = filterList
-        }
+        },
 
+        // 删除db中存储的数据
+        async removeDbData(index:Number){  
+          // console.log('查看下标::>>',index);
+          
+          const getResult  = await tsbApi.db.allDocs('courier:')
+          const rowList = getResult.rows
+          // 将getResult.rows列表的doc进行解构
+          const docList = rowList.map((item:any)=>{ return item.doc }) 
+          const res = await tsbApi.db.remove(docList[index])
+          // console.log('查看删除结果',res);
+          this.getDbCourier()
+        }
         
 
 

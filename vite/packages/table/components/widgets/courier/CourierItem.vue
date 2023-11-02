@@ -12,16 +12,16 @@
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
                     </div>
-                    <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor }">
+                    <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColors }">
                         {{ switchState }}
                     </div>
                 </div>
             </div>
             <div class="mt-2 xt-text-2" style="font-size: 14px;">
-                {{ lastTraces.AcceptTime }}
+                {{ lastTraces?.AcceptTime }}
             </div>
             <div class="mt-2 xt-text omit" style="font-size: 14px;">
-                {{ lastTraces.AcceptStation }}
+                {{ lastTraces?.AcceptStation }}
             </div>
         </div>
     </div>
@@ -35,7 +35,10 @@ import { stateColor,kdState,kdCompany } from './mock'
 const props = defineProps({courier:Object})
 // console.log('查看数据',props.courier);
 
-stateColor(props.courier?.State)
+
+const stateColors = computed(()=>{
+  return stateColor(props.courier?.State)
+})
 
 const switchState = computed(() => {
     return kdState(props.courier?.State)

@@ -13,7 +13,7 @@
                         <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                             {{switchCompany }}
                         </div>
-                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColor }">
+                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColors }">
                             {{ switchState }}
                         </div>
                     </div>
@@ -21,10 +21,10 @@
             </div>
             <div class="w-full h-[84px] xt-bg rounded-xl p-3 pt-2 mt-2 pointer" style="text-align: left;">
                 <div class="xt-text-2 ">
-                    {{ lastTraces.AcceptTime }}
+                    {{ lastTraces?.AcceptTime }}
                 </div>
                 <div class="mt-1 xt-text omit">
-                    {{ lastTraces.AcceptStation }}
+                    {{ lastTraces?.AcceptStation }}
                 </div>
             </div>
         </div>
@@ -41,7 +41,9 @@ const useCourierStore = courierStore()
 
 const props = defineProps({ courier: Object })
 
-stateColor(props?.courier?.State)
+const stateColors = computed(()=>{
+  return stateColor(props.courier?.State)
+})
 
 const courierCode = computed(()=>{
     const orderNum = props.courier?.LogisticCode
