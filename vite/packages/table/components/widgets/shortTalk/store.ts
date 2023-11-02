@@ -260,7 +260,7 @@ export const shortTalkStore = defineStore("shortTalkStore", {
     async getTodoData(){
       await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
         "content":{
-          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum,audit_thread_url,audit_post_url,audit_channel_post_url,report_url,audit_forum_member_url,audit_forum_url,",
+          "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum",
           "access":{
             "plate":'all',
             "day_type":'month',
@@ -274,6 +274,9 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           }
         }
       }).then((res)=>{
+        console.log('res');
+        console.log(res);
+        
 
         this.todoList.forEach(item => {
           item.num = res[item.type]

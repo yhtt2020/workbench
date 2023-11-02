@@ -20,11 +20,11 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <div @click="this.deTest">清除数据</div>
+            <!-- <div @click="this.deTest">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
             <div @click="this.findAll">db数据</div>
-            <div>{{ this.isSelTab }}</div>
+            <div>{{ this.isSelTab }}</div> -->
             <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"

@@ -121,7 +121,6 @@ export default {
             this.changeAccToken(this.accToken,this.accUrl)
         },
         jumpUrl(url){
-            // console.log(this.todoList);
             browser.openInUserSelect(url)
         },
         back(){
