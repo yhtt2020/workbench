@@ -25,20 +25,20 @@ export const courierModalStore = defineStore('courierModal',{
 
   // 删除不需要的输入框
   removeNewCourierInfo(index:any){
-    console.log('查看index',index);
-    console.log('查看数据长度',this.courierLists.length === 1);
+    // console.log('查看index',index);
+    // console.log('查看数据长度',this.courierLists.length === 1);
     if(this.courierLists.length === 1){
       return
     }else{
       this.courierLists.splice(index,1)
     }
-    
+
   },
 
   updateNewCourierInfo(data:any,index:any){
-    console.log('查看数据',data,index);
+    // console.log('查看数据',data,index);
     this.courierLists.splice(index, 1 , data)
-    console.log('查看替换后的数据',this.courierLists);
+    // console.log('查看替换后的数据',this.courierLists);
     
   }
  },

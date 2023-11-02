@@ -11,9 +11,9 @@
     <div class="font-14 font-normal xt-text-2 px-4 py-3 xt-bg-2 mb-4 rounded-lg">「顺丰快递」和「菜鸟橙运」需要填写额外信息。</div>
     <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
       <div class="flex items-center mb-4" v-for="(item,index) in courierLists">
-        <!--  @input="searchCourier" :filter-option="filterOption" -->
+        <!--  :filter-option="filterOption" -->
        <a-select  show-search placeholder="自动识别"  v-model:value="item.code"
-        style="width: 120px" :options="optionList"
+        style="width: 120px" :options="optionList"  @input="searchCourier"
        >
        </a-select>
 
@@ -43,7 +43,7 @@
  
    <div class="flex my-4 mr-4 justify-end">
      <xt-button w="64" h="40" @click="close">取消</xt-button>
-     <!-- <xt-button w="64" h="40" class="ml-3" type="theme" @click="addCourierData">确定</xt-button> -->
+     <xt-button w="64" h="40" class="ml-3" type="theme" @click="addCourierData">确定</xt-button>
    </div>
 
   </div>
@@ -84,7 +84,10 @@ export default defineComponent({
       const list = expressList.map((item)=>{ return {value:item.code,label:item.name} })
       return list
     })
-
+    
+    const isOrderNumEmpty = computed(()=>{
+     return courierLists.value.some((item) => { return item.orderNum === ''});
+    }) 
 
     // 关闭
     const close = ()=>{ ctx.emit('close') }
@@ -96,27 +99,84 @@ export default defineComponent({
 
     // 删除快递输入框
     const removeCourierInput = (index) =>{
-      console.log('查看index',index);
+      // console.log('查看index',index);
       courier.removeNewCourierInfo(index)
     }
 
     // 输入框数据自动识别
     const getCourierNumber = (item,index) =>{
-      console.log('查看item',item,index);
+      // console.log('查看item',item,index);
       if(item !== ''){
         const result =  getCourierName(item)
-        console.log('查看返回情况',{code:result.code,label:result.name,orderNum:item});
-        console.log('查看index',index);
+        // console.log('查看返回情况',{code:result.code,label:result.name,orderNum:item});
+        // console.log('查看index',index);
         courier.updateNewCourierInfo({code:result.code,label:result.name,orderNum:item},index)
+      }else{
+        courier.updateNewCourierInfo({code:'自动识别',label:'自动识别',orderNum:''},index)
+      }
+    }
+
+    // 下拉框搜索
+    const searchCourier = (evt) =>{
+      // if(evt.data){
+      //   const regexText = new RegExp(evt.data,"i");
+      //   const find = expressList.find((item)=>{ 
+      //    return regexText.test(item.name);
+      //   })
+
+      //   const result = expressList.filter((item)=>{
+      //    return regexText.test(item.name);
+      //   })
+      //   const filterResult = result.map((item)=>{ return {value:item.code,label:item.name} })
+
+      //   console.log('查看find结果',{value:find.code,label:find.name});
+
+      //   courierValue.value = { value:find.code,label:find.name }
+      //   filterOption.value = filterResult
+
+      // }else{
+      //   courierValue.value = ''
+      // }
+    }
+
+    // 最终添加按钮
+    const addCourierData = (evt) =>{
+      console.log(courierLists.value.length);
+      if(courierLists.value.length === 1){
+        // console.log('查看是否为单个添加');
+        // console.log('查看用户是否输入参数',courierLists.value[0].orderNum === '');
+        if(courierLists.value[0].orderNum === ''){
+          message.warning('请添加快递信息')
+          evt.preventDefault();
+        }else{
+          console.log('参数容错',courierLists.value[0]);
+          addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,'')
+          ctx.emit('close')
+        }
+      }else{
+        // console.log('查看是否为多个添加');
+        // console.log('查看用户是否输入参数',isOrderNumEmpty.value);
+        if(isOrderNumEmpty.value){
+          message.warning('请添加快递信息')
+          evt.preventDefault();
+        }else{
+          for(let i=0;i<courierLists.value.length;i++){
+            console.log('查看结果',courierLists.value[i]);
+            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,'')
+          }
+          ctx.emit('close')
+        }
       }
     }
 
 
 
+
+
     return {
-      courierLists,optionList,
+      courierLists,optionList,isOrderNumEmpty,
       ...toRefs(data),close,createCourierInput,removeCourierInput,
-      getCourierNumber,
+      getCourierNumber,searchCourier,addCourierData,
     }
   }
 })

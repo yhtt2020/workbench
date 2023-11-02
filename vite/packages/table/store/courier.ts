@@ -26,15 +26,15 @@ export const courierStore = defineStore("courier", {
         async putCourierInfo(code:any,order:any,customerName:any){
           //   console.log('查看情况',code,order);
           const option = {
-            shipperCode:code?.value,
+            shipperCode:code,
             logisticCode: order,
             customerName:customerName
           }
-          console.log('查看option',option);
+          // console.log('查看option',option);
           
 
           let response = await post(kdniao, option)
-          console.log('查看报错信息',response);
+          // console.log('查看报错信息',response);
           
 
           const dbData = {
@@ -68,6 +68,8 @@ export const courierStore = defineStore("courier", {
           // console.log('获取列表中的doc',filterList);
           this.courierDetailList = filterList
         }
+
+        
 
 
     },
