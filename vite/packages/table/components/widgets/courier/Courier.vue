@@ -182,7 +182,10 @@ export default {
     async mounted() {
         this.isLoading = true
         await this.getCouriersDetail()
-        // console.log(this.deliveryDetails,'deliveryDetails');
+        // console.log(this.couriersDetailMsg);
+        this.deliveryDetails= await this.couriersDetailMsg
+        
+        console.log(this.deliveryDetails,'deliveryDetails');
         setTimeout(() => {
             this.isLoading = false
         });

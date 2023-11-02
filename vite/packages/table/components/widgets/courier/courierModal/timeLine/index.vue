@@ -1,13 +1,13 @@
 <template>
  <a-timeline>
-  <a-timeline-item v-for="item in list" class="item-time">
+  <a-timeline-item v-for="(item,index) in reversedList" class="item-time">
     <div class="flex">
      <template v-if="item.title !==''">
-      <div  class="font-16 font-600 xt-font mr-4" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'"> {{ item.title }}</div>
+      <div  class="mr-4 font-16 font-600 xt-font" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'"> {{ deliveryStatus[index] }}</div>
      </template>
-     <div class="font-14 font-400 xt-font" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'">{{ item.time }}</div>
+     <div class="font-14 font-400 xt-font" :class="item.type === 'sign' && item.status === '0' ? 'xt-text': 'xt-text-2'">{{ item.AcceptTime }}</div>
     </div>
-    <div class="font-14 font-400 xt-text-2">{{ item.content }}</div>
+    <div class="font-14 font-400 xt-text-2">{{ item.AcceptStation }}</div>
   </a-timeline-item>
   <div style="height: 10px;"></div>
  </a-timeline>
@@ -15,12 +15,23 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-
+import {kdState} from '../../mock'
 export default {
  props:['list'],
  components:{
   SmallIcon
  },
+ computed:{
+  deliveryStatus(){
+    let deliveryList=this.list.map((item)=>{
+      return kdState(item.Action)
+    })
+    return deliveryList
+  },
+  reversedList() {
+    return this.list.slice().reverse();
+  }
+ }
 }
 </script>
 

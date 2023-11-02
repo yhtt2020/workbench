@@ -166,6 +166,9 @@ export const kdState=(state)=>{
         case "6":
             return '清关';
             break;
+        case "202":
+            return "派送中";
+            break;
     }
 }
 

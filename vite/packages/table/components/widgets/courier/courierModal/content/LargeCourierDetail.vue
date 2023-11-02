@@ -32,7 +32,7 @@
   <template v-else>
    <div class="flex justify-between px-6">
 
-    <SortList v-if="allVisible" :list="filterList"  @rightSelect="getRightItem"/>
+    <SortList v-if="allVisible" :list="this.couriersList"  @rightSelect="getRightItem"/>
 
     <div style="width: 452px;" v-else class="flex flex-col">
      <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
@@ -68,7 +68,7 @@
      <UpdateIcon :orderData="rightList"/>
      <div class="px-4 rounded-lg xt-bg-2">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
-       <TimeLine :list="rightList?.flowDetail"/>
+       <TimeLine :list="rightList?.Traces"/>
       </vue-custom-scrollbar>
      </div>
     </div>
@@ -85,7 +85,7 @@ import { mapActions,mapWritableState } from 'pinia'
 import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierDetailList, courierType} from '../modalMock'
-
+import {courierStore} from '../../../../../store/courier' 
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
 import TimeLine from '../timeLine/index.vue'
 import AddCourierModal from '../AddCourierModal.vue'
@@ -116,17 +116,23 @@ export default {
    currentID:courierDetailList[0].id,
 
    rightList:courierDetailList[0], // 接收选中的详情
+   couriersList:[]
   }
  },
 
  computed:{
   ...mapWritableState(courierModalStore,['sortList']),
+  ...mapWritableState(courierStore,['couriersDetailMsg']),
   flowType(){
-   const allLength = this.largeList.length;
-   const received = courierDetailList.filter((item)=>{ return item.status === 'collect' })
-   const hasSigned = courierDetailList.filter((item)=>{ return item.status === 'signed' })
-   const onWay = courierDetailList.filter((item)=>{ return item.status === 'enRoute' })
-   const outDelivery = courierDetailList.filter((item)=>{ return item.status === 'delivery' })
+   const allLength = this.couriersList.length;
+  //  揽收
+   const received = this.couriersList.filter((item)=>{ return item.State === '1' })
+  //  签收
+   const hasSigned = this.couriersList.filter((item)=>{ return item.State === '3' })
+  //  在途中--包括在途中，问题件，转寄，清关的快递件
+   const onWay = this.couriersList.filter((item)=>{ return item.State !== '1' && item.StateEx !== '202' && item.State !== '3' })
+  //  派件中
+   const outDelivery = this.couriersList.filter((item)=>{ return item.StateEx === '202' })
    const list = [...courierType]
    const filterList = list.map((item)=>{ 
     switch (item.name) {
@@ -211,7 +217,10 @@ export default {
   getRightItem(data){
    this.rightList = data
   }
- }
+ },
+ async mounted() {
+  this.couriersList=await this.couriersDetailMsg
+ },
 
 };
 </script>

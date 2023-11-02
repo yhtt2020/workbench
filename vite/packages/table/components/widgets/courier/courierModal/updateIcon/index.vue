@@ -7,13 +7,13 @@
    </div>
    <div class="flex flex-col ml-3">
     <div class="flex ">
-      <span class="mr-1 xt-font font-16 font-600 xt-text">{{ orderData?.goodName }}</span>
+      <span class="mr-1 xt-font font-16 font-600 xt-text">{{ orderData?.LogisticCode }}</span>
       <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
     </div>
 
     <div class="px-1.5 py-0.5">
-     <span class="xt-font xt-text-2 font-14 font-400">{{ orderData?.shipWay }}</span>
-     <span class="ml-1 xt-font xt-text-2 font-14 font-400">{{ orderData?.orderID }}</span>
+     <span class="xt-font xt-text-2 font-14 font-400">{{ switchCompany }}</span>
+     <span class="ml-1 xt-font xt-text-2 font-14 font-400">{{ orderData?.LogisticCode }}</span>
     </div>
 
    </div>
@@ -26,7 +26,7 @@
   </div>
 
  </div>
- 
+ <!-- {{ orderData }} -->
  <!-- <div class="flex justify-between mb-3">
         <div class="flex">
           <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
@@ -54,7 +54,7 @@
 import { Icon as SmallIcon } from '@iconify/vue'
 
 import GoodIcon from '../../../../../../selectIcon/page/index.vue'
-
+import {kdCompany} from '../../mock'
 export default {
  props:['orderData'],
  components:{
@@ -66,12 +66,16 @@ export default {
   //  avatar:`https://a.apps.vip/icons/goodSelect/${this.orderData.icon.split(':')[1]}.svg`,
    goodIconVisible:false,
    innerHeight:100,
+   defaultIcon:'fluent-emoji:package',
   }
  },
 
  computed:{
   detailAvatar(){
-    return `https://a.apps.vip/icons/goodSelect/${this.orderData.icon.split(':')[1]}.svg`;
+    return `https://a.apps.vip/icons/goodSelect/${this.defaultIcon.split(':')[1]}.svg`;
+  },
+  switchCompany(){
+    return kdCompany(this.orderData.ShipperCode)
   }
  },
 
