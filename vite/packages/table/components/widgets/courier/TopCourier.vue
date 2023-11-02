@@ -182,7 +182,7 @@ export default {
 
     },
     mounted() {
-        this. getDbCourier()
+        this.getDbCourier()
     },
 
 }

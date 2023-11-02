@@ -33,7 +33,7 @@ import { Icon as newIcon } from '@iconify/vue';
 import { stateColor,kdState,kdCompany } from './mock'
 
 const props = defineProps({courier:Object})
-console.log('查看数据',props.courier);
+// console.log('查看数据',props.courier);
 
 stateColor(props.courier?.State)
 
@@ -53,10 +53,22 @@ const courierCode = computed(()=>{
 
 const lastTraces = ref(null)
 
-lastTraces.value = {
-    AcceptStation:props.courier?.Traces[0]?.AcceptStation,
-    AcceptTime:props.courier?.Traces[0]?.AcceptTime
-}
+const newTraces = computed(()=>{
+   switch (props?.courier?.State) {
+    case '3':
+       return {
+         AcceptStation:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptTime
+        }
+    case '2':
+       return {
+         AcceptStation:props.courier?.Traces[0]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[0]?.AcceptTime
+        }
+   }
+})
+
+lastTraces.value = newTraces.value
 
 </script>
 

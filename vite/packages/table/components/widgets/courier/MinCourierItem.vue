@@ -58,10 +58,22 @@ const switchState = computed(() => {
 })
 const lastTraces = ref(null);
 
-lastTraces.value = {
-    AcceptStation:props.courier?.Traces[0]?.AcceptStation,
-    AcceptTime:props.courier?.Traces[0]?.AcceptTime
-}
+const newTraces = computed(()=>{
+   switch (props?.courier?.State) {
+    case '3':
+       return {
+         AcceptStation:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptTime
+        }
+    case '2':
+       return {
+         AcceptStation:props.courier?.Traces[0]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[0]?.AcceptTime
+        }
+   }
+})
+
+lastTraces.value = newTraces.value
 
 </script>
 <style lang='scss' scoped>

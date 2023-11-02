@@ -26,11 +26,17 @@ export const courierStore = defineStore("courier", {
         async putCourierInfo(code:any,order:any,customerName:any){
           //   console.log('查看情况',code,order);
           const option = {
-            shipperCode:code,
+            shipperCode:code?.value,
             logisticCode: order,
             customerName:customerName
           }
+          console.log('查看option',option);
+          
+
           let response = await post(kdniao, option)
+          console.log('查看报错信息',response);
+          
+
           const dbData = {
             _id:`courier:${Date.now()}`,
             content:response,
