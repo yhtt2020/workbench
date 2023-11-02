@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <template v-if="largeList?.length === 0">
+    <template v-if="this.couriersList?.length === 0">
       <div class="flex flex-col items-center justify-center h-full px-6">
         <SmallIcon icon="fluent-emoji:package" style="font-size: 3.5rem;" />
         <div class="px-4 py-3 my-4 rounded-lg xt-bg-2 xt-text">
@@ -38,13 +38,14 @@
         <SortList v-if="allVisible" :list="this.couriersList" @rightSelect="getRightItem" />
         <div style="width: 452px;" v-else class="flex flex-col">
           <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-            <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.id }"
+            <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
               class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
               </div>
               <!-- {{ otherList }} -->
-
+              <!-- {{ currentID }}
+              {{ item.EBusinessID }} -->
               <div class="flex flex-col" style="width: calc(100% - 84px);">
                 <div class="flex items-center justify-between ">
                   <span class="xt-font font-16 font-600">
@@ -122,7 +123,7 @@ export default {
 
       defaultFlow: { title: `全部${courierDetailList.length !== 0 ? `(${courierDetailList.length})` : ''} `, name: 'all' },
 
-      currentID: courierDetailList[0].id,
+      currentID: '',
 
       // rightList:this.couriersList[0], 接收选中的详情
       rightList: {}
@@ -228,7 +229,7 @@ export default {
     },
 
     seeDetail(data) {
-      this.currentID = data.id
+      this.currentID = data.LogisticCode
       this.rightList = data
     },
 
@@ -248,6 +249,7 @@ export default {
   async mounted() {
     this.couriersList = await this.couriersDetailMsg
     this.rightList = this.couriersList[0]
+    this.currentID=this.couriersList[0].LogisticCode
     // console.log(this.couriersList[0],'couriersList');
   },
 

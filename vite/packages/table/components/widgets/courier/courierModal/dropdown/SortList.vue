@@ -7,11 +7,11 @@
     </div>
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="width: 452px; height:480px;" ref="dropRef">
-        <div v-for="(item,index) in list" class="rounded-lg">
+        <div v-for="(item, index) in list" class="rounded-lg">
           <!-- {{ item }} -->
           <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-            <div :class="{ 'select': sortItem?.id === item.id }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+            <div :class="{ 'select': this.currentID === item.LogisticCode }"
+              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
               </div>
@@ -98,26 +98,27 @@ export default {
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
         },
-      ]
+      ],
+      currentID: '',
 
     }
   },
 
   computed: {
     stateColor() {
-      let colorList=this.list.map((item) => {
+      let colorList = this.list.map((item) => {
         return switchColor(item.State)
       })
       return colorList
     },
     switchState() {
-      let stateList=this.list.map((item) => {
+      let stateList = this.list.map((item) => {
         return kdState(item.State)
       })
       return stateList
     },
     switchCompany() {
-      let companyList=this.list.map((item) => {
+      let companyList = this.list.map((item) => {
         return kdCompany(item.ShipperCode)
       })
       return companyList
@@ -133,6 +134,7 @@ export default {
         onEnd: this.onSortEnd // 拖拽结束时触发的回调函数
       })
     })
+    this.currentID = this.list[0].LogisticCode
   },
 
   methods: {
@@ -160,7 +162,7 @@ export default {
     },
 
     seeDetail(data) {
-      //  this.currentID = data.id
+      this.currentID = data.LogisticCode
       this.$emit('rightSelect', data)
     },
 
@@ -198,5 +200,10 @@ export default {
 
 .select {
   background: var(--active-secondary-bg) !important;
+}
+.hover-bg{
+  &:hover{
+    background-color: var(--active-secondary-bg);
+  }
 }
 </style>
