@@ -127,4 +127,7 @@ editorConfig.MENU_CONF['bgColor'] = {
 :deep(.w-e-scroll){
     color: var(--primary-text);
 }
+:deep(.w-e-bar-divider){
+    background-color: var(--divider) !important;
+}
 </style>

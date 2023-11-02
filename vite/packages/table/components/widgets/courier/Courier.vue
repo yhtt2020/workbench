@@ -33,6 +33,7 @@
                     </xt-button>
                 </template>
             </template>
+
         </div>
 
     </Widget>
@@ -136,6 +137,7 @@ export default {
                 suppressScrollX: true,
                 wheelPropagation: true,
             },
+            isLoading: false,
         }
     },
     methods: {
@@ -153,7 +155,7 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courierStore,['courierMsgList','courierDetailList']),
+        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -168,7 +170,7 @@ export default {
                 return false
             }
         },
-        courierMsg(){
+        courierMsg() {
             return this.courierMsgList
         }
     },
@@ -191,8 +193,9 @@ export default {
         display: none;
 
     }
-    &:hover{
-        .add-courier{
+
+    &:hover {
+        .add-courier {
             display: block;
         }
     }

@@ -7,7 +7,7 @@
               <LeftSearch :selDesk="selDesk"></LeftSearch>
               </div>
               <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-                <NodeContent :selDesk="selDesk" v-show="this.selNote>=0"></NodeContent>
+                <NodeContent :selDesk="selDesk" v-show="this.selNote>=0 && this.noteList.length >0"></NodeContent>
               </div>
           </div>
       </LeftTab>
@@ -20,13 +20,14 @@
             </div>
           </div>
           <div style="height: 428px;" >
-            <div class="mb-4">我的桌面（{{ this.desks.length }}）</div>
-            <div class="overflow-hidden xt-scrollbar" style="height: 336px;">
+            <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
+            <div style="background: #2A2A2A;border-radius: 10px; padding: 10px 12px;">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
+            <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
               <div class="w-full flex items-center rounded-lg" 
                 style="height: 64px;background: #2A2A2A;justify-content: space-between;padding: 0 24px;" 
                 v-for="(item,index) in this.desks" 
                 :key="index" 
-                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' ,border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
+                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
                 'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
                  
                 @click="changeSelIndex(index)">
@@ -34,7 +35,7 @@
                   <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" class="mr-4"/>
                   {{ item.name }}
                 </div>
-                <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div>
+                <!-- <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div> -->
                 
               </div>
             </div>
@@ -84,11 +85,27 @@
       }
     },
     mounted () {
+      // console.log('初始化');
       this.getNotes()
     },
     computed: {
           ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
           ...mapWritableState(cardStore, ['desks','selIndex']),
+          // backgroundImage(){
+          //   if (this.noteList.length) {
+          //     return this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' 
+          //   }
+          // },
+          // border(){
+          //   if (this.noteList.length) {
+          //     return this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' 
+          //   }
+          // },
+          // marginBottom(){
+          //   if (this.noteList.length) {
+          //     return index == this.desks.length-1? '0' : '16px'
+          //   }
+          // },
           
     },
     methods: {
@@ -100,7 +117,7 @@
       // 选择桌面
       selDesk(){
         this.desks.forEach((item,index) => {
-          if(item.id == this.noteList[this.selNote].desk.id){
+          if(item.id == this.noteList[this.selNote].deskId){
             this.selIndex = index
           }
         });

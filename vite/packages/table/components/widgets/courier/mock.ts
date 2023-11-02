@@ -74,8 +74,35 @@ export const courier=([
         state:3
     },
 ])
+export const switchColor=(state)=>{
+    switch (state) {
+        case "0":
+            return '#508BFE';
+            break;
+        case "1":
+            return '#43CADE';
+            break;
+        case "2":
+            return '#508BFE';
+            break;
+        case "3":
+            return '#FA7B14';
+            break;
+        case "4":
+            return '#52C41A';
+            break;
+        case "5":
+            return '#508BFE';
+            break;
+        case "6":
+            return '#508BFE';
+            break;
 
-export function kdCompany(shipperCode:any){
+        default:
+            return '#508BFE';
+    }
+}
+export const kdCompany=(shipperCode)=>{
     switch (shipperCode) {
         case 'SF':
             return '顺丰快递';

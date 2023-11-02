@@ -533,12 +533,47 @@ export const cardStore = defineStore(
 
 
       },
-      addCard(value, desk) {
+      async addCard(value, desk) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
         // })
-        desk.cards.push(value)
+
+        // 便签卡片需要进行db存储
+        if (value.name == 'notes') {
+          let obj:any ={
+            ...value,
+            customData:{
+              ...value.customData,
+              title:'桌面便签',
+              background:"#57BF60",
+              cardSize:'card',
+              colors:"#ffffff",
+              height:2,
+              width:1,
+              text:'',
+              dragCardSize:'card'
+            },
+            _id:'note:' + value.id,
+            updateTime:value.id,
+            createTime:value.id,
+            name:'notes',
+            notes:'notes',
+            isDelete:false,
+            // desk:desk,
+            deskName:desk.name,
+            deskId:desk.id,
+            
+          }
+          desk.cards.push(obj)
+          // console.log(obj);
+          
+          await tsbApi.db.put(obj)
+        }else{
+          desk.cards.push(value)
+        }
+        
+        // desk.cards.push(value)
       },
       /**
        * 更新组件的customData，多个值的变更请一次性提交，newData为对象
@@ -559,7 +594,22 @@ export const cardStore = defineStore(
         }
         findCard.customData = {...findCard.customData, ...newData}
       },
-      removeCard(customIndex, desk) {
+      async removeCard(customIndex, desk, remove) {
+        // 切换卡片时不需要清除
+        if (!remove) {    
+          // console.log('清除数据');
+          
+          // 删除桌面便签时需要清除db数据
+          let getDb = await tsbApi.db.find({
+            selector: { 
+              _id: 'note:' + customIndex,
+            },
+          })
+          if (getDb.docs.length) {
+            await tsbApi.db.remove(getDb.docs[0])
+          }
+        }
+
         let currentDesk = this.getCurrentDesk()
         desk = desk || currentDesk
         desk.cards.splice(desk.cards.findIndex(item => {

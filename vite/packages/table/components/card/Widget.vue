@@ -33,11 +33,16 @@
                     border: none;
                     box-shadow: none !important;
                     position: relative;
-                    left: -32px;
-                    top: -3px;
+                    left: -25px;
+                    font-size: 16px;
+                    padding: 0;
                   "
-                  :value="options.title"
+                  v-model:value="noteTitle"
+                  @blur="options.changeNoteTitle"
                 ></a-input>
+                <!-- <div style="position: relative;left:-25px;">桌面便签</div> -->
+                <!-- <div style="position: relative;left:-25px;">{{ options.title }}</div> -->
+                <!-- {{ options.title }} -->
               </div>
               <div v-else="options.isEdit">
                 {{ options.title }}
@@ -169,6 +174,8 @@ export default {
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
+      // 便签标题
+      noteTitle:this.options.title,
     };
   },
   computed: {
