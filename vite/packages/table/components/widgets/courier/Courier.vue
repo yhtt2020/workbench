@@ -29,7 +29,8 @@
                     <template v-else>
                         <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                             style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                            <CourierItem v-for="(item, index) in deliveryDetails" :key="index" :courier="item" @click="viewDeliveryDetails(item)"/>
+                            <CourierItem v-for="(item, index) in deliveryDetails" :key="index" :courier="item"
+                                @click="viewDeliveryDetails(item)" />
                         </vue-custom-scrollbar>
                         <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
                             style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
@@ -44,11 +45,11 @@
                 <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
                 <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
             </template>
-            <teleport to='body' >
+            <teleport to='body'>
                 <Modal v-if="showCourierDetail" v-model:visible="showCourierDetail">
                     <LogisticsDetail :orderNum="orderNum" />
                 </Modal>
-                
+
             </teleport>
         </div>
 
@@ -152,14 +153,23 @@ export default {
             allCourierVisible: false,
             courierShow: true,
             deliveryDetails: [],
-            orderNum:[],
-            showCourierDetail:false,
+            orderNum: [],
+            showCourierDetail: false,
         }
     },
     methods: {
-        ...mapActions(courierStore, ['getCourierMsg','getCouriersDetail']),
-        refreshCourier() {
+        ...mapActions(courierStore, ['getCourierMsg', 'getCouriersDetail']),
+        async refreshCourier() {
             // this.getCourierMsg('YD', '463193332336436')
+            this.isLoading = true
+            await this.getCouriersDetail()
+            // console.log(this.couriersDetailMsg);
+            this.deliveryDetails = await this.couriersDetailMsg
+
+            // console.log(this.deliveryDetails, 'deliveryDetails');
+            setTimeout(() => {
+                this.isLoading = false
+            });
         },
         // changeState() {
         //     this.allCourierVisible = true
@@ -168,13 +178,13 @@ export default {
             this.allCourierVisible = false
         },
         viewDeliveryDetails(item) {
-            this.showCourierDetail=true
+            this.showCourierDetail = true
             this.orderNum = item
         }
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList','couriersDetailMsg']),
+        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList', 'couriersDetailMsg']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -194,16 +204,17 @@ export default {
         }
     },
     async mounted() {
-        this.isLoading = true
-        await this.getCouriersDetail()
-        // console.log(this.couriersDetailMsg);
-        this.deliveryDetails= await this.couriersDetailMsg
-        
-        console.log(this.deliveryDetails,'deliveryDetails');
-        setTimeout(() => {
-            this.isLoading = false
-        });
-        console.log(window.innerWidth)
+        // this.isLoading = true
+        // await this.getCouriersDetail()
+        // // console.log(this.couriersDetailMsg);
+        // this.deliveryDetails = await this.couriersDetailMsg
+
+        // console.log(this.deliveryDetails, 'deliveryDetails');
+        // setTimeout(() => {
+        //     this.isLoading = false
+        // });
+        await this.refreshCourier()
+        // console.log(window.innerWidth)
     },
     beforeUpdate() {
         console.log(window.innerWidth);
