@@ -207,10 +207,11 @@ export default defineComponent({
   height: 40px !important;
 }
 
-:deep(.ant-select-selector){
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder){
   line-height: 40px !important;
-  & input{
-    line-height: 40px !important;
-  }
+}
+
+:deep(.ant-select-arrow > *){
+  color:var(--secondary-text) !important;
 }
 </style>
