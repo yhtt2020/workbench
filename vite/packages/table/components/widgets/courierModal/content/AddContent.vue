@@ -18,13 +18,13 @@
        </a-select>
 
        <a-input spellcheck="false" style="width: 280px; margin: 0 12px; border-radius: 8px;" 
-        v-model:value="item.orderNum" class="h-10 xt-bg-2" 
+        v-model:value="item.orderNum" class="h-10 xt-bg-2"  :style="item.code === 'SF' ? { width: '148px !important'} : { width:'280px !important' }"
         placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
        />
       
-       <!-- <a-input style="width: 120px; border-radius: 8px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/> -->
+       <a-input v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
       
-       <div class="flex items-center pointer category-button" @click="removeCourierInput(index)">
+       <div class="flex items-center  pointer category-button" @click="removeCourierInput(index)">
         <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);" />
        </div>
       </div>
