@@ -11,19 +11,20 @@
     <div class="font-14 font-normal xt-text-2 px-4 py-3 xt-bg-2 mb-4 rounded-lg">「顺丰快递」和「菜鸟橙运」需要填写额外信息。</div>
     <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
       <div class="flex items-center mb-4" v-for="(item,index) in courierLists">
-        <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
-          style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
-        >
-        </a-select> 
 
-       <a-input spellcheck="false" style="width: 280px; margin: 0 12px; border-radius: 8px;" 
+       <a-input spellcheck="false" style="width: 280px; margin-right: 12px; border-radius: 8px;" 
         v-model:value="item.orderNum" class="h-10 xt-bg-2"  :style="item.code === 'SF' ? { width: '148px !important'} : { width:'280px !important' }"
         placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
        />
       
        <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
       
-       <div class="flex items-center  pointer category-button" @click="removeCourierInput(index)">
+       <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
+       style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
+       >
+       </a-select> 
+
+       <div class="flex items-center ml-3 pointer category-button" @click="removeCourierInput(index)">
         <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);" />
        </div>
       </div>
