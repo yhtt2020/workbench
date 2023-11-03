@@ -10,6 +10,12 @@ const kdniao = sUrl('/app/kdniao/realTimeQuery')
 export const courierStore = defineStore("courier", {
     state: () => ({
       storeInfo: {
+        tb:{
+          nickname:null,
+          order:{
+            orders:[],
+          }
+        },
         jd:{
           nickname:null,
           order:{
