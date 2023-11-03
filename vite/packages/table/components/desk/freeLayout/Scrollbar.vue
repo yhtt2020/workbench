@@ -3,15 +3,9 @@
   <div
     ref="scrollbar"
     class="no-drag relative w-full"
-    style="
-      padding-right: 10px;
-      padding-bottom: 10px;
-      height: 100%;
-    "
+    style="padding-right: 10px; padding-bottom: 10px; height: 100%"
     @mouseover="handleMouseMove"
   >
-    <!--  -->
-
     <slot> </slot>
   </div>
 </template>
@@ -67,6 +61,7 @@ const scrollAmount = 100; // 每次滚动的距离
 
 function handleMouseMove(event) {
   if (scrollbar.value) {
+    return;
     const { clientX, clientY } = event;
     const { left, top, right, bottom } =
       scrollbar.value.getBoundingClientRect();

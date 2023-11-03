@@ -35,6 +35,7 @@ import "vue-toastification/dist/index.css";
 // 注册业务组件
 // import components from "./components/card/components/index"
 // import components from "./ui/components/index.js"
+import XTUI from "./ui/new/index.js"
 import registerXTUI from "./ui/index"
 // 注册任务引导
 import VueShepherdPlugin from 'vue-shepherd';
@@ -123,7 +124,7 @@ const $app = app.use(pinia).use(Antd).use(ColorPicker).use(router).use(VueViewer
       trigger: "mouseenter click"
     }, // => Global default options * see all props
   }
-).use(Toast, options).use(TUIKit).use(WujieVue).use(VueShepherdPlugin).mount('#app')
+).use(Toast, options).use(TUIKit).use(WujieVue).use(VueShepherdPlugin).use(XTUI).mount('#app')
 registerXTUI(app)
 
 app.component('Icon', Icon)

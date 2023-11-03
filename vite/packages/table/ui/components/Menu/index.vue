@@ -6,14 +6,12 @@
   >
     <!-- 展开菜单的范围 -->
     <slot></slot>
-    <!-- 将菜单传递到body -->
     <teleport to="body">
       <Transition
         @beforeEnter="handleBeforeEnter"
         @enter="handleEnter"
         @afterEnter="handleAfterEnter"
       >
-        <!-- 便利菜单项 -->
         <div
           v-if="show"
           class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
@@ -25,52 +23,18 @@
             @mouseleave="handeleCloseLock()"
             @mouseover="handeleStartLock()"
           >
-            <template v-for="menu in props.menus">
-              <template v-if="menu.slot">
-                <div class="item rounded-lg">
-                  <Item :data="menu" :name="name" />
-                </div>
-                <slot :name="menu.slot"></slot>
-              </template>
-              <xt-divider v-else-if="menu.divider" class="my-3" />
-              <div
-                v-else-if="menu.children"
-                class="item rounded-lg"
-                :key="menu[`${name}`]"
-                @click="handleClick(menu)"
+            <slot name="menu">
+              <Menus
+                @handleClick="handleClick"
+                :menus="menus"
+                :name="name"
+                :fn="fn"
               >
-                <xt-popover>
-                  <xt-text class="w-full h-full">
-                    <Item :data="menu" :name="name" />
-                    <template #right>
-                      <xt-new-icon
-                        size="20"
-                        class="mr-3"
-                        icon="fluent:chevron-left-16-filled"
-                        style="transform: rotate(180deg)"
-                      />
-                    </template>
-                  </xt-text>
-                  <template #content>
-                    <div class="list w-full h-full p-1">
-                      <div
-                        class="item"
-                        @click="handleClick(data)"
-                        v-for="data in menu.children"
-                        :name="name"
-                      >
-                        <Item :data="data" :isBg="true" />
-                      </div>
-                    </div>
-                  </template>
-                </xt-popover>
-              </div>
-              <div v-else class="item rounded-lg" @click="handleClick(menu)">
-                <xt-text class="w-full h-full">
-                  <Item :data="menu" :name="name" />
-                </xt-text>
-              </div>
-            </template>
+                <template #cardSize>
+                  <slot name="cardSize"></slot>
+                </template>
+              </Menus>
+            </slot>
           </div>
         </div>
       </Transition>
@@ -78,43 +42,15 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.container {
-  width: 200px;
-  z-index: 999999999999;
-  .list {
-    border-radius: 12px;
-    box-sizing: border-box;
-    padding-bottom: 10px;
-    overflow: hidden;
-
-    .item {
-      box-sizing: border-box;
-      height: 40px;
-
-      &:hover {
-        background: var(--active-secondary-bg);
-        cursor: pointer;
-      }
-    }
-  }
-}
-</style>
-
 <script setup lang="ts">
 import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
-import Item from "./Item.vue";
-
-// 接收父组件传递的菜单项
+import Menus from "./Menus.vue";
 const props = defineProps({
   menus: {
     type: Array<any>,
     default: () => [],
-  },
-  data: {
-    default: "",
   },
   name: {
     default: "label",
@@ -122,14 +58,16 @@ const props = defineProps({
   fn: {
     default: "callBack",
   },
-
   start: {
     default: true,
   },
   lock: {
     default: true,
   },
-  // 展开触发模式
+  /**
+   * 展开触发模式
+   * contextmenu click all null
+   */
   model: {
     default: "contextmenu",
   },
@@ -137,10 +75,23 @@ const props = defineProps({
   trigger: {
     default: false,
   },
+  // 菜单打开前事件
+  beforeCreate: {
+    type: Function,
+    default: () => {
+      return true;
+    }, // 默认是一个返回true的函数
+  },
 });
 
 const { model, trigger, start, lock } = toRefs(props);
-const emits = defineEmits(["closeMenu"]);
+/**
+ * 菜单回调
+ * @beforeCreate 菜单打开前
+ * @mounted 菜单打开后
+ * @destroyed 菜单关闭后
+ */
+const emits = defineEmits(["destroyed", "beforeCreate", "mounted"]);
 
 /**
  * 打开菜单
@@ -153,9 +104,12 @@ const setup = (e: any) => {
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
+  emits("mounted");
 };
 
 const handeleCustomTrigger = (e: any) => {
+  if (!props.beforeCreate()) return;
+  emits("beforeCreate");
   if (trigger.value) {
     setup(e);
   }
@@ -169,9 +123,6 @@ const handleContextMenu = (e: any) => {
 // 左键
 const handleClickMenu = (e: any) => {
   handeleCustomTrigger(e);
-  if (trigger.value) {
-    setup(e);
-  }
   if (!start.value || model.value != "click") return;
   setup(e);
 };
@@ -180,7 +131,7 @@ const handleClick = (menu: any) => {
   if (!menu?.lock) {
     show.value = false;
   }
-  menu[props.fn] && menu[props.fn](props.data);
+  menu[props.fn] && menu[props.fn](menu);
 };
 /**
  * 关闭菜单
@@ -194,7 +145,7 @@ const handeleCloseLock = () => {
 };
 const handleCloseMenuCore = () => {
   show.value = false;
-  emits("closeMenu");
+  emits("destroyed");
 };
 
 const handleCloseMenu = () => {
@@ -267,3 +218,17 @@ onBeforeUnmount(() => {
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
 </script>
+
+<style lang="scss" scoped>
+.container {
+  width: 200px;
+  z-index: 999999999999;
+
+  .list {
+    border-radius: 12px;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    overflow: hidden;
+  }
+}
+</style>

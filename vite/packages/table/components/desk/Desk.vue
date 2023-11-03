@@ -38,7 +38,7 @@
         </a-result>
       </div>
     </div>
-
+<xt-demo3></xt-demo3>
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
@@ -406,6 +406,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
+
   props: {
     freeLayout: {
       default: true,

@@ -7,7 +7,7 @@
     :menus="menuList"
     :model="model"
     :start="menuState"
-    @closeMenu="close"
+    @destroyed="close"
   >
     <div
       @contextmenu="rightMenuState()"

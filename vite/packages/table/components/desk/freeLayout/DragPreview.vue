@@ -30,13 +30,14 @@ function getItemStyles(
     [x, y] = snapToGrid(x, y);
     x += initialOffset.x;
     y += initialOffset.y;
+  } else {
+    x = dargX.value;
+    y = dargY.value;
   }
-  x = dargX.value;
-  y = dargY.value;
+
   let transform = `translate(${isSnapToGrid ? x - 2 : x}px, ${
     isSnapToGrid ? y - 2 : y
   }px)`;
-  console.log("x,y 111111111:>> ", x, y);
   return {
     transform,
   };
@@ -66,7 +67,6 @@ watch(currentClientOffset, (newV) => {
     const { x, y }: any = currentClientOffset.value;
     dargX.value = x;
     dargY.value = y;
-    console.log("x,y :>> ", x, y);
   }
 });
 </script>

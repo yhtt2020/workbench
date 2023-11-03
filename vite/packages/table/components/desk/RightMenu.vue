@@ -1,5 +1,12 @@
 <template>
-  <Menu :menus="menus" name="name" fn="fn" :start="menuState" :model="model">
+  <Menu
+    :menus="menus"
+    name="name"
+    fn="fn"
+    :start="menuState"
+    :model="model"
+    :beforeCreate="test"
+  >
     <slot></slot>
   </Menu>
 </template>

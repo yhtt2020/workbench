@@ -67,6 +67,15 @@ const [, drop] = useDrop(() => ({
     moveBox(item.id, left, top);
     return undefined;
   },
+  end: (item: any, monitor) => {
+    const dropResult: any = monitor.getDropResult();
+    console.log("dropResult :>> ", dropResult);
+    console.log("item.name :>> ", item);
+    console.log(
+      " dropResult.allowedDropEffect :>> ",
+      dropResult.allowedDropEffect
+    );
+  },
 }));
 
 // 辅助线生成

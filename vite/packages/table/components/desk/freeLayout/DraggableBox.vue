@@ -23,6 +23,12 @@ const [collect, drag, preview] = useDrag(() => ({
   collect: (monitor: DragSourceMonitor) => ({
     isDragging: monitor.isDragging(),
   }),
+  end: (item: any, monitor) => {
+    const dropResult: any = monitor.getDropResult();
+    console.log("dropResult :>> ", dropResult);
+    console.log("item.name :>> ", item);
+    return;
+  },
 }));
 
 onMounted(() => {
