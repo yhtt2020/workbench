@@ -55,7 +55,7 @@
     </teleport>
     <teleport to='body'>
         <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="11" :maskIndex="10">
+            :isHeader="false" :boxIndex="100" :maskIndex="99">
             <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
         </xt-modal>
     </teleport>

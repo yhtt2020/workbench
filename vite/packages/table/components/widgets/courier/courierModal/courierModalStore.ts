@@ -14,7 +14,27 @@ export const courierModalStore = defineStore('courierModal',{
   },
   updateSmallSortList(data:any){
     this.smallSortList = data
-  }
+  },
+  // updatedSort(data: Array<any>) {
+  //   // let newList = data.map((item) => {
+  //   //   return Object.keys(this.sortList).map((key) => {
+  //   //     let i = this.sortList[key];
+  //   //     if (item.LogisticCode == i.LogisticCode) {
+  //   //       // console.log(i);
+  //   //       return {...i, ...item};
+  //   //     }
+  //   //   });
+  //   // });
+  //   // console.log(newList, 'newList');
+  //   let newList = data.filter((item) => {
+  //     return Object.values(this.sortList).some((i) => item.LogisticCode === i.LogisticCode);
+  //   });
+  //   // console.log(new Set(newList.concat(data)),'this.sortList.concat(newList)');
+  //   this.sortList =new Set(newList.concat(data)) ;
+    
+  //   // console.log(newList,'newList');
+    
+  // }
 
  },
  
