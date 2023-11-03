@@ -11,18 +11,17 @@
     <div class="font-14 font-normal xt-text-2 px-4 py-3 xt-bg-2 mb-4 rounded-lg">「顺丰快递」和「菜鸟橙运」需要填写额外信息。</div>
     <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
       <div class="flex items-center mb-4" v-for="(item,index) in courierLists">
-        <!--  :filter-option="filterOption" -->
-       <a-select  show-search placeholder="自动识别"  v-model:value="item.code"
-        style="width: 120px" :options="optionList"  @input="searchCourier"
-       >
-       </a-select>
+        <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
+          style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
+        >
+        </a-select> 
 
        <a-input spellcheck="false" style="width: 280px; margin: 0 12px; border-radius: 8px;" 
         v-model:value="item.orderNum" class="h-10 xt-bg-2"  :style="item.code === 'SF' ? { width: '148px !important'} : { width:'280px !important' }"
         placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
        />
       
-       <a-input v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
+       <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
       
        <div class="flex items-center  pointer category-button" @click="removeCourierInput(index)">
         <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);" />
@@ -78,6 +77,7 @@ export default defineComponent({
        suppressScrollX: true,
        wheelPropagation: true
       },
+      phoneLastNum:'',
     })
 
     const optionList = computed(()=>{
@@ -110,14 +110,16 @@ export default defineComponent({
         const result =  getCourierName(item)
         // console.log('查看返回情况',{code:result.code,label:result.name,orderNum:item});
         // console.log('查看index',index);
-        courier.updateNewCourierInfo({code:result.code,label:result.name,orderNum:item},index)
+        courier.updateNewCourierInfo({code:result.code,label:result.name,orderNum:item,phoneLastNum:''},index)
       }else{
-        courier.updateNewCourierInfo({code:'自动识别',label:'自动识别',orderNum:''},index)
+        courier.updateNewCourierInfo({code:'自动识别',label:'自动识别',orderNum:'',phoneLastNum:''},index)
       }
     }
 
     // 下拉框搜索
     const searchCourier = (evt) =>{
+      console.log('查看搜索结果',evt);
+
       // if(evt.data){
       //   const regexText = new RegExp(evt.data,"i");
       //   const find = expressList.find((item)=>{ 
@@ -150,7 +152,7 @@ export default defineComponent({
           evt.preventDefault();
         }else{
           console.log('参数容错',courierLists.value[0]);
-          addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,'')
+          addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,courierLists.value[0].phoneLastNum)
           ctx.emit('close')
         }
       }else{
@@ -162,7 +164,7 @@ export default defineComponent({
         }else{
           for(let i=0;i<courierLists.value.length;i++){
             console.log('查看结果',courierLists.value[i]);
-            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,'')
+            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,courierLists.value[i].phoneLastNum)
           }
           ctx.emit('close')
         }
@@ -202,16 +204,28 @@ export default defineComponent({
  }
 }
 
-:deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector){
-  border-radius: 8px !important;
+:deep(.custom-select){
+  & .ant-select-selector {
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    height: 40px !important;
+  }
+}
+
+
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder){
+  color: var(--secondary-text) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
+:deep(.ant-select-selection-search){
+  display: flex !important;
+  align-items: center !important;
   height: 40px !important;
 }
 
-:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder){
-  line-height: 40px !important;
-}
-
-:deep(.ant-select-arrow > *){
-  color:var(--secondary-text) !important;
-}
 </style>

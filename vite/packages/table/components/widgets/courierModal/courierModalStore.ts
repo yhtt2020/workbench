@@ -7,7 +7,7 @@ export const courierModalStore = defineStore('courierModal',{
  state:()=>({
   sortList:[], // 组件大尺寸下的数据
   smallSortList:[], // 组件小尺寸下的数据
-  courierLists:[{code:'auto',label:'自动识别', orderNum:''}]
+  courierLists:[{code:'auto',label:'自动识别', orderNum:'',phoneLastNum:''}]
  }),
 
  actions:{

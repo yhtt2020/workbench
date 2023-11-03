@@ -34,7 +34,7 @@ export const courierStore = defineStore("courier", {
           
 
           let response = await post(kdniao, option)
-          // console.log('查看报错信息',response);
+          console.log('查看报错信息',response);
           
 
           const dbData = {
