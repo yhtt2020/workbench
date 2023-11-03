@@ -1,7 +1,7 @@
 <template>
   <template v-if="!detailVisible">
     <div class="flex flex-col" style="width: 500px; height: 600px">
-      <div  class="flex items-center justify-center h-16" style="position: relative">
+      <div  class="flex items-center mb-4 justify-center h-16" style="position: relative">
         <TopDrop :navList="typeList" v-model:selectType="currentType" />
         <div class="flex top-right">
           <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
@@ -33,8 +33,8 @@
         <vue-custom-scrollbar :settings="settingsScroller" v-else>
           <div class="flex flex-col px-6" ref="smallSortRef" style="height:calc(100% - 64px);">
             <div v-for="(item,index) in otherList"  class="rounded-lg">
-              <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-                <div :class="{'select':currentID === item.id}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+              <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+                <div :class="{'select':currentID === item.LogisticCode}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                   <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                     <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
                   </div>
@@ -54,14 +54,15 @@
                     </div>
                   </div>
                     </div>
-                    <div class="my-2">{{ item.Traces[item.Traces.length - 1].AcceptTime  }}</div>
+                    <div class="my-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime  }}</div>
                     <div class="summary">
-                      {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+                      {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                     </div>
                   </div>
                 </div>
               </xt-menu>
             </div>
+            <div style="height: 12px;"></div>
           </div>
         </vue-custom-scrollbar>
       </template>
@@ -78,6 +79,7 @@ import { mapActions,mapWritableState } from 'pinia';
 import { courierModalStore } from '../courierModalStore'
 import { courierType } from '../modalMock'
 import { Icon as SmallIcon } from '@iconify/vue'
+import { courierStore } from '../../../../../store/courier'
 
 import TopDrop from "../dropdown/index.vue";
 import SortList from "../dropdown/SmallSortList.vue";
@@ -100,7 +102,8 @@ export default {
       detailVisible: false,
       currentType:{title:`全部${this.list.length !== 0 ? `(${this.list.length})` : '' }`,name:'all'},
       seeItem:{},
-      // currentID:this.list[0].id,
+      currentID:this.list[0]?.LogisticCode,
+      // item.LogisticCode
 
       settingsScroller: { 
        useBothWheelAxes: true,
@@ -124,7 +127,10 @@ export default {
        },
        {
         name:'删除快递',
-        callBack:()=>{},
+        callBack:()=>{
+          console.log(this.revID);
+          this.removeDbData(Number(this.revID))
+        },
         newIcon:'akar-icons:trash-can',
         color:'var(--error)'
        },
@@ -243,6 +249,8 @@ export default {
   },
 
   methods:{
+    ...mapActions(courierStore,['removeDbData','getDbCourier']),
+
     close(){
       this.$emit('close')
     },
@@ -261,7 +269,7 @@ export default {
     // 查看快递详情
     seeDetail(data){
      console.log('排查问题',data);
-     this.currentID = data.id
+     this.currentID = data.LogisticCode
      this.seeItem = data
      this.detailVisible = true
     },
