@@ -8,7 +8,7 @@
 
 <script>
 
-import Modal from '../../Modal.vue';
+import Modal from '../../../Modal.vue';
 import ModalContent from './content/AddContent.vue';
 
 export default {
