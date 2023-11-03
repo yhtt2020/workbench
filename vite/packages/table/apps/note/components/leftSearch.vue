@@ -9,6 +9,7 @@
                 border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
                 border-radius: 10px;"
                 placeholder="搜索"
+                maxlength="10"
                 v-model:value="this.searchValue"
                 @change="this.searchNote(this.searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
@@ -23,9 +24,9 @@
             <!-- <div @click="this.deTest">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div>
-            <div>{{ this.isSelTab }}</div> -->
-            <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
+            <div @click="this.findAll">db数据</div> -->
+            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
+            >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
                 :class="index == this.selNote?'note-active':''">
@@ -116,15 +117,11 @@
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
                     callBack:()=>{
-                        // this.menus.
                         if (!this.isSelTab) {
-                            
                             // 删除
-                            //console.log('删除');
                             this.moveToTrash()
                         }else{
                             // 彻底删除
-                            //console.log('彻底删除');
                             this.deleteNote()
 
                         }
@@ -158,12 +155,15 @@
             this.selNoteText = this.noteList[n].customData.text
             
         },
-        showData(){
-            console.log(this.noteList);
-        },
-        showDesk(){
-            console.log(this.deskList);
-        },
+        // showData(){
+        //     console.log(this.noteList);
+        // },
+        // showDesk(){
+        //     console.log(this.deskList);
+        // },
+        changeMenu(index){
+            this.selNote = index
+        }
     },
   };
   </script>
