@@ -41,8 +41,11 @@ import {mapActions, mapState,mapWritableState} from "pinia";
             },
             toolbar:[],
             blur:(value)=>{
-                // console.log(this.customData.text);
-                // console.log(this.desk);
+
+                // 定义一个虚拟元素提取文本
+                let tmpDiv = document.createElement('div')
+                tmpDiv.innerHTML = this.contentEditor.getHTML()
+                let content = tmpDiv.textContent || tmpDiv.innerText || ''
 
                 if (this.tmpData != value) {
                     this.updateCustomData(
@@ -53,7 +56,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
                         this.desk
                     );
                     this.tmpData = value
-                    this.saveDeskNote(this.customIndex,value)
+                    this.saveDeskNote(this.customIndex,value,content)
                 }
             }
         })

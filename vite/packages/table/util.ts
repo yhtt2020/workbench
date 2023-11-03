@@ -246,6 +246,13 @@ export function  initCanvas(refName,list,size,width,color,activeColor) {
 
 }
 
+export function formatTimestamp (timestamp) {
+  var date = new Date(timestamp);
+  var year = date.getFullYear();
+  var month = ("0" + (date.getMonth() + 1)).slice(-2);
+  var day = ("0" + date.getDate()).slice(-2);
+  return year + "-" + month + "-" + day;
+}
 
 export function formatTime(dateTimeStamp){
 
