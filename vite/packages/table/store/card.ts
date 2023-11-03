@@ -533,16 +533,14 @@ export const cardStore = defineStore(
 
 
       },
-      async addCard(value, desk) {
+      async addCard(value, desk, flag) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
         // })
 
         // 便签卡片需要进行db存储
-        if (value.name == 'notes' && noteStore().initFlag) {
-          console.log('存了');
-          
+        if (value.name == 'notes' && noteStore().initFlag && !flag ) {
           let obj:any ={
             ...value,
             customData:{
@@ -563,17 +561,14 @@ export const cardStore = defineStore(
             name:'notes',
             notes:'notes',
             isDelete:false,
-            // desk:desk,
             deskName:desk.name,
             deskId:desk.id,
             
           }
           desk.cards.push(obj)
-          // console.log(obj);
           
           await tsbApi.db.put(obj)
         }else{
-          console.log('没存');
           desk.cards.push(value)
         }
         
@@ -598,9 +593,9 @@ export const cardStore = defineStore(
         }
         findCard.customData = {...findCard.customData, ...newData}
       },
-      async removeCard(customIndex, desk, remove) {
+      async removeCard(customIndex, desk, flag) {
         // 切换卡片时不需要清除
-        if (!remove && noteStore().initFlag) {    
+        if (!flag && noteStore().initFlag) {    
           // console.log('清除数据');
           
           // 删除桌面便签时需要清除db数据

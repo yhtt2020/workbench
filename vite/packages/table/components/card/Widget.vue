@@ -37,6 +37,7 @@
                     font-size: 16px;
                     padding: 0;
                   "
+                  maxlength="15"
                   v-model:value="noteTitle"
                   @blur="options.changeNoteTitle"
                 ></a-input>

@@ -1,10 +1,10 @@
 import { expressList } from '../modalMock'
 // 匹配快递公司名称
 export function getCourierName(data:any){
- console.log('查看有没有传值进来',data);
+ // console.log('查看有没有传值进来',data);
  // 匹配纯数字
- console.log('查看结果1',isNumeric(data));
- console.log('查看结果2',hasUppercasePrefix(data));
+ // console.log('查看结果1',isNumeric(data));
+ // console.log('查看结果2',hasUppercasePrefix(data));
  
 
 
@@ -45,7 +45,7 @@ export function getCourierName(data:any){
 
 // 通过参数进行查找
 function findData(params:any){
- console.log('查找条件参数',params);
+ // console.log('查找条件参数',params);
  const isRegex = new RegExp(params)
  const find = expressList.find((item)=>{
   return isRegex.test(item.code)

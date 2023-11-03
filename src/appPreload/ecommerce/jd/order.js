@@ -1,16 +1,11 @@
 const {
   $,
   ipc,
-  args
+  args,
+  clearText,
+  fixProtocol
 } = require('../../app.js')
 
-function clearText (text) {
-  return text.replaceAll('\n', '').replaceAll(' ', '').replaceAll('\t', '')
-}
-
-function fixProtocol (url) {
-  return window.location.protocol + url
-}
 
 function getOrderInfo ($item) {
   const order = {

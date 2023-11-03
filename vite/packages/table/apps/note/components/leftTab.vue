@@ -20,12 +20,10 @@ export default {
     return {
       menuList:[
         {
-          // flag: true,
           newIcon: "fluent:notepad-12-regular",
-          // isSel:this.isSelTab,
           isSel:false,
+          title:'便签',
           callBack: () => {
-            // console.log('便签');
             this.isSelTab = false
             this.getNotes()
             this.menuList[0].isSel=true
@@ -36,11 +34,10 @@ export default {
           },
         },
         {
-          // flag: true,
           newIcon: "akar-icons:trash-can",
           isSel:false,
+          title:"回收站",
           callBack: () => {
-            // console.log('回收站');
             this.isSelTab = true
             this.getNotes()
             this.menuList[0].isSel=false
