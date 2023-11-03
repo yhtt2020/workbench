@@ -1,4 +1,3 @@
-
 const {
   $,
   ipc,
@@ -7,16 +6,15 @@ const {
 console.log('参数',args)
 let interval=setInterval(() => {
 
-  const nickname= $('#ttbar-login')[0].text()
-  let logged = $('#ttbar-login').length > 0 ? !nickname.includes('你好，请登录') : false
-  console.log('取到我的订单', logged)
-  console.log(args.cbId)
+  const nickname= $('.site-nav-user a').text()
+  let logged =  !!nickname
   if(logged){
+    console.log('找到昵称',nickname)
     ipc.send('api.web.callback',{
       args:{
         cbId:args.cbId,
         data: {
-          nickname:nickname.substring(0,nickname.indexOf('\n'))
+          nickname:nickname
         }
       }
     })
@@ -24,4 +22,3 @@ let interval=setInterval(() => {
     clearInterval(interval)
   }
 }, 1000)
-
