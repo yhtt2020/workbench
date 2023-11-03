@@ -1,6 +1,7 @@
 import {io} from "socket.io-client";
 import {getConfig} from "../axios/serverApi";
 import {barrageHandler} from "./barrageHandler";
+import {kdniaoHandler} from "./kdniaoHandler";
 const socketDevUrl='ws://localhost:9001'
 const socketPrdUrl='wss://wad.apps.vip'
 const dev=false //是否是开发环境
@@ -42,6 +43,11 @@ export const initSocket = async () => {
     socket.on('onBarrage',(data)=>{
       console.error('弹幕',data)
       barrageHandler.on(data)
+    })
+
+    socket.on('onKdniao',(data)=>{
+      console.error('收到快递鸟推送消息',data)
+      kdniaoHandler.on(data)
     })
     // socket.on('onCommunity',(data)=>{
     //   communityHandler.on(data)

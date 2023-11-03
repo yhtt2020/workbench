@@ -35,9 +35,14 @@ window.$models = {
 }
 try{
   window.$models.steamUser=require('steam-user')
-  window.$models.steamSession=require('steam-session')
+
 }catch (e) {
   console.error('注册steam包失败，错误信息：',e)
+}
+try{
+  window.$models.steamSession=require('steam-session')
+}catch (e) {
+  console.error('注册steamSession包失败，错误信息：',e)
 }
 window.$models.appModel.initDb()
 
