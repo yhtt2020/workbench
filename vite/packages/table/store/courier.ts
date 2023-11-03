@@ -82,13 +82,14 @@ export const courierStore = defineStore("courier", {
         },
 
         // 删除db中存储的数据
-        async removeDbData(index:Number){  
-          // console.log('查看下标::>>',index);
-          
+        async removeDbData(index:any){  
+          console.log('查看下标::>>',index);
           const getResult  = await tsbApi.db.allDocs('courier:')
           const rowList = getResult.rows
           // 将getResult.rows列表的doc进行解构
           const docList = rowList.map((item:any)=>{ return item.doc }) 
+          console.log('查看需要删除的doc', docList[index]);
+          
           const res = await tsbApi.db.remove(docList[index])
           // console.log('查看删除结果',res);
           this.getDbCourier()

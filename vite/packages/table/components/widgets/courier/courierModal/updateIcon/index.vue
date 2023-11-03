@@ -85,8 +85,8 @@ export default {
    this.goodIconVisible = !this.goodIconVisible
   },
 
-  removeItem(index){
-   
+  removeItem(){
+    
   }
   // 获取头像
   // getAvatar(avatar){

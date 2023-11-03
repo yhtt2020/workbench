@@ -40,6 +40,19 @@ export const courierModalStore = defineStore('courierModal',{
     this.courierLists.splice(index, 1 , data)
     // console.log('查看替换后的数据',this.courierLists);
     
+  },
+
+  // 将存储的sort列表进行删除
+  removeSortData(index:any){
+    console.log('删除排序的数据',index);
+    this.sortList.splice(index,1)
+    
+    // const list = [...this.sortList]
+    // console.log(list);
+    
+    // const sliceList = this.sortList.splice(index,1)
+    // console.log('查看删除后的数据',sliceList);
+    // this.sortList = sliceList
   }
  },
  

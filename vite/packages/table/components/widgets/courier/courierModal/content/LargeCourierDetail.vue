@@ -51,33 +51,38 @@
             <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
               <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
                 class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
-                <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                  <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-                </div>
-                <div class="flex flex-col" style="width: calc(100% - 84px);">
-                  <div class="flex items-center justify-between ">
-                    <span class="xt-font font-16 font-600">
-                      {{ item.LogisticCode }}
-                    </span>
-  
-                    <div class="flex">
-                      <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                          {{ switchCompany[index] }}
+                <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+                  <div class="w-full flex">
+                    <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                      <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <div class="flex items-center justify-between " style="width: 355px;">
+                        <span class="xt-font font-16 font-600">
+                          {{ item.LogisticCode }}
+                        </span>
+      
+                        <div class="flex">
+                          <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
+                            <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
+                              {{ switchCompany[index] }}
+                            </div>
+                            <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
+                              {{ switchState[index] }}
+                            </div>
+                          </div>
                         </div>
-                        <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
-                          {{ switchState[index] }}
-                        </div>
+                      </div>
+      
+                      <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
+                      <div class="summary">
+                        {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                       </div>
                     </div>
                   </div>
-  
-                  <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
-                  <div class="summary">
-                    {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
-                  </div>
-                </div>
+                </xt-menu>
               </div>
+              <div style="height: 12px;"></div>
             </vue-custom-scrollbar>
           </div>
           <div style="width: 452px;" v-if="otherList.length !== 0">
@@ -151,7 +156,31 @@ export default {
       currentID: '',
 
       // rightList:this.couriersList[0], 接收选中的详情
-      rightList: {}
+      rightList: {},
+
+      menus:[
+      {
+       name:'查看详情',
+       callBack:()=>{},
+       newIcon:'fluent:apps-list-detail-24-regular'
+      },
+      {
+        name:'订阅物流',
+        callBack:()=>{
+
+        },
+        newIcon:'fluent:star-12-regular'
+      },
+      {
+       name:'删除快递',
+       callBack:()=>{
+         this.removeSortData(this.revID)
+         this.removeDbData(this.revID)
+       },
+       newIcon:'akar-icons:trash-can',
+       color:'var(--error)'
+      },
+     ],
     }
   },
 
@@ -190,6 +219,8 @@ export default {
     },
 
     filterList() {
+      console.log('查看数据',this.couriersList);
+      // return this.couriersList
       if (this.allVisible) {
         if (this.sortList.length !== 0) {
           return this.sortList
@@ -241,7 +272,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore,['getDbCourier']),
+    ...mapActions(courierStore,['getDbCourier','removeDbData']),
+    ...mapActions(courierModalStore,['removeSortData']),
     // 添加快递入口
     addCourier() {
       this.$refs.addCourierRef.openCourierModel()
@@ -284,7 +316,7 @@ export default {
   watch:{
     'defaultFlow':{
       handle(newVal){
-        console.log('查看',newVal);
+        // console.log('查看',newVal);
         this.defaultFlow = newVal
       },
       immediate:true,
