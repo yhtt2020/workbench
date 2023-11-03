@@ -31,8 +31,8 @@ function getItemStyles(
     x += initialOffset.x;
     y += initialOffset.y;
   } else {
-    x = dargX.value;
-    y = dargY.value;
+    // x = dargX.value;
+    // y = dargY.value;
   }
 
   let transform = `translate(${isSnapToGrid ? x - 2 : x}px, ${
@@ -65,8 +65,8 @@ const dargY = ref();
 watch(currentClientOffset, (newV) => {
   if (newV) {
     const { x, y }: any = currentClientOffset.value;
-    dargX.value = x;
-    dargY.value = y;
+    // dargX.value = x;
+    // dargY.value = y;
   }
 });
 </script>

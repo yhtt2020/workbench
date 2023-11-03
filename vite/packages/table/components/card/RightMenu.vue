@@ -134,6 +134,7 @@ const menuList = computed(() => {
 
 // 卡片大小监听
 const cardSize = ref(props.sizeType);
+console.log('cardSize.value :>> ', cardSize.value);
 watch(cardSize, (newV) => {
   emits("update:sizeType", newV);
 });

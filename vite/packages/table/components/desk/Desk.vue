@@ -38,16 +38,14 @@
         </a-result>
       </div>
     </div>
-<xt-demo3></xt-demo3>
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-
       <!-- 自由布局滚动 -->
       <FreeLayoutScrollbar
-        v-if="isFreeLayout && $route.path == '/main' &&  freeLayout"
+        v-if="isFreeLayout && $route.path == '/main' && freeLayout"
         ref="freeLayoutScrollbar"
       >
         <!-- 自由布局画布 -->
@@ -150,7 +148,6 @@
           </vuuri>
         </div>
       </vue-custom-scrollbar>
-      <!-- </div> -->
     </RightMenu>
   </div>
 
@@ -278,6 +275,7 @@
     ></XtTab>
     <template v-if="currentSettingTab === 'current' && currentDesk.settings">
       <FreeLayoutState
+        v-if="$route.path == '/main' && freeLayout"
         @scrollbarRedirect="freeLayoutScrollbarRedirect"
         @scrollbarUpdate="freeLayoutScrollbarUpdate"
       ></FreeLayoutState>

@@ -24,10 +24,10 @@ const [collect, drag, preview] = useDrag(() => ({
     isDragging: monitor.isDragging(),
   }),
   end: (item: any, monitor) => {
-    const dropResult: any = monitor.getDropResult();
-    console.log("dropResult :>> ", dropResult);
-    console.log("item.name :>> ", item);
-    return;
+    // const dropResult: any = monitor.getDropResult();
+    // console.log("dropResult :>> ", dropResult);
+    // console.log("item.name :>> ", item);
+    // return;
   },
 }));
 

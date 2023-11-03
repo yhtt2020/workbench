@@ -89,9 +89,10 @@ const { model, trigger, start, lock } = toRefs(props);
  * 菜单回调
  * @beforeCreate 菜单打开前
  * @mounted 菜单打开后
+ * @selected 菜单项中时
  * @destroyed 菜单关闭后
  */
-const emits = defineEmits(["destroyed", "beforeCreate", "mounted"]);
+const emits = defineEmits(["beforeCreate", "mounted", "selected", "destroyed"]);
 
 /**
  * 打开菜单
@@ -131,6 +132,7 @@ const handleClick = (menu: any) => {
   if (!menu?.lock) {
     show.value = false;
   }
+  emits("selected");
   menu[props.fn] && menu[props.fn](menu);
 };
 /**

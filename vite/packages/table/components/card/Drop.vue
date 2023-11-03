@@ -1,11 +1,9 @@
 <!-- 小组件放置层 -->
 <template>
-  <div ref="container" :style="{
-    backgroundColor
-  }">
-    <div :ref="drop">
-      <slot></slot>
-    </div>
+  <div ref="container">
+    <!-- <div :ref="drop"> -->
+    <slot></slot>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -61,22 +59,21 @@ const widgetSizes: any = ref({
 //   emits("update:widgetSize", obj);
 // });
 
-
-const [collect, drop] = useDrop(() => ({
-  accept: "box",
-  drop: () => ({
-    name: `222`,
-  }),
-  collect: (monitor) => ({
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop(),
-  }),
-}));
-const { canDrop, isOver } = toRefs(collect);
-const isActive = computed(() => unref(canDrop) && unref(isOver));
-const backgroundColor = computed(() =>
-  unref(isActive) ? "darkgreen" : unref(canDrop) ? "darkkhaki" : ""
-);
+// const [collect, drop] = useDrop(() => ({
+//   accept: "box",
+//   drop: () => ({
+//     name: `222`,
+//   }),
+//   collect: (monitor) => ({
+//     isOver: monitor.isOver(),
+//     canDrop: monitor.canDrop(),
+//   }),
+// }));
+// const { canDrop, isOver } = toRefs(collect);
+// const isActive = computed(() => unref(canDrop) && unref(isOver));
+// const backgroundColor = computed(() =>
+//   unref(isActive) ? "darkgreen" : unref(canDrop) ? "darkkhaki" : ""
+// );
 // const [, drop] = useDrop(() => ({
 //   accept: "box",
 //   drop(item: any, monitor) {
