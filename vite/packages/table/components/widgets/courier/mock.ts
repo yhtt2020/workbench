@@ -144,8 +144,8 @@ export const kdCompany=(shipperCode)=>{
             break;
     }
 }
-// 获取快递状态
-export const kdState=(state)=>{
+
+export function kdState(state:any){
     switch (state) {
         case "0":
             return '暂无轨迹信息';
@@ -177,3 +177,24 @@ export const kdState=(state)=>{
     }
 }
 
+export function stateColor(state:any){
+    switch (state) {
+     case "0":
+        return '#508BFE';
+     case "1":
+                    return '#43CADE';
+                    break;
+        case "2":
+            return '#508BFE';
+        case "3":
+            return '#FA7B14';
+        case "4":
+           return '#52C41A';
+        case "5":
+            return '#508BFE';
+        case "6":
+            return '#508BFE';
+        default:
+            return '#508BFE';
+    }
+}
