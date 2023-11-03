@@ -43,7 +43,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
-import AddCourierModal from '../courierModal/AddCourierModal.vue';
+import AddCourierModal from './courierModal/AddCourierModal.vue';
 
 const addCourierRef = ref(null)
 

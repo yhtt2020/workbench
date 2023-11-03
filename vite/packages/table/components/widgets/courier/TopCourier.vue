@@ -36,7 +36,7 @@
             <template v-else>
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                     style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                    <CourierItem v-for="(item, index) in couriersList" :key="index" :courier="item" @click="viewDeliveryDetails(item)" />
+                    <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item" @click="viewDeliveryDetails(item)" />
                 </vue-custom-scrollbar>
             </template>
 
@@ -105,11 +105,11 @@ export default {
             // 'getCourierMsg',
             'getDbCourier'
         ]),
-        showTopCourier() {
+        async showTopCourier() {
             this.topCourierVisible = !this.topCourierVisible
-            if (this.topCourierVisible == true) {
-                this.couriersList = await this.couriersDetailMsg
-            }
+            // if (this.topCourierVisible == true) {
+            //     this.couriersList = await this.couriersDetailMsg
+            // }
         },
         addCourier() {
             this.topCourierVisible = false

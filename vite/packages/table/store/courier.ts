@@ -19,19 +19,7 @@ export const courierStore = defineStore("courier", {
         }
       },
         courierMsgList: [],
-        courierDetailList: [
-
-            {
-                shipperCode:'ZTO',
-                logisticCode:'78376829849713',
-                customerName:''
-            },
-            {
-                shipperCode:'SF',
-                logisticCode:'SF1672404324049',
-                customerName:'6654'
-            }
-        ],
+        courierDetailList: [],
         couriersDetailMsg:[]
     }),
     actions: {

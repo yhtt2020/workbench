@@ -33,9 +33,9 @@
                   </div>
                 </div>
 
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1].AcceptTime }}</div>
+                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                 <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+                  {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                 </div>
               </div>
             </div>

@@ -11,7 +11,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
-import AddCourierModal from "../courierModal/AddCourierModal.vue";
+import AddCourierModal from "./courierModal/AddCourierModal.vue";
 const addCourierRef = ref(null)
 
 const addCourier = () =>{

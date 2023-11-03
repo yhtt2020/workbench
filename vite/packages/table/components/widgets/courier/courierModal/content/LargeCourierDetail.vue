@@ -132,7 +132,7 @@ export default {
 
   computed: {
     ...mapWritableState(courierModalStore, ['sortList']),
-    ...mapWritableState(courierStore, ['couriersDetailMsg']),
+    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
     flowType() {
       const allLength = this.couriersList.length;
       //  揽收
@@ -215,6 +215,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(courierStore,['getDbCourier']),
     // 添加快递入口
     addCourier() {
       this.$refs.addCourierRef.openCourierModel()
@@ -247,9 +248,10 @@ export default {
     }
   },
   async mounted() {
-    this.couriersList = await this.couriersDetailMsg
+    this.getDbCourier()
+    this.couriersList = this.courierDetailList
     this.rightList = this.couriersList[0]
-    this.currentID=this.couriersList[0].LogisticCode
+    this.currentID=this.couriersList[0]?.LogisticCode
     // console.log(this.couriersList[0],'couriersList');
   },
 
