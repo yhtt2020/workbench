@@ -34,43 +34,67 @@
 
     <template v-else>
       <div class="flex justify-between px-6">
+        <template v-if="allVisible">
+          <SortList  :list="filterList" @rightSelect="getRightItem" />
+          <div style="width: 452px;">
+            <UpdateIcon :orderData="rightList" />
+            <div class="px-4 rounded-lg xt-bg-2">
+              <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
+                <TimeLine :list="rightList?.Traces" />
+              </vue-custom-scrollbar>
+            </div>
+          </div> 
+        </template>
 
-        <SortList v-if="allVisible" :list="this.filterList" @rightSelect="getRightItem" />
-        <div style="width: 452px;" v-else class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-            <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
-              <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-              </div>
-              <!-- {{ otherList }} -->
-              <!-- {{ currentID }}
-              {{ item.EBusinessID }} -->
-              <div class="flex flex-col" style="width: calc(100% - 84px);">
-                <div class="flex items-center justify-between ">
-                  <span class="xt-font font-16 font-600">
-                    {{ item.LogisticCode }}
-                  </span>
-
-                  <div class="flex">
-                    <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ switchCompany[index] }}
-                      </div>
-                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
-                        {{ switchState[index] }}
+        <template v-else>
+          <div style="width: 452px;" class="flex flex-col">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
+              <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
+                class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+                <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                  <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                </div>
+                <div class="flex flex-col" style="width: calc(100% - 84px);">
+                  <div class="flex items-center justify-between ">
+                    <span class="xt-font font-16 font-600">
+                      {{ item.LogisticCode }}
+                    </span>
+  
+                    <div class="flex">
+                      <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
+                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
+                          {{ switchCompany[index] }}
+                        </div>
+                        <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
+                          {{ switchState[index] }}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1].AcceptTime }}</div>
-                <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+  
+                  <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
+                  <div class="summary">
+                    {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
+                  </div>
                 </div>
               </div>
+            </vue-custom-scrollbar>
+          </div>
+          <div style="width: 452px;" v-if="otherList.length !== 0">
+            <UpdateIcon :orderData="rightList" />
+            <div class="px-4 rounded-lg xt-bg-2">
+              <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
+                <TimeLine :list="rightList?.Traces" />
+              </vue-custom-scrollbar>
             </div>
-          </vue-custom-scrollbar>
+          </div>
+        </template>
+      </div>
+
+      <!-- <div class="flex justify-between px-6">
+      
+        <div style="width: 452px;" class="flex flex-col">
+         
         </div>
 
         <div style="width: 452px;">
@@ -80,8 +104,9 @@
               <TimeLine :list="rightList?.Traces" />
             </vue-custom-scrollbar>
           </div>
-        </div>
-      </div>
+        </div> 
+      </div> -->
+    
     </template>
 
   </div>
@@ -143,6 +168,8 @@ export default {
       const onWay = this.couriersList.filter((item) => { return item.State !== '1' && item.StateEx !== '202' && item.State !== '3' })
       //  派件中
       const outDelivery = this.couriersList.filter((item) => { return item.StateEx === '202' })
+      
+
       const list = [...courierType]
       const filterList = list.map((item) => {
         switch (item.name) {
@@ -158,7 +185,6 @@ export default {
             return { title: `${item.title}${hasSigned.length !== 0 ? `(${hasSigned.length})` : ''}`, name: item.name, type: item.type }
         }
       })
-
       return filterList
 
     },
@@ -169,7 +195,7 @@ export default {
           return this.sortList
         } else {
           return this.couriersList
-        }
+        } 
       }
     },
 
@@ -254,6 +280,17 @@ export default {
     this.currentID=this.couriersList[0]?.LogisticCode
     // console.log(this.couriersList[0],'couriersList');
   },
+
+  watch:{
+    'defaultFlow':{
+      handle(newVal){
+        console.log('查看',newVal);
+        this.defaultFlow = newVal
+      },
+      immediate:true,
+      deep:true
+    }
+  }
 
 };
 </script>

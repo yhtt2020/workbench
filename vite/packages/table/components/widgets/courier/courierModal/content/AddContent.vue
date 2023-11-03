@@ -151,7 +151,7 @@ export default defineComponent({
           message.warning('请添加快递信息')
           evt.preventDefault();
         }else{
-          console.log('参数容错',courierLists.value[0]);
+          // console.log('参数容错',courierLists.value[0]);
           addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,courierLists.value[0].phoneLastNum)
           ctx.emit('close')
         }
@@ -163,7 +163,7 @@ export default defineComponent({
           evt.preventDefault();
         }else{
           for(let i=0;i<courierLists.value.length;i++){
-            console.log('查看结果',courierLists.value[i]);
+            // console.log('查看结果',courierLists.value[i]);
             addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,courierLists.value[i].phoneLastNum)
           }
           ctx.emit('close')

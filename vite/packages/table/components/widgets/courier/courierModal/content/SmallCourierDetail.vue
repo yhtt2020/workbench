@@ -34,7 +34,7 @@
           <div class="flex flex-col px-6" ref="smallSortRef" style="height:calc(100% - 64px);">
             <div v-for="(item,index) in otherList"  class="rounded-lg">
               <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-                <div :class="{'select':currentID === item.id}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+                <div :class="{'select':currentID === item.LogisticCode}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                   <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                     <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
                   </div>
@@ -54,9 +54,9 @@
                     </div>
                   </div>
                     </div>
-                    <div class="my-2">{{ item.Traces[item.Traces.length - 1].AcceptTime  }}</div>
+                    <div class="my-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime  }}</div>
                     <div class="summary">
-                      {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+                      {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                     </div>
                   </div>
                 </div>
@@ -100,7 +100,8 @@ export default {
       detailVisible: false,
       currentType:{title:`全部${this.list.length !== 0 ? `(${this.list.length})` : '' }`,name:'all'},
       seeItem:{},
-      // currentID:this.list[0].id,
+      currentID:this.list[0]?.LogisticCode,
+      // item.LogisticCode
 
       settingsScroller: { 
        useBothWheelAxes: true,
@@ -261,7 +262,7 @@ export default {
     // 查看快递详情
     seeDetail(data){
      console.log('排查问题',data);
-     this.currentID = data.id
+     this.currentID = data.LogisticCode
      this.seeItem = data
      this.detailVisible = true
     },

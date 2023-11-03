@@ -8,7 +8,6 @@
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="width: 452px; height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
-          <!-- {{ item }} -->
           <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
             <div :class="{ 'select': this.currentID === item.LogisticCode }"
               class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item)">
@@ -158,6 +157,7 @@ export default {
       cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
       cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
       // this.detailList = cloneTemp
+      // console.log('查看排序后的数据',cloneTemp);
       this.updateSortList(cloneTemp)
     },
 
