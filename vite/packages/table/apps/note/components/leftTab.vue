@@ -8,19 +8,10 @@
 </template>
 
 <script>
-// import CreateTopic from "../chat/left/createTopic.vue";
-// import { mapWritableState } from "pinia";
-// import { aiStore } from "../../../store/ai";
-// import Edit from "./edit.vue";
-// import { SettingFilled } from "@ant-design/icons-vue";
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
 export default {
   components: {
-    // CreateTopic,
-    // Edit,
-
-    // SettingFilled,
   },
   computed: {
       ...mapWritableState(noteStore, ['isSelTab','selNote','searchValue']),
@@ -69,13 +60,6 @@ export default {
   methods:{
     
     ...mapActions(noteStore, ['getNotes']),
-    formatTimestamp(timestamp) {
-      var date = new Date(timestamp * 1000);
-      var year = date.getFullYear();
-      var month = ("0" + (date.getMonth() + 1)).slice(-2);
-      var day = ("0" + date.getDate()).slice(-2);
-      return year + "-" + month + "-" + day;
-    },
 
   }
 };

@@ -12,22 +12,22 @@
           </div>
       </LeftTab>
       <Modal v-if="promptVisible" blurFlag="true" style="z-index:99999;"  >
-        <div class="p-5 xt-modal flex flex-col justify-center" style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);background: #212121;">
-          <div  style="width:100%;height:46px;position:relative;">
-            <div class='flex justify-center font-16' style='color: rgba(255,255,255,0.85);'>添加到桌面</div>
-            <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: #2A2A2A;border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
+        <div class="p-5 xt-modal flex flex-col justify-center" style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);">
+          <div  style="width:100%;height:46px;position:relative;color: var(--primary-text);">
+            <div class='flex justify-center font-16'>添加到桌面</div>
+            <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: var(--secondary-bg);border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
               <Icon :icon="icons.dismiss16Filled" />
             </div>
           </div>
           <div style="height: 428px;" >
             <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
-            <div style="background: #2A2A2A;border-radius: 10px; padding: 10px 12px;">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
+            <div style="background: var(--secondary-bg);border-radius: 10px; padding: 10px 12px;color: var(--primary-text);">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
             <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
-              <div class="w-full flex items-center rounded-lg" 
-                style="height: 64px;background: #2A2A2A;justify-content: space-between;padding: 0 24px;" 
+              <div class="w-full flex items-center rounded-lg pointer" 
+                style="height: 64px;background: var(--secondary-bg);justify-content: space-between;padding: 0 24px;" 
                 v-for="(item,index) in this.desks" 
                 :key="index" 
-                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
+                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : 'var(--secondary-bg)',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
                 'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
                  
                 @click="changeSelIndex(index)">
