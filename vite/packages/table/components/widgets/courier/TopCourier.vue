@@ -1,53 +1,10 @@
 <template>
-    <div v-if="topCourierVisible" style="position: absolute; top: 40px;z-index: 999999;left: 10px;">
-        <!-- <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
-            :showRightIcon="false" ref="cardSlot">
-            <template #left-title-icon>
-                <div class="icon"
-                    style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-                    <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
-                </div>
-            </template>
-            <div class="w-full h-full courier">
-                <div style="position: absolute;left: 124px;top: 15px;">
-                    ({{ this.courierDetailList.length }})
-                </div>
-                <div class="flex" style="position: absolute;right: 20px; top: 15px;">
-                    <xt-button :w="32" :h="32" class="ml-2">
-                        <newIcon icon="fluent:add-16-filled"></newIcon>
-                    </xt-button>
-                    <xt-button :w="32" :h="32" class="ml-2">
-                        <newIcon icon="fluent:arrow-counterclockwise-20-filled"></newIcon>
-                    </xt-button>
-                    <xt-button :w="32" :h="32" class="ml-2">
-                        <newIcon icon="fluent:settings-16-regular"></newIcon>
-                    </xt-button>
-                    <xt-button :w="32" :h="32" class="ml-2">
-                        <newIcon icon="fluent:dismiss-16-filled"></newIcon>
-                    </xt-button>
-                </div>
-                <template>
-                    <Empty v-if="courierList.length <= 0" />
-                    <template v-else>
-                        <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                            style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                            <CourierItem v-for="(item, index) in courierList" :key="index" :courier="item" />
-                        </vue-custom-scrollbar>
-                        <xt-button :w="40" :h="40" type="theme" @click="settingVisible" class="add-courier"
-                            style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
-                            <newIcon class="text-lg xt-text "
-                                style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
-                                icon="fluent:add-16-filled" />
-                        </xt-button>
-                    </template>
-                </template>
-            </div>
-
-        </Widget> -->
+    <div v-if="topCourierVisible" style="position: absolute; top: 40px;z-index: 9999;left: 10px;">
         <div class="w-[572px] h-[420px] rounded-xl p-4 " style="background-color: var(--secondary-bg);">
             <div class="flex justify-between h-[32px]">
                 <div class="flex mt-2">
-                    <div class="xt-text"><newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
+                    <div class="xt-text">
+                        <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
                     </div>
                     <div class="flex ml-4 xt-text">
                         <div class="text-base " style="line-height: 20px;">我的快递</div>
@@ -56,27 +13,33 @@
                 </div>
                 <div class="flex">
                     <a-tooltip autoAdjustOverflow title="添加快递">
-                    <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;">
-                        <newIcon icon="fluent:add-16-filled" style="vertical-align: sub;"></newIcon>
-                    </xt-button></a-tooltip>
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="addCourier">
+                            <newIcon icon="fluent:add-16-filled" style="vertical-align: sub;"></newIcon>
+                        </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="刷新">
-                    <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;">
-                        <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
-                    </xt-button></a-tooltip>
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="refreshExpress">
+                            <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
+                        </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
-                    <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;">
-                        <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;"></newIcon>
-                    </xt-button></a-tooltip>
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;">
+                            <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;"></newIcon>
+                        </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
-                    <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="showTopCourier">
-                        <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;"></newIcon>
-                    </xt-button></a-tooltip>
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="showTopCourier">
+                            <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;"></newIcon>
+                        </xt-button></a-tooltip>
                 </div>
             </div>
-            <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item" />
-            </vue-custom-scrollbar>
+            <div v-if="isLoading">
+                <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+            </div>
+            <template v-else>
+                <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                    style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                    <CourierItem v-for="(item, index) in couriersList" :key="index" :courier="item" @click="viewDeliveryDetails(item)" />
+                </vue-custom-scrollbar>
+            </template>
+
         </div>
     </div>
     <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
@@ -87,6 +50,15 @@
             style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;">{{
                 courierDetailList.length }}</span>
     </xt-button>
+    <teleport to='body'>
+        <AddCourierModal ref="addCourierRef" />
+    </teleport>
+    <teleport to='body'>
+        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+            :isHeader="false" :boxIndex="11" :maskIndex="10">
+            <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+        </xt-modal>
+    </teleport>
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
@@ -98,6 +70,8 @@ import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
+import AddCourierModal from './courierModal/AddCourierModal.vue'
+import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 export default {
     name: '我的快递',
     components: {
@@ -106,57 +80,13 @@ export default {
         CourierItem,
         MinCourierItem,
         Empty,
-        MinEmpty
-    },
-    props: {
-        customIndex: {
-            type: Number,
-            default: 0
-        },
-        customData: {
-            type: Object,
-            default: () => { }
-        },
-        desk: {
-            type: Object
-        }
+        MinEmpty,
+        AddCourierModal,
+        LogisticsDetail
     },
     data() {
         return {
             settingVisible: false,
-            sizeList: [
-                {
-                    height: 2,
-                    width: 2
-                },
-            ],
-
-
-
-            options: {
-                className: 'card double',
-                title: '我的快递',
-                icon: '',
-                type: 'Courier'
-            },
-            menuList: [
-                {
-                    newIcon: 'fluent:add-16-filled',
-                    title: '添加快递',
-                    fn: () => { console.log(1) }
-                },
-                {
-                    newIcon: 'fluent:box-16-regular',
-                    title: '全部快递',
-                    fn: () => { console.log(1) }
-                },
-                // {
-                //     icon: 'shezhi1',
-                //     title: '设置',
-                //     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
-                // },
-            ],
-            courierList: courier,
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -164,28 +94,56 @@ export default {
                 suppressScrollX: true,
                 wheelPropagation: true,
             },
-            topCourierVisible: false
+            topCourierVisible: false,
+            couriersList: [],
+            isLoading: false,
+            showCourierDetail: false,
         }
     },
     methods: {
         ...mapActions(courierStore, ['getCourierMsg']),
-        showTopCourier() {
+        async showTopCourier() {
             this.topCourierVisible = !this.topCourierVisible
+            if (this.topCourierVisible == true) {
+                this.couriersList = await this.couriersDetailMsg
+            }
+        },
+        addCourier() {
+            this.topCourierVisible = false
+            this.$refs.addCourierRef.openCourierModel()
+        },
+        // async refreshExpress() {
+        //     this.isLoading=true
+        //     this.couriersList = await this.couriersDetailMsg
+        //     setTimeout(() => {
+        //         this.isLoading=false
+        //     });
+
+        // }
+        viewDeliveryDetails(item) {
+            this.showCourierDetail = true
+            this.orderNum = item
+            this.topCourierVisible=false
+            console.log(this.orderNum)
+        },
+        closeCourierDetail(){
+            this.showCourierDetail=false
         }
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierDetailList']),
+        ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg']),
 
     },
-    mounted() {
-        this.getCourierMsg('YD', '463193332336436')
+    async mounted() {
+        // this.getCourierMsg('YD', '463193332336436')
+        this.couriersList = await this.couriersDetailMsg
+        //   console.log(this.couriersList)
     },
 
 }
 </script>
 <style lang="scss">
-
 .courier {
     .add-courier {
         display: none;

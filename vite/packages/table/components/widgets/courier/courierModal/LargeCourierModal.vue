@@ -1,13 +1,13 @@
 <template>
  <teleport to='body'>
   <Modal v-model:visible="largeShow" v-if="largeShow" :blurFlag="true">
-    <LargeCourierDetail @close="largeShow = false" />
+    <LargeCourierDetail @close="handleClose" />
   </Modal>
  </teleport>
 </template>
 
 <script>
-import Modal from '../../Modal.vue';
+import Modal from '../../../Modal.vue';
 import LargeCourierDetail from './content/LargeCourierDetail.vue';
 
 export default {
@@ -17,14 +17,26 @@ export default {
 
  data() {
   return {
-   largeShow:false,
+  //  largeShow:true,
   };
  },
 
  methods:{
    openLargeCourier(){
     this.largeShow = true
+   },
+   handleClose(){
+     let closeModal=false
+     this.$emit('close-modal',closeModal)
    }
+ },
+ props:{
+  show:Boolean
+ },
+ computed:{
+  largeShow(){
+    return this.show
+  }
  }
 
 }

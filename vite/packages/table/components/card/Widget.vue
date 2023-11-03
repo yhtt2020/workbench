@@ -54,7 +54,11 @@
                 </slot>
               </div>
             </div>
-            <div class="z-10 right-title" v-if="showRightIcon">
+            <div class="z-10 right-title flex" v-if="showRightIcon">
+            <!-- 用于便签添加复制 -->
+            <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
+              <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
+            </div>
               <MenuOutlined
                 class="pointer"
                 @click="showDrawer($event)"
@@ -214,6 +218,7 @@ export default {
           undefined,
       };
     },
+    // 作废 下次会优化掉
     sisza() {
       if (this.customSize?.width !== "NaNpx") {
         console.log("this.customSize :>> ", this.customSize);

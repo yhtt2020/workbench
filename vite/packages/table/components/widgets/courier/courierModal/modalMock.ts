@@ -151,7 +151,15 @@ export const courierDetailList = [
  },
 ]
 
-
+export const courierItem={
+    // 图标，没有修改图标即使用默认图标
+    icon:'fluent-emoji:package',
+    // 快递名称，如果没有就是快递单号
+    nickName:'',
+    shipperCode:'ZTO',
+    logisticCode:'78376829849713',
+    customerName:''
+}
 export const courierType = [
  {title:'全部',name:'all'},
  {title:'已揽收',name:'collect',color:'rgba(67,202,222,1)'},

@@ -74,6 +74,7 @@ export const courier=([
         state:3
     },
 ])
+// 处理不同快递状态背景颜色
 export const switchColor=(state)=>{
     switch (state) {
         case "0":
@@ -102,6 +103,7 @@ export const switchColor=(state)=>{
             return '#508BFE';
     }
 }
+// 解析部分常见快递公司
 export const kdCompany=(shipperCode)=>{
     switch (shipperCode) {
         case 'SF':
@@ -142,7 +144,7 @@ export const kdCompany=(shipperCode)=>{
             break;
     }
 }
-
+// 获取快递状态
 export const kdState=(state)=>{
     switch (state) {
         case "0":
@@ -165,6 +167,12 @@ export const kdState=(state)=>{
             break;
         case "6":
             return '清关';
+            break;
+        case "202":
+            return "派送中";
+            break;
+        case "211":
+            return "待取件";
             break;
     }
 }

@@ -4,7 +4,7 @@ import {nanoid} from 'nanoid'
 import {timerStore} from "./timer";
 import {marketStore} from "./market";
 import {watch} from 'vue'
-
+import { noteStore } from "../apps/note/store";
 // @ts-ignore
 export const cardStore = defineStore(
   "cardStore",
@@ -540,7 +540,9 @@ export const cardStore = defineStore(
         // })
 
         // 便签卡片需要进行db存储
-        if (value.name == 'notes') {
+        if (value.name == 'notes' && noteStore().initFlag) {
+          console.log('存了');
+          
           let obj:any ={
             ...value,
             customData:{
@@ -552,7 +554,8 @@ export const cardStore = defineStore(
               height:2,
               width:1,
               text:'',
-              dragCardSize:'card'
+              dragCardSize:'card',
+              content:'',
             },
             _id:'note:' + value.id,
             updateTime:value.id,
@@ -570,6 +573,7 @@ export const cardStore = defineStore(
           
           await tsbApi.db.put(obj)
         }else{
+          console.log('没存');
           desk.cards.push(value)
         }
         
@@ -596,7 +600,7 @@ export const cardStore = defineStore(
       },
       async removeCard(customIndex, desk, remove) {
         // 切换卡片时不需要清除
-        if (!remove) {    
+        if (!remove && noteStore().initFlag) {    
           // console.log('清除数据');
           
           // 删除桌面便签时需要清除db数据

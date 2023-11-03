@@ -5,6 +5,7 @@
         <div class="flex w-full pr-3 mt-3 mb-4" style="height: 40px;">
             <a-input
                 style="height:40px;background: var(--secondary-bg);
+                color: var(--primary-text);
                 border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
                 border-radius: 10px;"
                 placeholder="搜索"
@@ -41,11 +42,11 @@
                             </div>
                             <template #overlay>
                                 <a-menu 
-                                style="padding: 8px;width: 200px;border-radius: 12px;background: #212121;border: 1px solid rgba(255,255,255,0.1);">
+                                style="padding: 8px;width: 200px;border-radius: 12px;background: var(--modal-bg);border: 1px solid rgba(255,255,255,0.1);">
                                     <a-menu-item 
                                         v-for="(item,index) in menus" 
                                         :key="index" 
-                                        style="height: 40px;border-radius: 10px;"
+                                        style="height: 40px;border-radius: 10px;color:var(--primary-text);"
                                         @click="item.callBack">
                                         <div class="flex items-center font-16">
                                             <Icon width="20" height="20" :icon="item.newIcon" />
@@ -58,10 +59,10 @@
                         </a-dropdown>
                     </div>
                     <div class="mt-2 w-full two-hidden" style="min-height:22px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
-                        {{ item.hasOwnProperty('customData')?item.customData.text:'' }}
+                        {{ item.hasOwnProperty('customData')?item.customData.content:'' }}
                     </div>
-                    <div class="bottom mt-3" style="color: rgba(255,255,255,0.40);font-size: 14px;">
-                        {{ this.formatTimestamp(item.id) }}{{ item.deskName!=''?' · '+item.deskName:'' }}
+                    <div class="bottom mt-3" style="color: var(--secondary-text);font-size: 14px;">
+                        {{ formatTimestamp(item.id) }}{{ item.deskName!=''?' · '+item.deskName:'' }}
                     </div>
                 </div>
             </xt-menu>
@@ -76,9 +77,10 @@
   import search20Filled from '@iconify-icons/fluent/search-20-filled';
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
+  import { formatTimestamp } from '../../../util'
   export default {
     components: {
-        Icon
+        Icon,
     },
     props:['selDesk'],
     data() {
@@ -103,13 +105,12 @@
                             this.selDesk()
                         }else{
                             // 还原
-                            this.returnCard()
+                            this.restore()
                         }
                     }, 
                     newIcon: "fluent:open-20-filled",
                 },
                 { 
-                    // label: this.isSelTab?"删除便签":"彻底删除", 
                     // name:"删除便签",
                     label: "删除便签", 
                     newIcon: "akar-icons:trash-can",
@@ -120,7 +121,7 @@
                             
                             // 删除
                             //console.log('删除');
-                            this.moveNote()
+                            this.moveToTrash()
                         }else{
                             // 彻底删除
                             //console.log('彻底删除');
@@ -134,14 +135,11 @@
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
-
     },
     mounted() {
     },
     watch: {
         isSelTab(newval,oldval){
-            //console.log('监听到了');
-            //console.log(newval);
             if (newval) {
                 this.menus[0].label = '还原'
                 this.menus[1].label = '彻底删除'
@@ -152,19 +150,13 @@
         }
     },
     methods: {
-        ...mapActions(noteStore,['moveNote','deTest','addNote','returnCard','searchNote','findAll','deleteNote']),
+        ...mapActions(noteStore,['moveToTrash','deTest','addNote','restore','searchNote','findAll','deleteNote']),
+        formatTimestamp,
         changeNote(n){
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
             this.selNoteText = this.noteList[n].customData.text
             
-        },
-        formatTimestamp(timestamp) {
-            var date = new Date(timestamp);
-            var year = date.getFullYear();
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var day = ("0" + date.getDate()).slice(-2);
-            return year + "-" + month + "-" + day;
         },
         showData(){
             console.log(this.noteList);
@@ -214,6 +206,10 @@
 
     .scroll-color::-webkit-scrollbar-track {
         border-radius: 6px; /* 轨道圆角 */
+    }
+
+    :deep(.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover){
+        background-color: var(--active-secondary-bg);
     }
 </style>
   

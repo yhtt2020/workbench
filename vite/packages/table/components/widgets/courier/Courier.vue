@@ -21,16 +21,16 @@
       </div>
       <template v-else>
         <div v-if="showWay">
-          <MinEmpty v-if="courierDetailList.length <= 0"/>
-          <MinCourierItem v-else :courier="courierDetailList[0]"></MinCourierItem>
+          <MinEmpty v-if="this.deliveryDetails.length <= 0"/>
+          <MinCourierItem v-else :courier="this.deliveryDetails[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
         </div>
         <template v-else>
-          <Empty v-if="courierDetailList.length <= 0"/>
+          <Empty v-if="this.deliveryDetails.length <= 0"/>
           <template v-else>
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                                   style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-              <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"/>
-            </vue-custom-scrollbar>
+              <CourierItem v-for="(item, index) in deliveryDetails" :key="index" :courier="item"
+            @click="viewDeliveryDetails(item)" /></vue-custom-scrollbar>
             <div class="item-content" style="position: absolute;right: 24px;bottom: 10px">
               <xt-button @click="bindJd" :w="120" :h="40" type="theme" class=" mr-2"
               >
@@ -50,7 +50,16 @@
           </template>
         </template>
       </template>
-
+<template v-if="allCourierVisible">
+                <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
+                <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
+            </template>
+            <teleport to='body'>
+                <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+                    :isHeader="false" :boxIndex="11" :maskIndex="10">
+                    <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+                </xt-modal>
+            </teleport>
     </div>
 
   </Widget>
@@ -67,7 +76,9 @@ import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
 import grab from './grab'
-
+import LargeCourierModal from './courierModal/LargeCourierModal.vue';
+import SmallCourierModal from './courierModal/SmallCourierModal.vue';
+import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 export default {
   name: '我的快递',
   components: {
@@ -76,8 +87,10 @@ export default {
     CourierItem,
     MinCourierItem,
     Empty,
-    MinEmpty
-  },
+    MinEmpty,
+  LargeCourierModal,
+        SmallCourierModal,
+        LogisticsDetail},
   props: {
     customIndex: {
       type: Number,
@@ -114,134 +127,190 @@ export default {
           name: '4x6'
         },
 
-      ],
-      options: {
-        className: 'card double',
-        title: '我的快递',
-        icon: '',
-        type: 'Courier'
-      },
-      menuList: [
-        {
-          newIcon: 'fluent:add-16-filled',
-          title: '添加快递',
-          fn: () => { console.log(1) }
-        },
-        {
-          newIcon: 'fluent:box-16-regular',
-          title: '全部快递',
-          fn: () => { console.log(1) }
-        },
-        // {
-        //     icon: 'shezhi1',
-        //     title: '设置',
-        //     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+            ],
+            options: {
+                className: 'card double',
+                title: '我的快递',
+                icon: '',
+                type: 'Courier'
+            },
+            menuList: [
+                {
+                    newIcon: 'fluent:add-16-filled',
+                    title: '添加快递',
+                    fn: () => { console.log(1) }
+                },
+                {
+                    newIcon: 'fluent:box-16-regular',
+                    title: '全部快递',
+                    fn: () => { this.allCourierVisible = true }
+                },
+                // {
+                //     icon: 'shezhi1',
+                //     title: '设置',
+                //     fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+                // },
+            ],
+            courierList: courier,
+            outerSettings: {
+                useBothWheelAxes: true,
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: true,
+            },
+            isLoading: false,
+            allCourierVisible: false,
+            courierShow: true,
+            deliveryDetails: [],
+            orderNum: [],
+            showCourierDetail: false,
+        }
+    },
+    methods: {
+        ...mapActions(courierStore, ['getCourierMsg', 'getCouriersDetail']),
+        // async refreshCourier() {
+        //     // this.getCourierMsg('YD', '463193332336436')
+        //     this.isLoading = true
+        //     await this.getCouriersDetail()
+        //     // console.log(this.couriersDetailMsg);
+        //     this.deliveryDetails = await this.couriersDetailMsg
+
+        //     // console.log(this.deliveryDetails, 'deliveryDetails');
+        //     setTimeout(() => {
+        //         this.isLoading = false
+        //     });
         // },
-      ],
-      courierList: courier,
-      outerSettings: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true,
-      },
-      isLoading: false,
-    }
-  },
-  methods: {
-    ...mapActions(courierStore, ['getCourierMsg']),
-    refreshCourier () {
-      this.getCourierMsg('YD', '463193332336436')
-    },
+        // changeState() {
+        //     this.allCourierVisible = true
+        // }
+        changeState() {
+            this.allCourierVisible = false
+        },
+        viewDeliveryDetails(item) {
+            this.showCourierDetail = true
+            this.orderNum = item
+            console.log(this.orderNum)
+        },
+        closeCourierDetail() {
+            this.showCourierDetail = false
+        },
+        handleResize() {
+            let windoWidth = window.innerWidth
+            if (windoWidth > 1200) {
+                this.courierShow = true
+            } else {
+                this.courierShow = false
+            }
+            // console.log(windoWidth,'windoWidth')
+        },
+      bindJd () {
+        if (!this.storeInfo.jd.nickname) {
+          Modal.confirm({
+            centered: true,
+            content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
+            onOk: () => {
 
-    bindJd () {
-      if (!this.storeInfo.jd.nickname) {
-        Modal.confirm({
-          centered: true,
-          content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
-          onOk: () => {
-
-            grab.jd.login((data) => {
-              this.storeInfo.jd.nickname = data.nickname
-              message.loading({
-                content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-                key: 'loadingTip',
-                duration: 0
+              grab.jd.login((data) => {
+                this.storeInfo.jd.nickname = data.nickname
+                message.loading({
+                  content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
+                  key: 'loadingTip',
+                  duration: 0
+                })
+                grab.jd.getOrder((data) => {
+                  message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
+                  console.log(data)
+                })
               })
-              grab.jd.getOrder((data) => {
-                message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-                console.log(data)
-              })
-            })
 
-            // tsbApi.web.openPreloadWindow({
-            //   width: 1200,
-            //   height: 800,
-            //   background: false,
-            //   url: 'https://passport.jd.com/uc/login',
-            //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-            //   callback: (data) => {
-            //     this.loginInfo.jd.nickname=data.nickname
-            //     message.loading({
-            //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-            //       key: 'loadingTip',
-            //       duration:0
-            //     })
-            //     console.log('登录成功了，接下来进行下一步')
-            //     //todo 获取到登录成功的信号
-            //     tsbApi.web.openPreloadWindow({
-            //       background: true,
-            //       url: 'https://order.jd.com/center/list.action',
-            //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-            //       callback: (data) => {
-            //
-            //       }
-            //     })
-            //   }
-            // })
+              // tsbApi.web.openPreloadWindow({
+              //   width: 1200,
+              //   height: 800,
+              //   background: false,
+              //   url: 'https://passport.jd.com/uc/login',
+              //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
+              //   callback: (data) => {
+              //     this.loginInfo.jd.nickname=data.nickname
+              //     message.loading({
+              //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
+              //       key: 'loadingTip',
+              //       duration:0
+              //     })
+              //     console.log('登录成功了，接下来进行下一步')
+              //     //todo 获取到登录成功的信号
+              //     tsbApi.web.openPreloadWindow({
+              //       background: true,
+              //       url: 'https://order.jd.com/center/list.action',
+              //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
+              //       callback: (data) => {
+              //
+              //       }
+              //     })
+              //   }
+              // })
 
-          }
-        })
-      } else {
-        message.loading({
-          content: '已绑定账号：' + this.storeInfo.jd.nickname + '，正在为您更新订单信息，请稍候…',
-          key: 'loadingTip',
-          duration: 0
-        })
-        grab.jd.getOrder((data) => {
-          message.success({ content: '更新订单成功!本次共更新：'+data.orders.length+'条订单信息', key: 'loadingTip', duration: 3 })
-          console.log(data)
-        })
+            }
+          })
+        } else {
+          message.loading({
+            content: '已绑定账号：' + this.storeInfo.jd.nickname + '，正在为您更新订单信息，请稍候…',
+            key: 'loadingTip',
+            duration: 0
+          })
+          grab.jd.getOrder((data) => {
+            message.success({ content: '更新订单成功!本次共更新：'+data.orders.length+'条订单信息', key: 'loadingTip', duration: 3 })
+            console.log(data)
+          })
+        }
       }
-    }
-  },
-  computed: {
-    ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList', 'storeInfo']),
-    // 判断尺寸大小
-    showSize () {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height }
-      }
-      return this.sizeList[2]
+
     },
-    showWay () {
-      if (this.showSize.height === 1) {
-        return true
-      } else {
-        return false
-      }
+    computed: {
+        ...mapWritableState(courierStore, ['courierMsgList', 'courierDetailList', 'couriersDetailMsg', 'storeInfo']),
+        // 判断尺寸大小
+        showSize() {
+            if (this.customData && this.customData.width && this.customData.height) {
+                return { width: this.customData.width, height: this.customData.height }
+            }
+            return this.sizeList[2]
+        },
+        showWay() {
+            if (this.showSize.height === 1) {
+                return true
+            } else {
+                return false
+            }
+        },
+        courierMsg() {
+            return this.courierMsgList
+        }
     },
-    courierMsg () {
-      return this.courierMsgList
-    }
-  },
-  mounted () {
-    this.isLoading = true
-    setTimeout(() => {
-      this.isLoading = false
-    })
-  },
+    async mounted() {
+        this.isLoading = true
+        await this.getCouriersDetail()
+        // console.log(this.couriersDetailMsg);
+        this.deliveryDetails = await this.couriersDetailMsg
+
+        // console.log(this.deliveryDetails, 'deliveryDetails');
+        setTimeout(() => {
+            this.isLoading = false
+        });
+        // await this.refreshCourier()
+        // console.log(window.innerWidth)
+        window.addEventListener('resize', this.handleResize);
+    },
+    // beforeUpdate() {
+    //     // this.changeTag()
+    //     if (window.innerWidth > 1200) {
+    //         this.toggleDetail = true
+    //     } else {
+    //         this.toggleDetail = false
+    //     }
+    // },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleResize);
+    },
 
 }
 </script>
@@ -263,5 +332,9 @@ export default {
       display: block;
     }
   }
+}
+
+.xt-modal {
+    padding: 0px !important;
 }
 </style>
