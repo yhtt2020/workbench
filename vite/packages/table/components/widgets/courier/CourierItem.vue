@@ -30,6 +30,19 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
+import { courierStore } from '../../../store/courier'
+import { kdCompany, kdState,switchColor } from './mock'
+const useCourierStore = courierStore()
+const props = defineProps({ courier: Object })
+const stateColor = computed(() => {
+    return switchColor(props.courier.State)
+})
+const courierCode=computed(()=>{
+    const code=props.courier.LogisticCode
+    let start=code.substring(0,4)
+    let end=code.substring(code.length-4)
+    return ` ${start} - ${end}`
+})
 import { stateColor,kdState,kdCompany } from './mock'
 
 const props = defineProps({courier:Object})

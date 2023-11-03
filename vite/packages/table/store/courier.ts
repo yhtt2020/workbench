@@ -3,13 +3,36 @@ import dbStorage from "./dbStorage";
 import {sUrl} from "../consts";
 import {post} from "../js/axios/kdniaoPost";
 import {localCache} from '../js/axios/serverCache'
-const kdniao=sUrl('/app/kdniao/realTimeQuery')
+
+const kdniao = sUrl('/app/kdniao/realTimeQuery')
 
 // @ts-ignore
 export const courierStore = defineStore("courier", {
     state: () => ({
-      courierMsgList: [],
-      courierDetailList: [],
+      storeInfo: {
+        jd:{
+          nickname:null,
+          order:{
+            orders:[],
+            parentOrders:[]
+          }
+        }
+      },
+        courierMsgList: [],
+        courierDetailList: [
+
+            {
+                shipperCode:'ZTO',
+                logisticCode:'78376829849713',
+                customerName:''
+            },
+            {
+                shipperCode:'SF',
+                logisticCode:'SF1672404324049',
+                customerName:'6654'
+            }
+        ],
+        couriersDetailMsg:[]
     }),
     actions: {
         // addCourierEvent(event){
@@ -85,14 +108,14 @@ export const courierStore = defineStore("courier", {
         
 
 
-    },
-    persist: {
-        enabled: true,
-        strategies: [
-            {
-                storage: dbStorage,
-                paths: ['courierMsgList'],
-            }
-        ]
-    }
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: dbStorage,
+        paths: ['courierMsgList','storeInfo'],
+      }
+    ]
+  }
 })
