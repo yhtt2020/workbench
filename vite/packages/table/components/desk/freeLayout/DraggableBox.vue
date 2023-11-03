@@ -1,20 +1,20 @@
-<!-- 拖拽层 -->
 <script setup lang="ts">
 import { useDrag, DragSourceMonitor } from "vue3-dnd";
-import { ItemTypes } from "./ItemTypes";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import Box from "./Box.vue";
 import { toRefs } from "@vueuse/core";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { ItemTypes } from "./types";
+import { useFreeLayoutStore } from "./store";
+// 初始化操作
+const freeLayoutStore: any = useFreeLayoutStore();
+const { dragData } = storeToRefs(freeLayoutStore);
 
 const props = defineProps<{
   id: string;
-  title: string;
-  left: number;
-  top: number;
-  data: object;
-  customData: object;
-  currentDesk: object;
+  left: any;
+  top: any;
+  data: any;
 }>();
 
 const [collect, drag, preview] = useDrag(() => ({
@@ -30,6 +30,13 @@ onMounted(() => {
 });
 
 const { isDragging } = toRefs(collect);
+// 拖起开始
+watch(isDragging, (newV) => {
+  if (newV) {
+    console.log("开始托起 :>> ", props.data);
+    dragData.value = props.data;
+  }
+});
 </script>
 
 <template>
@@ -37,16 +44,12 @@ const { isDragging } = toRefs(collect);
     :ref="drag"
     :style="{
       position: 'absolute',
-      transform: `translate3d(${left}px, ${top}px, 0)`,
+      transform: `translate3d(${data.left}px, ${data.top}px, 0)`,
       opacity: isDragging ? 0 : 1,
       height: isDragging ? 0 : '',
     }"
     role="DraggableBox"
   >
-    <slot
-      name="item"
-      :data="data"
-    />
-
+    <slot name="box" :data="data"> </slot>
   </div>
 </template>
