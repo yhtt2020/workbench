@@ -17,17 +17,6 @@
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
-        <!-- :style="{ backgroundImage: background, color: fontColor }" -->
-        <!-- <textarea
-          spellcheck="false"
-          :style="{ backgroundImage: background}"
-          style="color: var(--primary-text);"
-          class="box no-drag"
-          placeholder="输入卡片内容"
-          v-model="text"
-          @blur="updateText"
-        >
-        </textarea> -->
         <Markdown :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
       </template>
     </cardDrag>
@@ -106,7 +95,7 @@ export default {
     // reSize,
   },
   computed:{
-    ...mapWritableState(noteStore, ['selNoteText']),
+    ...mapWritableState(noteStore, ['selNoteText','initFlag']),
   },
   data() {
     return {
@@ -116,11 +105,11 @@ export default {
         className: "card",
         title: "桌面便签",
         icon: "",
-        isCopy:true,
-        copyContent:()=>{
-          require('electron').clipboard.writeText(this.customData.text)
-          message.success("已成功复制到剪切板");
-        },
+        // isCopy:true,
+        // copyContent:()=>{
+        //   require('electron').clipboard.writeText(this.customData.text)
+        //   message.success("已成功复制到剪切板");
+        // },
         type: "games",
         isEdit:true,
         changeNoteTitle:(e)=>{
@@ -128,7 +117,9 @@ export default {
             this.updateCustomData(this.customIndex,{
                 title:e.target.value,
             },this.desk)
-            this.saveDeskTitle(this.customIndex,e.target.value)
+            if (this.initFlag) {
+              this.saveDeskTitle(this.customIndex,e.target.value)
+            }
           }
         }
       },
@@ -142,6 +133,19 @@ export default {
             this.settingVisible = true;
           },
         },
+        {
+          newIcon: "fluent:open-20-filled",
+          title: "跳转便签",
+          fn:()=>{
+            this.$router.push({
+              name:'note',
+              params:{
+                customIndex:this.customIndex
+              }
+            })
+          }
+
+        }
       ],
       color: {
         color1: "#57BF60",
@@ -225,8 +229,10 @@ export default {
         },
         this.desk
       );
-
-      this.changeDeskBg(this.customIndex,backgroundColor);
+      // 如果用户没有初始化过不加载
+      if (this.initFlag) {
+        this.changeDeskBg(this.customIndex,backgroundColor);
+      }
 
       this.background = backgroundColor;
       if (

@@ -46,7 +46,7 @@
             </div>
             <!-- 主体 -->
             <div>
-                <div class="mt-4 shadow" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
+                <div class="mt-4 shadow overflow-hidden" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
                     <a-input
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 24px; "
@@ -82,7 +82,6 @@
         ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
         deskName(){
             if (this.noteList.length) {
-                console.log(this.noteList[this.selNote]);
                 return this.selNote>=0?this.noteList[this.selNote].deskName:"" 
             }
         },
@@ -91,10 +90,7 @@
                 return this.selNote>=0?this.noteList[this.selNote].customData.background:''
             }
         },
-
-
         time() {
-            // console.log(this.selNote,this.noteList);
             // return 
             if (this.selNote>=0 && this.noteList) {
                 let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
@@ -156,12 +152,11 @@
     // 修改当前便签颜色
     changeBgColor(i){
         this.noteList[this.selNote].customData.background = this.noteBgColor[i]
-        if (this.noteList[this.selNote].deskName != '') {
-            // console.log('改变了');
+        if (this.noteList[this.selNote].deskId != '') {
             let nowIndex = -1;
             this.deskList.forEach((item,index)=>{
                 if (item.id ==this.noteList[this.selNote].deskId) {
-                nowIndex = index
+                    nowIndex = index
                 }
             })
             this.updateCustomData(this.noteList[this.selNote].id,{
@@ -175,7 +170,6 @@
     // 修改当前便签标题
     changeNoteTitle(e){
         if (this.noteList[this.selNote].customData.title != e.target.value) {
-            // console.log('开始保存');
             let n = -1;
             this.deskList.forEach((item,index)=>{
                 if (item.name == this.noteList[this.selNote].deskName) {

@@ -113,23 +113,22 @@ const props = defineProps({
     type: Array<any>,
     default: () => [],
   },
-  data: {
-    default: "",
-  },
   name: {
     default: "label",
   },
   fn: {
     default: "callBack",
   },
-
   start: {
     default: true,
   },
   lock: {
     default: true,
   },
-  // 展开触发模式
+  /**
+   * 展开触发模式
+   * contextmenu click all null
+   */
   model: {
     default: "contextmenu",
   },
@@ -137,10 +136,21 @@ const props = defineProps({
   trigger: {
     default: false,
   },
+  // 这是props 他提供一个beforeCreate 默认返回true 怎么让父组件传一个函数，在里面执行他自己的内容 成功返回true
+  beforeCreate: {
+    type: Function,
+    default: () => {
+      return true;
+    }, // 默认是一个返回true的函数
+  },
 });
 
 const { model, trigger, start, lock } = toRefs(props);
-const emits = defineEmits(["closeMenu"]);
+/**
+ * @closeMenu 关闭菜单回调
+ * @openMenu 打开菜单回调
+ */
+const emits = defineEmits(["closeMenu", "beforeCreate", "mounted"]);
 
 /**
  * 打开菜单
@@ -153,9 +163,12 @@ const setup = (e: any) => {
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
+  emits("mounted");
 };
 
 const handeleCustomTrigger = (e: any) => {
+  if (!props.beforeCreate()) return;
+  emits("beforeCreate");
   if (trigger.value) {
     setup(e);
   }
@@ -169,9 +182,6 @@ const handleContextMenu = (e: any) => {
 // 左键
 const handleClickMenu = (e: any) => {
   handeleCustomTrigger(e);
-  if (trigger.value) {
-    setup(e);
-  }
   if (!start.value || model.value != "click") return;
   setup(e);
 };
@@ -180,7 +190,7 @@ const handleClick = (menu: any) => {
   if (!menu?.lock) {
     show.value = false;
   }
-  menu[props.fn] && menu[props.fn](props.data);
+  menu[props.fn] && menu[props.fn](menu);
 };
 /**
  * 关闭菜单
