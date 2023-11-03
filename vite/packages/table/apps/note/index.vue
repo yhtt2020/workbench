@@ -60,19 +60,19 @@
   import Modal from '../../components/Modal.vue'
   import { Icon } from '@iconify/vue';
   import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled';
-  import { deskStore } from '../../store/desk'
   import { cardStore } from '../../store/card'
-  import { appStore } from '../../../app/store'
 
-  
   export default {
-    name: 'Tomato',
+    name: 'note',
     components:{
         LeftTab,
         LeftSearch,
         NodeContent,
         Modal,
         Icon,
+    },
+    props:{
+      customIndex:String
     },
     data () {
       return {
@@ -84,9 +84,16 @@
 
       }
     },
-    mounted () {
-      // console.log('初始化');
-      this.getNotes()
+    async mounted () {
+      
+      await this.getNotes()
+      if (this.$route.params.customIndex) {
+        this.noteList.forEach((item,index)=>{
+          if (item.id  == this.$route.params.customIndex) {
+            this.selNote = index
+          }
+        })
+      }
     },
     computed: {
           ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
