@@ -65,8 +65,9 @@
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
+          <!-- 进行数据筛选 将离线模式屏蔽的隐藏 -->
           <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
-                           :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
+              :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -105,6 +106,7 @@ import DeskMarket from './DeskMarket.vue'
 import ShareDesk from '../../../components/desk/ShareDesk.vue'
 import DeskPreview from '../../../components/desk/DeskPreview.vue'
 import { marketStore } from '../../../store/market'
+import { offlineStore } from "../../../js/common/offline";
 
 export default {
   name: 'AddCard',
@@ -178,11 +180,17 @@ export default {
         cname: '全部',
         children: items
       })
-    // navList = this.baseNavList
-
     navList.forEach(li => {
+      console.log(li);
+      li.children = li.children.filter(ele=>{
+        if (ele.cname != '天气') {
+          return ele
+        }
+      })
+      console.log(li);
       li.cname = li.cname + `（${li.children.length}）`
     })
+    console.log(navList);
     this.baseNavList = navList.map((item) => {
       if (item.children != null) {
         let children = []
@@ -209,6 +217,7 @@ export default {
     }
   },
   computed: {
+    ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(deskStore, ['apiList']),
     displayList () {
       // return this.apiList.filter
