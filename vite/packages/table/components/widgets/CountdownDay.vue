@@ -1,19 +1,27 @@
 <template>
   <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
-    <div class="content mt-4" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDays.length <= 0" >
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent-calendar-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
+    <div class="mt-4 content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center" v-if="countdownDays.length <= 0" >
       <a-empty :description="null" image="/img/test/load-ail.png"/>
-    <a-button type="primary" class=" xt-text xt--active-bg rounded-full" @click="()=>{settingVisible=true;goAddEvent()}">立即添加</a-button>
+    <a-button type="primary" class="rounded-full xt-text xt--active-bg" @click="()=>{settingVisible=true;goAddEvent()}">立即添加</a-button>
     </div>
-    <div class="content  mt-1 " style="height: calc(100% - 20px);overflow: hidden;" v-else>
+    <div class="mt-1 content " style="height: calc(100% - 20px);overflow: hidden;" v-else>
     <div class="cursor-pointer " @click="settingVisible=true" style="padding-top: 0.2em">
 
 
     <div
-      class="event-list px-4 mb-3 s-item xt-bg-2" style=""
+      class="px-4 mb-3 event-list s-item xt-bg-2" style=""
       v-for="(item) in countdownDays"
     >
       <div class="flex flex-row items-center">
-        <div class="round-dot mr-4"></div>
+        <div class="mr-4 round-dot"></div>
       <div class="event-title">
         <span class="text-more w-28 xt-text" style="font-size: 16px">{{ item.eventValue }}</span>
         <span class="event xt-text" style="font-size: 12px;"
@@ -46,13 +54,13 @@
             class="scroll"
           >
             <div
-              class="event-list px-4 mb-3 s-item xt-bg-2 xt-text"
+              class="px-4 mb-3 event-list s-item xt-bg-2 xt-text"
               v-for="(item,index) in countdownDays"
             >
 
-                <div class="flex flex-row justify-between items-center w-full">
+                <div class="flex flex-row items-center justify-between w-full">
               <div class="flex flex-row items-center">
-                <div class="round-dot mr-4"></div>
+                <div class="mr-4 round-dot"></div>
                 <div class="event-title">
                   <span class="text-more" style="font-size: 16px;">{{ item.eventValue }}</span>
                   <span class="event" style="font-size: 12px;"
@@ -75,20 +83,20 @@
            </vue-custom-scrollbar
           >
         </div>
-        <div class="flex flex-row items-center w-full justify-center mt-4">
+        <div class="flex flex-row items-center justify-center w-full mt-4">
 
-          <div class="xt-active-bg rounded-lg h-10 w-full flex justify-center items-center pointer " style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
+          <div class="flex items-center justify-center w-full h-10 rounded-lg xt-active-bg pointer " style="color: var(--primary-text);" @click="goAddEvent">添加事件</div>
         </div>
       </div>
     <div v-else>
       <div>事件名称</div>
-      <xt-input class="rounded-lg  h-12 mt-4 xt-text"   style="height: 48px;" v-model="eventValue" placeholder="请输入"></xt-input>
-      <!-- <a-input class="rounded-lg  h-10 mt-4 xt-text" allow-clear v-model:value="eventValue" placeholder="请输入"/> -->
+      <xt-input class="h-12 mt-4 rounded-lg xt-text"   style="height: 48px;" v-model="eventValue" placeholder="请输入"></xt-input>
+      <!-- <a-input class="h-10 mt-4 rounded-lg xt-text" allow-clear v-model:value="eventValue" placeholder="请输入"/> -->
       <div class="mt-4">日期</div>
       <a-date-picker v-model:value="dateValue" class="mt-4"/>
-      <div class="flex flex-row items-center w-full justify-center mt-4 xt-text"  style="color: var(--primary-text);">
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center mr-4 pointer xt-bg-2 " style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
-        <div class="rounded-lg h-10 w-24 flex justify-center items-center pointer xt-active-bg" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
+      <div class="flex flex-row items-center justify-center w-full mt-4 xt-text"  style="color: var(--primary-text);">
+        <div class="flex items-center justify-center w-24 h-10 mr-4 rounded-lg pointer xt-bg-2 " style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消</div>
+        <div class="flex items-center justify-center w-24 h-10 rounded-lg pointer xt-active-bg" style="color: var(--primary-text);" @click="addEvent">确定添加</div>
       </div>
     </div>
   </a-drawer>
@@ -132,6 +140,7 @@ import Widget from "../card/Widget.vue";
 import {message} from "ant-design-vue";
 import {timeStamp} from "../../util";
 import { timerStore } from '../../store/timer'
+import { Icon as newIcon } from "@iconify/vue";
 export default {
   name: "CountdownDay",
   props:{
@@ -148,7 +157,8 @@ export default {
     }
   },
   components:{
-    Widget
+    Widget,
+    newIcon
   },
 
   data() {
@@ -166,7 +176,7 @@ export default {
       options:{
         className:'card small',
         title:'纪念日',
-        icon:'calendar-check',
+        icon:'',
         type:'countdownDay'
       },
       menuList:[{icon:'shezhi1',title:'设置',fn:()=>{this.settingVisible = true;this.$refs.cardSlot.visible = false}},],

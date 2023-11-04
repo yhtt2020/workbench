@@ -8,6 +8,15 @@
     ref="homelSlotRef"
     :desk="desk"
   >
+  <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <!-- <RobotOutlined style="font-size: 20px" /> -->
+          <clockIcon icon="fluent:clock-12-regular" style="font-size: 22px;" />
+        </div>
+      </template>
     <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
@@ -61,7 +70,7 @@ import cardDrag from "../../card/hooks/cardDrag.vue";
 import cardDragHook from "../../card/hooks/cardDragHook";
 
 import cardSizeHook from "../../card/hooks/cardSizeHook";
-
+import {Icon as clockIcon } from '@iconify/vue'
 export default {
   mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
@@ -83,7 +92,7 @@ export default {
       options: {
         className: "card small",
         title: "时钟",
-        icon: "time-circle",
+        icon: "",
         type: "games",
       },
       menuList: [
@@ -121,6 +130,7 @@ export default {
     ClockStyle,
     ClockFullScreen,
     cardDrag,
+    clockIcon
   },
   created() {},
   mounted() {

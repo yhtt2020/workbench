@@ -40,25 +40,25 @@
              </vue-custom-scrollbar>
          </template>
 
-     </div>
- </div>
- <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
-     style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
-     @click="showTopCourier">
-     <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
-     <span
-         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;">{{
-             courierDetailList.length }}</span>
- </xt-button>
- <teleport to='body'>
-     <AddCourierModal ref="addCourierRef" />
- </teleport>
- <teleport to='body'>
-     <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-         :isHeader="false" :boxIndex="11" :maskIndex="10">
-         <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
-     </xt-modal>
- </teleport>
+        </div>
+    </div>
+    <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
+        style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
+        @click="showTopCourier">
+        <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
+        <span
+            style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;">{{
+                courierDetailList.length }}</span>
+    </xt-button>
+    <teleport to='body'>
+        <AddCourierModal ref="addCourierRef" />
+    </teleport>
+    <teleport to='body'>
+        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+            :isHeader="false" :boxIndex="100" :maskIndex="99">
+            <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+        </xt-modal>
+    </teleport>
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
