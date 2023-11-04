@@ -20,7 +20,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
       zoom: 1,
-      margin: 10,
+      margin: 6,
     },
   }),
   getters: {
@@ -63,8 +63,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   actions: {
     // 吸附网格
     snapToGrid(x: number, y: number): [number, number] {
-      let width = 140 + this.getFreeLayoutState?.margin;
-      let height = 102 + this.getFreeLayoutState?.margin;
+      let width = 140 - 6 + this.getFreeLayoutMargin * 2;
+      let height = 102 - 6 + this.getFreeLayoutMargin * 2;
       const snappedX = Math.round(x / width) * width;
       const snappedY = Math.round(y / height) * height;
       return [snappedX, snappedY];

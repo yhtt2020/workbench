@@ -73,7 +73,7 @@ const props = defineProps({
 
 const emits = defineEmits(["handleClick"]);
 const handleClick = (item) => {
-  console.log('1222 :>> ', 1222);
+  item[props.fn] && item[props.fn](item);
   emits("handleClick", item);
 };
 </script>

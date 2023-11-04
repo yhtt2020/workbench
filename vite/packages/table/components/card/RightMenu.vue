@@ -16,10 +16,10 @@
       <slot></slot>
     </div>
     <template #cardSize v-if="sizes.length > 0">
-      <div class="flex flex-wrap mb-2 ml-3 my-1">
+      <div class="flex flex-wrap mb-2 ml-2 my-1">
         <div
           v-for="item in sizes"
-          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-3"
+          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
           style="border-radius: 16px"
           @click="updateCardSize(item)"
         >

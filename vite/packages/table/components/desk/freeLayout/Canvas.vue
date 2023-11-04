@@ -85,14 +85,14 @@ function auxLine(length: number, factor: number) {
 const auxLineWidth = computed(() => {
   return auxLine(
     getFreeLayoutState.value.width,
-    140 + getFreeLayoutMargin.value
+    140 - 6 + getFreeLayoutMargin.value * 2
   );
 });
 
 const auxLineHeight = computed(() => {
   return auxLine(
     getFreeLayoutState.value.height,
-    102 + getFreeLayoutMargin.value
+    102 - 6 + getFreeLayoutMargin.value * 2
   );
 });
 </script>
