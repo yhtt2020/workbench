@@ -21,7 +21,7 @@
                          <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
                      </xt-button></a-tooltip>
                  <a-tooltip autoAdjustOverflow title="设置">
-                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;">
+                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="openCourierSetting">
                          <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;"></newIcon>
                      </xt-button></a-tooltip>
                  <a-tooltip autoAdjustOverflow title="关闭">
@@ -53,12 +53,18 @@
  <teleport to='body'>
      <AddCourierModal ref="addCourierRef" />
  </teleport>
+
  <teleport to='body'>
      <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
          :isHeader="false" :boxIndex="11" :maskIndex="10">
          <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
      </xt-modal>
  </teleport>
+
+ <teleport to='body'>
+    <CourierSetting ref="courierSettingRef"/>
+ </teleport>
+
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
@@ -70,8 +76,11 @@ import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
+
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
+import CourierSetting from './courierModal/CourierSetting.vue';
+
 export default {
  name: '我的快递',
  components: {
@@ -82,7 +91,8 @@ export default {
      Empty,
      MinEmpty,
      AddCourierModal,
-     LogisticsDetail
+     LogisticsDetail,
+     CourierSetting
  },
  data() {
      return {
@@ -131,6 +141,11 @@ export default {
      },
      closeCourierDetail(){
          this.showCourierDetail=false
+     },
+
+     //打开设置
+     openCourierSetting(){
+        this.$refs.courierSettingRef.openSettingModal()
      }
 
  },
