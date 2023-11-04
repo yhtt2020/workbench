@@ -59,6 +59,10 @@
          <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
      </xt-modal>
  </teleport>
+
+ <teleport to='body'>
+    <CourierSetting ref="courierSettingRef" />
+</teleport>
 </template>
 <script>
 import Widget from '../../card/Widget.vue';
