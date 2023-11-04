@@ -3,7 +3,7 @@
         <div class="p-4 mt-2 mb-2 rounded-lg xt-bg xt-text" style="font-size: 14px;">
             在桌面上时刻关注你的快递动态，支持同步主流电商平台的订单列表，自定义修改快递名称和图标。
         </div>
-        <div class="flex">
+        <!-- <div class="flex">
             <xt-button class="mr-2 commerce-large" @click="bandJd"
                 style="width: 40px; height: 40px;background: #E12419;font-weight: 600;">JD</xt-button>
             <xt-button class="mr-2 commerce-large" @click="bindTb"
@@ -12,10 +12,10 @@
                 <newIcon icon="fluent:add-16-filled" style="font-size: 20px;line-height: 40px;vertical-align: middle;" />
                 自定义添加
             </xt-button>
-        </div>
-
+        </div> -->
+        <BandCouriersVue />
     </div>
-    <AddCourierModal ref="addCourierRef" />
+    <!-- <AddCourierModal ref="addCourierRef" /> -->
 </template>
 
 <script setup>
@@ -23,6 +23,7 @@ import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AddCourierModal from "./courierModal/AddCourierModal.vue";
 import grab from './grab';
+import BandCouriersVue from './BandCouriers.vue';
 const addCourierRef = ref(null)
 
 const addCourier = () => {

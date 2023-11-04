@@ -101,6 +101,7 @@ export const courierStore = defineStore("courier", {
           this.getDbCourier()
         },
 
+        // 刷新快递信息
         async refreshCouriers(){
           if(this.courierDetailList.length>0){
             let data=this.courierDetailList.map((item)=>{

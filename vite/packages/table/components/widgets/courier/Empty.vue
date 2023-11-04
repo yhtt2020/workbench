@@ -52,8 +52,8 @@
                 </div>
 
             </div>
-
-            <div class="flex">
+            <BandCouriersVue />
+            <!-- <div class="flex">
                 <xt-button class="mr-2 commerce-large" @click="bandJD"
                     style="width: 40px; height: 40px;background: #E12419;font-weight: 600;">JD</xt-button>
                 <xt-button class="mr-2 commerce-large" @click="bandJD"
@@ -63,18 +63,18 @@
                         style="font-size: 20px;line-height: 40px;vertical-align: middle;" />
                     自定义添加
                 </xt-button>
-            </div>
+            </div> -->
         </div>
     </div>
 
-    <AddCourierModal ref="addCourierRef" />
+    <!-- <AddCourierModal ref="addCourierRef" /> -->
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue';
-
+import BandCouriersVue from './BandCouriers.vue';
 const addCourierRef = ref(null)
 
 const addCourier = () => {
