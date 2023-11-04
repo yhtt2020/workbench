@@ -27,25 +27,9 @@
             <slot name="left-title-icon"></slot>
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="flex w-2/3">
-              <div v-if="options.isEdit">
-                <a-input
-                  style="
-                    border: none;
-                    box-shadow: none !important;
-                    position: relative;
-                    left: -25px;
-                    font-size: 16px;
-                    padding: 0;
-                  "
-                  maxlength="15"
-                  v-model:value="noteTitle"
-                  @blur="options.changeNoteTitle"
-                ></a-input>
-              </div>
-              <div v-else="options.isEdit">
+              <slot name="title-editor">
                 {{ options.title }}
-              </div>
-
+              </slot>
               <slot name="left-title" v-if="options.rightIcon">
                 <div class="right-icon">
                   <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
@@ -54,16 +38,13 @@
             </div>
           </div>
           <div class="z-10 right-title flex" v-if="showRightIcon">
-            <!-- 用于便签添加复制 -->
-            <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
-              <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
-            </div>
+            <slot name="right-menu"> </slot>
             <MenuOutlined
               class="pointer"
               @click="showDrawer($event)"
               @contextmenu.stop="showDrawer"
             />
-            <slot name="right-menu"> </slot>
+      
           </div>
         </div>
       </slot>
@@ -176,8 +157,6 @@ export default {
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
-      // 便签标题
-      noteTitle:this.options.title,
     };
   },
   computed: {

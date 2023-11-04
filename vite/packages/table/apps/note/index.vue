@@ -12,14 +12,14 @@
           </div>
       </LeftTab>
       <Modal v-if="promptVisible" blurFlag="true" style="z-index:99999;"  >
-        <div class="p-5 xt-modal flex flex-col justify-center" style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);">
+        <div class="p-5 pt-1 pb-1 flex flex-col justify-center" style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);">
           <div  style="width:100%;height:46px;position:relative;color: var(--primary-text);">
-            <div class='flex justify-center font-16'>添加到桌面</div>
+            <div class='flex h-full items-center justify-center font-16'>添加到桌面</div>
             <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: var(--secondary-bg);border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
               <Icon :icon="icons.dismiss16Filled" />
             </div>
           </div>
-          <div style="height: 428px;" >
+          <div class="mt-1">
             <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
             <div style="background: var(--secondary-bg);border-radius: 10px; padding: 10px 12px;color: var(--primary-text);">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
             <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
@@ -40,7 +40,7 @@
               </div>
             </div>
           </div>
-          <div class='flex font-16' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+          <div class='flex font-16 mt-2' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
             <xt-button style="width: 64px;height:40px;" class="mr-3" @click="this.promptVisible = false">取消</xt-button>
             <xt-button style="width: 64px;height:40px;" class="xt-active-btn" @click="changeDesk">选择</xt-button>
           </div>
