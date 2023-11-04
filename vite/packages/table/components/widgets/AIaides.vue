@@ -21,7 +21,8 @@
             left: 2px;
           "
         >
-          <RobotOutlined style="font-size: 20px" />
+          <!-- <RobotOutlined style="font-size: 20px" /> -->
+          <AiIcon icon="fluent:bot-24-regular" style="font-size: 22px;" />
         </div>
       </template>
       <div class="content">
@@ -99,6 +100,7 @@ import {
 import DataStatu from "./DataStatu.vue";
 import { aiStore } from "../../store/ai";
 import { mapWritableState } from "pinia";
+import {Icon as AiIcon} from '@iconify/vue'
 export default {
   name: "AIaides",
   components: {
@@ -107,6 +109,7 @@ export default {
     SendOutlined,
     RobotOutlined,
     DataStatu,
+    AiIcon
   },
   props: {
     customIndex: {
