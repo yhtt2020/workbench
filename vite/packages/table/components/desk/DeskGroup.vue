@@ -838,7 +838,6 @@ export default {
               1
             );
             this.$emit("changeDesk", {id: this.deskList[0].id});
-          // 实现删除
           this.clearFreeLayout(this.deskList[0].id)
             // 删除桌面数据
             this.key = Date.now();
@@ -878,8 +877,7 @@ export default {
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
       };
-      console.log('desk :>> ', desk);
-      console.log(' this.deskList :>> ', this.deskList);
+
       this.deskList.unshift(desk);
       this.$emit("changeDesk", {id: desk.id});
       this.deskTitle = "";

@@ -275,7 +275,7 @@
     ></XtTab>
     <template v-if="currentSettingTab === 'current' && currentDesk.settings">
       <FreeLayoutState
-        v-if="$route.path == '/main' && freeLayout"
+        v-if="$route.path == '/main' && freeLayout && 0"
         @scrollbarRedirect="freeLayoutScrollbarRedirect"
         @scrollbarUpdate="freeLayoutScrollbarUpdate"
       ></FreeLayoutState>
