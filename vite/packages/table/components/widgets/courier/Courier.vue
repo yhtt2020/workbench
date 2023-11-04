@@ -10,7 +10,7 @@
     <div class="w-full h-full courier">
       <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier" class="pointer"
         v-if="courierDetailList.length > 0">
-        <xt-button :w="22" :h="22" style="background: transparent;">
+        <xt-button :w="22" :h="22" style="background: transparent;" >
           <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
             icon="akar-icons:arrow-clockwise" />
         </xt-button>
@@ -181,19 +181,10 @@ export default {
   },
   methods: {
     ...mapActions(courierStore, [// "getCourierMsg", "getCouriersDetail",
-      'getDbCourier']),
-    // async refreshCourier() {
-    //     // this.getCourierMsg('YD', '463193332336436')
-    //     this.isLoading = true
-    //     await this.getCouriersDetail()
-    //     // console.log(this.couriersDetailMsg);
-    //     this.deliveryDetails = await this.couriersDetailMsg
-
-    //     // console.log(this.deliveryDetails, 'deliveryDetails');
-    //     setTimeout(() => {
-    //         this.isLoading = false
-    //     });
-    // },
+      'getDbCourier','refreshCouriers']),
+    async refreshCourier() {
+        this.refreshCouriers()
+    },
     // changeState() {
     //     this.allCourierVisible = true
     // }

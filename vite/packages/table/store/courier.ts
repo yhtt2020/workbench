@@ -61,7 +61,7 @@ export const courierStore = defineStore("courier", {
             createTime:Date.now(),
             updateTime:Date.now()
           }
-          //console.log('查看db存储的数据',dbData);
+          console.log('查看db存储的数据',dbData);
           await tsbApi.db.put(dbData)
           // const res  = await tsbApi.db.put(dbData)
           // console.log('查看结果',res);
@@ -100,7 +100,24 @@ export const courierStore = defineStore("courier", {
           // console.log('查看删除结果',res);
           this.getDbCourier()
         },
-        refreshCouriers(){
+
+        async refreshCouriers(){
+          if(this.courierDetailList.length>0){
+            let data=this.courierDetailList.map((item)=>{
+              return {code:item.ShipperCode,order:item.LogisticCode,customerName:item.customerName?item.customerName:''}
+            })
+            // console.log(data[0]);
+            data.forEach(async(item,index)=>{
+                await this.putCourierInfo(item.code,item.order,item.customerName)
+                console.log(index);
+                await this.removeDbData(index)
+            })
+            // this.courierDetailList=new Set(this.courierDetailList)
+            // console.log(this.courierDetailList);
+            
+          
+            
+          }
           
         }
         
