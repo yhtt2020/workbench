@@ -4,9 +4,10 @@
       <div class="mb-4 flex items-center justify-between h-8">
         <div class="flex items-center">
           <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#E12419;line-height: 32px;">JD</div>
-          <span class="ml-3">京东</span>
+          <span class="ml-3">{{ storeInfo.jd.nickname === null ? '京东': `京东（${storeInfo.jd.nickname}）`}}</span>
         </div>
-        <xt-button w="32" style="color: var(--active-bg);" @click="bindJd">关联</xt-button>
+        <xt-button w="32" v-if="storeInfo.jd.nickname === null" style="color: var(--active-bg);" @click="bindJd">关联</xt-button>
+        <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindJd">解除关联</xt-button>
       </div>
 
       <a-divider style="height: 1px; background-color: var(--divider-text); margin: 0; " />
@@ -17,13 +18,13 @@
           <span class="ml-3">{{ storeInfo.tb.nickname === null ? '淘宝': `淘宝（${storeInfo.tb.nickname}）`}}</span>
         </div>
         <xt-button w="32" v-if="storeInfo.tb.nickname === null" style="color: var(--active-bg);" @click="bindTb">关联</xt-button>
-        <xt-button w="63" v-else style="color:var(--error) !important;" @click="unbindTb">解除关联</xt-button>
+        <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindTb">解除关联</xt-button>
       </div>
 
     </div>
 
     <div class="xt-bg-2 w-full flex items-enter mb-4 rounded-lg flex-col p-4">
-      
+
       <div class="flex justify-between mb-4">
         <span>自动刷新电商平台订单数据</span>
         <a-switch v-model:checked="settings.courierRefresh.autoRefresh"></a-switch>
@@ -44,7 +45,7 @@
         <RadioTab class="xt-bg" :height="40" :navList="autoCourier" v-model:selectType="defaultAuto"></RadioTab>
         <span class="xt-text-2 mt-4 xt-font font-14 font-400">
           由于各家快递公司的单号名称规则不同，选择模糊匹配可以识别到更多的快递单号。
-        </span>      
+        </span>
       </div>
 
       <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
@@ -55,7 +56,7 @@
           <a-switch v-model:checked="settings.courierStatus.statusBar"></a-switch>
         </div>
         <span class="xt-text-2 mb-2.5 xt-font font-14 font-400">在顶部状态栏左侧显示当前快递包裹数量。</span>
-   
+
         <a-select class="xt-bg rounded-lg"  :bordered="false" :options="statusSelect" v-model:value="settings.courierStatus.currentStatus"></a-select>
       </div>
 
@@ -76,15 +77,15 @@
           <span>到期自动取消关注并隐藏已签收订单</span>
           <a-switch v-model:checked="settings.courierSigned.blockSigned"></a-switch>
         </div>
-      
+
         <a-select class="xt-bg rounded-lg"  :bordered="false" :options="autoCancelTime" v-model:value="settings.courierSigned.courierTime"></a-select>
-         
-        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消订阅该订单，并设置为隐藏。</span>      
+
+        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消订阅该订单，并设置为隐藏。</span>
       </div>
     </div>
   </div>
 </template>
- 
+
 <script>
 import { mapActions, mapWritableState } from "pinia";
 import { Modal as SettingModal, message } from "ant-design-vue";
@@ -265,11 +266,18 @@ export default {
     },
 
     // 解除淘宝关联
-    unbindTb() {},
+    unbindTb() {
+      this.storeInfo.tb.nickname=null
+      message.success('解除淘宝账号关联成功。')
+    },
+    unbindJd(){
+      this.storeInfo.jd.nickname=null
+      message.success('解除京东账号关联成功。')
+    }
   },
 };
 </script>
- 
+
 <style lang="scss" scoped>
 :deep(.nav-box) {
   border-radius: 8px !important;
