@@ -1,4 +1,5 @@
-import exp from "constants"
+import grab from './grab'
+import {message} from 'ant-design-vue'
 
 export const courier=([
     {
@@ -182,19 +183,20 @@ export function stateColor(state:any){
      case "0":
         return '#508BFE';
      case "1":
-                    return '#43CADE';
-                    break;
-        case "2":
-            return '#508BFE';
-        case "3":
-            return '#FA7B14';
-        case "4":
-           return '#52C41A';
-        case "5":
-            return '#508BFE';
-        case "6":
-            return '#508BFE';
-        default:
-            return '#508BFE';
+        return '#43CADE';
+        break;
+     case "2":
+         return '#508BFE';
+     case "3":
+         return '#FA7B14';
+     case "4":
+        return '#52C41A';
+     case "5":
+         return '#508BFE';
+     case "6":
+         return '#508BFE';
+     default:
+         return '#508BFE';
     }
 }
+
