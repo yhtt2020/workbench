@@ -93,6 +93,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { courierStore } from "../../../../store/courier";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
 import { appStore } from "../../../../store";
+import { message } from "ant-design-vue";
 
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
@@ -124,67 +125,30 @@ export default {
   },
 
   methods: {
+    ...mapActions(courierStore,['getOrderDetail']),
     // 关联京东
     bindJd() {
       if (!this.storeInfo.jd.nickname){
         this.dealType = 'jd'
         this.$refs.dealModalRef.openDealDetail()
       }
-      // if (!this.storeInfo.jd.nickname) {
-      //   SettingModal.confirm({
-      //     centered: true,
-      //     content:
-      //       "请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。",
-      //     onOk: () => {
-      //       grab.jd.login(({ data }) => {
-      //         console.log('查看数据消息',data);
-      //         // this.storeInfo.jd.nickname = data.nickname;
-      //         // message.loading({
-      //         //   content:
-      //         //     "已成功绑定账号：" +
-      //         //     data.nickname +
-      //         //     "，正在为您获取订单信息，请稍候…",
-      //         //   key: "loadingTip",
-      //         //   duration: 0,
-      //         // });
-      //         // grab.jd.getOrder(async ({ data }) => {
-      //         //   console.log(data)
-      //         //   message.success({
-      //         //     content:
-      //         //       "更新订单成功!本次共更新：" +
-      //         //       data.orders.length +
-      //         //       "条订单信息",
-      //         //     key: "loadingTip",
-      //         //     duration: 3,
-      //         //   });
-      //         //   this.storeInfo.jd.order = data;
-      //         //   await this.getOrderDetail(data.orders);
-      //         //   // console.log(data);
-      //         // });
-      //       });
-      //     },
-      //   });
-      // } else {
-      //   message.loading({
-      //     content:
-      //       "已绑定账号：" +
-      //       this.storeInfo.jd.nickname +
-      //       "，正在为您更新订单信息，请稍候…",
-      //     key: "loadingTip",
-      //     duration: 0,
-      //   });
-      //   grab.jd.getOrder(async ({ data }) => {
-      //     message.success({
-      //       content:
-      //         "更新订单成功!本次共更新：" + data.orders.length + "条订单信息",
-      //       key: "loadingTip",
-      //       duration: 3,
-      //     });
-      //     this.storeInfo.jd.order = data;
-      //     await this.getOrderDetail(data.orders);
-      //     console.log(data);
-      //   });
-      // }
+      else {
+        message.loading({
+          content:"已绑定账号：" + this.storeInfo.jd.nickname + "，正在为您更新订单信息，请稍候…",
+          key: "loadingTip",
+          duration: 0,
+        });
+        grab.jd.getOrder(async ({ data }) => {
+          message.success({
+            content:  "更新订单成功!本次共更新：" + data.orders.length + "条订单信息",
+            key: "loadingTip",
+            duration: 3,
+          });
+          this.storeInfo.jd.order = data;
+          await this.getOrderDetail(data.orders);
+          console.log(data);
+        });
+      }
     },
 
     // 关联淘宝
@@ -214,7 +178,7 @@ export default {
             key: "loadingTip",
             duration: 3,
           });
-          // this.getOrderDetail(data.orders)
+          this.getOrderDetail(data.orders)
           console.log(args);
         });
       }
@@ -222,9 +186,6 @@ export default {
 
     // 解除淘宝关联
     unbindTb() {
-      // this.storeInfo.tb.nickname = null,
-      // this.storeInfo.tb.order = []
-    
       this.storeInfo.tb.nickname=null
       message.success('解除淘宝账号关联成功。')
     },

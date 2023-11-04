@@ -90,9 +90,51 @@ export default {
           key: "loadingTip",
           duration: 0,
         });
+        // grab.tb.getOrder((args) => {
+        //   console.log('查看数据',args);
+        //   if (args.status === 0) {
+        //     if (args.code === 401) {
+        //       message.error("获取订单失败，检测到登录信息过期，请重新登录。");
+        //       this.storeInfo.tb.nickname = null;
+        //       this.bindTb();
+        //       return;
+        //     }
+        //     message.error("获取订单意外失败。");
+        //     return;
+        //   }
+        //   message.success({
+        //     content:  "更新订单成功!本次共更新：" +  args.data.orders.length + "条订单信息",
+        //     key: "loadingTip",
+        //     duration: 3,
+        //   });
+        //   this.getOrderDetail(args.data.orders)
+        //   console.log(args);
+        // });
       });
     }else{
-      
+      grab.jd.login(({ data }) => {
+        this.storeInfo.jd.nickname = data.nickname;
+        this.dealVisible  = false
+        message.loading({
+          content:"已成功绑定账号：" + data.nickname + "，正在为您获取订单信息，请稍候…",
+          key: "loadingTip",
+          duration: 0,
+        });
+        grab.jd.getOrder(async ({ data }) => {
+          // console.log(data)
+          message.success({
+            content:
+              "更新订单成功!本次共更新：" +
+              data.orders.length +
+              "条订单信息",
+            key: "loadingTip",
+            duration: 3,
+          });
+          this.storeInfo.jd.order = data;
+          await this.getOrderDetail(data.orders);
+          // console.log(data);
+        });
+      });
     }
   }
 
