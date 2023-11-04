@@ -6,7 +6,6 @@
       </div>
       <template v-if="freeLayoutSwitch">
         <div class="mb-3">中心点功能</div>
-
         <xt-select v-model="getFreeLayoutState.position" :list="positionList" />
         <xt-button
           h="40"
@@ -32,6 +31,23 @@
           />
         </div>
         <div class="mb-3">画布功能</div>
+        <div class="flex items-center mb-3">
+          边距：
+          <a-slider
+            class="flex-1"
+            v-model:value="getFreeLayoutState.margin"
+            :min="1"
+            :max="50"
+            :step="1"
+            :tooltipOpen="true"
+          />
+          <a-input-number
+            v-model:value="getFreeLayoutState.margin"
+            :min="1"
+            :max="200"
+            :step="1"
+          ></a-input-number>
+        </div>
         <div class="flex items-center mb-3">
           缩放：
           <a-slider

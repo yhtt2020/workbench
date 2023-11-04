@@ -11,6 +11,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutState: {},
     // 拖拽时的数据
     dragData: {},
+    // 默认状态数据
+    defaultState: {
+      start: true,
+      position: "top center",
+      width: 2000,
+      height: 2000,
+      auxLine: true,
+      afterDrop: false,
+      whileDrag: false,
+      zoom: 1,
+      margin: 10,
+    },
   }),
   getters: {
     // 获取当前桌面数据
@@ -30,16 +42,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局数据
     getFreeLayoutData() {
-      const card: any = cardStore();
-      return this.freeLayoutData[card.currentDeskId];
-      // return this.freeLayoutData[this.getCurrentDeskId];
+      return this.freeLayoutData[this.getCurrentDeskId];
     },
     // 获取当前自由布局状态
     getFreeLayoutState() {
       return this.freeLayoutState[this.getCurrentDeskId];
-
-      const card: any = cardStore();
-      return this.freeLayoutState[card.currentDeskId];
     },
     // 当前自由布局是否开启
     isFreeLayout() {
@@ -49,6 +56,15 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
   },
   actions: {
+    // 吸附网格
+    snapToGrid(x: number, y: number): [number, number] {
+      let width = 140 + this.getFreeLayoutState?.margin;
+      let height = 102 + this.getFreeLayoutState?.margin;
+      const snappedX = Math.round(x / width) * width;
+      const snappedY = Math.round(y / height) * height;
+      return [snappedX, snappedY];
+    },
+
     // 初始化自由布局数据
     initFreeLayout() {
       // 格式化数据
@@ -74,8 +90,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         afterDrop: false,
         whileDrag: false,
         zoom: 1,
+        margin: 10,
       };
       this.freeLayoutData[this.getCurrentDeskId] = cardDatas;
+    },
+    // 初始化状态数据
+    initFreeLayoutState() {
+      for (let key in this.defaultState) {
+        if (!this.getFreeLayoutState.hasOwnProperty(key)) {
+          this.getFreeLayoutState[key] = this.defaultState[key];
+        }
+      }
+      console.log("初始化数据成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据
     renewFreeLayout() {
@@ -84,7 +110,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         this.freeLayoutState[this.getCurrentDeskId].start =
           !this.freeLayoutState[this.getCurrentDeskId].start;
       } else {
-        // 否者进行初始化
+        // 否则进行初始化
         this.initFreeLayout();
       }
     },
@@ -94,7 +120,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     strategies: [
       {
         paths: ["freeLayoutData", "freeLayoutState"],
-
         // storage: dbStorage,
         storage: localStorage,
       },

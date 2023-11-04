@@ -28,6 +28,7 @@ const [collect, drag, preview] = useDrag(() => ({
     // console.log("dropResult :>> ", dropResult);
     // console.log("item.name :>> ", item);
     // return;
+    dragData.value = {}
   },
 }));
 

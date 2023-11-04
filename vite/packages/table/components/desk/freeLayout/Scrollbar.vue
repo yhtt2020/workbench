@@ -10,7 +10,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -20,7 +20,7 @@ import { useFreeLayoutStore } from "./store";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutState, dragData } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 onMounted(() => {
@@ -56,12 +56,15 @@ function update() {
   perfectScrollbar.value.update();
 }
 // 鼠标滚动
-const scrollThreshold = 200; // 边缘滚动阈值
+const scrollThreshold = 300; // 边缘滚动阈值
 const scrollAmount = 100; // 每次滚动的距离
-
+watch(dragData, () => {
+  console.log("123 :>> ", 123);
+});
 function handleMouseMove(event) {
-  if (scrollbar.value) {
-    return;
+  console.log("dragData.value :>> ");
+  return;
+  if (scrollbar.value && Object.keys(dragData.value).length !== 0) {
     const { clientX, clientY } = event;
     const { left, top, right, bottom } =
       scrollbar.value.getBoundingClientRect();

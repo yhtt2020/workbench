@@ -16,6 +16,7 @@ const { currentDesk }: any = toRefs(props);
 const { freeLayoutData, getCurrentDeskId, getFreeLayoutData } =
   storeToRefs(freeLayoutStore);
 
+freeLayoutStore.initFreeLayoutState();
 /**
  * 更新自由布局数据
  */

@@ -59,12 +59,12 @@
             <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
               <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
             </div>
+            <slot name="right-menu"> </slot>
               <MenuOutlined
                 class="pointer"
                 @click="showDrawer($event)"
                 @contextmenu.stop="showDrawer"
               />
-              <slot name="right-menu"> </slot>
             </div>
           </div>
         </slot>
@@ -99,7 +99,6 @@ import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
-import { useElementSize } from "@vueuse/core";
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import WebState from "./WebState.vue";
@@ -217,15 +216,6 @@ export default {
           this.sizeType.height * 205 + (this.sizeType.height - 1) * 10 + "px" ||
           undefined,
       };
-    },
-    // 作废 下次会优化掉
-    sisza() {
-      if (this.customSize?.width !== "NaNpx") {
-        console.log("this.customSize :>> ", this.customSize);
-        return this.customSize;
-      }
-      console.log("object :>> ", this.widgetSize);
-      return this.widgetSize;
     },
     classes() {
       //默认的对象

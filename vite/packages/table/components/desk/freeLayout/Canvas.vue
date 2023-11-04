@@ -41,12 +41,12 @@ import { computed } from "vue";
 import { useDrop } from "vue3-dnd";
 import { storeToRefs } from "pinia";
 import { ItemTypes } from "./types";
-import { snapToGrid } from "./snapToGrid";
 import { useFreeLayoutStore } from "./store";
 
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutData, getFreeLayoutState } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutData, getFreeLayoutState }: any =
+  storeToRefs(freeLayoutStore);
 const moveBox = (id: any, left: number, top: number) => {
   Object.assign(getFreeLayoutData.value[id], { left, top });
 };
@@ -62,12 +62,15 @@ const [, drop] = useDrop(() => ({
     let left = Math.round(item.left + delta.x);
     let top = Math.round(item.top + delta.y);
     if (getFreeLayoutState.value.afterDrop) {
-      [left, top] = snapToGrid(left, top);
+      [left, top] = freeLayoutStore.snapToGrid(left, top);
     }
-    moveBox(item.id, left, top);
+    moveBox(
+      item.id,
+      left + getFreeLayoutState.value.margin,
+      top + getFreeLayoutState.value.margin
+    );
     return undefined;
   },
-
 }));
 
 // 辅助线生成
@@ -80,11 +83,18 @@ function auxLine(length: number, factor: number) {
   return arr;
 }
 const auxLineWidth = computed(() => {
-  return auxLine(getFreeLayoutState.value.width, 140);
+  return auxLine(
+    getFreeLayoutState.value.width,
+    140 + getFreeLayoutState.value.margin
+  );
 });
 
 const auxLineHeight = computed(() => {
-  return auxLine(getFreeLayoutState.value.height, 102);
+  console.log("getFreeLayoutState :>> ", getFreeLayoutState.value.margin);
+  return auxLine(
+    getFreeLayoutState.value.height,
+    102 + getFreeLayoutState.value.margin
+  );
 });
 </script>
 
