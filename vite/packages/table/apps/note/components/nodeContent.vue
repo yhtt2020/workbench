@@ -6,9 +6,9 @@
                 <div class="flex items-center">
                     <div 
                     class="flex justify-center items-center mr-3 pointer" style="background-color: var(--secondary-bg);border-radius:10px;width: 107px;height: 40px;"
-                    @click="selDesk"
+                    @click="changeDesk"
                     >{{ '#' + deskName}}</div>
-                    <div style="font-size: 14px;color: rgba(255,255,255,0.40);">{{ time }}</div>
+                    <div style="font-size: 14px;color: var(--secondary-text);">{{ time }}</div>
                 </div>
                 <div class="flex" style="position: relative;">
                     <div  class="flex justify-center items-center mr-3 pointer shadow" style="width:40px;height:40px;border-radius: 10px;" :style="{background:background}" @click="isColor=!isColor"></div>
@@ -21,23 +21,21 @@
                         <div class="flex rounded-lg pointer" style="height:40px;width:40px;"  v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}" @click="changeBgColor(index)"></div>
                     </div>
                     <a-dropdown :trigger="['click']">
-                            <div class="flex items-center pointer justify-center" style="width: 40px;height:40px;background: rgba(0,0,0,0.30);border-radius: 10px;">
+                            <div class="flex items-center pointer justify-center" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;">
                                 <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20" />
                             </div>
                             <template #overlay>
                                 <a-menu 
-                                style="padding: 8px;width: 200px;border-radius: 12px;background: #212121;border: 1px solid rgba(255,255,255,0.1);">
+                                style="padding: 8px;width: 200px;border-radius: 12px;background: var(--modal-bg);border: 1px solid rgba(255,255,255,0.1);">
                                     <a-menu-item 
                                     v-for="(item,index) in menus" 
                                     :key="index" 
-                                    style="height: 40px;border-radius: 10px;"
+                                    style="height: 40px;border-radius: 10px;color: var(--primary-text);"
                                     @click="item.callBack"
                                     >
-                                        <div
-                                        class="flex items-center font-16">
+                                        <div class="flex items-center font-16">
                                             <Icon width="20" height="20" :icon="item.newIcon" />
                                             <div 
-                                            
                                             :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
                                         </div>
                                         </a-menu-item>
@@ -48,7 +46,7 @@
             </div>
             <!-- 主体 -->
             <div>
-                <div class="mt-4 shadow" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
+                <div class="mt-4 shadow overflow-hidden" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
                     <a-input
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 24px; "
@@ -57,13 +55,6 @@
                         @blur="changeNoteTitle"
                     ></a-input>
                     <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">
-                        <!-- <a-textarea
-                        class=" scroll-color xt-scrollbar"
-                            style="color: var(--primary-text);font-size: 16px;font-weight: 400;word-wrap: break-word;text-wrap: wrap;
-                            border: none;box-shadow: none;padding: 0;height: 500px;"
-                            v-model:value="this.selNoteText"
-                            :auto-size="{ minRows: 2, maxRows: 20 }"
-                        /> -->
                         <Markdown ></Markdown>
                     </div>
                 </div>
@@ -78,6 +69,7 @@
  import {mapActions, mapState,mapWritableState} from "pinia";
  import { noteStore } from '../store'
  import { cardStore } from '../../../store/card';
+ import { formatTime } from '../../../util'
  import Markdown from "./markdown.vue";
  import dayjs from "dayjs";
  export default {
@@ -98,31 +90,11 @@
                 return this.selNote>=0?this.noteList[this.selNote].customData.background:''
             }
         },
-
-
         time() {
-            // console.log(this.selNote,this.noteList);
             // return 
             if (this.selNote>=0 && this.noteList) {
                 let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
-                const targetDate = dayjs(timestamp);
-                const now = dayjs();
-                const diffMinutes = now.diff(targetDate, "minute");
-    
-                if (diffMinutes < 3) {
-                    return "刚刚";
-                } else if (diffMinutes < 60) {
-                    return `${diffMinutes}分钟前`;
-                } else if (diffMinutes < 1440) {
-                    const diffHours = Math.floor(diffMinutes / 60);
-                    return `${diffHours}小时前`;
-                } else if (now.isSame(targetDate, "day")) {
-                    return `今天 ${targetDate.format("HH:mm")}`;
-                } else if (now.subtract(1, "day").isSame(targetDate, "day")) {
-                    return `昨天 ${targetDate.format("HH:mm")}`;
-                } else {
-                    return targetDate.format("MM-DD");
-                }
+                return formatTime(timestamp)
             }else{
                 return
             }
@@ -145,7 +117,7 @@
                             this.selDesk()
                         }else{
                             // 还原
-                            this.returnCard()
+                            this.restore()
                         }
                     }, 
                     
@@ -158,7 +130,7 @@
                         // this.menus.
                         if (!this.isSelTab) {
                             // 删除
-                            this.moveNote()
+                            this.moveToTrash()
                         }else{
                             // 彻底删除
                             this.deleteNote()
@@ -168,9 +140,6 @@
 
                 },
             ],
-            // timer:setTimeout(()=>{
-            //     this.timeout();
-            // },2000),
             
         };
     },
@@ -179,16 +148,15 @@
     },
    methods:{
     ...mapActions(cardStore, ['updateCustomData']),
-    ...mapActions(noteStore, ['saveNoteDb','getNotes','addNoteToDesk','changeBg','moveNote','returnCard','deleteNote']),
+    ...mapActions(noteStore, ['saveNoteDb','getNotes','addNoteToDesk','changeBg','moveToTrash','restore','deleteNote']),
     // 修改当前便签颜色
     changeBgColor(i){
         this.noteList[this.selNote].customData.background = this.noteBgColor[i]
-        if (this.noteList[this.selNote].deskName != '') {
-            // console.log('改变了');
+        if (this.noteList[this.selNote].deskId != '') {
             let nowIndex = -1;
             this.deskList.forEach((item,index)=>{
                 if (item.id ==this.noteList[this.selNote].deskId) {
-                nowIndex = index
+                    nowIndex = index
                 }
             })
             this.updateCustomData(this.noteList[this.selNote].id,{
@@ -199,32 +167,9 @@
         this.changeBg(this.noteBgColor[i])
         this.isColor=false
     },
-    // timeout(){
-    //     // 这里将数据自动保存到桌面
-    //     if (this.selNoteTitle ) {
-    //         if (this.noteList[this.selNote].desk!='') {
-    //             let n = -1;
-    //             this.deskList.forEach((item,index)=>{
-    //                 if (item.name == this.noteList[this.selNote].deskName) {
-    //                     n = index
-    //                 }
-    //             })
-    //             this.updateCustomData(this.noteList[this.selNote].id,{
-    //                 title:this.selNoteTitle,
-    //                 text:this.selNoteText
-    //             },this.deskList[n])
-    //         }
-    //         this.saveNoteDb()
-    //     }
-    // },
-    // clear(){
-    //     clearTimeout(this.timer)
-    //     this.timer=null
-    // },
+    // 修改当前便签标题
     changeNoteTitle(e){
-        // console.log(e.target.value);
         if (this.noteList[this.selNote].customData.title != e.target.value) {
-            // console.log('开始保存');
             let n = -1;
             this.deskList.forEach((item,index)=>{
                 if (item.name == this.noteList[this.selNote].deskName) {
@@ -239,25 +184,15 @@
             this.noteList[this.selNote].customData.title = e.target.value
             this.saveNoteDb()
         }
+    },
+    changeDesk(){
+        if (!this.isSelTab) {
+            this.selDesk()
+        }
     }
    },
    watch:{
-    // selNoteTitle(newval,oldval){
-    //     // 先清除后添加 
-    //     this.noteList[this.selNote].customData.title=this.selNoteTitle
-    //     this.noteList[this.selNote].customData.text=this.selNoteText
-    //     this.clear()
-
-    // },
-    // selNoteText(newval,oldval){
-    //     this.clear()
-    //     this.noteList[this.selNote].customData.title=this.selNoteTitle
-    //     this.noteList[this.selNote].customData.text=this.selNoteText
-    // },
-    
     isSelTab(newval,oldval){
-        // console.log('监听到了');
-        // console.log(newval);
         if (newval) {
             this.menus[0].label = '还原'
             this.menus[1].label = '彻底删除'
@@ -275,6 +210,11 @@
         box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);
         box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
     }
+
+    :deep(.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover){
+        background-color: var(--active-secondary-bg);
+    }
+
     .scroll-color::-webkit-scrollbar-thumb {
         background-color: #ccc; /* 滚动条颜色 */
         border-radius: 6px; /* 滚动条圆角 */

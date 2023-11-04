@@ -37,12 +37,10 @@
                     font-size: 16px;
                     padding: 0;
                   "
+                  maxlength="15"
                   v-model:value="noteTitle"
                   @blur="options.changeNoteTitle"
                 ></a-input>
-                <!-- <div style="position: relative;left:-25px;">桌面便签</div> -->
-                <!-- <div style="position: relative;left:-25px;">{{ options.title }}</div> -->
-                <!-- {{ options.title }} -->
               </div>
               <div v-else="options.isEdit">
                 {{ options.title }}
@@ -55,7 +53,11 @@
               </slot>
             </div>
           </div>
-          <div class="z-10 right-title" v-if="showRightIcon">
+          <div class="z-10 right-title flex" v-if="showRightIcon">
+            <!-- 用于便签添加复制 -->
+            <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
+              <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
+            </div>
             <MenuOutlined
               class="pointer"
               @click="showDrawer($event)"

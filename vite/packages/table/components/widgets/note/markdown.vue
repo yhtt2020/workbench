@@ -6,6 +6,11 @@
  </template>
  
  <script>
+ 
+import {
+    validateFile,
+    fileUpload,
+} from "../../../components/card/hooks/imageProcessing";
  import Vditor from 'vditor'
  import 'vditor/dist/index.css'
 import {cardStore} from "../../../store/card";
@@ -17,9 +22,9 @@ import {mapActions, mapState,mapWritableState} from "pinia";
     // Vditor
    },
    props:['customData','customIndex','desk'],
-   computed: {
-
-    },
+  computed:{
+    ...mapWritableState(noteStore, ['initFlag']),
+  },
     data() {
         return {
             contentEditor: '',
@@ -41,8 +46,11 @@ import {mapActions, mapState,mapWritableState} from "pinia";
             },
             toolbar:[],
             blur:(value)=>{
-                // console.log(this.customData.text);
-                // console.log(this.desk);
+
+                // 定义一个虚拟元素提取文本
+                let tmpDiv = document.createElement('div')
+                tmpDiv.innerHTML = this.contentEditor.getHTML()
+                let content = tmpDiv.textContent || tmpDiv.innerText || ''
 
                 if (this.tmpData != value) {
                     this.updateCustomData(
@@ -53,9 +61,26 @@ import {mapActions, mapState,mapWritableState} from "pinia";
                         this.desk
                     );
                     this.tmpData = value
-                    this.saveDeskNote(this.customIndex,value)
+                    // 如果用户没有进行初始化 不加载
+                    if (this.initFlag) {
+                        this.saveDeskNote(this.customIndex,value,content)
+                    }
                 }
-            }
+            },
+            upload: {
+                multiple: true,
+                handler: async (files) => {
+                    let urls = []
+                    for (const file of files) {
+                        let validate = validateFile(file, 2);
+                        if (validate !== true) return message.error(validate);
+                        let url = await fileUpload(file);
+                        if (!url) return message.error('上传失败');
+                        urls.push(`![image.png](${url})`)
+                    }
+                    this.contentEditor.insertValue(urls)
+                },
+            },
         })
     },
    methods:{
@@ -88,29 +113,6 @@ import {mapActions, mapState,mapWritableState} from "pinia";
         color: #fff;
         background: transparent;
     }
-
-    :deep(.vditor-ir::-webkit-scrollbar-thumb){
-        background-color: #ccc; /* 滚动条颜色 */
-        border-radius: 6px; /* 滚动条圆角 */
-    }
-    :deep(.vditor-ir::-webkit-scrollbar-thumb:hover){
-        background-color: #999; /* 悬停时滚动条颜色 */
-    }
-    :deep(.vditor-ir::-webkit-scrollbar-track){
-        border-radius: 6px; /* 轨道圆角 */
-    }
-
-    :deep(.vditor-reset::-webkit-scrollbar-thumb){
-        background-color: #ccc; /* 滚动条颜色 */
-        border-radius: 6px; /* 滚动条圆角 */
-    }
-    :deep(.vditor-reset::-webkit-scrollbar-thumb:hover){
-        background-color: #999; /* 悬停时滚动条颜色 */
-    }
-    :deep(.vditor-reset::-webkit-scrollbar-track){
-        border-radius: 6px; /* 轨道圆角 */
-    }
-
     
  </style>
  

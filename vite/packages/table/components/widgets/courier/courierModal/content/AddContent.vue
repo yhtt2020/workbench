@@ -1,91 +1,188 @@
 <template>
- <div class="flex flex-col" style="width:500px;">
-  <div class="flex items-center justify-center w-full py-5" style="position: relative;">
-   <span class="xt-text xt-font font-16 font-400">添加快递</span>
-   <div class="flex items-center justify-center p-2 close-button pointer category-button rounded-xl xt-bg-2" @click="close">
-    <CourierIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25rem;color:var(--secondary-text);"/>
-   </div>
-  </div>
-  
-  <div class="flex flex-col px-6 py-4">
-   <div class="px-4 py-3 xt-bg-2 xt-text xt-font rounded-xl category-14-400">
-    支持批量添加快递单号，每行一个单号，按下回车换行。「顺丰快递」和「菜鸟橙运」需要填写额外信息。
-   </div>
-
-   <RadioTab class="my-4" :navList="courierType" v-model:selectType="currentCourier"/>
-
-   <template v-if="currentCourier.name === 'ordinary'">
-    <a-textarea v-model:value="trackNumber"  placeholder="每一行一个单号" :rows="9" style="border-radius: 10px; padding: 10px 11px; margin-bottom: 16px;" />
-   </template>
-
-   <template v-else-if="currentCourier.name === 'SF'">
-     <div class="flex flex-col">
-      <a-textarea v-model:value="trackNumber"  placeholder="每一行一个单号" :rows="6" style="border-radius: 10px; padding: 10px 11px; margin-bottom: 16px;" />
-      <a-input placeholder="收件人或寄件人手机尾号4位，批量添加时需为同一个手机号" style="border-radius: 10px;margin-bottom: 16px;"></a-input>
-     </div>
-   </template>
-
-   <template v-else-if="currentCourier.name === 'Orange'">
-    <div class="flex flex-col">
-     <a-textarea v-model:value="trackNumber"  placeholder="每一行一个单号" :rows="6" style="border-radius: 10px; padding: 10px 11px; margin-bottom: 16px;" />
-     <a-input placeholder="货主编号，批量添加时需为同一个编号" style="border-radius: 10px;margin-bottom: 16px;"></a-input>
+  <div class="flex flex-col" style="width:500px;height: 500px;">
+   <div class="w-full flex items-center justify-center py-5" style="position: relative;">
+    <span class="xt-text xt-font font-16 font-400">添加快递</span>
+    <div class="flex close-button pointer items-center justify-center p-2 category-button rounded-xl xt-bg-2" @click="close">
+     <CourierIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25rem;color:var(--secondary-text);"/>
     </div>
-   </template>
+   </div>
+ 
+   <div class="px-6 flex-col" style="height: calc(100% - 131px);">
+    <div class="font-14 font-normal xt-text-2 px-4 py-3 xt-bg-2 mb-4 rounded-lg">「顺丰快递」和「菜鸟橙运」需要填写额外信息。</div>
+    <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
+      <div class="flex items-center mb-4" v-for="(item,index) in courierLists">
 
-   <div class="flex justify-end w-full">
-    <xt-button w="64" @click="close">取消</xt-button>
-    <xt-button w="64" type="theme" class="ml-3" @click="queryCourier">确定</xt-button>
-   </div> 
+       <a-input spellcheck="false" style="width: 280px; margin-right: 12px; border-radius: 8px;" 
+        v-model:value="item.orderNum" class="h-10 xt-bg-2"  :style="item.code === 'SF' ? { width: '148px !important'} : { width:'280px !important' }"
+        placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
+       />
+      
+       <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
+      
+       <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
+       style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
+       >
+       </a-select> 
+
+       <div class="flex items-center ml-3 pointer category-button" @click="removeCourierInput(index)">
+        <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);" />
+       </div>
+      </div>
+
+      <div class="flex items-center justify-center  w-full">
+       <xt-button w="82" h="40" @click="createCourierInput">
+        <div class="flex items-center justify-center">
+          <CourierIcon icon="fluent:add-16-filled" style="font-size: 1.25rem;"/>
+          <span>添加</span>
+        </div>
+       </xt-button>
+      </div>
+    </vue-custom-scrollbar>
+    
+   </div>
+ 
+   <div class="flex my-4 mr-4 justify-end">
+     <xt-button w="64" h="40" @click="close">取消</xt-button>
+     <xt-button w="64" h="40" class="ml-3" type="theme" @click="addCourierData">确定</xt-button>
+   </div>
+
   </div>
-  
- </div>
-</template>
+ </template>
 
 <script>
+import { defineComponent,ref,reactive,toRefs,computed} from 'vue'
+import { storeToRefs } from 'pinia'
+import { courierModalStore } from '../courierModalStore'
+import { courierStore } from '../../../../../store/courier'
+import { commonExpress,expressList } from '../modalMock'
+import { getCourierName } from '../utils/courierUtils'
+import { message }  from 'ant-design-vue'
 import { Icon as CourierIcon } from '@iconify/vue'
 
-import RadioTab from '../../../../RadioTab.vue'
 
-export default {
- components:{
-  CourierIcon,RadioTab
- },
-
- data(){
-  return{
-    courierType:[
-     {title:'普通快递',name:'ordinary'},
-     {title:'顺丰快递',name:'SF'},
-     {title:'菜鸟橙运',name:'Orange'}
-    ],
-    currentCourier:{title:'普通快递',name:'ordinary'},
-    trackNumber:'', // 接收快递单号
-  }
- },
-
- watch:{
-  'currentCourier':{
-    handler(newVal){
-      this.currentCourier = newVal
-    },
-    immediate:true,
-  }
- },
-
- methods:{
-  // 关闭弹窗
-  close(){
-   this.$emit('close')
+export default defineComponent({
+  components:{
+    CourierIcon
   },
 
-  // 查询快递
-  queryCourier(){
+  setup (props,ctx) {
+    const courier  = courierModalStore()
+    const addCourier = courierStore()
+    const { courierLists } = storeToRefs(courier)
 
-  },
- },
+    const data = reactive({
+      settingsScroller: { 
+       useBothWheelAxes: true,
+       swipeEasing: true,
+       suppressScrollY: false,
+       suppressScrollX: true,
+       wheelPropagation: true
+      },
+      phoneLastNum:'',
+    })
+
+    const optionList = computed(()=>{
+      const list = expressList.map((item)=>{ return {value:item.code,label:item.name} })
+      return list
+    })
+    
+    const isOrderNumEmpty = computed(()=>{
+     return courierLists.value.some((item) => { return item.orderNum === ''});
+    }) 
+
+    // 关闭
+    const close = ()=>{ ctx.emit('close') }
+
+    // 创建快递输入框
+    const createCourierInput = () => {
+      courier.addNewCourierInfo()
+    }
+
+    // 删除快递输入框
+    const removeCourierInput = (index) =>{
+      // console.log('查看index',index);
+      courier.removeNewCourierInfo(index)
+    }
+
+    // 输入框数据自动识别
+    const getCourierNumber = (item,index) =>{
+      // console.log('查看item',item,index);
+      if(item !== ''){
+        const result =  getCourierName(item)
+        // console.log('查看返回情况',{code:result.code,label:result.name,orderNum:item});
+        // console.log('查看index',index);
+        courier.updateNewCourierInfo({code:result.code,label:result.name,orderNum:item,phoneLastNum:''},index)
+      }else{
+        courier.updateNewCourierInfo({code:'自动识别',label:'自动识别',orderNum:'',phoneLastNum:''},index)
+      }
+    }
+
+    // 下拉框搜索
+    const searchCourier = (evt) =>{
+      console.log('查看搜索结果',evt);
+
+      // if(evt.data){
+      //   const regexText = new RegExp(evt.data,"i");
+      //   const find = expressList.find((item)=>{ 
+      //    return regexText.test(item.name);
+      //   })
+
+      //   const result = expressList.filter((item)=>{
+      //    return regexText.test(item.name);
+      //   })
+      //   const filterResult = result.map((item)=>{ return {value:item.code,label:item.name} })
+
+      //   console.log('查看find结果',{value:find.code,label:find.name});
+
+      //   courierValue.value = { value:find.code,label:find.name }
+      //   filterOption.value = filterResult
+
+      // }else{
+      //   courierValue.value = ''
+      // }
+    }
+
+    // 最终添加按钮
+    const addCourierData = (evt) =>{
+      console.log(courierLists.value.length);
+      if(courierLists.value.length === 1){
+        // console.log('查看是否为单个添加');
+        // console.log('查看用户是否输入参数',courierLists.value[0].orderNum === '');
+        if(courierLists.value[0].orderNum === ''){
+          message.warning('请添加快递信息')
+          evt.preventDefault();
+        }else{
+          // console.log('参数容错',courierLists.value[0]);
+          addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,courierLists.value[0].phoneLastNum)
+          ctx.emit('close')
+        }
+      }else{
+        // console.log('查看是否为多个添加');
+        // console.log('查看用户是否输入参数',isOrderNumEmpty.value);
+        if(isOrderNumEmpty.value){
+          message.warning('请添加快递信息')
+          evt.preventDefault();
+        }else{
+          for(let i=0;i<courierLists.value.length;i++){
+            // console.log('查看结果',courierLists.value[i]);
+            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,courierLists.value[i].phoneLastNum)
+          }
+          ctx.emit('close')
+        }
+      }
+    }
 
 
-}
+
+
+
+    return {
+      courierLists,optionList,isOrderNumEmpty,
+      ...toRefs(data),close,createCourierInput,removeCourierInput,
+      getCourierNumber,searchCourier,addCourierData,
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -107,4 +204,29 @@ export default {
   color: var(--secondary-text) !important;
  }
 }
+
+:deep(.custom-select){
+  & .ant-select-selector {
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    height: 40px !important;
+  }
+}
+
+
+:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder){
+  color: var(--secondary-text) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
+:deep(.ant-select-selection-search){
+  display: flex !important;
+  align-items: center !important;
+  height: 40px !important;
+}
+
 </style>

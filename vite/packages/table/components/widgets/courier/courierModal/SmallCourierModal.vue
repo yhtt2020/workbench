@@ -1,6 +1,7 @@
 <template>
   <teleport to='body'>
     <Modal v-if="courierShow" v-model:visible="courierShow" :blurFlag="true">
+      <!-- {{ list }} -->
       <SmallCourierDetail :list="list" @close="handleClose" />
     </Modal>
   </teleport>
@@ -28,6 +29,7 @@ export default {
     show: Boolean
   },
   methods: {
+    ...mapActions(courierStore,['getDbCourier']),
     openSmallCourierDetail() {
       this.courierShow = true
     },
@@ -38,13 +40,14 @@ export default {
 
   },
   computed:{
-    ...mapWritableState(courierStore, ['couriersDetailMsg']),
+    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
     courierShow(){
       return this.show
     }
   },
   async mounted() {
-    this.list=await this.couriersDetailMsg
+    this.getDbCourier()
+    this.list = await this.courierDetailList
     console.log(this.list,'this.list');
   }
 }
