@@ -1,5 +1,13 @@
 <template>
   <Widget :options="options" ref="weatherSlot" :customIndex="customIndex" :customData="customData" :desk="desk">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:cloud-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
     <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div>
@@ -81,6 +89,7 @@ import { weatherStore } from '../../store/weather'
 import Widget from "../card/Widget.vue";
 import HorizontalDrawer from '../HorizontalDrawer.vue';
 import XtButton from '../../ui/libs/Button/index.vue'
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: "Weather",
   props:{
@@ -113,7 +122,8 @@ export default {
   components:{
     XtButton,
     Widget,
-    HorizontalDrawer
+    HorizontalDrawer,
+    newIcon
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
