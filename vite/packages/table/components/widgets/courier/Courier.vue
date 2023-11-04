@@ -7,7 +7,7 @@
   </template>
   <div class="w-full h-full courier">
   <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier"
-    class="pointer" v-if="courierList.length > 0">
+    class="pointer" v-if="courierDetailList.length > 0">
     <xt-button :w="22" :h="22" style="background: transparent;">
       <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:arrow-clockwise"/>
     </xt-button>
@@ -61,7 +61,7 @@
       </template>
       <teleport to='body'>
         <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-                  :isHeader="false" :boxIndex="11" :maskIndex="10">
+                  :isHeader="false" :boxIndex="100" :maskIndex="99">
           <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
         </xt-modal>
       </teleport>
@@ -435,7 +435,7 @@ this.getDbCourier()
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .refresh {
   &:hover {
     background-color: var(--secondary-bg);

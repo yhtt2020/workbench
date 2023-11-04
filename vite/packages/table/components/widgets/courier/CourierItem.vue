@@ -7,7 +7,12 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
+                <div class="flex ">
+                    <div  class="commerce-small" style="background-color: #FA5000;" >淘</div>
+                    <div  class=" commerce-small" style="background-color: #E12419;">JD</div>
+                    <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
+                </div>
+                
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
@@ -92,6 +97,18 @@ lastTraces.value = newTraces.value
 
     &:hover {
         background-color: var(--active-secondary-bg);
+    }
+}
+.commerce{
+    &-small{
+        width: 24px ;
+        height: 24px;
+        line-height: 24px;
+        font-size: 14px;
+        margin-right: 6px;
+        text-align: center;
+        color: var(--primary-text);
+        border-radius: 6px;
     }
 }
 </style>

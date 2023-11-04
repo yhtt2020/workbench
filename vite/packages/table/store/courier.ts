@@ -99,6 +99,9 @@ export const courierStore = defineStore("courier", {
           const res = await tsbApi.db.remove(docList[index])
           // console.log('查看删除结果',res);
           this.getDbCourier()
+        },
+        refreshCouriers(){
+          
         }
         
 
