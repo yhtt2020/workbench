@@ -30,13 +30,13 @@
                            @click="viewDeliveryDetails(item)"/>
             </vue-custom-scrollbar>
             <div class="item-content" style="position: absolute;right: 24px;bottom: 10px">
-              <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
+              <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
               >
                 <newIcon class="text-lg xt-text "
                          style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
                          icon="fluent:add-16-filled"/>
                 绑定淘宝
-              </xt-button>
+              </xt-button> -->
         <xt-button @click="bindJd" :w="120" :h="40" type="theme" class="mr-2 "
         >
           <newIcon class="text-lg xt-text "
@@ -215,82 +215,82 @@ export default {
       }
       // console.log(windoWidth,'windoWidth')
     },
-    bindTb(){
-      if (!this.storeInfo.tb.nickname) {
-        Modal.confirm({
-          centered: true,
-          content: '请在弹出窗内完成淘宝登录，登录后系统会在后台为您获取订单信息。',
-          onOk: () => {
+    // bindTb(){
+    //   if (!this.storeInfo.tb.nickname) {
+    //     Modal.confirm({
+    //       centered: true,
+    //       content: '请在弹出窗内完成淘宝登录，登录后系统会在后台为您获取订单信息。',
+    //       onOk: () => {
 
-            grab.tb.login((args) => {
-              this.storeInfo.tb.nickname = args.data.nickname
-              message.loading({
-                content: '已成功绑定淘宝账号：' + args.data.nickname + '，正在为您获取订单信息，请稍候…',
-                key: 'loadingTip',
-                duration: 0
-              })
-              // grab.tb.getOrder((data) => {
-              //   message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-              //   console.log(data)
-              //   this.getOrderDetail(data.orders)
-              // })
-            })
+    //         grab.tb.login((args) => {
+    //           this.storeInfo.tb.nickname = args.data.nickname
+    //           message.loading({
+    //             content: '已成功绑定淘宝账号：' + args.data.nickname + '，正在为您获取订单信息，请稍候…',
+    //             key: 'loadingTip',
+    //             duration: 0
+    //           })
+    //           // grab.tb.getOrder((data) => {
+    //           //   message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
+    //           //   console.log(data)
+    //           //   this.getOrderDetail(data.orders)
+    //           // })
+    //         })
 
-            // tsbApi.web.openPreloadWindow({
-            //   width: 1200,
-            //   height: 800,
-            //   background: false,
-            //   url: 'https://passport.jd.com/uc/login',
-            //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-            //   callback: (data) => {
-            //     this.loginInfo.jd.nickname=data.nickname
-            //     message.loading({
-            //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-            //       key: 'loadingTip',
-            //       duration:0
-            //     })
-            //     console.log('登录成功了，接下来进行下一步')
-            //     //todo 获取到登录成功的信号
-            //     tsbApi.web.openPreloadWindow({
-            //       background: true,
-            //       url: 'https://order.jd.com/center/list.action',
-            //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-            //       callback: (data) => {
-            //
-            //       }
-            //     })
-            //   }
-            // })
+    //         // tsbApi.web.openPreloadWindow({
+    //         //   width: 1200,
+    //         //   height: 800,
+    //         //   background: false,
+    //         //   url: 'https://passport.jd.com/uc/login',
+    //         //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
+    //         //   callback: (data) => {
+    //         //     this.loginInfo.jd.nickname=data.nickname
+    //         //     message.loading({
+    //         //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
+    //         //       key: 'loadingTip',
+    //         //       duration:0
+    //         //     })
+    //         //     console.log('登录成功了，接下来进行下一步')
+    //         //     //todo 获取到登录成功的信号
+    //         //     tsbApi.web.openPreloadWindow({
+    //         //       background: true,
+    //         //       url: 'https://order.jd.com/center/list.action',
+    //         //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
+    //         //       callback: (data) => {
+    //         //
+    //         //       }
+    //         //     })
+    //         //   }
+    //         // })
 
-          }
-        })
-      } else {
-        message.loading({
-          content: '已绑定淘宝账号：' + this.storeInfo.tb.nickname + '，正在为您更新订单信息，请稍候…',
-          key: 'loadingTip',
-          duration: 0
-        })
-        grab.tb.getOrder((args) => {
-          if(args.status===0){
-            if(args.code===401){
-              message.error('获取订单失败，检测到登录信息过期，请重新登录。')
-              this.storeInfo.tb.nickname=null
-              this.bindTb()
-              return
-            }
-            message.error('获取订单意外失败。')
-            return
-          }
-          message.success({
-            content: '更新订单成功!本次共更新：' + args.data.orders.length + '条订单信息',
-            key: 'loadingTip',
-            duration: 3
-          })
-          // this.getOrderDetail(data.orders)
-          console.log(args)
-        })
-      }
-    },
+    //       }
+    //     })
+    //   } else {
+    //     message.loading({
+    //       content: '已绑定淘宝账号：' + this.storeInfo.tb.nickname + '，正在为您更新订单信息，请稍候…',
+    //       key: 'loadingTip',
+    //       duration: 0
+    //     })
+    //     grab.tb.getOrder((args) => {
+    //       if(args.status===0){
+    //         if(args.code===401){
+    //           message.error('获取订单失败，检测到登录信息过期，请重新登录。')
+    //           this.storeInfo.tb.nickname=null
+    //           this.bindTb()
+    //           return
+    //         }
+    //         message.error('获取订单意外失败。')
+    //         return
+    //       }
+    //       message.success({
+    //         content: '更新订单成功!本次共更新：' + args.data.orders.length + '条订单信息',
+    //         key: 'loadingTip',
+    //         duration: 3
+    //       })
+    //       // this.getOrderDetail(data.orders)
+    //       console.log(args)
+    //     })
+    //   }
+    // },
     bindJd () {
       if (!this.storeInfo.jd.nickname) {
         Modal.confirm({

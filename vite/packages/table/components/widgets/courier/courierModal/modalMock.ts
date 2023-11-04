@@ -941,3 +941,17 @@ export const expressList = [
   { name: "智汇鸟", code: "ZHN" },
   { name: "中原快运", code: "ZYKY" },
 ];
+
+
+export const autoRefreshTime = [
+  {value:'10分钟',type:''},
+  {value:'30分钟',type:''},
+  {value:'1小时',type:''},
+  {value:'2小时',}
+]
+
+export const autoCancelTime = [
+  {value:'24小时'},
+  {value:'48小时'},
+  {value:'一周'}
+]
