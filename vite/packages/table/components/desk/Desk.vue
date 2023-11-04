@@ -696,6 +696,7 @@ export default {
     clear() {
       this.menuVisible = false;
       let desk = this.currentDesk;
+      console.log('desk :>> ', desk);
       if (desk) {
         Modal.confirm({
           centered: true,
@@ -704,7 +705,6 @@ export default {
             desk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
-            console.log("1111 :>> ", 1111);
           },
           okText: "清空卡片",
         });

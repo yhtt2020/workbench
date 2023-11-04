@@ -111,7 +111,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 清空自由布局组件数据
     clearFreeLayoutData() {
-      this.getFreeLayoutData = {};
+      if (this.getFreeLayoutData) {
+        this.freeLayoutData[this.getCurrentDeskId] = {};
+      }
     },
     // 删除自由布局组件数据
     clearFreeLayoutState() {
