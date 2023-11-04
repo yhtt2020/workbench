@@ -21,7 +21,7 @@
       <template v-else>
         <div v-if="showWay">
           <MinEmpty v-if="courierDetailList.length === 0" />
-          <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])">
+          <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.courierDetailList[0])">
           </MinCourierItem>
         </div>
         <template v-else>

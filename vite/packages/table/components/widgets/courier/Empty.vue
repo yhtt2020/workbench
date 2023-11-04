@@ -18,13 +18,13 @@
                     <div class="w-full">
                         <div class="flex justify-between">
                             <div class="flex items-center">
-                                <div class=" commerce-small" style="background-color: #E12419;">JD</div>
+                                <div class=" commerce-small" style="background-color: #E12419;color: rgba(255,255,255,0.85);">JD</div>
                                 <div style="font-size: 16px;" class="xt-text">IKEA宜家沙发（示例）</div>
-                                <newIcon icon="fluent:star-12-regular" style="font-size: 20px;" />
+                                <newIcon icon="fluent:star-12-regular" style="font-size: 20px;" class="xt-text"/>
                             </div>
 
                             <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                                <div class="flex items-center pl-1 pr-1 rounded-md" style="background: #508BFE ;">
+                                <div class="flex items-center pl-1 pr-1 rounded-md" style="background: #508BFE ;color: rgba(255,255,255,0.85);">
                                     在途中
                                 </div>
                             </div>
