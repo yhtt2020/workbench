@@ -25,15 +25,15 @@
           </MinCourierItem>
         </div>
         <template v-else>
-          <Empty v-if="courierDetailList.length === 0" />
+          <EmptyModal v-if="courierDetailList.length === 0" />
           <template v-else>
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
               style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
               <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                 @click="viewDeliveryDetails(item)" />
             </vue-custom-scrollbar>
-            <div class="item-content" style="position: absolute;right: 24px;bottom: 10px">
-              <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 ">
+            <div  style="position: absolute;right: 24px;bottom: 10px">
+              <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 ">
                 <newIcon class="text-lg xt-text "
                   style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
                   icon="fluent:add-16-filled" />
@@ -44,7 +44,7 @@
                   style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
                   icon="fluent:add-16-filled" />
                 绑定京东
-              </xt-button>
+              </xt-button> -->
               <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
                 <newIcon class="text-lg xt-text "
                   style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
@@ -86,6 +86,7 @@ import LargeCourierModal from "./courierModal/LargeCourierModal.vue";
 import SmallCourierModal from "./courierModal/SmallCourierModal.vue";
 import LogisticsDetail from "./courierModal/content/LogisticsDetail.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue';
+import EmptyModal from "./EmptyModal.vue";
 import grab from './grab'
 
 export default {
@@ -99,9 +100,9 @@ export default {
     MinEmpty,
     LargeCourierModal,
     SmallCourierModal,
-    LogisticsDetail
-    ,
-    AddCourierModal
+    LogisticsDetail,
+    AddCourierModal,
+    EmptyModal
   },
   props: {
     customIndex: {

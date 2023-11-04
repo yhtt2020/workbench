@@ -10,8 +10,8 @@
             <div class="w-full">
                 <div class="flex justify-between">
                     <div class="flex items-center">
-                        <div class="commerce-small" style="background-color: #FA5000;">淘</div>
-                        <div class=" commerce-small" style="background-color: #E12419;">JD</div>
+                        <div class="commerce-small" style="background-color: #FA5000;" v-if="isTb">淘</div>
+                        <div class=" commerce-small" style="background-color: #E12419;" v-if="isJd">JD</div>
                         <div style="font-size: 16px;" class="mr-2 xt-text">{{ courierCode }}</div>
                         <newIcon icon="fluent:star-12-regular" style="font-size: 20px;" />
                     </div>
@@ -29,10 +29,10 @@
                         {{ switchCompany }}
                     </div>
                     <!-- v-if="props?.courier.parentId" -->
-                    <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2" >拆</div>
+                    <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2" v-if="props.courier.parentOrderId">拆</div>
                     </div>
                     
-                    <div class="xt-text">
+                    <div class="xt-text" v-if="props.courier.arrivalAt">
                         预计到达时间
                     </div>
                 </div>
