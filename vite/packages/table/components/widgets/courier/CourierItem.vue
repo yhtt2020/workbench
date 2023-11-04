@@ -10,28 +10,32 @@
             <div class="w-full">
                 <div class="flex justify-between">
                     <div class="flex items-center">
-                        <div class="commerce-small" style="background-color: #FA5000;color: rgba(255,255,255,0.85);" v-if="isTb">淘</div>
-                        <div class=" commerce-small" style="background-color: #E12419;color: rgba(255,255,255,0.85);" v-if="isJd">JD</div>
+                        <div class="commerce-small" style="background-color: #FA5000;color: rgba(255,255,255,0.85);"
+                            v-if="isTb">淘</div>
+                        <div class=" commerce-small" style="background-color: #E12419;color: rgba(255,255,255,0.85);"
+                            v-if="isJd">JD</div>
                         <div style="font-size: 16px;" class="mr-2 xt-text">{{ courierCode }}</div>
                         <newIcon icon="fluent:star-12-regular" style="font-size: 20px;" class="xt-text" />
                     </div>
 
                     <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
 
-                        <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColors }" style="color: rgba(255,255,255,0.85);">
+                        <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColors }"
+                            style="color: rgba(255,255,255,0.85);">
                             {{ switchState }}
                         </div>
                     </div>
                 </div>
                 <div class="flex justify-between mt-1">
                     <div class="flex">
-                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ switchCompany }}
+                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2 xt-text-2">
+                            {{ switchCompany }}
+                        </div>
+                        <!-- v-if="props?.courier.parentId" -->
+                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2 xt-text-2" v-if="props.courier.parentOrderId">
+                            拆</div>
                     </div>
-                    <!-- v-if="props?.courier.parentId" -->
-                    <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2" v-if="props.courier.parentOrderId">拆</div>
-                    </div>
-                    
+
                     <div class="xt-text" v-if="props.courier.arrivalAt">
                         预计到达时间
                     </div>
@@ -131,5 +135,4 @@ lastTraces.value = newTraces.value
         color: var(--primary-text);
         border-radius: 6px;
     }
-}
-</style>
+}</style>

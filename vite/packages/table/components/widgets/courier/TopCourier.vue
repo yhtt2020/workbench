@@ -42,7 +42,7 @@
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
@@ -65,6 +65,7 @@
 </teleport>
 </template>
 <script>
+import { appStore } from "../../../store";
 import Widget from '../../card/Widget.vue';
 import { Icon as newIcon } from '@iconify/vue'
 import CourierItem from './CourierItem.vue';
@@ -152,6 +153,7 @@ export default {
  },
  computed: {
      ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg']),
+     ...mapWritableState(appStore,['settings'])
 
  },
  mounted() {

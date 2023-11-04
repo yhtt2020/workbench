@@ -13,7 +13,7 @@
                         <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                             {{switchCompany }}
                         </div>
-                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColors }">
+                        <div class="pl-1 pr-1 rounded-md h-[24px] flex items-center" :style="{ 'background': stateColors }" style="color: rgba(255,255,255,0.85);">
                             {{ switchState }}
                         </div>
                     </div>
