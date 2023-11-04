@@ -112,7 +112,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-
+import { useDebounceFn } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 // 初始化操作
 
@@ -146,19 +146,27 @@ const positionList = ref([
 function freeDeskResize() {
   emits("scrollbarRedirect");
 }
+const emitScrollbarUpdate = (event) => {
+  emits("scrollbarUpdate");
+};
 
+const debounceScrollbarUpdate = useDebounceFn(emitScrollbarUpdate, 200);
 // 缩放比例
 const zoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.zoom * 100 : 100
 );
-let updateZoomTimer = null;
 watch(zoom, (newV) => {
   getFreeLayoutState.value.zoom = newV / 100;
-  clearTimeout(updateZoomTimer);
-  updateZoomTimer = setTimeout(() => {
-    emits("scrollbarUpdate");
-  }, 200);
+  debounceScrollbarUpdate();
 });
+
+watch(
+  () => [getFreeLayoutState.value.width, getFreeLayoutState.value.height],
+  (newV) => {
+    clearTimeout(updateWidthTimer);
+    debounceScrollbarUpdate();
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>
