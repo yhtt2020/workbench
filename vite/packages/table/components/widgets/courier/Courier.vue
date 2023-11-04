@@ -10,7 +10,7 @@
     <div class="w-full h-full courier">
       <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier" class="pointer"
         v-if="courierDetailList.length > 0">
-        <xt-button :w="22" :h="22" style="background: transparent;" >
+        <xt-button :w="22" :h="22" style="background: transparent;">
           <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
             icon="akar-icons:arrow-clockwise" />
         </xt-button>
@@ -25,7 +25,7 @@
           </MinCourierItem>
         </div>
         <template v-else>
-          <EmptyModal v-if="courierDetailList.length === 0" />
+          <Empty v-if="courierDetailList.length === 0" />
           <template v-else>
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
               style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
@@ -33,22 +33,19 @@
                 @click="viewDeliveryDetails(item)" />
             </vue-custom-scrollbar>
             <div class="item-content" style="position: absolute;right: 24px;bottom: 10px">
-              <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
-              >
+              <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 ">
                 <newIcon class="text-lg xt-text "
                   style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
                   icon="fluent:add-16-filled" />
                 绑定淘宝
               </xt-button>
-        <xt-button @click="bindJd" :w="120" :h="40" type="theme" class="mr-2 "
-        >
-          <newIcon class="text-lg xt-text "
-                   style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
-                   icon="fluent:add-16-filled"/>
-          绑定京东
-        </xt-button>
-        <xt-button  :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
-              >
+              <xt-button @click="bindJd" :w="120" :h="40" type="theme" class="mr-2 ">
+                <newIcon class="text-lg xt-text "
+                  style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
+                  icon="fluent:add-16-filled" />
+                绑定京东
+              </xt-button>
+              <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
                 <newIcon class="text-lg xt-text "
                   style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
                   icon="fluent:add-16-filled" />
@@ -70,7 +67,9 @@
       </teleport>
     </div>
   </Widget>
-
+  <teleport to='body'>
+    <CourierSetting ref="courierSettingRef" />
+</teleport>
   <AddCourierModal ref="addCourierRef" />
 </template>
 
@@ -89,9 +88,8 @@ import LargeCourierModal from "./courierModal/LargeCourierModal.vue";
 import SmallCourierModal from "./courierModal/SmallCourierModal.vue";
 import LogisticsDetail from "./courierModal/content/LogisticsDetail.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue';
-import EmptyModal from "./EmptyModal.vue";
 import grab from './grab'
-
+import CourierSetting from './courierModal/CourierSetting.vue';
 export default {
   name: "我的快递",
   components: {
@@ -105,7 +103,7 @@ export default {
     SmallCourierModal,
     LogisticsDetail,
     AddCourierModal,
-    EmptyModal
+    CourierSetting,
   },
   props: {
     customIndex: {
@@ -165,6 +163,11 @@ export default {
             this.allCourierVisible = true;
           },
         },
+        {
+          icon: 'shezhi1',
+          title: '设置',
+          fn: () => { this.$refs.courierSettingRef.openSettingModal(); this.$refs.cardSlot.visible = false }
+        },
 
       ],
       courierList: courier,
@@ -185,9 +188,9 @@ export default {
   },
   methods: {
     ...mapActions(courierStore, [// "getCourierMsg", "getCouriersDetail",
-      'getDbCourier','refreshCouriers']),
+      'getDbCourier', 'refreshCouriers']),
     async refreshCourier() {
-        this.refreshCouriers()
+      this.refreshCouriers()
     },
     // changeState() {
     //     this.allCourierVisible = true
@@ -288,7 +291,7 @@ export default {
     //     })
     //   }
     // },
-    bindJd () {
+    bindJd() {
       if (!this.storeInfo.jd.nickname) {
         Modal.confirm({
           centered: true,
@@ -454,4 +457,5 @@ export default {
 
 .xt-modal {
   padding: 0px !important;
-}</style>
+}
+</style>
