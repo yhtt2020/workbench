@@ -548,12 +548,6 @@ export default {
         arr.sort((a, b) => a.id - b.id);
         let deskGroupMenu = [...this.deskGroupMenu];
         deskGroupMenu[1].children = arr;
-
-        console.log(
-          "object deskGroupMenu[1].children:>> ",
-          deskGroupMenu[1].children
-        );
-        console.log("object deskGroupMenu:>> ", deskGroupMenu);
         return deskGroupMenu;
       }
       return [];
@@ -651,6 +645,7 @@ export default {
     window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
@@ -708,6 +703,8 @@ export default {
           onOk: () => {
             desk.cards = [];
             this.menuVisible = false;
+            this.clearFreeLayoutData();
+            console.log("1111 :>> ", 1111);
           },
           okText: "清空卡片",
         });

@@ -47,7 +47,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     getFreeLayoutState() {
       return this.freeLayoutState[this.getCurrentDeskId];
     },
-    // 当前自由布局是否开启
+    // 获取当前自由布局是否开启
     isFreeLayout() {
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         return this.freeLayoutState[this.getCurrentDeskId].start;
@@ -108,6 +108,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // 否则进行初始化
         this.initFreeLayout();
       }
+    },
+    // 清空自由布局组件数据
+    clearFreeLayoutData() {
+      this.getFreeLayoutData = {};
+    },
+    // 删除自由布局组件数据
+    clearFreeLayoutState() {
+      this.getFreeLayoutState = {};
+    },
+    clearFreeLayout() {
+      delete this.freeLayoutData[this.getCurrentDeskId];
+      delete this.freeLayoutState[this.getCurrentDeskId];
     },
   },
   persist: {

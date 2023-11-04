@@ -161,9 +161,8 @@ watch(zoom, (newV) => {
 });
 
 watch(
-  () => [getFreeLayoutState.value.width, getFreeLayoutState.value.height],
+  () => [getFreeLayoutState.value?.width, getFreeLayoutState.value?.height],
   (newV) => {
-    clearTimeout(updateWidthTimer);
     debounceScrollbarUpdate();
   }
 );

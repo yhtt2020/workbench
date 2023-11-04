@@ -472,7 +472,7 @@ import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
 import RightMenu from "./RightMenu.vue"
-
+import { useFreeLayoutStore } from "./freeLayout/store";
 export default {
   name: "DeskGroup",
   components: {
@@ -695,7 +695,7 @@ export default {
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-
+    ...mapActions(useFreeLayoutStore,['clearFreeLayout']) ,
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
@@ -838,7 +838,8 @@ export default {
               1
             );
             this.$emit("changeDesk", {id: this.deskList[0].id});
-
+          // 实现删除
+          this.clearFreeLayout(this.deskList[0].id)
             // 删除桌面数据
             this.key = Date.now();
             if (this.displayDesks.length === 1) {
