@@ -1,5 +1,5 @@
 <template>
- <div v-if="topCourierVisible" style="position: absolute; top: 40px;z-index: 9999;left: 10px;">
+ <div v-if="topCourierVisible" style="position: absolute; top: 40px;z-index: 500;left: 10px;">
      <div class="w-[572px] h-[420px] rounded-xl p-4 " style="background-color: var(--secondary-bg);">
          <div class="flex justify-between h-[32px]">
              <div class="flex mt-2">
