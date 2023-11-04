@@ -4,9 +4,7 @@ import { ItemTypes } from "./types";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 import { toRefs } from "@vueuse/core";
-
 import { useFreeLayoutStore } from "./store";
-import { snapToGrid } from "./snapToGrid";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const { dragData, getFreeLayoutState }: any = storeToRefs(freeLayoutStore);
@@ -34,7 +32,6 @@ function getItemStyles(
     // x = dargX.value;
     // y = dargY.value;
   }
-
   let transform = `translate(${isSnapToGrid ? x - 2 : x}px, ${
     isSnapToGrid ? y - 2 : y
   }px)`;

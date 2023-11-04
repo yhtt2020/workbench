@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 
 import { cardStore } from "../../../store/card";
@@ -18,7 +17,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       width: 2000,
       height: 2000,
       auxLine: true,
-      afterDrop: false,
+      afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
       zoom: 1,
       margin: 10,
@@ -54,6 +53,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         return this.freeLayoutState[this.getCurrentDeskId].start;
       }
     },
+    // 获取当前自由布局边距状态
+    getFreeLayoutMargin() {
+      return this.getFreeLayoutState?.afterDrop
+        ? this.getFreeLayoutState?.margin
+        : 0;
+    },
   },
   actions: {
     // 吸附网格
@@ -65,7 +70,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       return [snappedX, snappedY];
     },
 
-    // 初始化自由布局数据
+    // 初始化自由布局组件数据
     initFreeLayout() {
       // 格式化数据
       const desk = this.getCurrentDesk;
@@ -81,20 +86,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         };
       });
       // 保存数据
-      this.freeLayoutState[this.getCurrentDeskId] = {
-        start: true,
-        position: "top center",
-        width: 2000,
-        height: 2000,
-        auxLine: true,
-        afterDrop: false,
-        whileDrag: false,
-        zoom: 1,
-        margin: 10,
-      };
+      this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
       this.freeLayoutData[this.getCurrentDeskId] = cardDatas;
     },
-    // 初始化状态数据
+    // 初始化自由布局状态数据
     initFreeLayoutState() {
       for (let key in this.defaultState) {
         if (!this.getFreeLayoutState.hasOwnProperty(key)) {

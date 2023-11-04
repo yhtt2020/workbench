@@ -33,6 +33,7 @@ function updateCards(cards) {
       name,
       customData,
     };
+
   });
   freeLayoutData.value[getCurrentDeskId.value] = obj;
   console.log("更新了数据 :>> ");

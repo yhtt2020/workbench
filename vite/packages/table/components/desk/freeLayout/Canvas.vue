@@ -45,7 +45,7 @@ import { useFreeLayoutStore } from "./store";
 
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutData, getFreeLayoutState }: any =
+const { getFreeLayoutData, getFreeLayoutState, getFreeLayoutMargin }: any =
   storeToRefs(freeLayoutStore);
 const moveBox = (id: any, left: number, top: number) => {
   Object.assign(getFreeLayoutData.value[id], { left, top });
@@ -66,8 +66,8 @@ const [, drop] = useDrop(() => ({
     }
     moveBox(
       item.id,
-      left + getFreeLayoutState.value.margin,
-      top + getFreeLayoutState.value.margin
+      left + getFreeLayoutMargin.value,
+      top + getFreeLayoutMargin.value
     );
     return undefined;
   },
@@ -85,15 +85,14 @@ function auxLine(length: number, factor: number) {
 const auxLineWidth = computed(() => {
   return auxLine(
     getFreeLayoutState.value.width,
-    140 + getFreeLayoutState.value.margin
+    140 + getFreeLayoutMargin.value
   );
 });
 
 const auxLineHeight = computed(() => {
-  console.log("getFreeLayoutState :>> ", getFreeLayoutState.value.margin);
   return auxLine(
     getFreeLayoutState.value.height,
-    102 + getFreeLayoutState.value.margin
+    102 + getFreeLayoutMargin.value
   );
 });
 </script>

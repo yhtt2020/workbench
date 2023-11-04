@@ -58,11 +58,8 @@ function update() {
 // 鼠标滚动
 const scrollThreshold = 300; // 边缘滚动阈值
 const scrollAmount = 100; // 每次滚动的距离
-watch(dragData, () => {
-  console.log("123 :>> ", 123);
-});
+
 function handleMouseMove(event) {
-  console.log("dragData.value :>> ");
   return;
   if (scrollbar.value && Object.keys(dragData.value).length !== 0) {
     const { clientX, clientY } = event;

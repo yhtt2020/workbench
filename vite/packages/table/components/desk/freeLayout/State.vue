@@ -30,13 +30,12 @@
             v-model:checked="getFreeLayoutState.afterDrop"
           />
         </div>
-        <div class="mb-3">画布功能</div>
-        <div class="flex items-center mb-3">
+        <div class="flex items-center mb-3" v-if="getFreeLayoutState.afterDrop">
           边距：
           <a-slider
             class="flex-1"
             v-model:value="getFreeLayoutState.margin"
-            :min="1"
+            :min="0"
             :max="50"
             :step="1"
             :tooltipOpen="true"
@@ -48,6 +47,8 @@
             :step="1"
           ></a-input-number>
         </div>
+        <div class="mb-3">画布功能</div>
+
         <div class="flex items-center mb-3">
           缩放：
           <a-slider

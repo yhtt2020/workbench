@@ -326,7 +326,6 @@
           ></a-slider>
         </div>
       </template>
-
       <div>
         桌面垂直布局：
         <a-switch v-model:checked="currentDesk.settings.vDirection"></a-switch>
@@ -400,6 +399,7 @@ import { appStore } from "../../store";
 import { useWidgetStore } from "../card/store.ts";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import componentsMinis from "./components.ts";
+import _ from "lodash-es";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -547,7 +547,13 @@ export default {
         }
         arr.sort((a, b) => a.id - b.id);
         let deskGroupMenu = [...this.deskGroupMenu];
-        deskGroupMenu[1].children = [...arr];
+        deskGroupMenu[1].children = arr;
+
+        console.log(
+          "object deskGroupMenu[1].children:>> ",
+          deskGroupMenu[1].children
+        );
+        console.log("object deskGroupMenu:>> ", deskGroupMenu);
         return deskGroupMenu;
       }
       return [];
