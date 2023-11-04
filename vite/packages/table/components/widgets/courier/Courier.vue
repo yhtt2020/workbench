@@ -7,62 +7,71 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="w-full h-full courier" style="position:relative;">
-      <div style="position: absolute;left: 124px;top: 16px;" @click="refreshCourier"
-           class="pointer" v-if="courierDetailList.length > 0">
-        <xt-button :w="22" :h="22" style="background: transparent;">
-          <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                   icon="akar-icons:arrow-clockwise"/>
-        </xt-button>
+    <div class="flex flex-col ">
+      <div  class="relative mt-2">
+        <div>快递筛选</div>
+        <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
+             class="pointer flex" v-if="courierDetailList.length > 0">
+          <div class="mr-2">2023-11-03 11:11更新</div>
+          <xt-button :w="22" :h="22"  >
+            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                     icon="akar-icons:arrow-clockwise"/>
+          </xt-button>
+        </div>
       </div>
-      <div v-if="isLoading">
-        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
-      </div>
-      <template v-else>
-        <div v-if="showWay">
-          <MinEmpty v-if="courierDetailList.length === 0"/>
-          <MinCourierItem v-else :courier="courierDetailList[0]"
-                          @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
+      <div class="w-full h-0 courier flex-1" style="position:relative;">
+        <div v-if="isLoading">
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
         </div>
         <template v-else>
-          <Empty v-if="courierDetailList.length === 0"/>
+          <div v-if="showWay">
+            <MinEmpty v-if="courierDetailList.length === 0"/>
+            <MinCourierItem v-else :courier="courierDetailList[0]"
+                            @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
+          </div>
           <template v-else>
-            <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                                  style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-              <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                           @click="viewDeliveryDetails(item)"/>
-            </vue-custom-scrollbar>
-            <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
-              <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
-              >
-                <newIcon class="text-lg xt-text "
-                         style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
-                         icon="fluent:add-16-filled"/>
-                绑定淘宝
-              </xt-button> -->
+            <Empty v-if="courierDetailList.length === 0"/>
+            <template v-else>
+              <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                                    style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
+                             @click="viewDeliveryDetails(item)"/>
+              </vue-custom-scrollbar>
+              <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
+                <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
+                >
+                  <newIcon class="text-lg xt-text "
+                           style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
+                           icon="fluent:add-16-filled"/>
+                  绑定淘宝
+                </xt-button> -->
 
-              <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
-              >
-                <newIcon class="text-lg xt-text "
-                         style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
-                         icon="fluent:add-16-filled"/>
-              </xt-button>
-            </div>
+                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
+                >
+                  <newIcon class="text-lg xt-text "
+                           style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                           icon="fluent:add-16-filled"/>
+                </xt-button>
+              </div>
 
+            </template>
           </template>
         </template>
-      </template>
-      <template v-if="allCourierVisible">
-        <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
-        <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
-      </template>
-      <teleport to='body'>
-        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-                  :isHeader="false" :boxIndex="100" :maskIndex="99">
-          <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
-        </xt-modal>
-      </teleport>
+        <template v-if="allCourierVisible">
+          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
+          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
+        </template>
+        <teleport to='body'>
+          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+                    :isHeader="false" :boxIndex="100" :maskIndex="99">
+            <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
+          </xt-modal>
+        </teleport>
+      </div>
+
     </div>
+
+
   </Widget>
 
   <AddCourierModal ref="addCourierRef"/>
@@ -73,7 +82,7 @@ import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-import { message, Modal } from 'ant-design-vue'
+import { message, Modal,notification} from 'ant-design-vue'
 import Widget from '../../card/Widget.vue'
 import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
@@ -213,6 +222,30 @@ export default {
         this.courierShow = false
       }
       // console.log(windoWidth,'windoWidth')
+    },
+    refreshAll(){
+      message.loading('正在为您更新商城订单')
+      if(this.storeInfo.jd.nickname){
+        //京东绑定了
+        grab.jd.getOrder()
+      }
+      if(this.storeInfo.tb.nickname){
+        grab.tb.getOrder((args)=>{
+          console.log('淘宝结果',args)
+          if(args.status===0 && args.code===401){
+            notification.info({
+              content:'淘宝账号已过期，点击重新绑定。',
+              onClick:()=>{
+                grab.tb.login((args)=>{
+                  console.log(args,'获取到的订单信息')
+                })
+              }
+            })
+          }
+        })
+        //淘宝绑定了
+      }
+      //todo 刷新其他订单
     },
     // bindTb(){
     //   if (!this.storeInfo.tb.nickname) {
