@@ -2,8 +2,6 @@
   <div class="flex flex-col px-6">
     <div class="flex items-center justify-between px-4 py-3 mb-3 rounded-lg h-11 xt-bg-2">
       <span class="xt-text-2 font-14 font-400">「全部」分类下支持拖拽排序。</span>
-      <!-- <div class="flex items-center justify-center">
-   </div> -->
     </div>
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="height:480px;" ref="dropRef">
@@ -91,7 +89,7 @@ export default {
         {
           name: '删除快递',
           callBack: () => {
-
+              
           },
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'

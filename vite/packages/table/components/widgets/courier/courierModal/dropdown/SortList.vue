@@ -9,7 +9,6 @@
       <div style="width: 452px; height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
           <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-            <!--  -->
             <div :class="{ 'select': this.currentID ===  index }"
               class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item,index)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
@@ -18,7 +17,7 @@
               <div class="flex flex-col" style="width: calc(100% - 84px);">
                 <div class="flex items-center justify-between ">
                   <span class="xt-font font-16 font-600">
-                    {{ item.LogisticCode }}
+                    {{ item?.LogisticCode }}
                   </span>
 
                   <div class="flex">
@@ -33,9 +32,9 @@
                   </div>
                 </div>
 
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
+                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item?.Traces.length - 1]?.AcceptTime }}</div>
                 <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
+                  {{ item.Traces[item?.Traces.length - 1]?.AcceptStation }}
                 </div>
               </div>
             </div>
@@ -55,6 +54,7 @@ import { courierType } from '../modalMock'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
 import { courierStore } from '../../../../../store/courier'
+import { Modal } from 'ant-design-vue'
 
 export default {
   props: ["list", "sortItem"],
@@ -73,18 +73,10 @@ export default {
         wheelPropagation: true
       },
 
-      //  currentID:'',
 
       revID: '',
 
       menus: [
-        {
-          name: '查看详情',
-          callBack: () => {
-
-          },
-          newIcon: 'fluent:apps-list-detail-24-regular'
-        },
         {
           name: '订阅物流',
           callBack: () => {
@@ -95,9 +87,14 @@ export default {
         {
           name: '删除快递',
           callBack: () => {
-            console.log('查看删除下标',this.revID);
-            this.removeSortData(this.revID)
-            this.removeDbData(this.revID)
+            Modal.confirm({
+             content: '确认删除当前快递物流信息',
+             centered: true,
+             onOk: () => {
+             this.removeSortData(this.revID)
+             this.removeDbData(this.revID)
+             } 
+            })
           },
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
@@ -111,19 +108,19 @@ export default {
   computed: {
     stateColor() {
       let colorList = this.list.map((item) => {
-        return switchColor(item.State)
+        return switchColor(item?.State)
       })
       return colorList
     },
     switchState() {
       let stateList = this.list.map((item) => {
-        return kdState(item.State)
+        return kdState(item?.State)
       })
       return stateList
     },
     switchCompany() {
       let companyList = this.list.map((item) => {
-        return kdCompany(item.ShipperCode)
+        return kdCompany(item?.ShipperCode)
       })
       return companyList
     },
