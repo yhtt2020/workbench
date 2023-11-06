@@ -6,7 +6,26 @@ export const offlineStore = defineStore("offlineStore", {
   state: () => ({
     isOffline:false,
   }),
+  getters:{
+    getIsOff(){
+      return this.isOffline
+    }
+  },
   actions: {
+    isOff(){
+      // console.log(this.isOffline);
+      // setTimeout(()=>{
+      //   console.log(100,this.isOffline);
+      // },100)
+      // setTimeout(()=>{
+      //   console.log(200,this.isOffline);
+      // },200)
+      // setTimeout(()=>{
+      //   console.log(300,this.isOffline);
+      // },300)
+      
+      return this.isOffline
+    }
 
 
 

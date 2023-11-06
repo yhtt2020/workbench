@@ -180,17 +180,22 @@ export default {
         cname: '全部',
         children: items
       })
+    // await this.isOff()
+    //   console.log(this,this.getIsOff,this.isOffline);
+    //   console.log(555,thi.sgetIsOff);
+    //   console.log(555,this.isOffline);
+    // console.log(11,this.isOff());
+    // 处理离线模式时隐藏部分功能 卡片部分
     navList.forEach(li => {
-      console.log(li);
       li.children = li.children.filter(ele=>{
         if (ele.cname != '天气') {
           return ele
         }
       })
-      console.log(li);
       li.cname = li.cname + `（${li.children.length}）`
     })
-    console.log(navList);
+
+
     this.baseNavList = navList.map((item) => {
       if (item.children != null) {
         let children = []
@@ -217,7 +222,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(offlineStore, ["isOffline"]),
+    ...mapWritableState(offlineStore, ['isOffline','getIsOff']),
     ...mapWritableState(deskStore, ['apiList']),
     displayList () {
       // return this.apiList.filter
@@ -227,7 +232,6 @@ export default {
     }
   },
   watch: {
-
     selectNav (newV) {
       if (newV.name === 'desktop') {
         this.getDeskData()
@@ -262,6 +266,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(offlineStore, ["isOff"]),
     ...mapActions(marketStore, ['getCategories', 'getDesks', 'getRecommend']),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ['setDeskSize']),
