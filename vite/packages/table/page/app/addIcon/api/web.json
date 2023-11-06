@@ -1,0 +1,511 @@
+{
+  "design": [
+    {
+      "id": 1,
+      "name": "蓝湖",
+      "summary": "高效的产品设计协作平台。",
+      "icon": "https://up.apps.vip/yyscIcon/lanhu.png",
+      "url": "https://lanhuapp.com/dashboard/#/"
+    },
+    {
+      "id": 2,
+      "name": "即时设计",
+      "summary": "可云端编辑的专业级 UI 设计工具，为中国设计师量身打造Windows 也能用的「协作版 Sketch。",
+      "icon": "https://img.js.design/assets/webImg/favicon.ico",
+      "url": "https://js.design/workspace"
+    },
+    {
+      "id": 3,
+      "name": "MindMaster",
+      "summary": "专业思维导图软件，云同步跨平台、海量脑图模板、功能全易上手。",
+      "icon": "https://images.edrawsoft.com/favicon.ico",
+      "url": "https://mm.edrawsoft.cn/files"
+    },
+    {
+      "id": 4,
+      "name": "ProcessOn",
+      "summary": "业强大的作图工具，支持多人实时在线协作，可用于原型图、UML、BPMN、网络拓扑图等多种图形绘制。",
+      "icon": "https://www.processon.com/favicon.ico",
+      "url": "https://www.processon.com/diagrams"
+    },
+    {
+      "id": 5,
+      "name": "图怪兽",
+      "summary": "会打字就能用的在线编辑器。",
+      "icon": "https://js.tuguaishou.com/image/index/share-logo.png",
+      "url": "https://818ps.com/work"
+    }
+  ],
+  "message": [
+    {
+      "id": 1,
+      "name": "企业微信",
+      "summary": "腾讯微信团队为企业打造的专业办公管理工具。",
+      "icon": "https://wwcdn.weixin.qq.com/node/wwnl/wwnl/style/images/independent/favicon/favicon_48h$c976bd14.png",
+      "url": "https://work.weixin.qq.com/wework_admin"
+    },
+    {
+      "id": 2,
+      "name": "微信网页版",
+      "summary": "连接超过10亿用户，提供聊天和通话等强大功能。",
+      "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
+      "url": "https://wx.qq.com"
+    },
+    {
+      "id": 3,
+      "name": "钉钉网页版",
+      "summary": "阿里出品企业沟通工具。",
+      "icon": "https://up.apps.vip/yyscIcon/dingding.svg",
+      "url": "https://im.dingtalk.com"
+    }
+  ],
+  "docx": [
+    {
+      "id": 1,
+      "name": "语雀",
+      "summary": "优雅高效的在线文档编辑与协同工具。",
+      "icon": "https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png",
+      "url": "https://www.yuque.com/dashboard"
+    },
+    {
+      "id": 2,
+      "name": "腾讯文档",
+      "summary": "一款可多人协作的在线文档,可同时编辑Word、Excel和PPT文档,云端实时保存。",
+      "icon": "https://up.apps.vip/yyscIcon/tengxunwendang.jpg",
+      "url": "https://docs.qq.com/desktop"
+    },
+    {
+      "id": 3,
+      "name": "金山文档",
+      "summary": "一款可多人实时协作编辑的文档创作工具。",
+      "icon": "https://qn.cache.wpscdn.cn/s1/images/yun/home/yun-logo2.png",
+      "url": "https://www.kdocs.cn/latest?from=docs"
+    },
+    {
+      "id": 4,
+      "name": "石墨文档",
+      "summary": "石墨文档是一款优雅,轻便的在线协作文档工具,支持多人多端同时对文档编辑和评论。",
+      "icon": "https://as.smvm.cn/from_qbox/favicon.ico",
+      "url": "https://shimo.im/desktop"
+    },
+    {
+      "id": 5,
+      "name": "幕布",
+      "summary": "极简大纲笔记，一键生成思维导图。",
+      "icon": "https://up.apps.vip/yyscIcon/mubu.jpg",
+      "url": "https://mubu.com/app"
+    }
+  ],
+  "email": [
+    {
+      "id": 1,
+      "name": "QQ邮箱",
+      "summary": "为亿万用户提供高效稳定便捷的电子邮件服务。",
+      "icon": "https://mail.qq.com/zh_CN/htmledition/images/favicon/qqmail_favicon_96h.png",
+      "url": "https://mail.qq.com"
+    },
+    {
+      "id": 2,
+      "name": "网易邮箱",
+      "summary": "职场人士首选,专业稳定安全。",
+      "icon": "https://up.apps.vip/yyscIcon/wyyx.png",
+      "url": "https://mail.163.com"
+    },
+    {
+      "id": 3,
+      "name": "Outlook",
+      "summary": "Microsoft 所提供的免费个人电子邮件服务。",
+      "icon": "https://up.apps.vip/yyscIcon/outlook.jpg",
+      "url": "https://outlook.live.com"
+    }
+  ],
+  "information": [
+    {
+      "id": 1,
+      "name": "少数派",
+      "summary": "致力于更好地运用数字产品或科学方法,帮助用户提升工作效率和生活品质。",
+      "icon": "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico",
+      "url": "https://sspai.com"
+    },
+    {
+      "id": 2,
+      "name": "IT之家",
+      "summary": "IT之家,百度指数排名第一的前沿科技门户网站。",
+      "icon": "https://www.ithome.com/favicon.ico",
+      "url": "https://www.ithome.com"
+    },
+    {
+      "id": 3,
+      "name": "数字尾巴",
+      "summary": "致力于分享美好数字生活体验,囊括你闻所未闻的最丰富数码资讯。",
+      "icon": "https://up.apps.vip/yyscIcon/shuzi.png",
+      "url": "https://www.dgtle.com"
+    }
+  ],
+  "media": [
+    {
+      "id": 1,
+      "name": "微信公众平台",
+      "summary": "微信公众平台，给个人、企业和组织提供业务服务与用户管理能力的全新服务平台。",
+      "icon": "https://up.apps.vip/yyscIcon/wxggpt.jpg",
+      "url": "https://mp.weixin.qq.com"
+    },
+    {
+      "id": 2,
+      "name": "新浪微博",
+      "summary": " 随时随地发现新鲜事",
+      "icon": "https://up.apps.vip/yyscIcon/weibo.jpg",
+      "url": "https://weibo.com"
+    },
+    {
+      "id": 3,
+      "name": "头条号",
+      "summary": " 你创作的，就是头条。",
+      "icon": "https://sf1-cdn-tos.toutiaostatic.com/obj/ttfe/pgcfe/sz/mp_logo.png",
+      "url": "https://mp.toutiao.com"
+    },
+    {
+      "id": 4,
+      "name": "百家号",
+      "summary": "百家号，是百度为创作者打造的集创作、发布、变现于一体的内容创作平台，也是众多企业号实现营销转化的运营新阵地。",
+      "icon": "https://up.apps.vip/yyscIcon/baijiahao.png",
+      "url": "https://baijiahao.baidu.com"
+    },
+    {
+      "id": 5,
+      "name": "腾讯内容开发平台",
+      "summary": "腾讯内容开放平台",
+      "icon": "https://up.apps.vip/yyscIcon/txnrkfpt.jpg",
+      "url": "https://om.qq.com/userAuth/index"
+    },
+    {
+      "id": 6,
+      "name": "微信视频号",
+      "summary": "微信小视频助手",
+      "icon": "https://res.wx.qq.com/t/wx_fed/finder/helper/finder-helper-web/res/favicon.ico",
+      "url": "https://channels.weixin.qq.com/login"
+    },
+    {
+      "id": 7,
+      "name": "小红书创作平台",
+      "summary": "让创作发布、数据分析、商业变现更高效",
+      "icon": "https://up.apps.vip/yyscIcon/xiaohongshu.jpg",
+      "url": "https://creator.xiaohongshu.com/login"
+    },
+    {
+      "id": 8,
+      "name": "抖音后台",
+      "summary": "抖音管理后台",
+      "icon": "https://up.apps.vip/yyscIcon/douyin.jpg",
+      "url": "https://open.douyin.com/platform"
+    }
+  ],
+  "effect": [
+    {
+      "id": 6,
+      "name": "百度网盘",
+      "summary": "为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固。",
+      "icon": "https://up.apps.vip/yyscIcon/baiduwangpan.jpg",
+      "url": "https://pan.baidu.com/disk/main?from=homeFlow#/index?category=all"
+    },
+    {
+      "id": 7,
+      "name": "坚果云",
+      "summary": "一款提供网盘|云盘|云服务的团队协助软件,可随时随地实现共享文件夹。",
+      "icon": "https://up.apps.vip/yyscIcon/jianguoyun.png",
+      "url": "https://www.jianguoyun.com/d/home#/"
+    }
+  ],
+  "saas": [
+    {
+      "id": 1,
+      "name": "有赞后台",
+      "summary": "做移动互联网时代好用的网上开店工具,基于SaaS模式。",
+      "icon": "https://img.yzcdn.cn/v2/image/yz_fc.ico",
+      "url": "https://account.youzan.com/login"
+    },
+    {
+      "id": 2,
+      "name": "小鹅通",
+      "summary": "小鹅通是知识产品与用户服务的私域运营工具，包含知识店铺、企业直播、企业培训、企微助手等多款产品。",
+      "icon": "https://admin.xiaoe-tech.com/logo-64.ico",
+      "url": "https://admin.xiaoe-tech.com/login_page#/wx"
+    },
+    {
+      "id": 3,
+      "name": "纷享销客",
+      "summary": "赋能企业数字化未来。",
+      "icon": "https://up.apps.vip/yyscIcon/fenxiang.png",
+      "url": "https://www.fxiaoke.com/pc-login/build/login.html"
+    },
+    {
+      "id": 4,
+      "name": "轻流",
+      "summary": "轻量级、可自定义的管理系统搭建平台。",
+      "icon": "https://up.apps.vip/yyscIcon/qingliu.png",
+      "url": "https://qingflow.com/index/home"
+    }
+  ],
+  "code": [
+    {
+      "id": 1,
+      "name": "GitHub",
+      "summary": "代码管理。",
+      "icon": "https://github.githubassets.com/favicons/favicon.svg",
+      "url": "https://github.com/"
+    },
+    {
+      "id": 2,
+      "name": "DockerHub",
+      "summary": "镜像仓库。",
+      "icon": "https://up.apps.vip/yyscIcon/DockerHub.png",
+      "url": "https://registry.hub.docker.com"
+    },
+    {
+      "id": 3,
+      "name": "Jenkins",
+      "summary": "持续集成。",
+      "icon": "https://up.apps.vip/yyscIcon/Jenkins.png",
+      "url": "https://www.jenkins.io/zh/"
+    },
+    {
+      "id": 4,
+      "name": "禅道",
+      "summary": "项目管理。",
+      "icon": "https://up.apps.vip/yyscIcon/chandao.jpg",
+      "url": "https://www.zentao.net/"
+    },
+    {
+      "id": 5,
+      "name": "yapi",
+      "summary": "接口自动化、mooc。",
+      "icon": "https://up.apps.vip/yyscIcon/yapi.svg",
+      "url": "https://hellosean1025.github.io/yapi/"
+    },
+    {
+      "id": 6,
+      "name": "Vue",
+      "summary": "JS框架。",
+      "icon": "https://up.apps.vip/yyscIcon/vue.png",
+      "url": "https://cn.vuejs.org/"
+    },
+    {
+      "id": 7,
+      "name": "Antdesign",
+      "summary": "React前端框架。",
+      "icon": "https://gw.alipayobjects.com/zos/rmsportal/rlpTLlbMzTNYuZGGCVYM.png",
+      "url": "https://ant.design/docs/react/introduce-cn"
+    },
+    {
+      "id": 8,
+      "name": "Element",
+      "summary": "Vue前端框架。",
+      "icon": "https://element.eleme.io/favicon.ico",
+      "url": "https://element.eleme.io/#/zh-CN"
+    },
+    {
+      "id": 9,
+      "name": "Gitee",
+      "summary": "国内源码版本库。",
+      "icon": "https://up.apps.vip/yyscIcon/gitee.png",
+      "url": "https://gitee.com/"
+    },
+    {
+      "id": 10,
+      "name": "掘金",
+      "summary": "程序员社区。",
+      "icon": "https://up.apps.vip/yyscIcon/juejin.jpg",
+      "url": "https://juejin.cn/"
+    },
+    {
+      "id": 11,
+      "name": "Grafana",
+      "summary": "Promethus可视化。",
+      "icon": "https://up.apps.vip/yyscIcon/grafana.jpg",
+      "url": "https://grafana.com/"
+    },
+    {
+      "id": 12,
+      "name": "Git",
+      "summary": "代码管理工具。",
+      "icon": "https://up.apps.vip/yyscIcon/git.jpg",
+      "url": "https://git-scm.com/"
+    },
+    {
+      "id": 13,
+      "name": "TortiseGit",
+      "summary": "Win平台git辅助。。",
+      "icon": "https://up.apps.vip/yyscIcon/TortiseGit.png",
+      "url": " https://tortoisegit.org/download/"
+    },
+    {
+      "id": 14,
+      "name": "Hbuilder",
+      "summary": "uniapp、IDE。",
+      "icon": "https://up.apps.vip/yyscIcon/Hbuilder.png",
+      "url": "https://www.dcloud.io/"
+    },
+    {
+      "id": 15,
+      "name": "Electron",
+      "summary": "前端桌面App开发框架。",
+      "icon": "https://up.apps.vip/yyscIcon/electron.svg",
+      "url": "https://www.electronjs.org/"
+    }
+  ],
+  "game": [
+    {
+      "id": 1,
+      "name": "网易云音乐",
+      "summary": "专注于发现与分享的音乐产品,依托专业音乐人、DJ、好友推荐及社交功能,为用户打造全新的音乐生活。",
+      "icon": "https://s1.music.126.net/style/favicon.ico?v20180823",
+      "url": "https://music.163.com"
+    },
+    {
+      "id": 2,
+      "name": "QQ音乐",
+      "summary": "腾讯旗下音乐平台",
+      "icon": "https://up.apps.vip/yyscIcon/qqyinyue.jpg",
+      "url": "https://y.qq.com/"
+    },
+    {
+      "id": 3,
+      "name": "哔哩哔哩",
+      "summary": "干杯！",
+      "icon": "https://up.apps.vip/yyscIcon/bilibili.jpg",
+      "url": "https://www.bilibili.com/"
+    },
+    {
+      "id": 4,
+      "name": "爱奇艺",
+      "summary": "拥有海量、优质、高清的网络视频的大型视频网站,专业的网络视频播放平台。",
+      "icon": "https://up.apps.vip/yyscIcon/iqy.png",
+      "url": "https://www.iqiyi.com/"
+    },
+    {
+      "id": 5,
+      "name": "腾讯视频",
+      "summary": "不负好时光",
+      "icon": "https://v.qq.com/favicon.ico",
+      "url": "https://v.qq.com/"
+    },
+    {
+      "id": 6,
+      "name": "优酷",
+      "summary": "你的热爱",
+      "icon": "https://img.alicdn.com/tfs/TB1WeJ9Xrj1gK0jSZFuXXcrHpXa-195-195.png",
+      "url": "https://www.youku.com/"
+    }
+  ],
+  "learning": [
+    {
+      "id": 1,
+      "name": "慕课网",
+      "summary": "程序员的梦工厂",
+      "icon": "https://www.imooc.com/static/img/common/touch-icon-ipad.png",
+      "url": "https://www.imooc.com/"
+    },
+    {
+      "id": 2,
+      "name": "网易云课堂",
+      "summary": "实用技能平台",
+      "icon": "https://up.apps.vip/yyscIcon/wyykt.png",
+      "url": "https://study.163.com/"
+    },
+    {
+      "id": 3,
+      "name": "腾讯课堂",
+      "summary": "职业培训，考试提升",
+      "icon": "https://up.apps.vip/yyscIcon/txkt.png",
+      "url": "https://ke.qq.com/"
+    },
+    {
+      "id": 4,
+      "name": "知乎",
+      "summary": "有问题就会有答案",
+      "icon": "https://static.zhihu.com/heifetz/assets/apple-touch-icon-152.a53ae37b.png",
+      "url": "https://www.zhihu.com"
+    },
+    {
+      "id": 5,
+      "name": "喜马拉雅",
+      "summary": "每一天的精神食粮",
+      "icon": "https://up.apps.vip/yyscIcon/xmly.png",
+      "url": "https://www.ximalaya.com/"
+    },
+    {
+      "id": 6,
+      "name": "得到",
+      "summary": "知识就是力量",
+      "icon": "https://www.dedao.cn/favicon.ico",
+      "url": "https://www.dedao.cn/"
+    }
+  ],
+  "copurchase": [
+    {
+      "id": 1,
+      "name": "京东",
+      "summary": "正品低价",
+      "icon": "https://up.apps.vip/yyscIcon/jingdong.svg",
+      "url": "https://www.jd.com/"
+    },
+    {
+      "id": 2,
+      "name": "京满仓",
+      "summary": "企业采购",
+      "icon": "https://up.apps.vip/yyscIcon/jmc.png",
+      "url": "https://www.vipmro.net/"
+    },
+    {
+      "id": 3,
+      "name": "苏宁易购",
+      "summary": "专注好服务",
+      "icon": "https://up.apps.vip/yyscIcon/snyg.svg",
+      "url": "https://www.suning.com/"
+    },
+    {
+      "id": 4,
+      "name": "淘宝",
+      "summary": "淘！我喜欢",
+      "icon": "https://img.alicdn.com/tps/i3/T1OjaVFl4dXXa.JOZB-114-114.png",
+      "url": "https://www.taobao.com/"
+    },
+    {
+      "id": 5,
+      "name": "1688",
+      "summary": "采购批发平台",
+      "icon": "https://up.apps.vip/yyscIcon/1688.png",
+      "url": "https://1688.com/"
+    },
+    {
+      "id": 6,
+      "name": "爱采购",
+      "summary": "帮助用户一站直达全网商品信息，触达海量优质商家，通过安全便捷的交易能力全网采购。",
+      "icon": "https://b2b.baidu.com/static/pc/icon_180.png",
+      "url": "https://b2b.baidu.com/"
+    }
+  ],
+  "coinfo": [
+    {
+      "id": 1,
+      "name": "爱企查",
+      "summary": "专业免费的企业信息查询平台",
+      "icon": "https://xinpub.cdn.bcebos.com/static/favicon.ico",
+      "url": "https://aiqicha.baidu.com/"
+    },
+    {
+      "id": 2,
+      "name": "企查查",
+      "summary": "商业精英的共同选择",
+      "icon": "https://qcc-static.qcc.com/resources/web/omaterial/favicon.png",
+      "url": "https://www.qcc.com/"
+    },
+    {
+      "id": 3,
+      "name": "天眼查",
+      "summary": "重要决策就用天眼查",
+      "icon": "https://up.apps.vip/yyscIcon/tianyancha.png",
+      "url": "https://www.tianyancha.com/"
+    }
+  ]
+}
