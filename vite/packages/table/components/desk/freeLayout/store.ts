@@ -24,13 +24,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       margin: 6,
     },
     // 当前环境状态
-    currentEnvState: {
+    freeLayoutEnv: {
       loading: false, // 当前自由布局加载状态
       scrollTop: 0, // 当前滚动条Y轴
       scrollLeft: 0, // 当前滚动条X轴
     },
     // 当前环境状态
-    defaultCurrentEnvState: {
+    defaultFreeLayoutEnv: {
       loading: false,
       scrollTop: 0,
       scrollLeft: 0,
@@ -139,6 +139,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     clearFreeLayout() {
       delete this.freeLayoutData[this.getCurrentDeskId];
       delete this.freeLayoutState[this.getCurrentDeskId];
+    },
+    // 初始化当前环境
+    initFreeLayoutEnv() {
+      this.freeLayoutEnv = this.defaultFreeLayoutEnv;
+      console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
   },
   persist: {

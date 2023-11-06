@@ -1,3 +1,4 @@
+<!-- 画布层 用于维护所有小组件展示 -->
 <template>
   <div
     class="relative"

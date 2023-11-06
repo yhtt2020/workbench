@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const { currentDesk }: any = toRefs(props);
-const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, currentEnvState } =
+const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 
 freeLayoutStore.initFreeLayoutState();
@@ -29,10 +29,9 @@ function updateCards(cards) {
     obj[item.id] = {
       left:
         getFreeLayoutData.value[item.id]?.left ||
-        currentEnvState.value.scrollLeft,
+        freeLayoutEnv.value.scrollLeft,
       top:
-        getFreeLayoutData.value[item.id]?.top ||
-        currentEnvState.value.scrollTop,
+        getFreeLayoutData.value[item.id]?.top || freeLayoutEnv.value.scrollTop,
       id,
       name,
       customData,
