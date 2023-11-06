@@ -62,9 +62,11 @@
       <teleport to='body'>
         <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
           :isHeader="false" :boxIndex="100" :maskIndex="99">
-          <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+          <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail=false"/>
+          <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
         </xt-modal>
       </teleport>
+      <SmallCourierModal  :show="showSmallDetail" @close-modal="smallDetailsVisible" />
     </div>
   </Widget>
   <teleport to='body'>
@@ -88,6 +90,7 @@ import LargeCourierModal from "./courierModal/LargeCourierModal.vue";
 import SmallCourierModal from "./courierModal/SmallCourierModal.vue";
 import LogisticsDetail from "./courierModal/content/LogisticsDetail.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue';
+import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
 import grab from './grab'
 import CourierSetting from './courierModal/CourierSetting.vue';
 export default {
@@ -104,6 +107,7 @@ export default {
     LogisticsDetail,
     AddCourierModal,
     CourierSetting,
+    LargeCourierDetail
   },
   props: {
     customIndex: {
@@ -184,6 +188,8 @@ export default {
       deliveryDetails: [],
       orderNum: [],
       showCourierDetail: false,
+      showSmallDetail:false,
+      largeDetailVisible:true
     };
   },
   methods: {
@@ -201,6 +207,7 @@ export default {
     viewDeliveryDetails(item) {
       this.showCourierDetail = true;
       this.orderNum = item;
+      this.viewCourierDetail=item
       console.log(this.orderNum);
     },
     closeCourierDetail() {
@@ -208,9 +215,12 @@ export default {
     },
     handleResize() {
       let windoWidth = window.innerWidth;
+      console.log(windoWidth);
       if (windoWidth > 1200) {
+        this.largeDetailVisible=true
         this.courierShow = true;
       } else {
+        this.largeDetailVisible=false
         this.courierShow = false;
       }
       // console.log(windoWidth,'windoWidth')
@@ -381,13 +391,20 @@ export default {
 
     addCourier() {
       this.$refs.addCourierRef.openCourierModel()
+    },
+    smallDetailsVisible(){
+      this.showSmallDetail=false
+    },
+    backAllCoutiers(){
+      this.showSmallDetail=true,
+      this.showCourierDetail=false
     }
   },
   computed: {
     ...mapWritableState(courierStore, ["courierMsgList",
       "courierDetailList",
       "couriersDetailMsg",
-      "storeInfo",]),
+      "storeInfo",'viewCourierDetail']),
     // 判断尺寸大小
     showSize() {
       if (this.customData && this.customData.width && this.customData.height) {

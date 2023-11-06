@@ -26,7 +26,9 @@ export const courierStore = defineStore("courier", {
       },
         courierMsgList: [],
         courierDetailList: [],
-        couriersDetailMsg:[]
+        couriersDetailMsg:[],
+        // 大尺寸下查看内容详情，传递快递单号
+        viewCourierDetail:''
     }),
     actions: {
         // addCourierEvent(event){

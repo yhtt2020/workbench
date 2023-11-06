@@ -69,7 +69,7 @@
               <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
                 class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                 <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                  <div class="w-full flex">
+                  <div class="flex w-full">
                     <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                       <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
                     </div>
@@ -208,7 +208,7 @@ export default {
 
   computed: {
     ...mapWritableState(courierModalStore, ['sortList']),
-    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
+    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList','viewCourierDetail']),
     flowType() {
       const allLength = this.couriersList.length;
       //  揽收
@@ -306,6 +306,7 @@ export default {
 
     // 关闭按钮
     close() {
+      this.viewCourierDetail=''
       this.$emit('close')
     },
 
@@ -336,8 +337,16 @@ export default {
   async mounted() {
     this.getDbCourier()
     this.couriersList = this.courierDetailList
-    this.rightList = this.couriersList[0]
-    this.currentID=this.couriersList[0]?.LogisticCode
+    if(this.viewCourierDetail){
+      console.log(this.viewCourierDetail)
+      this.rightList=this.viewCourierDetail
+      this.currentID=this.viewCourierDetail?.LogisticCode
+    }else{
+      this.rightList = this.couriersList[0]
+      this.currentID=this.couriersList[0]?.LogisticCode
+    }
+    
+    // this.viewCourierDetail=''
     // console.log(this.couriersList[0],'couriersList');
   },
 
