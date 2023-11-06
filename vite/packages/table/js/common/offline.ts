@@ -13,11 +13,11 @@ export const offlineStore = defineStore("offlineStore", {
   actions: {
     changeOffline(){
       cache.set('isOffline',this.isOffline)
-      console.log(this.$isOffline);
-      console.log(this.$isWeb);
-      
-      
-      
+      // console.log(cache.get('isOffline'));
+    },
+    getIsOffline(){
+      // console.log(cache.get('isOffline'));
+      return cache.get('isOffline')
     }
 
 

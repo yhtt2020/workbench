@@ -1,28 +1,15 @@
 <template>
-  <RightMenu
-    :menus="menus"
-    :sizes="sizeList"
-    @removeCard="doRemoveCard"
-    v-model:sizeType="sizeType"
-    v-model:oldMenuVisible="menuVisible"
-  >
-    <div
-      v-if="!options?.hide"
-      :class="classes"
-      style="color: var(--primary-text)"
-      :style="{
-        display: options.hide == true ? 'none' : '',
-        width: customSize.width,
-        height: customSize.height,
-        background: options.background || 'var( --primary-bg)',
-      }"
-    >
+  <RightMenu :menus="menus" :sizes="sizeList" @removeCard="doRemoveCard" v-model:sizeType="sizeType"
+    v-model:oldMenuVisible="menuVisible">
+    <div v-if="!options?.hide" :class="classes" style="color: var(--primary-text)" :style="{
+      display: options.hide == true ? 'none' : '',
+      width: customSize.width,
+      height: customSize.height,
+      background: options.background || 'var( --primary-bg)',
+    }">
       <!--标题栏start-->
       <slot name="cardTitle">
-        <div
-          :class="options.noTitle === true ? 'no-title' : 'content-title'"
-          class="flex items-center justify-between"
-        >
+        <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex items-center justify-between">
           <div class="left-title" v-if="options.noTitle !== true">
             <!-- 标题左侧插槽 -->
             <slot name="left-title-icon"></slot>
@@ -40,22 +27,23 @@
           <div class="z-10 right-title flex" v-if="showRightIcon">
             <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
             <slot name="right-menu"> </slot>
-            <MenuOutlined
-              class="pointer"
-              @click="showDrawer($event)"
-              @contextmenu.stop="showDrawer"
-            />
+            <MenuOutlined class="pointer" @click="showDrawer($event)" @contextmenu.stop="showDrawer" />
           </div>
         </div>
       </slot>
       <!-- 标题栏end   -->
       <!--  主体内容插槽start  -->
-      <WebState v-if="env[$currentEnv]"></WebState>
-      <slot v-else :customIndex="customIndex"></slot>
-      <!--  主题内容插槽end  -->
+      <!-- v-if="env[$currentEnv]" -->
+      <WebState>
+        <slot></slot>
+      </WebState>
+      <!--  主题
+          内容插槽end  -->
     </div>
     <template v-else>
-      <slot></slot>
+      <WebState>
+        <slot></slot>
+      </WebState>
     </template>
     <!-- 右上角抽屉菜单扩展 start  -->
     <template #menuExtra>
@@ -78,6 +66,7 @@ import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
+import { offlineStore } from "../../js/common/offline";
 
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
@@ -90,6 +79,7 @@ export default {
     MenuOutlined,
     MyIcon,
     RightMenu,
+    WebState
   },
   name: "Widget",
   props: {
@@ -129,7 +119,7 @@ export default {
     //组件自定义数据，每个卡片独立，并存入桌面数据当中
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     desk: {
       type: Object,
@@ -241,8 +231,8 @@ export default {
       handler() {
         this.updateCustomData(
           this.$parent.customIndex ||
-            this.$parent.$parent.customIndex ||
-            this.$parent.$attrs.customIndex,
+          this.$parent.$parent.customIndex ||
+          this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
@@ -252,12 +242,13 @@ export default {
       },
     },
     size: {
-      handler(newVal) {},
+      handler(newVal) { },
     },
   },
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
+    ...mapActions(offlineStore, ["getIsOffline"]),
     showDrawer(e) {
       this.menuVisible = true;
     },
@@ -266,8 +257,8 @@ export default {
       this.options.beforeDelete && this.$emit("delete");
       this.removeCard(
         this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex,
+        this.$parent.$parent.customIndex ||
+        this.$parent.$attrs.customIndex,
         this.desk
       );
       this.menuVisible = false;
@@ -288,12 +279,14 @@ export default {
 <style lang="scss">
 .no-frame {
   background: none !important;
+
   .no-title {
     position: absolute;
     right: 20px;
     top: 10px;
     z-index: 99;
   }
+
   position: relative;
 }
 </style>
