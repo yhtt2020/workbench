@@ -8,3 +8,9 @@ export function isHide(type='steam',id){
     return (item.type===type && item.id===id)
   })
 }
+
+export function getHide(type='steam',id){
+  return steamUserStore().hideGames.some(item=>{
+    return (item.type===type && item.id===id)
+  })
+}

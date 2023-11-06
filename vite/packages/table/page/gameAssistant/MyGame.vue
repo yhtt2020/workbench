@@ -40,7 +40,7 @@
                    @mouseenter="mouseOn(index)" @mouseleave="mouseClose">
                 <img :src="item.icon" class="w-full h-full rounded-lg object-cover" alt="">
               </div>
-              <div class="w-full h-12  bottom-0  mt-4 text-center text-white truncate px-3">{{ item.name }}</div>
+              <div class="w-full h-12  bottom-0  mt-4 text-center text-white truncate px-3"> {{ item.name }}</div>
             </div>
           </div>
         </div>
@@ -66,7 +66,8 @@
           <!--       </div>-->
           <!--    </div>-->
           <!--  </div>-->
-          <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content " v-for="(item,index) in displaySteamGameList">
+          <div class="pb-3 pl-3 game-list-item flex-shrink-0 my-game-content "
+               v-for="(item,index) in displaySteamGameList">
             <div class="relative  w-auto h-full my-bg  pointer flex flex-col " style="border-radius: 12px"
                  :class="hoverIndex===index?'fly':''" @mouseenter="mouseOn(index)" @mouseleave="mouseClose"
                  @click="openSteamDetail(item)">
@@ -78,8 +79,10 @@
 
               <!--    <div class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3" >{{item.appinfo.common.name}}</div>-->
               <div :style="showTime?'height: 96px':'height: 50px'" class="p-3 flex flex-col justify-between ">
-                <span class="text-more text-white text-base my-item"
-                      style="font-weight: 400">{{ item.chineseName }}</span>
+                <div class="truncate  text-white text-base my-item"
+                      style="font-weight: 400"><a-tag color="red" v-if="getHide('steam',item.appid)">隐</a-tag>
+
+                  {{ item.chineseName }}</div>
                 <span :style="showTime?'':'display:none'"
                       class="text-xs my-num">过去两周：{{ twoWeekTime(item.time) }}小时</span>
                 <span :style="showTime?'':'display:none'"
@@ -93,7 +96,7 @@
         <div v-else>
           <div class="text-center mt-20 item-content flex-col justify-center items-center">
             <a-empty image="/img/test/load-ail.png" description=""/>
-            <xt-button type="theme" v-if="gameType.name==='steam'" @click="goBind"  :w="150">绑定Steam账号</xt-button>
+            <xt-button type="theme" v-if="gameType.name==='steam'" @click="goBind" :w="150">绑定Steam账号</xt-button>
             <xt-button v-else @click="openModal" type="theme" :w="150">导入外部游戏</xt-button>
           </div>
 
@@ -134,14 +137,17 @@
     <Modal v-model:visible="steamShow" v-if="steamShow" animationName="bounce-in" :blurFlag="true">
       <div class=" flex flex-col" style="border-radius: 6px;overflow: hidden" v-if="currentSteamGame">
         <div class=" relative" style="height: 188px;width: 400px" v-if="currentSteamGame">
-          <img :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteamGame.appid+'/header.jpg'" style=" "
+          <img :src="'https://cdn.cloudflare.steamstatic.com/steam/apps/'+currentSteamGame.appid+'/header.jpg'"
+               style=" "
                class="w-full h-full object-cover" alt="">
         </div>
         <div class="  p-4">
-          <div style="user-select: text" class="text-white">
+          <div style="user-select: text" class="text-white flex">
             <a-avatar shape="square" :size="24"
                       :src="getClientIcon(this.currentSteamGame.appid,this.currentSteamGame.clientIcon)"></a-avatar>
-            <span class="xt-text ml-2 truncate"> {{ currentSteamGame.chineseName }} {{ currentSteamGame.appid }}</span></div>
+            <div class="xt-text ml-2 truncate" style="max-width: 300px"> {{ currentSteamGame.chineseName }}
+              <span class="xt-text-2">{{ currentSteamGame.appid }}</span></div>
+          </div>
           <div class="flex flex-row flex-wrap w-80">
             <div class="w-1/2 mt-3">上次游玩：{{ getDateMyTime(currentSteamGame.time) }}</div>
             <!--            <div class="w-1/2 mt-3">游戏在线玩家数：{{ totalTime(currentSteamGame.online) || '-' }}人</div>-->
@@ -257,7 +263,7 @@ import { MoreOutlined, ShopOutlined } from '@ant-design/icons-vue'
 import ShareToChat from '../../ui/chat/ShareToChat.vue'
 
 import { completeTask } from '../../apps/task/page/branch/task.ts'
-import { isHide } from './game'
+import { getHide, isHide } from './game'
 
 const toast = useToast()
 export default {
@@ -278,12 +284,9 @@ export default {
       shareVisible: false,//分享组件可见
       gameMenus: [
         {
-          label: '隐藏游戏',
-          callBack: () => {
-            this.steamShow = false
-            this.hideSteamGame(this.currentSteamGame.appid)
-          }
+          label: '占位'
         },
+
         {
           label: '定位到Steam游戏库',
           callBack: () => {
@@ -340,21 +343,19 @@ export default {
     this.updateGameTime()
   },
   computed: {
-    ...mapWritableState(steamUserStore, ['steamGameList', 'localGameList', 'runningGame', 'showTime', 'deskList','hideGames']),
+    ...mapWritableState(steamUserStore, ['steamGameList', 'localGameList', 'runningGame', 'showTime', 'deskList', 'hideGames']),
     ...mapWritableState(appStore, ['fullScreen']),
-    ...mapWritableState(steamUserStore,{
-      gameSettings:'settings'
+    ...mapWritableState(steamUserStore, {
+      gameSettings: 'settings'
     }),
     displayGameList () {
       return this.localGameList.filter(game => {
-        return isHide('local',game.id)
+        return isHide('local', game.id)
       })
     },
-    displaySteamGameList(){
-      console.log(this.steamGameList)
-      console.log(this.hideGames)
+    displaySteamGameList () {
       return this.steamGameList.filter(game => {
-        return !isHide('steam',game.appid)
+        return !isHide('steam', game.appid)
       })
     },
     selectSteamList () {
@@ -385,7 +386,8 @@ export default {
   },
   methods: {
     getClientIcon,
-    ...mapActions(steamUserStore, ['setGameList', 'playGame', 'getClient', 'updateGameTime']),
+    ...mapActions(steamUserStore, ['setSteamGameList', 'playGame', 'getClient', 'updateGameTime']),
+    getHide,
     goBind () {
       this.$router.push({ name: 'gameSetting' })
     },
@@ -456,18 +458,28 @@ export default {
       steamProtocol.uninstall(this.currentSteamGame.appid)
     },
     hideSteamGame (appid) {
-      let foundIndex=this.hideGames.findIndex(game=>{
-        return (game.type==='steam' && game.id===appid)
+      let foundIndex = this.hideGames.findIndex(game => {
+        return (game.type === 'steam' && game.id === appid)
       })
-      if(foundIndex>-1){
+      if (foundIndex > -1) {
         return
-      }else{
+      } else {
         this.hideGames.push({
-          id:appid,
-          type:'steam'
+          id: appid,
+          type: 'steam'
         })
       }
-      console.log('隐藏了',this.hideGames)
+    },
+    showSteamGame (appid) {
+      let foundIndex = this.hideGames.findIndex(game => {
+        return (game.type === 'steam' && game.id === appid)
+      })
+      if (foundIndex > -1) {
+        this.hideGames.splice(foundIndex, 1)
+        return
+      } else {
+        return
+      }
     },
     showMyGameDir () {
       require('electron').shell.showItemInFolder(this.currentLocalGame.path)
@@ -543,7 +555,26 @@ export default {
 
     openSteamDetail (item) {
       this.currentSteamGame = item
+      let hide=getHide('steam',item.appid)
+      console.log(';隐藏=',item.appid)
+      this.gameMenus[0]=!hide? {
+          label: '隐藏游戏',
+          callBack: () => {
+            this.steamShow = false
+            this.hideSteamGame(this.currentSteamGame.appid)
+          }
+        }:
+        {
+          label: '取消隐藏',
+          callBack: () => {
+            this.steamShow = false
+            this.showSteamGame(this.currentSteamGame.appid)
+          }
+        }
+        //设置菜单
       this.steamShow = true
+
+
       // this.getClient().getPlayerCount(this.currentSteamGame.appid, (err, online) => {
       //   if (err) {
       //     console.error(err)

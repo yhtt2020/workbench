@@ -182,7 +182,7 @@ export const steamUserStore = defineStore("steamUser", {
           }
         }
       })
-      this.setGameList(value)
+      this.setSteamGameList(value)
       this.steamGameList.sort((a, b) => {
         if (a.time === undefined && a.time === undefined) {
           return 0;
