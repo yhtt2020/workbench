@@ -4,21 +4,38 @@
       <HorizontalPanel :navList="flowType" v-model:selectType="defaultFlow" />
 
       <div class="flex right-button">
-        <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2"
-          @click="addCourier">
-          <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
-        </div>
-
-        <div class="flex items-center px-2 py-1.5 ml-3 justify-center category-button pointer rounded-lg xt-bg-2"
-          @click="openSetting">
-          <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
-        </div>
-
-
-        <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2"
-          @click="close">
-          <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
-        </div>
+        <a-tooltip placement="top" class="mx-3">
+          <template #title>
+            <span class="xt-text-2">添加</span>
+          </template>
+          <xt-button w="32" h="32" @click="addCourier" style="border-radius: 8px !important;">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
+            </div>
+          </xt-button>
+        </a-tooltip>
+      
+        <a-tooltip placement="top" class="mr-3">
+          <template #title>
+            <span class="xt-text-2">设置</span>
+          </template>
+          <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
+            </div>
+          </xt-button>
+        </a-tooltip>
+        
+        <a-tooltip placement="top">
+          <template #title>
+            <span class="xt-text-2">关闭</span>
+          </template>
+          <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
+            </div>
+          </xt-button>
+        </a-tooltip>
       </div>
     </div>
 
@@ -117,6 +134,8 @@
   </div>
 
   <AddCourierModal ref="addCourierRef" />
+
+  <CourierSetting ref="courierSettingRef" />
 </template>
 
 <script>
@@ -131,11 +150,14 @@ import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'
 import SortList from '../dropdown/SortList.vue'
 import { kdCompany, kdState, switchColor } from '../../mock'
+import CourierSetting from '../CourierSetting.vue'
+
 export default {
   props: [''],
 
   components: {
-    SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList
+    SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList,
+    CourierSetting,
   },
 
   data() {
@@ -303,8 +325,14 @@ export default {
 
     getRightItem(data) {
       this.rightList = data
+    },
+
+    // 打开设置
+    openSetting(){
+      this.$refs.courierSettingRef.openSettingModal()
     }
   },
+
   async mounted() {
     this.getDbCourier()
     this.couriersList = this.courierDetailList
