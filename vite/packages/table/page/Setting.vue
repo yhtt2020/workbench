@@ -60,6 +60,12 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div  @click="tipOffline" class="btn relative">
+                离线模式<br />
+                <a-switch @click.stop="() => { }" v-model:checked="this.isOffline"></a-switch>
+              </div>
+            </a-col>
           </a-row>
 
           <div></div>
@@ -228,6 +234,7 @@ import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import { taskStore } from "../apps/task/store";
+import { offlineStore } from "../js/common/offline";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
@@ -279,6 +286,7 @@ export default {
     ]),
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(offlineStore, ["isOffline"]),
 
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
@@ -326,6 +334,13 @@ export default {
       Modal.info({
         content:
           "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如小队功能。",
+        centered: true,
+      });
+    },
+    tipOffline() {
+      Modal.info({
+        content:
+          "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
         centered: true,
       });
     },
