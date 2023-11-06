@@ -32,7 +32,10 @@
               <Icon :icon="options.icon" class="title-icon"></Icon>
               <div class="flex w-2/3">
                 <slot name="title-text">
-                  {{ options.title }}
+                  <span class="pointer" v-if='options.titleRoute' @click="goRoute">{{ options.title }}</span>
+                  <span v-else>
+                    {{options.title}}
+                  </span>
                 </slot>
                 <slot name="left-title" v-if="options.rightIcon">
                   <div class="right-icon">
@@ -187,6 +190,7 @@ export default {
         },
       ];
     },
+
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
@@ -304,6 +308,9 @@ export default {
     },
     hideMenu() {
       this.menuVisible = false;
+    },
+    goRoute(){
+      this.$router.push(this.options.titleRoute)
     },
   },
 };
