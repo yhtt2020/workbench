@@ -2,11 +2,11 @@
     <div>
         <div class="flex mt-4">
             <xt-button class="mr-2 commerce-large" @click="bindJd"
-                style="width: 40px; height: 40px;background: #E12419;font-weight: 600;">JD</xt-button>
+                style="width: 40px; height: 40px;background: #E12419;font-weight: 600;color: rgba(255,255,255,0.85) !important;font-size: 24px;">JD</xt-button>
             <xt-button class="mr-2 commerce-large" @click="bindTb"
-                style="width: 40px; height: 40px;background: #FA5000;font-weight: 600;">淘</xt-button>
-            <xt-button :w="129" :h="40" style="background: #508BFE;" class="xt-text" @click="addCourier">
-                <newIcon icon="fluent:add-16-filled" style="font-size: 20px;line-height: 40px;vertical-align: middle;" />
+                style="width: 40px; height: 40px;background: #FA5000;font-weight: 600;color: rgba(255,255,255,0.85) !important;font-size: 24px;">淘</xt-button>
+            <xt-button :w="129" :h="40" style="background: #508BFE;color: rgba(255,255,255,0.85) !important;"  @click="addCourier">
+                <newIcon icon="fluent:add-16-filled" style="font-size: 20px;line-height: 40px;vertical-align: sub;" />
                 自定义添加
             </xt-button>
         </div>

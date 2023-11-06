@@ -13,13 +13,12 @@
         <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
              class="flex pointer" v-if="courierDetailList.length > 0">
           <div class="mr-2">2023-11-03 11:11更新</div>
-          <xt-button :w="22" :h="22"  >
-            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+          <xt-button :w="22" :h="22" @click="refreshCourier" class="refresh">
+            <newIcon class="xt-text-2 " style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
                      icon="akar-icons:arrow-clockwise"/>
           </xt-button>
         </div>
       </div>
-      <template v-else>
         <div v-if="showWay">
           <MinEmpty v-if="courierDetailList.length === 0"  />
           <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])">
@@ -27,19 +26,19 @@
         </div>
         <template v-else>
           <div v-if="showWay">
-            <MinEmpty v-if="courierDetailList.length === 0"/>
+            <MinEmpty v-if="courierDetailList.length === 0" />
             <MinCourierItem v-else :courier="courierDetailList[0]"
                             @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0"/>
+            <Empty v-if="courierDetailList.length === 0" :example-visible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                                     style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                              @click="viewDeliveryDetails(item)"/>
               </vue-custom-scrollbar>
-              <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
+              <div class="item-content" style="position: absolute;right: 24px;bottom: 10px;width: 40px">
                 <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
                 >
                   <newIcon class="text-lg xt-text "
@@ -48,10 +47,8 @@
                   绑定淘宝
                 </xt-button> -->
 
-                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
-                >
-                  <newIcon class="text-lg xt-text "
-                           style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
+                  <newIcon class="text-lg " style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
                            icon="fluent:add-16-filled"/>
                 </xt-button>
               </div>
@@ -485,6 +482,7 @@ export default {
 
 <style lang="scss" scoped>
 .refresh {
+  background-color: var(--primary-bg);
   &:hover {
     background-color: var(--secondary-bg);
   }
