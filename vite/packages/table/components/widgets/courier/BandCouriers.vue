@@ -13,6 +13,7 @@
 
     </div>
     <AddCourierModal ref="addCourierRef" />
+    <DealModal ref="dealModalRef" :type="dealType"/>
 </template>
 <script>
 import { courierStore } from "../../../store/courier.ts";
@@ -21,133 +22,76 @@ import AddCourierModal from './courierModal/AddCourierModal.vue';
 import grab from './grab'
 import { Icon as newIcon } from '@iconify/vue';
 import { message, Modal } from "ant-design-vue";
+import DealModal from "./courierModal/DealModal.vue";
 export default {
     name: 'band',
     components: {
         AddCourierModal,
-        newIcon
+        newIcon,
+        DealModal
+    },
+    data() {
+        return {
+            dealType:''
+        }
     },
     methods: {
-        bindTb() {
-            if (!this.storeInfo.tb.nickname) {
-                Modal.confirm({
-                    centered: true,
-                    content: '请在弹出窗内完成淘宝登录，登录后系统会在后台为您获取订单信息。',
-                    onOk: () => {
-
-                        grab.tb.login((args) => {
-                            this.storeInfo.tb.nickname = args.data.nickname
-                            message.loading({
-                                content: '已成功绑定淘宝账号：' + args.data.nickname + '，正在为您获取订单信息，请稍候…',
-                                key: 'loadingTip',
-                                duration: 0
-                            })
-                            // grab.tb.getOrder((data) => {
-                            //   message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-                            //   console.log(data)
-                            //   this.getOrderDetail(data.orders)
-                            // })
-                        })
-
-                        // tsbApi.web.openPreloadWindow({
-                        //   width: 1200,
-                        //   height: 800,
-                        //   background: false,
-                        //   url: 'https://passport.jd.com/uc/login',
-                        //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-                        //   callback: (data) => {
-                        //     this.loginInfo.jd.nickname=data.nickname
-                        //     message.loading({
-                        //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-                        //       key: 'loadingTip',
-                        //       duration:0
-                        //     })
-                        //     console.log('登录成功了，接下来进行下一步')
-                        //     //todo 获取到登录成功的信号
-                        //     tsbApi.web.openPreloadWindow({
-                        //       background: true,
-                        //       url: 'https://order.jd.com/center/list.action',
-                        //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-                        //       callback: (data) => {
-                        //
-                        //       }
-                        //     })
-                        //   }
-                        // })
-
-                    }
-                })
-            } else {
-                message.loading({
-                    content: '已绑定淘宝账号：' + this.storeInfo.tb.nickname + '，正在为您更新订单信息，请稍候…',
-                    key: 'loadingTip',
-                    duration: 0
-                })
-                grab.tb.getOrder((args) => {
-                    if (args.status === 0) {
-                        if (args.code === 401) {
-                            message.error('获取订单失败，检测到登录信息过期，请重新登录。')
-                            this.storeInfo.tb.nickname = null
-                            this.bindTb()
-                            return
-                        }
-                        message.error('获取订单意外失败。')
-                        return
-                    }
-                    message.success({
-                        content: '更新订单成功!本次共更新：' + args.data.orders.length + '条订单信息',
-                        key: 'loadingTip',
-                        duration: 3
-                    })
-                    // this.getOrderDetail(data.orders)
-                    console.log(args)
-                })
-            }
-        },
         bindJd() {
-            if (!this.storeInfo.jd.nickname) {
-                Modal.confirm({
-                    centered: true,
-                    content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
-                    onOk: () => {
-                        grab.jd.login(({ data }) => {
-                            this.storeInfo.jd.nickname = data.nickname
-                            message.loading({
-                                content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-                                key: 'loadingTip',
-                                duration: 0
-                            })
-                            grab.jd.getOrder(async ({ data }) => {
-                                message.success({
-                                    content: '更新订单成功!本次共更新：' + data.orders.length + '条订单信息',
-                                    key: 'loadingTip',
-                                    duration: 3
-                                })
-                                this.storeInfo.jd.order = data
-                                await this.getOrderDetail(data.orders)
-                                console.log(data)
-                            })
-                        })
-                    }
-                })
-            } else {
-                message.loading({
-                    content: '已绑定账号：' + this.storeInfo.jd.nickname + '，正在为您更新订单信息，请稍候…',
-                    key: 'loadingTip',
-                    duration: 0
-                })
-                grab.jd.getOrder(async ({ data }) => {
-                    message.success({
-                        content: '更新订单成功!本次共更新：' + data.orders.length + '条订单信息',
-                        key: 'loadingTip',
-                        duration: 3
-                    })
-                    this.storeInfo.jd.order = data
-                    await this.getOrderDetail(data.orders)
-                    console.log(data)
-                })
+      if (!this.storeInfo.jd.nickname){
+        this.dealType = 'jd'
+        this.$refs.dealModalRef.openDealDetail()
+      }
+      else {
+        message.loading({
+          content:"已绑定账号：" + this.storeInfo.jd.nickname + "，正在为您更新订单信息，请稍候…",
+          key: "loadingTip",
+          duration: 0,
+        });
+        grab.jd.getOrder(async ({ data }) => {
+          message.success({
+            content:  "更新订单成功!本次共更新：" + data.orders.length + "条订单信息",
+            key: "loadingTip",
+            duration: 3,
+          });
+          this.storeInfo.jd.order = data;
+          await this.getOrderDetail(data.orders);
+          console.log(data);
+        });
+      }
+    },
+
+    // 关联淘宝
+    bindTb() {
+      if(!this.storeInfo.tb.nickname){
+        this.dealType = 'tb'
+        this.$refs.dealModalRef.openDealDetail()
+      }else {
+        message.loading({
+          content:  "已绑定淘宝账号：" + this.storeInfo.tb.nickname + "，正在为您更新订单信息，请稍候…",
+          key: "loadingTip",
+          duration: 0,
+        });
+        grab.tb.getOrder((args) => {
+          if (args.status === 0) {
+            if (args.code === 401) {
+              message.error("获取订单失败，检测到登录信息过期，请重新登录。");
+              this.storeInfo.tb.nickname = null;
+              this.bindTb();
+              return;
             }
-        },
+            message.error("获取订单意外失败。");
+            return;
+          }
+          message.success({
+            content:  "更新订单成功!本次共更新：" +  args.data.orders.length + "条订单信息",
+            key: "loadingTip",
+            duration: 3,
+          });
+          this.getOrderDetail(data.orders)
+          console.log(args);
+        });
+      }
+    },
         async getOrderDetail(orders) {
 
             let promises = []
