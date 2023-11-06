@@ -47,8 +47,8 @@
                 </xt-button> -->
 
                 <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
-                  <newIcon class="text-lg xt-text "
-                    style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                  <newIcon class="text-lg "
+                    style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
                     icon="fluent:add-16-filled" />
                 </xt-button>
               </div>
@@ -64,7 +64,7 @@
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
             :isHeader="false" :boxIndex="99" :maskIndex="97">
             <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
-            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
           </xt-modal>
         </teleport>
       </div>
@@ -427,7 +427,7 @@ export default {
     },
     backAllCoutiers() {
       this.showSmallDetail = true,
-        this.showCourierDetail = false
+      this.showCourierDetail = false
     }
   },
   computed: {
