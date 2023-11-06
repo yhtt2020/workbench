@@ -56,11 +56,12 @@
  </teleport>
  <teleport to='body'>
      <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-         :isHeader="false" :boxIndex="11" :maskIndex="10">
-         <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+         :isHeader="false" :boxIndex="100" :maskIndex="99">
+         <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
+         <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
      </xt-modal>
  </teleport>
-
+ <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
  <teleport to='body'>
     <CourierSetting ref="courierSettingRef" />
 </teleport>
@@ -80,7 +81,8 @@ import TopDrop from "./courierModal/dropdown/index.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 import CourierSetting from './courierModal/CourierSetting.vue';
-
+import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
+import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 export default {
  name: '我的快递',
  components: {
@@ -93,7 +95,9 @@ export default {
      AddCourierModal,
      LogisticsDetail,
      CourierSetting,
-     TopDrop
+     TopDrop,
+     LargeCourierDetail,
+     SmallCourierModal
  },
  data() {
      return {
@@ -127,7 +131,9 @@ export default {
             },
             
          ],
-         currentType:{title:'全部',name:"全部",type:'all'}
+         currentType:{title:'全部',name:"全部",type:'all'},
+         largeDetailVisible:true,
+         showSmallDetail:false
      }
  },
  methods: {
@@ -169,7 +175,26 @@ export default {
      //打开设置
      openCourierSetting(){
         this.$refs.courierSettingRef.openSettingModal()
-     }
+     },
+     backAllCoutiers() {
+      this.showSmallDetail = true,
+        this.showCourierDetail = false
+    },
+    smallDetailsVisible() {
+      this.showSmallDetail = false
+    },
+    handleResize() {
+      let windoWidth = window.innerWidth;
+      // console.log(windoWidth);
+      if (windoWidth > 1200) {
+        this.largeDetailVisible = true
+        // this.courierShow = true;
+      } else {
+        this.largeDetailVisible = false
+        // this.courierShow = false;
+      }
+      // console.log(windoWidth,'windoWidth')
+    },
 
  },
  computed: {
@@ -179,8 +204,11 @@ export default {
  },
  mounted() {
      this.getDbCourier()
+     window.addEventListener("resize", this.handleResize)
  },
-
+ beforeDestroy() {
+    window.addEventListener("resize", this.handleResize)
+ },
 }
 </script>
 <style lang="scss">

@@ -423,7 +423,7 @@ export default {
     },
     backAllCoutiers() {
       this.showSmallDetail = true,
-        this.showCourierDetail = false
+      this.showCourierDetail = false
     }
   },
   computed: {
