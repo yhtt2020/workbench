@@ -1,30 +1,23 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {mapActions, mapState,mapWritableState} from "pinia";
+import cache from "../../components/card/hooks/cache";
 // @ts-ignore
 export const offlineStore = defineStore("offlineStore", {
   state: () => ({
     isOffline:false,
+    offlineList:['weather','OilPrices','supervisory','news','todo','games','historyInfo','smallRank','gameInformation','Dashboard','ShortTodo','Guider','ShortChart','yuanCommunity']
+
   }),
-  getters:{
-    getIsOff(){
-      return this.isOffline
-    }
-  },
+  getters:{},
   actions: {
-    isOff(){
-      // console.log(this.isOffline);
-      // setTimeout(()=>{
-      //   console.log(100,this.isOffline);
-      // },100)
-      // setTimeout(()=>{
-      //   console.log(200,this.isOffline);
-      // },200)
-      // setTimeout(()=>{
-      //   console.log(300,this.isOffline);
-      // },300)
+    changeOffline(){
+      cache.set('isOffline',this.isOffline)
+      console.log(this.$isOffline);
+      console.log(this.$isWeb);
       
-      return this.isOffline
+      
+      
     }
 
 

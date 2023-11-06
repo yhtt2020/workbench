@@ -63,7 +63,7 @@
             <a-col :span="12">
               <div  @click="tipOffline" class="btn relative">
                 离线模式<br />
-                <a-switch @click.stop="() => { }" v-model:checked="this.isOffline"></a-switch>
+                <a-switch @click="this.changeOffline"  v-model:checked="isOffline"></a-switch>
               </div>
             </a-col>
           </a-row>
@@ -300,6 +300,7 @@ export default {
   },
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
+    ...mapActions(offlineStore, ["changeOffline"]),
     isMain: isMain,isWin,
     goApps(){
       this.$router.push({
