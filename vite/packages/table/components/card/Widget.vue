@@ -24,27 +24,27 @@
           class="flex items-center justify-between"
         >
           <div class="left-title" v-if="options.noTitle !== true">
+            <!-- 标题左侧插槽 -->
             <slot name="left-title-icon"></slot>
+            <!-- 标题旧版左侧图标 -->
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="flex w-2/3">
+              <!-- 卡片标题插槽 -->
               <slot name="title-text">
                 {{ options.title }}
               </slot>
-              <slot name="left-title" v-if="options.rightIcon">
-                <div class="right-icon">
-                  <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
-                </div>
-              </slot>
+              <!-- 标题右侧插槽 -->
+              <slot name="left-title"></slot>
             </div>
           </div>
           <div class="z-10 right-title flex" v-if="showRightIcon">
+            <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
             <slot name="right-menu"> </slot>
             <MenuOutlined
               class="pointer"
               @click="showDrawer($event)"
               @contextmenu.stop="showDrawer"
             />
-      
           </div>
         </div>
       </slot>
@@ -295,14 +295,5 @@ export default {
     z-index: 99;
   }
   position: relative;
-}
-
-.right-icon svg {
-  position: relative;
-  left: -10px;
-  top: 4px;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
 }
 </style>

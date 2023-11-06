@@ -14,6 +14,7 @@ export interface IOption {
   title?: string;
   // 图标
   icon?: string;
+  // 标题右侧图标
   rightIcon?: string;
   // 背景色
   background?: string;
