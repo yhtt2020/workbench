@@ -7,7 +7,7 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="flex flex-col ">
+    <div class="flex flex-col " style="height: calc(100% - 30px)">
       <div  v-if="!showWay" class="relative mt-2">
         <div>快递筛选</div>
         <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
@@ -33,7 +33,7 @@
             <Empty v-if="courierDetailList.length === 0"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                                    style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                                    style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                              @click="viewDeliveryDetails(item)"/>
               </vue-custom-scrollbar>
