@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const { currentDesk }: any = toRefs(props);
-const { freeLayoutData, getCurrentDeskId, getFreeLayoutData } =
+const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, currentEnvState } =
   storeToRefs(freeLayoutStore);
 
 freeLayoutStore.initFreeLayoutState();
@@ -27,13 +27,16 @@ function updateCards(cards) {
   cards.forEach((item) => {
     const { id, name, customData } = item;
     obj[item.id] = {
-      left: getFreeLayoutData.value[item.id]?.left || 0,
-      top: getFreeLayoutData.value[item.id]?.top || 0,
+      left:
+        getFreeLayoutData.value[item.id]?.left ||
+        currentEnvState.value.scrollLeft,
+      top:
+        getFreeLayoutData.value[item.id]?.top ||
+        currentEnvState.value.scrollTop,
       id,
       name,
       customData,
     };
-
   });
   freeLayoutData.value[getCurrentDeskId.value] = obj;
   console.log("更新了数据 :>> ");
