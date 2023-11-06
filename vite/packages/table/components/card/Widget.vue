@@ -43,11 +43,16 @@
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
             <slot name="right-menu"> </slot>
-              <MenuOutlined
-                class="pointer"
-                @click="showDrawer($event)"
-                @contextmenu.stop="showDrawer"
-              />
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:oldMenuVisible="menuVisible"
+              >
+                <MenuOutlined class="pointer" />
+              </RightMenu>
             </div>
           </div>
         </slot>
@@ -280,9 +285,6 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    showDrawer(e) {
-      this.menuVisible = true;
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
