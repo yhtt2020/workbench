@@ -1,7 +1,4 @@
 <template>
-<!--<xt-button type="theme">-->
-<!--  {{ customIndex }}-->
-<!--</xt-button>-->
   <Drop v-model:widgetSize="widgetSize">
     <RightMenu
       :menus="menus"

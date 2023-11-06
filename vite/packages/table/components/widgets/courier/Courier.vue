@@ -7,15 +7,17 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="w-full h-full courier">
-      <div style="position: absolute;left: 124px;top: 16px;" class="pointer" v-if="courierDetailList.length > 0">
-        <xt-button :w="22" :h="22" style="background: transparent;" @click="refreshCourier">
-          <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-            icon="akar-icons:arrow-clockwise" />
-        </xt-button>
-      </div>
-      <div v-if="isLoading">
-        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+    <div class="flex flex-col ">
+      <div  class="relative mt-2">
+        <div>快递筛选</div>
+        <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
+             class="flex pointer" v-if="courierDetailList.length > 0">
+          <div class="mr-2">2023-11-03 11:11更新</div>
+          <xt-button :w="22" :h="22"  >
+            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                     icon="akar-icons:arrow-clockwise"/>
+          </xt-button>
+        </div>
       </div>
       <template v-else>
         <div v-if="showWay">
@@ -24,33 +26,35 @@
           </MinCourierItem>
         </div>
         <template v-else>
-          <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
+          <div v-if="showWay">
+            <MinEmpty v-if="courierDetailList.length === 0"/>
+            <MinCourierItem v-else :courier="courierDetailList[0]"
+                            @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
+          </div>
           <template v-else>
-            <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-              style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-              <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                @click="viewDeliveryDetails(item)" />
-            </vue-custom-scrollbar>
-            <div style="position: absolute;right: 24px;bottom: 10px">
-              <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
-              >
-                <newIcon class="text-lg xt-text "
-                         style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
-                         icon="fluent:add-16-filled"/>
-                绑定淘宝
-              </xt-button> -->
-              <!-- <xt-button @click="bindJd" :w="120" :h="40" type="theme" class="mr-2 ">
-                <newIcon class="text-lg xt-text "
-                  style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
-                  icon="fluent:add-16-filled" />
-                绑定京东
-              </xt-button> -->
-              <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
-                <newIcon class="text-lg xt-text "
-                  style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
-                  icon="fluent:add-16-filled" />
-              </xt-button>
-            </div>
+            <Empty v-if="courierDetailList.length === 0"/>
+            <template v-else>
+              <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                                    style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
+                             @click="viewDeliveryDetails(item)"/>
+              </vue-custom-scrollbar>
+              <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
+                <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
+                >
+                  <newIcon class="text-lg xt-text "
+                           style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
+                           icon="fluent:add-16-filled"/>
+                  绑定淘宝
+                </xt-button> -->
+
+                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
+                >
+                  <newIcon class="text-lg xt-text "
+                           style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                           icon="fluent:add-16-filled"/>
+                </xt-button>
+              </div>
 
           </template>
         </template>
