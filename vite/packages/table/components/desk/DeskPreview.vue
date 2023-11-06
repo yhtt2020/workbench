@@ -15,7 +15,8 @@
     <!-- 预览 -->
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
     <div class="flex justify-center items-center preview" id="previewContent">
-      <Desk :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+      <!-- 市场分享 桌面布局定位 -->
+      <Desk  :freeLayout="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot flex ">
       <div class="flex items-center mr-2">

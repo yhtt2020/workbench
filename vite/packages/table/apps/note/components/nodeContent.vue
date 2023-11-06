@@ -1,13 +1,17 @@
  <template>
     <div class="w-full h-full flex justify-center items-center">
-        <div class="w-full center overflow-hidden"  style="max-width: 800px;max-height: 660px;height: 90%;">
+        <div class="w-full center overflow-hidden"  style="width:90%;height: 96%;">
             <!-- 顶部 -->
-            <div style="max-width: 800px;justify-content: space-between;" class="flex w-full" >
+            <div style="justify-content: space-between;" class="flex w-full" >
                 <div class="flex items-center">
                     <div 
-                    class="flex justify-center items-center mr-3 pointer" style="background-color: var(--secondary-bg);border-radius:10px;width: 107px;height: 40px;"
+                    class="flex justify-center items-center mr-3 pointer center" style="background-color: var(--secondary-bg);border-radius:10px;height: 40px;padding: 0 10px;"
                     @click="changeDesk"
-                    >{{ '#' + deskName}}</div>
+                    >
+                    <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24"/> 
+                    {{deskName}}
+                    <!-- <div class="ml-3">{{deskName}}</div> -->
+                </div>
                     <div style="font-size: 14px;color: var(--secondary-text);">{{ time }}</div>
                 </div>
                 <div class="flex" style="position: relative;">
@@ -45,8 +49,8 @@
                 </div>
             </div>
             <!-- 主体 -->
-            <div>
-                <div class="mt-4 shadow overflow-hidden" style="height: 600px;border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
+            <div class="h-full">
+                <div class="mt-4 shadow overflow-hidden h-full" style="border-radius: 12px;padding: 24px 0 0 0 ;" :style="{background:background}">
                     <a-input
                         style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 24px; "
@@ -72,6 +76,8 @@
  import { formatTime } from '../../../util'
  import Markdown from "./markdown.vue";
  import dayjs from "dayjs";
+ 
+import { message } from 'ant-design-vue';
  export default {
    components: {
     Icon,
@@ -121,6 +127,28 @@
                         }
                     }, 
                     
+                },
+                { 
+                    label: "跳转到桌面", 
+                    newIcon: "majesticons:monitor-line",
+                    callBack:()=>{
+                        if (this.noteList[this.selNote].deskName) {
+                            this.deskList.forEach((item,index)=>{
+                                if (this.noteList[this.selNote].deskId == item.id) {
+                                    this.currentDeskId = item.id
+                                    this.$router.push({
+                                        name:'home',
+                                    })
+                                }
+                            })
+                        }else{
+                            if (this.isSelTab) {
+                                message.error('该便签已被删除')
+                            }else{
+                                message.error('请先添加桌面')
+                            }
+                        }
+                    }
                 },
                 { 
                     label: "删除便签", 
@@ -195,10 +223,10 @@
     isSelTab(newval,oldval){
         if (newval) {
             this.menus[0].label = '还原'
-            this.menus[1].label = '彻底删除'
+            this.menus[2].label = '彻底删除'
         }else{
             this.menus[0].label = '添加到桌面'
-            this.menus[1].label = '删除便签'
+            this.menus[2].label = '删除便签'
         }
     }
    }

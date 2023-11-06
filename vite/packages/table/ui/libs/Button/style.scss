@@ -1,0 +1,45 @@
+
+.xt-theme-plain-btn {
+  background: var(--active-secondary-bg) !important;
+  color: var(--active-bg) !important;
+
+  &:hover {
+    background: var(--active-bg) !important;
+    color: var(--active-text) !important;
+  }
+}
+
+.xt-error-plain-btn {
+  background: rgba(255, 77, 79, 0.2) !important;
+  color: var(--error) !important;
+
+  &:hover {
+    background: var(--error) !important;
+    color: var(--active-text) !important;
+  }
+}
+.xt-warn-plain-btn {
+  background: rgba(250, 173, 20, 0.2) !important;
+  color: var(--warning) !important;
+  &:hover {
+    background: var(--warning) !important;
+    color: var(--active-text) !important;
+  }
+}
+.xt-link-plain-btn {
+  background: rgba(80, 139, 254, 0.2) !important;
+  color: var(--link) !important;
+
+  &:hover {
+    background: var(--link) !important;
+    color: var(--active-text) !important;
+  }
+}
+.xt-success-plain-btn {
+  background: rgba(82, 196, 26, 0.2) !important;
+  color: var(--success) !important;
+  &:hover {
+    background: var(--success);
+    color: var(--active-text) !important;
+  }
+}

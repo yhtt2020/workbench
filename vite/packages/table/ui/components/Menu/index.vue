@@ -6,14 +6,12 @@
   >
     <!-- 展开菜单的范围 -->
     <slot></slot>
-    <!-- 将菜单传递到body -->
     <teleport to="body">
       <Transition
         @beforeEnter="handleBeforeEnter"
         @enter="handleEnter"
         @afterEnter="handleAfterEnter"
       >
-        <!-- 便利菜单项 -->
         <div
           v-if="show"
           class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
@@ -25,52 +23,18 @@
             @mouseleave="handeleCloseLock()"
             @mouseover="handeleStartLock()"
           >
-            <template v-for="menu in props.menus">
-              <template v-if="menu.slot">
-                <div class="item rounded-lg">
-                  <Item :data="menu" :name="name" />
-                </div>
-                <slot :name="menu.slot"></slot>
-              </template>
-              <xt-divider v-else-if="menu.divider" class="my-3" />
-              <div
-                v-else-if="menu.children"
-                class="item rounded-lg"
-                :key="menu[`${name}`]"
-                @click="handleClick(menu)"
+            <slot name="menu">
+              <Menus
+                @handleClick="handleClick"
+                :menus="menus"
+                :name="name"
+                :fn="fn"
               >
-                <xt-popover>
-                  <xt-text class="w-full h-full">
-                    <Item :data="menu" :name="name" />
-                    <template #right>
-                      <xt-new-icon
-                        size="20"
-                        class="mr-3"
-                        icon="fluent:chevron-left-16-filled"
-                        style="transform: rotate(180deg)"
-                      />
-                    </template>
-                  </xt-text>
-                  <template #content>
-                    <div class="list w-full h-full p-1">
-                      <div
-                        class="item"
-                        @click="handleClick(data)"
-                        v-for="data in menu.children"
-                        :name="name"
-                      >
-                        <Item :data="data" :isBg="true" />
-                      </div>
-                    </div>
-                  </template>
-                </xt-popover>
-              </div>
-              <div v-else class="item rounded-lg" @click="handleClick(menu)">
-                <xt-text class="w-full h-full">
-                  <Item :data="menu" :name="name" />
-                </xt-text>
-              </div>
-            </template>
+                <template #cardSize>
+                  <slot name="cardSize"></slot>
+                </template>
+              </Menus>
+            </slot>
           </div>
         </div>
       </Transition>
@@ -78,36 +42,11 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.container {
-  width: 200px;
-  z-index: 999999999999;
-  .list {
-    border-radius: 12px;
-    box-sizing: border-box;
-    padding-bottom: 10px;
-    overflow: hidden;
-
-    .item {
-      box-sizing: border-box;
-      height: 40px;
-
-      &:hover {
-        background: var(--active-secondary-bg);
-        cursor: pointer;
-      }
-    }
-  }
-}
-</style>
-
 <script setup lang="ts">
 import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
-import Item from "./Item.vue";
-
-// 接收父组件传递的菜单项
+import Menus from "./Menus.vue";
 const props = defineProps({
   menus: {
     type: Array<any>,
@@ -147,10 +86,13 @@ const props = defineProps({
 
 const { model, trigger, start, lock } = toRefs(props);
 /**
- * @closeMenu 关闭菜单回调
- * @openMenu 打开菜单回调
+ * 菜单回调
+ * @beforeCreate 菜单打开前
+ * @mounted 菜单打开后
+ * @selected 菜单项中时
+ * @destroyed 菜单关闭后
  */
-const emits = defineEmits(["closeMenu", "beforeCreate", "mounted"]);
+const emits = defineEmits(["beforeCreate", "mounted", "selected", "destroyed"]);
 
 /**
  * 打开菜单
@@ -190,6 +132,7 @@ const handleClick = (menu: any) => {
   if (!menu?.lock) {
     show.value = false;
   }
+  emits("selected");
   menu[props.fn] && menu[props.fn](menu);
 };
 /**
@@ -204,7 +147,7 @@ const handeleCloseLock = () => {
 };
 const handleCloseMenuCore = () => {
   show.value = false;
-  emits("closeMenu");
+  emits("destroyed");
 };
 
 const handleCloseMenu = () => {
@@ -226,6 +169,7 @@ const handeleMenuViewport = (size: any) => {
 // 菜单加载前
 const handleBeforeEnter = (el: any) => {
   el.style.height = 0;
+  el.style.overflow = "hidden";
 };
 // 菜单加载后
 const handleEnter = (el: any) => {
@@ -277,3 +221,18 @@ onBeforeUnmount(() => {
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
 </script>
+
+<style lang="scss" scoped>
+.container {
+  width: 200px;
+  z-index: 999999999999;
+  &:hover {
+    overflow: visible !important;
+  }
+  .list {
+    border-radius: 12px;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+  }
+}
+</style>

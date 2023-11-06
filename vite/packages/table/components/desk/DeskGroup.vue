@@ -472,8 +472,7 @@ import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
 import RightMenu from "./RightMenu.vue"
-import {useFreeDeskStore} from './free/store'
-
+import { useFreeLayoutStore } from "./freeLayout/store";
 export default {
   name: "DeskGroup",
   components: {
@@ -696,8 +695,7 @@ export default {
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-    ...mapActions(useFreeDeskStore,['delFreeDeskState']),
-
+    ...mapActions(useFreeLayoutStore,['clearFreeLayout']) ,
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
@@ -840,8 +838,8 @@ export default {
               1
             );
             this.$emit("changeDesk", {id: this.deskList[0].id});
-            this.delFreeDeskState(this.currentDeskId)
-
+          this.clearFreeLayout(this.deskList[0].id)
+            // 删除桌面数据
             this.key = Date.now();
             if (this.displayDesks.length === 1) {
               notification.open(
@@ -879,8 +877,7 @@ export default {
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
       };
-      console.log('desk :>> ', desk);
-      console.log(' this.deskList :>> ', this.deskList);
+
       this.deskList.unshift(desk);
       this.$emit("changeDesk", {id: desk.id});
       this.deskTitle = "";

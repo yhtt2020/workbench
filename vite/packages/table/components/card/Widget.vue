@@ -1,87 +1,75 @@
 <template>
-  <RightMenu
-    :menus="menus"
-    :sizes="sizeList"
-    @removeCard="doRemoveCard"
-    v-model:sizeType="sizeType"
-    v-model:oldMenuVisible="menuVisible"
-  >
-    <div
-      v-if="!options?.hide"
-      :class="classes"
-      style="color: var(--primary-text)"
-      :style="{
-        display: options.hide == true ? 'none' : '',
-        width: customSize.width,
-        height: customSize.height,
-        background: options.background || 'var( --primary-bg)',
-      }"
+<!--<xt-button type="theme">-->
+<!--  {{ customIndex }}-->
+<!--</xt-button>-->
+  <Drop v-model:widgetSize="widgetSize">
+    <RightMenu
+      :menus="menus"
+      :sizes="sizeList"
+      @removeCard="doRemoveCard"
+      v-model:sizeType="sizeType"
+      v-model:oldMenuVisible="menuVisible"
     >
-      <!--标题栏start-->
-      <slot name="cardTitle">
-        <div
-          :class="options.noTitle === true ? 'no-title' : 'content-title'"
-          class="flex items-center justify-between"
-        >
-          <div class="left-title" v-if="options.noTitle !== true">
-            <slot name="left-title-icon"></slot>
-            <Icon :icon="options.icon" class="title-icon"></Icon>
-            <div class="flex w-2/3">
-              <div v-if="options.isEdit">
-                <a-input
-                  style="
-                    border: none;
-                    box-shadow: none !important;
-                    position: relative;
-                    left: -25px;
-                    font-size: 16px;
-                    padding: 0;
-                  "
-                  maxlength="15"
-                  v-model:value="noteTitle"
-                  @blur="options.changeNoteTitle"
-                ></a-input>
+      <div
+        v-if="!options?.hide"
+        id="widget"
+        :class="classes"
+        style="color: var(--primary-text)"
+        :style="[
+          {
+            display: options.hide == true ? 'none' : '',
+            width: customSize.width,
+            height: customSize.height,
+            background: options.background || 'var( --primary-bg)',
+          },
+        ]"
+      >
+        <!--标题栏start-->
+        <slot name="cardTitle">
+          <div
+            :class="options.noTitle === true ? 'no-title' : 'content-title'"
+            class="flex items-center justify-between"
+          >
+            <div class="left-title" v-if="options.noTitle !== true">
+              <slot name="left-title-icon"></slot>
+              <Icon :icon="options.icon" class="title-icon"></Icon>
+              <div class="flex w-2/3">
+                <slot name="title-text">
+                  {{ options.title }}
+                </slot>
+                <slot name="left-title" v-if="options.rightIcon">
+                  <div class="right-icon">
+                    <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
+                  </div>
+                </slot>
               </div>
-              <div v-else="options.isEdit">
-                {{ options.title }}
-              </div>
-
-              <slot name="left-title" v-if="options.rightIcon">
-                <div class="right-icon">
-                  <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
-                </div>
-              </slot>
             </div>
-          </div>
-          <div class="z-10 right-title flex" v-if="showRightIcon">
-            <!-- 用于便签添加复制 -->
-            <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
-              <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
-            </div>
-            <MenuOutlined
-              class="pointer"
-              @click="showDrawer($event)"
-              @contextmenu.stop="showDrawer"
-            />
+            <div class="z-10 right-title flex" v-if="showRightIcon">
             <slot name="right-menu"> </slot>
+              <MenuOutlined
+                class="pointer"
+                @click="showDrawer($event)"
+                @contextmenu.stop="showDrawer"
+              />
+            </div>
           </div>
-        </div>
-      </slot>
-      <!-- 标题栏end   -->
-      <!--  主体内容插槽start  -->
-      <WebState v-if="env[$currentEnv]"></WebState>
-      <slot v-else :customIndex="customIndex"></slot>
-      <!--  主题内容插槽end  -->
-    </div>
-    <template v-else>
-      <slot></slot>
-    </template>
-    <!-- 右上角抽屉菜单扩展 start  -->
-    <template #menuExtra>
-      <slot name="menuExtra"></slot>
-    </template>
-    <!-- 右上角抽屉扩展 end -->
-  </RightMenu>
+        </slot>
+        <!-- 标题栏end   -->
+        <!--  主体内容插槽start  -->
+        <WebState v-if="env[$currentEnv]"></WebState>
+        <slot v-else :customIndex="customIndex"></slot>
+        <!--  主题内容插槽end  -->
+      </div>
+      <template v-else>
+        <slot></slot>
+      </template>
+      <!-- 右上角抽屉菜单扩展 start  -->
+      <template #menuExtra>
+        <slot name="menuExtra"></slot>
+      </template>
+      <!-- 右上角抽屉扩展 end -->
+    </RightMenu>
+  </Drop>
 
   <div></div>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
@@ -97,10 +85,10 @@ import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
-
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import WebState from "./WebState.vue";
+import Drop from "./Drop.vue";
 import { IOption, IMenuItem } from "./types";
 
 export default {
@@ -109,6 +97,7 @@ export default {
     MenuOutlined,
     MyIcon,
     RightMenu,
+    Drop,
   },
   name: "Widget",
   props: {
@@ -172,12 +161,15 @@ export default {
   },
   data() {
     return {
+      // 小组件
+      widgetSize: {
+        width: "",
+        height: "",
+      },
       //右上角抽屉菜单可见与否的控制
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
-      // 便签标题
-      noteTitle:this.options.title,
     };
   },
   computed: {
@@ -186,9 +178,9 @@ export default {
       return [
         ...this.menuList,
         {
-          icon: "guanbi2",
+          newIcon: "akar-icons:trash-can",
           fn: this.doRemoveCard,
-          title: "删除",
+          title: "删除小组件",
           color: "#FF4D4F",
         },
       ];
@@ -253,11 +245,11 @@ export default {
         // this.$parent.$attrs.onCustomEvent()
         // console.log(this.$parent.$attrs.onCustomEvent)
       }
-    } else {
     }
   },
 
   watch: {
+    // 旧版卡片大小更新
     sizeType: {
       handler() {
         this.updateCustomData(
@@ -272,8 +264,20 @@ export default {
         );
       },
     },
-    size: {
-      handler(newVal) {},
+    // 更新最新的widget框架大小
+    widgetSize: {
+      handler(newVal) {
+        this.updateCustomData(
+          this.$parent.customIndex ||
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
+          {
+            widgetWidth: this.widgetSize.width,
+            widgetHeight: this.widgetSize.height,
+          },
+          this.desk
+        );
+      },
     },
   },
 
