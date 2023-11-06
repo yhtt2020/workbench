@@ -1,7 +1,7 @@
 <template>
  <teleport to='body'>
   <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" style="z-index: 510;">
-    <div class="xt-text" style="width: 500px;height: 537px;">
+    <div class="xt-text mb-4" style="width: 500px;height: 537px;">
       <div class="w-full flex items-center justify-center py-4" style="position: relative;">
         <span class="xt-text xt-font font-16 font-400">「我的快递」设置</span>
         <div class="flex right-button">
