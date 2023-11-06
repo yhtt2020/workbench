@@ -19,19 +19,19 @@
       </div>
       <template v-else>
         <div v-if="showWay">
-          <MinEmpty v-if="courierDetailList.length === 0" />
+          <MinEmpty v-if="courierDetailList.length === 0"  />
           <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])">
           </MinCourierItem>
         </div>
         <template v-else>
-          <Empty v-if="courierDetailList.length === 0" />
+          <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
           <template v-else>
             <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
               style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
               <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                 @click="viewDeliveryDetails(item)" />
             </vue-custom-scrollbar>
-            <div  style="position: absolute;right: 24px;bottom: 10px">
+            <div style="position: absolute;right: 24px;bottom: 10px">
               <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
               >
                 <newIcon class="text-lg xt-text "
@@ -423,7 +423,7 @@ export default {
     },
     backAllCoutiers() {
       this.showSmallDetail = true,
-      this.showCourierDetail = false
+        this.showCourierDetail = false
     }
   },
   computed: {

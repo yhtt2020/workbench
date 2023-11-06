@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex">
+        <div class="flex mt-4">
             <xt-button class="mr-2 commerce-large" @click="bindJd"
                 style="width: 40px; height: 40px;background: #E12419;font-weight: 600;">JD</xt-button>
             <xt-button class="mr-2 commerce-large" @click="bindTb"
