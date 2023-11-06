@@ -7,7 +7,7 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="flex flex-col ">
+    <div class="flex flex-col h-full">
       <div  class="relative mt-2">
         <div>快递筛选</div>
         <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
@@ -25,16 +25,10 @@
           </MinCourierItem>
         </div>
         <template v-else>
-          <div v-if="showWay">
-            <MinEmpty v-if="courierDetailList.length === 0" />
-            <MinCourierItem v-else :courier="courierDetailList[0]"
-                            @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
-          </div>
-          <template v-else>
             <Empty v-if="courierDetailList.length === 0" :example-visible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                                    style="height: calc(100% - 20px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                                    style="height: calc(100% - 45px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                              @click="viewDeliveryDetails(item)"/>
               </vue-custom-scrollbar>
@@ -55,14 +49,13 @@
 
           </template>
         </template>
-      </template>
       <template v-if="allCourierVisible">
         <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
         <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
       </template>
       <teleport to='body'>
         <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-          :isHeader="false" :boxIndex="100" :maskIndex="99">
+          :isHeader="false" :boxIndex="10" :maskIndex="9">
           <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
           <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
         </xt-modal>
