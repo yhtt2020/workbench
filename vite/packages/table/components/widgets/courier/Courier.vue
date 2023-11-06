@@ -30,7 +30,7 @@
           <div v-if="showWay">
             <MinEmpty v-if="courierDetailList.length === 0"/>
             <MinCourierItem v-else :courier="courierDetailList[0]"
-                            @click="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
+                            @click.stop="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
           </div>
           <template v-else>
             <Empty v-if="courierDetailList.length === 0"/>
@@ -38,7 +38,7 @@
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                             @click="viewDeliveryDetails(item)"/>
+                             @click.stop="viewDeliveryDetails(item)"/>
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
