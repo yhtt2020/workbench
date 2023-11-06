@@ -43,7 +43,7 @@
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-      {{ currentDesk }}
+<!--      {{ currentDesk }}-->
       <!-- 自由布局滚动 -->
       <FreeLayoutScrollbar
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
