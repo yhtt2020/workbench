@@ -6,7 +6,7 @@
           <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#E12419;line-height: 32px;color:var(--active-text);">JD</div>
           <span class="ml-3">{{ storeInfo.jd.nickname === null ? '京东': `京东（${storeInfo.jd.nickname}）`}}</span>
         </div>
-        <xt-button w="32" v-if="storeInfo.jd.nickname === null" style="color: var(--active-bg);" @click="bindJd">关联</xt-button>
+        <xt-button w="32" v-if="storeInfo.jd.nickname === null" style="color: var(--active-bg) !important;" @click="bindJd">关联</xt-button>
         <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindJd">解除关联</xt-button>
       </div>
 
@@ -17,7 +17,7 @@
           <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#FA5000;line-height: 32px;color:var(--active-text);">淘</div>
           <span class="ml-3">{{ storeInfo.tb.nickname === null ? '淘宝': `淘宝（${storeInfo.tb.nickname}）`}}</span>
         </div>
-        <xt-button w="32" v-if="storeInfo.tb.nickname === null" style="color: var(--active-bg);" @click="bindTb">关联</xt-button>
+        <xt-button w="32" v-if="storeInfo.tb.nickname === null" style="color: var(--active-bg) !important;" @click="bindTb">关联</xt-button>
         <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindTb">解除关联</xt-button>
       </div>
 
@@ -86,6 +86,7 @@
   </div>
 
   <DealModal ref="dealModalRef" :type="dealType"/>
+  <Disassociation ref="disassociationRef" :type="dealType"/>
 </template>
 
 <script>
@@ -97,10 +98,11 @@ import { message } from "ant-design-vue";
 
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
+import Disassociation from "./Disassociation.vue";
 
 export default {
   components: {
-    RadioTab,DealModal
+    RadioTab,DealModal,Disassociation
   },
 
   data() {
@@ -186,12 +188,13 @@ export default {
 
     // 解除淘宝关联
     unbindTb() {
-      this.storeInfo.tb.nickname=null
-      message.success('解除淘宝账号关联成功。')
+      this.dealType = 'tb'
+      this.$refs.disassociationRef.openDisassociation()
+     
     },
     unbindJd(){
-      this.storeInfo.jd.nickname=null
-      message.success('解除京东账号关联成功。')
+      this.dealType = 'jd'
+      this.$refs.disassociationRef.openDisassociation()
     }
   },
 };
