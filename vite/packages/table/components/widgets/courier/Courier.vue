@@ -208,14 +208,14 @@ export default {
       this.showCourierDetail = true;
       this.orderNum = item;
       this.viewCourierDetail=item
-      console.log(this.orderNum);
+      // console.log(this.orderNum);
     },
     closeCourierDetail() {
       this.showCourierDetail = false;
     },
     handleResize() {
       let windoWidth = window.innerWidth;
-      console.log(windoWidth);
+      // console.log(windoWidth);
       if (windoWidth > 1200) {
         this.largeDetailVisible=true
         this.courierShow = true;

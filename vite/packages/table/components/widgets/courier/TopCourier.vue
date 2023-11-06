@@ -7,8 +7,9 @@
                      <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
                  </div>
                  <div class="flex ml-4 xt-text">
-                     <div class="text-base " style="line-height: 20px;">我的快递</div>
-                     <div class="ml-3 text-base" style="line-height: 20px;">({{ this.courierDetailList.length }})</div>
+                    <TopDrop :navList="typeList" v-model:selectType="currentType" />
+                     <!-- <div class="text-base " style="line-height: 20px;">我的快递</div>
+                     <div class="ml-3 text-base" style="line-height: 20px;">({{ this.courierDetailList.length }})</div> -->
                  </div>
              </div>
              <div class="flex">
@@ -75,7 +76,7 @@ import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-
+import TopDrop from "./courierModal/dropdown/index.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 import CourierSetting from './courierModal/CourierSetting.vue';
@@ -91,7 +92,8 @@ export default {
      MinEmpty,
      AddCourierModal,
      LogisticsDetail,
-     CourierSetting
+     CourierSetting,
+     TopDrop
  },
  data() {
      return {
@@ -107,6 +109,25 @@ export default {
          couriersList: [],
          isLoading: false,
          showCourierDetail: false,
+         typeList:[
+            {
+                title:'全部',
+                name:"全部",
+                type:"all"
+            },
+            {
+                title:'淘宝',
+                name:"淘宝",
+                type:"all"
+            },
+            {
+                title:'京东',
+                name:"京东",
+                type:"all"
+            },
+            
+         ],
+         currentType:{title:'全部',name:"全部",type:'all'}
      }
  },
  methods: {
