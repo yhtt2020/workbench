@@ -175,6 +175,39 @@ export function kdState(state:any){
         case "211":
             return "待取件";
             break;
+        case '301':
+            return '正常签收'
+            break;
+        case '302':
+            return '派件异常后最终签收'
+            break;
+        case '304':
+            return '代收签收'
+            break;
+        case '311':
+            return '驿站签收'
+            break;
+        case '401':
+            return '发货无信息'
+            break;
+        case '402':
+            return '超时未签收'
+            break;
+        case '403':
+            return '超时未更新'
+            break;
+        case '404':
+            return '拒收/退件'
+            break;
+        case '412':
+            return '超时未取'
+            break;
+        case '405':
+            return '派件异常'
+            break;
+        case '416':
+            return '无法联系'
+            break;
     }
 }
 

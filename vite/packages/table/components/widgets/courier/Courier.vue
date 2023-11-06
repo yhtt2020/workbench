@@ -7,32 +7,37 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="flex flex-col h-full">
-      <div  class="relative mt-2">
+    <div class="flex flex-col " style="height: calc(100% - 30px)">
+      <div v-if="!showWay" class="relative mt-2">
         <div>快递筛选</div>
-        <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
-             class="flex pointer" v-if="courierDetailList.length > 0">
+        <div style="position: absolute;right: 10px;top: 0px;" @click="refreshAll" class="flex pointer"
+          v-if="courierDetailList.length > 0">
           <div class="mr-2">2023-11-03 11:11更新</div>
-          <xt-button :w="22" :h="22" @click="refreshCourier" class="refresh">
-            <newIcon class="xt-text-2 " style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                     icon="akar-icons:arrow-clockwise"/>
+          <xt-button :w="22" :h="22">
+            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+              icon="akar-icons:arrow-clockwise" />
           </xt-button>
         </div>
       </div>
-        <div v-if="showWay">
-          <MinEmpty v-if="courierDetailList.length === 0"  />
-          <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])">
-          </MinCourierItem>
+      <div class="flex-1 w-full h-0 courier" style="position:relative;">
+        <div v-if="isLoading">
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
         <template v-else>
-            <Empty v-if="courierDetailList.length === 0" :example-visible="true"/>
+          <div v-if="showWay">
+            <MinEmpty v-if="courierDetailList.length === 0" />
+            <MinCourierItem v-else :courier="courierDetailList[0]" @click="viewDeliveryDetails(this.deliveryDetails[0])">
+            </MinCourierItem>
+          </div>
+          <template v-else>
+            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                                    style="height: calc(100% - 45px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                             @click="viewDeliveryDetails(item)"/>
+                  @click="viewDeliveryDetails(item)" />
               </vue-custom-scrollbar>
-              <div class="item-content" style="position: absolute;right: 24px;bottom: 10px;width: 40px">
+              <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
                 <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
                 >
                   <newIcon class="text-lg xt-text "
@@ -42,26 +47,31 @@
                 </xt-button> -->
 
                 <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
-                  <newIcon class="text-lg " style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
-                           icon="fluent:add-16-filled"/>
+                  <newIcon class="text-lg xt-text "
+                    style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
+                    icon="fluent:add-16-filled" />
                 </xt-button>
               </div>
 
+            </template>
           </template>
         </template>
-      <template v-if="allCourierVisible">
-        <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
-        <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
-      </template>
-      <teleport to='body'>
-        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-          :isHeader="false" :boxIndex="10" :maskIndex="9">
-          <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
-          <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
-        </xt-modal>
-      </teleport>
+        <template v-if="allCourierVisible">
+          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
+          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
+        </template>
+        <teleport to='body'>
+          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+            :isHeader="false" :boxIndex="99" :maskIndex="97">
+            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
+            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+          </xt-modal>
+        </teleport>
+      </div>
       <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
     </div>
+
+
   </Widget>
   <teleport to='body'>
     <CourierSetting ref="courierSettingRef" />
@@ -476,6 +486,7 @@ export default {
 <style lang="scss" scoped>
 .refresh {
   background-color: var(--primary-bg);
+
   &:hover {
     background-color: var(--secondary-bg);
   }
@@ -497,3 +508,4 @@ export default {
   padding: 0px !important;
 }
 </style>
+
