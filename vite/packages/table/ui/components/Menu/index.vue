@@ -169,6 +169,7 @@ const handeleMenuViewport = (size: any) => {
 // 菜单加载前
 const handleBeforeEnter = (el: any) => {
   el.style.height = 0;
+  el.style.overflow = "hidden";
 };
 // 菜单加载后
 const handleEnter = (el: any) => {
@@ -225,12 +226,13 @@ onBeforeUnmount(() => {
 .container {
   width: 200px;
   z-index: 999999999999;
-
+  &:hover {
+    overflow: visible !important;
+  }
   .list {
     border-radius: 12px;
     box-sizing: border-box;
     padding-bottom: 10px;
-    overflow: hidden;
   }
 }
 </style>
