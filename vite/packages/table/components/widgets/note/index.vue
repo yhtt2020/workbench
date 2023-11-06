@@ -9,11 +9,36 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-  <!-- 图标 -->
+  <template #left-title-icon>
+    <!-- 图标 -->
     <div class="icon flex justify-center align-center"
-      style="width: 35px;height: 24px;position: absolute;left: 7px;top:15px;">
+      style="width: 35px;height: 24px;position: absolute;left: 3px;top:16px;">
       <Icon :icon="icons.notepad12Regular" width="20" height="20" />
     </div>
+  </template>
+  <!-- 窗口化 -->
+  <template #right-menu>
+    <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
+        <Icon width="20" height="20" icon="fluent:window-multiple-16-filled" />
+      </div>
+  </template>
+
+  <template #title-editor>
+    <a-input
+      style="
+        border: none;
+        box-shadow: none !important;
+        position: relative;
+        left: -15px;
+        top: 1px;
+        font-size: 16px;
+        padding: 0;
+      "
+      maxlength="15"
+      v-model:value="this.tmpTitle"
+      @blur="changeNoteTitle"
+    ></a-input>
+  </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
@@ -101,27 +126,19 @@ export default {
     return {
       fontColors: ["white", "black", "red", "green", "blue"],
       fontColor: "white",
+      tmpTitle:'桌面标签',
       options: {
         className: "card",
         title: "桌面便签",
         icon: "",
-        // isCopy:true,
-        // copyContent:()=>{
-        //   require('electron').clipboard.writeText(this.customData.text)
-        //   message.success("已成功复制到剪切板");
-        // },
+        // 用于窗口化
+        isCopy:true,
+        copyContent:()=>{
+          require('electron').clipboard.writeText(this.customData.text)
+          message.success("已成功复制到剪切板");
+        },
         type: "games",
-        isEdit:true,
-        changeNoteTitle:(e)=>{
-          if (e.target.value != this.customData.title) {
-            this.updateCustomData(this.customIndex,{
-                title:e.target.value,
-            },this.desk)
-            if (this.initFlag) {
-              this.saveDeskTitle(this.customIndex,e.target.value)
-            }
-          }
-        }
+        
       },
       settingVisible: false,
       menuList: [
@@ -197,6 +214,7 @@ export default {
   },
   mounted() {
     this.text = this.customData.text;
+    this.tmpTitle =this.customData.title;
     this.background = this.customData.background;
     this.colors = this.customData.color;
     if (!this.customData.fontColor) {
@@ -272,7 +290,16 @@ export default {
       );
       this.fontColor = color;
     },
-
+    // 修改便签标题
+    changeNoteTitle(){
+      // 数据发生变动开始保存
+      if (this.tmpTitle != this.customData.title) {
+        this.updateCustomData(this.customIndex,{
+            title:this.tmpTitle,
+        },this.desk)
+        this.saveDeskTitle(this.customIndex,this.tmpTitle)
+      }
+    }
   },
 };
 </script>

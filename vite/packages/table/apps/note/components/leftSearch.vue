@@ -79,6 +79,9 @@
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
   import { formatTimestamp } from '../../../util'
+  import { cardStore } from "../../../store/card";
+import { message } from 'ant-design-vue';
+
   export default {
     components: {
         Icon,
@@ -112,6 +115,28 @@
                     newIcon: "fluent:open-20-filled",
                 },
                 { 
+                    label: "跳转到桌面", 
+                    newIcon: "majesticons:monitor-line",
+                    callBack:()=>{
+                        if (this.noteList[this.selNote].deskName) {
+                            this.deskList.forEach((item,index)=>{
+                                if (this.noteList[this.selNote].deskId == item.id) {
+                                    this.currentDeskId = item.id
+                                    this.$router.push({
+                                        name:'home',
+                                    })
+                                }
+                            })
+                        }else{
+                            if (this.isSelTab) {
+                                message.error('该便签已被删除')
+                            }else{
+                                message.error('请先添加桌面')
+                            }
+                        }
+                    }
+                },
+                { 
                     // name:"删除便签",
                     label: "删除便签", 
                     newIcon: "akar-icons:trash-can",
@@ -132,6 +157,7 @@
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
+        ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
     },
     mounted() {
     },
@@ -139,15 +165,16 @@
         isSelTab(newval,oldval){
             if (newval) {
                 this.menus[0].label = '还原'
-                this.menus[1].label = '彻底删除'
+                this.menus[2].label = '彻底删除'
             }else{
                 this.menus[0].label = '添加到桌面'
-                this.menus[1].label = '删除便签'
+                this.menus[2].label = '删除便签'
             }
         }
     },
     methods: {
         ...mapActions(noteStore,['moveToTrash','deTest','addNote','restore','searchNote','findAll','deleteNote']),
+        ...mapActions(cardStore, ['switchToDesk','setRouteParams']),
         formatTimestamp,
         changeNote(n){
             this.selNote = n
