@@ -14,7 +14,9 @@ export const steamUserStore = defineStore("steamUser", {
 
     runningGame:{},
     recentGameList:[],
+    hideGames:[],//隐藏的游戏
     settings:{
+      showHideGame:false,
       proxy:{
         type:'none',//'web','http','socks5
         address:'127.0.0.1',
@@ -40,9 +42,9 @@ export const steamUserStore = defineStore("steamUser", {
     },
 
     userData: {},
-    gameList: [],
-    originGameList: [],
-    myGameList: [],
+    steamGameList: [],//steam游戏列表
+    originGameList: [],//steam原始列表
+    localGameList: [],//本地游戏库列表
     myFriends: [],
 
     searchWords:{},//appid=>{video,text}
@@ -139,12 +141,12 @@ export const steamUserStore = defineStore("steamUser", {
     setUserData(value) {
       this.userData = {...value}
     },
-    setGameList(value) {
-      this.gameList = value
+    setSteamGameList(value) {
+      this.steamGameList = value
       let list = value.filter(li => {
         return !!li.appinfo
       })
-      this.gameList = list.map(game => {
+      this.steamGameList = list.map(game => {
         //此处映射需要用到的字段，以简化数据库存入，提升性能
         let formattedGame = {
           clientIcon:game.appinfo.common.clienticon,
@@ -181,7 +183,7 @@ export const steamUserStore = defineStore("steamUser", {
         }
       })
       this.setGameList(value)
-      this.gameList.sort((a, b) => {
+      this.steamGameList.sort((a, b) => {
         if (a.time === undefined && a.time === undefined) {
           return 0;
         } else if (a.time === undefined) {
@@ -192,7 +194,7 @@ export const steamUserStore = defineStore("steamUser", {
           return b.time.rtime_last_played - a.time.rtime_last_played;
         }
       });
-      //   this.gameList.forEach((e,index) =>{
+      //   this.steamGameList.forEach((e,index) =>{
       //       const obj = value.find(i => i.appinfo.appid ==e.appid)
       //     if(obj){
       //       e.appinfo = obj.appinfo
@@ -210,7 +212,7 @@ export const steamUserStore = defineStore("steamUser", {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['steamLoginData', 'gameList', 'friendList', 'myGameList','recentGameList','desks','searchWords','deskList','desksOld','deskSettings','settings'],
+      paths: ['steamLoginData', 'steamGameList', 'friendList', 'localGameList','recentGameList','desks','searchWords','deskList','desksOld','deskSettings','settings','hideGames'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
