@@ -3,7 +3,12 @@
   <div
     ref="scrollbar"
     class="no-drag relative w-full"
-    style="padding-right: 10px; padding-bottom: 10px; height: 200px"
+    style="
+      padding-right: 10px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      height: 100%;
+    "
     @mouseover="handleMouseMove"
   >
     <slot> </slot>

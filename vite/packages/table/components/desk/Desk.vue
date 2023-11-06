@@ -43,7 +43,6 @@
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-      {{ currentDesk }}
       <!-- 自由布局滚动 -->
       <FreeLayoutScrollbar
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
@@ -276,7 +275,7 @@
     ></XtTab>
     <template v-if="currentSettingTab === 'current' && currentDesk.settings">
       <FreeLayoutState
-        v-if="$route.path == '/main' && freeLayout && 0"
+        v-if="$route.path == '/main' && freeLayout && 1"
         @scrollbarRedirect="freeLayoutScrollbarRedirect"
         @scrollbarUpdate="freeLayoutScrollbarUpdate"
       ></FreeLayoutState>
