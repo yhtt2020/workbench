@@ -2,7 +2,7 @@
 
     <Widget @click="onHistoryMessage" :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="cardSlot" :desk="desk"  :menuList="menuList">
         <template #left-title>
-            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:2px;" />
+            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
         </template>
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
