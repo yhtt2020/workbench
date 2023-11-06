@@ -1,119 +1,102 @@
 <template>
-  <div
-    class="xt-active xt-base-btn"
-    :style="[customStyle]"
-    :class="[typeClass]"
-    @click="copyToClipboard()"
+  <button
+    @click.stop="handleClick"
+    :disabled="disabled"
+    class="xt-text text-base flex items-center justify-center"
+    :class="[buttonStyle]"
+    :style="{
+      width: block ? '100%' : w + 'px',
+      height: h + 'px',
+      'border-radius': radius + 'px',
+    }"
   >
-    <template v-if="iconPosition == 'prefix'">
-      <XtBaseIcon
-        v-if="icon"
-        :icon="icon"
-        :class="[icon ? 'mr-1' : '']"
-        :style="iconSize"
-      ></XtBaseIcon>
-      <xt-new-icon
-        v-if="newIicon"
-        :icon="newIicon"
-        :class="[newIicon ? 'mr-1' : '']"
-        :style="iconSize"
-      />
-    </template>
-    <div :style="textSize">
-      <slot>{{ text }}</slot>
-    </div>
-    <template v-if="iconPosition == 'postfix'">
-      <xt-new-icon
-        v-if="newIicon"
-        :icon="newIicon"
-        :class="[newIicon ? 'ml-1' : '']"
-        :style="iconSize"
-      />
-    </template>
-  </div>
+    <slot name="prefix" v-if="iconPosition == 'prefix'">
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
+    </slot>
+    <span class="">
+      <slot></slot>
+    </span>
+    <slot name="postfix" v-if="iconPosition == 'postfix'">
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
+    </slot>
+  </button>
 </template>
 
-<script>
-import { copyMixins } from "../../common/copyMixins";
-export default {
-  name: "XtButton",
-  mixins: [copyMixins],
-  props: {
-    // 有prefix  postfix
-    iconPosition: {
-      default: "prefix",
-    },
-    // 有 default theme error warn link success
-    type: {
-      type: String,
-      default: "default",
-    },
-    icon: {
-      type: String,
-    },
-    text: {},
-    // 有 mini default big
-    size: {
-      default: "default",
-    },
-    w: {
-      type: Number,
-      default: 120,
-    },
-    h: {
-      type: Number,
-      default: 48,
-    },
+<script setup>
+import { toRefs, computed } from "vue";
+import { useThrottleFn } from "@vueuse/core";
+
+const props = defineProps({
+  // 节流时间
+  throttleTime: {
+    type: Number || String,
+    default: 500,
   },
-  computed: {
-    // 自定义宽高
-    customStyle() {
-      return {
-        width: this.w + "px",
-        height: this.h + "px",
-      };
-    },
-    textSize() {
-      let sizeList = {
-        default: {
-          fontSize: "16px",
-        },
-        mini: {
-          fontSize: "14px",
-        },
-        big: {
-          fontSize: "18px",
-        },
-      };
-      return sizeList[this.size];
-    },
-    iconSize() {
-      let sizeList = {
-        default: {
-          fontSize: "18px",
-        },
-        mini: {
-          fontSize: "16px",
-        },
-        big: {
-          fontSize: "20px",
-        },
-      };
-      return sizeList[this.size];
-    },
-    typeClass() {
-      let typeLIst = {
-        default: "xt-btn",
-        theme: "xt-theme-btn",
-        error: "xt-error-btn",
-        warn: "xt-warn-btn",
-        link: "xt-link-btn",
-        success: "xt-success-btn",
-      };
-      return typeLIst[this.type];
-    },
+  // 宽度
+  w: {
+    type: Number || String,
+    default: 120,
   },
-};
+  // 高度
+  h: {
+    type: Number || String,
+    default: 48,
+  },
+  // 圆角
+  radius: {
+    type: Number || String,
+    default: 12,
+  },
+  /**
+   * 按钮类型 default theme error warn link success
+   */
+  type: {
+    type: String,
+    default: "default",
+  },
+  // 图标
+  icon: {},
+  // 图标位置 prefix postfix
+  iconPosition: {
+    default: "prefix",
+  },
+  // 图标大小
+  iconSize: {
+    type: Number || String,
+    default: 24,
+  },
+  // 禁用状态
+  disabled: {
+    type: Boolean,
+  },
+  // 将按钮适合其父宽度
+  block: {
+    type: Boolean,
+  },
+  // 另一种风格的按钮
+  plain: {
+    type: Boolean,
+  },
+});
+const { throttleTime, type, disabled, block, plain } = toRefs(props);
+
+const emits = defineEmits(["click"]);
+const handleClick = useThrottleFn(() => {
+  emits("click");
+}, throttleTime.value);
+
+const buttonStyle = computed(() => {
+  return disabled.value
+    ? " xt-disabled-btn "
+    : ` xt-${type.value}${plain.value ? "-plain" : ""}-btn xt-active `;
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "./style.scss";
+button {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+</style>
