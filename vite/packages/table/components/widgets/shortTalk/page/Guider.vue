@@ -1,6 +1,9 @@
 <template>
 
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
+        <template #left-title>
+            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:2px;" />
+        </template>
         <div class="top-icon">
             <Icon icon="akar-icons:chat-question" />
         </div>

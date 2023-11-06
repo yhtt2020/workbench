@@ -1,6 +1,9 @@
 <template>
 
     <Widget @click="onHistoryMessage" :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="cardSlot" :desk="desk"  :menuList="menuList">
+        <template #left-title>
+            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:2px;" />
+        </template>
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
         </div>
@@ -152,9 +155,10 @@ export default {
             options: {
                 className: "card",
                 title: "社区数据",
+                // newIcon:'majesticons:monitor-line'
                 // 左侧图标
                 // icon: "iconamoon:history-fill",
-                rightIcon:"fluent:open-20-filled",
+                // rightIcon:"fluent:open-20-filled",
             },
             targetKeys:[1,2,3,4,5,6,7,8,9],
             // 密钥和地址
