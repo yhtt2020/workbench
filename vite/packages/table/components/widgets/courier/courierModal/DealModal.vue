@@ -36,8 +36,6 @@
      <div class="flex justify-end items-center p-4" style="height: 72px;">
       <xt-button w="64" h="40" class="mr-3" @click="dealVisible = false">取消</xt-button>
       <xt-button w="64" h="40" type="theme" @click="agreeRelevance">同意</xt-button>
-      <!-- <div>123</div>
-      <div>456</div> -->
      </div>
     </div>
    </Modal>
