@@ -3,27 +3,28 @@
     <div class="xt-bg-2 rounded-lg mb-3 p-4 w-full">
       <div class="mb-4 flex items-center justify-between h-8">
         <div class="flex items-center">
-          <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#E12419;line-height: 32px;">JD</div>
-          <span class="ml-3">京东</span>
+          <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#E12419;line-height: 32px;color:var(--active-text);">JD</div>
+          <span class="ml-3">{{ storeInfo.jd.nickname === null ? '京东': `京东（${storeInfo.jd.nickname}）`}}</span>
         </div>
-        <xt-button w="32" style="color: var(--active-bg);" @click="bindJd">关联</xt-button>
+        <xt-button w="32" v-if="storeInfo.jd.nickname === null" style="color: var(--active-bg);" @click="bindJd">关联</xt-button>
+        <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindJd">解除关联</xt-button>
       </div>
 
       <a-divider style="height: 1px; background-color: var(--divider-text); margin: 0; " />
 
       <div class="mt-4 flex items-center justify-between h-8">
         <div class="flex items-center">
-          <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#FA5000;line-height: 32px;">淘</div>
+          <div class="xt-font font-19 font-500 w-8 h-8 rounded-lg flex items-enter justify-center" style="background:#FA5000;line-height: 32px;color:var(--active-text);">淘</div>
           <span class="ml-3">{{ storeInfo.tb.nickname === null ? '淘宝': `淘宝（${storeInfo.tb.nickname}）`}}</span>
         </div>
         <xt-button w="32" v-if="storeInfo.tb.nickname === null" style="color: var(--active-bg);" @click="bindTb">关联</xt-button>
-        <xt-button w="63" v-else style="color:var(--error) !important;" @click="unbindTb">解除关联</xt-button>
+        <xt-button  w="63" v-else style="color:var(--error) !important;" @click="unbindTb">解除关联</xt-button>
       </div>
 
     </div>
 
     <div class="xt-bg-2 w-full flex items-enter mb-4 rounded-lg flex-col p-4">
-      
+
       <div class="flex justify-between mb-4">
         <span>自动刷新电商平台订单数据</span>
         <a-switch v-model:checked="settings.courierRefresh.autoRefresh"></a-switch>
@@ -44,7 +45,7 @@
         <RadioTab class="xt-bg" :height="40" :navList="autoCourier" v-model:selectType="defaultAuto"></RadioTab>
         <span class="xt-text-2 mt-4 xt-font font-14 font-400">
           由于各家快递公司的单号名称规则不同，选择模糊匹配可以识别到更多的快递单号。
-        </span>      
+        </span>
       </div>
 
       <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
@@ -55,7 +56,7 @@
           <a-switch v-model:checked="settings.courierStatus.statusBar"></a-switch>
         </div>
         <span class="xt-text-2 mb-2.5 xt-font font-14 font-400">在顶部状态栏左侧显示当前快递包裹数量。</span>
-   
+
         <a-select class="xt-bg rounded-lg"  :bordered="false" :options="statusSelect" v-model:value="settings.courierStatus.currentStatus"></a-select>
       </div>
 
@@ -76,28 +77,30 @@
           <span>到期自动取消关注并隐藏已签收订单</span>
           <a-switch v-model:checked="settings.courierSigned.blockSigned"></a-switch>
         </div>
-      
+
         <a-select class="xt-bg rounded-lg"  :bordered="false" :options="autoCancelTime" v-model:value="settings.courierSigned.courierTime"></a-select>
-         
-        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消订阅该订单，并设置为隐藏。</span>      
+
+        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消订阅该订单，并设置为隐藏。</span>
       </div>
     </div>
   </div>
+
+  <DealModal ref="dealModalRef" :type="dealType"/>
 </template>
- 
+
 <script>
 import { mapActions, mapWritableState } from "pinia";
-import { Modal as SettingModal, message } from "ant-design-vue";
 import { courierStore } from "../../../../store/courier";
-import grab from "../grab";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
+import { appStore } from "../../../../store";
+import { message } from "ant-design-vue";
 
 import RadioTab from "../../../RadioTab.vue";
-import { appStore } from "../../../../store";
+import DealModal from "./DealModal.vue";
 
 export default {
   components: {
-    RadioTab,
+    RadioTab,DealModal
   },
 
   data() {
@@ -112,6 +115,7 @@ export default {
       statusSelect: [{ value: "全部快递" }, { value: "特别关注（订阅物流）" }],
       autoRefreshTime,
       autoCancelTime,
+      dealType:''
     };
   },
 
@@ -121,53 +125,22 @@ export default {
   },
 
   methods: {
+    ...mapActions(courierStore,['getOrderDetail']),
     // 关联京东
     bindJd() {
-      if (!this.storeInfo.jd.nickname) {
-        SettingModal.confirm({
-          centered: true,
-          content:
-            "请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。",
-          onOk: () => {
-            grab.jd.login(({ data }) => {
-              this.storeInfo.jd.nickname = data.nickname;
-              message.loading({
-                content:
-                  "已成功绑定账号：" +
-                  data.nickname +
-                  "，正在为您获取订单信息，请稍候…",
-                key: "loadingTip",
-                duration: 0,
-              });
-              grab.jd.getOrder(async ({ data }) => {
-                message.success({
-                  content:
-                    "更新订单成功!本次共更新：" +
-                    data.orders.length +
-                    "条订单信息",
-                  key: "loadingTip",
-                  duration: 3,
-                });
-                this.storeInfo.jd.order = data;
-                await this.getOrderDetail(data.orders);
-                console.log(data);
-              });
-            });
-          },
-        });
-      } else {
+      if (!this.storeInfo.jd.nickname){
+        this.dealType = 'jd'
+        this.$refs.dealModalRef.openDealDetail()
+      }
+      else {
         message.loading({
-          content:
-            "已绑定账号：" +
-            this.storeInfo.jd.nickname +
-            "，正在为您更新订单信息，请稍候…",
+          content:"已绑定账号：" + this.storeInfo.jd.nickname + "，正在为您更新订单信息，请稍候…",
           key: "loadingTip",
           duration: 0,
         });
         grab.jd.getOrder(async ({ data }) => {
           message.success({
-            content:
-              "更新订单成功!本次共更新：" + data.orders.length + "条订单信息",
+            content:  "更新订单成功!本次共更新：" + data.orders.length + "条订单信息",
             key: "loadingTip",
             duration: 3,
           });
@@ -180,62 +153,12 @@ export default {
 
     // 关联淘宝
     bindTb() {
-      if (!this.storeInfo.tb.nickname) {
-        SettingModal.confirm({
-          centered: true,
-          content:
-            "请在弹出窗内完成淘宝登录，登录后系统会在后台为您获取订单信息。",
-          onOk: () => {
-            grab.tb.login((args) => {
-              this.storeInfo.tb.nickname = args.data.nickname;
-              message.loading({
-                content:
-                  "已成功绑定淘宝账号：" +
-                  args.data.nickname +
-                  "，正在为您获取订单信息，请稍候…",
-                key: "loadingTip",
-                duration: 0,
-              });
-              // grab.tb.getOrder((data) => {
-              //   message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-              //   console.log(data)
-              //   this.getOrderDetail(data.orders)
-              // })
-            });
-
-            // tsbApi.web.openPreloadWindow({
-            //   width: 1200,
-            //   height: 800,
-            //   background: false,
-            //   url: 'https://passport.jd.com/uc/login',
-            //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-            //   callback: (data) => {
-            //     this.loginInfo.jd.nickname=data.nickname
-            //     message.loading({
-            //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-            //       key: 'loadingTip',
-            //       duration:0
-            //     })
-            //     console.log('登录成功了，接下来进行下一步')
-            //     //todo 获取到登录成功的信号
-            //     tsbApi.web.openPreloadWindow({
-            //       background: true,
-            //       url: 'https://order.jd.com/center/list.action',
-            //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-            //       callback: (data) => {
-            //
-            //       }
-            //     })
-            //   }
-            // })
-          },
-        });
-      } else {
+      if(!this.storeInfo.tb.nickname){
+        this.dealType = 'tb'
+        this.$refs.dealModalRef.openDealDetail()
+      }else {
         message.loading({
-          content:
-            "已绑定淘宝账号：" +
-            this.storeInfo.tb.nickname +
-            "，正在为您更新订单信息，请稍候…",
+          content:  "已绑定淘宝账号：" + this.storeInfo.tb.nickname + "，正在为您更新订单信息，请稍候…",
           key: "loadingTip",
           duration: 0,
         });
@@ -251,25 +174,29 @@ export default {
             return;
           }
           message.success({
-            content:
-              "更新订单成功!本次共更新：" +
-              args.data.orders.length +
-              "条订单信息",
+            content:  "更新订单成功!本次共更新：" +  args.data.orders.length + "条订单信息",
             key: "loadingTip",
             duration: 3,
           });
-          // this.getOrderDetail(data.orders)
+          this.getOrderDetail(data.orders)
           console.log(args);
         });
       }
     },
 
     // 解除淘宝关联
-    unbindTb() {},
+    unbindTb() {
+      this.storeInfo.tb.nickname=null
+      message.success('解除淘宝账号关联成功。')
+    },
+    unbindJd(){
+      this.storeInfo.jd.nickname=null
+      message.success('解除京东账号关联成功。')
+    }
   },
 };
 </script>
- 
+
 <style lang="scss" scoped>
 :deep(.nav-box) {
   border-radius: 8px !important;

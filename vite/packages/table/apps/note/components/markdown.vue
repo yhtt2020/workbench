@@ -107,25 +107,22 @@ export default {
 };
 </script>
 <style lang="scss">
+    // .vditor-ir{
+    //     display: flex;
+    //     justify-content: center;
+    // }
 
-
-    :deep(.vditor-toolbar) {
-        border: none;
-        padding: 0 10px !important;
-        // background: transparent;
-    }
-
-    :deep(.vditor-reset) {
+    .vditor-reset{
         
         color: #fff !important;
+        padding: 10px 9% !important;
+        // padding: 10px 0 !important;
+        // width: 90%;
     }
     .box .vditor-reset{
         color: #fff !important;
         height: 101% !important;
     }
-    // :deep(.vditor-ir pre.vditor-reset){
-    // }
-
     ::-webkit-scrollbar{
         -webkit-appearance: none;
         width: 6px;
@@ -143,7 +140,22 @@ export default {
         border-radius: 6px; /* 轨道圆角 */
     }
 
+    .vditor-toolbar{
+        border: none;
+        padding: 0 8% !important;
 
+    }
+    .vditor-toolbar__item{
+        -webkit-app-region: no-drag;
+
+    }
+
+    .box .vditor-markdown{
+        border: none;
+        border-radius: 0;
+        z-index: 100 !important;
+
+    }
 
 </style>
  

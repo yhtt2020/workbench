@@ -60,6 +60,12 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div  @click="tipOffline" class="btn relative">
+                离线模式<br />
+                <a-switch @click.stop="() => { }" v-model:checked="this.isOffline"></a-switch>
+              </div>
+            </a-col>
           </a-row>
 
           <div></div>
@@ -74,12 +80,12 @@
                   <div>设置触摸屏</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain() && isWin()" :span="6">
-                <div @click="setPen" class="btn">
-                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>
-                  <div>设置笔</div>
-                </div>
-              </a-col>
+<!--              <a-col v-if="isMain() && isWin()" :span="6">-->
+<!--                <div @click="setPen" class="btn">-->
+<!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
+<!--                  <div>设置笔</div>-->
+<!--                </div>-->
+<!--              </a-col>-->
               <a-col :span="6">
                 <div @click="chooseScreen" class="btn">
                   <Icon icon="touping" style="font-size: 2em"></Icon>
@@ -107,18 +113,26 @@
                   <div>导航栏编辑</div>
                 </div>
               </a-col>
+              <a-col :span="6">
+                <xt-task :modelValue="m04011" @cb="basic">
+                  <div @click="basic" class="btn">
+                    <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                    <div>通用设置</div>
+                  </div>
+                </xt-task>
+              </a-col>
               <a-col v-if="isMain()" :span="6">
                 <div @click="goApps()" class="btn">
                   <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
                   <div>应用管理</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
-                <div @click="wizard" class="btn">
-                  <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
-                  <div>配置向导</div>
-                </div>
-              </a-col>
+<!--              <a-col v-if="isMain()" :span="6">-->
+<!--                <div @click="wizard" class="btn">-->
+<!--                  <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>-->
+<!--                  <div>配置向导</div>-->
+<!--                </div>-->
+<!--              </a-col>-->
 
               <a-col :span="6">
                 <div @click="papersSettings" class="btn">
@@ -126,14 +140,7 @@
                   <div>壁纸</div>
                 </div>
               </a-col>
-              <a-col :span="6">
-               <xt-task :modelValue="m04011" @cb="basic">
-                <div @click="basic" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div>通用设置</div>
-                </div>
-               </xt-task>
-              </a-col>
+
 
               <a-col :span="6">
                 <xt-task :modelValue="m03011" @cb="styleVisible = true">
@@ -228,6 +235,7 @@ import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import { taskStore } from "../apps/task/store";
+import { offlineStore } from "../js/common/offline";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
@@ -279,6 +287,7 @@ export default {
     ]),
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(offlineStore, ["isOffline"]),
 
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
@@ -326,6 +335,13 @@ export default {
       Modal.info({
         content:
           "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如小队功能。",
+        centered: true,
+      });
+    },
+    tipOffline() {
+      Modal.info({
+        content:
+          "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
         centered: true,
       });
     },

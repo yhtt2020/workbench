@@ -69,11 +69,16 @@ import AIaides from "../widgets/AIaides.vue";
 import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/YuanCommunity.vue";
 import RightMenu from "./RightMenu.vue";
-import FreeDesk from "./free/index";
-import Courier from '../widgets/courier/Courier.vue'
+import Courier from "../widgets/courier/Courier.vue";
+
+import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
+import FreeLayoutContainer from "./freeLayout/Container.vue";
+import FreeLayoutState from "./freeLayout/State.vue";
 export default {
   components: {
-    FreeDesk,
+    FreeLayoutScrollbar,
+    FreeLayoutContainer,
+    FreeLayoutState,
     RightMenu,
     GameInformation,
     HistoryInfo,
@@ -136,6 +141,6 @@ export default {
     AIaides,
     OilPrices,
     yuanCommunity,
-    Courier
+    Courier,
   },
 };

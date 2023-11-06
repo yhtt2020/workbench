@@ -6,6 +6,7 @@ const {
   fixProtocol,
   intervalEvent,
   closeSelf,
+  callback
 } = require('../../app.js')
 
 intervalEvent((clear) => {
@@ -25,7 +26,7 @@ intervalEvent((clear) => {
       })
 
       clear()
-      closeSelf()
+      //closeSelf()
     }
   }
 })
@@ -111,7 +112,7 @@ function main () {
   function getExpressInfo () {
     function finish () {
       clearInterval(tipInterval)
-      ipc.send('api.web.callback', {
+      callback({
         args: {
           status: 1,
           info: '成功获取',
@@ -184,18 +185,24 @@ function getOrderInfo ($item) {
       name: '',
       num: 1,
       amount: '',
-      detailUrl: ''
     }
     //if ($(child).hasClass('sep-tr-bd')) continue
-    item.cover = fixProtocol($(child).find('.production-mod__pic___G8alD img').attr('src'))
+    let imgSrc=$(child).find('.production-mod__pic___G8alD img').attr('src')
+    if(!imgSrc){
+      continue
+    }
+    item.cover = fixProtocol(imgSrc)
     item.name = $(child).find('span[style=\'line-height:16px;\']').text()
-    item.num = clearText($(child).find('.sol-mod__no-br___36X3g').eq(1).text())
-    item.amount = clearText($(child).find('.price-mod__price___3_8Zs').text())
-
+    item.num = clearText($(child).find('.sol-mod__no-br___36X3g').eq(2).text())
+    item.amount = $(child).find('.price-mod__price___3_8Zs strong').eq(2).text()
     order.items.push(item)
   }
-  order.status = clearText($item.find('.text-mod__link___1rXmw').text())
-  order.detailUrl = fixProtocol($item.find('.text-mod__link___1rXmw text-mod__hover___1TDrR').attr('href'))
+  // const statusParent=$item.find('table tbody:eq(1) tr:eq(0) td:eq(5)')
+  // console.log(statusParent)
+  order.status = $item.find('tbody').eq(1).find('td').eq(5).find("p[style='margin-bottom:3px;'] span.text-mod__link___1rXmw").text()
+  order.detailUrl = fixProtocol($item.find("a").filter(function (){
+    return $(this).text()==='订单详情'
+  }).attr('href'))
   return order
 }
 
