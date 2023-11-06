@@ -8,7 +8,7 @@
       </div>
     </template>
     <div class="flex flex-col ">
-      <div  class="relative mt-2">
+      <div  v-if="!showWay" class="relative mt-2">
         <div>快递筛选</div>
         <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
              class="pointer flex" v-if="courierDetailList.length > 0">
