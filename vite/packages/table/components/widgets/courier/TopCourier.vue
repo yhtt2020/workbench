@@ -43,12 +43,12 @@
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length>0"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
      <span
-         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;">{{
+         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
              courierDetailList.length }}</span>
  </xt-button>
  <teleport to='body'>
