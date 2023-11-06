@@ -43,6 +43,7 @@
       class="w-full h-full"
       @contextmenu="showMenu"
     >
+      {{ currentDesk }}
       <!-- 自由布局滚动 -->
       <FreeLayoutScrollbar
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
@@ -395,8 +396,9 @@ import Muuri from "muuri";
 import { message, Modal } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../../store";
+import { cardStore } from "../../store/card";
 
-import { useWidgetStore } from "../card/store.ts";
+import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import componentsMinis from "./components.ts";
 import _ from "lodash-es";
@@ -532,7 +534,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
+    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout", "getCurrentDesk"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
@@ -696,13 +698,13 @@ export default {
     clear() {
       this.menuVisible = false;
       let desk = this.currentDesk;
-      console.log('desk :>> ', desk);
       if (desk) {
         Modal.confirm({
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
             desk.cards = [];
+            this.getCurrentDesk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

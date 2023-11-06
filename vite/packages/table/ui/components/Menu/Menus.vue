@@ -19,7 +19,6 @@
       v-else-if="menu.children"
       class="item rounded-lg"
       :key="menu[`${name}`]"
-      @click="handleClick(menu)"
     >
       <xt-popover>
         <xt-text class="w-full h-full">
@@ -37,7 +36,7 @@
           <div class="list w-full h-full p-1">
             <div
               class="item"
-              @click="handleClick(data)"
+              @click="handleClick(data, true)"
               v-for="data in menu.children"
               :name="name"
             >
@@ -72,8 +71,12 @@ const props = defineProps({
 });
 
 const emits = defineEmits(["handleClick"]);
-const handleClick = (item) => {
-  item[props.fn] && item[props.fn](item);
+const handleClick = (item, flag = null) => {
+  if (flag) {
+    item[props.fn] && item[props.fn](item);
+    return;
+  }
+
   emits("handleClick", item);
 };
 </script>
