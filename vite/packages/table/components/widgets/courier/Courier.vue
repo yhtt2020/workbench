@@ -7,18 +7,21 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
-    <div class="flex flex-col " style="height: calc(100% - 30px)">
-      <div  v-if="!showWay" class="relative mt-2">
-        <div>快递筛选</div>
-        <div  style="position: absolute;right: 10px;top: 0px;" @click="refreshAll"
-             class="pointer flex" v-if="courierDetailList.length > 0">
-          <div class="mr-2">2023-11-03 11:11更新</div>
-          <xt-button :w="22" :h="22"  >
-            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                     icon="akar-icons:arrow-clockwise"/>
-          </xt-button>
+    <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
+      <template v-if="!showWay">
+        <div class="w-full flex mt-2 justify-between" v-if="courierDetailList.length !== 0">
+          <div class="xt-text xt-font ">快递筛选</div>
+          <div class="flex items-center">
+            <span class="mr-2">2023-11-03 11:11更新</span>
+            <xt-button :w="22" :h="22"  @click="refreshAll">
+              <div class="flex items-center justify-center">
+                <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:arrow-clockwise"/>
+              </div>
+            </xt-button>
+          </div>
         </div>
-      </div>
+      </template>
+
       <div class="w-full h-0 courier flex-1" style="position:relative;">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
@@ -38,13 +41,6 @@
                              @click="viewDeliveryDetails(item)"/>
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
-                <!-- <xt-button @click="bindTb" :w="120" :h="40" type="theme" class="mr-2 "
-                >
-                  <newIcon class="text-lg xt-text "
-                           style="vertical-align: middle;font-size: 20px;text-align: center;margin: 5px ;"
-                           icon="fluent:add-16-filled"/>
-                  绑定淘宝
-                </xt-button> -->
 
                 <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
                 >
@@ -62,10 +58,11 @@
           <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
         </template>
         <teleport to='body'>
-          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-                    :isHeader="false" :boxIndex="100" :maskIndex="99">
+          <Modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title=""
+           :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+          >
             <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
-          </xt-modal>
+          </Modal>
         </teleport>
       </div>
 
@@ -82,7 +79,10 @@ import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-import { message, Modal,notification} from 'ant-design-vue'
+import { message, Modal as antModal ,notification} from 'ant-design-vue'
+import grab from './grab'
+
+import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
 import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
@@ -92,7 +92,7 @@ import LargeCourierModal from './courierModal/LargeCourierModal.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
-import grab from './grab'
+
 
 export default {
   name: '我的快递',
@@ -105,9 +105,9 @@ export default {
     MinEmpty,
     LargeCourierModal,
     SmallCourierModal,
-    LogisticsDetail
-    ,
-    AddCourierModal
+    LogisticsDetail,
+    AddCourierModal,
+    Modal
   },
   props: {
     customIndex: {
@@ -186,23 +186,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(courierStore, [// "getCourierMsg", "getCouriersDetail",
-      'getDbCourier']),
-    // async refreshCourier() {
-    //     // this.getCourierMsg('YD', '463193332336436')
-    //     this.isLoading = true
-    //     await this.getCouriersDetail()
-    //     // console.log(this.couriersDetailMsg);
-    //     this.deliveryDetails = await this.couriersDetailMsg
-
-    //     // console.log(this.deliveryDetails, 'deliveryDetails');
-    //     setTimeout(() => {
-    //         this.isLoading = false
-    //     });
-    // },
-    // changeState() {
-    //     this.allCourierVisible = true
-    // }
+    ...mapActions(courierStore, ['getDbCourier']),
     changeState () {
       this.allCourierVisible = false
     },
@@ -221,7 +205,6 @@ export default {
       } else {
         this.courierShow = false
       }
-      // console.log(windoWidth,'windoWidth')
     },
     refreshAll(){
       message.loading('正在为您更新商城订单')
@@ -247,126 +230,7 @@ export default {
       }
       //todo 刷新其他订单
     },
-    // bindTb(){
-    //   if (!this.storeInfo.tb.nickname) {
-    //     Modal.confirm({
-    //       centered: true,
-    //       content: '请在弹出窗内完成淘宝登录，登录后系统会在后台为您获取订单信息。',
-    //       onOk: () => {
 
-    //         grab.tb.login((args) => {
-    //           this.storeInfo.tb.nickname = args.data.nickname
-    //           message.loading({
-    //             content: '已成功绑定淘宝账号：' + args.data.nickname + '，正在为您获取订单信息，请稍候…',
-    //             key: 'loadingTip',
-    //             duration: 0
-    //           })
-    //           // grab.tb.getOrder((data) => {
-    //           //   message.success({ content: '获取订单成功!', key: 'loadingTip', duration: 3 })
-    //           //   console.log(data)
-    //           //   this.getOrderDetail(data.orders)
-    //           // })
-    //         })
-
-    //         // tsbApi.web.openPreloadWindow({
-    //         //   width: 1200,
-    //         //   height: 800,
-    //         //   background: false,
-    //         //   url: 'https://passport.jd.com/uc/login',
-    //         //   preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/login.js',
-    //         //   callback: (data) => {
-    //         //     this.loginInfo.jd.nickname=data.nickname
-    //         //     message.loading({
-    //         //       content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-    //         //       key: 'loadingTip',
-    //         //       duration:0
-    //         //     })
-    //         //     console.log('登录成功了，接下来进行下一步')
-    //         //     //todo 获取到登录成功的信号
-    //         //     tsbApi.web.openPreloadWindow({
-    //         //       background: true,
-    //         //       url: 'https://order.jd.com/center/list.action',
-    //         //       preload: window.globalArgs['app-dir_name'] + '/../appPreload/ecommerce/jd/order.js',
-    //         //       callback: (data) => {
-    //         //
-    //         //       }
-    //         //     })
-    //         //   }
-    //         // })
-
-    //       }
-    //     })
-    //   } else {
-    //     message.loading({
-    //       content: '已绑定淘宝账号：' + this.storeInfo.tb.nickname + '，正在为您更新订单信息，请稍候…',
-    //       key: 'loadingTip',
-    //       duration: 0
-    //     })
-    //     grab.tb.getOrder((args) => {
-    //       if(args.status===0){
-    //         if(args.code===401){
-    //           message.error('获取订单失败，检测到登录信息过期，请重新登录。')
-    //           this.storeInfo.tb.nickname=null
-    //           this.bindTb()
-    //           return
-    //         }
-    //         message.error('获取订单意外失败。')
-    //         return
-    //       }
-    //       message.success({
-    //         content: '更新订单成功!本次共更新：' + args.data.orders.length + '条订单信息',
-    //         key: 'loadingTip',
-    //         duration: 3
-    //       })
-    //       // this.getOrderDetail(data.orders)
-    //       console.log(args)
-    //     })
-    //   }
-    // },
-    bindJd () {
-      if (!this.storeInfo.jd.nickname) {
-        Modal.confirm({
-          centered: true,
-          content: '请在弹出窗内完成京东登录，登录后系统会在后台为您获取订单信息。',
-          onOk: () => {
-            grab.jd.login(({ data }) => {
-              this.storeInfo.jd.nickname = data.nickname
-              message.loading({
-                content: '已成功绑定账号：' + data.nickname + '，正在为您获取订单信息，请稍候…',
-                key: 'loadingTip',
-                duration: 0
-              })
-              grab.jd.getOrder(async ({ data }) => {
-                message.success({
-                  content: '更新订单成功!本次共更新：' + data.orders.length + '条订单信息',
-                  key: 'loadingTip',
-                  duration: 3
-                })
-                this.storeInfo.jd.order = data
-                await this.getOrderDetail(data.orders)
-                console.log(data)
-              })
-            })
-          }
-        })
-      } else {
-        message.loading({
-          content: '已绑定账号：' + this.storeInfo.jd.nickname + '，正在为您更新订单信息，请稍候…',
-          key: 'loadingTip',
-          duration: 0
-        })
-        grab.jd.getOrder(async ({ data }) => {
-          message.success({
-            content: '更新订单成功!本次共更新：' + data.orders.length + '条订单信息',
-            key: 'loadingTip',
-            duration: 3
-          })
-          this.storeInfo.jd.order = data
-          await this.getOrderDetail(data.orders)
-          console.log(data)
-        })
-      }
-    },
     async getOrderDetail (orders) {
 
       let promises = []
@@ -439,28 +303,10 @@ export default {
     },
   },
   async mounted () {
-    // this.isLoading = true;
-    // await this.getCouriersDetail();
-    // //console.log(this.couriersDetailMsg);
-    // this.deliveryDetails = await this.couriersDetailMsg;
-
-    // //console.log(this.deliveryDetails, 'deliveryDetails');
-    //setTimeout(() => {
-    //   this.isLoading = false;
-    // })
-    // await this.refreshCourier()
-    // console.log(window.innerWidth)
     this.getDbCourier()
     window.addEventListener('resize', this.handleResize)
   },
-  // beforeUpdate() {
-  //     // this.changeTag()
-  //     if (window.innerWidth > 1200) {
-  //         this.toggleDetail = true
-  //     } else {
-  //         this.toggleDetail = false
-  //     }
-  // },
+
   beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
   },
@@ -487,7 +333,4 @@ export default {
   }
 }
 
-.xt-modal {
-  padding: 0px !important;
-}
 </style>
