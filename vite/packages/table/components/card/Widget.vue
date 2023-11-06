@@ -55,16 +55,31 @@
               </div>
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
-            <!-- 用于便签添加复制 -->
-            <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:1px;" @click="options.copyContent">
-              <MyIcon width="20" height="20" icon="fluent:window-multiple-16-filled" />
-            </div>
-            <slot name="right-menu"> </slot>
-              <MenuOutlined
+              <!-- 用于便签添加复制 -->
+              <div
                 class="pointer"
-                @click="showDrawer($event)"
-                @contextmenu.stop="showDrawer"
-              />
+                v-if="options.isCopy"
+                style="position: absolute; left: -28px; top: 1px"
+                @click="options.copyContent"
+              >
+                <MyIcon
+                  width="20"
+                  height="20"
+                  icon="fluent:window-multiple-16-filled"
+                />
+              </div>
+              <slot name="right-menu"> </slot>
+
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:oldMenuVisible="menuVisible"
+              >
+                <MenuOutlined class="pointer" />
+              </RightMenu>
             </div>
           </div>
         </slot>
@@ -297,9 +312,6 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    showDrawer(e) {
-      this.menuVisible = true;
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
