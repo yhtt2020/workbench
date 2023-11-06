@@ -27,7 +27,7 @@
             <slot name="left-title-icon"></slot>
             <Icon :icon="options.icon" class="title-icon"></Icon>
             <div class="flex w-2/3">
-              <slot name="title-editor">
+              <slot name="title-text">
                 {{ options.title }}
               </slot>
               <slot name="left-title" v-if="options.rightIcon">

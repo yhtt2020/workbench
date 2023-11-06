@@ -17,13 +17,13 @@
     </div>
   </template>
   <!-- 窗口化 -->
-  <template #right-menu>
+  <!-- <template #right-menu>
     <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
         <Icon width="20" height="20" icon="fluent:window-multiple-16-filled" />
       </div>
-  </template>
+  </template> -->
 
-  <template #title-editor>
+  <template #title-text>
     <a-input
       style="
         border: none;
