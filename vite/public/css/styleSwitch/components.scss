@@ -54,7 +54,10 @@
     background: var(--active) !important;
   }
 }
-
+.xt-default-btn {
+  background: var(--secondary-bg) !important;
+  color: var(--primary-text) !important;
+}
 .xt-error-btn {
   background: rgba(255, 77, 79, 0.2) !important;
   color: var(--error) !important;
