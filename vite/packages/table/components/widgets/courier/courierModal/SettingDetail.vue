@@ -86,6 +86,7 @@
   </div>
 
   <DealModal ref="dealModalRef" :type="dealType"/>
+  <Disassociation ref="disassociationRef" :type="dealType"/>
 </template>
 
 <script>
@@ -97,10 +98,11 @@ import { message } from "ant-design-vue";
 
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
+import Disassociation from "./Disassociation.vue";
 
 export default {
   components: {
-    RadioTab,DealModal
+    RadioTab,DealModal,Disassociation
   },
 
   data() {
@@ -186,12 +188,13 @@ export default {
 
     // 解除淘宝关联
     unbindTb() {
-      this.storeInfo.tb.nickname=null
-      message.success('解除淘宝账号关联成功。')
+      this.dealType = 'tb'
+      this.$refs.disassociationRef.openDisassociation()
+     
     },
     unbindJd(){
-      this.storeInfo.jd.nickname=null
-      message.success('解除京东账号关联成功。')
+      this.dealType = 'jd'
+      this.$refs.disassociationRef.openDisassociation()
     }
   },
 };
