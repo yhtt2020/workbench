@@ -32,7 +32,10 @@
               <Icon :icon="options.icon" class="title-icon"></Icon>
               <div class="flex w-2/3">
                 <slot name="title-text">
-                  {{ options.title }}
+                  <span class="pointer" v-if='options.titleRoute' @click="goRoute">{{ options.title }}</span>
+                  <span v-else>
+                    {{options.title}}
+                  </span>
                 </slot>
                 <slot name="left-title" v-if="options.rightIcon">
                   <div class="right-icon">
@@ -43,11 +46,16 @@
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
             <slot name="right-menu"> </slot>
-              <MenuOutlined
-                class="pointer"
-                @click="showDrawer($event)"
-                @contextmenu.stop="showDrawer"
-              />
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:oldMenuVisible="menuVisible"
+              >
+                <MenuOutlined class="pointer" />
+              </RightMenu>
             </div>
           </div>
         </slot>
@@ -182,6 +190,7 @@ export default {
         },
       ];
     },
+
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
@@ -280,9 +289,6 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    showDrawer(e) {
-      this.menuVisible = true;
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
@@ -302,6 +308,9 @@ export default {
     },
     hideMenu() {
       this.menuVisible = false;
+    },
+    goRoute(){
+      this.$router.push(this.options.titleRoute)
     },
   },
 };

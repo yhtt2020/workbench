@@ -1,6 +1,7 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
+    v-show="currentEnvState.loading"
     ref="scrollbar"
     class="no-drag relative w-full"
     style="
@@ -25,16 +26,23 @@ import { useFreeLayoutStore } from "./store";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutState, dragData, currentEnvState } =
+  storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 onMounted(() => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  nextTick(() => {
-    setTimeout(() => {
-      redirect();
-    }, 100);
-  });
+
+  setTimeout(async () => {
+    await redirect();
+    scrollbar.value.addEventListener("ps-scroll-x", () => {
+      currentEnvState.value.scrollLeft = scrollbar.value.scrollLeft;
+    });
+    scrollbar.value.addEventListener("ps-scroll-y", () => {
+      currentEnvState.value.scrollTop = scrollbar.value.scrollTop;
+    });
+    currentEnvState.value.loading = true;
+  }, 100);
 });
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);

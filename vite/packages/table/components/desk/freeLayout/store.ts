@@ -8,6 +8,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
+
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -16,11 +17,23 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       position: "top center",
       width: 2000,
       height: 2000,
-      auxLine: true,
+      auxLine: false,
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
       zoom: 1,
       margin: 6,
+    },
+    // 当前环境状态
+    currentEnvState: {
+      loading: false, // 当前自由布局加载状态
+      scrollTop: 0, // 当前滚动条Y轴
+      scrollLeft: 0, // 当前滚动条X轴
+    },
+    // 当前环境状态
+    defaultCurrentEnvState: {
+      loading: false,
+      scrollTop: 0,
+      scrollLeft: 0,
     },
   }),
   getters: {
@@ -58,6 +71,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       return this.getFreeLayoutState?.afterDrop
         ? this.getFreeLayoutState?.margin
         : 0;
+    },
+    // 获取当前状态
+    getCurrentState() {
+      return this.currentState;
     },
   },
   actions: {
