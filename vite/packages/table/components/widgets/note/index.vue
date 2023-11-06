@@ -23,7 +23,7 @@
       </div>
   </template>
 
-  <template #title-editor>
+  <template #title-text>
     <a-input
       style="
         border: none;
@@ -89,7 +89,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
 import { noteStore } from '../../../apps/note/store';
 
 export default {
-  name:'便签', 
+  name:'便签',
   components: {
     Widget,
     Icon,
@@ -138,7 +138,7 @@ export default {
           message.success("已成功复制到剪切板");
         },
         type: "games",
-        
+
       },
       settingVisible: false,
       menuList: [
@@ -223,7 +223,7 @@ export default {
   },
 
   methods: {
-    
+
     ...mapActions(noteStore, ['changeDeskBg','saveDeskTitle']),
     // updateText() {
     //   this.updateCustomData(
