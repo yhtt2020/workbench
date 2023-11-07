@@ -34,16 +34,16 @@
       <!-- 标题栏end   -->
       <!--  主体内容插槽start  -->
       <!-- v-if="env[$currentEnv]" -->
-      <WebState>
+      <PageState :env="env">
         <slot></slot>
-      </WebState>
+      </PageState>
       <!--  主题
           内容插槽end  -->
     </div>
     <template v-else>
-      <WebState>
+      <PageState>
         <slot></slot>
-      </WebState>
+      </PageState>
     </template>
     <!-- 右上角抽屉菜单扩展 start  -->
     <template #menuExtra>
@@ -70,7 +70,7 @@ import { offlineStore } from "../../js/common/offline";
 
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
-import WebState from "./WebState.vue";
+import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
 
 export default {
@@ -79,7 +79,7 @@ export default {
     MenuOutlined,
     MyIcon,
     RightMenu,
-    WebState
+    PageState
   },
   name: "Widget",
   props: {
@@ -137,6 +137,7 @@ export default {
           web: false,
           mobile: false,
           client: false,
+          offline:false
         };
       },
     },

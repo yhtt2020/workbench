@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" ref="weatherSlot" :customIndex="customIndex" :customData="customData" :desk="desk">
+  <Widget :options="options" ref="weatherSlot" :customIndex="customIndex" :customData="customData" :desk="desk" :env="env">
     <template #left-title-icon>
         <div
           class="icon"
@@ -115,7 +115,13 @@ export default {
         type:'weather',
       },
       defaultValue:'',
-      drawerTitle:'常用天气位置'
+      drawerTitle:'常用天气位置',
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     };
   },
 

@@ -13,10 +13,9 @@ export const offlineStore = defineStore("offlineStore", {
   actions: {
     changeOffline(){
       cache.set('isOffline',this.isOffline)
-      // console.log(cache.get('isOffline'));
+      window.$isOffline = this.isOffline
     },
     getIsOffline(){
-      // console.log(cache.get('isOffline'));
       return cache.get('isOffline')
     }
 

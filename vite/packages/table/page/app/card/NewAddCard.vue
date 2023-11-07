@@ -180,15 +180,17 @@ export default {
         cname: '全部',
         children: items
       })
-    // 处理离线模式时隐藏部分功能 卡片部分
-    navList.forEach(li => {
-      if (this.isOffline) {
-        li.children = li.children.filter(ele=>{
-          if (this.offlineList.indexOf(ele.name)<0) {
-            return ele
-          }
-        })
-      }
+      navList.forEach(li => {
+
+        // 离线模式时 隐藏卡片添加
+        if (this.getIsOffline()) {
+          li.children = li.children.filter(ele=>{
+            if (this.offlineList.indexOf(ele.name)<0) {
+              return ele
+            }
+          })
+        }
+
       li.cname = li.cname + `（${li.children.length}）`
     })
 
@@ -266,6 +268,7 @@ export default {
     ...mapActions(marketStore, ['getCategories', 'getDesks', 'getRecommend']),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ['setDeskSize']),
+    ...mapActions(offlineStore, ['getIsOffline']),
     doSearch(){
       if(this.search.keywords===''){
         this.cancelSearch()
