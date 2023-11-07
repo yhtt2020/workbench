@@ -1,14 +1,13 @@
 <template>
   <teleport to='body'>
     <Modal v-if="courierShow" v-model:visible="courierShow" :blurFlag="true" style="z-index:400;">
-      <SmallCourierDetail :list="list" @close="handleClose" />
+      <SmallCourierDetail @close="handleClose" />
     </Modal>
   </teleport>
 </template>
  
 <script>
-import { courierDetailList } from './modalMock'
-import { courierStore } from '../../../../store/courier.ts'
+import { courierStore } from '../../../../store/courier'
 import {mapActions,mapWritableState} from 'pinia'
 import Modal from '../../../Modal.vue';
 import SmallCourierDetail from './content/SmallCourierDetail.vue';
@@ -39,15 +38,12 @@ export default {
 
   },
   computed:{
-    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
     courierShow(){
       return this.show
     }
   },
   async mounted() {
     this.getDbCourier()
-    this.list = await this.courierDetailList
-    // console.log(this.list,'this.list');
   }
 }
 </script>

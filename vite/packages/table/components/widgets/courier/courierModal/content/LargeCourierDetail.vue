@@ -130,6 +130,7 @@ export default {
              centered: true,
              onOk: () => {
               this.removeDbData(this.revID)
+              message.success('删除成功')
              } 
             })
           },

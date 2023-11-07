@@ -51,9 +51,7 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
-import { courierType } from '../modalMock'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
 import { courierStore } from '../../../../../store/courier'
@@ -141,21 +139,10 @@ export default {
       cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
       this.putSortList(cloneTemp)
     },
-
     seeDetail(data,index) {
       this.currentID = index
       this.$emit('rightSelect', data)
     },
-
-    // 根据不同标识进行背景色获取
-    getBgColor(data) {
-      const findItem = courierType.find((item) => {
-        return item.name === data.status
-      })
-      return findItem
-    },
-
-
     stateColor(item) {
       return switchColor(item.State)
     },
@@ -166,7 +153,6 @@ export default {
       return kdCompany(item?.ShipperCode)
     },
   },
-
 };
 </script>
 
