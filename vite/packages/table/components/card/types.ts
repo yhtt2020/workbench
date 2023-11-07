@@ -23,11 +23,11 @@ export interface IOption {
 // 菜单项
 export interface IMenuItem {
   // 标题
-  title: string;
+  title?: string;
   // 函数
-  fn: () => void;
+  fn?: () => void;
   // 图标
-  icon: string;
+  icon?: string;
   // 新图标
   newIcon?: string;
 }

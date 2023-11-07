@@ -15,14 +15,15 @@
           </div>
           <div class="flex justify-end items-center cursor-pointer my-2">
             <xt-button
-              type=""
-              icon="fuzhi"
+              type="2222"
               h="16"
               w="60"
               size="mini"
               :copy="item.content"
               class="xt-text-2"
-              >复制
+            >
+              <xt-base-icon icon="fuzhi" />
+              复制
             </xt-button>
           </div>
         </div>
@@ -36,13 +37,14 @@
         </div>
         <xt-button
           type=""
-          icon="fuzhi"
           h="16"
           w="60"
           size="mini"
           :copy="item.content"
           class="xt-text-2 my-2"
-          >复制
+        >
+          <xt-base-icon icon="fuzhi" />
+          复制
         </xt-button>
       </div>
     </template>

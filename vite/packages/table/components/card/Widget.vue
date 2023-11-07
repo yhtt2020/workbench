@@ -32,9 +32,14 @@
               <Icon :icon="options.icon" class="title-icon"></Icon>
               <div class="flex w-2/3">
                 <slot name="title-text">
-                  <span class="pointer" v-if='options.titleRoute' @click="goRoute">{{ options.title }}</span>
+                  <span
+                    class="pointer"
+                    v-if="options.titleRoute"
+                    @click="goRoute"
+                    >{{ options.title }}</span
+                  >
                   <span v-else>
-                    {{options.title}}
+                    {{ options.title }}
                   </span>
                 </slot>
                 <slot name="left-title" v-if="options.rightIcon">
@@ -45,7 +50,7 @@
               </div>
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
-            <slot name="right-menu"> </slot>
+              <slot name="right-menu"> </slot>
               <RightMenu
                 :menus="menus"
                 :sizes="sizeList"
@@ -211,7 +216,7 @@ export default {
     },
     classes() {
       //默认的对象
-      let defaultClass = {
+      let defaultClass: any = {
         gradient: true,
         "gradient--14": true,
       };
@@ -278,8 +283,7 @@ export default {
             this.$parent.$parent.customIndex ||
             this.$parent.$attrs.customIndex,
           {
-            widgetWidth: this.widgetSize.width,
-            widgetHeight: this.widgetSize.height,
+            widgetSize: this.widgetSize,
           },
           this.desk
         );
@@ -309,8 +313,8 @@ export default {
     hideMenu() {
       this.menuVisible = false;
     },
-    goRoute(){
-      this.$router.push(this.options.titleRoute)
+    goRoute() {
+      this.$router.push(this.options.titleRoute);
     },
   },
 };

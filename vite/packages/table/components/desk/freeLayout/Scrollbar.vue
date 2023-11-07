@@ -39,6 +39,10 @@ onMounted(() => {
   setTimeout(async () => {
     // 初始化自由布局定位
     await redirect();
+
+    let { width, height } = scrollbar.value?.getBoundingClientRect();
+    freeLayoutEnv.value.scrollWidth = width;
+    freeLayoutEnv.value.scrollHeight = height;
     // 监听自由布局滚动事件
     scrollbar.value.addEventListener("ps-scroll-x", () => {
       freeLayoutEnv.value.scrollLeft = scrollbar.value.scrollLeft;
@@ -75,9 +79,31 @@ function redirect() {
 function update() {
   perfectScrollbar.value.update();
 }
+
+// 监听画布缩放情况
+watch(
+  () => getFreeLayoutState.value?.zoom,
+  () => {
+    let { width, height } = scrollbar.value.getBoundingClientRect();
+    let currentWidth =
+      getFreeLayoutState.value.width * getFreeLayoutState.value.zoom;
+    let currentHeight =
+      getFreeLayoutState.value.height * getFreeLayoutState.value.zoom;
+    if (currentWidth < width && getFreeLayoutState.value.width < 10000) {
+      console.log("宽度增加 :>> ", 222);
+      getFreeLayoutState.value.width += 1000;
+    }
+    if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
+      console.log("gao度增加 :>> ", 222);
+      getFreeLayoutState.value.height += 1000;
+    }
+  }
+);
 // 鼠标滚动
 const scrollThreshold = 300; // 边缘滚动阈值
 const scrollAmount = 100; // 每次滚动的距离
+
+// 鼠标拖拽元素 被zoom影响了位置
 
 function handleMouseMove(event) {
   return;
