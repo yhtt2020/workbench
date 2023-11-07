@@ -63,7 +63,7 @@
               <div v-for="(item,index) in detailList" :class="{ 'select': currentID === item.LogisticCode }"
                 class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                 <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                  <div class="w-full flex justify-between">
+                  <div class="flex w-full justify-between">
                     <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                       <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
                     </div>

@@ -1,9 +1,9 @@
 <template>
   <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
-          ref="cardSlot">
+    ref="cardSlot">
     <template #left-title-icon>
       <div class="icon"
-           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
+        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
@@ -24,29 +24,28 @@
 
       <div class="w-full h-0 courier flex-1" style="position:relative;">
         <div v-if="isLoading">
-          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
         <template v-else>
           <div v-if="showWay">
-            <MinEmpty v-if="courierDetailList.length === 0"/>
-            <MinCourierItem v-else :courier="courierDetailList[0]"
-                            @click.stop="viewDeliveryDetails(this.deliveryDetails[0])"></MinCourierItem>
+            <MinEmpty v-if="courierDetailList.length === 0" />
+            <MinCourierItem v-else :courier="courierDetailList[0]" @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+            </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0"/>
+            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                                    style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
+                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                             @click.stop="viewDeliveryDetails(item)"/>
+                  @click.stop="viewDeliveryDetails(item)" />
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
-                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier"
-                >
-                  <newIcon class="text-lg xt-text "
-                           style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;"
-                           icon="fluent:add-16-filled"/>
+                <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
+                  <newIcon class="text-lg "
+                    style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
+                    icon="fluent:add-16-filled" />
                 </xt-button>
               </div>
 
@@ -54,24 +53,26 @@
           </template>
         </template>
         <template v-if="allCourierVisible">
-          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
-          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
+          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
+          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
         </template>
         <teleport to='body'>
-          <Modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title=""
-           :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
-          >
-            <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false"/>
-          </Modal>
+          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+            :isHeader="false" :boxIndex="99" :maskIndex="97">
+            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
+            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
+          </xt-modal>
         </teleport>
       </div>
-
+      <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
     </div>
 
 
   </Widget>
-
-  <AddCourierModal ref="addCourierRef"/>
+  <teleport to='body'>
+    <CourierSetting ref="courierSettingRef" />
+  </teleport>
+  <AddCourierModal ref="addCourierRef" />
 </template>
 
 <script>
@@ -79,7 +80,7 @@ import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-import { message, Modal as antModal ,notification} from 'ant-design-vue'
+import { message, Modal as antModal , notification } from 'ant-design-vue'
 import grab from './grab'
 
 import Modal from '../../Modal.vue'
@@ -92,8 +93,9 @@ import LargeCourierModal from './courierModal/LargeCourierModal.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
-
-
+import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
+import CourierSetting from './courierModal/CourierSetting.vue';
+import _ from 'lodash-es'
 export default {
   name: '我的快递',
   components: {
@@ -107,7 +109,9 @@ export default {
     SmallCourierModal,
     LogisticsDetail,
     AddCourierModal,
-    Modal
+    Modal,
+    CourierSetting,
+    LargeCourierDetail
   },
   props: {
     customIndex: {
@@ -116,13 +120,13 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     desk: {
       type: Object,
     },
   },
-  data () {
+  data() {
     return {
       settingVisible: false,
       sizeList: [
@@ -154,8 +158,8 @@ export default {
       },
       menuList: [
         {
-          newIcon: 'fluent:add-16-filled',
-          title: '添加快递',
+          newIcon: "fluent:add-16-filled",
+          title: "添加快递",
           fn: () => {
             this.$refs.addCourierRef.openCourierModel()
           },
@@ -166,6 +170,11 @@ export default {
           fn: () => {
             this.allCourierVisible = true
           },
+        },
+        {
+          icon: 'shezhi1',
+          title: '设置',
+          fn: () => { this.$refs.courierSettingRef.openSettingModal(); this.$refs.cardSlot.visible = false }
         },
 
       ],
@@ -183,44 +192,54 @@ export default {
       deliveryDetails: [],
       orderNum: [],
       showCourierDetail: false,
-    }
+      showSmallDetail: false,
+      largeDetailVisible: true
+    };
   },
   methods: {
-    ...mapActions(courierStore, ['getDbCourier']),
+    ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers']),
     changeState () {
       this.allCourierVisible = false
     },
-    viewDeliveryDetails (item) {
-      this.showCourierDetail = true
-      this.orderNum = item
-      console.log(this.orderNum)
+    refreshCourier() {
+      // _.debounce(this.refreshCouriers(),1000)
+      this.refreshCouriers()
     },
-    closeCourierDetail () {
+    viewDeliveryDetails(item) {
+      this.showCourierDetail = true;
+      this.orderNum = item;
+      this.viewCourierDetail = item
+      // console.log(this.orderNum);
+    },
+    closeCourierDetail() {
       this.showCourierDetail = false
     },
-    handleResize () {
-      let windoWidth = window.innerWidth
+    handleResize() {
+      let windoWidth = window.innerWidth;
+      // console.log(windoWidth);
       if (windoWidth > 1200) {
-        this.courierShow = true
+        this.largeDetailVisible = true
+        this.courierShow = true;
       } else {
-        this.courierShow = false
+        this.largeDetailVisible = false
+        this.courierShow = false;
       }
     },
-    refreshAll(){
+    refreshAll() {
       message.loading('正在为您更新商城订单')
-      if(this.storeInfo.jd.nickname){
+      if (this.storeInfo.jd.nickname) {
         //京东绑定了
         grab.jd.getOrder()
       }
-      if(this.storeInfo.tb.nickname){
-        grab.tb.getOrder((args)=>{
-          console.log('淘宝结果',args)
-          if(args.status===0 && args.code===401){
+      if (this.storeInfo.tb.nickname) {
+        grab.tb.getOrder((args) => {
+          console.log('淘宝结果', args)
+          if (args.status === 0 && args.code === 401) {
             notification.info({
-              content:'淘宝账号已过期，点击重新绑定。',
-              onClick:()=>{
-                grab.tb.login((args)=>{
-                  console.log(args,'获取到的订单信息')
+              content: '淘宝账号已过期，点击重新绑定。',
+              onClick: () => {
+                grab.tb.login((args) => {
+                  console.log(args, '获取到的订单信息')
                 })
               }
             })
@@ -231,7 +250,8 @@ export default {
       //todo 刷新其他订单
     },
 
-    async getOrderDetail (orders) {
+
+    async getOrderDetail(orders) {
 
       let promises = []
       for (const order of orders) {
@@ -275,40 +295,47 @@ export default {
       console.log('更新后的订单', this.storeInfo.jd.order)
     },
 
-    addCourier () {
+    addCourier() {
       this.$refs.addCourierRef.openCourierModel()
+    },
+    smallDetailsVisible() {
+      this.showSmallDetail = false
+    },
+    backAllCoutiers() {
+      this.showSmallDetail = true,
+      this.showCourierDetail = false
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ['courierMsgList',
-      'courierDetailList',
-      'couriersDetailMsg',
-      'storeInfo',]),
+    ...mapWritableState(courierStore, ["courierMsgList",
+      "courierDetailList",
+      "couriersDetailMsg",
+      "storeInfo", 'viewCourierDetail']),
     // 判断尺寸大小
-    showSize () {
+    showSize() {
       if (this.customData && this.customData.width && this.customData.height) {
         return { width: this.customData.width, height: this.customData.height }
       }
       return this.sizeList[2]
     },
-    showWay () {
+    showWay() {
       if (this.showSize.height === 1) {
         return true
       } else {
         return false
       }
     },
-    courierMsg () {
-      return this.courierMsgList
+    courierMsg() {
+      return this.courierMsgList;
     },
   },
-  async mounted () {
+  async mounted() {
     this.getDbCourier()
-    window.addEventListener('resize', this.handleResize)
+    window.addEventListener("resize", this.handleResize)
   },
 
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize)
   },
 
 }
@@ -316,6 +343,8 @@ export default {
 
 <style lang="scss" scoped>
 .refresh {
+  background-color: var(--primary-bg);
+
   &:hover {
     background-color: var(--secondary-bg);
   }
@@ -334,3 +363,4 @@ export default {
 }
 
 </style>
+
