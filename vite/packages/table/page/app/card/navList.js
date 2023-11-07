@@ -653,7 +653,7 @@ export const NavList = [
         time: "2023/6/5",
       },
       {
-        name: "games",
+        name: "GameEpic",
         cname: "Epic喜加一",
         detail: "查看本周Epic免费游戏，下周神秘游戏预告。",
         sizes: ["2x4"],

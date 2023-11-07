@@ -130,9 +130,14 @@ export default {
     }
 
 
-    ::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb{
+        display: none;
         background-color: #ccc; /* 滚动条颜色 */
         border-radius: 6px; /* 滚动条圆角 */
+    }
+
+    .vditor-content:hover ::-webkit-scrollbar-thumb{
+        display: block;
     }
     
 

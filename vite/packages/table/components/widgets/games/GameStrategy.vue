@@ -104,7 +104,7 @@ export default {
         className: 'card double',
         title: '',
         // icon: 'trophy',
-        rightIcon:'',
+        // rightIcon:'',
         type: 'strategy',
       },
 
