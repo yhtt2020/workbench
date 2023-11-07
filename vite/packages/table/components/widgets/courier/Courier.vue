@@ -36,7 +36,7 @@
             <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
+                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
                 <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
                   @click.stop="viewDeliveryDetails(item)" />
               </vue-custom-scrollbar>
@@ -203,9 +203,6 @@ export default {
       this.allCourierVisible = false
     },
     refreshCourier() {
-      // _.debounce(this.refreshCouriers(),1000)
-      const newDate = new Date(); // 获取新的日期和时间
-      this.$set(this, 'dateNow', newDate); // 更新dateNow属性的值
       this.refreshCouriers()
     },
     viewDeliveryDetails(item) {
@@ -229,6 +226,8 @@ export default {
       }
     },
     refreshAll() {
+      // 快递鸟快递信息更新
+      this.refreshCouriers()
       message.loading('正在为您更新商城订单')
       if (this.storeInfo.jd.nickname) {
         //京东绑定了
@@ -360,6 +359,16 @@ export default {
 //     // background-color: var(--secondary-bg);
 //   }
 // }
+.courier-item{
+  &::after{
+        content:'';
+        width: 100%;
+        height: 1px;
+        background-color: var(--divider);
+        margin-top: 6px;
+    }
+}
+
 
 .courier {
   .add-courier {

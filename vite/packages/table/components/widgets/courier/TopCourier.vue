@@ -20,26 +20,31 @@
                     <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
-                        <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;" @click="refreshCourier">
+                        <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;"
+                            @click="refreshCourier">
                             <div class="flex items-center justify-center">
-                                <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                                <newIcon icon="fluent:arrow-counterclockwise-20-filled"
+                                    style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
                             </div>
-                            
+
                         </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
                         <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
                             @click="openCourierSetting">
                             <div class="flex items-center justify-center">
-                                <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                                <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;">
+                                </newIcon>
                             </div>
-                            
+
                         </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;" @click="showTopCourier">
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
+                            @click="showTopCourier">
                             <div class="flex items-center justify-center">
-                                <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                                <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;font-size: 1.25rem;">
+                                </newIcon>
                             </div>
-                            
+
                         </xt-button></a-tooltip>
                 </div>
             </div>
@@ -62,12 +67,12 @@
         style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
         @click="showTopCourier">
         <div class="flex items-center justify-between">
-           <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
-        <span
-            style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-                allCouriers }}</span> 
+            <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
+            <span
+                style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
+                    allCouriers }}</span>
         </div>
-        
+
     </xt-button>
     <teleport to='body'>
         <AddCourierModal ref="addCourierRef" />
@@ -102,7 +107,8 @@ import CourierSetting from './courierModal/CourierSetting.vue';
 import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue';
-
+import { message, Modal as antModal , notification } from 'ant-design-vue'
+import grab from "./grab";
 export default {
     name: '我的快递',
     components: {
@@ -171,7 +177,7 @@ export default {
                     }
                 },
             ],
-            defaultType:'',
+            defaultType: '',
         }
     },
     methods: {
@@ -208,7 +214,32 @@ export default {
         },
         refreshCourier() {
             // console.log(this.storeInfo.jd.order.orders.length)
-            this.refreshCouriers()
+            // refreshAll() {
+                // 快递鸟快递信息更新
+                this.refreshCouriers()
+                message.loading('正在为您更新商城订单')
+                if (this.storeInfo.jd.nickname) {
+                    //京东绑定了
+                    grab.jd.getOrder()
+                }
+                if (this.storeInfo.tb.nickname) {
+                    grab.tb.getOrder((args) => {
+                        console.log('淘宝结果', args)
+                        if (args.status === 0 && args.code === 401) {
+                            notification.info({
+                                content: '淘宝账号已过期，点击重新绑定。',
+                                onClick: () => {
+                                    grab.tb.login((args) => {
+                                        console.log(args, '获取到的订单信息')
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    //淘宝绑定了
+                }
+                //todo 刷新其他订单
+            // },
         },
 
         //打开设置
@@ -237,30 +268,30 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg','storeInfo']),
+        ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg', 'storeInfo']),
         ...mapWritableState(appStore, ['settings']),
-        filterType(){
-            const allLength=this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
-            const jdLength=this.storeInfo.jd.order.orders
-            const tbLength=this.storeInfo.tb.order.orders
-            const list=[...this.typeList]
-            const filterList=list.map((item)=>{
-                switch(item.type){
+        filterType() {
+            const allLength = this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
+            const jdLength = this.storeInfo.jd.order.orders
+            const tbLength = this.storeInfo.tb.order.orders
+            const list = [...this.typeList]
+            const filterList = list.map((item) => {
+                switch (item.type) {
                     case 'all':
                         return {
-                            title: `${item.title}${allLength!==0?`(${allLength})`:''}`,
+                            title: `${item.title}${allLength !== 0 ? `(${allLength})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
                     case 'JD':
                         return {
-                            title: `${item.title}${jdLength.length!==0?`(${jdLength.length})`:''}`,
+                            title: `${item.title}${jdLength.length !== 0 ? `(${jdLength.length})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
                     case 'TB':
                         return {
-                            title: `${item.title}${tbLength.length!==0?`(${tbLength.length})`:''}`,
+                            title: `${item.title}${tbLength.length !== 0 ? `(${tbLength.length})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
@@ -268,14 +299,14 @@ export default {
             })
             return filterList
         },
-        currentType(){
+        currentType() {
             return {
                 title: `全部  (${this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length})`,
                 name: "全部",
                 type: 'all'
             }
         },
-        allCouriers(){
+        allCouriers() {
             return this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
         }
 
@@ -284,10 +315,10 @@ export default {
         this.getDbCourier()
         window.addEventListener("resize", this.handleResize)
         setTimeout(() => {
-            this.defaultType=this.currentType
+            this.defaultType = this.currentType
         }, 2000);
-        
-        
+
+
     },
     beforeDestroy() {
         window.addEventListener("resize", this.handleResize)

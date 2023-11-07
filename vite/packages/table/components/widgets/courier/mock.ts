@@ -176,7 +176,7 @@ export function kdState(state:any){
             return "待取件";
             break;
         case '301':
-            return '正常签收'
+            return '签收'
             break;
         case '302':
             return '派件异常后最终签收'

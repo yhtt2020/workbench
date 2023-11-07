@@ -54,6 +54,7 @@
 
 
     </div>
+    <!-- <a-divider style="height: 1px; background-color: var(--divider)" /> -->
 </template>
 
 <script setup>
@@ -122,12 +123,14 @@ lastTraces.value = newTraces.value
     &:hover {
         background-color: var(--active-secondary-bg);
     }
-    &::after{
-        content:''
-        // width: 100%;
-        // height: 1px;
-        // background-color: var(--divider);
-    }
+    // &::after{
+    //     content: '';
+    //     display: block;
+    //     width: 100%;
+    //     height: 1px;
+    //     background-color: var(--divider);
+    // }
+    
 }
 
 .commerce {
