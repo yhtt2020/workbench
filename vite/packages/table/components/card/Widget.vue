@@ -80,7 +80,7 @@ export default {
     MenuOutlined,
     MyIcon,
     RightMenu,
-    PageState
+    PageState,
     Drop,
   },
   name: "Widget",
