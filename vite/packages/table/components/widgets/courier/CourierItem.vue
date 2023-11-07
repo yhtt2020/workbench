@@ -118,9 +118,15 @@ lastTraces.value = newTraces.value
     border-radius: 12px;
     padding: 12px;
     transform: all 0.3s;
-    border-bottom: 1px solid var(--divider);
+    // border-bottom: 1px solid var(--divider);
     &:hover {
         background-color: var(--active-secondary-bg);
+    }
+    &::after{
+        content:''
+        // width: 100%;
+        // height: 1px;
+        // background-color: var(--divider);
     }
 }
 

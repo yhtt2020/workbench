@@ -12,10 +12,13 @@
         <div>快递筛选</div>
         <div style="position: absolute;right: 10px;top: 0px;" @click="refreshAll" class="flex pointer"
           v-if="courierDetailList.length > 0">
-          <div class="mr-2">2023-11-03 11:11更新</div>
+          <div class="mr-2">{{ formattedDate }}更新</div>
           <xt-button :w="22" :h="22">
-            <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+            <div class="flex items-center justify-center"> 
+              <newIcon class="xt-text refresh" style=" font-size: 18px;"
               icon="akar-icons:arrow-clockwise" />
+            </div>
+            
           </xt-button>
         </div>
       </div>
@@ -194,7 +197,8 @@ export default {
       orderNum: [],
       showCourierDetail: false,
       showSmallDetail: false,
-      largeDetailVisible: true
+      largeDetailVisible: true,
+      dateNow: new Date(),
     };
   },
   methods: {
@@ -202,6 +206,8 @@ export default {
       'getDbCourier', 'refreshCouriers']),
     refreshCourier() {
       // _.debounce(this.refreshCouriers(),1000)
+      const newDate = new Date(); // 获取新的日期和时间
+      this.$set(this, 'dateNow', newDate); // 更新dateNow属性的值
       this.refreshCouriers()
     },
     // changeState() {
@@ -452,6 +458,14 @@ export default {
     courierMsg() {
       return this.courierMsgList;
     },
+    formattedDate() {
+      const year = this.dateNow.getFullYear();
+      const month = String(this.dateNow.getMonth() + 1).padStart(2, '0');
+      const day = String(this.dateNow.getDate()).padStart(2, '0');
+      const hours = String(this.dateNow.getHours()).padStart(2, '0');
+      const minutes = String(this.dateNow.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
   },
   async mounted() {
     // this.isLoading = true;
@@ -484,13 +498,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.refresh {
-  background-color: var(--primary-bg);
+// .refresh {
+//   // background-color: var(--primary-bg);
 
-  &:hover {
-    background-color: var(--secondary-bg);
-  }
-}
+//   &:hover {
+//     // background-color: var(--secondary-bg);
+//   }
+// }
 
 .courier {
   .add-courier {

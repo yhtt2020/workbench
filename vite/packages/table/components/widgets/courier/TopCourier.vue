@@ -61,10 +61,13 @@
     <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length > 0"
         style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
         @click="showTopCourier">
-        <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
+        <div class="flex items-center justify-between">
+           <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
         <span
             style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-                courierDetailList.length }}</span>
+                allCouriers }}</span> 
+        </div>
+        
     </xt-button>
     <teleport to='body'>
         <AddCourierModal ref="addCourierRef" />
@@ -237,7 +240,7 @@ export default {
         ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg','storeInfo']),
         ...mapWritableState(appStore, ['settings']),
         filterType(){
-            const allLength=this.courierDetailList.length
+            const allLength=this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
             const jdLength=this.storeInfo.jd.order.orders
             const tbLength=this.storeInfo.tb.order.orders
             const list=[...this.typeList]
@@ -267,17 +270,23 @@ export default {
         },
         currentType(){
             return {
-                title: `全部  (${this.courierDetailList.length})`,
+                title: `全部  (${this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length})`,
                 name: "全部",
                 type: 'all'
             }
+        },
+        allCouriers(){
+            return this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
         }
 
     },
     mounted() {
         this.getDbCourier()
         window.addEventListener("resize", this.handleResize)
-        this.defaultType=this.currentType
+        setTimeout(() => {
+            this.defaultType=this.currentType
+        }, 2000);
+        
         
     },
     beforeDestroy() {
