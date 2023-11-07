@@ -37,8 +37,11 @@
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
-                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                  @click.stop="viewDeliveryDetails(item)" />
+                <div v-for="(item, index) in courierDetailList">
+                  <CourierItem  :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
+                  <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
+                </div>
+                
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
@@ -368,7 +371,12 @@ export default {
         margin-top: 6px;
     }
 }
-
+.divider{
+    width: 100%;
+    height: 1px;
+    background-color: var(--divider);
+    margin-top: 6px;
+}
 
 .courier {
   .add-courier {
