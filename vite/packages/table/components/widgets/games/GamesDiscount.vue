@@ -1,6 +1,6 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
-                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk">
+                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk" :env="env">
     <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;color:var(--primary-text)">{{ region.name }}
     </div>
@@ -164,7 +164,13 @@ export default {
           this.$refs.regionDrawer.detailDisplay = true;
           this.$refs.gameSlot.visible = false
         }
-      }]
+      }],
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline: false,
+      }
     }
   },
   computed: {

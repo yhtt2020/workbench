@@ -1,6 +1,7 @@
 /**
  * @returns 当前所属环境
  */
+ import cache from "../../components/card/hooks/cache";
 const getCurrentEnv = () => {
   const userAgent = navigator.userAgent;
   if (
@@ -36,15 +37,17 @@ const currentEnv = getCurrentEnv();
 const isWeb = getWebEnv();
 const isClient = getClientEnv();
 const isMac = getMacEnv();
+const isOffline = cache.get('isOffline')
 
 export default currentEnv;
 
-export { isWeb, isClient, isMac };
+export { isWeb, isClient, isMac, isOffline };
 
 
 module.exports = {
   currentEnv,
   isWeb,
   isClient,
-  isMac
+  isMac,
+  isOffline,
 };
