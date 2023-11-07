@@ -91,13 +91,13 @@ export const switchColor=(state)=>{
             return '#FA7B14';
             break;
         case "4":
-            return '#52C41A';
+            return '#FF4D4F ';
             break;
         case "5":
-            return '#508BFE';
+            return '#FF4D4F ';
             break;
         case "6":
-            return '#508BFE';
+            return '#FF4D4F ';
             break;
 
         default:

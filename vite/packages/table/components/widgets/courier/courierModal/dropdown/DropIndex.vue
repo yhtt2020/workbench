@@ -12,7 +12,7 @@
   </a-tooltip> 
   
   <template #overlay>
-   <a-menu class="flex flex-col" style="width: 200px;border-radius: 8px; padding: 8px;">
+   <a-menu class="flex flex-col xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
     <!--  @click="selectNav(item)" -->
     <a-menu-item v-for="item in navList" class="flex flex-col w-full rounded-lg xt-text nav-item"
      @click.prevent="item.callBack"
