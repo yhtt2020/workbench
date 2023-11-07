@@ -62,7 +62,7 @@
         </template>
         <teleport to='body'>
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="99" :maskIndex="97">
+            :isHeader="false" :boxIndex="100" :maskIndex="99">
             <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
             <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
           </xt-modal>

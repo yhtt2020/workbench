@@ -20,18 +20,26 @@
                     <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
-                        <xt-button :w="32" :h="32" class=" xt-bg" style="border-radius: 8px;" @click="refreshCourier">
-                            <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
+                        <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;" @click="refreshCourier">
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                            </div>
+                            
                         </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
                             @click="openCourierSetting">
-                            <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;"></newIcon>
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                            </div>
+                            
                         </xt-button></a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="showTopCourier">
-                            <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;padding-bottom: 2px;">
-                            </newIcon>
+                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;" @click="showTopCourier">
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
+                            </div>
+                            
                         </xt-button></a-tooltip>
                 </div>
             </div>
@@ -63,7 +71,7 @@
     </teleport>
     <teleport to='body'>
         <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="99" :maskIndex="98">
+            :isHeader="false" :boxIndex="100" :maskIndex="99">
             <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
             <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
         </xt-modal>
