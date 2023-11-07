@@ -1,7 +1,6 @@
 <template>
   <teleport to='body'>
-    <Modal v-if="courierShow" v-model:visible="courierShow" :blurFlag="true">
-      <!-- {{ list }} -->
+    <Modal v-if="courierShow" v-model:visible="courierShow" :blurFlag="true" style="z-index:400;">
       <SmallCourierDetail :list="list" @close="handleClose" />
     </Modal>
   </teleport>
@@ -21,7 +20,7 @@ export default {
 
   data() {
     return {
-      // courierShow: true,
+      courierShow: false,
       list: [],
     }
   },
@@ -48,7 +47,7 @@ export default {
   async mounted() {
     this.getDbCourier()
     this.list = await this.courierDetailList
-    console.log(this.list,'this.list');
+    // console.log(this.list,'this.list');
   }
 }
 </script>

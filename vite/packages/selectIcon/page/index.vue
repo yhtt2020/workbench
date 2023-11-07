@@ -172,7 +172,7 @@
     },
     mounted(){
       this.topHeight = document.getElementById('selectIcon').getBoundingClientRect().top;
-      console.log(111111111111);
+      // console.log(111111111111);
     },
     
     methods: {

@@ -17,7 +17,7 @@
         placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
        />
       
-       <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
+       <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'|| item.code === 'CNCY'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
       
        <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
        style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
