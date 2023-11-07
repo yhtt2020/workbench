@@ -19,14 +19,14 @@
     >
      <div class="flex " v-if="item.name === 'tb'">
       <div class="flex justify-center w-5 h-5 rounded-md xt-font font-14 font-500 items-enter" style="background:#FA5000;line-height: 20px;color:var(--active-text);">淘</div>
-      <span class="ml-3"  :style="storeInfo.tb.nickname !== null ? {color:'rgba(255,255,255,0.40) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
-      <span class="ml-4" v-if="storeInfo.tb.nickname !== null" style="color:rgba(255,255,255,0.40) !important;">已关联</span>
+      <span class="ml-3"  :style="storeInfo.tb.nickname !== null ? {color:'var(--secondary-text) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
+      <span class="ml-4" v-if="storeInfo.tb.nickname !== null" style="color:var(--secondary-text) !important;">已关联</span>
       <span class="ml-4" v-else style="color:var(--active-bg) !important;" @click="toTbRelevance">未关联</span>
      </div>
      <div class="flex " v-if="item.name === 'jd'">
       <div class="flex justify-center w-5 h-5 rounded-md xt-font font-14 font-500 items-enter" style="background:#E12419;line-height: 20px;color:var(--active-text);">JD</div>
-      <span class="ml-3" :style="storeInfo.jd.nickname !== null ? {color:'rgba(255,255,255,0.40) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
-      <span class="ml-4" v-if="storeInfo.jd.nickname !== null" style="color:rgba(255,255,255,0.40) !important;">已关联</span>
+      <span class="ml-3" :style="storeInfo.jd.nickname !== null ? {color:'var(--secondary-text) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
+      <span class="ml-4" v-if="storeInfo.jd.nickname !== null" style="color:var(--secondary-text) !important;">已关联</span>
       <span class="ml-4" v-else style="color:var(--active-bg) !important;" @click="toJdRelevance">未关联</span>
      </div>
 
