@@ -1,5 +1,5 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" :env="env">
 
         <!-- icon图标<icon icon="shuaxin"></icon> -->
         <MyIcon icon="fluent:games-16-filled" class="myIcon" />
@@ -33,6 +33,7 @@ import { message } from 'ant-design-vue'
 import {getGameInfo} from "../../../store/gameInfomation"
 import browser from '../../../js/common/browser'
 export default {
+    name:'gameInformation',
     components:{
         Widget,
         MyIcon
@@ -63,10 +64,17 @@ export default {
                 className: "card double",
                 title: "电竞资讯",
                 // icon: "bianji",
-                icon: "",
+                newIcon: "fluent:games-16-filled",
+                type: 'gameInformation'
                 // icon: "games-16-filled",
             },
             gameData:[],
+            env:{
+                web: false,
+                mobile: false,
+                client: false,
+                offline:true
+            }
         };
     },
     async mounted() {

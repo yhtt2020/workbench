@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-col justify-center items-center flex-1" v-if="false">
-
+  <div class="flex flex-col justify-center items-center flex-1" style="height:90%" v-if="isShow">
     <Icon icon="fluent-emoji:sleeping-face" width="56" height="56" />
-    <div>功能在{{ platform }}端无法使用</div>
+    <div class="mt-4">功能在{{ platform }}无法使用</div>
   </div>
   <slot v-else></slot>
 </template>
@@ -12,46 +11,43 @@ import { ref, defineProps, computed } from 'vue';
 import { Icon } from "@iconify/vue";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
-import {offlineStore} from '../../js/common/offline' 
-import { mapActions, mapWritableState } from 'pinia'
 const props = defineProps({
   env:{
     type:Object,
     default:{},
   }
 })
-const offline = offlineStore()
-const offlineList = storeToRefs(offline).offlineList
 onMounted(()=>{
-  // console.log('props.env');
-  // console.log(props.env);
+
 })
 
-const isOff = computed(() => {
+const isShow = computed(() => {
+  console.log(window.$currentEnv);
+  // console.log( props.env[window.$currentEnv]);
+  // console.log(props.env.offline);
+  // props.env[window.$currentEnv]
+  // props.env.offline
   // if (window.$isOffline) {
   //   console.log(offlineList);
   //   console.log(offlineList.value);
   //   console.log(props);
   //   console.log(offlineList.value.indexOf(props.title));
   // }
-  return window.$isOffline && offlineList.value.indexOf(props.title)
+  return props.env[window.$currentEnv] || (props.env.offline && window.$isOffline)
 });
 
 const platform = computed(()=>{
-  if (window.$isOffline) {
+  if (props.env.offline && window.$isOffline) {
     return '离线模式'
-  }else if(window.$isWeb){
+  }else if(props.env[window.$currentEnv] && window.$currentEnv=='web'){
     return 'web端'
+  }else if(props.env[window.$currentEnv] && window.$currentEnv=='mobile'){
+    return '移动端'
+  }else if(props.env[window.$currentEnv] && window.$currentEnv=='client'){
+    return '客户端'
   }
-  // return 
+  return 
 })
-// const 
-// })
-// onMounted(()=>{
-//   console.log('this');
-//   console.log(cache.get('isOffline'));
-// })
-// const 
 
 </script>
 

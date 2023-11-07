@@ -1,5 +1,6 @@
 <template>
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk"
+    :env="env">
         <div class="icon" @click="onHistoryMessage">
             <CalendarOutlined style="width:20px;height:20px;" />
         </div>
@@ -54,6 +55,12 @@ export default {
                 tetle:""
             },
             timer:"12",
+            env:{
+                web: false,
+                mobile: false,
+                client: false,
+                offline:true
+            }
         };
     },
     async mounted() {

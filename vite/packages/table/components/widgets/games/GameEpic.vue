@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex" :desk="desk">
+  <Widget :options="options" :customIndex="customIndex" :desk="desk" :env="env">
     <HorizontalPanel style="min-width: 100%" :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
@@ -82,6 +82,12 @@ export default {
       detailList: {},
       detailShow: false,
       simpleImage: '/public/img/test/not-data.png', // 空状态
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     }
   },
   computed: {

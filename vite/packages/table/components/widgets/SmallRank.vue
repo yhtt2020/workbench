@@ -5,6 +5,7 @@
   :customData="customData"
   :desk="desk" 
   ref="rankingSmallSlot" 
+  :env="env"
   :menuList="toggleRankingList">
   <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
     style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankIndex].title }}
@@ -99,7 +100,13 @@ export default {
         {title:'累计签到榜',name:'accrue'},
         {title:'连续签到榜',name:'series'},
       ],
-      rankIndex: 0
+      rankIndex: 0,
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     }
   },
   mounted() {

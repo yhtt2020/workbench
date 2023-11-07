@@ -1,5 +1,5 @@
 <template>
-    <Widget :desk="desk" :options="options" v-if="!detailToggle">
+    <Widget :desk="desk" :options="options" v-if="!detailToggle" :env="env">
       <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div v-if="isLoading">
@@ -71,6 +71,12 @@
         detailId: -1,
         isLoading: false,
         pageToggle: true,
+        env:{
+          web: false,
+          mobile: false,
+          client: false,
+          offline:true
+        }
       };
     },
     computed: {
