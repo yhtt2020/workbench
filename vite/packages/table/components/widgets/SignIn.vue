@@ -1,12 +1,20 @@
 <template>
   <Widget :options="options" :desk="desk" :showRightIcon='rightIcon'>
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:calendar-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
     <div></div>
 <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
 <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
 <!--      活动说明-->
 <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between s-item p-4 rounded-lg xt-bg-2 xt-text"
+      <div class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
            style="margin-top: 1em;">
         <div>
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
@@ -22,14 +30,14 @@
       </div>
       <HorizontalPanel style="min-width: 100%" :navList="signInTitle" v-model:selectType="signInType" :height="44"
                        class="mt-3 mb-2"></HorizontalPanel>
-      <div v-if="signInType.name === 'today'" class="flex flex-col overflow content-box pt-1 ">
+      <div v-if="signInType.name === 'today'" class="flex flex-col pt-1 overflow content-box ">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
-        <div v-if="!todayRank.length" class="not-sign h-full flex justify-center items-center ">还没有人签到，快来抢第一
+        <div v-if="!todayRank.length" class="flex items-center justify-center h-full not-sign ">还没有人签到，快来抢第一
         </div>
         <div v-else v-for="item in todayRank.slice(0,5)" :key="item.id"
-             class="w-full flex items-center rounded-lg justify-between pointer set-type" style="margin: 6px 0 6px;">
+             class="flex items-center justify-between w-full rounded-lg pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
-          <div class="flex-1 flex ml-3 items-center" style="width: 60px">
+          <div class="flex items-center flex-1 ml-3" style="width: 60px">
             <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar" :frame-url="item.equippedItems?.frameDetail?.image">
               <template #icon>
                 <UserOutlined/>
@@ -44,13 +52,13 @@
         </div>
         <!-- </vue-custom-scrollbar> -->
       </div>
-      <div v-else class="flex flex-col overflow content-box pt-1">
+      <div v-else class="flex flex-col pt-1 overflow content-box">
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
         <!--        <div v-for="item in accrueList" :key="item.id"-->
-        <!--             class="w-full flex items-center rounded-lg justify-between pointer mt-3 set-type"-->
+        <!--             class="flex items-center justify-between w-full mt-3 rounded-lg pointer set-type"-->
         <!--             style="margin: 6px 0 6px;">-->
         <!--          <span class="ranking">{{ item.id }}</span>-->
-        <!--          <div class="flex-1 flex ml-3 items-center">-->
+        <!--          <div class="flex items-center flex-1 ml-3">-->
         <!--            <a-avatar>-->
         <!--              <template #icon>-->
         <!--                <UserOutlined/>-->
@@ -62,7 +70,7 @@
         <!--          </div>-->
         <!--          <div style="color: rgba(255,255,255,0.60);font-size: 16px;">{{ item.accumulate }}</div>-->
         <!--        </div>-->
-        <div class="text-center py-5">暂未开放，敬请期待</div>
+        <div class="py-5 text-center">暂未开放，敬请期待</div>
         <!-- </vue-custom-scrollbar> -->
       </div>
       <div class="integral-modal s-bg" v-if="toggleModal">
@@ -71,25 +79,25 @@
       </div>
     </template>
     <template v-else>
-      <div v-if="false " class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+      <div v-if="false " class="rounded-lg s-item" style="margin-top: 1em;padding: 10px 12px 15px;">
         <span class="text-style" style="color: var(--primary-text);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
         <div class="mt-1" style="color: var(--secondary-text);font-size: 14px;">今日已为{{
             completeLikes.length
           }}位社区新人点赞
         </div>
       </div>
-      <div v-else class="s-item rounded-lg" style="margin-top: 1em;padding: 10px 12px 15px;">
+      <div v-else class="rounded-lg s-item" style="margin-top: 1em;padding: 10px 12px 15px;">
         <span class="text-style"
               style="color: rgba(255,255,255,0.85);font-size: 14px;">今日新注册用户：  {{ total }} 人</span>
       </div>
       <div class="mt-3" style="height:235px; overflow:hidden;">
-        <!--        <div class="text-center mb-1" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>-->
+        <!--        <div class="mb-1 text-center" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>-->
         <div class="head-list">
-          <div v-for="item in newPeopleList" class=" w-14  flex justify-center items-center pointer flex-col"
+          <div v-for="item in newPeopleList" class="flex flex-col items-center justify-center w-14 pointer"
                :key="item.id"
                style="margin:8px 14px;border-radius: 50%;" @click="showCard(item.uid,item.userInfo)"
                @contextmenu.stop="showCard(item.uid,item.userInfo)">
-            <div class="mb-2 mt-2">
+            <div class="mt-2 mb-2">
               <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.userInfo.avatar"/>
             </div>
             <div>
@@ -100,10 +108,10 @@
       </div>
       <div class="flex items-center justify-around">
         <div @click="signInBack"
-             class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
+             class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change">
           <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
         </div>
-        <span @click="popUsers" class="change pointer rounded-lg s-item  flex items-center justify-center"
+        <span @click="popUsers" class="flex items-center justify-center rounded-lg change pointer s-item"
               style="padding:13px 55px;color: var(--primary-text);"
         >
           <icon style="font-size: 20px" icon="shuaxin" class="mr-2"></icon>   换一换
@@ -123,14 +131,15 @@ import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
-
+import {Icon as newIcon} from '@iconify/vue'
 export default {
   name: 'SingIn',
   components: {
     FrameAvatar,
     Widget,
     HorizontalPanel,
-    UserOutlined
+    UserOutlined,
+    newIcon
   },
   props: ['desk', 'rightIcon'],
   data () {
@@ -138,7 +147,7 @@ export default {
       options: {
         className: 'card',
         title: '签到',
-        icon: 'star',
+        // icon: 'star',
         type: 'signIn'
       },
       signInTitle: [{ title: '今日已签', name: 'today' },

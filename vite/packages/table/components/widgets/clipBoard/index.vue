@@ -3,16 +3,17 @@
 
         <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
         <div class="icon-topline">
-            <pushpin-outlined></pushpin-outlined>
+            <!-- <pushpin-outlined></pushpin-outlined> -->
+            <newIcon icon="fluent:clipboard-bullet-list-16-regular" style="font-size: 20px;"/>
         </div>
         <div class="top-col">
             <div class="col-left">
-                <span class="flex-1 h-full nav-item flex justify-center items-center relative pointer span-flex"  :class="['item', { action: actionIndex == 1 }]" @click="onChangeTopIndex(1)">
+                <span class="relative flex items-center justify-center flex-1 h-full nav-item pointer span-flex"  :class="['item', { action: actionIndex == 1 }]" @click="onChangeTopIndex(1)">
                     <div class="span-icon">
                         <clock-circle-outlined />
                     </div>
                     剪贴板历史</span>
-                <span class="flex-1 h-full nav-item flex justify-center items-center relative pointer span-flex"  :class="['item', { action: actionIndex == 2 }]" @click="onChangeTopIndex(2)">
+                <span class="relative flex items-center justify-center flex-1 h-full nav-item pointer span-flex"  :class="['item', { action: actionIndex == 2 }]" @click="onChangeTopIndex(2)">
                     <div class="span-icon">
                         <star-outlined />
                     </div>
@@ -57,14 +58,14 @@
                     <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;width: 100%" class="">
                         <div class="row-body">
                             <a-row  class="row-col" >
-                                <a-col class="text-left pt-2 mr-2" :span="3">
+                                <a-col class="pt-2 mr-2 text-left" :span="3">
                                     <file-outlined style="font-size: 24px" />
                                 </a-col>
                                 <a-col>
-                                    <div class="font-bold font-14 text-left">
+                                    <div class="font-bold text-left font-14">
                                         {{ item.title }}
                                     </div>
-                                    <div :title="file" class="xt-text-2 font-12 truncate">
+                                    <div :title="file" class="truncate xt-text-2 font-12">
                                         {{ item.content }}
                                     </div>
                                 </a-col>
@@ -107,7 +108,7 @@
 
         <span v-for="(item, index) in todoList" :key="index"
         :class="selectTodo.id === item.id ? 'active-index':''"
-        class="span-list mb-4 text-center pointer h-12 xt-bg-2 rounded-lg py-3"
+        class="h-12 py-3 mb-4 text-center rounded-lg span-list pointer xt-bg-2"
         @click="onChangeTodo(item.id)">
         <component :is= "item.icon" class="mr-1"/>
         {{ item.title }}</span>
@@ -130,7 +131,7 @@ import ClipAudio from "./ClipAudio.vue"
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 // 导入剪贴板测试数据
 import { fileList, videoList, audioList }  from "../../../js/data/clipboardData"
-
+import {Icon as newIcon} from '@iconify/vue'
 export default {
     components:{
         Widget,
@@ -147,6 +148,7 @@ export default {
         ClipVideo,
         ClipAudio,
         VueCustomScrollbar,
+        newIcon
 
     },
     props: {
