@@ -1,7 +1,7 @@
 <template>
   <template v-if="!detailVisible">
     <div class="flex flex-col" style="width: 500px; height: 600px">
-      <div  class="flex items-center mb-4 justify-center h-16" style="position: relative">
+      <div  class="flex items-center justify-center h-16 mb-4" style="position: relative">
         <TopDrop :navList="typeList" v-model:selectType="currentType" />
         <div class="flex top-right">
           <DropIndex :navList="addList" />

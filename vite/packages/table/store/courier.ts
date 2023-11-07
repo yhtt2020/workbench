@@ -26,7 +26,9 @@ export const courierStore = defineStore("courier", {
       },
         courierMsgList: [],
         courierDetailList: [],
-        couriersDetailMsg:[]
+        couriersDetailMsg:[],
+        // 大尺寸下查看内容详情，传递快递单号
+        viewCourierDetail:''
     }),
     actions: {
         // addCourierEvent(event){
@@ -61,7 +63,7 @@ export const courierStore = defineStore("courier", {
             createTime:Date.now(),
             updateTime:Date.now()
           }
-          //console.log('查看db存储的数据',dbData);
+          console.log('查看db存储的数据',dbData);
           await tsbApi.db.put(dbData)
           // const res  = await tsbApi.db.put(dbData)
           // console.log('查看结果',res);
@@ -100,8 +102,92 @@ export const courierStore = defineStore("courier", {
           // console.log('查看删除结果',res);
           this.getDbCourier()
         },
-        refreshCouriers(){
+
+        // 刷新快递信息
+        // async refreshCouriers(){
+        //   if(this.courierDetailList.length>0){
+        //     let data=this.courierDetailList.map((item)=>{
+        //       return {code:item.ShipperCode,order:item.LogisticCode,customerName:item.customerName?item.customerName:''}
+        //     })
+        //     console.log(data);
+        //     data.forEach(async(item,index)=>{
+        //         // await this.putCourierInfo(item.code,item.order,item.customerName)
+        //         // console.log('删除的索引',index,item);
+        //         // await this.removeDbData(index)
+
+        //         let res=await post(kdniao,{
+        //           shipperCode:item.code,
+        //           logisticCode: item.order,
+        //           customerName:item.customerName
+        //         })
+        //         const getResult  = await tsbApi.db.allDocs('courier:')
+        //         const rowList = getResult.rows
+        //         // 将getResult.rows列表的doc进行解构
+        //         const docList = rowList.map((item:any)=>{ return item.doc }) 
+        //         console.log(docList,'老数据');
+                
+        //         let newMsg=docList.filter((item)=>{
+        //           if(item.content.ShipperCode===res.ShipperCode && item.content.LogisticCode === res.LogisticCode){
+        //               return res
+        //           }
+        //         })
+                
+        //         console.log(JSON.stringify(newMsg))
+        //         await tsbApi.db.put(JSON.stringify(newMsg))
+        //         // const res  = await tsbApi.db.put(dbData)
+        //         // console.log('查看结果',res);
+        //         this.getDbCourier();
+        //         // console.log(newMsg)
+        //     })
+        //     // for(let i=0;i<data.length;i++){
+        //     //   this.putCourierInfo(data[i].code,data[i].order,data[i].customerName)
+        //     //   // console.log(i)
+        //     //   this.removeDbData(i)
+        //     // }
+            
           
+            
+        //   }
+          
+        // }
+        async refreshCouriers() {
+          if (this.courierDetailList.length > 0) {
+            let data = this.courierDetailList.map((item) => {
+              return {
+                code: item.ShipperCode,
+                order: item.LogisticCode,
+                customerName: item.customerName ? item.customerName : '',
+              };
+            });
+        
+            data.forEach(async (item, index) => {
+              let res = await post(kdniao, {
+                shipperCode: item.code,
+                logisticCode: item.order,
+                customerName: item.customerName,
+              });
+        
+              const getResult = await tsbApi.db.allDocs('courier:');
+              const rowList = getResult.rows;
+              const docList = rowList.map((item) => item.doc);
+              // console.log(docList);
+              
+              let newMsg = docList.filter((doc) => {
+                return doc.content.ShipperCode === res.ShipperCode && doc.content.LogisticCode === res.LogisticCode;
+              });
+              // console.log(newMsg[0].content,'newM');
+              
+              if (newMsg.length > 0) {
+                // let changeRes='hhhh'
+                // res.ShipperCode='SF'
+                newMsg[0].content = res; // 更新 content 属性
+                // console.log(newMsg[0].content,'New')
+                await tsbApi.db.put(newMsg[0]); // 更新文档
+              }
+        
+              this.getDbCourier();
+            });
+          }
         }
         
 
