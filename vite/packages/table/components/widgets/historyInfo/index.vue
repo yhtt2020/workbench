@@ -1,8 +1,18 @@
 <template>
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
-        <div class="icon" @click="onHistoryMessage">
+    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk"
+    :env="env">
+        <template #left-title-icon>
+            <div class="icon"
+                style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 3px;top: 13px;">
+                <Icon icon="ant-design:calendar-outlined" width="20" height="20" />
+                <!-- <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon> -->
+            </div>
+        </template>
+        <!-- <div class="icon" @click="onHistoryMessage">
             <CalendarOutlined style="width:20px;height:20px;" />
-        </div>
+        </div> -->
+        
+
         <div class="box-flex">
             <div>{{this.history.date}}</div> 
             <div>{{ this.history.title }}</div>
@@ -47,13 +57,20 @@ export default {
             options: {
                 className: "card small",
                 title: "历史上的今天",
-                icon: "iconamoon:history-fill",
+                // icon: "iconamoon:history-fill",
+                newIcon:'ant-design:calendar-outlined'
             },
             history:{
                 date:"",
                 tetle:""
             },
             timer:"12",
+            env:{
+                web: false,
+                mobile: false,
+                client: false,
+                offline:true
+            }
         };
     },
     async mounted() {

@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk">
+  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk" :env="env">
     <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;">{{ region.name }}
     </div>
@@ -148,7 +148,13 @@ export default {
       visible:false,
       id:'',
       isLoading:false,
-      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}]
+      detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}],
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:false
+      }
     }
   },
   mounted(){
