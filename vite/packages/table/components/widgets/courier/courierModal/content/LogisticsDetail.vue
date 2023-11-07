@@ -2,20 +2,33 @@
  <div class="flex flex-col" style="width: 500px;height: 600px;">
   <div class="flex items-center justify-center h-16" style="position: relative;">
    <div class="left-back">
-     <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2 pointer category-button " @click="back">
-      <SmallIcon icon="fluent:chevron-left-16-filled" class="xt-text-2" style="font-size:1.2rem;"/>
-     </div>
+    <a-tooltip placement="top">
+      <template #title>
+        <span class="xt-text-2">返回</span>
+      </template>
+      <xt-button w="32" h="32"  @click="back" style="border-radius: 8px !important;">
+        <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2 pointer category-button " >
+          <SmallIcon icon="fluent:chevron-left-16-filled" class="xt-text-2" style="font-size:1.2rem;"/>
+        </div>
+      </xt-button>
+    </a-tooltip>
    </div>
 
    <div class="xt-text font-16 font-400 ">物流详情</div>
     
    <div class="flex top-right">
-    <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
-      <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;"/>
-    </div>
-    <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2" @click="close">
-     <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
-    </div>
+    <DropIndex :navList="addList"/>
+
+    <a-tooltip placement="top">
+      <template #title>
+        <span class="xt-text-2">关闭</span>
+      </template>
+      <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
+        <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2">
+          <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
+        </div> 
+      </xt-button>
+    </a-tooltip>
    </div>
   </div>
 
@@ -39,6 +52,7 @@ import { Icon as SmallIcon } from '@iconify/vue'
 import AddCourierModal from '../AddCourierModal.vue'
 import TimeLine from '../timeLine/index.vue'
 import UpdateIcon from '../updateIcon/index.vue'
+import DropIndex from '../dropdown/DropIndex.vue'
 
 export default {
  props:['orderNum'],
@@ -46,7 +60,7 @@ export default {
  components:{
   SmallIcon,AddCourierModal,
   TimeLine,
-  UpdateIcon
+  UpdateIcon,DropIndex
  },
 
  data(){
@@ -58,6 +72,24 @@ export default {
     suppressScrollX: true,
     wheelPropagation: true
     },
+
+    addList:[
+      {
+        title:'京东账号',name:'jd',
+        callBack:()=>{}
+      },
+      {
+        title:'淘宝账号',name:'tb',
+        callBack:()=>{}
+      },
+      { 
+        title:'自定义',
+        icon:'fluent:add-16-filled',
+        callBack:()=>{
+          this.addCourier()
+        }
+      },
+    ]
 
   }
  },

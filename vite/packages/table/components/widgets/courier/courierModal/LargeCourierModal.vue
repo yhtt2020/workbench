@@ -1,6 +1,6 @@
 <template>
  <teleport to='body'>
-  <Modal v-model:visible="largeShow" v-if="largeShow" :blurFlag="true">
+  <Modal v-model:visible="largeShow" v-if="largeShow" :blurFlag="true" style="z-index:400;">
     <LargeCourierDetail @close="handleClose" />
   </Modal>
  </teleport>

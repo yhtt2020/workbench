@@ -7,8 +7,9 @@
                      <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
                  </div>
                  <div class="flex ml-4 xt-text">
-                     <div class="text-base " style="line-height: 20px;">我的快递</div>
-                     <div class="ml-3 text-base" style="line-height: 20px;">({{ this.courierDetailList.length }})</div>
+                    <TopDrop :navList="typeList" v-model:selectType="currentType" />
+                     <!-- <div class="text-base " style="line-height: 20px;">我的快递</div>
+                     <div class="ml-3 text-base" style="line-height: 20px;">({{ this.courierDetailList.length }})</div> -->
                  </div>
              </div>
              <div class="flex">
@@ -19,7 +20,7 @@
                  <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
 
                  <a-tooltip autoAdjustOverflow title="刷新">
-                     <xt-button :w="32" :h="32" class="xt-bg" style="border-radius: 8px;" @click="refreshExpress">
+                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="refreshExpress">
                          <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
                      </xt-button></a-tooltip>
                  <a-tooltip autoAdjustOverflow title="设置">
@@ -28,7 +29,7 @@
                      </xt-button></a-tooltip>
                  <a-tooltip autoAdjustOverflow title="关闭">
                      <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="showTopCourier">
-                         <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;"></newIcon>
+                         <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;padding-bottom: 2px;"></newIcon>
                      </xt-button></a-tooltip>
              </div>
          </div>
@@ -44,12 +45,12 @@
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="courierDetailList.length > 0"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length>0"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
      <span
-         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;">{{
+         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
              courierDetailList.length }}</span>
  </xt-button>
  <teleport to='body'>
@@ -57,16 +58,18 @@
  </teleport>
  <teleport to='body'>
      <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-         :isHeader="false" :boxIndex="11" :maskIndex="10">
-         <LogisticsDetail :orderNum="orderNum" @close="closeCourierDetail" @back="showCourierDetail = false" />
+         :isHeader="false" :boxIndex="99" :maskIndex="98">
+         <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
+         <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
      </xt-modal>
  </teleport>
-
+ <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
  <teleport to='body'>
     <CourierSetting ref="courierSettingRef" />
 </teleport>
 </template>
 <script>
+import { appStore } from "../../../store";
 import Widget from '../../card/Widget.vue';
 import { Icon as newIcon } from '@iconify/vue'
 import CourierItem from './CourierItem.vue';
@@ -76,10 +79,12 @@ import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-
+import TopDrop from "./courierModal/dropdown/index.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 import CourierSetting from './courierModal/CourierSetting.vue';
+import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
+import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue';
 
 export default {
@@ -94,6 +99,9 @@ export default {
      AddCourierModal,
      LogisticsDetail,
      CourierSetting,
+     TopDrop,
+     LargeCourierDetail,
+     SmallCourierModal,
      DropIndex
  },
  data() {
@@ -110,6 +118,27 @@ export default {
          couriersList: [],
          isLoading: false,
          showCourierDetail: false,
+         typeList:[
+            {
+                title:'全部',
+                name:"全部",
+                type:"all"
+            },
+            {
+                title:'淘宝',
+                name:"淘宝",
+                type:"all"
+            },
+            {
+                title:'京东',
+                name:"京东",
+                type:"all"
+            },
+            
+         ],
+         currentType:{title:'全部',name:"全部",type:'all'},
+         largeDetailVisible:true,
+         showSmallDetail:false,
          addList:[
         {
           title:'京东账号',name:'jd',
@@ -132,7 +161,7 @@ export default {
  methods: {
      ...mapActions(courierStore, [
          // 'getCourierMsg',
-         'getDbCourier'
+         'getDbCourier','refreshCouriers'
      ]),
      async showTopCourier() {
          this.topCourierVisible = !this.topCourierVisible
@@ -161,21 +190,47 @@ export default {
      closeCourierDetail(){
          this.showCourierDetail=false
      },
+     refreshCourier(){
+        this.refreshCouriers()
+     },
 
      //打开设置
      openCourierSetting(){
         this.$refs.courierSettingRef.openSettingModal()
-     }
+     },
+     backAllCoutiers() {
+      this.showSmallDetail = true,
+        this.showCourierDetail = false
+    },
+    smallDetailsVisible() {
+      this.showSmallDetail = false
+    },
+    handleResize() {
+      let windoWidth = window.innerWidth;
+      // console.log(windoWidth);
+      if (windoWidth > 1200) {
+        this.largeDetailVisible = true
+        // this.courierShow = true;
+      } else {
+        this.largeDetailVisible = false
+        // this.courierShow = false;
+      }
+      // console.log(windoWidth,'windoWidth')
+    },
 
  },
  computed: {
      ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg']),
+     ...mapWritableState(appStore,['settings'])
 
  },
  mounted() {
      this.getDbCourier()
+     window.addEventListener("resize", this.handleResize)
  },
-
+ beforeDestroy() {
+    window.addEventListener("resize", this.handleResize)
+ },
 }
 </script>
 <style lang="scss">

@@ -1,12 +1,6 @@
 import { expressList } from '../modalMock'
 // 匹配快递公司名称
 export function getCourierName(data:any){
- // console.log('查看有没有传值进来',data);
- // 匹配纯数字
- // console.log('查看结果1',isNumeric(data));
- // console.log('查看结果2',hasUppercasePrefix(data));
- 
-
 
  // 前缀编码
  if(hasUppercasePrefix(data)){
@@ -37,6 +31,12 @@ export function getCourierName(data:any){
  }
 
 
+
+ if(isCaiNiaoChengYun(data) && data.length === 10){
+  let existWord = 'CNCY'
+  return findData(existWord)
+ }
+
  
 
  
@@ -59,4 +59,10 @@ function isNumeric(string:any){
 
 function hasUppercasePrefix(string:any) {
  return /^[A-Z]/.test(string);
+}
+
+function isCaiNiaoChengYun(string:any) {
+ const regex = /^\d{10}$/;
+
+ return regex.test(string);
 }
