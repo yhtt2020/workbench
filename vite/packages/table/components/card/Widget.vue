@@ -71,6 +71,7 @@ import { offlineStore } from "../../js/common/offline";
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
+import Drop from "./Drop.vue";
 import { IOption, IMenuItem } from "./types";
 
 export default {
@@ -80,6 +81,7 @@ export default {
     MyIcon,
     RightMenu,
     PageState
+    Drop,
   },
   name: "Widget",
   props: {
@@ -144,6 +146,11 @@ export default {
   },
   data() {
     return {
+      // 小组件
+      widgetSize: {
+        width: "",
+        height: "",
+      },
       //右上角抽屉菜单可见与否的控制
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
@@ -156,13 +163,14 @@ export default {
       return [
         ...this.menuList,
         {
-          icon: "guanbi2",
+          newIcon: "akar-icons:trash-can",
           fn: this.doRemoveCard,
-          title: "删除",
+          title: "删除小组件",
           color: "#FF4D4F",
         },
       ];
     },
+
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
@@ -223,11 +231,11 @@ export default {
         // this.$parent.$attrs.onCustomEvent()
         // console.log(this.$parent.$attrs.onCustomEvent)
       }
-    } else {
     }
   },
 
   watch: {
+    // 旧版卡片大小更新
     sizeType: {
       handler() {
         this.updateCustomData(
@@ -242,8 +250,20 @@ export default {
         );
       },
     },
-    size: {
-      handler(newVal) { },
+    // 更新最新的widget框架大小
+    widgetSize: {
+      handler(newVal) {
+        this.updateCustomData(
+          this.$parent.customIndex ||
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
+          {
+            widgetWidth: this.widgetSize.width,
+            widgetHeight: this.widgetSize.height,
+          },
+          this.desk
+        );
+      },
     },
   },
 
@@ -272,6 +292,9 @@ export default {
     },
     hideMenu() {
       this.menuVisible = false;
+    },
+    goRoute(){
+      this.$router.push(this.options.titleRoute)
     },
   },
 };

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { getSelect } from "../api/api";
+import { getNavList } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../../../../components/card/hooks/cache";
 import { scrollable } from "../hooks/scrollable";
@@ -141,24 +141,15 @@ export default {
       let appList = cache.get(`link-${index}`);
       if (!appList) {
         appList = [];
-        let res = await getSelect({
-          applicationType: index,
-        });
-        res.data[0].forEach((item) => {
-          appList.push({
-            link: "link",
-            icon: item.app.version.logo256 || "",
-            name: item.app.version.name || "",
-            open: {
-              value: item.app.version.url || "",
-              type: this.type,
-            },
-          });
-        });
-        cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
+        let res =getNavList();
+        console.log('查回的导航',res)
+        cache.set(`link-${index}`, res[index], 2 * 24 * 60 * 60 * 1000);
       } else {
         appList.forEach((item) => {
-          item.open.type = this.type;
+          item.open={
+            type: this.type,
+            value:item.url
+          };
         });
       }
 

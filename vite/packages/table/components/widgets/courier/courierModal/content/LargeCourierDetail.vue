@@ -4,17 +4,9 @@
       <HorizontalPanel :navList="flowType" v-model:selectType="defaultFlow" />
 
       <div class="flex right-button">
-        <a-tooltip placement="top" class="mx-3">
-          <template #title>
-            <span class="xt-text-2">添加</span>
-          </template>
-          <xt-button w="32" h="32" @click="addCourier" style="border-radius: 8px !important;">
-            <div class="flex items-center justify-center">
-              <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
-            </div>
-          </xt-button>
-        </a-tooltip>
-      
+        
+        <DropIndex :navList="addList"></DropIndex>
+
         <a-tooltip placement="top" class="mr-3">
           <template #title>
             <span class="xt-text-2">设置</span>
@@ -69,7 +61,7 @@
               <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
                 class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                 <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                  <div class="w-full flex">
+                  <div class="flex w-full">
                     <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                       <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
                     </div>
@@ -112,22 +104,6 @@
           </div>
         </template>
       </div>
-
-      <!-- <div class="flex justify-between px-6">
-      
-        <div style="width: 452px;" class="flex flex-col">
-         
-        </div>
-
-        <div style="width: 452px;">
-          <UpdateIcon :orderData="rightList" />
-          <div class="px-4 rounded-lg xt-bg-2">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
-              <TimeLine :list="rightList?.Traces" />
-            </vue-custom-scrollbar>
-          </div>
-        </div> 
-      </div> -->
     
     </template>
 
@@ -142,6 +118,7 @@
 import { mapActions, mapWritableState } from 'pinia'
 import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
+import { Modal } from 'ant-design-vue'
 import { courierDetailList, courierType } from '../modalMock'
 import { courierStore } from '../../../../../store/courier'
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
@@ -150,14 +127,16 @@ import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'
 import SortList from '../dropdown/SortList.vue'
 import { kdCompany, kdState, switchColor } from '../../mock'
+
 import CourierSetting from '../CourierSetting.vue'
+import DropIndex from '../dropdown/DropIndex.vue'
 
 export default {
   props: [''],
 
   components: {
     SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList,
-    CourierSetting,
+    CourierSetting,DropIndex,
   },
 
   data() {
@@ -177,15 +156,9 @@ export default {
 
       currentID: '',
 
-      // rightList:this.couriersList[0], 接收选中的详情
       rightList: {},
 
       menus:[
-      {
-       name:'查看详情',
-       callBack:()=>{},
-       newIcon:'fluent:apps-list-detail-24-regular'
-      },
       {
         name:'订阅物流',
         callBack:()=>{
@@ -196,19 +169,45 @@ export default {
       {
        name:'删除快递',
        callBack:()=>{
-         this.removeSortData(this.revID)
-         this.removeDbData(this.revID)
+        console.log('测试::>>');
+        Modal.confirm({
+          content: '确认删除当前快递物流信息',
+          centered: true,
+          onOk: () => {
+            this.removeSortData(this.revID)
+            this.removeDbData(this.revID)
+          } 
+        })
+      
        },
        newIcon:'akar-icons:trash-can',
        color:'var(--error)'
       },
-     ],
+      ],
+
+      addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ]
     }
   },
 
   computed: {
     ...mapWritableState(courierModalStore, ['sortList']),
-    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
+    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList','viewCourierDetail']),
     flowType() {
       const allLength = this.couriersList.length;
       //  揽收
@@ -241,8 +240,6 @@ export default {
     },
 
     filterList() {
-      console.log('查看数据',this.couriersList);
-      // return this.couriersList
       if (this.allVisible) {
         if (this.sortList.length !== 0) {
           return this.sortList
@@ -306,6 +303,7 @@ export default {
 
     // 关闭按钮
     close() {
+      this.viewCourierDetail=''
       this.$emit('close')
     },
 
@@ -336,8 +334,16 @@ export default {
   async mounted() {
     this.getDbCourier()
     this.couriersList = this.courierDetailList
-    this.rightList = this.couriersList[0]
-    this.currentID=this.couriersList[0]?.LogisticCode
+    if(this.viewCourierDetail){
+      console.log(this.viewCourierDetail)
+      this.rightList=this.viewCourierDetail
+      this.currentID=this.viewCourierDetail?.LogisticCode
+    }else{
+      this.rightList = this.couriersList[0]
+      this.currentID=this.couriersList[0]?.LogisticCode
+    }
+    
+    // this.viewCourierDetail=''
     // console.log(this.couriersList[0],'couriersList');
   },
 

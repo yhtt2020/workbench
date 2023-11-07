@@ -80,12 +80,12 @@
                   <div>设置触摸屏</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain() && isWin()" :span="6">
-                <div @click="setPen" class="btn">
-                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>
-                  <div>设置笔</div>
-                </div>
-              </a-col>
+<!--              <a-col v-if="isMain() && isWin()" :span="6">-->
+<!--                <div @click="setPen" class="btn">-->
+<!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
+<!--                  <div>设置笔</div>-->
+<!--                </div>-->
+<!--              </a-col>-->
               <a-col :span="6">
                 <div @click="chooseScreen" class="btn">
                   <Icon icon="touping" style="font-size: 2em"></Icon>
@@ -113,18 +113,26 @@
                   <div>导航栏编辑</div>
                 </div>
               </a-col>
+              <a-col :span="6">
+                <xt-task :modelValue="m04011" @cb="basic">
+                  <div @click="basic" class="btn">
+                    <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                    <div>通用设置</div>
+                  </div>
+                </xt-task>
+              </a-col>
               <a-col v-if="isMain()" :span="6">
                 <div @click="goApps()" class="btn">
                   <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
                   <div>应用管理</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
-                <div @click="wizard" class="btn">
-                  <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
-                  <div>配置向导</div>
-                </div>
-              </a-col>
+<!--              <a-col v-if="isMain()" :span="6">-->
+<!--                <div @click="wizard" class="btn">-->
+<!--                  <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>-->
+<!--                  <div>配置向导</div>-->
+<!--                </div>-->
+<!--              </a-col>-->
 
               <a-col :span="6">
                 <div @click="papersSettings" class="btn">
@@ -132,14 +140,7 @@
                   <div>壁纸</div>
                 </div>
               </a-col>
-              <a-col :span="6">
-               <xt-task :modelValue="m04011" @cb="basic">
-                <div @click="basic" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div>通用设置</div>
-                </div>
-               </xt-task>
-              </a-col>
+
 
               <a-col :span="6">
                 <xt-task :modelValue="m03011" @cb="styleVisible = true">

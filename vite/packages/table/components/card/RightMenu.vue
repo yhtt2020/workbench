@@ -3,23 +3,19 @@
   <Menu
     name="title"
     fn="fn"
-    v-model:trigger="trigger"
-    :menus="menuList"
     :model="model"
-    :start="menuState"
-    @closeMenu="close"
+    :menus="menuList"
+    :beforeCreate="beforeCreateMenu"
+    @destroyed="close"
   >
-    <div
-      @contextmenu="rightMenuState()"
-
-    >
+    <div @contextmenu="rightMenuState()">
       <slot></slot>
     </div>
     <template #cardSize v-if="sizes.length > 0">
-      <div class="flex flex-wrap mb-2 ml-3 my-1">
+      <div class="flex flex-wrap mb-2 ml-2 my-1">
         <div
           v-for="item in sizes"
-          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-3"
+          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
           style="border-radius: 16px"
           @click="updateCardSize(item)"
         >
@@ -57,11 +53,7 @@
     />
     <div class="flex flex-row">
       <slot name="menuExtra"></slot>
-      <BottomEdit
-        :menuList="menuList"
-        @close="menuVisible = false"
-        @removeCard="doRemoveCard"
-      />
+      <BottomEdit :menuList="menuList" @close="menuVisible = false" />
       <!--      <div class="w-24 h-24 ml-4 option" @click="onCopy"-->
       <!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
       <!--        <Icon class="icon" icon="fuzhi"></Icon>-->
@@ -79,39 +71,45 @@ import Menu from "../../ui/components/Menu/index.vue";
 import BottomEdit from "./BottomEdit.vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 
-const emits = defineEmits(["removeCard", "sizeType"]);
+const emits = defineEmits(["sizeType", "onClick"]);
 
 const props = defineProps({
   // 右键菜单数据
   menus: {
+    type: Array,
     default: () => {
       return [];
     },
   },
   // 卡片大小数据
   sizes: {
+    type: Array,
     default: () => {
       return [];
     },
   },
-  //
-  event: {
-    default: null,
-  },
-  oldMenuVisible: {},
   sizeType: {},
+  model: {
+    default: "contextmenu",
+  },
 });
-const { menus, sizes, oldMenuVisible, currentEvent, event } = toRefs(props);
+const { menus, sizes } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
 
 // 新版右键和点击事件切换
-const model = ref("contextmenu");
 // 是否启动跟随菜单
 const menuState = computed(() => {
   return rightModel.value == "follow" ? true : false;
 });
+
+function beforeCreateMenu() {
+  if (!menuState.value) {
+    menuVisible.value = true;
+  }
+  return menuState.value;
+}
 
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
@@ -134,29 +132,12 @@ const menuList = computed(() => {
 
 // 卡片大小监听
 const cardSize = ref(props.sizeType);
+
 watch(cardSize, (newV) => {
   emits("update:sizeType", newV);
 });
 // 旧版菜单展示
 const menuVisible = ref(false);
-const menuRef = ref();
-// 旧版右键监听
-const trigger = ref(false);
-const close = () => {
-  trigger.value = false;
-};
-watch(oldMenuVisible, (newV) => {
-  // 如果不处于主应用模式
-  if (!menuState.value) menuVisible.value = newV;
-  else if (menuState.value) {
-    trigger.value = true;
-    emits("update:oldMenuVisible", false);
-  }
-});
-watch(menuVisible, (newV) => {
-  emits("update:oldMenuVisible", newV);
-  oldMenuVisible.value = newV;
-});
 
 // 更新卡片大小
 const updateCardSize = (item) => {
@@ -164,10 +145,7 @@ const updateCardSize = (item) => {
 
   emits("update:sizeType", item);
 };
-// 删除卡片
-const removeCard = () => {
-  emits("removeCard");
-};
+
 const rightMenuState = () => {
   if (!menuState.value) menuVisible.value = true;
 };

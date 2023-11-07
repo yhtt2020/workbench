@@ -1,5 +1,11 @@
 <template>
-  <Menu :menus="menus" name="name" fn="fn" :start="menuState" :model="model">
+  <Menu
+    :menus="menus"
+    name="name"
+    fn="fn"
+    :beforeCreate="menuState"
+    :model="model"
+  >
     <slot></slot>
   </Menu>
 </template>
@@ -18,9 +24,9 @@ const props = defineProps({
 const widgetStore = useWidgetStore();
 
 const { rightModel } = storeToRefs(widgetStore);
-const menuState = computed(() => {
+function menuState() {
   return rightModel.value == "follow";
-});
+}
 </script>
 
 <style lang="scss" scoped></style>

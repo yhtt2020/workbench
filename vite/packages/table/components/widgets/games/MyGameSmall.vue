@@ -1,6 +1,6 @@
 <template>
   <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare" :desk="desk">
-    <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
+    <div @click="goRoute" class="px-1 py-1 pointer" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
       我的游戏
     </div>
     <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
@@ -10,10 +10,10 @@
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
       <!-- 这是什么判断 栓q -->
-          <a-spin v-if="gameList.length !== gameList.length " style="margin: 0 auto;"/>
+          <a-spin v-if="displaySteamGame.length !== displaySteamGame.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
-            <XtState  v-if="gameList.length ==0"  :state="'null'" style="width: 250px;height: 352px;" bg=""></XtState>
-           <div v-for="item in gameList.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
+            <XtState  v-if="displaySteamGame.length ==0"  :state="'null'" style="width: 250px;height: 352px;" bg=""></XtState>
+           <div v-for="item in displaySteamGame.slice(0,2)" @click="enterMyGameDetail(item)" class="mb-4 flex flex-col s-item pointer rounded-lg">
             <div style="height:118.53px;" >
               <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
             </div>
@@ -25,7 +25,7 @@
       </div>
       <div v-else>
         <div class="my-other mt-4" v-if="otherDetailShow === false">
-          <div class="rounded-lg my-other-item pointer relative" v-for="item in otherGameList.slice(0,6)" @click="enterOtherGameDetail(item)"  style=" width: 100px; height: 100px;">
+          <div class="rounded-lg my-other-item pointer relative" v-for="item in othersteamGameList.slice(0,6)" @click="enterOtherGameDetail(item)"  style=" width: 100px; height: 100px;">
             <img :src="item.src" alt="" class="rounded-lg " style="width: 100%; height:100%; object-fit: cover;">
             <span class="small-title  truncate px-2 py-2" style="width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">{{ item.title }}</span>
           </div>
@@ -36,10 +36,10 @@
     <template v-else>
       <div v-if="defaultGame.name === 'steam'">
         <div class="flex items-center" v-if="detailShow === false">
-          <a-spin v-if="gameList.length !== gameList.length" style="margin: 0 auto;"/>
+          <a-spin v-if="displaySteamGame.length !== displaySteamGame.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
-            <XtState  v-if="gameList.length ==0" :state="'null'" style="width: 538px;height: 352px;" bg=""></XtState>
-            <div v-for="item in gameList.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
+            <XtState  v-if="displaySteamGame.length ==0" :state="'null'" style="width: 538px;height: 352px;" bg=""></XtState>
+            <div v-for="item in displaySteamGame.slice(0,4)" @click="enterMyGameDetail(item)"  class="mb-3 flex my-game-item flex-col s-item pointer rounded-lg">
               <div style="height:118px;">
                 <img class="rounded-t-lg" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`" style="width: 100%;height: 100%;object-fit: cover;" alt="">
                </div>
@@ -82,7 +82,7 @@ import MyGameSmallDetail from './MyGameSmallDetail.vue';
 import { mapActions, mapWritableState } from 'pinia';
 import { cardStore } from '../../../store/card';
 import { steamUserStore } from '../../../store/steamUser';
-// import { message } from "ant-design-vue";
+import {isHide} from '../../../page/gameAssistant/game'
 import _ from 'lodash-es'
 
 export default {
@@ -114,7 +114,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(steamUserStore,['gameList']),
+    ...mapWritableState(steamUserStore,['steamGameList']),
     showSize(){
       if(this.customData && this.customData.width && this.customData.height){
         return {width:this.customData.width,height:this.customData.height}
@@ -127,12 +127,20 @@ export default {
       }
       return this.showGameType[0]
     },
+    displaySteamGame(){
+      return this.steamGameList.filter(game=>{
+        return !isHide('steam',game.appid)
+      })
+    }
   },
   data(){
     return{
       options: {
         className: 'card ',
         title: '',
+        titleRoute:{
+          name:'myGame'
+        },
         icon: 'game',
         type: 'games',
         epicShow: true
@@ -177,6 +185,11 @@ export default {
     getGameType(item,index){
       this.customData.name = item.name
       this.steamIndex = index
+    },
+    goRoute(){
+      this.$router.push({
+        name:'myGame'
+      })
     },
     enterMyGameDetail(item){
       this.steamDetail = item

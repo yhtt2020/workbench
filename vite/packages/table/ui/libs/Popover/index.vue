@@ -1,5 +1,5 @@
 <template>
-  <div class="box w-full h-full">
+  <div class="box">
     <a-popover
       trigger="hover"
       overlayClassName="bgg"

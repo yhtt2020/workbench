@@ -1,20 +1,11 @@
 <template>
   <template v-if="!detailVisible">
     <div class="flex flex-col" style="width: 500px; height: 600px">
-      <div  class="flex items-center mb-4 justify-center h-16" style="position: relative">
+      <div  class="flex items-center justify-center h-16 mb-4" style="position: relative">
         <TopDrop :navList="typeList" v-model:selectType="currentType" />
         <div class="flex top-right">
-          <a-tooltip placement="top" class="mx-3">
-            <template #title>
-              <span class="xt-text-2">添加</span>
-            </template>
-            <xt-button w="32" h="32" @click="addCourier" style="border-radius: 8px !important;">
-              <div class="flex items-center justify-center">
-                <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
-              </div>
-            </xt-button>
-          </a-tooltip>
-        
+          <DropIndex :navList="addList" />
+
           <a-tooltip placement="top" class="mr-3">
             <template #title>
               <span class="xt-text-2">设置</span>
@@ -113,6 +104,7 @@ import LogisticsDetail from '../content/LogisticsDetail.vue';
 import { kdCompany, kdState, switchColor } from '../../mock'
 
 import CourierSetting from '../CourierSetting.vue';
+import DropIndex from '../dropdown/DropIndex.vue';
 
 export default {
   props: ["list"],
@@ -123,7 +115,8 @@ export default {
     AddCourierModal,
     SmallIcon,
     LogisticsDetail,
-    CourierSetting
+    CourierSetting,
+    DropIndex
   },
 
   data() {
@@ -166,6 +159,24 @@ export default {
       ],
 
       sortItem:{},
+
+      addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ],
       
     };
   },
