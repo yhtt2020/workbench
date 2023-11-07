@@ -27,11 +27,11 @@
       <Empty v-if="detailList?.length === 0"  :exampleVisible="true"/>
   
       <template v-else>
-        <SortList :list="allList" v-if="allShow" @rightSelect="getSmallItem" />
+        <SortList :list="allList" v-if="allShow" @rightSelect="getSmallItem" @viewDetail="getDetail"/>
         <vue-custom-scrollbar :settings="settingsScroller" v-else>
           <div class="flex flex-col px-6" ref="smallSortRef" style="height:calc(100% - 64px);">
             <div v-for="(item,index) in detailList"  class="rounded-lg">
-              <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+              <xt-menu name="name" @contextmenu="revID = {item,index}" :menus="menus">
                 <div :class="{'select':currentID === index}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="detailClick(item)">
                   <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                     <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
@@ -114,7 +114,11 @@ export default {
       menus:[
         {  
           name:'查看详情',  newIcon:'fluent:apps-list-detail-24-regular',
-          callBack:()=>{},
+          callBack:()=>{
+            this.currentID = this.revID.index
+            this.detailVisible = true
+            this.detailItem = this.revID.item
+          },
         },
         {
           name:'订阅物流',newIcon:'fluent:star-12-regular',
@@ -190,6 +194,11 @@ export default {
      this.currentID = index
      this.detailVisible = true
      this.detailItem = item
+    },
+    getDetail(revID){
+      this.currentID = revID.index
+     this.detailVisible = true
+     this.detailItem = revID.item
     }
   },
 

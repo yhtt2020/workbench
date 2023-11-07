@@ -6,7 +6,7 @@
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
-          <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+          <xt-menu name="name" @contextmenu="revID = {item,index}" :menus="menus">
             <div :class="{ 'select': sortItem === index }"
               class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="sortDetail(item,index)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
@@ -73,7 +73,7 @@ export default {
         {
           name: '查看详情',
           callBack: () => {
-
+            this.$emit('viewDetail',this.revID)
           },
           newIcon: 'fluent:apps-list-detail-24-regular'
         },
@@ -91,7 +91,7 @@ export default {
              content: '确认删除当前快递物流信息',
              centered: true,
              onOk: () => {
-              this.removeDbData(this.revID)
+              this.removeDbData(this.revID.index)
               message.success('删除成功')
              } 
             })
