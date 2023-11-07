@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <Modal v-model:visible="courierShow" v-if="courierShow" :blurFlag="true">
+    <Modal v-model:visible="courierShow" v-if="courierShow" :blurFlag="true" style="z-index:700;">
       <ModalContent @close="courierShow = false"></ModalContent>
     </Modal>
   </teleport>

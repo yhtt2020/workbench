@@ -118,6 +118,7 @@
 import { mapActions, mapWritableState } from 'pinia'
 import { courierModalStore } from '../courierModalStore'
 import { Icon as SmallIcon } from '@iconify/vue'
+import { Modal } from 'ant-design-vue'
 import { courierDetailList, courierType } from '../modalMock'
 import { courierStore } from '../../../../../store/courier'
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
@@ -155,15 +156,9 @@ export default {
 
       currentID: '',
 
-      // rightList:this.couriersList[0], 接收选中的详情
       rightList: {},
 
       menus:[
-      {
-       name:'查看详情',
-       callBack:()=>{},
-       newIcon:'fluent:apps-list-detail-24-regular'
-      },
       {
         name:'订阅物流',
         callBack:()=>{
@@ -174,8 +169,16 @@ export default {
       {
        name:'删除快递',
        callBack:()=>{
-         this.removeSortData(this.revID)
-         this.removeDbData(this.revID)
+        console.log('测试::>>');
+        Modal.confirm({
+          content: '确认删除当前快递物流信息',
+          centered: true,
+          onOk: () => {
+            this.removeSortData(this.revID)
+            this.removeDbData(this.revID)
+          } 
+        })
+      
        },
        newIcon:'akar-icons:trash-can',
        color:'var(--error)'
@@ -237,8 +240,6 @@ export default {
     },
 
     filterList() {
-      console.log('查看数据',this.couriersList);
-      // return this.couriersList
       if (this.allVisible) {
         if (this.sortList.length !== 0) {
           return this.sortList
