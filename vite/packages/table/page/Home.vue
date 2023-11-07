@@ -94,9 +94,9 @@
         <div class="flex line" v-if="!appSettings.transparent">
 
           <xt-task :modelValue="m01034" to="" @cb="goPaper">
-            <a-button type="primary" class="mr-3 xt-active-bg" @click="goPaper">背景设置</a-button>
+            <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
           </xt-task>
-          <a-button @click="clearWallpaper" class="xt-text">清除背景</a-button>
+          <xt-button  size="mini" :w="80" :h="40" @click="clearWallpaper" >清除背景</xt-button>
         </div>
         <div v-if="!appSettings.transparent" class="line">
           <div class="line">
@@ -504,7 +504,7 @@ export default {
     // },500)
     let n=0
     if (navigator.connection.downlink < 1) {
-      
+
       let timer=setInterval(()=>{
         if(n>3){
           clearInterval(timer)
@@ -517,13 +517,13 @@ export default {
       let timer=setInterval(()=>{
         if(n>2){
           clearInterval(timer)
-          return 
+          return
         }
         this.replaceIcon()
         n++
       },1000)
     }
-    
+
     // let counte=0
     // const counter=setInterval(()=>{
     //     if(this.replaceFlag==false){

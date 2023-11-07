@@ -8,10 +8,10 @@
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="width: 452px; height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
-          <!-- {{ item }} -->
-          <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-            <div :class="{ 'select': this.currentID === item.LogisticCode }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item)">
+          <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+            <!--  -->
+            <div :class="{ 'select': this.currentID ===  index }"
+              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item,index)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
               </div>
@@ -33,9 +33,9 @@
                   </div>
                 </div>
 
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1].AcceptTime }}</div>
+                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                 <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+                  {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                 </div>
               </div>
             </div>
@@ -54,6 +54,8 @@ import { Icon as SmallIcon } from '@iconify/vue'
 import { courierType } from '../modalMock'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
+import { courierStore } from '../../../../../store/courier'
+
 export default {
   props: ["list", "sortItem"],
 
@@ -93,7 +95,9 @@ export default {
         {
           name: '删除快递',
           callBack: () => {
-
+            console.log('查看删除下标',this.revID);
+            this.removeSortData(this.revID)
+            this.removeDbData(this.revID)
           },
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
@@ -138,7 +142,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierModalStore, ['updateSortList']),
+    ...mapActions(courierModalStore, ['updateSortList','removeSortData']),
+    ...mapActions(courierStore,['removeDbData']),
     onSortEnd(evt) {
       let newIndex = evt.newIndex, oldIndex = evt.oldIndex
       let newItem = this.$refs.dropRef.children[newIndex]
@@ -158,11 +163,13 @@ export default {
       cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
       cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
       // this.detailList = cloneTemp
+      // console.log('查看排序后的数据',cloneTemp);
       this.updateSortList(cloneTemp)
     },
 
-    seeDetail(data) {
-      this.currentID = data.LogisticCode
+    seeDetail(data,index) {
+      // this.currentID = data.LogisticCode
+      this.currentID = index
       this.$emit('rightSelect', data)
     },
 

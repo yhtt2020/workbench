@@ -7,58 +7,79 @@
         </div>
         <div class="w-full">
             <div class="flex justify-between">
-                <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
+                <div class="flex ">
+                    <div  class="commerce-small" style="background-color: #FA5000;" >淘</div>
+                    <div  class=" commerce-small" style="background-color: #E12419;">JD</div>
+                    <div style="font-size: 16px;" class="xt-text">{{ courierCode }}</div>
+                </div>
+                
                 <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                     <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
                         {{ switchCompany }}
                     </div>
-                    <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor }">
+                    <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColors }">
                         {{ switchState }}
                     </div>
                 </div>
             </div>
             <div class="mt-2 xt-text-2" style="font-size: 14px;">
-                {{ props.courier.Traces[props.courier.Traces.length-1].AcceptTime }}
+                {{ lastTraces?.AcceptTime }}
             </div>
             <div class="mt-2 xt-text omit" style="font-size: 14px;">
-                {{ props.courier.Traces[props.courier.Traces.length-1].AcceptStation }}
+                {{ lastTraces?.AcceptStation }}
             </div>
         </div>
     </div>
 </template>
 
-<script setup lang='ts'>
+<script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
-import { courierStore } from '../../../store/courier'
 import { kdCompany, kdState,switchColor } from './mock'
-const useCourierStore = courierStore()
-const props = defineProps({ courier: Object })
-const stateColor = computed(() => {
-    return switchColor(props.courier.State)
+
+const props = defineProps({courier:Object})
+// console.log('查看数据',props.courier);
+
+
+const stateColors = computed(()=>{
+  return switchColor(props.courier?.State)
 })
-const courierCode=computed(()=>{
-    const code=props.courier.LogisticCode
-    let start=code.substring(0,4)
-    let end=code.substring(code.length-4)
-    return ` ${start} - ${end}`
-})
-const switchCompany = computed(() => {
-    return kdCompany(props.courier.ShipperCode)
-})
+
 const switchState = computed(() => {
-    return kdState(props.courier.State)
+    return kdState(props.courier?.State)
 })
-// const lastTraces = ref({AcceptTime:null,AcceptStation:null})
-// onMounted( async () => {
-//     await useCourierStore.getCourierMsg(props.courier.shipperCode, props.courier.logisticCode,props.courier.customerName)
-//     // console.log(props.courier.shipperCode, props.courier.logisticCode);
-    
-//     // setTimeout(() => {
-//         lastTraces.value = await useCourierStore.courierMsgList.Traces[useCourierStore.courierMsgList.Traces.length - 1]
-//     // });
-// })
+
+const switchCompany = computed(() => {
+    return kdCompany(props.courier?.ShipperCode)
+})
+
+const courierCode = computed(()=>{
+    const orderNum = props.courier?.LogisticCode
+    const changCode = `${orderNum.slice(0,4)}-${orderNum.slice(-4)}`
+    return changCode
+})
+
+const lastTraces = ref(null)
+
+const newTraces = computed(()=>{
+   switch (props?.courier?.State) {
+    case '3':
+       return {
+         AcceptStation:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptTime
+        }
+    case '2':
+       return {
+         AcceptStation:props.courier?.Traces[0]?.AcceptStation,
+         AcceptTime:props.courier?.Traces[0]?.AcceptTime
+        }
+   }
+})
+
+lastTraces.value = newTraces.value
+
 </script>
+
 <style lang='scss' scoped>
 .omit {
     display: -webkit-box;
@@ -76,6 +97,18 @@ const switchState = computed(() => {
 
     &:hover {
         background-color: var(--active-secondary-bg);
+    }
+}
+.commerce{
+    &-small{
+        width: 24px ;
+        height: 24px;
+        line-height: 24px;
+        font-size: 14px;
+        margin-right: 6px;
+        text-align: center;
+        color: var(--primary-text);
+        border-radius: 6px;
     }
 }
 </style>

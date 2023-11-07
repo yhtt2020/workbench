@@ -28,25 +28,15 @@
             class="flex items-center justify-between"
           >
             <div class="left-title" v-if="options.noTitle !== true">
-              <slot name="left-title"></slot>
+              <slot name="left-title-icon"></slot>
               <Icon :icon="options.icon" class="title-icon"></Icon>
-              <div class="w-2/3 flex">
-                <div v-if="options.isEdit">
-                  <a-input
-                    style="
-                      border: none;
-                      box-shadow: none !important;
-                      position: relative;
-                      left: -32px;
-                      top: -3px;
-                    "
-                    :value="options.title"
-                  ></a-input>
-                </div>
-                <div v-else="options.isEdit">
-                  {{ options.title }}
-                </div>
-
+              <div class="flex w-2/3">
+                <slot name="title-text">
+                  <span class="pointer" v-if='options.titleRoute' @click="goRoute">{{ options.title }}</span>
+                  <span v-else>
+                    {{options.title}}
+                  </span>
+                </slot>
                 <slot name="left-title" v-if="options.rightIcon">
                   <div class="right-icon">
                     <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
@@ -55,21 +45,7 @@
               </div>
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
-              <!-- 用于便签添加复制 -->
-              <div
-                class="pointer"
-                v-if="options.isCopy"
-                style="position: absolute; left: -28px; top: 1px"
-                @click="options.copyContent"
-              >
-                <MyIcon
-                  width="20"
-                  height="20"
-                  icon="fluent:window-multiple-16-filled"
-                />
-              </div>
-              <slot name="right-menu"> </slot>
-
+            <slot name="right-menu"> </slot>
               <RightMenu
                 :menus="menus"
                 :sizes="sizeList"
@@ -214,6 +190,7 @@ export default {
         },
       ];
     },
+
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
     },
@@ -331,6 +308,9 @@ export default {
     },
     hideMenu() {
       this.menuVisible = false;
+    },
+    goRoute(){
+      this.$router.push(this.options.titleRoute)
     },
   },
 };

@@ -22,26 +22,62 @@
 
 .font{
  &-14{
-  font-size: 14px;
+  font-size: 14px !important;
  }
  &-16{
-  font-size: 16px;
+  font-size: 16px !important;
  }
  &-12{
-  font-size: 12px;
+  font-size: 12px !important;
  }
  &-18{
-  font-size: 18px;
+  font-size: 18px !important;
+ }
+
+ &-19{
+  font-size: 19px !important;
  }
 
  &-400{
-  font-weight: 400;
+  font-weight: 400 !important;
  }
  &-500{
-  font-weight: 500;
+  font-weight: 500 !important;
  }
 
  &-600{
-  font-weight: 600;
+  font-weight: 600 !important;
  }
 }
+// .commerce{
+//     &-small{
+//         width: 24px ;
+//         height: 24px;
+//         line-height: 24px;
+//         font-size: 14px;
+//         margin-right: 6px;
+//         text-align: center;
+//         color: var(--primary-text);
+//         border-radius: 6px;
+//     }
+//     &-middle{
+//         width: 32px;
+//         height: 32px;
+//         line-height: 32px;
+//         text-align: center;
+//         font-weight: 600;
+//         border-radius: 8px;
+//         color: var(--primary-text);
+
+//     }
+//     &-large{
+//         width: 40px ;
+//         height: 40px;
+//         line-height: 40px;
+//         font-size: 24px;
+//         margin-right: 8px;
+//         text-align: center;
+//         color: var(--primary-text);
+//         border-radius: 10px;
+//     }
+// }

@@ -13,9 +13,10 @@ class Web extends Base {
 
     this.on('callback',async(event,args,instance)=>{
       console.log('子窗体回调到达',args)
-      console.log('cbs',this.callbacks)
       let ins=this.callbacks[args.cbId]
-      ins.table.window.webContents.send(args.cbId,args.data)
+      ins.table.window.webContents.send(args.cbId,{
+        ...args
+      })
     })
     this.on('openPreloadWindow', async (event, args, instance) => {
       // width:800,
@@ -31,7 +32,6 @@ class Web extends Base {
       //     preload:window.globalArgs['app-dir_name'] +'/src/appPreload/ecommerce/jd/order.js'
       //   })
       // }
-      console.log('接收到启动命令', args)
       const name='api_web_' + require('nanoid').nanoid(8)
       let windowInstance = await global.windowManager.create({
         name: name ,

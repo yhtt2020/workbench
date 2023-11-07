@@ -75,6 +75,26 @@ export const appStore = defineStore('appStore', {
       darkMod: true, //深色模式
       attachScreen: null, //id,bounds
       isAllSelected:false,
+
+      courierSigned:{ // 屏蔽快递已经签收的订单
+        blockSigned:true, 
+        courierTime:'24小时'
+      },
+
+      courierStatus:{ // 状态图标显示
+        statusBar:true, 
+        currentStatus:'特别关注（订阅物流）'
+      },
+
+      courierRefresh:{ // 开启自动订单数据自动刷新
+        autoRefresh:true, 
+        autoTime:'30分钟'
+      },
+
+    
+      relevanceEnable:false, //开启关联的电商平台快递 
+      customCourier:false, // 自定义快递
+      
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条

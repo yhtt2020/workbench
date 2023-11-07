@@ -4,21 +4,30 @@
       <HorizontalPanel :navList="flowType" v-model:selectType="defaultFlow" />
 
       <div class="flex right-button">
-        <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2"
-          @click="addCourier">
-          <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
-        </div>
+        
+        <DropIndex :navList="addList"></DropIndex>
 
-        <div class="flex items-center px-2 py-1.5 ml-3 justify-center category-button pointer rounded-lg xt-bg-2"
-          @click="openSetting">
-          <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
-        </div>
-
-
-        <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2"
-          @click="close">
-          <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
-        </div>
+        <a-tooltip placement="top" class="mr-3">
+          <template #title>
+            <span class="xt-text-2">设置</span>
+          </template>
+          <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
+            </div>
+          </xt-button>
+        </a-tooltip>
+        
+        <a-tooltip placement="top">
+          <template #title>
+            <span class="xt-text-2">关闭</span>
+          </template>
+          <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
+            </div>
+          </xt-button>
+        </a-tooltip>
       </div>
     </div>
 
@@ -34,59 +43,75 @@
 
     <template v-else>
       <div class="flex justify-between px-6">
+        <template v-if="allVisible">
+          <SortList  :list="filterList" @rightSelect="getRightItem" />
+          <div style="width: 452px;">
+            <UpdateIcon :orderData="rightList" />
+            <div class="px-4 rounded-lg xt-bg-2">
+              <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
+                <TimeLine :list="rightList?.Traces" />
+              </vue-custom-scrollbar>
+            </div>
+          </div> 
+        </template>
 
-        <SortList v-if="allVisible" :list="this.filterList" @rightSelect="getRightItem" />
-        <div style="width: 452px;" v-else class="flex flex-col">
-          <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-            <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
-              <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-              </div>
-              <!-- {{ otherList }} -->
-              <!-- {{ currentID }}
-              {{ item.EBusinessID }} -->
-              <div class="flex flex-col" style="width: calc(100% - 84px);">
-                <div class="flex items-center justify-between ">
-                  <span class="xt-font font-16 font-600">
-                    {{ item.LogisticCode }}
-                  </span>
-
-                  <div class="flex">
-                    <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ switchCompany[index] }}
+        <template v-else>
+          <div style="width: 452px;" class="flex flex-col">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
+              <div v-for="(item,index) in otherList" :class="{ 'select': currentID === item.LogisticCode }"
+                class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+                <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+                  <div class="w-full flex">
+                    <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                      <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <div class="flex items-center justify-between " style="width: 355px;">
+                        <span class="xt-font font-16 font-600">
+                          {{ item.LogisticCode }}
+                        </span>
+      
+                        <div class="flex">
+                          <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
+                            <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
+                              {{ switchCompany[index] }}
+                            </div>
+                            <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
+                              {{ switchState[index] }}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
-                        {{ switchState[index] }}
+      
+                      <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
+                      <div class="summary">
+                        {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1].AcceptTime }}</div>
-                <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1].AcceptStation }}
-                </div>
+                </xt-menu>
               </div>
-            </div>
-          </vue-custom-scrollbar>
-        </div>
-
-        <div style="width: 452px;">
-          <UpdateIcon :orderData="rightList" />
-          <div class="px-4 rounded-lg xt-bg-2">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
-              <TimeLine :list="rightList?.Traces" />
+              <div style="height: 12px;"></div>
             </vue-custom-scrollbar>
           </div>
-        </div>
+          <div style="width: 452px;" v-if="otherList.length !== 0">
+            <UpdateIcon :orderData="rightList" />
+            <div class="px-4 rounded-lg xt-bg-2">
+              <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
+                <TimeLine :list="rightList?.Traces" />
+              </vue-custom-scrollbar>
+            </div>
+          </div>
+        </template>
       </div>
+    
     </template>
 
   </div>
 
   <AddCourierModal ref="addCourierRef" />
+
+  <CourierSetting ref="courierSettingRef" />
 </template>
 
 <script>
@@ -101,11 +126,16 @@ import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'
 import SortList from '../dropdown/SortList.vue'
 import { kdCompany, kdState, switchColor } from '../../mock'
+
+import CourierSetting from '../CourierSetting.vue'
+import DropIndex from '../dropdown/DropIndex.vue'
+
 export default {
   props: [''],
 
   components: {
-    SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList
+    SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList,
+    CourierSetting,DropIndex,
   },
 
   data() {
@@ -126,13 +156,55 @@ export default {
       currentID: '',
 
       // rightList:this.couriersList[0], 接收选中的详情
-      rightList: {}
+      rightList: {},
+
+      menus:[
+      {
+       name:'查看详情',
+       callBack:()=>{},
+       newIcon:'fluent:apps-list-detail-24-regular'
+      },
+      {
+        name:'订阅物流',
+        callBack:()=>{
+
+        },
+        newIcon:'fluent:star-12-regular'
+      },
+      {
+       name:'删除快递',
+       callBack:()=>{
+         this.removeSortData(this.revID)
+         this.removeDbData(this.revID)
+       },
+       newIcon:'akar-icons:trash-can',
+       color:'var(--error)'
+      },
+      ],
+
+      addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ]
     }
   },
 
   computed: {
     ...mapWritableState(courierModalStore, ['sortList']),
-    ...mapWritableState(courierStore, ['couriersDetailMsg']),
+    ...mapWritableState(courierStore, ['couriersDetailMsg','courierDetailList']),
     flowType() {
       const allLength = this.couriersList.length;
       //  揽收
@@ -143,6 +215,8 @@ export default {
       const onWay = this.couriersList.filter((item) => { return item.State !== '1' && item.StateEx !== '202' && item.State !== '3' })
       //  派件中
       const outDelivery = this.couriersList.filter((item) => { return item.StateEx === '202' })
+      
+
       const list = [...courierType]
       const filterList = list.map((item) => {
         switch (item.name) {
@@ -158,18 +232,19 @@ export default {
             return { title: `${item.title}${hasSigned.length !== 0 ? `(${hasSigned.length})` : ''}`, name: item.name, type: item.type }
         }
       })
-
       return filterList
 
     },
 
     filterList() {
+      console.log('查看数据',this.couriersList);
+      // return this.couriersList
       if (this.allVisible) {
         if (this.sortList.length !== 0) {
           return this.sortList
         } else {
           return this.couriersList
-        }
+        } 
       }
     },
 
@@ -215,6 +290,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(courierStore,['getDbCourier','removeDbData']),
+    ...mapActions(courierModalStore,['removeSortData']),
     // 添加快递入口
     addCourier() {
       this.$refs.addCourierRef.openCourierModel()
@@ -244,14 +321,32 @@ export default {
 
     getRightItem(data) {
       this.rightList = data
+    },
+
+    // 打开设置
+    openSetting(){
+      this.$refs.courierSettingRef.openSettingModal()
     }
   },
+
   async mounted() {
-    this.couriersList = await this.couriersDetailMsg
+    this.getDbCourier()
+    this.couriersList = this.courierDetailList
     this.rightList = this.couriersList[0]
-    this.currentID=this.couriersList[0].LogisticCode
+    this.currentID=this.couriersList[0]?.LogisticCode
     // console.log(this.couriersList[0],'couriersList');
   },
+
+  watch:{
+    'defaultFlow':{
+      handle(newVal){
+        // console.log('查看',newVal);
+        this.defaultFlow = newVal
+      },
+      immediate:true,
+      deep:true
+    }
+  }
 
 };
 </script>

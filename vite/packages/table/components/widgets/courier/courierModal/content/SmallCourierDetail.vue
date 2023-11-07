@@ -1,20 +1,32 @@
 <template>
   <template v-if="!detailVisible">
     <div class="flex flex-col" style="width: 500px; height: 600px">
-      <div  class="flex items-center justify-center h-16" style="position: relative">
+      <div  class="flex items-center mb-4 justify-center h-16" style="position: relative">
         <TopDrop :navList="typeList" v-model:selectType="currentType" />
         <div class="flex top-right">
-          <div class="flex items-center px-2 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="addCourier">
-           <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;"/>
-          </div>
-   
-          <div class="flex items-center px-2 ml-3 py-1.5 justify-center category-button pointer rounded-lg xt-bg-2" @click="openSetting">
-           <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;"/>
-          </div>
+          <DropIndex :navList="addList" />
+
+          <a-tooltip placement="top" class="mr-3">
+            <template #title>
+              <span class="xt-text-2">设置</span>
+            </template>
+            <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
+              <div class="flex items-center justify-center">
+                <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
+              </div>
+            </xt-button>
+          </a-tooltip>
           
-          <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2" @click="close">
-           <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
-          </div>
+          <a-tooltip placement="top">
+            <template #title>
+              <span class="xt-text-2">关闭</span>
+            </template>
+            <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
+              <div class="flex items-center justify-center">
+                <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
+              </div>
+            </xt-button>
+          </a-tooltip>
    
         </div>
       </div>
@@ -33,8 +45,8 @@
         <vue-custom-scrollbar :settings="settingsScroller" v-else>
           <div class="flex flex-col px-6" ref="smallSortRef" style="height:calc(100% - 64px);">
             <div v-for="(item,index) in otherList"  class="rounded-lg">
-              <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-                <div :class="{'select':currentID === item.id}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+              <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+                <div :class="{'select':currentID === item.LogisticCode}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
                   <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                     <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
                   </div>
@@ -54,23 +66,28 @@
                     </div>
                   </div>
                     </div>
-                    <div class="my-2">{{ item.Traces[item.Traces.length - 1].AcceptTime  }}</div>
+                    <div class="my-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime  }}</div>
                     <div class="summary">
-                      {{ item.Traces[item.Traces.length - 1].AcceptStation }}
+                      {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
                     </div>
                   </div>
                 </div>
               </xt-menu>
             </div>
+            <div style="height: 12px;"></div>
           </div>
         </vue-custom-scrollbar>
       </template>
     </div>
   </template>
+
   <template v-else> 
     <LogisticsDetail :orderNum="seeItem" @close="close" @back="detailVisible = false"/>
   </template>
+
   <AddCourierModal ref="addCourierRef"/>
+
+  <CourierSetting ref="courierSettingRef"/>
 </template>
 
 <script>
@@ -78,12 +95,17 @@ import { mapActions,mapWritableState } from 'pinia';
 import { courierModalStore } from '../courierModalStore'
 import { courierType } from '../modalMock'
 import { Icon as SmallIcon } from '@iconify/vue'
+import { courierStore } from '../../../../../store/courier'
 
 import TopDrop from "../dropdown/index.vue";
 import SortList from "../dropdown/SmallSortList.vue";
 import AddCourierModal from '../AddCourierModal.vue';
 import LogisticsDetail from '../content/LogisticsDetail.vue';
 import { kdCompany, kdState, switchColor } from '../../mock'
+
+import CourierSetting from '../CourierSetting.vue';
+import DropIndex from '../dropdown/DropIndex.vue';
+
 export default {
   props: ["list"],
 
@@ -92,7 +114,9 @@ export default {
     TopDrop,
     AddCourierModal,
     SmallIcon,
-    LogisticsDetail
+    LogisticsDetail,
+    CourierSetting,
+    DropIndex
   },
 
   data() {
@@ -100,7 +124,8 @@ export default {
       detailVisible: false,
       currentType:{title:`全部${this.list.length !== 0 ? `(${this.list.length})` : '' }`,name:'all'},
       seeItem:{},
-      // currentID:this.list[0].id,
+      currentID:this.list[0]?.LogisticCode,
+      // item.LogisticCode
 
       settingsScroller: { 
        useBothWheelAxes: true,
@@ -124,13 +149,34 @@ export default {
        },
        {
         name:'删除快递',
-        callBack:()=>{},
+        callBack:()=>{
+          console.log(this.revID);
+          this.removeDbData(Number(this.revID))
+        },
         newIcon:'akar-icons:trash-can',
         color:'var(--error)'
        },
       ],
 
       sortItem:{},
+
+      addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ],
       
     };
   },
@@ -243,6 +289,8 @@ export default {
   },
 
   methods:{
+    ...mapActions(courierStore,['removeDbData','getDbCourier']),
+
     close(){
       this.$emit('close')
     },
@@ -261,7 +309,7 @@ export default {
     // 查看快递详情
     seeDetail(data){
      console.log('排查问题',data);
-     this.currentID = data.id
+     this.currentID = data.LogisticCode
      this.seeItem = data
      this.detailVisible = true
     },
@@ -272,6 +320,11 @@ export default {
       this.sortItem = data
       this.seeItem = data
       this.detailVisible = true
+    },
+
+    // 打开设置弹窗
+    openSetting(){
+      this.$refs.courierSettingRef.openSettingModal()
     }
 
   }

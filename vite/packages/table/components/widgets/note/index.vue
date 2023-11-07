@@ -9,25 +9,39 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-  <!-- 图标 -->
+  <template #left-title-icon>
+    <!-- 图标 -->
     <div class="icon flex justify-center align-center"
-      style="width: 35px;height: 24px;position: absolute;left: 7px;top:15px;">
+      style="width: 35px;height: 24px;position: absolute;left: 3px;top:16px;">
       <Icon :icon="icons.notepad12Regular" width="20" height="20" />
     </div>
+  </template>
+  <!-- 窗口化 -->
+  <template #right-menu>
+    <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
+        <Icon width="20" height="20" icon="fluent:window-multiple-16-filled" />
+      </div>
+  </template>
+
+  <template #title-text>
+    <a-input
+      style="
+        border: none;
+        box-shadow: none !important;
+        position: relative;
+        left: -15px;
+        top: 1px;
+        font-size: 16px;
+        padding: 0;
+      "
+      maxlength="15"
+      v-model:value="this.tmpTitle"
+      @blur="changeNoteTitle"
+    ></a-input>
+  </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
-        <!-- :style="{ backgroundImage: background, color: fontColor }" -->
-        <!-- <textarea
-          spellcheck="false"
-          :style="{ backgroundImage: background}"
-          style="color: var(--primary-text);"
-          class="box no-drag"
-          placeholder="输入卡片内容"
-          v-model="text"
-          @blur="updateText"
-        >
-        </textarea> -->
         <Markdown :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
       </template>
     </cardDrag>
@@ -75,7 +89,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
 import { noteStore } from '../../../apps/note/store';
 
 export default {
-  name:'便签', 
+  name:'便签',
   components: {
     Widget,
     Icon,
@@ -106,31 +120,25 @@ export default {
     // reSize,
   },
   computed:{
-    ...mapWritableState(noteStore, ['selNoteText']),
+    ...mapWritableState(noteStore, ['selNoteText','initFlag']),
   },
   data() {
     return {
       fontColors: ["white", "black", "red", "green", "blue"],
       fontColor: "white",
+      tmpTitle:'桌面标签',
       options: {
         className: "card",
         title: "桌面便签",
         icon: "",
+        // 用于窗口化
         isCopy:true,
         copyContent:()=>{
           require('electron').clipboard.writeText(this.customData.text)
           message.success("已成功复制到剪切板");
         },
         type: "games",
-        isEdit:true,
-        changeNoteTitle:(e)=>{
-          if (e.target.value != this.customData.title) {
-            this.updateCustomData(this.customIndex,{
-                title:e.target.value,
-            },this.desk)
-            this.saveDeskTitle(this.customIndex,e.target.value)
-          }
-        }
+
       },
       settingVisible: false,
       menuList: [
@@ -142,6 +150,19 @@ export default {
             this.settingVisible = true;
           },
         },
+        {
+          newIcon: "fluent:open-20-filled",
+          title: "跳转便签",
+          fn:()=>{
+            this.$router.push({
+              name:'note',
+              params:{
+                customIndex:this.customIndex
+              }
+            })
+          }
+
+        }
       ],
       color: {
         color1: "#57BF60",
@@ -193,6 +214,7 @@ export default {
   },
   mounted() {
     this.text = this.customData.text;
+    this.tmpTitle =this.customData.title;
     this.background = this.customData.background;
     this.colors = this.customData.color;
     if (!this.customData.fontColor) {
@@ -201,7 +223,7 @@ export default {
   },
 
   methods: {
-    
+
     ...mapActions(noteStore, ['changeDeskBg','saveDeskTitle']),
     // updateText() {
     //   this.updateCustomData(
@@ -225,8 +247,10 @@ export default {
         },
         this.desk
       );
-
-      this.changeDeskBg(this.customIndex,backgroundColor);
+      // 如果用户没有初始化过不加载
+      if (this.initFlag) {
+        this.changeDeskBg(this.customIndex,backgroundColor);
+      }
 
       this.background = backgroundColor;
       if (
@@ -266,7 +290,16 @@ export default {
       );
       this.fontColor = color;
     },
-
+    // 修改便签标题
+    changeNoteTitle(){
+      // 数据发生变动开始保存
+      if (this.tmpTitle != this.customData.title) {
+        this.updateCustomData(this.customIndex,{
+            title:this.tmpTitle,
+        },this.desk)
+        this.saveDeskTitle(this.customIndex,this.tmpTitle)
+      }
+    }
   },
 };
 </script>

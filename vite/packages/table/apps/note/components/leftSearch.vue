@@ -9,6 +9,7 @@
                 border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
                 border-radius: 10px;"
                 placeholder="搜索"
+                maxlength="10"
                 v-model:value="this.searchValue"
                 @change="this.searchNote(this.searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
@@ -23,9 +24,9 @@
             <!-- <div @click="this.deTest">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div>
-            <div>{{ this.isSelTab }}</div> -->
-            <xt-menu :menus="menus" v-for="(item,index) in this.noteList">
+            <div @click="this.findAll">db数据</div> -->
+            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
+            >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
                 :class="index == this.selNote?'note-active':''">
@@ -78,6 +79,9 @@
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
   import { formatTimestamp } from '../../../util'
+  import { cardStore } from "../../../store/card";
+import { message } from 'ant-design-vue';
+
   export default {
     components: {
         Icon,
@@ -111,20 +115,38 @@
                     newIcon: "fluent:open-20-filled",
                 },
                 { 
+                    label: "跳转到桌面", 
+                    newIcon: "majesticons:monitor-line",
+                    callBack:()=>{
+                        if (this.noteList[this.selNote].deskName) {
+                            this.deskList.forEach((item,index)=>{
+                                if (this.noteList[this.selNote].deskId == item.id) {
+                                    this.currentDeskId = item.id
+                                    this.$router.push({
+                                        name:'home',
+                                    })
+                                }
+                            })
+                        }else{
+                            if (this.isSelTab) {
+                                message.error('该便签已被删除')
+                            }else{
+                                message.error('请先添加桌面')
+                            }
+                        }
+                    }
+                },
+                { 
                     // name:"删除便签",
                     label: "删除便签", 
                     newIcon: "akar-icons:trash-can",
                     color:'#FF4D4F',
                     callBack:()=>{
-                        // this.menus.
                         if (!this.isSelTab) {
-                            
                             // 删除
-                            //console.log('删除');
                             this.moveToTrash()
                         }else{
                             // 彻底删除
-                            //console.log('彻底删除');
                             this.deleteNote()
 
                         }
@@ -135,6 +157,7 @@
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
+        ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
     },
     mounted() {
     },
@@ -142,15 +165,16 @@
         isSelTab(newval,oldval){
             if (newval) {
                 this.menus[0].label = '还原'
-                this.menus[1].label = '彻底删除'
+                this.menus[2].label = '彻底删除'
             }else{
                 this.menus[0].label = '添加到桌面'
-                this.menus[1].label = '删除便签'
+                this.menus[2].label = '删除便签'
             }
         }
     },
     methods: {
         ...mapActions(noteStore,['moveToTrash','deTest','addNote','restore','searchNote','findAll','deleteNote']),
+        ...mapActions(cardStore, ['switchToDesk','setRouteParams']),
         formatTimestamp,
         changeNote(n){
             this.selNote = n
@@ -158,12 +182,15 @@
             this.selNoteText = this.noteList[n].customData.text
             
         },
-        showData(){
-            console.log(this.noteList);
-        },
-        showDesk(){
-            console.log(this.deskList);
-        },
+        // showData(){
+        //     console.log(this.noteList);
+        // },
+        // showDesk(){
+        //     console.log(this.deskList);
+        // },
+        changeMenu(index){
+            this.selNote = index
+        }
     },
   };
   </script>
