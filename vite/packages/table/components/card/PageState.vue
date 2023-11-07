@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-col justify-center items-center flex-1" style="height:90%" v-if="isShow">
-    <Icon icon="fluent-emoji:sleeping-face" width="56" height="56" />
-    <div class="mt-4">功能在{{ platform }}无法使用</div>
+    <!-- <Icon icon="fluent-emoji:sleeping-face" width="56" height="56" /> -->
+    <Icon icon="fluent:plug-disconnected-16-regular" width="40" height="40" style="color: var(--secondary-text);" />
+    <div class="mt-4" style="font-family: 'PuHuiTi400';font-size: 14px;color: var(--secondary-text);">{{ props.options.title }}在{{ platform }}下不可用</div>
   </div>
   <slot v-else></slot>
 </template>
@@ -15,9 +16,14 @@ const props = defineProps({
   env:{
     type:Object,
     default:{},
-  }
+  },
+  options:{
+    type:Object,
+    default:{},
+  },
 })
 onMounted(()=>{
+  console.log(props.options);
 
 })
 

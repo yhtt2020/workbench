@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon'>
+  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <div></div>
 <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
 <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
@@ -171,6 +171,13 @@ export default {
       max: 99999,
       lastUsers: [],
       total: 0,
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline: true
+      }
+
     }
   },
   async mounted () {

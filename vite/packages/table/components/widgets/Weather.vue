@@ -110,7 +110,7 @@ export default {
       today: "",
       options:{
         className:'card small',
-        title:'',
+        title:'天气',
         icon:'',
         type:'weather',
       },

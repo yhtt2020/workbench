@@ -6,7 +6,7 @@ import cache from "../../components/card/hooks/cache";
 export const offlineStore = defineStore("offlineStore", {
   state: () => ({
     isOffline:false,
-    offlineList:['weather','OilPrices','supervisory','news','todo','games','GameEpic','historyInfo','smallRank','gameInformation','Dashboard','ShortTodo','Guider','ShortChart','yuanCommunity']
+    offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier']
 
   }),
   getters:{},

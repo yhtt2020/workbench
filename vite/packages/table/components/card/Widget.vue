@@ -34,7 +34,7 @@
       <!-- 标题栏end   -->
       <!--  主体内容插槽start  -->
       <!-- v-if="env[$currentEnv]" -->
-      <PageState :env="env">
+      <PageState :env="env" :options="options">
         <slot></slot>
       </PageState>
       <!--  主题
