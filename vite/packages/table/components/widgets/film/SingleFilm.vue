@@ -1,5 +1,13 @@
 <template>
     <Widget :desk="desk" :options="options" v-if="!detailToggle">
+      <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 24px;" />
+        </div>
+      </template>
       <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div v-if="isLoading">
@@ -7,12 +15,12 @@
         </div>
         <div v-else>
           <div class="pointer title-refresh" @click="refreshPage"></div>
-          <div class="w-full  cursor-pointer"
+          <div class="w-full cursor-pointer"
           style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
           @click="btnDetail(singleFilm.id)"
           >
             <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
-            <div class="right-top text-center bg-black bg-opacity-70"
+            <div class="text-center bg-black right-top bg-opacity-70"
             style="font-weight: 600;font-family: PingFangSC-Semibold;background:var(--primary-bg) !important;">
               <span v-if="singleFilm.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;color: var(--primary-text);">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{singleFilm.score}}</span>
@@ -34,13 +42,15 @@
   import DataStatu from "../DataStatu.vue"
   import { mapWritableState, mapActions } from 'pinia'
   import { filmStore } from '../../../store/douBan';
+  import {Icon as newIcon} from '@iconify/vue'
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
     components:{
       Widget,
       FilmDetail,
-      DataStatu
+      DataStatu,
+      newIcon
     },
     props: {
       desk:{
@@ -62,7 +72,7 @@
         options:{
           className:'card',
           title:'正在热映',
-          icon:'video',
+          // icon:'video',
           type:'singleFilm'
         },
         filmList: [],

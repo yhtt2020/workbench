@@ -1,7 +1,8 @@
 <template>
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
         <div class="icon" @click="onHistoryMessage">
-            <CalendarOutlined style="width:20px;height:20px;" />
+            <!-- <CalendarOutlined style="width:20px;height:20px;" /> -->
+            <Icon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
         <div class="box-flex">
             <div>{{this.history.date}}</div> 
@@ -86,7 +87,7 @@ export default {
         width: 20px;
         height: 20px;
         position: relative;
-        top: -21px;
+        top: -22px;
         left: 0;
     }
     :deep(.anticon svg){

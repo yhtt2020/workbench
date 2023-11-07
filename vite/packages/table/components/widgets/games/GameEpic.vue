@@ -1,12 +1,20 @@
 <template>
   <Widget :options="options" :customIndex="customIndex" :desk="desk">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="cib:epic-games" style="font-size: 22px;" />
+        </div>
+      </template>
     <HorizontalPanel style="min-width: 100%" :navList="epicTips" v-model:selectType="epicType" class="mt-2 drawer-item-bg"></HorizontalPanel>
     <template v-if="epicType.name === 'week'">
       <div class="w-full" v-if="detailShow === false">
-        <div class="flex items-center  justify-center my-10" v-if="weekEpic.length === 0">
+        <div class="flex items-center justify-center my-10" v-if="weekEpic.length === 0">
           <a-empty :image="simpleImage" />
         </div>
-        <div v-else class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in weekEpic"
+        <div v-else class="relative rounded-lg cursor-pointer week-image" v-for="weekItem in weekEpic"
              @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
@@ -20,10 +28,10 @@
     </template>
     <template v-else>
       <div class="w-full" v-if="detailShow === false">
-        <div class="flex items-center  justify-center my-10" v-if="nextWeekEpic.length === 0">
+        <div class="flex items-center justify-center my-10" v-if="nextWeekEpic.length === 0">
           <a-empty :image="simpleImage" />
         </div>
-        <div v-else class="week-image rounded-lg relative cursor-pointer" v-for="weekItem in nextWeekEpic"
+        <div v-else class="relative rounded-lg cursor-pointer week-image" v-for="weekItem in nextWeekEpic"
              @click="enterWeek(weekItem)">
           <img class="rounded-lg" :src="weekItem.keyImages[0].url" alt=""
                style="width:100%;height:100%;object-fit: cover;">
@@ -45,13 +53,14 @@ import HorizontalPanel from '../../HorizontalPanel.vue'
 import { sendRequest, startOfNextWeek, startOfWeek, remainderDay } from '../../../js/axios/api'
 import EpicDetail from './EpicDetail.vue'
 import _ from 'lodash-es'
-
+import {Icon as newIcon} from '@iconify/vue' 
 export default {
   name: 'GameEpic',
   components: {
     Widget,
     HorizontalPanel,
-    EpicDetail
+    EpicDetail,
+    newIcon
   },
   props: {
     customIndex: {
@@ -67,7 +76,7 @@ export default {
       options: {
         className: 'card',
         title: 'Epic喜加一',
-        icon: 'epicgames',
+        // icon: 'epicgames',
         type: 'games',
         epicShow: true,
       },
