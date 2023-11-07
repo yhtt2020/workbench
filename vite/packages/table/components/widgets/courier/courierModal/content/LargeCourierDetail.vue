@@ -4,17 +4,9 @@
       <HorizontalPanel :navList="flowType" v-model:selectType="defaultFlow" />
 
       <div class="flex right-button">
-        <a-tooltip placement="top" class="mx-3">
-          <template #title>
-            <span class="xt-text-2">添加</span>
-          </template>
-          <xt-button w="32" h="32" @click="addCourier" style="border-radius: 8px !important;">
-            <div class="flex items-center justify-center">
-              <SmallIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
-            </div>
-          </xt-button>
-        </a-tooltip>
-      
+        
+        <DropIndex :navList="addList"></DropIndex>
+
         <a-tooltip placement="top" class="mr-3">
           <template #title>
             <span class="xt-text-2">设置</span>
@@ -112,22 +104,6 @@
           </div>
         </template>
       </div>
-
-      <!-- <div class="flex justify-between px-6">
-      
-        <div style="width: 452px;" class="flex flex-col">
-         
-        </div>
-
-        <div style="width: 452px;">
-          <UpdateIcon :orderData="rightList" />
-          <div class="px-4 rounded-lg xt-bg-2">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:426px;">
-              <TimeLine :list="rightList?.Traces" />
-            </vue-custom-scrollbar>
-          </div>
-        </div> 
-      </div> -->
     
     </template>
 
@@ -150,14 +126,16 @@ import AddCourierModal from '../AddCourierModal.vue'
 import UpdateIcon from '../updateIcon/index.vue'
 import SortList from '../dropdown/SortList.vue'
 import { kdCompany, kdState, switchColor } from '../../mock'
+
 import CourierSetting from '../CourierSetting.vue'
+import DropIndex from '../dropdown/DropIndex.vue'
 
 export default {
   props: [''],
 
   components: {
     SmallIcon, HorizontalPanel, TimeLine, AddCourierModal, UpdateIcon, SortList,
-    CourierSetting,
+    CourierSetting,DropIndex,
   },
 
   data() {
@@ -202,7 +180,25 @@ export default {
        newIcon:'akar-icons:trash-can',
        color:'var(--error)'
       },
-     ],
+      ],
+
+      addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ]
     }
   },
 

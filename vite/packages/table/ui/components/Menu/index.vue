@@ -1,10 +1,9 @@
 <template>
   <div
     ref="containerRef"
-    @click.stop.prevent="handleClickMenu($event)"
-    @contextmenu.stop.prevent="handleContextMenu($event)"
+    @click.stop.prevent="handleOpenMenu($event, 'click')"
+    @contextmenu.stop.prevent="handleOpenMenu($event, 'contextmenu')"
   >
-    <!-- 展开菜单的范围 -->
     <slot></slot>
     <teleport to="body">
       <Transition
@@ -16,16 +15,14 @@
           v-if="show"
           class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
           :style="pos"
+          v-resize="handleMenuViewport"
+          @mouseleave="handleCloseLock()"
+          @mouseover="handleStartLock()"
         >
-          <div
-            class="list w-full h-full p-2"
-            v-resize="handeleMenuViewport"
-            @mouseleave="handeleCloseLock()"
-            @mouseover="handeleStartLock()"
-          >
-            <slot name="menu">
+          <slot name="menu">
+            <div class="list w-full h-full p-2">
               <Menus
-                @handleClick="handleClick"
+                @handleClick="handleItemCallBack"
                 :menus="menus"
                 :name="name"
                 :fn="fn"
@@ -34,8 +31,8 @@
                   <slot name="cardSize"></slot>
                 </template>
               </Menus>
-            </slot>
-          </div>
+            </div>
+          </slot>
         </div>
       </Transition>
     </teleport>
@@ -47,52 +44,63 @@ import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
-const props = defineProps({
-  menus: {
-    type: Array<any>,
-    default: () => [],
-  },
-  name: {
-    default: "label",
-  },
-  fn: {
-    default: "callBack",
-  },
-  start: {
-    default: true,
-  },
-  lock: {
-    default: true,
-  },
-  /**
-   * 展开触发模式
-   * contextmenu click all null
-   */
-  model: {
-    default: "contextmenu",
-  },
-  // 用于手动触发事件
-  trigger: {
-    default: false,
-  },
-  // 这是props 他提供一个beforeCreate 默认返回true 怎么让父组件传一个函数，在里面执行他自己的内容 成功返回true
-  beforeCreate: {
-    type: Function,
-    default: () => {
-      return true;
-    }, // 默认是一个返回true的函数
-  },
+// import type { MenuProps } from "./types";
+interface Menus {
+  name: string;
+  fn?: () => void;
+  lock?: boolean;
+  children?: any[];
+}
+
+export interface MenuProps {
+  menus: Menus[];
+  name?: string;
+  fn?: string;
+  type?: string;
+  lock?: boolean;
+  model?: string;
+  beforeCreate?: () => boolean;
+  beforeUnmount?: () => boolean;
+}
+
+const props = withDefaults(defineProps<MenuProps>(), {
+  menus: () => [
+    {
+      name: "下班",
+      fn: () => {
+        console.log("我到点下班啦！~ ");
+      },
+    },
+    {
+      name: "吃啥",
+      lock: true,
+      children: [
+        {
+          name: "炸鸡",
+          fn: () => {
+            console.log("这餐吃炸鸡~ ");
+          },
+        },
+      ],
+    },
+  ],
+  name: "label",
+  fn: "callBack",
+  type: "menu",
+  lock: true,
+  model: "contextmenu",
+  beforeCreate: () => true,
+  beforeUnmount: () => true,
 });
 
-const { model, trigger, start, lock } = toRefs(props);
+const { type, model, lock, beforeCreate, beforeUnmount } = toRefs(props);
 /**
  * 菜单回调
- * @beforeCreate 菜单打开前
  * @mounted 菜单打开后
  * @selected 菜单项中时
  * @destroyed 菜单关闭后
  */
-const emits = defineEmits(["beforeCreate", "mounted", "selected", "destroyed"]);
+const emits = defineEmits(["mounted", "selected", "destroyed"]);
 
 /**
  * 打开菜单
@@ -101,59 +109,39 @@ const show = ref(false);
 const menuX = ref(0);
 const menuY = ref(0);
 
-const setup = (e: any) => {
+function handleOpenMenu(e: any, currentModel: string) {
+  if (!beforeCreate.value()) return;
+
+  if (model.value != currentModel && model.value != "all") return;
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
-  emits("mounted");
-};
+}
 
-const handeleCustomTrigger = (e: any) => {
-  if (!props.beforeCreate()) return;
-  emits("beforeCreate");
-  if (trigger.value) {
-    setup(e);
-  }
-};
-// 右键
-const handleContextMenu = (e: any) => {
-  handeleCustomTrigger(e);
-  if (!start.value || model.value != "contextmenu") return;
-  setup(e);
-};
-// 左键
-const handleClickMenu = (e: any) => {
-  handeleCustomTrigger(e);
-  if (!start.value || model.value != "click") return;
-  setup(e);
-};
 // 菜单项事件点击 调用回调函数
-const handleClick = (menu: any) => {
+function handleItemCallBack(menu: any) {
   if (!menu?.lock) {
     show.value = false;
   }
-  emits("selected");
+  emits("selected", menu);
   menu[props.fn] && menu[props.fn](menu);
-};
+}
 /**
  * 关闭菜单
  */
 let lockState = ref(false);
-const handeleStartLock = () => {
+function handleStartLock() {
   if (lock.value) lockState.value = true;
-};
-const handeleCloseLock = () => {
+}
+function handleCloseLock() {
   if (lock.value) lockState.value = false;
-};
-const handleCloseMenuCore = () => {
+}
+function handleCloseMenu() {
+  if (lockState.value) return;
+  if (!beforeUnmount.value()) return;
   show.value = false;
   emits("destroyed");
-};
-
-const handleCloseMenu = () => {
-  if (lockState.value) return;
-  handleCloseMenuCore();
-};
+}
 
 // 获取 视图大小
 const { windowWidth, windowHeight } = useWindowViewport();
@@ -161,7 +149,7 @@ const { windowWidth, windowHeight } = useWindowViewport();
 const w = ref(0);
 const h = ref(0);
 
-const handeleMenuViewport = (size: any) => {
+const handleMenuViewport = (size: any) => {
   w.value = size.width;
   h.value = size.height;
 };

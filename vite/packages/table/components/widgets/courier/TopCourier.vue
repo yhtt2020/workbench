@@ -13,13 +13,15 @@
                  </div>
              </div>
              <div class="flex">
-                 <a-tooltip autoAdjustOverflow title="添加快递">
+                 <!-- <a-tooltip autoAdjustOverflow title="添加快递">
                      <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="addCourier">
-                         <newIcon icon="fluent:add-16-filled" style="vertical-align: sub; padding-bottom: 2px;"></newIcon>
-                     </xt-button></a-tooltip>
+                         <newIcon icon="fluent:add-16-filled" style="vertical-align: sub;"></newIcon>
+                     </xt-button></a-tooltip> -->
+                 <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
+
                  <a-tooltip autoAdjustOverflow title="刷新">
-                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="refreshCourier">
-                         <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;padding-bottom: 2px;"></newIcon>
+                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="refreshExpress">
+                         <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="vertical-align: sub;"></newIcon>
                      </xt-button></a-tooltip>
                  <a-tooltip autoAdjustOverflow title="设置">
                      <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="openCourierSetting">
@@ -83,6 +85,8 @@ import LogisticsDetail from './courierModal/content/LogisticsDetail.vue';
 import CourierSetting from './courierModal/CourierSetting.vue';
 import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
+import DropIndex from './courierModal/dropdown/DropIndex.vue';
+
 export default {
  name: '我的快递',
  components: {
@@ -97,7 +101,8 @@ export default {
      CourierSetting,
      TopDrop,
      LargeCourierDetail,
-     SmallCourierModal
+     SmallCourierModal,
+     DropIndex
  },
  data() {
      return {
@@ -133,7 +138,24 @@ export default {
          ],
          currentType:{title:'全部',name:"全部",type:'all'},
          largeDetailVisible:true,
-         showSmallDetail:false
+         showSmallDetail:false,
+         addList:[
+        {
+          title:'京东账号',name:'jd',
+          callBack:()=>{}
+        },
+        {
+          title:'淘宝账号',name:'tb',
+          callBack:()=>{}
+        },
+        { 
+          title:'自定义',
+          icon:'fluent:add-16-filled',
+          callBack:()=>{
+            this.addCourier()
+          }
+        },
+      ]
      }
  },
  methods: {

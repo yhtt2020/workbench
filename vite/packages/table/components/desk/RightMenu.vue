@@ -3,9 +3,8 @@
     :menus="menus"
     name="name"
     fn="fn"
-    :start="menuState"
+    :beforeCreate="menuState"
     :model="model"
-    :beforeCreate="test"
   >
     <slot></slot>
   </Menu>
@@ -25,9 +24,9 @@ const props = defineProps({
 const widgetStore = useWidgetStore();
 
 const { rightModel } = storeToRefs(widgetStore);
-const menuState = computed(() => {
+function menuState() {
   return rightModel.value == "follow";
-});
+}
 </script>
 
 <style lang="scss" scoped></style>

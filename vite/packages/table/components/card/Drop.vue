@@ -11,10 +11,10 @@
 import { ref, watch, computed, unref } from "vue";
 import { useDrop } from "vue3-dnd";
 import { storeToRefs } from "pinia";
-import { toRefs } from "@vueuse/core";
+import { toRefs ,useElementSize} from "@vueuse/core";
 import useElementDimensions from "./get";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
-
+  // @vueuse
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 

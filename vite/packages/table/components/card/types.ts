@@ -17,6 +17,7 @@ export interface IOption {
   rightIcon?: string;
   // 背景色
   background?: string;
+  titleRoute:any;
 }
 
 // 菜单项
