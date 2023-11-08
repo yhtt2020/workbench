@@ -7,20 +7,24 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
+    <div style="position: absolute;top: 14px;left: 120px;">
+      <xt-button :w="22" :h="22" @click="refreshAll">
+        <div class="flex items-center justify-center">
+          <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+            icon="akar-icons:arrow-clockwise" />
+        </div>
+      </xt-button>
+    </div>
     <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
-      <template v-if="!showWay">
-        <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
+      <!-- <template v-if="!showWay"> -->
+      <!-- <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
           <div class="xt-text xt-font ">快递筛选</div>
           <div class="flex items-center">
             <span class="mr-2">2023-11-03 11:11更新</span>
-            <xt-button :w="22" :h="22"  @click="refreshAll">
-              <div class="flex items-center justify-center">
-                <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:arrow-clockwise"/>
-              </div>
-            </xt-button>
+            
           </div>
-        </div>
-      </template>
+        </div> -->
+      <!-- </template> -->
 
       <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
@@ -29,19 +33,20 @@
         <template v-else>
           <div v-if="showWay">
             <MinEmpty v-if="courierDetailList.length === 0" />
-            <MinCourierItem v-else :courier="courierDetailList[0]" @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+            <MinCourierItem v-else :courier="courierDetailList[0]"
+              @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
             </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
+            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true" />
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
                 <div v-for="(item, index) in courierDetailList">
-                  <CourierItem  :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
+                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
                   <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
                 </div>
-                
+
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
@@ -83,7 +88,7 @@ import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
-import { message, Modal as antModal , notification } from 'ant-design-vue'
+import { message, Modal as antModal, notification } from 'ant-design-vue'
 import grab from './grab'
 
 import Modal from '../../Modal.vue'
@@ -197,17 +202,17 @@ export default {
       showCourierDetail: false,
       showSmallDetail: false,
       largeDetailVisible: true,
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        offline: true
       }
     };
   },
   methods: {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers']),
-    changeState () {
+    changeState() {
       this.allCourierVisible = false
     },
     refreshCourier() {
@@ -313,7 +318,7 @@ export default {
     },
     backAllCoutiers() {
       this.showSmallDetail = true,
-      this.showCourierDetail = false
+        this.showCourierDetail = false
     }
   },
   computed: {
@@ -349,6 +354,7 @@ export default {
   },
   async mounted() {
     this.getDbCourier()
+    console.log(this.storeInfo.jd.order.orders)
     window.addEventListener("resize", this.handleResize)
   },
 
@@ -367,20 +373,21 @@ export default {
 //     // background-color: var(--secondary-bg);
 //   }
 // }
-.courier-item{
-  &::after{
-        content:'';
-        width: 100%;
-        height: 1px;
-        background-color: var(--divider);
-        margin-top: 6px;
-    }
-}
-.divider{
+.courier-item {
+  &::after {
+    content: '';
     width: 100%;
     height: 1px;
     background-color: var(--divider);
-    margin-top: 8px;
+    margin-top: 6px;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--divider);
+  margin-top: 8px;
 }
 
 .courier {
@@ -394,6 +401,5 @@ export default {
     }
   }
 }
-
 </style>
 
