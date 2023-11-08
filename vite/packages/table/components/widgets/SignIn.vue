@@ -180,6 +180,13 @@ export default {
       max: 99999,
       lastUsers: [],
       total: 0,
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline: true
+      }
+
     }
   },
   async mounted () {

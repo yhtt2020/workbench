@@ -1,7 +1,7 @@
 <template>
   <div>
     <Widget :options="options" :customIndex="customIndex" :customData="customData" :menuList="menuList" ref="cardSlot"
-      :desk="desk" :size="size">
+      :desk="desk" :size="size" :env="env">
       <template #left-title-icon>
         <div
           class="icon"
@@ -134,7 +134,13 @@ export default {
       },
       defaultCityIndex: 0,
       city: city,
-      isLoading: true
+      isLoading: true,
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     }
   },
   methods: {

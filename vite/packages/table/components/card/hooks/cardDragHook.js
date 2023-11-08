@@ -93,7 +93,7 @@ export default {
     },
     updateSize(e) {
       this.$nextTick(() => {
-        this.$refs.drag.dragCallBack(e);
+        this.$refs.drag?.dragCallBack(e);
       });
     },
   },

@@ -5,6 +5,7 @@
   :customData="customData"
   :desk="desk" 
   ref="rankingSmallSlot" 
+  :env="env"
   :menuList="toggleRankingList">
   <template #left-title-icon>
         <div
@@ -88,7 +89,7 @@ export default {
   },
   data () {
     return {
-      options: {className: 'card small',title: '',type: 'smallRank'},
+      options: {className: 'card small',title: '排行榜',type: 'smallRank'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       //在线时长榜
       onLineList,
@@ -109,7 +110,13 @@ export default {
         {title:'累计签到榜',name:'accrue'},
         {title:'连续签到榜',name:'series'},
       ],
-      rankIndex: 0
+      rankIndex: 0,
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline: true,
+      }
     }
   },
   mounted() {

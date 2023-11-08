@@ -1,5 +1,5 @@
 <template>
-  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
+  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" :env="env"
     ref="cardSlot">
     <template #left-title-icon>
       <div class="icon"
@@ -197,7 +197,12 @@ export default {
       showCourierDetail: false,
       showSmallDetail: false,
       largeDetailVisible: true,
-      dateNow: new Date(),
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     };
   },
   methods: {

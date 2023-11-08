@@ -6,6 +6,7 @@
     :customIndex="customIndex"
     :custom-data="customData"
     :menuList="menuList"
+    :env="env"
     v-if="!detailToggle"
     >
     <template #left-title-icon>
@@ -106,6 +107,12 @@
         detailId: -1,
         isLoading: false,
         pageToggle: true,
+        env:{
+          web: false,
+          mobile: false,
+          client: false,
+          offline:false
+        }
       };
     },
     computed: {

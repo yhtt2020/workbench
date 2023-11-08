@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"
+        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"  :env="env"
             :sizeList="sizeList" :customData="customData">
             <template #left-title-icon>
                 <div class="icon"
@@ -221,6 +221,12 @@ export default {
             cardData: null,
             toggleDetail: true,
             selectValue: [],
+            env:{
+                web: false,
+                mobile: false,
+                client: false,
+                offline: true,
+            },
         }
     },
     methods: {

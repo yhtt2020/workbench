@@ -91,6 +91,12 @@ export default {
       detailList: {},
       detailShow: false,
       simpleImage: '/public/img/test/not-data.png', // 空状态
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:false
+      }
     }
   },
   computed: {

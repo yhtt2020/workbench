@@ -2,7 +2,7 @@
   <div>
 
     <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
-      ref="cardSlot" :customData="customData">
+      ref="cardSlot" :customData="customData" :env="env">
       <template #left-title-icon>
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
@@ -117,6 +117,7 @@ export default {
         title: '新闻资讯',
         icon: '',
         type: 'news'
+
       },
       menuList: [
         {
@@ -193,6 +194,12 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:true
+      }
     }
   },
   methods: {

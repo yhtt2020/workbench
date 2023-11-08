@@ -81,6 +81,12 @@
         detailId: -1,
         isLoading: false,
         pageToggle: true,
+        env:{
+          web: false,
+          mobile: false,
+          client: false,
+          offline:false
+        }
       };
     },
     computed: {
