@@ -1,5 +1,13 @@
 <template>
   <Widget :options="options" :customIndex="customIndex" :desk="desk">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:music-note-2-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
     <div
       @click="enterMusic"
       class="pointer"
@@ -22,6 +30,7 @@
 import { appStore } from "../../store";
 import { mapWritableState } from "pinia";
 import Widget from "../card/Widget.vue";
+import { Icon as newIcon } from "@iconify/vue";
 export default {
   name: "Music",
   props: {
@@ -42,13 +51,14 @@ export default {
       options: {
         className: "card small",
         title: "网易云",
-        icon: "customerservice",
+        // icon: "customerservice",
         type: "music",
       },
     };
   },
   components: {
     Widget,
+    newIcon
   },
   computed: {
     ...mapWritableState(appStore, ["status"]),

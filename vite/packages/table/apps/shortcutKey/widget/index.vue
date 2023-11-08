@@ -3,7 +3,7 @@
     <Widget :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="cardSlot"
             :desk="desk">
       <div class="icon">
-        <Icon icon="solar:keyboard-bold"/>
+        <Icon icon="fluent:flash-16-regular"/>
       </div>
       <!-- 快捷键列表 更多快捷键 -->
       <div v-show="defaultType.name === 'recent'" class="top-list">
@@ -69,7 +69,7 @@
                  v-for="(item,index) in keyList" :key="item.id">
               <!-- 标题 -->
               <div class="key-item" v-if="item.groupName">
-                <div class="key-name truncate">
+                <div class="truncate key-name">
                   <div class="color-dot" :style="{backgroundColor:getColor(currentKeyList,index+(page-1)*12)}"></div>
                   <strong class="ml-2">{{ item.groupName }}</strong>
                 </div>
@@ -97,7 +97,7 @@
       <div v-if="defaultType.name === 'showDetail'">
         <p style="margin-top: 14px;">选择快捷键方案</p>
         <a-select
-          class="select rounded-lg  text-xs flex items-center" size="large" :bordered="false"
+          class="flex items-center text-xs rounded-lg select" size="large" :bordered="false"
           v-model:value="selValue"
           show-search
           placeholder="请选择"

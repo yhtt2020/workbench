@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"  :env="env"
+        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :env="env"
             :sizeList="sizeList" :customData="customData">
             <template #left-title-icon>
                 <div class="icon"
@@ -11,8 +11,8 @@
             <template #left-title v-if="showForumList.length > 0">
                 <div @click="refreshPost">
                     <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
-                        <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                            icon="akar-icons:arrow-clockwise" />
+                    <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                        icon="akar-icons:arrow-clockwise" />
                     <!-- </xt-button> -->
                 </div>
             </template>
@@ -32,7 +32,7 @@
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{height:scrollBarHeight}">
+                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{ height: scrollBarHeight }">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -61,8 +61,11 @@
 
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
                 style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
-                <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
-                    icon="fluent:add-16-filled" />
+                <div class="flex items-center justify-center">
+                    <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
+                        icon="fluent:add-16-filled" />
+                </div>
+
             </xt-button>
 
 
@@ -221,7 +224,7 @@ export default {
             cardData: null,
             toggleDetail: true,
             selectValue: [],
-            env:{
+            env: {
                 web: false,
                 mobile: false,
                 client: false,
@@ -242,7 +245,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            // console.log(this.customData.defaultForum);
+            console.log(this.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
@@ -302,6 +305,13 @@ export default {
         //         this.options.title='元社区'
         //     }
         // }
+        handleResize() {
+            if (window.innerWidth > 1200) {
+                this.toggleDetail = true
+            } else {
+                this.toggleDetail = false
+            }
+        },
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -351,12 +361,19 @@ export default {
         //     return window.innerWidth > 1200
         // }
         scrollBarHeight() {
-            if(this.showForumList.length>1){
+            if (this.showForumList.length > 1) {
                 return 'calc(100% - 65px)'
-            }else{
+            } else {
                 return 'calc(100% - 40px)'
             }
-        }
+        },
+        // optionTitle(){
+        //     if(this.customData && this.customData.selectList && this.customData.selectList.length===1){
+        //         return this.customData.selectList[0].value.name
+        //     }else{
+        //         return '元社区'
+        //     }
+        // }
     },
     async mounted() {
         // console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
@@ -365,27 +382,40 @@ export default {
         // await this.getCommunityPost(this.showForumList[0].id)
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
+        // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
             // console.log(this.defaultForum);
+        }else if(this.customData && this.customData.selectList){
+            // console.log(this.customData.selectList)
+            this.defaultForum = this.customData.selectList[0]
         }
-        if(this.customData && this.customData.selectList){
-            this.selectValue = this.customData.selectList.map((item)=>{
+        // 加载已选择的模块
+        if (this.customData && this.customData.selectList) {
+            this.selectValue = this.customData.selectList.map((item) => {
                 return item.index
             })
             // console.log(this.selectValue);
         }
+        // 判断组件名称
+        if(this.customData.selectList.length === 1){
+            this.options.title = this.customData.selectList[0].value.name
+        }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
+        window.addEventListener("resize", this.handleResize)
     },
-    beforeUpdate() {
-        // this.changeTag()
-        if (window.innerWidth > 1200) {
-            this.toggleDetail = true
-        } else {
-            this.toggleDetail = false
-        }
+    beforeDestroy() {
+        window.removeEventListener("resize", this.handleResize)
     },
+    // beforeUpdate() {
+    //     // this.changeTag()
+    //     if (window.innerWidth > 1200) {
+    //         this.toggleDetail = true
+    //     } else {
+    //         this.toggleDetail = false
+    //     }
+    // },
     watch: {
         showForumList(newValue) {
             this.isLoading = true
@@ -399,6 +429,7 @@ export default {
         },
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
+            this.defaultForum = this.customData.defaultForum
             this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
@@ -415,10 +446,10 @@ export default {
             handler(newValue, oldValue) {
                 if (newValue.length === 1) {
                     this.options.title = newValue[0].value.name
-                    // console.log(this.options.title)
+                    console.log(this.options.title)
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
-                    // console.log(this.options.title);
+                    console.log(this.options.title);
                 }
 
             }

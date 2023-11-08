@@ -157,7 +157,7 @@ export default {
     this.reloadAll()
     this.today = getDateTime();
     if(this.cities.length !== 0) this.defaultValue = this.defaultCity.id
-    if(this.cities.length)this.options.icon = 'position';
+    // if(this.cities.length)this.options.icon = 'position';
   },
   methods: {
     openWeatherDrawer(){
