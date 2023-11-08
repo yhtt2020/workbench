@@ -2,14 +2,14 @@
 import { useDrag, DragSourceMonitor } from "vue3-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { toRefs } from "@vueuse/core";
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { ItemTypes } from "./types";
 import { useFreeLayoutStore } from "./store";
+// ---
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
-const { dragData } = storeToRefs(freeLayoutStore);
-
+const { dragData, getFreeLayoutState }: any = storeToRefs(freeLayoutStore);
 const props = defineProps<{
   id: string;
   left: any;
@@ -28,7 +28,7 @@ const [collect, drag, preview] = useDrag(() => ({
     // console.log("dropResult :>> ", dropResult);
     // console.log("item.name :>> ", item);
     // return;
-    dragData.value = {}
+    dragData.value = {};
   },
 }));
 
@@ -44,6 +44,8 @@ watch(isDragging, (newV) => {
     dragData.value = props.data;
   }
 });
+
+
 </script>
 
 <template>

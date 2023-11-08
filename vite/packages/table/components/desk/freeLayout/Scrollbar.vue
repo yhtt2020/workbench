@@ -1,7 +1,7 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
-    v-show="currentEnvState.loading"
+    v-show="freeLayoutEnv.loading"
     ref="scrollbar"
     class="no-drag relative w-full"
     style="
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, watch, nextTick } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -26,22 +26,33 @@ import { useFreeLayoutStore } from "./store";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData, currentEnvState } =
+const { getFreeLayoutState, dragData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 onMounted(() => {
+  // 初始化自由布局环境
+  freeLayoutStore.initFreeLayoutEnv();
+  // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
 
   setTimeout(async () => {
+    // 初始化自由布局定位
     await redirect();
+
+    let { width, height } = scrollbar.value?.getBoundingClientRect();
+    freeLayoutEnv.value.scrollWidth = width;
+    freeLayoutEnv.value.scrollHeight = height;
+    // 监听自由布局滚动事件
     scrollbar.value.addEventListener("ps-scroll-x", () => {
-      currentEnvState.value.scrollLeft = scrollbar.value.scrollLeft;
+      freeLayoutEnv.value.scrollLeft = scrollbar.value.scrollLeft;
     });
     scrollbar.value.addEventListener("ps-scroll-y", () => {
-      currentEnvState.value.scrollTop = scrollbar.value.scrollTop;
+      freeLayoutEnv.value.scrollTop = scrollbar.value.scrollTop;
     });
-    currentEnvState.value.loading = true;
+
+    // 完成操作 开启
+    freeLayoutEnv.value.loading = true;
   }, 100);
 });
 // 重置中心区域
@@ -68,9 +79,31 @@ function redirect() {
 function update() {
   perfectScrollbar.value.update();
 }
+
+// 监听画布缩放情况
+watch(
+  () => getFreeLayoutState.value?.zoom,
+  () => {
+    let { width, height } = scrollbar.value.getBoundingClientRect();
+    let currentWidth =
+      getFreeLayoutState.value.width * getFreeLayoutState.value.zoom;
+    let currentHeight =
+      getFreeLayoutState.value.height * getFreeLayoutState.value.zoom;
+    if (currentWidth < width && getFreeLayoutState.value.width < 10000) {
+      console.log("宽度增加 :>> ", 222);
+      getFreeLayoutState.value.width += 1000;
+    }
+    if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
+      console.log("gao度增加 :>> ", 222);
+      getFreeLayoutState.value.height += 1000;
+    }
+  }
+);
 // 鼠标滚动
 const scrollThreshold = 300; // 边缘滚动阈值
 const scrollAmount = 100; // 每次滚动的距离
+
+// 鼠标拖拽元素 被zoom影响了位置
 
 function handleMouseMove(event) {
   return;
@@ -105,7 +138,14 @@ function handleMouseMove(event) {
     }
   }
 }
-
+onBeforeUnmount(() => {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+    capture: true,
+  });
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+    capture: true,
+  });
+});
 defineExpose({
   redirect,
   update,

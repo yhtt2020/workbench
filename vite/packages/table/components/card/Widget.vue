@@ -1,58 +1,71 @@
 <template>
-  <RightMenu :menus="menus" :sizes="sizeList" @removeCard="doRemoveCard" v-model:sizeType="sizeType"
-    v-model:oldMenuVisible="menuVisible">
-    <div v-if="!options?.hide" :class="classes" style="color: var(--primary-text)" :style="{
-      display: options.hide == true ? 'none' : '',
-      width: customSize.width,
-      height: customSize.height,
-      background: options.background || 'var( --primary-bg)',
-    }">
-      <!--标题栏start-->
-      <slot name="cardTitle">
-        <div :class="options.noTitle === true ? 'no-title' : 'content-title'" class="flex items-center justify-between">
-          <div class="left-title" v-if="options.noTitle !== true">
-            <!-- 标题左侧插槽 -->
-            <slot name="left-title-icon"></slot>
-            <!-- 标题旧版左侧图标 -->
-            <Icon :icon="options.icon" class="title-icon"></Icon>
-            <div class="flex w-2/3">
-              <!-- 卡片标题插槽 -->
-              <slot name="title-text">
-                {{ options.title }}
-              </slot>
-              <!-- 标题右侧插槽 -->
-              <slot name="left-title"></slot>
+  <Drop v-model:widgetSize="widgetSize">
+    <RightMenu
+      :menus="menus"
+      :sizes="sizeList"
+      @removeCard="doRemoveCard"
+      v-model:sizeType="sizeType"
+      v-model:oldMenuVisible="menuVisible"
+    >
+      <div
+        v-if="!options?.hide"
+        :class="classes"
+        style="color: var(--primary-text)"
+        :style="{
+          display: options.hide == true ? 'none' : '',
+          width: customSize.width,
+          height: customSize.height,
+          background: options.background || 'var( --primary-bg)',
+        }"
+      >
+        <!--标题栏start-->
+        <slot name="cardTitle">
+          <div
+            :class="options.noTitle === true ? 'no-title' : 'content-title'"
+            class="flex items-center justify-between"
+          >
+            <div class="left-title" v-if="options.noTitle !== true">
+              <!-- 标题左侧插槽 -->
+              <slot name="left-title-icon"></slot>
+              <!-- 标题旧版左侧图标 -->
+              <Icon :icon="options.icon" class="title-icon"></Icon>
+              <div class="flex w-2/3">
+                <!-- 卡片标题插槽 -->
+                <slot name="title-text">
+                  {{ options.title }}
+                </slot>
+                <!-- 标题右侧插槽 -->
+                <slot name="left-title"></slot>
+              </div>
+            </div>
+            <div class="z-10 right-title flex" v-if="showRightIcon">
+              <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
+              <slot name="right-menu"> </slot>
+              <MenuOutlined
+                class="pointer"
+                @click="showDrawer($event)"
+                @contextmenu.stop="showDrawer"
+              />
             </div>
           </div>
-          <div class="z-10 right-title flex" v-if="showRightIcon">
-            <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
-            <slot name="right-menu"> </slot>
-            <MenuOutlined class="pointer" @click="showDrawer($event)" @contextmenu.stop="showDrawer" />
-          </div>
-        </div>
-      </slot>
-      <!-- 标题栏end   -->
-      <!--  主体内容插槽start  -->
-      <!-- v-if="env[$currentEnv]" -->
-      <PageState :env="env" :options="options">
-        <slot></slot>
-      </PageState>
-      <!--  主题
+        </slot>
+        <!-- 标题栏end   -->
+        <!--  主体内容插槽start  -->
+        <PageState :env="env" :options="options">
+          <slot></slot>
+        </PageState>
+        <!--  主题
           内容插槽end  -->
-    </div>
-    <template v-else>
-      <PageState>
-        <slot></slot>
-      </PageState>
-    </template>
-    <!-- 右上角抽屉菜单扩展 start  -->
-    <template #menuExtra>
-      <slot name="menuExtra"></slot>
-    </template>
-    <!-- 右上角抽屉扩展 end -->
-  </RightMenu>
+      </div>
+      <slot v-else></slot>
+      <!-- 右上角抽屉菜单扩展 start  -->
+      <template #menuExtra>
+        <slot name="menuExtra"></slot>
+      </template>
+      <!-- 右上角抽屉扩展 end -->
+    </RightMenu>
+  </Drop>
 
-  <div></div>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -121,7 +134,7 @@ export default {
     //组件自定义数据，每个卡片独立，并存入桌面数据当中
     customData: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     desk: {
       type: Object,
@@ -139,7 +152,7 @@ export default {
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          offline: false,
         };
       },
     },
@@ -191,7 +204,7 @@ export default {
     },
     classes() {
       //默认的对象
-      let defaultClass = {
+      let defaultClass: any = {
         gradient: true,
         "gradient--14": true,
       };
@@ -240,8 +253,8 @@ export default {
       handler() {
         this.updateCustomData(
           this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex,
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
@@ -258,8 +271,7 @@ export default {
             this.$parent.$parent.customIndex ||
             this.$parent.$attrs.customIndex,
           {
-            widgetWidth: this.widgetSize.width,
-            widgetHeight: this.widgetSize.height,
+            widgetSize: this.widgetSize,
           },
           this.desk
         );
@@ -278,8 +290,8 @@ export default {
       this.options.beforeDelete && this.$emit("delete");
       this.removeCard(
         this.$parent.customIndex ||
-        this.$parent.$parent.customIndex ||
-        this.$parent.$attrs.customIndex,
+          this.$parent.$parent.customIndex ||
+          this.$parent.$attrs.customIndex,
         this.desk
       );
       this.menuVisible = false;
@@ -293,8 +305,8 @@ export default {
     hideMenu() {
       this.menuVisible = false;
     },
-    goRoute(){
-      this.$router.push(this.options.titleRoute)
+    goRoute() {
+      this.$router.push(this.options.titleRoute);
     },
   },
 };
