@@ -87,6 +87,7 @@
 import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
+import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'
 import grab from './grab'
@@ -319,6 +320,13 @@ export default {
     backAllCoutiers() {
       this.showSmallDetail = true,
         this.showCourierDetail = false
+    },
+    autoRefresh() {
+      if (this.settings.courierRefresh.autoRefresh) {
+        setInterval(() => {
+          this.refreshAll()
+        }, this.refreshTime);
+      }
     }
   },
   computed: {
@@ -326,6 +334,7 @@ export default {
       "courierDetailList",
       "couriersDetailMsg",
       "storeInfo", 'viewCourierDetail']),
+    ...mapWritableState(appStore, ["settings"]),
     // 判断尺寸大小
     showSize() {
       if (this.customData && this.customData.width && this.customData.height) {
@@ -343,23 +352,39 @@ export default {
     courierMsg() {
       return this.courierMsgList;
     },
-    formattedDate() {
-      const year = this.dateNow.getFullYear();
-      const month = String(this.dateNow.getMonth() + 1).padStart(2, '0');
-      const day = String(this.dateNow.getDate()).padStart(2, '0');
-      const hours = String(this.dateNow.getHours()).padStart(2, '0');
-      const minutes = String(this.dateNow.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
-    },
+    refreshTime() {
+      switch (this.settings.courierRefresh.autoTime) {
+        case '10分钟':
+          return 600000
+          break;
+        case '30分钟':
+          return 1800000
+          break;
+        case '1小时':
+          return 3600000
+
+          break;
+        case '2小时':
+          return 7200000
+          break;
+
+        default:
+          return 1800000
+          break;
+      }
+    }
   },
   async mounted() {
     this.getDbCourier()
-    console.log(this.storeInfo.jd.order.orders)
+    // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener("resize", this.handleResize)
+    console.log(this.refreshTime)
+    this.autoRefresh()
   },
 
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize)
+    this.autoRefresh()
   },
 
 }
