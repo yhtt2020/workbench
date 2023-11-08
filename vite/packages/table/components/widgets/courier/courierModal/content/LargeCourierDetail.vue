@@ -6,7 +6,7 @@
         <DropDown class="ml-3" :navList="tabList.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
       <div class="flex right-button">
-        <DropIndex :navList="addList"></DropIndex>
+        <DropIndex :navList="addList" @open="addCourier"></DropIndex>
         <a-tooltip placement="top" class="mr-3" title="设置">
           <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
             <div class="flex items-center justify-center">

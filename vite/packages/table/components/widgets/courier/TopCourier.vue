@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="flex">
-                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
+                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2" @open="addCourier"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
                         <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;"

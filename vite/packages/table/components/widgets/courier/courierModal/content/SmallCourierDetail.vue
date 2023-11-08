@@ -6,7 +6,7 @@
           <TopDrop :navList="typeList" v-model:selectType="currentType" />
         </div>
         <div class="flex top-right">
-          <DropIndex :navList="addList" />
+          <DropIndex :navList="addList" @open="addCourier"/>
           <a-tooltip placement="top" class="mr-3" title="设置">
             <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
               <div class="flex items-center justify-center">
