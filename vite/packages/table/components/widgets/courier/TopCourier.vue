@@ -323,6 +323,11 @@ export default {
     beforeDestroy() {
         window.addEventListener("resize", this.handleResize)
     },
+    watch: {
+        currentType() {
+            this.defaultType = this.currentType
+        }
+    }
 }
 </script>
 <style lang="scss">

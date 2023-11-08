@@ -375,7 +375,7 @@ export default {
     width: 100%;
     height: 1px;
     background-color: var(--divider);
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 .courier {
