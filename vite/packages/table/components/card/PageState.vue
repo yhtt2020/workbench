@@ -23,22 +23,9 @@ const props = defineProps({
   },
 })
 onMounted(()=>{
-  console.log(props.options);
-
 })
 
 const isShow = computed(() => {
-  console.log(window.$currentEnv);
-  // console.log( props.env[window.$currentEnv]);
-  // console.log(props.env.offline);
-  // props.env[window.$currentEnv]
-  // props.env.offline
-  // if (window.$isOffline) {
-  //   console.log(offlineList);
-  //   console.log(offlineList.value);
-  //   console.log(props);
-  //   console.log(offlineList.value.indexOf(props.title));
-  // }
   return props.env[window.$currentEnv] || (props.env.offline && window.$isOffline)
 });
 

@@ -28,12 +28,12 @@
                     <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                 </div>
                 <div v-show="!this.setVisible">
-                    <div class="txt-content pointer" style="height: 48px;" @click="this.setVisible = !this.setVisible">
+                    <div class="txt-content pointer" style="height: 48px;color: var(--primary-text);background: var(--secondary-bg);" @click="this.setVisible = !this.setVisible">
                         <div>关联短说社区系统<span>{{ this.access_token && this.baseUrl ? '已关联 >' : '未关联 >'  }}</span></div>
                     </div>
-                    <div class="txt-content" style="height: 104px;">
+                    <div class="txt-content" style="height: 104px;color: var(--primary-text);background: var(--secondary-bg);">
                         <div>设置小组件数据</div>
-                        <div>你可以选择一下两种图表：[社区访问数据]、[社区互动数据]；同事支持在此处选择图表的时间范围和平台</div>
+                        <div>你可以选择一下两种图表：[社区访问数据]、[社区互动数据]；同时支持在此处选择图表的时间范围和平台</div>
                     </div>
                     <p class="ml-1">图表类型</p>
                     <RadioTab :navList="dataType" v-model:selectType="defaultDataType"></RadioTab>
@@ -44,6 +44,22 @@
                         <p class="ml-1 mt-3">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type"
                         v-model:selectType="defaultPlatType"  ></RadioTab>
+                    </div>
+                    <div>
+                        <p class="ml-1 mt-3">数据更新频率</p>
+                        <a-select
+                            ref="select"
+                            v-model:value="timeVal"
+                            class="w-full"
+                            :bordered="false"
+                            size="large"
+                            style="color: var(--primary-text);background: var(--secondary-bg);
+                            border-radius: 10px;"
+                            dropdownClassName="drop-class"
+                            :options="timeOption"
+                            @change="handleChangeTime"
+                        ></a-select>
+                        
                     </div>
                 </div>
             </vue-custom-scrollbar>
@@ -97,6 +113,26 @@ export default {
     },
     data() {
         return {
+            // 设置定时刷新
+            timeOption:[
+                {
+                    value:600,
+                    label:'10分钟'
+                },
+                {
+                    value:1800,
+                    label:'30分钟'
+                },
+                {
+                    value:3600,
+                    label:'1小时（默认）'
+                },
+                {
+                    value:86400,
+                    label:'24小时'
+                },
+            ],
+            timeVal:3600,
             settings: {
                 swipeEasing: true,
                 suppressScrollY: false,
@@ -154,17 +190,46 @@ export default {
             // 密钥和地址
             accToken:'',
             accUrl:'',
+            timer:"",
+
 
         };
     },
     async mounted() {
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
+        if (this.customData.time) {
+            this.timeVal = this.customData.time
+        }else{
+            this.timeVal = 3600
+            this.updateCustomData(this.customIndex,{
+                time:3600,
+            },this.desk)
+        }
+        this.timer = setInterval(()=>{
+            this.init()
+        },this.timeVal * 1000)
+        
         this.init()
+    },
+    unmounted() {
+        clearInterval(this.timer)
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(shortTalkStore, ['getChartData','changeAccToken']),
+        // 设置定时刷新
+        handleChangeTime(value){
+            this.updateCustomData(this.customIndex,{
+                time:value,
+            },this.desk)
+            this.$message.success('修改成功')
+            // 修改后重新添加定时器
+            clearInterval(this.timer)
+            this.timer = setInterval(()=>{
+                this.init()
+            },this.timeVal * 1000)
+        },
         init(){
             // 初始
             if(!this.customData.defaultDataType){
@@ -223,7 +288,7 @@ export default {
                 // 内部属性
                 series:this.series,
             }
-            const myChart = echarts.init(document.getElementById("myChart"))
+            const myChart = echarts.init(this.$refs.myChart)
             // const myChart = this.$refs.myChart
             myChart.clear()
             myChart.setOption(mulColumnZZTData);
@@ -401,27 +466,27 @@ export default {
 
     .txt-content{
         width: 100%;
-        background: #2A2A2A;
+        // background: #2A2A2A;
         border-radius: 12px;
         padding: 13px 16px;
-        color: rgba(255,255,255,0.85);
+        // color: rgba(255,255,255,0.85);
         font-size: 16px;
         margin-bottom: 16px;
     }
     .txt-content span{
         float: right;
         font-size: 14px;
-        color: rgba(255,255,255,0.60);
+        // color: rgba(255,255,255,0.60);
     }
 
     .txt-content div:nth-of-type(1){
-        color: rgba(255,255,255,0.85);
+        // color: rgba(255,255,255,0.85);
         margin-bottom: 10px;
 
     }
     .txt-content div{
         font-size: 14px;
-        color: rgba(255,255,255,0.60);
+        // color: rgba(255,255,255,0.60);
     }
 
     .nav-type :deep(.nav-box){
@@ -449,5 +514,15 @@ export default {
 
     .text-content div{
         margin-bottom: 10px;
+    }
+
+    :deep(.ant-select:not(.ant-select-customize-input) .ant-select-selector){
+        border: none;
+    }
+    :deep(.ant-drawer-header, .ant-modal-header, .ant-modal-footer, .ant-drawer-wrapper-body){
+        color: var(--primary-text);
+    }
+    .drop-class{
+        background-color: red;
     }
 </style>
