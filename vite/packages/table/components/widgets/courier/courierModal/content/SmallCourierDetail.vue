@@ -46,7 +46,7 @@
           <div class="flex flex-col px-6" ref="smallSortRef" style="height: 450px;">
             <div v-for="(item,index) in detailList"  class="rounded-lg">
               <xt-menu name="name" @contextmenu="revID = {item,index}" :menus="menus">
-                <div :class="{'select':currentID === index}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="detailClick(item)">
+                <div :class="{'select':currentID === index}" class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="detailClick(item,index)">
                    <div class="flex flex-col items-center">
                     <div class="flex">
                       <div class="flex items-center justify-center mr-3 rounded-lg" style="width:52px;height:52px; background: var(--mask-bg);">
@@ -226,15 +226,19 @@ export default {
       this.$refs.courierSettingRef.openSettingModal()
     },
     getSmallItem(item){
-      this.detailVisible = true
+      console.log('查看item',item);
       this.detailItem = item
+      this.detailVisible = true
     },
     detailClick(item,index){
+    console.log('查看item',item);
      this.currentID = index
-     this.detailVisible = true
      this.detailItem = item
+     this.detailVisible = true
+     
     },
     getDetail(revID){
+      console.log('查看item',revID.item);
       this.currentID = revID.index
      this.detailVisible = true
      this.detailItem = revID.item

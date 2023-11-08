@@ -5,16 +5,27 @@
      <a-avatar :size="32" :src="detailAvatar"></a-avatar>
     </div>
     <div class="flex flex-col ml-3">
+     
      <div class="flex ">
-       <span class="mr-1 xt-font font-16 font-600 xt-text">{{ orderData?.LogisticCode }}</span>
+       <div v-if="isJd" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #E12419;">JD</div>
+       <div v-if="isTb" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #FA5000;">淘</div>
+       <span class="mx-1 xt-font font-16 font-600 xt-text">{{ orderData?.LogisticCode }}</span>
        <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
      </div>
-     <div class="px-1.5 py-0.5">
-      <span class="xt-font xt-text-2 font-14 font-400">{{ switchCompany }}</span>
-      <span class="ml-1 xt-font xt-text-2 font-14 font-400">{{ orderData?.LogisticCode }}</span>
+     <div class="flex items-center">
+      <div class="px-1.5 py-0.5 flex items-center xt-bg-2 rounded-md">
+        <span class="xt-font xt-text-2 font-14 font-400">{{ switchCompany }}</span>
+        <span class="xt-font xt-text-2 font-14 font-400">{{ orderData?.LogisticCode }}</span>
+        <div class="flex items-center pointer justify-center" @click="copyOrderNum">
+          <SmallIcon icon="fluent:copy-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
+        </div>
+      </div>
+      <div class="xt-bg-2 flex items-center justify-center px-1 rounded-md mx-2">9150</div>
+      <div class="xt-bg-2 w-6 h-6 rounded-md flex items-center justify-center">拆</div>
      </div>
     </div>
    </div>
+
    <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar" />
    
    <div class="flex items-center">
@@ -36,6 +47,7 @@
 import { Icon as SmallIcon } from '@iconify/vue'
 import {kdCompany} from '../../mock'
 import { Modal,message } from 'ant-design-vue'
+import useClipboard from 'vue-clipboard3';
  
 import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
@@ -110,6 +122,15 @@ export default {
      }
      this.detailAvatar = avatar
    },
+
+   // 复制订单号
+   async copyOrderNum(){
+    const { toClipboard } = useClipboard();
+    const res = await toClipboard(this.orderNum);
+    if(res.text !== ""){
+      message.success('群聊ID成功复制');
+    }
+   }
    
   }
 }

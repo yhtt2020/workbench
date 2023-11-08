@@ -2,7 +2,7 @@
  <a-select v-model:value="selectValue" style="width: 120px;border-radius: 8px;" :bordered="false">
   <a-select-option v-for="item in selectList" class="option-item" :value="item.value">
    <div class="flex items-center justify-center">
-    <div v-if="item.alias" class="rounded-md flex items-center justify-center w-6 h-6 mr-1.5" :style="{background:`${item.color}`}">
+    <div v-if="item.alias" class="rounded-md flex xt-active-text items-center justify-center w-6 h-6 mr-1.5" :style="{background:`${item.color}`}">
      {{ item.alias }}
     </div>
     <span>{{ item.title }}</span>
