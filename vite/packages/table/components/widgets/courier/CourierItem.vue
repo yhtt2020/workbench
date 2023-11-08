@@ -127,9 +127,13 @@ onMounted(()=>{
     // console.log(lastTraces?.value.AcceptTime)
     console.log(new Date(lastTraces?.value.AcceptTime).getTime())
     let nowDate=new Date().getTime()
+    
     if(nowDate - new Date(lastTraces?.value.AcceptTime).getTime()>(deleteTime.value)){
         console.log('过期了',props.itemIndex);
-        useCourierStore.removeDbData(props.itemIndex)
+        if(useAppStore.settings.courierSigned.blockSigned && props?.courier?.State==='3'){
+            useCourierStore.removeDbData(props.itemIndex)
+        }
+        
     }else{
         console.log('没过期');
     }
