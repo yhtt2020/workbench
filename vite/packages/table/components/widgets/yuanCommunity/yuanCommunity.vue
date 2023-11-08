@@ -59,12 +59,13 @@
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible" style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
+                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
                 <div class="flex items-center justify-center">
                     <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
-                    icon="fluent:add-16-filled" />
+                        icon="fluent:add-16-filled" />
                 </div>
-                
+
             </xt-button>
 
 
@@ -244,7 +245,7 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            // console.log(this.customData.defaultForum);
+            console.log(this.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
             this.isLoading = false
         },
@@ -365,7 +366,14 @@ export default {
             } else {
                 return 'calc(100% - 40px)'
             }
-        }
+        },
+        // optionTitle(){
+        //     if(this.customData && this.customData.selectList && this.customData.selectList.length===1){
+        //         return this.customData.selectList[0].value.name
+        //     }else{
+        //         return '元社区'
+        //     }
+        // }
     },
     async mounted() {
         // console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
@@ -374,15 +382,24 @@ export default {
         // await this.getCommunityPost(this.showForumList[0].id)
         // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
+        // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
             // console.log(this.defaultForum);
+        }else if(this.customData && this.customData.selectList){
+            // console.log(this.customData.selectList)
+            this.defaultForum = this.customData.selectList[0]
         }
+        // 加载已选择的模块
         if (this.customData && this.customData.selectList) {
             this.selectValue = this.customData.selectList.map((item) => {
                 return item.index
             })
             // console.log(this.selectValue);
+        }
+        // 判断组件名称
+        if(this.customData.selectList.length === 1){
+            this.options.title = this.customData.selectList[0].value.name
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
@@ -412,6 +429,7 @@ export default {
         },
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
+            this.defaultForum = this.customData.defaultForum
             this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
@@ -428,10 +446,10 @@ export default {
             handler(newValue, oldValue) {
                 if (newValue.length === 1) {
                     this.options.title = newValue[0].value.name
-                    // console.log(this.options.title)
+                    console.log(this.options.title)
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
-                    // console.log(this.options.title);
+                    console.log(this.options.title);
                 }
 
             }
