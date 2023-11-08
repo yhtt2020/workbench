@@ -1,8 +1,8 @@
 <template>
-    <div style='width:400px;height:400px;background: #212121;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon" id="selectIcon">
+    <div style='width:400px;height:400px;background:var(--modal-bg);border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon" id="selectIcon">
       <!--  -->
       <div class="top-icon flex">
-        <div class="type-select flex">
+        <div class="type-select flex" style="color:var(--primary-text)">
           <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''">Emojis</span>
           <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''">Icons</span>
           <span @click="onSelChange(3)" v-if="this.isCustom" :class="selIndex == 3 ? 'active':''">自定义</span>
@@ -11,8 +11,9 @@
       </div>
       <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != 3">
         <a-input
-          style="height:40px;background: #191919;
-          border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
+          style="height:40px;background: var(--secondary-bg);
+          color: var(--primary-text);
+          border: 1px solid var(--secondary-bg);flex:1;width: 80%;
           border-radius: 10px;"
           placeholder="搜索"
           v-model:value="searchValue"
@@ -21,12 +22,12 @@
         <!-- 随机 -->
         <a-tooltip>
           <template #title>随机</template>
-          <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: #2A2A2A;border-radius: 10px;" @click="onRandom">
+          <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: var(--secondary-bg);border-radius: 10px;" @click="onRandom">
             <Icon class="pointer flex items-center" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
           </xt-button>
         </a-tooltip>
         <!-- 颜色选择 -->
-        <div v-show="selIndex == 2" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: #2A2A2A;border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
+        <div v-show="selIndex == 2" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
           
           <a-tooltip>
             <template #title>颜色选择</template>
@@ -34,7 +35,7 @@
             <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
           </a-tooltip>
           
-          <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;">
+          <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
             <div class="ml-4 mt-2">自定义</div>
             <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
               <XtBaseColor v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
@@ -86,11 +87,11 @@
       </div>
       <div v-else class="flex pl-1 pr-1 items-center flex-wrap flex-col" style="height:330px;">
         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
-        <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: #2A2A2A;border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
+        <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
           <Icon :icon="icons.add16Filled" width="20" height="20"/>
         </div>
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
-        <div class="mt-4" style="font-size: 14px;color: rgba(255,255,255,0.60);">{{ this.customTitle }}</div>
+        <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ this.customTitle }}</div>
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
         
       </div>
@@ -283,7 +284,8 @@
   }
     .top-icon{
       height: 48px;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
+      border-bottom: 1px solid var(--secondary-bg);
+      // border-bottom: 1px solid rgba(255,255,255,0.10);
       padding: 0 16px;
       justify-content: space-between;
     }
@@ -294,7 +296,7 @@
       height: 48px;
       font-family: PingFangSC-Semibold;
       font-size: 14px;
-      color: rgba(255,255,255,0.85);
+      // color: rgba(255,255,255,0.85);
       font-weight: 400;
       align-items: center;
       margin-right: 16px;
@@ -322,7 +324,7 @@
     .select-color{
       width:166px;
       height:204px;
-      background: #212121;
+      background: var(--modal-bg);
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
       border-radius: 8px;
