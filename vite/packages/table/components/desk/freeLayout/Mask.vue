@@ -9,9 +9,8 @@
   <div
     class="w-full h-full relative"
     ref="container"
-    :class="{ 'free-layout-container': freeLayoutEnv.updatePosition }"
-    :style="{
-      border: error ? '1px solid red' : '',
+    :class="{
+      'free-layout-container  xt-theme-b': freeLayoutEnv.updatePosition,
     }"
     @click="setPosition($event)"
     @contextmenu="contextmenu($event)"
@@ -34,11 +33,7 @@ function setPosition(event) {
   if (freeLayoutEnv.value.updatePosition) {
     const { left, top } = container.value.getBoundingClientRect();
     const { clientX, offsetY } = event;
-    console.log("event :>> ", event);
-    console.log(
-      "freeLayoutEnv.value.scrollLeft :>> ",
-      freeLayoutEnv.value.scrollLeft
-    );
+
     const x = clientX - left + freeLayoutEnv.value.scrollLeft;
     // + top 这里为什么不算top是正确的
     const y = offsetY + freeLayoutEnv.value.scrollTop;
@@ -55,18 +50,12 @@ function setPosition(event) {
 
 function contextmenu(e) {
   if (freeLayoutEnv.value.updatePosition) {
-    // e.preventDefault();
-    // e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
   }
 }
-const error = ref(false);
 function maskClick() {
   message.error("请点击框选区域内修改中心元素");
-  error.value = true;
-
-  setTimeout(() => {
-    error.value = false;
-  }, 1000);
 }
 </script>
 

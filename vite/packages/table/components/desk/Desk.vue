@@ -44,11 +44,10 @@
       @contextmenu="showMenu"
     >
       <!-- 自由布局滚动 -->
-      <FreeLayoutMask>
-        <FreeLayoutScrollbar
-          v-if="isFreeLayout && $route.path == '/main' && freeLayout"
-          ref="freeLayoutScrollbar"
-        >
+      <FreeLayoutMask
+        v-if="isFreeLayout && $route.path == '/main' && freeLayout"
+      >
+        <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <!-- 自由布局画布 -->
           <FreeLayoutContainer :currentDesk="currentDesk">
             <!-- 可拖拽元素 -->

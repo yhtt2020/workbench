@@ -36,8 +36,13 @@
     <!-- 中心线显示 -->
     <template v-if="getFreeLayoutState.line.isCenterLine">
       <div
-        class="absolute xt-theme-bg"
-        style="left: 0; right: 0; height: 1px; border: 2px solid red"
+        class="absolute"
+        style="
+          left: 0;
+          right: 0;
+          height: 1px;
+          border: 3px groove var(--active-bg);
+        "
         :style="{
           top:
             getFreeLayoutState.line.centerLine.y / getFreeLayoutState.zoom +
@@ -45,10 +50,17 @@
         }"
       />
       <div
-        class="absolute xt-theme-bg"
-        style="top: 0; width: 1px; height: 100%; border: 2px solid red"
+        class="absolute"
+        style="
+          top: 0;
+          width: 1px;
+          height: 100%;
+          border: 3px groove var(--active-bg);
+        "
         :style="{
-          left: getFreeLayoutState.line.centerLine.x / getFreeLayoutState.zoom  + 'px',
+          left:
+            getFreeLayoutState.line.centerLine.x / getFreeLayoutState.zoom +
+            'px',
         }"
       />
     </template>
@@ -80,7 +92,6 @@ const [, drop] = useDrop(() => ({
       x: number;
       y: number;
     };
-    console.log("delta :>> ", delta);
     //     // 计算鼠标的移动距离
     // const deltaX = x - initialClientOffset.value.x;
     // const deltaY = y - initialClientOffset.value.y;
@@ -93,7 +104,6 @@ const [, drop] = useDrop(() => ({
     // x = initialClientOffset.value.x + correctedDeltaX;
     // y = initialClientOffset.value.y + correctedDeltaY;
     // 这里处理位置摆放
-    console.log("item.left :>> ", item.left);
     let left = Math.round(item.left + delta.x);
     let top = Math.round(item.top + delta.y);
     if (getFreeLayoutState.value.afterDrop) {

@@ -6,17 +6,13 @@
       </div>
       <template v-if="freeLayoutSwitch">
         <div class="mb-3">中心点功能</div>
-        <xt-select v-model="getFreeLayoutState.position" :list="positionList" />
-        <xt-button
-          h="40"
-          class="my-3"
-          @click="freeDeskResize()"
-          type="theme"
-          block
-        >
-          回到中心点</xt-button
-        >
-        <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
+        <!-- <xt-select v-model="getFreeLayoutState.position" :list="positionList" /> -->
+        <xt-text class="my-3">
+          <xt-button class="mr-3" @click="freeDeskResize()" type="theme">
+            回到中心点</xt-button
+          >
+          <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
+        </xt-text>
         <div class="mb-3">网格功能</div>
         <div class="mb-3">
           网格线常驻：<a-switch

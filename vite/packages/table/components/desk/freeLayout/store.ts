@@ -18,12 +18,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       position: "top center",
       width: 2000,
       height: 2000,
-      auxLine: false,
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
       zoom: 1,
       margin: 6,
-      // 是否辅助线
+      // 辅助线参数
       line: {
         isAuxLine: false,
         isCenterLine: false,
