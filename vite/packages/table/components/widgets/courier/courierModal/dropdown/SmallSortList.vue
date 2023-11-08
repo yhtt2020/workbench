@@ -1,35 +1,43 @@
 <template>
   <div class="flex flex-col px-6">
-    <div class="flex items-center justify-between px-4 py-3 mb-3 rounded-lg h-11 xt-bg-2">
+    <div v-if="settings.tagVisible" class="flex items-center justify-between px-4 py-3 mb-3 rounded-lg h-11 xt-bg-2">
       <span class="xt-text-2 font-14 font-400">「全部」分类下支持拖拽排序。</span>
     </div>
     <vue-custom-scrollbar :settings="settingsScroller">
-      <div style="height:480px;" ref="dropRef">
+      <div :style="settings.tagVisible ? {height:'380px'} : {height:'450px'}" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
           <xt-menu name="name" @contextmenu="revID = {item,index}" :menus="menus">
             <div :class="{ 'select': sortItem === index }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="sortDetail(item,index)">
-              <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-              </div>
-              <div class="flex flex-col" style="width: calc(100% - 84px);">
-                <div class="flex items-center justify-between ">
-                  <span class="xt-font font-16 font-600">
-                    {{ item.LogisticCode }}
-                  </span>
-
-                  <div class="flex">
-                    <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ switchCompany(item)}}
-                      </div>
-                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item) }">
-                        {{ switchState(item)}}
-                      </div>
+              class="flex p-3 mb-3 flex-col rounded-lg xt-text pointer xt-bg-2 courier-item" @click="sortDetail(item,index)">
+              <div class="flex">
+                <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                </div>
+                <div class="flex items-center justify-between " style="width:364px;">
+                  <div class="flex flex-col">
+                    <div class="flex items-center mb-1.5">
+                      <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
+                      <div v-if="isTb" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#FA5000;"> 淘 </div>
+                      <span class="xt-font font-16 font-600 mx-1.5">
+                        {{ item.LogisticCode }}
+                      </span>
+                      <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
+                      <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
+                    </div>
+                    <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+                      {{ switchCompany(item) }}
                     </div>
                   </div>
+                  <div class="flex flex-col items-center justify-end">
+                    <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item,index),color:'var(--active-text)'}">
+                      {{ switchState(item) }}
+                    </div>
+                    <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
+                  </div>
                 </div>
+              </div>
 
+              <div class="flex flex-col">
                 <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                 <div class="summary">
                   {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
@@ -45,12 +53,13 @@
 </template>
 
 <script>
-import { mapActions } from 'pinia'
+import { mapActions,mapWritableState } from 'pinia'
 import { courierStore } from '../../../../../store/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
 import { Modal,message } from 'ant-design-vue'
+import { appStore } from '../../../../../store'
 
 export default {
   props: ["list", "sortItem"],
@@ -103,7 +112,10 @@ export default {
       sortItem:''
     }
   },
-
+ 
+  computed:{
+    ...mapWritableState(appStore,['settings']),
+  },
 
   mounted() {
     this.$nextTick(() => {
@@ -163,7 +175,7 @@ export default {
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   white-space: break-spaces;
   overflow: hidden;
   margin: 0 !important;

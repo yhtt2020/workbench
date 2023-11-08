@@ -7,7 +7,7 @@
         <span class="xt-text-2">返回</span>
       </template>
       <xt-button w="32" h="32"  @click="back" style="border-radius: 8px !important;">
-        <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2 pointer category-button " >
+        <div class="flex items-center justify-center rounded-lg xt-bg-2 pointer category-button " >
           <SmallIcon icon="fluent:chevron-left-16-filled" class="xt-text-2" style="font-size:1.2rem;"/>
         </div>
       </xt-button>
@@ -19,12 +19,9 @@
    <div class="flex top-right">
     <DropIndex :navList="addList"/>
 
-    <a-tooltip placement="top">
-      <template #title>
-        <span class="xt-text-2">关闭</span>
-      </template>
+    <a-tooltip placement="top" title="关闭">
       <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
-        <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg category-button pointer xt-bg-2">
+        <div class="flex items-center justify-center rounded-lg category-button pointer xt-bg-2">
           <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
         </div> 
       </xt-button>
