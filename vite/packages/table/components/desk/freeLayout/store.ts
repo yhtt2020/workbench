@@ -24,11 +24,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       zoom: 1,
       margin: 6,
       // 是否辅助线
-      auxLineObj: {
-        // 包含中心线
-        center: false,
-        start: true,
-        last: true,
+      line: {
+        isAuxLine: false,
+        isCenterLine: false,
+        centerLine: {
+          x: 1000,
+          y: 1000,
+        },
       },
       // 画布数据
       canvas: {

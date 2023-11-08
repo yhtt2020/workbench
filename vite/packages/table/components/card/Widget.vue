@@ -28,7 +28,7 @@
               <!-- 标题左侧插槽 -->
               <slot name="left-title-icon"></slot>
               <!-- 标题旧版左侧图标 -->
-              <Icon :icon="options.icon" class="title-icon"></Icon>
+              <Icon :icon="options.icon" class="title-icon" />
               <div class="flex w-2/3">
                 <!-- 卡片标题插槽 -->
                 <slot name="title-text">
@@ -41,23 +41,30 @@
             <div class="z-10 right-title flex" v-if="showRightIcon">
               <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
               <slot name="right-menu"> </slot>
-              <MenuOutlined
-                class="pointer"
-                @click="showDrawer($event)"
-                @contextmenu.stop="showDrawer"
-              />
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:oldMenuVisible="menuVisible"
+              >
+                <MenuOutlined class="pointer" />
+              </RightMenu>
             </div>
           </div>
         </slot>
         <!-- 标题栏end   -->
-        <!--  主体内容插槽start  -->
         <PageState :env="env" :options="options">
-          <slot></slot>
+          <slot>
+            <!--  主体内容插槽1  -->
+          </slot>
         </PageState>
-        <!--  主题
-          内容插槽end  -->
       </div>
-      <slot v-else></slot>
+      <slot v-else>
+        <!--  主体内容插槽2  -->
+      </slot>
+      <!-- 卡片整体区域end -->
       <!-- 右上角抽屉菜单扩展 start  -->
       <template #menuExtra>
         <slot name="menuExtra"></slot>

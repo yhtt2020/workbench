@@ -38,7 +38,6 @@
         </a-result>
       </div>
     </div>
-    <!-- <xt-demo6></xt-demo6> -->
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"

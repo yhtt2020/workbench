@@ -46,7 +46,7 @@ function addCardAtPosition(item) {
   const scrollWidth = freeLayoutEnv.value.scrollWidth;
   // 获取卡片元素
   const { id, name, customData } = item;
-  console.log("cu :>> ", customData.widgetSize);
+  // console.log("cu :>> ", customData.widgetSize);
   const widgetWidth: any = customData.widgetSize.width;
   const scrollLeft = freeLayoutEnv.value.scrollLeft;
   const currentWidth = scrollLeft * 6 + widgetWidth;

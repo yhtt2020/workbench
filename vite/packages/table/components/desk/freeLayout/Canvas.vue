@@ -9,11 +9,11 @@
       zoom: getFreeLayoutState.zoom,
     }"
     :class="{
-      'xt-theme-b': getFreeLayoutState?.auxLine,
+      'xt-theme-b': getFreeLayoutState.line.isAuxLine,
     }"
   >
-    <!-- 辅助线 -->
-    <template v-if="getFreeLayoutState?.auxLine">
+    <!-- 辅助线显示 -->
+    <template v-if="getFreeLayoutState.line.isAuxLine">
       <div
         v-for="item in auxLineHeight"
         :key="item"
@@ -33,20 +33,26 @@
         }"
       />
     </template>
-    <div
-      class="absolute xt-theme-bg"
-      style="left: 0; right: 0; height: 1px; border: 2px solid red"
-      :style="{
-        top: `50%`,
-      }"
-    />
-    <div
-      class="absolute xt-theme-bg"
-      style="top: 0; width: 1px; height: 100%; border: 2px solid red"
-      :style="{
-        left: `50%`,
-      }"
-    />
+    <!-- 中心线显示 -->
+    <template v-if="getFreeLayoutState.line.isCenterLine">
+      <div
+        class="absolute xt-theme-bg"
+        style="left: 0; right: 0; height: 1px; border: 2px solid red"
+        :style="{
+          top:
+            getFreeLayoutState.line.centerLine.y / getFreeLayoutState.zoom +
+            'px',
+        }"
+      />
+      <div
+        class="absolute xt-theme-bg"
+        style="top: 0; width: 1px; height: 100%; border: 2px solid red"
+        :style="{
+          left: getFreeLayoutState.line.centerLine.x / getFreeLayoutState.zoom  + 'px',
+        }"
+      />
+    </template>
+
     <slot></slot>
   </div>
 </template>

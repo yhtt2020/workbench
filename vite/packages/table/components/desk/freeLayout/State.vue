@@ -19,7 +19,14 @@
         <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
         <div class="mb-3">网格功能</div>
         <div class="mb-3">
-          网格线常驻：<a-switch v-model:checked="getFreeLayoutState.auxLine" />
+          网格线常驻：<a-switch
+            v-model:checked="getFreeLayoutState.line.isAuxLine"
+          />
+        </div>
+        <div class="mb-3">
+          中心线常驻：<a-switch
+            v-model:checked="getFreeLayoutState.line.isCenterLine"
+          />
         </div>
         <!-- <div class="mb-3">
           拖拽保持吸附网格：<a-switch

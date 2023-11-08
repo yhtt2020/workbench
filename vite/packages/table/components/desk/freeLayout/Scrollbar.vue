@@ -65,14 +65,42 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
+  console.log("222 :>> ", 222);
   const zoom = getFreeLayoutState.value.zoom;
-  const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
-  const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
-  if (getFreeLayoutState.value.position) {
-    scrollbar.value.scrollLeft = 2222;
-    scrollbar.value.scrollTop = 1111;
-  }
+  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
+  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
+
+  // scrollbar.value.scrollLeft =
+  //   getFreeLayoutState.value.position.x -
+  //   (getFreeLayoutState.value.width * zoom) / 2;
+
+  // console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+  // scrollbar.value.scrollTop =
+  //   getFreeLayoutState.value.position.y -
+  //   (getFreeLayoutState.value.height * zoom) / 2;
+
+  //   console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+
+  /**
+   * 居中X坐标 = (可见视图区宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
+   * 居中Y坐标 = (可见视图区高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   */
+  const x =
+    (width.value - getFreeLayoutState.value.width * zoom) / 2 +
+    getFreeLayoutState.value.line.centerLine.x * zoom;
+  const y =
+    (height.value - getFreeLayoutState.value.height * zoom) / 2 +
+    (getFreeLayoutState.value.line.centerLine.y + 205) * zoom;
+  scrollbar.value.scrollLeft = x;
+
+  scrollbar.value.scrollTop = y;
+
+  // scrollbar.value.scrollLeft = desiredScrollLeft;
+
+  // scrollbar.value.scrollTop = desiredScrollTop;
   return;
+  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
+  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
   if (getFreeLayoutState.value.position == "top center") {
     scrollbar.value.scrollLeft = Math.abs(scrollLeft);
     scrollbar.value.scrollTop = 0;
