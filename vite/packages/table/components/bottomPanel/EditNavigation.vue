@@ -195,13 +195,10 @@
          class="relative" style="height: calc(100% - 40px);padding: 5px 0">
 <template v-for="(item,index) in filterList">
     <xt-task  id='M0104' no='6'  v-if="item.name == '主页'" @cb="clickRightListItem(item,index)">
-
-            <listItem  :item="item"
-                      class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
-                    </xt-task>
-
-                    <listItem v-else  :item="item"
-                      class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+      <listItem  :item="item" class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
+    </xt-task>
+      
+      <listItem v-else  :item="item" class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
 </template>
 
 
@@ -364,7 +361,14 @@ export default {
     ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
 
     filterList () {
-      return this.ClassifyData.filter(i => {return i.type === this.nowClassify && i.name.includes(this.selectContent)})
+      return this.ClassifyData.filter(i => {
+        // 离线模式下隐藏 创意市场
+        if(window.$isOffline){
+          return i.type === this.nowClassify && i.name.includes(this.selectContent) && i.name != '创意市场'
+        }else{
+          return i.type === this.nowClassify && i.name.includes(this.selectContent)
+        }
+      })
     }
   },
   components: {

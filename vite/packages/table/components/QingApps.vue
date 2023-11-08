@@ -44,6 +44,11 @@ export default {
   },
   async mounted () {
     this.apps = await appModel.getAllApps()
+    if (window.$isOffline) {
+      this.apps = this.apps.filter(i=>{
+        return i.name != '应用市场'
+      })
+    }
   },
   methods: {
     executeApp (app) {
