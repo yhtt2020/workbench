@@ -10,10 +10,10 @@
             <div :class="{ 'select': sortItem === index }"
               class="flex p-3 mb-3 flex-col rounded-lg xt-text pointer xt-bg-2 courier-item" @click="sortDetail(item,index)">
               <div class="flex">
-                <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                <div class="flex items-center justify-center mr-4 rounded-lg " style="width:52px;height:52px; background: var(--mask-bg);">
                  <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
                 </div>
-                <div class="flex items-center justify-between " style="width:364px;">
+                <div class="flex items-center justify-between " style="width:362px;">
                   <div class="flex flex-col">
                     <div class="flex items-center mb-1.5">
                       <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
@@ -24,8 +24,11 @@
                       <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
                       <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
                     </div>
-                    <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                      {{ switchCompany(item) }}
+                    <div class="flex">
+                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+                        {{ switchCompany(item) }}
+                      </div>
+                      <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆</div>
                     </div>
                   </div>
                   <div class="flex flex-col items-center justify-end">

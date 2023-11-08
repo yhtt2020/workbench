@@ -32,6 +32,14 @@
       </template>
       <div class="flex w-full justify-between px-6" v-else>
         <div style="width:452px;" class="flex flex-col">
+          <div class="flex items-center mb-4 justify-between">
+            <SelectPlateform />
+            <xt-button w="40" h="40">
+              <div class="flex items-center justify-center">
+                <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
+              </div>
+            </xt-button>
+          </div>
           <template v-if="allShow">
             <SortList  :list="courierDetailList" @rightSelect="getRightItem"/>
           </template>
@@ -44,10 +52,10 @@
                   <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
                     <div class="flex flex-col justify-between"  @click.prevent="detailClick(item,index)">
                       <div class="flex">
-                        <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                        <div class="flex items-center justify-center mr-4 rounded-lg" style="width:52px;height:52px;background: var(--mask-bg);">
                          <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
                         </div>
-                        <div class="flex items-center justify-between " style="width:364px;">
+                        <div class="flex items-center justify-between " style="width:362px;">
                           <div class="flex flex-col">
                             <div class="flex items-center mb-1.5">
                               <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
@@ -58,8 +66,11 @@
                               <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
                               <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
                             </div>
-                            <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                              {{ switchCompany(item) }}
+                            <div class="flex">
+                              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+                                {{ switchCompany(item) }}
+                              </div>
+                              <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆</div>
                             </div>
                           </div>
                           <div class="flex flex-col items-center justify-end">
@@ -103,22 +114,23 @@ import { courierStore } from '../../../../../store/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierType,selectTab,selectData } from '../modalMock'
 import { kdCompany, kdState, switchColor } from '../../mock'
-import { Modal } from 'ant-design-vue'
+import { Modal } from 'ant-design-vue' 
 
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
-import AddCourierModal from '../AddCourierModal.vue'
+import AddCourierModal from '../AddCourierModal.vue' 
 import CourierSetting from '../CourierSetting.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
 import DropDown from '../dropdown/MoreDrop.vue'
 import SortList from '../dropdown/SortList.vue'
 import Empty from '../../Empty.vue'
 import RightDetail from './RightDetail.vue'
+import SelectPlateform from '../dropdown/SelectPlateform.vue'
 
 
 export default {
   components:{
     SmallIcon,HorizontalPanel,DropIndex,AddCourierModal,
-    CourierSetting,DropDown,SortList,Empty,RightDetail
+    CourierSetting,DropDown,SortList,Empty,RightDetail,SelectPlateform
   },
 
   data(){

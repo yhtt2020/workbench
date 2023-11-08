@@ -12,15 +12,15 @@
     <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
       <div class="flex items-center mb-4" v-for="(item,index) in courierLists">
 
-       <a-input spellcheck="false" style="width: 280px; margin-right: 12px; border-radius: 8px;" 
+       <a-input ref="numRef" spellcheck="false" style="width: 280px; margin-right: 12px; border-radius: 8px;" 
         v-model:value="item.orderNum" class="h-10 xt-bg-2"  :style="item.code === 'SF' ? { width: '148px !important'} : { width:'280px !important' }"
-        placeholder="输入快递单号" @input="getCourierNumber(item.orderNum,index)"
+        placeholder="输入快递单号"   @input="getCourierNumber(item.orderNum,index)" allowClear
        />
       
        <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF'|| item.code === 'CNCY'" style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位"/>
       
        <a-select show-search class="custom-select"  v-model:value="item.code" placeholder="自动识别"
-       style="width: 120px;text-align: center;" :options="optionList"  @input="searchCourier"
+       style="width: 120px;text-align: center;" ref="selectRef" :options="optionList"  @input="searchCourier"
        >
        </a-select> 
 
@@ -81,6 +81,9 @@ export default defineComponent({
       phoneLastNum:'',
     })
 
+    const numRef = ref(null)
+    const selectRef = ref(null)
+
     const optionList = computed(()=>{
       const list = expressList.map((item)=>{ return {value:item.code,label:item.name} })
       return list
@@ -100,17 +103,18 @@ export default defineComponent({
 
     // 删除快递输入框
     const removeCourierInput = (index) =>{
-      // console.log('查看index',index);
-      courier.removeNewCourierInfo(index)
+      if(index === 0){
+        numRef.value[0].stateValue = ''
+        selectRef.value[0] = ''
+      }else{
+        courier.removeNewCourierInfo(index)
+      }
     }
 
     // 输入框数据自动识别
     const getCourierNumber = (item,index) =>{
-      // console.log('查看item',item,index);
       if(item !== ''){
         const result =  getCourierName(item)
-        // console.log('查看返回情况',{code:result.code,label:result.name,orderNum:item});
-        // console.log('查看index',index);
         courier.updateNewCourierInfo({code:result.code,label:result.name,orderNum:item,phoneLastNum:''},index)
       }else{
         courier.updateNewCourierInfo({code:'自动识别',label:'自动识别',orderNum:'',phoneLastNum:''},index)
@@ -144,28 +148,23 @@ export default defineComponent({
 
     // 最终添加按钮
     const addCourierData = (evt) =>{
-      console.log(courierLists.value.length);
       if(courierLists.value.length === 1){
-        // console.log('查看是否为单个添加');
-        // console.log('查看用户是否输入参数',courierLists.value[0].orderNum === '');
         if(courierLists.value[0].orderNum === ''){
           message.warning('请添加快递信息')
           evt.preventDefault();
         }else{
-          // console.log('参数容错',courierLists.value[0]);
           addCourier.putCourierInfo(courierLists.value[0].code,courierLists.value[0].orderNum,courierLists.value[0].phoneLastNum)
           ctx.emit('close')
         }
       }else{
-        // console.log('查看是否为多个添加');
-        // console.log('查看用户是否输入参数',isOrderNumEmpty.value);
         if(isOrderNumEmpty.value){
           message.warning('请添加快递信息')
           evt.preventDefault();
         }else{
+          
           for(let i=0;i<courierLists.value.length;i++){
-            // console.log('查看结果',courierLists.value[i]);
-            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,courierLists.value[i].phoneLastNum)
+            console.log(numRef.value[i].stateValue);
+            addCourier.putCourierInfo(courierLists.value[i].code,courierLists.value[i].orderNum,courierLists.value[i].phoneLastNum) 
           }
           ctx.emit('close')
         }
@@ -177,7 +176,7 @@ export default defineComponent({
 
 
     return {
-      courierLists,optionList,isOrderNumEmpty,
+      courierLists,optionList,isOrderNumEmpty,numRef,selectRef,
       ...toRefs(data),close,createCourierInput,removeCourierInput,
       getCourierNumber,searchCourier,addCourierData,
     }
@@ -229,4 +228,8 @@ export default defineComponent({
   height: 40px !important;
 }
 
+
+:deep(.anticon.ant-input-clear-icon){
+  color:var(--secondary-text) !important;
+}
 </style>

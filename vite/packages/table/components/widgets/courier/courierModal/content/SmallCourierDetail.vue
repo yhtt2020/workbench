@@ -33,14 +33,11 @@
       <template v-else>
         <div class="flex items-center mb-4 justify-between px-6">
           <SelectPlateform />
-          <div class="flex items-center ">
-            <span class="xt-text-2 font-14 font-400 xt-font mr-2.5">2023-11-03 11:11 更新</span>
-            <xt-button w="40" h="40">
-              <div class="flex items-center justify-center">
-                <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
-              </div>
-             </xt-button>
-          </div>
+          <xt-button w="40" h="40">
+            <div class="flex items-center justify-center">
+              <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
+            </div>
+          </xt-button>
         </div>
 
         <SortList :list="allList" v-if="allShow" @rightSelect="getSmallItem" @viewDetail="getDetail"/>
@@ -55,7 +52,7 @@
                       <div class="flex items-center justify-center mr-3 rounded-lg" style="width:52px;height:52px; background: var(--mask-bg);">
                         <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;"/>
                       </div>
-                      <div class="flex items-center justify-between " style="width:364px;">
+                      <div class="flex items-center justify-between " style="width:362px;">
                         <div class="flex flex-col">
                           <div class="flex items-center mb-1.5">
                             <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
@@ -66,8 +63,11 @@
                             <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
                             <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
                           </div>
-                          <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                            {{ switchCompany(item) }}
+                          <div class="flex">
+                            <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+                              {{ switchCompany(item) }}
+                            </div>
+                            <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆</div>
                           </div>
                         </div>
                         <div class="flex flex-col items-center justify-end">
