@@ -1,5 +1,13 @@
 <template>
   <Widget :options="options" :menu-list="menuList" :desk="desk">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:arrow-trending-lines-20-filled" style="font-size: 24px;" />
+        </div>
+      </template>
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -44,6 +52,7 @@ import Widget from "../../card/Widget.vue";
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: "SmallCPUCard",
   data(){
@@ -51,7 +60,7 @@ export default {
       options:{
         className:'card small',
         title:'CPU',
-        icon:'cpu',
+        // icon:'cpu',
         type:'smallCPUCard'
       },
       CPUData:{
@@ -73,7 +82,8 @@ export default {
     }
   },
   components:{
-    Widget
+    Widget,
+    newIcon
   },
   props:{
     desk:{

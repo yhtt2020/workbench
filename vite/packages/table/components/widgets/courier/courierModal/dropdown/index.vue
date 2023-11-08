@@ -1,12 +1,12 @@
 <template>
  <a-dropdown :trigger="['click']" placement="bottom">
-  <div class="xt-text flex items-center justify-center pointer"> 
+  <div class="flex items-center justify-center xt-text pointer"> 
     <span class="xt-text">{{selectType.title }} </span>
     <DropIcon icon="fluent:caret-down-12-filled" style="font-size: 1.25rem;"/> 
   </div>
   <template #overlay>
-   <a-menu class="flex flex-col items-center justify-center" style="width: 180px;border-radius: 8px; padding: 8px;">
-    <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col items-center justify-center"
+   <a-menu class="flex flex-col items-center justify-center xt-bg-2" style="width: 180px;border-radius: 8px; padding: 8px;">
+    <a-menu-item v-for="item in navList" class="flex flex-col items-center justify-center w-full rounded-lg xt-text nav-item "
      @click="selectNav(item)"
     >
      {{ item.title }}

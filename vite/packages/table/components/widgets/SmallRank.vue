@@ -7,7 +7,15 @@
   ref="rankingSmallSlot" 
   :env="env"
   :menuList="toggleRankingList">
-  <div class="bg-mask rounded-lg px-3 py-1 pointer" @click="showDrawer"
+  <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:people-community-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
+  <div class="px-3 py-1 rounded-lg bg-mask pointer" @click="showDrawer"
     style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankIndex].title }}
   </div>
     <!-- 总在线时长榜 -->
@@ -45,7 +53,7 @@
       <span   v-for="(item,index) in rankingType" :key="index"  
       @click="getRankingType(item,index)" 
       :class="rankIndex === index ? 'active-index':''" 
-      class="mb-4  text-center pointer change h-12 xt-bg-2 rounded-lg show-game-time py-3">
+      class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
          {{ item.title }}
       </span>
     </div>
@@ -58,11 +66,13 @@ import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import { onLineList,teamList,inviteList,signInList } from "../../js/rank"
 import RankList from '../rank/RankList.vue'
+import { Icon as newIcon } from '@iconify/vue'
 export default {
   name: 'SmallRank',
   components: {
     Widget,
-    RankList
+    RankList,
+    newIcon
   },
   props: {
     customIndex: {
@@ -79,7 +89,7 @@ export default {
   },
   data () {
     return {
-      options: {className: 'card small',title: '排行榜',icon: 'linechart',type: 'smallRank'},
+      options: {className: 'card small',title: '排行榜',type: 'smallRank'},
       sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
       //在线时长榜
       onLineList,

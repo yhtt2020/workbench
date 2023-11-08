@@ -5,15 +5,23 @@
   :customData="customData"
   :desk="desk"
   >
-  <div class="flex flex-col overflow mt-1 hot-box" style="height: 95%;">
+  <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="ri:weibo-fill" style="font-size: 24px;" />
+        </div>
+      </template>
+  <div class="flex flex-col mt-1 overflow hot-box" style="height: 95%;">
     <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
 
       <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
-        class="w-full flex items-center rounded-lg justify-between pointer set-type"
+        class="flex items-center justify-between w-full rounded-lg pointer set-type"
         style="margin: 8px 0 8px;">
         <span class="sort">{{ item.id }}</span>
-        <div class="flex-1 flex ml-3 items-center">
+        <div class="flex items-center flex-1 ml-3">
           <div class="truncate" style="color: var(--primary-text);font-size: 16px;"
           :style="customData.width === 2 ? 'max-width:390px' : 'max-width: 214px;'">
             {{ item.title }}
@@ -35,10 +43,12 @@ import { mapActions, mapWritableState } from 'pinia'
 import { hotStore } from '../../store/hot'
 import browser from '../../js/common/browser'
 import { message } from 'ant-design-vue'
+import {Icon as newIcon} from '@iconify/vue'
 export default {
   name: 'HotSearch',
   components: {
     Widget,
+    newIcon
   },
   props: {
     customIndex: {
@@ -62,7 +72,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      options: {className: 'card',title: '微博热搜',icon: 'weibo1',type: 'hotSearch'},
+      options: {className: 'card',title: '微博热搜',type: 'hotSearch'},
       sizeList:[{title:'2x4',height:2,width:1,name:'1x2'},{title:'4x4',height:2,width:2,name:'2x2'}],
       hotList: []
     }

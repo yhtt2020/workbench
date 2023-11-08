@@ -1,9 +1,9 @@
 <template>
  <a-dropdown :trigger="['click']" placement="bottomRight">
-  <a-tooltip placement="top" :class="mClass">
-   <template #title>
+  <a-tooltip placement="top" :class="mClass" title="添加">
+   <!-- <template #title>
      <span class="xt-text-2">添加</span>
-   </template>
+   </template> -->
    <xt-button w="32" h="32" :class="dropClass" style="border-radius: 8px !important;">
      <div class="flex items-center justify-center">
       <DropIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
@@ -12,21 +12,21 @@
   </a-tooltip> 
   
   <template #overlay>
-   <a-menu class="flex flex-col" style="width: 200px;border-radius: 8px; padding: 8px;">
+   <a-menu class="flex flex-col xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
     <!--  @click="selectNav(item)" -->
-    <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col"
+    <a-menu-item v-for="item in navList" class="flex flex-col w-full rounded-lg xt-text nav-item"
      @click.prevent="item.callBack"
     >
      <div class="flex " v-if="item.name === 'tb'">
-      <div class="xt-font font-14 font-500 w-5 h-5 rounded-md flex items-enter justify-center" style="background:#FA5000;line-height: 20px;color:var(--active-text);">淘</div>
-      <span class="ml-3"  :style="storeInfo.tb.nickname !== null ? {color:'rgba(255,255,255,0.40) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
-      <span class="ml-4" v-if="storeInfo.tb.nickname !== null" style="color:rgba(255,255,255,0.40) !important;">已关联</span>
+      <div class="flex justify-center w-5 h-5 rounded-md xt-font font-14 font-500 items-enter" style="background:#FA5000;line-height: 20px;color:var(--active-text);">淘</div>
+      <span class="ml-3"  :style="storeInfo.tb.nickname !== null ? {color:'var(--secondary-text) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
+      <span class="ml-4" v-if="storeInfo.tb.nickname !== null" style="color:var(--secondary-text) !important;">已关联</span>
       <span class="ml-4" v-else style="color:var(--active-bg) !important;" @click="toTbRelevance">未关联</span>
      </div>
      <div class="flex " v-if="item.name === 'jd'">
-      <div class="xt-font font-14 font-500 w-5 h-5 rounded-md flex items-enter justify-center" style="background:#E12419;line-height: 20px;color:var(--active-text);">JD</div>
-      <span class="ml-3" :style="storeInfo.jd.nickname !== null ? {color:'rgba(255,255,255,0.40) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
-      <span class="ml-4" v-if="storeInfo.jd.nickname !== null" style="color:rgba(255,255,255,0.40) !important;">已关联</span>
+      <div class="flex justify-center w-5 h-5 rounded-md xt-font font-14 font-500 items-enter" style="background:#E12419;line-height: 20px;color:var(--active-text);">JD</div>
+      <span class="ml-3" :style="storeInfo.jd.nickname !== null ? {color:'var(--secondary-text) !important'} : {color:'var(--primary-text) !important'} ">{{ item.title }}</span>
+      <span class="ml-4" v-if="storeInfo.jd.nickname !== null" style="color:var(--secondary-text) !important;">已关联</span>
       <span class="ml-4" v-else style="color:var(--active-bg) !important;" @click="toJdRelevance">未关联</span>
      </div>
 

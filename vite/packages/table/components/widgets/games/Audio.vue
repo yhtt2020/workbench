@@ -1,13 +1,19 @@
 <template>
   <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk">
+    <template #left-title-icon>
+      <div class="icon"
+        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
+        <newIcon icon="akar-icons:sound-on" class="" style="font-size: 20px;"></newIcon>
+      </div>
+    </template>
     <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
     <a-tooltip title="更多管理" placement="top">
-      <div class=" px-2 rounded-full" @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
+      <div class="px-2 rounded-full " @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
     </a-tooltip>
-    <div  v-if="audioType.name === 'output'" class="mt-4 flex flex-col xt-text" style="">
+    <div  v-if="audioType.name === 'output'" class="flex flex-col mt-4 xt-text" style="">
       <div class="flex">
-        <div class="flex-1 flex flex-col mr-4">
-          <div class="flex my-1 justify-between">
+        <div class="flex flex-col flex-1 mr-4">
+          <div class="flex justify-between my-1">
             <span style=" font-size: 14px;font-weight: 400;">音量</span>
             <span style=" font-size: 14px;font-weight: 400;">{{ defaultOutput.volume }}%</span>
           </div>
@@ -18,7 +24,7 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click.stop="closeVolume" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2">
+          <div @click.stop="closeVolume" class="flex items-center justify-center px-3 py-3 rounded-full btn-active voice-hover pointer s-item xt-bg-2">
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
@@ -27,7 +33,7 @@
       <span class="mt-2 mb-2" style="font-size: 14px;font-weight: 400;">输出</span>
       <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:184px;">
         <template v-for="(item,index) in outputList">
-        <div   :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" @click.stop="selectDefaultDevice(item,outputList)" class="w-full py-1 flex btn-active voice-hover  items-center rounded-lg  pointer " style="padding: 8px 10px 6px 10px;font-size: 14.64px;font-weight: 200;">
+        <div   :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" @click.stop="selectDefaultDevice(item,outputList)" class="flex items-center w-full py-1 rounded-lg btn-active voice-hover pointer " style="padding: 8px 10px 6px 10px;font-size: 14.64px;font-weight: 200;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>
@@ -40,10 +46,10 @@
       <div class="flex flex-col">
         <span style="font-size: 14px;font-weight: 400;">输入检测</span>
         <div class="flex">
-          <div style="width: 180px;" class="mr-4 flex items-center justify-center">
+          <div style="width: 180px;" class="flex items-center justify-center mr-4">
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
-          <div @click.stop="closeMicrophone" class="flex btn-active voice-hover items-center rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2" style="">
+          <div @click.stop="closeMicrophone" class="flex items-center justify-center px-3 py-3 rounded-full btn-active voice-hover pointer s-item xt-bg-2" style="">
             <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
@@ -52,7 +58,7 @@
       <span class="mt-2 " style="font-size: 14px;font-weight: 400;">输入</span>
       <vue-custom-scrollbar class="mt-2" :settings="settingsScroller" style="height:200px;">
         <template v-for="(item,index) in inputList">
-        <div :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" class="w-full py-1 voice-hover pointer voice-hover rounded-lg flex items-center  py-2 px-2  xt-text" @click.stop="selectDefaultDevice(item,inputList)" style=" font-size: 15px;font-weight: 200;color: var(--primary-text) !important;">
+        <div :class="item.isDefaultForMultimedia ? 's-item xt-bg-2' :''" class="flex items-center w-full px-2 py-1 py-2 rounded-lg voice-hover pointer xt-text" @click.stop="selectDefaultDevice(item,inputList)" style=" font-size: 15px;font-weight: 200;color: var(--primary-text) !important;">
           <span class="item-name">
             {{ item.name }}（{{item.deviceName}}）
           </span>
@@ -80,12 +86,14 @@ import {
   setMicVolume
 } from '../../../js/ext/audio/audio.ts'
 import { appStore } from '../../../store'
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   name:'Audio',
   components:{
     Template,
     Widget,
-    HorizontalPanel
+    HorizontalPanel,
+    newIcon
   },
   props:{
     customIndex: {
@@ -126,7 +134,7 @@ export default {
       options: {
         className: 'card',
         title: '音频',
-        icon: 'sound',
+        // icon: 'sound',
         type: 'games',
       },
       devices:[],

@@ -9,7 +9,7 @@
     </template>
     <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
       <template v-if="!showWay">
-        <div class="w-full flex mt-2 justify-between" v-if="courierDetailList.length !== 0">
+        <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
           <div class="xt-text xt-font ">快递筛选</div>
           <div class="flex items-center">
             <span class="mr-2">2023-11-03 11:11更新</span>
@@ -22,7 +22,7 @@
         </div>
       </template>
 
-      <div class="w-full h-0 courier flex-1" style="position:relative;">
+      <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
@@ -36,9 +36,12 @@
             <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;">
-                <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
-                  @click.stop="viewDeliveryDetails(item)" />
+                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
+                <div v-for="(item, index) in courierDetailList">
+                  <CourierItem  :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
+                  <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
+                </div>
+                
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
@@ -208,7 +211,6 @@ export default {
       this.allCourierVisible = false
     },
     refreshCourier() {
-      // _.debounce(this.refreshCouriers(),1000)
       this.refreshCouriers()
     },
     viewDeliveryDetails(item) {
@@ -232,6 +234,8 @@ export default {
       }
     },
     refreshAll() {
+      // 快递鸟快递信息更新
+      this.refreshCouriers()
       message.loading('正在为您更新商城订单')
       if (this.storeInfo.jd.nickname) {
         //京东绑定了
@@ -334,6 +338,14 @@ export default {
     courierMsg() {
       return this.courierMsgList;
     },
+    formattedDate() {
+      const year = this.dateNow.getFullYear();
+      const month = String(this.dateNow.getMonth() + 1).padStart(2, '0');
+      const day = String(this.dateNow.getDate()).padStart(2, '0');
+      const hours = String(this.dateNow.getHours()).padStart(2, '0');
+      const minutes = String(this.dateNow.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    },
   },
   async mounted() {
     this.getDbCourier()
@@ -348,12 +360,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.refresh {
-  background-color: var(--primary-bg);
+// .refresh {
+//   // background-color: var(--primary-bg);
 
-  &:hover {
-    background-color: var(--secondary-bg);
-  }
+//   &:hover {
+//     // background-color: var(--secondary-bg);
+//   }
+// }
+.courier-item{
+  &::after{
+        content:'';
+        width: 100%;
+        height: 1px;
+        background-color: var(--divider);
+        margin-top: 6px;
+    }
+}
+.divider{
+    width: 100%;
+    height: 1px;
+    background-color: var(--divider);
+    margin-top: 8px;
 }
 
 .courier {

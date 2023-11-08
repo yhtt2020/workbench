@@ -14,7 +14,11 @@
               </div>
             </xt-button>
           </a-tooltip>
-          <a-tooltip placement="top" title="关闭">
+          
+          <a-tooltip placement="top">
+            <template #title>
+              <span class="xt-text-2">关闭</span>
+            </template>
             <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
