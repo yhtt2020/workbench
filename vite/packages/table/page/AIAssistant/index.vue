@@ -5,7 +5,7 @@
         <div class="flex h-full">
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
-        <div class="flex h-full flex-col w-full">
+        <div class="flex h-full flex-col flex-1 w-0" >
           <HeaderView></HeaderView>
           <Caht></Caht>
         </div>
