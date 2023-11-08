@@ -23,8 +23,10 @@
 <script>
 import GradeSmallTip from "./GradeSmallTip.vue";
 import { taskStore } from "../apps/task/store";
-import { mapWritableState } from 'pinia'
 import routerTab from '../js/common/routerTab'
+import {mapActions, mapState,mapWritableState} from "pinia";
+import { offlineStore } from "../js/common/offline";
+
 export default {
   name: 'SecondPanel',
   props: [
@@ -57,6 +59,9 @@ export default {
   mounted() {
     this.panel = document.getElementById('secondPanel')
     this.activeIndex = this.menus[0].index
+    // console.log(this.getIsOffline());
+    // console.log(this.menus);
+
     //this.panel.style.marginTop = -this.panel.offsetHeight / 2-20 + 'px'
   },
   computed: {
@@ -76,6 +81,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(offlineStore, ["getIsOffline"]),
     isActive:routerTab.isActive,
     current(menu) {
       if(menu.tab){

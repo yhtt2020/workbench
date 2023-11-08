@@ -94,6 +94,7 @@ export const appStore = defineStore('appStore', {
     
       relevanceEnable:false, //开启关联的电商平台快递 
       customCourier:false, // 自定义快递
+      tagVisible:true, // 快递组件排序tag提示
       
     },
 

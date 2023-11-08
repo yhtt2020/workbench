@@ -13,7 +13,7 @@
           ">
           <h3 style="color: var(--primary-text)">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-            <a-col :span="12">
+            <a-col :span="12" v-if="!this.isOffline">
               <div class="relative btn">
                 弹幕
                 <br />
@@ -159,14 +159,14 @@
                   </div>
                 </xt-task>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && !this.isOffline" :span="6">
                 <div @click="invite" class="btn">
                   <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
                   <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
                   <div>邀请</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && !this.isOffline" :span="6">
                 <div @click="verify" class="btn">
                   <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
                   <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />

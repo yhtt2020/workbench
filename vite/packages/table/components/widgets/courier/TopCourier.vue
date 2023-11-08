@@ -61,33 +61,32 @@
                 </vue-custom-scrollbar>
             </template>
 
-        </div>
-    </div>
-    <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length > 0"
-        style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
-        @click="showTopCourier">
-        <div class="flex items-center justify-between">
+     </div>
+ </div>
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length>0"
+     style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
+     @click="showTopCourier">
+     <div class="flex items-center justify-between">
             <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub" />
             <span
                 style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
                     allCouriers }}</span>
         </div>
-
-    </xt-button>
-    <teleport to='body'>
-        <AddCourierModal ref="addCourierRef" />
-    </teleport>
-    <teleport to='body'>
-        <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="100" :maskIndex="99" @close="showCourierDetail = false">
-            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
-            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
-        </xt-modal>
-    </teleport>
-    <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
-    <teleport to='body'>
-        <CourierSetting ref="courierSettingRef" />
-    </teleport>
+ </xt-button>
+ <teleport to='body'>
+     <AddCourierModal ref="addCourierRef" />
+ </teleport>
+ <teleport to='body'>
+     <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+         :isHeader="false" :boxIndex="600" :maskIndex="100">
+         <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
+         <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
+     </xt-modal>
+ </teleport>
+ <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
+ <teleport to='body'>
+    <CourierSetting ref="courierSettingRef" />
+</teleport>
 </template>
 <script>
 import { appStore } from "../../../store";

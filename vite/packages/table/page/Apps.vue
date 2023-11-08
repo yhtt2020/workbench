@@ -491,6 +491,13 @@ export default {
       ]
     }
   },
+  mounted(){
+    if(window.$isOffline){
+      this.menus = this.menus.filter(i=>{
+        return i.index != 'store'
+      })
+    }
+  },
   methods: {
     ...mapActions(appsStore, ['addApps']),
     getSelectApps (data) {

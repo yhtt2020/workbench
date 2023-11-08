@@ -38,6 +38,7 @@
         </a-result>
       </div>
     </div>
+    <!-- <xt-demo6></xt-demo6> -->
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
@@ -60,14 +61,14 @@
             />
           </template>
           <!-- 鼠标跟随元素 -->
-          <template #preview="{ data }">
+          <!-- <template #preview="{ data }">
             <component
               :desk="currentDesk"
               :is="data?.data.name"
               :customIndex="data?.data.id"
               :customData="data?.data.customData"
             />
-          </template>
+          </template> -->
         </FreeLayoutContainer>
       </FreeLayoutScrollbar>
 

@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import cache from "../../components/card/hooks/cache";
+import { appStore } from "../../store";
 // @ts-ignore
 export const offlineStore = defineStore("offlineStore", {
   state: () => ({
@@ -14,6 +15,9 @@ export const offlineStore = defineStore("offlineStore", {
     changeOffline(){
       cache.set('isOffline',this.isOffline)
       window.$isOffline = this.isOffline
+      if (appStore().settings.enableBarrage) {
+        appStore().settings.enableBarrage = false
+      }
     },
     getIsOffline(){
       return cache.get('isOffline')
