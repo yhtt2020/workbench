@@ -6,6 +6,7 @@
     :customIndex="customIndex"
     :custom-data="customData"
     :menuList="menuList"
+    :env="env"
     v-if="!detailToggle"
     >
       <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
@@ -96,6 +97,12 @@
         detailId: -1,
         isLoading: false,
         pageToggle: true,
+        env:{
+          web: false,
+          mobile: false,
+          client: false,
+          offline:false
+        }
       };
     },
     computed: {

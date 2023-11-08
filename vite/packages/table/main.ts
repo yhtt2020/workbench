@@ -1,9 +1,10 @@
 // 注册想天客户端状态
-import currentEnv, { isWeb, isClient ,isMac} from "./ui/hooks/env";
+import currentEnv, { isWeb, isClient ,isMac, isOffline} from "./ui/hooks/env";
 window.$currentEnv = currentEnv;
 window.$isWeb = isWeb;
 window.$isClient = isClient;
 window.$isMac = isMac;
+window.$isOffline = isOffline;
 import {createApp} from 'vue'
 import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.less';
@@ -99,11 +100,13 @@ app.provide("currentEnv", currentEnv);
 app.provide("isWeb", isWeb);
 app.provide("isClient", isClient);
 app.provide("isMac", isMac);
+app.provide("isOffline", isOffline);
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
 app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
+app.config.globalProperties.$isOffline = isOffline;
 
 const pinia = createPinia()
 pinia.use(piniaPersist)

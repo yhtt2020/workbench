@@ -6,6 +6,7 @@
     :desk="desk"
     ref="todoSlot"
     :menuList="toggleTodoList"
+    :env="env"
   >
     <template #right-menu>
       <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px">
@@ -131,7 +132,13 @@ export default {
       listType: [],
       todoIndex: 0,
       selectTodo: {title: '个人', nanoid: 'T00111'},
-      taskList: []
+      taskList: [],
+      env:{
+        web: false,
+        mobile: false,
+        client: false,
+        offline:false
+      }
     }
   },
   computed: {

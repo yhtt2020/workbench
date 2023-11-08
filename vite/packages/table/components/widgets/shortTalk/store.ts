@@ -225,7 +225,6 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           
         })
       }else{
-        // console.log('暂时没customData');
         
       }
     },
@@ -274,10 +273,6 @@ export const shortTalkStore = defineStore("shortTalkStore", {
           }
         }
       }).then((res)=>{
-        console.log('res');
-        console.log(res);
-        
-
         this.todoList.forEach(item => {
           item.num = res[item.type]
           item.url = res[`${item.type}_url`]

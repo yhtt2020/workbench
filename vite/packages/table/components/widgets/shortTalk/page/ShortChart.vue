@@ -1,11 +1,14 @@
 <template>
 
     <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
+        <template #left-title>
+            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
+        </template>
         <div class="top-icon">
             <Icon icon="fluent:arrow-trending-lines-20-filled" />
         </div>
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
-        <div v-else class="echarts" id="mychart" :style="myChartStyle"></div>
+        <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
@@ -220,8 +223,8 @@ export default {
                 // 内部属性
                 series:this.series,
             }
-            const myChart = echarts.init(document.getElementById("mychart"))
-            // myChart.setOption(mulColumnZZTData);
+            const myChart = echarts.init(document.getElementById("myChart"))
+            // const myChart = this.$refs.myChart
             myChart.clear()
             myChart.setOption(mulColumnZZTData);
             window.addEventListener("resize",()=>{

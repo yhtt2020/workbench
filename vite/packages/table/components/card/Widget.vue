@@ -9,17 +9,14 @@
     >
       <div
         v-if="!options?.hide"
-        id="widget"
         :class="classes"
         style="color: var(--primary-text)"
-        :style="[
-          {
-            display: options.hide == true ? 'none' : '',
-            width: customSize.width,
-            height: customSize.height,
-            background: options.background || 'var( --primary-bg)',
-          },
-        ]"
+        :style="{
+          display: options.hide == true ? 'none' : '',
+          width: customSize.width,
+          height: customSize.height,
+          background: options.background || 'var( --primary-bg)',
+        }"
       >
         <!--标题栏start-->
         <slot name="cardTitle">
@@ -28,51 +25,39 @@
             class="flex items-center justify-between"
           >
             <div class="left-title" v-if="options.noTitle !== true">
+              <!-- 标题左侧插槽 -->
               <slot name="left-title-icon"></slot>
+              <!-- 标题旧版左侧图标 -->
               <Icon :icon="options.icon" class="title-icon"></Icon>
               <div class="flex w-2/3">
+                <!-- 卡片标题插槽 -->
                 <slot name="title-text">
-                  <span
-                    class="pointer"
-                    v-if="options.titleRoute"
-                    @click="goRoute"
-                    >{{ options.title }}</span
-                  >
-                  <span v-else>
-                    {{ options.title }}
-                  </span>
+                  {{ options.title }}
                 </slot>
-                <slot name="left-title" v-if="options.rightIcon">
-                  <div class="right-icon">
-                    <MyIcon class="pointer" :icon="options.rightIcon"></MyIcon>
-                  </div>
-                </slot>
+                <!-- 标题右侧插槽 -->
+                <slot name="left-title"></slot>
               </div>
             </div>
             <div class="z-10 right-title flex" v-if="showRightIcon">
+              <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
               <slot name="right-menu"> </slot>
-              <RightMenu
-                :menus="menus"
-                :sizes="sizeList"
-                model="all"
-                @removeCard="doRemoveCard"
-                v-model:sizeType="sizeType"
-                v-model:oldMenuVisible="menuVisible"
-              >
-                <MenuOutlined class="pointer" />
-              </RightMenu>
+              <MenuOutlined
+                class="pointer"
+                @click="showDrawer($event)"
+                @contextmenu.stop="showDrawer"
+              />
             </div>
           </div>
         </slot>
         <!-- 标题栏end   -->
         <!--  主体内容插槽start  -->
-        <WebState v-if="env[$currentEnv]"></WebState>
-        <slot v-else :customIndex="customIndex"></slot>
-        <!--  主题内容插槽end  -->
+        <PageState :env="env" :options="options">
+          <slot></slot>
+        </PageState>
+        <!--  主题
+          内容插槽end  -->
       </div>
-      <template v-else>
-        <slot></slot>
-      </template>
+      <slot v-else></slot>
       <!-- 右上角抽屉菜单扩展 start  -->
       <template #menuExtra>
         <slot name="menuExtra"></slot>
@@ -81,7 +66,6 @@
     </RightMenu>
   </Drop>
 
-  <div></div>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -95,9 +79,11 @@ import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
+import { offlineStore } from "../../js/common/offline";
+
 import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
-import WebState from "./WebState.vue";
+import PageState from "./PageState.vue";
 import Drop from "./Drop.vue";
 import { IOption, IMenuItem } from "./types";
 
@@ -107,6 +93,7 @@ export default {
     MenuOutlined,
     MyIcon,
     RightMenu,
+    PageState,
     Drop,
   },
   name: "Widget",
@@ -165,6 +152,7 @@ export default {
           web: false,
           mobile: false,
           client: false,
+          offline: false,
         };
       },
     },
@@ -293,6 +281,10 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
+    ...mapActions(offlineStore, ["getIsOffline"]),
+    showDrawer(e) {
+      this.menuVisible = true;
+    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
@@ -323,21 +315,14 @@ export default {
 <style lang="scss">
 .no-frame {
   background: none !important;
+
   .no-title {
     position: absolute;
     right: 20px;
     top: 10px;
     z-index: 99;
   }
-  position: relative;
-}
 
-.right-icon svg {
   position: relative;
-  left: -10px;
-  top: 4px;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
 }
 </style>
