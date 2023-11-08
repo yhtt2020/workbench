@@ -91,6 +91,12 @@ export default {
     }
   },
   mounted() {
+    // 离线模式下隐藏弹幕入口
+    if (window.$isOffline) {
+      this.menus = this.menus.filter(i=>{
+        return i.name != 'barrage'
+      })
+    }
     // this.$router.replace({
     //       name:'key'
     //     })

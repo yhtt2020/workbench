@@ -13,7 +13,7 @@
           ">
           <h3 style="color: var(--primary-text)">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-            <a-col :span="12" v-if="!isOffline">
+            <a-col :span="12" v-if="!this.isOffline">
               <div class="btn relative">
                 弹幕
                 <br />
@@ -42,7 +42,7 @@
               </div>
             </a-col>
 
-            <a-col  :span="12" v-if="!isOffline">
+            <a-col  :span="12" v-if="!this.isOffline">
               <div class="btn relative">
                 社群沟通<br />
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -54,7 +54,7 @@
                 <a-switch v-model:checked="settings.noticeEnable"></a-switch>
               </div>
             </a-col>
-            <a-col :span="12" v-if="!isOffline">
+            <a-col :span="12" v-if="!this.isOffline">
               <div style="cursor: help" @click="tipSimple" class="btn relative">
                 极简模式<br />
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
@@ -150,13 +150,13 @@
                   </div>
                 </xt-task>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && !this.isOffline" :span="6">
                 <div @click="invite" class="btn">
                   <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon>
                   <div>邀请</div>
                 </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && !this.isOffline" :span="6">
                 <div @click="verify" class="btn">
                   <Icon icon="team" style="font-size: 2em"></Icon>
                   <div>受邀</div>
