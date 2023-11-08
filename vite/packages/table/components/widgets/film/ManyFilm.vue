@@ -9,6 +9,14 @@
     :env="env"
     v-if="!detailToggle"
     >
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 24px;" />
+        </div>
+      </template>
       <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
       <div v-if="pageToggle">
         <div class="example" v-if="isLoading">
@@ -19,11 +27,11 @@
           <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
             <div v-for="item in filmArrange" :key="item.id"
             @click="btnDetail(item.id)"
-            class="w-full  cursor-pointer one-film"
+            class="w-full cursor-pointer one-film"
             style="display:hiddle;">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
               <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="right-top text-center bg-black bg-opacity-70"  style="background: var(--primary-bg) !important;">
+              <div class="text-center bg-black right-top bg-opacity-70"  style="background: var(--primary-bg) !important;">
               <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;color: var(--primary-text);">
                 猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
               </span>
@@ -33,10 +41,10 @@
           </div>
           <div class="film-item" v-else-if="customData.width === 2">
             <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
-            class="w-full rounded-t-lg  cursor-pointer mr-5 one-film">
+            class="w-full mr-5 rounded-t-lg cursor-pointer one-film">
               <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
               <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="right-top text-center bg-black bg-opacity-70" style="background: var(--primary-bg) !important;">
+              <div class="text-center bg-black right-top bg-opacity-70" style="background: var(--primary-bg) !important;">
                 <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
                   猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: background: var(--primary-bg);">{{item.score}}</span>
                 </span>
@@ -57,13 +65,15 @@
   import { filmStore } from '../../../store/douBan';
   import DataStatu from "../DataStatu.vue"
   import FilmDetail from './FilmDetail.vue'
+  import { Icon as newIcon } from '@iconify/vue';
   import _ from 'lodash-es';
   export default {
     name: "ManyFilm",
     components:{
       Widget,
       FilmDetail,
-      DataStatu
+      DataStatu,
+      newIcon
     },
     props: {
       customIndex:{
@@ -86,7 +96,7 @@
         options:{
           className:'card',
           title:'正在热映',
-          icon:'video',
+          // icon:'video',
           type:'singleFilm'
         },
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },

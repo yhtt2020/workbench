@@ -1,14 +1,21 @@
 <template>
   <Widget :options="options" :desk="desk">
-    <div class="absolute  left-4 top-4 h-6 w-16 pointer"   @click="moveToday"></div>
+    <div class="absolute w-16 h-6 left-4 top-4 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
       </Calendar>
     </div>
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:calendar-16-regular" style="font-size: 24px;" />
+        </div>
+      </template>
 
-
-      <a-row class="festival mt-4 s-item xt-bg-2 xt-text" style="border-radius: 12px;height: 60px;">
-        <a-col :span="11" class="flex flex-row items-center pl-2 py-2" >
+      <a-row class="mt-4 festival s-item xt-bg-2 xt-text" style="border-radius: 12px;height: 60px;">
+        <a-col :span="11" class="flex flex-row items-center py-2 pl-2" >
           <a-row>
             <a-col :span="4" class="flex pt-4">
               <div class="round-dot "></div>
@@ -21,14 +28,14 @@
             </a-col>
           </a-row>
         </a-col>
-        <a-col :span="13" class="flex  flex-row items-center justify-end pr-2 pt-4" >12月30日~1月1日</a-col>
+        <a-col :span="13" class="flex flex-row items-center justify-end pt-4 pr-2" >12月30日~1月1日</a-col>
       </a-row>
-<!--      <a-row class="festival mt-2 " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
+<!--      <a-row class="mt-2 festival " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
 <!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->
-<!--          <div class="round-dot mr-3"></div>-->
+<!--          <div class="mr-3 round-dot"></div>-->
 <!--          端午节-->
 <!--        </a-col>-->
-<!--        <a-col :span="13"  class="text-right flex  items-center justify-end pr-2">6月22日~6月24日</a-col>-->
+<!--        <a-col :span="13"  class="flex items-center justify-end pr-2 text-right">6月22日~6月24日</a-col>-->
 <!--      </a-row>-->
 
   </Widget>
@@ -41,6 +48,7 @@ import { cardStore } from '../../store/card'
 import Widget from '../card/Widget.vue'
 import { Calendar  } from 'v-calendar';
 import 'v-calendar/style.css';
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: 'CustomTimer',
   props:['desk'],
@@ -52,7 +60,7 @@ export default {
       options: {
         className: 'card',
         title: '日历',
-        icon: 'carryout',
+        // icon: 'carryout',
         type: 'customTimer'
       },
       attributes:[{
@@ -68,6 +76,7 @@ export default {
   components: {
     Widget,
     Calendar,
+    newIcon
   },
   mounted() {
 

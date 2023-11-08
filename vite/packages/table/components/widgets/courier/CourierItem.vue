@@ -54,6 +54,9 @@
 
 
     </div>
+    <!-- <a-divider style="height: 1px; background-color: var(--divider)" /> -->
+    <!-- <hr class="divider"> -->
+    <!-- <div class="divider"></div> -->
 </template>
 
 <script setup>
@@ -118,12 +121,25 @@ lastTraces.value = newTraces.value
     border-radius: 12px;
     padding: 12px;
     transform: all 0.3s;
-
+    // border-bottom: 1px solid var(--divider);
     &:hover {
         background-color: var(--active-secondary-bg);
     }
+    // &::after{
+    //     content: '';
+    //     display: block;
+    //     width: 100%;
+    //     height: 1px;
+    //     background-color: var(--divider);
+    // }
+    
 }
-
+.divider{
+    width: 100%;
+    height: 1px;
+    background-color: var(--divider);
+    margin-top: 6px;
+}
 .commerce {
     &-small {
         width: 24px;

@@ -6,7 +6,8 @@
       <template #left-title-icon>
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-          <FileSearchOutlined style="font-size: 20px;" />
+          <!-- <FileSearchOutlined style="font-size: 20px;" /> -->
+          <newIcon icon="fluent:news-16-regular" style="font-size: 24px;"/>
         </div>
 
       </template>
@@ -60,6 +61,7 @@ import DataStatu from "../DataStatu.vue"
 import { newsStore } from '../../../store/news.ts'
 import NewsCardDrawer from "./NewsCardDrawer.vue";
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
+import {Icon as newIcon } from '@iconify/vue'
 export default {
   name: "News",
   props: {
@@ -83,7 +85,8 @@ export default {
     LeftOutlined,
     RightOutlined,
     HolderOutlined,
-    FileSearchOutlined
+    FileSearchOutlined,
+    newIcon
   },
   data() {
     return {

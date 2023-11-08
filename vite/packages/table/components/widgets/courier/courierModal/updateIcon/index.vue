@@ -1,6 +1,5 @@
 <template>
  <div class="flex justify-between mb-3">
-
   <div class="flex">
    <div class="flex items-center justify-center rounded-lg w-14 h-14 pointer category-button xt-bg-2" @click="onUpdateImg">
     <a-avatar :size="32" :src="detailAvatar"></a-avatar>
@@ -10,12 +9,10 @@
       <span class="mr-1 xt-font font-16 font-600 xt-text">{{ orderData?.LogisticCode }}</span>
       <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
     </div>
-
     <div class="px-1.5 py-0.5">
      <span class="xt-font xt-text-2 font-14 font-400">{{ switchCompany }}</span>
      <span class="ml-1 xt-font xt-text-2 font-14 font-400">{{ orderData?.LogisticCode }}</span>
     </div>
-
    </div>
   </div>
 

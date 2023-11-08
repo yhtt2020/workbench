@@ -3,9 +3,11 @@
     <Widget :options="options" :customIndex="customIndex" :customData="customData" :menuList="menuList" ref="cardSlot"
       :desk="desk" :size="size" :env="env">
       <template #left-title-icon>
-        <div class="icon"
-          style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-          <LineChartOutlined style="font-size: 20px;" />
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:gas-pump-24-regular" style="font-size: 22px;" />
         </div>
       </template>
       <!-- {{ currentCity }} -->
@@ -79,12 +81,14 @@ import { LineChartOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
 import city from '../../js/axios/city.ts'
 import { mapActions, mapState } from 'pinia'
 import { oilStore } from '../../store/store.ts'
+import {Icon as newIcon} from '@iconify/vue';
 export default {
   name: 'OilPrices',
   components: {
     Widget,
     LineChartOutlined,
     CaretDownOutlined,
+    newIcon
   },
   props: {
     customIndex: {

@@ -91,13 +91,13 @@ export const switchColor=(state)=>{
             return '#FA7B14';
             break;
         case "4":
-            return '#52C41A';
+            return '#FF4D4F ';
             break;
         case "5":
-            return '#508BFE';
+            return '#FF4D4F ';
             break;
         case "6":
-            return '#508BFE';
+            return '#FF4D4F ';
             break;
 
         default:
@@ -176,7 +176,7 @@ export function kdState(state:any){
             return "待取件";
             break;
         case '301':
-            return '正常签收'
+            return '签收'
             break;
         case '302':
             return '派件异常后最终签收'

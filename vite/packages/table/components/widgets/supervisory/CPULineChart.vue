@@ -1,5 +1,13 @@
 <template>
   <Widget :options="options" :menu-list="menuList" :desk="desk">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:arrow-trending-lines-20-filled" style="font-size: 24px;" />
+        </div>
+      </template>
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div class="cpu">
         <div class="cpu-number">
@@ -94,6 +102,7 @@ import Widget from "../../card/Widget.vue";
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
+import { Icon as newIcon } from "@iconify/vue";
 export default {
   props:['desk'],
   data(){
@@ -101,7 +110,7 @@ export default {
       options:{
         className:'card',
         title:'性能',
-        icon:'dashboard',
+        // icon:'dashboard',
         type:'CPULineChart'
       },
       CPUOption,
@@ -132,7 +141,8 @@ export default {
 
   name: "CPULineChart",
   components:{
-    Widget
+    Widget,
+    newIcon
   },
   computed:{
     ...mapWritableState(appStore,['saving']),

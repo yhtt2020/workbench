@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col items-center w-full " style="margin: 0 auto;">
-        <div class="w-[452px] flex flex-col items-center  ">
+        <div class="w-[452px] flex flex-col items-center empty-content">
             <div>
                 <newIcon icon="fluent-emoji:package" style="font-size: 56px;" />
             </div>
-            <div class="p-3 mb-4 xt-bg rounded-xl">
+            <div class="p-3 mb-4 xt-bg-2 rounded-xl xt-text">
                 在桌面上时刻关注你的快递动态，支持同步主流电商平台的订单列表，自定义添加快递单号，自定义修改快递名称和图标。
             </div>
-            <div class="flex flex-col w-full p-3 mb-3 pointer xt-bg rounded-xl" v-if="props.exampleVisible">
+            <div class="flex flex-col w-full p-3 mb-3 pointer xt-bg-2 rounded-xl" v-if="props.exampleVisible">
                 <div class="flex w-full">
                     <div class="mr-4">
                         <div class="w-[56px] h-[56px] rounded-xl xt-bg-2 flex justify-center items-center pointer">

@@ -6,9 +6,9 @@
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="height:480px;" ref="dropRef">
         <div v-for="(item, index) in list" class="rounded-lg">
-          <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-            <div :class="{ 'select': sortItem?.LogisticCode === item.LogisticCode }"
-              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="seeDetail(item)">
+          <xt-menu name="name" @contextmenu="revID = {item,index}" :menus="menus">
+            <div :class="{ 'select': sortItem === index }"
+              class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" @click="sortDetail(item,index)">
               <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
               </div>
@@ -21,10 +21,10 @@
                   <div class="flex">
                     <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
                       <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                        {{ switchCompany[index] }}
+                        {{ switchCompany(item)}}
                       </div>
-                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor[index] }">
-                        {{ switchState[index] }}
+                      <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item) }">
+                        {{ switchState(item)}}
                       </div>
                     </div>
                   </div>
@@ -45,12 +45,13 @@
 </template>
 
 <script>
-import { mapActions, mapWritableState } from 'pinia'
-import { courierModalStore } from '../courierModalStore'
+import { mapActions } from 'pinia'
+import { courierStore } from '../../../../../store/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
-import { courierType } from '../modalMock'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
+import { Modal,message } from 'ant-design-vue'
+
 export default {
   props: ["list", "sortItem"],
 
@@ -67,15 +68,12 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-
-      //  currentID:this.list[0].id,
-
       revID: '',
       menus: [
         {
           name: '查看详情',
           callBack: () => {
-
+            this.$emit('viewDetail',this.revID)
           },
           newIcon: 'fluent:apps-list-detail-24-regular'
         },
@@ -89,35 +87,21 @@ export default {
         {
           name: '删除快递',
           callBack: () => {
-              
+            Modal.confirm({
+             content: '确认删除当前快递物流信息',
+             centered: true,
+             onOk: () => {
+              this.removeDbData(this.revID.index)
+              message.success('删除成功')
+             } 
+            })
           },
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
         },
-      ]
-
+      ],
+      sortItem:''
     }
-  },
-
-  computed: {
-    stateColor() {
-      let colorList = this.list.map((item) => {
-        return switchColor(item.State)
-      })
-      return colorList
-    },
-    switchState() {
-      let stateList = this.list.map((item) => {
-        return kdState(item.State)
-      })
-      return stateList
-    },
-    switchCompany() {
-      let companyList = this.list.map((item) => {
-        return kdCompany(item.ShipperCode)
-      })
-      return companyList
-    },
   },
 
 
@@ -132,7 +116,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierModalStore, ['updateSmallSortList']),
+    ...mapActions(courierStore, ['putSortList','removeDbData']),
     onSortEnd(evt) {
       let newIndex = evt.newIndex, oldIndex = evt.oldIndex
       let newItem = this.$refs.dropRef.children[newIndex]
@@ -151,25 +135,27 @@ export default {
       let temp = cloneTemp[evt.oldIndex]  // 获取旧的下标
       cloneTemp.splice(evt.oldIndex, 1)   // 移除旧的下标
       cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
-      // this.detailList = cloneTemp
-      this.updateSmallSortList(cloneTemp)
+      this.putSortList(cloneTemp)
     },
 
     seeDetail(data) {
-      //  this.currentID = data.id
       this.$emit('rightSelect', data)
     },
 
-    // 根据不同标识进行背景色获取
-    getBgColor(data) {
-      const findItem = courierType.find((item) => {
-        return item.name === data.status
-      })
-      return findItem
+    stateColor(item) {
+      return switchColor(item.State)
     },
-
+    switchState(item) {
+      return kdState(item.State)
+    },
+    switchCompany(item) {
+      return kdCompany(item?.ShipperCode)
+    },
+    sortDetail(item,index){
+     this.sortItem = index
+     this.$emit('rightSelect',item)
+    }
   },
-
 };
 </script>
 

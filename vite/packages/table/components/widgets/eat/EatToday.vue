@@ -6,6 +6,14 @@
   ref="eatSlot"
   :menuList="menuList"
   >
+  <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:emoji-smile-slight-24-regular" style="font-size: 24px;" />
+        </div>
+      </template>
   <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
   </div>
   <div @click="openSettings = true">
@@ -18,7 +26,7 @@
       <a-input v-model:value="title" spellcheck ="false" class="input" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 48px;"/>
       <span class="drawer-title" style="margin-top:24px;">选项</span>
       <span class="drawer-tip">每行填写一个选项</span>
-      <a-textarea @change="getEatVal" v-model:value="eatText" :bordered="false" spellcheck="false" class="input xt-text my-4" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 423px;"/>
+      <a-textarea @change="getEatVal" v-model:value="eatText" :bordered="false" spellcheck="false" class="my-4 input xt-text" placeholder="请输入" aria-placeholder="font-size: 16px;" style="height: 423px;"/>
     </div>
   </a-drawer>
 </template>
@@ -28,11 +36,13 @@ import Widget from '../../card/Widget.vue'
 import Turntable from './Turntable.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import {message} from "ant-design-vue"
+import { Icon as newIcon } from '@iconify/vue'
 export default {
   name: 'Todo',
   components: {
     Widget,
     Turntable,
+    newIcon
   },
   props: {
     customIndex: {
@@ -49,7 +59,7 @@ export default {
   },
   data () {
     return {
-      options: {className: 'card',title: '',icon: 'zhuanpanshezhi',type: 'todo'},
+      options: {className: 'card',title: '',type: 'todo'},
       openSettings: false,
       menuList:[ { icon: 'shezhi1', title: '设置', fn: () => {this.openSettings = true;this.$refs.eatSlot.visible = false } } ],
       title: '今天吃什么',

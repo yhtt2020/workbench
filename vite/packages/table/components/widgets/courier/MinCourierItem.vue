@@ -23,8 +23,11 @@
                 <div class="xt-text-2 ">
                     {{ lastTraces?.AcceptTime }}
                 </div>
-                <div class="mt-1 xt-text omit">
+                <div class="mt-1 xt-text omit" :class="choseOmit">
                     {{ lastTraces?.AcceptStation }}
+                </div>
+                <div class="xt-text-2">
+                    {{ props?.courier?.arrivalAt }}
                 </div>
             </div>
         </div>
@@ -76,14 +79,25 @@ const newTraces = computed(()=>{
 })
 
 lastTraces.value = newTraces.value
-
+const choseOmit=computed(()=>{
+    if(props.courier?.arrivalAt){
+        return 'omit-1'
+    }else{
+        return 'omit-2'
+    }
+})
 </script>
 <style lang='scss' scoped>
 .omit{
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.omit-2{
+    -webkit-line-clamp: 2;
+}
+.omit-1{
+    -webkit-line-clamp: 1;
 }
 </style>

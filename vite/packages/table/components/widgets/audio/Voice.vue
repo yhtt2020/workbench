@@ -1,12 +1,15 @@
 <template>
-  <Widget :customIndex="customIndex" :customData="customData" :options="options" :desk="desk">
-    <a-tooltip title="更多管理" placement="top">
-      <div class=" px-2 rounded-full" @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
-    </a-tooltip>
-     <div  class="mt-5 flex flex-col" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
+  <Widget :customIndex="customIndex" :customData="customData" :options="options" :desk="desk" :menu-list="menus">
+    <template #left-title-icon>
+      <div class="icon"
+        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
+        <newIcon icon="akar-icons:sound-on" class="" style="font-size: 20px;"></newIcon>
+      </div>
+    </template>
+     <div  class="flex flex-col mt-5" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
-        <div class="flex-1 flex flex-col mr-4">
-          <div class="flex my-1 justify-between" >
+        <div class="flex flex-col flex-1 mr-4">
+          <div class="flex justify-between my-1" >
             <span style=" font-size: 14px;font-weight: 400;">音量</span>
             <span style=" font-size: 14px;font-weight: 400;">{{ defaultOutput.volume  }}%</span>
           </div>
@@ -17,29 +20,29 @@
           </div>
         </div>
         <div class="flex-1">
-          <div @click.stop="clickMute" class="flex btn-active items-center voice-hover btn-hover rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2"  >
+          <div @click.stop="clickMute" class="flex items-center justify-center px-3 py-3 rounded-full btn-active voice-hover btn-hover pointer s-item xt-bg-2"  >
             <Icon icon="yinliang" style="font-size: 2.286em;" v-if="muteShow === true"></Icon>
             <Icon icon="jingyin" style="font-size: 2.286em;" v-else></Icon>
           </div>
         </div>
       </div>
       <span class="mt-2" style=" font-size: 14px;font-weight: 400;">输出</span>
-      <div @click.stop="selectOutputVoice" class="flex mt-3 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
+      <div @click.stop="selectOutputVoice" class="flex items-center justify-center mt-3 rounded-lg btn-active pointer s-item xt-bg-2" style="padding: 8px 10px;">
         <div class="item-name">{{ defaultOutput.name }}（{{defaultOutput.deviceName}}）</div>
         <Icon icon="xiangxia" style="font-size: 1.5em"></Icon>
       </div>
       <span class="mt-2" style="font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
-        <div style="width: 180px;" class="mr-4 flex items-center justify-center">
+        <div style="width: 180px;" class="flex items-center justify-center mr-4">
           <a-progress :percent="audioTest" :showInfo="false"/>
         </div>
-        <div @click="closeMicrophone" style="" class="flex items-center voice-hover btn-active rounded-full pointer justify-center px-3 py-3 s-item xt-bg-2">
+        <div @click="closeMicrophone" style="" class="flex items-center justify-center px-3 py-3 rounded-full voice-hover btn-active pointer s-item xt-bg-2">
           <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
           <Icon icon="mic-off" style="font-size: 2.286em" v-else></Icon>
         </div>
       </div>
       <span style="font-size: 14px;font-weight: 400;">输入</span>
-      <div @click.stop="selectInputVoice"  class="flex mt-2 btn-active pointer items-center rounded-lg justify-center s-item xt-bg-2" style="padding: 8px 10px;">
+      <div @click.stop="selectInputVoice"  class="flex items-center justify-center mt-2 rounded-lg btn-active pointer s-item xt-bg-2" style="padding: 8px 10px;">
         <span class="item-name">{{ defaultMic.name }}（{{defaultMic.deviceName}}）</span>
         <Icon icon="xiangxia" style="font-size: 1.5em;"></Icon>
       </div>
@@ -61,12 +64,14 @@ import { inspectorStore } from '../../../store/inspector'
 import audio from '../../../js/common/audio'
 import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../../js/ext/audio/audio'
 import { appStore } from '../../../store'
+import { Icon as newIcon } from '@iconify/vue'
 export default {
   name:'Voice',
   components:{
     Widget,
     VoiceOutputDetail,
-    VoiceInputDetail
+    VoiceInputDetail,
+    newIcon
   },
   props:{
     customIndex: {
@@ -88,7 +93,7 @@ export default {
       options: {
         className: 'card',
         title: '音频',
-        icon: 'sound',
+        // icon: 'sound',
         type: 'games',
       },
       audioValue:50,
@@ -98,6 +103,18 @@ export default {
       inputContent:'',
       muteShow:true,
       microphoneShow:true,
+      menus:[
+        {
+          icon: 'shezhi1',
+          title:'设置',
+          fn:()=>{
+
+            this.$router.push({
+              name:'status'
+            })
+          }
+        }
+      ]
     }
   },
   computed:{

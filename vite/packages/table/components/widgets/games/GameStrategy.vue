@@ -1,7 +1,7 @@
 <template>
   <Widget :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
     <div class="flex items-center" style="position: absolute; top: 0.85rem; left:1rem;">
-      <StrategyIcon icon="akar-icons:trophy" style="font-size: 1.25rem;color:var(--secondary-text);"/>
+      <StrategyIcon icon="fluent:games-16-regular" style="font-size: 1.25rem;color:var(--secondary-text);"/>
       <div class="flex items-center justify-center category-button ml-2 py-0.5 px-2 xt-enable-bg xt-text rounded-lg pointer" @click="openGuideDrawer">
         游戏攻略- {{ customData.chineseName }}
       </div>

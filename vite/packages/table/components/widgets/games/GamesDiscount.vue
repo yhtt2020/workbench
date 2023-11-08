@@ -1,7 +1,7 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
-                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk" :env="env">
-    <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
+                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk">
+    <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;color:var(--primary-text)">{{ region.name }}
     </div>
     <a-spin v-if="isLoading === true"
@@ -17,18 +17,18 @@
     <template v-else>
       <template v-if="gameShow ===false">
 
-        <div class="discount-item flex flex-col" style="margin-top: 1em;">
+        <div class="flex flex-col discount-item" style="margin-top: 1em;">
           <div class="flex flex-col ">
-            <div class="w-full flex cursor-pointer rounded-md" @click="enterDetail(item,customData.id)"
+            <div class="flex w-full rounded-md cursor-pointer" @click="enterDetail(item,customData.id)"
                  v-for="item in list" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
-              <img :src="item.header_image" alt="" class=" rounded-md"
+              <img :src="item.header_image" alt="" class="rounded-md "
                    style="width:140px;height:65px; object-fit: cover;">
-              <div class="flex  discount-content flex-col" style="margin-left: 10px; width: 104px;">
-                <div class="name truncate" style="width: 100%; margin-bottom: 10px;color: var(--primary-text);">{{ item.name }}</div>
-                <span class="line-through price-font text-white text-opacity-60" style="font-size: 10px;color: var(--secondary-text);">
+              <div class="flex flex-col discount-content" style="margin-left: 10px; width: 104px;">
+                <div class="truncate name" style="width: 100%; margin-bottom: 10px;color: var(--primary-text);">{{ item.name }}</div>
+                <span class="text-white line-through price-font text-opacity-60" style="font-size: 10px;color: var(--secondary-text);">
                 {{ currencyFormat(item.original_price, item.currency) }}
               </span>
-                <div class="flex w-full justify-between ">
+                <div class="flex justify-between w-full ">
                 <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500;">
                  {{ currencyFormat(item.final_price, item.currency) }}
                 </span>
@@ -46,31 +46,31 @@
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="s-item change  flex rounded-lg cursor-pointer xt-bg-2" @click="discountChange" style="padding:13px 41px;color:var(--primary-text)">
+            <div class="flex rounded-lg cursor-pointer s-item change xt-bg-2" @click="discountChange" style="padding:13px 41px;color:var(--primary-text)">
               <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
               <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
               <span style="margin-left: 1em;">换一换</span>
             </div>
-            <span style="padding:13px 26px;" class="s-item rounded-lg change pointer xt-bg-2" @click="enterDiscountDetail">更多</span>
+            <span style="padding:13px 26px;" class="rounded-lg s-item change pointer xt-bg-2" @click="enterDiscountDetail">更多</span>
           </div>
         </div>
       </template>
       <template v-else-if="gameShow === true">
-        <div class="flex flex-grow flex-col" style="margin-top: 14px;" >
-          <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
+        <div class="flex flex-col flex-grow" style="margin-top: 14px;" >
+          <div class="rounded-lg detail-image" style="margin-bottom: 14px;">
             <img class="rounded-lg" :src="detailList.header_image" alt="">
           </div>
           <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;color: var(--primary-text);">{{ detailList.name }}</div>
-          <span class="content-introduction text-white text-opacity-60" style="color: var(--secondary-text);">{{ detailList.short_description }}</span>
+          <span class="text-white content-introduction text-opacity-60" style="color: var(--secondary-text);">{{ detailList.short_description }}</span>
           <div class="flex" style="margin-bottom: 10px;">
-          <span class="discount-description rounded-md bg-white bg-opacity-20 " style="color: var(--secondary-text);background: var(--secondary-bg);"
+          <span class="bg-white rounded-md discount-description bg-opacity-20 " style="color: var(--secondary-text);background: var(--secondary-bg);"
                 v-for="item in detailList.genres">{{ item.description }}</span>
           </div>
-          <span v-if="detailList.price_overview.initial_formatted" class="price-font line-through text-white text-opacity-60"
+          <span v-if="detailList.price_overview.initial_formatted" class="text-white line-through price-font text-opacity-60"
                 style="font-size: 12px;color: var(--secondary-text);">
             {{ detailList.price_overview.initial_formatted }}
           </span>
-          <div class="flex w-full justify-between " style="margin-bottom: 16px;">
+          <div class="flex justify-between w-full " style="margin-bottom: 16px;">
             <span
               style="font-family: oswald; color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500; padding-right: 2.41em;">
              {{ detailList.price_overview.final_formatted }}
@@ -83,16 +83,16 @@
           </div>
           <div class="flex items-center justify-around">
             <div @click="discountBack"
-                 class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center" style="color: var(--primary-text);background: var(--primary-bg);">
+                 class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change" style="color: var(--primary-text);background: var(--primary-bg);">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
             </div>
-            <span class="change pointer rounded-lg s-item  flex items-center justify-center"
+            <span class="flex items-center justify-center rounded-lg change pointer s-item"
             style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
              @click="enterGameDetail(detailList.steam_appid)"
             >
               详情
             </span>
-            <span class="change pointer rounded-lg s-item  flex items-center justify-center"
+            <span class="flex items-center justify-center rounded-lg change pointer s-item"
              style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
              @click="openSteam(detailList.steam_appid)">购买</span>
           </div>
@@ -115,6 +115,7 @@ import { cardStore } from '../../../store/card'
 import Template from '../../../../user/pages/Template.vue'
 import { regionRange } from '../../../js/axios/api'
 import browser from '../../../js/common/browser'
+import { Icon as newIcon} from '@iconify/vue'
 export default {
   name: 'GamesDiscount',
   props: {
@@ -137,7 +138,8 @@ export default {
   components: {
     Template,
     Widget,
-    HorizontalDrawer
+    HorizontalDrawer,
+    newIcon
   },
   data () {
     return {
@@ -145,7 +147,7 @@ export default {
       options: {
         className: 'card',
         title: '',
-        icon: 'steam',
+        // icon: 'steam',
         type: 'games',
         epicShow: true
       },
