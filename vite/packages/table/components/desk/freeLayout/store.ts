@@ -49,12 +49,16 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       scrollLeft: 0, // 当前滚动条X轴
       scrollWidth: 0, // 当前滚动条宽度
       scrollHeight: 0, // 当前滚动条高度
+      updatePosition: false, // 修改位置
     },
-    // 当前环境状态
+    // 默认环境状态
     defaultFreeLayoutEnv: {
-      loading: false,
-      scrollTop: 0,
-      scrollLeft: 0,
+      loading: false, // 当前自由布局加载状态
+      scrollTop: 0, // 当前滚动条Y轴
+      scrollLeft: 0, // 当前滚动条X轴
+      scrollWidth: 0, // 当前滚动条宽度
+      scrollHeight: 0, // 当前滚动条高度
+      updatePosition: false, // 修改位置
     },
   }),
   getters: {

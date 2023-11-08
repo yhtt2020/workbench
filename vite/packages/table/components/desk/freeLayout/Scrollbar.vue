@@ -13,6 +13,13 @@
     @mouseover="handleMouseMove"
   >
     <slot> </slot>
+    <!-- <div
+      @click="handleClick($event)"
+      class="absolute w-full h-full xt-theme-bg top-0 left-0"
+      style="z-index: 1000"
+    >
+      112
+    </div> -->
   </div>
 </template>
 <script setup>
@@ -61,6 +68,11 @@ function redirect() {
   const zoom = getFreeLayoutState.value.zoom;
   const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
   const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
+  if (getFreeLayoutState.value.position) {
+    scrollbar.value.scrollLeft = 2222;
+    scrollbar.value.scrollTop = 1111;
+  }
+  return;
   if (getFreeLayoutState.value.position == "top center") {
     scrollbar.value.scrollLeft = Math.abs(scrollLeft);
     scrollbar.value.scrollTop = 0;
@@ -75,6 +87,10 @@ function redirect() {
 // 页面缩放更新布局
 function update() {
   perfectScrollbar.value.update();
+}
+
+function handleClick(e) {
+  console.log("e :>> ", e);
 }
 
 // 监听画布缩放情况

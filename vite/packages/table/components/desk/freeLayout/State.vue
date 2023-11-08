@@ -16,6 +16,7 @@
         >
           回到中心点</xt-button
         >
+        <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
         <div class="mb-3">网格功能</div>
         <div class="mb-3">
           网格线常驻：<a-switch v-model:checked="getFreeLayoutState.auxLine" />
@@ -122,7 +123,8 @@ import { useFreeLayoutStore } from "./store";
 
 const emits = defineEmits(["scrollbarRedirect", "scrollbarUpdate"]);
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, isFreeLayout } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutState, isFreeLayout, freeLayoutEnv } =
+  storeToRefs(freeLayoutStore);
 
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
@@ -153,6 +155,9 @@ function freeDeskResize() {
 const emitScrollbarUpdate = (event) => {
   emits("scrollbarUpdate");
 };
+function updatePosition() {
+  freeLayoutEnv.value.updatePosition = true;
+}
 
 const debounceScrollbarUpdate = useDebounceFn(emitScrollbarUpdate, 200);
 // 缩放比例

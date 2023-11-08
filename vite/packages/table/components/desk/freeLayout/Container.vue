@@ -33,25 +33,35 @@ let updateCardTimer: any = null;
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
   ([newScrollTop, newScrollLeft], [oldScrollTop, oldScrollLeft]) => {
-    console.log("scrollTop changed:", newScrollTop, "old:", oldScrollTop);
-    console.log("scrollLeft changed:", newScrollLeft, "old:", oldScrollLeft);
+    // console.log("scrollTop changed:", newScrollTop, "old:", oldScrollTop);
+    // console.log("scrollLeft changed:", newScrollLeft, "old:", oldScrollLeft);
   }
 );
 // 记录以添加了的内容
-let currentCard = ref([]);
+let currentCard = ref();
+let width = 0;
 // 实现添加
 function addCardAtPosition(item) {
   // 获取当前宽度
   const scrollWidth = freeLayoutEnv.value.scrollWidth;
   // 获取卡片元素
   const { id, name, customData } = item;
+  console.log("cu :>> ", customData.widgetSize);
+  const widgetWidth: any = customData.widgetSize.width;
+  const scrollLeft = freeLayoutEnv.value.scrollLeft;
+  const currentWidth = scrollLeft * 6 + widgetWidth;
+  width += currentWidth;
+  return scrollLeft + 6;
+  // if () {
+
+  // }
 }
 
 function updateCards(cards) {
   let obj = {};
   cards.forEach((item) => {
     const { id, name, customData } = item;
-    // addCardAtPosition(item);
+    addCardAtPosition(item);
     obj[item.id] = {
       left:
         getFreeLayoutData.value[item.id]?.left ||
