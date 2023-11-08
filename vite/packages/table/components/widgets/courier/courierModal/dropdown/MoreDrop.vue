@@ -6,7 +6,7 @@
    </div>
   </xt-button>
   <template #overlay>
-   <a-menu class="flex flex-col items-center justify-center" style="width: 140px;border-radius: 8px; padding: 8px;">
+   <a-menu class="flex flex-col xt-bg-2 items-center justify-center" style="width: 140px;border-radius: 8px; padding: 8px;">
     <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col items-center justify-center"
      @click="selectNav(item)"
     >

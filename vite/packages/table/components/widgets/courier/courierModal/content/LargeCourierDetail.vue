@@ -42,28 +42,36 @@
                 :class="{ 'select': currentID === index }" 
                 >
                   <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                    <div class="flex  justify-between"  @click.prevent="detailClick(item,index)">
-                      <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                        <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-                      </div>
-                      <div class="flex flex-col" style="max-width: 360px;">
-                        <div class="flex items-center justify-between " >
-                          <span class="xt-font font-16 font-600">
-                            {{ item.LogisticCode }}
-                          </span>
-        
-                          <div class="flex">
-                            <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
-                                {{ switchCompany(item) }}
-                              </div>
-                              <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item) }">
-                                {{ switchState(item) }}
-                              </div>
+                    <div class="flex flex-col justify-between"  @click.prevent="detailClick(item,index)">
+                      <div class="flex">
+                        <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
+                         <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                        </div>
+                        <div class="flex items-center justify-between " style="width:364px;">
+                          <div class="flex flex-col">
+                            <div class="flex items-center mb-1.5">
+                              <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
+                              <div v-if="isTb" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#FA5000;"> 淘 </div>
+                              <span class="xt-font font-16 font-600 mx-1.5">
+                                {{ item.LogisticCode }}
+                              </span>
+                              <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
+                              <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
+                            </div>
+                            <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+                              {{ switchCompany(item) }}
                             </div>
                           </div>
+                          <div class="flex flex-col items-center justify-end">
+                            <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item,index),color:'var(--active-text)'}">
+                              {{ switchState(item) }}
+                            </div>
+                            <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
+                          </div>
                         </div>
+                      </div>
         
+                      <div class="flex flex-col">
                         <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                         <div class="summary">
                           {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
@@ -244,7 +252,7 @@ export default {
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   white-space: break-spaces;
   overflow: hidden;
   margin: 0 !important;

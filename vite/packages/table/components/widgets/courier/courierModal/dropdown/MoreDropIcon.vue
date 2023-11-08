@@ -6,7 +6,7 @@
    </div>
   </xt-button>
   <template #overlay>
-   <a-menu style="width: 200px;border-radius: 8px; padding: 8px;">
+   <a-menu class="xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
     <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col"
      @click="item.callBack"
     >
