@@ -58,18 +58,15 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
+  const zoom = getFreeLayoutState.value.zoom;
+  const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
+  const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
   if (getFreeLayoutState.value.position == "top center") {
-    scrollbar.value.scrollLeft = Math.abs(
-      (width.value - getFreeLayoutState.value.width) / 2
-    );
+    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
     scrollbar.value.scrollTop = 0;
   } else if (getFreeLayoutState.value.position == "center") {
-    scrollbar.value.scrollLeft = Math.abs(
-      (width.value - getFreeLayoutState.value.width) / 2
-    );
-    scrollbar.value.scrollTop = Math.abs(
-      (height.value - getFreeLayoutState.value.height) / 2
-    );
+    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
+    scrollbar.value.scrollTop = Math.abs(scrollTop);
   } else {
     scrollbar.value.scrollLeft = 0;
     scrollbar.value.scrollTop = 0;
@@ -84,19 +81,27 @@ function update() {
 watch(
   () => getFreeLayoutState.value?.zoom,
   () => {
-    let { width, height } = scrollbar.value.getBoundingClientRect();
-    let currentWidth =
-      getFreeLayoutState.value.width * getFreeLayoutState.value.zoom;
-    let currentHeight =
-      getFreeLayoutState.value.height * getFreeLayoutState.value.zoom;
-    if (currentWidth < width && getFreeLayoutState.value.width < 10000) {
-      console.log("宽度增加 :>> ", 222);
-      getFreeLayoutState.value.width += 1000;
-    }
-    if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
-      console.log("gao度增加 :>> ", 222);
-      getFreeLayoutState.value.height += 1000;
-    }
+    // console.log(
+    //   "freeLayoutEnv.value.loading :>> ",
+    //   freeLayoutEnv.value.loading
+    // );
+    // if (!freeLayoutEnv.value.loading) {
+    //   console.log("222222222 :>> ", 222222222);
+    //   return;
+    // }
+    // let { width, height } = scrollbar.value.getBoundingClientRect();
+    // let currentWidth =
+    //   getFreeLayoutState.value?.width * getFreeLayoutState.value?.zoom;
+    // let currentHeight =
+    //   getFreeLayoutState.value?.height * getFreeLayoutState.value?.zoom;
+    // if (currentWidth < width && getFreeLayoutState.value?.width < 10000) {
+    //   console.log("宽度增加 :>> ", 222);
+    //   getFreeLayoutState.value.width += 1000;
+    // }
+    // if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
+    //   console.log("gao度增加 :>> ", 222);
+    //   getFreeLayoutState.value.height += 1000;
+    // }
   }
 );
 // 鼠标滚动
@@ -139,6 +144,7 @@ function handleMouseMove(event) {
   }
 }
 onBeforeUnmount(() => {
+  freeLayoutStore.initFreeLayoutEnv();
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
