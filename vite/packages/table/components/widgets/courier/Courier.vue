@@ -43,7 +43,7 @@
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
                 <div v-for="(item, index) in courierDetailList">
-                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
+                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
                   <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
                 </div>
 
@@ -324,7 +324,27 @@ export default {
     autoRefresh() {
       if (this.settings.courierRefresh.autoRefresh) {
         setInterval(() => {
-          this.refreshAll()
+          message.loading('正在为您更新商城订单')
+      if (this.storeInfo.jd.nickname) {
+        //京东绑定了
+        grab.jd.getOrder()
+      }
+      if (this.storeInfo.tb.nickname) {
+        grab.tb.getOrder((args) => {
+          console.log('淘宝结果', args)
+          if (args.status === 0 && args.code === 401) {
+            notification.info({
+              content: '淘宝账号已过期，点击重新绑定。',
+              onClick: () => {
+                grab.tb.login((args) => {
+                  console.log(args, '获取到的订单信息')
+                })
+              }
+            })
+          }
+        })
+        //淘宝绑定了
+      }
         }, this.refreshTime);
       }
     }
@@ -375,6 +395,7 @@ export default {
     }
   },
   async mounted() {
+    // console.log(this.courierDetailList)
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener("resize", this.handleResize)

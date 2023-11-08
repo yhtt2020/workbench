@@ -56,7 +56,7 @@
           <a-switch v-model:checked="settings.courierStatus.statusBar"></a-switch>
         </div>
         <span class="xt-text-2 mb-2.5 xt-font font-14 font-400">在顶部状态栏左侧显示当前快递包裹数量。</span>
-
+        <!-- {{ settings.courierStatus.currentStatus }} -->
         <a-select class="rounded-lg xt-bg"  :bordered="false" :options="statusSelect" v-model:value="settings.courierStatus.currentStatus"></a-select>
       </div>
 
@@ -114,7 +114,7 @@ export default {
       ],
       defaultAuto: { title: "精准匹配", name: "preciseMatch" },
 
-      statusSelect: [{ value: "未完成快递" }, { value: "特别关注（订阅物流）" }],
+      statusSelect: [{ value: "未完成快递" ,name:'unCompleted'}, { value: "特别关注（订阅物流）",name:'specialAttention' }],
       autoRefreshTime,
       autoCancelTime,
       dealType:''

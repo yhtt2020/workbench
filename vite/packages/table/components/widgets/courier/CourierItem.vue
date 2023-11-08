@@ -63,11 +63,15 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
 import { kdCompany, kdState, switchColor } from './mock'
-
-const props = defineProps({ courier: Object })
+import { courierStore } from '../../../store/courier.ts'
+import { appStore } from '../../../store';
+const props = defineProps({ 
+    courier: Object,
+    itemIndex: Number
+})
 // console.log('查看数据',props.courier);
-
-
+const useCourierStore = courierStore()
+const useAppStore=appStore()
 const stateColors = computed(() => {
     return switchColor(props.courier?.State)
 })
@@ -104,6 +108,32 @@ const newTraces = computed(() => {
 })
 
 lastTraces.value = newTraces.value
+const deleteTime=computed(()=>{
+    switch (useAppStore.settings.courierSigned.courierTime) {
+        case '24小时':
+            return 24 * 60 * 60 * 1000
+            break;
+        case '48小时':
+            return 48 * 60 * 60 * 1000
+            break;
+        case '一周':
+            return 7 * 24 * 60 * 60 * 1000
+            break;
+        default:24 * 60 * 60 * 1000
+            break;
+    }
+})
+onMounted(()=>{
+    // console.log(lastTraces?.value.AcceptTime)
+    console.log(new Date(lastTraces?.value.AcceptTime).getTime())
+    let nowDate=new Date().getTime()
+    if(nowDate - new Date(lastTraces?.value.AcceptTime).getTime()>(deleteTime.value)){
+        console.log('过期了',props.itemIndex);
+        useCourierStore.removeDbData(props.itemIndex)
+    }else{
+        console.log('没过期');
+    }
+})
 
 </script>
 
