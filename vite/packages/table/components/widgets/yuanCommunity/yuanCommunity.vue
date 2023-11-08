@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot"  :env="env"
+        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :env="env"
             :sizeList="sizeList" :customData="customData">
             <template #left-title-icon>
                 <div class="icon"
@@ -11,8 +11,8 @@
             <template #left-title v-if="showForumList.length > 0">
                 <div @click="refreshPost">
                     <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
-                        <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                            icon="akar-icons:arrow-clockwise" />
+                    <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                        icon="akar-icons:arrow-clockwise" />
                     <!-- </xt-button> -->
                 </div>
             </template>
@@ -32,7 +32,7 @@
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{height:scrollBarHeight}">
+                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{ height: scrollBarHeight }">
                         <div v-if="isLoading">
                             <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
                         </div>
@@ -59,10 +59,12 @@
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
 
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
-                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
-                <YuanIcon class="text-lg xt-text " style="vertical-align: sub;font-size: 20px;text-align: center;"
+            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible" style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+                <div class="flex items-center justify-center">
+                    <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
                     icon="fluent:add-16-filled" />
+                </div>
+                
             </xt-button>
 
 
@@ -221,7 +223,7 @@ export default {
             cardData: null,
             toggleDetail: true,
             selectValue: [],
-            env:{
+            env: {
                 web: false,
                 mobile: false,
                 client: false,
@@ -302,6 +304,13 @@ export default {
         //         this.options.title='元社区'
         //     }
         // }
+        handleResize() {
+            if (window.innerWidth > 1200) {
+                this.toggleDetail = true
+            } else {
+                this.toggleDetail = false
+            }
+        },
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
@@ -351,9 +360,9 @@ export default {
         //     return window.innerWidth > 1200
         // }
         scrollBarHeight() {
-            if(this.showForumList.length>1){
+            if (this.showForumList.length > 1) {
                 return 'calc(100% - 65px)'
-            }else{
+            } else {
                 return 'calc(100% - 40px)'
             }
         }
@@ -369,23 +378,27 @@ export default {
             this.defaultForum = this.customData.defaultForum
             // console.log(this.defaultForum);
         }
-        if(this.customData && this.customData.selectList){
-            this.selectValue = this.customData.selectList.map((item)=>{
+        if (this.customData && this.customData.selectList) {
+            this.selectValue = this.customData.selectList.map((item) => {
                 return item.index
             })
             // console.log(this.selectValue);
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
+        window.addEventListener("resize", this.handleResize)
     },
-    beforeUpdate() {
-        // this.changeTag()
-        if (window.innerWidth > 1200) {
-            this.toggleDetail = true
-        } else {
-            this.toggleDetail = false
-        }
+    beforeDestroy() {
+        window.removeEventListener("resize", this.handleResize)
     },
+    // beforeUpdate() {
+    //     // this.changeTag()
+    //     if (window.innerWidth > 1200) {
+    //         this.toggleDetail = true
+    //     } else {
+    //         this.toggleDetail = false
+    //     }
+    // },
     watch: {
         showForumList(newValue) {
             this.isLoading = true

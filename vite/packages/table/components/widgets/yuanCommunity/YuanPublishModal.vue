@@ -167,11 +167,11 @@
                         </template>
                     </a-select>
                     <div class="flex items-center">
-                        <xt-button type="text" class=" xt-text xt-bg-2"
-                            style="border-radius:10px ; color: var(--secondary-text) !important;width: 64px; height: 40px;"
+                        <xt-button type="text" class=" xt-bg-2"
+                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85);width: 64px; height: 40px;"
                             @click="handleOk">取消</xt-button>
                         <xt-button type="primary" class="ml-2"
-                            style="border-radius:10px ; color: var(--secondary-text) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
+                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85); width: 64px; height: 40px;background-color: var(--active-bg);"
                             @click="publishPost">发布</xt-button>
                     </div>
                 </div>
