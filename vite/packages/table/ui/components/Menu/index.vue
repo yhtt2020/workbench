@@ -116,6 +116,7 @@ function handleOpenMenu(e: any, currentModel: string) {
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
+  emits("mounted");
 }
 
 // 菜单项事件点击 调用回调函数
