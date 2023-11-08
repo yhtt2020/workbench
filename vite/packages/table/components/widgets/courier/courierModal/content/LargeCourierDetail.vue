@@ -24,11 +24,11 @@
       </div>
     </div>
 
-    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="true"/>
+    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="false"/>
 
     <template v-else>
       <template v-if="detailList?.length === 0">
-        <Empty :exampleVisible="true"/>
+        <Empty :exampleVisible="false"/>
       </template>
       <div class="flex w-full justify-between px-6" v-else>
         <div style="width:452px;" class="flex flex-col">
@@ -268,6 +268,6 @@ export default {
 :deep(.empty-content){
   height: 400px !important;
   margin: 50px 0 !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
 }
 </style>

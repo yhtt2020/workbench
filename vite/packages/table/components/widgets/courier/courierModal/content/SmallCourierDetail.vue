@@ -28,7 +28,7 @@
         </div>
       </div>
       
-      <Empty v-if="detailList?.length === 0"  :exampleVisible="true"/>
+      <Empty v-if="detailList?.length === 0"  :exampleVisible="false"/>
   
       <template v-else>
         <div class="flex items-center mb-4 justify-between px-6">
@@ -285,6 +285,6 @@ export default {
 :deep(.empty-content){
   height: 400px !important;
   margin: 50px 0 !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
 }
 </style>
