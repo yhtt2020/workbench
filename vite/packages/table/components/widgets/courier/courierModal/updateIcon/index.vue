@@ -42,7 +42,7 @@
    </div>
   </div>   
 
-  <EditModal ref="courierEditRef"/>
+  <EditModal ref="courierEditRef" :editContent="orderData" :avatar="detailAvatar"/>
 </template>
  
 <script>

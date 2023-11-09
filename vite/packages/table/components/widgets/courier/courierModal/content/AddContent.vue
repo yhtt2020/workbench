@@ -211,10 +211,13 @@ export default defineComponent({
     align-items: center;
     height: 40px !important;
   }
+  & .ant-select-item{
+    color:var(--secondary-text) !important;
+  }
 }
 
 
-:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder){
+:deep(.ant-select-selection-placeholder){
   color: var(--secondary-text) !important;
   display: flex !important;
   align-items: center !important;
@@ -232,4 +235,5 @@ export default defineComponent({
 :deep(.anticon.ant-input-clear-icon){
   color:var(--secondary-text) !important;
 }
+
 </style>

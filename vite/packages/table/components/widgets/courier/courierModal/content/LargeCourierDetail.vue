@@ -34,7 +34,7 @@
         <div style="width:452px;" class="flex flex-col">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform />
-            <xt-button w="40" h="40">
+            <xt-button w="40" h="40" class="category-button" @click="refresh">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
               </div>
@@ -224,6 +224,10 @@ export default {
 
     getRightItem(item){
       this.rightDetail = item
+    },
+    
+    refresh(){
+      // todo 刷新
     }
 
 
