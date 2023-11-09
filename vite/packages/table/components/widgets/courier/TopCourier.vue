@@ -4,17 +4,17 @@
             <div class="flex justify-between h-[32px]">
                 <div class="flex mt-2">
                     <div class="xt-text">
-                        <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
+                        <newIcon icon="fluent:box-16-regular"  style="font-size: 20px;"></newIcon>
                     </div>
                     <div class="flex ml-4 xt-text" style="margin-top: -6px;">
                         <TopDrop :navList="filterType" v-model:selectType="defaultType" />
                     </div>
                 </div>
                 <div class="flex">
-                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2" @open="addCourier"></DropIndex>
+                    <DropIndex :navList="addList" dropStyle="var(--primary-bg) !important"  mClass="mr-2" @open="addCourier"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
-                        <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" style="border-radius: 8px;background: var(--primary-bg) !important;"
                             @click="refreshCourier">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:arrow-counterclockwise-20-filled"
@@ -24,7 +24,7 @@
                         </xt-button>
                     </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" class="ml-2" style="border-radius: 8px; background: var(--primary-bg) !important;"
                             @click="openCourierSetting">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;">
@@ -33,7 +33,7 @@
                         </xt-button>
                     </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" class="ml-2" style="border-radius: 8px; background: var(--primary-bg) !important;"
                             @click="showTopCourier">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;font-size: 1.25rem;">
