@@ -46,7 +46,7 @@
           <span class="xt-text-2 font-14 font-400">下单时间：2023-10-31 20:00:23</span>
           <span class="xt-text-2 font-14 font-400">xxxx(收)</span>
         </div>
-        <div class="flex w-full">
+        <div class="flex w-full mb-2">
           <span class="xt-text-2 font-14 font-400">
             订单编号：{{ orderNums }}
           </span>
