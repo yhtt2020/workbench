@@ -90,7 +90,8 @@ export const appStore = defineStore('appStore', {
         autoRefresh:true, 
         autoTime:'30分钟'
       },
-
+      // 开启快递单号匹配
+      courierMatch:'preciseMatch',
     
       relevanceEnable:false, //开启关联的电商平台快递 
       customCourier:false, // 自定义快递

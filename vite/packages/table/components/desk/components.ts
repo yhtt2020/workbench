@@ -74,10 +74,12 @@ import Courier from "../widgets/courier/Courier.vue";
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
 import FreeLayoutContainer from "./freeLayout/Container.vue";
 import FreeLayoutState from "./freeLayout/State.vue";
+import FreeLayoutMask from "./freeLayout/Mask.vue";
 export default {
   components: {
     FreeLayoutScrollbar,
     FreeLayoutContainer,
+    FreeLayoutMask,
     FreeLayoutState,
     RightMenu,
     GameInformation,

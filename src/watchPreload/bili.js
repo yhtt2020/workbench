@@ -1,6 +1,14 @@
 let $ = require('cash-dom')
 const { TaskHandler, utils } = require('./base')
 const clean = utils.clean
+function convertToNum(text){
+  if(text.includes('万'))
+  {
+    return +(text.replace('万',''))*10000
+  }else{
+    return +text
+  }
+}
 if (!window.location.href.endsWith('iframe.html')) {
   //因为B站还会加载一个frame，这个是不需要注入代码的
   function getData () {
@@ -8,23 +16,24 @@ if (!window.location.href.endsWith('iframe.html')) {
     let title = $('#viewbox_report h1 ').text()
 
     //真实阅读数
-    let view = $('.video-data-list .view.item').attr('title').replace('总播放数', '')
+    //let view = $('.video-info-detail .view.item').attr('title').replace('总播放数', '')
     //阅读数文本
-    let viewText = clean($('.video-data-list .view.item').text())
+    let viewText = clean($('.video-info-detail-list .view.item').text())
+    let view= convertToNum(viewText)
     //弹幕
-    let dm = clean($('.video-data-list .dm.item').text())
+    let dm = clean($('.video-info-detail .dm.item').text())
 
     //发布日期
-    let pudate = clean($('.video-data-list .pudate').text())
+    let pudate = clean($('.video-info-detail .pubdate-text').text())
 
     //点赞
-    let like = $('.video-toolbar-v1 .like .info-text').text()
+    let like = $('.video-toolbar-container .video-like-info').text()
     //投币
-    let coin = $('.video-toolbar-v1 .coin .info-text').text()
+    let coin = $('.video-toolbar-container .video-coin-info').text()
     //收藏
-    let collect = $('.video-toolbar-v1 .collect .info-text').text()
+    let collect = $('.video-toolbar-container .video-fav-info').text()
 
-    let share = $('.share-wrap .info-text').text()
+    let share = $('.video-toolbar-container .video-share-info').text()
 
     //封面
     let cover = $('head meta[itemprop=image]').attr('content').replace('@100w_100h_1c.png', '')
