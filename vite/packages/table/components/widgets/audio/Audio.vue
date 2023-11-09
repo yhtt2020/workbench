@@ -1,5 +1,5 @@
 <template>
-  <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk">
+  <Widget :customData="customData" :customIndex="customIndex" :options="options" :desk="desk" :menu-list="menus">
     <template #left-title-icon>
       <div class="icon"
         style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
@@ -7,9 +7,7 @@
       </div>
     </template>
     <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
-    <a-tooltip title="更多管理" placement="top">
-      <div class="px-2 rounded-full " @click="goStatus" style="position: absolute;top: 16px;right:40px;cursor: pointer;font-size: 12px"><icon icon="tiaoduguanli"></icon> </div>
-    </a-tooltip>
+
     <div  v-if="audioType.name === 'output'" class="flex flex-col mt-4 xt-text" style="">
       <div class="flex">
         <div class="flex flex-col flex-1 mr-4">
@@ -106,7 +104,8 @@ export default {
     },
     desk:{
       type:Object
-    }
+    },
+
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest']),
@@ -156,6 +155,18 @@ export default {
       outputIndex:0,
       microphoneShow:true,
       muteShow:true,
+      menus:[
+        {
+          icon: 'shezhi1',
+          title:'设置',
+          fn:()=>{
+
+            this.$router.push({
+              name:'status'
+            })
+          }
+        }
+      ]
     }
   },
   methods:{
