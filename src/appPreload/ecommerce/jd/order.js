@@ -3,9 +3,10 @@ const {
   ipc,
   args,
   clearText,
-  fixProtocol
+  fixProtocol,
+  callback,
+  closeSelf
 } = require('../../app.js')
-
 
 function getOrderInfo ($item) {
   const order = {
@@ -42,8 +43,9 @@ function getOrderInfo ($item) {
       amount: '',
       detailUrl: ''
     }
-    if ($(child).hasClass('sep-tr-bd')) continue
-    item.cover = fixProtocol($(child).find('.goods-item img').attr('src'))
+    if ($(child).hasClass('sep-tr-bd')) continue //排除掉错误数据
+    let lazyCover=$(child).find('.goods-item img').attr('data-lazy-img')
+    item.cover = lazyCover!=='done'?fixProtocol(lazyCover): fixProtocol($(child).find('.goods-item img').attr('src'))
     item.name = $(child).find('.p-msg .p-name a').attr('title')
     item.num = clearText($(child).find('.goods-number').text())
     item.consignee = $(child).find('.consignee .txt').text()
@@ -51,10 +53,11 @@ function getOrderInfo ($item) {
 
     order.items.push(item)
   }
-  order.status=clearText($item.find('.order-status').text())
+  order.status = clearText($item.find('.order-status').text())
   order.detailUrl = fixProtocol($item.find('.status a').attr('href'))
   return order
 }
+
 let tipInterval
 let interval = setInterval(() => {
 
@@ -69,15 +72,15 @@ let interval = setInterval(() => {
   const parentOrders = []
   try {
     if (orderItems) {
-      const  tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
+      const tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
       for (const tip of tips) {
         //执行触发
         console.log(tip)
         $(tip).trigger('mouseenter')
       }
-      tipInterval=setInterval(()=>{
+      tipInterval = setInterval(() => {
         getExpressInfo()
-      },1000)
+      }, 1000)
 
       for (const item of orderItems) {
         const $item = $(item)
@@ -111,14 +114,13 @@ let interval = setInterval(() => {
     }
 
   } catch (error) {
-    ipc.send('api.web.callback', {
-      args: {
+    callback(
+      {
         cbId: args.cbId,
         status: 0,
         info: '获取报错',
         error: error
-      }
-    })
+      })
     clearInterval(interval)
   }
 
@@ -126,45 +128,44 @@ let interval = setInterval(() => {
 
 }, 1000)
 
-
-function getExpressInfo(){
-  function finish(){
+function getExpressInfo () {
+  function finish () {
     clearInterval(tipInterval)
-    ipc.send('api.web.callback', {
-      args: {
+    callback({
         status: 1,
         info: '成功获取',
         cbId: args.cbId,
-        data:window.callbackData
+        data: window.callbackData
       }
-    })
-    ipc.send('closeSelf')
+    )
+    //closeSelf()
   }
-  const  tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
-  if(tips.length===0){
+
+  const tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
+  if (tips.length === 0) {
     finish()
   }
-  let got=false
+  let got = false
   for (const tip of tips) {
-    const orderId=$(tip).attr('_orderid')
-    window.callbackData.orders.find(order=>{
-      if(order.id===orderId){
-         let nodes= $(tip).find('li')
-        for(const node of nodes){
-          const nodeItem={
-            time:$(node).find('.time').text(),
-            txt:clearText($(node).find('.txt').text())
+    const orderId = $(tip).attr('_orderid')
+    window.callbackData.orders.find(order => {
+      if (order.id === orderId) {
+        let nodes = $(tip).find('li')
+        for (const node of nodes) {
+          const nodeItem = {
+            time: $(node).find('.time').text(),
+            txt: clearText($(node).find('.txt').text())
           }
           order.latestNodes.push(nodeItem)
         }
         order.arrivalAt = $(tip).find('.logistics-cont .mt10').text()
-        order.expressType = clearText($(tip).find('.p-tit').text()).replaceAll('查看更多>','')
-        order.expressNo=order.expressType.substring(order.expressType.lastIndexOf('：')+1,order.expressType.length)
+        order.expressType = clearText($(tip).find('.p-tit').text()).replaceAll('查看更多>', '')
+        order.expressNo = order.expressType.substring(order.expressType.lastIndexOf('：') + 1, order.expressType.length)
       }
     })
-    got=true
+    got = true
   }
-  if(got){
+  if (got) {
     finish()
   }
 }

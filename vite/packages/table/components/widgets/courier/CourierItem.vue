@@ -3,18 +3,16 @@
 
         <div class="flex w-full">
             <div class="mr-4">
-                <div class="w-[52px] h-[52px] rounded-xl xt-bg-2 flex justify-center items-center pointer">
-                    <newIcon icon="fluent-emoji:package" style="font-size: 32px;text-align: center;"></newIcon>
-                </div>
+                <Cover :cover="courier.cover" :store="courier.store"></Cover>
             </div>
             <div class="w-full">
                 <div class="flex justify-between">
                     <div class="flex items-center">
-                        <div class="commerce-small" style="background-color: #FA5000;color: rgba(255,255,255,0.85);"
-                            v-if="isTb">淘</div>
-                        <div class=" commerce-small" style="background-color: #E12419;color: rgba(255,255,255,0.85);"
-                            v-if="isJd">JD</div>
-                        <div style="font-size: 16px;" class="mr-2 xt-text">{{ courierCode }}</div>
+                        <div class="commerce-small" v-if="courier.store==='tb'" style="background-color: #FA5000;color: rgba(255,255,255,0.85);"
+                            >淘</div>
+                        <div class=" commerce-small" v-if="courier.store==='jd'" style="background-color: #E12419;color: rgba(255,255,255,0.85);"
+                            >JD</div>
+                        <div style="font-size: 16px;" class="mr-2 xt-text truncate w-4/5" :title="courier.title">{{ courier.title?.slice(0,20) }}</div>
                         <newIcon icon="fluent:star-12-regular" style="font-size: 20px;" class="xt-text" />
                     </div>
 
@@ -32,19 +30,27 @@
                             {{ switchCompany }}
                         </div>
                         <!-- v-if="props?.courier.parentId" -->
-                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2 xt-text-2" v-if="props.courier.parentOrderId">
+                        <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2 xt-text-2" v-if="courier.content.parentOrderId">
                             拆</div>
                     </div>
 
-                    <div class="xt-text" v-if="props.courier.arrivalAt">
-                        预计到达时间
+                    <div class="xt-text" v-if="courier.content.arrivalAt">
+                        {{courier.content.arrivalAt}}
                     </div>
                 </div>
 
             </div>
 
         </div>
+      <template v-if="courier.store==='jd' && courier.content?.latestNodes.length>0">
         <div class="mt-2 xt-text-2" style="font-size: 14px;">
+          {{ courier.content.latestNodes[0].time }}
+        </div>
+        <div class="mt-2 xt-text omit" style="font-size: 14px;">
+          {{ courier.content.latestNodes[0].txt }}
+        </div>
+      </template>
+        <div v-if="!courier.store && courier.content.Traces?.length>0" class="mt-2 xt-text-2" style="font-size: 14px;">
             {{ lastTraces?.AcceptTime }}
         </div>
         <div class="mt-2 xt-text omit" style="font-size: 14px;">
@@ -57,6 +63,7 @@
     <!-- <a-divider style="height: 1px; background-color: var(--divider)" /> -->
     <!-- <hr class="divider"> -->
     <!-- <div class="divider"></div> -->
+
 </template>
 
 <script setup>
@@ -66,44 +73,66 @@ import { kdCompany, kdState, switchColor } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { appStore } from '../../../store';
 import {autoCancelTime} from './courierModal/modalMock'
-const props = defineProps({ 
+import Cover from './Cover.vue'
+const props = defineProps({
     courier: Object,
     itemIndex: Number
 })
+const courier=props.courier
 // console.log('查看数据',props.courier);
 const useCourierStore = courierStore()
 const useAppStore=appStore()
 const stateColors = computed(() => {
-    return switchColor(props.courier?.State)
+    return switchColor(courier.content?.State)
 })
 
 const switchState = computed(() => {
-    return kdState(props.courier?.State)
+  console.log(courier)
+  if(courier.store){
+    return courier.content.status
+  }else
+    return kdState(courier.content?.State)
 })
 
 const switchCompany = computed(() => {
-    return kdCompany(props.courier?.ShipperCode)
+  if(courier.store){
+    if(courier.store==='jd'){
+      if(courier.content.expressType){
+        return courier.content.expressType
+      }else{
+        return '京东快递'
+      }
+    }
+
+  }else{
+    return kdCompany(courier.content?.ShipperCode)
+  }
+
 })
 
-const courierCode = computed(() => {
+const orderDetail=ref({})
+
+const courierTitle = computed(() => {
+
     const orderNum = props.courier?.LogisticCode
-    const changCode = `${orderNum.slice(0, 4)}-${orderNum.slice(-4)}`
+    const changCode = props.title  //`${orderNum.slice(0, 4)}-${orderNum.slice(-4)}`
     return changCode
 })
 
 const lastTraces = ref(null)
 
 const newTraces = computed(() => {
-    switch (props?.courier?.State) {
+  let content=courier.content
+    switch (content?.State) {
         case '3':
             return {
-                AcceptStation: props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptStation,
-                AcceptTime: props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptTime
+                AcceptStation: content.Traces[content.Traces.length - 1]?.AcceptStation,
+                AcceptTime:content.Traces[content.Traces.length - 1]?.AcceptTime
             }
         case '2':
             return {
-                AcceptStation: props.courier?.Traces[0]?.AcceptStation,
-                AcceptTime: props.courier?.Traces[0]?.AcceptTime
+                AcceptStation: content.Traces[0]?.AcceptStation,
+                AcceptTime: content.Traces[0]?.AcceptTime
             }
     }
 })
@@ -131,13 +160,13 @@ onMounted(()=>{
     // console.log(lastTraces?.value.AcceptTime)
     // console.log(new Date(lastTraces?.value.AcceptTime).getTime())
     let nowDate=new Date().getTime()
-    
-    if(nowDate - new Date(lastTraces?.value.AcceptTime).getTime()>(cancelTime[0].type)){
+
+    if(nowDate - new Date(lastTraces?.value?.AcceptTime).getTime()>(cancelTime[0].type)){
         console.log('过期了',props.itemIndex);
         if(useAppStore.settings.courierSigned.blockSigned && props?.courier?.State==='3'){
             useCourierStore.removeDbData(props.itemIndex)
         }
-        
+
     }else{
         console.log('没过期');
     }
@@ -171,7 +200,7 @@ onMounted(()=>{
     //     height: 1px;
     //     background-color: var(--divider);
     // }
-    
+
 }
 .divider{
     width: 100%;

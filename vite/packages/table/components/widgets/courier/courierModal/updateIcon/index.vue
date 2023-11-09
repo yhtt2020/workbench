@@ -5,10 +5,10 @@
      <a-avatar :size="32" :src="detailAvatar"></a-avatar>
     </div>
     <div class="flex flex-col ml-3">
-     
+
      <div class="flex ">
-       <div v-if="isJd" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #E12419;">JD</div>
-       <div v-if="isTb" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #FA5000;">淘</div>
+       <div v-if="orderData.store==='jd'" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #E12419;">JD</div>
+       <div v-if="orderData.store==='tb'" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 " style="background: #FA5000;">淘</div>
        <span class="mx-1 xt-font font-16 font-600 xt-text">{{ orderData?.LogisticCode }}</span>
        <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
      </div>
@@ -27,7 +27,7 @@
    </div>
 
    <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar" />
-   
+
    <div class="flex items-center">
     <xt-button w="32" h="32" style="border-radius: 8px;">
       <div class="flex items-center justify-center" v-if="true">
@@ -37,22 +37,22 @@
         <SmallIcon icon="fluent:star-16-filled" style="color: var(--warning);"/>
       </div>
     </xt-button>
-  
+
     <MoreDrop class="ml-3" :navList="jdTbList"/>
    </div>
-  </div>   
+  </div>
 </template>
- 
+
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
 import {kdCompany} from '../../mock'
 import { Modal,message } from 'ant-design-vue'
 import useClipboard from 'vue-clipboard3';
- 
+
 import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
 
- 
+
 export default {
   props:['orderData'],
   components:{
@@ -99,13 +99,13 @@ export default {
     ]
    }
   },
- 
+
   computed:{
    switchCompany(){
      return kdCompany(this.orderData.ShipperCode)
    }
   },
- 
+
   methods:{
    editCourier(){},
    onUpdateImg(){
@@ -131,11 +131,11 @@ export default {
       message.success('群聊ID成功复制');
     }
    }
-   
+
   }
 }
 </script>
- 
+
 <style lang="scss" scoped>
  :deep(.float-icon){
    top:125px !important;
