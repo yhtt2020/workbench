@@ -43,7 +43,7 @@
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
                 <div v-for="(item, index) in courierDetailList">
-                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
+                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index" />
                   <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
                 </div>
 
@@ -105,6 +105,7 @@ import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
 import CourierSetting from './courierModal/CourierSetting.vue';
 import _ from 'lodash-es'
+import { autoRefreshTime } from './courierModal/modalMock'
 export default {
   name: '我的快递',
   components: {
@@ -208,7 +209,8 @@ export default {
         mobile: false,
         client: false,
         offline: true
-      }
+      },
+      autoRefreshTime
     };
   },
   methods: {
@@ -325,27 +327,27 @@ export default {
       if (this.settings.courierRefresh.autoRefresh) {
         setInterval(() => {
           message.loading('正在为您更新商城订单')
-      if (this.storeInfo.jd.nickname) {
-        //京东绑定了
-        grab.jd.getOrder()
-      }
-      if (this.storeInfo.tb.nickname) {
-        grab.tb.getOrder((args) => {
-          console.log('淘宝结果', args)
-          if (args.status === 0 && args.code === 401) {
-            notification.info({
-              content: '淘宝账号已过期，点击重新绑定。',
-              onClick: () => {
-                grab.tb.login((args) => {
-                  console.log(args, '获取到的订单信息')
+          if (this.storeInfo.jd.nickname) {
+            //京东绑定了
+            grab.jd.getOrder()
+          }
+          if (this.storeInfo.tb.nickname) {
+            grab.tb.getOrder((args) => {
+              console.log('淘宝结果', args)
+              if (args.status === 0 && args.code === 401) {
+                notification.info({
+                  content: '淘宝账号已过期，点击重新绑定。',
+                  onClick: () => {
+                    grab.tb.login((args) => {
+                      console.log(args, '获取到的订单信息')
+                    })
+                  }
                 })
               }
             })
+            //淘宝绑定了
           }
-        })
-        //淘宝绑定了
-      }
-        }, this.refreshTime);
+        }, this.refreshTimes[0].type);
       }
     }
   },
@@ -372,26 +374,31 @@ export default {
     courierMsg() {
       return this.courierMsgList;
     },
-    refreshTime() {
-      switch (this.settings.courierRefresh.autoTime) {
-        case '10分钟':
-          return 600000
-          break;
-        case '30分钟':
-          return 1800000
-          break;
-        case '1小时':
-          return 3600000
+    // refreshTime() {
+    //   switch (this.settings.courierRefresh.autoTime) {
+    //     case '10分钟':
+    //       return 600000
+    //       break;
+    //     case '30分钟':
+    //       return 1800000
+    //       break;
+    //     case '1小时':
+    //       return 3600000
 
-          break;
-        case '2小时':
-          return 7200000
-          break;
+    //       break;
+    //     case '2小时':
+    //       return 7200000
+    //       break;
 
-        default:
-          return 1800000
-          break;
-      }
+    //     default:
+    //       return 1800000
+    //       break;
+    //   }
+    // },
+    refreshTimes() {
+      return this.autoRefreshTime.filter((item) => {
+        return item.value === this.settings.courierRefresh.autoTime
+      })
     }
   },
   async mounted() {
@@ -399,8 +406,11 @@ export default {
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener("resize", this.handleResize)
-    console.log(this.refreshTime)
-    this.autoRefresh()
+    console.log(this.refreshTimes[0].type, 'refreshTimes')
+    if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
+      this.autoRefresh()
+    }
+
   },
 
   beforeDestroy() {

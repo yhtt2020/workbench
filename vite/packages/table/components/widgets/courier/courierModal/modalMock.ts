@@ -946,16 +946,16 @@ export const expressList = [
 
 
 export const autoRefreshTime = [
-  {value:'10分钟',type:''},
-  {value:'30分钟',type:''},
-  {value:'1小时',type:''},
-  {value:'2小时',}
+  {value:'10分钟',type:'600000'},
+  {value:'30分钟',type:'1800000'},
+  {value:'1小时',type:'3600000'},
+  {value:'2小时',type:'7200000'},
 ]
 
 export const autoCancelTime = [
-  {value:'24小时'},
-  {value:'48小时'},
-  {value:'一周'}
+  {value:'24小时',type:'86400000'},
+  {value:'48小时',type:'172800000'},
+  {value:'一周',type:'604800000'},
 ]
 
 
