@@ -26,8 +26,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { taskStore } from "../store";
+import { offlineStore } from "../../../js/common/offline";
 import Primary from "./primary/index.vue";
 import Branch from "./branch/index.vue";
 import Activity from "./activity/index.vue";
@@ -37,6 +38,7 @@ let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
 const store = taskStore();
+const isOffline = offlineStore().isOffline
 // 切换任务
 const selectTab = (item) => {
   currentTask.value = item.value;
@@ -47,8 +49,15 @@ const selectBranchTab = (item) => {
   currentTask.value = "Branch";
   task.value = tasks[item.value];
 };
+const menusList = computed(()=>{
+  if (isOffline) {
+    return menus.splice(3,2)
+  }else{
+    return menus
+  }
+}) 
 // 任务配置
-const menus = ref([
+let menus = ref([
   {
     // slot: "star",
     newIcon: "fluent-emoji:star",

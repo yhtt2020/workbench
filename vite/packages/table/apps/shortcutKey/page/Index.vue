@@ -31,7 +31,7 @@ export default {
     ...mapWritableState(keyStore, ['sessionList', 'executedApps', 'currentApp', 'settings']),
     ...mapWritableState(appStore, ['fullScreen']),
     leftMenu() {
-      const startMenu = [
+      var startMenu = [
         {
           id: 'list',
           icon: "liebiao",
@@ -52,8 +52,14 @@ export default {
             this.$router.push({name: 'shortcutStore'})
           },
         },
-
       ]
+      // 离线模式隐藏 创意市场
+      if (window.$isOffline) {
+        startMenu = startMenu.filter(i=>{
+          return i.tab != 'store'
+        })
+      }
+      
       const endMenu = [
         {
           full: true,

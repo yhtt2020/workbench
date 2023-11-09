@@ -42,7 +42,7 @@
               </div>
             </a-col>
 
-            <a-col  :span="12">
+            <a-col  :span="12" v-if="!this.isOffline">
               <div class="relative btn">
                 社群沟通<br />
                 <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -54,7 +54,7 @@
                 <a-switch v-model:checked="settings.noticeEnable"></a-switch>
               </div>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="12" v-if="!this.isOffline">
               <div style="cursor: help" @click="tipSimple" class="relative btn">
                 极简模式<br />
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
@@ -102,7 +102,7 @@
                   <div > 分屏设置</div>
                 </div>
               </a-col>
-              <a-col v-if="simple" :span="6">
+              <a-col v-if="simple && !this.isOffline"  :span="6">
                 <MyAvatar :size="37"></MyAvatar>
               </a-col>
             </a-row>
