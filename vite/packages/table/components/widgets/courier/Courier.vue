@@ -7,20 +7,24 @@
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
+    <div style="position: absolute;top: 14px;left: 120px;">
+      <xt-button :w="22" :h="22" @click="refreshAll">
+        <div class="flex items-center justify-center">
+          <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+            icon="akar-icons:arrow-clockwise" />
+        </div>
+      </xt-button>
+    </div>
     <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
-      <template v-if="!showWay">
-        <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
+      <!-- <template v-if="!showWay"> -->
+      <!-- <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
           <div class="xt-text xt-font ">快递筛选</div>
           <div class="flex items-center">
             <span class="mr-2">2023-11-03 11:11更新</span>
-            <xt-button :w="22" :h="22"  @click="refreshAll">
-              <div class="flex items-center justify-center">
-                <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:arrow-clockwise"/>
-              </div>
-            </xt-button>
+            
           </div>
-        </div>
-      </template>
+        </div> -->
+      <!-- </template> -->
 
       <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
@@ -29,19 +33,20 @@
         <template v-else>
           <div v-if="showWay">
             <MinEmpty v-if="courierDetailList.length === 0" />
-            <MinCourierItem v-else :courier="courierDetailList[0]" @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+            <MinCourierItem v-else :courier="courierDetailList[0]"
+              @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
             </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
+            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true" />
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                 style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
                 <div v-for="(item, index) in courierDetailList">
-                  <CourierItem  :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" />
+                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index" />
                   <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
                 </div>
-                
+
               </vue-custom-scrollbar>
               <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
 
@@ -61,7 +66,7 @@
         </template>
         <teleport to='body'>
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="600" :maskIndex="100">
+            :isHeader="false" :boxIndex="100" :maskIndex="99">
             <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
             <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
           </xt-modal>
@@ -82,8 +87,9 @@
 import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
 import { courierStore } from '../../../store/courier.ts'
+import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
-import { message, Modal as antModal , notification } from 'ant-design-vue'
+import { message, Modal as antModal, notification } from 'ant-design-vue'
 import grab from './grab'
 
 import Modal from '../../Modal.vue'
@@ -99,6 +105,7 @@ import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
 import CourierSetting from './courierModal/CourierSetting.vue';
 import _ from 'lodash-es'
+import { autoRefreshTime } from './courierModal/modalMock'
 export default {
   name: '我的快递',
   components: {
@@ -197,17 +204,18 @@ export default {
       showCourierDetail: false,
       showSmallDetail: false,
       largeDetailVisible: true,
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
-        offline:true
-      }
+        offline: true
+      },
+      autoRefreshTime
     };
   },
   methods: {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers']),
-    changeState () {
+    changeState() {
       this.allCourierVisible = false
     },
     refreshCourier() {
@@ -313,7 +321,34 @@ export default {
     },
     backAllCoutiers() {
       this.showSmallDetail = true,
-      this.showCourierDetail = false
+        this.showCourierDetail = false
+    },
+    autoRefresh() {
+      if (this.settings.courierRefresh.autoRefresh) {
+        setInterval(() => {
+          message.loading('正在为您更新商城订单')
+          if (this.storeInfo.jd.nickname) {
+            //京东绑定了
+            grab.jd.getOrder()
+          }
+          if (this.storeInfo.tb.nickname) {
+            grab.tb.getOrder((args) => {
+              console.log('淘宝结果', args)
+              if (args.status === 0 && args.code === 401) {
+                notification.info({
+                  content: '淘宝账号已过期，点击重新绑定。',
+                  onClick: () => {
+                    grab.tb.login((args) => {
+                      console.log(args, '获取到的订单信息')
+                    })
+                  }
+                })
+              }
+            })
+            //淘宝绑定了
+          }
+        }, this.refreshTimes[0].type);
+      }
     }
   },
   computed: {
@@ -321,6 +356,7 @@ export default {
       "courierDetailList",
       "couriersDetailMsg",
       "storeInfo", 'viewCourierDetail']),
+    ...mapWritableState(appStore, ["settings"]),
     // 判断尺寸大小
     showSize() {
       if (this.customData && this.customData.width && this.customData.height) {
@@ -338,22 +374,48 @@ export default {
     courierMsg() {
       return this.courierMsgList;
     },
-    formattedDate() {
-      const year = this.dateNow.getFullYear();
-      const month = String(this.dateNow.getMonth() + 1).padStart(2, '0');
-      const day = String(this.dateNow.getDate()).padStart(2, '0');
-      const hours = String(this.dateNow.getHours()).padStart(2, '0');
-      const minutes = String(this.dateNow.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
-    },
+    // refreshTime() {
+    //   switch (this.settings.courierRefresh.autoTime) {
+    //     case '10分钟':
+    //       return 600000
+    //       break;
+    //     case '30分钟':
+    //       return 1800000
+    //       break;
+    //     case '1小时':
+    //       return 3600000
+
+    //       break;
+    //     case '2小时':
+    //       return 7200000
+    //       break;
+
+    //     default:
+    //       return 1800000
+    //       break;
+    //   }
+    // },
+    refreshTimes() {
+      return this.autoRefreshTime.filter((item) => {
+        return item.value === this.settings.courierRefresh.autoTime
+      })
+    }
   },
   async mounted() {
+    // console.log(this.courierDetailList)
     this.getDbCourier()
+    // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener("resize", this.handleResize)
+    console.log(this.refreshTimes[0].type, 'refreshTimes')
+    if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
+      this.autoRefresh()
+    }
+
   },
 
   beforeDestroy() {
     window.removeEventListener("resize", this.handleResize)
+    this.autoRefresh()
   },
 
 }
@@ -367,20 +429,21 @@ export default {
 //     // background-color: var(--secondary-bg);
 //   }
 // }
-.courier-item{
-  &::after{
-        content:'';
-        width: 100%;
-        height: 1px;
-        background-color: var(--divider);
-        margin-top: 6px;
-    }
-}
-.divider{
+.courier-item {
+  &::after {
+    content: '';
     width: 100%;
     height: 1px;
     background-color: var(--divider);
-    margin-top: 8px;
+    margin-top: 6px;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--divider);
+  margin-top: 8px;
 }
 
 .courier {
@@ -394,6 +457,5 @@ export default {
     }
   }
 }
-
 </style>
 

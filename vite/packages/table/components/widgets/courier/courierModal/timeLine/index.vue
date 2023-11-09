@@ -2,10 +2,7 @@
  <a-timeline>
   <a-timeline-item v-for="(item,index) in reversedList" class="item-time">
     <div class="flex">
-     <!-- <template v-if="item.title !==''"> -->
-      <!-- {{ item.Action }} -->
       <div  class="mr-4 font-16 font-600 xt-font" :class="index==0? 'xt-text' :'xt-text-2'"> {{ deliveryStatus[index] }}</div>
-     <!-- </template> -->
      <div class="font-14 font-400 xt-font" :class="index==0? 'xt-text' :'xt-text-2'">{{ item.AcceptTime }}</div>
     </div>
     <div class="font-14 font-400 xt-text-2">{{ item.AcceptStation }}</div>

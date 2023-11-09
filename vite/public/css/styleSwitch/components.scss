@@ -109,8 +109,9 @@
 }
 // 点击状态
 .xt-active {
-  --tw-scale-x: 1.05;
-  --tw-scale-y: 1.05;
+  --tw-scale-x: 1.02;
+  --tw-scale-y: 1.02;
+  transition: all 0.2s;
   &:active {
     transform: translate(var(--tw-translate-x), var(--tw-translate-y))
       rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
