@@ -8,16 +8,10 @@
                     </div>
                     <div class="flex ml-4 xt-text" style="margin-top: -6px;">
                         <TopDrop :navList="filterType" v-model:selectType="defaultType" />
-                        <!-- <div class="text-base " style="line-height: 20px;">我的快递</div>
-                     <div class="ml-3 text-base" style="line-height: 20px;">({{ this.courierDetailList.length }})</div> -->
                     </div>
                 </div>
                 <div class="flex">
-                    <!-- <a-tooltip autoAdjustOverflow title="添加快递">
-                     <xt-button :w="32" :h="32" class="ml-2 xt-bg" style="border-radius: 8px;" @click="addCourier">
-                         <newIcon icon="fluent:add-16-filled" style="vertical-align: sub;"></newIcon>
-                     </xt-button></a-tooltip> -->
-                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2"></DropIndex>
+                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2" @open="addCourier"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
                         <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;"
@@ -27,7 +21,8 @@
                                     style="vertical-align: sub;font-size: 1.25rem;"></newIcon>
                             </div>
 
-                        </xt-button></a-tooltip>
+                        </xt-button>
+                    </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
                         <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
                             @click="openCourierSetting">
@@ -35,8 +30,8 @@
                                 <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;">
                                 </newIcon>
                             </div>
-
-                        </xt-button></a-tooltip>
+                        </xt-button>
+                    </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
                         <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
                             @click="showTopCourier">
@@ -45,14 +40,15 @@
                                 </newIcon>
                             </div>
 
-                        </xt-button></a-tooltip>
+                        </xt-button>
+                    </a-tooltip>
                 </div>
             </div>
-            <!-- {{ this.storeInfo.jd.order }} -->
-            <!-- {{ this.storeInfo.tb.order.orders.length }} -->
+
             <div v-if="isLoading">
                 <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
             </div>
+
             <template v-else>
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                     style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
@@ -78,7 +74,7 @@
  </teleport>
  <teleport to='body'>
      <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-         :isHeader="false" :boxIndex="600" :maskIndex="100">
+         :isHeader="false" :boxIndex="100" :maskIndex="99">
          <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
          <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
      </xt-modal>
@@ -269,46 +265,58 @@ export default {
     computed: {
         ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg', 'storeInfo']),
         ...mapWritableState(appStore, ['settings']),
-        filterType() {
-            const allLength = this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
-            const jdLength = this.storeInfo.jd.order.orders
-            const tbLength = this.storeInfo.tb.order.orders
-            const list = [...this.typeList]
-            const filterList = list.map((item) => {
+        config(){
+          return {
+            jdOrder:this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
+            tbOrder:this.storeInfo.tb.order && this.storeInfo.tb.order.orders !== undefined,
+            otherOrder:this.courierDetailList && this.courierDetailList !== undefined,
+            allLength:this.courierDetailList?.length !== undefined ? this.courierDetailList?.length : 0 ,
+            jdLength:this.storeInfo?.jd?.order?.orders?.length !== undefined ? this.storeInfo?.jd?.order?.orders?.length : 0 ,
+            tbLength:this.storeInfo?.tb?.order?.orders?.length !== undefined ? this.storeInfo?.tb?.order?.orders?.length : 0 ,
+           }
+        },
+        filterType() {         
+            if(this.config.jdOrder || this.config.tbOrder || this.config.otherOrder){
+                const list = [...this.typeList]
+                const filterList = list.map((item) => {
                 switch (item.type) {
                     case 'all':
                         return {
-                            title: `${item.title}${allLength !== 0 ? `(${allLength})` : ''}`,
+                            title: `${item.title}${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength) !== 0 ? `(${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
                     case 'JD':
                         return {
-                            title: `${item.title}${jdLength.length !== 0 ? `(${jdLength.length})` : ''}`,
+                            title: `${item.title}${this.config.jdLength !== 0 ? `(${this.config.jdLength})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
                     case 'TB':
                         return {
-                            title: `${item.title}${tbLength.length !== 0 ? `(${tbLength.length})` : ''}`,
+                            title: `${item.title}${this.config.tbLength !== 0 ? `(${this.config.tbLength})` : ''}`,
                             name: item.name,
                             type: item.type
                         }
                 }
-            })
-            return filterList
+                })
+                return filterList
+            }
         },
         currentType() {
-            return {
-                title: `全部  (${this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length})`,
-                name: "全部",
-                type: 'all'
+            if(this.config.jdOrder || this.config.tbOrder || this.config.otherOrder){
+                return {
+                 title: `全部  (${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})`,
+                 name: "全部",
+                 type: 'all'
+                }
             }
         },
         allCouriers() {
-            return this.courierDetailList.length + this.storeInfo.jd.order.orders.length + this.storeInfo.tb.order.orders.length
+            if(this.config.jdOrder || this.config.tbOrder || this.config.otherOrder){
+                return parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)
+            }
         }
-
     },
     mounted() {
         this.getDbCourier()

@@ -12,8 +12,8 @@ import MiddleWallpaper from "../widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../widgets/SmallWallpaper.vue";
 import MyGameSmall from "../widgets/games/MyGameSmall.vue";
 import Capture from "../widgets/games/Capture.vue";
-import Voice from "../widgets/games/Voice.vue";
-import Audio from "../widgets/games/Audio.vue";
+import Voice from "../widgets/audio/Voice.vue";
+import Audio from "../widgets/audio/Audio.vue";
 import CaptureNewCard from "../widgets/games/CaptureNewCard.vue";
 import Remote from "../widgets/custom/Remote.vue";
 import GameEpic from "../widgets/games/GameEpic.vue";
@@ -74,10 +74,12 @@ import Courier from "../widgets/courier/Courier.vue";
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
 import FreeLayoutContainer from "./freeLayout/Container.vue";
 import FreeLayoutState from "./freeLayout/State.vue";
+import FreeLayoutMask from "./freeLayout/Mask.vue";
 export default {
   components: {
     FreeLayoutScrollbar,
     FreeLayoutContainer,
+    FreeLayoutMask,
     FreeLayoutState,
     RightMenu,
     GameInformation,

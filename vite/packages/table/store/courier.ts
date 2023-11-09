@@ -24,9 +24,9 @@ export const courierStore = defineStore("courier", {
           }
         }
       },
-        courierDetailList: [],
-        // 大尺寸下查看内容详情，传递快递单号
-        viewCourierDetail:''
+      courierDetailList: [],
+      // 大尺寸下查看内容详情，传递快递单号
+      viewCourierDetail:''
     }),
     actions: {
         // 根据订单号来存储快递数据

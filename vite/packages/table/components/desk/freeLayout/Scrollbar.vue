@@ -13,6 +13,13 @@
     @mouseover="handleMouseMove"
   >
     <slot> </slot>
+    <!-- <div
+      @click="handleClick($event)"
+      class="absolute w-full h-full xt-theme-bg top-0 left-0"
+      style="z-index: 1000"
+    >
+      112
+    </div> -->
   </div>
 </template>
 <script setup>
@@ -58,18 +65,47 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
+  const zoom = getFreeLayoutState.value.zoom;
+  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
+  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
+
+  // scrollbar.value.scrollLeft =
+  //   getFreeLayoutState.value.position.x -
+  //   (getFreeLayoutState.value.width * zoom) / 2;
+
+  // console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+  // scrollbar.value.scrollTop =
+  //   getFreeLayoutState.value.position.y -
+  //   (getFreeLayoutState.value.height * zoom) / 2;
+
+  //   console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+
+  /**
+   * 自由布局算法
+   * 居中X坐标 = (可见视图区宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
+   * 居中Y坐标 = (可见视图区高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   */
+  const x =
+    (width.value - getFreeLayoutState.value.width * zoom) / 2 +
+    getFreeLayoutState.value.line.centerLine.x * zoom;
+  const y =
+    (height.value - getFreeLayoutState.value.height * zoom) / 2 +
+    (getFreeLayoutState.value.line.centerLine.y + 205) * zoom;
+  scrollbar.value.scrollLeft = x;
+  scrollbar.value.scrollTop = y;
+
+  // scrollbar.value.scrollLeft = desiredScrollLeft;
+
+  // scrollbar.value.scrollTop = desiredScrollTop;
+  return;
+  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
+  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
   if (getFreeLayoutState.value.position == "top center") {
-    scrollbar.value.scrollLeft = Math.abs(
-      (width.value - getFreeLayoutState.value.width) / 2
-    );
+    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
     scrollbar.value.scrollTop = 0;
   } else if (getFreeLayoutState.value.position == "center") {
-    scrollbar.value.scrollLeft = Math.abs(
-      (width.value - getFreeLayoutState.value.width) / 2
-    );
-    scrollbar.value.scrollTop = Math.abs(
-      (height.value - getFreeLayoutState.value.height) / 2
-    );
+    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
+    scrollbar.value.scrollTop = Math.abs(scrollTop);
   } else {
     scrollbar.value.scrollLeft = 0;
     scrollbar.value.scrollTop = 0;
@@ -80,23 +116,35 @@ function update() {
   perfectScrollbar.value.update();
 }
 
+function handleClick(e) {
+  console.log("e :>> ", e);
+}
+
 // 监听画布缩放情况
 watch(
   () => getFreeLayoutState.value?.zoom,
   () => {
-    let { width, height } = scrollbar.value.getBoundingClientRect();
-    let currentWidth =
-      getFreeLayoutState.value.width * getFreeLayoutState.value.zoom;
-    let currentHeight =
-      getFreeLayoutState.value.height * getFreeLayoutState.value.zoom;
-    if (currentWidth < width && getFreeLayoutState.value.width < 10000) {
-      console.log("宽度增加 :>> ", 222);
-      getFreeLayoutState.value.width += 1000;
-    }
-    if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
-      console.log("gao度增加 :>> ", 222);
-      getFreeLayoutState.value.height += 1000;
-    }
+    // console.log(
+    //   "freeLayoutEnv.value.loading :>> ",
+    //   freeLayoutEnv.value.loading
+    // );
+    // if (!freeLayoutEnv.value.loading) {
+    //   console.log("222222222 :>> ", 222222222);
+    //   return;
+    // }
+    // let { width, height } = scrollbar.value.getBoundingClientRect();
+    // let currentWidth =
+    //   getFreeLayoutState.value?.width * getFreeLayoutState.value?.zoom;
+    // let currentHeight =
+    //   getFreeLayoutState.value?.height * getFreeLayoutState.value?.zoom;
+    // if (currentWidth < width && getFreeLayoutState.value?.width < 10000) {
+    //   console.log("宽度增加 :>> ", 222);
+    //   getFreeLayoutState.value.width += 1000;
+    // }
+    // if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
+    //   console.log("gao度增加 :>> ", 222);
+    //   getFreeLayoutState.value.height += 1000;
+    // }
   }
 );
 // 鼠标滚动
@@ -139,6 +187,7 @@ function handleMouseMove(event) {
   }
 }
 onBeforeUnmount(() => {
+  freeLayoutStore.initFreeLayoutEnv();
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
