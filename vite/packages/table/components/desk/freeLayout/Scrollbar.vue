@@ -1,5 +1,6 @@
 <!-- 滚动条视图和事件 -->
 <template>
+  {{ getFreeLayoutState }}
   <div
     v-show="freeLayoutEnv.loading"
     ref="scrollbar"
@@ -65,7 +66,7 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  const zoom = getFreeLayoutState.value.zoom;
+  const zoom = getFreeLayoutState.value.canvas.zoom;
   // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
   // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
 
@@ -91,10 +92,10 @@ function redirect() {
    *
    */
   const x =
-    (width.value - getFreeLayoutState.value.width * zoom) / 2 +
+    (width.value - getFreeLayoutState.value.canvas.width * zoom) / 2 +
     getFreeLayoutState.value.line.centerLine.x * zoom;
   const y =
-    (height.value - getFreeLayoutState.value.height * zoom) / 2 +
+    (height.value - getFreeLayoutState.value.canvas.height * zoom) / 2 +
     getFreeLayoutState.value.line.centerLine.y * zoom;
   scrollbar.value.scrollLeft = x;
   scrollbar.value.scrollTop = y;
@@ -127,7 +128,7 @@ function handleClick(e) {
 
 // 监听画布缩放情况
 watch(
-  () => getFreeLayoutState.value?.zoom,
+  () => getFreeLayoutState.value?.canvas.zoom,
   () => {
     // console.log(
     //   "freeLayoutEnv.value.loading :>> ",

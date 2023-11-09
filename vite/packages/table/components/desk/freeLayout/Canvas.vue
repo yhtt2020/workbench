@@ -4,9 +4,9 @@
     class="relative mx-auto"
     :ref="drop"
     :style="{
-      width: getFreeLayoutState.width + 'px',
-      height: getFreeLayoutState.height + 'px',
-      zoom: getFreeLayoutState.zoom,
+      width: getFreeLayoutState.canvas.width + 'px',
+      height: getFreeLayoutState.canvas.height + 'px',
+      zoom: getFreeLayoutState.canvas.zoom,
     }"
     :class="{
       'xt-theme-b': getFreeLayoutState.line.isAuxLine,
@@ -36,30 +36,22 @@
     <!-- 中心线显示 -->
     <template v-if="getFreeLayoutState.line.isCenterLine">
       <div
-        class="absolute"
-        style="
-          left: 0;
-          right: 0;
-          height: 1px;
-          border: 3px groove var(--active-bg);
-        "
+        class="absolute left-0 right-0"
+        style="height: 1px; border: 3px groove var(--active-bg)"
         :style="{
           top:
-            getFreeLayoutState.line.centerLine.y / getFreeLayoutState.zoom +
+            getFreeLayoutState.line.centerLine.y /
+              getFreeLayoutState.canvas.zoom +
             'px',
         }"
       />
       <div
-        class="absolute"
-        style="
-          top: 0;
-          width: 1px;
-          height: 100%;
-          border: 3px groove var(--active-bg);
-        "
+        class="absolute top-0 h-full"
+        style="width: 1px; border: 3px groove var(--active-bg)"
         :style="{
           left:
-            getFreeLayoutState.line.centerLine.x / getFreeLayoutState.zoom +
+            getFreeLayoutState.line.centerLine.x /
+              getFreeLayoutState.canvas.zoom +
             'px',
         }"
       />
@@ -80,7 +72,6 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutData, getFreeLayoutState, getFreeLayoutMargin }: any =
   storeToRefs(freeLayoutStore);
-const zoom = freeLayoutStore.getFreeLayoutState.zoom;
 const moveBox = (id: any, left: number, top: number) => {
   Object.assign(getFreeLayoutData.value[id], { left, top });
 };
@@ -129,14 +120,14 @@ function auxLine(length: number, factor: number) {
 }
 const auxLineWidth = computed(() => {
   return auxLine(
-    getFreeLayoutState.value.width,
+    getFreeLayoutState.value.canvas.width,
     140 - 6 + getFreeLayoutMargin.value * 2
   );
 });
 
 const auxLineHeight = computed(() => {
   return auxLine(
-    getFreeLayoutState.value.height,
+    getFreeLayoutState.value.canvas.height,
     102 - 6 + getFreeLayoutMargin.value * 2
   );
 });

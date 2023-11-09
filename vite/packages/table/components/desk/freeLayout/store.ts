@@ -16,11 +16,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       start: true,
       last: true,
       position: "top center",
-      width: 2000,
-      height: 2000,
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
-      zoom: 1,
       margin: 6,
       // 辅助线参数
       line: {
@@ -33,14 +30,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       },
       // 画布数据
       canvas: {
-        // 是否无限衍生
-        isInfinite: false,
-
-        // 缩放比例
-        zoom: 1,
-        // 宽高
-        width: 2000,
-        height: 2000,
+        isInfinite: false, // 是否无限衍生
+        zoom: 1, // 缩放比例
+        width: 2000, // 宽
+        height: 2000, // 高
       },
     },
     // 当前环境状态
@@ -54,12 +47,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 默认环境状态
     defaultFreeLayoutEnv: {
-      loading: false, // 当前自由布局加载状态
-      scrollTop: 0, // 当前滚动条Y轴
-      scrollLeft: 0, // 当前滚动条X轴
-      scrollWidth: 0, // 当前滚动条宽度
-      scrollHeight: 0, // 当前滚动条高度
-      updatePosition: false, // 修改位置
+      loading: false,
+      scrollTop: 0,
+      scrollLeft: 0,
+      scrollWidth: 0,
+      scrollHeight: 0,
+      updatePosition: false,
     },
   }),
   getters: {
@@ -99,8 +92,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         : 0;
     },
     // 获取当前状态
-    getCurrentState() {
-      return this.currentState;
+    isFreeLayoutExist() {
+      return this.getFreeLayoutState;
     },
   },
   actions: {
@@ -182,6 +175,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     initFreeLayoutEnv() {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
+    },
+    // 清除所有数据
+    clearAllFreeLayout() {
+      this.freeLayoutData = {};
+      // 自由布局状态
+      this.freeLayoutState = {};
     },
   },
   persist: {
