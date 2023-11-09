@@ -105,7 +105,7 @@ export default {
     const { toClipboard } = useClipboard();
     const res = await toClipboard(this.orderNum);
     if(res.text !== ""){
-      message.success('群聊ID成功复制');
+      message.success('订单号复制成功');
     }
    }
  }

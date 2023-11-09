@@ -126,9 +126,9 @@ export default {
    // 复制订单号
    async copyOrderNum(){
     const { toClipboard } = useClipboard();
-    const res = await toClipboard(this.orderNum);
+    const res = await toClipboard(this.orderData?.LogisticCode);
     if(res.text !== ""){
-      message.success('群聊ID成功复制');
+      message.success('订单号复制成功');
     }
    }
    
