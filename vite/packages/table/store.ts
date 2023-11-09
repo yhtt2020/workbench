@@ -83,7 +83,7 @@ export const appStore = defineStore('appStore', {
 
       courierStatus:{ // 状态图标显示
         statusBar:true, 
-        currentStatus:'特别关注（订阅物流）'
+        currentStatus:'未完成快递'
       },
 
       courierRefresh:{ // 开启自动订单数据自动刷新

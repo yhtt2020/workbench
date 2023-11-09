@@ -116,17 +116,13 @@ export default defineComponent({
 
     // 输入框数据自动识别
     const getCourierNumber = (item, index) => {
-      // console.log(useAppStore.settings.courierMatch)
-      if (useAppStore.settings.courierMatch === 'preciseMatch') {
         if (item !== '') {
           const result = getCourierName(item)
           courier.updateNewCourierInfo({ code: result.code, label: result.name, orderNum: item, phoneLastNum: '' }, index)
         } else {
           courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
         }
-      }else if(useAppStore.settings.courierMatch==='close'){
-        // courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
-      }
+      
 
     }
 
