@@ -1,17 +1,17 @@
 <template>
-    <div style='width:400px;height:400px;background: #212121;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon" id="selectIcon">
+    <div  style='width:400px;height:400px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);border-radius: 10px;top: 175px;' class="float-icon xt-bg-2" id="selectIcon">
       <!--  -->
       <div class="top-icon flex">
         <div class="type-select flex">
-          <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''">Emojis</span>
-          <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''">Icons</span>
-          <span @click="onSelChange(3)" v-if="this.isCustom" :class="selIndex == 3 ? 'active':''">自定义</span>
+          <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''" class="xt-text">Emojis</span>
+          <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''" class="xt-text">Icons</span>
+          <span @click="onSelChange(3)" v-if="this.isCustom" :class="selIndex == 3 ? 'active':''" class="xt-text">自定义</span>
         </div>
-        <div class="flex items-center pointer" @click="clearAvatar">移除</div>
+        <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
       </div>
       <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != 3">
         <a-input
-          style="height:40px;background: #191919;
+          style="height:40px;background:var(--primary-bg) !important;
           border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
           border-radius: 10px;"
           placeholder="搜索"
@@ -21,7 +21,7 @@
         <!-- 随机 -->
         <a-tooltip>
           <template #title>随机</template>
-          <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: #2A2A2A;border-radius: 10px;" @click="onRandom">
+          <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background:var(--primary-bg) !important;border-radius: 10px;" @click="onRandom">
             <Icon class="pointer flex items-center" :icon="icons.arrowSync20Filled"  width="20" height="20"/>
           </xt-button>
         </a-tooltip>
@@ -331,6 +331,13 @@
       left: -125px;
     }
 
-
+    :deep(.ant-input){
+      color: var(--secondary-text) !important;
+      font-size: 14px;
+      font-weight: 400;
+      &::placeholder{
+       color: var(--secondary-text) !important;
+      }
+     }
   </style>
   

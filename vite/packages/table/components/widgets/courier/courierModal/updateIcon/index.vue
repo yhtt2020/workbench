@@ -41,6 +41,8 @@
     <MoreDrop class="ml-3" :navList="jdTbList"/>
    </div>
   </div>   
+
+  <EditModal ref="courierEditRef"/>
 </template>
  
 <script>
@@ -51,13 +53,14 @@ import useClipboard from 'vue-clipboard3';
  
 import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
+import EditModal from '../EditModal.vue';
 
  
 export default {
   props:['orderData'],
   components:{
    SmallIcon,
-   GoodIcon,MoreDrop,
+   GoodIcon,MoreDrop,EditModal
   },
   data(){
    return{
@@ -68,6 +71,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
@@ -87,7 +91,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
-
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
