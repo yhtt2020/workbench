@@ -14,6 +14,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 默认状态数据
     defaultState: {
       start: true,
+      last: true,
       position: "top center",
       width: 2000,
       height: 2000,
@@ -22,15 +23,35 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       whileDrag: false,
       zoom: 1,
       margin: 6,
+      // 是否辅助线
+      auxLineObj: {
+        // 包含中心线
+        center: false,
+        start: true,
+        last: true,
+      },
+      // 画布数据
+      canvas: {
+        // 是否无限衍生
+        infinite: false,
+
+        // 缩放比例
+        zoom: 1,
+        // 宽高
+        width: 2000,
+        height: 2000,
+      },
     },
     // 当前环境状态
-    currentEnvState: {
+    freeLayoutEnv: {
       loading: false, // 当前自由布局加载状态
       scrollTop: 0, // 当前滚动条Y轴
       scrollLeft: 0, // 当前滚动条X轴
+      scrollWidth: 0, // 当前滚动条宽度
+      scrollHeight: 0, // 当前滚动条高度
     },
     // 当前环境状态
-    defaultCurrentEnvState: {
+    defaultFreeLayoutEnv: {
       loading: false,
       scrollTop: 0,
       scrollLeft: 0,
@@ -139,6 +160,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     clearFreeLayout() {
       delete this.freeLayoutData[this.getCurrentDeskId];
       delete this.freeLayoutState[this.getCurrentDeskId];
+    },
+    // 初始化当前环境
+    initFreeLayoutEnv() {
+      this.freeLayoutEnv = this.defaultFreeLayoutEnv;
+      console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
   },
   persist: {

@@ -1,6 +1,14 @@
 <template>
   <Widget :editing="editing" :sizeList="bottomSizeList" :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
     :menuList="gameMiddleBare" ref="aggregateSearchSlot">
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:search-20-filled" style="font-size: 24px;" />
+        </div>
+      </template>
     <div class="flex items-center justify-center w-full p-2 mt-8 mb-3 rounded-xl pointer"
       style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="enterSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
@@ -75,13 +83,14 @@ import AggregateSearchDrawer from "./AggregateSearchDrawer.vue";
 
 import { AggregateList } from "../../../js/data/searchData";
 import _ from 'lodash-es'
-
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   components: {
     Widget,
     Modal,
     AggregateSearchFullScreen,
-    AggregateSearchDrawer
+    AggregateSearchDrawer,
+    newIcon
   },
   props: {
     editing:{
@@ -105,7 +114,7 @@ export default {
       options: {
         className: 'card small',
         title: '聚合搜索',
-        icon: 'sousuo1',
+        // icon: 'sousuo1',
         type: 'search',
       },
 

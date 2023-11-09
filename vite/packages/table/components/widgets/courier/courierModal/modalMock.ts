@@ -160,10 +160,12 @@ export const courierDetailList = [
 
 export const courierType = [
   { title: "全部", name: "all" },
-  { title: "已揽收", name: "collect", color: "rgba(67,202,222,1)" },
+  { title:'订阅',name:'subscribe' },
   { title: "在途中", name: "enRoute", color: "var(--active-bg)" },
   { title: "派送中", name: "delivery", color: "var(--warning)" },
+  { title:'发货中',name:'onDelivery' },
   { title: "已签收", name: "signed", color: "var(--success)" },
+  { title: "已揽收", name: "collect", color: "rgba(67,202,222,1)" },
 ];
 
 export const commonExpress = [
@@ -957,6 +959,68 @@ export const autoCancelTime = [
 ]
 
 
+// 筛选tab栏数据
+export function selectTab(item:any,list:any){
+  switch (item.name) {
+    case 'all':
+      return {
+        title:`${item.title}${list === 0 ? '' : `(${list.length})`}`,
+        name:item.name,
+      };
+    case 'subscribe':
+      return {title:item.title,name:item.name} ;
+    case 'enRoute':
+      const routeList = list.filter((item:any) => { return item.State === '2' })
+      return { 
+        title:`${item.title}${routeList.length === 0 ? '' : `${routeList.length}`}`,
+        name:item.name 
+      }; 
+    case 'delivery':
+      const deliList = list.filter((item:any)=>{ return item.State === '202' })
+      return {
+        title:`${item.title}${deliList.length === 0 ? '' : `(${deliList.length})` }`,
+        name:item.name,
+      };
+    case 'onDelivery':
+      return { title:item.title,name:item.name };
+    case 'collect':
+      const cList = list.filter((item:any) => { return item.State === '1' })
+      return {
+        title:`${item.title}${cList.length === 0 ? '' : `(${cList.length})` }`,
+        name:item.name,
+      };
+    case 'signed':
+      const signList = list.filter((item:any) => { return item.State === '3' })
+      return {
+        title:`${item.title}${signList.length === 0 ? '' : `(${signList.length})` }`,
+        name:item.name,
+      };
+  }
+}
+
+// 筛选数据
+export function selectData(item:any,list:any){
+  switch (item?.name) {
+    case 'all':
+      return list
+    case 'subscribe':
+      return [];
+    case 'enRoute':
+      const routeList = list.filter((item:any) => { return item.State === '2' })
+      return  routeList
+    case 'delivery':
+      const deliList = list.filter((item:any)=>{ return item.State === '202' })
+      return deliList
+    case 'onDelivery':
+      return [];
+    case 'collect':
+      const cList = list.filter((item:any) => { return item.State === '1' })
+      return cList
+    case 'signed':
+      const signList = list.filter((item:any) => { return item.State === '3' })
+      return signList
+  }
+}
 
 /*
 {

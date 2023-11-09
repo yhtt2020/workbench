@@ -1,5 +1,13 @@
 <template>
 <Widget :options="options" :menu-list="menuList" :desk="desk">
+  <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:arrow-trending-lines-20-filled" style="font-size: 24px;" />
+        </div>
+      </template>
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.value}}%</span>
       <span>
@@ -53,6 +61,7 @@ import {filterObjKeys, netWorkDownUp} from "../../../util";
 import Widget from "../../card/Widget.vue";
 import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
+import {Icon as newIcon} from '@iconify/vue'
 const {rpc}=window.$models
 
 export default {
@@ -67,7 +76,7 @@ export default {
       options:{
         className:'card',
         title:'性能',
-        icon:'dashboard',
+        // icon:'dashboard',
         type:'CPUFourCard'
       },
       CPUGPUData:{
@@ -112,7 +121,8 @@ export default {
     //}
  // },
   components:{
-    Widget
+    Widget,
+    newIcon
   }, mounted () {
     this.startInspect()
   },

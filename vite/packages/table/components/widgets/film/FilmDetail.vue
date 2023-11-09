@@ -1,5 +1,13 @@
 <template>
     <Widget :options="options" :customIndex="customIndex" :custom-data="customData">
+      <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 24px;" />
+        </div>
+      </template>
       <div class="example" v-if="isLoading">
         <a-spin />
       </div>
@@ -22,7 +30,7 @@
               <div>语言：<span>{{ detailMovie.language }}</span></div>
               <div>上映：<span>{{ detailMovie.pubDesc }}</span></div>
             </div>
-            <div v-if="detailMovie.sc" class="items-center s-item mt-2 mb-3 rounded-lg pl-4" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'"  >
+            <div v-if="detailMovie.sc" class="items-center pl-4 mt-2 mb-3 rounded-lg s-item" style="display:flex;height:55px;" :class="fatherWidth == 2 ? 'size-max' : 'size-min'"  >
               <span class="mr-4" style="font-size: 16px;color: var(--secondary-text);" v-if="fatherWidth == 2">猫眼</span>
               <span style="font-size: 32px;color: #FFFFFF;letter-spacing: 4px;font-weight: 500;margin-right: 11px;">{{ detailMovie.score }}</span>
               <span style="font-size:20px;position: relative;top: -3px;">
@@ -32,10 +40,10 @@
             </div>
             <div class="flex items-center justify-between">
               <div @click="discountBack(false)"
-                  class="s-item change cursor-pointer rounded-lg w-12 h-12 flex items-center justify-center">
+                  class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change">
                 <Icon icon="xiangzuo" style="font-size: 20px;color: var(--primary-text);"></Icon>
               </div>
-              <span class="change pointer rounded-lg s-item  flex items-center justify-center"
+              <span class="flex items-center justify-center rounded-lg change pointer s-item"
               style="color: var(--primary-text);font-size: 16px;"
               @click="stripDay(detailMovie.shareInfo.url)"
               :style="fatherWidth == 2 ? 'padding: 13px 80px;' : 'padding:13px 62px;'"
@@ -55,11 +63,13 @@
   import DataStatu from "../DataStatu.vue"
   import { cacheRequest } from '../../../js/axios/api'
   import _ from 'lodash-es';
+  import {Icon as newIcon} from '@iconify/vue'
   export default {
     name: "ManyFilm",
     components:{
       Widget,
-      DataStatu
+      DataStatu,
+      newIcon
     },
     props: {
       customIndex:{
@@ -84,7 +94,7 @@
         options:{
           className:'card',
           title:'正在热映',
-          icon:'video',
+          // icon:'video',
           type:'singleDoubanFilm'
         },
         detailMovie: {},

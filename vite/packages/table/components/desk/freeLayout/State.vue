@@ -48,7 +48,11 @@
           ></a-input-number>
         </div> -->
         <div class="mb-3">画布功能</div>
-
+        <div class="mb-3">
+          无限画布(过大可能导致卡顿)：<a-switch
+            v-model:checked="getFreeLayoutState.afterDrop"
+          />
+        </div>
         <div class="flex items-center mb-3">
           缩放：
           <a-slider

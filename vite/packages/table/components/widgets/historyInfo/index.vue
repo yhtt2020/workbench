@@ -4,7 +4,7 @@
         <template #left-title-icon>
             <div class="icon"
                 style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 3px;top: 13px;">
-                <Icon icon="ant-design:calendar-outlined" width="20" height="20" />
+                <Icon icon="fluent:clock-12-regular" width="20" height="20" />
                 <!-- <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon> -->
             </div>
         </template>
@@ -103,7 +103,7 @@ export default {
         width: 20px;
         height: 20px;
         position: relative;
-        top: -21px;
+        top: -22px;
         left: 0;
     }
     :deep(.anticon svg){

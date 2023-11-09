@@ -158,7 +158,6 @@ const handleMenuViewport = (size: any) => {
 // 菜单加载前
 const handleBeforeEnter = (el: any) => {
   el.style.height = 0;
-  el.style.overflow = "hidden";
 };
 // 菜单加载后
 const handleEnter = (el: any) => {
@@ -170,7 +169,7 @@ const handleEnter = (el: any) => {
   // 该方法需要传入一个回调函数  回调函数会在页面被刷新时前调用
   requestAnimationFrame(() => {
     el.style.height = height + "px";
-    el.style.transition = ".2s";
+    el.style.transition = ".03s";
   });
 };
 // 菜单离开时
@@ -215,13 +214,12 @@ onBeforeUnmount(() => {
 .container {
   width: 200px;
   z-index: 999999999999;
-  &:hover {
-    overflow: visible !important;
-  }
+
   .list {
     border-radius: 12px;
     box-sizing: border-box;
     padding-bottom: 10px;
+    overflow: hidden;
   }
 }
 </style>

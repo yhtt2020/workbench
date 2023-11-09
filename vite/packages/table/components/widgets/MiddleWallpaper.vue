@@ -1,7 +1,15 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
     <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :desk="desk">
-      <div class="absolute top-4 left-4 w-24 h-5 pointer" @click="openRight"></div>
+      <div class="absolute w-24 h-5 top-4 left-4 pointer" @click="openRight"></div>
+      <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:image-multiple-16-regular" style="font-size: 22px;" />
+        </div>
+      </template>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
         <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
           <a-empty :image="simpleImage" />
@@ -9,34 +17,34 @@
             <xt-button size="mini" :w="100" :h="40"  type="theme" @click="goGallery">去挑选壁纸</xt-button>
           </div>
         </div>
-        <div class="h-full w-full pointer" v-else @click="goSource">
+        <div class="w-full h-full pointer" v-else @click="goSource">
           <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
             playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
             <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid" />
           </video>
 
-          <img :src="currentImg.middleSrc" @load="imgLoad" @error="imgError" alt="" class="h-full w-full"
+          <img :src="currentImg.middleSrc" @load="imgLoad" @error="imgError" alt="" class="w-full h-full"
             style="border-radius: 8px; object-fit: cover" v-else-if="currentImg.middleSrc" />
-          <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="h-full w-full"
+          <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="w-full h-full"
             style="border-radius: 8px; object-fit: cover" v-else />
         </div>
       </div>
-      <div class="flex flex-row absolute bottom-4 justify-center" style="width: 543px" v-if="imgList.length > 0">
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="lastImg">
+      <div class="absolute flex flex-row justify-center bottom-4" style="width: 543px" v-if="imgList.length > 0">
+        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="lastImg">
           <Icon class="icon" icon="caret-left"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="nextImg">
+        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="nextImg">
           <Icon class="icon" icon="caret-right"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="randomImg">
+        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="randomImg">
           <Icon class="icon" :class="randomFlag ? 'replace-it' : ''" icon="reload"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer mr-4" @click="collect"
+        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="collect"
           v-if="addressType.name !== 'my'">
           <Icon v-if="!isInMyPapers" icon="star"></Icon>
           <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
         </div>
-        <div class="item-icon flex justify-center items-center pointer" @click="settingImg">
+        <div class="flex items-center justify-center item-icon pointer" @click="settingImg">
           <Icon class="icon" icon="desktop"></Icon>
         </div>
       </div>
@@ -49,7 +57,7 @@
     <div class="text-base">壁纸源</div>
     <a-select style="
         border: 1px solid rgba(255, 255, 255, 0.1);
-      " class="w-full h-10 rounded-lg mt-4 text-xs" size="large" :bordered="false" v-model:value="pickFilterValue"
+      " class="w-full h-10 mt-4 text-xs rounded-lg" size="large" :bordered="false" v-model:value="pickFilterValue"
       @change="pickFilterChange($event)" :options="wallpaperOptions">
     </a-select>
   </a-drawer>
@@ -65,6 +73,7 @@ import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
 import { lively, lively2 } from "../../js/data/livelyData";
 import XtButton from '../../ui/libs/Button/index.vue'
+import { Icon as newIcon } from "@iconify/vue";
 let fs = require("fs");
 let path = require("path");
 export default {
@@ -72,6 +81,7 @@ export default {
   components: {
     XtButton,
     Widget,
+    newIcon
   },
   props: {
     desk:{
@@ -92,7 +102,7 @@ export default {
       options: {
         className: "card double",
         title: "壁纸",
-        icon: "image",
+        // icon: "image",
         type: "MiddleWallpaper",
       },
       menuList: [
