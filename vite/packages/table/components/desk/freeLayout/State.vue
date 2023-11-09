@@ -7,11 +7,13 @@
       <template v-if="freeLayoutSwitch">
         <div class="mb-3">中心点功能</div>
         <!-- <xt-select v-model="getFreeLayoutState.position" :list="positionList" /> -->
-        <xt-text class="my-3">
-          <xt-button class="mr-3" @click="freeDeskResize()" type="theme">
+        <xt-text class="mb-3">
+          <xt-button class="mr-3" h="40" @click="freeDeskResize()" type="theme">
             回到中心点</xt-button
           >
-          <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
+          <xt-button @click="updatePosition" h="40" type="link"
+            >修改中心点</xt-button
+          >
         </xt-text>
         <div class="mb-3">网格功能</div>
         <div class="mb-3">
@@ -53,8 +55,8 @@
         </div> -->
         <div class="mb-3">画布功能</div>
         <div class="mb-3">
-          无限画布(过大可能导致卡顿)：<a-switch
-            v-model:checked="getFreeLayoutState.afterDrop"
+          无限画布(最大支持10万像素)：<a-switch
+            v-model:checked="getFreeLayoutState.canvas.isInfinite"
           />
         </div>
         <div class="flex items-center mb-3">
@@ -80,7 +82,7 @@
             class="flex-1"
             v-model:value="getFreeLayoutState.width"
             :min="1000"
-            :max="5000"
+            :max="maxCanvasSize"
             :step="500"
             :tooltipOpen="true"
           />
@@ -88,7 +90,7 @@
             v-model:value="getFreeLayoutState.width"
             :min="1000"
             :step="500"
-            :max="5000"
+            :max="maxCanvasSize"
           ></a-input-number>
         </div>
         <div class="flex items-center mb-3">
@@ -97,7 +99,7 @@
             class="flex-1"
             v-model:value="getFreeLayoutState.height"
             :min="1000"
-            :max="5000"
+            :max="maxCanvasSize"
             :step="500"
             :tooltipOpen="true"
           />
@@ -105,7 +107,7 @@
             v-model:value="getFreeLayoutState.height"
             :min="1000"
             :step="500"
-            :max="5000"
+            :max="maxCanvasSize"
           ></a-input-number>
         </div>
       </template>
@@ -128,6 +130,13 @@ const emits = defineEmits(["scrollbarRedirect", "scrollbarUpdate"]);
 const freeLayoutStore = useFreeLayoutStore();
 const { getFreeLayoutState, isFreeLayout, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
+
+const maxCanvasSize = computed(() => {
+  if (getFreeLayoutState.value.canvas.isInfinite) {
+    return 100000;
+  }
+  return 10000;
+});
 
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);

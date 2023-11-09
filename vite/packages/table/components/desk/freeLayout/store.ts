@@ -34,7 +34,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 画布数据
       canvas: {
         // 是否无限衍生
-        infinite: false,
+        isInfinite: false,
 
         // 缩放比例
         zoom: 1,
@@ -106,6 +106,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   actions: {
     // 吸附网格
     snapToGrid(x: number, y: number): [number, number] {
+      /**
+       * @author 杨南南
+       * @date 2023-11-09
+       * @description 将输入的坐标对齐到网格的交点
+       *
+       * 核心算法
+       * 网格宽度：基础宽度 - 修正宽度 + 边距 * 2
+       * 网格高度：基础高度 - 修正高度 + 边距 * 2
+       * 对齐后的X坐标 = Math.round(视窗内的X坐标 / 网格宽度) * 网格宽度
+       * 对齐后的Y坐标 = Math.round(视窗内的Y坐标 / 网格高度) * 网格高度
+       *
+       */
       let width = 140 - 6 + this.getFreeLayoutMargin * 2;
       let height = 102 - 6 + this.getFreeLayoutMargin * 2;
       const snappedX = Math.round(x / width) * width;

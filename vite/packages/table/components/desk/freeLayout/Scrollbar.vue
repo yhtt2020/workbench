@@ -81,16 +81,21 @@ function redirect() {
   //   console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
 
   /**
-   * 自由布局算法
-   * 居中X坐标 = (可见视图区宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
-   * 居中Y坐标 = (可见视图区高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   * @author 杨南南
+   * @date 2023-11-09
+   * @description 根据X,Y轴定位到当前屏幕居中位置
+   *
+   * 核心算法
+   *   滚动X位置 = (可视宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
+   *   滚动Y位置 = (可视高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   *
    */
   const x =
     (width.value - getFreeLayoutState.value.width * zoom) / 2 +
     getFreeLayoutState.value.line.centerLine.x * zoom;
   const y =
     (height.value - getFreeLayoutState.value.height * zoom) / 2 +
-    (getFreeLayoutState.value.line.centerLine.y + 205) * zoom;
+    getFreeLayoutState.value.line.centerLine.y * zoom;
   scrollbar.value.scrollLeft = x;
   scrollbar.value.scrollTop = y;
 
