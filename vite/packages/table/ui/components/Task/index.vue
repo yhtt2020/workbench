@@ -175,9 +175,6 @@ export default defineComponent({
 </script>
 
 <style>
-/* .box {
-  position: relative;
-} */
 
 .xt-task-container {
   position: relative;

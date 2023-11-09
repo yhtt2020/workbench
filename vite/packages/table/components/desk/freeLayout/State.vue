@@ -6,19 +6,23 @@
       </div>
       <template v-if="freeLayoutSwitch">
         <div class="mb-3">中心点功能</div>
-        <xt-select v-model="getFreeLayoutState.position" :list="positionList" />
-        <xt-button
-          h="40"
-          class="my-3"
-          @click="freeDeskResize()"
-          type="theme"
-          block
-        >
-          回到中心点</xt-button
-        >
+        <!-- <xt-select v-model="getFreeLayoutState.position" :list="positionList" /> -->
+        <xt-text class="my-3">
+          <xt-button class="mr-3" @click="freeDeskResize()" type="theme">
+            回到中心点</xt-button
+          >
+          <xt-button @click="updatePosition" type="link">修改中心点</xt-button>
+        </xt-text>
         <div class="mb-3">网格功能</div>
         <div class="mb-3">
-          网格线常驻：<a-switch v-model:checked="getFreeLayoutState.auxLine" />
+          网格线常驻：<a-switch
+            v-model:checked="getFreeLayoutState.line.isAuxLine"
+          />
+        </div>
+        <div class="mb-3">
+          中心线常驻：<a-switch
+            v-model:checked="getFreeLayoutState.line.isCenterLine"
+          />
         </div>
         <!-- <div class="mb-3">
           拖拽保持吸附网格：<a-switch
@@ -122,7 +126,8 @@ import { useFreeLayoutStore } from "./store";
 
 const emits = defineEmits(["scrollbarRedirect", "scrollbarUpdate"]);
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, isFreeLayout } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutState, isFreeLayout, freeLayoutEnv } =
+  storeToRefs(freeLayoutStore);
 
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
@@ -153,6 +158,9 @@ function freeDeskResize() {
 const emitScrollbarUpdate = (event) => {
   emits("scrollbarUpdate");
 };
+function updatePosition() {
+  freeLayoutEnv.value.updatePosition = true;
+}
 
 const debounceScrollbarUpdate = useDebounceFn(emitScrollbarUpdate, 200);
 // 缩放比例

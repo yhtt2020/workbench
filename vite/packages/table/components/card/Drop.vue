@@ -1,5 +1,6 @@
 <!-- 小组件放置层 -->
 <template>
+
   <div ref="container" v-resize="handleMenuViewport">
     <slot></slot>
   </div>
