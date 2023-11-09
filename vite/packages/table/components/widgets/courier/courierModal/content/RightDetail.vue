@@ -8,7 +8,7 @@
         <div class="flex justify-between w-full">
           <span class=" xt-text font-14 font-400"
                 style="max-width: 100%;">{{ detail.title }}</span>
-<!--          <span class="xt-font font-16 font-600 xt-text">￥2810</span>-->
+          <span class="xt-font font-16 font-600 xt-text ml-2">{{content.amount}}</span>
         </div>
         <div v-if="detailVisible" v-for="item in content.items" class="flex justify-between w-full my-1.5">
           <div class="flex">
@@ -41,7 +41,7 @@
           <div class="flex items-center justify-center w-full">
             <xt-button h="20" @click="detailVisible = false">
               <div class="flex items-center justify-center">
-                <span class="xt-text-2">收起</span>
+                <span class="xt-text-2 font-14">收起</span>
                 <DetailIcon class="xt-text-2" icon="ri:arrow-up-s-line" style="font-size: 1.25rem;"/>
               </div>
             </xt-button>
@@ -52,7 +52,7 @@
           <div class="flex items-center justify-center w-full">
             <xt-button h="20" @click="detailVisible = true">
               <div class="flex items-center justify-center">
-                <span class="xt-text-2">更多信息</span>
+                <span class="xt-text-2 font-14">更多信息</span>
                 <DetailIcon class="xt-text-2" icon="ri:arrow-down-s-line" style="font-size: 1.5rem;"/>
               </div>
             </xt-button>
@@ -134,10 +134,11 @@ export default {
   watch:{
     'detail':{
       handler(){
-        if(this.detail.id){
+        if(this.detail._id){
           this.refreshData()
         }
       },
+      immediate:true
     }
   },
   methods: {
@@ -147,7 +148,6 @@ export default {
       if(this.detail.store==='jd'){
         this.traces=[]
         for(const t of this.content.latestNodes){
-
           this.traces.push({
             AcceptTime:t.time,
             AcceptStation:t.txt

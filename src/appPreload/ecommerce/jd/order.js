@@ -32,6 +32,7 @@ function getOrderInfo ($item) {
   }
   order.id = $item.find('a[name=\'orderIdLinks\']').text()
   order.dealtime = $item.find('.dealtime').text()
+  order.amount=$item.find('tr').eq(2).find('td div.amount span').eq(0).text()
 
   const children = $item.children('.tr-bd')
   for (const child of children) {
@@ -54,7 +55,9 @@ function getOrderInfo ($item) {
     order.items.push(item)
   }
   order.status = clearText($item.find('.order-status').text())
-  order.detailUrl = fixProtocol($item.find('.status a').attr('href'))
+  order.detailUrl = fixProtocol($item.find(".status a").filter(function (){
+    return $(this).text()==='订单详情'
+  }).attr('href'))
   return order
 }
 
@@ -75,7 +78,6 @@ let interval = setInterval(() => {
       const tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
       for (const tip of tips) {
         //执行触发
-        console.log(tip)
         $(tip).trigger('mouseenter')
       }
       tipInterval = setInterval(() => {

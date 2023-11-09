@@ -25,11 +25,11 @@
     </div>
 
 <!-- 如果没有快递单号   -->
-    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="false"/>
+    <Empty v-if="orderList.length === 0"  :exampleVisible="false"/>
 
     <template v-else>
       <!--   筛选不到数据   -->
-      <template v-if="courierDetailList?.length === 0">
+      <template v-if="orderList?.length === 0">
         <Empty :exampleVisible="false"/>
       </template>
       <div v-else class="flex w-full justify-between px-6 flex-1 h-0" >
@@ -181,13 +181,16 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(courierStore,['courierDetailList','currentDetail']),
+    ...mapWritableState(courierStore,['orderList','currentDetail']),
     displayList(){
-      let list= this.courierDetailList.filter(item=>{
+      let list= this.orderList.filter(item=>{
         if(this.filterPlatform==='all'){
           return true
         }else{
-          console.log(item.store,this.filterPlatform,item.store===this.filterPlatform)
+          console.log(String(item.store),this.filterPlatform,item.store===this.filterPlatform)
+          if(!item.store){
+            item.store=''
+          }
           return item.store===this.filterPlatform
         }
       })
@@ -196,11 +199,11 @@ export default {
     },
     // 计算获取tab栏数据
     tabList(){
-      if(this.courierDetailList.length > 0){
+      if(this.orderList.length > 0){
         //至少有一个数据
         const list = courierType.map((item)=>{
           /*计算每个分类包含的数量*/
-          return selectTab(item,this.courierDetailList)
+          return selectTab(item,this.orderList)
         })
         return list
       }else{
@@ -221,7 +224,7 @@ export default {
     // 获取下拉菜单点击后的数据
     getSelectType(item){
       this.defaultFlow = item
-      this.detailList = selectData(item,this.courierDetailList)
+      this.detailList = selectData(item,this.orderList)
     },
 
     stateColor(item) {
@@ -266,7 +269,7 @@ export default {
   watch:{
     'defaultFlow':{
       handler(newVal){
-        this.detailList = selectData(newVal,this.courierDetailList)
+        this.detailList = selectData(newVal,this.orderList)
       },
       immediate:true
     }

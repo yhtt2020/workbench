@@ -20,7 +20,7 @@ const grab = {
     getOrder(callback, page = 1) {
       const url = 'https://buyertrade.taobao.com/trade/itemlist/list_bought_items.htm'
       tsbApi.web.openPreloadWindow({
-        background: false,
+        background: true,
         url: url,
         preload: appDirName + '/../appPreload/ecommerce/tb/order.js',
         callback: (data) => {
@@ -45,7 +45,7 @@ const grab = {
     },
     getOrder(callback, page = 1) {
       tsbApi.web.openPreloadWindow({
-        background: false,
+        background: true,
         url: 'https://order.jd.com/center/list.action' + '?page=' + page,
         preload: appDirName + '/../appPreload/ecommerce/jd/order.js',
         callback: (data) => {

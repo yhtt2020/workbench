@@ -18,7 +18,8 @@ export default {
     selectList:[
      { value:'all',title:'全部平台' },
      { value:'jd',title:'京东',alias:'JD',color:'#E12419'},
-     { value:'tb',title:'淘宝',alias:'淘',color:'#FA5000' }
+     { value:'tb',title:'淘宝',alias:'淘',color:'#FA5000' },
+      { value:'',title:'普快',alias:'普',color:'#0d6f09' }
     ],
     selectValue:'all'
    }

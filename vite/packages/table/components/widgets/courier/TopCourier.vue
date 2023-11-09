@@ -52,14 +52,14 @@
             <template v-else>
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                     style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                    <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
+                    <CourierItem v-for="(item, index) in orderList" :key="index" :courier="item"
                         @click="viewDeliveryDetails(item)" />
                 </vue-custom-scrollbar>
             </template>
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length>0"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && orderList.length>0"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <div class="flex items-center justify-between">
@@ -263,14 +263,14 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg', 'storeInfo']),
+        ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo']),
         ...mapWritableState(appStore, ['settings']),
         config(){
           return {
             jdOrder:this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
             tbOrder:this.storeInfo.tb.order && this.storeInfo.tb.order.orders !== undefined,
-            otherOrder:this.courierDetailList && this.courierDetailList !== undefined,
-            allLength:this.courierDetailList?.length !== undefined ? this.courierDetailList?.length : 0 ,
+            otherOrder:this.orderList && this.orderList !== undefined,
+            allLength:this.orderList?.length !== undefined ? this.orderList?.length : 0 ,
             jdLength:this.storeInfo?.jd?.order?.orders?.length !== undefined ? this.storeInfo?.jd?.order?.orders?.length : 0 ,
             tbLength:this.storeInfo?.tb?.order?.orders?.length !== undefined ? this.storeInfo?.tb?.order?.orders?.length : 0 ,
            }

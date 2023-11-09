@@ -33,20 +33,20 @@
         </div>
         <template v-else>
           <div v-if="showWay">
-            <MinEmpty v-if="courierDetailList.length === 0"/>
-            <MinCourierItem v-else :courier="courierDetailList[0]"
+            <MinEmpty v-if="displayList.length === 0"/>
+            <MinCourierItem v-else :courier="displayList[0]"
                             @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
             </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true"/>
+            <Empty v-if="displayList.length === 0" :exampleVisible="true"/>
             <template v-else>
-              <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
+              <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
                                     class="courier-item">
-                <div v-for="(item, index) in courierDetailList.slice(0,10)">
-                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
-                  <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
+                <div v-for="(item, index) in displayList" >
+                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
+                  <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
               </vue-custom-scrollbar>
@@ -69,7 +69,7 @@
         <teleport to='body'>
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
                     :isHeader="false" :boxIndex="100" :maskIndex="99">
-            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
+            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false;getDbCourier()"/>
             <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>
           </xt-modal>
         </teleport>
@@ -215,6 +215,7 @@ export default {
         client: false,
         offline: true
       },
+      displayList:[],//显示列表
       autoRefreshTime
     }
   },
@@ -222,6 +223,7 @@ export default {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers', 'saveJdOrders']),
     changeState () {
       this.allCourierVisible = false
+      this.getDbCourier()
     },
     refreshCourier () {
       this.refreshCouriers()
@@ -245,10 +247,10 @@ export default {
         this.courierShow = false
       }
     },
-    refreshAll () {
+    refreshAll (tip=true) {
       // 快递鸟快递信息更新
       this.refreshCouriers()
-      message.loading({
+      tip && message.loading({
         content: '正在为您更新京东商城订单',
         key: 'loadingTip',
         duration: 0
@@ -257,13 +259,16 @@ export default {
         //京东绑定了
         grab.jd.getOrder(async (args) => {
           if (args.status) {
-            message.loading({
+            tip &&  message.loading({
               content: '订单获取成功，正在为您更新订单详情',
               key: 'loadingTip',
               duration: 0
             })
+            await this.getOrderDetail(args.data.orders)
             let count = await this.saveJdOrders(args.data)
-            message.success({ content: '成功更新' + count + '个京东订单信息', key: 'loadingTip' })
+            tip &&  message.success({ content: '成功更新' + count + '个京东订单信息', key: 'loadingTip' })
+            await this.getDbCourier()
+            console.log('刷新一下本地记录')
           } else {
             notification.info({
               message: '京东账号已过期，点击重新绑定后再刷新。',
@@ -301,25 +306,27 @@ export default {
       //todo 刷新其他订单
     },
 
-    async getOrderDetail (orders) {
+    async getOrderDetail (orders,tip=true) {
 
+      let completed=0
       let promises = []
       for (const order of orders) {
-
-        if (order.status === '商品出库') {
+        if ((order.status === '商品出库' || order.latestNodes.length===0)&& order.status !== '订单取消') {
           //只检查等待收货的商品
           //仅检查未完成的订单
           let getProcess = new Promise((resolve, reject) => {
             grab.jd.getOrderDetail(order.detailUrl, ({ status, code, data }) => {
               if (status) {
-                console.log('成功获得订单详情', data)
+                completed++
                 order.detail = {}
                 order.detail.expressNo = data.expressNo
                 order.detail.traceNodes = data.traceNodes
                 order.detail.expressType = data.expressType
                 order.detail.updateTime = Date.now()
+
                 resolve(data)
               } else {
+                completed++
                 reject({
                   status, code
                 })
@@ -330,14 +337,21 @@ export default {
           promises.push(getProcess)
         }
       }
-      message.loading({
+      tip && message.loading({
         content: '共有' + promises.length + '个订单需要更新物流信息，' + '请稍候…',
         key: 'loadingTip',
         duration: 0
       })
 
-      await Promise.all(promises)
-      message.success({
+      console.log('要执行的promises=',promises)
+      let taskChunks=_.chunk(promises,5)
+      for(const chunk of taskChunks){
+        //切片并发5个
+        await Promise.allSettled(chunk)
+        console.log('执行完成一个块',chunk)
+      }
+
+      tip &&  message.success({
         content: '订单物流信息更新完成。',
         key: 'loadingTip',
         duration: 4
@@ -385,10 +399,11 @@ export default {
   },
   computed: {
     ...mapWritableState(courierStore, ['courierMsgList',
-      'courierDetailList',
+      'orderList',
       'couriersDetailMsg',
       'storeInfo', 'currentDetail']),
     ...mapWritableState(appStore, ['settings']),
+
     // 判断尺寸大小
     showSize () {
       if (this.customData && this.customData.width && this.customData.height) {
@@ -431,6 +446,16 @@ export default {
       return this.autoRefreshTime.filter((item) => {
         return item.value === this.settings.courierRefresh.autoTime
       })
+    }
+  },
+  watch:{
+    'orderList':{
+      handler(newVal){
+        console.log('发现变化',newVal)
+        this.displayList=[]
+        this.displayList=newVal.slice(0,10)
+      },
+      immediate:true
     }
   },
   async mounted () {
