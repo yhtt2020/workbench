@@ -1,10 +1,7 @@
 <template>
- <a-dropdown :trigger="['click']" placement="bottomRight">
+ <a-dropdown :trigger="['hover']" placement="bottomRight">
   <a-tooltip placement="top" :class="mClass" title="添加">
-   <!-- <template #title>
-     <span class="xt-text-2">添加</span>
-   </template> -->
-   <xt-button w="32" h="32" :class="dropClass" style="border-radius: 8px !important;">
+   <xt-button w="32" h="32" :class="dropClass" style="border-radius: 8px !important;" @click="openAddModal">
      <div class="flex items-center justify-center">
       <DropIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
      </div>
@@ -13,7 +10,6 @@
   
   <template #overlay>
    <a-menu class="flex flex-col xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
-    <!--  @click="selectNav(item)" -->
     <a-menu-item v-for="item in navList" class="flex flex-col w-full rounded-lg xt-text nav-item"
      @click.prevent="item.callBack"
     >
@@ -88,10 +84,6 @@ export default {
  
 
  methods:{
-  // selectNav(item){
-  //  this.$emit("update:selectType",item)
-  // }
-
   toJdRelevance(){
    this.dropType = 'jd'
    this.$refs.dropModalRef.openDealDetail()
@@ -99,6 +91,9 @@ export default {
   toTbRelevance(){
    this.dropType = 'tb'
    this.$refs.dropModalRef.openDealDetail()
+  },
+  openAddModal(){
+    this.$emit('open')
   }
  }
 }

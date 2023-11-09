@@ -6,11 +6,14 @@
    </div>
   </xt-button>
   <template #overlay>
-   <a-menu class="flex flex-col xt-bg-2 items-center justify-center" style="width: 140px;border-radius: 8px; padding: 8px;">
-    <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col items-center justify-center"
-     @click="selectNav(item)"
+   <a-menu class="xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
+    <a-menu-item v-for="item in navList" class="flex xt-text w-full nav-item rounded-lg flex-col"
+     @click="item.callBack"
     >
-     {{ item.title }}
+      <div class="flex items-center">
+        <DropIcon :icon="item.icon" style="font-size: 1.25rem;color: var(--secondary-text);"/>
+        <span class="ml-3 font-16 xt-font font-400" :style="{color:`${item.color}`}">{{ item.title }}</span>
+      </div>
     </a-menu-item>
    </a-menu>
   </template>
@@ -36,12 +39,6 @@ export default {
  components:{
   DropIcon
  },
-
- methods:{
-  selectNav(item){
-   this.$emit("selectType",item)
-  }
- }
 }
 </script>
 
@@ -51,5 +48,4 @@ export default {
    background: var(--active-secondary-bg) !important;
   }
 }
-
 </style>
