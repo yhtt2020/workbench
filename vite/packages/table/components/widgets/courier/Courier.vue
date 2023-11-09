@@ -70,7 +70,7 @@
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
                     :isHeader="false" :boxIndex="100" :maskIndex="99">
             <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
-            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers"/>
+            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>
           </xt-modal>
         </teleport>
       </div>
@@ -206,7 +206,6 @@ export default {
       allCourierVisible: false,
       courierShow: true,
       deliveryDetails: [],
-      orderNum: [],
       showCourierDetail: false,
       showSmallDetail: false,
       largeDetailVisible: true,
@@ -228,10 +227,9 @@ export default {
       this.refreshCouriers()
     },
     viewDeliveryDetails (item) {
+      this.currentDetail = item
       this.showCourierDetail = true
-      this.orderNum = item
-      this.viewCourierDetail = item
-      // console.log(this.orderNum);
+      // console.log(this.currentDetail);
     },
     closeCourierDetail () {
       this.showCourierDetail = false
@@ -389,7 +387,7 @@ export default {
     ...mapWritableState(courierStore, ['courierMsgList',
       'courierDetailList',
       'couriersDetailMsg',
-      'storeInfo', 'viewCourierDetail']),
+      'storeInfo', 'currentDetail']),
     ...mapWritableState(appStore, ['settings']),
     // 判断尺寸大小
     showSize () {

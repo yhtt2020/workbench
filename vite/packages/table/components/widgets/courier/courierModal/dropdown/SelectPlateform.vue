@@ -20,8 +20,16 @@ export default {
      { value:'jd',title:'京东',alias:'JD',color:'#E12419'},
      { value:'tb',title:'淘宝',alias:'淘',color:'#FA5000' }
     ],
-    selectValue:{ value:'all',title:'全部平台' },
+    selectValue:'all'
    }
+  },
+  watch:{
+    selectValue:{
+      handler(newVal){
+        this.$emit('changePlatform',newVal)
+      },
+      immediate:true
+    }
   }
 }
 </script>

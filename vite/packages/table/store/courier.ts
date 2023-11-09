@@ -24,6 +24,7 @@ export const courierStore = defineStore("courier", {
         }
       }
     },
+    currentDetail:{},//当前定位到的详情订单
     courierDetailList: [],
     // 大尺寸下查看内容详情，传递快递单号
     viewCourierDetail: ''
@@ -39,19 +40,32 @@ export const courierStore = defineStore("courier", {
       }
       // console.log('查看option',option);
       let response = await post(kdniao, option)
+      console.log('添加数据',response)
       // console.log('查看报错信息',response);
-      const dbData = {
-        _id: `courier:${Date.now()}`,
-        content: response,
-        category: `courier:${Date.now()}`,
-        createTime: Date.now(),
-        updateTime: Date.now()
+      if(response.Success){
+        //更详细的监测
+        let now=Date.now()
+        const dbData = {
+          _id: `courier:${now}`,
+          content: response,
+          title:response.LogisticCode.slice(0, 4)+'-'+response.LogisticCode.slice(0, 4).slice(-4),
+          category: `courier:${now}`,
+          createTime: now,
+          updateTime: now
+        }
+        // console.log('查看db存储的数据',dbData);
+        let rs = await tsbApi.db.put(dbData)
+        console.log('添加结果',rs)
+        if(rs.ok){
+          return rs.docs
+        }else{
+          this.getDbCourier();
+          return false
+        }
+
       }
-      // console.log('查看db存储的数据',dbData);
-      await tsbApi.db.put(dbData)
       // const res  = await tsbApi.db.put(dbData)
       // console.log('查看结果',res);
-      this.getDbCourier();
     },
 
     // 获取db中存储的快递数据
@@ -66,29 +80,25 @@ export const courierStore = defineStore("courier", {
       const contentList = docList.map((item: any) => {
         return item
       })
-      const filterList = contentList.filter((item: any) => {
+      let  filterList = contentList.filter((item: any) => {
         // console.log('查看',item.Traces.length);
         // if(item.Traces.length !== 0){
         //   return item
         // }
         return item
       })
+      filterList=filterList.sort((item1,item2)=>{
+        return item2.createTime-item1.createTime
+      })
       // console.log('获取列表中的doc',filterList);
       this.courierDetailList = filterList
     },
 
     // 删除db中存储的数据
-    async removeDbData(index: any) {
+    async removeDbData(item) {
       // console.log('查看下标::>>',index);
-      const getResult = await tsbApi.db.allDocs('courier:')
-      const rowList = getResult.rows
-      // 将getResult.rows列表的doc进行解构
-      const docList = rowList.map((item: any) => {
-        return item.doc
-      })
-      // console.log('查看需要删除的doc', docList[index]);
 
-      const res = await tsbApi.db.remove(docList[index])
+      const res = await tsbApi.db.remove(item)
       // console.log('查看删除结果',res);
       this.getDbCourier()
     },
@@ -148,6 +158,8 @@ export const courierStore = defineStore("courier", {
         }
         console.log(data,'要更新')
        return  await tsbApi.db.put(data); // 更新文档
+      }else{
+        return false
       }
     },
 
@@ -169,6 +181,7 @@ export const courierStore = defineStore("courier", {
       let updateCount = 0
 
       if (orderInfo.orders) {
+        orderInfo.orders=orderInfo.orders.reverse()
         for (const order of orderInfo.orders) {
           let found = await tsbApi.db.find({
             selector: {
@@ -237,7 +250,7 @@ export const courierStore = defineStore("courier", {
     strategies: [
       {
         storage: dbStorage,
-        paths: ['courierMsgList', 'storeInfo'],
+        paths: ['courierMsgList', 'storeInfo','currentDetail'],
       }
     ]
   }

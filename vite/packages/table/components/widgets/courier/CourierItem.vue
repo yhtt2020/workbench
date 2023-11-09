@@ -73,7 +73,7 @@ import { kdCompany, kdState, switchColor } from './mock'
 import { courierStore } from '../../../store/courier.ts'
 import { appStore } from '../../../store';
 import {autoCancelTime} from './courierModal/modalMock'
-import Cover from './Cover.vue'
+import Cover from './component/Cover.vue'
 const props = defineProps({
     courier: Object,
     itemIndex: Number
@@ -115,7 +115,7 @@ const orderDetail=ref({})
 const courierTitle = computed(() => {
 
     const orderNum = props.courier?.LogisticCode
-    const changCode = props.title  //`${orderNum.slice(0, 4)}-${orderNum.slice(-4)}`
+    const changCode = props.title  //`${currentDetail.slice(0, 4)}-${currentDetail.slice(-4)}`
     return changCode
 })
 

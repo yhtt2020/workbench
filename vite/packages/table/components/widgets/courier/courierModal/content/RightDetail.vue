@@ -1,27 +1,37 @@
 <template>
-  <div class="w-full flex flex-col" v-if="emptyObj">
+  <div class="w-full flex flex-col h-full" v-if="emptyObj">
     <UpdateIcon :orderData="detail"/>
 
     <!--  商品订单详情  -->
     <template v-if="detail.store">
       <div class="flex flex-col xt-bg-2 px-3 mb-4 py-2.5 rounded-md">
         <div class="flex justify-between w-full">
-          <span class="summary xt-text font-14 font-400"
-                style="max-width: 335px;">IKEA宜家弗瑞顿转角沙发床带储物坐卧两用客厅简约</span>
-          <span class="xt-font font-16 font-600 xt-text">￥2810</span>
+          <span class=" xt-text font-14 font-400"
+                style="max-width: 100%;">{{ detail.title }}</span>
+<!--          <span class="xt-font font-16 font-600 xt-text">￥2810</span>-->
         </div>
-        <div class="flex justify-between w-full my-1.5">
-          <span class="xt-text-2 font-14 font-400">弗瑞顿 深灰色 惠力尔沙发 2米以上</span>
-          <span class="xt-text-2 font-14 font-400">x1</span>
+        <div v-if="detailVisible" v-for="item in content.items" class="flex justify-between w-full my-1.5">
+          <div class="flex">
+            <div class="mr-1">
+              <a-avatar  shape="square" :src="item.cover"></a-avatar>
+            </div>
+            <div class="flex-1 " style="width:340px">
+              <div class="xt-text-2 font-14   font-400   " >{{ item.name }}</div>
+            </div>
+            <div class="ml-1">
+              <span class="xt-text-2 font-14 font-400">{{ item.num }}</span>
+            </div>
+          </div>
+
         </div>
         <template v-if="detailVisible">
           <div class="flex justify-between w-full my-1.5">
-            <span class="xt-text-2 font-14 font-400">下单时间：2023-10-31 20:00:23</span>
-            <span class="xt-text-2 font-14 font-400">xxxx(收)</span>
+            <span class="xt-text-2 font-14 font-400">下单时间：{{ content.dealtime }}</span>
+<!--            <span class="xt-text-2 font-14 font-400">{{  }}(收)</span>-->
           </div>
           <div class="flex w-full">
         <span class="xt-text-2 font-14 font-400">
-          订单编号：{{ orderNum }}
+          订单编号：{{ content?.id }}
         </span>
             <div class="flex items-center pointer justify-center" @click="copyOrderNum">
               <DetailIcon icon="fluent:copy-16-regular" class="xt-text-2" style="font-size: 1.25rem;"/>
@@ -50,19 +60,32 @@
         </template>
       </div>
     </template>
-    <div class="px-4 rounded-lg xt-bg-2" :style="detailVisible ? {height:'245px'} :{height:'310px'}">
-      <template v-if="detail?.Traces.length === 0">
-        <EmptyModal/>
+    <div class="px-4 rounded-lg xt-bg-2 flex-1 h-0">
+      <template v-if="!detail.store">
+        <template v-if="content?.Traces.length === 0">
+          <EmptyModal/>
+        </template>
+        <vue-custom-scrollbar class="h-full" :settings="settingsScroller"
+                              v-else>
+          <TimeLine :list="content?.Traces"/>
+        </vue-custom-scrollbar>
       </template>
-      <vue-custom-scrollbar :settings="settingsScroller" :style="detailVisible ? {height:'228px'} :{height:'291px'}"
-                            v-else>
-        <div class="flex items-center justify-center">
-          <div class="px-1.5 py-0.5 my-4 font-14 font-400 rounded-md xt-bg" style="color:var(--active-bg);">
-            预计11月4日15:00-19:00到达
+      <template v-if="detail.store==='jd'">
+        <template v-if="traces.length === 0">
+          <EmptyModal/>
+        </template>
+        <vue-custom-scrollbar class="h-full" :settings="settingsScroller"
+                              v-else>
+          <div v-if="content.arrivalAt" class="flex items-center justify-center">
+            <div class="px-1.5 py-0.5 my-4 font-14 font-400 rounded-md xt-bg" style="color:var(--active-bg);">
+              {{ content.arrivalAt }}
+            </div>
           </div>
-        </div>
-        <TimeLine :list="detail?.Traces"/>
-      </vue-custom-scrollbar>
+          <TimeLine :list="traces"/>
+        </vue-custom-scrollbar>
+      </template>
+
+
     </div>
   </div>
 </template>
@@ -85,6 +108,7 @@ export default {
 
   data () {
     return {
+      content: {},
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -92,8 +116,9 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      orderNum: '2325336804199588681',
+      orderNum: '',
       detailVisible: false,
+      traces:[]
     }
   },
 
@@ -102,8 +127,36 @@ export default {
       return Object.keys(this.detail).length !== 0
     }
   },
+  mounted () {
 
+
+  },
+  watch:{
+    'detail':{
+      handler(){
+        if(this.detail.id){
+          this.refreshData()
+        }
+      },
+    }
+  },
   methods: {
+    refreshData(){
+      this.orderNum=this.detail.orderId
+      this.content = this.detail.content
+      if(this.detail.store==='jd'){
+        this.traces=[]
+        for(const t of this.content.latestNodes){
+
+          this.traces.push({
+            AcceptTime:t.time,
+            AcceptStation:t.txt
+          })
+        }
+      }
+
+      console.log('刷新一下数据',this.traces)
+    },
     // 复制订单号
     async copyOrderNum () {
       const { toClipboard } = useClipboard()

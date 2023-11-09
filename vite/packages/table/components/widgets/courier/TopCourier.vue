@@ -202,7 +202,7 @@ export default {
             this.showCourierDetail = true
             this.orderNum = item
             this.topCourierVisible = false
-            // console.log(this.orderNum)
+            // console.log(this.currentDetail)
         },
         closeCourierDetail() {
             this.showCourierDetail = false
@@ -275,7 +275,7 @@ export default {
             tbLength:this.storeInfo?.tb?.order?.orders?.length !== undefined ? this.storeInfo?.tb?.order?.orders?.length : 0 ,
            }
         },
-        filterType() {         
+        filterType() {
             if(this.config.jdOrder || this.config.tbOrder || this.config.otherOrder){
                 const list = [...this.typeList]
                 const filterList = list.map((item) => {

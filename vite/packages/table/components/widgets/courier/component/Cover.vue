@@ -6,7 +6,8 @@ export default defineComponent({
   components:{newIcon},
   props: [
     'cover',
-    'store'
+    'store',
+    'bg'
   ]
 })
 </script>
@@ -16,7 +17,7 @@ export default defineComponent({
     <a-avatar  :size="50"  shape="square" :src="cover"></a-avatar>
   </div>
 
-  <div v-else class="w-[52px] h-[52px] rounded-xl xt-bg-2 flex justify-center items-center pointer">
+  <div v-else class="w-[52px] h-[52px] rounded-xl  flex justify-center items-center pointer" :class="{'xt-bg-2':!bg}" :style="{background:bg}">
     <newIcon icon="fluent-emoji:package" style="font-size: 32px;text-align: center;"></newIcon>
   </div>
 
