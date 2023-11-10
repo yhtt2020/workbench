@@ -87,7 +87,7 @@ import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
-
+import taskStore from '../page/app/todo/stores/task'
 export default {
   name: 'Code',
   components: { RayMedal },
@@ -124,6 +124,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
+    this.initStore(taskStore, 'taskStore')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入

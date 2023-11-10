@@ -76,7 +76,6 @@
 import Widget from '../../card/Widget.vue'
 import {mapActions, mapWritableState} from 'pinia'
 import Tasklist from './TaskList.vue'
-import {databaseStore, listStore, taskStore} from "../../../page/app/todo/store";
 import {PlusOutlined, LeftOutlined,RightOutlined} from "@ant-design/icons-vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import Modal from "../../Modal.vue";
@@ -84,6 +83,8 @@ import TaskInput from "../../../page/app/todo/components/TaskInput.vue";
 import {Tippy} from "vue-tippy";
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
+import {taskStore} from "../../../page/app/todo/stores/task";
+import {listStore} from "../../../page/app/todo/stores/list";
 export default {
   name: 'Todo',
   components: {
@@ -150,10 +151,10 @@ export default {
   },
   async mounted() {
     //初始化数据
-    await databaseStore().init();
-    databaseStore().$subscribe(() => {
-      databaseStore().save();
-    });
+    // await databaseStore().init();
+    // databaseStore().$subscribe(() => {
+    //   databaseStore().save();
+    // });
     // if (this.customData?.id) {
     //   this.todoIndex = this.customData.id
     // }

@@ -69,3 +69,5 @@ export const  listStore=defineStore('list',{
         ],
     }
 })
+
+export default listStore

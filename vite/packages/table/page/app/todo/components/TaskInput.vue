@@ -14,14 +14,16 @@
 
 <script lang="ts">
 import dayjs from "dayjs";
-import {mapActions, mapState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {taskStore} from "../stores/task";
 import {CalendarOutlined} from "@ant-design/icons-vue";
 import objectSupport from "dayjs/plugin/objectSupport";
 import TimerSelector from "./TimerSelector.vue";
-import {configStore, listStore} from "../store";
+import listStore from "../stores/list";
+import configStore from "../stores/config";
 // import { completeTask } from "../apps/task/page/branch/task"
  import { completeTask } from "../../../../apps/task/page/branch/task.ts"
+import {message} from "ant-design-vue";
 
 dayjs.locale("zh-cn");
 dayjs.extend(objectSupport);
@@ -34,9 +36,9 @@ export default {
   emits: ['added'],
   props: ['addToList'],
   computed: {
-    ...mapState(taskStore, ["currentTasks", "tasks"]),
-    ...mapState(listStore, ["activeList"]),
-    ...mapState(configStore, ["runtime"]),
+    ...mapWritableState(taskStore, ["currentTasks", "tasks"]),
+    ...mapWritableState(listStore, ["activeList"]),
+    ...mapWritableState(configStore, ["runtime"]),
     currentList() {
       if (this.addToList && !['T00111', 'T00222', 'T00333'].includes(this.addToList.nanoid)) {
         return this.addToList
@@ -85,15 +87,25 @@ export default {
       }else{
         task.listNanoid=[]
       }
+      if(this.newTask.title.trim()===''){
+        message.error('请输入待办内容')
+        return
+      }
       // 支线任务点
       completeTask('Z0203')
 
       task = Object.assign(this.newTask, {});
-      this.addTask(task);
-      this.newTask.title = "";
-      this.newTask.deadTime = null;
-      this.newTask.listNanoid = [];
-      this.$emit('added')
+      console.log('添加的任务',task)
+      let rs= this.addTask(task);
+      if(rs){
+        this.newTask.title = "";
+        this.newTask.deadTime = null;
+        this.newTask.listNanoid = [];
+        this.$emit('added')
+      }else{
+        message.error('数据库写入失败')
+      }
+
     },
   },
 };
