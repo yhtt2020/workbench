@@ -54,7 +54,7 @@
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
-                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 24px">
                 <div class="flex items-center justify-center">
                     <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
                         icon="fluent:add-16-filled" />
