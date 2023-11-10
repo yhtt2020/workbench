@@ -38,30 +38,29 @@
         </a-result>
       </div>
     </div>
-    <!-- <xt-demo6></xt-demo6> -->
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
       @contextmenu="showMenu"
     >
       <!-- 自由布局滚动 -->
-      <FreeLayoutScrollbar
+      <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
-        ref="freeLayoutScrollbar"
       >
-        <!-- 自由布局画布 -->
-        <FreeLayoutContainer :currentDesk="currentDesk">
-          <!-- 可拖拽元素 -->
-          <template #box="{ data }">
-            <component
-              :desk="currentDesk"
-              :is="data?.data.name"
-              :customIndex="data?.data.id"
-              :customData="data?.data.customData"
-            />
-          </template>
-          <!-- 鼠标跟随元素 -->
-          <!-- <template #preview="{ data }">
+        <FreeLayoutScrollbar ref="freeLayoutScrollbar">
+          <!-- 自由布局画布 -->
+          <FreeLayoutContainer :currentDesk="currentDesk">
+            <!-- 可拖拽元素 -->
+            <template #box="{ data }">
+              <component
+                :desk="currentDesk"
+                :is="data?.data.name"
+                :customIndex="data?.data.id"
+                :customData="data?.data.customData"
+              />
+            </template>
+            <!-- 鼠标跟随元素 -->
+            <!-- <template #preview="{ data }">
             <component
               :desk="currentDesk"
               :is="data?.data.name"
@@ -69,9 +68,9 @@
               :customData="data?.data.customData"
             />
           </template> -->
-        </FreeLayoutContainer>
-      </FreeLayoutScrollbar>
-
+          </FreeLayoutContainer>
+        </FreeLayoutScrollbar>
+      </FreeLayoutMask>
       <vue-custom-scrollbar
         class="no-drag"
         key="scrollbar"

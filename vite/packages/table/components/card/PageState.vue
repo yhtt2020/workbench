@@ -22,8 +22,6 @@ const props = defineProps({
     default:{},
   },
 })
-onMounted(()=>{
-})
 
 const isShow = computed(() => {
   return props.env[window.$currentEnv] || (props.env.offline && window.$isOffline)
@@ -39,7 +37,7 @@ const platform = computed(()=>{
   }else if(props.env[window.$currentEnv] && window.$currentEnv=='client'){
     return '客户端'
   }
-  return 
+  return
 })
 
 </script>

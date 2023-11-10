@@ -38,6 +38,12 @@ const windowApi = {
   setBounds(bounds){
     send('setBounds',bounds)
   },
+  setFocusable(flag){
+    send('setFocusable',flag)
+  },
+  async isFocusable () {
+    return await sendSync('isFocusable',)
+  },
   setFullScreen(flag){
     send('setFullScreen',flag)
   },
