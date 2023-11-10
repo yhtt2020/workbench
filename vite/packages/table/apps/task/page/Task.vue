@@ -9,7 +9,7 @@
     @closeMessage="task.isTaskDrawer = false"
   >
     <div class="xt-modal flex py-3" style="width: 500px; height: 100%">
-      <xt-left-menu :list="menus" last="5" model="id" />
+      <xt-left-menu :list="menusList" :last="Offline.isOffline?3:4" model="id" />
       <div class="w-full xt-scrollbar xt-text">
         <Primary v-if="currentTask == 'Primary'" />
         <Branch
@@ -20,13 +20,14 @@
         />
         <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'" />
+
       </div>
     </div>
   </a-drawer>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { taskStore } from "../store";
 import { offlineStore } from "../../../js/common/offline";
 import Primary from "./primary/index.vue";
@@ -38,7 +39,7 @@ let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
 const store = taskStore();
-const isOffline = offlineStore().isOffline
+let Offline = offlineStore()
 // 切换任务
 const selectTab = (item) => {
   currentTask.value = item.value;
@@ -50,10 +51,14 @@ const selectBranchTab = (item) => {
   task.value = tasks[item.value];
 };
 const menusList = computed(()=>{
-  if (isOffline) {
-    return menus.splice(3,2)
-  }else{
-    return menus
+  if (Offline.isOffline) {
+    let tmp = ref([])
+    tmp.value = menus.value.filter(i=>{
+      return i.value!='chats' && i.value!='Activity'
+    })
+    return tmp.value
+  }else{ 
+    return menus.value
   }
 }) 
 // 任务配置
@@ -89,12 +94,12 @@ let menus = ref([
     value: "chats",
     callBack: selectBranchTab,
   },
-  {
-    newIcon: "fluent-emoji:rainbow",
-    value: "Activity",
-    title: "活动任务",
-    callBack: selectTab,
-  },
+  // {
+  //   newIcon: "fluent-emoji:rainbow",
+  //   value: "Activity",
+  //   title: "活动任务",
+  //   callBack: selectTab,
+  // },
   {
     icon: "shezhi1",
     value: "Set",
