@@ -1,59 +1,71 @@
 <template>
     <div class="w-full ">
         <reply @addComment="getReplyText"/>
-        <div class="mb-4 font-14 xt-text">
+        <div class="mb-4 text-sm xt-text">
             评论 {{ props.reply }}
         </div>
-        <MainReplyComment :commentList="item" v-for="(item, index) in commentList.list" :key="index" :uid="props.uid"></MainReplyComment>
-        <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible" class="xt-text-2"/>
+        <MainReplyComment :commentList="item" v-for="(item, index) in commentList" :key="index" :uid="props.uid"></MainReplyComment>
+        <xt-button class="check-more" @click="loadingMoreComments" v-if="props.reply > commentList.length">查看更多评论</xt-button>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted,watch,onUnmounted } from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './Reply.vue'
 import {useCommunityStore} from '../commun'
-const current = ref(1)
-const changePage=(val)=>{
-    current.value=val
-    store.getCommunityPostReply(store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id,val)
-}
-const totalReply=computed(()=>{
-    return props.reply
-})
-const paginationVisible=computed(()=>{
-    return totalReply.value>0?true:false
-})
+import _ from 'lodash_es'
 const store=useCommunityStore()
 const props=defineProps({
     tid:Number,
     reply:Number,
     uid:Number
 })
-const value = ref('')
+const commentsList=ref([])
+const current = ref(1)
+const loadingMoreComments=async()=>{
+    // let val=1
+    let tid=store.communityPostDetail.pay_set.tid?store.communityPostDetail.pay_set.tid:store.communityPostDetail.id
+    current.value++
+    await store.getCommunityPostReply(tid,current.value)
+    commentsList.value.push(commentList.value)
+    console.log(commentsList.value,'loadingMoreComments')
+    
+    
+}
 // 评论内容列表
 const commentList = computed(()=>{
-    return store.communityReply
+    return store.communityReply.list
 })
-
+onMounted(()=>{
+    commentsList.value.push(commentList.value)
+    console.log(commentsList.value,'onmounted')
+})
 const getReplyText=(val)=>{
-    // console.log(val);
     commentList.value=val.value
-    // console.log('com',commentList);
-    // console.log('comstore',store.communityReply);
-
 }
-
+// watch(commentList,(val)=>{
+//     console.log(val,'watch--val')
+//     commentsList.value.push(val)
+//     console.log(commentsList.value,'watch')
+// })
+onUnmounted(()=>{
+    console.log(commentsList.value,'onUnmounted')
+    commentsList.value=[]
+})
+// const loadingMoreComment=computed(()=>{
+//     if(commentList.value.list && commentList.value.list.length>10){
+//         return true
+//     }else{
+//         return false
+//     }
+// })
 </script>
 <style lang='scss' scoped>
-.font-14 {
-    font-size: 14px;
-    font-weight: 400;
-}
-
-.btn {
-    border: none;
+.check-more{
+    margin: 10px auto;
+    background-color: transparent;
+    color: var(--active-bg) !important;
 }
 
 :deep(.ant-input) {
@@ -64,17 +76,11 @@ const getReplyText=(val)=>{
         // margin-left: 3px;
     }
 }
-:deep(.ant-pagination){
-    text-align: center;
-}
+// :deep(.ant-pagination){
+//     text-align: center;
+// }
 
-:deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link){
-    color: var(--secondary-text) !important;
-}
-.input-btm {
-    :deep(.ant-button) {
-        color: var(--secondary-text) !important;
-        text-align: center;
-    }
-}
+// :deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link){
+//     color: var(--secondary-text) !important;
+// }
 </style>

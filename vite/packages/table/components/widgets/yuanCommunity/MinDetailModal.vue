@@ -1,5 +1,5 @@
 <template>
-    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" @close="closeDetail"
         :esc="true">
         <div class="w-[600px] h-[700px] maxDetail " :style="{ width: isFullScreen ? `${windoWidth}px` : '600px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
             <div class="w-full pl-4 pr-4 card-content">
@@ -8,37 +8,47 @@
                     <div class="flex items-center">
                         <a-tooltip title="前往元社区" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="fluent:chat-16-regular" />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon"  icon="fluent:chat-16-regular" />
+                                </div>
+                                
                             </xt-button>
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="fullScreen" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="fluent:full-screen-maximize-16-filled"  v-if="!isFullScreen" />
-                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="fluent:full-screen-minimize-16-filled"  v-else />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-maximize-16-filled"  v-if="!isFullScreen" />
+                                    <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-minimize-16-filled"  v-else />
+                                </div>
+                                
                             </xt-button>
                             
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="refresh" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="akar-icons:arrow-clockwise"  />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="akar-icons:arrow-clockwise"  />
+                                </div>
+                                
                             </xt-button>
                             
                         </a-tooltip>
                         <a-tooltip title="外部打开" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="goYuan" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="majesticons:open"
-                                 />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="majesticons:open"/>
+                                </div>
+                                
                             </xt-button>
                             
                         </a-tooltip>
                         <a-divider class="w-[3px]  " type="vertical" style="color: var(--divider);" />
                         <a-tooltip title="关闭" placement="bottom" >
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="closeDetail" >
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:cross"
-                                 />
+                                <div class="flex items-center juscify-center">
+                                     <Icon class=" xt-text pointer active-icon"  icon="akar-icons:cross"/>
+                                </div>
+                               
                             </xt-button>
                             
                         </a-tooltip>
@@ -62,8 +72,8 @@
                                         {{ cardData.user.nickname }}
                                     </div>
                                     <div class="self-msg " style="color:  var(--secondary-text);font-size: 12px;">
-                                        <span class="date">{{ createTime[0] }}</span>
-                                        <span class="time">{{ createTime[1] }}</span>
+                                        <span class="mr-1 date">{{ createTime[0] }}</span>
+                                        <span class="mr-1 time">{{ createTime[1] }}</span>
                                         <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
                                     </div>
                                 </div>
@@ -118,36 +128,39 @@
 
                         </div>
                         <div class="mt-4 text-xs card-bottom" style="color:  var(--secondary-text);">
-                            <span class="view" style="cursor: pointer; margin-right: 4px;">{{ cardData.view_count }}
-                                浏览</span>
-                            <span class="like" style="cursor: pointer; margin-right: 4px;">{{ cardData.support_count }}
-                                点赞</span>
+                            <span class="view" >{{ cardData.view_count }}  浏览</span>
+                            <span class="view" >{{ cardData.support_count }} 点赞</span>
                             <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                         </div>
                         <a-divider class="w-full h-[2px] " type="vertical" style="color: var(--divider);" />
                         <div class="mt-4">
                             <div class="flex mb-4">
                                 <!-- {{ store.communityCollect.info }} -->
-                                <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
+                                <!-- <div class="flex items-center " style="cursor: pointer;" > -->
                                     <!-- <div class="item-content"> -->
-                                    <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
+                                    <xt-button class="pl-5 mr-3 reply xt-text" @click="clickLike"
                                         :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
                                         style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                        <img src="../../../../../public/icons/like.png" alt=""
-                                            class="w-[20px] h-[20px] -ml-6">
-                                        {{ cardData.support_count }}</xt-button>
+                                        <div class="flex items-center justify-center">
+                                           <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] mr-1">
+                                        {{ cardData.support_count }} 
+                                        </div>
+                                        
+                                    </xt-button>
                                     <!-- </div> -->
 
 
-                                </div>
-                                <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
-                                    <xt-button class="flex items-center justify-center pl-5 reply xt-text"
+                                <!-- </div> -->
+                                <!-- <div class="flex items-center " style="cursor: pointer;" > -->
+                                    <xt-button class="pl-5 reply xt-text" @click="clickCollect"
                                         :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
                                         style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                        <img src="../../../../../public/icons/collect.png" alt=""
-                                            class="w-[20px] h-[20px] -ml-6 mr-1">
-                                        {{ cardData.collect_count }}</xt-button>
-                                </div>
+                                        <div class="flex items-center justify-center">
+                                            <img src="../../../../../public/icons/collect.png" alt=""  class="w-[20px] h-[20px] mr-1">
+                                            {{ cardData.collect_count }}
+                                        </div>
+                                        </xt-button>
+                                <!-- </div> -->
                             </div>
                             <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
                         </div>
@@ -371,9 +384,9 @@ watch(() => window.innerWidth, (newVal) => {
         }
     }
 
-    .reply {
-        border-radius: 8px;
-    }
+    // .reply {
+    //     border-radius: 8px;
+    // }
 
     .title {
         font-size: 16px;
@@ -398,30 +411,22 @@ watch(() => window.innerWidth, (newVal) => {
         }
     }
 
-    .card-bottom {
-        margin-top: 12px;
-
-        .view::after {
-            content: '·';
-            margin-left: 5px;
-            margin-right: 5px;
-
-        }
-
-        .like::after {
-            content: '·';
-            margin-left: 5px;
-            margin-right: 5px;
-        }
-    }
 
 }
 
 .active-icon {
     background: transparent;
-
+    font-size: 20px;
     &:hover {
         background: var(--secondary-bg);
     }
+}
+.view{
+     cursor: pointer;
+     &::after {
+     content: '·';
+     margin-left: 5px;
+     margin-right: 5px;
+     }
 }
 </style>
