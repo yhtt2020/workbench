@@ -29,16 +29,20 @@
 
 
                 <div class="flex items-center">
-                    <xt-button class="flex items-center justify-center border-0 rounded-md xt-bg-2 pointer"
+                    <xt-button class="border-0 rounded-md xt-bg-2 pointer"
                         @click="handleFullScreen" style="width: 40px;height: 40px; flex-shrink: 0;">
-                        <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen"
-                            class="mt-1 text-xl text-center xt-text pointer"></newIcon>
-                        <newIcon icon="fluent:full-screen-minimize-16-filled" v-else
-                            class="mt-1 text-xl text-center xt-text pointer"></newIcon>
+                        <div class="flex items-center justify-center">
+                            <newIcon icon="fluent:full-screen-maximize-16-filled" v-if="!fullScreen" class="text-xl text-center xt-text pointer"></newIcon>
+                            <newIcon icon="fluent:full-screen-minimize-16-filled" v-else class="text-xl text-center xt-text pointer"></newIcon>
+                        </div>
+                        
                     </xt-button>
-                    <xt-button class="flex items-center justify-center ml-2 border-0 rounded-md xt-bg-2 pointer"
+                    <xt-button class="ml-2 border-0 rounded-md xt-bg-2 pointer"
                         @click="handleOk" style="width: 40px;height: 40px;flex-shrink: 0;">
-                        <newIcon class="mt-1 text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                        <div class="flex items-center justify-center">
+                            <newIcon class="text-xl text-center xt-text pointer" icon="akar-icons:cross" />
+                        </div>
+                        
                     </xt-button>
                 </div>
 
@@ -108,17 +112,21 @@
                             <!-- <button>表情</button> -->
                             <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
                                 style="color: var(--secondary-text) !important;">
-                                <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
-                                表情
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                                    表情
+                                </div>
+                                
                             </xt-button>
                         </tippy>
                         <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
                             <xt-button type="text" :w="72" :h="32" class="xt-text" v-if="defaultType.value !== 'video'"
                                 style="color: var(--secondary-text) !important;">
-                                <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
-                                图片
+                                <div class="flex items-center justify-center">
+                                   <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                                    图片 
+                                </div>
+                                
                             </xt-button>
                         </a-upload>
                         <div v-if="defaultType.value == 'post'">
@@ -126,16 +134,21 @@
                                 v-show="coverList.length === 0">
                                 <xt-button type="text" :w="118" :h="32" class="xt-text"
                                     style="color: var(--secondary-text) !important;">
-                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
-                                        style="vertical-align: sub;margin-right: 4px;" />
-                                    设置封面
+                                    <div class="flex items-center justify-center">
+                                       <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" />
+                                    设置封面 
+                                    </div>
+                                    
                                 </xt-button>
                             </a-upload>
                             <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
                                 @click="removeCover" style="color: var(--secondary-text) !important;">
-                                <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                    style="margin-right: 4px;" />
                                 移除封面
+                                </div>
                             </xt-button>
                         </div>
 
@@ -149,8 +162,6 @@
                     <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
                 </div>
                 <div class="flex items-center justify-between h-[56px] ">
-                    <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
                     <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
                         @change="handleChange"
                         style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
@@ -163,10 +174,10 @@
                     </a-select>
                     <div class="flex items-center">
                         <xt-button type="text" class=" xt-bg-2"
-                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85);width: 64px; height: 40px;"
+                            style="border-radius:10px ; width: 64px; height: 40px;"
                             @click="handleOk">取消</xt-button>
                         <xt-button type="primary" class="ml-2"
-                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
+                            style="border-radius:10px ; color:rgba(255,255,255,0.85) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
                             @click="publishPost">发布</xt-button>
                     </div>
                 </div>
@@ -452,6 +463,7 @@ const publishPost = async () => {
     color: var(--secondary-text);
     height: 40px;
     line-height: 40px;
+    text-align: center;
 }
 
 :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
@@ -466,29 +478,29 @@ const publishPost = async () => {
     font-size: 16px;
 }
 
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
-    // &::placeholder {
-    font-weight: 400;
-    font-size: 16px;
+// :deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
+//     // &::placeholder {
+//     font-weight: 400;
+//     font-size: 16px;
 
-    color: var(--secondary-text);
-    // }
-}
+//     color: var(--secondary-text);
+//     // }
+// }
 
-:deep(.ant-select-open) {
-    background: var(--primary-bg) !important;
-    color: var(--primary-text) !important;
-}
+// :deep(.ant-select-open) {
+//     background: var(--primary-bg) !important;
+//     color: var(--primary-text) !important;
+// }
 
-:deep(.ant-select-focused) {
-    background: var(--primary-bg) !important;
-    color: var(--primary-text) !important;
-}
+// :deep(.ant-select-focused) {
+//     background: var(--primary-bg) !important;
+//     color: var(--primary-text) !important;
+// }
 
-:deep(.ant-select-focused .ant-select-open) {
-    background: var(--primary-bg) !important;
-    color: var(--primary-text) !important;
-}
+// :deep(.ant-select-focused .ant-select-open) {
+//     background: var(--primary-bg) !important;
+//     color: var(--primary-text) !important;
+// }
 
 :deep(.ant-input) {
     color: var(--secondary-text);
