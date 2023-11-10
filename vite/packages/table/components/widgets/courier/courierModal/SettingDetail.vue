@@ -200,8 +200,12 @@ export default {
   watch: {
     defaultAuto(){
       this.settings.courierMatch=this.defaultAuto.name
-      // console.log(this.settings.courierMatch)
+      // console.log(this.defaultAuto)
     }
+  },
+  mounted() {
+    this.defaultAuto=this.autoCourier.filter(item=>item.name===this.settings.courierMatch)[0]
+    // console.log(temp)
   },
 }
 </script>
