@@ -44,18 +44,15 @@
 
 
             </div>
-            <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
+            <vue-custom-scrollbar ref="threadListRef" :settings="settingsScroller"
                 style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
                 <!-- <div class="" style="max-width: 1000px !important;"> -->
                 <div class="w-full mb-2 rounded-md xt-bg-2 h-[200px] " style="border: 1px solid var(--divider);"
                     v-if="defaultType.value == 'video'">
-                    <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange"
-                        @drop="handleDrop">
+                    <a-upload-dragger v-model:fileList="videoList" name="file" :multiple="true" @change="handleChange">
                         <div class="flex flex-col items-center justify-center w-full h-full">
-                            <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;">
-                            </newIcon>
-                            <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB
-                            </p>
+                            <newIcon icon="fluent:add-16-filled" class="mb-3 xt-text" style="font-size: 20px;"></newIcon>
+                            <p class="text-sm ant-upload-text">推荐视频比例：16：9，建议最大不超过<span class="ml-1 mr-1">500</span>MB</p>
                         </div>
                     </a-upload-dragger>
                 </div>
@@ -169,7 +166,7 @@
                             style="border-radius:10px ; color: color: rgba(255,255,255,0.85);width: 64px; height: 40px;"
                             @click="handleOk">取消</xt-button>
                         <xt-button type="primary" class="ml-2"
-                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85); width: 64px; height: 40px;background-color: var(--active-bg);"
+                            style="border-radius:10px ; color: color: rgba(255,255,255,0.85) !important; width: 64px; height: 40px;background-color: var(--active-bg);"
                             @click="publishPost">发布</xt-button>
                     </div>
                 </div>
@@ -212,163 +209,31 @@ const publishType = ref([
     //     value: 'video'
     // }
 ])
-// 清除封面
-const removeCover = () => {
-    coverList.value = []
-}
 // 默认选项
 let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
-// 修改发布框
-const changeItem = (index) => {
-    defaultType.value = publishType.value[index]
-
-}
-const outerSettings = reactive({
-    useBothWheelAxes: true,
-    swipeEasing: true,
-    suppressScrollY: false,
-    suppressScrollX: true,
-    wheelPropagation: true,
-})
 // 视频文件
 const videoList = ref([])
 // 封面文件
 const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
-// 全屏状态修改
-const handleFullScreen = () => {
-
-    fullScreen.value = !fullScreen.value
-}
-const dynamicSize = computed(() => {
-    if (fullScreen.value) {
-        return { minRows: 20, maxRows: 30 }
-    } else {
-        return { minRows: 5, maxRows: 8 }
-    }
-})
-// const userName = ref('我是皮克斯呀')
 // 正文内容
 const postValue = ref('')
-// 
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
     forumId: Number,
     forum: Array
 })
-// 添加表情
-const addEmoji = (item) => {
-    const lastSlashIndex = item.lastIndexOf('/');
-    const emoiiValue = item.substring(lastSlashIndex + 1);
-    // console.log(emoiiValue);
-
-    const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    postValue.value += `${key}`
-
-}
-// 图片添加是否可见
-const imageLoadVisible = computed(() => {
-    return fileList.value?.length > 0
-})
-// 关闭发布框的状态判断
-const visible = ref(false)
-// 图片转base64
-function getBase64(file: File) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-
-const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
 // 发布帖子
 const titleValue = ref('')
-// 用于在动态和评论中使用的表情
-// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
-// https://sad.apps.vip/public/static/emoji/emojistatic/
 // 表情保存
 let folderPath = reactive([])
 let windoWidth = ref()
 let windowHeight = ref()
-onMounted(() => {
-    // 表情转换
-    Object.values(fluentEmojis).forEach((item) => {
-        folderPath.push(`${emoji.value}${item}`)
-    })
-    // 聚焦第一个文本框
-    // let inputElement = window.document.querySelector('input')
-    let textareaElement = window.document.querySelector('textarea')
-    // console.log(textareaElement);
-    // if(inputElement){
-    //     inputElement?.focus()
-    // }else{
-    textareaElement?.focus()
-    windoWidth.value = window.innerWidth
-    windowHeight.value = window.innerHeight
-    // }
-    // 获取编辑文本
-    if (defaultType.value.value == 'dynamic' && useYuanCommunityStore.saveDynamic) {
-        postValue.value = useYuanCommunityStore.saveDynamic
-    } else {
-        postValue.value = ''
-    }
-    // 获取标题
-    if (defaultType.value.value == 'post' && useYuanCommunityStore.saveTitle) {
-        titleValue.value = useYuanCommunityStore.saveTitle
-    } else {
-        titleValue.value = ''
-
-    }
-    // console.log(postValue.value,'postValue.value');
-
-    // console.log(navigator.plugins);
-    useYuanCommunityStore.getMyForumList()
-
-    // console.log(useYuanCommunityStore.saveContent, 'useYuanCommunityStore.saveContent');
-})
-
-// 选择发帖板块
-const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
-let arr = ref([])
-communCate.value.forEach((item) => {
-    arr.value.push({
-        value: item.id,
-        label: item.name
-    })
-})
-let cascaderValue = ref([])
-const options = ref<CascaderProps['options']>([]);
-arr.value.forEach((item) => {
-    options.value.push(item)
-})
-// 修改发帖板块
-const handleChange = (value) => {
-    // console.log(value, 'value');
-    cascaderValue.value = value
-    // console.log(cascaderValue.value,'cascaderValue.value');
-    // console.log(arr.value);
-
-}
-// 暂存动态文本
-const savaDynamic = () => {
-    useYuanCommunityStore.saveDynamic = postValue.value
-}
-// 监听文本
-watch(postValue, _.debounce(savaDynamic, 500))
-// const holder = computed(() => {
-//     return props.forum.name
-// })
-const saveTitleText = () => {
-    useYuanCommunityStore.saveTitle = titleValue.value
-}
-watch(titleValue, _.debounce(saveTitleText, 500))
 // 滚动条设置
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -379,7 +244,46 @@ const settingsScroller = reactive({
 });
 // 图片暂存
 const fileList = ref<UploadProps['fileList']>([]);
+// 清除封面
+const removeCover = () => {
+    coverList.value = []
+}
+// 修改发布框
+const changeItem = (index) => {
+    defaultType.value = publishType.value[index]
+}
+// 全屏状态修改
+const handleFullScreen = () => {
+    fullScreen.value = !fullScreen.value
+}
+const dynamicSize = computed(() => {
+    if (fullScreen.value) {
+        return { minRows: 20, maxRows: 30 }
+    } else {
+        return { minRows: 5, maxRows: 8 }
+    }
+})
+// 添加表情
+const addEmoji = (item) => {
+    const lastSlashIndex = item.lastIndexOf('/');
+    const emojiValue = item.substring(lastSlashIndex + 1);
+    const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emojiValue))[0]
+    postValue.value += `${key}`
 
+}
+// 图片添加是否可见
+const imageLoadVisible = computed(() => {
+    return fileList.value?.length > 0
+})
+// 图片转base64 ---antd组件方法
+function getBase64(file: File) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
 const handleCancel = () => {
     previewVisible.value = false;
     previewTitle.value = '';
@@ -392,10 +296,61 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
+
+
+const emit = defineEmits(['handleOk'])
+onMounted(() => {
+    // 表情转换
+    Object.values(fluentEmojis).forEach((item) => {
+        folderPath.push(`${emoji.value}${item}`)
+    })
+    // 聚焦第一个文本框
+    let textareaElement = window.document.querySelector('textarea')
+    textareaElement?.focus()
+    windoWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+    const selectType=defaultType.value
+    // 获取编辑文本
+    if (selectType.value == 'dynamic' && useYuanCommunityStore.saveDynamic) {
+        postValue.value = useYuanCommunityStore.saveDynamic
+    } else {
+        postValue.value = ''
+    }
+    // 获取标题
+    if (selectType.value == 'post' && useYuanCommunityStore.saveTitle) {
+        titleValue.value = useYuanCommunityStore.saveTitle
+    } else {
+        titleValue.value = ''
+    }
+    useYuanCommunityStore.getMyForumList()
+})
+
+// 选择发帖板块
+const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
+const options = ref<CascaderProps['options']>([]);
+communCate.value.forEach((item) => {
+    options.value.push({
+        value: item.id,
+        label: item.name
+    })
+})
+let cascaderValue = ref([])
+// 修改发帖板块
+const handleChange = (value) => {
+    cascaderValue.value = value
+}
+// 暂存动态文本
+const savaDynamic = () => {
+    useYuanCommunityStore.saveDynamic = postValue.value
+}
+// 监听文本
+watch(postValue, _.debounce(savaDynamic, 500))
+const saveTitleText = () => {
+    useYuanCommunityStore.saveTitle = titleValue.value
+}
+watch(titleValue, _.debounce(saveTitleText, 500))
 const handleOk = () => {
-    // console.log(e);
-    visible.value = false
-    emit('handleOk', visible)
+    emit('handleOk', false)
 };
 
 const publishPost = async () => {

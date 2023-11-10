@@ -72,20 +72,13 @@ import { yuanCommunityStore } from '../../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../../page/chat/commun'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-// const imageLoadVisible = ref(true)
-const browserUrl = ref('https://s.apps.vip/forum?id=')
 const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
-const goYuan = () => {
-    browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
-}
-const titleContent = ref('')
 const removeCover = () => {
     coverList.value = []
 }
 const handleMenuItemClick = (index) => {
     defaultType.value = publishType.value[index]
 }
-// const userName = ref('我是皮克斯呀')
 const postValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
@@ -106,7 +99,6 @@ const addEmoji = (item) => {
 const imageLoadVisible = computed(() => {
     return fileList.value?.length > 0
 })
-const visible = ref(false)
 function getBase64(file: File) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -115,14 +107,9 @@ function getBase64(file: File) {
         reader.onerror = error => reject(error);
     });
 }
-const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-
-// 用于在动态和评论中使用的表情
-// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
-// https://sad.apps.vip/public/static/emoji/emojistatic/
 let folderPath = reactive([])
 
 onMounted(() => {
@@ -134,38 +121,9 @@ onMounted(() => {
 
     textareaElement?.focus()
     // console.log(navigator.plugins);
-    useYuanCommunityStore.getMyForumList()
+    // useYuanCommunityStore.getMyForumList()
 
 
-})
-// 选择发帖板块
-const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
-let arr = ref([])
-communCate.value.forEach((item) => {
-    arr.value.push({
-        value: item.id,
-        label: item.name
-    })
-})
-let cascaderValue = ref([])
-const options = ref<CascaderProps['options']>([]);
-arr.value.forEach((item) => {
-    options.value.push(item)
-})
-const loadData: CascaderProps['loadData'] = selectedOptions => {
-    const targetOption = selectedOptions[selectedOptions.length - 1];
-    targetOption.loading = true;
-    arr.value.forEach((item) => {
-        targetOption.children?.push(item)
-    })
-    options.value = [...options.value];
-};
-const handleChange = (value) => {
-    cascaderValue.value = value
-    console.log(cascaderValue.value);
-}
-const holderName = computed(() => {
-    return useYuanCommunityStore.myForumList.joined[props.forumIndex].name
 })
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -188,44 +146,6 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
-const handleOk = () => {
-    // console.log(e);
-    visible.value = false
-    emit('handleOk', visible)
-};
-// 发布帖子
-const titleValue = ref('')
-const publishPost = async () => {
-    if (postValue.value || fileList.value.length > 0) {
-        const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
-            const url = await fileUpload(item.originFileObj);
-            return url;
-        }));
-        // let image = JSON.stringify(imageUrlList.value)
-        let forumId = props.forumId
-        let content = postValue.value
-        let title = computed(() => {
-            if (!titleValue.value || titleValue.value.length < 5) {
-                return postValue.value.slice(0, 5)
-            }
-            return titleValue.value
-        })
-        // console.log(title.value, 'title.value');
-
-
-        setTimeout(async () => {
-            // console.log(forumId, content, title.value, image, 'titleValue.value');
-            const imageList = JSON.stringify(imageUrlList);
-            await useCommunStore.getCommunityPublishPost(forumId, imageList, content, title.value, cascaderValue)
-            message.success('发布成功')
-            titleValue.value = ''
-            postValue.value = ''
-            fileList.value = []
-            handleOk()
-        });
-
-    }
-}
 </script>
 <style lang='scss' scoped>
 :deep(.ant-upload-list-text-container) {

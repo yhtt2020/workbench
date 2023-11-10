@@ -29,6 +29,7 @@
                         style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
                     </YuanHorizontalPanel>
                 </div>
+                <!-- {{ defaultForum }} -->
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
@@ -58,7 +59,6 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
-
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
                 style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
                 <div class="flex items-center justify-center">
