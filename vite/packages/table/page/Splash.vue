@@ -37,6 +37,9 @@
             <a-col flex="1">
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button>
             </a-col>
+            <a-col flex="1">
+              <xt-button size="mini" style="width: 100%" type="theme" @click="offline">离线模式</xt-button>
+            </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
@@ -103,6 +106,12 @@ export default {
     }
   },
   async mounted () {
+    setTimeout(()=>{
+      if (window.$isOffline && this.init) {
+        this.$router.replace({ name: 'home' })
+      }
+    },1000)
+
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
     this.initStore(appStore, 'appStore')

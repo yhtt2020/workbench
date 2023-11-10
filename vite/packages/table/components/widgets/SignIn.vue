@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon'>
+  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <template #left-title-icon>
         <div
           class="icon"
@@ -184,7 +184,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        offline: true,
       }
 
     }
