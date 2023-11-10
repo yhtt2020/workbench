@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import { sendRequest,regionRange,remainderDay,currencyFormat } from '../../js/axios/api';
+import { sendRequest,regionRange,currencyFormat } from '../../js/axios/api';
+// remainderDay,
 import HorizontalPanel from '../../components/HorizontalPanel.vue';
 import HorizontalDrawer from '../../components/HorizontalDrawer.vue';
 import browser from '../../js/common/browser'
@@ -108,7 +109,7 @@ export default {
     this.getEpicData()
   },
   methods:{
-    remainderDay,
+    // remainderDay,
     currencyFormat,
     // 打开右侧抽屉事件
     openRightDrawer(){

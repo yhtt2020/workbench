@@ -227,6 +227,9 @@ const TUISearch = defineComponent({
         ctx.emit('close')
       }
 
+      const res  = await window.$TUIKit.tim.getGroupApplicationList()
+      console.log('获取申请群聊列表',res);
+
     }
 
     watch(()=>data.searchId,(newVal)=>{
