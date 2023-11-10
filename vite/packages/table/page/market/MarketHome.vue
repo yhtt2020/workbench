@@ -83,15 +83,15 @@ export default {
           },
           type: 'route'
         },
-        {
-          imgBack: '/img/market/key.png',
-          title: '快捷键市场',
-          children: [],
-          route: {
-            name: 'creativeMarket',
-          },
-          type: 'route'
-        },
+        // {
+        //   imgBack: '/img/market/key.png',
+        //   title: '快捷键市场',
+        //   children: [],
+        //   route: {
+        //     name: 'creativeMarket',
+        //   },
+        //   type: 'route'
+        // },
       ],
       visibleAdd: false
     }

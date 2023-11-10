@@ -7,8 +7,8 @@
         <div class="top-icon">
             <Icon icon="akar-icons:chat-question" />
         </div>
-        <div class="guider-body">
-            <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index">
+        <div class="guider-body xt-scrollbar overflow-hidden mt-3" style="height: 92%;">
+            <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index" @click="jumpUrl(item.url)">
                 <div class="cell-icon flex items-center">
                     <Icon :icon="item.icon"  width="20" height="20" />
                 </div>
@@ -63,29 +63,45 @@ export default {
                 // icon: "games-16-filled",
             },
             dataList:[
+                // {
+                //     title:"短说社区客服",
+                //     icon:'fluent-emoji-flat:globe-with-meridians',
+                //     url:'',
+                // },
                 {
-                    title:"短说社区客服",
-                    icon:'fluent-emoji-flat:globe-with-meridians',
+                    title:"短说通用版使用手册",
+                    icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/wbogn1',
                 },
                 {
-                    title:"短说通用版V4版本使用手册sdadsad",
+                    title:"短说企业版使用手册",
                     icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/osz34h',
                 },
                 {
-                    title:"短说PC版V2版本使用手册",
+                    title:"短说PC端使用手册",
                     icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/ew0ak2',
                 },
                 {
-                    title:"短说企业版差异部分手册",
+                    title:"短说部署安装文档",
                     icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/ulwd0g',
                 },
                 {
-                    title:"短说二次开发技术文档",
+                    title:"短说接入第三方应用方案",
                     icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/emfp20',
                 },
                 {
-                    title:"短说企业文化社区解决方案",
+                    title:"短说移动端二次开发手册",
                     icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/ixokka',
+                },
+                {
+                    title:"短说PC端二次开发手册",
+                    icon:'fluent-emoji-flat:thought-balloon',
+                    url:'https://www.yuque.com/thisky/ne5ut5',
                 },
             ]
         };
@@ -94,7 +110,9 @@ export default {
 
     },
     methods:{
-
+        jumpUrl(url){
+            browser.openInUserSelect(url)
+        },
     }
 };
 </script>
@@ -116,7 +134,6 @@ export default {
     }
     
     .guider-cell{
-        margin-top: 12px;
         width: 100%;
         height: 50px;
         line-height: 50px;
@@ -124,6 +141,9 @@ export default {
         border-radius: 12px;
         display: flex;
         padding: 0 14px;
+    }
+    .guider-cell:not(:nth-of-type(1)){
+        margin-top: 12px;
     }
   
     .guider-cell span{

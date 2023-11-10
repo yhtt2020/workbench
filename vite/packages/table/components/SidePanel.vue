@@ -11,8 +11,9 @@
       <div   style="width: 67px;overflow-x: hidden">
         <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start" >
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
+            <!-- 左右导航栏隐藏入口 -->
             <div   :key="item.name" @click.stop="clickNavigation(item)">
-              <div  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
+              <div v-if="!(this.isOffline && this.navList.includes(item.event))"  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
                 <div class="icon-color" v-if="item.type === 'systemApp'">
                   <navIcon class="icon-color xt-text" :icon="item.icon" style="width:2.5em;height:2.5em;"
                            :class="{ 'active-color': current(item) }"></navIcon>
@@ -52,10 +53,11 @@
 </template>
 
 <script>
-import { mapWritableState } from 'pinia';
+import {mapActions, mapState,mapWritableState} from "pinia";
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
+import { offlineStore } from '../js/common/offline';
 import Sortable from 'sortablejs';
 import { message } from 'ant-design-vue';
 import routerTab from '../js/common/routerTab'
@@ -127,6 +129,7 @@ export default {
   computed: {
     ...mapWritableState(navStore, ['builtInFeatures','mainNavigationList']),
     ...mapWritableState(cardStore, ['routeParams']),
+    ...mapWritableState(offlineStore, ['isOffline','navList']),
   },
   mounted() {
     this.colDrop()

@@ -121,9 +121,13 @@ export default {
       this.showModal = val
     },
     goDownload(){
-      this.$router.push({
-        name:"shortcutStore"
-      })
+      if(window.$isOffline){
+        this.$message.error('离线模式暂无法使用')
+      }else{
+        this.$router.push({
+          name:"shortcutStore"
+        })
+      }
     }
   },
   mounted(){

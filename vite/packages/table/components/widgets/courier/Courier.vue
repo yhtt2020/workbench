@@ -9,7 +9,7 @@
       </div>
     </template>
     <div style="position: absolute;top: 14px;left: 120px;">
-      <xt-button :w="22" :h="22" @click="refreshAll">
+      <xt-button :w="22" :h="22" @click="refreshAll" style="background-color: transparent !important;">
         <div class="flex items-center justify-center">
           <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
                    icon="akar-icons:arrow-clockwise"/>

@@ -7,7 +7,7 @@
   >
     <!-- 快速搜索 底部 用户栏 -->
     <div
-      v-if=" (!simple || settings.enableChat)"
+      v-if=" (!simple || settings.enableChat) && !this.isOffline"
       class="flex flex-row common-panel user s-bg"
       style="
         vertical-align: top;
@@ -70,7 +70,8 @@
                   :key="item.name"
                         :title="item.name"
                 >
-         <div
+         <div 
+         v-if="!(this.navList.includes(item.event) && this.isOffline)"
            @contextmenu.stop="enableDrag"
            class="mr-3 mr-6 pointer"
            style="white-space: nowrap; display: inline-block"
@@ -296,6 +297,7 @@ import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
 import {Icon as navIcon} from '@iconify/vue'
 import navigationData from '../js/data/tableData'
+import { offlineStore } from "../js/common/offline";
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -432,6 +434,7 @@ export default {
       'rightNavigationList',
       'mainNavigationList',
     ]),
+    ...mapWritableState(offlineStore, ["isOffline",'navList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {

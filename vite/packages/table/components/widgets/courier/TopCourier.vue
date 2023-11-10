@@ -59,7 +59,7 @@
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && orderList.length>0"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar  && orderList.length>0"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <div class="flex items-center justify-between">
