@@ -1,6 +1,6 @@
 const Watch = require('./apiHander/watch')
 const Web = require('./apiHander/web')
-const Window = require('./apiHander/Window')
+const Window = require('./apiHander/window')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
