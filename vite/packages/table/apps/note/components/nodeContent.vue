@@ -93,14 +93,22 @@ import { message } from 'ant-design-vue';
         },
         background(){
             if (this.noteList.length) {
-                return this.selNote>=0?this.noteList[this.selNote].customData.background:''
+                if(this.selNote>=0){
+                    return this.selNote>=0?this.noteList[this.selNote].customData.background:''
+                }else{
+                    return 
+                }
             }
         },
         time() {
             // return 
             if (this.selNote>=0 && this.noteList) {
-                let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
-                return formatTime(timestamp)
+                if(this.noteList[this.selNote]){
+                    let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
+                    return formatTime(timestamp)
+                }else{
+                    return 
+                }
             }else{
                 return
             }
