@@ -288,13 +288,14 @@ export default {
                 // 内部属性
                 series:this.series,
             }
-            const myChart = echarts.init(this.$refs.myChart)
-            // const myChart = this.$refs.myChart
-            myChart.clear()
-            myChart.setOption(mulColumnZZTData);
-            window.addEventListener("resize",()=>{
-                myChart.resize();
-            })
+            if (this.$refs.myChart) {
+                const myChart = echarts.init(this.$refs.myChart)
+                myChart.clear()
+                myChart.setOption(mulColumnZZTData);
+                window.addEventListener("resize",()=>{
+                    myChart.resize();
+                })
+            }
         },
         // 修改柱状图数据
         changeBarChart(){
