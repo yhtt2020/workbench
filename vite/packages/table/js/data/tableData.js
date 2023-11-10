@@ -272,6 +272,12 @@ export default {
       name: '创意市场',
       event: 'market',
     },
+    {
+      "type": "systemApp",
+      "icon": "fluent:bot-24-regular",
+      "name": "AI助手",
+      "event": "ai"
+  },
   ],
   systemFillAppList: [
     {
@@ -410,6 +416,12 @@ export default {
       name: '创意市场',
       event: 'market',
     },
+    {
+      "type": "systemApp",
+      "icon": "fluent:bot-24-filled",
+      "name": "AI助手",
+      "event": "ai"
+  },
   ],
 }
 
