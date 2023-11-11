@@ -88,7 +88,7 @@
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
                 <xt-button :w="56" :h="32"
-                    style="background-color: var(--active-bg);color: var(--primary-text);font-size: 16px;border-radius: 8px;"
+                    style="background-color: var(--active-bg);color: rgba(255, 255, 255, 0.85);font-size: 16px;border-radius: 8px;"
                     @click="saveSetting">保存</xt-button>
             </template>
             <div class="mb-6 xt-text font-16">
@@ -386,7 +386,7 @@ export default {
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
             // console.log(this.defaultForum);
-        }else if(this.customData && this.customData.selectList){
+        } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList)
             this.defaultForum = this.customData.selectList[0]
         }
@@ -398,7 +398,7 @@ export default {
             // console.log(this.selectValue);
         }
         // 判断组件名称
-        if(this.customData.selectList.length === 1){
+        if (this.customData.selectList.length === 1) {
             this.options.title = this.customData.selectList[0].value.name
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
@@ -518,5 +518,9 @@ export default {
         background-color: rgba(80, 139, 254, 0.20) !important;
         height: 28px;
     }
+}
+
+:deep(.xt-active-btn span) {
+    color: rgba(255, 255, 255, 0.85) !important;
 }
 </style>

@@ -93,13 +93,10 @@ export const noteStore = defineStore("noteStore", {
           })
           // 根据时间进行排序
         }
-        
+        // 从桌面拿的初始化的数据需要进行排序
         this.sortByTimestamp(tmpList)
         this.noteList = tmpList
         await tsbApi.db.bulkDocs(tmpList)
-        // .then(()=>{
-        //   this.findAll()
-        // }) 
       }
       // 证明用户初始化过
       this.initFlag = true
