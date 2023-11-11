@@ -605,6 +605,11 @@ export default {
     },
     updateSuggestNav (addItem, type) {
       this.suggestNavList = suggestNavigationList
+      if (window.$isOffline) {
+        this.suggestNavList = this.suggestNavList.filter(i=>{
+          return i.tab != 'community'
+        })
+      }
       let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
       if (type) {
         this.mainNavList.forEach(item => {

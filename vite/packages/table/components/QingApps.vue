@@ -23,12 +23,13 @@
 <script>
 import { mapWritableState } from 'pinia'
 import { Modal } from 'ant-design-vue'
-
+import { offlineStore } from "../js/common/offline";
 const { appModel } = window.$models
 export default {
   name: 'QingApps',
   computed: {
     // ...mapWritableState(apps,['myApps','qingApps'])
+    ...mapWritableState(offlineStore,['appList'])
   },
   data () {
     return {
@@ -46,7 +47,7 @@ export default {
     this.apps = await appModel.getAllApps()
     if (window.$isOffline) {
       this.apps = this.apps.filter(i=>{
-        return i.name != '应用市场'
+        return !this.appList.includes(i.name)
       })
     }
   },

@@ -7,7 +7,13 @@ import { appStore } from "../../store";
 export const offlineStore = defineStore("offlineStore", {
   state: () => ({
     isOffline:false,
-    offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier']
+    
+    offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier'],
+    // 屏蔽导航栏
+    navList:['chat', 'market'],
+    // 屏蔽轻应用
+    appList:['应用市场','元社区'],
+
 
   }),
   getters:{},
@@ -22,10 +28,6 @@ export const offlineStore = defineStore("offlineStore", {
     getIsOffline(){
       return cache.get('isOffline')
     }
-
-
-
-
   },
   persist: {
     enabled: true,
