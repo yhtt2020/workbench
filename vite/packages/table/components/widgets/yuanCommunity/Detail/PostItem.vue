@@ -1,35 +1,33 @@
 <template>
-    <div class="w-full h-full">
+    <div class="h-full " style="max-width: 1000px;">
         <!-- 视频和帖子 -->
         <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);">
-            <a-input v-model:value="titleContent" placeholder="标题" :bordered="false" />
+            <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
         </div>
-        <div class="w-full mt-2 xt-bg box font-16">
-            <div style="font-size: 1rem !important;">
-                <div class="mt-3 mb-2 xt-bg-2 reply-textarea " style="border: 1px solid var(--divider);">
-                    <!-- 帖子 -->
-                    <div class="w-full h-[350px]" style="overflow: hidden;">
+        <div class="w-full mt-2 text-base xt-bg box " style="height: 85%;">
+            <div style="font-size: 1rem !important;" class="w-full h-full">
+                <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea" style="border: 1px solid var(--divider);">
+                    <div class="w-full " :style="{ height: fullScreen ? '100%' : '300px' }" style="overflow: hidden;">
                         <MarkDown></MarkDown>
                     </div>
-                    <!-- 动态和帖子 -->
-                    <div style="font-size: 16px !important;" v-if="imageLoadVisible" >
-                        <a-upload v-model:file-list="fileList" action="" class="ml-2 text-base" list-type="picture-card"
-                            multiple @preview="handlePreview">
-                            <div v-if="fileList.length < 6">
-                                <!-- <plus-outlined style="font-size: 1.2em; " class="xt-text" /> -->
-                                <newIcon icon="fluent:add-16-filled" style="font-size: 24px;vertical-align: sub;"
-                                    class="xt-text"></newIcon>
-                            </div>
-                        </a-upload>
-                    </div>
-                    <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                        <img style="width: 100%" :src="previewImage" />
-                    </a-modal>
                 </div>
-
             </div>
         </div>
-        <div class="h-[45px] flex items-center justify-between " >
+        <div style=" " v-if="imageLoadVisible">
+            <a-upload v-model:file-list="fileList" action="" class="ml-1 text-base " list-type="picture-card" multiple
+                @preview="handlePreview">
+                <div v-if="fileList.length < 6">
+                    <div class="flex items-center justify-center">
+                        <newIcon icon="fluent:add-16-filled" style="font-size: 24px;" class="xt-text"></newIcon>
+                    </div>
+
+                </div>
+            </a-upload>
+        </div>
+        <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+            <img style="width: 100%" :src="previewImage" />
+        </a-modal>
+        <div class="h-[45px] flex items-center justify-between">
             <div class="flex items-center justify-center xt-text-2">
                 <tippy trigger=" click" placement="bottom" :interactive="true">
                     <template #content>
@@ -43,53 +41,59 @@
                         </vue-custom-scrollbar>
                         <!-- </div> -->
                     </template>
-
-                    <a-button type="text" size="small" class=" xt-text emojiVis"
-                        style="color: var(--secondary-text) !important;"><template #icon>
-                            <!-- <SmileOutlined style="" /> -->
+                    <!-- <button>表情</button> -->
+                    <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
+                        style="color: var(--secondary-text) !important;">
+                        <div class="flex items-center justify-center">
                             <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
-                                style="vertical-align: sub;margin-right: 4px;" />
-                        </template> 表情</a-button>
+                                style="margin-right: 4px;" />
+                            表情
+                        </div>
+
+                    </xt-button>
                 </tippy>
                 <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
-                    <a-button type="text" size="small" class="xt-text"
-                        style=" color: var(--secondary-text) !important;"><template #icon>
+                    <xt-button type="text" :w="72" :h="32" class="xt-text" style="color: var(--secondary-text) !important;">
+                        <div class="flex items-center justify-center">
                             <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
-                                style="vertical-align: sub;margin-right: 4px;" />
-                        </template> 图片</a-button>
+                                style="margin-right: 4px;" />图片
+                        </div>
+
+                    </xt-button>
+
+                    <!-- <button>表情</button> -->
                 </a-upload>
                 <div>
                     <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
                         v-show="coverList.length === 0">
-                        <a-button type="text" size="small" class="xt-text"
-                            style="color: var(--secondary-text) !important;"><template #icon>
-                                <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
-                                    style="vertical-align: sub;margin-right: 4px;" />
-                            </template> 设置封面</a-button>
-                    </a-upload>
-                    <a-button type="text" size="small" class="xt-text" v-show="coverList.length > 0" @click="removeCover"
-                        style="color: var(--secondary-text) !important;"><template #icon>
-                            <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
-                                style="vertical-align: sub;margin-right: 4px;" />
-                        </template> 移除封面</a-button>
-                </div>
+                        <xt-button type="text" :w="118" :h="32" class="xt-text"
+                            style="color: var(--secondary-text) !important;">
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                                设置封面
+                            </div>
 
+                        </xt-button>
+                    </a-upload>
+                    <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
+                        @click="removeCover" style="color: var(--secondary-text) !important;">
+                        <div class="flex items-center justify-center">
+                            <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                            移除封面
+                        </div>
+                    </xt-button>
+                </div>
             </div>
 
         </div>
         <div style="font-size: 16px !important;" v-if="coverList.length > 0">
-            <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
-                @preview="handlePreview">
-            </a-upload>
-            <!-- <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-                    <img style="width: 100%" :src="previewImage" />
-                </a-modal> -->
+            <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed,watch } from 'vue'
 import type { UploadProps } from 'ant-design-vue';
 import browser from '../../../../js/common/browser';
 import Modal from '../../../../components/Modal.vue'
@@ -101,28 +105,18 @@ import fluentEmojis from '../../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../../page/chat/commun'
 import MarkDown from './MarkDown.vue';
+import _ from 'lodash-es'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-// const imageLoadVisible = ref(true)
-const browserUrl = ref('https://s.apps.vip/forum?id=')
+const postValue = ref('')
+// 发布帖子
+const titleValue = ref('')
 const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
-const goYuan = () => {
-    browser.openInUserSelect(`${browserUrl.value}${props.forumId}`)
-}
-const titleContent = ref('')
 const removeCover = () => {
     coverList.value = []
 }
 // 封面文件
 const coverList = ref([])
-// const userName = ref('我是皮克斯呀')
-const postValue = ref('')
-const props = defineProps({
-    replyVisible: Boolean,
-    showPublishModal: Boolean,
-    forumId: Number,
-    forumIndex: Number
-})
 // 添加表情
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
@@ -142,7 +136,6 @@ function getBase64(file: File) {
         reader.onerror = error => reject(error);
     });
 }
-const emit = defineEmits(['handleOk'])
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
@@ -154,6 +147,12 @@ onMounted(() => {
     })
     let inputElement = window.document.querySelector('input')
     inputElement?.focus()
+    // 获取标题
+    if ( useYuanCommunityStore.postContent.title) {
+        titleValue.value = useYuanCommunityStore.postContent.title
+    } else {
+        titleValue.value = ''
+    }
 })
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -176,8 +175,10 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
-// 发布帖子
-const titleValue = ref('')
+const saveTitleText = () => {
+    useYuanCommunityStore.postContent.title = titleValue.value
+}
+watch(titleValue, _.debounce(saveTitleText, 500))
 </script>
 <style lang='scss' scoped>
 :deep(.ant-upload-list-text-container) {
