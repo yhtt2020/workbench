@@ -66,9 +66,7 @@
                             <div class="flex items-center">
                                 <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
                                     @click.stop="showCard(uid, userInfo)">
-                                    <template #icon>
-                                        <UserOutlined />
-                                    </template>
+                                    <template #icon><UserOutlined /></template>
                                 </a-avatar>
                                 <div class="ml-3 user-msg">
                                     <div class="username" style="color: var(--primary-text);font-size: 14px;">

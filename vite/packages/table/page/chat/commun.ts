@@ -339,7 +339,7 @@ export const useCommunityStore = defineStore('forumStore',{
             // console.log('reply',res);
             if(res.code===200){
                 this.communityReply=res.data
-                console.log(this.communityReply,'res');
+                // console.log(this.communityReply,'res');
                 localCache.set(`communityReply_${id}`,this.communityReply,60*60*12)
             }
             } catch (error) {
