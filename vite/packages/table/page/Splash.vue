@@ -28,7 +28,7 @@
         <div class="mb-10 ml-40 text-center text-md">—— 划时代的副屏效率神器</div>
         <p v-if="!userInfo">
           <div class="mb-5 xt-text" style="font-size: 16px">
-            由于本产品功能需要借助网络，目前暂未提供离线模式。<br>
+            由于本产品功能需要借助网络，如您不希望登录，则可使用离线模式，此模式下，依赖于网络的功能将被隐藏。<br>
             <strong>请登录后使用。</strong><br>
 
           </div>
@@ -38,7 +38,7 @@
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button>
             </a-col>
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%" type="theme" @click="offline">离线模式</xt-button>
+              <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
             </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
