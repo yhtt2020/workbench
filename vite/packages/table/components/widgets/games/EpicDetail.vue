@@ -12,17 +12,19 @@
         剩余{{detailOptions.days}}天
       </span>
     </div>
-    <div class="flex justify-between mt-2">
+    <!-- <div class="flex justify-between mt-2">
         <span @click.stop="epicBack" class="w-12 h-12 cursor-pointer epic-back flex items-center rounded-lg justify-center" style="color: var(--primary-text);background: var(--primary-bg);">
            <Icon icon="xiangzuo" class="text-xl"></Icon>
         </span>
         <span @click.stop="onClickOffice" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);">领取</span>
-    </div>
+    </div> -->
  </div>
 </template>
 
 <script>
+import { Icon as ButtonIcon } from '@iconify/vue'
 import browser from '../../../js/common/browser'
+
 export default {
   name:'EpicDetail',
   props:{

@@ -8,6 +8,12 @@
         <newIcon icon="cib:epic-games" style="font-size: 22px" />
       </div>
     </template>
+
+    <div ref="refreshButton" class="flex items-center justify-center pointer" style="position: absolute;left: 130px;top: 19px;" @click.stop="refreshNow">
+      <newIcon icon="fluent:arrow-sync-20-filled" style="color: var(--primary-text);"/>
+    </div>
+
+    
     <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class="mt-2 drawer-item-bg" >
     </HorizontalPanel>
 
@@ -54,9 +60,12 @@
 
 <script>
 import { Icon as newIcon } from "@iconify/vue";
-import { serverCache, localCache } from "../../../js/axios/serverCache";
-import axios from "axios";
-import { thisWeek, nextWeek,remainderDays } from "./utils/epicUtils";
+import { mapWritableState,mapActions } from 'pinia'
+import { epicStore } from '../../../store/epicStore'
+import { message } from 'ant-design-vue'
+// import { serverCache, localCache } from "../../../js/axios/serverCache";
+// import axios from "axios";
+// import { thisWeek, nextWeek,remainderDays } from "./utils/epicUtils";
 
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
@@ -103,115 +112,30 @@ export default {
     }
   },
 
+  computed:{
+    ...mapWritableState(epicStore,['epicData'])
+  },
+
   mounted() {
-   this.$nextTick(()=>{
-    this.getEpicList();
-   })
+    this.getEpicData();
+    if(Object.keys(this.epicData).length !== 0){
+      this.unPromotionList = this.epicData.unPromotionList
+      this.promotionList = this.epicData.promotionList
+    }
   },
 
   methods: {
-    async getEpicList() {
-      const epicURL = "https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=zh-CN&country=CN&allowCountries=CN";
-      const result = await axios.get(epicURL);
-      const data = result.data.data.Catalog;
-      const epicList = data.searchStore.elements;
-      localCache.set("epic", epicList, 10 * 60);
-      serverCache.setData("epic", epicList, 10 * 60);
-      // 走服务器缓存
-      const res = await serverCache.getDataWithLocalCache("epic", {
-        localCache: true,
-        ttl: 10 * 60,
-        cache: false,
-      });
-      try {
-        if (res) {
-          const epicRes = res;
-          // 过滤掉为null的数据
-          const filterEpic = epicRes.filter((item) => {
-            return item.promotions !== null;
-          });
-          // 排除promotions.promotionalOffers的列表不是空列表
-          const mapPromo = filterEpic.map((item) => {
-            if (item.promotions.promotionalOffers.length !== 0) {
-              return {
-                title: item.title,
-                summary: item.description,
-                keyImages: item.keyImages,
-                price: item.price,
-                promotions: {
-                  ...item.promotions.promotionalOffers[0].promotionalOffers[0],
-                },
-              };
-            }
-          });
-          // 排除promotions.upcomingPromotionalOffers的列表不是空列表
-          const mapUnPromo = filterEpic.map((item) => {
-            if (item.promotions.upcomingPromotionalOffers.length !== 0) {
-              return {
-                title: item.title,
-                summary: item.description,
-                keyImages: item.keyImages,
-                price: item.price,
-                promotions: {
-                  ...item.promotions.upcomingPromotionalOffers[0]
-                    .promotionalOffers[0],
-                },
-              };
-            }
-          });
-          // 将promotions.promotionalOffers被排除后的列表中有undefined的值进行过滤
-          const filterPromo = mapPromo.filter((item) => {
-            return item !== undefined;
-          });
-          // 将promotions.upcomingPromotionalOffers被排除后的列表中有undefined的值进行过滤
-          const filterUnPromo = mapUnPromo.filter((item) => {
-            return item !== undefined;
-          });
-          /**
-           * 将promotions.promotionalOffers和promotions.upcomingPromotionalOffers的列表
-           * 进行合并,然后根据startDate和endDate进行本周和下周的区分
-           * **/
-          const newPromoList = filterPromo.concat(filterUnPromo);
-          const thisWeekDate = thisWeek();
-          const nextWeekDate = nextWeek();
-          // 根据promoList和unPromoList中的startDate和endDate来判断属于本周还是下一周的数据
-          const thisWeekList = newPromoList.filter((item) => {
-            if (
-              item.promotions.startDate !== null &&
-              item.promotions.endDate !== null
-            ) {
-              const startDate = new Date(item.promotions.startDate);
-              const endDate = new Date(item.promotions.endDate);
-              return startDate <= thisWeekDate.endDate && endDate >= thisWeekDate.startDate
-            }
-          });
-          const nextWeekList = newPromoList.filter((item) => {
-            const itemNull = item.promotions.startDate !== null && item.promotions.endDate !== null
-            if (itemNull) {
-              const nextStartDate = new Date(item.promotions.startDate);
-              const nextEndDate = new Date(item.promotions.endDate);
-              return  nextStartDate <= nextWeekDate.endDate && nextEndDate >= nextWeekDate.startDate
-            }
-          });
-
-          const thisWeekListMap = thisWeekList.map((item)=>{
-            return {
-              ...item,days:remainderDays(item.promotions)
-            }
-          })
-
-          const nextWeekListMap = nextWeekList.map((item)=>{
-            return {...item,days:remainderDays(item.promotions),}
-          })
-          // console.log('本周免费',thisWeekListMap);
-          // console.log('下周预告',nextWeekListMap);
-          this.promotionList = thisWeekListMap.slice(0,2);
-          this.unPromotionList = nextWeekListMap.slice(1);
-        }
-      } catch (error) {
-        console.error("网络问题", error);
-      }
+    ...mapActions(epicStore,['getEpicData','refresh']),
+    // 点击刷新
+    refreshNow(){
+      this.$refs.refreshButton.classList.add('animate-spin')
+      setTimeout(()=>{
+        this.$refs.refreshButton.classList.remove('animate-spin')
+        message.success('数据更新成功')
+      },500)
+      this.refresh()
     },
+  
     enterWeek (item){
       const data = {
         ...item,
