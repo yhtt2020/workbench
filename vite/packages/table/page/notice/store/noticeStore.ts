@@ -29,6 +29,13 @@ export const noticeStore = defineStore('notice',{
     })
     // console.log('将数据进行拷贝修改',mapData);
     
+    const sortData = mapData.sort((a:any,b:any)=>{
+      return b.createTime - a.createTime
+    })
+
+    console.log('查看排序后的消息列表',sortData);
+    
+
     this.detailList = mapData
     
   },

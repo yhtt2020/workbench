@@ -1,7 +1,7 @@
 <template>
  <a-dropdown :trigger="['hover']" placement="bottomRight">
   <a-tooltip placement="top" :class="mClass" title="添加">
-   <xt-button w="32" h="32" :class="dropClass" style="border-radius: 8px !important;" @click="openAddModal">
+   <xt-button w="32" h="32" class="rounded-md" :style="{background:`${dropStyle}`}" style="border-radius: 8px !important;" @click="openAddModal">
      <div class="flex items-center justify-center">
       <DropIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
      </div>
@@ -57,7 +57,7 @@ export default {
       type: Object,
       default: () => {}
     },
-   dropClass:{
+   dropStyle:{
     type:String,
     default:''
    },

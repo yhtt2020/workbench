@@ -7,7 +7,7 @@
           <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''">Icons</span>
           <span @click="onSelChange(3)" v-if="this.isCustom" :class="selIndex == 3 ? 'active':''">自定义</span>
         </div>
-        <div class="flex items-center pointer" @click="clearAvatar">移除</div>
+        <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
       </div>
       <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != 3">
         <a-input
@@ -333,6 +333,13 @@
       left: -125px;
     }
 
-
+    :deep(.ant-input){
+      color: var(--secondary-text) !important;
+      font-size: 14px;
+      font-weight: 400;
+      &::placeholder{
+       color: var(--secondary-text) !important;
+      }
+     }
   </style>
   
