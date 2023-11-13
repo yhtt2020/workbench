@@ -24,6 +24,7 @@ const web = {
       })
     }
     delete options.callback
+    console.log(cbId)
     send('openPreloadWindow', {
       ...options,
       cbId: cbId

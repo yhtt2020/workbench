@@ -24,16 +24,18 @@
       </div>
     </div>
 
-    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="false"/>
+<!-- 如果没有快递单号   -->
+    <Empty v-if="orderList.length === 0"  :exampleVisible="false"/>
 
     <template v-else>
-      <template v-if="detailList?.length === 0">
+      <!--   筛选不到数据   -->
+      <template v-if="orderList?.length === 0">
         <Empty :exampleVisible="false"/>
       </template>
-      <div class="flex w-full justify-between px-6" v-else>
-        <div style="width:452px;" class="flex flex-col">
+      <div v-else class="flex w-full justify-between px-6 flex-1 h-0" >
+        <div style="width:452px;" class="flex flex-col h-full">
           <div class="flex items-center mb-4 justify-between">
-            <SelectPlateform />
+            <SelectPlateform @changePlatform="changePlatform"/>
             <xt-button w="40" h="40">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
@@ -41,13 +43,15 @@
             </xt-button>
           </div>
           <template v-if="allShow">
-            <SortList  :list="courierDetailList" @rightSelect="getRightItem"/>
+<!--    全部展示        -->
+            <SortList  :list="displayList" @rightSelect="getRightItem"/>
           </template>
           <template v-else>
-            <div style="width: 455px;" class="flex flex-col mr-4">
+<!--      其他条件      -->
+            <div style="width: 455px;" class="flex flex-col mr-4 h-full">
               <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-                <div v-for="(item,index) in detailList"  class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item" 
-                :class="{ 'select': currentID === index }" 
+                <div v-for="(item,index) in displayList"  class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item"
+                :class="{ 'select': currentID === index }"
                 >
                   <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
                     <div class="flex flex-col justify-between"  @click.prevent="detailClick(item,index)">
@@ -81,8 +85,8 @@
                           </div>
                         </div>
                       </div>
-        
-                      <div class="flex flex-col">
+
+                      <div v-if="!item" class="flex flex-col">
                         <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                         <div class="summary">
                           {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
@@ -96,8 +100,8 @@
           </template>
         </div>
 
-        <div style="width:452px;">
-          <RightDetail :detail="rightDetail"/>
+        <div style="width:452px;" class="h-full">
+          <RightDetail v-if="currentDetail?._id" :detail="currentDetail"/>
         </div>
       </div>
     </template>
@@ -114,10 +118,10 @@ import { courierStore } from '../../../../../store/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierType,selectTab,selectData } from '../modalMock'
 import { kdCompany, kdState, switchColor } from '../../mock'
-import { Modal } from 'ant-design-vue' 
+import { Modal } from 'ant-design-vue'
 
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
-import AddCourierModal from '../AddCourierModal.vue' 
+import AddCourierModal from '../AddCourierModal.vue'
 import CourierSetting from '../CourierSetting.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
 import DropDown from '../dropdown/MoreDrop.vue'
@@ -136,27 +140,30 @@ export default {
   data(){
     return{
       addList:[
-        { title:'京东账号',name:'jd',callBack:()=>{} }, 
+        { title:'京东账号',name:'jd',callBack:()=>{} },
         { title:'淘宝账号',name:'tb',callBack:()=>{} },
         { title:'自定义添加', icon:'fluent:add-16-filled',callBack:()=>{ this.addCourier() }}
       ],
+      filterPlatform:'all',
       menus:[
         {name:'订阅物流',callBack:()=>{ },newIcon:'fluent:star-12-regular'},
         {
           name:'删除快递', newIcon:'akar-icons:trash-can', color:'var(--error)',
-          callBack:()=>{ 
+          callBack:()=>{
             Modal.confirm({
              content: '确认删除当前快递物流信息',
              centered: true,
              onOk: () => {
               this.removeDbData(this.revID)
               message.success('删除成功')
-             } 
+             }
             })
           },
         }
       ],
-      defaultFlow:null,
+      defaultFlow:{
+        name:'all'
+      },
       detailList:[],
       settingsScroller: {
         useBothWheelAxes: true,
@@ -167,17 +174,36 @@ export default {
       },
       revID:'',
       currentID:'',
-      rightDetail:{},
+      rightDetail:{
+
+      },
     }
   },
- 
+
   computed:{
-    ...mapWritableState(courierStore,['courierDetailList']),
+    ...mapWritableState(courierStore,['orderList','currentDetail']),
+    displayList(){
+      let list= this.orderList.filter(item=>{
+        if(this.filterPlatform==='all'){
+          return true
+        }else{
+          console.log(String(item.store),this.filterPlatform,item.store===this.filterPlatform)
+          if(!item.store){
+            item.store=''
+          }
+          return item.store===this.filterPlatform
+        }
+      })
+      console.log('list',list)
+      return list
+    },
     // 计算获取tab栏数据
     tabList(){
-      if(this.courierDetailList.length !== 0){
+      if(this.orderList.length > 0){
+        //至少有一个数据
         const list = courierType.map((item)=>{
-          return selectTab(item,this.courierDetailList)
+          /*计算每个分类包含的数量*/
+          return selectTab(item,this.orderList)
         })
         return list
       }else{
@@ -198,7 +224,7 @@ export default {
     // 获取下拉菜单点击后的数据
     getSelectType(item){
       this.defaultFlow = item
-      this.detailList = selectData(item,this.courierDetailList)
+      this.detailList = selectData(item,this.orderList)
     },
 
     stateColor(item) {
@@ -210,11 +236,14 @@ export default {
     switchCompany(item) {
       return kdCompany(item?.ShipperCode)
     },
-
+    changePlatform(platform){
+      console.log('修改平台',platform)
+      this.filterPlatform=platform
+    },
     // 列表点击显示详情
     detailClick(item,index){
       this.currentID = index
-      this.rightDetail = item
+      this.currentDetail = item
     },
 
     // 自定义添加快递
@@ -223,22 +252,26 @@ export default {
     },
 
     getRightItem(item){
-      this.rightDetail = item
+      this.currentDetail = item
+      console.log(this.rightDetail,'de')
     }
-
-
   },
 
   mounted(){
     this.defaultFlow = this.tabList[0]
+    this.filterPlatform='all'
+    console.log(this.displayList,'display')
+    // setTimeout(()=>{
+    //   this.changePlatform('all')
+    // },1000)
   },
 
   watch:{
     'defaultFlow':{
       handler(newVal){
-        this.detailList = selectData(newVal,this.courierDetailList)
+        this.detailList = selectData(newVal,this.orderList)
       },
-      immediate:true,
+      immediate:true
     }
   }
 }

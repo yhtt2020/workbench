@@ -17,7 +17,9 @@ import {
   SwapLeftOutlined,
 } from "@ant-design/icons-vue";
 import { mapActions, mapGetters, mapState, mapWritableState } from "pinia";
-import { databaseStore, configStore, listStore, taskStore } from "./store";
+import configStore from "./stores/config";
+import taskStore from './stores/task'
+import listStore from "./stores/list";
 import { MenuState } from "./consts";
 import { Empty } from "ant-design-vue";
 import { ITaskInfo as TaskInfo } from "./interfaces";

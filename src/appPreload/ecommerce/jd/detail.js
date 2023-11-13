@@ -4,7 +4,13 @@ const {
   callback,
   closeSelf
 } = require('../../app')
-
+setTimeout(()=>{
+  callback({
+    status:0,
+    code:500,
+    info:'超时失败'
+  })
+},10000)
 intervalEvent((clear)=>{
 
   if($('#ttbar-login .nickname').length>0){
@@ -35,6 +41,14 @@ function main(){
   let expressNo=$('.J-delivery-track li').eq(2).text()
   let expressType=$('.J-delivery-track li').eq(1).text()
   let traceNodeEls=$('.track-list li')
+  if(traceNodeEls.length===0){
+    callback({
+      status:0,
+      info:'无物流',
+    })
+    closeSelf()
+    return
+  }
   let traceNodes=[]
   for(const li of traceNodeEls){
     const $li=$(li)
@@ -55,5 +69,6 @@ function main(){
     data
   })
   closeSelf()
+  //closeSelf()
   console.log(data)
 }

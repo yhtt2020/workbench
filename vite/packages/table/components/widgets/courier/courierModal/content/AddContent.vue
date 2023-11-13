@@ -122,7 +122,7 @@ export default defineComponent({
         } else {
           courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
         }
-      
+
 
     }
 
@@ -132,7 +132,7 @@ export default defineComponent({
 
       // if(evt.data){
       //   const regexText = new RegExp(evt.data,"i");
-      //   const find = expressList.find((item)=>{ 
+      //   const find = expressList.find((item)=>{
       //    return regexText.test(item.name);
       //   })
 
@@ -166,10 +166,11 @@ export default defineComponent({
           message.warning('请添加快递信息')
           evt.preventDefault();
         } else {
-
-          for (let i = 0; i < courierLists.value.length; i++) {
-            console.log(numRef.value[i].stateValue);
-            addCourier.putCourierInfo(courierLists.value[i].code, courierLists.value[i].orderNum, courierLists.value[i].phoneLastNum)
+message.success('添加快递成功。')
+          for (const item of courierLists.value) {
+            if(item){
+              addCourier.putCourierInfo(item.code, item.orderNum, item.phoneLastNum)
+            }
           }
           ctx.emit('close')
         }
