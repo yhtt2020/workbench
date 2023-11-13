@@ -12,7 +12,19 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
         communityPost: [],
         saveContent:'',
         saveDynamic:'',
-        saveTitle:''
+        saveTitle:'',
+        // 保存帖子相关内容
+        postContent:{
+            title:'',
+            content:'',
+            imagesList:[],
+            coverList:[]
+        },
+        // 保存动态相关内容
+        dynamicContent:{
+            content:"",
+            imagesList:[]
+        }
     }),
     actions: {
         // 获取我的圈子
