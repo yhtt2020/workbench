@@ -44,13 +44,11 @@ function getItemStyles(
     [x, y] = freeLayoutStore.snapToGrid(x, y);
     x += initialOffset.x;
     y += initialOffset.y;
-    console.log("最后的x, y :>> ", x, y);
   } else {
     // x = dargX.value;
     // y = dargY.value;
   }
 
-  // console.log("x :>> ", x);
   let transform = `translate(${isSnapToGrid ? x - 2 : x}px, ${
     isSnapToGrid ? y - 2 : y
   }px)`;

@@ -1,8 +1,8 @@
 <template>
   <div
     ref="containerRef"
-    @click.stop.prevent="handleOpenMenu($event, 'click')"
-    @contextmenu.stop.prevent="handleOpenMenu($event, 'contextmenu')"
+    @click.prevent.stop="handleOpenMenu($event, 'click')"
+    @contextmenu.prevent.stop="handleOpenMenu($event, 'contextmenu')"
   >
     <slot></slot>
     <teleport to="body">
@@ -112,7 +112,9 @@ const menuY = ref(0);
 function handleOpenMenu(e: any, currentModel: string) {
   if (!beforeCreate.value()) return;
 
+
   if (model.value != currentModel && model.value != "all") return;
+  console.log('222 :>> ', 222);
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;

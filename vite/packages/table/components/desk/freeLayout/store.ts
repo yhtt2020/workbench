@@ -13,16 +13,26 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     dragData: {},
     // 默认状态数据
     defaultState: {
+      // 未划分
       start: true,
-      last: true,
-      position: "top center",
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
+      // 系统数据
+      system: {
+        // 是否使用自由布局
+        isFreeLayout: true,
+        // 是否使用悬浮菜单
+        isFloatMenu: true,
+        FloatMenu: {},
+      },
+
       margin: 6,
-      // 辅助线参数
+      // 辅助线数据
       line: {
-        isAuxLine: false,
-        isCenterLine: false,
+        isAuxLine: false, // 是否显示辅助线
+        isCenterLine: false, // 是否显示中心线
+        isBorderLine: false, // 是否显示边框线
+
         centerLine: {
           x: 1000,
           y: 1000,
@@ -82,7 +92,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前自由布局是否开启
     isFreeLayout() {
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        return this.freeLayoutState[this.getCurrentDeskId].start;
+        return this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
       }
     },
     // 获取当前自由布局边距状态
@@ -150,8 +160,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        this.freeLayoutState[this.getCurrentDeskId].start =
-          !this.freeLayoutState[this.getCurrentDeskId].start;
+        this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
+          !this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
       } else {
         // 否则进行初始化
         this.initFreeLayout();
@@ -167,20 +177,22 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     clearFreeLayoutState() {
       this.getFreeLayoutState = {};
     },
+    // 删除当前自由布局数据
     clearFreeLayout() {
+      console.log("2222 :>> ", 2222);
       delete this.freeLayoutData[this.getCurrentDeskId];
       delete this.freeLayoutState[this.getCurrentDeskId];
+      console.log("object :>> ", this.freeLayoutState);
+    },
+    // 清除所有自由布局数据
+    clearAllFreeLayout() {
+      this.freeLayoutData = {};
+      this.freeLayoutState = {};
     },
     // 初始化当前环境
     initFreeLayoutEnv() {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
-    },
-    // 清除所有数据
-    clearAllFreeLayout() {
-      this.freeLayoutData = {};
-      // 自由布局状态
-      this.freeLayoutState = {};
     },
   },
   persist: {

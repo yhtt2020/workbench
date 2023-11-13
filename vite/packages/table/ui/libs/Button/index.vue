@@ -2,7 +2,7 @@
   <button
     @click.stop="handleClick"
     :disabled="disabled"
-    class="xt-text text-base flex items-center justify-center"
+    class=" text-base flex items-center justify-center"
     :class="[buttonStyle]"
     :style="{
       width: block ? '100%' : w + 'px',

@@ -56,9 +56,9 @@
         }"
       />
     </template>
-
     <slot></slot>
   </div>
+  <!-- <FloatMenu></FloatMenu> -->
 </template>
 
 <script setup lang="ts">
@@ -67,7 +67,6 @@ import { useDrop } from "vue3-dnd";
 import { storeToRefs } from "pinia";
 import { ItemTypes } from "./types";
 import { useFreeLayoutStore } from "./store";
-
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutData, getFreeLayoutState, getFreeLayoutMargin }: any =

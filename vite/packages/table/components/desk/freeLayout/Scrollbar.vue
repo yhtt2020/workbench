@@ -1,6 +1,7 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  {{ getFreeLayoutState }}
+  <!-- <FloatMenu style="z-index: 99999;"/> -->
+  <!-- {{ scrollData }} -->
   <div
     v-show="freeLayoutEnv.loading"
     ref="scrollbar"
@@ -14,13 +15,6 @@
     @mouseover="handleMouseMove"
   >
     <slot> </slot>
-    <!-- <div
-      @click="handleClick($event)"
-      class="absolute w-full h-full xt-theme-bg top-0 left-0"
-      style="z-index: 1000"
-    >
-      112
-    </div> -->
   </div>
 </template>
 <script setup>
@@ -29,8 +23,11 @@ import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-
+import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
+
+import Container from "./FloatMenu/Container.vue";
+// import FloatMenu from "./FloatMenu.vue";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
@@ -38,12 +35,15 @@ const { getFreeLayoutState, dragData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
+const scrollData = ref();
 onMounted(() => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-
+  // scrollData.value =
+  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
+  console.log("scrollData :>> ", scrollData);
   setTimeout(async () => {
     // 初始化自由布局定位
     await redirect();
@@ -87,8 +87,8 @@ function redirect() {
    * @description 根据X,Y轴定位到当前屏幕居中位置
    *
    * 核心算法
-   *   滚动X位置 = (可视宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
-   *   滚动Y位置 = (可视高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   * 滚动X位置 = (可视宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
+   * 滚动Y位置 = (可视高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
    *
    */
   const x =

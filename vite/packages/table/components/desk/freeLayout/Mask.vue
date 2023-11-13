@@ -37,8 +37,8 @@ function setPosition(event) {
      * @description 获取鼠标点击位置位于整个滚动区的实际位置
      *
      * 核心算法
-     *   居中X坐标 = 鼠标点击X轴 - 容器左边界相对于视窗的位置 + X轴滚动距离
-     *   居中Y坐标 = 鼠标点击Y轴 - 容器上边界相对于视窗的位置 + Y轴滚动距离
+     * 居中X坐标 = 鼠标点击X轴 - 容器左边界相对于视窗的位置 + X轴滚动距离
+     * 居中Y坐标 = 鼠标点击Y轴 - 容器上边界相对于视窗的位置 + Y轴滚动距离
      */
     const { left, top } = container.value.getBoundingClientRect();
     const { clientX, clientY } = event;

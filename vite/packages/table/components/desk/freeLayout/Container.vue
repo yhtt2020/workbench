@@ -19,63 +19,87 @@ const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, freeLayoutEnv } =
 
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
+
+// 1 获取页面数据
+const scrollWidth = freeLayoutEnv.value.scrollWidth;
+const scrollHeight = freeLayoutEnv.value.scrollHeight;
+const scrollTop = freeLayoutEnv.value.scrollTop;
+const scrollLeft = freeLayoutEnv.value.scrollLeft;
+
+// 滚动清除cards数据
+watch(
+  [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
+  ([newScrollTop, newScrollLeft], [oldScrollTop, oldScrollLeft]) => {
+    cards.value = [];
+  }
+);
+
+// 绘制图形
+const cards: any = ref([]);
+const waterfallFlow: any = ref(null);
+async function drawGraph(item) {
+  const { customData } = item;
+  const { width, height } = customData.widgetSize;
+
+  cards.value.push({
+    width,
+    height,
+  });
+}
+
+// 获取位置
+async function getPosition(item) {
+  await drawGraph(item);
+  const childDiv = await waterfallFlow.value?.getElementsByTagName("div");
+  const { left, top } =
+    childDiv[cards.value.length - 1].getBoundingClientRect();
+
+  const { left: waterfallFlowLeft, top: waterfallFlowTop } =
+    waterfallFlow.value.getBoundingClientRect();
+
+  return {
+    left: left - waterfallFlowLeft,
+    top: top - waterfallFlowTop,
+  };
+}
+
 /**
  * 更新自由布局数据
  */
 let updateCardTimer: any = null;
-
-/**
- *
- * @param cards
- * 计算当前页面添加数据
- *
- */
-watch(
-  [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
-  ([newScrollTop, newScrollLeft], [oldScrollTop, oldScrollLeft]) => {
-    // console.log("scrollTop changed:", newScrollTop, "old:", oldScrollTop);
-    // console.log("scrollLeft changed:", newScrollLeft, "old:", oldScrollLeft);
-  }
-);
-// 记录以添加了的内容
-let currentCard = ref();
-let width = 0;
-// 实现添加
-function addCardAtPosition(item) {
-  // 获取当前宽度
-  const scrollWidth = freeLayoutEnv.value.scrollWidth;
-  // 获取卡片元素
-  const { id, name, customData } = item;
-  // console.log("cu :>> ", customData.widgetSize);
-  const widgetWidth: any = customData.widgetSize.width;
-  const scrollLeft = freeLayoutEnv.value.scrollLeft;
-  const currentWidth = scrollLeft * 6 + widgetWidth;
-  width += currentWidth;
-  return scrollLeft + 6;
-  // if () {
-
-  // }
-}
-
-function updateCards(cards) {
+function updateCards(data) {
   let obj = {};
-  cards.forEach((item) => {
+
+  // 优化1 抽离删除过程
+  let cardObj = {};
+  data.forEach((item) => (cardObj[item.id] = item));
+  for (const key in getFreeLayoutData.value) {
+    if (!(key in cardObj)) {
+      delete getFreeLayoutData.value[key];
+    }
+  }
+  // 添加逻辑
+  data.forEach(async (item) => {
     const { id, name, customData } = item;
-    addCardAtPosition(item);
-    obj[item.id] = {
-      left:
-        getFreeLayoutData.value[item.id]?.left ||
-        freeLayoutEnv.value.scrollLeft + 6,
-      top:
-        getFreeLayoutData.value[item.id]?.top ||
-        freeLayoutEnv.value.scrollTop + 6,
+    // 优化2 重复的ID跳过
+    if (
+      getFreeLayoutData.value[item.id] &&
+      getFreeLayoutData.value[item.id].id == id
+    ) {
+      return;
+    }
+    // 优化3 抽离获取坐标过程
+    const { left, top } = await getPosition(item);
+    getFreeLayoutData.value[item.id] = {
+      left,
+      top,
       id,
       name,
       customData,
     };
+
+    console.log("更新了数据 :>> ");
   });
-  freeLayoutData.value[getCurrentDeskId.value] = obj;
-  console.log("更新了数据 :>> ");
 }
 watch(currentDesk.value?.cards, (cards) => {
   clearTimeout(updateCardTimer);
@@ -83,45 +107,52 @@ watch(currentDesk.value?.cards, (cards) => {
     updateCards(cards);
   }, 200);
 });
-
-/**
- * 实现瀑布流
- */
-
-// 1 获取页面数据
-// const scrollWidth = freeLayoutEnv.value.scrollWidth;
-// const scrollHeight = freeLayoutEnv.value.scrollHeight;
-// const scrollTop = freeLayoutEnv.value.scrollTop;
-// const scrollLeft = freeLayoutEnv.value.scrollLeft;
-// // 2 逐个添加
-// let a = [];
-
-// currentDesk.value.forEach((item) => {
-//   console.log("item :>> ", item);
-// });
 </script>
 
 <template>
+  <div
+    ref="waterfallFlow"
+    class="flex flex-wrap justify-start items-start xt-theme-b fixed"
+    style="z-index: -1"
+    :style="{
+      width: freeLayoutEnv.scrollData?.width + 'px',
+      height: freeLayoutEnv.scrollData?.height + 'px',
+      top: freeLayoutEnv?.scrollData?.top + 'px',
+      left: freeLayoutEnv?.scrollData?.left + 'px',
+    }"
+  >
+    <div
+      class="rounded-xl xt-theme-b"
+      v-for="item in cards"
+      style="margin: 6px"
+      :style="{
+        width: item.width + 'px',
+        height: item.height + 'px',
+      }"
+    ></div>
+  </div>
   <!-- 拖拽层 -->
-  <DragPreview>
-    <template #box="{ data }">
-      <slot name="box" :data="{ data }"></slot>
-    </template>
-  </DragPreview>
-  <!-- 整体画布层 -->
-
-  <Canvas>
-    <DraggableBox
-      v-for="item in getFreeLayoutData"
-      :id="item.id"
-      :top="item.top"
-      :left="item.left"
-      :key="item.id"
-      :data="item"
-    >
+  <teleport to="body">
+    <DragPreview>
       <template #box="{ data }">
         <slot name="box" :data="{ data }"></slot>
       </template>
-    </DraggableBox>
-  </Canvas>
+    </DragPreview>
+  </teleport>
+  <!-- 整体画布层 -->
+
+  <!-- <Canvas> -->
+  <DraggableBox
+    v-for="item in getFreeLayoutData"
+    :id="item.id"
+    :top="item.top"
+    :left="item.left"
+    :key="item.id"
+    :data="item"
+  >
+    <template #box="{ data }">
+      <slot name="box" :data="{ data }"></slot>
+    </template>
+  </DraggableBox>
+  <!-- </Canvas> -->
 </template>
