@@ -88,6 +88,7 @@ import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
+
 export default {
   name: 'Code',
   components: { RayMedal },
@@ -106,11 +107,12 @@ export default {
     }
   },
   async mounted () {
-    setTimeout(()=>{
+    setTimeout(() => {
       if (window.$isOffline && this.init) {
         this.$router.replace({ name: 'home' })
       }
-    },1000)
+    }, 1000)
+    this.timeout()
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
@@ -178,12 +180,14 @@ export default {
     timeout () {
       this.timeoutHandler = setTimeout(() => {
         Modal.error({
-          content: '服务器连接超时。可能服务器正在维护，请稍后再试。',
+          content: '服务器连接超时。可能服务器正在维护，请稍后再试或者使用离线模式。',
           key: 'error',
-          okText: '重试',
+          okText: '确定',
           centered: true,
           onOk: () => {
-            window.location.reload()
+            this.launching = false
+            window.loadedStore['userInfo'] = true
+            this.loading = false
           }
         })
       }, 5000)
