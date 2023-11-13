@@ -1,9 +1,8 @@
 
 <template>
-    <xt-modal  title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
-        :esc="true">
+    <xt-modal title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true">
         <div class="w-full pl-4 pr-4"
-            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen? '0px' : '12px' }">
+            :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen ? '0px' : '12px' }">
             <div class="flex justify-between w-full h-[64px] items-center ">
                 <div class="flex justify-center w-full ">
                     <div class="flex justify-center ml-12">
@@ -109,10 +108,9 @@
                                 </vue-custom-scrollbar>
                                 <!-- </div> -->
                             </template>
-
+                            <!-- <button>表情</button> -->
                             <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
                                 style="color: var(--secondary-text) !important;">
-                                <!-- <SmileOutlined style="" /> -->
                                 <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
                                     style="vertical-align: sub;margin-right: 4px;" />
                                 表情
@@ -151,12 +149,12 @@
                     <!-- <a-upload v-model:file-list="coverList" action="" class="ml-2 text-base" list-type="picture-card"
                         @preview="handlePreview">
                     </a-upload> -->
-                    <a-image :width="200"  :src="coverList[0]?.originFileObj.path" />
+                    <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
                 </div>
                 <div class="flex items-center justify-between h-[56px] ">
                     <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
                     style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
-                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择板块" :bordered="false"
+                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
                         @change="handleChange"
                         style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
                         dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
@@ -409,9 +407,9 @@ const publishPost = async () => {
         let coverImage
         if (coverList.value.length > 0) {
             const coverUrlList = await Promise.all(coverList.value.map(async (item) => {
-            const url = await fileUpload(item.originFileObj);
-            return url;
-        }));
+                const url = await fileUpload(item.originFileObj);
+                return url;
+            }));
             coverImage = await JSON.stringify(coverUrlList);
 
         }
@@ -454,8 +452,8 @@ const publishPost = async () => {
             useYuanCommunityStore.saveContent = ''
             postValue.value = ''
             fileList.value = []
-            coverList.value = []   
-        },1000);
+            coverList.value = []
+        }, 1000);
 
     }
 }

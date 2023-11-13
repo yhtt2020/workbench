@@ -1,6 +1,6 @@
 <template>
   <div class="team-module">
-    <div @click="toggleTeam" class="common-panel s-bg pointer "
+    <div v-if='!isOffline' @click="toggleTeam" class="common-panel s-bg pointer "
     style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);">
     <emoji style="width: 52px;height:52px" icon="glassface"></emoji>
     </div>
@@ -26,6 +26,7 @@ import { teamStore } from '../../store/team'
 import MyProp from '../team/MyProp.vue'
 import Emoji from '../comp/Emoji.vue'
 import { taskStore } from '../../apps/task/store'
+import { offlineStore } from '../../js/common/offline'
 export default {
   name: "Team",
   components: {
@@ -83,6 +84,7 @@ export default {
   computed: {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(taskStore, ['isTaskDrawer']),
+    ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),

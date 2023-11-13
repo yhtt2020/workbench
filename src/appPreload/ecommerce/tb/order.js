@@ -75,10 +75,7 @@ function main () {
 
         console.log(orders)
         console.log(parentOrders)
-        window.callbackData = {
-          orders: orders,
-          parentOrders: parentOrders,
-        }
+        callback(orders)
         // ipc.send('api.web.callback', {
         //   args: {
         //     status: 1,
@@ -89,19 +86,18 @@ function main () {
         // })
         // clearInterval(interval)
         clear()
+        closeSelf()
       }
 
     } catch (error) {
       clear()
-      ipc.send('api.web.callback', {
-        args: {
-          cbId: args.cbId,
-          status: 0,
-          info: '获取报错',
-          error: error
-        }
+      callback({
+        cbId: args.cbId,
+        status: 0,
+        info: '获取报错',
+        error: error
       })
-
+      closeSelf()
       // clearInterval(interval)
     }
 
@@ -140,7 +136,7 @@ function main () {
             }
             order.latestNodes.push(nodeItem)
           }
-          order.updateTime=Date.now()
+          order.updateTime = Date.now()
           order.arrivalAt = $(tip).find('.logistics-cont .mt10').text()
           order.expressType = clearText($(tip).find('.p-tit').text()).replaceAll('查看更多>', '')
           order.expressNo = order.expressType.substring(order.expressType.lastIndexOf('：') + 1, order.expressType.length)
@@ -187,8 +183,8 @@ function getOrderInfo ($item) {
       amount: '',
     }
     //if ($(child).hasClass('sep-tr-bd')) continue
-    let imgSrc=$(child).find('.production-mod__pic___G8alD img').attr('src')
-    if(!imgSrc){
+    let imgSrc = $(child).find('.production-mod__pic___G8alD img').attr('src')
+    if (!imgSrc) {
       continue
     }
     item.cover = fixProtocol(imgSrc)
@@ -199,9 +195,9 @@ function getOrderInfo ($item) {
   }
   // const statusParent=$item.find('table tbody:eq(1) tr:eq(0) td:eq(5)')
   // console.log(statusParent)
-  order.status = $item.find('tbody').eq(1).find('td').eq(5).find("p[style='margin-bottom:3px;'] span.text-mod__link___1rXmw").text()
-  order.detailUrl = fixProtocol($item.find("a").filter(function (){
-    return $(this).text()==='订单详情'
+  order.status = $item.find('tbody').eq(1).find('td').eq(5).find('p[style=\'margin-bottom:3px;\'] span.text-mod__link___1rXmw').text()
+  order.detailUrl = fixProtocol($item.find('a').filter(function () {
+    return $(this).text() === '订单详情'
   }).attr('href'))
   return order
 }

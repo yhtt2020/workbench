@@ -6,7 +6,7 @@
         <DropDown class="ml-3" :navList="tabList.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
       <div class="flex right-button">
-        <DropIndex :navList="addList"></DropIndex>
+        <DropIndex :navList="addList" @open="addCourier"></DropIndex>
         <a-tooltip placement="top" class="mr-3" title="设置">
           <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
             <div class="flex items-center justify-center">
@@ -24,14 +24,22 @@
       </div>
     </div>
 
-    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="true"/>
+    <Empty v-if="courierDetailList.length === 0"  :exampleVisible="false"/>
 
     <template v-else>
       <template v-if="detailList?.length === 0">
-        <Empty :exampleVisible="true"/>
+        <Empty :exampleVisible="false"/>
       </template>
       <div class="flex w-full justify-between px-6" v-else>
         <div style="width:452px;" class="flex flex-col">
+          <div class="flex items-center mb-4 justify-between">
+            <SelectPlateform />
+            <xt-button w="40" h="40">
+              <div class="flex items-center justify-center">
+                <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
+              </div>
+            </xt-button>
+          </div>
           <template v-if="allShow">
             <SortList  :list="courierDetailList" @rightSelect="getRightItem"/>
           </template>
@@ -42,28 +50,39 @@
                 :class="{ 'select': currentID === index }" 
                 >
                   <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                    <div class="flex  justify-between"  @click.prevent="detailClick(item,index)">
-                      <div class="flex items-center justify-center mr-4 rounded-lg w-14 h-14" style="background: var(--mask-bg);">
-                        <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
-                      </div>
-                      <div class="flex flex-col" style="max-width: 360px;">
-                        <div class="flex items-center justify-between " >
-                          <span class="xt-font font-16 font-600">
-                            {{ item.LogisticCode }}
-                          </span>
-        
-                          <div class="flex">
-                            <div class="flex xt-text-2" style="font-size: 14px;text-align: center;">
-                              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg-2">
+                    <div class="flex flex-col justify-between"  @click.prevent="detailClick(item,index)">
+                      <div class="flex">
+                        <div class="flex items-center justify-center mr-4 rounded-lg" style="width:52px;height:52px;background: var(--mask-bg);">
+                         <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                        </div>
+                        <div class="flex items-center justify-between " style="width:362px;">
+                          <div class="flex flex-col">
+                            <div class="flex items-center mb-1.5">
+                              <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
+                              <div v-if="isTb" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#FA5000;"> 淘 </div>
+                              <span class="xt-font font-16 font-600 mx-1.5">
+                                {{ item.LogisticCode }}
+                              </span>
+                              <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
+                              <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
+                            </div>
+                            <div class="flex">
+                              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
                                 {{ switchCompany(item) }}
                               </div>
-                              <div class="flex items-center pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item) }">
-                                {{ switchState(item) }}
-                              </div>
+                              <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆</div>
                             </div>
                           </div>
+                          <div class="flex flex-col items-center justify-end">
+                            <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item,index),color:'var(--active-text)'}">
+                              {{ switchState(item) }}
+                            </div>
+                            <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
+                          </div>
                         </div>
+                      </div>
         
+                      <div class="flex flex-col">
                         <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
                         <div class="summary">
                           {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
@@ -95,22 +114,23 @@ import { courierStore } from '../../../../../store/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierType,selectTab,selectData } from '../modalMock'
 import { kdCompany, kdState, switchColor } from '../../mock'
-import { Modal } from 'ant-design-vue'
+import { Modal } from 'ant-design-vue' 
 
 import HorizontalPanel from '../../../../HorizontalPanel.vue'
-import AddCourierModal from '../AddCourierModal.vue'
+import AddCourierModal from '../AddCourierModal.vue' 
 import CourierSetting from '../CourierSetting.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
 import DropDown from '../dropdown/MoreDrop.vue'
 import SortList from '../dropdown/SortList.vue'
 import Empty from '../../Empty.vue'
 import RightDetail from './RightDetail.vue'
+import SelectPlateform from '../dropdown/SelectPlateform.vue'
 
 
 export default {
   components:{
     SmallIcon,HorizontalPanel,DropIndex,AddCourierModal,
-    CourierSetting,DropDown,SortList,Empty,RightDetail
+    CourierSetting,DropDown,SortList,Empty,RightDetail,SelectPlateform
   },
 
   data(){
@@ -244,7 +264,7 @@ export default {
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   white-space: break-spaces;
   overflow: hidden;
   margin: 0 !important;
@@ -260,6 +280,6 @@ export default {
 :deep(.empty-content){
   height: 400px !important;
   margin: 50px 0 !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
 }
 </style>

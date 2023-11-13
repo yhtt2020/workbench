@@ -62,6 +62,7 @@ class TableManager {
           minWidth: 800,
           minHeight: 480,
           frame: false,
+          //focusable:false, //辅助模式，无法被聚焦
           skipTaskbar: !showInTaskbar,
           transparent: true,
           //backgroundColor: '#fff',

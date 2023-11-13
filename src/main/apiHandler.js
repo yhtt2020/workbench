@@ -1,12 +1,13 @@
 const Watch = require('./apiHander/watch')
 const Web = require('./apiHander/web')
+const Window = require('./apiHander/Window')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
 const { ipcMain: ipc, app } = require('electron')
 const captureHelper = require('./captureHelper')
-const SystemHelper=require('./libs/systemHelper')
-console.log(SystemHelper,'系统帮助')
+const SystemHelper = require('./libs/systemHelper')
+console.log(SystemHelper, '系统帮助')
 const apiList = {
 
   window: [
@@ -29,6 +30,7 @@ class ApiHandler {
   static bindIPC () {
     ApiHandler.handlers.push(new Watch())
     ApiHandler.handlers.push(new Web())
+    ApiHandler.handlers.push(new Window())
     ApiHandler.handlers.forEach(handler => {
       handler.bindIPC()
     })
@@ -222,153 +224,6 @@ class ApiHandler {
       event.returnValue = require('electron').screen.getAllDisplays()
     })
 
-    ApiHandler.onWindow('close', (event, args, instance) => {
-      windowManager.close(instance.name)
-    })
-
-    ApiHandler.onWindow('setAlwaysOnTop', (event, args, instance) => {
-      if (instance.window) {
-        instance.window.setAlwaysOnTop(args.flag)
-      }
-    })
-
-    ApiHandler.onWindow('isAlwaysOnTop', (event, args, instance) => {
-      if (instance.type === 'view') {
-        event.returnValue = false //view的话，统一返回false
-      } else if (instance.type === 'frameWindow') {
-        event.returnValue = instance.frame.isAlwaysOnTop()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.isAlwaysOnTop()
-      }
-    })
-
-    ApiHandler.onWindow('isMaximized', (event, args, instance) => {
-      if (instance.type === 'view') {
-        event.returnValue = false //view的话，统一返回false
-      } else if (instance.type === 'frameWindow') {
-        event.returnValue = instance.frame.isMaximized()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.isMaximized()
-      }
-    })
-    ApiHandler.onWindow('maximize', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.maximize()
-      } else if (instance.type === 'window') {
-        instance.window.maximize()
-      }
-    })
-    ApiHandler.onWindow('unmaximize', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.unmaximize()
-      } else if (instance.type === 'window') {
-        instance.window.unmaximize()
-      }
-    })
-    ApiHandler.onWindow('minimize', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.minimize()
-      } else if (instance.type === 'window') {
-        instance.window.minimize()
-      }
-    })
-    ApiHandler.onWindow('restore', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.restore()
-      } else if (instance.type === 'window') {
-        instance.window.restore()
-      }
-    })
-
-    ApiHandler.onWindow('getSize', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        event.returnValue = instance.view.getSize()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.getSize()
-      }
-    })
-
-    ApiHandler.onWindow('getZoomFactor', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        event.returnValue = instance.view.webContents.getZoomFactor()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.webContents.getZoomFactor()
-      }
-    })
-
-    ApiHandler.onWindow('setZoomFactor', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.view.webContents.setZoomFactor(args)
-      } else if (instance.type === 'window') {
-        instance.window.webContents.setZoomFactor(args)
-      }
-    })
-
-    ApiHandler.onWindow('getBounds', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        event.returnValue = instance.frame.getBounds()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.getBounds()
-      }
-
-    })
-
-    ApiHandler.onWindow('setBounds', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.setBounds(args)
-      } else if (instance.type === 'window') {
-        instance.window.setBounds(args)
-      }
-    })
-    ApiHandler.onWindow('setFullScreen', (event, args, instance) => {
-      if (instance.type === 'frameWindow') {
-        instance.frame.setFullScreen(args)
-      } else if (instance.type === 'window') {
-        instance.window.setFullScreen(args)
-      }
-    })
-    ApiHandler.onWindow('isFullScreen', (event, args, instance) => {
-      if (instance.type === 'view') {
-        event.returnValue = false //view的话，统一返回false
-      } else if (instance.type === 'frameWindow') {
-        event.returnValue = instance.frame.isFullScreen()
-      } else if (instance.type === 'window') {
-        event.returnValue = instance.window.isFullScreen()
-      }
-    })
-    ApiHandler.onWindow('attach', (event, args, instance) => {
-      if (windowManager.attachedInstance === instance) {
-        return
-      }
-      windowManager.attachInstance(instance, args.pos, args.width)
-    })
-
-    ApiHandler.onWindow('detach', (event, args, instance) => {
-      if (windowManager.attachedInstance !== instance) {
-        return
-      }
-      windowManager.detachInstance()
-    })
-
-    ApiHandler.onWindow('getAttachStatus', (event, args, instance) => {
-      if (windowManager.attachedInstance !== instance) {
-        event.returnValue = false
-      } else {
-        event.returnValue = windowManager.attachStatus
-      }
-    })
-
-    ApiHandler.onWindow('getCapture', async (event, args, instance) => {
-      if (instance.type === 'window') {
-        let captureImg = await captureHelper.capture(event.sender)
-        if (captureImg) {
-          event.returnValue = captureImg
-        } else {
-          event.returnValue = null
-        }
-      }
-    })
-
     ApiHandler.on('notification', 'send', (event, args, instance) => {
       //需要前置处理消息设置的状态决定到底发不发消息
       if (instance.app) {
@@ -387,17 +242,6 @@ class ApiHandler {
     })
   }
 
-  /**
-   * 通用绑定事件方法，额外增加了一个instance参数以便于api区分当前的instance
-   * @param channel
-   * @param cb
-   */
-  static onWindow (channel, cb) {
-    ApiHandler._on('api.window.' + channel, (event, args) => {
-      let instance = windowManager.get(args['_name'])
-      cb(event, args['args'], instance)
-    })
-  }
 
   static on (module, channel, cb) {
     ApiHandler._on('api.' + module + '.' + channel, (event, args) => {

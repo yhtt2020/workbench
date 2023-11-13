@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="flex ">
-            <xt-button class="mr-2 commerce-large" @click="bindJd"
+            <xt-button class="mr-2 commerce-large" @click="bindJd" v-if="storeInfo.jd.nickname === null"
                 style="width: 40px; height: 40px;background: #E12419;font-weight: 600;color: rgba(255,255,255,0.85) !important;font-size: 24px;">JD</xt-button>
-            <xt-button class="mr-2 commerce-large" @click="bindTb"
+            <xt-button class="mr-2 commerce-large" @click="bindTb" v-if="storeInfo.tb.nickname === null"
                 style="width: 40px; height: 40px;background: #FA5000;font-weight: 600;color: rgba(255,255,255,0.85) !important;font-size: 24px;">淘</xt-button>
             <xt-button :w="129" :h="40" style="background: #508BFE;color: rgba(255,255,255,0.85) !important;"  @click="addCourier">
                 <newIcon icon="fluent:add-16-filled" style="font-size: 20px;line-height: 40px;vertical-align: sub;" />
