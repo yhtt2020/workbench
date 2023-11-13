@@ -5,10 +5,10 @@
     </div>
     <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;color: var(--primary-text);">{{ detailOptions.title }}</span>
     <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;color: var(--secondary-text);">{{detailOptions.summary}}</span>
-    <span class="line-through mt-1" style="color:var(--secondary-text);font-family: Oswald-Regular;">{{detailOptions.price}}</span>
+    <span class="line-through mt-1 xt-num-font-600" style="color:var(--secondary-text);">{{detailOptions.price}}</span>
     <div class="flex justify-between items-center">
-      <span style="color: rgba(255, 77, 79, 1);font-family: Oswald;font-size: 16px;font-weight: 600;">免费领取</span>
-      <span style="background: rgba(255, 77, 79, 1);font-family: Oswald; padding: 1px 7px 3px 6px;border-radius: 4px;color:var(--active-text);">
+      <span class="xt-num-font-600" style="color: rgba(255, 77, 79, 1);font-size: 16px;font-weight: 600;">免费领取</span>
+      <span class="xt-num-font-600" style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;color:var(--active-text);">
         剩余{{detailOptions.days}}天
       </span>
     </div>

@@ -4,74 +4,90 @@ export const regionRange= [
   {
     id: 'cn',
     name: '国区',
-    locale:'zh-CN'
+    locale:'zh-CN',
+    symbol:'¥',
   },
   {
     id:'tr',
     name:'土耳其',
-    locale:'tr-TR'
+    locale:'tr-TR',
+    symbol:'₤'
   },
 
   {
     id: 'ar',
     name: '阿根廷',
-    locale:'ar-AR'
+    locale:'ar-AR',
+    symbol:'$'
   },
   {
     id: 'hk',
     name: '香港',
-    locale:'zh-HK'
+    locale:'zh-HK',
+    symbol:'HK$'
   }, {
     id: 'us',
     name: '美国',
-    locale:'us-US'
+    locale:'us-US',
+    symbol:'$'
   },
   {
     id: 'ca',
     name: '加拿大',
-    locale:'ca-CA'
+    locale:'ca-CA',
+    symbol:'$'
   },
   {
     id: 'gb',
     name: '英国',
-    locale:'gb-GB'
+    locale:'gb-GB',
+    symbol:'£'
   }, {
     id: 'fr',
     name: '法国',
-    locale:'fr-FR'
+    locale:'fr-FR',
+    symbol:'€'
   }, {
     id: 'de',
     name: '德国',
-    locale:'de-DE'
+    locale:'de-DE',
+    symbol:'€'
   }, {
     id: 'it',
     name: '意大利',
-    locale:'it-IT'
+    locale:'it-IT',
+    symbol:'€'
   }, {
     id: 'jp',
     name: '日本',
-    locale:'jp-JP'
+    locale:'jp-JP',
+    symbol:'¥'
   }, {
     id: 'br',
     name: '巴西',
-    locale:'br-BR'
+    locale:'br-BR',
+    symbol:'R$'
   }, {
     id: 'in',
     name: '印度',
-    locale:'in-IN'
+    locale:'in-IN',
+    symbol:'₨'
   }, {
     id: 'ru',
     name: '俄罗斯',
-    locale:'ru-RU'
+    locale:'ru-RU',
+    symbol:'₽'
   }, {
     id: 'au',
     name: '澳大利亚',
-    locale:'au-AU'
+    locale:'au-AU',
+    symbol:'$'
   },
   {
     id:'kr',
     name:'韩国',
-    locale:'kr-KR'
+    locale:'kr-KR',
+    symbol:'₩'
   }
 
 ]

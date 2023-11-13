@@ -1,3 +1,5 @@
+import { regionRange } from '../../../../js/axios/api'
+
 // 判断本周的方法
 export function thisWeek() {
  // 获取当前日期
@@ -16,7 +18,6 @@ export function thisWeek() {
   endDate:thisWeekEnd
  }
 }
-
 
 // 判断下周的方法
 export function nextWeek() {
@@ -40,7 +41,6 @@ export function nextWeek() {
  
 }
 
-
 // 计算剩余多少天
 export function remainderDays(data:any){
  const startDate = new Date(data.startDate)
@@ -53,4 +53,24 @@ export function remainderDays(data:any){
 
  return {start:diffDayStart,end:diffDayEnd}
  
+}
+
+// 根据国家编码来获取货币单位
+export function currencyChange(code:any,oldPrice:any,finalPrice:any){
+ if(code !== '' && oldPrice !== '' && finalPrice !==''){
+  const findItem = regionRange.find((item)=>{ 
+   return item.id.toLocaleUpperCase() === code.slice(0,2)
+  })
+  if(findItem === undefined){
+   return {
+    old:`€${(oldPrice / 100).toFixed(2)}`,
+    final:`€${(finalPrice / 100).toFixed(2)}`
+   }
+  }else{
+   return {
+    old:`${findItem?.symbol}${(oldPrice / 100).toFixed(2)}`,
+    final:`${findItem?.symbol}${(finalPrice / 100).toFixed(2)}`
+   }
+  }
+ }
 }

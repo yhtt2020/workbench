@@ -2,8 +2,8 @@
   <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <template #left-title-icon>
       <div
-        class="icon flex items-center justify-center h-6"
-        style="width: 38px; position: absolute; left: 2px"
+        class="icon flex items-center justify-center"
+        style="width: 38px;height:24px; position: absolute; left: 2px"
       >
         <newIcon icon="cib:epic-games" style="font-size: 22px" />
       </div>
@@ -19,10 +19,10 @@
         <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in promotionList" @click.stop="enterWeek(item)">
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
          
-         <div class="remainder-day xt-num-font" style="color: var(--active-text);min-width: 100px;">
+         <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
           剩余 {{ item.days.end }} 天
          </div>
-         <div class="stablish-province xt-num-font" style="min-width: 100px;">
+         <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
           立省  {{ item.price.totalPrice.fmtPrice.originalPrice }}
          </div>
         </div>
@@ -38,10 +38,10 @@
         <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in unPromotionList" @click.stop="enterWeek(item)">
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
          
-         <div class="remainder-day xt-num-font" style="color: var(--active-text);min-width: 100px;">
+         <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
           剩余 {{ item.days.start }} 天
          </div>
-         <div class="stablish-province xt-num-font" style="min-width: 100px;">
+         <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
           立省 
           {{ item.price.totalPrice.fmtPrice.originalPrice }}
          </div>
