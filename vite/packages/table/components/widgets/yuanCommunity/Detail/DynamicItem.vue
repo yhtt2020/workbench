@@ -10,132 +10,19 @@
         </div>
 
         <!-- </div> -->
-        <div style=" " v-if="imageLoadVisible">
-            <a-upload v-model:file-list="fileList" action="" class="ml-1 text-base " list-type="picture-card" multiple
-                @preview="handlePreview">
-                <div v-if="fileList.length < 6">
-                    <div class="flex items-center justify-center">
-                        <newIcon icon="fluent:add-16-filled" style="font-size: 24px;" class="xt-text"></newIcon>
-                    </div>
-
-                </div>
-            </a-upload>
-        </div>
-        <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-            <img style="width: 100%" :src="previewImage" />
-        </a-modal>
-        <div class="h-[45px] flex items-center justify-between">
-            <div class="flex items-center justify-center xt-text-2">
-                <tippy trigger=" click" placement="bottom" :interactive="true">
-                    <template #content>
-                        <!-- <div class="w-full"> -->
-                        <vue-custom-scrollbar :settings="settingsScroller"
-                            class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
-                            <div v-for="(item, index) in folderPath" class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]"
-                                @click="addEmoji(item)" :key="index" style="cursor: pointer;">
-                                <img :src="item" class="w-[32px] h-[32px]">
-                            </div>
-                        </vue-custom-scrollbar>
-                        <!-- </div> -->
-                    </template>
-                    <button>表情</button>
-                    <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
-                        style="color: var(--secondary-text) !important;">
-                        <div class="flex items-center justify-center">
-                            <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
-                                style="margin-right: 4px;" />
-                            表情
-                        </div>
-
-                    </xt-button>
-                </tippy>
-                <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
-                    <xt-button type="text" :w="72" :h="32" class="xt-text" style="color: var(--secondary-text) !important;">
-                        <div class="flex items-center justify-center">
-                            <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
-                                style="margin-right: 4px;" />图片
-                        </div>
-
-                    </xt-button>
-                    <button>表情</button>
-                </a-upload>
-            </div>
-
-        </div>
+        
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
-import type { UploadProps } from 'ant-design-vue';
-import { Icon as newIcon } from '@iconify/vue';
-import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
-import type { CascaderProps } from 'ant-design-vue';
-import { message } from 'ant-design-vue'
-import fluentEmojis from '../../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../../page/chat/commun'
 import _ from 'lodash-es'
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
-const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const postValue = ref('')
-const addEmoji = (item) => {
-    const lastSlashIndex = item.lastIndexOf('/');
-    const emoiiValue = item.substring(lastSlashIndex + 1);
-    const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
-    postValue.value += `${key}`
-}
-// 图片添加后列表
-const imageLoadVisible = computed(() => {
-    return fileList.value?.length > 0
-})
-const settingsScroller = reactive({
-    useBothWheelAxes: true,
-    swipeEasing: true,
-    suppressScrollY: false,
-    suppressScrollX: true,
-    wheelPropagation: true,
-});
-// antd中图片处理方式
-const previewVisible = ref(false)
-const previewImage = ref('')
-const previewTitle = ref('')
-const fileList = ref<UploadProps['fileList']>([])
-const handleCancel = () => {
-    previewVisible.value = false
-    previewTitle.value = ''
-};
-const translateImage=(fileList)=>{
-    return Promise.all(fileList.map(async (file)=>{
-        return await fileUpload(file.originFileObj);
-    }))
-}
-function getBase64(file: File) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-const handlePreview = async (file: UploadProps['fileList'][number]) => {
-    if (!file.url && !file.preview) {
-        file.preview = (await getBase64(file.originFileObj)) as string;
-    }
-    previewImage.value = file.url || file.preview;
-    previewVisible.value = true;
-    previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
-    let res=await translateImage(fileList.value)
-    console.log(res)
-};
-
-
-let folderPath = reactive([])
 onMounted(() => {
-    Object.values(fluentEmojis).forEach((item) => {
-        folderPath.push(`${emoji.value}${item}`)
-    })
     let textareaElement = window.document.querySelector('textarea')
     textareaElement?.focus()
     // 获取编辑文本
@@ -154,90 +41,13 @@ const savaDynamic = () => {
 }
 // 监听文本
 watch(postValue, _.debounce(savaDynamic, 500))
+watch(() => useYuanCommunityStore.dynamicContent.content, (val) => {
+    if (val) {
+        postValue.value = val
+    }
+})
 </script>
 <style lang='scss' scoped>
-:deep(.ant-upload-list-text-container) {
-    display: none;
-}
-
-:deep(.ant-upload-list-picture-card .ant-upload-list-item-thumbnail) {
-    font-size: 8px;
-}
-
-:deep(.ant-upload.ant-upload-select-picture-card) {
-    width: 64px;
-    height: 64px;
-}
-
-:deep(.ant-upload-list-picture-card-container) {
-    width: 64px;
-    height: 64px;
-}
-
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
-    padding-right: 0px;
-}
-
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
-    color: var(--secondary-text);
-    height: 40px;
-    line-height: 40px;
-}
-
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item) {
-    color: var(--secondary-text);
-    height: 40px;
-    line-height: 40px;
-}
-
-:deep(.ant-select-arrow) {
-    color: var(--secondary-text);
-    font-size: 16px;
-}
-
-:deep(.ant-select-single.ant-select-show-arrow .ant-select-selection-item, .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder) {
-    // &::placeholder {
-    font-weight: 400;
-    font-size: 16px;
-
-    color: var(--secondary-text);
-    // }
-}
-
-// :deep(.ant-select-open) {
-//     background: var(--primary-bg) !important;
-//     color: var(--primary-text) !important;
-// }
-
-// :deep(.ant-select-focused) {
-//     background: var(--primary-bg) !important;
-//     color: var(--primary-text) !important;
-// }
-
-// :deep(.ant-select-focused .ant-select-open) {
-//     background: var(--primary-bg) !important;
-//     color: var(--primary-text) !important;
-// }
-
-:deep(.ant-input) {
-    color: var(--secondary-text);
-    margin-left: 8px;
-
-    &::placeholder {
-        font-weight: 400;
-        font-size: 16px;
-
-        color: var(--secondary-text);
-        // padding-left: 8px;
-    }
-}
-
-:deep(.tippy-box) {
-    width: 51%;
-    margin-left: 35%;
-}
-
-
 .reply-textarea {
     border-radius: 10px;
 

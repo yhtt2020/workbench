@@ -54,6 +54,83 @@
                 style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
                 <!-- 动态组件 -->
                 <component :is="componentId"></component>
+                <div style=" " v-if="imageLoadVisible">
+                    <a-upload v-model:file-list="fileList" action="" class="ml-1 text-base " list-type="picture-card"
+                        multiple @preview="handlePreview">
+                        <div v-if="fileList.length < 6">
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="fluent:add-16-filled" style="font-size: 24px;" class="xt-text"></newIcon>
+                            </div>
+
+                        </div>
+                    </a-upload>
+                </div>
+                <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+                    <img style="width: 100%" :src="previewImage" />
+                </a-modal>
+                <div class="h-[45px] flex items-center justify-between">
+                    <div class="flex items-center justify-center xt-text-2">
+                        <tippy trigger=" click" placement="bottom" :interactive="true">
+                            <template #content>
+                                <!-- <div class="w-full"> -->
+                                <vue-custom-scrollbar :settings="settingsScroller"
+                                    class="w-full h-[150px] xt-bg-2 rounded-lg flex  " style="flex-wrap: wrap;">
+                                    <div v-for="(item, index) in folderPath"
+                                        class="mb-2 ml-1 mr-1  pointer w-[32px] h-[32px]" @click="addEmoji(item)"
+                                        :key="index" style="cursor: pointer;">
+                                        <img :src="item" class="w-[32px] h-[32px]">
+                                    </div>
+                                </vue-custom-scrollbar>
+                                <!-- </div> -->
+                            </template>
+                            <!-- <button>表情</button> -->
+                            <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
+                                style="color: var(--secondary-text) !important;">
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" />
+                                    表情
+                                </div>
+
+                            </xt-button>
+                            <button>表情</button>
+                        </tippy>
+                        <a-upload v-model:file-list="fileList" @preview="handlePreview" multiple>
+                            <xt-button type="text" :w="72" :h="32" class="xt-text"
+                                style="color: var(--secondary-text) !important;">
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" />图片
+                                </div>
+
+                            </xt-button>
+                            <button>表情</button>
+                        </a-upload>
+                        <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
+                            v-show="coverList.length === 0">
+                            <xt-button type="text" :w="118" :h="32" class="xt-text"
+                                style="color: var(--secondary-text) !important;">
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                                    设置封面
+                                </div>
+
+                            </xt-button>
+                            <button>表情</button>
+                        </a-upload>
+                        <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
+                            @click="removeCover" style="color: var(--secondary-text) !important;">
+                            <div class="flex items-center justify-center">
+                                <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2" style="margin-right: 4px;" />
+                                移除封面
+                            </div>
+                        </xt-button>
+                    </div>
+
+                </div>
+                <div style="font-size: 16px !important;" v-if="coverList.length > 0">
+                    <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
+                </div>
                 <div class="flex items-center justify-between h-[56px] ">
                     <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
                         @change="handleChange"
@@ -83,12 +160,14 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { message } from 'ant-design-vue'
 import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
 import DynamicItem from './Detail/DynamicItem.vue'
 import PostItem from './Detail/PostItem.vue'
+import { translateImage } from './Detail/index'
+import fluentEmojis from '../../../js/chat/fulentEmojis'
+const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()
 // 下拉框选项
@@ -111,11 +190,9 @@ let defaultType = ref({ 'title': '发动态', 'value': 'dynamic' })
 // 视频文件
 // const videoList = ref([])
 // 封面文件
-// const coverList = ref([])
+const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
-// 正文内容
-const postValue = ref('')
 const props = defineProps({
     replyVisible: Boolean,
     showPublishModal: Boolean,
@@ -130,9 +207,9 @@ const componentId = computed(() => {
     }
 })
 // 发布帖子
-const titleValue = ref('')
+// const titleValue = ref('')
 // 表情保存
-// let folderPath = reactive([])
+let folderPath = reactive([])
 let windoWidth = ref()
 let windowHeight = ref()
 // 滚动条设置
@@ -144,11 +221,11 @@ const settingsScroller = reactive({
     wheelPropagation: true,
 });
 // 图片暂存
-// const fileList = ref<UploadProps['fileList']>([]);
+const fileList = ref([]);
 // 清除封面
-// const removeCover = () => {
-//     coverList.value = []
-// }
+const removeCover = () => {
+    coverList.value = []
+}
 // 修改发布框
 const changeItem = (index) => {
     defaultType.value = publishType.value[index]
@@ -157,100 +234,171 @@ const changeItem = (index) => {
 const handleFullScreen = () => {
     fullScreen.value = !fullScreen.value
 }
+const emojiKey=ref('')
 // 添加表情
-// const addEmoji = (item) => {
-//     const lastSlashIndex = item.lastIndexOf('/');
-//     const emojiValue = item.substring(lastSlashIndex + 1);
-//     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emojiValue))[0]
-//     postValue.value += `${key}`
-
-// }
+const addEmoji = (item) => {
+    const lastSlashIndex = item.lastIndexOf('/');
+    const emojiValue = item.substring(lastSlashIndex + 1);
+     emojiKey.value = Object.entries(fluentEmojis).find(([k, v]) => v === (emojiValue))[0]
+    // useYuanCommunityStore.dynamicContent.content += `${emojiKey.value}`
+    addEmojiContent()
+}
+// 
+const addEmojiContent=()=>{
+    if(defaultType.value.value==='dynamic'){
+        useYuanCommunityStore.dynamicContent.content += `${emojiKey.value}`
+    }else if(defaultType.value.value==='post'){
+        useYuanCommunityStore.postContent.content += `${emojiKey.value}`
+    }
+}
 // 图片添加是否可见
-// const imageLoadVisible = computed(() => {
-//     return fileList.value?.length > 0
-// })
+const imageLoadVisible = computed(() => {
+    return fileList.value?.length > 0
+})
 const emit = defineEmits(['handleOk'])
-onMounted(() => {
+onMounted(async () => {
     // 表情转换
-    // Object.values(fluentEmojis).forEach((item) => {
-    //     folderPath.push(`${emoji.value}${item}`)
-    // })
+    Object.values(fluentEmojis).forEach((item) => {
+        folderPath.push(`${emoji.value}${item}`)
+    })
     windoWidth.value = window.innerWidth
     windowHeight.value = window.innerHeight
-    useYuanCommunityStore.getMyForumList()
+    await useYuanCommunityStore.getMyForumList()
+    communCate.value.forEach((item) => {
+        options.value.push({
+            value: item.id,
+            label: item.name
+        })
+    })
+    cascaderValue.value = options.value[0]
 })
 
 // 选择发帖板块
 const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
 const options = ref([]);
-communCate.value.forEach((item) => {
-    options.value.push({
-        value: item.id,
-        label: item.name
-    })
-})
 let cascaderValue = ref([])
 // 修改发帖板块
 const handleChange = (value) => {
     cascaderValue.value = value
 }
-
-const translateImage=(fileList)=>{
-    return Promise.all(fileList.map(async (file)=>{
-        return await fileUpload(file.originFileObj);
-    }))
-}
 const handleOk = () => {
     emit('handleOk', false)
 };
-const postContent=computed(()=>{
+const postContent = computed(() => {
     return useYuanCommunityStore.postContent
 })
-const dynamicContent=computed(()=>{
+const dynamicContent = computed(() => {
     return useYuanCommunityStore.dynamicContent
 })
+// 监听图片
+watch(fileList, async () => {
+    let imagesList = await translateImage(fileList.value)
+    if (defaultType.value.value == 'dynamic') {
+        useYuanCommunityStore.dynamicContent.imagesList = JSON.stringify(imagesList)
+    } else if (defaultType.value.value == 'post') {
+        useYuanCommunityStore.postContent.imagesList = JSON.stringify(imagesList)
+    }
+})
+watch(coverList, async () => {
+    let coversList = await translateImage(coverList.value)
+    useYuanCommunityStore.postContent.coverList = await JSON.stringify(coversList)
+})
 const publishPost = async () => {
-    if (postValue.value || fileList.value.length > 0 || useYuanCommunityStore.saveContent) {
-        const imageUrlList = await translateImage(fileList.value)
-        let coverImage
-        if (coverList.value.length > 0) {
-            const coverUrlList = await translateImage(coverList.value)
-            coverImage = await JSON.stringify(coverUrlList);
+    // if (postValue.value || fileList.value.length > 0 || useYuanCommunityStore.saveContent) {
+    //     const imageUrlList = await translateImage(fileList.value)
+    //     let coverImage
+    //     if (coverList.value.length > 0) {
+    //         const coverUrlList = await translateImage(coverList.value)
+    //         coverImage = await JSON.stringify(coverUrlList);
 
-        }
-        let forumId = cascaderValue.value
-        let content = computed(() => {
-            switch (defaultType.value.value) {
-                case 'dynamic':
-                    return dynamicContent.value.content
-                    break;
-                case 'post':
-                    return postContent.value.content
-                    break;
-            }
-        })
-        let title = computed(() => {
-            if (!postContent.value.title || postContent.value.title.length < 5) {
-                return postContent.value.content.slice(0, 5)
-            }
-            return titleValue.value
-        })
-        const imageList = await JSON.stringify(imageUrlList);
+    //     }
+    //     let forumId = cascaderValue.value
+    //     let content = computed(() => {
+    //         switch (defaultType.value.value) {
+    //             case 'dynamic':
+    //                 return dynamicContent.value.content
+    //                 break;
+    //             case 'post':
+    //                 return postContent.value.content
+    //                 break;
+    //         }
+    //     })
+    //     let title = computed(() => {
+    //         if (!postContent.value.title || postContent.value.title.length < 5) {
+    //             return postContent.value.content.slice(0, 5)
+    //         }
+    //         return titleValue.value
+    //     })
+    //     const imageList = await JSON.stringify(imageUrlList);
+    //     setTimeout(async () => {
+    //         if (defaultType.value.value == 'dynamic') {
+    //             let is_weibo = 1
+    //             await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo)
+    //         } else if (defaultType.value.value == 'post') {
+    //             console.log(forumId, imageList, content.value, title.value, coverImage);
+    //             await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
+    //         }
+    //         message.success('发布成功')
+    //         handleOk()
+    //     });
+
+    // }
+    if (dynamicContent.value.content || dynamicContent.value.imagesList.length > 0 && defaultType.value.value == 'dynamic') {
+        let dynamic = dynamicContent.value
         setTimeout(async () => {
-            if (defaultType.value.value == 'dynamic') {
-                let is_weibo = 1
-                await useCommunStore.getCommunityPublishPost(forumId, imageList, content.value, title.value, is_weibo)
-            } else if (defaultType.value.value == 'post') {
-                console.log(forumId, imageList, content.value, title.value, coverImage);
-                await useCommunStore.getPublishPost(forumId, imageList, content.value, title.value, coverImage)
-            }
-            message.success('发布成功')
-            handleOk()
+            await useCommunStore.getCommunityPublishPost(cascaderValue.value, dynamic.imagesList, dynamic.content)
         });
-
+    } else if (postContent.value.content || postContent.value.imagesList.length > 0 && defaultType.value.value == 'post') {
+        let post = postContent.value
+        const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
+        setTimeout(async () => {
+            await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
+        });
+    }
+    message.success('发布成功')
+    handleOk()
+    clearAllContent()
+}
+const clearAllContent = () => {
+    if (defaultType.value.value === 'dynamic') {
+        useYuanCommunityStore.dynamicContent = {
+            content: '',
+            imagesList: []
+        }
+    } else if (defaultType.value.value === 'post') {
+        useYuanCommunityStore.postContent = {
+            content: '',
+            imagesList: [],
+            title: '',
+            coverList: []
+        }
     }
 }
 
+// antd图片预览
+const previewVisible = ref(false)
+const previewImage = ref('')
+const previewTitle = ref('')
+const handleCancel = () => {
+    previewVisible.value = false
+    previewTitle.value = ''
+};
+function getBase64(file: File) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+const handlePreview = async (file: UploadProps['fileList'][number]) => {
+    if (!file.url && !file.preview) {
+        file.preview = (await getBase64(file.originFileObj)) as string;
+    }
+    previewImage.value = file.url || file.preview;
+    previewVisible.value = true;
+    previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+};
 
 </script>
 <style lang='scss' scoped>
@@ -362,4 +510,5 @@ const publishPost = async () => {
             }
         }
     }
-}</style>
+}
+</style>
