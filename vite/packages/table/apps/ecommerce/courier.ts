@@ -73,16 +73,33 @@ export const courierStore = defineStore("courier", {
       if(courier){
         courier.followed=true
       }
+      console.log(courier,'需要存入的')
       let rs= await tsbApi.db.put(courier)
       console.log('保存结果',rs)
       if(rs.ok){
+        this.getDbCourier();
         return true
       }else{
         return false
       }
 
     },
+    async unfollowCourier(id){
+      let courier=await this.findDbItem(id)
+      if(courier){
+        courier.followed=false
+      }
+      console.log(courier,'需要存入的')
+      let rs= await tsbApi.db.put(courier)
+      console.log('保存结果',rs)
+      if(rs.ok){
+        this.getDbCourier();
+        return true
+      }else{
+        return false
+      }
 
+    },
     // 获取db中存储的快递数据
     async getDbCourier() {
       console.log('执行一此筛选')
@@ -165,7 +182,7 @@ export const courierStore = defineStore("courier", {
       let found = await tsbApi.db.find(
         {
           selector: {
-            id: id,
+            _id: id,
           }
         })
       if (found?.docs?.length) {

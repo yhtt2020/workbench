@@ -30,10 +30,10 @@
 
    <div class="flex items-center">
     <xt-button w="32" h="32" style="border-radius: 8px;">
-      <div class="flex items-center justify-center" v-if="true">
+      <div @click="follow" class="flex items-center justify-center" v-if="!orderData.followed">
         <SmallIcon icon="fluent:star-12-regular"/>
       </div>
-      <div class="flex items-center " v-else>
+      <div @click="unfollow" class="flex items-center " v-else>
         <SmallIcon icon="fluent:star-16-filled" style="color: var(--warning);"/>
       </div>
     </xt-button>
@@ -55,7 +55,8 @@ import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
 import Cover from '../../component/Cover.vue'
 import EditModal from '../EditModal.vue';
-
+import { courierStore } from '../../../../../apps/ecommerce/courier'
+import {mapActions} from 'pinia'
 
 export default {
   props:['orderData'],
@@ -119,10 +120,29 @@ export default {
   },
 
   methods:{
+    ...mapActions(courierStore,['followCourier','unfollowCourier']),
    editCourier(){},
    onUpdateImg(){
     this.goodIconVisible = !this.goodIconVisible
    },
+    async follow () {
+      let rs = await this.followCourier(this.orderData._id)
+      if (rs) {
+        this.orderData.followed = true
+        message.success('订阅成功')
+      } else {
+        message.error('订阅失败')
+      }
+    },
+    async unfollow(){
+      let rs = await this.unfollowCourier(this.orderData._id)
+      if (rs) {
+        this.orderData.followed = false
+        message.success('取消订阅成功')
+      } else {
+        message.error('取消订阅失败')
+      }
+    },
    removeItem(){},
    // 获取头像
    getAvatar(avatar){
