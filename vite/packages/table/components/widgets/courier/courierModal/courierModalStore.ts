@@ -16,7 +16,7 @@ export const courierModalStore = defineStore('courierModal',{
 
   // 新增更多的快递信息
   addNewCourierInfo(){
-    this.courierLists.push({orderNum:''})
+    this.courierLists.push({currentDetail:''})
   },
 
   // 删除不需要的输入框
@@ -35,10 +35,10 @@ export const courierModalStore = defineStore('courierModal',{
     // console.log('查看数据',data,index);
     this.courierLists.splice(index, 1 , data)
     // console.log('查看替换后的数据',this.courierLists);
-    
+
   },
  },
- 
+
  persist:{
   enabled: true,
   strategies: [{

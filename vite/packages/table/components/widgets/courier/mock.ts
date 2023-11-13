@@ -79,30 +79,59 @@ export const courier=([
 export const switchColor=(state)=>{
     switch (state) {
         case "0":
-            return '#508BFE';
+            return '#508BFE';//暂无轨迹信息
             break;
         case "1":
-            return '#43CADE';
+            return '#43CADE';//已揽收
             break;
         case "2":
-            return '#508BFE';
+            return '#508BFE';//在途中
             break;
         case "3":
-            return '#FA7B14';
+            return '#FA7B14';//签收
             break;
         case "4":
-            return '#FF4D4F ';
+            return '#FF4D4F ';//问题件
             break;
         case "5":
-            return '#FF4D4F ';
+            return '#FF4D4F ';//转寄
             break;
         case "6":
-            return '#FF4D4F ';
+            return '#FF4D4F '; //清关
             break;
 
         default:
             return '#508BFE';
     }
+}
+
+export function convertJdStatusColor(status){
+  switch (status) {
+    case "0":
+      return '#508BFE';
+      break;
+    case "1":
+      return '#43CADE';
+      break;
+    case "等待收货":
+      return '#508BFE';
+      break;
+    case "已完成":
+      return '#FA7B14';
+      break;
+    case "4":
+      return '#FF4D4F ';
+      break;
+    case "5":
+      return '#FF4D4F ';
+      break;
+    case "6":
+      return '#FF4D4F ';
+      break;
+
+    default:
+      return '#508BFE';
+  }
 }
 // 解析部分常见快递公司
 export const kdCompany=(shipperCode)=>{

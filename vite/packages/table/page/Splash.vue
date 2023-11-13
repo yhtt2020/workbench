@@ -28,7 +28,7 @@
         <div class="mb-10 ml-40 text-center text-md">—— 划时代的副屏效率神器</div>
         <p v-if="!userInfo">
           <div class="mb-5 xt-text" style="font-size: 16px">
-            由于本产品功能需要借助网络，目前暂未提供离线模式。<br>
+            由于本产品功能需要借助网络，如您不希望登录，则可使用离线模式，此模式下，依赖于网络的功能将被隐藏。<br>
             <strong>请登录后使用。</strong><br>
 
           </div>
@@ -38,7 +38,7 @@
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button>
             </a-col>
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%" type="theme" @click="offline">离线模式</xt-button>
+              <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
             </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
@@ -87,6 +87,7 @@ import { browserStore } from '../store/browser'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
+import taskStore from '../page/app/todo/stores/task'
 
 export default {
   name: 'Code',
@@ -106,11 +107,12 @@ export default {
     }
   },
   async mounted () {
-    setTimeout(()=>{
+    setTimeout(() => {
       if (window.$isOffline && this.init) {
         this.$router.replace({ name: 'home' })
       }
-    },1000)
+    }, 1000)
+    this.timeout()
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
@@ -124,6 +126,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
+    this.initStore(taskStore, 'taskStore')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -177,12 +180,14 @@ export default {
     timeout () {
       this.timeoutHandler = setTimeout(() => {
         Modal.error({
-          content: '服务器连接超时。可能服务器正在维护，请稍后再试。',
+          content: '服务器连接超时。可能服务器正在维护，请稍后再试或者使用离线模式。',
           key: 'error',
-          okText: '重试',
+          okText: '确定',
           centered: true,
           onOk: () => {
-            window.location.reload()
+            this.launching = false
+            window.loadedStore['userInfo'] = true
+            this.loading = false
           }
         })
       }, 5000)

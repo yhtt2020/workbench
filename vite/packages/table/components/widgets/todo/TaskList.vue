@@ -50,7 +50,7 @@
 <script lang="ts">
 import {ITaskInfo} from "../../../page/app/todo/interfaces";
 import dayjs from "dayjs";
-import {mapActions, mapState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {taskStore} from "../../../page/app/todo/stores/task";
 import {ToTopOutlined} from "@ant-design/icons-vue";
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
@@ -86,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(taskStore, ["activeTask"]),
+    ...mapWritableState(taskStore, ["activeTask"]),
     notFinish() {
       return JSON.parse(JSON.stringify(this.data))
     }
