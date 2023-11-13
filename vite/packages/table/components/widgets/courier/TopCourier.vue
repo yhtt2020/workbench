@@ -93,7 +93,7 @@ import { courier } from './mock'
 import MinCourierItem from './MinCourierItem.vue';
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import TopDrop from "./courierModal/dropdown/index.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue'

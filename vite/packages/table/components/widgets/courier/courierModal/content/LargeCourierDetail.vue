@@ -114,7 +114,7 @@
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { courierType,selectTab,selectData } from '../modalMock'
 import { kdCompany, kdState, switchColor } from '../../mock'
@@ -255,7 +255,7 @@ export default {
       this.currentDetail = item
       console.log(this.rightDetail,'de')
     },
-    
+
     refresh(){
       // todo 刷新
     }

@@ -91,7 +91,7 @@
 
 <script>
 import { mapActions, mapWritableState } from "pinia";
-import { courierStore } from "../../../../store/courier";
+import { courierStore } from "../../../../apps/ecommerce/courier";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
 import { appStore } from "../../../../store";
 import { message } from "ant-design-vue";
@@ -190,7 +190,7 @@ export default {
     unbindTb() {
       this.dealType = 'tb'
       this.$refs.disassociationRef.openDisassociation()
-     
+
     },
     unbindJd(){
       this.dealType = 'jd'

@@ -6,8 +6,8 @@
       <DropIcon icon="fluent:add-16-filled" class="xt-text-2" style="font-size: 1.25rem;" />
      </div>
    </xt-button>
-  </a-tooltip> 
-  
+  </a-tooltip>
+
   <template #overlay>
    <a-menu class="flex flex-col xt-bg-2" style="width: 200px;border-radius: 8px; padding: 8px;">
     <a-menu-item v-for="item in navList" class="flex flex-col w-full rounded-lg xt-text nav-item"
@@ -41,7 +41,7 @@
 <script>
 import { mapWritableState,mapActions } from 'pinia'
 import { Icon as DropIcon } from '@iconify/vue'
-import { courierStore } from '../../../../../store/courier';
+import { courierStore } from '../../../../../apps/ecommerce/courier';
 
 import DealModal from '../DealModal.vue';
 
@@ -81,7 +81,7 @@ export default {
   ...mapWritableState(courierStore,['storeInfo']),
  },
 
- 
+
 
  methods:{
   toJdRelevance(){

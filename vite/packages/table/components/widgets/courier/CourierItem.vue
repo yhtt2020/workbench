@@ -70,7 +70,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue';
 import { kdCompany, kdState, switchColor } from './mock'
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { appStore } from '../../../store';
 import {autoCancelTime} from './courierModal/modalMock'
 import Cover from './component/Cover.vue'

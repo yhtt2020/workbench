@@ -9,6 +9,7 @@ import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
 
 // @ts-ignore
+// @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
     currentRoute:undefined,//当前路由

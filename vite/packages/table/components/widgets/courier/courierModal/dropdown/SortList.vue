@@ -73,7 +73,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor, convertJdStatusColor } from '../../mock'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
 import Cover from '../../component/Cover.vue'
@@ -100,8 +100,13 @@ export default {
       menus: [
         {
           name: '订阅物流',
-          callBack: () => {
-
+          callBack:async  () => {
+            let rs=await this.followCourier(this.displayList[this.revID].id)
+            if(rs){
+              message.success('订阅成功')
+            }else{
+              message.error('订阅失败')
+            }
           },
           newIcon: 'fluent:star-12-regular'
         },
@@ -148,7 +153,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList','followCourier']),
     refreshData () {
       this.displayList = [...this.list.map(item => {
         let newItem = {

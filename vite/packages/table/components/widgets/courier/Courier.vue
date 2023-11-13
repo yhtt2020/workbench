@@ -88,7 +88,7 @@
 <script>
 import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'

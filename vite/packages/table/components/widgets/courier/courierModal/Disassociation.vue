@@ -23,17 +23,17 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
-import { courierStore } from "../../../../store/courier";
+import { courierStore } from "../../../../apps/ecommerce/courier";
 import { message } from "ant-design-vue";
 import { Icon as CourierIcon } from '@iconify/vue'
 import { appStore } from '../../../../store'
 
-import Modal from '../../../Modal.vue' 
+import Modal from '../../../Modal.vue'
 
 export default {
   props:['type'],
   components:{
-   Modal,CourierIcon 
+   Modal,CourierIcon
   },
   data(){
    return{
