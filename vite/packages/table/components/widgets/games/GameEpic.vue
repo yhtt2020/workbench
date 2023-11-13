@@ -20,7 +20,7 @@
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
          
          <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
-          剩余 {{ item.days.end }} 天
+          剩余 {{ item.days.start }} 天
          </div>
          <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
           立省  {{ item.price.totalPrice.fmtPrice.originalPrice }}
@@ -39,7 +39,7 @@
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
          
          <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
-          剩余 {{ item.days.start }} 天
+          剩余 {{ item.days.end }} 天
          </div>
          <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
           立省 
@@ -203,8 +203,9 @@ export default {
           const nextWeekListMap = nextWeekList.map((item)=>{
             return {...item,days:remainderDays(item.promotions),}
           })
-
-          this.promotionList = thisWeekListMap;
+          // console.log('本周免费',thisWeekListMap);
+          // console.log('下周预告',nextWeekListMap);
+          this.promotionList = thisWeekListMap.slice(0,2);
           this.unPromotionList = nextWeekListMap.slice(1);
         }
       } catch (error) {

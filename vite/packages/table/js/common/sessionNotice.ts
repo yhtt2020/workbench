@@ -64,9 +64,9 @@ export class Notifications{
       {
        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast',
-      //  onClose() {
-      //   noticeStore().putIMChatData(msg,'message')
-      //  },
+       onClose() {
+        noticeStore().putNoticeData(msg,'weak');
+       },
       }
     )
     
@@ -103,7 +103,7 @@ export class Notifications{
       },
       {
         icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
-        pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
+        pauseOnHover:true,timeout:0,toastClassName:'notice-toast',
       }
     )
 
