@@ -77,26 +77,26 @@ export const appStore = defineStore('appStore', {
       isAllSelected:false,
 
       courierSigned:{ // 屏蔽快递已经签收的订单
-        blockSigned:true, 
+        blockSigned:true,
         courierTime:'24小时'
       },
 
       courierStatus:{ // 状态图标显示
-        statusBar:true, 
+        statusBar:true,
         currentStatus:'未完成快递'
       },
 
       courierRefresh:{ // 开启自动订单数据自动刷新
-        autoRefresh:true, 
+        autoRefresh:true,
         autoTime:'30分钟'
       },
       // 开启快递单号匹配
       courierMatch:'preciseMatch',
-    
-      relevanceEnable:false, //开启关联的电商平台快递 
+
+      relevanceEnable:false, //开启关联的电商平台快递
       customCourier:false, // 自定义快递
       tagVisible:true, // 快递组件排序tag提示
-      
+
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条
@@ -138,6 +138,7 @@ export const appStore = defineStore('appStore', {
           uid: uid,
           nickname: data.user.nickname,
           avatar: data.user.avatar_128,
+          frame:data.user.frame,
           signature: data.user.signature,
           certification: data.user.all_certification_entity_pc || []
         }
@@ -193,6 +194,7 @@ export const appStore = defineStore('appStore', {
      * @param userInfo
      */
     setUser(userInfo) {
+      console.log('接口返回的用户信息',userInfo)
       userInfo.onlineGradeExtra.cumulativeMinutes = Number(userInfo.onlineGradeExtra.minutes) - Number(userInfo.onlineGradeExtra.cumulativeHours) * 60
       userInfo.onlineGradeExtra.cumulativeMinute = userInfo.onlineGradeExtra.minutes
       userInfo.onlineGradeIcons = {}
