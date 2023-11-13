@@ -21,7 +21,7 @@
     </div>
     <CreateIcon icon="akar-icons:cloud-upload" width="20" height="20" style="font-size: 1.5rem;width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);background:var(--active-bg);border-radius: 50%;" color="var(--secondary-text)"/>
    </div>
-   <SelectIcon @isIconShow="iconVisible = false" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+   <SelectIcon @isIconShow="iconVisible = false" :goodVisible="true" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
    <!-- <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div> -->
    <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
    </div>

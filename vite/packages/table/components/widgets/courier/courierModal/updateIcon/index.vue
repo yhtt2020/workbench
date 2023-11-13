@@ -41,6 +41,8 @@
     <MoreDrop class="ml-3" :navList="jdTbList"/>
    </div>
   </div>
+
+  <EditModal ref="courierEditRef" :editContent="orderData" :avatar="detailAvatar"/>
 </template>
 
 <script>
@@ -52,6 +54,7 @@ import useClipboard from 'vue-clipboard3';
 import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
 import Cover from '../../component/Cover.vue'
+import EditModal from '../EditModal.vue';
 
 
 export default {
@@ -59,7 +62,7 @@ export default {
   components:{
     Cover,
    SmallIcon,
-   GoodIcon,MoreDrop,
+   GoodIcon,MoreDrop,EditModal
   },
   data(){
    return{
@@ -70,6 +73,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
@@ -89,7 +93,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
-
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
@@ -134,9 +138,9 @@ export default {
    // 复制订单号
    async copyOrderNum(){
     const { toClipboard } = useClipboard();
-    const res = await toClipboard(this.orderNum);
+    const res = await toClipboard(this.orderData?.LogisticCode);
     if(res.text !== ""){
-      message.success('群聊ID成功复制');
+      message.success('订单号复制成功');
     }
    }
 

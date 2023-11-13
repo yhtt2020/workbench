@@ -6,16 +6,16 @@
         <DropDown class="ml-3" :navList="tabList.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
       <div class="flex right-button">
-        <DropIndex :navList="addList" @open="addCourier"></DropIndex>
+        <DropIndex :navList="addList" dropStyle="var(--secondary-bg) !important" @open="addCourier"></DropIndex>
         <a-tooltip placement="top" class="mr-3" title="设置">
-          <xt-button w="32" h="32"  @click="openSetting" style="border-radius: 8px !important;">
+          <xt-button w="32" h="32" class="xt-bg" @click="openSetting" style="border-radius: 8px !important;">
             <div class="flex items-center justify-center">
               <SmallIcon icon="fluent:settings-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
             </div>
           </xt-button>
         </a-tooltip>
         <a-tooltip placement="top" title="关闭">
-          <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
+          <xt-button w="32" h="32" class="xt-bg" @click="close" style="border-radius: 8px !important;">
             <div class="flex items-center justify-center">
               <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
             </div>
@@ -36,7 +36,7 @@
         <div style="width:452px;" class="flex flex-col h-full">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
-            <xt-button w="40" h="40">
+            <xt-button w="40" h="40" class="category-button" @click="refresh">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
               </div>
@@ -254,6 +254,10 @@ export default {
     getRightItem(item){
       this.currentDetail = item
       console.log(this.rightDetail,'de')
+    },
+    
+    refresh(){
+      // todo 刷新
     }
   },
 
