@@ -243,6 +243,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.tippy-content){
+ padding: 12px 12px 16px 12px !important;
+}
+:deep(.tippy-box){
+ border-radius: 12px !important;
+ border: 1px solid var(--divider);
+ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2), 0px 0px 20px 0px rgba(0,0,0,0.1), 0px 0px 40px 0px rgba(0,0,0,0.2);
+}
+
+/**
 :deep(.xt-br) {
   margin-right: 0px !important;
 }
@@ -263,4 +273,10 @@ export default {
   top: 23px !important;
   left: 12px !important;
 }
+
+:deep(.tippy){
+  inset: -8px auto auto 10px !important;
+}
+
+**/
 </style>
