@@ -19,7 +19,7 @@ export default {
   name: 'Browser',
   data() {
     return {
-      openUrlBrowser: 'inner'
+      openUrlBrowser: 'system'
     }
   },
   computed:{
