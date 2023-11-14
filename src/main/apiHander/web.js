@@ -32,7 +32,8 @@ class Web extends Base {
       //     preload:window.globalArgs['app-dir_name'] +'/src/appPreload/ecommerce/jd/order.js'
       //   })
       // }
-      const name='api_web_' + require('nanoid').nanoid(8)
+      const name='api_web_' + args.cbId
+      console.log('创建一个cbid',args.cbId)
       let windowInstance = await global.windowManager.create({
         name: name ,
         show: !args.background,//不显示

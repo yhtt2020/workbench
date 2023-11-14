@@ -45,7 +45,7 @@
 
   </div>
   <div v-else-if="backgroundImage.path && !settings.transparent" class="fixed inset-0 video-container ">
-    <img style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
+    <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
   </div>
   <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
 

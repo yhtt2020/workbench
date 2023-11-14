@@ -1,9 +1,10 @@
 <template>
-  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" :env="env"
-    ref="cardSlot">
+  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
+          :env="env"
+          ref="cardSlot">
     <template #left-title-icon>
       <div class="icon"
-        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
+           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
         <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
       </div>
     </template>
@@ -11,7 +12,7 @@
       <xt-button :w="22" :h="22" @click="refreshAll" style="background-color: transparent !important;">
         <div class="flex items-center justify-center">
           <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-            icon="akar-icons:arrow-clockwise" />
+                   icon="akar-icons:arrow-clockwise"/>
         </div>
       </xt-button>
     </div>
@@ -21,39 +22,40 @@
           <div class="xt-text xt-font ">快递筛选</div>
           <div class="flex items-center">
             <span class="mr-2">2023-11-03 11:11更新</span>
-            
+
           </div>
         </div> -->
       <!-- </template> -->
 
       <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
-          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
         </div>
         <template v-else>
           <div v-if="showWay">
-            <MinEmpty v-if="courierDetailList.length === 0" />
-            <MinCourierItem v-else :courier="courierDetailList[0]"
-              @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+            <MinEmpty v-if="displayList.length === 0"/>
+            <MinCourierItem v-else :courier="displayList[0]"
+                            @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
             </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="courierDetailList.length === 0" :exampleVisible="true" />
+            <Empty v-if="displayList.length === 0" :exampleVisible="true"/>
             <template v-else>
-              <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;" class="courier-item">
-                <div v-for="(item, index) in courierDetailList">
-                  <CourierItem :key="index" :courier="item" @click.stop="viewDeliveryDetails(item)" :itemIndex="index" />
-                  <div v-if="index !== courierDetailList.length - 1" class="divider"></div>
+              <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
+                                    style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
+                                    class="courier-item">
+                <div v-for="(item, index) in displayList" >
+                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
+                  <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
               </vue-custom-scrollbar>
-              <div class="item-content" style="position: absolute;right: 15px;bottom: 30px;width: 40px">
+              <div class="item-content" style="position: absolute;right: 15px;bottom: 0px;width: 40px">
 
                 <xt-button :w="40" :h="40" type="theme" @click="addCourier" class="add-courier">
                   <newIcon class="text-lg "
-                    style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
-                    icon="fluent:add-16-filled" />
+                           style="vertical-align: sub;font-size: 20px;text-align: center;margin: 10px ;color: rgba(255,255,255,0.85);"
+                           icon="fluent:add-16-filled"/>
                 </xt-button>
               </div>
 
@@ -61,32 +63,32 @@
           </template>
         </template>
         <template v-if="allCourierVisible">
-          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState" />
-          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState" />
+          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
+          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
         </template>
         <teleport to='body'>
           <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-            :isHeader="false" :boxIndex="100" :maskIndex="99">
-            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false" />
-            <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers" />
+                    :isHeader="false" :boxIndex="100" :maskIndex="99">
+            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false;getDbCourier()"/>
+            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>
           </xt-modal>
         </teleport>
       </div>
-      <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible" />
+      <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
     </div>
 
 
   </Widget>
   <teleport to='body'>
-    <CourierSetting ref="courierSettingRef" />
+    <CourierSetting ref="courierSettingRef"/>
   </teleport>
-  <AddCourierModal ref="addCourierRef" />
+  <AddCourierModal ref="addCourierRef"/>
 </template>
 
 <script>
 import { Icon as newIcon } from '@iconify/vue'
 import { courier } from './mock'
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'
@@ -102,10 +104,11 @@ import LargeCourierModal from './courierModal/LargeCourierModal.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import LogisticsDetail from './courierModal/content/LogisticsDetail.vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
-import LargeCourierDetail from "./courierModal/content/LargeCourierDetail.vue";
-import CourierSetting from './courierModal/CourierSetting.vue';
+import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
+import CourierSetting from './courierModal/CourierSetting.vue'
 import _ from 'lodash-es'
 import { autoRefreshTime } from './courierModal/modalMock'
+
 export default {
   name: '我的快递',
   components: {
@@ -136,7 +139,7 @@ export default {
       type: Object,
     },
   },
-  data() {
+  data () {
     return {
       settingVisible: false,
       sizeList: [
@@ -168,8 +171,8 @@ export default {
       },
       menuList: [
         {
-          newIcon: "fluent:add-16-filled",
-          title: "添加快递",
+          newIcon: 'fluent:add-16-filled',
+          title: '添加快递',
           fn: () => {
             this.$refs.addCourierRef.openCourierModel()
           },
@@ -184,7 +187,10 @@ export default {
         {
           icon: 'shezhi1',
           title: '设置',
-          fn: () => { this.$refs.courierSettingRef.openSettingModal(); this.$refs.cardSlot.visible = false }
+          fn: () => {
+            this.$refs.courierSettingRef.openSettingModal()
+            this.$refs.cardSlot.visible = false
+          }
         },
 
       ],
@@ -200,7 +206,6 @@ export default {
       allCourierVisible: false,
       courierShow: true,
       deliveryDetails: [],
-      orderNum: [],
       showCourierDetail: false,
       showSmallDetail: false,
       largeDetailVisible: true,
@@ -210,53 +215,86 @@ export default {
         client: false,
         offline: true
       },
+      displayList:[],//显示列表
       autoRefreshTime
-    };
+    }
   },
   methods: {
-    ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers']),
-    changeState() {
+    ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers', 'saveJdOrders']),
+    changeState () {
       this.allCourierVisible = false
+      this.getDbCourier()
     },
-    refreshCourier() {
+    refreshCourier () {
       this.refreshCouriers()
     },
-    viewDeliveryDetails(item) {
-      this.showCourierDetail = true;
-      this.orderNum = item;
-      this.viewCourierDetail = item
-      // console.log(this.orderNum);
+    viewDeliveryDetails (item) {
+      this.currentDetail = item
+      this.showCourierDetail = true
+      // console.log(this.currentDetail);
     },
-    closeCourierDetail() {
+    closeCourierDetail () {
       this.showCourierDetail = false
     },
-    handleResize() {
-      let windoWidth = window.innerWidth;
+    handleResize () {
+      let windoWidth = window.innerWidth
       // console.log(windoWidth);
       if (windoWidth > 1200) {
         this.largeDetailVisible = true
-        this.courierShow = true;
+        this.courierShow = true
       } else {
         this.largeDetailVisible = false
-        this.courierShow = false;
+        this.courierShow = false
       }
     },
-    refreshAll() {
+    refreshAll (tip=true) {
       // 快递鸟快递信息更新
       this.refreshCouriers()
-      message.loading('正在为您更新商城订单')
+      tip && message.loading({
+        content: '正在为您更新京东商城订单',
+        key: 'loadingTip',
+        duration: 0
+      })
       if (this.storeInfo.jd.nickname) {
         //京东绑定了
-        grab.jd.getOrder()
+        grab.jd.getOrder(async (args) => {
+          if (args.status) {
+            tip &&  message.loading({
+              content: '订单获取成功，正在为您更新订单详情',
+              key: 'loadingTip',
+              duration: 0
+            })
+            await this.getOrderDetail(args.data.orders)
+            let count = await this.saveJdOrders(args.data)
+            tip &&  message.success({ content: '成功更新' + count + '个京东订单信息', key: 'loadingTip' })
+            await this.getDbCourier()
+            console.log('刷新一下本地记录')
+          } else {
+            notification.info({
+              message: '京东账号已过期，点击重新绑定后再刷新。',
+              onClick: () => {
+                grab.jd.login((args) => {
+                  this.storeInfo.jd.nickname = args.data.nickname
+                  message.success({
+                    content: '京东重新登录成功。请重新刷新。',
+                    key: 'loadingTip',
+                    duration: 0
+                  })
+                })
+              }
+            })
+          }
+
+        })
       }
       if (this.storeInfo.tb.nickname) {
         grab.tb.getOrder((args) => {
-          console.log('淘宝结果', args)
           if (args.status === 0 && args.code === 401) {
             notification.info({
-              content: '淘宝账号已过期，点击重新绑定。',
+              message: '淘宝账号已过期，点击重新绑定。',
               onClick: () => {
                 grab.tb.login((args) => {
+
                   console.log(args, '获取到的订单信息')
                 })
               }
@@ -268,26 +306,27 @@ export default {
       //todo 刷新其他订单
     },
 
+    async getOrderDetail (orders,tip=true) {
 
-    async getOrderDetail(orders) {
-
+      let completed=0
       let promises = []
       for (const order of orders) {
-
-        if (order.status === '商品出库') {
+        if ((order.status === '商品出库' || order.latestNodes.length===0)&& order.status !== '订单取消') {
           //只检查等待收货的商品
           //仅检查未完成的订单
           let getProcess = new Promise((resolve, reject) => {
             grab.jd.getOrderDetail(order.detailUrl, ({ status, code, data }) => {
               if (status) {
-                console.log('成功获得订单详情', data)
+                completed++
                 order.detail = {}
                 order.detail.expressNo = data.expressNo
                 order.detail.traceNodes = data.traceNodes
                 order.detail.expressType = data.expressType
                 order.detail.updateTime = Date.now()
+
                 resolve(data)
               } else {
+                completed++
                 reject({
                   status, code
                 })
@@ -298,14 +337,21 @@ export default {
           promises.push(getProcess)
         }
       }
-      message.loading({
+      tip && message.loading({
         content: '共有' + promises.length + '个订单需要更新物流信息，' + '请稍候…',
         key: 'loadingTip',
         duration: 0
       })
 
-      await Promise.all(promises)
-      message.success({
+      console.log('要执行的promises=',promises)
+      let taskChunks=_.chunk(promises,5)
+      for(const chunk of taskChunks){
+        //切片并发5个
+        await Promise.allSettled(chunk)
+        console.log('执行完成一个块',chunk)
+      }
+
+      tip &&  message.success({
         content: '订单物流信息更新完成。',
         key: 'loadingTip',
         duration: 4
@@ -313,17 +359,17 @@ export default {
       console.log('更新后的订单', this.storeInfo.jd.order)
     },
 
-    addCourier() {
+    addCourier () {
       this.$refs.addCourierRef.openCourierModel()
     },
-    smallDetailsVisible() {
+    smallDetailsVisible () {
       this.showSmallDetail = false
     },
-    backAllCoutiers() {
+    backAllCoutiers () {
       this.showSmallDetail = true,
         this.showCourierDetail = false
     },
-    autoRefresh() {
+    autoRefresh () {
       if (this.settings.courierRefresh.autoRefresh) {
         setInterval(() => {
           message.loading('正在为您更新商城订单')
@@ -347,32 +393,33 @@ export default {
             })
             //淘宝绑定了
           }
-        }, this.refreshTimes[0].type);
+        }, this.refreshTimes[0].type)
       }
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ["courierMsgList",
-      "courierDetailList",
-      "couriersDetailMsg",
-      "storeInfo", 'viewCourierDetail']),
-    ...mapWritableState(appStore, ["settings"]),
+    ...mapWritableState(courierStore, ['courierMsgList',
+      'orderList',
+      'couriersDetailMsg',
+      'storeInfo', 'currentDetail']),
+    ...mapWritableState(appStore, ['settings']),
+
     // 判断尺寸大小
-    showSize() {
+    showSize () {
       if (this.customData && this.customData.width && this.customData.height) {
         return { width: this.customData.width, height: this.customData.height }
       }
       return this.sizeList[2]
     },
-    showWay() {
+    showWay () {
       if (this.showSize.height === 1) {
         return true
       } else {
         return false
       }
     },
-    courierMsg() {
-      return this.courierMsgList;
+    courierMsg () {
+      return this.courierMsgList
     },
     // refreshTime() {
     //   switch (this.settings.courierRefresh.autoTime) {
@@ -395,17 +442,27 @@ export default {
     //       break;
     //   }
     // },
-    refreshTimes() {
+    refreshTimes () {
       return this.autoRefreshTime.filter((item) => {
         return item.value === this.settings.courierRefresh.autoTime
       })
     }
   },
-  async mounted() {
+  watch:{
+    'orderList':{
+      handler(newVal){
+        console.log('发现变化',newVal)
+        this.displayList=[]
+        this.displayList=newVal.slice(0,10)
+      },
+      immediate:true
+    }
+  },
+  async mounted () {
     // console.log(this.courierDetailList)
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
-    window.addEventListener("resize", this.handleResize)
+    window.addEventListener('resize', this.handleResize)
     console.log(this.refreshTimes[0].type, 'refreshTimes')
     if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
       this.autoRefresh()
@@ -413,8 +470,8 @@ export default {
 
   },
 
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize)
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleResize)
     this.autoRefresh()
   },
 

@@ -1,6 +1,6 @@
 <template>
  <a-dropdown :trigger="['click']" placement="bottomRight">
-  <xt-button w="32" h="32" style="border-radius: 8px !important;">
+  <xt-button w="32" h="32" class="xt-bg" style="border-radius: 8px !important;">
    <div class="xt-text flex items-center justify-center pointer"> 
     <DropIcon :icon="icon" style="font-size: 1.25rem;"/> 
    </div>

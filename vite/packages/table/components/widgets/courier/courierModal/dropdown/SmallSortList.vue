@@ -57,7 +57,7 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor } from '../../mock'
@@ -105,7 +105,7 @@ export default {
              onOk: () => {
               this.removeDbData(this.revID.index)
               message.success('删除成功')
-             } 
+             }
             })
           },
           newIcon: 'akar-icons:trash-can',
@@ -115,7 +115,7 @@ export default {
       sortItem:''
     }
   },
- 
+
   computed:{
     ...mapWritableState(appStore,['settings']),
   },

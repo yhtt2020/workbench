@@ -1,12 +1,12 @@
- <template>    
+ <template>
  <div class="h-full w-full " style="">
-    <div ref="vditor" class="h-full " style="border-radius:10px;padding: 0;" ></div>
+    <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;" ></div>
  </div>
 
  </template>
- 
+
  <script>
- 
+
 import {
     validateFile,
     fileUpload,
@@ -21,13 +21,13 @@ import {mapActions, mapState,mapWritableState} from "pinia";
    components: {
     // Vditor
    },
-   props:['customData','customIndex','desk'],
+   props:['customData','customIndex','desk','vid'],
   computed:{
     ...mapWritableState(noteStore, ['initFlag']),
   },
     data() {
         return {
-            contentEditor: '',
+            contentEditor: {},
             tmpData:'',
         };
     },
@@ -39,7 +39,7 @@ import {mapActions, mapState,mapWritableState} from "pinia";
             },
             cache: {
                 enable: false,
-            }, 
+            },
             after: () => {
                 this.contentEditor.setValue(this.customData.text)
                 this.tmpData = this.customData.text
@@ -86,9 +86,11 @@ import {mapActions, mapState,mapWritableState} from "pinia";
    methods:{
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(noteStore, ['saveDeskNote']),
-     
+     getContent(){
+          return this.contentEditor.getHTML()
+     }
 
- 
+
    }
  };
  </script>
@@ -113,6 +115,5 @@ import {mapActions, mapState,mapWritableState} from "pinia";
         color: #fff;
         background: transparent;
     }
-    
+
  </style>
- 

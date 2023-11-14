@@ -20,7 +20,7 @@ async function getUserInfo () {
   } catch (e) {
     console.error(e)
   }
-  let rs = await baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar' }, 'get')
+  let rs = await baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar,frame' }, 'get')
   return rs
 }
 

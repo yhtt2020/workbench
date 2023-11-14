@@ -55,7 +55,7 @@ import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { courierModalStore } from '../courierModalStore'
 import { appStore } from '../../../../../store'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { commonExpress, expressList } from '../modalMock'
 import { getCourierName } from '../utils/courierUtils'
 import { message } from 'ant-design-vue'
@@ -122,7 +122,7 @@ export default defineComponent({
         } else {
           courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
         }
-      
+
 
     }
 
@@ -132,7 +132,7 @@ export default defineComponent({
 
       // if(evt.data){
       //   const regexText = new RegExp(evt.data,"i");
-      //   const find = expressList.find((item)=>{ 
+      //   const find = expressList.find((item)=>{
       //    return regexText.test(item.name);
       //   })
 
@@ -166,10 +166,11 @@ export default defineComponent({
           message.warning('请添加快递信息')
           evt.preventDefault();
         } else {
-
-          for (let i = 0; i < courierLists.value.length; i++) {
-            console.log(numRef.value[i].stateValue);
-            addCourier.putCourierInfo(courierLists.value[i].code, courierLists.value[i].orderNum, courierLists.value[i].phoneLastNum)
+message.success('添加快递成功。')
+          for (const item of courierLists.value) {
+            if(item){
+              addCourier.putCourierInfo(item.code, item.orderNum, item.phoneLastNum)
+            }
           }
           ctx.emit('close')
         }
@@ -217,10 +218,13 @@ export default defineComponent({
     align-items: center;
     height: 40px !important;
   }
+  & .ant-select-item{
+    color:var(--secondary-text) !important;
+  }
 }
 
 
-:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder) {
+:deep(.ant-select-selection-placeholder){
   color: var(--secondary-text) !important;
   display: flex !important;
   align-items: center !important;
@@ -238,4 +242,5 @@ export default defineComponent({
 :deep(.anticon.ant-input-clear-icon) {
   color: var(--secondary-text) !important;
 }
+
 </style>

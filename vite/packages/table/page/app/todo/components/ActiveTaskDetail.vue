@@ -214,8 +214,9 @@ import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { fileUpload, pathUpload } from '../../../../components/card/hooks/imageProcessing'
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { mapActions, mapWritableState } from "pinia";
-import { taskStore } from "../stores/task";
-import { configStore, listStore } from "../store";
+import configStore from "../stores/config";
+import listStore from "../stores/list";
+import taskStore from '../stores/task'
 import { MenuState } from "../consts";
 import VueCustomScrollbars from "./VueScrollbar.vue";
 import HorizontalPanel from "../../../../components/HorizontalPanel.vue";

@@ -14,14 +14,18 @@
                 {{ item.content.title }}
               </div>
             </div>
-            <DetailIcon icon="akar-icons:circle-x-fill" class="category-button pointer" style="font-size: 1.25rem;color:var(--secondary-text);" @click="delSingleHistoryNotice(item)"/>
+            <xt-button w="21" h="21"  @click="delSingleHistoryNotice(item)">
+              <div class="flex items-center justify-center">
+                <DetailIcon icon="akar-icons:circle-x-fill" class="category-button pointer" style="font-size: 1.25rem;color:var(--secondary-text);" />
+              </div>
+            </xt-button>
           </div>
           <div class="font-16 font-400 xt-font xt-text mb-2">
             {{ item.content.body }}
           </div> 
           <div class="flex justify-between">
-            <div class="">{{formatTime(item.createTime)}}</div>
-            <xt-button style="width: 56px;height: 32px;background: var(--active-secondary-bg);color:var(--active-bg);" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
+            <div class="flex items-center justify-center ">{{formatTime(item.createTime)}}</div>
+            <xt-button class="category-button" style="width: 56px;height: 32px;background: var(--active-secondary-bg)!important;color:var(--active-bg);border-radius: 8px !important;" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
           </div>
         </div>
       </xt-menu>
@@ -81,12 +85,7 @@ export default {
   computed:{
     filterList(){
       if(this.type === 'system'){
-        const systemList = this.list.filter((item)=>{
-          if(item.content.type === 'system'){
-            return item
-          }
-        })
-        return systemList
+        return this.list
       }else{
         const messageList = this.list.filter((item)=>{
           if(item.content.type === 'message'){
