@@ -5,7 +5,7 @@
     <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList" /> 
   </div>
 
-  <div class="font-14 mb-2" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
+  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
     {{ categoryList.summary }}
   </div> 
   

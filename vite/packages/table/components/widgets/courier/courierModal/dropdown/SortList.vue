@@ -9,36 +9,44 @@
       </xt-button>
     </div>
     <vue-custom-scrollbar :settings="settingsScroller">
-      <div style="height:480px;" ref="dropRef" class="w-full">
-        <div v-for="(item, index) in list" class="rounded-lg">
+      <div style="height:460px;" ref="dropRef" class="w-full">
+        <div v-for="(item, index) in displayList" class="rounded-lg">
           <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-            <div :class="{ 'select': this.currentID ===  index }"
-              class="flex flex-col p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg" @click="seeDetail(item,index)">
+            <div :class="{ 'select': this.currentDetail._id ===  item._id }"
+                 class="flex flex-col p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg"
+                 @click="seeDetail(item,index)">
               <div class="flex">
-                <div class="flex items-center justify-center mr-4 rounded-lg" style="width:52px;height:52px; background: var(--mask-bg);">
-                 <SmallIcon icon="fluent-emoji:package" style="font-size: 2rem;" />
+                <div class="flex items-center justify-center mr-4 rounded-lg">
+                  <Cover :cover="item.cover" :store="item.store" bg="var(--mask-bg)"></Cover>
                 </div>
                 <div class="flex items-center justify-between " style="width:362px;">
                   <div class="flex flex-col">
-                    <div class="flex items-center mb-1.5">
-                      <div  v-if="isJd" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#E12419;"> JD </div>
-                      <div v-if="isTb" class="w-6 h-6 flex items-center justify-center rounded-md" style="background:#FA5000;"> 淘 </div>
-                      <span class="xt-font font-16 font-600 mx-1.5">
-                        {{ item.LogisticCode }}
+                    <div class="flex items-center mb-1.5 ">
+                      <div v-if="item.store==='jd'" class="w-6 h-6 store flex items-center justify-center rounded-md"
+                           style="background:#E12419;"> JD
+                      </div>
+                      <div v-if="item.store==='tb'" class="w-6 h-6 store flex items-center justify-center rounded-md"
+                           style="background:#FA5000;"> 淘
+                      </div>
+                      <span class="xt-font font-14 font-600 mx-1.5">
+                        {{ item.title?.slice(0, 20) }}
                       </span>
-                      <SmallIcon v-if="true" icon="fluent:star-12-regular" style="font-size: 1.25rem;"/>
-                      <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);font-size: 1.25rem;"/>
+                      <span class="fav-icon">
+                      <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
+                      <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
                     </div>
                     <div class="flex">
                       <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                        {{ switchCompany(item) }}
+                        {{ item.company }}
                       </div>
-                      <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆</div>
+                      <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆
+                      </div>
                     </div>
                   </div>
                   <div class="flex flex-col items-center justify-end">
-                    <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md" :style="{ 'background': stateColor(item,index),color:'var(--active-text)'}">
-                      {{ switchState(item) }}
+                    <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md state-text"
+                         :style="{ 'background': item.tagColor,color:'var(--active-text)'}">
+                      {{ item.stateText }}
                     </div>
                     <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
                   </div>
@@ -46,9 +54,9 @@
               </div>
 
               <div class="flex flex-col">
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.Traces[item.Traces.length - 1]?.AcceptTime }}</div>
+                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.lastNodeTime }}</div>
                 <div class="summary">
-                  {{ item.Traces[item.Traces.length - 1]?.AcceptStation }}
+                  {{ item.lastNodeSummary }}
                 </div>
               </div>
             </div>
@@ -64,19 +72,20 @@
 import { mapActions, mapWritableState } from 'pinia'
 import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
-import { kdCompany, kdState, switchColor } from '../../mock'
-import { courierStore } from '../../../../../store/courier'
-import { Modal } from 'ant-design-vue'
+import { kdCompany, kdState, switchColor, convertJdStatusColor } from '../../mock'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
+import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
-
+import Cover from '../../component/Cover.vue'
 export default {
-  props: ["list", "sortItem"],
+  props: ['list', 'sortItem'],
 
   components: {
+    Cover,
     SmallIcon
   },
 
-  data() {
+  data () {
     return {
       settingsScroller: {
         useBothWheelAxes: true,
@@ -85,62 +94,109 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      revID: '',
-      menus: [
-        {
-          name: '订阅物流',
-          callBack: () => {
+      revID: -1,
+      displayList: [],
 
-          },
-          newIcon: 'fluent:star-12-regular'
-        },
+      currentID: '',
+    }
+  },
+
+  computed: {
+    ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(courierStore, ['currentDetail']),
+    menus(){
+      if(!this.displayList || this.revID<0){
+        return []
+      }
+      return [
+        this.displayList[this.revID].followed ? {
+            name: '取消订阅',
+            callBack: async () => {
+              let rs = await this.unfollowCourier(this.displayList[this.revID]._id)
+              if (rs) {
+                this.displayList[this.revID].followed = false
+                message.success('取消订阅成功')
+              } else {
+                message.error('取消订阅失败')
+              }
+            },
+            newIcon: 'fluent:star-12-regular'
+          } :
+          {
+            name: '订阅物流',
+            callBack: async () => {
+              console.log('item', this.displayList[this.revID])
+              let rs = await this.followCourier(this.displayList[this.revID]._id)
+              if (rs) {
+                this.displayList[this.revID].followed = true
+                message.success('订阅成功')
+              } else {
+                message.error('订阅失败')
+              }
+            },
+            newIcon: 'fluent:star-16-filled'
+          }
+        ,
         {
           name: '删除快递',
           callBack: () => {
             Modal.confirm({
-             content: '确认删除当前快递物流信息',
-             centered: true,
-             onOk: () => {
-              this.removeDbData(this.revID)
-             } 
+              content: '确认删除当前快递物流信息',
+              centered: true,
+              onOk: () => {
+                let rs = this.removeDbData(this.displayList[this.revID])
+                if (rs) {
+                  message.success('删除成功。')
+                  this.displayList.splice(this.revID, 1)
+                }
+              }
             })
           },
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
         },
-      ],
-      currentID: '',
+      ]
     }
   },
 
-  computed:{
-    ...mapWritableState(appStore,['settings'])
+  mounted () {
+
+    //this.currentID = this.list[0].LogisticCode
   },
 
-  mounted() {
-    this.$nextTick(() => {
-      const el = this.$refs.dropRef
-      new Sortable(el, {
-        group: 'sortableGroup',
-        onEnd: this.onSortEnd // 拖拽结束时触发的回调函数
-      })
-    })
-    this.currentID = this.list[0].LogisticCode
+  watch: {
+    'list': {
+      handler () {
+        this.refreshData()
+      },
+      immediate: true
+    }
   },
 
   methods: {
-    ...mapActions(courierStore,['removeDbData','putSortList']),
-    onSortEnd(evt) {
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier','unfollowCourier']),
+    refreshData () {
+      this.displayList = this.list
+      this.$nextTick(() => {
+        const el = this.$refs.dropRef
+        new Sortable(el, {
+          group: 'sortableGroup',
+          onEnd: this.onSortEnd // 拖拽结束时触发的回调函数
+        })
+      })
+    },
+    onSortEnd (evt) {
       let newIndex = evt.newIndex, oldIndex = evt.oldIndex
-      let newItem = this.$refs.dropRef.children[newIndex]
-      let oldItem = this.$refs.dropRef.children[oldIndex]
+      const dropRef = this.$refs.dropRef
+      let newItem = dropRef.children[newIndex]
+      let oldItem = dropRef.children[oldIndex]
       // 先删除移动的节点
-      this.$refs.dropRef.removeChild(newItem)
+      dropRef.removeChild(newItem)
       // 再插入移动的节点到原有节点，还原了移动的操作
       if (newIndex > oldIndex) {
-        this.$refs.dropRef.insertBefore(newItem, oldItem)
+        dropRef.insertBefore(newItem, oldItem)
       } else {
-        this.$refs.dropRef.insertBefore(newItem, oldItem.nextSibling)
+        dropRef.insertBefore(newItem, oldItem.nextSibling)
       }
 
       // 将数组进行排序
@@ -150,21 +206,21 @@ export default {
       cloneTemp.splice(evt.newIndex, 0, temp) // 将旧的下标进行替换
       this.putSortList(cloneTemp)
     },
-    seeDetail(data,index) {
+    seeDetail (data, index) {
       this.currentID = index
       this.$emit('rightSelect', data)
     },
-    stateColor(item) {
+    stateColor (item) {
       return switchColor(item.State)
     },
-    switchState(item) {
+    switchState (item) {
       return kdState(item.State)
     },
-    switchCompany(item) {
+    switchCompany (item) {
       return kdCompany(item?.ShipperCode)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -183,9 +239,25 @@ export default {
 .select {
   background: var(--active-secondary-bg) !important;
 }
-.hover-bg{
-  &:hover{
+
+.hover-bg {
+  &:hover {
     background-color: var(--active-secondary-bg);
   }
+}
+
+.state-text {
+  width: auto;
+  text-wrap: nowrap;
+}
+
+.store {
+  min-width: 25px;
+}
+
+.fav-icon {
+  font-size: 18px;
+  display: inline-block;
+  min-width: 18px;
 }
 </style>

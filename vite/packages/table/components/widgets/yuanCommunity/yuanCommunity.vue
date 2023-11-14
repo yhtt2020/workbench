@@ -17,18 +17,13 @@
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
-                <!-- <div style="position: absolute;left: 136px;top: 16px;" @click="refreshPost" class="pointer">
-                    <xt-button :w="22" :h="22" style="background: transparent;">
-                        <YuanIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                            icon="akar-icons:arrow-clockwise" />
-                    </xt-button>
-                </div> -->
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
                     <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
                         style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
                     </YuanHorizontalPanel>
                 </div>
+                <!-- {{ defaultForum }} -->
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
@@ -58,9 +53,8 @@
             </div>
             <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
-
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
-                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 10px">
+                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 24px">
                 <div class="flex items-center justify-center">
                     <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
                         icon="fluent:add-16-filled" />
@@ -82,13 +76,11 @@
 
 
         </teleport>
-        <!-- <teleport to="body" :disabled="false">
-        </teleport> -->
 
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
                 <xt-button :w="56" :h="32"
-                    style="background-color: var(--active-bg);color: var(--primary-text);font-size: 16px;border-radius: 8px;"
+                    style="background-color: var(--active-bg);color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
                     @click="saveSetting">保存</xt-button>
             </template>
             <div class="mb-6 xt-text font-16">
@@ -137,7 +129,6 @@ import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
-import browser from '../../../js/common/browser'
 import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
@@ -237,11 +228,6 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
-        // 切换圈子
-        // async setCurrentIndex(index, item) {
-        //     this.currentIndex = index
-        //     await this.getCommunityPost(item.id)
-        // },
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
@@ -298,13 +284,6 @@ export default {
         saveSetting() {
             this.settingVisible = false
         },
-        // changeTag() {
-        //     if(this.customData.selectList.length==1){
-        //         this.options.title=this.customData.selectList[0].value.name
-        //     }else{
-        //         this.options.title='元社区'
-        //     }
-        // }
         handleResize() {
             if (window.innerWidth > 1200) {
                 this.toggleDetail = true
@@ -327,11 +306,6 @@ export default {
                 return this.customData.height == 2 ? '392px' : '600px'
             }
             return '392px'
-        },
-        // 判断不同高度返回不同个数
-        copyNum() {
-            return this.showSize.height == 2 ? 3 : 5
-
         },
         forumList() {
             // this.customData.forumList = this.myForumList.joined
@@ -357,9 +331,6 @@ export default {
             }
             return this.communityPost.list?.slice(0, 10)
         },
-        // isShow(){
-        //     return window.innerWidth > 1200
-        // }
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
                 return 'calc(100% - 65px)'
@@ -367,26 +338,16 @@ export default {
                 return 'calc(100% - 40px)'
             }
         },
-        // optionTitle(){
-        //     if(this.customData && this.customData.selectList && this.customData.selectList.length===1){
-        //         return this.customData.selectList[0].value.name
-        //     }else{
-        //         return '元社区'
-        //     }
-        // }
     },
     async mounted() {
-        // console.log(this.customData.defaultForum.value?.id, 'this.defaultForum');
         this.isLoading = true
         await this.getMyForumList()
-        // await this.getCommunityPost(this.showForumList[0].id)
-        // this.myForumList.joined
         this.customData.forumList = this.myForumList.joined
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
             // console.log(this.defaultForum);
-        }else if(this.customData && this.customData.selectList){
+        } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList)
             this.defaultForum = this.customData.selectList[0]
         }
@@ -398,7 +359,7 @@ export default {
             // console.log(this.selectValue);
         }
         // 判断组件名称
-        if(this.customData.selectList.length === 1){
+        if (this.customData.selectList.length === 1) {
             this.options.title = this.customData.selectList[0].value.name
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
@@ -408,14 +369,6 @@ export default {
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize)
     },
-    // beforeUpdate() {
-    //     // this.changeTag()
-    //     if (window.innerWidth > 1200) {
-    //         this.toggleDetail = true
-    //     } else {
-    //         this.toggleDetail = false
-    //     }
-    // },
     watch: {
         showForumList(newValue) {
             this.isLoading = true
@@ -446,26 +399,17 @@ export default {
             handler(newValue, oldValue) {
                 if (newValue.length === 1) {
                     this.options.title = newValue[0].value.name
-                    console.log(this.options.title)
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
-                    console.log(this.options.title);
                 }
-
             }
         },
     }
 }
 </script>
 <style>
-@media screen and (max-width: 1000px) {
-    .mood {
-        display: none;
-    }
-
-    .show {
-        display: block;
-    }
+:deep(.xt-active-btn span) {
+    color: rgba(255, 255, 255, 0.85) !important;
 }
 
 
@@ -479,20 +423,6 @@ export default {
     transform: scale(1.3);
     /* 鼠标悬停时放大 */
     background-color: var(--secondary-bg);
-}
-
-.action {
-    background: var(--active-bg);
-    border-radius: 8px;
-    cursor: pointer;
-    width: 123px;
-    height: 32px;
-    border-left: 0px;
-    padding: 0px;
-    margin-right: 0px;
-    text-align: center;
-    color: var(--active-text);
-    border: none;
 }
 
 :deep(.ant-tag-close-icon) {
@@ -519,4 +449,6 @@ export default {
         height: 28px;
     }
 }
+
+
 </style>

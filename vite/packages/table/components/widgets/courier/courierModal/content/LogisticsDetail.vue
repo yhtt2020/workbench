@@ -15,15 +15,15 @@
    </div>
 
    <div class="xt-text font-16 font-400 ">物流详情</div>
-    
+
    <div class="flex top-right">
     <DropIndex :navList="addList"/>
 
     <a-tooltip placement="top" title="关闭">
       <xt-button w="32" h="32"  @click="close" style="border-radius: 8px !important;">
         <div class="flex items-center justify-center rounded-lg category-button pointer xt-bg-2">
-          <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/> 
-        </div> 
+          <SmallIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;"/>
+        </div>
       </xt-button>
     </a-tooltip>
    </div>
@@ -46,7 +46,7 @@
           <span class="xt-text-2 font-14 font-400">下单时间：2023-10-31 20:00:23</span>
           <span class="xt-text-2 font-14 font-400">xxxx(收)</span>
         </div>
-        <div class="flex w-full">
+        <div class="flex w-full mb-2">
           <span class="xt-text-2 font-14 font-400">
             订单编号：{{ orderNums }}
           </span>
@@ -54,7 +54,7 @@
             <DetailIcon icon="fluent:copy-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
           </div>
         </div>
-    
+
         <div class="flex items-center justify-center w-full">
           <xt-button h="20" @click="detailVisible = false">
             <div class="flex items-center justify-center">
@@ -64,7 +64,7 @@
           </xt-button>
         </div>
       </template>
-  
+
       <template v-else>
         <div class="flex items-center justify-center w-full">
           <xt-button h="20" @click="detailVisible = true">
@@ -84,12 +84,12 @@
             预计11月4日15:00-19:00到达
           </div>
         </div>
-        <TimeLine :list="orderNum?.Traces"/>
+        <TimeLine :list="detail?.Traces"/>
       </vue-custom-scrollbar>
     </div>
    </div>
  </div>
-  
+
  <AddCourierModal ref="addCourierRef" />
 
 </template>
@@ -105,8 +105,8 @@ import UpdateIcon from '../updateIcon/index.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
 
 export default {
- props:['orderNum'],
- 
+ props:['detail'],
+
  components:{
   SmallIcon,AddCourierModal,
   TimeLine,
@@ -115,7 +115,7 @@ export default {
 
  data(){
   return{
-    settingsScroller: { 
+    settingsScroller: {
     useBothWheelAxes: true,
     swipeEasing: true,
     suppressScrollY: false,
@@ -132,7 +132,7 @@ export default {
         title:'淘宝账号',name:'tb',
         callBack:()=>{}
       },
-      { 
+      {
         title:'自定义',
         icon:'fluent:add-16-filled',
         callBack:()=>{
@@ -162,7 +162,7 @@ export default {
     const { toClipboard } = useClipboard();
     const res = await toClipboard(this.orderNum);
     if(res.text !== ""){
-      message.success('群聊ID成功复制');
+      message.success('订单号复制成功');
     }
   }
  }

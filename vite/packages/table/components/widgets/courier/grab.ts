@@ -1,5 +1,5 @@
 import {message} from "ant-design-vue";
-import {courierStore} from "../../../store/courier";
+import {courierStore} from "../../../apps/ecommerce/courier";
 
 const appDirName = window.globalArgs['app-dir_name']
 const grab = {
@@ -20,7 +20,7 @@ const grab = {
     getOrder(callback, page = 1) {
       const url = 'https://buyertrade.taobao.com/trade/itemlist/list_bought_items.htm'
       tsbApi.web.openPreloadWindow({
-        background: false,
+        background: true,
         url: url,
         preload: appDirName + '/../appPreload/ecommerce/tb/order.js',
         callback: (data) => {

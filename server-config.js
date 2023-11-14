@@ -33,7 +33,7 @@ const localServer = false  //设置为true， cgz则使用本地的node配置 //
 const config = {
   SERVER_BASE_URL: 'https://s.apps.vip',
   SERVER_BACKEND_URL: 'https://sad.apps.vip',
-  DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
+  DEV_NODE_SERVER_BASE_URL: 'http://test1.com:9001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
   NODE_SERVER_BASE_URL: 'https://apps.vip',
   IM:{
@@ -59,13 +59,14 @@ const appConfig = {
 //cyx本地开发,则修改相应的配置项
 if(localNode && isDevelopmentMode){
   //本地环境下的配置项重置
-  config.NODE_SERVER_BASE_URL = 'http://test.com:8001'
-  appConfig.client_id=10008
+  config.NODE_SERVER_BASE_URL = 'http://test1.com:9001'
+  config.DEV_NODE_SERVER_BASE_URL='http://test1.com:9001'
+  appConfig.client_id=10009
 }
 
 //cgz本地开发
 if(localServer && isDevelopmentMode){
-  config.NODE_SERVER_BASE_URL = 'http://test.com:8001'
+  config.NODE_SERVER_BASE_URL = 'http://test.com:9001'
   config.SERVER_BASE_URL = 'http://pc2.mark.opensns.cn'  //测试站
   config.SERVER_BACKEND_URL = 'https://osxbenew.mark.opensns.cn'
   config.IM.FRONT_URL_DEV = 'http://127.0.0.1:8000'

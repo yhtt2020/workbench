@@ -4,17 +4,17 @@
             <div class="flex justify-between h-[32px]">
                 <div class="flex mt-2">
                     <div class="xt-text">
-                        <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
+                        <newIcon icon="fluent:box-16-regular"  style="font-size: 20px;"></newIcon>
                     </div>
                     <div class="flex ml-4 xt-text" style="margin-top: -6px;">
                         <TopDrop :navList="filterType" v-model:selectType="defaultType" />
                     </div>
                 </div>
                 <div class="flex">
-                    <DropIndex :navList="addList" dropClass="xt-bg rounded-md" mClass="mr-2" @open="addCourier"></DropIndex>
+                    <DropIndex :navList="addList" dropStyle="var(--primary-bg) !important"  mClass="mr-2" @open="addCourier"></DropIndex>
 
                     <a-tooltip autoAdjustOverflow title="刷新">
-                        <xt-button :w="32" :h="32" class=" xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" style="border-radius: 8px;background: var(--primary-bg) !important;"
                             @click="refreshCourier">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:arrow-counterclockwise-20-filled"
@@ -24,7 +24,7 @@
                         </xt-button>
                     </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="设置">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" class="ml-2" style="border-radius: 8px; background: var(--primary-bg) !important;"
                             @click="openCourierSetting">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:settings-16-regular" style="vertical-align: sub;font-size: 1.25rem;">
@@ -33,7 +33,7 @@
                         </xt-button>
                     </a-tooltip>
                     <a-tooltip autoAdjustOverflow title="关闭">
-                        <xt-button :w="32" :h="32" class="ml-2 xt-bg xt-text-2" style="border-radius: 8px;"
+                        <xt-button :w="32" :h="32" class="ml-2" style="border-radius: 8px; background: var(--primary-bg) !important;"
                             @click="showTopCourier">
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:dismiss-16-filled" style="vertical-align: sub;font-size: 1.25rem;">
@@ -52,14 +52,14 @@
             <template v-else>
                 <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                     style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-                    <CourierItem v-for="(item, index) in courierDetailList" :key="index" :courier="item"
+                    <CourierItem v-for="(item, index) in orderList" :key="index" :courier="item"
                         @click="viewDeliveryDetails(item)" />
                 </vue-custom-scrollbar>
             </template>
 
      </div>
  </div>
- <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar && courierDetailList.length>0"
+ <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar  && orderList.length>0"
      style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
      @click="showTopCourier">
      <div class="flex items-center justify-between">
@@ -93,7 +93,7 @@ import { courier } from './mock'
 import MinCourierItem from './MinCourierItem.vue';
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue';
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import TopDrop from "./courierModal/dropdown/index.vue";
 import AddCourierModal from './courierModal/AddCourierModal.vue'
@@ -202,7 +202,7 @@ export default {
             this.showCourierDetail = true
             this.orderNum = item
             this.topCourierVisible = false
-            // console.log(this.orderNum)
+            // console.log(this.currentDetail)
         },
         closeCourierDetail() {
             this.showCourierDetail = false
@@ -263,19 +263,19 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(courierStore, ['courierDetailList', 'couriersDetailMsg', 'storeInfo']),
+        ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo']),
         ...mapWritableState(appStore, ['settings']),
         config(){
           return {
             jdOrder:this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
             tbOrder:this.storeInfo.tb.order && this.storeInfo.tb.order.orders !== undefined,
-            otherOrder:this.courierDetailList && this.courierDetailList !== undefined,
-            allLength:this.courierDetailList?.length !== undefined ? this.courierDetailList?.length : 0 ,
+            otherOrder:this.orderList && this.orderList !== undefined,
+            allLength:this.orderList?.length !== undefined ? this.orderList?.length : 0 ,
             jdLength:this.storeInfo?.jd?.order?.orders?.length !== undefined ? this.storeInfo?.jd?.order?.orders?.length : 0 ,
             tbLength:this.storeInfo?.tb?.order?.orders?.length !== undefined ? this.storeInfo?.tb?.order?.orders?.length : 0 ,
            }
         },
-        filterType() {         
+        filterType() {
             if(this.config.jdOrder || this.config.tbOrder || this.config.otherOrder){
                 const list = [...this.typeList]
                 const filterList = list.map((item) => {

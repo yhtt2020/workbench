@@ -38,7 +38,7 @@
 <script setup>
 import { ref, reactive,computed,onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
-import { courierStore } from '../../../store/courier'
+import { courierStore } from '../../../apps/ecommerce/courier'
 import { kdCompany, kdState,switchColor } from './mock'
 const useCourierStore = courierStore()
 

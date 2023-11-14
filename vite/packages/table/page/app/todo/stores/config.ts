@@ -57,3 +57,5 @@ export const configStore = defineStore('config', {
         ],
     }
 })
+
+export default configStore

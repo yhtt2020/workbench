@@ -91,7 +91,7 @@
 
 <script>
 import { mapActions, mapWritableState } from "pinia";
-import { courierStore } from "../../../../store/courier";
+import { courierStore } from "../../../../apps/ecommerce/courier";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
 import { appStore } from "../../../../store";
 import { message } from "ant-design-vue";
@@ -190,7 +190,7 @@ export default {
     unbindTb() {
       this.dealType = 'tb'
       this.$refs.disassociationRef.openDisassociation()
-     
+
     },
     unbindJd(){
       this.dealType = 'jd'
@@ -200,8 +200,12 @@ export default {
   watch: {
     defaultAuto(){
       this.settings.courierMatch=this.defaultAuto.name
-      // console.log(this.settings.courierMatch)
+      // console.log(this.defaultAuto)
     }
+  },
+  mounted() {
+    this.defaultAuto=this.autoCourier.filter(item=>item.name===this.settings.courierMatch)[0]
+    // console.log(temp)
   },
 }
 </script>

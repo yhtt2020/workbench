@@ -5,9 +5,9 @@
     </Modal>
   </teleport>
 </template>
- 
+
 <script>
-import { courierStore } from '../../../../store/courier'
+import { courierStore } from '../../../../apps/ecommerce/courier'
 import {mapActions,mapWritableState} from 'pinia'
 import Modal from '../../../Modal.vue';
 import SmallCourierDetail from './content/SmallCourierDetail.vue';
@@ -47,5 +47,5 @@ export default {
   }
 }
 </script>
- 
+
 <style lang="scss" scoped></style>

@@ -17,7 +17,7 @@ export default {
 
  data() {
   return {
-  //  largeShow:true,
+   largeShow:true,
   };
  },
 
@@ -26,8 +26,7 @@ export default {
     this.largeShow = true
    },
    handleClose(){
-     let closeModal=false
-     this.$emit('close-modal',closeModal)
+    this.$emit('close-modal',false)
    }
  },
  props:{

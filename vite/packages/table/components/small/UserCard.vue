@@ -3,7 +3,7 @@
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
         <FrameAvatar :frame="displayUserInfo?.equippedItems?.frameDetail" :avatarSize="60"
-                     :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.equippedItems?.frameDetail?.image">
+                     :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.frame">
         </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">
@@ -172,6 +172,7 @@ export default {
           uid: this.uid,
           nickname: data.user.nickname,
           avatar: data.user.avatar_128,
+          frame:data.frame,
           signature: data.user.signature,
           certification: data.user.all_certification_entity_pc || [],
           equippedItems: data.equippedItems
