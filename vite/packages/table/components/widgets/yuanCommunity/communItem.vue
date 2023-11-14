@@ -20,7 +20,7 @@
             </div>
         </div>
     </div> -->
-    <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px]">
+    <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px] h-full">
         <div class="flex flex-col justify-between">
             <div class="flex items-center">
                 <a-avatar :src="detailPost.user.avatar" :size="24"></a-avatar>
@@ -31,9 +31,11 @@
                     {{ detailPost.create_time }}
                 </div>
             </div>
-            <div class="mt-1 mb-1 text-base xt-text content-text"  style="text-align: left;" :innerHTML="contentText"></div>
+            <div class="mb-1 text-base xt-text content-text"  style="text-align: left;" :innerHTML="contentText"></div>
         </div>
-        <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg"></div>
+        <div class="flex flex-col justify-end h-full"  v-if="showImg">
+            <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }"></div>
+        </div>
     </div>
 </template>
 
@@ -77,11 +79,12 @@ const contentText = computed(() => {
     border-radius: 10px;
     width: 54px;
     height: 54px;
-    margin: 8px 0px;
+    // margin: 8px 0px;
     margin-left: 12px;
     background-size: cover;
     cursor: pointer;
     flex-shrink: 0;
+    margin-bottom: 4px;
 }
 
 .nickname {
