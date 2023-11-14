@@ -21,10 +21,10 @@ const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, freeLayoutEnv } =
 freeLayoutStore.initFreeLayoutState();
 
 // 1 获取页面数据
-const scrollWidth = freeLayoutEnv.value.scrollWidth;
-const scrollHeight = freeLayoutEnv.value.scrollHeight;
-const scrollTop = freeLayoutEnv.value.scrollTop;
-const scrollLeft = freeLayoutEnv.value.scrollLeft;
+// const scrollWidth = freeLayoutEnv.value.scrollWidth;
+// const scrollHeight = freeLayoutEnv.value.scrollHeight;
+// const scrollTop = freeLayoutEnv.value.scrollTop;
+// const scrollLeft = freeLayoutEnv.value.scrollLeft;
 
 // 滚动清除cards数据
 watch(
@@ -56,10 +56,11 @@ async function getPosition(item) {
 
   const { left: waterfallFlowLeft, top: waterfallFlowTop } =
     waterfallFlow.value.getBoundingClientRect();
-
+  const scrollTop = freeLayoutEnv.value.scrollTop;
+  const scrollLeft = freeLayoutEnv.value.scrollLeft;
   return {
-    left: left - waterfallFlowLeft,
-    top: top - waterfallFlowTop,
+    left: left - waterfallFlowLeft + scrollLeft,
+    top: top - waterfallFlowTop + scrollTop,
   };
 }
 
@@ -120,7 +121,7 @@ watch(currentDesk.value?.cards, (cards) => {
   <div
     ref="waterfallFlow"
     class="flex flex-wrap justify-start items-start xt-theme-b fixed"
-    style="z-index: -1"
+    style="z-index: -1; overflow: hidden"
     :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
