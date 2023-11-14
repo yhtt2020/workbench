@@ -145,7 +145,6 @@ export default {
         if (this.filterPlatform === 'all') {
           return true
         } else {
-          console.log(String(item.store), this.filterPlatform, item.store === this.filterPlatform)
           if (!item.store) {
             item.store = ''
           }

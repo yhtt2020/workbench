@@ -318,11 +318,12 @@ export const courierStore = defineStore("courier", {
           if (found.docs?.length) {
             //更新流程
             console.log(found)
+            let mapped=mapData(order)
             let foundOrder = found.docs[0]
             foundOrder = {
               ...foundOrder,
-              ...mapData(order),
-              title:foundOrder.edited?foundOrder.title:order.title//单独处理title
+              ...mapped,
+              title:foundOrder.edited?foundOrder.title:mapped.title//单独处理title
             }
 
             let putRs = await tsbApi.db.put(foundOrder)

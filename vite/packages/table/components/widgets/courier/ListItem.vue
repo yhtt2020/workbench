@@ -14,14 +14,9 @@ export default {
     goDetail() {
       this.$emit('goDetail', this.item)
     },
-    refreshData() {
-      this.displayList = this.list
-    },
   },
   data() {
     return {
-      revID: -1,
-      displayList: [],
     }
   },
   computed: {
@@ -76,14 +71,6 @@ export default {
         },
       ]
     }
-  },
-  watch: {
-    'list': {
-      handler() {
-        this.refreshData()
-      },
-      immediate: true
-    }
   }
 }
 </script>
@@ -118,7 +105,12 @@ export default {
               <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
                 {{ item.company }}
               </div>
-              <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆
+              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg xt-text-2"
+                   v-if="item.content.parentOrderId">
+                拆
+              </div>
+              <div class="xt-text" v-if="item.content.arrivalAt">
+                {{ item.content.arrivalAt?.replace('您的订单','').replace('您手中','') }}
               </div>
             </div>
           </div>
