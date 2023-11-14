@@ -12,7 +12,7 @@
               </div>
               <span class="font-16 font-500 xt-text ml-3 xt-font">{{ top.title }}</span>
             </div>
-            <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll(top.type)"/>
+            <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll"/>
           </div>
           <NoticeDetail :type="top.type" :list="detailList"  @close="close"/>
         </div>
@@ -68,8 +68,8 @@ const enableNotice = () =>{
 }
 
 
-const clearAll = (item) =>{
-  notice.delAllHistoryNotice(item)
+const clearAll = () =>{
+  notice.delAllHistoryNotice(top.value.type)
 }
 
 const close = () =>{

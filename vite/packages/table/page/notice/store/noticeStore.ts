@@ -8,6 +8,8 @@ export const noticeStore = defineStore('notice',{
  }),
  
  actions:{
+
+ 
   // 获取db数据库中的数据
   async getNoticeList(){
     // console.log('读取存储数据');
@@ -33,10 +35,10 @@ export const noticeStore = defineStore('notice',{
       return b.createTime - a.createTime
     })
 
-    console.log('查看排序后的消息列表',sortData);
+    // console.log('查看排序后的消息列表',sortData);
     
 
-    this.detailList = mapData
+    this.detailList = sortData
     
   },
 
@@ -53,10 +55,7 @@ export const noticeStore = defineStore('notice',{
       createTime:Date.now(),
       updateTime:Date.now()
      }
-    //  console.log('强消息通知',strongNotice);
-     
-    const res =  await  tsbApi.db.put(strongNotice)
-    console.log('查看状态1',res);
+     await  tsbApi.db.put(strongNotice)
     }else{
     //  console.log('存储弱消息通知数据',data);
     //  console.log('查看',data.type);
@@ -70,9 +69,8 @@ export const noticeStore = defineStore('notice',{
         createTime: Date.now(),
         updateTime:Date.now()
       }
-      //  console.log('查看数据参数',weakMessageOption);
-      const res =  await  tsbApi.db.put(weakMessageOption)
-      console.log('查看状态2',res);
+      await  tsbApi.db.put(weakMessageOption)
+
      }else{ 
 
       const weakSystemOption = {
@@ -82,9 +80,7 @@ export const noticeStore = defineStore('notice',{
         createTime: Date.now(),
         updateTime:Date.now()
       }
-      // console.log('查看数据结构',weakSystemOption);
-      const res =  await tsbApi.db.put(weakSystemOption)
-      console.log('查看状态3',res);
+      await tsbApi.db.put(weakSystemOption)
       
      }
 
@@ -93,16 +89,19 @@ export const noticeStore = defineStore('notice',{
   },
 
   // 将全部历史消息通知进行清除
-  async delAllHistoryNotice(data:any){
-    // console.log('全部清空',data);
-    for(let i=0;i<this.detailList.length;i++){
-      if(this.detailList[i].content.type === data){
-        await tsbApi.db.remove(this.detailList[i])
-        // const res =  await tsbApi.db.remove(this.detailList[i])
-        // console.log('查看结果',res);
-      }
+  async delAllHistoryNotice(type:any){
+    // console.log('查看列表',this.detailList);
+    // console.log('查看type',type);
+    
+    for(const item of this.detailList){
+      await tsbApi.db.remove(item)
+      // console.log('查看item',item);
+      // const itemType = item.content.type  // 根据左侧tab切换类型来将数据进行删除
+      // if(type === itemType){
+      // }
     }
     this.getNoticeList()
+    
   },
 
   // 将单个历史消息通知进行删除
