@@ -23,9 +23,9 @@
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
                     <p class="ml-1 mt-1">密钥</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                     <p class="ml-1 mt-2">管理后台地址</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
                 </div>
                 <div v-show="!this.setVisible">
                     <div class="txt-content pointer" style="height: 48px;color: var(--primary-text);background: var(--secondary-bg);" @click="this.setVisible = !this.setVisible">

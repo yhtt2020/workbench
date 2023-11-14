@@ -16,7 +16,7 @@
           <div class="icon" v-if="running" @click="onStop">
             <Icon icon="fluent:stop-16-filled" />
           </div>
-          <xt-button style="background: rgba(255,255,255,0.40);border-radius: 50px;color: rgba(255, 255, 255, 0.85);" v-if="!running" @click="onPlay">
+          <xt-button style="background: rgba(255, 255, 255, 0.4) !important;border-radius: 50px;color: rgba(255, 255, 255, 0.85);" v-if="!running" @click="onPlay">
             <span>立即开始</span>
           </xt-button>
           <div class="icon" @click="this.onFullScreen">
@@ -190,8 +190,11 @@
     }
 
     .icon:hover{
-      background: rgba(255,255,255,0.60);
+      background: rgba(255,255,255,0.60) !important;
+    }
 
+    .icon-tltle:hover{
+      background: rgba(255,255,255,0.60) !important;
     }
 
     .icon svg{
