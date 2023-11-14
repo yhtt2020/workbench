@@ -30,6 +30,7 @@ export const courierStore = defineStore("courier", {
     // 大尺寸下查看内容详情，传递快递单号
     viewCourierDetail: '',
     settings: {
+      lastRefreshTime:'',
       courierSigned: { // 屏蔽快递已经签收的订单
         blockSigned: true,
         courierTime: '24小时'
@@ -46,7 +47,8 @@ export const courierStore = defineStore("courier", {
       },
       // 开启快递单号匹配
       courierMatch: 'preciseMatch',
-    }
+    },
+
   }),
   actions: {
     // 根据订单号来存储快递数据

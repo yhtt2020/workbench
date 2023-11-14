@@ -5,7 +5,9 @@ import {courierStore} from "../../../apps/ecommerce/courier";
 
 const ui={
   async refreshAll (tip=true) {
+
     const store=courierStore()
+    store.settings.lastRefreshTime=Date.now()
     // 快递鸟快递信息更新
     await store.refreshCouriers()
     tip && message.loading({

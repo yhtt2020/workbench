@@ -335,7 +335,6 @@ export default {
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener('resize', this.handleResize)
-    console.log(this.refreshTimes[0].type, 'refreshTimes')
     if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
       this.autoRefresh()
     }

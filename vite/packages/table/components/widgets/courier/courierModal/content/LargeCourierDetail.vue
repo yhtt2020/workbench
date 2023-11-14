@@ -36,11 +36,13 @@
         <div   class="flex flex-col h-full w-1/2">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
+            <a-tooltip placement="top" class="mr-3" :title="lastRefreshTime">
             <xt-button w="40" h="40" class="category-button" @click="refreshAll">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
               </div>
             </xt-button>
+            </a-tooltip>
           </div>
           <template v-if="allShow">
             <!--    全部展示        -->
@@ -89,6 +91,7 @@ import Cover from '../../component/Cover.vue'
 import { preHandle } from '../../courierTool'
 import ui from '../../courierUI'
 import ListItem from '../../ListItem.vue'
+import { formatTime } from '../../../../../util'
 export default {
   components: {
     ListItem,
@@ -139,7 +142,10 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'currentDetail']),
+    ...mapWritableState(courierStore, ['orderList', 'currentDetail','settings']),
+    lastRefreshTime(){
+      return this.settings.lastRefreshTime?'最后刷新时间：'+formatTime(this.settings.lastRefreshTime):''
+    },
     displayList () {
       let list = this.detailList.filter(item => {
         if (this.filterPlatform === 'all') {
@@ -172,6 +178,7 @@ export default {
   },
 
   methods: {
+    formatTime,
     ...mapActions(courierStore, ['removeDbData']),
     refreshAll:ui.refreshAll,
     // 关闭
