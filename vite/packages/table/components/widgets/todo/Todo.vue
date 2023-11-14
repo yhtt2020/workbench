@@ -15,7 +15,7 @@
     </template>
 
     <div style="height:100%;">
-      <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:12px;">
+      <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:15px;">
         <!-- <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon> -->
         <newIcon icon="fluent:checkmark-square-24-regular" style="color:var(--secondary-text);font-size:20px"/>
       </div>
