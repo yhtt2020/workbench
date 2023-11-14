@@ -69,7 +69,7 @@
       <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>
       <span
         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-          allCouriers
+          couriersCount
         }}</span>
     </div>
   </xt-button>
@@ -104,8 +104,7 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue'
-import { message, Modal as antModal, notification } from 'ant-design-vue'
-import grab from './grab'
+import ui from './courierUI'
 
 export default {
   name: '我的快递',
@@ -211,33 +210,7 @@ export default {
       this.showCourierDetail = false
     },
     refreshCourier () {
-      // console.log(this.storeInfo.jd.order.orders.length)
-      // refreshAll() {
-      // 快递鸟快递信息更新
-      this.refreshCouriers()
-      message.loading('正在为您更新商城订单')
-      if (this.storeInfo.jd.nickname) {
-        //京东绑定了
-        grab.jd.getOrder()
-      }
-      if (this.storeInfo.tb.nickname) {
-        grab.tb.getOrder((args) => {
-          console.log('淘宝结果', args)
-          if (args.status === 0 && args.code === 401) {
-            notification.info({
-              content: '淘宝账号已过期，点击重新绑定。',
-              onClick: () => {
-                grab.tb.login((args) => {
-                  console.log(args, '获取到的订单信息')
-                })
-              }
-            })
-          }
-        })
-        //淘宝绑定了
-      }
-      //todo 刷新其他订单
-      // },
+      ui.refreshAll()
     },
 
     //打开设置
@@ -317,10 +290,8 @@ export default {
     displayList () {
 
     },
-    allCouriers () {
-      if (this.config.jdOrder || this.config.tbOrder || this.config.otherOrder) {
-        return parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)
-      }
+    couriersCount () {
+      return this.orderList.length
     }
   },
   mounted () {

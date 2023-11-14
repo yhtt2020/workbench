@@ -8,7 +8,7 @@ import {Icon as SmallIcon} from '@iconify/vue'
 export default {
   name: "ListItem",
   components: {Cover, SmallIcon},
-  props: ['item'],
+  props: ['item','noBg'],
   methods: {
     ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier']),
     goDetail() {
@@ -77,8 +77,8 @@ export default {
 
 <template>
   <xt-menu name="name" :menus="menus">
-    <div :class="{ 'select': this.currentDetail?._id ===  item._id }"
-         class="flex flex-col p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg"
+    <div :class="{ 'select': this.currentDetail?._id ===  item._id ,'xt-bg-2':!noBg,'mb-3':!noBg }"
+         class="flex flex-col p-3  rounded-lg xt-text pointer courier-item hover-bg"
          @click="goDetail">
       <div class="flex">
         <div class="flex items-center justify-center mr-4 rounded-lg">

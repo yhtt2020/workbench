@@ -43,10 +43,9 @@
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
-                                    class="courier-item">
+                                    class="courier-item mt-2">
                 <div v-for="(item, index) in displayList">
-                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)"
-                               :itemIndex="index"/>
+                  <ListItem :no-bg="true" :item="item" @goDetail="viewDeliveryDetails(item)"></ListItem>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
@@ -94,7 +93,7 @@ import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'
 import grab from './grab'
-
+import ListItem from './ListItem.vue'
 import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
 import CourierItem from './CourierItem.vue'
@@ -110,10 +109,12 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 import _ from 'lodash-es'
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './courierUI'
+import { preHandle } from './courierTool'
 
 export default {
   name: '我的快递',
   components: {
+    ListItem,
     Widget,
     newIcon,
     CourierItem,
@@ -324,8 +325,8 @@ export default {
   watch: {
     'orderList': {
       handler (newVal) {
-        this.displayList = []
-        this.displayList = newVal.slice(0, 10)
+        this.displayList = preHandle(this.orderList)
+        this.displayList = this.displayList.slice(0, 10)
       },
       immediate: true
     }
@@ -373,6 +374,8 @@ export default {
   height: 1px;
   background-color: var(--divider);
   margin-top: 8px;
+
+  margin-bottom: 8px;
 }
 
 .courier {
