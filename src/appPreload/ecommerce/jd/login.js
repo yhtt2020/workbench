@@ -1,28 +1,29 @@
-
 const {
   $,
   ipc,
-  args
+  args,
+  intervalEvent
 } = require('../../app.js')
-console.log('参数',args)
-let interval=setInterval(() => {
-
-  const nickname= $('#ttbar-login .nickname').text()
-
-  let logged = $('#ttbar-login .nickname').length>0 ? !nickname.includes('你好，请登录') : false
+const { isLogged, getNickname } = require('util')
+intervalEvent((clear) => {
+  let logged = isLogged()
   console.log('取到我的订单', logged)
   console.log(args.cbId)
-  if(logged){
-    ipc.send('api.web.callback',{
-      args:{
-        cbId:args.cbId,
+  if (logged) {
+    ipc.send('api.web.callback', {
+      args: {
+        cbId: args.cbId,
         data: {
-          nickname:nickname
+          nickname: getNickname()
         }
       }
     })
     ipc.send('closeSelf')
-    clearInterval(interval)
+    clear()
   }
 }, 1000)
+
+
+
+
 

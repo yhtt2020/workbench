@@ -36,7 +36,7 @@
         <div   class="flex flex-col h-full w-1/2">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
-            <xt-button w="40" h="40" class="category-button" @click="refresh">
+            <xt-button w="40" h="40" class="category-button" @click="refreshAll">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
               </div>
@@ -142,7 +142,7 @@ import RightDetail from './RightDetail.vue'
 import SelectPlateform from '../dropdown/SelectPlateform.vue'
 import Cover from '../../component/Cover.vue'
 import { preHandle } from '../../courierTool'
-
+import ui from '../../courierUI'
 export default {
   components: {
     Cover,
@@ -227,6 +227,7 @@ export default {
 
   methods: {
     ...mapActions(courierStore, ['removeDbData']),
+    refreshAll:ui.refreshAll,
     // 关闭
     close () { this.$emit('close') },
     // 打开快递设置
