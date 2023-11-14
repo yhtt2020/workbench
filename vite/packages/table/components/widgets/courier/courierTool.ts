@@ -17,7 +17,6 @@ export function preHandle(list){
         newItem.lastNodeSummary = content.Traces[content.Traces.length - 1]?.AcceptStation
       }
     } else if (newItem.store === 'jd') {
-      console.log('content=', content)
       if (!content.expressType) {
         newItem.company = '京东快递'
       } else {

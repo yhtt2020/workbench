@@ -10,58 +10,8 @@
     </div>
     <vue-custom-scrollbar :settings="settingsScroller">
       <div style="height:460px;" ref="dropRef" class="w-full">
-        <div v-for="(item, index) in displayList" class="rounded-lg">
-          <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-            <div :class="{ 'select': this.currentDetail._id ===  item._id }"
-                 class="flex flex-col p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg"
-                 @click="seeDetail(item,index)">
-              <div class="flex">
-                <div class="flex items-center justify-center mr-4 rounded-lg">
-                  <Cover :cover="item.cover" :store="item.store" bg="var(--mask-bg)"></Cover>
-                </div>
-                <div class="flex items-center justify-between " style="width:362px;">
-                  <div class="flex flex-col">
-                    <div class="flex items-center mb-1.5 ">
-                      <div v-if="item.store==='jd'" class="w-6 h-6 store flex items-center justify-center rounded-md"
-                           style="background:#E12419;"> JD
-                      </div>
-                      <div v-if="item.store==='tb'" class="w-6 h-6 store flex items-center justify-center rounded-md"
-                           style="background:#FA5000;"> 淘
-                      </div>
-                      <span class="xt-font font-14 font-600 mx-1.5">
-                        {{ item.title?.slice(0, 20) }}
-                      </span>
-                      <span class="fav-icon">
-                      <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
-                      <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
-                    </div>
-                    <div class="flex">
-                      <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                        {{ item.company }}
-                      </div>
-                      <div v-if="false" class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex flex-col items-center justify-end">
-                    <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md state-text"
-                         :style="{ 'background': item.tagColor,color:'var(--active-text)'}">
-                      {{ item.stateText }}
-                    </div>
-                    <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
-                  </div>
-                </div>
-              </div>
 
-              <div class="flex flex-col">
-                <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.lastNodeTime }}</div>
-                <div class="summary">
-                  {{ item.lastNodeSummary }}
-                </div>
-              </div>
-            </div>
-          </xt-menu>
-        </div>
+        <ListItem :item="item" @goDetail="seeDetail(item)" v-for="item in displayList"></ListItem>
         <div style="height: 12px;"></div>
       </div>
     </vue-custom-scrollbar>
@@ -77,10 +27,12 @@ import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
 import Cover from '../../component/Cover.vue'
+import ListItem from '../../ListItem.vue'
 export default {
   props: ['list', 'sortItem'],
 
   components: {
+    ListItem,
     Cover,
     SmallIcon
   },
