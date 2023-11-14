@@ -264,7 +264,7 @@ export default {
 
     getRightItem (item) {
       this.currentDetail = item
-      console.log(this.rightDetail, 'de')
+      console.log( this.currentDetail, 'de')
     },
 
     refresh () {
