@@ -20,8 +20,8 @@
             </div>
         </div>
     </div> -->
-    <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px] h-full">
-        <div class="flex flex-col justify-between">
+    <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px] h-full active-item">
+        <div class="flex flex-col ">
             <div class="flex items-center">
                 <a-avatar :src="detailPost.user.avatar" :size="24"></a-avatar>
                 <div class="ml-2 text-sm xt-text-2 nickname" style="text-align: left;">
@@ -31,7 +31,7 @@
                     {{ detailPost.create_time }}
                 </div>
             </div>
-            <div class="mb-1 text-base xt-text content-text"  style="text-align: left;" :innerHTML="contentText"></div>
+            <div class="mt-2 mb-1 text-base xt-text content-text"  style="text-align: left;cursor: pointer;" :innerHTML="contentText"></div>
         </div>
         <div class="flex flex-col justify-end h-full"  v-if="showImg">
             <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }"></div>
@@ -74,7 +74,12 @@ const contentText = computed(() => {
     text-overflow: ellipsis;
     overflow: hidden;
 }
-
+.active-item{
+    &:hover {
+        background-color: var(--active-secondary-bg);
+        border-radius: 12px;
+    }
+}
 .right {
     border-radius: 10px;
     width: 54px;
