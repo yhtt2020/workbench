@@ -366,7 +366,7 @@ export const courierStore = defineStore("courier", {
     strategies: [
       {
         storage: dbStorage,
-        paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList'],
+        paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList','settings'],
       }
     ]
   }
