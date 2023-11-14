@@ -5,10 +5,10 @@
     </div>
 
     <template #communityFloat>
-      <div class="flex flex-col" style="height:500px;width:300px;" v-if="communityNo !== 1">
+      <div class="flex flex-col" style="height:500px;" v-if="communityNo !== 1">
         <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat>
       </div>
-      <div class="flex flex-col" style="height:500px;width:300px;" v-else>
+      <div class="flex flex-col" style="height:500px;" v-else>
         <DefaultFloat :float="true"></DefaultFloat>
       </div>
     </template>
@@ -245,6 +245,7 @@ export default {
 <style lang="scss" scoped>
 :deep(.tippy-content){
  padding: 12px 12px 16px 12px !important;
+ width:336px !important;
 }
 :deep(.tippy-box){
  border-radius: 12px !important;
@@ -252,31 +253,5 @@ export default {
  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2), 0px 0px 20px 0px rgba(0,0,0,0.1), 0px 0px 40px 0px rgba(0,0,0,0.2);
 }
 
-/**
-:deep(.xt-br) {
-  margin-right: 0px !important;
-}
 
-.font-16-500 {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.font-14 {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-
-:deep(#tippy-4) {
-  z-index: 1000 !important;
-  top: 23px !important;
-  left: 12px !important;
-}
-
-:deep(.tippy){
-  inset: -8px auto auto 10px !important;
-}
-
-**/
 </style>

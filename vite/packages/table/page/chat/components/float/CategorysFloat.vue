@@ -5,7 +5,7 @@
     <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList" /> 
   </div>
 
-  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'336px' } : {width:'215px'} ">
+  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'323px' } : {width:'215px'} ">
     {{ categoryList.summary }}
   </div> 
   
@@ -48,24 +48,7 @@
   <template  v-if="!isDoubleColumn">
     <div class="flex flex-col">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-        <xt-menu name="name" :menus="item.type === 'link' ? linkMenus : menus">
-          <div class="flex items-center" @click="currentItem(item)">
-            <div class="flex items-center">
-              <template v-if="item.type === 'group'">
-                <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-              </template>
-              <template v-if="item.type === 'link'">
-                <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-              </template>
-              <template v-if="item.type === 'forum'">
-                <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-              </template>
-            </div>
-            <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-            <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-             v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-          </div>
-        </xt-menu>
+        <MenuDropdown :type="item.type" :no="communityID.no" :item="item"  @currentItem="currentItem"/>
       </div>
     </div>
   </template>
@@ -73,24 +56,7 @@
   <template v-else>
     <div class="flex grid grid-cols-2 gap-1">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-        <xt-menu name="name" :menus="item.type === 'link' ? linkMenus : menus">
-          <div class="flex items-center" @click="currentItem(item)">
-            <div class="flex items-center">
-              <template v-if="item.type === 'group'">
-                <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-              </template>
-              <template v-if="item.type === 'link'">
-                <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-              </template>
-              <template v-if="item.type === 'forum'">
-                <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-              </template>
-            </div>
-            <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-            <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-             v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-          </div>
-        </xt-menu>
+        <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
       </div>
     </div>
   </template>
@@ -101,47 +67,13 @@
       <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
         <div class="flex flex-col" v-if="isDoubleColumn === false">
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <xt-menu name="name" :menus="item.type === 'link' ? linkMenus : menus">
-              <div class="flex items-center" @click="currentItem(item)">
-                <div class="flex items-center">
-                  <template v-if="item.type === 'group'">
-                    <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-                  </template>
-                  <template v-if="item.type === 'link'">
-                    <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-                  </template>
-                  <template v-if="item.type === 'forum'">
-                    <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                  </template>
-                </div>
-                <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-                 v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-              </div>
-            </xt-menu>
+            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
           </div>
         </div>
   
         <div class="flex grid grid-cols-2 gap-1" v-else>
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <xt-menu name="name" :menus="item.type === 'link' ? linkMenus : menus">
-              <div class="flex items-center" @click="currentItem(item)">
-                <div class="flex items-center">
-                  <template v-if="item.type === 'group'">
-                    <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-                  </template>
-                  <template v-if="item.type === 'link'">
-                    <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-                  </template>
-                  <template v-if="item.type === 'forum'">
-                    <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-                  </template>
-                </div>
-                <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-                <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-                 v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-              </div>
-            </xt-menu>
+            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem" />
           </div>
         </div>
       </ChatFold>  
@@ -195,27 +127,7 @@ export default{
       channelMenu,
       listType:'',
       categoryItem:{},
-      linkMenus:[
-        {
-          name:'链接设置',
-          newIcon:'fluent:settings-16-regular',
-          callBack:()=>{}
-        },
-        {
-          name:'删除应用',
-          newIcon:'akar-icons:trash-can',
-          color: 'var(--error)',
-          callBack:()=>{}
-        }
-      ],
-      menus:[
-        {
-          name:'删除应用',
-          newIcon:'akar-icons:trash-can',
-          color: 'var(--error)',
-          callBack:()=>{}
-        }
-      ],
+      
       floatMenu:[
         {
           name:'分组设置',
@@ -298,13 +210,6 @@ export default{
       this.currentID = item.id
       this.$emit('clickItem',item)
     },
-
-    // 根据类型判断返回右键下拉列表
-    // menuList(type){
-    //   console.log('查看type',type);
-    //   return type === 'link' ? this.linkMenus : this.menus;
-    // },
-
 
   },
 

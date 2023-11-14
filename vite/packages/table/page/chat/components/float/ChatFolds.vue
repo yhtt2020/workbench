@@ -1,9 +1,9 @@
 <template>
  <div class="collapse-container" style="position: relative;">
-   <div class="header mb-2 flex  px-1 justify-between rounded-md h-8" @click.stop="toggleCollapse">
+   <div class="header mb-2 flex  justify-between rounded-md h-8" @click.stop="toggleCollapse">
      <div class="flex items-center">
-      <div class="flex items-center justify-center" :class="['icon', { 'rotate': !collapsed }]">
-        <CaretRightOutlined style="font-size: 1em;"/>
+      <div class="flex items-center justify-center" :class="['icon', { 'rotate': collapsed }]">
+        <FoldIcon  icon="fluent:caret-down-12-filled" style="font-size: 1.5rem;"/>
       </div>
       <span class="font-14 ml-2" style="color:var(--secondary-text);">
        {{ title }}
@@ -25,14 +25,14 @@
 
 <script>
 import { ref,reactive } from 'vue';
-import { CaretRightOutlined } from '@ant-design/icons-vue';
+import { Icon as FoldIcon } from '@iconify/vue';
 import ChatDropDown from './ChatsDropDown.vue';
 import { categoryMenu } from '../../../../js/data/chatList'
 
 export default {
  props:['title','content','show','no'],
  components: {
-   CaretRightOutlined,ChatDropDown
+  FoldIcon,ChatDropDown
  },
  setup() {
    const collapsed = ref(false);
@@ -70,7 +70,7 @@ export default {
 }
 
 .rotate {
- transform: rotate(90deg);  /* 旋转图标 */
+ transform: rotate(-90deg);  /* 旋转图标 */
 }
 
 /**
