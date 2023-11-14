@@ -17,7 +17,7 @@ export const newsStore = defineStore("news", {
       const cacheData=localCache.get(cacheTag)
       if(cacheData){
         this.newsMsgList = cacheData
-        console.log(this.newsMsgList);
+        // console.log(this.newsMsgList);
       }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
@@ -42,7 +42,7 @@ export const newsStore = defineStore("news", {
         localCache.set(cacheTag,this.newsMsgList,300)
       }
       else{
-        return false
+        this.newsMsgList=[]
       }
     },
 
