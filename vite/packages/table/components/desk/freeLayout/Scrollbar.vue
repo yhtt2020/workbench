@@ -1,7 +1,5 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <!-- <FloatMenu style="z-index: 99999;"/> -->
-  <!-- {{ scrollData }} -->
   <div
     v-show="freeLayoutEnv.loading"
     ref="scrollbar"
@@ -26,12 +24,11 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 
-import Container from "./FloatMenu/Container.vue";
-// import FloatMenu from "./FloatMenu.vue";
+// import Container from "./FloatMenu/Container.vue";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData, freeLayoutEnv } =
+const { getFreeLayoutState, dragData, freeLayoutEnv ,getFreeLayoutData} =
   storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
@@ -43,7 +40,7 @@ onMounted(() => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   // scrollData.value =
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
-  console.log("scrollData :>> ", scrollData);
+
   setTimeout(async () => {
     // 初始化自由布局定位
     await redirect();

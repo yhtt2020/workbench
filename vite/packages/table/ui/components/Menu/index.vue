@@ -112,9 +112,8 @@ const menuY = ref(0);
 function handleOpenMenu(e: any, currentModel: string) {
   if (!beforeCreate.value()) return;
 
-
   if (model.value != currentModel && model.value != "all") return;
-  console.log('222 :>> ', 222);
+  console.log("222 :>> ", 222);
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;

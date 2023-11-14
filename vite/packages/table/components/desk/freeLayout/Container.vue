@@ -46,7 +46,7 @@ async function drawGraph(item) {
     height,
   });
 }
-
+const last = ref(true);
 // 获取位置
 async function getPosition(item) {
   await drawGraph(item);
@@ -81,11 +81,17 @@ function updateCards(data) {
   // 添加逻辑
   data.forEach(async (item) => {
     const { id, name, customData } = item;
-    // 优化2 重复的ID跳过
-    if (
-      getFreeLayoutData.value[item.id] &&
-      getFreeLayoutData.value[item.id].id == id
-    ) {
+    // 优化2 判断初始化还是更新
+    if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
+      if (last.value) {
+        getFreeLayoutData.value[id] = {
+          left: getFreeLayoutData.value[id].left,
+          top: getFreeLayoutData.value[id].top,
+          id,
+          name,
+          customData,
+        };
+      }
       return;
     }
     // 优化3 抽离获取坐标过程
@@ -97,10 +103,11 @@ function updateCards(data) {
       name,
       customData,
     };
-
     console.log("更新了数据 :>> ");
   });
+  last.value = false;
 }
+
 watch(currentDesk.value?.cards, (cards) => {
   clearTimeout(updateCardTimer);
   updateCardTimer = setTimeout(() => {
@@ -116,7 +123,7 @@ watch(currentDesk.value?.cards, (cards) => {
     style="z-index: -1"
     :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
-      height: freeLayoutEnv.scrollData?.height + 'px',
+      height: 100 + '%',
       top: freeLayoutEnv?.scrollData?.top + 'px',
       left: freeLayoutEnv?.scrollData?.left + 'px',
     }"

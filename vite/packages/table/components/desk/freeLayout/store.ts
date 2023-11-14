@@ -23,7 +23,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         isFreeLayout: true,
         // 是否使用悬浮菜单
         isFloatMenu: true,
-        FloatMenu: {},
+        floatMenu: {
+          top: 0,
+          left: 0,
+        },
       },
 
       margin: 6,

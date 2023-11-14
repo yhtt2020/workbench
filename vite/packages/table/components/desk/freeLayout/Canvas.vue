@@ -58,7 +58,6 @@
     </template>
     <slot></slot>
   </div>
-  <!-- <FloatMenu></FloatMenu> -->
 </template>
 
 <script setup lang="ts">

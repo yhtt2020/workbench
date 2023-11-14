@@ -38,17 +38,20 @@
         </a-result>
       </div>
     </div>
+    <FloatMenu
+      v-if="isFreeLayout"
+      @scrollbarRedirect="freeLayoutScrollbarRedirect"
+    ></FloatMenu>
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-      <FreeLayoutFloatMenu></FreeLayoutFloatMenu>
+      <!-- 悬浮菜单 -->
       <!-- 自由布局滚动 -->
       <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
       >
-        <!-- <FreeLayoutFloatMenu></FreeLayoutFloatMenu> -->
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas>
             <FreeLayoutContainer :currentDesk="currentDesk">
@@ -268,7 +271,7 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <a-drawer v-model:visible="settingVisible" placement="right"     :width="500">
+  <a-drawer v-model:visible="settingVisible" placement="right" :width="500">
     <XtTab
       class="mb-2"
       v-if="settingVisible"

@@ -20,6 +20,10 @@
         开放式桌面画布，支持自定义每个组件的位置、缩放，还可以实现层叠等操作（当前功能尚未完成，可能会产生严重Bug，仅限尝鲜体验）
       </div>
       <hr class="my-3" />
+      <div class="flex justify-between mb-3">
+        <div>开启悬浮窗</div>
+        <a-switch v-model:checked="getFreeLayoutState.system.isFloatMenu" />
+      </div>
       <div class="mb-3">画布中心点</div>
       <div class="xt-text-2 text-sm my-3">
         桌面是一张「画布」，你可以手动调节画布的中心，然后点击「回到中心点」快速定位画布。

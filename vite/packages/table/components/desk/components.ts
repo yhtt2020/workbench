@@ -77,15 +77,15 @@ import FreeLayoutState from "./freeLayout/State.vue";
 import FreeLayoutMask from "./freeLayout/Mask.vue";
 import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
 // import FreeLayoutFloatMenu from "./freeLayout/FloatMenu/Container.vue";
-import FreeLayoutFloatMenu from "./freeLayout/FloatMenu.vue";
+import FloatMenu from './floatMenu/FloatMenu.vue'
 export default {
   components: {
     FreeLayoutScrollbar,
+    FloatMenu,
     FreeLayoutContainer,
     FreeLayoutCanvas,
     FreeLayoutMask,
     FreeLayoutState,
-    FreeLayoutFloatMenu,
     RightMenu,
     GameInformation,
     HistoryInfo,
