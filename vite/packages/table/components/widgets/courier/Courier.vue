@@ -106,7 +106,7 @@ import LogisticsDetail from './courierModal/content/LogisticsDetail.vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import CourierSetting from './courierModal/CourierSetting.vue'
-import _ from 'lodash-es'
+
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './courierUI'
 import { preHandle } from './courierTool'

@@ -1,6 +1,6 @@
 import {message, notification} from "ant-design-vue";
 import grab from "./grab";
-import _ = require("lodash");
+import _ from 'lodash-es'
 import {courierStore} from "../../../apps/ecommerce/courier";
 
 const ui={
