@@ -39,7 +39,7 @@ export default {
                 enable: false,
             },
             // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-            toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', '|', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'preview', 'fullscreen', 'devtools', 'upload', 'help', 'br'],
+            toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'preview', 'devtools', 'upload', 'help', 'br'],
             after: () => {
                 if (this.selNote >= 0 && this.noteList.length) {
                     this.contentEditor.setValue(this.noteList[this.selNote].customData.text)
@@ -162,5 +162,93 @@ export default {
 
     }
 
+    // 以下样式针对全屏模式下的便签编辑器调整
+    .pop-box .vditor-toolbar{
+        position: absolute;
+        // padding: 0;
+        width: 100%;
+        left: 0; 
+        height: 52px;
+        top: 64px;
+        display: flex;
+        // flex-;
+        justify-content: center !important;
+        flex-wrap: wrap;
+    }
+
+    .pop-box .vditor-reset{
+        height: 90% !important;
+        padding: 20px 49px !important;
+    }
+
+    .pop-box .vditor-toolbar .vditor-toolbar__item{
+        height: 100%;
+        padding: 0 8px;
+        display: flex !important;
+        align-items: center;
+    }
+
+
+    // 以下样式针对markdown特殊格式进行调整
+    .vditor-ir h1{
+        margin: 16px 0 12px;
+        font-size: 22px;
+        font-weight: 85;
+    }
+    .vditor-ir h2{
+        margin: 16px 0 12px;
+        font-size: 20px;
+        font-weight: 85;
+    }
+    .vditor-ir h3{
+        margin: 16px 0 12px;
+        font-size: 18px;
+        font-weight: 85;
+    }
+    .vditor-ir h4{
+        margin: 16px 0 12px;
+        font-size: 16px;
+        font-weight: 85;
+    }
+    .vditor-ir h5{
+        margin: 16px 0 12px;
+        font-size: 15px;
+        font-weight: 85;
+    }
+    .vditor-ir h6{
+        margin: 16px 0 12px;
+        font-size: 15px;
+        font-weight: 85;
+    }
+    .vditor-ir [data-type='em']{
+        font-size: 15px;
+        font-weight: 55;
+    }
+    .vditor-ir [data-type='strong']{
+        font-size: 15px;
+        font-weight: 75;
+    }
+    .vditor-ir [data-type='s']{
+        font-size: 15px;
+        font-weight: 60;
+    }
+    .vditor-ir blockquote{
+        font-size: 15px;
+        background: #2A2A2A;
+        color: #e6e6e6 !important;
+    }
+    .vditor-ir ol{
+        font-size: 15px;
+        font-weight: 55;
+    }
+    .vditor-ir ul{
+        font-size: 15px;
+        font-weight: 55;
+    }
+    .vditor-ir table{
+        font-size: 15px;
+        font-weight: 55;
+        color: #000 !important;
+    }
 </style>
  
