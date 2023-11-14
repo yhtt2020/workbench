@@ -132,18 +132,18 @@ export default {
       let rs = await this.followCourier(this.orderData._id)
       if (rs) {
         this.orderData.followed = true
-        message.success('订阅成功')
+        message.success('关注成功')
       } else {
-        message.error('订阅失败')
+        message.error('关注失败')
       }
     },
     async unfollow(){
       let rs = await this.unfollowCourier(this.orderData._id)
       if (rs) {
         this.orderData.followed = false
-        message.success('取消订阅成功')
+        message.success('取消关注成功')
       } else {
-        message.error('取消订阅失败')
+        message.error('取消关注失败')
       }
     },
    removeItem(){},

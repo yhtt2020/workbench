@@ -159,7 +159,7 @@ export default {
       ],
       filterPlatform: 'all',
       menus: [
-        { name: '订阅物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
+        { name: '关注物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
         {
           name: '删除快递', newIcon: 'akar-icons:trash-can', color: 'var(--error)',
           callBack: () => {

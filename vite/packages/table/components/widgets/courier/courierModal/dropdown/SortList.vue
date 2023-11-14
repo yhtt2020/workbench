@@ -110,28 +110,28 @@ export default {
       }
       return [
         this.displayList[this.revID].followed ? {
-            name: '取消订阅',
+            name: '取消关注',
             callBack: async () => {
               let rs = await this.unfollowCourier(this.displayList[this.revID]._id)
               if (rs) {
                 this.displayList[this.revID].followed = false
-                message.success('取消订阅成功')
+                message.success('取消关注成功')
               } else {
-                message.error('取消订阅失败')
+                message.error('取消关注失败')
               }
             },
             newIcon: 'fluent:star-12-regular'
           } :
           {
-            name: '订阅物流',
+            name: '关注物流',
             callBack: async () => {
               console.log('item', this.displayList[this.revID])
               let rs = await this.followCourier(this.displayList[this.revID]._id)
               if (rs) {
                 this.displayList[this.revID].followed = true
-                message.success('订阅成功')
+                message.success('关注成功')
               } else {
-                message.error('订阅失败')
+                message.error('关注失败')
               }
             },
             newIcon: 'fluent:star-16-filled'

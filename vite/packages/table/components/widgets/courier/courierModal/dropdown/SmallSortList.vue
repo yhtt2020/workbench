@@ -90,7 +90,7 @@ export default {
           newIcon: 'fluent:apps-list-detail-24-regular'
         },
         {
-          name: '订阅物流',
+          name: '关注物流',
           callBack: () => {
 
           },

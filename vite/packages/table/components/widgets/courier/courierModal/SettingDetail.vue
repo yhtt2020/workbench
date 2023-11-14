@@ -80,7 +80,7 @@
 
         <a-select class="rounded-lg xt-bg"  :bordered="false" :options="autoCancelTime" v-model:value="settings.courierSigned.courierTime"></a-select>
 
-        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消订阅该订单，并设置为隐藏。</span>
+        <span class="xt-text-2 mt-2.5 xt-font font-14 font-400">已签收的订单到达以上时间后自动取消关注该订单，并设置为隐藏。</span>
       </div>
     </div>
   </div>
@@ -114,7 +114,7 @@ export default {
       ],
       defaultAuto: { title: "精准匹配", name: "preciseMatch" },
 
-      statusSelect: [{ value: "未完成快递" ,name:'unCompleted'}, { value: "特别关注（订阅物流）",name:'specialAttention' }],
+      statusSelect: [{ value: "未完成快递" ,name:'unCompleted'}, { value: "特别关注（关注物流）",name:'specialAttention' }],
       autoRefreshTime,
       autoCancelTime,
       dealType:''

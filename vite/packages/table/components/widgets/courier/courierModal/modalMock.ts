@@ -1,3 +1,5 @@
+import {getOrderState} from "../courierTool";
+
 export const courierDetailList = [
   {
     goodName: "《悲惨世界》图书",
@@ -160,7 +162,7 @@ export const courierDetailList = [
 
 export const courierType = [
   {title: "全部", name: "all"},
-  {title: '订阅', name: 'subscribe'},
+  {title: '关注', name: 'subscribe'},
   {title: "在途中", name: "enRoute", color: "var(--active-bg)"},
   {title: "派送中", name: "delivery", color: "var(--warning)"},
   {title: '发货中', name: 'onDelivery'},
@@ -961,56 +963,48 @@ export const autoCancelTime = [
 
 // 筛选tab栏数据
 export function selectTab(item: any, list: any) {
+  let count=0
   switch (item.name) {
     case 'all':
-      return {
-        title: `${item.title}${list === 0 ? '' : `(${list.length})`}`,
-        name: item.name,
-      };
+      count=list.length
+      break
     case 'subscribe':
-      console.log(list,'筛选出的列表')
       let subscribed = list.filter(li => {
         return li.followed
       })
-      return {
-        title: item.title + (subscribed.length > 0 ? '(' + subscribed.length + ')' : '')
-        , name: item.name
-      };
+      count=subscribed.length
+      break
     case 'enRoute':
       const routeList = list.filter((item: any) => {
-        return item.State === '2'
+       return getOrderState(item)==='onRoad'
       })
-      return {
-        title: `${item.title}${routeList.length === 0 ? '' : `${routeList.length}`}`,
-        name: item.name
-      };
+      count=routeList.length
+      break
     case 'delivery':
-      const deliList = list.filter((item: any) => {
-        return item.State === '202'
-      })
-      return {
-        title: `${item.title}${deliList.length === 0 ? '' : `(${deliList.length})`}`,
-        name: item.name,
-      };
+      count=list.filter((item)=>{
+        return getOrderState(item)==='delivery'
+      }).length
+      break
     case 'onDelivery':
-      return {title: item.title, name: item.name};
+      count=list.filter((item)=>{
+        return getOrderState(item)==='preparing'
+      }).length
+      break
     case 'collect':
-      const cList = list.filter((item: any) => {
-        return item.State === '1'
-      })
-      return {
-        title: `${item.title}${cList.length === 0 ? '' : `(${cList.length})`}`,
-        name: item.name,
-      };
+      count=list.filter((item)=>{
+        return getOrderState(item)==='collected'
+      }).length
+      break
     case 'signed':
-      const signList = list.filter((item: any) => {
-        return item.State === '3'
-      })
-      return {
-        title: `${item.title}${signList.length === 0 ? '' : `(${signList.length})`}`,
-        name: item.name,
-      };
+      count=list.filter((item)=>{
+        return getOrderState(item)==='signed'
+      }).length
+
   }
+  return {
+    title: `${item.title}${count==0 ? '':'（'+ count+'）'}`,
+    name: item.name
+  };
 }
 
 // 筛选数据
@@ -1023,527 +1017,24 @@ export function selectData(item: any, list: any) {
         return li.followed
       })
     case 'enRoute':
-      const routeList = list.filter((item: any) => {
-        if(item.store==='jd'){
-          return item.content.status==='等待收货'
-        }
-        return item.State === '2'
+      return list.filter(item=>{
+        return getOrderState(item)==='onRoad'
       })
-      return routeList
     case 'delivery':
-      const deliList = list.filter((item: any) => {
-        return item.State === '202'
+      return list.filter(item=>{
+        return getOrderState(item)==='delivery'
       })
-      return deliList
     case 'onDelivery':
-      return [];
+      return list.filter(item=>{
+        return getOrderState(item)==='preparing'
+      })
     case 'collect':
-      const cList = list.filter((item: any) => {
-        return item.State === '1'
+      return list.filter(item=>{
+        return getOrderState(item)==='collected'
       })
-      return cList
     case 'signed':
-      const signList = list.filter((item: any) => {
-        if(item.store==='jd'){
-          return item.content.status==='已完成'
-        }
-        return item.State === '3'
+      return list.filter(item=>{
+        return getOrderState(item)==='signed'
       })
-      return signList
   }
 }
-
-/*
-{
-    "status": 1,
-    "info": "成功获取",
-    "cbId": "callback_hBJbIZmS",
-    "data": {
-        "orders": [
-            {
-                "id": "284939356394",
-                "dealtime": "2023-11-03 10:18:27",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "飞兹(fizz)特氟龙多功能剪刀组合装美工刀+剪刀二合一办公家用生活裁剪两用不锈钢办公学生文具 红色 FZ21213",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥16.99在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284939356394&PassKey=CD4C7699223ABAFA43BB58C1209D4C43",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "283256084637",
-                "dealtime": "2023-11-01 23:02:56",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "海康威视（HIKVISION）1TB Type-C USB3.2超极速固态U盘S560移动固态闪存优盘  双接口手机电脑通用便携",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥389.00在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=283256084637&PassKey=485725988372402157964ECF752681D1",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "284689401607",
-                "dealtime": "2023-10-31 20:00:15",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "京东京造Z9 Smart人体工学椅 电竞椅 办公椅子电脑椅久坐 双背撑腰 带脚踏",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥678.99在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284689401607&PassKey=5C861C92D09491350307F9D3D838230B",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "283128502301",
-                "dealtime": "2023-10-31 13:54:33",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "新日（Sunra）新日折叠电动车 【10补邮费专用】勿单拍，拍前联系客服！！ 10",
-                        "num": "x6",
-                        "consignee": "陈一枭",
-                        "amount": "¥59.99在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=283128502301&PassKey=D983C648FAD4854762516949145AFAF0",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "283090371710",
-                "dealtime": "2023-10-30 12:17:58",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "木藝生显示器增高架台式电脑支架显示屏高底座桌面置物架键盘架子储物架 【收纳伴侣套装】双层-颜色备注 置物架",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥45.03在线支付",
-                        "detailUrl": ""
-                    },
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "木藝生嗮家装嗮视频赠多重好礼 详询客服 1",
-                        "num": "x1",
-                        "consignee": "",
-                        "amount": "",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=283090371710&PassKey=5D29EB66834913CE86DFA90DA6D0187B",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "284595370625",
-                "dealtime": "2023-10-30 08:48:21",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "绿巨能（llano） USB/Type-C读卡器3.0高速SD/TF卡多功能合一单反相机佳能手机iPad行车记录仪监控存储内存卡",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥41.98在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284595370625&PassKey=7450A3A738BFF51F5574984C747DED88",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "283133167728",
-                "status": "已完成"
-            },
-            {
-                "id": "284571865829",
-                "dealtime": "2023-10-29 15:31:26",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "Oftensee 平板电脑支架iPadminiPro桌面懒人手机金属调节折叠便携通用学习绘画支撑托架 【360°旋转升降】铝合金折叠支架-灰色",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥57.20在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284571865829&PassKey=EB2AB89662363AC54B3BE4367D88DB2E",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "284505543916",
-                "status": "已完成"
-            },
-            {
-                "id": "284557315586",
-                "dealtime": "2023-10-29 15:31:26",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "达摩鲨 K3PRO 三模无线小键盘 蓝牙2.4G 19键机械数字键盘 RGB全键热插拔自定义财务键盘",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥192.00在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284557315586&PassKey=51AB2B6692AD263E1AD45176A4BCBFF8",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "284505543916",
-                "status": "已完成"
-            },
-            {
-                "id": "284503744837",
-                "dealtime": "2023-10-28 10:22:52",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥1459.00在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284503744837&PassKey=70946DB028B132FEC9DB25095F9A8C7A",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已取消"
-            },
-            {
-                "id": "283032384561",
-                "dealtime": "2023-10-27 00:28:37",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "bestoct头戴式手机支架gopro12固定拍摄支架第一人称视角随身直播穿戴身上配件路亚户外夹子 手机/GoPro运动相机头戴支架【旗舰版】",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥34.88在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=283032384561&PassKey=F9E0E91F6BD1C40DFCCEAD31FB98DA5B",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "282969861055",
-                "dealtime": "2023-10-26 17:42:03",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "闪迪（SanDisk）A2 512GB TF（MicroSD）存储卡 V30 U3 4K至尊超极速移动版内存卡 读速200MB/s 写速140MB/s",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥478.98在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282969861055&PassKey=4F2869A6E54C4B30027BF8ADC9D3ABB9",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "284361162979",
-                "dealtime": "2023-10-25 21:32:13",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "大疆 DJI Osmo Pocket 3 全能套装 一英寸口袋云台相机 OP灵眸手持数码相机 旅游vlog 便携美颜摄像",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥4499.00在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284361162979&PassKey=227E2F6A6110187781D313B889F2909F",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "284298131403",
-                "dealtime": "2023-10-24 18:58:13",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "建材再保1年",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥0.00在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284298131403&PassKey=78F34CA71640DF9DFEEEEC058365715C",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "284226831790",
-                "dealtime": "2023-10-24 16:35:01",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "罗技（G）G502 X LIGHTSPEED无线游戏鼠标 进阶无线版 全新光学-机械混合微动 HERO引擎 电竞鼠标 白色",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥548.98在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=284226831790&PassKey=05F04FAA6EF1DBE4CB196BE02577209F",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "282916217232",
-                "dealtime": "2023-10-24 12:29:56",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "米家追光氛围灯带电竞RGB小米追光 PC智能联动 声光互动氛围灯",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥198.99在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282916217232&PassKey=F729D077E47481C0FAA247A1AAF74319",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "282915951344",
-                "dealtime": "2023-10-24 12:25:02",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "鸥歌电竞房洞洞板置物架万能挂板电脑桌面壁挂式铁艺墙上洞洞板收纳 【带边框带挂钩】180*100 黑色",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥141.35在线支付",
-                        "detailUrl": ""
-                    },
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "鸥歌电竞房洞洞板置物架万能挂板电脑桌面壁挂式铁艺墙上洞洞板收纳 加购收藏 黑色",
-                        "num": "x1",
-                        "consignee": "",
-                        "amount": "",
-                        "detailUrl": ""
-                    },
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "鸥歌电竞房洞洞板置物架万能挂板电脑桌面壁挂式铁艺墙上洞洞板收纳 商品自带挂钩10个，勿拍 黑色",
-                        "num": "x1",
-                        "consignee": "",
-                        "amount": "",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282915951344&PassKey=96F3BAA6AB8501C0189FAD20B9139A38",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "282763769589",
-                "dealtime": "2023-10-24 08:02:43",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "机械师KT68 机械键盘 无线/2.4G/蓝牙三模游戏键盘 笔记本电脑键盘 智慧屏 黑金版 知秋轴",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥698.98在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282763769589&PassKey=79DB94CCB6BFFE48020D317AACF424B0",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            },
-            {
-                "id": "282531547616",
-                "dealtime": "2023-10-13 11:09:46",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "banq&JOY联名款 64GB TF（MicroSD）存储卡U3 C10 A1 V30 4K 高速款 行车记录仪&监控摄像头手机内存卡",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥16.90在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282531547616&PassKey=F3115E8FA32E2185A93B2B7EC636F24D",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "282541777638",
-                "status": "已完成"
-            },
-            {
-                "id": "282531547584",
-                "dealtime": "2023-10-13 11:09:46",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "闪迪（SanDisk）32GB SD存储卡 C10 至尊高速版内存卡 读速120MB/s 捕捉全高清 数码相机理想伴侣",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥35.88在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=282531547584&PassKey=66B067AF79455BE828831D9FE0BDB0D6",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "282541777638",
-                "status": "已完成"
-            },
-            {
-                "id": "277161423519",
-                "dealtime": "2023-10-09 09:48:45",
-                "items": [
-                    {
-                        "cover": "https://misc.360buyimg.com/lib/img/e/blank.gif",
-                        "name": "胖牛40cm小型摄影棚器材美食珠宝拍摄补光灯PU5040A白光单色温led摄影棚摄影柔光箱送6色背景纸影棚器材套装",
-                        "num": "x1",
-                        "consignee": "陈一枭",
-                        "amount": "¥135.99在线支付",
-                        "detailUrl": ""
-                    }
-                ],
-                "detailUrl": "https://details.jd.com/normal/item.action?orderid=277161423519&PassKey=DB6D6826BEE91A92F531774FF2728F37",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "已完成"
-            }
-        ],
-        "parentOrders": [
-            {
-                "id": "283133167728",
-                "dealtime": "2023-10-30 08:48:21",
-                "items": [],
-                "detailUrl": "https:undefined",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "订单状态：已拆分"
-            },
-            {
-                "id": "284505543916",
-                "dealtime": "2023-10-29 15:31:26",
-                "items": [],
-                "detailUrl": "https:undefined",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "订单状态：已拆分"
-            },
-            {
-                "id": "282541777638",
-                "dealtime": "2023-10-13 11:09:46",
-                "items": [],
-                "detailUrl": "https:undefined",
-                "arrivalAt": "",
-                "latestNodes": [],
-                "expressType": "",
-                "expressNo": "",
-                "parentOrderId": "",
-                "status": "订单状态：已拆分"
-            }
-        ]
-    }
-}
-
-
-**/
