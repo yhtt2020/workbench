@@ -133,7 +133,7 @@
                 </div>
                 <!-- foot -->
                 <div class="flex items-center justify-between h-[56px] ">
-                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
+                    <a-select v-model:value="cascaderValue" :options="selectOptions" placeholder="选择版块" :bordered="false"
                         @change="handleChange" 
                         style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
                         dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
@@ -164,7 +164,7 @@ import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
 import DynamicItem from './Detail/DynamicItem.vue'
 import PostItem from './Detail/PostItem.vue'
-import { translateImage } from './Detail/index'
+import { translateImage,translateOnlyImage } from './Detail/index'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const useCommunStore = useCommunityStore()
@@ -263,17 +263,17 @@ onMounted(async () => {
     windowHeight.value = window.innerHeight
     await useYuanCommunityStore.getMyForumList()
     communCate.value.forEach((item) => {
-        options.value.push({
+        selectOptions.value.push({
             value: item.id,
             label: item.name
         })
     })
-    cascaderValue.value = options.value[0]
+    cascaderValue.value = selectOptions.value[0]
 })
 
 // 选择发帖板块
 const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
-const options = ref([]);
+const selectOptions = ref([]);
 let cascaderValue = ref([])
 // 修改发帖板块
 const handleChange = (value) => {
@@ -299,7 +299,7 @@ watch(fileList, async () => {
 })
 watch(coverList, async () => {
     let coversList = await translateImage(coverList.value)
-    useYuanCommunityStore.postContent.coverList = await JSON.stringify(coversList)
+    useYuanCommunityStore.postContent.coverList = coversList.toString()
 })
 const publishPost = async () => {
     if (dynamicContent.value.content || dynamicContent.value.imagesList.length > 0 && defaultType.value.value == 'dynamic') {
@@ -311,6 +311,7 @@ const publishPost = async () => {
         let post = postContent.value
         const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
         setTimeout(async () => {
+            console.log(cascaderValue.value,post.imagesList, post.content, title, post.coverList,'post-publish')
             await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
         });
     }
