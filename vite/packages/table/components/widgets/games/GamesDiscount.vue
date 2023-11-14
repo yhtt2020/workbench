@@ -6,7 +6,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 28px;" />
+          <newIcon icon="mdi:steam" style="font-size: 20px;" />
         </div>
       </template>
     <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"

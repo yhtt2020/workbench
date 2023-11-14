@@ -10,11 +10,14 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="ri:weibo-fill" style="font-size: 24px;" />
+          <newIcon icon="ri:weibo-fill" style="font-size: 20px;" />
         </div>
       </template>
   <div class="flex flex-col mt-1 overflow hot-box" style="height: 95%;">
-    <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
+    <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
+      <!-- <icon icon="shuaxin"></icon> -->
+      <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="font-size: 20px;"/>
+    </div>
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
 
       <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"

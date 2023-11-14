@@ -11,7 +11,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:emoji-smile-slight-24-regular" style="font-size: 24px;" />
+          <newIcon icon="fluent:emoji-smile-slight-24-regular" style="font-size: 20px;" />
         </div>
       </template>
   <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
