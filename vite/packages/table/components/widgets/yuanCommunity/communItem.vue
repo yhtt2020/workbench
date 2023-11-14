@@ -1,10 +1,10 @@
 <template>
-    <div class="w-[542px] h-[84px] pl-3  pt-3 pb-2 mb-4 pointer ">
-        <div class="flex justify-between w-full h-full" >
-            <div class="h-[84px] mr-3 flex flex-col justify-between">
+    <!-- <div class="w-[542px] h-[84px] pl-3  pt-3 pb-2 mb-4 pointer ">
+        <div class="flex items-center justify-between w-full h-full" >
+            <div class="flex flex-col justify-between h-[84px] mr-3">
                 <div class="flex items-center h-[24px]" >
                     <a-avatar :src="detailPost.user.avatar" :size="24" ></a-avatar>
-                    <div class="ml-2 xt-text-2 font-14 nickname" style="text-align: left;">
+                    <div class="ml-2 text-sm xt-text-2 nickname" style="text-align: left;">
                         {{ detailPost.user.nickname }}
                     </div>
                     <div class="xt-text-2 font-14">
@@ -12,13 +12,28 @@
                     </div>
                 </div>
 
-                <div class="mt-1 xt-text font-16 content-text" style="text-align: left;" :innerHTML="contentText">
-                    <!-- {{ contentText }} -->
+                <div class="mt-1 text-base xt-text content-text" :style="{height:showImg?'54px':'100%'}" style="text-align: left;" :innerHTML="contentText">
+                    
                 </div>
             </div>
             <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg">
             </div>
         </div>
+    </div> -->
+    <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px]">
+        <div class="flex flex-col justify-between">
+            <div class="flex items-center">
+                <a-avatar :src="detailPost.user.avatar" :size="24"></a-avatar>
+                <div class="ml-2 text-sm xt-text-2 nickname" style="text-align: left;">
+                    {{ detailPost.user.nickname }}
+                </div>
+                <div class="xt-text-2 font-14">
+                    {{ detailPost.create_time }}
+                </div>
+            </div>
+            <div class="mt-1 mb-1 text-base xt-text content-text"  style="text-align: left;" :innerHTML="contentText"></div>
+        </div>
+        <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg"></div>
     </div>
 </template>
 
@@ -49,19 +64,6 @@ const contentText = computed(() => {
 })
 </script>
 <style lang='scss' scoped>
-.font-14 {
-
-    font-size: 14px;
-    font-weight: 400;
-}
-
-.font-16 {
-
-    font-size: 16px;
-    line-height: 26px;
-    font-weight: 400;
-}
-
 .content-text {
     white-space: normal;
     display: -webkit-box;
@@ -73,22 +75,24 @@ const contentText = computed(() => {
 
 .right {
     border-radius: 10px;
-    width: 72px;
-    height: 72px;
+    width: 54px;
+    height: 54px;
     margin: 8px 0px;
-    margin-right: 12px;
+    margin-left: 12px;
     background-size: cover;
     cursor: pointer;
     flex-shrink: 0;
 }
-.nickname{
-    &:after{
+
+.nickname {
+    &:after {
         content: '·';
         margin-left: 4px;
         margin-right: 4px;
     }
 }
-.active-item{
+
+.active-item {
     &:hover {
         background-color: var(--active-secondary-bg);
     }

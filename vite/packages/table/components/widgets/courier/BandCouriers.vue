@@ -21,7 +21,7 @@
   <DealModal ref="dealModalRef" :type="dealType"/>
 </template>
 <script>
-import { courierStore } from '../../../store/courier.ts'
+import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import grab from './grab'

@@ -157,6 +157,7 @@ export default {
 
       console.log('刷新一下数据',this.traces)
     },
+
     // 复制订单号
     async copyOrderNum () {
       const { toClipboard } = useClipboard()

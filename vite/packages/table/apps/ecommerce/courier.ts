@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
-import dbStorage from "./dbStorage";
-import {sUrl} from "../consts";
-import {post} from "../js/axios/kdniaoPost";
-import {localCache} from '../js/axios/serverCache'
+import dbStorage from "../../store/dbStorage";
+import {sUrl} from "../../consts";
+import {post} from "../../js/axios/kdniaoPost";
+import {localCache} from '../../js/axios/serverCache'
 
 const kdniao = sUrl('/app/kdniao/realTimeQuery')
 
@@ -68,6 +68,38 @@ export const courierStore = defineStore("courier", {
       // console.log('查看结果',res);
     },
 
+    async followCourier(id){
+      let courier=await this.findDbItem(id)
+      if(courier){
+        courier.followed=true
+      }
+      console.log(courier,'需要存入的')
+      let rs= await tsbApi.db.put(courier)
+      console.log('保存结果',rs)
+      if(rs.ok){
+        this.getDbCourier();
+        return true
+      }else{
+        return false
+      }
+
+    },
+    async unfollowCourier(id){
+      let courier=await this.findDbItem(id)
+      if(courier){
+        courier.followed=false
+      }
+      console.log(courier,'需要存入的')
+      let rs= await tsbApi.db.put(courier)
+      console.log('保存结果',rs)
+      if(rs.ok){
+        this.getDbCourier();
+        return true
+      }else{
+        return false
+      }
+
+    },
     // 获取db中存储的快递数据
     async getDbCourier() {
       console.log('执行一此筛选')
@@ -139,6 +171,24 @@ export const courierStore = defineStore("courier", {
         const rowList = getResult.rows;
         const docList = rowList.map((item) => item.doc);
         this.getDbCourier();
+      }
+    },
+
+    /**
+     * 根据id从数据库里取一个
+     * @param id
+     */
+    async findDbItem(id){
+      let found = await tsbApi.db.find(
+        {
+          selector: {
+            _id: id,
+          }
+        })
+      if (found?.docs?.length) {
+        return found?.docs[0]
+      }else{
+        return null
       }
     },
 

@@ -12,7 +12,7 @@
         </xt-button>
       </div>
      </div>
-    
+
      <div class="px-6 flex flex-col">
       <div class="flex xt-bg-2 px-4 py-3 flex-col rounded-lg mb-3">
         <span class="xt-text-2 font-400 font-14 ">
@@ -47,7 +47,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { Icon as DealIcon } from '@iconify/vue'
 import grab from "../grab";
 import { message } from "ant-design-vue";
-import { courierStore } from "../../../../store/courier";
+import { courierStore } from "../../../../apps/ecommerce/courier";
 
 import Modal from '../../../Modal.vue';
 

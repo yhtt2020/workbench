@@ -30,10 +30,10 @@
 
    <div class="flex items-center">
     <xt-button w="32" h="32" style="border-radius: 8px;">
-      <div class="flex items-center justify-center" v-if="true">
+      <div @click="follow" class="flex items-center justify-center" v-if="!orderData.followed">
         <SmallIcon icon="fluent:star-12-regular"/>
       </div>
-      <div class="flex items-center " v-else>
+      <div @click="unfollow" class="flex items-center " v-else>
         <SmallIcon icon="fluent:star-16-filled" style="color: var(--warning);"/>
       </div>
     </xt-button>
@@ -41,6 +41,8 @@
     <MoreDrop class="ml-3" :navList="jdTbList"/>
    </div>
   </div>
+
+  <EditModal ref="courierEditRef" :editContent="orderData" :avatar="detailAvatar"/>
 </template>
 
 <script>
@@ -52,14 +54,16 @@ import useClipboard from 'vue-clipboard3';
 import GoodIcon from '../../../../../../selectIcon/page/index.vue';
 import MoreDrop from '../dropdown/MoreDropIcon.vue';
 import Cover from '../../component/Cover.vue'
-
+import EditModal from '../EditModal.vue';
+import { courierStore } from '../../../../../apps/ecommerce/courier'
+import {mapActions} from 'pinia'
 
 export default {
   props:['orderData'],
   components:{
     Cover,
    SmallIcon,
-   GoodIcon,MoreDrop,
+   GoodIcon,MoreDrop,EditModal
   },
   data(){
    return{
@@ -70,6 +74,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
@@ -89,7 +94,7 @@ export default {
       {
         title:'编辑快递',icon:'akar-icons:edit',
         callBack:()=>{
-
+          this.$refs.courierEditRef.openEditModal()
         }
       },
       {
@@ -115,10 +120,29 @@ export default {
   },
 
   methods:{
+    ...mapActions(courierStore,['followCourier','unfollowCourier']),
    editCourier(){},
    onUpdateImg(){
     this.goodIconVisible = !this.goodIconVisible
    },
+    async follow () {
+      let rs = await this.followCourier(this.orderData._id)
+      if (rs) {
+        this.orderData.followed = true
+        message.success('订阅成功')
+      } else {
+        message.error('订阅失败')
+      }
+    },
+    async unfollow(){
+      let rs = await this.unfollowCourier(this.orderData._id)
+      if (rs) {
+        this.orderData.followed = false
+        message.success('取消订阅成功')
+      } else {
+        message.error('取消订阅失败')
+      }
+    },
    removeItem(){},
    // 获取头像
    getAvatar(avatar){
@@ -134,9 +158,9 @@ export default {
    // 复制订单号
    async copyOrderNum(){
     const { toClipboard } = useClipboard();
-    const res = await toClipboard(this.orderNum);
+    const res = await toClipboard(this.orderData?.LogisticCode);
     if(res.text !== ""){
-      message.success('群聊ID成功复制');
+      message.success('订单号复制成功');
     }
    }
 

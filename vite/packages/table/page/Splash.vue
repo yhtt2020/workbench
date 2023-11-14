@@ -179,15 +179,16 @@ export default {
     ...mapActions(captureStore, ['bindCaptureIPC']),
     timeout () {
       this.timeoutHandler = setTimeout(() => {
+        this.launching = false
+        window.loadedStore['userInfo'] = true
+        this.loading = false
         Modal.error({
           content: '服务器连接超时。可能服务器正在维护，请稍后再试或者使用离线模式。',
           key: 'error',
           okText: '确定',
           centered: true,
           onOk: () => {
-            this.launching = false
-            window.loadedStore['userInfo'] = true
-            this.loading = false
+
           }
         })
       }, 5000)
@@ -232,7 +233,7 @@ export default {
         }
 
         const userInfo = args.data
-
+      console.log('ipc',userInfo)
         let lvInfo = this.lvInfo
         lvInfo.lv = userInfo.onlineGradeExtra.lv
         let current = this.gradeTableGenerate(64)[lvInfo.lv]

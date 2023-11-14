@@ -32,7 +32,7 @@
                         {{ item.title?.slice(0, 20) }}
                       </span>
                       <span class="fav-icon">
-                      <SmallIcon v-if="true" icon="fluent:star-12-regular"/>
+                      <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
                       <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
                     </div>
                     <div class="flex">
@@ -73,11 +73,10 @@ import { mapActions, mapWritableState } from 'pinia'
 import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor, convertJdStatusColor } from '../../mock'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
 import Cover from '../../component/Cover.vue'
-
 export default {
   props: ['list', 'sortItem'],
 
@@ -95,16 +94,49 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      revID: '',
+      revID: -1,
       displayList: [],
-      menus: [
-        {
-          name: '订阅物流',
-          callBack: () => {
 
-          },
-          newIcon: 'fluent:star-12-regular'
-        },
+      currentID: '',
+    }
+  },
+
+  computed: {
+    ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(courierStore, ['currentDetail']),
+    menus(){
+      if(!this.displayList || this.revID<0){
+        return []
+      }
+      return [
+        this.displayList[this.revID].followed ? {
+            name: '取消订阅',
+            callBack: async () => {
+              let rs = await this.unfollowCourier(this.displayList[this.revID]._id)
+              if (rs) {
+                this.displayList[this.revID].followed = false
+                message.success('取消订阅成功')
+              } else {
+                message.error('取消订阅失败')
+              }
+            },
+            newIcon: 'fluent:star-12-regular'
+          } :
+          {
+            name: '订阅物流',
+            callBack: async () => {
+              console.log('item', this.displayList[this.revID])
+              let rs = await this.followCourier(this.displayList[this.revID]._id)
+              if (rs) {
+                this.displayList[this.revID].followed = true
+                message.success('订阅成功')
+              } else {
+                message.error('订阅失败')
+              }
+            },
+            newIcon: 'fluent:star-16-filled'
+          }
+        ,
         {
           name: '删除快递',
           callBack: () => {
@@ -123,14 +155,8 @@ export default {
           newIcon: 'akar-icons:trash-can',
           color: 'var(--error)'
         },
-      ],
-      currentID: '',
+      ]
     }
-  },
-
-  computed: {
-    ...mapWritableState(appStore, ['settings']),
-    ...mapWritableState(courierStore, ['currentDetail'])
   },
 
   mounted () {
@@ -148,40 +174,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier','unfollowCourier']),
     refreshData () {
-      this.displayList = [...this.list.map(item => {
-        let newItem = {
-          ...item
-        }
-
-        let content = item.content
-        if (!newItem.store) {
-          //快递鸟快递
-          newItem.tagColor = switchColor(content.state)
-          newItem.stateText = kdState(content.State)
-          newItem.company = kdCompany(content.ShipperCode)
-          if (content.Traces && content.Traces.length > 0) {
-            newItem.lastNodeTime = content.Traces[content.Traces.length - 1]?.AcceptTime
-            newItem.lastNodeSummary = content.Traces[content.Traces.length - 1]?.AcceptStation
-          }
-        } else if (newItem.store === 'jd') {
-          console.log('content=', content)
-          if (!content.expressType) {
-            newItem.company = '京东快递'
-          } else {
-            newItem.company = content.expressType.slice(0, content.expressType.indexOf('快递') + 2)
-          }
-          newItem.stateText = content.status
-          newItem.tagColor = convertJdStatusColor(content.status)
-          if (content.latestNodes && content.latestNodes.length > 0) {
-            newItem.lastNodeTime = content.latestNodes[0]?.time
-            newItem.lastNodeSummary = content.latestNodes[0]?.txt
-          }
-        }
-        return newItem
-      })]
-      console.log('displayList', this.displayList)
+      this.displayList = this.list
       this.$nextTick(() => {
         const el = this.$refs.dropRef
         new Sortable(el, {

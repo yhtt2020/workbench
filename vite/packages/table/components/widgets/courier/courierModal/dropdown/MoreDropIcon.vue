@@ -48,4 +48,8 @@ export default {
    background: var(--active-secondary-bg) !important;
   }
 }
+
+:deep(.ant-dropdown-menu-item){
+  align-items: start !important;
+}
 </style>

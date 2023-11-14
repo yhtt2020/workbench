@@ -47,7 +47,7 @@
             </a-upload>
         </div>
         <xt-button type="primary" class=" reply xt-text"
-            style="color: var(--secondary-text) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
+            style="color: color:rgba(255,255,255,0.85) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
             @click="addComment">回复</xt-button>
     </div>
 </template>

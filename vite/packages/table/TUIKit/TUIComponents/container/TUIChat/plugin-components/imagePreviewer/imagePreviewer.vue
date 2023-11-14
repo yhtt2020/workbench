@@ -271,7 +271,7 @@ onUnmounted(() => {
 @import url('../../../../styles/icon.scss');
 .image-previewer {
   position: fixed;
-  z-index: 12;
+  z-index: 200;
   width: 100vw;
   height: 100vh;
   background: rgba(#000000, 0.3);

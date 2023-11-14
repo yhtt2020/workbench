@@ -1,6 +1,6 @@
 import { defineStore,storeToRefs } from 'pinia';
 import dbStorage from '../../../../store/dbStorage'
-import { courierStore } from '../../../../store/courier'
+import { courierStore } from '../../../../apps/ecommerce/courier'
 
 // @ts-ignore
 export const courierModalStore = defineStore('courierModal',{

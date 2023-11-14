@@ -55,7 +55,7 @@ import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { courierModalStore } from '../courierModalStore'
 import { appStore } from '../../../../../store'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { commonExpress, expressList } from '../modalMock'
 import { getCourierName } from '../utils/courierUtils'
 import { message } from 'ant-design-vue'
@@ -218,10 +218,13 @@ message.success('添加快递成功。')
     align-items: center;
     height: 40px !important;
   }
+  & .ant-select-item{
+    color:var(--secondary-text) !important;
+  }
 }
 
 
-:deep(.ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder) {
+:deep(.ant-select-selection-placeholder){
   color: var(--secondary-text) !important;
   display: flex !important;
   align-items: center !important;
@@ -239,4 +242,5 @@ message.success('添加快递成功。')
 :deep(.anticon.ant-input-clear-icon) {
   color: var(--secondary-text) !important;
 }
+
 </style>

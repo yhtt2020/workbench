@@ -1,5 +1,5 @@
 import {message} from "ant-design-vue";
-import {courierStore} from "../../../store/courier";
+import {courierStore} from "../../../apps/ecommerce/courier";
 
 const appDirName = window.globalArgs['app-dir_name']
 const grab = {

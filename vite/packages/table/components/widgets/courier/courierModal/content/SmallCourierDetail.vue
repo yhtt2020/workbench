@@ -14,7 +14,7 @@
               </div>
             </xt-button>
           </a-tooltip>
-          
+
           <a-tooltip placement="top">
             <template #title>
               <span class="xt-text-2">关闭</span>
@@ -27,9 +27,9 @@
           </a-tooltip>
         </div>
       </div>
-      
+
       <Empty v-if="detailList?.length === 0"  :exampleVisible="false"/>
-  
+
       <template v-else>
         <div class="flex items-center mb-4 justify-between px-6">
           <SelectPlateform />
@@ -41,7 +41,7 @@
         </div>
 
         <SortList :list="allList" v-if="allShow" @rightSelect="getSmallItem" @viewDetail="getDetail"/>
-        
+
         <vue-custom-scrollbar :settings="settingsScroller" v-else>
           <div class="flex flex-col px-6" ref="smallSortRef" style="height: 450px;">
             <div v-for="(item,index) in detailList"  class="rounded-lg">
@@ -96,18 +96,18 @@
     </div>
   </template>
 
-  <template v-else> 
+  <template v-else>
     <LogisticsDetail :orderNum="detailItem" @close="close" @back="detailVisible = false"/>
   </template>
- 
+
 
   <AddCourierModal ref="addCourierRef"/>
-  <CourierSetting ref="courierSettingRef"/> 
+  <CourierSetting ref="courierSettingRef"/>
 </template>
 
 <script>
 import { mapActions, mapWritableState } from 'pinia'
-import { courierStore } from '../../../../../store/courier'
+import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { courierType,selectData,selectTab } from '../modalMock'
 import { Icon as SmallIcon } from '@iconify/vue'
 import { kdCompany, kdState, switchColor } from '../../mock'
@@ -137,13 +137,13 @@ export default {
       addList:[
         { title:'京东账号',name:'jd', callBack:()=>{}},
         { title:'淘宝账号',name:'tb',   callBack:()=>{}},
-        { 
+        {
           title:'自定义添加',   icon:'fluent:add-16-filled',
           callBack:()=>{ this.addCourier()}
         }
       ],
       menus:[
-        {  
+        {
           name:'查看详情',  newIcon:'fluent:apps-list-detail-24-regular',
           callBack:()=>{
             this.currentID = this.revID.index
@@ -164,7 +164,7 @@ export default {
              onOk: () => {
               this.removeDbData(this.revID)
               message.success('删除成功')
-             } 
+             }
             })
           }
         }
@@ -235,7 +235,7 @@ export default {
      this.currentID = index
      this.detailItem = item
      this.detailVisible = true
-     
+
     },
     getDetail(revID){
       console.log('查看item',revID.item);

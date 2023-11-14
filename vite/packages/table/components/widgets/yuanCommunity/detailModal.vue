@@ -1,46 +1,59 @@
 <template>
     <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
-        :esc="true">
-        <div class=" maxDetail" :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
+        :esc="true" @close="closeDetail">
+        <div class=" maxDetail"
+            :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
             <div class="w-full pl-4 pr-4 card-content">
                 <div class="flex justify-between mb-2 ">
                     <span class="xt-text-2 font-16">详情</span>
                     <div class="flex items-center">
                         <a-tooltip title="前往元社区" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="fluent:chat-16-regular" />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="fluent:chat-16-regular" />
+                                </div>
+
                             </xt-button>
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="fullScreen" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="fluent:full-screen-maximize-16-filled"  v-if="!isFullScreen" />
-                            <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="fluent:full-screen-minimize-16-filled"  v-else />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-maximize-16-filled"
+                                        v-if="!isFullScreen" />
+                                    <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-minimize-16-filled"
+                                        v-else />
+                                </div>
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="refresh" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;"
-                                icon="akar-icons:arrow-clockwise"  />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="akar-icons:arrow-clockwise" />
+                                </div>
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-tooltip title="外部打开" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="goYuan" class="ml-3">
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="majesticons:open"
-                                 />
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="majesticons:open" />
+                                </div>
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-divider class="w-[3px]  " type="vertical" style="color: var(--divider);" />
-                        <a-tooltip title="关闭" placement="bottom" >
-                            <xt-button :w="22" :h="22" style="background: transparent;" @click="closeDetail" >
-                                <Icon class=" xt-text pointer active-icon" style="font-size: 20px;margin-top: 1px;vertical-align: sub;" icon="akar-icons:cross"
-                                 />
+                        <a-tooltip title="关闭" placement="bottom">
+                            <xt-button :w="22" :h="22" style="background: transparent;" @click="closeDetail">
+                                <div class="flex items-center juscify-center">
+                                    <Icon class=" xt-text pointer active-icon" icon="akar-icons:cross" />
+                                </div>
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                     </div>
                 </div>
@@ -53,17 +66,15 @@
                             <div class="flex items-center">
                                 <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
                                     @click.stop="showCard(uid, userInfo)">
-                                    <template #icon>
-                                        <UserOutlined />
-                                    </template>
+                                    <template #icon><UserOutlined /></template>
                                 </a-avatar>
                                 <div class="ml-3 user-msg">
                                     <div class="username" style="color: var(--primary-text);font-size: 14px;">
                                         {{ cardData.user.nickname }}
                                     </div>
                                     <div class="self-msg " style="color:  var(--secondary-text);font-size: 12px;">
-                                        <span class="date">{{ createTime[0] }}</span>
-                                        <span class="time">{{ createTime[1] }}</span>
+                                        <span class="mr-1 date">{{ createTime[0] }}</span>
+                                        <span class="mr-1 time">{{ createTime[1] }}</span>
                                         <span class="ip">{{ props.cardData.user.ip_home?.region }}</span>
                                     </div>
                                 </div>
@@ -95,11 +106,6 @@
 
                                 </div>
                                 <template v-if="cardData.image_170_170">
-                                    <!-- <ul class="flex flex-wrap items-center p-0 mb-0 ">
-                                <img :src="item.image" v-for="(item, index) in cardData.image_170_170" @click="showImage"
-                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
-                            </ul> -->
-                                    <!-- :options="options" -->
                                     <viewer :images="cardData.image_170_170" :options="options"
                                         class="items-center p-0 mb-0 ">
                                         <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
@@ -118,41 +124,35 @@
 
                         </div>
                         <div class="mt-4 text-xs card-bottom" style="color:  var(--secondary-text);">
-                            <span class="view" style="cursor: pointer; margin-right: 4px;">{{ cardData.view_count }}
-                                浏览</span>
-                            <span class="like" style="cursor: pointer; margin-right: 4px;">{{ cardData.support_count }}
-                                点赞</span>
+                            <span class=" view">{{ cardData.view_count }}浏览</span>
+                            <span class=" view">{{ cardData.support_count }}点赞</span>
                             <span class="comments" style="cursor: pointer;">{{ cardData.reply_count }} 评论</span>
                         </div>
 
                     </div>
                 </vue-custom-scrollbar>
                 <!-- 分隔线 -->
-                <a-divider class="w-[5px] h-full detele-line" type="vertical"  />
+                <a-divider class="w-[5px] h-full detele-line" type="vertical" />
                 <vue-custom-scrollbar ref="threadListRef" class="w-1/2 pr-4 thread-list" :settings="settingsScroller"
                     style="height: 100%;overflow: hidden;flex-shrink: 0; ">
                     <div class="mt-4">
                         <div class="flex mb-4">
                             <!-- {{ store.communityCollect.info }} -->
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickLike">
-                                <!-- <div class="item-content"> -->
-                                <xt-button class="flex items-center justify-center pl-5 mr-3 reply xt-text"
-                                    :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] -ml-6">
-                                    {{ cardData.support_count }}</xt-button>
-                                <!-- </div> -->
+                            <xt-button class="pl-5 mr-3 reply xt-text" @click="clickLike"
+                                :class="{ 'xt-bg': !isLike, 'xt-active-bg': isLike }" style="width: 57px;height: 32px;">
+                                <div class="flex items-center justify-center">
+                                    <img src="../../../../../public/icons/like.png"  class="w-[20px] h-[20px] mr-1">
+                                    {{ cardData.support_count }}
+                                </div>
 
-
-                            </div>
-                            <div class="flex items-center " style="cursor: pointer;" @click="clickCollect">
-                                <xt-button class="flex items-center justify-center pl-5 reply xt-text"
-                                    :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
-                                    style="width: 57px;height: 32px;border: none;cursor: pointer;">
-                                    <img src="../../../../../public/icons/collect.png" alt=""
-                                        class="w-[20px] h-[20px] -ml-6 mr-1">
-                                    {{ cardData.collect_count }}</xt-button>
-                            </div>
+                            </xt-button>
+                            <xt-button class="pl-5 reply xt-text" @click="clickCollect"
+                                :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }" style="width: 57px;height: 32px;">
+                                <div class="flex items-center justify-center">
+                                    <img src="../../../../../public/icons/collect.png" class="w-[20px] h-[20px] mr-1">
+                                    {{ cardData.collect_count }}
+                                </div>
+                            </xt-button>
                         </div>
                         <Comment :tid="tid" :reply="cardData.reply_count" :uid="cardData.user.uid" />
                     </div>
@@ -184,8 +184,8 @@ let userInfo = {
     nickname: props.cardData.user?.nickname,
     avatar: props.cardData.user?.avatar_128
 }
-let windowHeight=ref()
-let windoWidth=ref()
+let windowHeight = ref()
+let windoWidth = ref()
 onMounted(() => {
     windoWidth.value = window.innerWidth
     windowHeight.value = window.innerHeight
@@ -202,11 +202,9 @@ const showCard = (uid, userInfo) => {
 const goYuan = () => {
     browser.openInUserSelect(`https://s.apps.vip/post/${props.cardData.pay_set.tid}`)
 }
-const detailVisible = ref(true)
 const emit = defineEmits(['closeDetail'])
 const closeDetail = () => {
-    detailVisible.value = false
-    emit('closeDetail', detailVisible.value)
+    emit('closeDetail', false)
 }
 const settingsScroller = reactive({
     useBothWheelAxes: true,
@@ -220,10 +218,8 @@ const isLike = computed(() => {
     return store.communityPostDetail.is_support
 })
 //
+let tid = store.communityPostDetail?.pay_set?.tid ? store.communityPostDetail?.pay_set?.tid : store.communityPostDetail?.id
 const clickLike = async () => {
-    // isLike.value = !isLike.value
-    let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
-    // let thread = thread
     await store.getCommunityLike("thread", tid)
     message.success(store.communitySupport.info)
     refresh()
@@ -233,8 +229,6 @@ const isCollect = computed(() => {
 })
 // 收藏
 const clickCollect = async () => {
-    let tid = store.communityPostDetail.pay_set.tid ? store.communityPostDetail.pay_set.tid : store.communityPostDetail.id
-    // isCollect.value = !isCollect.value
     if (store.communityPostDetail.is_collect == 0) {
         await store.getCommunityCollect(tid)
         message.success(store.communityCollect.info)
@@ -257,25 +251,11 @@ const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
 })
-// const tid=store.communityPostDetail.pay_set.tid
-let tid = store.communityPostDetail?.pay_set?.tid || store.communityPostDetail?.id;
-const refreshDetailFlag = ref(true)
-const refreshDetail = async () => {
-    let Detailtid = props.cardData.pay_set.tid ? props.cardData.pay_set.tid : props.cardData.id
-    refreshDetailFlag.value = false
-    await store.getCommunityPostDetail(Detailtid)
-    refreshDetailFlag.value = true
-}
 const refresh = async () => {
     let detailTid = props.cardData.pay_set.tid ? props.cardData.pay_set.tid : props.cardData.id
-    // refreshDetailFlag.value = false
     await store.getCommunityPostDetail(detailTid)
-    // refreshDetailFlag.value = true
     await store.getCommunityPostReply(detailTid)
 }
-// 用于在动态和评论中使用的表情
-// str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
-// https://sad.apps.vip/public/static/emoji/emojistatic/
 const content = computed(() => {
     return emojiReplace(props.cardData.pc_summary);
 });
@@ -286,19 +266,12 @@ const title = computed(() => {
 const showMenu = (img) => {
     console.log(img);
 }
-// 控制图片画廊的显示
-const vieewerVisible = ref(false)
-const showImage = () => {
-    vieewerVisible.value = !vieewerVisible.value
-}
 const isFullScreen = ref(false)
 const fullScreen = () => {
     isFullScreen.value = !isFullScreen.value
 }
 </script>
 <style lang='scss' scoped>
-
-
 .card {
     display: flex;
     // 占满整个父元素
@@ -331,7 +304,6 @@ const fullScreen = () => {
 
                 .self-msg {
                     font-size: 12px;
-                    color: rgba(255, 255, 255, 0.40);
                     font-weight: 400;
 
                     .date {
@@ -397,26 +369,26 @@ const fullScreen = () => {
     .card-bottom {
         margin-top: 12px;
 
-        .view::after {
-            content: '·';
-            margin-left: 5px;
-            margin-right: 5px;
 
-        }
-
-        .like::after {
-            content: '·';
-            margin-left: 5px;
-            margin-right: 5px;
-        }
     }
 
 }
 
 .active-icon {
     background: transparent;
+    font-size: 20px;
 
     &:hover {
         background: var(--secondary-bg);
+    }
+}
+
+.view {
+    cursor: pointer;
+
+    &::after {
+        content: '·';
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }</style>

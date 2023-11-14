@@ -27,8 +27,8 @@ const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
     // 查看所有的功能选项
     // console.log(editor.getAllMenuKeys())
-    if (useYuanCommunityStore.saveContent) {
-        valueHtml.value = useYuanCommunityStore.saveContent
+    if (useYuanCommunityStore.postContent.content) {
+        valueHtml.value = useYuanCommunityStore.postContent.content
     } else {
         valueHtml.value = ''
     }
@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
     editor.destroy();
 });
 const saveText = () => {
-    useYuanCommunityStore.saveContent = valueHtml.value
+    useYuanCommunityStore.postContent.content = valueHtml.value
 }
 // 监听富文本内容
 watch(valueHtml, _.debounce(saveText, 500));
