@@ -122,8 +122,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(courierStore, ["storeInfo"]),
-    ...mapWritableState(appStore, ["settings"]),
+    ...mapWritableState(courierStore, ["storeInfo",'settings']),
   },
 
   methods: {

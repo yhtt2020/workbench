@@ -44,8 +44,9 @@
               <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
                                     class="courier-item">
-                <div v-for="(item, index) in displayList" >
-                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
+                <div v-for="(item, index) in displayList">
+                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)"
+                               :itemIndex="index"/>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
@@ -109,6 +110,7 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 import _ from 'lodash-es'
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './courierUI'
+
 export default {
   name: '我的快递',
   components: {
@@ -215,8 +217,9 @@ export default {
         client: false,
         offline: true
       },
-      displayList:[],//显示列表
-      autoRefreshTime
+      displayList: [],//显示列表
+      autoRefreshTime,
+      timer: null
     }
   },
   methods: {
@@ -247,7 +250,7 @@ export default {
         this.courierShow = false
       }
     },
-    refreshAll:ui.refreshAll,
+    refreshAll: ui.refreshAll,
 
     addCourier () {
       this.$refs.addCourierRef.openCourierModel()
@@ -261,29 +264,10 @@ export default {
     },
     autoRefresh () {
       if (this.settings.courierRefresh.autoRefresh) {
-        setInterval(() => {
-          message.loading('正在为您更新商城订单')
-          if (this.storeInfo.jd.nickname) {
-            //京东绑定了
-            grab.jd.getOrder()
-          }
-          if (this.storeInfo.tb.nickname) {
-            grab.tb.getOrder((args) => {
-              console.log('淘宝结果', args)
-              if (args.status === 0 && args.code === 401) {
-                notification.info({
-                  content: '淘宝账号已过期，点击重新绑定。',
-                  onClick: () => {
-                    grab.tb.login((args) => {
-                      console.log(args, '获取到的订单信息')
-                    })
-                  }
-                })
-              }
-            })
-            //淘宝绑定了
-          }
-        }, this.refreshTimes[0].type)
+        this.timer = setInterval(() => {
+          console.log('刷新立碑')
+          ui.refreshAll()
+        }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
     }
   },
@@ -291,8 +275,7 @@ export default {
     ...mapWritableState(courierStore, ['courierMsgList',
       'orderList',
       'couriersDetailMsg',
-      'storeInfo', 'currentDetail']),
-    ...mapWritableState(appStore, ['settings']),
+      'storeInfo', 'currentDetail', 'settings']),
 
     // 判断尺寸大小
     showSize () {
@@ -332,20 +315,19 @@ export default {
     //       break;
     //   }
     // },
-    refreshTimes () {
-      return this.autoRefreshTime.filter((item) => {
+    refreshInterval () {
+      return this.autoRefreshTime.find((item) => {
         return item.value === this.settings.courierRefresh.autoTime
       })
     }
   },
-  watch:{
-    'orderList':{
-      handler(newVal){
-        console.log('发现变化',newVal)
-        this.displayList=[]
-        this.displayList=newVal.slice(0,10)
+  watch: {
+    'orderList': {
+      handler (newVal) {
+        this.displayList = []
+        this.displayList = newVal.slice(0, 10)
       },
-      immediate:true
+      immediate: true
     }
   },
   async mounted () {
@@ -361,8 +343,9 @@ export default {
   },
 
   beforeDestroy () {
+    console.log('xiezai')
     window.removeEventListener('resize', this.handleResize)
-    this.autoRefresh()
+    clearInterval(this.timer)
   },
 
 }

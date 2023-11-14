@@ -55,7 +55,7 @@ export default {
           name: '删除快递',
           callBack: () => {
             Modal.confirm({
-              content: '确认删除订单',
+              content: '确认删除订单？删除的订单在下次同步的时候仍然会被添加回列表。如果不希望显示此订单，请使用隐藏功能。',
               centered: true,
               onOk: async () => {
                 let rs = await this.removeDbData(this.item)
