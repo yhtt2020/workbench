@@ -169,7 +169,7 @@ export default {
     'form.title':{
       handler(newVal){
         if(newVal===''){
-          this.form.title=generateTitle(this.order.content)
+          this.form.title=generateTitle(this.order.content,this.order.store)
           this.$nextTick(()=>{
             this.$refs.titleRef.focus()
             this.$refs.titleRef.select()

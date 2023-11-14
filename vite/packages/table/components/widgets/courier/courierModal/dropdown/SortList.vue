@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col" @click="getColor">
-    <div v-if="settings.tagVisible" class="flex items-center justify-between px-4 py-3 mb-3 rounded-lg h-11 xt-bg-2">
+  <div class="flex flex-col flex-1 h-0" @click="getColor">
+    <div   class="flex items-center justify-between px-4 py-3 mb-3 rounded-lg h-11 xt-bg-2">
       <span class="xt-text-2 font-14 font-400">「全部」分类下支持拖拽排序。</span>
       <xt-button w="12" h="12" @click="settings.tagVisible = false">
         <div class="flex items-center justify-center">
@@ -8,10 +8,9 @@
         </div>
       </xt-button>
     </div>
-    <vue-custom-scrollbar :settings="settingsScroller">
-      <div style="height:460px;" ref="dropRef" class="w-full">
-
-        <ListItem :item="item" @goDetail="seeDetail(item)" v-for="item in displayList"></ListItem>
+    <vue-custom-scrollbar class="flex-1 h-0" :settings="settingsScroller">
+      <div  ref="dropRef" class="w-full">
+        <ListItem :item="item" @goDetail="seeDetail(item)" v-for="item in list"></ListItem>
         <div style="height: 12px;"></div>
       </div>
     </vue-custom-scrollbar>
@@ -24,10 +23,10 @@ import { Icon as SmallIcon } from '@iconify/vue'
 import Sortable from 'sortablejs'
 import { kdCompany, kdState, switchColor, convertJdStatusColor } from '../../mock'
 import { courierStore } from '../../../../../apps/ecommerce/courier'
-import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
 import Cover from '../../component/Cover.vue'
 import ListItem from '../../ListItem.vue'
+
 export default {
   props: ['list', 'sortItem'],
 
@@ -46,69 +45,12 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      revID: -1,
-      displayList: [],
-
-      currentID: '',
     }
   },
 
   computed: {
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(courierStore, ['currentDetail']),
-    menus(){
-      if(!this.displayList || this.revID<0){
-        return []
-      }
-      return [
-        this.displayList[this.revID].followed ? {
-            name: '取消关注',
-            callBack: async () => {
-              let rs = await this.unfollowCourier(this.displayList[this.revID]._id)
-              if (rs) {
-                this.displayList[this.revID].followed = false
-                message.success('取消关注成功')
-              } else {
-                message.error('取消关注失败')
-              }
-            },
-            newIcon: 'fluent:star-12-regular'
-          } :
-          {
-            name: '关注物流',
-            callBack: async () => {
-              console.log('item', this.displayList[this.revID])
-              let rs = await this.followCourier(this.displayList[this.revID]._id)
-              if (rs) {
-                this.displayList[this.revID].followed = true
-                message.success('关注成功')
-              } else {
-                message.error('关注失败')
-              }
-            },
-            newIcon: 'fluent:star-16-filled'
-          }
-        ,
-        {
-          name: '删除快递',
-          callBack: () => {
-            Modal.confirm({
-              content: '确认删除当前快递物流信息',
-              centered: true,
-              onOk: () => {
-                let rs = this.removeDbData(this.displayList[this.revID])
-                if (rs) {
-                  message.success('删除成功。')
-                  this.displayList.splice(this.revID, 1)
-                }
-              }
-            })
-          },
-          newIcon: 'akar-icons:trash-can',
-          color: 'var(--error)'
-        },
-      ]
-    }
   },
 
   mounted () {
@@ -126,9 +68,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier','unfollowCourier']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier']),
     refreshData () {
-      this.displayList = this.list
+
       this.$nextTick(() => {
         const el = this.$refs.dropRef
         new Sortable(el, {

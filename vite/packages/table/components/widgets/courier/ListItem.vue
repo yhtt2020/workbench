@@ -62,8 +62,8 @@ export default {
             Modal.confirm({
               content: '确认删除订单',
               centered: true,
-              onOk: () => {
-                let rs = this.removeDbData(this.item)
+              onOk: async () => {
+                let rs = await this.removeDbData(this.item)
                 if (rs) {
                   message.success('删除成功。')
                   this.$emit('removeItem', this.item)
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <template>
-  <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
+  <xt-menu name="name" :menus="menus">
     <div :class="{ 'select': this.currentDetail?._id ===  item._id }"
          class="flex flex-col p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item hover-bg"
          @click="goDetail">
@@ -161,7 +161,7 @@ export default {
 
 .hover-bg {
   &:hover {
-    background-color: var(--active-secondary-bg);
+    background-color: var(--active-secondary-bg) !important;
   }
 }
 

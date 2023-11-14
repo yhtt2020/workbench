@@ -157,9 +157,10 @@ export const courierStore = defineStore("courier", {
     async removeDbData(item) {
       // console.log('查看下标::>>',index);
 
-      const res = await tsbApi.db.remove(item)
+      const rs = await tsbApi.db.remove(item)
       // console.log('查看删除结果',res);
       this.getDbCourier()
+      return rs
     },
 
     // 刷新快递信息
@@ -308,7 +309,6 @@ export const courierStore = defineStore("courier", {
                   txt: i.txt
                 }
               })
-              console.log('转存了latestNodes', order)
 
             }
             return data
@@ -336,6 +336,10 @@ export const courierStore = defineStore("courier", {
               ...mapData(order),
               _id: `courier:${now}`,
               createTime: now,
+              title:order.items[0].name,
+              shipperCode:order.shipperCode,
+              logisticCode:order.logisticCode,
+              customerName:order.customerName,
               category: `courier:${now}`,
             }
             let addRs = await tsbApi.db.put(dbData)
