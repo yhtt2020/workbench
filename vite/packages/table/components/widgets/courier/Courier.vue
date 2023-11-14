@@ -266,7 +266,7 @@ export default {
       if (this.settings.courierRefresh.autoRefresh) {
         this.timer = setInterval(() => {
           console.log('刷新立碑')
-          ui.refreshAll()
+          ui.refreshAll(false)
         }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
     }
