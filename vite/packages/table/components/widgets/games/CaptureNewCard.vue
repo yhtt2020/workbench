@@ -1,15 +1,21 @@
 <template>
   <Widget :menuList="menuList" :options="options" :customData="customData" :customIndex="customIndex"
            ref="captureNewSlot" :desk="desk">
-
+        <template #left-title-icon>
+        <div class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="fluent:resize-video-20-regular" style="font-size: 22px;" />
+        </div>
+      </template>
       <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
 
 
     <div class="flex flex-col items-center justify-center">
-      <span :class="{disable:!this.settings.imageSavePath}" @click="showImages" class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的截屏({{ images.length }})</span>
-      <span :class="{disable:!this.settings.videoSavePath}" @click="showVideos" class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3">我的录制({{ videos.length }})</span>
-      <span class="mb-2 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="visibleSettings=true">快捷键设置</span>
-      <span class="mb-3 s-item w-full pointer btn-active voice-hover text-center rounded-lg py-3" @click="visibleSettings=true">捕获设置</span>
+      <span :class="{disable:!this.settings.imageSavePath}" @click="showImages" class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover">我的截屏({{ images.length }})</span>
+      <span :class="{disable:!this.settings.videoSavePath}" @click="showVideos" class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover">我的录制({{ videos.length }})</span>
+      <span class="w-full py-3 mb-2 text-center rounded-lg s-item pointer btn-active voice-hover" @click="visibleSettings=true">快捷键设置</span>
+      <span class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover" @click="visibleSettings=true">捕获设置</span>
     </div>
   </Widget>
   <teleport to="#app">
@@ -32,13 +38,14 @@ import CaptureSettings from '../../modal/CaptureSettings.vue'
 import Modal from '../../Modal.vue'
 import { captureStore } from '../../../store/capture'
 import { mapActions,mapState } from 'pinia'
-
+import {Icon as  newIcon } from '@iconify/vue'
 export default {
   name: 'CaptureNewCard',
   components: {
     Modal, CaptureSettings, SourceSelector,
     CaptureCore,
-    Widget
+    Widget,
+    newIcon
   },
   props: {
     customIndex: {
@@ -73,7 +80,7 @@ export default {
       options: {
         className: 'card',
         title: '捕获',
-        icon: 'video',
+        // icon: 'video',
         type: 'games',
       },
       captureNewShow: false,
