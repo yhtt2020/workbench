@@ -33,3 +33,16 @@ export function preHandle(list){
     return newItem
   })]
 }
+
+/**
+ * 根据不同类型的订单自动生成订单标题
+ * @param orderContent
+ * @param store
+ */
+export function generateTitle(orderContent,store=''){
+  if(!store){
+    return orderContent.LogisticCode.slice(0,6) + '-' + orderContent.LogisticCode.slice(-6)
+  }else if(store==='jd'){
+    return orderContent.items[0].title
+  }
+}

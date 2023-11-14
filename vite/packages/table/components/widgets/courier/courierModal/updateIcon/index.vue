@@ -15,12 +15,12 @@
      <div class="flex items-center">
       <div class="px-1.5 py-0.5 flex items-center xt-bg-2 rounded-md">
         <span class="xt-font xt-text-2 font-14 font-400">{{ orderData.company }}</span>
-        <span class="xt-font xt-text-2 font-14 font-400">{{ orderData?.LogisticCode }}</span>
+        <span class="xt-font xt-text-2 font-14 font-400 ml-2">{{ orderData?.logisticCode }}</span>
         <div class="flex items-center pointer justify-center" @click="copyOrderNum">
           <SmallIcon icon="fluent:copy-16-regular" class="xt-text-2" style="font-size: 1.25rem;" />
         </div>
       </div>
-      <div class="xt-bg-2 flex items-center justify-center px-1 rounded-md mx-2">9150</div>
+      <div class="xt-bg-2 flex items-center justify-center px-1 rounded-md mx-2">{{ orderData.customerName }}</div>
       <div v-if="orderData.content.parentOrderId" class="xt-bg-2 w-6 h-6 rounded-md flex items-center justify-center">拆</div>
      </div>
     </div>
@@ -38,11 +38,12 @@
       </div>
     </xt-button>
 
-    <MoreDrop class="ml-3" :navList="jdTbList"/>
+    <MoreDrop v-if="orderData.store==='jd' || orderData.store==='tb'" class="ml-3" :navList="jdTbList"/>
+     <MoreDrop v-else class="ml-3" :navList="moreList"/>
    </div>
   </div>
 
-  <EditModal ref="courierEditRef" :editContent="orderData" :avatar="detailAvatar"/>
+  <EditModal ref="courierEditRef" :order="orderData" :avatar="detailAvatar"/>
 </template>
 
 <script>
@@ -98,7 +99,7 @@ export default {
         }
       },
       {
-        title:'查看原始订单',icon:'akar-icons:edit',
+        title:'查看原始订单',icon:'akar-icons:link-out',
         callBack:()=>{
           browser.openInUserSelect(this.orderData.content.detailUrl)
         }
@@ -121,7 +122,9 @@ export default {
 
   methods:{
     ...mapActions(courierStore,['followCourier','unfollowCourier']),
-   editCourier(){},
+   editCourier(){
+     this.$refs.courierEditRef.openEditModal()
+   },
    onUpdateImg(){
     this.goodIconVisible = !this.goodIconVisible
    },
