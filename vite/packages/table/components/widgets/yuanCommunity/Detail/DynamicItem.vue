@@ -43,7 +43,7 @@ onBeforeUnmount(() => {
 const handleResize = _.debounce((entries) => {
   const newWidth = entries[0]?.contentRect?.width || 0;
   if(newWidth>600){
-    textWidth.value = 22
+    textWidth.value = 24
   }else{
     textWidth.value = 10
   }

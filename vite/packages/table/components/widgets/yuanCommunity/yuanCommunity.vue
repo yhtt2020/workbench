@@ -62,12 +62,11 @@
 
             </xt-button>
 
-
+            <!-- {{ customData.defaultForum.value }} -->
         </Widget>
 
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                :forum="customData.defaultForum?.value"></YuanPublishModal>
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"></YuanPublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -261,6 +260,7 @@ export default {
             // console.log(this.selectList);
             let temp = this.selectList;
             this.customData.selectList = temp;
+            this.forumsList=this.customData.selectList
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -293,7 +293,7 @@ export default {
         },
     },
     computed: {
-        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
+        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList','forumsList','defaultSection']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -383,6 +383,7 @@ export default {
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
             this.defaultForum = this.customData.defaultForum
+            this.defaultSection=this.customData.defaultForum
             this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
