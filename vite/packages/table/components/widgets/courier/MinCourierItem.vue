@@ -23,7 +23,7 @@
                 <div class="xt-text-2 ">
                   {{ item.lastNodeTime }}
                 </div>
-                <div class="mt-1 xt-text omit" :class="choseOmit">
+                <div :title="item.lastNodeSummary" class="mt-1 xt-text omit omit-1 " :class="choseOmit">
                   {{ item.lastNodeSummary }}
                 </div>
                 <div class="xt-text-2">
