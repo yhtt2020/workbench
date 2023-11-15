@@ -62,12 +62,12 @@
 
     </div>
   </div>
-  <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar  && orderList.length>0"
+  <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar   "
              style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
              @click="showTopCourier">
     <div class="flex items-center justify-between">
       <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>
-      <span
+      <span v-if="list.length>0"
         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
           list.length
         }}</span>
@@ -253,7 +253,7 @@ export default {
         })
       } else {
         this.list = this.list.filter(li => {
-          return getOrderState(li) !== 'signed'
+          return getOrderState(li) !== 'signed' && getOrderState(li) !== 'canceled'
         })
       }
     }
