@@ -51,9 +51,13 @@
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
       </div>
-
       <template v-else>
-        <vue-custom-scrollbar class="mt-2" ref="threadListRef" :key="currentPage" :settings="outerSettings"
+        <div  v-if="displayList.length===0" class="mt-16">
+          <Empty >
+
+          </Empty>
+        </div>
+        <vue-custom-scrollbar v-else class="mt-2" ref="threadListRef" :key="currentPage" :settings="outerSettings"
                               style="height: calc(100% - 35px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
           <ListItem v-for="(item, index) in displayList" :key="index" :item="item"
                     @goDetail="viewDeliveryDetails(item)"/>

@@ -37,6 +37,7 @@
 
       <span class="mt-4 xt-text-2 xt-font font-14 font-400">仅对电商平台快递订单有效。（自定义添加的快递订单默认会定期自动更新，不需要设置）</span>
 
+      <xt-button @click="clear" :radius="6" type="error" size="mini"  :h="34"  class="mt-2 " style="width: 100%"> 清空全部数据</xt-button>
     </div>
 
     <div class="flex flex-col w-full p-4 rounded-lg xt-bg-2 items-enter">
@@ -94,7 +95,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { courierStore } from "../../../../apps/ecommerce/courier";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
 import { appStore } from "../../../../store";
-import { message } from "ant-design-vue";
+import { message, Modal } from 'ant-design-vue'
 
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
@@ -126,7 +127,21 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore,['getOrderDetail']),
+    ...mapActions(courierStore,['getOrderDetail','clearDb']),
+    clear(){
+      Modal.confirm({
+        centered:true,
+        content:'是否清空全部的数据？此操作不可恢复。清空后仍可通过刷新重新获取订单。',
+        onOk:async () => {
+          let rs = await this.clearDb()
+          if (rs) {
+            message.success('清空数据成功。')
+          } else {
+            message.error('清空失败。')
+          }
+        }
+      })
+    },
     // 关联京东
     bindJd() {
       if (!this.storeInfo.jd.nickname){

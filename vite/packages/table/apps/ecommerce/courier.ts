@@ -132,6 +132,22 @@ export const courierStore = defineStore("courier", {
         return false
       }
     },
+    async clearDb() {
+      const getResult = await tsbApi.db.find({
+        selector: {
+          _id: {
+            $regex: new RegExp(`^courier:`)
+          }
+        }
+      })
+      if(getResult.docs){
+        for(const doc of getResult.docs){
+          await tsbApi.db.remove(doc)
+        }
+      }
+      await this.getDbCourier()
+      return true
+    },
     /**
      * 置顶一个订单
      */
