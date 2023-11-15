@@ -13,7 +13,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="rounded-xl overflow-hidden" v-if="store==='jd' || store==='tb'">
+  <div class="rounded-xl overflow-hidden" v-if="store==='jd' || store==='tb' || cover">
     <a-avatar  :size="50"  shape="square" :src="cover"></a-avatar>
   </div>
 

@@ -30,7 +30,7 @@
   </div>
 
    <div class="flex flex-col px-6">
-    <UpdateIcon :orderData="orderNum"/>
+    <DetailHead :orderData="orderNum"/>
 
     <div class="flex flex-col xt-bg-2 px-3 mb-4 py-2.5 rounded-md">
       <div class="flex justify-between w-full">
@@ -100,17 +100,17 @@ import useClipboard from 'vue-clipboard3';
 import { message,Modal } from 'ant-design-vue'
 
 import AddCourierModal from '../AddCourierModal.vue'
-import TimeLine from '../timeLine/index.vue'
-import UpdateIcon from '../updateIcon/index.vue'
+import TimeLine from '../../component/TimeLine.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
+import DetailHead from '../../component/DetailHead.vue'
 
 export default {
  props:['detail'],
 
  components:{
+   DetailHead,
   SmallIcon,AddCourierModal,
-  TimeLine,
-  UpdateIcon,DropIndex
+  TimeLine,DropIndex
  },
 
  data(){

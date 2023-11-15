@@ -2,8 +2,9 @@
  <a-timeline>
   <a-timeline-item v-for="(item,index) in reversedList" class="item-time">
     <div class="flex">
-      <div  class="mr-4 font-16  xt-font" :class="index==0? 'xt-text font-600' :'xt-text-2 font-500'" v-if="deliveryStatus[index]"> {{ deliveryStatus[index] }}</div>
-      <div class="font-14 font-400 xt-font" :class="index==0? 'xt-text' :'xt-text-2'">{{ item.AcceptTime }}</div>
+      <div class="mr-4 font-16  xt-font" :class="TimeLine==0? 'xt-text font-600' :'xt-text-2 font-500'" v-if="deliveryStatus[TimeLine]">
+        {{ deliveryStatus[TimeLine] }}</div>
+      <div class="font-14 font-400 xt-font" :class="TimeLine==0? 'xt-text' :'xt-text-2'">{{ item.AcceptTime }}</div>
     </div>
     <div class="font-14 font-400 xt-text-2">{{ item.AcceptStation }}</div>
   </a-timeline-item>
@@ -13,7 +14,7 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import {kdState} from '../../mock'
+import {kdState} from '../mock'
 export default {
  props:['list'],
  components:{

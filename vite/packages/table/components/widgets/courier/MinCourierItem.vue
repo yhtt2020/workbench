@@ -27,7 +27,7 @@
                   {{ item.lastNodeSummary }}
                 </div>
                 <div class="xt-text-2">
-                    {{ item?.content?.arrivalAt.replaceAll('您的订单','') }}
+                    {{ item?.content?.arrivalAt?.replaceAll('您的订单','') }}
                 </div>
             </div>
         </div>

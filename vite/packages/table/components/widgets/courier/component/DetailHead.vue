@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between mb-3">
     <div class="flex">
-      <div class="flex items-center justify-center rounded-lg w-14 h-14 pointer category-button " @click="onUpdateImg">
+      <div class="flex items-center justify-center rounded-lg w-14 h-14 pointer category-button "  @click="editCourier" >
         <Cover :cover="orderData.cover" :store="orderData.store" bg="var(--secondary-bg)"></Cover>
       </div>
       <div class="flex flex-col ml-3">
@@ -32,7 +32,6 @@
       </div>
     </div>
 
-    <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar"/>
 
     <div class="flex items-center">
       <xt-button @click="toggleFollow" w="32" h="32" style="border-radius: 8px;">
@@ -54,23 +53,21 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import { kdCompany } from '../../mock'
+import { kdCompany } from '../mock'
 import { Modal, message } from 'ant-design-vue'
 import useClipboard from 'vue-clipboard3'
 
-import GoodIcon from '../../../../../../selectIcon/page/index.vue'
-import MoreDrop from '../dropdown/MoreDropIcon.vue'
-import Cover from '../../component/Cover.vue'
-import EditModal from '../EditModal.vue'
-import { courierStore } from '../../../../../apps/ecommerce/courier'
+import MoreDrop from '../courierModal/dropdown/MoreDropIcon.vue'
+import Cover from './Cover.vue'
+import EditModal from '../courierModal/EditModal.vue'
+import { courierStore } from '../../../../apps/ecommerce/courier'
 import { mapActions } from 'pinia'
 
 export default {
   props: ['orderData'],
   components: {
     Cover,
-    SmallIcon,
-    GoodIcon, MoreDrop, EditModal
+    SmallIcon,  MoreDrop, EditModal
   },
   data () {
     return {
@@ -130,9 +127,6 @@ export default {
     ...mapActions(courierStore, ['followCourier', 'unfollowCourier']),
     editCourier () {
       this.$refs.courierEditRef.openEditModal()
-    },
-    onUpdateImg () {
-      this.goodIconVisible = !this.goodIconVisible
     },
     toggleFollow () {
       if (this.orderData.followed) {
