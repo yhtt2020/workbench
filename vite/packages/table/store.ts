@@ -77,22 +77,7 @@ export const appStore = defineStore('appStore', {
       attachScreen: null, //id,bounds
       isAllSelected:false,
 
-      courierSigned:{ // 屏蔽快递已经签收的订单
-        blockSigned:true,
-        courierTime:'24小时'
-      },
 
-      courierStatus:{ // 状态图标显示
-        statusBar:true,
-        currentStatus:'未完成快递'
-      },
-
-      courierRefresh:{ // 开启自动订单数据自动刷新
-        autoRefresh:true,
-        autoTime:'30分钟'
-      },
-      // 开启快递单号匹配
-      courierMatch:'preciseMatch',
 
       relevanceEnable:false, //开启关联的电商平台快递
       customCourier:false, // 自定义快递

@@ -110,6 +110,7 @@ export default {
     setTimeout(() => {
       if (window.$isOffline && this.init) {
         this.$router.replace({ name: 'home' })
+        this.launching = false
       }
     }, 1000)
     this.timeout()

@@ -1,17 +1,16 @@
 <template>
   <div class="w-full h-full flex justify-center items-center">
-    <div class="w-full center overflow-hidden" style="width:90%;height: 96%;">
+    <div class="w-full center overflow-hidden flex justify-center flex-wrap h-full">
       <!-- 顶部 -->
       <div style="justify-content: space-between;" class="flex w-full">
         <div class="flex items-center">
           <div
             class="flex justify-center items-center mr-3 pointer center"
-            style="background-color: var(--secondary-bg);border-radius:10px;height: 40px;padding: 0 10px;"
+            style="background-color: var(--mask-bg);border-radius:10px;height: 40px;padding: 0 10px;"
             @click="changeDesk"
           >
-            <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24"/>
-            {{ deskName }}
-            <!-- <div class="ml-3">{{deskName}}</div> -->
+            <Icon icon="majesticons:monitor-line" width="20" height="20" />
+            <div class="ml-2" v-if="deskName">{{ deskName }}</div>
           </div>
           <div style="font-size: 14px;color: var(--secondary-text);">{{ time }}</div>
         </div>
@@ -29,39 +28,28 @@
                  v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}"
                  @click="changeBgColor(index)"></div>
           </div>
-          <a-dropdown :trigger="['click']">
-            <div class="flex items-center pointer justify-center"
-                 style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;">
+            <!-- 全屏 -->
+            <div class="flex items-center pointer justify-center mr-3"
+                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
+                @click="changeIsFull">
+                <Icon icon="fluent:full-screen-maximize-16-filled" width="20" height="20"/>
+            </div>
+            <!-- 设置 -->
+          <xt-menu :menus="menus" model="click">
+            <div class="flex items-center pointer justify-center no-drag"
+                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;">
               <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20"/>
             </div>
-            <template #overlay>
-              <a-menu
-                style="padding: 8px;width: 200px;border-radius: 12px;background: var(--modal-bg);border: 1px solid rgba(255,255,255,0.1);">
-                <a-menu-item
-                  v-for="(item,index) in menus"
-                  :key="index"
-                  style="height: 40px;border-radius: 10px;color: var(--primary-text);"
-                  @click="item.callBack"
-                >
-                  <div class="flex items-center font-16">
-                    <Icon width="20" height="20" :icon="item.newIcon"/>
-                    <div
-                      :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}
-                    </div>
-                  </div>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+          </xt-menu>
         </div>
       </div>
       <!-- 主体 -->
-      <div class="h-full">
+      <div class="h-full" style="width:950px;">
         <div class="mt-4 shadow overflow-hidden h-full" style="border-radius: 12px;padding: 24px 0 0 0 ;"
              :style="{background:background}">
           <a-input
             style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
-                        border: none;box-shadow: none;padding: 0 0 0 24px; "
+                        border: none;box-shadow: none;padding: 0 0 0 50px; "
             v-model:value="this.selNoteTitle"
             maxlength="15"
             @blur="changeNoteTitle"
@@ -73,6 +61,11 @@
       </div>
     </div>
   </div>
+    <!-- 全屏模式 -->
+    <FullScreen v-if="isFull" :changeIsFull="changeIsFull" :selDesk="selDesk"></FullScreen>
+    <!-- <teleport to="body">
+        
+    </teleport> -->
 </template>
 
 <script>
@@ -83,7 +76,7 @@ import { noteStore } from '../store'
 import { cardStore } from '../../../store/card'
 import { formatTime } from '../../../util'
 import Markdown from './markdown.vue'
-import dayjs from 'dayjs'
+import FullScreen from './fullScreen.vue'
 
 import { message } from 'ant-design-vue'
 
@@ -91,97 +84,101 @@ export default {
   components: {
     Icon,
     Markdown,
-  },
-  props: ['selDesk'],
-  computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
-    deskName () {
-      if (this.noteList.length) {
-        return this.selNote >= 0 ? this.noteList[this.selNote].deskName : ''
-      }
-    },
-    background () {
-      if (this.noteList.length) {
-        return this.selNote >= 0 ? this.noteList[this.selNote].customData.background : ''
-      }
-    },
-    time () {
-      // return
-      if (this.selNote >= 0 && this.noteList) {
-        if (this.noteList[this.selNote]) {
-          let timestamp = this.noteList[this.selNote].updateTime // 假设您已经获取了时间戳
-          return formatTime(timestamp)
-        } else {
-          return
-        }
-      } else {
-        return
-      }
-    },
-  },
-  data () {
-    return {
-      icons: {
-        moreHorizontal16Filled,
-      },
-      isColor: false,
-      menus: [
-        {
-          label: '添加到桌面',
-          newIcon: 'fluent:open-20-filled',
-          callBack: () => {
-            // 修改当前选中桌面
-            if (!this.isSelTab) {
-              // 添加到桌面
-              this.selDesk()
-            } else {
-              // 还原
-              this.restore()
+    FullScreen,
+   },
+   props:['selDesk'],
+   computed: {
+        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
+        deskName(){
+            if (this.noteList.length) {
+                return this.selNote>=0?this.noteList[this.selNote].deskName:"" 
             }
-          },
-
         },
-        {
-          label: '跳转到桌面',
-          newIcon: 'majesticons:monitor-line',
-          callBack: () => {
-            if (this.noteList[this.selNote].deskName) {
-              this.deskList.forEach((item, index) => {
-                if (this.noteList[this.selNote].deskId == item.id) {
-                  this.currentDeskId = item.id
-                  this.$router.push({
-                    name: 'home',
-                  })
+        background(){
+            if (this.noteList.length) {
+                if(this.selNote>=0){
+                    return this.selNote>=0?this.noteList[this.selNote].customData.background:''
+                }else{
+                    return 
                 }
-              })
-            } else {
-              if (this.isSelTab) {
-                message.error('该便签已被删除')
-              } else {
-                message.error('请先添加桌面')
-              }
             }
-          }
         },
-        {
-          label: '删除便签',
-          newIcon: 'akar-icons:trash-can',
-          color: '#FF4D4F',
-          callBack: () => {
-            // this.menus.
-            if (!this.isSelTab) {
-              // 删除
-              this.moveToTrash()
-            } else {
-              // 彻底删除
-              this.deleteNote()
-
+        time() {
+            // return 
+            if (this.selNote>=0 && this.noteList) {
+                if(this.noteList[this.selNote]){
+                    let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
+                    return formatTime(timestamp)
+                }else{
+                    return 
+                }
+            }else{
+                return
             }
-          }
-
         },
-      ],
+   },
+   data() {
+    return {
+        icons: {
+            moreHorizontal16Filled,
+        },
+        isColor:false,
+        isFull:false,
+        menus:[
+            { 
+                label: "添加到桌面", 
+                newIcon: "fluent:open-20-filled",
+                callBack: ()=>{
+                    // 修改当前选中桌面
+                    if (!this.isSelTab) {
+                        // 添加到桌面
+                        this.selDesk()
+                    }else{
+                        // 还原
+                        this.restore()
+                    }
+                }, 
+                
+            },
+            { 
+                label: "跳转到桌面", 
+                newIcon: "majesticons:monitor-line",
+                callBack:()=>{
+                    if (this.noteList[this.selNote].deskName) {
+                        this.deskList.forEach((item,index)=>{
+                            if (this.noteList[this.selNote].deskId == item.id) {
+                                this.currentDeskId = item.id
+                                this.$router.push({
+                                    name:'home',
+                                })
+                            }
+                        })
+                    }else{
+                        if (this.isSelTab) {
+                            message.error('该便签已被删除')
+                        }else{
+                            message.error('请先添加桌面')
+                        }
+                    }
+                }
+            },
+            { 
+                label: "删除便签", 
+                newIcon: "akar-icons:trash-can",
+                color:'#FF4D4F',
+                callBack:()=>{
+                    // this.menus.
+                    if (!this.isSelTab) {
+                        // 删除
+                        this.moveToTrash()
+                    }else{
+                        // 彻底删除
+                        this.deleteNote()
 
+                    }
+                }
+            },
+        ],
     }
   },
   mounted () {
@@ -190,6 +187,9 @@ export default {
   methods: {
     ...mapActions(cardStore, ['updateCustomData']),
     ...mapActions(noteStore, ['saveNoteDb', 'getNotes', 'addNoteToDesk', 'changeBg', 'moveToTrash', 'restore', 'deleteNote']),
+    changeIsFull(){
+        this.isFull = !this.isFull
+    },
     // 修改当前便签颜色
     changeBgColor (i) {
       this.noteList[this.selNote].customData.background = this.noteBgColor[i]
@@ -246,14 +246,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
 .shadow {
   box-shadow: 0px 0px 3.12px 0px rgba(0, 0, 0, 0.03);
   box-shadow: 0px 0px 10.23px 0px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
-}
-
-:deep(.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover) {
-  background-color: var(--active-secondary-bg);
 }
 
 .scroll-color::-webkit-scrollbar-thumb {
@@ -267,6 +264,13 @@ export default {
 
 .scroll-color::-webkit-scrollbar-track {
   border-radius: 6px; /* 轨道圆角 */
+}
+
+:deep(.vditor-toolbar){
+    background: #212121 !important;
+}
+:deep(.vditor-reset){
+    background: #191919 !important;
 }
 
 </style>

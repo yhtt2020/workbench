@@ -36,28 +36,11 @@
                             <div class="ml-2">{{ item.hasOwnProperty('customData')?item.customData.title:'' }}</div>
                         </div>
                         <!-- 菜单 -->
-                        <!-- <a-dropdown> -->
-                        <a-dropdown :trigger="['click']">
+                        <xt-menu :menus="menus" model="click">
                             <div class="flex items-center pointer note-menu">
                                 <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20" />
                             </div>
-                            <template #overlay>
-                                <a-menu 
-                                style="padding: 8px;width: 200px;border-radius: 12px;background: var(--modal-bg);border: 1px solid rgba(255,255,255,0.1);">
-                                    <a-menu-item 
-                                        v-for="(item,index) in menus" 
-                                        :key="index" 
-                                        style="height: 40px;border-radius: 10px;color:var(--primary-text);"
-                                        @click="item.callBack">
-                                        <div class="flex items-center font-16">
-                                            <Icon width="20" height="20" :icon="item.newIcon" />
-                                            <div :style="{color:item.color?item.color:''}" class="ml-3">{{ item.label }}</div>
-                                        </div>
-
-                                    </a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
+                        </xt-menu>
                     </div>
                     <div class="mt-2 w-full two-hidden" style="min-height:22px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
                         {{ item.hasOwnProperty('customData')?item.customData.content:'' }}

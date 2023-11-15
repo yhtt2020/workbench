@@ -61,7 +61,6 @@
                             <div class="flex items-center justify-center">
                                 <newIcon icon="fluent:add-16-filled" style="font-size: 24px;" class="xt-text"></newIcon>
                             </div>
-
                         </div>
                     </a-upload>
                 </div>
@@ -82,11 +81,11 @@
                                     </div>
                                 </vue-custom-scrollbar>
                             </template>
-                            <!-- <button>表情</button> -->
-                            <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32"
+                            <xt-button type="text" class=" xt-text emojiVis" :w="72" :h="32" :throttleTime="0"
                                 style="color: var(--secondary-text) !important;">
                                 <div class="flex items-center justify-center">
-                                    <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"  style="margin-right: 4px;" /> 表情
+                                    <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" /> 表情
                                 </div>
 
                             </xt-button>
@@ -96,33 +95,38 @@
                             <xt-button type="text" :w="72" :h="32" class="xt-text"
                                 style="color: var(--secondary-text) !important;">
                                 <div class="flex items-center justify-center">
-                                    <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />图片
+                                    <newIcon icon="fluent:image-multiple-16-regular" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" />图片
                                 </div>
 
                             </xt-button>
                             <!-- <button>表情</button> -->
                         </a-upload>
                         <!-- <slot name="more-button" /> -->
-                        <div v-if="defaultType.value==='post'">
-                            <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1" v-show="coverList.length === 0">
-                            <xt-button type="text" :w="118" :h="32" class="xt-text"
-                                style="color: var(--secondary-text) !important;">
-                                <div class="flex items-center justify-center">
-                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="margin-right: 4px;" />
-                                    设置封面
-                                </div>
+                        <div v-if="defaultType.value === 'post'">
+                            <a-upload v-model:file-list="coverList" @preview="handlePreview" maxCount="1"
+                                v-show="coverList.length === 0">
+                                <xt-button type="text" :w="118" :h="32" class="xt-text"
+                                    style="color: var(--secondary-text) !important;">
+                                    <div class="flex items-center justify-center">
+                                        <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2"
+                                            style="margin-right: 4px;" />
+                                        设置封面
+                                    </div>
 
+                                </xt-button>
+                                <!-- <button>表情</button> -->
+                            </a-upload>
+                            <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0"
+                                @click="removeCover" style="color: var(--secondary-text) !important;">
+                                <div class="flex items-center justify-center">
+                                    <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2"
+                                        style="margin-right: 4px;" />
+                                    移除封面
+                                </div>
                             </xt-button>
-                            <!-- <button>表情</button> -->
-                        </a-upload>
-                        <xt-button type="text" :w="118" :h="32" class="xt-text" v-show="coverList.length > 0" @click="removeCover" style="color: var(--secondary-text) !important;">
-                            <div class="flex items-center justify-center">
-                                <newIcon icon="akar-icons:trash-can" class="text-xl xt-text-2" style="margin-right: 4px;" />
-                                移除封面
-                            </div>
-                        </xt-button>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -133,8 +137,8 @@
                 </div>
                 <!-- foot -->
                 <div class="flex items-center justify-between h-[56px] ">
-                    <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
-                        @change="handleChange" 
+                    <a-select v-model:value="cascaderValue" :options="selectOptions" placeholder="选择版块" :bordered="false"
+                        @change="handleChange"
                         style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
                         dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
 
@@ -164,7 +168,7 @@ import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import { useCommunityStore } from '../../../page/chat/commun'
 import DynamicItem from './Detail/DynamicItem.vue'
 import PostItem from './Detail/PostItem.vue'
-import { translateImage } from './Detail/index'
+import { translateImage, translateOnlyImage } from './Detail/index'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
 const emoji = ref('https://sad.apps.vip/public/static/emoji/emojistatic/')
 const useCommunStore = useCommunityStore()
@@ -193,8 +197,8 @@ const coverList = ref([])
 // 是否全屏
 const fullScreen = ref(false)
 const props = defineProps({
-    options:{
-        type:()=>Object,
+    options: {
+        type: () => Object,
     }
 })
 const componentId = computed(() => {
@@ -221,7 +225,7 @@ const fileList = ref([]);
 // 清除封面
 const removeCover = () => {
     coverList.value = []
-    useYuanCommunityStore.postContent.coverList=[]
+    useYuanCommunityStore.postContent.coverList = []
 }
 // 修改发布框
 const changeItem = (index) => {
@@ -232,21 +236,21 @@ const handleFullScreen = () => {
     fullScreen.value = !fullScreen.value
 }
 // 选中图标
-const emojiKey=ref('')
+const emojiKey = ref('')
 // 添加表情
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emojiValue = item.substring(lastSlashIndex + 1);
-     emojiKey.value = Object.entries(fluentEmojis).find(([k, v]) => v === (emojiValue))[0]
+    emojiKey.value = Object.entries(fluentEmojis).find(([k, v]) => v === (emojiValue))[0]
     // useYuanCommunityStore.dynamicContent.content += `${emojiKey.value}`
     addEmojiContent()
 }
 // 添加图标到内容中
-const addEmojiContent=()=>{
-    if(defaultType.value.value==='dynamic'){
+const addEmojiContent = () => {
+    if (defaultType.value.value === 'dynamic') {
         useYuanCommunityStore.dynamicContent.content += `${emojiKey.value}`
-    }else if(defaultType.value.value==='post'){
-        useYuanCommunityStore.postContent.content += `${emojiKey.value}`
+    } else if (defaultType.value.value === 'post') {
+        useYuanCommunityStore.postContent.title += `${emojiKey.value}`
     }
 }
 // 图片添加是否可见
@@ -263,17 +267,17 @@ onMounted(async () => {
     windowHeight.value = window.innerHeight
     await useYuanCommunityStore.getMyForumList()
     communCate.value.forEach((item) => {
-        options.value.push({
+        selectOptions.value.push({
             value: item.id,
             label: item.name
         })
     })
-    cascaderValue.value = options.value[0]
+    cascaderValue.value = selectOptions.value[0]
 })
 
 // 选择发帖板块
 const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
-const options = ref([]);
+const selectOptions = ref([]);
 let cascaderValue = ref([])
 // 修改发帖板块
 const handleChange = (value) => {
@@ -299,7 +303,7 @@ watch(fileList, async () => {
 })
 watch(coverList, async () => {
     let coversList = await translateImage(coverList.value)
-    useYuanCommunityStore.postContent.coverList = await JSON.stringify(coversList)
+    useYuanCommunityStore.postContent.coverList = coversList.toString()
 })
 const publishPost = async () => {
     if (dynamicContent.value.content || dynamicContent.value.imagesList.length > 0 && defaultType.value.value == 'dynamic') {
@@ -311,6 +315,7 @@ const publishPost = async () => {
         let post = postContent.value
         const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
         setTimeout(async () => {
+            console.log(cascaderValue.value, post.imagesList, post.content, title, post.coverList, 'post-publish')
             await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
         });
     }

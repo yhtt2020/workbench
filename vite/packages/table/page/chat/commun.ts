@@ -443,7 +443,7 @@ export const useCommunityStore = defineStore('forumStore',{
                 console.error(error)
             }
         },
-        async getPublishPost(fid,image='',content,title,classId=67,is_close_comment=1,from='PC',type=1,cover=''):Promise<IThread>{
+        async getPublishPost(fid,image='',content,title,cover='',classId=67,is_close_comment=1,from='PC',type=1):Promise<IThread>{
             console.log(fid,image,content,title,classId=67,is_close_comment=1,from='PC',type=1,cover,'getCommunityPublishPost');
 
             try {

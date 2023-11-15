@@ -156,7 +156,7 @@ export default {
         },
         {
           title: '体育',
-          type: 'tiyu',
+          tag: 'tiyu',
           // id:5
         },
         {
@@ -219,6 +219,7 @@ export default {
     getNewsData() {
       let tag = this.showList[this.currentIndex].tag
       this.customData.tag=tag
+      console.log(this.showList[this.currentIndex])
       this.getNewsMsg(this.customData.tag)
 
       // this.customData.newsList=this.newsMsgList

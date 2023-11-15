@@ -1,6 +1,14 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
                      :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk">
+                     <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="mdi:steam" style="font-size: 20px;" />
+        </div>
+      </template>
     <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;color:var(--primary-text)">{{ region.name }}
     </div>

@@ -102,6 +102,11 @@ body {
 .xt-theme-b {
   border: 1px solid var(--active-bg);
 }
+
+hr {
+  height: 1px;
+  border: 1px solid var(--divider) !important;
+}
 /**
 * 功能性颜色
 */
@@ -134,8 +139,7 @@ body {
   color: var(--warning);
 }
 
-
 // 禁用背景色
-.xt-enable-bg{
+.xt-enable-bg {
   background: var(--disable-text) !important;
 }

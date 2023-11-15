@@ -43,9 +43,9 @@
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
-                                    class="courier-item">
-                <div v-for="(item, index) in displayList" >
-                  <CourierItem :courier="item" :key="item._id" @click.stop="viewDeliveryDetails(item)" :itemIndex="index"/>
+                                    class="courier-item mt-2">
+                <div v-for="(item, index) in displayList">
+                  <ListItem :no-bg="true" :item="item" @goDetail="viewDeliveryDetails(item)"></ListItem>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
@@ -93,7 +93,7 @@ import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'
 import grab from './grab'
-
+import ListItem from './ListItem.vue'
 import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
 import CourierItem from './CourierItem.vue'
@@ -106,12 +106,15 @@ import LogisticsDetail from './courierModal/content/LogisticsDetail.vue'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
 import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import CourierSetting from './courierModal/CourierSetting.vue'
-import _ from 'lodash-es'
+
 import { autoRefreshTime } from './courierModal/modalMock'
+import ui from './courierUI'
+import { preHandle } from './courierTool'
 
 export default {
   name: '我的快递',
   components: {
+    ListItem,
     Widget,
     newIcon,
     CourierItem,
@@ -215,8 +218,9 @@ export default {
         client: false,
         offline: true
       },
-      displayList:[],//显示列表
-      autoRefreshTime
+      displayList: [],//显示列表
+      autoRefreshTime,
+      timer: null
     }
   },
   methods: {
@@ -247,117 +251,7 @@ export default {
         this.courierShow = false
       }
     },
-    refreshAll (tip=true) {
-      // 快递鸟快递信息更新
-      this.refreshCouriers()
-      tip && message.loading({
-        content: '正在为您更新京东商城订单',
-        key: 'loadingTip',
-        duration: 0
-      })
-      if (this.storeInfo.jd.nickname) {
-        //京东绑定了
-        grab.jd.getOrder(async (args) => {
-          if (args.status) {
-            tip &&  message.loading({
-              content: '订单获取成功，正在为您更新订单详情',
-              key: 'loadingTip',
-              duration: 0
-            })
-            await this.getOrderDetail(args.data.orders)
-            let count = await this.saveJdOrders(args.data)
-            tip &&  message.success({ content: '成功更新' + count + '个京东订单信息', key: 'loadingTip' })
-            await this.getDbCourier()
-            console.log('刷新一下本地记录')
-          } else {
-            notification.info({
-              message: '京东账号已过期，点击重新绑定后再刷新。',
-              onClick: () => {
-                grab.jd.login((args) => {
-                  this.storeInfo.jd.nickname = args.data.nickname
-                  message.success({
-                    content: '京东重新登录成功。请重新刷新。',
-                    key: 'loadingTip',
-                    duration: 0
-                  })
-                })
-              }
-            })
-          }
-
-        })
-      }
-      if (this.storeInfo.tb.nickname) {
-        grab.tb.getOrder((args) => {
-          if (args.status === 0 && args.code === 401) {
-            notification.info({
-              message: '淘宝账号已过期，点击重新绑定。',
-              onClick: () => {
-                grab.tb.login((args) => {
-
-                  console.log(args, '获取到的订单信息')
-                })
-              }
-            })
-          }
-        })
-        //淘宝绑定了
-      }
-      //todo 刷新其他订单
-    },
-
-    async getOrderDetail (orders,tip=true) {
-
-      let completed=0
-      let promises = []
-      for (const order of orders) {
-        if ((order.status === '商品出库' || order.latestNodes.length===0)&& order.status !== '订单取消') {
-          //只检查等待收货的商品
-          //仅检查未完成的订单
-          let getProcess = new Promise((resolve, reject) => {
-            grab.jd.getOrderDetail(order.detailUrl, ({ status, code, data }) => {
-              if (status) {
-                completed++
-                order.detail = {}
-                order.detail.expressNo = data.expressNo
-                order.detail.traceNodes = data.traceNodes
-                order.detail.expressType = data.expressType
-                order.detail.updateTime = Date.now()
-
-                resolve(data)
-              } else {
-                completed++
-                reject({
-                  status, code
-                })
-              }
-
-            })
-          })
-          promises.push(getProcess)
-        }
-      }
-      tip && message.loading({
-        content: '共有' + promises.length + '个订单需要更新物流信息，' + '请稍候…',
-        key: 'loadingTip',
-        duration: 0
-      })
-
-      console.log('要执行的promises=',promises)
-      let taskChunks=_.chunk(promises,5)
-      for(const chunk of taskChunks){
-        //切片并发5个
-        await Promise.allSettled(chunk)
-        console.log('执行完成一个块',chunk)
-      }
-
-      tip &&  message.success({
-        content: '订单物流信息更新完成。',
-        key: 'loadingTip',
-        duration: 4
-      })
-      console.log('更新后的订单', this.storeInfo.jd.order)
-    },
+    refreshAll: ui.refreshAll,
 
     addCourier () {
       this.$refs.addCourierRef.openCourierModel()
@@ -371,29 +265,10 @@ export default {
     },
     autoRefresh () {
       if (this.settings.courierRefresh.autoRefresh) {
-        setInterval(() => {
-          message.loading('正在为您更新商城订单')
-          if (this.storeInfo.jd.nickname) {
-            //京东绑定了
-            grab.jd.getOrder()
-          }
-          if (this.storeInfo.tb.nickname) {
-            grab.tb.getOrder((args) => {
-              console.log('淘宝结果', args)
-              if (args.status === 0 && args.code === 401) {
-                notification.info({
-                  content: '淘宝账号已过期，点击重新绑定。',
-                  onClick: () => {
-                    grab.tb.login((args) => {
-                      console.log(args, '获取到的订单信息')
-                    })
-                  }
-                })
-              }
-            })
-            //淘宝绑定了
-          }
-        }, this.refreshTimes[0].type)
+        this.timer = setInterval(() => {
+          console.log('刷新立碑')
+          ui.refreshAll(false)
+        }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
     }
   },
@@ -401,8 +276,7 @@ export default {
     ...mapWritableState(courierStore, ['courierMsgList',
       'orderList',
       'couriersDetailMsg',
-      'storeInfo', 'currentDetail']),
-    ...mapWritableState(appStore, ['settings']),
+      'storeInfo', 'currentDetail', 'settings']),
 
     // 判断尺寸大小
     showSize () {
@@ -442,20 +316,19 @@ export default {
     //       break;
     //   }
     // },
-    refreshTimes () {
-      return this.autoRefreshTime.filter((item) => {
+    refreshInterval () {
+      return this.autoRefreshTime.find((item) => {
         return item.value === this.settings.courierRefresh.autoTime
       })
     }
   },
-  watch:{
-    'orderList':{
-      handler(newVal){
-        console.log('发现变化',newVal)
-        this.displayList=[]
-        this.displayList=newVal.slice(0,10)
+  watch: {
+    'orderList': {
+      handler (newVal) {
+        this.displayList = preHandle(this.orderList)
+        this.displayList = this.displayList.slice(0, 10)
       },
-      immediate:true
+      immediate: true
     }
   },
   async mounted () {
@@ -463,7 +336,6 @@ export default {
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener('resize', this.handleResize)
-    console.log(this.refreshTimes[0].type, 'refreshTimes')
     if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
       this.autoRefresh()
     }
@@ -471,8 +343,9 @@ export default {
   },
 
   beforeDestroy () {
+    console.log('xiezai')
     window.removeEventListener('resize', this.handleResize)
-    this.autoRefresh()
+    clearInterval(this.timer)
   },
 
 }
@@ -501,6 +374,8 @@ export default {
   height: 1px;
   background-color: var(--divider);
   margin-top: 8px;
+
+  margin-bottom: 8px;
 }
 
 .courier {

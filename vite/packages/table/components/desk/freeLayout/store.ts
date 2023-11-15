@@ -13,19 +13,29 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     dragData: {},
     // 默认状态数据
     defaultState: {
+      // 未划分
       start: true,
-      last: true,
-      position: "top center",
-      width: 2000,
-      height: 2000,
       afterDrop: false, // 鼠标落下吸附网格
       whileDrag: false,
-      zoom: 1,
+      // 系统数据
+      system: {
+        // 是否使用自由布局
+        isFreeLayout: true,
+        // 是否使用悬浮菜单
+        isFloatMenu: true,
+        floatMenu: {
+          top: 0,
+          left: 0,
+        },
+      },
+
       margin: 6,
-      // 辅助线参数
+      // 辅助线数据
       line: {
-        isAuxLine: false,
-        isCenterLine: false,
+        isAuxLine: false, // 是否显示辅助线
+        isCenterLine: false, // 是否显示中心线
+        isBorderLine: false, // 是否显示边框线
+
         centerLine: {
           x: 1000,
           y: 1000,
@@ -33,14 +43,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       },
       // 画布数据
       canvas: {
-        // 是否无限衍生
-        infinite: false,
-
-        // 缩放比例
-        zoom: 1,
-        // 宽高
-        width: 2000,
-        height: 2000,
+        isInfinite: false, // 是否无限衍生
+        zoom: 1, // 缩放比例
+        width: 2000, // 宽
+        height: 2000, // 高
       },
     },
     // 当前环境状态
@@ -54,12 +60,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 默认环境状态
     defaultFreeLayoutEnv: {
-      loading: false, // 当前自由布局加载状态
-      scrollTop: 0, // 当前滚动条Y轴
-      scrollLeft: 0, // 当前滚动条X轴
-      scrollWidth: 0, // 当前滚动条宽度
-      scrollHeight: 0, // 当前滚动条高度
-      updatePosition: false, // 修改位置
+      loading: false,
+      scrollTop: 0,
+      scrollLeft: 0,
+      scrollWidth: 0,
+      scrollHeight: 0,
+      updatePosition: false,
     },
   }),
   getters: {
@@ -89,7 +95,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前自由布局是否开启
     isFreeLayout() {
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        return this.freeLayoutState[this.getCurrentDeskId].start;
+        return this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
       }
     },
     // 获取当前自由布局边距状态
@@ -99,13 +105,25 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         : 0;
     },
     // 获取当前状态
-    getCurrentState() {
-      return this.currentState;
+    isFreeLayoutExist() {
+      return this.getFreeLayoutState;
     },
   },
   actions: {
     // 吸附网格
     snapToGrid(x: number, y: number): [number, number] {
+      /**
+       * @author 杨南南
+       * @date 2023-11-09
+       * @description 将输入的坐标对齐到网格的交点
+       *
+       * 核心算法
+       * 网格宽度：基础宽度 - 修正宽度 + 边距 * 2
+       * 网格高度：基础高度 - 修正高度 + 边距 * 2
+       * 对齐后的X坐标 = Math.round(视窗内的X坐标 / 网格宽度) * 网格宽度
+       * 对齐后的Y坐标 = Math.round(视窗内的Y坐标 / 网格高度) * 网格高度
+       *
+       */
       let width = 140 - 6 + this.getFreeLayoutMargin * 2;
       let height = 102 - 6 + this.getFreeLayoutMargin * 2;
       const snappedX = Math.round(x / width) * width;
@@ -145,8 +163,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        this.freeLayoutState[this.getCurrentDeskId].start =
-          !this.freeLayoutState[this.getCurrentDeskId].start;
+        this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
+          !this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
       } else {
         // 否则进行初始化
         this.initFreeLayout();
@@ -162,9 +180,17 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     clearFreeLayoutState() {
       this.getFreeLayoutState = {};
     },
+    // 删除当前自由布局数据
     clearFreeLayout() {
+      console.log("2222 :>> ", 2222);
       delete this.freeLayoutData[this.getCurrentDeskId];
       delete this.freeLayoutState[this.getCurrentDeskId];
+      console.log("object :>> ", this.freeLayoutState);
+    },
+    // 清除所有自由布局数据
+    clearAllFreeLayout() {
+      this.freeLayoutData = {};
+      this.freeLayoutState = {};
     },
     // 初始化当前环境
     initFreeLayoutEnv() {
