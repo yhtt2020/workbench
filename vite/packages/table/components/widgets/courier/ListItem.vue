@@ -10,7 +10,7 @@ export default {
   components: {Cover, SmallIcon},
   props: ['item','noBg'],
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier','hideCourier']),
     goDetail() {
       this.$emit('goDetail', this.item)
     },
@@ -71,8 +71,26 @@ export default {
               message.error('置顶失败')
             }
           }
-        }
-        ,
+        },
+        {
+          name: '隐藏订单',
+          callBack: () => {
+            Modal.confirm({
+              content: '隐藏订单后，即使重新获取订单也不会再出现。需要手动单独在隐藏订单中恢复。',
+              centered: true,
+              okText:'确认隐藏',
+              onOk: async () => {
+                let rs = await this.hideCourier(this.item._id)
+                if (rs) {
+                  message.success('删除成功。')
+                  this.$emit('hideItem', this.item)
+                }
+              }
+            })
+          },
+          newIcon:'fluent:eye-off-16-regular'
+
+        },
         {
           name: '删除订单',
           callBack: () => {
@@ -89,7 +107,6 @@ export default {
             })
           },
           newIcon: 'akar-icons:trash-can',
-          color: 'var(--error)'
         },
       ]
     }

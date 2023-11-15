@@ -98,18 +98,40 @@ export const courierStore = defineStore("courier", {
       if (courier) {
         courier.followed = true
       }
-      console.log(courier, '需要存入的')
       let rs = await tsbApi.db.put(courier)
-      console.log('保存结果', rs)
       if (rs.ok) {
         this.getDbCourier();
         return true
       } else {
         return false
       }
-
     },
-
+    async hideCourier(id) {
+      let courier = await this.findDbItem(id)
+      if (courier) {
+        courier.hide = true
+      }
+      let rs = await tsbApi.db.put(courier)
+      if (rs.ok) {
+        this.getDbCourier();
+        return true
+      } else {
+        return false
+      }
+    },
+    async showCourier(id){
+        let courier = await this.findDbItem(id)
+        if (courier) {
+          courier.hide = false
+        }
+        let rs = await tsbApi.db.put(courier)
+        if (rs.ok) {
+          this.getDbCourier();
+          return true
+        } else {
+          return false
+      }
+    },
     /**
      * 置顶一个订单
      */
@@ -151,12 +173,19 @@ export const courierStore = defineStore("courier", {
     // 获取db中存储的快递数据
     async getDbCourier() {
       console.log('执行一此筛选')
-      const getResult = await tsbApi.db.allDocs('courier:')
-      const rowList = getResult.rows
-      // 将getResult.rows列表的doc进行解构
-      const docList = rowList.map((item: any) => {
-        return item.doc
+      const getResult = await tsbApi.db.find({
+        selector:{
+          _id: {
+            $regex: new RegExp(`^courier:`)
+          },
+          hide: {
+            $ne:true
+          }
+        }
       })
+      console.log('查找到结果',getResult)
+      // 将getResult.rows列表的doc进行解构
+      const docList = getResult.docs
       // 将docList中的content进行解构
       const contentList = docList.map((item: any) => {
         return item
@@ -291,7 +320,7 @@ export const courierStore = defineStore("courier", {
     async saveJdOrders(orderInfo) {
       await tsbApi.db.createIndex({
         index: {
-          fields: ['store', 'orderId']
+          fields: ['store', 'orderId','hide','followed']
         }
       })
       let updateCount = 0
