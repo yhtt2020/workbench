@@ -10,7 +10,7 @@
     </div>
     <vue-custom-scrollbar class="flex-1 h-0" :settings="settingsScroller">
       <div  ref="dropRef" class="w-full">
-        <ListItem :item="item" @goDetail="seeDetail(item)" v-for="item in list"></ListItem>
+        <ListItem @afterRemove="scrollToItem(currentDetail._id)" @scrollToCurrent="scrollToItem(currentDetail._id)" :ref="el=>setItemRef(el,item)" :item="item" @goDetail="seeDetail(item)" v-for="item in list"></ListItem>
         <div style="height: 12px;"></div>
       </div>
     </vue-custom-scrollbar>
@@ -38,6 +38,7 @@ export default {
 
   data () {
     return {
+      itemRefs:[],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -54,7 +55,7 @@ export default {
   },
 
   mounted () {
-
+    this.scrollToItem(this.currentDetail._id)
     //this.currentID = this.list[0].LogisticCode
   },
 
@@ -69,6 +70,29 @@ export default {
 
   methods: {
     ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier']),
+    scrollToItem(id){
+      setTimeout(() => {
+        let found = this.itemRefs.find(item => {
+          return item.id === id
+        })
+        if (found) {
+          found.el.$el.scrollIntoView()
+          setTimeout(()=>{
+            found.el.$el.firstElementChild.style.border='solid var(--active-bg) 2px'
+            setTimeout(()=>{
+              found.el.$el.firstElementChild.style.border=''
+            },400)
+          },400)
+
+        }
+      },500)
+    },
+    setItemRef(el,item){
+      this.itemRefs.push({
+        el:el,
+        id:item._id
+      })
+    },
     refreshData () {
 
       this.$nextTick(() => {
@@ -118,40 +142,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.summary {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  white-space: break-spaces;
-  overflow: hidden;
-  margin: 0 !important;
-  font-size: 14px;
-  color: var(--primary-text);
-  font-weight: 400;
-}
 
-.select {
-  background: var(--active-secondary-bg) !important;
-}
-
-.hover-bg {
-  &:hover {
-    background-color: var(--active-secondary-bg);
-  }
-}
-
-.state-text {
-  width: auto;
-  text-wrap: nowrap;
-}
-
-.store {
-  min-width: 25px;
-}
-
-.fav-icon {
-  font-size: 18px;
-  display: inline-block;
-  min-width: 18px;
-}
 </style>

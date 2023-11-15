@@ -6,7 +6,7 @@
                 <Cover :cover="courier.cover" :store="courier.store" bg="var(--mask-bg)"></Cover>
               </div>
                 <div class="ml-2 flex flex-col justify-between h-[56px]" >
-                    <div class="text-base xt-text pointer">
+                    <div :title="item.title" class="text-base xt-text pointer omit omit-1">
                         {{ item.title }}
                     </div>
                     <div class="flex xt-text-2 h-[24px]" style="font-size: 14px;text-align: center;">

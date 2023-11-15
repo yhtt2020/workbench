@@ -109,6 +109,29 @@ export const courierStore = defineStore("courier", {
       }
 
     },
+
+    /**
+     * 置顶一个订单
+     */
+    async setTopCourier(id) {
+      let courier = await this.findDbItem(id)
+      if (courier) {
+        await this.removeDbData(courier)
+      }
+      courier._id='courier:'+Date.now()
+      courier.createTime=Date.now()
+      courier.updateTime=Date.now()
+      delete courier._rev
+      console.log('重新插入',courier)
+      let rs=await tsbApi.db.put(courier)
+      if(rs?.ok){
+        await this.getDbCourier()
+        return true
+      } else{
+        return false
+      }
+
+    },
     async unfollowCourier(id) {
       let courier = await this.findDbItem(id)
       if (courier) {

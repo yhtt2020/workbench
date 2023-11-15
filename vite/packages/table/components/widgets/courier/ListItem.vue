@@ -10,17 +10,24 @@ export default {
   components: {Cover, SmallIcon},
   props: ['item','noBg'],
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier']),
     goDetail() {
       this.$emit('goDetail', this.item)
     },
+    setFirstActive(){
+      if(this.orderList.length>0){
+        this.currentDetail=this.orderList[0]
+      }else{
+        this.currentDetail=null
+      }
+    }
   },
   data() {
     return {
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ['currentDetail']),
+    ...mapWritableState(courierStore, ['currentDetail','orderList']),
     menus() {
       return [
         this.item.followed ? {
@@ -37,9 +44,8 @@ export default {
             newIcon: 'fluent:star-12-regular'
           } :
           {
-            name: '关注物流',
+            name: '关注订单',
             callBack: async () => {
-              console.log('item', this.item)
               let rs = await this.followCourier(this.item._id)
               if (rs) {
                 this.item.followed = true
@@ -52,7 +58,23 @@ export default {
           }
         ,
         {
-          name: '删除快递',
+          name: '移至顶部',
+          newIcon: 'fluent:arrow-upload-16-filled',
+          callBack:async()=>{
+            let rs = await this.setTopCourier(this.item._id)
+            if (rs) {
+              this.item.followed = true
+              message.success('置顶成功')
+              this.setFirstActive()
+              this.$emit('scrollToCurrent')
+            } else {
+              message.error('置顶失败')
+            }
+          }
+        }
+        ,
+        {
+          name: '删除订单',
           callBack: () => {
             Modal.confirm({
               content: '确认删除订单？删除的订单在下次同步的时候仍然会被添加回列表。如果不希望显示此订单，请使用隐藏功能。',
@@ -76,8 +98,8 @@ export default {
 </script>
 
 <template>
-  <xt-menu name="name" :menus="menus">
-    <div :class="{ 'select': this.currentDetail?._id ===  item._id ,'xt-bg-2':!noBg,'mb-3':!noBg }"
+  <xt-menu  name="name" :menus="menus">
+    <div ref="itemRef" :class="{ 'select': this.currentDetail?._id ===  item._id ,'xt-bg-2':!noBg,'mb-3':!noBg }"
          class="flex flex-col p-3  rounded-lg xt-text pointer courier-item hover-bg"
          @click="goDetail">
       <div class="flex">
@@ -135,6 +157,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
+.courier-item{
+  border:2px solid transparent;
+}
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;

@@ -44,18 +44,16 @@
             </xt-button>
             </a-tooltip>
           </div>
-          <template v-if="allShow">
-            <!--    全部展示        -->
-            <SortList :list="displayList" @rightSelect="getRightItem"/>
-          </template>
-          <template v-else>
+<!--          <template v-if="allShow">-->
+<!--            &lt;!&ndash;    全部展示        &ndash;&gt;-->
+<!--            <SortList :list="displayList" @rightSelect="getRightItem"/>-->
+<!--          </template>-->
             <!--      其他条件      -->
             <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
               <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-                <ListItem :item="item" @goDetail="this.currentDetail=item" v-for="item in displayList"></ListItem>
+                <ListItem :ref="el=>setItemRef(el,item)" @afterRemove="scrollToItem(currentDetail._id)" @scrollToCurrent="scrollToItem(currentDetail._id)"  :item="item" @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
               </vue-custom-scrollbar>
             </div>
-          </template>
         </div>
 
         <div style="width:452px;" class="h-full">
@@ -102,6 +100,7 @@ export default {
 
   data () {
     return {
+      itemRefs:[],
       addList: [
         { title: '京东账号', name: 'jd', callBack: () => {} },
         { title: '淘宝账号', name: 'tb', callBack: () => {} },
@@ -181,6 +180,29 @@ export default {
     formatTime,
     ...mapActions(courierStore, ['removeDbData']),
     refreshAll:ui.refreshAll,
+    scrollToItem(id){
+      setTimeout(() => {
+        let found = this.itemRefs.find(item => {
+          return item.id === id
+        })
+        if (found) {
+          found.el.$el.scrollIntoView()
+          setTimeout(()=>{
+            found.el.$el.firstElementChild.style.border='solid var(--active-bg) 2px'
+            setTimeout(()=>{
+              found.el.$el.firstElementChild.style.border=''
+            },400)
+          },400)
+
+        }
+      },500)
+    },
+    setItemRef(el,item){
+      this.itemRefs.push({
+        el:el,
+        id:item._id
+      })
+    },
     // 关闭
     close () { this.$emit('close') },
     // 打开快递设置
@@ -229,9 +251,15 @@ export default {
     this.defaultFlow = this.tabList[0]
     this.filterPlatform = 'all'
     this.detailList=preHandle(this.orderList)
-    console.log(this.displayList, 'display')
+    this.scrollToItem(this.currentDetail._id)
+
+    // console.log(this.displayList, 'display',this.$refs)
     // setTimeout(()=>{
-    //   this.changePlatform('all')
+    //   console.log('全部',this.itemRefs)
+    //   let needToScroll=this.itemRefs.find(item=>{
+    //     return item.id===this.currentDetail._id
+    //   })
+    //
     // },1000)
   },
 
