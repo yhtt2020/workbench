@@ -583,17 +583,17 @@ export default {
 <style lang="scss" scoped>
 
 .icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   // border: 1px solid #fff;
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 18px;
+  left: 16px;
 }
 
 .icon svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .card-app {

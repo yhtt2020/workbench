@@ -5,7 +5,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 24px;" />
+          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 20px;" />
         </div>
       </template>
       <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>

@@ -5,7 +5,7 @@
     <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList" /> 
   </div>
 
-  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
+  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'323px' } : {width:'215px'} ">
     {{ categoryList.summary }}
   </div> 
   
@@ -45,127 +45,40 @@
 
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
-
-  <template v-if="!isDoubleColumn">
+  <template  v-if="!isDoubleColumn">
     <div class="flex flex-col">
-      <div v-for="item in channelList" class="flex items-center px-2  py-2 rounded-lg pointer group-item" :class="{'active-bg': currentID ===item.id}"
-        @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
-      >
-        <template v-if="isWorkGroup(item)">
-          <div class="flex items-center">
-            <template v-if="item.type === 'group'">
-             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'link'">
-             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'forum'">
-             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-            </template>
-          </div> 
-          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-        </template>
+      <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+        <MenuDropdown :type="item.type" :no="communityID.no" :item="item"  @currentItem="currentItem"/>
       </div>
     </div>
-    <transition name="slide-fade">
-      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  class="dropdown-menu" :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no"></MenuDropdown>
-    </transition>
   </template>
 
   <template v-else>
     <div class="flex grid grid-cols-2 gap-1">
-      <div v-for="item in channelList" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"  :class="{'active-bg': currentID ===item.id}"  
-       @click.stop="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
-      >
-        <template v-if="isWorkGroup(item)">
-          <div class="flex items-center">
-            <template v-if="item.type === 'group'">
-             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'link'">
-             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'forum'">
-             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-            </template>
-          </div> 
-          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-        </template>
+      <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+        <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
       </div>
     </div>
-
-    <transition name="slide-fade">
-      <!-- :style="`top: ${position.y}px; left: ${position.x}px`" class="dropdown-menu" -->
-      <MenuDropdown v-if="showTopMenu" :item="categoryItem" :position="position"  :list="listType === 'link' ? channelMenu : [channelMenu[1]]" :id="currentID" :no="categoryList.no" ></MenuDropdown>
-    </transition>
   </template>
 
 
-  <div v-for="(item,index) in categoryFilterList" class="my-3" @contextmenu.stop.prevent="topCategory($event,item)">
-    <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
-    
-      <div class="flex flex-col" v-if="isDoubleColumn === false">
+  <div v-for="(item,index) in categoryFilterList" class="my-3" >
+    <xt-menu name="name" :menus="floatMenu">
+      <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
+        <div class="flex flex-col" v-if="isDoubleColumn === false">
+          <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
+          </div>
+        </div>
   
-       <div v-for="item in item.children" @click.stop.prevent="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)" 
-        :class="{'active-bg': currentID ===item.id}"
-        class="flex items-center rounded-lg p-2 pointer group-item" 
-       >
-        <template v-if="isWorkGroup(item)">
-          <div class="flex items-center">
-            <template v-if="item.type === 'group'">
-             <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'link'">
-             <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-            </template>
-            <template v-if="item.type === 'forum'">
-             <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-            </template>
-          </div> 
-          <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-          <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-          v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage' "/>
-        </template>
-        
-       </div>
-  
-      </div>
-  
-      <div class="flex grid grid-cols-2 gap-1" v-else>
-       <div v-for="(item,index) in item.children" @click.stop.prevent="currentItem(item)" @contextmenu.stop.prevent="topChannel($event,item)"
-        :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
-       >
-        <template v-if="isWorkGroup(item)">
-        <div class="flex items-center">
-          <template v-if="item.type === 'group'">
-           <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'link'">
-           <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="item.type === 'forum'">
-           <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-         </div>
-         <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-         
-         <communityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
-         v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-        </template>
-       </div>
-      </div>
-  
-    </ChatFold>
+        <div class="flex grid grid-cols-2 gap-1" v-else>
+          <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem" />
+          </div>
+        </div>
+      </ChatFold>  
+    </xt-menu>
   </div>
-  
-  <transition name="slide-fade">
-    <MenuDropdown v-if="categoryShowMenu" :item="categoryItem" :position="position"  :no="categoryList.no" :id="currentID" :list="categoryMenu"></MenuDropdown>
-  </transition>
-
  </vue-custom-scrollbar>
 
  
@@ -213,12 +126,22 @@ export default{
       categoryMenu,  
       channelMenu,
       listType:'',
-      categoryItem:{}
+      categoryItem:{},
+      
+      floatMenu:[
+        {
+          name:'分组设置',
+          newIcon:'fluent:settings-16-regular',
+          callBack:()=>{}
+        },
+        {
+          name:'删除分组',
+          newIcon:'akar-icons:trash-can',
+          color: 'var(--error)',
+          callBack:()=>{}
+        }
+      ]
     }
-  },
-
-  mounted(){
-    document.addEventListener('click', this.hideDropdown);
   },
 
   computed:{
@@ -287,47 +210,6 @@ export default{
       this.currentID = item.id
       this.$emit('clickItem',item)
     },
-
-    // 顶级频道鼠标右键点击
-    topChannel(evt,item){
-      // console.log('顶级频道::>',item);
-     this.listType = item.type
-     this.currentID = item.id
-     this.categoryItem = item
-     this.showTopMenu = true
-     this.position = { x: evt.clientX - 50 , y: evt.clientY + 25 };
-    },
-
-    // 带有子级的频道的一级目录
-    topCategory(evt,item){
-     //  console.log('带父级的的频道目录',item.id)
-     this.currentID = item.id
-     this.categoryItem = item
-     this.categoryShowMenu = true
-     this.position = { x: evt.clientX - 50 , y: evt.clientY + 10 };
-    },
-
-
-    // 隐藏下拉菜单
-    hideDropdown(evt){
-      evt.preventDefault();
-      this.showTopMenu = false
-      this.categoryShowMenu = false
-    },
-
-    // 检测群聊是否为好友工作群
-    isWorkGroup(item){
-      // const data = JSON.parse(item.props);
-      // const list = window.$TUIKit.store.store.TUIGroup.groupList
-      // const index = list.findIndex((findItem)=>{ 
-      //   console.log(findItem.type,data.type);
-      //   // return findItem.groupID === data.groupID && findItem.type === data.type
-      // })
-      // return index !== -1
-
-      return true
-    }
-
 
   },
 

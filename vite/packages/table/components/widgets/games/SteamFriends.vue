@@ -8,7 +8,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 24px;" />
+          <newIcon icon="mdi:steam" style="font-size: 20px;" />
         </div>
       </template>
     <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
