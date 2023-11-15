@@ -3,14 +3,17 @@
         <template #left-title-icon>
             <div class="icon"
                 style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 4px;top: 14px;">
-                <MyIcon icon="fluent:games-16-filled" width="24" height="24" />
+                <MyIcon icon="fluent:games-16-filled" width="20" height="20" />
                 <!-- <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon> -->
             </div>
         </template>
         <!-- icon图标<icon icon="shuaxin"></icon> -->
         <!-- <MyIcon icon="fluent:games-16-filled" class="myIcon" /> -->
         <div class="box-border">
-            <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 15px;"><icon icon="shuaxin"></icon></div>
+            <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
+                <!-- <icon icon="shuaxin"></icon> -->
+                <MyIcon icon="fluent:arrow-counterclockwise-20-filled"  style="font-size: 20px;"/>
+            </div>
             <div class="card-body"   v-for="(value,index) in gameData" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
                     <div class="title-article">{{value.title}}</div>

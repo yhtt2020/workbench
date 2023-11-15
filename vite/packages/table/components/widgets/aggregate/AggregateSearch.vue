@@ -6,7 +6,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:search-20-filled" style="font-size: 24px;" />
+          <newIcon icon="fluent:search-20-filled" style="font-size: 20px;" />
         </div>
       </template>
     <div class="flex items-center justify-center w-full p-2 mt-8 mb-3 rounded-xl pointer"

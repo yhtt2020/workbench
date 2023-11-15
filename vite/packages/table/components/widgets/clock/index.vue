@@ -14,7 +14,7 @@
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
           <!-- <RobotOutlined style="font-size: 20px" /> -->
-          <clockIcon icon="fluent:clock-12-regular" style="font-size: 22px;" />
+          <clockIcon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
       </template>
     <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
