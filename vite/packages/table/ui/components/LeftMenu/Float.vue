@@ -51,8 +51,7 @@ const props = defineProps({
 // 展示状态
 const trigger = computed(() => {
   if (props.data.float) {
-    return "click";
-    // mouseenter
+    return "mouseenter";
   } else {
     return "";
   }
