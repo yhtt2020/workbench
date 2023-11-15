@@ -36,7 +36,7 @@
 
       <div v-for="item in item.children" @click="currentItem(item)" 
        :class="{'active-bg': currentID ===item.id}"
-       class="flex items-center rounded-lg p-2 pointer group-item" 
+       class="flex items-center rounded-lg px-3.5 py-2.5 pointer group-item" 
       >
        <div class="flex items-center">
         <template v-if="item.type === 'group'">
@@ -59,7 +59,7 @@
      <div class="flex grid grid-cols-2 gap-1" v-else>
  
       <div v-for="item in item.children" @click="currentItem(item)"
-       :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2 rounded-lg pointer group-item"
+       :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2.5 rounded-lg pointer group-item"
       >
        <div class="flex items-center">
         <template v-if="item.type === 'group'">
@@ -152,5 +152,9 @@ export default {
 <style lang="scss" scoped>
 .active-bg {
  background: var(--active-secondary-bg);
+}
+
+.group-item{
+  width:156px !important;
 }
 </style>

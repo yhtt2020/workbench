@@ -1,6 +1,6 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col  class="flex flex-col h-full px-3 find-left" v-if="isFloat === false"
+    <a-col  class="flex flex-col h-full pr-3 find-left" v-if="isFloat === false"
      style=" border-right:1px solid var(--divider);"
     >
       <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
