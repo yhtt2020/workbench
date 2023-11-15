@@ -75,6 +75,7 @@
               :style="{ backgroundColor: selectedIndex === index ? 'var(--active-secondary-bg) !important' : 'var(--primary-bg) !important', flex: 1 }">
             </ComCard>
             <a-pagination v-model:current="current" :total="totalPost" simple @change="changePage" class="xt-text-2" />
+            <!-- <a-pagination v-model:current="current" :total="totalPost"  class="pagination" @change="changePage" /> -->
           </template>
 
         </div>

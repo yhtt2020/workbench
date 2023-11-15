@@ -46,8 +46,8 @@
                 </xt-button>
             </a-upload>
         </div>
-        <xt-button type="primary" class=" reply xt-text"
-            style="color: color:rgba(255,255,255,0.85) !important; border-radius: 8px;width: 68px; height: 32px;background: var(--active-bg) !important;"
+        <xt-button type="primary" class=" reply" :radius="8" :w="68" :h="32"
+            style="color:rgba(255,255,255,0.85) !important; background: var(--active-bg) !important;"
             @click="addComment">回复</xt-button>
     </div>
 </template>
@@ -195,7 +195,7 @@ onMounted(async () => {
 
 :deep(.tippy-box) {
     width: 51%;
-    margin-left: 15%;
+    margin-left: 10%;
 }
 :deep(.ant-upload-list-text-container){
     display: none;

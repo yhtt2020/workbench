@@ -80,7 +80,7 @@
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
                 <xt-button :w="56" :h="32"
-                    style="background-color: var(--active-bg);color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
+                    style="background-color: var(--active-bg) !important;color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
                     @click="saveSetting">保存</xt-button>
             </template>
             <div class="mb-6 xt-text font-16">
@@ -412,27 +412,10 @@ export default {
     color: rgba(255, 255, 255, 0.85) !important;
 }
 
-
-.clock-icon {
-    cursor: pointer;
-    transition: transform 0.3s;
-    /* 添加一个过渡效果 */
-}
-
-.clock-icon:hover {
-    transform: scale(1.3);
-    /* 鼠标悬停时放大 */
-    background-color: var(--secondary-bg);
-}
-
 :deep(.ant-tag-close-icon) {
     color: var(--secondary-text);
     margin-left: 8px;
     font-size: 12px;
-}
-
-:deep(.ant-drawer-title) {
-    color: var(--primary-text) !important;
 }
 
 :deep(.ant-select-selection-item) {

@@ -47,7 +47,7 @@ const handleResize = _.debounce((entries) => {
   }else{
     textWidth.value = 10
   }
-}, 500);
+});
 // 文本默认长度
 let textWidth = ref(10)
 // 暂存动态文本
