@@ -114,7 +114,7 @@ export default {
       ],
       defaultAuto: { title: "精准匹配", name: "preciseMatch" },
 
-      statusSelect: [{ value: "未完成快递" ,name:'unCompleted'}, { value: "特别关注（关注物流）",name:'specialAttention' }],
+      statusSelect: [{ value: "unFinished" ,label:'未完成订单'}, { value: "followed",label:'关注的订单' }],
       autoRefreshTime,
       autoCancelTime,
       dealType:''

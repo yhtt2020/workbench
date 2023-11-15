@@ -46,7 +46,7 @@
           </div>
 <!--          <template v-if="allShow">-->
 <!--            &lt;!&ndash;    全部展示        &ndash;&gt;-->
-<!--            <SortList :list="displayList" @rightSelect="getRightItem"/>-->
+<!--            <SortList :list="list" @rightSelect="getRightItem"/>-->
 <!--          </template>-->
             <!--      其他条件      -->
             <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
@@ -253,7 +253,7 @@ export default {
     this.detailList=preHandle(this.orderList)
     this.scrollToItem(this.currentDetail._id)
 
-    // console.log(this.displayList, 'display',this.$refs)
+    // console.log(this.list, 'display',this.$refs)
     // setTimeout(()=>{
     //   console.log('全部',this.itemRefs)
     //   let needToScroll=this.itemRefs.find(item=>{

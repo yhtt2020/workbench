@@ -53,10 +53,10 @@
       </div>
 
       <template v-else>
-        <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                              style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+        <vue-custom-scrollbar class="mt-2" ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                              style="height: calc(100% - 35px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
           <ListItem v-for="(item, index) in displayList" :key="index" :item="item"
-                       @goDetail="viewDeliveryDetails(item)"/>
+                    @goDetail="viewDeliveryDetails(item)"/>
         </vue-custom-scrollbar>
       </template>
 
@@ -69,7 +69,7 @@
       <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>
       <span
         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-          couriersCount
+          list.length
         }}</span>
     </div>
   </xt-button>
@@ -106,7 +106,8 @@ import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue'
 import ui from './courierUI'
 import ListItem from './ListItem.vue'
-import { preHandle } from './courierTool'
+import { getOrderState, preHandle } from './courierTool'
+
 export default {
   name: '我的快递',
   components: {
@@ -127,7 +128,7 @@ export default {
   },
   data () {
     return {
-      displayList:[],
+      list: [],
       settingVisible: false,
       outerSettings: {
         useBothWheelAxes: true,
@@ -149,13 +150,18 @@ export default {
         {
           title: '淘宝',
           name: '淘宝',
-          type: 'TB'
+          type: 'tb'
         },
         {
           title: '京东',
           name: '京东',
-          type: 'JD'
+          type: 'jd'
         },
+        {
+          title: '普快',
+          name: '普快',
+          type: 'common'
+        }
 
       ],
       largeDetailVisible: true,
@@ -177,7 +183,7 @@ export default {
           }
         },
       ],
-      defaultType: '',
+      defaultType: {},
     }
   },
   methods: {
@@ -204,7 +210,7 @@ export default {
 
     // }
     viewDeliveryDetails (item) {
-      this.currentDetail=item
+      this.currentDetail = item
       this.topCourierVisible = false
       this.showCourierDetail = true
       // console.log(this.currentDetail)
@@ -239,10 +245,21 @@ export default {
       }
       // console.log(windoWidth,'windoWidth')
     },
-
+    reload (list) {
+      this.list = preHandle(list)
+      if (this.settings.courierStatus.currentStatus === 'followed') {
+        this.list = this.list.filter(li => {
+          return li.followed
+        })
+      } else {
+        this.list = this.list.filter(li => {
+          return getOrderState(li) !== 'signed'
+        })
+      }
+    }
   },
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings','currentDetail']),
+    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail']),
     config () {
       return {
         jdOrder: this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
@@ -254,49 +271,48 @@ export default {
       }
     },
     filterType () {
-      if (this.config.jdOrder || this.config.tbOrder || this.config.otherOrder) {
-        const list = [...this.typeList]
-        const filterList = list.map((item) => {
-          switch (item.type) {
-            case 'all':
-              return {
-                title: `${item.title}${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength) !== 0 ? `(${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-            case 'JD':
-              return {
-                title: `${item.title}${this.config.jdLength !== 0 ? `(${this.config.jdLength})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-            case 'TB':
-              return {
-                title: `${item.title}${this.config.tbLength !== 0 ? `(${this.config.tbLength})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-          }
-        })
-        return filterList
-      }
+      const list = [...this.typeList]
+      const filterList = list.map((item) => {
+        let count = 0
+        let returnItem = {
+          title: item.title,
+          name: item.name,
+          type: item.type
+        }
+        if (item.name === 'all') {
+          count = this.orderList.length
+        } else {
+          count = ui.filterOrder('all', item.type, this.list).length
+        }
+        returnItem.title = returnItem.title + (count > 0 ? '（' + count + '）' : '')
+        return returnItem
+      })
+      return filterList
     },
     currentType () {
-      if (this.config.jdOrder || this.config.tbOrder || this.config.otherOrder) {
-        return {
-          title: `全部  (${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})`,
-          name: '全部',
-          type: 'all'
-        }
-      }
+      return this.defaultType
     },
-    couriersCount () {
-      return this.orderList.length
+    displayList () {
+      let list = this.list
+      list = list.filter(li => {
+        if (this.defaultType.type === 'all') {
+          return true
+        } else if (this.defaultType.type === 'common') {
+          return !li.store
+        } else {
+          return li.store === this.defaultType.type
+        }
+      })
+
+      return list
+
     }
+
   },
   mounted () {
     this.getDbCourier()
     window.addEventListener('resize', this.handleResize)
+    this.defaultType = this.filterType[0]
     setTimeout(() => {
       this.defaultType = this.currentType
     }, 2000)
@@ -309,11 +325,17 @@ export default {
     currentType () {
       this.defaultType = this.currentType
     },
-    'orderList':{
-      handler(newVal){
-        this.displayList=preHandle(newVal)
+    'orderList': {
+      handler (newVal) {
+        this.reload(newVal)
+      }
+    },
+    'settings.courierStatus.currentStatus': {
+      handler (newVal) {
+        this.reload(this.orderList)
       }
     }
+
   }
 }
 </script>

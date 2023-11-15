@@ -2,6 +2,7 @@ import {message, notification} from "ant-design-vue";
 import grab from "./grab";
 import _ from 'lodash-es'
 import {courierStore} from "../../../apps/ecommerce/courier";
+import {getOrderState} from "./courierTool";
 
 const ui={
   async refreshAll (tip=true) {
@@ -119,7 +120,35 @@ const ui={
     console.log('更新后的订单', store.storeInfo.jd.order)
   },
 
-
+  /**
+   * 根据订单的状态、平台筛选订单，默认以全部订单，可提交初次筛选后的列表
+   * @param state
+   * @param platform
+   * @param orderList
+   */
+   filterOrder(state='all',platform='all',orderList=null){
+   let list=orderList
+    const store=courierStore()
+    if(!list){
+      list=store.orderList
+    }
+    let filtered=list.filter(li1=>{
+      //平台筛选
+      if(platform==='all'){
+        return true
+      }
+      if(platform==='common'){
+        return !li1.store
+      }
+      return li1.store===platform
+    }).filter(li2=>{
+      if(state==='all'){
+        return true
+      }
+      return getOrderState(li2)===state
+    })
+    return filtered
+  }
 }
 
 export default ui

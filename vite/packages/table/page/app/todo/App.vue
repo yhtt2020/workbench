@@ -39,7 +39,7 @@ export default {
       "activeTask",
       "currentTasks",
       "tasks",
-      "displayList",
+      "list",
     ]),
     ...mapState(configStore, ["config"]),
     ...mapWritableState(listStore, ["activeList"]),

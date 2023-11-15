@@ -38,7 +38,7 @@ export const courierStore = defineStore("courier", {
 
       courierStatus: { // 状态图标显示
         statusBar: true,
-        currentStatus: '未完成快递'
+        currentStatus: 'unFinished',//followed,unFinished     //,'未完成快递'
       },
 
       courierRefresh: { // 开启自动订单数据自动刷新

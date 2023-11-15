@@ -50,12 +50,14 @@ export function generateTitle(orderContent,store=''){
   }
 }
 
+
+
 /**
  * 统一获取标准化的订单状态
  * @param order
  */
 export function getOrderState(order){
-  const states=['onRoad','delivery','preparing','signed','collected']
+  const states=['onRoad','delivery','preparing','signed','collected','canceled']
   const words=['在途中','派送中','发货中','已签收','已揽收']
   if(order.store==='jd'){
     //京东订单处理
@@ -78,6 +80,8 @@ export function getJdState(order){
       return 'preparing'
     case '已完成':
       return 'signed'
+    case '已取消':
+      return 'canceled'
   }
 }
 export function getExpressState(order){
