@@ -99,50 +99,6 @@ export const chatList = [
   }
 ]
 
-
-export const hideDropList = [
-  {icon:'fluent:people-add-16-regular',title:'邀请其他人',type:'invited'},
-  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
-  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
-  // {icon:'',title:'社群管理',type:'manage'},
-  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
-  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-
-]
-
-export const showDropList = [
-  {icon:'fluent:people-add-16-regular',title:'邀请其他人',type:'invited'},
-  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
-  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
-  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
-  // {icon:'',title:'社群管理',type:'manage'},
-  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'}
-]
-
-export const memberDropList = [
-  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-]
-
-
-export const memberShowList = [
-  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-]
-
-export const categoryMenu = [
-  { icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'addNewApp' },
-  { icon:'fluent:settings-16-regular',title:'分组设置',type:'packetSet'},
-  { icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket' }
- ]
-
-export const channelMenu = [
-  { icon:'fluent:settings-16-regular',title:'链接设置',type:'linkSet'},
-  { icon:'akar-icons:trash-can',title:'删除应用',type:'deleteApp' },
-]
-
-
 export const hotCommunityData = [
   {
     createTime: '2023-09-15 14:01:23',

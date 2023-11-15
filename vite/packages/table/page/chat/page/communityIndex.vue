@@ -73,10 +73,8 @@
 
 <script>
 import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
-import { chatList,hideDropList } from '../../../js/data/chatList'
-import ChatDropDown from '../components/float/ChatsDropDown.vue'
+import { chatList } from '../../../js/data/chatList'
 import ChatFold from '../components/float/ChatFolds.vue'
-import { AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import Commun from '../Commun.vue'
 import { chatStore } from '../../../store/chat'
 import browser from '../../../js/common/browser'
@@ -91,12 +89,8 @@ import DefaultFloat from '../components/float/DefaultsFloat.vue'
 
 export default defineComponent({
   components: {
-    AppstoreOutlined, MessageOutlined, LinkOutlined,SelectOutlined,
-    Emoji,
-    ChatDropDown,
-    ChatFold, Commun, Modal, ValidateModal,
-    DefaultFloat,
-    communityIcon
+    Emoji,ChatFold, Commun, Modal, ValidateModal,
+    DefaultFloat,communityIcon
   },
 
   data(){
@@ -179,7 +173,7 @@ export default defineComponent({
     })
 
     return {
-      doubleCol, isFloat,hideDropList,
+      doubleCol, isFloat,
       ...toRefs(data), updatePage,
       currentItem, checkGroupShip,
     }

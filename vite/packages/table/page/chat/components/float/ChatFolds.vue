@@ -12,7 +12,8 @@
    </div>
 
    <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
-    <ChatDropDown :no="no" :data="content"  :list="dorpList"></ChatDropDown>
+    <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :list="dorpList"></ChatDropDown>
+    <!-- :no="no" :data="content"  :list="dorpList" -->
    </div>
    <transition name="collapse">
     <!-- class="content" -->
@@ -26,8 +27,7 @@
 <script>
 import { ref,reactive } from 'vue';
 import { Icon as FoldIcon } from '@iconify/vue';
-import ChatDropDown from './ChatsDropDown.vue';
-import { categoryMenu } from '../../../../js/data/chatList'
+import ChatDropDown from './Dropdown.vue';
 
 export default {
  props:['title','content','show','no'],
@@ -37,7 +37,26 @@ export default {
  setup() {
    const collapsed = ref(false);
    const dorpShow = ref(false)
-   const dorpList = ref(categoryMenu)
+   const dorpList = ref([
+    { 
+      icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
+      callBack:()=>{
+
+      }
+    },
+    { 
+      icon:'fluent:settings-16-regular',title:'分组设置',
+      callBack:()=>{
+        
+      }
+    },
+    { 
+      icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket',color:'var(--error)',
+      callBack:()=>{
+        console.log(props.no);
+      }
+    }
+   ])
 
    const toggleCollapse = () => {
      collapsed.value = !collapsed.value;

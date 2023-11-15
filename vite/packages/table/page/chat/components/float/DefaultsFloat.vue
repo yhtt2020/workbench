@@ -2,7 +2,7 @@
  <div class="flex flex-col">
   <div class="w-full mb-2.5 flex  justify-between items-center">
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ defaultCategory?.name }}</span>
-    <ChatDropDown :list="floatList"/> 
+    <ChatDropDown newIcon="fluent:line-horizontal-3-20-filled" :list="floatList"/> 
   </div>
 
   <div class="font-14 mb-2" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'312px' } : {width:'215px'} ">
@@ -85,11 +85,11 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
-import { chatList,memberDropList,memberShowList } from '../../../../js/data/chatList'
+import { chatList } from '../../../../js/data/chatList'
 import {chatStore} from '../../../../store/chat'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
-import ChatDropDown from './ChatsDropDown.vue'
+import ChatDropDown from './Dropdown.vue'
 import ChatFold from './ChatFolds.vue'
 
 
@@ -108,9 +108,7 @@ export default {
     no:1,
     tree:chatList[0].channelList
    },
-   
    currentID:'',
-
    settingsScroller: {
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -118,7 +116,29 @@ export default {
     suppressScrollX: true,
     wheelPropagation: true
    },
-
+   
+   showList:[
+    {
+      icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show',
+      callBack:()=>{
+        this.setFloatVisible(false)
+      }
+    },
+   ],
+   hideList:[
+    {
+      icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',
+      callBack:()=>{
+        this.setFloatVisible(true)
+      }
+    },
+    { 
+      icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
+      callBack:()=>{
+        this.setDouble()
+      }
+    },
+   ]
 
   }
  },
@@ -130,14 +150,15 @@ export default {
   },
   floatList(){
    if(this.float && this.settings.enableHide){
-     return memberShowList
+     return this.showList
    }else{
-     return memberDropList
+     return this.hideList
    }
   }
  },
 
  methods:{
+  ...mapActions(chatStore,['setFloatVisible','setDouble']),
   currentItem(item){
    this.currentID = item.id
    this.$emit('clickItem',item)
