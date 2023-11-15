@@ -13,7 +13,7 @@
           <div v-if="orderData.store==='tb'" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 "
                style="background: #FA5000;">淘
           </div>
-          <span class="mx-1 xt-font font-16 font-600 xt-text truncate" style="width:200px">{{ orderData?.title }}</span>
+          <span class="mx-1 xt-font font-16 font-600 xt-text truncate" style="max-width:200px">{{ orderData?.title }}</span>
           <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
         </div>
         <div class="flex items-center">

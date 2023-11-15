@@ -117,7 +117,7 @@ export default {
               </div>
               <div class="xt-font font-14 font-600 mx-1.5  flex-1 w-0 flex mt-1" style="width: calc(100% - 70px); ">
                 <div :title="item.title" class="truncate">{{ item.title }}</div>
-                <span class="fav-icon">
+                <span class="fav-icon ml-1">
                       <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
                       <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
               </div>

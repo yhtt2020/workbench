@@ -55,8 +55,8 @@
       <template v-else>
         <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
                               style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-          <CourierItem v-for="(item, index) in orderList" :key="index" :courier="item"
-                       @click="viewDeliveryDetails(item)"/>
+          <ListItem v-for="(item, index) in displayList" :key="index" :item="item"
+                       @goDetail="viewDeliveryDetails(item)"/>
         </vue-custom-scrollbar>
       </template>
 
@@ -105,7 +105,8 @@ import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue'
 import ui from './courierUI'
-
+import ListItem from './ListItem.vue'
+import { preHandle } from './courierTool'
 export default {
   name: '我的快递',
   components: {
@@ -115,6 +116,7 @@ export default {
     MinCourierItem,
     Empty,
     MinEmpty,
+    ListItem,
     AddCourierModal,
     LogisticsDetail,
     CourierSetting,
@@ -125,6 +127,7 @@ export default {
   },
   data () {
     return {
+      displayList:[],
       settingVisible: false,
       outerSettings: {
         useBothWheelAxes: true,
@@ -201,9 +204,9 @@ export default {
 
     // }
     viewDeliveryDetails (item) {
-      this.showCourierDetail = true
-      this.orderNum = item
+      this.currentDetail=item
       this.topCourierVisible = false
+      this.showCourierDetail = true
       // console.log(this.currentDetail)
     },
     closeCourierDetail () {
@@ -239,7 +242,7 @@ export default {
 
   },
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings']),
+    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings','currentDetail']),
     config () {
       return {
         jdOrder: this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
@@ -287,9 +290,6 @@ export default {
         }
       }
     },
-    displayList () {
-
-    },
     couriersCount () {
       return this.orderList.length
     }
@@ -308,6 +308,11 @@ export default {
   watch: {
     currentType () {
       this.defaultType = this.currentType
+    },
+    'orderList':{
+      handler(newVal){
+        this.displayList=preHandle(newVal)
+      }
     }
   }
 }
