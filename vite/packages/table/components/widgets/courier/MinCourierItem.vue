@@ -23,7 +23,7 @@
                 <div class="xt-text-2 ">
                   {{ item.lastNodeTime }}
                 </div>
-                <div :title="item.lastNodeSummary" class="mt-1 xt-text omit omit-1 " :class="choseOmit">
+                <div :title="item.lastNodeSummary" class="mt-1 xt-text omit " :class="choseOmit">
                   {{ item.lastNodeSummary }}
                 </div>
                 <div class="xt-text-2">
@@ -50,39 +50,9 @@ const stateColors = computed(()=>{
   return switchColor(props.courier?.State)
 })
 
-const courierCode = computed(()=>{
-    const orderNum = props.courier?.LogisticCode
-    const changCode = `${orderNum.slice(0,4)}-${orderNum.slice(-4)}`
-    return changCode
-})
-
-
-const switchCompany = computed(() => {
-    return kdCompany(props?.courier?.ShipperCode)
-})
-const switchState = computed(() => {
-    return kdState(props?.courier?.State)
-})
-const lastTraces = ref(null);
-
-const newTraces = computed(()=>{
-   switch (props?.courier?.State) {
-    case '3':
-       return {
-         AcceptStation:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptStation,
-         AcceptTime:props.courier?.Traces[props.courier?.Traces.length - 1]?.AcceptTime
-        }
-    case '2':
-       return {
-         AcceptStation:props.courier?.Traces[0]?.AcceptStation,
-         AcceptTime:props.courier?.Traces[0]?.AcceptTime
-        }
-   }
-})
 const item=preHandleItem(props.courier)
-lastTraces.value = newTraces.value
 const choseOmit=computed(()=>{
-    if(props.courier?.arrivalAt){
+    if(item?.content?.arrivalAt){
         return 'omit-1'
     }else{
         return 'omit-2'

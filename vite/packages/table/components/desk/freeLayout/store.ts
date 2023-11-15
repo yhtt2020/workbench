@@ -95,7 +95,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前自由布局是否开启
     isFreeLayout() {
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        return this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
+        return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
       }
     },
     // 获取当前自由布局边距状态

@@ -35,7 +35,7 @@
           <div v-if="showWay">
             <MinEmpty v-if="displayList.length === 0"/>
             <MinCourierItem v-else :courier="displayList[0]"
-                            @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+                            @click.stop="showDetail(displayList[0])">
             </MinCourierItem>
           </div>
           <template v-else>
@@ -45,7 +45,7 @@
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
                                     class="courier-item mt-2">
                 <div v-for="(item, index) in displayList">
-                  <ListItem :no-bg="true" :item="item" @goDetail="viewDeliveryDetails(item)"></ListItem>
+                  <ListItem :no-bg="true" :item="item" @goDetail="showDetail(item)"></ListItem>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
@@ -232,7 +232,7 @@ export default {
     refreshCourier () {
       this.refreshCouriers()
     },
-    viewDeliveryDetails (item) {
+    showDetail (item) {
       this.currentDetail = item
       this.showCourierDetail = true
       // console.log(this.currentDetail);
