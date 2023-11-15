@@ -14,7 +14,7 @@
                 <!-- <icon icon="shuaxin"></icon> -->
                 <MyIcon icon="fluent:arrow-counterclockwise-20-filled"  style="font-size: 20px;"/>
             </div>
-            <div class="card-body"   v-for="(value,index) in gameData" :key="index" @click="jump(value.url)" >
+            <div class="card-body"   v-for="(value,index) in gameData.slice(0, 3)" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
                     <div class="title-article">{{value.title}}</div>
                     <div class="message-article">{{value.description}}</div>
@@ -33,7 +33,7 @@
 
     </Widget>
 </template>
-  
+
 <script>
 import axios from "axios";
 import Widget from "../../card/Widget.vue";
@@ -109,7 +109,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .card>svg{
         width: 24px;
@@ -170,7 +170,7 @@ export default {
         float: left;
         cursor: pointer;
     }
-    
+
     .source-article{
         font-size: 12px;
         max-width: 100px;
@@ -193,4 +193,3 @@ export default {
         // border: 1px solid #fff;
     }
 </style>
-  
