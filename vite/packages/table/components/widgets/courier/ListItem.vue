@@ -10,7 +10,7 @@ export default {
   components: {Cover, SmallIcon},
   props: ['item','noBg'],
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier','hideCourier']),
+    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier','hideCourier','showCourier']),
     goDetail() {
       this.$emit('goDetail', this.item)
     },
@@ -72,7 +72,18 @@ export default {
             }
           }
         },
-        {
+        this.item.hide ?{
+          name: '显示订单',
+          callBack: async () => {
+            let rs = await this.showCourier(this.item._id)
+            if (rs) {
+              message.success('显示成功。')
+              this.$emit('showItem', this.item)
+            }
+          },
+          newIcon:'fluent:eye-off-16-regular'
+
+        }:{
           name: '隐藏订单',
           callBack: () => {
             Modal.confirm({
@@ -82,14 +93,13 @@ export default {
               onOk: async () => {
                 let rs = await this.hideCourier(this.item._id)
                 if (rs) {
-                  message.success('删除成功。')
+                  message.success('隐藏成功。')
                   this.$emit('hideItem', this.item)
                 }
               }
             })
           },
           newIcon:'fluent:eye-off-16-regular'
-
         },
         {
           name: '删除订单',

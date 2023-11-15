@@ -2,8 +2,8 @@
   <div class="flex flex-col" style="width: 976px;height: 600px;">
     <div class="flex items-center justify-center w-full py-4 mb-4" style="position: relative;">
       <div class="flex">
-        <HorizontalPanel :navList="tabList.slice(0,4)" v-model:selectType="defaultFlow"/>
-        <DropDown class="ml-3" :navList="tabList.slice(4)" @selectType="getSelectType"></DropDown>
+        <HorizontalPanel :navList="tabs.slice(0,4)" v-model:selectType="defaultFlow"/>
+        <DropDown class="ml-3" :navList="tabs.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
       <div class="flex right-button">
         <DropIndex :navList="addList" dropStyle="var(--secondary-bg) !important" @open="addCourier"></DropIndex>
@@ -51,7 +51,7 @@
             <!--      其他条件      -->
             <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
               <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-                <ListItem :ref="el=>setItemRef(el,item)" @afterRemove="scrollToItem(currentDetail._id)" @scrollToCurrent="scrollToItem(currentDetail._id)"  :item="item" @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
+                <ListItem @showItem="showItem(item)" :ref="el=>setItemRef(el,item)" @afterRemove="scrollToItem(currentDetail._id)" @scrollToCurrent="scrollToItem(currentDetail._id)"  :item="item" @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
               </vue-custom-scrollbar>
             </div>
         </div>
@@ -105,6 +105,7 @@ export default {
         { title: '淘宝账号', name: 'tb', callBack: () => {} },
         { title: '自定义添加', icon: 'fluent:add-16-filled', callBack: () => { this.addCourier() } }
       ],
+      tabs:[],//用于显示的tab
       filterPlatform: 'all',
       menus: [
         { name: '关注物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
@@ -157,19 +158,8 @@ export default {
       })
       return selectData(this.defaultFlow, list)
     },
-    // 计算获取tab栏数据
-    tabList () {
-      if (this.orderList.length > 0) {
-        //至少有一个数据
-        const list = courierType.map((item) => {
-          /*计算每个分类包含的数量*/
-          return selectTab(item, this.orderList)
-        })
-        return list
-      } else {
-        return courierType
-      }
-    },
+
+
     allShow () {
       return this.defaultFlow?.name === 'all'
     }
@@ -177,8 +167,15 @@ export default {
 
   methods: {
     formatTime,
-    ...mapActions(courierStore, ['removeDbData']),
+    ...mapActions(courierStore, ['removeDbData','getHideList']),
     refreshAll:ui.refreshAll,
+    async showItem(item){
+      console.log('需要显示',item)
+      this.detailList.splice(this.detailList.findIndex(i=>{
+        return i._id===item._id
+      }),1)
+      await this.getTabList()
+    },
     scrollToItem(id){
       setTimeout(() => {
         let found = this.itemRefs.find(item => {
@@ -230,7 +227,18 @@ export default {
       this.currentID = index
       this.currentDetail = item
     },
-
+    // 计算获取tab栏数据
+    async getTabList () {
+      if (this.orderList.length > 0) {
+        console.log('重新获取数量')
+        //至少有一个数据
+        const list = []
+        for (const type of courierType) {
+          list.push(await selectTab(type, this.orderList))
+        }
+        this.tabs=list
+      }
+    },
     // 自定义添加快递
     addCourier () {
       this.$refs.addCourierRef.openCourierModel()
@@ -246,12 +254,14 @@ export default {
     }
   },
 
-  mounted () {
-    this.defaultFlow = this.tabList[0]
-    this.filterPlatform = 'all'
-    this.detailList=preHandle(this.orderList)
-    this.scrollToItem(this.currentDetail._id)
+  async mounted () {
 
+    this.filterPlatform = 'all'
+    this.detailList = preHandle(this.orderList)
+    console.log('与阿婆', this.detailList)
+    this.scrollToItem(this.currentDetail._id)
+    await this.getTabList()
+    this.defaultFlow = (await this.tabList)[0]
     // console.log(this.list, 'display',this.$refs)
     // setTimeout(()=>{
     //   console.log('全部',this.itemRefs)
@@ -264,14 +274,25 @@ export default {
 
   watch: {
     'defaultFlow': {
-      handler (newVal) {
-        this.detailList = selectData(newVal, preHandle(this.orderList))
+      async handler (newVal) {
+        console.log('自',newVal)
+        if (newVal?.name === 'hide') {
+          let list=await this.getHideList()
+          console.log('list=筛选 ',list)
+          this.detailList = preHandle(list)
+        } else {
+          this.detailList = preHandle(this.orderList)
+        }
       },
       immediate: true
     },
     'orderList':{
       handler(newVal){
+        if(this.defaultFlow.name==='hide'){
+          return
+        }
         this.detailList=preHandle(newVal)
+        this.getTabList()
       }
     }
   }
