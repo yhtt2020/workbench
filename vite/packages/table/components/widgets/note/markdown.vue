@@ -1,5 +1,5 @@
  <template>
- <div class="h-full w-full " style="">
+ <div class="h-full w-full box" style="">
     <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;" ></div>
  </div>
 
@@ -16,6 +16,7 @@ import {
 import {cardStore} from "../../../store/card";
 import {noteStore} from "../../../apps/note/store";
 import {mapActions, mapState,mapWritableState} from "pinia";
+import { message } from 'ant-design-vue'
 
  export default {
    components: {

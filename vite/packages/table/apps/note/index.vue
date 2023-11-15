@@ -85,6 +85,7 @@
       }
     },
     async mounted () {
+      this.selNote = -1
       if (this.$route.params.customIndex) {
           this.isSelTab = false
       }
