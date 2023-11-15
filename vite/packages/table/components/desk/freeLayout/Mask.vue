@@ -31,12 +31,20 @@ const { freeLayoutEnv, getFreeLayoutState } = storeToRefs(freeLayoutStore);
 const container = ref();
 function setPosition(event) {
   if (freeLayoutEnv.value.updatePosition) {
+    /**
+     * @author 杨南南
+     * @date 2023-11-09
+     * @description 获取鼠标点击位置位于整个滚动区的实际位置
+     *
+     * 核心算法
+     * 居中X坐标 = 鼠标点击X轴 - 容器左边界相对于视窗的位置 + X轴滚动距离
+     * 居中Y坐标 = 鼠标点击Y轴 - 容器上边界相对于视窗的位置 + Y轴滚动距离
+     */
     const { left, top } = container.value.getBoundingClientRect();
-    const { clientX, offsetY } = event;
+    const { clientX, clientY } = event;
 
     const x = clientX - left + freeLayoutEnv.value.scrollLeft;
-    // + top 这里为什么不算top是正确的
-    const y = offsetY + freeLayoutEnv.value.scrollTop;
+    const y = clientY - top + freeLayoutEnv.value.scrollTop;
     getFreeLayoutState.value.line.centerLine = {
       x,
       y,
