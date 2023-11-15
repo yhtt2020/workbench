@@ -1,7 +1,7 @@
 <template>
  <teleport to="body">
-  <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:10000 !important;">
-    <div class="flex flex-col my-3 justify-between" style="width: 500px ;height: 596px;">
+  <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:200 !important;">
+    <div class="flex flex-col my-3 justify-between" style="width: 500px ;" v-if="nextShow === false">
      <ModalTop title="添加新应用" @close="addVisible = false"/>
 
      <div class="flex flex-col px-6">
@@ -30,10 +30,10 @@
      </div>
 
     </div>
+
+    <ChannelWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="addVisible = false" @back="nextShow = false"/>
   </Modal>
  </teleport>
-
-
 </template>
 
 <script>
@@ -41,10 +41,11 @@ import { Icon as NewIcon } from '@iconify/vue'
 
 import Modal from '../../../../components/Modal.vue';
 import ModalTop from '../ModalTop.vue';
+import ChannelWebLink from '../channelSelect/ChannelWebLink.vue';
 
 export default {
  components:{
-  NewIcon,Modal,ModalTop
+  NewIcon,Modal,ModalTop,ChannelWebLink
  },
 
  props:['no'],
@@ -78,7 +79,7 @@ export default {
   },
   // 选择完进入下一步
   selectSubmit(){
-   data.nextShow = true
+   this.nextShow = true
   }
 
  }

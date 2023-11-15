@@ -62,9 +62,9 @@ export const communityStore = defineStore('communityStore',{
 
    //  创建社群频道
    async createChannel(data:any,no:any){
-    // console.log('查看data和no',data,no);
+    console.log('查看data和no',data,no);
     const res = await post(createChannels,data)
-    // console.log('查看频道添加成功结果',res);
+    console.log('查看频道添加成功结果',res);
     if(res.status === 1 && no !== 1){
       this.getCategoryData(no)
       this.getChannelList(no)
@@ -155,7 +155,7 @@ export const communityStore = defineStore('communityStore',{
    // 删除社群频道
    async removeCategory(id:any,no:any){
     const res = await post(deleteCategory,{id:id})
-    // console.log('查看结果',res);
+    console.log('查看结果',res);
     if(res.status === 1 && no !== 1){
       this.getCategoryData(no)
       this.getChannelList(no)

@@ -31,7 +31,7 @@
 
  <template v-if="categoryList?.tree?.length === 0 ">
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
-      <EmptyAdd :no="communityID"/>
+      <EmptyAdd :no="categoryList.no"/>
   </div>
 
   <div v-else  class="flex items-center h-full justify-center">
@@ -77,7 +77,8 @@
   </div>
  </vue-custom-scrollbar>
 
- 
+ <AddNewCategory ref="addCategoryRef" :no="categoryList.no"/>
+ <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
 </template>
 
 <script>
@@ -88,15 +89,20 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 import { Modal,message } from 'ant-design-vue'
 
 import ChatDropDown from './Dropdown.vue';
-import ChatFold from './ChatFolds.vue'
-import MenuDropdown from './MenuDropdowns.vue'
-import EmptyAdd from '../empty/EmptyAdd.vue'
+import ChatFold from './ChatFolds.vue';
+import MenuDropdown from './MenuDropdowns.vue';
+import EmptyAdd from '../empty/EmptyAdd.vue';
+
+import AddNewCategory from '../add/AddNewCategory.vue';
+import AddNewGroup from '../add/AddNewGroup.vue'
+
 
 export default{
   props:[ 'communityID','float' ],
 
   components:{
-    CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd
+    CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd,
+    AddNewCategory,AddNewGroup
   },
 
   data(){
@@ -131,15 +137,13 @@ export default{
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                this.removeCategory(this.revID.id,this.communityID)
-                message.success('删除成功')
-                // const result = await this.removeCategory(this.revID.id,this.communityID)
-                // console.log('查看result',result);
-                // if(result?.status === 1){
-                //  console.log('查看no',this.communityID);
-                //  await this.getChannelList(this.communityID)
-                //  await this.getCategoryData(this.communityID)
-                // }
+                const comNo = parseInt(this.communityID)
+                if(comNo !== NaN && comNo !== undefined){
+                  this.removeCategory(this.revID.id,comNo)
+                  message.success('删除成功')
+                }else{
+                  return
+                }
               }
             })
           }
@@ -152,11 +156,11 @@ export default{
         },
         {
           icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
-          callBack:()=>{}
+          callBack:()=>{ this.$refs.addCategoryRef.openAddNewCategory() }
         },
         {
           icon:'fluent:add-16-filled',title:'添加新分组',
-          callBack:()=>{}
+          callBack:()=>{ this.$refs.addNewRef.openAddModal() }
         },
         {
           icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',
@@ -164,10 +168,10 @@ export default{
         },
         // {icon:'',title:'社群管理',type:'manage'},
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
-        {
-          icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
-          callBack:()=>{ this.setDouble() }
-        },
+        // {
+        //   icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
+        //   callBack:()=>{ this.setDouble() }
+        // },
       ],
       showList:[
         {
@@ -176,11 +180,11 @@ export default{
         },
         {
           icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
-          callBack:()=>{ }
+          callBack:()=>{ this.$refs.addCategoryRef.openAddNewCategory() }
         },
         {
           icon:'fluent:add-16-filled',title:'添加新分组',
-          callBack:()=>{}
+          callBack:()=>{ this.$refs.addNewRef.openAddModal() }
         },
         // {icon:'',title:'社群管理',type:'manage'},
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},

@@ -27,16 +27,22 @@
 <script>
 import { ref,reactive } from 'vue';
 import { Icon as FoldIcon } from '@iconify/vue';
+import { communityStore } from '../../store/communityStore'
+import { message,Modal } from 'ant-design-vue'
+
 import ChatDropDown from './Dropdown.vue';
+
 
 export default {
  props:['title','content','show','no'],
  components: {
   FoldIcon,ChatDropDown
  },
- setup() {
+ setup(props,ctx) {
    const collapsed = ref(false);
    const dorpShow = ref(false)
+   const community = communityStore()
+
    const dorpList = ref([
     { 
       icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
@@ -47,13 +53,22 @@ export default {
     { 
       icon:'fluent:settings-16-regular',title:'分组设置',
       callBack:()=>{
-        
+        // console.log('查看分组',props.content);
       }
     },
     { 
       icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket',color:'var(--error)',
       callBack:()=>{
-        console.log(props.no);
+        Modal.confirm({
+          content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+          centered:true,
+          onOk:()=>{
+            const id = props.content.id
+            const communityNo = props.no
+            community.removeCategory(id,communityNo)
+            message.success('删除成功')
+          }
+        })
       }
     }
    ])

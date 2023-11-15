@@ -253,5 +253,8 @@ export default {
  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2), 0px 0px 20px 0px rgba(0,0,0,0.1), 0px 0px 40px 0px rgba(0,0,0,0.2);
 }
 
+:deep(.menu-item )+div{
+  z-index: 100 !important;
+}
 
 </style>
