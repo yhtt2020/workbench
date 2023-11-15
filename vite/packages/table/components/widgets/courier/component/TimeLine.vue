@@ -45,6 +45,7 @@ export default {
 }
 
 :deep(.item-time){
+  user-select: text;
   &:first-of-type{
    padding-top: 16px;
   }
