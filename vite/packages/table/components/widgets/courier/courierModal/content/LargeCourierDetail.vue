@@ -81,7 +81,6 @@ import AddCourierModal from '../AddCourierModal.vue'
 import CourierSetting from '../CourierSetting.vue'
 import DropIndex from '../dropdown/DropIndex.vue'
 import DropDown from '../dropdown/MoreDrop.vue'
-import SortList from '../dropdown/SortList.vue'
 import Empty from '../../Empty.vue'
 import RightDetail from './RightDetail.vue'
 import SelectPlateform from '../dropdown/SelectPlateform.vue'
@@ -95,7 +94,7 @@ export default {
     ListItem,
     Cover,
     SmallIcon, HorizontalPanel, DropIndex, AddCourierModal,
-    CourierSetting, DropDown, SortList, Empty, RightDetail, SelectPlateform
+    CourierSetting, DropDown, Empty, RightDetail, SelectPlateform
   },
 
   data () {

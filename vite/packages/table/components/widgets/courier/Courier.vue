@@ -96,7 +96,6 @@ import grab from './grab'
 import ListItem from './ListItem.vue'
 import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
-import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue'
@@ -117,7 +116,6 @@ export default {
     ListItem,
     Widget,
     newIcon,
-    CourierItem,
     MinCourierItem,
     Empty,
     MinEmpty,

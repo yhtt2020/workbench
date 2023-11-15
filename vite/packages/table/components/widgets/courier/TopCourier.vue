@@ -91,7 +91,6 @@
 <script>
 import Widget from '../../card/Widget.vue'
 import { Icon as newIcon } from '@iconify/vue'
-import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue'
@@ -113,7 +112,6 @@ export default {
   components: {
     Widget,
     newIcon,
-    CourierItem,
     MinCourierItem,
     Empty,
     MinEmpty,
