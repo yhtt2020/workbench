@@ -2,7 +2,7 @@
  <div class="flex flex-col">
   <div class="w-full mb-2.5 flex  justify-between items-center">
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ categoryList.name }}</span>
-    <ChatDropDown @updatePage="updatePage" :no="categoryList.no" :list="floatList" /> 
+    <ChatDropDown newIcon="fluent:line-horizontal-3-20-filled" :list="floatList" /> 
   </div>
 
   <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'323px' } : {width:'215px'} ">
@@ -31,11 +31,7 @@
 
  <template v-if="categoryList?.tree?.length === 0 ">
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
-    <div v-for="item in emptyList" class="flex  items-center rounded-lg pointer mb-3 active-button h-10 px-3"
-         style="background: var(--secondary-bg);" @click="clickEmptyButton(item)">
-      <CommunityIcon :icon="item.icon" style="font-size:1.25rem;"></CommunityIcon>
-      <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
-    </div>
+      <EmptyAdd :no="communityID"/>
   </div>
 
   <div v-else  class="flex items-center h-full justify-center">
@@ -48,7 +44,7 @@
   <template  v-if="!isDoubleColumn">
     <div class="flex flex-col">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-        <MenuDropdown :type="item.type" :no="communityID.no" :item="item"  @currentItem="currentItem"/>
+        <MenuDropdown :type="item.type" :no="communityID" :item="item"  @currentItem="currentItem"/>
       </div>
     </div>
   </template>
@@ -56,24 +52,24 @@
   <template v-else>
     <div class="flex grid grid-cols-2 gap-1">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-        <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
+        <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem"/>
       </div>
     </div>
   </template>
 
 
   <div v-for="(item,index) in categoryFilterList" class="my-3" >
-    <xt-menu name="name" :menus="floatMenu">
+    <xt-menu name="name" :menus="floatMenu" @contextmenu="revID = item">
       <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
         <div class="flex flex-col" v-if="isDoubleColumn === false">
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem"/>
+            <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem"/>
           </div>
         </div>
   
         <div class="flex grid grid-cols-2 gap-1" v-else>
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <MenuDropdown :type="item.type" :no="communityID.no" :item="item" @currentItem="currentItem" />
+            <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem" />
           </div>
         </div>
       </ChatFold>  
@@ -88,29 +84,29 @@
 import { mapActions,mapWritableState } from 'pinia'
 import { chatStore } from '../../../../store/chat'
 import { communityStore } from '../../store/communityStore'
-import { hideDropList,showDropList,memberDropList,memberShowList } from '../../../../js/data/chatList'
 import { Icon as CommunityIcon } from '@iconify/vue'
-import { categoryMenu, channelMenu } from '../../../../js/data/chatList'
+import { Modal,message } from 'ant-design-vue'
 
-import ChatDropDown from './ChatsDropDown.vue';
+import ChatDropDown from './Dropdown.vue';
 import ChatFold from './ChatFolds.vue'
 import MenuDropdown from './MenuDropdowns.vue'
+import EmptyAdd from '../empty/EmptyAdd.vue'
 
 export default{
   props:[ 'communityID','float' ],
 
   components:{
-    CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,
+    CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd
   },
 
   data(){
     return{
-      emptyList: [
-       { icon:'fluent:people-add-16-regular', name: '邀请其他人', type: 'inviteOther' },
-       { icon:'fluent:apps-add-in-20-filled', name: '添加新应用', type: 'addChannel' },
-       { icon:'fluent:add-16-filled', name: '添加新分组', type: 'addNewGroup' },
-      ],
       currentID:'',
+      emptyImage:'/img/state/null.png',
+      showMenuIndex:-1,    
+      categoryItem:{},
+      revID:'',
+      
       settingsScroller: {
        useBothWheelAxes: true,
        swipeEasing: true,
@@ -118,28 +114,84 @@ export default{
        suppressScrollX: true,
        wheelPropagation: true
       },
-      emptyImage:'/img/state/null.png',
-      position: { x: 0, y: 0 },
-      categoryShowMenu:false,
-      showTopMenu:false,
-      showMenuIndex:-1,    
-      categoryMenu,  
-      channelMenu,
-      listType:'',
-      categoryItem:{},
-      
       floatMenu:[
         {
           name:'分组设置',
           newIcon:'fluent:settings-16-regular',
-          callBack:()=>{}
+          callBack:()=>{
+             
+          }
         },
         {
           name:'删除分组',
           newIcon:'akar-icons:trash-can',
           color: 'var(--error)',
-          callBack:()=>{}
+          callBack:()=>{
+            Modal.confirm({
+              content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+              centered:true,
+              onOk: async ()=>{
+                this.removeCategory(this.revID.id,this.communityID)
+                message.success('删除成功')
+                // const result = await this.removeCategory(this.revID.id,this.communityID)
+                // console.log('查看result',result);
+                // if(result?.status === 1){
+                //  console.log('查看no',this.communityID);
+                //  await this.getChannelList(this.communityID)
+                //  await this.getCategoryData(this.communityID)
+                // }
+              }
+            })
+          }
         }
+      ],
+      hideList:[
+        {
+          icon:'fluent:people-add-16-regular',title:'邀请其他人',
+          callBack:()=>{}
+        },
+        {
+          icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
+          callBack:()=>{}
+        },
+        {
+          icon:'fluent:add-16-filled',title:'添加新分组',
+          callBack:()=>{}
+        },
+        {
+          icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',
+          callBack:()=>{ this.setFloatVisible(false) }
+        },
+        // {icon:'',title:'社群管理',type:'manage'},
+        // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
+        {
+          icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
+          callBack:()=>{ this.setDouble() }
+        },
+      ],
+      showList:[
+        {
+          icon:'fluent:people-add-16-regular',title:'邀请其他人',
+          callBack:()=>{   }
+        },
+        {
+          icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
+          callBack:()=>{ }
+        },
+        {
+          icon:'fluent:add-16-filled',title:'添加新分组',
+          callBack:()=>{}
+        },
+        // {icon:'',title:'社群管理',type:'manage'},
+        // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
+        {
+          icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',
+          callBack:()=>{ this.setFloatVisible(true) }
+        },
+        {
+          icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
+          callBack:()=>{ this.setDouble() }
+        },
       ]
     }
   },
@@ -150,27 +202,11 @@ export default{
     isDoubleColumn(){
       return this.settings.showDouble
     },
-    floatList(){
-      if(this.float){
-        if(this.communityID.no === 1){
-          return memberShowList
-        }else{
-          if(this.categoryList?.role !== 'member'){
-            return showDropList
-          }else{
-            return memberShowList
-          }
-        }
+    floatList(){  // 下拉菜单列表
+      if(this.settings.enableHide){
+        return this.hideList
       }else{
-        if(this.communityID.no === '1'){
-          return memberDropList
-        }else{
-          if(this.categoryList?.value?.role !== 'member'){
-            return hideDropList
-          }else{
-            return memberDropList
-          }
-        }
+        return this.showList
       }
     },
 
@@ -202,19 +238,14 @@ export default{
   },
 
   methods:{
-    clickEmptyButton(item){
-      this.$emit('createCategory',item)
-    },
+    ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
+    ...mapActions(chatStore,['setFloatVisible','setDouble']),
     currentItem(item){
       // console.log('排查当前点击::>',item);
       this.currentID = item.id
       this.$emit('clickItem',item)
     },
 
-  },
-
-  destroyed() {
-    document.removeEventListener('click', this.hideDropdown);
   },
 }
 

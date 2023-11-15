@@ -96,11 +96,11 @@
 
   </a-row>
 
-  <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
+  <!-- <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
     <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
     <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
     <InviteOther v-if="type === 'inviteOther'" :no="routeData" @close="addShow = false" />
-  </Modal>
+  </Modal> -->
 </template>
 
 <script>
@@ -114,18 +114,22 @@ import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
-import CreateNewChannel from '../components/CreateNewChannels.vue'
-import CreateNewGroup from '../components/CreateNewCategory.vue'
+// import CreateNewChannel from '../components/CreateNewChannels.vue'
+// import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/CategorysFloat.vue'
 import Commun from '../Commun.vue'
-import InviteOther from '../components/InviteOthers.vue'
+// import InviteOther from '../components/InviteOthers.vue'
 
 export default {
   components:{
-    CategoryFloat,Modal,CreateNewChannel,
-    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun,InviteOther
+    CategoryFloat,Modal,
+    // CreateNewChannel,
+    // CreateNewGroup,
+    VueCustomScrollbar,CommunityIcon,Article,
+    Commun,
+    // InviteOther
   },
 
   computed:{

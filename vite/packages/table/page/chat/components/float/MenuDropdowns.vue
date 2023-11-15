@@ -49,13 +49,14 @@ export default {
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                console.log(this.revID,this.no);
-                const result = await this.removeCategory(this.revID.id)
-                console.log('返回结果',result);
-                if(result?.status === 1){
-                 await this.getChannelList(this.no)
-                 await this.getCategoryData(this.no)
-                }
+                this.removeCategory(this.revID.id,this.no)
+                message.success('删除成功')
+                // console.log(this.revID,this.no);
+                // const result = await this.removeCategory(this.revID.id)
+                // if(result?.status === 1){
+                //  await this.getChannelList(this.no)
+                //  await this.getCategoryData(this.no)
+                // }
               }
             })
           }
@@ -71,13 +72,13 @@ export default {
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                console.log(this.revID,this.no);
-                const result = await this.removeCategory(this.revID.id)
-                console.log('返回结果',result);
-                if(result?.status === 1){
-                 await this.getChannelList(this.no)
-                 await this.getCategoryData(this.no)
-                }
+                this.removeCategory(this.revID.id,this.no)
+                message.success('删除成功')
+                // const result = await this.removeCategory(this.revID.id)
+                // if(result.status === 1){
+                //  await this.getChannelList(this.no)
+                //  await this.getCategoryData(this.no)
+                // }
               }
             })
           }
