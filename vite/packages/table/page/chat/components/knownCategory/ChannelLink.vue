@@ -30,7 +30,8 @@
     </a-input-group>
 
     <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
-    <RadioTab :navList="openType" class="my-3" v-model:selectType="defaultOpen"></RadioTab>
+    <RadioTab :navList="openType"  v-model:selectType="defaultOpen"></RadioTab>
+    <div class="my-2"></div>
     <template v-if="defaultOpen.openMethod === 'outerOpen'">
       <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     </template>
@@ -141,38 +142,6 @@ export default {
  </script>
 
  <style lang="scss" scoped>
- .font-16-400{
-  font-size: 16px;
-  font-weight: 400;
- }
-
- .close-channel{
-  position: absolute;
-  top:1px;
-  right:12px;
- }
-
- .active-button{
-  &:active{
-   filter: brightness(0.8);
-   opacity: 0.8;
-  }
-  &:hover{
-   opacity: 0.8;
-  }
- }
-
- .font-14-400{
-  font-size: 14px;
-  font-weight: 400;
- }
-
- .back-button{
-  position: absolute;
-  top: 1px ;
-  left: 12px;
- }
-
  :deep(.ant-input){
   color: var(--secondary-text) !important;
   font-size: 1.15em;
@@ -180,8 +149,6 @@ export default {
     color: var(--secondary-text) !important;
   }
  }
-
-
  :deep(.ant-select .ant-select-selector){
   height:40px !important;
   border-top-left-radius: 8px !important;
@@ -190,4 +157,5 @@ export default {
  :deep(.ant-select-selection-item){
   line-height: 40px !important;
  }
+
  </style>

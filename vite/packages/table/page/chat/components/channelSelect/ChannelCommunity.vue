@@ -1,37 +1,22 @@
 <template>
  <div class="flex flex-col my-3" style="width:500px;" v-if="classShow === false">
-  <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-    <ClassIcon  icon="fluent:chevron-left-16-filled" style="font-size: 2em;color:var(--secondary-text);" />
-   </div>
-   <span class="font-16-400" style="color:var(--primary-text);">选择社区版块</span>
-   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-    <ClassIcon icon="fluent:dismiss-16-filled" style="font-size: 1.75em;color:var(--secondary-text);"/>
-   </div>
-  </div>
+  <ModalTop title="选择社区版块" back="true" @close="closeChannel" @back="backChannel"/>
 
   <div class="flex flex-col px-6">
-   <span class="font-16 font-400 mb-4" style="color: var(--primary-text);">我创建的版块({{ forumList.length }})</span>
+   <span class="font-16 font-400 mb-4 xt-text" >我创建的版块({{ forumList.length }})</span>
 
    <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
-    <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg" :class="{'select-bg':selectIndex === index}"
-     style="background: var(--secondary-bg);" @click="selectForum(index,item)"
+    <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg xt-bg-2" 
+     :class="{'select-bg':selectIndex === index}" @click="selectForum(index,item)"
     >
      <a-avatar :size="40" shape="square" :src="item.logo"></a-avatar>
-     <span class="font-16 font-400 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
+     <span class="font-16 font-400 ml-3 xt-text">{{ item.name }}</span>
     </div>
    </vue-custom-scrollbar>
 
-
-
    <div class="mt-4 flex items-center justify-end" style="height:40px;">
-    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
-     取消
-    </XtButton>
-
-    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectNext">
-     选择
-    </XtButton>
+    <xt-button w="64" h="40" class="category-button mr-3" @click="closeChannel">取消</xt-button>
+    <xt-button w="64" h="40" class="category-button" type="theme" @click="selectNext">选择</xt-button>
    </div>
   </div>
  </div>
@@ -45,11 +30,13 @@ import { forumStore } from '../../store/forumStore'
 import { Icon as ClassIcon} from '@iconify/vue'
 
 import ChannelClassification from './ChannelClassification.vue'
+import ModalTop from '../ModalTop.vue'
 
 export default {
  components:{
   ClassIcon,
-  ChannelClassification
+  ChannelClassification,
+  ModalTop
  },
 
  props:['no'],
@@ -106,11 +93,7 @@ export default {
     evt.preventDefault();
    }
   }
-
-
  },
-
-
 }
 </script>
 

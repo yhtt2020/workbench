@@ -34,7 +34,7 @@
     
           <template v-else>
             <div class="flex w-full justify-between">
-              <span class="font-16-400" style="color:var(--primary-text);">{{ item.name }}</span>
+              <span class="font-16 font-400 xt-font xt-text">{{ item.name }}</span>
               <div class="flex">
                <ClassIcon icon="akar-icons:edit" class="pointer" style="font-size: 1.5em;" @click.stop="edit(index)"></ClassIcon>
                <ClassIcon icon="akar-icons:trash-can" class="ml-4 pointer" style="font-size: 1.5em;" @click.stop="deleted(item)"></ClassIcon>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="flex items-center px-6 justify-end mt-4">
-      <xt-button w="64" h="40" class="category-button mr-3" @click="closeChannel">取消</xt-button>
+      <xt-button w="64" h="40" class="category-button mr-3" @click="closeButton">取消</xt-button>
       <xt-button w="64" h="40" type="theme" class="category-button" @click="finshCategoryCreate">确定</xt-button>
     </div>
   </div>
@@ -96,8 +96,38 @@ export default {
     ...mapWritableState(communityStore, ["categoryClass"]),
   },
 
+  mounted(){
+    this.getChannelList(this.no);
+    const el = this.$refs.classSortTab;
+    new Sortable(el, {
+      group: "sortableGroup",
+      onEnd: this.onSortEnd, // 拖拽结束时触发的回调函数
+    });
+  },
+
   methods: {
-    ...mapActions(communityStore,['removeCategory','createChannel']),
+    ...mapActions(communityStore,[
+      'removeCategory','createChannel','getChannelList',
+      'updateCategoryClass',
+    ]),
+    // 拖拽排序
+    onSortEnd(evt){
+      let element = this.$refs.classSortTab;
+      let newIndex = evt.newIndex,oldIndex = evt.oldIndex;
+      let newItem  = element.children[newIndex];
+      let oldItem = element.children[oldIndex];
+      element.removeChild(newItem);
+      if (newIndex > oldIndex){
+        element.insertBefore(newItem, oldItem)
+      }else{
+        element.insertBefore(newItem, oldItem.nextSibling);
+      }
+      let cloneTemp = [...this.categoryClass]; // 将原数据进行复制
+      let temp = cloneTemp[evt.oldIndex]; // 获取旧的下标
+      cloneTemp.splice(evt.oldIndex, 1); // 移除旧的下标
+      cloneTemp.splice(evt.newIndex, 0, temp); // 将旧的下标进行替换
+      this.updateCategoryClass(cloneTemp);
+    },
     // 关闭
     closeButton() {
       this.$emit("close");
@@ -158,11 +188,37 @@ export default {
     async saveEdit(item){
       if (item.id){
         // const res = await this.updateChannel(item);
-
       }else{
         this.createClass(item)
       }
+    },
+    // 选择当前频道目录
+    listClick(item, index) {
+      // 选中当前频道目录分类
+      if (this.statusIndex === index) {
+        this.statusIndex = -1;
+      } else {
+        this.statusIndex = index;
+        this.classItem = item;
+      }
+    },
+
+    // 完成并且创建
+    finshCategoryCreate(){
+      const option = {
+        type: this.type,
+        id: this.classItem.id,
+        no: this.no,
+      };
+      console.log('查看option');
+      // if(Array.isArray(this.data)){
+      //   for(const item of this.data){
+
+      //   }
+      // }
+
     }
+
 
 
   },

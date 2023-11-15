@@ -1,6 +1,6 @@
 <template>
  <teleport to='body' >
-  <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:10000 !important;">
+  <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:200 !important;">
    <div class="flex flex-col justify-between my-3" style="width:500px;height:208px;">
     <ModalTop title="添加分组" @close="addVisible = false"/>
 
