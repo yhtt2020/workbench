@@ -211,7 +211,6 @@ export default {
         id: this.classItem.id === undefined ? 0 : this.classItem.id,
         no: this.no,
       };
-      console.log('查看option',option);
       if(Array.isArray(this.data)){
         for(const item of this.data){
           const chatOption = {

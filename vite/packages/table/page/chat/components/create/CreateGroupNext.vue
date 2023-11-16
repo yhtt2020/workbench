@@ -184,7 +184,6 @@ export default {
       const res =  await window.$TUIKit.tim.createGroup(option)
       if(res.code === 0){
         const data = res.data.group;
-        console.log('查看data',data);
         this.returnData = data
         this.classShow = true
       }
