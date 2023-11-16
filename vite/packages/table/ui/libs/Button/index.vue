@@ -2,14 +2,13 @@
   <button
     @click.stop="handleClick"
     :disabled="disabled"
-    class=" text-base flex items-center justify-center"
+    class="xt-text text-base flex items-center justify-center"
     :class="[buttonStyle]"
     :style="{
       width: block ? '100%' : w + 'px',
       height: h + 'px',
       'border-radius': radius + 'px',
-    }"
-  >
+    }">
     <slot name="prefix" v-if="iconPosition == 'prefix'">
       <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
     </slot>
@@ -71,6 +70,7 @@ const emits = defineEmits(["click"]);
 const handleClick = useThrottleFn(() => {
   copyToClipboard();
   emits("click");
+
 }, throttleTime.value);
 
 const buttonStyle = computed(() => {
@@ -114,6 +114,7 @@ function copyStr(text) {
 
 <style lang="scss" scoped>
 @import "./style.scss";
+
 button {
   cursor: pointer;
   border: none;

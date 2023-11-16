@@ -19,10 +19,12 @@ export async function getGameInfo(url){
         "key":"fapigx.esports.query"
         },
     }
-    var dataList =[];
+    let dataList =[];
     await get(sUrl(url),params).then(res=>{
-        for(let i=0;i<res.data.newslist.length&&i<3;i++){
-            dataList[i] = res.data.newslist[i]
+        if(res.status){
+            if (res.data.allnum) {
+                dataList = res.data.newslist
+            }
         }
     })
     return dataList;

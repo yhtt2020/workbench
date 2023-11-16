@@ -27,10 +27,10 @@
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
-                    <p class="ml-1 mt-1">密钥</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
-                    <p class="ml-1 mt-2">管理后台地址</p>
-                    <a-input style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <p class="mt-1 ml-1">密钥</p>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="pl-1 search input-txt"></a-input>
+                    <p class="mt-2 ml-1">管理后台地址</p>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="pl-1 search input-txt"></a-input>
                 </div>
             </vue-custom-scrollbar>
         </a-drawer>
@@ -89,7 +89,7 @@ export default {
             options: {
                 className: "card",
                 title: "社区待办",
-                icon: "iconamoon:history-fill",
+                // icon: "iconamoon:history-fill",
                 rightIcon:"fluent:open-20-filled",
                 // icon: "games-16-filled",
             },

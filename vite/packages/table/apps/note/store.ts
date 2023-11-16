@@ -52,54 +52,88 @@ export const noteStore = defineStore("noteStore", {
     async getNotes(){
       // 先从tsbApi取
       let tmpList = [] as any[]
+      this.deskList = cardStore().desks
       let getDb = await tsbApi.db.find({
         selector: { 
           notes:"notes",
           isDelete:this.isSelTab,
         },
       })
-      this.deskList = cardStore().desks
-      if (getDb.docs.length) {
-        tmpList = getDb.docs
+      // 回收站不需要进行检测
+      if (!this.isSelTab) {
+        if (getDb.docs.length) {
+          let tmpArr = [] as any[]
+          let deskArr = [] as any[]
+          let dbArr = [] as any[]
+          tmpList = getDb.docs
+          tmpArr = tmpList.filter(i=>{
+            return i.deskName !=''
+          })
+          dbArr = tmpList.filter(i=>{
+            return i.deskName ==''
+          })
+          deskArr = this.searchCardForDesk()
+          // 这边添加一个自检测机制 防止桌面卡片遗漏
+          if (tmpArr.length != deskArr.length) {
+            let tt = await tsbApi.db.allDocs('note:')
+            for(let i = 0;i<tt.rows.length;i++){
+              await tsbApi.db.remove(tt.rows[i].doc)
+            }
+            deskArr.push(...dbArr)
+            this.sortByTimestamp(deskArr)
+            this.noteList = deskArr
+            await tsbApi.db.bulkDocs(deskArr)
+          }else{
+            this.sortByTimestamp(tmpList)
+            this.noteList = getDb.docs
+          }
+        }else{
+          // 判断是否是回收站
+          if (!this.isSelTab) {
+            tmpList = this.searchCardForDesk()
+          }
+          // 从桌面拿的初始化的数据需要进行排序
+          this.sortByTimestamp(tmpList)
+          this.noteList = tmpList
+          tmpList.forEach(i => {
+            delete i._rev
+          });
+          await tsbApi.db.bulkDocs(tmpList)
+        }
+      }else{
         this.sortByTimestamp(tmpList)
         this.noteList = getDb.docs
-      }else{
-        // 判断是否是回收站
-        if (!this.isSelTab) {
-          
-          this.deskList.forEach((item:any) => {
-            if (item.cards.length) {
-              
-              item.cards.forEach((tmp:any)=>{
-                if (tmp.name == 'notes') {
-                  
-                  if (!tmp.customData.hasOwnProperty('title')) {
-                    tmp.customData.title = '桌面便签'
-                  }
-                  delete tmp._$muuri_id
-                  delete tmp.$muuri_id
-                  tmpList.push({
-                    ...tmp,
-                    deskName:item.name,
-                    deskId:item.id,
-                    notes:'notes',
-                    createTime:tmp.id,
-                    _id:'note:' +  tmp.id.toString(),
-                    isDelete:false,
-                  })
-                }
-              })
-            }
-          })
-          // 根据时间进行排序
-        }
-        // 从桌面拿的初始化的数据需要进行排序
-        this.sortByTimestamp(tmpList)
-        this.noteList = tmpList
-        await tsbApi.db.bulkDocs(tmpList)
       }
       // 证明用户初始化过
       this.initFlag = true
+    },
+
+    // 从桌面找出所以便签卡片
+    searchCardForDesk(){
+      let tmpList = [] as any[]
+      this.deskList.forEach((item:any) => {
+        if (item.cards.length) {
+          item.cards.forEach((tmp:any)=>{
+            if (tmp.name == 'notes') {
+              if (!tmp.customData.hasOwnProperty('title')) {
+                tmp.customData.title = '桌面便签'
+              }
+              delete tmp._$muuri_id
+              delete tmp.$muuri_id
+              tmpList.push({
+                ...tmp,
+                deskName:item.name,
+                deskId:item.id,
+                notes:'notes',
+                createTime:tmp.id,
+                _id:'note:' +  tmp.id.toString(),
+                isDelete:false,
+              })
+            }
+          })
+        }
+      })
+      return tmpList
     },
     // 根据时间进行排序
     sortByTimestamp(obj) {
@@ -312,7 +346,7 @@ export const noteStore = defineStore("noteStore", {
       this.getNotes()
     },
     // 测试 一键删除错误数据
-    async deTest(){
+    async dbClear(){
       let tt = await tsbApi.db.allDocs('note:')
       for(let i = 0;i<tt.rows.length;i++){
         await tsbApi.db.remove(tt.rows[i].doc)

@@ -110,8 +110,11 @@ export default {
     setTimeout(() => {
       if (window.$isOffline && this.init) {
         this.$router.replace({ name: 'home' })
+        this.launching = false
+        // 暂时还没有排查到卡顿原因
+        
       }
-    }, 1000)
+    }, 3000)
     this.timeout()
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成

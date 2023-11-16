@@ -46,23 +46,12 @@
       </template>
     </cardDrag>
   </Widget>
-
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+  <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
 
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
-    <!-- <div>文字颜色</div> -->
-    <!-- <div class="item-box">
-      <div
-        class="item"
-        :key="item"
-        :style="{ background: item }"
-        v-for="item in fontColors"
-        @click="updateFontColor(item)"
-      ></div>
-    </div> -->
     <div class="text-base" style="margin: 12px 0">背景色</div>
     <div class="item-box">
       <div
@@ -73,8 +62,33 @@
         @click="updateBackground(color[`${'color' + item}`])"
       ></div>
     </div>
-  </a-drawer>
+  </a-drawer> -->
   <teleport to="body">
+    
+    <!-- <xt-modal :width="500" v-model:visible="settingVisible">
+      dsadsad 
+    </xt-modal> -->
+    <!-- 新设置 -->
+    <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">
+      <div style="width:500px;height:466px;">
+        <div class="p-4 font-16" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);">
+          「桌面便签」设置
+          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="closeSetting">
+            <Icon icon="fluent:dismiss-16-filled" />
+          </div>
+        </div>
+        <!--  -->
+          <div class="w-full" style="padding:0 24px 24px 24px;height:400px;">
+            <div class="w-full h-full rounded-lg p-4" style="background-color: var(--secondary-bg);">
+              <div style="color:var(--prinmary-text);font-size: 16px;">小组件尺寸</div>
+              <!-- <RadioTab :navList="sizeType" v-model:selectType="defaultSizeType"></RadioTab> -->
+              <xt-tab v-model="cardSize" :list="sizeType" class="xt-bg-2 p-1 h-12 mb-3" />
+              <div>支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
+            </div>
+          </div>
+      </div>
+    </Modal>
+    <!-- 打印 -->
     <Modal v-if="printPreviewVisible" v-model:visible="printPreviewVisible" :blurFlag="true" :mask-no-close="false">
       <div class="p-3" style="width:400px;height:auto">
         <div class="p-3">设备要求：德佟P1；纸张：40*60，间隙纸</div>
@@ -89,9 +103,9 @@
               size="large"
               @change="handleChange"
               :dropdownStyle="{
-      'z-index': 999999999999,
-      backgroundColor: 'var(--secondary-bg)',
-    }"
+              'z-index': 999999999999,
+              backgroundColor: 'var(--secondary-bg)',
+            }"
             >
               <a-select-option class="no-drag" v-for="item in print.printers" :value="item.name"
               >{{ item.name }}
@@ -192,12 +206,12 @@ export default {
         title: '桌面便签',
         icon: '',
         // 用于窗口化
-        isCopy: true,
-        copyContent: () => {
-          require('electron').clipboard.writeText(this.customData.text)
-          message.success('已成功复制到剪切板')
-        },
-        type: 'games',
+        // isCopy: true,
+        // copyContent: () => {
+        //   require('electron').clipboard.writeText(this.customData.text)
+        //   message.success('已成功复制到剪切板')
+        // },
+        type: 'note',
 
       },
       settingVisible: false,
@@ -263,27 +277,19 @@ export default {
         color4: '#DE5D5D',
         color5: '#5898CB',
         color6: '#DE5DB2',
-        // color1: "linear-gradient(-45deg, #545454 0%, #C1E65B 0%, #71E293 100%)",
-        // color2: "linear-gradient(-45deg, #545454 0%, #51E191 0%, #42CAAB 100%)",
-        // color3: "linear-gradient(-45deg, #545454 0%, #CDF97D 0%, #A1E99D 100%)",
-        // color4: "linear-gradient(-45deg, #545454 0%, #C0E0FF 0%, #ADC9FF 100%)",
-        // color5: "linear-gradient(-45deg, #545454 0%, #89E5FF 0%, #70B3FF 100%)",
-        // color6: "linear-gradient(-45deg, #545454 0%, #44D2DE 0%, #558AED 100%)",
-        // color7: "linear-gradient(-45deg, #545454 0%, #D9ABE1 0%, #A772FC 100%)",
-        // color8: "linear-gradient(-45deg, #545454 0%, #F5BC9A 0%, #D57FE6 100%)",
-        // color9: "linear-gradient(-45deg, #545454 0%, #FDE485 0%, #F895AA 100%)",
-        // color10:"linear-gradient(-45deg, #BA4348 0%, #A466E9 0%, #BA4244 100%)",
-        // color11:"linear-gradient(-45deg, #A93AAE 0%, #DA6891 0%, #C987CC 100%)",
-        // color12:"linear-gradient(-45deg, #545454 0%, #DA6991 0%, #A73781 100%)",
-        // color13:"linear-gradient(-45deg, #545454 0%, #F1EBF9 0%, #F4CFF6 100%)",
-        // color14:"linear-gradient(-45deg, #545454 0%, #F9F8F9 0%, #F2F1F2 100%)",
-        // color15:"linear-gradient(-45deg, #252A31 0%, #30373F 0%, #15161A 100%)",
       },
       text: '',
       background: '',
       icons: {
         notepad12Regular,
       },
+      cardSize: { name: '2x2', value: '2x2' },
+      sizeType: [
+          { name: '2x2', value: '2x2' },
+          { name: '2x4', value: '2x4' },
+          { name: '4x4', value: '4x4' },
+          { name: '4x6', value: '4x6' },
+      ],
     }
   },
   created () {
@@ -445,6 +451,9 @@ export default {
         }, this.desk)
         this.saveDeskTitle(this.customIndex, this.tmpTitle)
       }
+    },
+    closeSetting(){
+      this.settingVisible = false
     }
   }
   ,

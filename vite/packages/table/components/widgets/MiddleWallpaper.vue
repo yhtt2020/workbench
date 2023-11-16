@@ -7,7 +7,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:image-multiple-16-regular" style="font-size: 22px;" />
+          <newIcon icon="fluent:image-multiple-16-regular" style="font-size: 20px;" />
         </div>
       </template>
       <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">

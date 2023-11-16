@@ -5,7 +5,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:resize-video-20-regular" style="font-size: 22px;" />
+          <newIcon icon="fluent:resize-video-20-regular" style="font-size: 20px;" />
         </div>
       </template>
      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
