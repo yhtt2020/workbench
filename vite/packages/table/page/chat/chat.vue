@@ -254,7 +254,7 @@ export default {
 }
 
 :deep(.menu-item )+div{
-  z-index: 100 !important;
+  z-index: 90 !important;
 }
 
 </style>

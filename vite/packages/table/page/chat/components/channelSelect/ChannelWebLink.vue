@@ -20,12 +20,12 @@
       </a-input-group>
 
       <span class="font-16 font-400 xt-font my-4 xt-text">链接打开方式</span>
-      <RadioTab :navList="openType" v-model:selectType="defaultOpen"></RadioTab>
+      <RadioTab :navList="openType" class="mb-3" v-model:selectType="defaultOpen"></RadioTab>
       <template v-if="defaultOpen.openMethod === 'outerOpen'">
-        <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
+        <RadioTab class="mb-3" :navList="linkType" v-model:selectType="defaultType"></RadioTab>
       </template>
 
-      <div class="flex items-center justify-end my-3">
+      <div class="flex items-center justify-end mb-3">
         <xt-button w="64" h="40" class="mr-3 category-button" @click="closeClick">取消</xt-button>
         <xt-button w="64" h="40" type="theme" class="category-button" @click="selectNext">选择</xt-button>
       </div>

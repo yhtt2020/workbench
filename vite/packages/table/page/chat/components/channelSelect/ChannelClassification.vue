@@ -60,6 +60,7 @@ import Sortable from "sortablejs";
 import { Icon as ClassIcon } from "@iconify/vue";
 import { communityStore } from "../../store/communityStore";
 import { message, Modal as ClassModal } from "ant-design-vue";
+import { channelClass } from '../../../../js/chat/createChannelClass'
 
 import ModalTop from "../ModalTop.vue";
 
@@ -210,17 +211,36 @@ export default {
         id: this.classItem.id,
         no: this.no,
       };
-      console.log('查看option');
-      // if(Array.isArray(this.data)){
-      //   for(const item of this.data){
-
-      //   }
-      // }
-
+      console.log('查看option',option);
+      if(Array.isArray(this.data)){
+        for(const item of this.data){
+          const chatOption = {
+            ...option,
+            content:{
+              name:item.name,
+              props:{
+                groupID:item.groupID,
+                avatar:item.avatar,
+                type:item.type
+              }
+            }
+          }
+          channelClass.secondaryChannel(chatOption,no)
+        }
+        this.closeButton()
+      }else{
+        const channelOption = {
+          ...option,
+          content:{
+           name:this.data.name,
+           props:this.type === 'link' ? this.data.props : this.data
+          }
+        }
+        channelClass.secondaryChannel(channelOption)
+        message.success('添加应用成功')
+        this.closeButton()
+      }
     }
-
-
-
   },
 };
 </script>

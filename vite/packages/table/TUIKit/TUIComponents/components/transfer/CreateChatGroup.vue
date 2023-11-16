@@ -1,15 +1,7 @@
 <template>
  <div class="flex flex-col mb-3" style="padding: 12px; width: 650px; height: 530px;">
-  <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backButton">
-    <CreateIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);" />
-   </div>
-   <span class="font-16 font-400" style="color:var(--primary-text);">发起群聊</span>
-   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeCreate">
-    <CreateIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
-   </div>
-  </div>
-  
+  <ModalTop title="发起群聊" back="true" @close="closeCreate" @back="backButton"/>
+
   <div class="flex items-center flex-col justify-center">
    <div class="flex items-center flex-col justify-center" style="margin-bottom: 28px;">
     <!-- 替换成图标选择器 -->
@@ -39,15 +31,15 @@
     <a-select-option v-for="(item,index) in groupType" :key="index"  :value="item.type">{{item.text}}</a-select-option>
    </a-select>
 
-   <div class="font-14" style="color: var(--secondary-text);width: 320px;margin-top: 16px;">
+   <div class="font-14 font-400 xt-font  xt-text-2" style="width: 320px;margin-top: 16px;">
     {{ groupTypeData.detail }}
    </div>
 
   </div>
 
   <div class="flex items-end justify-end " style="margin-top: 67px;">
-   <a-button style="width: 100px; border-radius: 8px; height: 40px; background: var(--secondary-bg);color: var(--secondary-text);" @click="closeCreate">取消</a-button>
-   <a-button type="primary" style="width: 100px;height: 40px;margin-left: 16px;border-radius: 8px;" @click="submit">确定</a-button>
+    <xt-button w="100" h="40" class="mr-3 category-button" @click="closeCreate">取消</xt-button>
+    <xt-button w="100" h="40" type="theme" class="category-button" @click="submit">确定</xt-button>
   </div>
  </div>
 </template>
@@ -60,12 +52,13 @@ import { message } from 'ant-design-vue'
 import { chatStore } from '../../../../store/chat'
 
 import SelectIcon from '../../../../../selectIcon/page/index.vue'
+import ModalTop from '../../../../page/chat/components/ModalTop.vue'
 
 export default {
  props:['list'],
 
  components:{
-  SelectIcon,CreateIcon
+  SelectIcon,CreateIcon,ModalTop
  },
 
  data(){

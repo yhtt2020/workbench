@@ -29,6 +29,7 @@
 
     <ChannelWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="addVisible = false" @back="nextShow = false"/>
     <ChannelCommunity v-if="selectIndex === 'com' && nextShow === true" :no="no" @close="addVisible = false" @back="nextShow = false"/>
+    <ChannelKnownGroup v-if="selectIndex === 'chat' && nextShow === true" :no="no" @close="addVisible = false" @back="nextShow = false" />
   </Modal>
  </teleport>
 </template>
@@ -40,11 +41,12 @@ import Modal from '../../../../components/Modal.vue';
 import ModalTop from '../ModalTop.vue';
 import ChannelWebLink from '../channelSelect/ChannelWebLink.vue';
 import ChannelCommunity from '../channelSelect/ChannelCommunity.vue';
+import ChannelKnownGroup from '../channelSelect/ChannelGroupChat.vue';
 
 export default {
  components:{
   NewIcon,Modal,ModalTop,ChannelWebLink,
-  ChannelCommunity,
+  ChannelCommunity,ChannelKnownGroup
  },
 
  props:['no'],

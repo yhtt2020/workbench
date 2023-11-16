@@ -4,18 +4,16 @@
     <span class=" font-bold text-lg truncate" style="color:var(--primary-text);">{{ categoryList.name }}</span>
     <ChatDropDown newIcon="fluent:line-horizontal-3-20-filled" :list="floatList" /> 
   </div>
-
-  <div class="font-14 mb-2 summary" style="color:var(--secondary-text);" :style="isDoubleColumn ? { width:'323px' } : {width:'215px'} ">
+  <div class="font-14 mb-2 summary font-12 font-400 xt-font xt-text-2"  :style="isDoubleColumn ? { width:'323px' } : {width:'215px'} ">
     {{ categoryList.summary }}
   </div> 
-  
-  <div class="ml-1 category-14-400 mb-2" style="color:var(--primary-text);">
+  <div class="ml-1 font-12 font-400 xt-font xt-text-2 mb-2 ">
    社群号：{{ categoryList.no }}
   </div>
   <div>
    <a-row :gutter="10">
     <a-col flex="55px" class="mt-1 text-right">
-      <span class="px-2 rounded-full xt-active-bg">0 级</span>
+      <span class="px-2 rounded-full xt-active-bg xt-active-text">0 级</span>
     </a-col>
     <a-col flex="auto" style="padding-top: 3px">
       <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="10"></a-progress>
@@ -23,15 +21,13 @@
 
    </a-row>
   </div>
-
  </div>
 
  <a-divider style="height: 2px;margin: 12px 0; background-color: var(--divider)"/>
 
-
  <template v-if="categoryList?.tree?.length === 0 ">
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
-      <EmptyAdd :no="categoryList.no"/>
+    <EmptyAdd :no="categoryList.no"/>
   </div>
 
   <div v-else  class="flex items-center h-full justify-center">
@@ -52,7 +48,7 @@
   <template v-else>
     <div class="flex grid grid-cols-2 gap-1">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-        <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem"/>
+        <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem"/>
       </div>
     </div>
   </template>
@@ -63,13 +59,13 @@
       <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
         <div class="flex flex-col" v-if="isDoubleColumn === false">
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem"/>
+            <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem"/>
           </div>
         </div>
   
         <div class="flex grid grid-cols-2 gap-1" v-else>
           <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <MenuDropdown :type="item.type" :no="communityID" :item="item" @currentItem="currentItem" />
+            <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem" />
           </div>
         </div>
       </ChatFold>  
@@ -79,6 +75,9 @@
 
  <AddNewCategory ref="addCategoryRef" :no="categoryList.no"/>
  <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
+ <AddInvite ref="addInviteRef" :no="categoryList.no"/>
+
+ <PacketSetting ref="packRef" :no="categoryList.no" :item="categoryItem"/>
 </template>
 
 <script>
@@ -92,9 +91,10 @@ import ChatDropDown from './Dropdown.vue';
 import ChatFold from './ChatFolds.vue';
 import MenuDropdown from './MenuDropdowns.vue';
 import EmptyAdd from '../empty/EmptyAdd.vue';
-
 import AddNewCategory from '../add/AddNewCategory.vue';
-import AddNewGroup from '../add/AddNewGroup.vue'
+import AddNewGroup from '../add/AddNewGroup.vue';
+import AddInvite from '../add/AddInvite.vue';
+import PacketSetting from '../knownCategory/PacketSettings.vue'
 
 
 export default{
@@ -102,7 +102,7 @@ export default{
 
   components:{
     CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd,
-    AddNewCategory,AddNewGroup
+    AddNewCategory,AddNewGroup,AddInvite,PacketSetting
   },
 
   data(){
@@ -125,7 +125,8 @@ export default{
           name:'分组设置',
           newIcon:'fluent:settings-16-regular',
           callBack:()=>{
-             
+            this.categoryItem = this.revID
+            this.$refs.packRef.openSetModal()
           }
         },
         {
@@ -137,7 +138,8 @@ export default{
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                const comNo = parseInt(this.communityID)
+                const comNo = parseInt(this.categoryList.no)
+                // console.log('查看comNo',comNo);
                 if(comNo !== NaN && comNo !== undefined){
                   this.removeCategory(this.revID.id,comNo)
                   message.success('删除成功')
@@ -152,7 +154,7 @@ export default{
       hideList:[
         {
           icon:'fluent:people-add-16-regular',title:'邀请其他人',
-          callBack:()=>{}
+          callBack:()=>{ this.$refs.addInviteRef.openAddInvite() }
         },
         {
           icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
@@ -176,7 +178,7 @@ export default{
       showList:[
         {
           icon:'fluent:people-add-16-regular',title:'邀请其他人',
-          callBack:()=>{   }
+          callBack:()=>{ this.$refs.addInviteRef.openAddInvite()  }
         },
         {
           icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
@@ -247,6 +249,7 @@ export default{
     currentItem(item){
       // console.log('排查当前点击::>',item);
       this.currentID = item.id
+      this.categoryItem = item
       this.$emit('clickItem',item)
     },
 
@@ -260,7 +263,17 @@ export default{
 .active-bg {
  background: var(--active-secondary-bg);
 }
-
+.summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: break-spaces;
+  overflow: hidden;
+  margin: 0 !important;
+  font-size: 14px;
+  color: var(--primary-text);
+  font-weight: 400;
+}
 </style>
 
 <style scoped>

@@ -15,7 +15,7 @@
   <div>
    <a-row :gutter="10">
     <a-col flex="55px" class="mt-1 text-right">
-      <span class="px-2 rounded-full xt-active-bg">0 级</span>
+      <span class="px-2 rounded-full xt-active-bg xt-active-text">0 级</span>
     </a-col>
     <a-col flex="auto" style="padding-top: 3px">
       <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="10"></a-progress>

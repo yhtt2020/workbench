@@ -5,7 +5,7 @@
       <div class="flex items-center justify-center" :class="['icon', { 'rotate': collapsed }]">
         <FoldIcon  icon="fluent:caret-down-12-filled" style="font-size: 1.5rem;"/>
       </div>
-      <span class="font-14 ml-2" style="color:var(--secondary-text);">
+      <span class="font-14 ml-2 xt-text-2 xt-font font-400" >
        {{ title }}
       </span>
      </div>
@@ -13,7 +13,6 @@
 
    <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
     <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :list="dorpList"></ChatDropDown>
-    <!-- :no="no" :data="content"  :list="dorpList" -->
    </div>
    <transition name="collapse">
     <!-- class="content" -->
@@ -22,6 +21,8 @@
     </div>
    </transition>
  </div>
+
+ <PacketSetting ref="packRef" :no="no" :item="content"/>
 </template>
 
 <script>
@@ -31,17 +32,19 @@ import { communityStore } from '../../store/communityStore'
 import { message,Modal } from 'ant-design-vue'
 
 import ChatDropDown from './Dropdown.vue';
+import PacketSetting from '../knownCategory/PacketSettings.vue';
 
 
 export default {
  props:['title','content','show','no'],
  components: {
-  FoldIcon,ChatDropDown
+  FoldIcon,ChatDropDown,PacketSetting,
  },
  setup(props,ctx) {
    const collapsed = ref(false);
    const dorpShow = ref(false)
    const community = communityStore()
+   const packRef = ref(null)
 
    const dorpList = ref([
     { 
@@ -53,7 +56,7 @@ export default {
     { 
       icon:'fluent:settings-16-regular',title:'分组设置',
       callBack:()=>{
-        // console.log('查看分组',props.content);
+        packRef.value.openSetModal()
       }
     },
     { 
@@ -78,7 +81,7 @@ export default {
    };
 
    return {
-     collapsed,dorpShow,dorpList,
+     collapsed,dorpShow,dorpList,packRef,
      toggleCollapse
    };
  }
@@ -127,8 +130,4 @@ export default {
   opacity: 0;
 }
 
-.font-14{
- font-size: 14px;
- font-weight: 400;
-}
 </style>

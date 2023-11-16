@@ -51,12 +51,6 @@ export default {
               onOk: async ()=>{
                 this.removeCategory(this.revID.id,this.no)
                 message.success('删除成功')
-                // console.log(this.revID,this.no);
-                // const result = await this.removeCategory(this.revID.id)
-                // if(result?.status === 1){
-                //  await this.getChannelList(this.no)
-                //  await this.getCategoryData(this.no)
-                // }
               }
             })
           }
@@ -74,11 +68,6 @@ export default {
               onOk: async ()=>{
                 this.removeCategory(this.revID.id,this.no)
                 message.success('删除成功')
-                // const result = await this.removeCategory(this.revID.id)
-                // if(result.status === 1){
-                //  await this.getChannelList(this.no)
-                //  await this.getCategoryData(this.no)
-                // }
               }
             })
           }

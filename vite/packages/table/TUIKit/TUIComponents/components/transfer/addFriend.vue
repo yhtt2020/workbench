@@ -1,14 +1,6 @@
 <template>
   <div class="flex flex-col mb-3" style="padding: 12px; width: 650px; height: 530px;" v-if="isNextShow === false">
-    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-      <div class="font-16 font-400 flex items-center justify-center" style="color:var(--primary-text);">选择联系人</div>
-      <div class="flex rounded-lg close-button category-button pointer items-center w-12 h-12 justify-center"
-       style="background: var(--secondary-bg);" @click="closeContact" 
-      >
-        <CloseIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
-      </div>
-    </div>
-
+    <ModalTop title="选择联系人" @close="closeContact"/>
     <!-- 中间内容 左侧 右侧 -->
     <div class="flex  justify-between">
       <div class="flex flex-col" style="width: 293px;">
@@ -45,13 +37,9 @@
           </div>
         </vue-custom-scrollbar>
 
-        <div class="flex justify-end" style="height: 40px;">
-          <div class="flex items-center rounded-md pointer font-16 font-400 category-button justify-center"  style="width: 100px;color: var(--secondary-text); background: var(--secondary-bg);" @click="closeContact">
-            取消
-           </div>
-           <div class="flex items-center rounded-md pointer font-16 font-400 category-button justify-center" style="width: 100px;color: var(--active-text);background: var(--active-bg);margin-left: 12px;" @click="enterNextStep">
-            确定
-           </div>
+        <div class="flex justify-end items-center">
+          <xt-button w="100" h="40"  class="category-button mr-3" @click="closeContact">取消</xt-button>
+          <xt-button w="100" h="40" type="theme" class="category-button" @click="enterNextStep">确定</xt-button>
         </div>
       </div>
     </div>
@@ -68,12 +56,15 @@ import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
 
 import CreateChatGroup from './CreateChatGroup.vue'
+import ModalTop from '../../../../page/chat/components/ModalTop.vue'
 
 export default {
   components:{
     CreateChatGroup,
-    CloseIcon,
+    CloseIcon,ModalTop,
   },
+
+  props:['showBack'],
 
   data(){
     return{
@@ -116,6 +107,11 @@ export default {
     // 关闭
     closeContact(){
       this.$emit('close')
+    },
+
+    // 返回
+    backButton(){
+      this.$emit('back')
     },
     
     // 选中状态
