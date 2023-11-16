@@ -2,9 +2,7 @@
  <teleport to="body">
   <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:200 !important;">
     <div class="flex flex-col my-3" style="width: 500px ;" v-if="inviteShow === false">
-      <!--  -->
      <ModalTop title="邀请其他人" @close="addVisible = false"/>
-
      <div class="px-6 flex flex-col">
       <div class="p-4 xt-bg-2 rounded-md flex flex-col pointer mb-4" v-for="item in inviteMethod" @click.stop="inviteEnter(item)">
         <div class="flex w-full justify-between items-center mb-2.5">
@@ -15,7 +13,6 @@
           {{ item.summary }}
         </div>
       </div>
-
       <div class="xt-bg-2 p-4 flex rounded-md flex-col">
         <span class="font-16 font-400 xt-text xt-font">邀请链接</span>
         <span class="font-14 font-400 mt-2.5 mb-3 xt-text-2 xt-font">
@@ -26,11 +23,9 @@
           <xt-button w="64" h="40" type="theme" class="ml-3" @click="linkCopy">复制</xt-button>
         </div>
       </div>
-
       <xt-button w="64" h="22" class="my-3">重置链接</xt-button>
      </div>
     </div>
-
     <AddDirectly v-else-if="inviteShow === true && type === 'direct'" :no="no" @close="addVisible = false" @back="inviteShow = false"/>
     <InvitationJoin v-else-if="inviteShow == true && type === 'invite'" :no="no" @close="addVisible = false" @back="inviteShow = false"/>
   </Modal>

@@ -7,8 +7,9 @@
       <!-- flex=" 0 1 300px" -->
 
       <CategoryFloat :float="false" :communityID="routeData"
-      @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"
+      @updateColumn="updateColumn" @createCategory="clickEmptyButton"
       ></CategoryFloat>
+      <!--  @clickItem="currentItem" -->
 
     </a-col>
 
@@ -147,7 +148,10 @@ export default {
     // console.log('启动')
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
-    // console.log(rs)
+    // 监听当前事件触发
+    this.$mit.on('clickItem',(item)=>{
+      this.currentItem(item)
+    })
   },
 
   data(){
@@ -194,9 +198,6 @@ export default {
         const index = groups.findIndex((findItem)=>{ return findItem.groupID === changeData.groupID })
         const enableGroup = await checkGroupShip([`${changeData.groupID}`]) // 有没有添加群聊
         this.isChat = enableGroup[0]
-
-        // console.log('获取数据',groups[index].type === 'Private');
-
         if(groups[index].type === 'Private'){
           const isDisable = groups[index].joinOption === "DisableApply"
           if(enableGroup[0] === 'yes'){
@@ -213,7 +214,6 @@ export default {
               message.warn('该群禁止加入')
             }
           }
-
         }else{
           const res = await window.$chat.searchGroupByID(changeData.groupID)
           const isDisable = res.data.group.joinOption !== 'DisableApply'
@@ -229,18 +229,14 @@ export default {
             // isDisable判断群聊是否禁止加入
             if (isDisable) {
              this.group = res.data.group
-             // data.showModal = true
             } else {
               message.warn('该群禁止加入')
             }
           }
         }
-
       }
-
       // 其他
       this.currentChannel = {...item,props:JSON.parse(item.props)}
-
     },
 
     clickEmptyButton(item){

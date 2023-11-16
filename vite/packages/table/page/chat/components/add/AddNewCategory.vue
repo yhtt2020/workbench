@@ -3,7 +3,6 @@
   <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:200 !important;">
     <div class="flex flex-col my-3 justify-between" style="width: 500px ;" v-if="nextShow === false">
      <ModalTop title="添加新应用" @close="addVisible = false"/>
-
      <div class="flex flex-col px-6">
       <div class="p-4 flex rounded-lg flex-col xt-bg-2">
        <span class="font-16 font-400 mb-2.5 xt-text" >选择类型</span>
@@ -26,7 +25,6 @@
       </div>
      </div>
     </div>
-
     <ChannelWebLink v-if="selectIndex === 'link' && nextShow === true " :no="no" @close="addVisible = false" @back="nextShow = false"/>
     <ChannelCommunity v-if="selectIndex === 'com' && nextShow === true" :no="no" @close="addVisible = false" @back="nextShow = false"/>
     <ChannelKnownGroup v-if="selectIndex === 'chat' && nextShow === true" :no="no" @close="addVisible = false" @back="nextShow = false" />

@@ -23,7 +23,7 @@
   </div>
  </div>
 
- <a-divider style="height: 2px;margin: 12px 0; background-color: var(--divider)"/>
+ <a-divider style="height: 2px;margin: 12px 0 0 0; background-color: var(--divider)"/>
 
  <template v-if="categoryList?.tree?.length === 0 ">
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
@@ -250,7 +250,7 @@ export default{
       // console.log('排查当前点击::>',item);
       this.currentID = item.id
       this.categoryItem = item
-      this.$emit('clickItem',item)
+      this.$mit.emit('clickItem',item)
     },
 
   },

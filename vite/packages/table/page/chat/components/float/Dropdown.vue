@@ -1,7 +1,7 @@
 <template>
  <a-dropdown :trigger="['click']" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
   <div class="flex pointer items-center justify-center">
-   <DorpIcon :icon="newIcon" style="font-size: 1.25rem;"></DorpIcon>
+   <DorpIcon :icon="newIcon" class="xt-text-2" style="font-size: 1.25rem;"></DorpIcon>
   </div>
   <template #overlay>
    <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">

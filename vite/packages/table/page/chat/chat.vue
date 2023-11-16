@@ -6,7 +6,7 @@
 
     <template #communityFloat>
       <div class="flex flex-col" style="height:500px;" v-if="communityNo !== 1">
-        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat>
+        <CategoryFloat :communityID="{no:communityNo}" :float="true"  @clickItem="currentItem"></CategoryFloat>
       </div>
       <div class="flex flex-col" style="height:500px;" v-else>
         <DefaultFloat :float="true"></DefaultFloat>

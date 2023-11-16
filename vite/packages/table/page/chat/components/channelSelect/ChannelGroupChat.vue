@@ -16,19 +16,21 @@
     </div>
   </div>
 
-  <CreateNewGroup v-if="listIndex === 'create' && chatShow === true " :no="no" @close="closeChannel"  @back="chatShow = false"/>
-  <ChannelKnownGroup :no="no" v-if="listIndex === 'related' && chatShow === true"  @back="chatShow = false" @close="closeChannel"/>
+  <CreateNewGroup v-else-if="listIndex === 'create' && chatShow === true " :no="no" @close="closeChannel"  @backButton="chatShow = false"/>
+  <ChannelKnownGroup :no="no" v-else-if="listIndex === 'related' && chatShow === true"  @backButton="chatShow = false" @close="closeChannel"/>
 </template>
 
 <script>
 
 import ModalTop from '../ModalTop.vue';
-import CreateNewGroup from '../CreateNewGroups.vue';
 import ChannelKnownGroup from './ChannelKnownGroup.vue';
+import CreateNewGroup from '../create/CreateChatGroup.vue';
 
 export default {
  components:{
-  ModalTop,CreateNewGroup,ChannelKnownGroup,
+  ModalTop,
+  CreateNewGroup,
+  ChannelKnownGroup,
  },
 
  props:['type','no'],

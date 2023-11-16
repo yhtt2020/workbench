@@ -33,7 +33,7 @@ export default {
   data(){
     return{
       setVisible:false,
-      categoryName: this.item.name !== undefined ? this.item.name : '' ,
+      // categoryName: this.item.name !== undefined ? this.item.name : '' ,
     }
   },
 

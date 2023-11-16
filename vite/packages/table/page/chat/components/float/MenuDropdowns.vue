@@ -3,17 +3,17 @@
     <div class="flex items-center" @click="currentItem(item)">
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
-          <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25rem;"/>
         </template>
         <template v-if="item.type === 'link'">
-          <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 1.25rem;"/>
         </template>
         <template v-if="item.type === 'forum'">
-          <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 1.25rem;"/>
         </template>
       </div>
       <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-      <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+      <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
     </div>
   </xt-menu>

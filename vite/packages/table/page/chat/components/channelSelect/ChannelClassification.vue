@@ -208,7 +208,7 @@ export default {
     finshCategoryCreate(){
       const option = {
         type: this.type,
-        id: this.classItem.id,
+        id: this.classItem.id === undefined ? 0 : this.classItem.id,
         no: this.no,
       };
       console.log('查看option',option);
