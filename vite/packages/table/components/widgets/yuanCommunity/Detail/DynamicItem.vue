@@ -43,11 +43,11 @@ onBeforeUnmount(() => {
 const handleResize = _.debounce((entries) => {
   const newWidth = entries[0]?.contentRect?.width || 0;
   if(newWidth>600){
-    textWidth.value = 22
+    textWidth.value = 24
   }else{
     textWidth.value = 10
   }
-}, 500);
+});
 // 文本默认长度
 let textWidth = ref(10)
 // 暂存动态文本

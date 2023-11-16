@@ -21,7 +21,7 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <!-- <div @click="this.deTest">清除数据</div>
+            <!-- <div @click="this.dbClear">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
             <div @click="this.findAll">db数据</div> -->
@@ -156,7 +156,7 @@ import { message } from 'ant-design-vue';
         }
     },
     methods: {
-        ...mapActions(noteStore,['moveToTrash','deTest','addNote','restore','searchNote','findAll','deleteNote']),
+        ...mapActions(noteStore,['moveToTrash','dbClear','addNote','restore','searchNote','findAll','deleteNote']),
         ...mapActions(cardStore, ['switchToDesk','setRouteParams']),
         formatTimestamp,
         changeNote(n){
@@ -165,12 +165,12 @@ import { message } from 'ant-design-vue';
             this.selNoteText = this.noteList[n].customData.text
             
         },
-        // showData(){
-        //     console.log(this.noteList);
-        // },
-        // showDesk(){
-        //     console.log(this.deskList);
-        // },
+        showData(){
+            console.log(this.noteList);
+        },
+        showDesk(){
+            console.log(this.deskList);
+        },
         changeMenu(index){
             this.selNote = index
         }

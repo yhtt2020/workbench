@@ -16,7 +16,7 @@ import { noteStore } from '../store'
 import { cardStore } from "../../../store/card";
 export default {
     components: {
-        // Vditor
+
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
@@ -38,6 +38,7 @@ export default {
             cache: {
                 enable: false,
             },
+            // 编辑器工具参数
             // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
             toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'preview', 'devtools', 'upload', 'help', 'br'],
             after: () => {
@@ -52,7 +53,6 @@ export default {
                     let tmpDiv = document.createElement('div')
                     tmpDiv.innerHTML = this.contentEditor.getHTML()
                     let content = tmpDiv.textContent || tmpDiv.innerText || ''
-
                     if (this.noteList[this.selNote].deskName != '') {
                         let n = -1
                         this.deskList.forEach((item, index) => {
@@ -71,7 +71,6 @@ export default {
                         }
                     }
                     this.noteList[this.selNote].customData.text = value
-
                     this.saveDeskNote(this.noteList[this.selNote].id, value, content)
                 }
             },
@@ -94,13 +93,16 @@ export default {
     methods: {
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(noteStore, ['saveDeskNote','noteList','selNote']),
-
+        childEvent(value) {
+            // 子组件中的事件逻辑
+            this.contentEditor.setValue(value)
+        }
     },
     watch: {
         selNote(newval, oldval) {
             if (newval >= 0 && this.noteList.length >= 0) {
                 this.tmpData = this.noteList[newval].customData.text
-                this.contentEditor.setValue(this.noteList[newval].customData.text)
+                this.contentEditor.setValue(this.tmpData)
             }
         }
     }
@@ -121,16 +123,16 @@ export default {
     }
     .box .vditor-reset{
         color: #fff !important;
-        height: 101% !important;
+        height: 96% !important;
     }
-    ::-webkit-scrollbar{
+
+    .box ::-webkit-scrollbar{
         -webkit-appearance: none;
         width: 6px;
         height: 6px;;
     }
 
-
-    ::-webkit-scrollbar-thumb{
+    .box ::-webkit-scrollbar-thumb{
         display: none;
         background-color: #ccc; /* 滚动条颜色 */
         border-radius: 6px; /* 滚动条圆角 */
@@ -141,7 +143,7 @@ export default {
     }
     
 
-    ::-webkit-scrollbar-track {
+    .box ::-webkit-scrollbar-track {
         border-radius: 6px; /* 轨道圆角 */
     }
 

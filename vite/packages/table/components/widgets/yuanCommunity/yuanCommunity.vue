@@ -62,12 +62,11 @@
 
             </xt-button>
 
-
+            <!-- {{ customData.defaultForum.value }} -->
         </Widget>
 
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                :forum="customData.defaultForum?.value"></YuanPublishModal>
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"></YuanPublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -80,7 +79,7 @@
         <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
             <template #extra>
                 <xt-button :w="56" :h="32"
-                    style="background-color: var(--active-bg);color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
+                    style="background-color: var(--active-bg) !important;color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
                     @click="saveSetting">保存</xt-button>
             </template>
             <div class="mb-6 xt-text font-16">
@@ -261,6 +260,7 @@ export default {
             // console.log(this.selectList);
             let temp = this.selectList;
             this.customData.selectList = temp;
+            this.forumsList=this.customData.selectList
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -293,7 +293,7 @@ export default {
         },
     },
     computed: {
-        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList']),
+        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList','forumsList','defaultSection']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -383,6 +383,7 @@ export default {
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
             this.defaultForum = this.customData.defaultForum
+            this.defaultSection=this.customData.defaultForum
             this.getCommunityPost(this.customData.defaultForum.value?.id)
         },
         immediate: true,
@@ -412,27 +413,10 @@ export default {
     color: rgba(255, 255, 255, 0.85) !important;
 }
 
-
-.clock-icon {
-    cursor: pointer;
-    transition: transform 0.3s;
-    /* 添加一个过渡效果 */
-}
-
-.clock-icon:hover {
-    transform: scale(1.3);
-    /* 鼠标悬停时放大 */
-    background-color: var(--secondary-bg);
-}
-
 :deep(.ant-tag-close-icon) {
     color: var(--secondary-text);
     margin-left: 8px;
     font-size: 12px;
-}
-
-:deep(.ant-drawer-title) {
-    color: var(--primary-text) !important;
 }
 
 :deep(.ant-select-selection-item) {

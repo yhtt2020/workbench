@@ -79,8 +79,11 @@
         </div>
         <!--  -->
           <div class="w-full" style="padding:0 24px 24px 24px;height:400px;">
-            <div class="w-full h-full rounded-lg" style="background-color: var(--secondary-bg);">
-
+            <div class="w-full h-full rounded-lg p-4" style="background-color: var(--secondary-bg);">
+              <div style="color:var(--prinmary-text);font-size: 16px;">小组件尺寸</div>
+              <!-- <RadioTab :navList="sizeType" v-model:selectType="defaultSizeType"></RadioTab> -->
+              <xt-tab v-model="cardSize" :list="sizeType" class="xt-bg-2 p-1 h-12 mb-3" />
+              <div>支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
             </div>
           </div>
       </div>
@@ -100,9 +103,9 @@
               size="large"
               @change="handleChange"
               :dropdownStyle="{
-      'z-index': 999999999999,
-      backgroundColor: 'var(--secondary-bg)',
-    }"
+              'z-index': 999999999999,
+              backgroundColor: 'var(--secondary-bg)',
+            }"
             >
               <a-select-option class="no-drag" v-for="item in print.printers" :value="item.name"
               >{{ item.name }}
@@ -280,6 +283,13 @@ export default {
       icons: {
         notepad12Regular,
       },
+      cardSize: { name: '2x2', value: '2x2' },
+      sizeType: [
+          { name: '2x2', value: '2x2' },
+          { name: '2x4', value: '2x4' },
+          { name: '4x4', value: '4x4' },
+          { name: '4x6', value: '4x6' },
+      ],
     }
   },
   created () {
