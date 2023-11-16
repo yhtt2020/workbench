@@ -29,31 +29,34 @@
 
     <template v-else>
       <!--   筛选不到数据   -->
-      <template v-if="displayList?.length === 0">
-        <Empty :exampleVisible="false"/>
-      </template>
-      <div v-else class="flex w-full justify-between px-6 flex-1 h-0">
-        <div   class="flex flex-col h-full w-1/2">
+      <div class="flex w-full justify-between px-6 flex-1 h-0">
+        <div class="flex flex-col h-full w-1/2">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
             <a-tooltip placement="top" class="mr-3" :title="lastRefreshTime">
-            <xt-button w="40" h="40" class="category-button" @click="refreshAll">
-              <div class="flex items-center justify-center">
-                <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
-              </div>
-            </xt-button>
+              <xt-button w="40" h="40" class="category-button" @click="refreshAll">
+                <div class="flex items-center justify-center">
+                  <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
+                </div>
+              </xt-button>
             </a-tooltip>
           </div>
-<!--          <template v-if="allShow">-->
-<!--            &lt;!&ndash;    全部展示        &ndash;&gt;-->
-<!--            <SortList :list="list" @rightSelect="getRightItem"/>-->
-<!--          </template>-->
-            <!--      其他条件      -->
-            <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
-              <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-                <ListItem @showItem="showItem(item)" :ref="el=>setItemRef(el,item)" @afterRemove="scrollToItem(currentDetail._id)" @scrollToCurrent="scrollToItem(currentDetail._id)"  :item="item" @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
-              </vue-custom-scrollbar>
-            </div>
+          <!--          <template v-if="allShow">-->
+          <!--            &lt;!&ndash;    全部展示        &ndash;&gt;-->
+          <!--            <SortList :list="list" @rightSelect="getRightItem"/>-->
+          <!--          </template>-->
+          <!--      其他条件      -->
+          <template v-if="displayList?.length === 0">
+            <Empty :exampleVisible="false"/>
+          </template>
+          <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
+            <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
+              <ListItem @showItem="showItem(item)" :ref="el=>setItemRef(el,item)"
+                        @afterRemove="scrollToItem(currentDetail._id)"
+                        @scrollToCurrent="scrollToItem(currentDetail._id)" :item="item"
+                        @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
+            </vue-custom-scrollbar>
+          </div>
         </div>
 
         <div style="width:452px;" class="h-full">
@@ -89,6 +92,7 @@ import { preHandle } from '../../courierTool'
 import ui from '../../courierUI'
 import ListItem from '../../ListItem.vue'
 import { formatTime } from '../../../../../util'
+
 export default {
   components: {
     ListItem,
@@ -99,13 +103,13 @@ export default {
 
   data () {
     return {
-      itemRefs:[],
+      itemRefs: [],
       addList: [
         { title: '京东账号', name: 'jd', callBack: () => {} },
         { title: '淘宝账号', name: 'tb', callBack: () => {} },
         { title: '自定义添加', icon: 'fluent:add-16-filled', callBack: () => { this.addCourier() } }
       ],
-      tabs:[],//用于显示的tab
+      tabs: [],//用于显示的tab
       filterPlatform: 'all',
       menus: [
         { name: '关注物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
@@ -141,9 +145,9 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'currentDetail','settings']),
-    lastRefreshTime(){
-      return this.settings.lastRefreshTime?'最后刷新时间：'+formatTime(this.settings.lastRefreshTime):''
+    ...mapWritableState(courierStore, ['orderList', 'currentDetail', 'settings']),
+    lastRefreshTime () {
+      return this.settings.lastRefreshTime ? '最后刷新时间：' + formatTime(this.settings.lastRefreshTime) : ''
     },
     displayList () {
       let list = this.detailList.filter(item => {
@@ -159,7 +163,6 @@ export default {
       return selectData(this.defaultFlow, list)
     },
 
-
     allShow () {
       return this.defaultFlow?.name === 'all'
     }
@@ -167,36 +170,36 @@ export default {
 
   methods: {
     formatTime,
-    ...mapActions(courierStore, ['removeDbData','getHideList']),
-    refreshAll:ui.refreshAll,
-    async showItem(item){
-      console.log('需要显示',item)
-      this.detailList.splice(this.detailList.findIndex(i=>{
-        return i._id===item._id
-      }),1)
+    ...mapActions(courierStore, ['removeDbData', 'getHideList']),
+    refreshAll: ui.refreshAll,
+    async showItem (item) {
+      console.log('需要显示', item)
+      this.detailList.splice(this.detailList.findIndex(i => {
+        return i._id === item._id
+      }), 1)
       await this.getTabList()
     },
-    scrollToItem(id){
+    scrollToItem (id) {
       setTimeout(() => {
         let found = this.itemRefs.find(item => {
           return item.id === id
         })
         if (found) {
           found.el.$el.scrollIntoView()
-          setTimeout(()=>{
-            found.el.$el.firstElementChild.style.border='solid var(--active-bg) 2px'
-            setTimeout(()=>{
-              found.el.$el.firstElementChild.style.border=''
-            },400)
-          },400)
+          setTimeout(() => {
+            found.el.$el.firstElementChild.style.border = 'solid var(--active-bg) 2px'
+            setTimeout(() => {
+              found.el.$el.firstElementChild.style.border = ''
+            }, 400)
+          }, 400)
 
         }
-      },500)
+      }, 500)
     },
-    setItemRef(el,item){
+    setItemRef (el, item) {
       this.itemRefs.push({
-        el:el,
-        id:item._id
+        el: el,
+        id: item._id
       })
     },
     // 关闭
@@ -236,7 +239,7 @@ export default {
         for (const type of courierType) {
           list.push(await selectTab(type, this.orderList))
         }
-        this.tabs=list
+        this.tabs = list
       }
     },
     // 自定义添加快递
@@ -246,7 +249,7 @@ export default {
 
     getRightItem (item) {
       this.currentDetail = item
-      console.log( this.currentDetail, 'de')
+      console.log(this.currentDetail, 'de')
     },
 
     refresh () {
@@ -275,10 +278,10 @@ export default {
   watch: {
     'defaultFlow': {
       async handler (newVal) {
-        console.log('自',newVal)
+        console.log('自', newVal)
         if (newVal?.name === 'hide') {
-          let list=await this.getHideList()
-          console.log('list=筛选 ',list)
+          let list = await this.getHideList()
+          console.log('list=筛选 ', list)
           this.detailList = preHandle(list)
         } else {
           this.detailList = preHandle(this.orderList)
@@ -286,12 +289,12 @@ export default {
       },
       immediate: true
     },
-    'orderList':{
-      handler(newVal){
-        if(this.defaultFlow.name==='hide'){
+    'orderList': {
+      handler (newVal) {
+        if (this.defaultFlow.name === 'hide') {
           return
         }
-        this.detailList=preHandle(newVal)
+        this.detailList = preHandle(newVal)
         this.getTabList()
       }
     }
@@ -337,6 +340,7 @@ export default {
   margin: 50px 0 !important;
   justify-content: center !important;
 }
+
 .state-text {
   width: auto;
   text-wrap: nowrap;
