@@ -43,8 +43,7 @@
         </div>
       </xt-button>
 
-      <MoreDrop v-if="orderData.store==='jd' || orderData.store==='tb'" class="ml-3" :navList="jdTbList"/>
-      <MoreDrop v-else class="ml-3" :navList="moreList"/>
+
     </div>
   </div>
 
