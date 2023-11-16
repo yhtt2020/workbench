@@ -88,6 +88,7 @@ import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
+import cache from "../components/card/hooks/cache";
 
 export default {
   name: 'Code',
@@ -321,6 +322,11 @@ export default {
         this.getUserInfo()
       })
     },
+    offline(){
+      this.$router.replace({ name: 'wizard' })
+      cache.set('isOffline',true)
+      window.$isOffline = true
+    }
   },
 }
 </script>
