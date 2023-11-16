@@ -1,113 +1,110 @@
 <template>
- <div class="flex flex-col rounded-md p-2 dropdown-container" :style="`top: ${position.y}px; left: ${position.x}px`">
-  <div class="p-3 pointer dropdown-item rounded-md flex items-center " v-for="item in list" @click.stop="selectItem(item)">
-   <DropIcon :icon="item.icon" style="font-size: 1.25rem;"></DropIcon>
-   <span class="pl-3 font-16 font-400" :style="item.type === 'deletePacket' || item.type === 'deleteApp' ? {color:'var(--error)'} :{color:'var(--primary-text)'}">{{ item.title }}</span>
-  </div> 
- </div>
- 
-
- <teleport to='body' >
-  <Modal v-if="menuDropShow" v-model:visible="menuDropShow" :blurFlag="true" style="z-index:1000 !important;">
-    <PacketSetting v-if="type === 'packetSet'" :item="item" :no="no" @close="menuDropShow = false" ></PacketSetting>
-    <AddLeftChildChannel v-if="type === 'addNewApp'" :id="id" :no="no" @close="menuDropShow = false"></AddLeftChildChannel>
-    <LinkSetting v-if="type === 'linkSet'" :item="item" :no="no" :id="id" @close="menuDropShow = false"/>
-  </Modal>
- </teleport>
+  <xt-menu name="name" :menus="menus" @contextmenu="revID = item">
+    <div class="flex items-center" @click="currentItem(item)">
+      <div class="flex items-center">
+        <template v-if="item.type === 'group'">
+          <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+        </template>
+        <template v-if="item.type === 'link'">
+          <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+        </template>
+        <template v-if="item.type === 'forum'">
+          <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+        </template>
+      </div>
+      <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+      <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+       v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+    </div>
+  </xt-menu>
 </template>
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
-import { Icon as DropIcon } from '@iconify/vue'
-import { message,Modal as DropModal } from 'ant-design-vue'
+import { Icon as CommunityIcon } from '@iconify/vue'
+import { Modal,message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
-import PacketSetting from '../knownCategory/PacketSettings.vue'
-import Modal from '../../../../components/Modal.vue'
-import AddLeftChildChannel from '../AddLeftChildChannel.vue'
-import LinkSetting from '../knownCategory/LinkSetting.vue'
-
-
 export default {
- props:['list','id','no','position','item'],
+  props:['item','type','no'],
 
- components:{
-  DropIcon,PacketSetting,Modal,AddLeftChildChannel,LinkSetting
- },
+  components:{
+    CommunityIcon
+  },
 
- data(){
-  return{
-    menuDropShow:false,
-    type:'',
-  }
- },
-
- methods:{
-  ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
-
-  selectItem(item){
-   this.type = item.type
-   switch (item.type) {
-    case 'packetSet':
-     this.menuDropShow = true
-     break;
-    case 'linkSet':
-     this.menuDropShow = true
-     break;
-    case 'deleteApp':
-     //  console.log('获取id::>>',this.id);
-     DropModal.confirm({
-      content:'删除应用操作不可撤销,是否确定删除？',
-      centered:true,
-      onOk: async ()=>{
-        const result = await this.removeCategory(this.id)
-        // console.log('返回结果',result);
-        if(result?.status === 1){
-          // console.log('查看社群号',this.no);
-          await this.getChannelList(this.no)
-          await this.getCategoryData(this.no)
+  data(){
+    return{
+      linkMenus:[
+        {
+          name:'链接设置',
+          newIcon:'fluent:settings-16-regular',
+          callBack:()=>{}
+        },
+        {
+          name:'删除应用',
+          newIcon:'akar-icons:trash-can',
+          color: 'var(--error)',
+          callBack:()=>{
+            Modal.confirm({
+              content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+              centered:true,
+              onOk: async ()=>{
+                console.log(this.revID,this.no);
+                const result = await this.removeCategory(this.revID.id)
+                console.log('返回结果',result);
+                if(result?.status === 1){
+                 await this.getChannelList(this.no)
+                 await this.getCategoryData(this.no)
+                }
+              }
+            })
+          }
         }
-      }
-     })
-     break;
-    case 'deletePacket':
-     //  console.log('查看id',this.id);
-     DropModal.confirm({
-      content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-      centered:true,
-      onOk: async ()=>{
-        const result = await this.removeCategory(this.id)
-        if(result?.status === 1){
-          message.success(`${result.info}`)
-          await this.getChannelList(this.no)
-          await this.getCategoryData(this.no)
+      ],
+      menus:[
+        {
+          name:'删除应用',
+          newIcon:'akar-icons:trash-can',
+          color: 'var(--error)',
+          callBack:()=>{
+            Modal.confirm({
+              content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+              centered:true,
+              onOk: async ()=>{
+                console.log(this.revID,this.no);
+                const result = await this.removeCategory(this.revID.id)
+                console.log('返回结果',result);
+                if(result?.status === 1){
+                 await this.getChannelList(this.no)
+                 await this.getCategoryData(this.no)
+                }
+              }
+            })
+          }
         }
+      ],
+      revID:''
+    }
+  },
+
+  computed:{
+    menus(){
+      if(this.type === 'link'){
+        return this.linkMenus
+      }else{
+        return this.menus
       }
-     })
-     break;
-    case 'addNewApp':
-      this.menuDropShow = true
-      break;
-   } 
+    }
+  },
 
-
+  methods:{
+    ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
+    currentItem(item){
+      this.$emit('currentItem',item)
+    }
   }
- }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.dropdown{
- &-container{
-  width:200px;
-  background: var(--secondary-bg);
-  position: fixed;
-  z-index: 1000;
- }
- &-item{
-  &:hover{
-   background: var(--active-secondary-bg);
-  }
- }
-}
 </style>

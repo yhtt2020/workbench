@@ -1,6 +1,14 @@
 <template>
   <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk" :env="env">
-    <div class="bg-mask rounded-lg px-3 py-1 pointer xt-bg-2" @click="showRegionSelect"
+    <template #left-title-icon>
+        <div
+          class="icon"
+          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+            left: 2px; ">
+          <newIcon icon="mdi:steam" style="font-size: 20px;" />
+        </div>
+      </template>
+    <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;">{{ region.name }}
     </div>
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
@@ -16,43 +24,43 @@
         <div class='w-full'>
           <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
           <swiper-slide v-for="item in list">
-            <div class="w-full  cursor-pointer  mt-5" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
+            <div class="w-full mt-5 cursor-pointer" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
               <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
-              <div class="right-top w-14 text-center bg-black bg-opacity-70" style="color:var(--active-text);font-family: oswald;border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
+              <div class="text-center bg-black right-top w-14 bg-opacity-70" style="color:var(--active-text);font-family: oswald;border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
             </div>
           </swiper-slide>
         </swiper>
         </div>
         <!--  -->
-        <!-- <div class="mt-12 flex change bg-black bg-opacity-10 rounded-lg cursor-pointer" @click="discountChange" style="padding:13px 80px;">
-          <Icon icon="reload" class="animate-spin duration-100" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
+        <!-- <div class="flex mt-12 bg-black rounded-lg cursor-pointer change bg-opacity-10" @click="discountChange" style="padding:13px 80px;">
+          <Icon icon="reload" class="duration-100 animate-spin" style="font-size: 1.429em; color:rgba(255, 255, 255, 0.85);" v-if="reloadShow === true"></Icon>
           <Icon icon="reload" style="font-size: 1.429em; color: rgba(255, 255, 255, 0.85);" v-else></Icon>
           <span style="margin-left: 1em;color: rgba(255, 255, 255, 0.85);">换一换</span>
         </div> -->
-        <div class="flex mt-12 items-center justify-between" style="color: var(--primary-text)">
-          <div class="s-item change  flex rounded-lg cursor-pointer xt-bg-2" @click="discountChange" style="padding:13px 41px;">
+        <div class="flex items-center justify-between mt-12" style="color: var(--primary-text)">
+          <div class="flex rounded-lg cursor-pointer s-item change xt-bg-2" @click="discountChange" style="padding:13px 41px;">
             <Icon icon="reload" class="animate-spin" style="font-size: 1.429em" v-if="reloadShow === true"></Icon>
             <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
             <span style="margin-left: 1em;">换一换</span>
           </div>
-          <span style="padding:13px 26px;" class="s-item rounded-lg change pointer  xt-bg-2" @click="enterDiscountDetail">更多</span>
+          <span style="padding:13px 26px;" class="rounded-lg s-item change pointer xt-bg-2" @click="enterDiscountDetail">更多</span>
         </div>
       </template>
       <template v-if="detailShow === true">
 
-        <div class="flex flex-grow flex-col" style="margin-top: 14px;" >
-          <div class="detail-image rounded-lg" style="margin-bottom: 14px;">
+        <div class="flex flex-col flex-grow" style="margin-top: 14px;" >
+          <div class="rounded-lg detail-image" style="margin-bottom: 14px;">
             <img class="rounded-lg" :src="dpList.header_image" alt="">
           </div>
           <div class="truncate" style="font-size: 18px;font-weight: 500;">{{dpList.name}}</div>
           <span class="content-introduction" style="color:var(--secondary-text);font-size: 16px;font-weight: 400;">{{dpList.short_description}}</span>
           <div class="flex" style="margin-bottom: 8px;">
-            <span class="discount-description rounded-md" style="background:var(--secondary-bg);color: var(--secondary-text);font-size: 12px;font-weight: 500;"  v-for="item in dpList.genres">{{item.description}}</span>
+            <span class="rounded-md discount-description" style="background:var(--secondary-bg);color: var(--secondary-text);font-size: 12px;font-weight: 500;"  v-for="item in dpList.genres">{{item.description}}</span>
           </div>
           <span class="line-through" style="font-family: Oswald-Regular;font-size: 12px;">
             {{dpList.price_overview.initial_formatted}}
           </span>
-          <div class="flex w-full justify-between " style="margin-bottom: 16px;">
+          <div class="flex justify-between w-full " style="margin-bottom: 16px;">
             <span style="font-family: Oswald-SemiBold;color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 400; padding-right: 2.41em;">
              {{dpList.price_overview.final_formatted}}
             </span>
@@ -63,16 +71,16 @@
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack()" class=" change pointer rounded-lg w-12 h-12 flex items-center justify-center" style="background: var(--primary-bg);">
+            <div @click="discountBack()" class="flex items-center justify-center w-12 h-12 rounded-lg change pointer" style="background: var(--primary-bg);">
               <Icon icon="xiangzuo" style="font-size: 1.715em;color:var(--primary-text);"></Icon>
             </div>
-            <span class="change pointer rounded-lg  flex items-center justify-center"
+            <span class="flex items-center justify-center rounded-lg change pointer"
             style="padding:13px 30px;color:var(--primary-text); background: var(--primary-bg);"
              @click="enterGameDetail(dpList.steam_appid)"
             >
               详情
             </span>
-            <span class="change pointer rounded-lg flex items-center justify-center"
+            <span class="flex items-center justify-center rounded-lg change pointer"
              style="padding:13px 30px;color:var(--primary-text); background: var(--primary-bg);"
              @click="openSteam(dpList.steam_appid)">购买</span>
           </div>
@@ -100,6 +108,7 @@ import Template from '../../../../user/pages/Template.vue'
 import { regionRange } from '../../../js/axios/api'
 import _ from 'lodash-es'
 import browser from '../../../js/common/browser'
+import {Icon as newIcon} from '@iconify/vue'
 export default {
   name:'GamesDiscount',
   props:{
@@ -124,7 +133,8 @@ export default {
     Widget,
     Swiper,
     SwiperSlide,
-    HorizontalDrawer
+    HorizontalDrawer,
+    newIcon
   },
   data(){
     return{
@@ -133,7 +143,7 @@ export default {
       options:{
         className:'card',
         title:'',
-        icon:'steam',
+        // icon:'steam',
         type:'games',
         epicShow:true
       },

@@ -11,7 +11,7 @@
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 24px;" />
+          <newIcon icon="mdi:steam" style="font-size: 20px;" />
         </div>
       </template>
     <template v-if="showSize.width === 1 && showSize.height === 2">

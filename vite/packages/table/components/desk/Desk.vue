@@ -38,29 +38,34 @@
         </a-result>
       </div>
     </div>
+    <FloatMenu
+      v-if="isFreeLayout"
+      @scrollbarRedirect="freeLayoutScrollbarRedirect"
+    ></FloatMenu>
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
       @contextmenu="showMenu"
     >
+      <!-- 悬浮菜单 -->
       <!-- 自由布局滚动 -->
       <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
-          <!-- 自由布局画布 -->
-          <FreeLayoutContainer :currentDesk="currentDesk">
-            <!-- 可拖拽元素 -->
-            <template #box="{ data }">
-              <component
-                :desk="currentDesk"
-                :is="data?.data.name"
-                :customIndex="data?.data.id"
-                :customData="data?.data.customData"
-              />
-            </template>
-            <!-- 鼠标跟随元素 -->
-            <!-- <template #preview="{ data }">
+          <FreeLayoutCanvas>
+            <FreeLayoutContainer :currentDesk="currentDesk">
+              <!-- 可拖拽元素 -->
+              <template #box="{ data }">
+                <component
+                  :desk="currentDesk"
+                  :is="data?.data.name"
+                  :customIndex="data?.data.id"
+                  :customData="data?.data.customData"
+                />
+              </template>
+              <!-- 鼠标跟随元素 -->
+              <!-- <template #preview="{ data }">
             <component
               :desk="currentDesk"
               :is="data?.data.name"
@@ -68,7 +73,9 @@
               :customData="data?.data.customData"
             />
           </template> -->
-          </FreeLayoutContainer>
+            </FreeLayoutContainer>
+          </FreeLayoutCanvas>
+          <!-- 自由布局画布 -->
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
@@ -264,7 +271,7 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <a-drawer v-model:visible="settingVisible" placement="right">
+  <a-drawer v-model:visible="settingVisible" placement="right" :width="500">
     <XtTab
       class="mb-2"
       v-if="settingVisible"

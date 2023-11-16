@@ -42,6 +42,11 @@ const saveTitleText = () => {
     useYuanCommunityStore.postContent.title = titleValue.value
 }
 watch(titleValue, _.debounce(saveTitleText, 500))
+watch(() => useYuanCommunityStore.postContent.title, (val) => {
+    if (val) {
+        titleValue.value = val
+    }
+})
 </script>
 <style lang='scss' scoped>
 :deep(.ant-input) {

@@ -2,10 +2,10 @@
   <Widget :options="options" :customIndex="customIndex" :desk="desk">
     <template #left-title-icon>
       <div
-        class="icon flex items-center justify-center"
+        class="flex items-center justify-center icon"
         style="width: 38px;height:24px; position: absolute; left: 2px"
       >
-        <newIcon icon="cib:epic-games" style="font-size: 22px" />
+        <newIcon icon="cib:epic-games" style="font-size: 20px" />
       </div>
     </template>
 
