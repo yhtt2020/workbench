@@ -908,8 +908,14 @@ export default {
           filesArr.push(files[i].path)
         }
       }
-      this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
+      // this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
+      this.dropFiles = await tsbApi.system.extractFileIcon(JSON.parse(JSON.stringify(filesArr)))
       this.dropList.push(...this.dropFiles)
+      // this.dropList =await Promise.all(filesArr.map(async(item)=>{
+      //     console.log(item,'item')
+      //     let dropFiles =await tsbApi.system.extractFileIcon(item)
+      //     return `file:${dropFiles}`
+      //   }))
     },
     clickItem (item) {
       this.activeRightItem = 0
@@ -1027,8 +1033,36 @@ export default {
             filesArr.push(savePath[i])
           }
         }
-        let dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
-        this.dropList.push(...dropFiles)
+        // 原来的方法
+        // let dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
+        //   this.dropList.push(...dropFiles)
+
+        
+        // console.log(JSON.parse(JSON.stringify(filesArr)))
+        
+        this.dropList =await Promise.all(filesArr.map(async(item)=>{
+          // console.log(item,'item')
+          const fileName = item.substring(item.lastIndexOf("\\") + 1);
+          let dropFiles =await tsbApi.system.extractFileIcon(item)
+          return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
+        }))
+        // this.dropList=(this.dropList).toString()
+        // console.log(this.dropList,'dropList')
+
+        
+        // let dropFiles
+        // for(const item of filesArr){
+        //   console.log(item,'item')
+        //   let dropFiles =await tsbApi.system.extractFileIcon(JSON.stringify(item))
+        //   // let result=''
+        //   // for(const item of dropFiles){
+        //   //   result+=item
+        //   // }
+        //   this.dropList.push(...dropFiles)
+        // }
+        // let dropFiles =await tsbApi.system.extractFileIcon(filesArr)
+        // this.dropList.push(...dropFiles)
+        // console.log(this.dropList,'dropList')
       } else {
         // console.log('取消选择')
       }

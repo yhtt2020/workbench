@@ -70,7 +70,6 @@ const emits = defineEmits(["click"]);
 const handleClick = useThrottleFn(() => {
   copyToClipboard();
   emits("click");
-  console.log(throttleTime.value);
 
 }, throttleTime.value);
 

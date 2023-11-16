@@ -70,17 +70,18 @@
   import Markdown from './markdown.vue'
   import { noteStore } from '../store'
   import { formatTime } from '../../../util'
+  import { message } from 'ant-design-vue'
   export default {
     components: {
         Icon,
         Markdown,
     },
-    props:['changeIsFull','selDesk'],
+    props:['changeIsFull','selDesk','watchEditorValue'],
     watch: {
 
     },
     computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
+      ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
       ...mapState(appStore,['userInfo','backgroundImage']),
         deskName(){
             if (this.noteList.length) {
@@ -174,6 +175,12 @@
         ],
       };
     },
+    unmounted(){
+      if(this.noteList.length > 0 && this.selNote >=0){
+        // 将数据直接传入到小屏幕编辑器中
+        this.watchEditorValue(this.noteList[this.selNote].customData.text)
+      }
+    },
     methods: {
       ...mapActions(cardStore, ['updateCustomData']),
       ...mapActions(noteStore, ['saveNoteDb', 'getNotes', 'addNoteToDesk', 'changeBg', 'moveToTrash', 'restore', 'deleteNote']),
@@ -217,7 +224,7 @@
         if (!this.isSelTab) {
           this.selDesk()
         }
-      }
+      },
     },
   };
   </script>

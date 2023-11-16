@@ -52,6 +52,7 @@
                 style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
                 <!-- 动态组件 -->
                 <!-- body -->
+                {{ props.forum }}
                 <!-- <slot name="content" /> -->
                 <component :is="componentId"></component>
                 <div style=" " v-if="imageLoadVisible">
@@ -199,7 +200,7 @@ const fullScreen = ref(false)
 const props = defineProps({
     options: {
         type: () => Object,
-    }
+    },
 })
 const componentId = computed(() => {
     if (defaultType.value.value == 'dynamic') {
@@ -272,7 +273,10 @@ onMounted(async () => {
             label: item.name
         })
     })
-    cascaderValue.value = selectOptions.value[0]
+    cascaderValue.value = selectOptions.value.find((item)=>{
+        return item.label===useYuanCommunityStore.defaultSection.value.name
+    })
+    // console.log(useYuanCommunityStore.forumsList,useYuanCommunityStore.defaultSection)
 })
 
 // 选择发帖板块
@@ -315,7 +319,7 @@ const publishPost = async () => {
         let post = postContent.value
         const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
         setTimeout(async () => {
-            console.log(cascaderValue.value, post.imagesList, post.content, title, post.coverList, 'post-publish')
+            // console.log(cascaderValue.value, post.imagesList, post.content, title, post.coverList, 'post-publish')
             await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
         });
     }

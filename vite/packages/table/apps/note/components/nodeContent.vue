@@ -55,17 +55,14 @@
             @blur="changeNoteTitle"
           ></a-input>
           <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">
-            <Markdown></Markdown>
+            <Markdown ref="child"></Markdown>
           </div>
         </div>
       </div>
     </div>
   </div>
     <!-- 全屏模式 -->
-    <FullScreen v-if="isFull" :changeIsFull="changeIsFull" :selDesk="selDesk"></FullScreen>
-    <!-- <teleport to="body">
-        
-    </teleport> -->
+    <FullScreen v-if="isFull" :changeIsFull="changeIsFull" :watchEditorValue="watchEditorValue" :selDesk="selDesk"></FullScreen>
 </template>
 
 <script>
@@ -230,7 +227,11 @@ export default {
       if (!this.isSelTab) {
         this.selDesk()
       }
-    }
+    },
+    watchEditorValue(value){
+      this.$refs.child.childEvent(value);
+    },
+    
   },
   watch: {
     isSelTab (newval, oldval) {
