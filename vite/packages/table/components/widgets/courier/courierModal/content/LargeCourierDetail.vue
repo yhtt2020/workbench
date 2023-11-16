@@ -5,6 +5,7 @@
         <HorizontalPanel :navList="tabs.slice(0,4)" v-model:selectType="defaultFlow"/>
         <DropDown class="ml-3" :navList="tabs.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
+
       <div class="flex right-button">
         <DropIndex :navList="addList" dropStyle="var(--secondary-bg) !important" @open="addCourier"></DropIndex>
         <a-tooltip placement="top" class="mr-3" title="设置">
@@ -33,13 +34,26 @@
         <div class="flex flex-col h-full w-1/2">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
-            <a-tooltip placement="top" class="mr-3" :title="lastRefreshTime">
-              <xt-button w="40" h="40" class="category-button" @click="refreshAll">
+            <div class="flex" v-if="findVisible">
+              <div  class="mr-2">
+                <a-input size="large" v-model:value="searchWords" allow-clear class="rounded-full"></a-input>
+              </div>
+              <xt-button  @click="findVisible=false;searchWords=''" w="40" h="40"> <CloseOutlined  style="font-size: 1.1em"/></xt-button>
+            </div>
+            <div class="flex " v-else>
+              <xt-button  w="40" h="40" class="category-button mr-2" @click="showFind">
                 <div class="flex items-center justify-center">
-                  <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
+                  <SearchOutlined  style="font-size: 1.2em"/>
                 </div>
               </xt-button>
-            </a-tooltip>
+              <a-tooltip placement="top" class="mr-3" :title="lastRefreshTime">
+                <xt-button w="40" h="40" class="category-button" @click="refreshAll">
+                  <div class="flex items-center justify-center">
+                    <SmallIcon icon="fluent:arrow-counterclockwise-20-filled"  style="font-size: 1.2em" />
+                  </div>
+                </xt-button>
+              </a-tooltip>
+            </div>
           </div>
           <!--          <template v-if="allShow">-->
           <!--            &lt;!&ndash;    全部展示        &ndash;&gt;-->
@@ -92,13 +106,14 @@ import { preHandle } from '../../courierTool'
 import ui from '../../courierUI'
 import ListItem from '../../ListItem.vue'
 import { formatTime } from '../../../../../util'
-
+import {CloseOutlined,SearchOutlined} from '@ant-design/icons-vue'
 export default {
   components: {
     ListItem,
     Cover,
     SmallIcon, HorizontalPanel, DropIndex, AddCourierModal,
-    CourierSetting, DropDown, Empty, RightDetail, SelectPlateform
+    CourierSetting, DropDown, Empty, RightDetail, SelectPlateform,
+    CloseOutlined,SearchOutlined
   },
 
   data () {
@@ -130,6 +145,8 @@ export default {
       defaultFlow: {
         name: 'all'
       },
+      findVisible:false,//查找可见度
+      searchWords:'',//查找关键词
       detailList: [],
       settingsScroller: {
         useBothWheelAxes: true,
@@ -160,6 +177,11 @@ export default {
           return item.store === this.filterPlatform
         }
       })
+      if(this.searchWords){
+        list=list.filter(li=>{
+          return li.title?.includes(this.searchWords)
+        })
+      }
       return selectData(this.defaultFlow, list)
     },
 
@@ -171,6 +193,9 @@ export default {
   methods: {
     formatTime,
     ...mapActions(courierStore, ['removeDbData', 'getHideList']),
+    showFind(){
+      this.findVisible=true
+    },
     refreshAll: ui.refreshAll,
     async showItem (item) {
       console.log('需要显示', item)
