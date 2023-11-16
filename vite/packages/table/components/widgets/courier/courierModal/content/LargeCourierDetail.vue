@@ -1,10 +1,12 @@
 <template>
-  <div class="flex flex-col" style="width: 976px;height: 600px;">
+  <div :class="{'small':mode==='small'}" class="flex flex-col" style="" :style="mode==='small'?'width:580px;height:700px':'width: 976px;height: 600px;'">
     <div class="flex items-center justify-center w-full py-4 mb-4" style="position: relative;">
-      <div class="flex">
+<!--      {{mode}} {{route}}-->
+      <div class="flex" v-if="mode==='large'">
         <HorizontalPanel :navList="tabs.slice(0,4)" v-model:selectType="defaultFlow"/>
         <DropDown class="ml-3" :navList="tabs.slice(4)" @selectType="getSelectType"></DropDown>
       </div>
+
 
       <div class="flex right-button">
         <DropIndex :navList="addList" dropStyle="var(--secondary-bg) !important" @open="addCourier"></DropIndex>
@@ -30,8 +32,8 @@
 
     <template v-else>
       <!--   筛选不到数据   -->
-      <div class="flex w-full justify-between px-6 flex-1 h-0">
-        <div class="flex flex-col h-full w-1/2">
+      <div class="flex w-full justify-between px-6 flex-1 h-0" >
+        <div :class="{'w-1/2':mode==='large','w-full':mode==='small'}" class="flex flex-col h-full " v-if="route==='list' || mode==='large'">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
             <div class="flex" v-if="findVisible">
@@ -63,17 +65,28 @@
           <template v-if="displayList?.length === 0">
             <Empty :exampleVisible="false"/>
           </template>
-          <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
-            <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
+          <div  class="flex flex-col mr-4 h-0 flex-1 w-full">
+            <vue-custom-scrollbar :settings="settingsScroller" class="h-full">
               <ListItem @showItem="showItem(item)" :ref="el=>setItemRef(el,item)"
                         @afterRemove="(item)=>{this.afterRemove(item,index)}"
                         @scrollToCurrent="scrollToItem(currentDetail._id)" :item="item"
-                        @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
+                        @goDetail="goDetail(item)" v-for="(item,index) in displayList"></ListItem>
             </vue-custom-scrollbar>
           </div>
         </div>
-
-        <div style="width:452px;" class="h-full">
+        <div style="" :style="{width:mode==='small'?'100%':'452px'}" class="h-full" v-if="route==='detail' || mode==='large'">
+          <div class="left-back">
+            <a-tooltip placement="top">
+              <template #title>
+                <span class="xt-text-2">返回</span>
+              </template>
+              <xt-button type="default" w="32" h="32"  @click="goBack" style="border-radius: 8px !important;">
+                <div class="flex items-center justify-center " >
+                  <SmallIcon icon="fluent:chevron-left-16-filled" class="xt-text-2" style="font-size:1.2rem;"/>
+                </div>
+              </xt-button>
+            </a-tooltip>
+          </div>
           <RightDetail v-if="currentDetail?._id" :detail="currentDetail"/>
         </div>
       </div>
@@ -115,7 +128,17 @@ export default {
     CourierSetting, DropDown, Empty, RightDetail, SelectPlateform,
     CloseOutlined,SearchOutlined
   },
-
+  emits:['changeRoute'],
+  props:{
+    mode:{
+      type:String,
+      default:'large'
+    },
+    route:{
+      type:String,
+      default:'list'
+    }
+  },
   data () {
     return {
       itemRefs: [],
@@ -196,12 +219,23 @@ export default {
     showFind(){
       this.findVisible=true
     },
+    goDetail(item){
+      this.currentDetail=item
+      if(this.mode==='small'){
+        this.$emit('changeRoute','detail')
+      }
+    },
+    goBack(){
+      console.log('提交时间')
+      this.$emit('changeRoute','list')
+    },
     refreshAll: ui.refreshAll,
     async showItem (item) {
       console.log('需要显示', item)
       this.detailList.splice(this.detailList.findIndex(i => {
         return i._id === item._id
       }), 1)
+
       await this.getTabList()
     },
     afterRemove(item,index){
@@ -305,7 +339,7 @@ export default {
     console.log('与阿婆', this.detailList)
     this.scrollToItem(this.currentDetail._id)
     await this.getTabList()
-    this.defaultFlow = (await this.tabList)[0]
+    this.defaultFlow = (await this.getTabList())[0]
     // console.log(this.list, 'display',this.$refs)
     // setTimeout(()=>{
     //   console.log('全部',this.itemRefs)
@@ -395,5 +429,17 @@ export default {
   font-size: 18px;
   display: inline-block;
   min-width: 18px;
+}
+
+.left-back{
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+.small{
+  .right-button{
+    top:0px;
+    right:0px
+  }
 }
 </style>

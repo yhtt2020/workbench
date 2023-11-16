@@ -30,7 +30,7 @@
   </div>
 
    <div class="flex flex-col px-6">
-    <DetailHead :orderData="orderNum"/>
+    <DetailHead :orderData="currentDetail"/>
 
     <div class="flex flex-col xt-bg-2 px-3 mb-4 py-2.5 rounded-md">
       <div class="flex justify-between w-full">

@@ -240,10 +240,10 @@ export default {
       // console.log(windoWidth);
       if (windoWidth > 1200) {
         this.largeDetailVisible = true
-        // this.courierShow = true;
+        // this.modalMode = true;
       } else {
         this.largeDetailVisible = false
-        // this.courierShow = false;
+        // this.modalMode = false;
       }
       // console.log(windoWidth,'windoWidth')
     },

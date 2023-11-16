@@ -62,19 +62,19 @@
             </template>
           </template>
         </template>
-        <template v-if="allCourierVisible">
-          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
-          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
-        </template>
+<!--        <template v-if="allCourierVisible">-->
+<!--          <LargeCourierModal :route="showCourierDetail?'detail':'list'" :mode="modalMode" :show="courierModalVisible" @close-modal="changeState"/>-->
+<!--&lt;!&ndash;          //<SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>&ndash;&gt;-->
+<!--        </template>-->
         <teleport to='body'>
-          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+          <xt-modal v-if="courierModalVisible" v-model:visible="courierModalVisible" title="" :isFooter="false" zIndex="9"
                     :isHeader="false" :boxIndex="100" :maskIndex="99">
-            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false;getDbCourier()"/>
-            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>
+            <LargeCourierDetail @change-route="changeRoute" :route="showCourierDetail?'detail':'list'" :mode="modalMode" @close="courierModalVisible = false;getDbCourier()"/>
+<!--            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>-->
           </xt-modal>
         </teleport>
       </div>
-      <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
+<!--      <SmallCourierModal :show="showSmallDetail" :route="showCourierDetail?'detail':'list'" @close-modal="smallDetailsVisible"/>-->
     </div>
 
 
@@ -182,7 +182,8 @@ export default {
           newIcon: 'fluent:box-16-regular',
           title: '全部快递',
           fn: () => {
-            this.allCourierVisible = true
+            this.showCourierDetail=false
+            this.courierModalVisible = true
           },
         },
         {
@@ -205,11 +206,12 @@ export default {
       },
       isLoading: false,
       allCourierVisible: false,
-      courierShow: true,
+      modalMode: 'large',
       deliveryDetails: [],
-      showCourierDetail: false,
+      showCourierDetail: false,//显示详情
       showSmallDetail: false,
       largeDetailVisible: true,
+      courierModalVisible:false,//显示模态弹窗
       env: {
         web: false,
         mobile: false,
@@ -227,26 +229,30 @@ export default {
       this.allCourierVisible = false
       this.getDbCourier()
     },
+    changeRoute(route){
+      this.showCourierDetail=(route==='detail')
+    },
     refreshCourier () {
       this.refreshCouriers()
     },
     showDetail (item) {
       this.currentDetail = item
-      this.showCourierDetail = true
+      this.courierModalVisible = true
+      this.showCourierDetail=true
       // console.log(this.currentDetail);
     },
     closeCourierDetail () {
-      this.showCourierDetail = false
+      this.courierModalVisible = false
     },
     handleResize () {
-      let windoWidth = window.innerWidth
+      let windowWidth = window.innerWidth
       // console.log(windoWidth);
-      if (windoWidth > 1200) {
+      if (windowWidth > 1200) {
         this.largeDetailVisible = true
-        this.courierShow = true
+        this.modalMode = 'large'
       } else {
         this.largeDetailVisible = false
-        this.courierShow = false
+        this.modalMode = 'small'
       }
     },
     refreshAll: ui.refreshAll,
