@@ -1,11 +1,7 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs, reactive } from "vue";
+import { ref, watch, toRefs } from "vue";
 import { storeToRefs } from "pinia";
-
-import DraggableBox from "./DraggableBox.vue";
-import DragPreview from "./DragPreview.vue";
-import Canvas from "./Canvas.vue";
 import { useFreeLayoutStore } from "./store";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
@@ -14,8 +10,13 @@ const props = defineProps({
 });
 
 const { currentDesk }: any = toRefs(props);
-const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, freeLayoutEnv } =
-  storeToRefs(freeLayoutStore);
+const {
+  freeLayoutData,
+  getCurrentDeskId,
+  getFreeLayoutData,
+  freeLayoutEnv,
+  getFreeLayoutState,
+} = storeToRefs(freeLayoutStore);
 
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
@@ -86,8 +87,9 @@ function updateCards(data) {
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
       if (last.value) {
         getFreeLayoutData.value[id] = {
-          left: getFreeLayoutData.value[id].left,
-          top: getFreeLayoutData.value[id].top,
+          left: getFreeLayoutData.value[id].left || 0,
+          top: getFreeLayoutData.value[id].top || 0,
+          index: getFreeLayoutData.value[id].index || 1,
           id,
           name,
           customData,
@@ -96,10 +98,11 @@ function updateCards(data) {
       return;
     }
     // 优化3 抽离获取坐标过程
-    const { left, top } = await getPosition(item);
+    // const { left, top } = await getPosition(item);
     getFreeLayoutData.value[item.id] = {
-      left,
-      top,
+      left: 0,
+      top: 0,
+      index: 1,
       id,
       name,
       customData,
@@ -139,28 +142,20 @@ watch(currentDesk.value?.cards, (cards) => {
       }"
     ></div>
   </div>
-  <!-- 拖拽层 -->
-  <teleport to="body">
-    <DragPreview>
-      <template #box="{ data }">
-        <slot name="box" :data="{ data }"></slot>
-      </template>
-    </DragPreview>
-  </teleport>
-  <!-- 整体画布层 -->
-
-  <!-- <Canvas> -->
-  <DraggableBox
+  <xt-drag
+    parent
+    boundary
     v-for="item in getFreeLayoutData"
-    :id="item.id"
-    :top="item.top"
-    :left="item.left"
+    v-model:y="item.top"
+    v-model:x="item.left"
+    v-model:index="item.index"
     :key="item.id"
-    :data="item"
+    :parentScale="getFreeLayoutState.canvas.zoom"
+    :afterDragging="getFreeLayoutState.option.afterDragging"
+    :showGrid="getFreeLayoutState.option.afterDragging"
+    :whileDragging="getFreeLayoutState.option.whileDragging"
+    :collision="getFreeLayoutState.option.collision"
   >
-    <template #box="{ data }">
-      <slot name="box" :data="{ data }"></slot>
-    </template>
-  </DraggableBox>
-  <!-- </Canvas> -->
+    <slot name="box" :data="{ ...item }"></slot>
+  </xt-drag>
 </template>

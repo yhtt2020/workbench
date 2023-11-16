@@ -3,6 +3,7 @@
     <RightMenu
       :menus="menus"
       :sizes="sizeList"
+      :customIndex="customIndex"
       @removeCard="doRemoveCard"
       v-model:sizeType="sizeType"
       v-model:oldMenuVisible="menuVisible"
@@ -10,7 +11,8 @@
       <div
         v-if="!options?.hide"
         :class="classes"
-        style="color: var(--primary-text)"
+        class="flex flex-col"
+        style="color: var(--primary-text); padding: 0"
         :style="{
           display: options.hide == true ? 'none' : '',
           width: customSize.width,
@@ -22,7 +24,7 @@
         <slot name="cardTitle">
           <div
             :class="options.noTitle === true ? 'no-title' : 'content-title'"
-            class="flex items-center justify-between"
+            class="flex items-center justify-between pt-3 px-3"
           >
             <div class="left-title" v-if="options.noTitle !== true">
               <!-- 标题左侧插槽 -->
@@ -44,6 +46,7 @@
               <RightMenu
                 :menus="menus"
                 :sizes="sizeList"
+                :customIndex="customIndex"
                 model="all"
                 @removeCard="doRemoveCard"
                 v-model:sizeType="sizeType"
@@ -56,9 +59,11 @@
         </slot>
         <!-- 标题栏end   -->
         <PageState :env="env" :options="options">
-          <slot>
-            <!--  主体内容插槽1  -->
-          </slot>
+          <div class="px-3 pb-3 h-full">
+            <slot>
+              <!--  主体内容插槽1  -->
+            </slot>
+          </div>
         </PageState>
       </div>
       <slot v-else>

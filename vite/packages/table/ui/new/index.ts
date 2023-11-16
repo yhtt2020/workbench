@@ -7,8 +7,7 @@ export default {
     const components = import.meta.glob("./**/index.ts");
     for (const path in components) {
       const component = components[path];
-      const name =
-        "Xt" + capitalizeFirstLetter(path.replace("./", "").split("/")[0]);
+      const name = "Xt" + capitalizeFirstLetter( path.replace("./", "").split("/")[0]);
       app.component(name, defineAsyncComponent(component));
     }
   },

@@ -13,10 +13,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     dragData: {},
     // 默认状态数据
     defaultState: {
-      // 未划分
-      start: true,
-      afterDrop: false, // 鼠标落下吸附网格
-      whileDrag: false,
       // 系统数据
       system: {
         // 是否使用自由布局
@@ -28,14 +24,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
           left: 0,
         },
       },
+      option: {
+        afterDragging: false,
+        whileDragging: false,
+        collision: false,
+        margin: 6, // 没用目前 可能会直接删
+      },
 
-      margin: 6,
       // 辅助线数据
       line: {
         isAuxLine: false, // 是否显示辅助线
-        isCenterLine: false, // 是否显示中心线
         isBorderLine: false, // 是否显示边框线
-
+        isCenterLine: false, // 是否显示中心线
         centerLine: {
           x: 1000,
           y: 1000,
@@ -100,9 +100,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局边距状态
     getFreeLayoutMargin() {
-      return this.getFreeLayoutState?.afterDrop
-        ? this.getFreeLayoutState?.margin
-        : 0;
+      // return this.getFreeLayoutState?.option.afterDragging ||
+      //   this.getFreeLayoutState?.option.whileDragging
+      //   ? this.getFreeLayoutState?.margin
+      //   : 0;
+      return 6;
     },
     // 获取当前状态
     isFreeLayoutExist() {
@@ -164,7 +166,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 如果自由布局数据存在进行切换
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
-          !this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout;
+          !this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
       } else {
         // 否则进行初始化
         this.initFreeLayout();

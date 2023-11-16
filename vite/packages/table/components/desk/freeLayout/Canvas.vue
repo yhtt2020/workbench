@@ -2,7 +2,7 @@
 <template>
   <div
     class="relative mx-auto"
-    :ref="drop"
+
     :style="{
       width: getFreeLayoutState.canvas.width + 'px',
       height: getFreeLayoutState.canvas.height + 'px',
@@ -70,43 +70,6 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutData, getFreeLayoutState, getFreeLayoutMargin }: any =
   storeToRefs(freeLayoutStore);
-const moveBox = (id: any, left: number, top: number) => {
-  Object.assign(getFreeLayoutData.value[id], { left, top });
-};
-
-const [, drop] = useDrop(() => ({
-  accept: ItemTypes.BOX,
-  drop(item: any, monitor) {
-    const delta = monitor.getDifferenceFromInitialOffset() as {
-      x: number;
-      y: number;
-    };
-    //     // 计算鼠标的移动距离
-    // const deltaX = x - initialClientOffset.value.x;
-    // const deltaY = y - initialClientOffset.value.y;
-
-    // // 修正移动距离，考虑缩放比例
-    // const correctedDeltaX = deltaX / getFreeLayoutState.value.zoom;
-    // const correctedDeltaY = deltaY / getFreeLayoutState.value.zoom;
-
-    // // 计算拖拽元素应该位于的新坐标
-    // x = initialClientOffset.value.x + correctedDeltaX;
-    // y = initialClientOffset.value.y + correctedDeltaY;
-    // 这里处理位置摆放
-    let left = Math.round(item.left + delta.x);
-    let top = Math.round(item.top + delta.y);
-    if (getFreeLayoutState.value.afterDrop) {
-      [left, top] = freeLayoutStore.snapToGrid(left, top);
-    }
-    moveBox(
-      item.id,
-      left + getFreeLayoutMargin.value,
-      top + getFreeLayoutMargin.value
-    );
-    return undefined;
-  },
-}));
-
 // 辅助线生成
 function auxLine(length: number, factor: number) {
   let arr: any = [];

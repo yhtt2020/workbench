@@ -21,9 +21,20 @@
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
-        <div>开启悬浮窗</div>
+        <div>悬浮操作栏</div>
         <a-switch v-model:checked="getFreeLayoutState.system.isFloatMenu" />
       </div>
+      <hr class="my-3" />
+      <div class="flex justify-between mb-3">
+        <div>碰撞体积</div>
+        <a-switch v-model:checked="getFreeLayoutState.option.collision" />
+      </div>
+      <hr class="my-3" />
+      <div class="flex justify-between mb-3">
+        <div>基于网格移动</div>
+        <a-switch v-model:checked="getFreeLayoutState.option.whileDragging" />
+      </div>
+      <hr class="my-3" />
       <div class="mb-3">画布中心点</div>
       <div class="xt-text-2 text-sm my-3">
         桌面是一张「画布」，你可以手动调节画布的中心，然后点击「回到中心点」快速定位画布。
@@ -51,7 +62,7 @@
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
         <div>拖拽自动吸附到网格</div>
-        <a-switch v-model:checked="getFreeLayoutState.afterDrop" />
+        <a-switch v-model:checked="getFreeLayoutState.option.afterDragging" />
       </div>
       <div class="xt-text-2 text-sm my-3">
         拖动小组件进行排列时自动对齐到网格。

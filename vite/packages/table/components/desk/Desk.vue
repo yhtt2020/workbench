@@ -55,24 +55,14 @@
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas>
             <FreeLayoutContainer :currentDesk="currentDesk">
-              <!-- 可拖拽元素 -->
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
-                  :is="data?.data.name"
-                  :customIndex="data?.data.id"
-                  :customData="data?.data.customData"
+                  :is="data.name"
+                  :customIndex="data.id"
+                  :customData="data.customData"
                 />
               </template>
-              <!-- 鼠标跟随元素 -->
-              <!-- <template #preview="{ data }">
-            <component
-              :desk="currentDesk"
-              :is="data?.data.name"
-              :customIndex="data?.data.id"
-              :customData="data?.data.customData"
-            />
-          </template> -->
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
           <!-- 自由布局画布 -->

@@ -1,5 +1,6 @@
 <!-- 滚动条视图和事件 -->
 <template>
+  <!-- <xt-msg v-model="aa" title="1111"> </xt-msg> -->
   <div
     v-show="freeLayoutEnv.loading"
     ref="scrollbar"
@@ -25,10 +26,10 @@ import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 
 // import Container from "./FloatMenu/Container.vue";
-
+const aa = ref(true);
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData, freeLayoutEnv ,getFreeLayoutData} =
+const { getFreeLayoutState, dragData, freeLayoutEnv, getFreeLayoutData } =
   storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
