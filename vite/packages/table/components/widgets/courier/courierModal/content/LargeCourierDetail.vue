@@ -66,7 +66,7 @@
           <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
             <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
               <ListItem @showItem="showItem(item)" :ref="el=>setItemRef(el,item)"
-                        @afterRemove="scrollToItem(currentDetail._id)"
+                        @afterRemove="(item)=>{this.afterRemove(item,index)}"
                         @scrollToCurrent="scrollToItem(currentDetail._id)" :item="item"
                         @goDetail="this.currentDetail=item" v-for="(item,index) in displayList"></ListItem>
             </vue-custom-scrollbar>
@@ -203,6 +203,22 @@ export default {
         return i._id === item._id
       }), 1)
       await this.getTabList()
+    },
+    afterRemove(item,index){
+      if(item!==this.currentDetail){
+        return
+      }
+      if(index>=1){
+        this.currentDetail=this.displayList[index-1]
+      }else if(this.displayList.length===0){
+        this.currentDetail=null
+        return
+      }else if(this.displayList.length===1){
+        this.currentDetail=this.displayList[0]
+      }
+      this.$nextTick(()=>{
+        this.scrollToItem(this.currentDetail._id)
+      })
     },
     scrollToItem (id) {
       setTimeout(() => {

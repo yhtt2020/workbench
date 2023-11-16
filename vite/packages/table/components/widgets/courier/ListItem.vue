@@ -112,6 +112,7 @@ export default {
                 if (rs) {
                   message.success('删除成功。')
                   this.$emit('removeItem', this.item)
+                  this.$emit('afterRemove',this.item)
                 }
               }
             })
