@@ -7,7 +7,7 @@
         <div class="top-icon">
             <Icon icon="akar-icons:chat-question" />
         </div>
-        <div class="guider-body xt-scrollbar overflow-hidden mt-3" style="height: 92%;">
+        <div class="guider-body xt-scrollbar overflow-hidden mt-3" style="height: 360px;">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index" @click="jumpUrl(item.url)">
                 <div class="cell-icon flex items-center">
                     <Icon :icon="item.icon"  width="20" height="20" />

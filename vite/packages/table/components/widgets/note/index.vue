@@ -8,6 +8,7 @@
     class="test"
     ref="homelSlotRef"
     :desk="desk"
+    style="background: #191919; !important"
   >
     <template #left-title-icon>
       <!-- 图标 -->
@@ -65,9 +66,6 @@
   </a-drawer> -->
   <teleport to="body">
     
-    <!-- <xt-modal :width="500" v-model:visible="settingVisible">
-      dsadsad 
-    </xt-modal> -->
     <!-- 新设置 -->
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">
       <div style="width:500px;height:466px;">
@@ -80,10 +78,37 @@
         <!--  -->
           <div class="w-full" style="padding:0 24px 24px 24px;height:400px;">
             <div class="w-full h-full rounded-lg p-4" style="background-color: var(--secondary-bg);">
-              <div style="color:var(--prinmary-text);font-size: 16px;">小组件尺寸</div>
-              <!-- <RadioTab :navList="sizeType" v-model:selectType="defaultSizeType"></RadioTab> -->
-              <xt-tab v-model="cardSize" :list="sizeType" class="xt-bg-2 p-1 h-12 mb-3" />
-              <div>支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
+              <div style="color:var(--primary-text);font-size: 16px;">小组件尺寸</div>
+
+              <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="xt-bg-2 p-1 h-12 mb-3"  @click="__updateSize" :data="customData.dragCardSize"/> -->
+              
+              <!-- <RadioTab  :navList="sizeType"  class="nav-type"
+                        v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
+
+              <XtRadio class="mt-3 mb-3" @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
+
+              <div style="color: var(--secondary-text);">支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
+              <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
+              <div style="color:var(--primary-text);font-size: 16px;">便签主题色</div>
+              <div>
+                <div class="item-box mt-4">
+                  <div
+                    class="item mr-4 flex justify-center items-center"
+                    :key="item"
+                    :style="{ background: color[`${'color' + item}`] }"
+                    v-for="item,index in 6"
+                    @click="updateBackground(color[`${'color' + item}`],item)"
+                  >
+                  <Icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" width="20" height="20" />
+                  </div>
+                </div>
+              </div>
+              <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
+              <div class="flex" style="justify-content: space-between;" >
+                <div style="color:var(--primary-text);font-size: 16px;">仅在标题处显示主题色</div>
+                <a-switch @click="this.changeShowColor"  v-model:checked="options.showColor"></a-switch>
+              </div>
+              <div style="color: var(--secondary-text);">开启后小组件背景使用默认的编辑器颜色，标题部分使用上方选择的主题色。</div>
             </div>
           </div>
       </div>
@@ -147,6 +172,7 @@ import { mapActions, mapState, mapWritableState } from 'pinia'
 import { noteStore } from '../../../apps/note/store'
 import Modal from '../../Modal.vue'
 import { DTPWeb, LPA_JobNames } from 'dtpweb'
+import RadioTab from "../../../components/RadioTab.vue"
 
 const labelWidth = 40
 const labelHeight = 60
@@ -159,6 +185,7 @@ export default {
     Icon,
     cardDrag,
     Markdown,
+    RadioTab,
   },
   mixins: [cardDragHook, cardSizeHook],
   props: {
@@ -212,6 +239,7 @@ export default {
         //   message.success('已成功复制到剪切板')
         // },
         type: 'note',
+        showColor:true
 
       },
       settingVisible: false,
@@ -283,13 +311,21 @@ export default {
       icons: {
         notepad12Regular,
       },
-      cardSize: { name: '2x2', value: '2x2' },
+      cardSize: { name: '2x2', title: '2x2' },
       sizeType: [
+          { name: '2x2', title: '2x2' },
+          { name: '2x4', title: '2x4' },
+          { name: '4x4', title: '4x4' },
+          { name: '4x6', title: '4x6' },
+      ],
+      cardSize1: { name: '2x2', value: '2x2' },
+      sizeType1: [
           { name: '2x2', value: '2x2' },
           { name: '2x4', value: '2x4' },
           { name: '4x4', value: '4x4' },
           { name: '4x6', value: '4x6' },
       ],
+      colorIndex:1,
     }
   },
   created () {
@@ -312,6 +348,8 @@ export default {
   },
   mounted () {
     this.text = this.customData.text
+    this.colorIndex = this.customData.colorIndex
+    this.options.showColor = this.customData.showColor
     this.tmpTitle = this.customData.title
     this.background = this.customData.background
     this.colors = this.customData.color
@@ -388,7 +426,9 @@ export default {
     //     // 将text存入db
     //   );
     // },
-    updateBackground (backgroundColor) {
+    updateBackground (backgroundColor,n) {
+      this.colorIndex = n
+      
       message.success({
         content: '设置卡片背景成功',
         key: 'bg',
@@ -397,6 +437,7 @@ export default {
         this.customIndex,
         {
           background: backgroundColor,
+          colorIndex: n,
         },
         this.desk
       )
@@ -454,6 +495,14 @@ export default {
     },
     closeSetting(){
       this.settingVisible = false
+    },
+    changeShowColor(){
+      this.updateCustomData(this.customIndex, {
+        showColor: this.options.showColor,
+      }, this.desk)
+    },
+    test(){
+      console.log('触发了')
     }
   }
   ,
@@ -493,12 +542,11 @@ export default {
 }
 
 .item {
-  width: 56px;
-  height: 56px;
-  opacity: 0.65;
+  width: 40px;
+  height: 40px;
+  // opacity: 0.65;
   border-radius: 10px;
   cursor: pointer;
-  margin: 9px;
 }
 
 .drag-boxs {
