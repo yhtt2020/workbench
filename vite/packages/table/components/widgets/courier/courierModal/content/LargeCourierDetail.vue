@@ -36,11 +36,13 @@
         <div   class="flex flex-col h-full w-1/2">
           <div class="flex items-center mb-4 justify-between">
             <SelectPlateform @changePlatform="changePlatform"/>
-            <xt-button w="40" h="40" class="category-button" @click="refresh">
+            <a-tooltip placement="top" class="mr-3" :title="lastRefreshTime">
+            <xt-button w="40" h="40" class="category-button" @click="refreshAll">
               <div class="flex items-center justify-center">
                 <SmallIcon icon="fluent:arrow-counterclockwise-20-filled" style="1.25rem"/>
               </div>
             </xt-button>
+            </a-tooltip>
           </div>
           <template v-if="allShow">
             <!--    全部展示        -->
@@ -50,62 +52,7 @@
             <!--      其他条件      -->
             <div style="height: 460px;" class="flex flex-col mr-4 h-full w-full">
               <vue-custom-scrollbar :settings="settingsScroller" style="height:500px;">
-                <div v-for="(item,index) in displayList"
-                     class="flex p-3 mb-3 rounded-lg xt-text pointer xt-bg-2 courier-item"
-                     :class="{ 'select': currentID === index }"
-                >
-                  <xt-menu name="name" @contextmenu="revID = index" :menus="menus">
-                    <div class="flex flex-col justify-between" @click.prevent="detailClick(item,index)">
-                      <div class="flex">
-                        <div class="flex items-center justify-center mr-4 rounded-lg">
-                          <Cover :cover="item.cover" :store="item.store" bg="var(--mask-bg)"></Cover>
-                        </div>
-                        <div class="flex items-center justify-between " style="width:362px;">
-                          <div class="flex flex-col">
-                            <div class="flex items-center mb-1.5">
-                              <div v-if="item.store==='jd'"
-                                   class="w-6 h-6 store flex items-center justify-center rounded-md"
-                                   style="background:#E12419;"> JD
-                              </div>
-                              <div v-if="item.store==='tb'"
-                                   class="w-6 h-6 store flex items-center justify-center rounded-md"
-                                   style="background:#FA5000;"> 淘
-                              </div>
-                              <span class="xt-font font-14 font-600 mx-1.5">
-                        {{ item.title?.slice(0, 20) }}
-                      </span>
-                              <span class="fav-icon">
-                      <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
-                      <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
-                            </div>
-                            <div class="flex">
-                              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
-                                {{ item.company }}
-                              </div>
-                              <div v-if="false"
-                                   class="flex items-center justify-center rounded-md w-6 h-6 xt-text-2 xt-bg">拆
-                              </div>
-                            </div>
-                          </div>
-                          <div class="flex flex-col items-center justify-end">
-                            <div class="flex items-center ml-8 mb-2 pl-1 pr-1 rounded-md state-text"
-                                 :style="{ 'background': item.tagColor,color:'var(--active-text)'}">
-                              {{ item.stateText }}
-                            </div>
-                            <span v-if="false" class="xt-text-2 font-14 font-400">预计明天到达</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="flex flex-col">
-                        <div class="my-1.5 font-14 font-400 xt-text-2">{{ item.lastNodeTime }}</div>
-                        <div class="summary">
-                          {{ item.lastNodeSummary }}
-                        </div>
-                      </div>
-                    </div>
-                  </xt-menu>
-                </div>
+                <ListItem :item="item" @goDetail="this.currentDetail=item" v-for="item in displayList"></ListItem>
               </vue-custom-scrollbar>
             </div>
           </template>
@@ -142,9 +89,12 @@ import RightDetail from './RightDetail.vue'
 import SelectPlateform from '../dropdown/SelectPlateform.vue'
 import Cover from '../../component/Cover.vue'
 import { preHandle } from '../../courierTool'
-
+import ui from '../../courierUI'
+import ListItem from '../../ListItem.vue'
+import { formatTime } from '../../../../../util'
 export default {
   components: {
+    ListItem,
     Cover,
     SmallIcon, HorizontalPanel, DropIndex, AddCourierModal,
     CourierSetting, DropDown, SortList, Empty, RightDetail, SelectPlateform
@@ -159,7 +109,7 @@ export default {
       ],
       filterPlatform: 'all',
       menus: [
-        { name: '订阅物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
+        { name: '关注物流', callBack: () => { }, newIcon: 'fluent:star-12-regular' },
         {
           name: '删除快递', newIcon: 'akar-icons:trash-can', color: 'var(--error)',
           callBack: () => {
@@ -192,13 +142,15 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'currentDetail']),
+    ...mapWritableState(courierStore, ['orderList', 'currentDetail','settings']),
+    lastRefreshTime(){
+      return this.settings.lastRefreshTime?'最后刷新时间：'+formatTime(this.settings.lastRefreshTime):''
+    },
     displayList () {
       let list = this.detailList.filter(item => {
         if (this.filterPlatform === 'all') {
           return true
         } else {
-          console.log(String(item.store), this.filterPlatform, item.store === this.filterPlatform)
           if (!item.store) {
             item.store = ''
           }
@@ -226,7 +178,9 @@ export default {
   },
 
   methods: {
+    formatTime,
     ...mapActions(courierStore, ['removeDbData']),
+    refreshAll:ui.refreshAll,
     // 关闭
     close () { this.$emit('close') },
     // 打开快递设置
@@ -263,7 +217,7 @@ export default {
 
     getRightItem (item) {
       this.currentDetail = item
-      console.log(this.rightDetail, 'de')
+      console.log( this.currentDetail, 'de')
     },
 
     refresh () {

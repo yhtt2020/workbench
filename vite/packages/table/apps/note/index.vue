@@ -7,7 +7,7 @@
               <LeftSearch :selDesk="selDesk"></LeftSearch>
               </div>
               <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-                <NodeContent :selDesk="selDesk" v-show="this.selNote>=0 && this.noteList.length >0"></NodeContent>
+                <NodeContent :selDesk="selDesk" v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
               </div>
           </div>
       </LeftTab>
@@ -85,18 +85,22 @@
       }
     },
     async mounted () {
-      
-      await this.getNotes()
+      this.selNote = -1
       if (this.$route.params.customIndex) {
-        this.noteList.forEach((item,index)=>{
-          if (item.id  == this.$route.params.customIndex) {
-            this.selNote = index
-          }
-        })
+          this.isSelTab = false
       }
+      await this.getNotes().then(()=>{
+        if (this.$route.params.customIndex) {
+          this.noteList.forEach((item,index)=>{
+            if (item.id  == this.$route.params.customIndex) {
+              this.selNote = index
+            }
+          })
+        }
+      })
     },
     computed: {
-          ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor']),
+          ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isSelTab']),
           ...mapWritableState(cardStore, ['desks','selIndex']),
           // backgroundImage(){
           //   if (this.noteList.length) {

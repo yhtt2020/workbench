@@ -20,13 +20,13 @@ intervalEvent((clear) => {
         args: {
           cbId: args.cbId,
           status: 0,
-          info: '掉登录',
+          info: '淘宝掉登录',
           code: 401
         }
       })
 
       clear()
-      //closeSelf()
+      closeSelf()
     }
   }
 })

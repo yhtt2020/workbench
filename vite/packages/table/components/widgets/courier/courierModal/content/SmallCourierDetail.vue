@@ -152,7 +152,7 @@ export default {
           },
         },
         {
-          name:'订阅物流',newIcon:'fluent:star-12-regular',
+          name:'关注物流',newIcon:'fluent:star-12-regular',
           callBack:()=>{},
         },
         {

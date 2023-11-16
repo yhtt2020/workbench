@@ -3,37 +3,42 @@
     <div class="flex items-center justify-center w-full py-5" style="position: relative;">
       <span class="xt-text xt-font font-16 font-400">添加快递</span>
       <div class="flex items-center justify-center p-2 close-button pointer category-button rounded-xl xt-bg-2"
-        @click="close">
-        <CourierIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);" />
+           @click="close">
+        <CourierIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
       </div>
     </div>
 
     <div class="flex-col px-6" style="height: calc(100% - 131px);">
-      <div class="px-4 py-3 mb-4 font-normal rounded-lg font-14 xt-text-2 xt-bg-2">「顺丰快递」和「菜鸟橙运」需要填写额外信息。</div>
+      <div class="px-4 py-3 mb-4 font-normal rounded-lg font-14 xt-text-2 xt-bg-2">
+        「顺丰快递」和「菜鸟橙运」需要填写额外信息。
+      </div>
       <vue-custom-scrollbar :settings="settingsScroller" class="h-full" style="height: 79%;">
         <div class="flex items-center mb-4" v-for="(item, index) in courierLists">
 
           <a-input ref="numRef" spellcheck="false" style="width: 280px; margin-right: 12px; border-radius: 8px;"
-            v-model:value="item.orderNum" class="h-10 xt-bg-2"
-            :style="item.code === 'SF' ? { width: '148px !important' } : { width: '280px !important' }" placeholder="输入快递单号"
-            @input="getCourierNumber(item.orderNum, index)" allowClear />
+                   v-model:value="item.orderNum" class="h-10 xt-bg-2"
+                   :style="item.code === 'SF' ? { width: '148px !important' } : { width: '280px !important' }"
+                   placeholder="输入快递单号"
+                   @input="getCourierNumber(item.orderNum, index)" allowClear/>
 
           <a-input v-model:value="item.phoneLastNum" v-if="item.code === 'SF' || item.code === 'CNCY'"
-            style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2" placeholder="手机尾号后4位" />
+                   style="width: 120px; border-radius: 8px;margin-right: 12px;" class="h-10 xt-bg-2"
+                   placeholder="手机尾号后4位"/>
 
           <a-select show-search class="custom-select" v-model:value="item.code" placeholder="自动识别"
-            style="width: 120px;text-align: center;" ref="selectRef" :options="optionList" @input="searchCourier">
+                    style="width: 120px;text-align: center;" ref="selectRef" :options="optionList"
+                    @input="searchCourier">
           </a-select>
 
           <div class="flex items-center ml-3 pointer category-button" @click="removeCourierInput(index)">
-            <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);" />
+            <CourierIcon icon="akar-icons:trash-can" style="font-size: 1.2rem;color:var(--secondary-text);"/>
           </div>
         </div>
 
         <div class="flex items-center justify-center w-full">
           <xt-button w="82" h="40" @click="createCourierInput">
             <div class="flex items-center justify-center">
-              <CourierIcon icon="fluent:add-16-filled" style="font-size: 1.25rem;" />
+              <CourierIcon icon="fluent:add-16-filled" style="font-size: 1.25rem;"/>
               <span>添加</span>
             </div>
           </xt-button>
@@ -61,13 +66,12 @@ import { getCourierName } from '../utils/courierUtils'
 import { message } from 'ant-design-vue'
 import { Icon as CourierIcon } from '@iconify/vue'
 
-
 export default defineComponent({
   components: {
     CourierIcon
   },
 
-  setup(props, ctx) {
+  setup (props, ctx) {
     const courier = courierModalStore()
     const addCourier = courierStore()
     const useAppStore = appStore()
@@ -93,7 +97,7 @@ export default defineComponent({
     })
 
     const isOrderNumEmpty = computed(() => {
-      return courierLists.value.some((item) => { return item.orderNum === '' });
+      return courierLists.value.some((item) => { return item.orderNum === '' })
     })
 
     // 关闭
@@ -116,19 +120,18 @@ export default defineComponent({
 
     // 输入框数据自动识别
     const getCourierNumber = (item, index) => {
-        if (item !== '') {
-          const result = getCourierName(item)
-          courier.updateNewCourierInfo({ code: result.code, label: result.name, orderNum: item, phoneLastNum: '' }, index)
-        } else {
-          courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
-        }
-
+      if (item !== '') {
+        const result = getCourierName(item)
+        courier.updateNewCourierInfo({ code: result.code, label: result.name, orderNum: item, phoneLastNum: '' }, index)
+      } else {
+        courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
+      }
 
     }
 
     // 下拉框搜索
     const searchCourier = (evt) => {
-      console.log('查看搜索结果', evt);
+      console.log('查看搜索结果', evt)
 
       // if(evt.data){
       //   const regexText = new RegExp(evt.data,"i");
@@ -156,7 +159,7 @@ export default defineComponent({
       if (courierLists.value.length === 1) {
         if (courierLists.value[0].orderNum === '') {
           message.warning('请添加快递信息')
-          evt.preventDefault();
+          evt.preventDefault()
         } else {
           addCourier.putCourierInfo(courierLists.value[0].code, courierLists.value[0].orderNum, courierLists.value[0].phoneLastNum)
           ctx.emit('close')
@@ -164,11 +167,11 @@ export default defineComponent({
       } else {
         if (isOrderNumEmpty.value) {
           message.warning('请添加快递信息')
-          evt.preventDefault();
+          evt.preventDefault()
         } else {
-message.success('添加快递成功。')
+          message.success('添加快递成功。')
           for (const item of courierLists.value) {
-            if(item){
+            if (item) {
               addCourier.putCourierInfo(item.code, item.orderNum, item.phoneLastNum)
             }
           }
@@ -176,10 +179,6 @@ message.success('添加快递成功。')
         }
       }
     }
-
-
-
-
 
     return {
       courierLists, optionList, isOrderNumEmpty, numRef, selectRef,
@@ -218,13 +217,14 @@ message.success('添加快递成功。')
     align-items: center;
     height: 40px !important;
   }
-  & .ant-select-item{
-    color:var(--secondary-text) !important;
+
+  & .ant-select-item {
+    color: var(--secondary-text) !important;
   }
 }
 
 
-:deep(.ant-select-selection-placeholder){
+:deep(.ant-select-selection-placeholder) {
   color: var(--secondary-text) !important;
   display: flex !important;
   align-items: center !important;

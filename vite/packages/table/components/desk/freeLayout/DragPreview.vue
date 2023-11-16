@@ -20,18 +20,23 @@ function getItemStyles(
       display: "none",
     };
   }
-
+  /**
+   * @author 杨南南
+   * @date 2023-11-09
+   * @description 修正拖拽元素的坐标，以使其根据画布缩放进行对齐
+   *
+   * 核心算法
+   * 修正后的拖拽X坐标 = 初始X坐标 + (当前X坐标 - 初始X坐标) / 画布缩放比例
+   * 修正后的拖拽Y坐标 = 初始Y坐标 + (当前Y坐标 - 初始Y坐标) / 画布缩放比例
+   *
+   */
   let { x, y } = currentOffset;
-  // 计算鼠标的移动距离
-  const deltaX = x - initialClientOffset.value.x;
-  const deltaY = y - initialClientOffset.value.y;
-  // 修正移动距离，考虑缩放比例
-  const correctedDeltaX = deltaX / getFreeLayoutState.value.zoom;
-  const correctedDeltaY = deltaY / getFreeLayoutState.value.zoom;
+  const initX = initialClientOffset.value.x;
+  const initY = initialClientOffset.value.y;
+  const zoom = getFreeLayoutState.value.canvas.zoom;
 
-  // 计算拖拽元素应该位于的新坐标
-  x = initialClientOffset.value.x + correctedDeltaX;
-  y = initialClientOffset.value.y + correctedDeltaY;
+  x = initX + (x - initX) / zoom;
+  y = initY + (y - initY) / zoom;
 
   if (isSnapToGrid) {
     x -= initialOffset.x;
@@ -39,13 +44,11 @@ function getItemStyles(
     [x, y] = freeLayoutStore.snapToGrid(x, y);
     x += initialOffset.x;
     y += initialOffset.y;
-    console.log("最后的x, y :>> ", x, y);
   } else {
     // x = dargX.value;
     // y = dargY.value;
   }
 
-  // console.log("x :>> ", x);
   let transform = `translate(${isSnapToGrid ? x - 2 : x}px, ${
     isSnapToGrid ? y - 2 : y
   }px)`;
@@ -93,7 +96,7 @@ watch(currentClientOffset, (newV) => {
   <div
     class="layer"
     :style="{
-      zoom: getFreeLayoutState.zoom,
+      zoom: getFreeLayoutState.canvas.zoom,
     }"
   >
     <div

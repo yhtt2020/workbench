@@ -41,7 +41,7 @@ export class Notifications{
         listeners:{
           'putNotice':function(){
             console.log('关闭并存储数据',msg);
-            noticeStore().putNoticeData(msg,'weak');
+            noticeStore().putNoticeData(msg);
           },
 
           // 'nowCheck':function(){
@@ -65,7 +65,7 @@ export class Notifications{
        icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
        pauseOnHover:true,timeout: 5000,toastClassName:'notice-toast',
        onClose() {
-        noticeStore().putNoticeData(msg,'weak');
+        noticeStore().putNoticeData(msg);
        },
       }
     )
@@ -83,7 +83,7 @@ export class Notifications{
         listeners:{
           'putNotice':function(){
             console.log('关闭并存储数据',msg);
-            noticeStore().putNoticeData(msg,'strong');
+            noticeStore().putNoticeData(msg);
           },
 
           // 'nowCheck':function(){
@@ -253,7 +253,7 @@ export class Notifications{
           body: `${data.nick}：${data.payload.text}`,
           time:data.time,
           conversationID:data.conversationID,
-          type:'message'
+          type:'message',
         }
         // 全局
         if(config.global && config.enable && config.cue && !config.currentDisturb){ 

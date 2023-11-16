@@ -1,6 +1,10 @@
 <template>
-  <button @click="handleClick" :disabled="disabled" class="flex items-center justify-center text-base xt-text"
-    :class="[buttonStyle]" :style="{
+  <button
+    @click.stop="handleClick"
+    :disabled="disabled"
+    class="xt-text text-base flex items-center justify-center"
+    :class="[buttonStyle]"
+    :style="{
       width: block ? '100%' : w + 'px',
       height: h + 'px',
       'border-radius': radius + 'px',

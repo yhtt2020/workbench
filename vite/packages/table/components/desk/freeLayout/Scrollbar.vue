@@ -13,13 +13,6 @@
     @mouseover="handleMouseMove"
   >
     <slot> </slot>
-    <!-- <div
-      @click="handleClick($event)"
-      class="absolute w-full h-full xt-theme-bg top-0 left-0"
-      style="z-index: 1000"
-    >
-      112
-    </div> -->
   </div>
 </template>
 <script setup>
@@ -28,20 +21,25 @@ import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-
+import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
+
+// import Container from "./FloatMenu/Container.vue";
 
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData, freeLayoutEnv } =
+const { getFreeLayoutState, dragData, freeLayoutEnv ,getFreeLayoutData} =
   storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
+const scrollData = ref();
 onMounted(() => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  // scrollData.value =
+  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
     // 初始化自由布局定位
@@ -65,7 +63,7 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  const zoom = getFreeLayoutState.value.zoom;
+  const zoom = getFreeLayoutState.value.canvas.zoom;
   // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
   // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
 
@@ -81,16 +79,21 @@ function redirect() {
   //   console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
 
   /**
-   * 自由布局算法
-   * 居中X坐标 = (可见视图区宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
-   * 居中Y坐标 = (可见视图区高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   * @author 杨南南
+   * @date 2023-11-09
+   * @description 根据X,Y轴定位到当前屏幕居中位置
+   *
+   * 核心算法
+   * 滚动X位置 = (可视宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
+   * 滚动Y位置 = (可视高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
+   *
    */
   const x =
-    (width.value - getFreeLayoutState.value.width * zoom) / 2 +
+    (width.value - getFreeLayoutState.value.canvas.width * zoom) / 2 +
     getFreeLayoutState.value.line.centerLine.x * zoom;
   const y =
-    (height.value - getFreeLayoutState.value.height * zoom) / 2 +
-    (getFreeLayoutState.value.line.centerLine.y + 205) * zoom;
+    (height.value - getFreeLayoutState.value.canvas.height * zoom) / 2 +
+    getFreeLayoutState.value.line.centerLine.y * zoom;
   scrollbar.value.scrollLeft = x;
   scrollbar.value.scrollTop = y;
 
@@ -122,7 +125,7 @@ function handleClick(e) {
 
 // 监听画布缩放情况
 watch(
-  () => getFreeLayoutState.value?.zoom,
+  () => getFreeLayoutState.value?.canvas.zoom,
   () => {
     // console.log(
     //   "freeLayoutEnv.value.loading :>> ",
