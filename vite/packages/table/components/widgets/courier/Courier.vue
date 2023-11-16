@@ -16,7 +16,7 @@
         </div>
       </xt-button>
     </div>
-    <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
+    <div class="flex flex-col w-full" style="height: calc(100% - 12px)">
       <!-- <template v-if="!showWay"> -->
       <!-- <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
           <div class="xt-text xt-font ">快递筛选</div>
