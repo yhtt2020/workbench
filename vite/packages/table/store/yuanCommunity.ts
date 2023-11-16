@@ -24,7 +24,10 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
         dynamicContent:{
             content:"",
             imagesList:[]
-        }
+        },
+        // 列表
+        forumsList: {},
+        defaultSection:'选择板块'
     }),
     actions: {
         // 获取我的圈子
