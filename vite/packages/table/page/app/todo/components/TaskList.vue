@@ -23,7 +23,7 @@ export default {
   computed: {
     ...mapState(taskStore, ["activeTask"]),
     displayList(){
-      return this.data.sort((a,b)=>{
+      return this.data?.sort((a,b)=>{
         return -((a.isTop?1:0)-(b.isTop?1:0))
       })
     }
@@ -62,7 +62,7 @@ export default {
 
 <template>
   <div
-    v-if="data.length === 0"
+    v-if="data?.length === 0"
     style="margin-left: -20px; margin-top: calc((100vh - 96px) / 2 - 100px)"
   >
     <a-empty description=""></a-empty>

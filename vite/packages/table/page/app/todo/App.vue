@@ -44,6 +44,7 @@ export default {
     ...mapState(configStore, ["config"]),
     ...mapWritableState(listStore, ["activeList"]),
     ...mapState(listStore, ["lists", "displayLists"]),
+    ...mapState(taskStore,['displayList'])
   },
   components: {
     NavList,
@@ -86,10 +87,6 @@ export default {
     };
   },
   async mounted() {
-    await databaseStore().init();
-    databaseStore().$subscribe((mutation, state) => {
-      databaseStore().save();
-    });
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask"]),
