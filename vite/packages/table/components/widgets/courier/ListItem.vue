@@ -10,7 +10,7 @@ export default {
   components: {Cover, SmallIcon},
   props: ['item','noBg'],
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier','hideCourier','showCourier']),
+    ...mapActions(courierStore, ['updateOrder','removeDbData', 'putSortList', 'followCourier', 'unfollowCourier','setTopCourier','hideCourier','showCourier']),
     goDetail() {
       this.$emit('goDetail', this.item)
     },
@@ -30,6 +30,22 @@ export default {
     ...mapWritableState(courierStore, ['currentDetail','orderList']),
     menus() {
       return [
+        {
+          name: '更新此订单',
+          callBack: async () => {
+            let rs=await this.updateOrder(this.item._id)
+            if(rs){
+              for(const key of Object.keys(rs)){
+                this.item[key]=rs[key] //全键更新
+              }
+              console.log(rs,this.item)
+              message.success('刷新订单成功')
+            }else{
+              message.error('刷新订单失败')
+            }
+          },
+          newIcon: 'fluent:arrow-counterclockwise-20-filled'
+        },
         this.item.followed ? {
             name: '取消关注',
             callBack: async () => {

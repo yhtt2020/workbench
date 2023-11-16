@@ -4,6 +4,7 @@ import {sUrl} from "../../consts";
 import {post} from "../../js/axios/kdniaoPost";
 import {localCache} from '../../js/axios/serverCache'
 import {generateTitle} from "../../components/widgets/courier/courierTool";
+import grab from "../../components/widgets/courier/grab";
 
 const kdniao = sUrl('/app/kdniao/realTimeQuery')
 
@@ -249,6 +250,67 @@ export const courierStore = defineStore("courier", {
     async getHideCount() {
       let res = await this.getHideList()
       return res.length
+    },
+    async updateOrder(id) {
+      let order = await this.findDbItem(id)
+      if (order) {
+        console.log('存在订单',order)
+        if (order.store === 'jd') {
+          console.log('是京东订单',order)
+          let promise=new Promise((resolve,reject)=>{
+            grab.jd.getOrderDetail(order.content.detailUrl, async ({status, code, data}) => {
+              if (status) {
+                let content=order.content
+                if(!content.detail) content.detail={}
+                content.detail.expressNo = data.expressNo
+                content.detail.traceNodes = data.traceNodes
+                content.detail.expressType = data.expressType
+                content.detail.updateTime = Date.now()
+                content.latestNodes=content.detail.traceNodes
+                let date=''
+                //修复一下日期时间戳的显示问题
+                for(const node of content?.latestNodes){
+                  if(node.date){
+                    date=node.date
+                  }else{
+                    node.date=date
+                  }
+                  node.time=node.date+' ' +node.time
+                }
+                const rs=await this.updateDbItem({
+                  ...order,
+                  content: content
+                })
+                console.log('写入结果',rs)
+                resolve(order)
+              } else {
+                reject(false)
+              }
+            })
+          })
+          let rs= await promise
+          return rs
+        }else{
+          //快递鸟订单
+          let res = await post(kdniao, {
+            shipperCode: order.shipperCode,
+            logisticCode: order.logisticCode,
+            customerName: order.customerName,
+          });
+          if (res.Success) {
+            //如果成功获取到快递鸟信息了
+            const rs=await this.updateDbItem({
+              ...order,
+              content: res
+            })
+            return order
+          }else{
+            return false
+          }
+        }
+      }else{
+        return false
+      }
     },
 
     // 刷新快递信息
