@@ -231,8 +231,4 @@
       align-items: center;
     }
 
-    .xt-default-btn{
-      color: rgba(255, 255, 255, 0.85) !important;
-    }
-
   </style>
