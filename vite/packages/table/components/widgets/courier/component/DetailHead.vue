@@ -167,8 +167,8 @@ export default {
     // 复制订单号
     async copyOrderNum () {
       const { toClipboard } = useClipboard()
-      const res = await toClipboard(this.orderData?.LogisticCode)
-      if (res.text !== '') {
+      await toClipboard(this.orderData?.logisticCode)
+      if (this.orderData?.LogisticCode !== '') {
         message.success('订单号复制成功')
       }
     }
