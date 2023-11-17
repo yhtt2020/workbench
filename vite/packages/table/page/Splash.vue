@@ -89,6 +89,7 @@ import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
+import { offlineStore } from '../js/common/offline'
 
 export default {
   name: 'Code',
@@ -173,6 +174,7 @@ export default {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -326,6 +328,7 @@ export default {
       this.$router.replace({ name: 'wizard' })
       cache.set('isOffline',true)
       window.$isOffline = true
+      this.isOffline = true
     }
   },
 }
