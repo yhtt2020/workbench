@@ -114,9 +114,9 @@ export default {
         display: flex;
         flex-direction: column;
         width: 240px;
-        height: 140px;
+        height: 150px;
         position: relative;
-        top: -10px;
+        top: 2px;
         font-size: 24px;
         font-family: '优设标题黑';
         text-align: center;

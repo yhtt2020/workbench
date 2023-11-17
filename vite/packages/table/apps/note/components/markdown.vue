@@ -71,7 +71,7 @@ export default {
                         }
                     }
                     this.noteList[this.selNote].customData.text = value
-                    this.saveDeskNote(this.noteList[this.selNote].id, value, content)
+                    this.saveAppNote(this.noteList[this.selNote].id, value, content)
                 }
             },
             upload: {
@@ -92,7 +92,7 @@ export default {
     },
     methods: {
         ...mapActions(cardStore, ['updateCustomData']),
-        ...mapActions(noteStore, ['saveDeskNote','noteList','selNote']),
+        ...mapActions(noteStore, ['saveAppNote','noteList','selNote']),
         childEvent(value) {
             // 子组件中的事件逻辑
             this.contentEditor.setValue(value)

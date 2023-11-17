@@ -57,7 +57,7 @@
         </slot>
         <!-- 标题栏end   -->
         <PageState :env="env" :options="options">
-          <div class="">
+          <div class="flex-1 h-0">
             <div class="px-3 pb-2 h-full rounded-b-lg" :style="{background: options.showColor ? '#191919': '' }">
               <slot>
                 <!--  主体内容插槽1  -->
