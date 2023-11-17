@@ -74,7 +74,7 @@
          v-if="!(this.navList.includes(item.event) && this.isOffline)"
            @contextmenu.stop="enableDrag"
            class="mr-6 pointer"
-           style="white-space: nowrap; display: inline-block"
+           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
            @click.stop="clickNavigation(item)"
          >
            <div
@@ -209,7 +209,7 @@
       <a-col>
         <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
           <template v-if="item.icon=='fluent:compose-16-regular'">
-            <xt-task  id='M0104' no="2" @cb="editNavigation" >
+            <xt-task  id='M0104' no="2" @cb="editNavigation(item)" >
             <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
             <div><span>{{ item.title }}</span></div>
           </xt-task>
@@ -220,17 +220,9 @@
           </template>
           
         </div>
-        <!-- 
-          <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-         -->
-         <!-- <div @click="editNavigation" class="relative btn" v-for="item in noEditMenus">
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-        </div> -->
         <div
           @click="clickNavigation(item)"
-          class=" btn"
+          class=" btn extra-btn"
           v-for="item in builtInFeatures"
           :key="item.name"
         >
@@ -242,11 +234,6 @@
       </a-col>
     </a-row>
   </a-drawer>
-  <!-- <RightMenu
-      :menus="dropdownMenu"
-      class="w-full h-full"
-      @contextmenu="showMenu"
-    > -->
     <RightMenu :menus="builtInFeatures" v-model:value="menuVisible" @contextmenu="showDetailMenu">
       
     </RightMenu>
@@ -584,7 +571,6 @@ export default {
     },
     editNavigation (item) {
       if(item.component){
-        console.log(item.component)
         this.componentId=item.component
       }else if(item.visible){
         console.log(111)
@@ -801,10 +787,11 @@ export default {
   text-align: center;
   margin-right: 24px;
   border-radius: 12px;
-  width: 105px;
+  width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
+  margin-bottom: 24px;
 }
 
 .status-text {

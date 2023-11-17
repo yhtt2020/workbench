@@ -8,14 +8,14 @@
           overflow-x: hidden;border-radius: 18px;
           padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
-      <div   style="width: 67px;overflow-x: hidden;" class="pl-1" >
-        <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start;border-radius: 18px;" >
+      <div   style="width: 67px;overflow-x: hidden;"  >
+        <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start;" >
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
             <div   :key="item.name" @click.stop="clickNavigation(item)">
               <div v-if="!(this.isOffline && this.navList.includes(item.event))"  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
-                <div class="icon-color" v-if="item.type === 'systemApp'" >
-                  <navIcon class="icon-color xt-text" :icon="item.icon" style="width:2.5em;height:2.5em;"
+                <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'" >
+                  <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
                            :class="{ 'active-color': current(item) }"></navIcon>
                 </div>
                 <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
@@ -34,7 +34,7 @@
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="relative btn" v-for="item in drawerMenus">
+        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
           <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
           <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
           <div><span>{{ item.title }}</span></div>
@@ -50,7 +50,8 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <EditNavigation @setQuick="setQuick"></EditNavigation>
+      <EditNavigation @setQuick="setQuick" v-if="componentId==='EditNavigation'"></EditNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId==='navigationSetting'"></navigationSetting>
     </div>
   </transition>
 </template>
@@ -68,11 +69,13 @@ import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
 import {renderIcon} from '../js/common/common'
 import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
+import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 export default {
   name: 'SidePanel',
   components: {
     EditNavigation,
-    navIcon
+    navIcon,
+    navigationSetting
   },
   data() {
     return {
@@ -82,7 +85,8 @@ export default {
       sortable:null,
       dragEnable:false,
       dragEvent:null,
-      drawerMenus:[...extraRightMenu,...moreMenus]
+      drawerMenus:[...extraRightMenu,...moreMenus],
+      componentId: 'EditNavigation',
     }
   },
   props: {
@@ -288,7 +292,15 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
-    editNavigation() {
+    editNavigation(item) {
+      if(item.component){
+        console.log(item)
+        this.componentId=item.component
+      }else if(item.visible){
+        console.log(111)
+      }else{
+        return
+      }
       this.quick = true
       this.menuVisible = false
     },
@@ -353,22 +365,28 @@ export default {
 .item-nav {
   width: 56px;
   height: 56px;
-  margin: 12px auto;
+  // margin: 6px auto;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   cursor: pointer;
   border-radius: 12px;
-  // margin-left: 5px;
+  margin-left: 5px;
+  background-color: var(--secondary-bg);
+  
 }
+// .item-nav:last-child{
+//   margin-bottom: 12px;
+// }
 
-.item-nav:hover {
-  background: var(--active-bg);
-  .icon-color {
-    :deep(.icon) {
-      fill: rgba(255,255,255,0.9) !important;
-    }
-  }
-}
+// .item-nav:hover {
+//   background: var(--active-bg);
+//   .icon-color {
+//     :deep(.icon) {
+//       fill: rgba(255,255,255,0.9) !important;
+//     }
+//   }
+// }
 .icon-color{
   height: 34px;
   width: 34px;
@@ -400,10 +418,11 @@ export default {
   text-align: center;
   margin-right: 24px;
   border-radius: 12px;
-  width: 105px;
+  width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
+  margin-bottom: 24px;
 }
 
 @media screen and (max-height: 510px) {
