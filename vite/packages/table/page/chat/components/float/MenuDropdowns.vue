@@ -17,6 +17,8 @@
        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
     </div>
   </xt-menu>
+
+  <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/>
 </template>
 
 <script>
@@ -25,11 +27,13 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 import { Modal,message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
+import LinkSetting from '../knownCategory/LinkSetting.vue'
+
 export default {
   props:['item','type','no'],
 
   components:{
-    CommunityIcon
+    CommunityIcon,LinkSetting
   },
 
   data(){
@@ -38,7 +42,7 @@ export default {
         {
           name:'链接设置',
           newIcon:'fluent:settings-16-regular',
-          callBack:()=>{}
+          callBack:()=>{this.$refs.linkRef.openLinkModal()}
         },
         {
           name:'删除应用',

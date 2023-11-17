@@ -116,7 +116,6 @@ export const communityStore = defineStore('communityStore',{
    // 更新社群频道
    async updateChannel(data:any,no:any){
     const res  =  await  post(sUrl("/app/community/channel/updateProfile"),data)
-    console.log('查看更新结果',res);
     if(res.status === 1){
       this.getChannelList(no)
       this. getCategoryData(no)
