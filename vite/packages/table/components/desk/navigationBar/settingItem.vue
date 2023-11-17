@@ -2,7 +2,7 @@
 <div>
     <div class="flex justify-between w-full">
         <div class="text-base xt-text">{{ settingItem.title }}</div>
-        <a-switch v-model:checked="checked" />
+        <a-switch v-model:checked="useNavStore.navigationToggle[props.index]" />
     </div>
     <div class="mt-2 text-sm xt-text-2">
         {{ settingItem.description }}
@@ -12,9 +12,11 @@
 
 <script setup lang='ts'>
 import {ref,reactive} from 'vue'
-const checked=ref(false)
+import {navStore} from '../../../store/nav'
+const useNavStore = navStore()
 const props=defineProps({
-    settingItem:Object
+    settingItem:Object,
+    index:Number
 })
 </script>
 <style lang='scss' scoped>

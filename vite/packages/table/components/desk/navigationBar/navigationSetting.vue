@@ -1,37 +1,56 @@
 <template>
-<Modal  v-model:visible="settingVisible">
-    <div class="w-[500px] h-[614px] xt-bg rounded-xl p-6 ">
-        <div>
-            <div class="w-full text-base xt-text">导航栏位置</div>
-            <div>
-                
+    <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
+    <xt-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
+        <div class="w-[500px] h-[614px]  rounded-xl p-3 wuzi">
+            <div class="flex justify-between w-full h-[32px] items-center ">
+                <div class="flex justify-center w-full">
+                    <div class="ml-8 text-base xt-text">导航栏设置</div>
+                </div>
+                <xt-button class="border-0 rounded-md xt-bg-2 pointer" :w="32" :h="32" @click="close"
+                    style="flex-shrink: 0;">
+                    <div class="flex items-center justify-center">
+                        <newIcon class="text-base xt-text pointer" icon="akar-icons:cross" />
+                    </div>
+                </xt-button>
             </div>
-        </div>
-        <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4 mt-4">
-            <div  v-for="(item,index) in navigationPosition">
-                <settingItem  :settingItem="item"></settingItem>
-                <!-- <a-divider style="height: 1px; background-color: var(--divider)" /> -->
-                <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index!=navigationPosition.length-1"></div>
+            <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4 mt-4">
+                <div v-for="(item, index) in navigationPosition">
+                    <settingItem :settingItem="item" :index="index"></settingItem>
+                    <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index != navigationPosition.length - 1">
+                    </div>
+                </div>
             </div>
+            <div class="w-full h-[255px] xt-bg-2 rounded-xl mt-4 p-4">
+                <div v-for="(item, index) in navigationFunction">
+                    <settingItem :settingItem="item"></settingItem>
+                    <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index != navigationFunction.length - 1">
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="w-full h-[255px] xt-bg-2 rounded-xl mt-4 p-4">
-            <div  v-for="(item,index) in navigationFunction">
-            <settingItem  :settingItem="item"></settingItem>
-            <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index!=navigationFunction.length-1"></div>
-        </div>
-        </div>
-        
-    </div>
-</Modal>
+        <!-- </Modal> -->
+    </xt-modal>
 </template>
 
 <script setup lang='ts'>
-import {ref,reactive} from 'vue'
-import {navigationPosition,navigationFunction} from './index'
+import { ref, reactive,onBeforeMount } from 'vue'
+import { navigationPosition, navigationFunction } from './index'
 import settingItem from './settingItem.vue';
-// 常量设置
-const settingVisible=ref(false)
+import { Icon as newIcon } from '@iconify/vue';
+import {navStore} from '../../../store/nav'
+const useNavStore = navStore()
+const emit = defineEmits(['setQuick'])
+const close = () => {
+    emit('setQuick')
+}
+const navigationSwitch=ref([])
+onBeforeMount(() => {
+    navigationSwitch.value=navigationPosition.map((item,index)=>{
+        item.switch=useNavStore.navigationToggle[index]
+        return item
+    })
+    // console.log(navigationSwitch.value)
+})
 </script>
-<style lang='scss' scoped>
-
-</style>
+<style lang='scss' scoped></style>

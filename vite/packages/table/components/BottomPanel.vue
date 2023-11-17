@@ -110,7 +110,7 @@
           </div>
         </div>
 
-        <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
+        <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
           <div
             @click="appChange"
             v-if="isMain"
@@ -165,7 +165,7 @@
               >
             </template>
           </div>
-        </a-tooltip>
+        </a-tooltip> -->
       </div>
     </div>
 
@@ -208,10 +208,17 @@
     <a-row>
       <a-col>
         <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-          <xt-task  id='M0104' no="2" @cb="editNavigation" >
+          <template v-if="item.icon=='fluent:compose-16-regular'">
+            <xt-task  id='M0104' no="2" @cb="editNavigation" >
             <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
             <div><span>{{ item.title }}</span></div>
           </xt-task>
+          </template>
+          <template v-else>
+            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
+          </template>
+          
         </div>
         <!-- 
           <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
@@ -258,8 +265,9 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <!-- <EditNavigation @setQuick="setQuick"></EditNavigation> -->
-      <component :is='componentId'></component>
+      <EditNavigation @setQuick="setQuick" v-if="componentId==='EditNavigation'"></EditNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId==='navigationSetting'"></navigationSetting>
+      <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
 

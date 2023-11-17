@@ -1,8 +1,5 @@
 export const navigationPosition = [
-    {
-        title:'底部导航',
-        description:'在工作台底部显示导航栏',
-    },
+    
     {
         title:'左侧导航',
         description:'在工作台左侧显示导航栏',
@@ -10,6 +7,10 @@ export const navigationPosition = [
     {
         title:'右侧导航',
         description:'在工作台右侧显示导航栏',
+    },
+    {
+        title:'底部导航',
+        description:'在工作台底部显示导航栏',
     },
 
 ]
