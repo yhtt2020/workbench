@@ -224,7 +224,7 @@ export default {
               }
             }
           }
-          channelClass.secondaryChannel(chatOption,no)
+          channelClass.secondaryChannel(chatOption)
         }
         this.closeButton()
       }else{

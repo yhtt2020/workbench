@@ -71,7 +71,6 @@ export default {
     simpleImage:'/img/state/null.png', // 空状态图片
     allChecked:false, // 全选
     next:false,
-
     // 滚动条配置
     settingsScroller: {  
       useBothWheelAxes: true,
@@ -142,7 +141,6 @@ export default {
  watch:{
   'allChecked':{
     handler(newVal){
-      console.log('查看newVal',newVal);
       if(newVal){
         this.selectList = this.friendList
       }else{

@@ -23,7 +23,7 @@
   </div>
  </div>
 
- <a-divider style="height: 2px;margin: 12px 0 0 0; background-color: var(--divider)"/>
+ <a-divider style="height: 2px;margin: 12px 0 12px 0; background-color: var(--divider)"/>
 
  <template v-if="categoryList?.tree?.length === 0 ">
   <div class="flex items-center h-full justify-center flex-col" v-if="categoryList?.role !== 'member'">
@@ -38,7 +38,7 @@
 
  <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;" v-else>
   <template  v-if="!isDoubleColumn">
-    <div class="flex flex-col">
+    <div class="flex flex-col" :class="channelList.length !== 0 ? 'mb-3' : 'm-0'">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
         <MenuDropdown :type="item.type" :no="communityID" :item="item"  @currentItem="currentItem"/>
       </div>
@@ -46,7 +46,7 @@
   </template>
 
   <template v-else>
-    <div class="flex grid grid-cols-2 gap-1">
+    <div class="flex grid grid-cols-2 gap-1 " :class="channelList.length !== 0 ? 'mb-3' : 'm-0'">
       <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
         <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem"/>
       </div>
@@ -54,7 +54,7 @@
   </template>
 
 
-  <div v-for="(item,index) in categoryFilterList" class="my-3" >
+  <div v-for="(item,index) in categoryFilterList" >
     <xt-menu name="name" :menus="floatMenu" @contextmenu="revID = item">
       <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
         <div class="flex flex-col" v-if="isDoubleColumn === false">
@@ -77,7 +77,7 @@
  <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
  <AddInvite ref="addInviteRef" :no="categoryList.no"/>
 
- <PacketSetting ref="packRef" :no="categoryList.no" :item="categoryItem"/>
+ <PacketSetting ref="packRef" :no="categoryList.no"/>
 </template>
 
 <script>
@@ -125,7 +125,6 @@ export default{
           name:'分组设置',
           newIcon:'fluent:settings-16-regular',
           callBack:()=>{
-            this.categoryItem = this.revID
             this.$refs.packRef.openSetModal()
           }
         },
@@ -139,7 +138,6 @@ export default{
               centered:true,
               onOk: async ()=>{
                 const comNo = parseInt(this.categoryList.no)
-                // console.log('查看comNo',comNo);
                 if(comNo !== NaN && comNo !== undefined){
                   this.removeCategory(this.revID.id,comNo)
                   message.success('删除成功')
@@ -208,16 +206,15 @@ export default{
     isDoubleColumn(){
       return this.settings.showDouble
     },
-    floatList(){  // 下拉菜单列表
+    // 下拉菜单列表
+    floatList(){  
       if(this.settings.enableHide){
         return this.hideList
       }else{
         return this.showList
       }
     },
-
     channelList(){
-      // console.log('获取数据::>>111',this.categoryList.tree.length);
       if(this.categoryList.tree !== undefined){
         const list = this.categoryList.tree.filter((item)=>{
          return item.role !== 'category'
@@ -226,9 +223,7 @@ export default{
       }else{
         return []
       }
-      
     },
-
     categoryFilterList(){
       // console.log('获取数据::>>222',this.categoryList.tree.length);
       if(this.categoryList.tree !== undefined){
@@ -244,19 +239,15 @@ export default{
   },
 
   methods:{
-    ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
+    ...mapActions(communityStore,['removeCategory']),
     ...mapActions(chatStore,['setFloatVisible','setDouble']),
     currentItem(item){
-      // console.log('排查当前点击::>',item);
       this.currentID = item.id
       this.categoryItem = item
       this.$mit.emit('clickItem',item)
     },
-
   },
 }
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -275,7 +266,6 @@ export default{
   font-weight: 400;
 }
 </style>
-
 <style scoped>
 .slide-fade-enter-active,
 .slide-fade-leave-active {

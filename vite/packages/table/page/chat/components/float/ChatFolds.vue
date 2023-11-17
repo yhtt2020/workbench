@@ -23,6 +23,7 @@
  </div>
 
  <PacketSetting ref="packRef" :no="no" :item="content"/>
+ <AddUnClassCategory ref="unClassRef" :no="no" :item="content"/>
 </template>
 
 <script>
@@ -33,24 +34,26 @@ import { message,Modal } from 'ant-design-vue'
 
 import ChatDropDown from './Dropdown.vue';
 import PacketSetting from '../knownCategory/PacketSettings.vue';
+import AddUnClassCategory from '../add/AddUnClassCategory.vue';
 
 
 export default {
  props:['title','content','show','no'],
  components: {
-  FoldIcon,ChatDropDown,PacketSetting,
+  FoldIcon,ChatDropDown,PacketSetting,AddUnClassCategory,
  },
  setup(props,ctx) {
    const collapsed = ref(false);
    const dorpShow = ref(false)
    const community = communityStore()
    const packRef = ref(null)
+   const unClassRef = ref(null)
 
    const dorpList = ref([
     { 
       icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
       callBack:()=>{
-
+        unClassRef.value.openUnClassModal()
       }
     },
     { 
@@ -81,7 +84,7 @@ export default {
    };
 
    return {
-     collapsed,dorpShow,dorpList,packRef,
+     collapsed,dorpShow,dorpList,packRef,unClassRef,
      toggleCollapse
    };
  }

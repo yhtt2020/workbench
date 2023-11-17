@@ -62,9 +62,7 @@ export const communityStore = defineStore('communityStore',{
 
    //  创建社群频道
    async createChannel(data:any,no:any){
-    // console.log('查看data和no',data,no);
     const res = await post(createChannels,data)
-    // console.log('查看频道添加成功结果',res);
     if(res.status === 1 && no !== 1){
       this.getCategoryData(no)
       this.getChannelList(no)
@@ -73,9 +71,6 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取社群频道目录
    async getCategoryData(id:any){
-
-    // console.log('获取数值',id,)
-
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const categoryResList = await post(getChannelList,option)
@@ -97,7 +92,6 @@ export const communityStore = defineStore('communityStore',{
       this.categoryList = result
 
     }
-   
    },
 
 
@@ -106,38 +100,16 @@ export const communityStore = defineStore('communityStore',{
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const res =  await post(getChannelList,option)
-      // console.log('排查数据',res)
       if(res?.data?.list){
         const filterCategoryRes = res?.data?.list.filter((item:any)=>{
          return item.role === 'category'
         })
-
         const filterTypeChannel = res?.data?.list.filter((item:any)=>{
          return item.role === 'channel'
         })
-        // console.log('排查过滤后的有子级目录数据',filterCategoryRes)
-        // console.log('排查过滤后的没有子级目录数据',filterTypeChannel)
-
         this.categoryClass  = filterCategoryRes
         this.channelList = filterTypeChannel
       }
-
-      // const filterCategoryRes = res?.data?.list.filter((item:any)=>{
-      //   return item.role === 'category'
-      // })
-
-      // const filterTypeChannel = res?.data?.list.filter((item:any)=>{
-      //   return item.role === 'channel'
-      // })
-
-
-      // // console.log('排查过滤后的数据',filterCategoryRes)
-
-      // if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
-        // this.categoryClass  = filterCategoryRes
-        // this.channelList = filterTypeChannel
-      // }
-
     }
    },
 
@@ -155,7 +127,6 @@ export const communityStore = defineStore('communityStore',{
    updateCategoryClass(val:any){
     this.categoryClass = val
    },
- 
 
    // 删除社群频道
    async removeCategory(id:any,no:any){
@@ -165,10 +136,7 @@ export const communityStore = defineStore('communityStore',{
       this.getCategoryData(no)
       this.getChannelList(no)
     }
-   }
-
-
-
+   },
 
   },
 

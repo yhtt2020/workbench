@@ -1,26 +1,14 @@
-<!-- 更新社群频道链接,在没有选择分类的情况下 -->
 <template>
   <div class="flex flex-col my-3" style="width:500px;">
-   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-     <LinkIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5em;color: var(--secondary-text);"/>
-    </div>
-    <span class="font-16-400" style="color:var(--primary-text);">自定义网页链接</span>
-    <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-      <LinkIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;color: var(--secondary-text);"/>
-    </div>
-   </div>
-
+   <ModalTop back="true" title="自定义网页链接" @close="closeChannel" @back="backChannel"/>
    <div class="flex flex-col px-6">
-    <div class="p-4 flex rounded-lg flex-col mb-4" style="background: var(--secondary-bg);">
-     <span class="font-16-400 mb-2.5" style="color:var(--primary-text);">操作指南</span>
-     <span class="font-14-400" style="color:var(--secondary-text)">
+    <div class="p-4 flex rounded-lg flex-col mb-4 xt-bg-2">
+     <span class="font-16 font-400 mb-2.5 xt-text">操作指南</span>
+     <span class="font-14 font-400 xt-font xt-text-2">
       输入带有“https://”或“http://”前缀的，完整的网页地址。支持选择点击链接后的打开方式，默认使用工作台设置。
      </span>
     </div>
-
     <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" style="border-radius: 12px; margin-bottom: 12px;" placeholder="链接名称" />
-
     <a-input-group compact>
       <a-select v-model:value="requestProtocol" style="width:20%;">
         <a-select-option value="https">https</a-select-option>
@@ -28,44 +16,44 @@
       </a-select>
       <a-input v-model:value="link" ref="linkRef" placeholder="请输入" spellcheck="false" style="width: 80%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
     </a-input-group>
-
-    <span class="font-16-400 my-4" style="color:var(--primary-text);">链接打开方式</span>
+    <span class="font-16 font-400 xt-font my-4 xt-text">链接打开方式</span>
     <RadioTab :navList="openType"  v-model:selectType="defaultOpen"></RadioTab>
     <div class="my-2"></div>
     <template v-if="defaultOpen.openMethod === 'outerOpen'">
       <RadioTab  :navList="linkType" v-model:selectType="defaultType"></RadioTab>
     </template>
-
-
     <div class="flex items-center justify-end my-3">
-     <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-     <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitSelect">确定</XtButton>
+      <xt-button class="mr-3 category-button" w="64" h="40" @click="closeChannel">取消</xt-button>
+      <xt-button class="mr-3 category-button" type="theme" w="64" h="40" @click="submitSelect">确定</xt-button>
     </div>
    </div>
-
   </div>
- </template>
+</template>
 
- <script>
-import { mapActions } from 'pinia'
-import { Icon as LinkIcon } from '@iconify/vue'
-import { channelClass } from '../../../../js/chat/createChannelClass'
-import { communityStore } from '../../store/communityStore'
-import { message } from 'ant-design-vue'
+<script>
+import { mapActions } from 'pinia';
+import { Icon as LinkIcon } from '@iconify/vue';
+import { channelClass } from '../../../../js/chat/createChannelClass';
+import { communityStore } from '../../store/communityStore';
+import { message } from 'ant-design-vue';
 
-import RadioTab from '../../../../components/RadioTab.vue'
+import RadioTab from '../../../../components/RadioTab.vue';
+import ModalTop from '../ModalTop.vue';
 
 export default {
-
  props:['no','id'],
 
  components:{
-  LinkIcon,RadioTab,
+  LinkIcon,RadioTab,ModalTop,
  },
 
  data(){
    return{
     requestProtocol:'https',
+    defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
+    defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
+    link:'',
+    linkName:'',
     linkType:[
      { title:'内部浏览器',name:'inter',openMethod:'userSelect' },
      { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
@@ -74,32 +62,24 @@ export default {
      {title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
      {title:'外部跳转打开',name:'outer',openMethod:'outerOpen'},
     ],
-    defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
-    defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
-    link:'',
-    linkName:'',
    }
  },
 
  mounted(){
   this.$nextTick(()=>{
     const nameRef = this.$refs.linkNameRef
-    // const linkRef = this.$refs.linkRef
     nameRef.focus()
-    // linkRef.focus()
   })
  },
 
  methods:{
   ...mapActions(communityStore,['getCategoryData','getChannelList']),
-
   backChannel(){
     this.$emit('back')
   },
   closeChannel(){
     this.$emit('close')
   },
-
   async submitSelect(evt){
     if(this.link !== '' && this.linkName !== ''){
       const option = {
@@ -112,20 +92,15 @@ export default {
           }
         }
       }
-      // console.log('查看参数',option);
-      const res  = await channelClass.secondaryChannel(option)
-      if(res?.status === 1){
-        message.success(`${res.info}`)
-        await this.getCategoryData(this.no)
-        await this.getChannelList(this.no)
-        this.closeChannel()
-      }
+      channelClass.secondaryChannel(option)
+      message.success('关联成功')
+      this.closeChannel()
     }else{
+      message.warning('参数必须填写完整')
       evt.preventDefault();
     }
   }
  },
-
 
  watch:{
   defaultType(newVal){
@@ -137,11 +112,10 @@ export default {
     this.defaultOpen = newVal
   }
  }
-
 }
- </script>
+</script>
 
- <style lang="scss" scoped>
+<style lang="scss" scoped>
  :deep(.ant-input){
   color: var(--secondary-text) !important;
   font-size: 1.15em;
@@ -157,5 +131,4 @@ export default {
  :deep(.ant-select-selection-item){
   line-height: 40px !important;
  }
-
- </style>
+</style>

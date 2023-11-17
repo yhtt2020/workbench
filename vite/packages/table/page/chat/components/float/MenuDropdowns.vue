@@ -1,5 +1,5 @@
 <template>
-  <xt-menu name="name" :menus="menus" @contextmenu="revID = item">
+  <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
     <div class="flex items-center" @click="currentItem(item)">
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
@@ -57,6 +57,11 @@ export default {
         }
       ],
       menus:[
+        // {
+        //   name:'应用设置',
+        //   newIcon:'fluent:settings-16-regular',
+        //   callBack:()=>{}
+        // },
         {
           name:'删除应用',
           newIcon:'akar-icons:trash-can',
@@ -71,7 +76,7 @@ export default {
               }
             })
           }
-        }
+        },
       ],
       revID:''
     }

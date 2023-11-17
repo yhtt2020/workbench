@@ -40,8 +40,6 @@
     <xt-button w="100" h="40" type="theme" class="category-button" @click="submit">确定</xt-button>
   </div>
  </div>
-
- <ChannelClassification v-else :no="no" type="group" :data="returnData" @close="closeCreate" @classBack="classShow = false"/>
 </template>
 
 <script>
@@ -50,12 +48,14 @@ import { Icon as CreateIcon } from '@iconify/vue';
 import _ from 'lodash-es';
 import { message } from 'ant-design-vue';
 import { chatStore } from '../../../../store/chat';
+import { channelClass } from '../../../../js/chat/createChannelClass'
+
 import SelectIcon from '../../../../../selectIcon/page/index.vue';
 import ModalTop from '../../../../page/chat/components/ModalTop.vue';
 import ChannelClassification from '../channelSelect/ChannelClassification.vue';
 
 export default {
- props:['list','no'],
+ props:['list','no','id'],
 
  components:{
   SelectIcon,CreateIcon,ModalTop,ChannelClassification
@@ -131,7 +131,7 @@ export default {
  methods:{
   ...mapActions(chatStore,['updateConversation']),
   backButton(){
-   this.$emit('backNext')
+   this.$emit('backButton')
   },
   closeCreate(){
    this.$emit('close')
@@ -166,23 +166,34 @@ export default {
   },
   // 创建社群
   async submit(){
-    const option = {
-      type:this.defaultType.type,
-      groupID:this.groupID,
-      memberList:this.list,
-      name:this.groupName,
-      avatar:this.avatarUrl
-    };
-    if(this.validateChinese){
-      return
-    }else{
-      const res =  await window.$TUIKit.tim.createGroup(option)
-      if(res.code === 0){
-        const data = res.data.group;
-        this.returnData = data
-        this.classShow = true
+   const option = {
+    type:this.defaultType.type,
+    groupID:this.groupID,
+    memberList:this.list,
+    name:this.groupName,
+    avatar:this.avatarUrl
+   };
+   if(this.validateChinese){
+    message.warning('数据必须填写完整')
+    return
+   }else{
+    const res =  await window.$TUIKit.tim.createGroup(option)
+    if(res.code === 0){
+     const data = res.data.group;
+     const channelOption = {
+      type:'group',
+      id:this.id !== undefined ? this.id : 0,
+      no:this.no,
+      content:{
+       name:data.name,
+       props:data,
       }
+     };
+     channelClass.secondaryChannel(channelOption);
+     message.success('创建的群聊关联成功');
+     this.closeCreate()
     }
+   }
   }
  }
 }
