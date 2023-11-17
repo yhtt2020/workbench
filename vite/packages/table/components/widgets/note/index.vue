@@ -115,13 +115,18 @@
     </Modal>
     <!-- 打印 -->
     <Modal v-if="printPreviewVisible" v-model:visible="printPreviewVisible" :blurFlag="true" :mask-no-close="false">
-      <div class="p-3" style="width:400px;height:auto">
-        <div class="p-3">设备要求：德佟P1；纸张：40*60，间隙纸</div>
-        <span v-if="!print.status">打印助手未就绪</span>
-
-        <template v-else>
-          <div class="px-3 pb-3">
-            <a-select
+      <div class="px-6" style="width:500px;height:500px;">
+        <div class="font-16 pt-4" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);" @click="print.status = !print.status">
+          <!-- <div class="w-full">打印</div> -->
+          打印
+          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="printPreviewVisible = false">
+            <Icon icon="fluent:dismiss-16-filled" />
+          </div>
+        </div>
+        <!-- 打印机就绪 -->
+        <div class="" v-if="print.status">
+          <div class="p-3 rounded-lg mb-4" style="background:var(--secondary-bg)">设备要求：德佟P1；纸张：40*60，间隙纸</div>
+          <a-select
               style="z-index: 99999999; position: relative;border:none"
               v-model:value="selectedPrinter"
               class="no-drag w-full rounded-xl printers"
@@ -136,20 +141,54 @@
               >{{ item.name }}
               </a-select-option>
             </a-select>
-
-            <div class="text-center" >
-              <div ref="previewText" class="rounded-lg mt-3  mb-3 "
-                   style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
-                <div ref="printContent" hidden v-html="print.previewHtml"></div>
-                <div ref="preivew" class="item-content "></div>
-              </div>
-            </div>
-
-            <div class="content-item">
-              <xt-button type="theme" @click="startPrint"  style="width:100%" :h="30">打印</xt-button>
+          <div class="text-center" >
+            <div ref="previewText" class="rounded-lg mt-3  mb-3 "
+                  style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
+              <div ref="printContent" hidden v-html="print.previewHtml"></div>
+              <div ref="preivew" class="item-content "></div>
             </div>
           </div>
-        </template>
+          <div class="flex justify-end">
+            <xt-button type="primary" class="mt-2 font-16 xt-text"
+                style="width: 64px; height: 40px; background-color: var(--secondary-bg); "
+                @click="printPreviewVisible = false">取消</xt-button>
+            <xt-button type="primary" class="mt-2 font-16 xt-text ml-3"
+                style="width: 64px; height: 40px; background-color: var(--active-bg);"
+                @click="startPrint">确定</xt-button>
+          </div>
+        </div>
+        <!-- 打印机未就绪 -->
+        <div v-else class="p-6">
+          <div class="flex justify-center" style="margin-top:42px;">
+            <Icon icon="fluent-emoji:printer" width="56px" height="56px" />
+          </div>
+          <div class="font-14 text-center w-full mt-4" style="color:var(--secondary-text)">驱动未就绪，未检测到可用打印机</div>
+          <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
+          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
+            <div
+            class="flex justify-center items-center rounded-lg" 
+            style="width:48px;height:48px;background-color: var(--primary-bg);">
+              <Icon icon="fluent:print-16-regular" width="20" height="20" />
+            </div>
+            <div class="flex ml-3" style="flex-direction:column;width:216px;">
+              <div>德佟 P1 标签打印机</div>
+              <div>纸张：40*60mm</div>
+            </div>
+            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32"   >立即购买</xt-button>
+          </div>
+          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
+            <div
+            class="flex justify-center items-center rounded-lg" 
+            style="width:48px;height:48px;background-color: var(--primary-bg);">
+              <Icon icon="tabler:brand-bilibili" width="20" height="20" />
+            </div>
+            <div class="flex ml-3" style="flex-direction:column;width:216px;">
+              <div>想天工作台「德佟 P1 标签打印机」使用教程</div>
+            </div>
+            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32">观看视频</xt-button>
+          </div>
+
+        </div>
 
 
       </div>

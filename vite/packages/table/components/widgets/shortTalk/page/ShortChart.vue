@@ -173,7 +173,7 @@ export default {
                 },
             ],
             options: {
-                className: "card double",
+                className: "card double w-full",
                 title: "社区访问数据/每日/全部",
                 icon: "iconamoon:history-fill",
                 rightIcon:"fluent:open-20-filled",
