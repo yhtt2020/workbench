@@ -108,11 +108,13 @@ export default defineComponent({
       courier.addNewCourierInfo()
     }
 
+     function clear(){
+      courierLists.value=[{code:'自动识别',label:'自动识别', orderNum:'',phoneLastNum:''}]
+    }
     // 删除快递输入框
     const removeCourierInput = (index) => {
       if (index === 0) {
-        numRef.value[0].stateValue = ''
-        selectRef.value[0] = ''
+        clear()
       } else {
         courier.removeNewCourierInfo(index)
       }
@@ -162,6 +164,8 @@ export default defineComponent({
           evt.preventDefault()
         } else {
           addCourier.putCourierInfo(courierLists.value[0].code, courierLists.value[0].orderNum, courierLists.value[0].phoneLastNum)
+          message.success('添加快递成功。')
+          clear()
           ctx.emit('close')
         }
       } else {
@@ -169,12 +173,13 @@ export default defineComponent({
           message.warning('请添加快递信息')
           evt.preventDefault()
         } else {
-          message.success('添加快递成功。')
           for (const item of courierLists.value) {
             if (item) {
               addCourier.putCourierInfo(item.code, item.orderNum, item.phoneLastNum)
             }
           }
+          message.success('添加快递成功。')
+          clear()
           ctx.emit('close')
         }
       }
