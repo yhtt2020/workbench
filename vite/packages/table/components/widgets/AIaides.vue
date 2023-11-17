@@ -1,91 +1,39 @@
 <template>
   <div>
-    <Widget
-      :desk="desk"
-      :sizeList="sizeList"
-      :options="options"
-      :customIndex="customIndex"
-      ref="cardSlot"
-      :customData="customData"
-    >
+    <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" ref="cardSlot"
+      :customData="customData">
       <template #left-title-icon>
-        <div
-          class="icon"
-          style="
-            width: 38px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            left: 2px;
-          "
-        >
+        <div class="icon" style=" width: 38px; height: 24px;position: absolute;left: 4px;top:14px">
           <!-- <RobotOutlined style="font-size: 20px" /> -->
           <AiIcon icon="fluent:bot-24-regular" style="font-size: 22px;" />
         </div>
       </template>
-      <div class="content">
-        <!-- {{ recentList.slice(0,4).length }} -->
-        <div class="input xt-bg" style="position: relative">
-          <a-input
-            placeholder="问我任何问题"
-            :bordered="false"
-            v-model:value="inputValue"
-            @keyup.enter="enterMsg"
-          />
-          <SendOutlined
-            style="
-              position: absolute;
-              font-size: 22px;
-              right: 16px;
-              color: var(--primary-text);
-            "
-            @click="enterMsg"
-          />
-        </div>
-        <div
-          class="ai-con"
-          style="
-            display: flex;
-            text-align: left;
-            margin-top: 14px;
-            margin-bottom: 12px;
-            color: var(--primary-text);
-          "
-        >
-          最近对话
-        </div>
-        <template v-if=" recentList">
-          <div v-for="index in copyNum">
-            <div class="ai-msg xt-bg-2" @click="goPage(index - 1)">
-              <xt-base-icon
-                class="msg-icon"
-                :icon="recentList[index - 1]?.icon.name || 'message'"
-              ></xt-base-icon>
-              <div
-                class="msg-title"
-                :style="{
-                  height: copyNum !== 1 ? '56px' : '48px',
-                  lineHeight: copyNum !== 1 ? '56px' : '48px',
-                }"
-              >
-                {{ recentList[index - 1]?.name }}
-              </div>
+      <div class="mt-4">
+        <a-input v-model:value="inputValue" :bordered="false" placeholder="问我任何问题" class=" xt-bg h-[48px] rounded-xl"
+          @keyup.enter="enterMsg">
+          <template #suffix>
+            <SendOutlined class="xt-text-2 pointer" style="font-size: 20px;" @click="enterMsg" />
+          </template>
+        </a-input>
+        <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
+        <template v-if="recentList">
+          <div class="mb-3 xt-bg rounded-xl" v-for="index in copyNum"
+            :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
+            <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
+              <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
+              <xt-base-icon class="mr-3 text-xl xt-text"
+                :icon="recentList[index - 1]?.icon.name || 'message'"></xt-base-icon>
+              <div class="text-base xt-text ">{{ recentList[index - 1]?.name }}</div>
             </div>
           </div>
         </template>
         <template v-else>
-          <div v-if="copyNum == 1">暂无数据</div>
-          <DataStatu
-            v-else
-            imgDisplay="/img/test/load-ail.png"
-            :btnToggle="false"
-            textPrompt="暂无数据"
-            style="margin-top: 200px"
-          ></DataStatu>
+          <div v-if="copyNum == 1" style="text-align: center;font-size: 16px;">暂无数据</div>
+          <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
+            class="mt-4"></DataStatu>
         </template>
       </div>
+
     </Widget>
   </div>
 </template>
@@ -100,7 +48,7 @@ import {
 import DataStatu from "./DataStatu.vue";
 import { aiStore } from "../../store/ai";
 import { mapWritableState } from "pinia";
-import {Icon as AiIcon} from '@iconify/vue'
+import { Icon as AiIcon } from '@iconify/vue'
 export default {
   name: "AIaides",
   components: {
@@ -118,7 +66,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     desk: {
       type: Object,
@@ -174,7 +122,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 .content {
   box-sizing: border-box;
   width: 252px;
@@ -237,6 +185,18 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+}
+</style> -->
+<style lang="scss" scoped>
+:deep(.ant-input-affix-wrapper) {
+  font-size: 16px;
+  border-radius: 12px;
+}
+:deep(.ant-input) {
+  color: var(--secondary-text) !important;
+  &::placeholder {
+    color: var(--secondary-text) !important;
   }
 }
 </style>

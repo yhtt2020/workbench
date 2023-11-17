@@ -1,6 +1,6 @@
 <template>
     <!-- style="box-shadow: 1px 1px var(--secondary-bg);" -->
-    <div style="position: absolute; top: 31px;z-index: 999999;">
+    <div style="position: absolute; top: 31px;z-index: 1000;">
         <!-- 闹钟设置界面 -->
         <div v-show="clockSettingVisible"
             style="position: absolute;left:-330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2); "
@@ -10,7 +10,7 @@
                 <div class="">
                     <div class="flex justify-between">
                         <div class="mb-3 font-14 xt-text-2">添加闹钟</div>
-                        <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 20px;" class="xt-text-2 pointer"
+                        <clockIcon icon="fluent:dismiss-16-filled" style="font-size: 20px;" class="mr-2 xt-text-2 pointer"
                             @click="settingClock">
                         </clockIcon>
                     </div>
@@ -103,7 +103,7 @@
 
         </div>
         <!-- 一级快捷面板 -->
-        <div class="w-[300px] h-[300px] relative xt-bg-2  rounded-lg p-0 " v-show="customizeSetting">
+        <div class="w-[300px] h-[300px] relative xt-bg-2  rounded-lg p-0 " v-if="customizeSetting">
             <div class="pt-4 pl-4 pr-4" style="">
                 <div class="flex justify-between w-full h-[56px] rounded-md items-center xt-bg pl-4 pr-4 mb-2"
                     v-if="useCountDownStore.countDowntime.hours !== undefined">
@@ -195,8 +195,8 @@
                 style="font-size: 8px;color: var(--primary-text); " :maskClosable="false">
                 <div style="display: flex;flex-direction: column;align-items: center;">
                     <div style="">自定义倒计时</div>
-                    <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-                        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }"
+                    <a-space direction="vertical" style="margin: 14px" >
+                        <a-time-picker v-model:value="value1" size="large" 
                             :showNow="false" popupClassName="popupClass" />
                     </a-space>
                     <xt-button type="primary" @click="addCustom"
@@ -207,29 +207,27 @@
     </div>
 
     <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-    <div style="position: relative">
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer progress-bar " @click="closeDetail"
-            v-if="useCountDownStore.countDowntime.hours !== undefined" style="width: 150px; height: 32px;"
+    <div style="position: relative" class="no-drag">
+        <xt-button class="mr-3 rounded-md clock-timer progress-bar" @click="closeDetail"
+            v-if="useCountDownStore.countDowntime.hours !== undefined" style="width: 150px; height: 30px;"
             :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
-            <div class="flex items-center">
+            <div class="flex items-center" >
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
-                <!-- {{ useCountDownStore.countDowntime.hours }} -->
-                <!-- {{ TopClockTimerVisible }} -->
                 <div class="mr-1 xt-text font-14">倒计时</div>
                 <div class="xt-text font-14">{{ useCountDownStore.countDowntime.hours }} : {{
                     useCountDownStore.countDowntime.minutes }} : {{ useCountDownStore.countDowntime.seconds }}</div>
             </div>
 
         </xt-button>
-        <xt-button class="flex items-center justify-center mr-3 rounded-md clock-timer top-bar " v-else @click="closeDetail"
-            style="width: 82px; height: 32px;background: rgba(80,139,254,0.20);">
+        <xt-button class="mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail" :throttleTime="0"
+            style="width: 82px; height: 30px;background: rgba(80,139,254,0.20);">
             <div class="flex items-center">
                 <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
-                <!-- <div class="mr-2 xt-text font-14">闹钟</div> -->
                 <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">{{ firstClockTime?.hours }} : {{
                     firstClockTime?.minutes }} </div>
             </div>
         </xt-button>
+        <!-- <button v-else @click="test">1111</button> -->
     </div>
 
     <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"
@@ -256,7 +254,9 @@ import { Notifications } from '../../js/common/sessionNotice'
 import RadioTab from '../RadioTab.vue';
 import SetupClock from './setClock.vue'
 const notifications = new Notifications()
-
+const test=()=>{
+    console.log(111111,'suanqu')
+}
 const usetopClockSettingStore = topClockSettingStore()
 onMounted(() => {
     if (useCountDownStore.countDowntime.seconds == '00' && useCountDownStore.countDowntime.minutes == '00' && useCountDownStore.countDowntime.hours == '00') {
@@ -422,7 +422,7 @@ const closeDetail = () => {
     customizeSetting.value = !customizeSetting.value
 
 
-    // console.log(customizeSetting.value);
+    console.log(customizeSetting.value);
 }
 const changeSettingStatus = () => {
     // usetopClockSettingStore.changeSettingStatus()
