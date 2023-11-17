@@ -73,12 +73,12 @@
          <div 
          v-if="!(this.navList.includes(item.event) && this.isOffline)"
            @contextmenu.stop="enableDrag"
-           class="mr-3 mr-6 pointer"
+           class="mr-6 pointer"
            style="white-space: nowrap; display: inline-block"
            @click.stop="clickNavigation(item)"
          >
            <div
-             style="width: 56px; height: 56px"
+             style="width: 56px; height: 56px;border-radius: 12px;" 
              v-if="item.type === 'systemApp'"
              class="flex items-center justify-center rounded-lg s-item xt-bg-2"
            >
@@ -207,19 +207,25 @@
   >
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="relative btn">
-          <xt-task  id='M0104' no="2" @cb="editNavigation">
-            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-            <div><span>编辑导航</span></div>
+        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+          <xt-task  id='M0104' no="2" @cb="editNavigation" >
+            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
           </xt-task>
         </div>
-
+        <!-- 
+          <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
+         -->
+         <!-- <div @click="editNavigation" class="relative btn" v-for="item in noEditMenus">
+            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
+        </div> -->
         <div
           @click="clickNavigation(item)"
           class=" btn"
           v-for="item in builtInFeatures"
           :key="item.name"
-
         >
           <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
           <div>
@@ -229,6 +235,14 @@
       </a-col>
     </a-row>
   </a-drawer>
+  <!-- <RightMenu
+      :menus="dropdownMenu"
+      class="w-full h-full"
+      @contextmenu="showMenu"
+    > -->
+    <RightMenu :menus="builtInFeatures" v-model:value="menuVisible" @contextmenu="showDetailMenu">
+      
+    </RightMenu>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -244,7 +258,8 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <EditNavigation @setQuick="setQuick"></EditNavigation>
+      <!-- <EditNavigation @setQuick="setQuick"></EditNavigation> -->
+      <component :is='componentId'></component>
     </div>
   </transition>
 
@@ -270,6 +285,7 @@ import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
 import { mapWritableState, mapActions } from 'pinia'
+import {useWidgetStore} from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
@@ -298,6 +314,8 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import {Icon as navIcon} from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
+import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
+import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -318,6 +336,7 @@ export default {
     Team,
     TaskBox,
     navIcon,
+    navigationSetting
   },
   data () {
     return {
@@ -352,6 +371,8 @@ export default {
       rightNav: false,
       delNav: false,
       //screenWidth: document.body.clientWidth
+      drawerMenus:[...extraRightMenu,...moreMenus],
+      componentId: 'EditNavigation',
     }
   },
   props: {
@@ -435,6 +456,7 @@ export default {
       'mainNavigationList',
     ]),
     ...mapWritableState(offlineStore, ["isOffline",'navList']),
+    ...mapWritableState(useWidgetStore,['rightModel']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -552,7 +574,15 @@ export default {
       this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation () {
+    editNavigation (item) {
+      if(item.component){
+        console.log(item.component)
+        this.componentId=item.component
+      }else if(item.visible){
+        console.log(111)
+      }else{
+        return
+      }
       this.quick = true
       this.menuVisible = false
     },
@@ -572,7 +602,13 @@ export default {
         this.$router.push({ path: '/status' })
       }
     },
-
+    showDetailMenu(){
+      if(this.rightModel=='follow'){
+        console.log(111)
+        this.menuVisible = true
+      }
+      
+    },
     power () {
       this.$router.push({ path: '/power' })
     },
@@ -757,7 +793,7 @@ export default {
   text-align: center;
   margin-right: 24px;
   border-radius: 12px;
-  width: 100px;
+  width: 105px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;

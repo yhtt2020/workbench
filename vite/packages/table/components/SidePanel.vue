@@ -26,15 +26,18 @@
       </div>
 
     </div>
-
+  <RightMenu :menus="builtInFeatures" v-model:visible="menuVisible">
+    
+  </RightMenu>
 
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="relative btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>编辑导航</span></div>
+        <div @click="editNavigation" class="relative btn" v-for="item in drawerMenus">
+          <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
+          <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+          <div><span>{{ item.title }}</span></div>
           <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
         </div>
         <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
@@ -58,11 +61,13 @@ import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
 import { offlineStore } from '../js/common/offline';
+import {useWidgetStore} from '../components/card/store'
 import Sortable from 'sortablejs';
 import { message } from 'ant-design-vue';
 import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
 import {renderIcon} from '../js/common/common'
+import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
 export default {
   name: 'SidePanel',
   components: {
@@ -76,7 +81,8 @@ export default {
       delNav: false,
       sortable:null,
       dragEnable:false,
-      dragEvent:null
+      dragEvent:null,
+      drawerMenus:[...extraRightMenu,...moreMenus]
     }
   },
   props: {
@@ -130,6 +136,7 @@ export default {
     ...mapWritableState(navStore, ['builtInFeatures','mainNavigationList']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline','navList']),
+    ...mapWritableState(useWidgetStore,['rightModel']),
   },
   mounted() {
     this.colDrop()
@@ -344,13 +351,14 @@ export default {
 }
 
 .item-nav {
-  width: 68px;
-  height: 68px;
-  margin: 16px auto;
+  width: 56px;
+  height: 56px;
+  margin: 12px auto;
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 12px;
+  margin-left: 5px;
 }
 
 .item-nav:hover {
@@ -392,7 +400,7 @@ export default {
   text-align: center;
   margin-right: 24px;
   border-radius: 12px;
-  width: 100px;
+  width: 105px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
