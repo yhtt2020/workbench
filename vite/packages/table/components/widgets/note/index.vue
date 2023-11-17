@@ -142,6 +142,7 @@
               </a-select-option>
             </a-select>
           <div class="text-center" >
+            <!-- 打印预览 -->
             <div ref="previewText" class="rounded-lg mt-3  mb-3 "
                   style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
               <div ref="printContent" hidden v-html="print.previewHtml"></div>
@@ -287,12 +288,12 @@ export default {
           newIcon: 'fluent:print-20-regular',
           title: '打印',
           fn: () => {
-
+            let html = this.customData.text
             this.printPreviewVisible = true
             this.print.previewHtml = this.$refs.mdEditor.getContent()
-            // const div = document.createElement('div')
-            // div.innerHTML = html
-            //this.print.previewText = div.innerText
+            const div = document.createElement('div')
+            div.innerHTML = html
+            this.print.previewText = div.innerText
             //console.log(div, html, this.print.previewText)
             this.api = DTPWeb.getInstance()
             DTPWeb.checkServer((value) => {
@@ -445,6 +446,7 @@ export default {
           const img = document.createElement('img')
           img.setAttribute('style', 'object-fit:contains;width:100%;height:100%')
           img.src = page.data
+          console.log('img',img);
           this.$refs.preivew.appendChild(img)
           api.closePrinter()
         } else {
