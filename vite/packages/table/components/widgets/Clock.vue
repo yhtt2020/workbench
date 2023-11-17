@@ -25,14 +25,14 @@
           icon="fluent:dismiss-16-filled" @click="deleteCountDown"></clockIcon>
       </div>
     </div>
-    <div class="flex flex-col text-center" v-else-if="clockEvent.length <= 0" style="width: 100%">
+    <div class="flex flex-col h-full text-center" v-else-if="clockEvent.length <= 0" style="width: 100%">
       <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
       </div>
-      <div class="flex flex-col items-center justify-center mt-10">
+      <div class="flex flex-col items-center justify-center h-full">
         <xt-button class="rounded-lg  w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16" type="primary"
           @click="onSetup">添加闹钟</xt-button>
-        <xt-button type="text" class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 warn-bg font-16"
+        <xt-button type="text" class="rounded-lg  w-[120px] h-[45px]  border-0 p-0 font-16" style="background-color: #FBAE17;"
           @click="onSetCountDown">添加定时器</xt-button>
       </div>
 
@@ -70,8 +70,8 @@
     style="font-size: 8px;color: var(--primary-text);" :maskClosable="false">
     <div style="display: flex;flex-direction: column;align-items: center;">
       <div style="">自定义倒计时</div>
-      <a-space direction="vertical" style="margin: 14px" :popupStyle="{ zIndex: 9999999999999 }">
-        <a-time-picker v-model:value="value1" size="large" :popupStyle="{ zIndex: 9999999999999 }" :showNow="false" />
+      <a-space direction="vertical" style="margin: 14px" >
+        <a-time-picker v-model:value="value1" size="large"  :showNow="false" />
       </a-space>
       <xt-button type="primary" @click="addCustom"
                         style="margin: 14px; background: var(--active-bg);">开始倒计时</xt-button>
