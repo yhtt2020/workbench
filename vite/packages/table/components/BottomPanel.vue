@@ -14,6 +14,7 @@
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
+        border-radius: 18px;
       "
     >
       <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
@@ -34,7 +35,7 @@
         justify-items: center;
         align-content: center;
         align-items: center;
-        border-radius: 8px;
+        border-radius: 18px;
         height: 73px;
         overflow: hidden;
         margin-right: 10px;
@@ -86,8 +87,8 @@
                :icon="item.icon"
                class="test"
                style="
-                 width: 32px;
-                 height: 32px;
+                 width: 28px;
+                 height: 28px;
                  fill: var(--primary-text);
                "
              ></navIcon>

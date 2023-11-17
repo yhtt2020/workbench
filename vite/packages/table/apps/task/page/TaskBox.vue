@@ -4,8 +4,8 @@
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
       <div
         @click="store.isTaskDrawer = true"
-        class="xt-bg relative s-bg h-full xt-base-btn"
-        style="width: 70px; height: 70px; border-radius: 8px"
+        class="relative h-full xt-bg s-bg xt-base-btn"
+        style="width: 70px; height: 70px; border-radius: 18px"
       >
         <img
           src="/img/task/star.png"
@@ -13,13 +13,13 @@
           alt=""
         />
         <div
-          class="absolute text-center xt-text rounded-md left-1/2 -translate-x-1/2 flex overflow-hidden"
+          class="absolute flex overflow-hidden text-center -translate-x-1/2 rounded-md xt-text left-1/2"
           style="width: 90%; bottom: 4px; height: 20px; z-index: 9999"
         >
           <div class="xt-active-bg" :style="[progress]"></div>
           <div class="flex-1 xt-bg-2"></div>
           <div
-            class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
+            class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
             style="width: 60px; font-size: 11px"
           >
             主线 {{ width }} %
