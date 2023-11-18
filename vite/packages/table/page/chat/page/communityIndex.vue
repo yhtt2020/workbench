@@ -1,16 +1,10 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col  class="flex flex-col h-full pr-3 find-left" v-if="isFloat === false"
+    <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false"
       style=" border-right:1px solid var(--divider);"
     >
-    <!-- :style="doubleCol ? { width:'336px' } :{ width:'240px '}" -->
-    <!-- :flex="doubleCol ? 0 1 336 : 0 1 240 "  -->
-    <!-- flex=" 0 1 300px" -->
-
       <DefaultFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></DefaultFloat>
-
     </a-col>
-
     <a-col flex=" 1 1 200px" class="flex flex-col h-full">
       <div class="flex items-center px-4 mb-0 line-title">
         <div class="flex items-center justify-center">
@@ -66,13 +60,11 @@
 
 
     </a-col>
-
   </a-row>
-
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, ref, computed } from 'vue'
+import { defineComponent, reactive, toRefs, ref, computed,onMounted,getCurrentInstance} from 'vue'
 import { chatList } from '../../../js/data/chatList'
 import ChatFold from '../components/float/ChatFolds.vue'
 import Commun from '../Commun.vue'
@@ -93,16 +85,18 @@ export default defineComponent({
     DefaultFloat,communityIcon
   },
 
-  data(){
-    return{
-      routeData:this.$route.params
-    }
-  },
+  // data(){
+  //   return{
+  //     routeData:this.$route.params
+  //   }
+  // },
 
   setup () {
 
     const chat = chatStore()
     // const community = chatAdminStore()
+    const { appContext } = getCurrentInstance()
+    const globalProperties = appContext.config.globalProperties;
 
     const doubleCol = ref(chat.$state.settings.showDouble)
 
@@ -111,7 +105,6 @@ export default defineComponent({
       groupName: chatList[0].name,
       enable: chatList[0].props.enableColumns,
       summary: chatList[0].summary,
-
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -125,8 +118,8 @@ export default defineComponent({
       showModal: false, // 没有加入社群提示弹窗控制
       group: {}, // 接收传递的社群id
       isChat: 'yes',
-
-      avatarUrl:'/icons/logo28.png'
+      avatarUrl:'/icons/logo28.png',
+      routeData:1,
     })
 
     const updatePage = () => {
@@ -172,6 +165,14 @@ export default defineComponent({
       return chat.$state.settings.enableHide
     })
 
+    onMounted(()=>{
+      const mit = globalProperties.$mit
+      // console.log('查看mit',mit);
+      mit.on('clickItem',(item)=>{
+        // console.log('监听item',item);
+        currentItem(item)
+      })
+    })
     return {
       doubleCol, isFloat,
       ...toRefs(data), updatePage,

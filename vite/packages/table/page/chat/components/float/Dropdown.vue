@@ -1,6 +1,7 @@
 <template>
- <a-dropdown :trigger="['click']" placement="bottomLeft" :overlayStyle="{ zIndex:'10000 !important'}">
-  <div class="flex pointer items-center justify-center">
+ <a-dropdown :trigger="['click']" :placement="title !== undefined ? 'bottom':'bottomRight'" :overlayStyle="{ zIndex:'10000 !important',minWidth:'0px !important'}">
+  <div class="flex pointer items-center" :class="title !== undefined ? 'justify-between':'justify-center'">
+   <span class="font-16 font-500 xt-font xt-text">{{ title }}</span>
    <DorpIcon :icon="newIcon" class="xt-text-2" style="font-size: 1.25rem;"></DorpIcon>
   </div>
   <template #overlay>
@@ -8,7 +9,7 @@
     <template v-for="(item,index) in list">
      <a-menu-item v-if=" index <  list.length - 2 " style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
      @click="item.callBack">
-       <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+       <DorpIcon :icon="item.newIcon" style="font-size: 1.25rem;"/>
        <span class="pl-4 font-16 font-400" style="color:var(--primary-text);"> {{ item.title }}</span>
      </a-menu-item>
 
@@ -16,7 +17,7 @@
 
      <a-menu-item v-if=" index >= list.length - 2 "  style="color: var(--secondary-text);width:184px;margin-bottom: 8px;" class="rounded-lg flex items-center h-11 drop-item"
       @click="item.callBack">
-       <DorpIcon :icon="item.icon" style="font-size: 1.25rem;"/>
+       <DorpIcon :icon="item.newIcon" style="font-size: 1.25rem;"/>
        <span class="pl-4 font-16 font-400" :style="item.type === 'deletePacket' ? { color:'var(--error)' } : { color:'var(--primary-text)' }"> {{ item.title }}</span>
      </a-menu-item>
     </template>
@@ -29,7 +30,7 @@
 import {Icon as DorpIcon} from '@iconify/vue'
 
 export default {
- props:['newIcon','list'],
+ props:['newIcon','list','title'],
  components:{
   DorpIcon
  },

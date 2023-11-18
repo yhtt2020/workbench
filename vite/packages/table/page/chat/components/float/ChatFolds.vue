@@ -1,6 +1,6 @@
 <template>
  <div class="collapse-container" style="position: relative;">
-   <div class="header mb-2 flex  justify-between rounded-md h-8" @click.stop="toggleCollapse">
+   <div class="header pl-2 mb-2 flex  justify-between rounded-md h-8" @click.stop="toggleCollapse">
      <div class="flex items-center">
       <div class="flex items-center justify-center" :class="['icon', { 'rotate': collapsed }]">
         <FoldIcon  icon="fluent:caret-down-12-filled" style="font-size: 1.5rem;"/>
@@ -22,8 +22,8 @@
    </transition>
  </div>
 
- <PacketSetting ref="packRef" :no="no" :item="content"/>
- <AddUnClassCategory ref="unClassRef" :no="no" :item="content"/>
+ <PacketSetting ref="packRef" :no="no" :item="content !== undefined ? content : undefined "/>
+ <AddUnClassCategory ref="unClassRef" :no="no" :item="content !== undefined ? content : undefined"/>
 </template>
 
 <script>
@@ -51,19 +51,19 @@ export default {
 
    const dorpList = ref([
     { 
-      icon:'fluent:apps-add-in-20-filled',title:'添加新应用',
+      newIcon:'fluent:apps-add-in-20-filled',title:'添加新应用',
       callBack:()=>{
         unClassRef.value.openUnClassModal()
       }
     },
     { 
-      icon:'fluent:settings-16-regular',title:'分组设置',
+      newIcon:'fluent:settings-16-regular',title:'分组设置',
       callBack:()=>{
         packRef.value.openSetModal()
       }
     },
     { 
-      icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket',color:'var(--error)',
+      newIcon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket',color:'var(--error)',
       callBack:()=>{
         Modal.confirm({
           content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
