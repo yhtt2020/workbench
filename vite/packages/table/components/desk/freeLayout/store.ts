@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 
 import { cardStore } from "../../../store/card";
+import {homeStore} from "../../../store/home";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
@@ -80,7 +81,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前桌面Id
     getCurrentDeskId() {
-      const card: any = cardStore();
+      const card: any = homeStore();
       const { currentDeskId } = storeToRefs(card);
       return currentDeskId.value;
     },

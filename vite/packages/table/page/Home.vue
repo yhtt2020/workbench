@@ -262,6 +262,7 @@ import { setTransparent, detTransparent } from "../components/card/hooks/themeSw
 import { taskStore } from "../apps/task/store"
 import navigationData from '../js/data/tableData'
 import { navStore } from '../store/nav'
+import { homeStore } from '../store/home'
 
 const { steamUser, steamSession, path, https, steamFs } = $models
 if (steamUser && steamSession) {
@@ -433,7 +434,6 @@ export default {
       "clockEvent",
       "settings",
       "desks",
-      "currentDeskId",
       "moved",
       "currentDeskIndex",
       "lastHeight"
@@ -454,6 +454,7 @@ export default {
     }),
     ...mapWritableState(deskStore, ['deskList']),
     ...mapWritableState(taskStore, ['taskID', 'step']),
+    ...mapWritableState(homeStore,['currentDeskId']),
     m01033() {
       return this.taskID == "M0103" && this.step == 3
     },
