@@ -1,7 +1,7 @@
 <template>
- <div :style="isDoubleColumn ? { width:'336px' } : {width:'240px'} " class="relative">
+ <div :style="isDoubleColumn ? { width:'336px',height:'150px' } : {width:'240px',height:'130px'} " class="relative">
   <img :src="textUrl" class="w-full h-full object-cover" :class="settings.enableHide ? 'rounded-t-xl':''"/>
-  <div class="community-name h-11 w-full" :class="isDoubleColumn ? 'com-line-bg':''">
+  <div class="community-name h-11 w-full com-line-bg">
     <div class="m-1.5 px-3 items-center drop-hover rounded-lg flex justify-between h-8">
       <ChatDropDown class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :title="categoryList.name" :list="floatList" /> 
     </div>
@@ -38,20 +38,20 @@
         </div>
         <xt-button w="32" h="32" style="background: none !important;" @click="openHideContent">
           <div class="flex items-center justify-center" v-if="collapsed">
-            <CommunityIcon icon="fluent:caret-down-16-filled" style="font-size: 1.25rem;" />
+            <CommunityIcon icon="fluent:caret-down-16-filled" style="font-size: 1rem;" />
           </div>
           <div class="flex items-center justify-center" v-else>
-            <CommunityIcon icon="fluent:caret-up-16-filled" style="font-size: 1.25rem;" />
+            <CommunityIcon icon="fluent:caret-up-16-filled" style="font-size: 1rem;" />
           </div>
         </xt-button>
       </div>
-      <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="10"></a-progress>
       <div class="flex items-center mt-2">
         <span class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3 " :class="settings.enableHide ? '' :'xt-bg'">
           社群号：{{ categoryList.no }}
         </span>
         <span class="px-2 rounded-md xt-active-bg xt-active-text">0 级</span>
       </div>
+      <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="10"></a-progress>
     </template>
     <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
     <!-- 空状态 -->
