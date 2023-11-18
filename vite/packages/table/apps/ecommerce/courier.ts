@@ -54,16 +54,12 @@ export const courierStore = defineStore("courier", {
   actions: {
     // 根据订单号来存储快递数据
     async putCourierInfo(shipperCode: any, logisticCode: any, customerName: any) {
-      //console.log('查看情况',code,order);
       const option = {
         shipperCode: shipperCode,
         logisticCode: logisticCode,
         customerName: customerName
       }
-      // console.log('查看option',option);
       let response = await post(kdniao, option)
-      console.log('添加数据', response)
-      // console.log('查看报错信息',response);
       if (response.Success) {
         //更详细的监测
         let now = Date.now()
@@ -78,9 +74,7 @@ export const courierStore = defineStore("courier", {
           createTime: now,
           updateTime: now
         }
-        // console.log('查看db存储的数据',dbData);
         let rs = await tsbApi.db.put(dbData)
-        console.log('添加结果', rs)
         if (rs.ok) {
           this.getDbCourier();
           return rs.docs
@@ -90,8 +84,6 @@ export const courierStore = defineStore("courier", {
         }
 
       }
-      // const res  = await tsbApi.db.put(dbData)
-      // console.log('查看结果',res);
     },
 
     async followCourier(id) {
@@ -161,7 +153,6 @@ export const courierStore = defineStore("courier", {
       courier.createTime = Date.now()
       courier.updateTime = Date.now()
       delete courier._rev
-      console.log('重新插入', courier)
       let rs = await tsbApi.db.put(courier)
       if (rs?.ok) {
         await this.getDbCourier()
@@ -176,9 +167,7 @@ export const courierStore = defineStore("courier", {
       if (courier) {
         courier.followed = false
       }
-      console.log(courier, '需要存入的')
       let rs = await tsbApi.db.put(courier)
-      console.log('保存结果', rs)
       if (rs.ok) {
         this.getDbCourier();
         return true
@@ -189,7 +178,6 @@ export const courierStore = defineStore("courier", {
     },
     // 获取db中存储的快递数据
     async getDbCourier() {
-      console.log('执行一此筛选')
       const getResult = await tsbApi.db.find({
         selector: {
           _id: {
@@ -200,7 +188,6 @@ export const courierStore = defineStore("courier", {
           }
         }
       })
-      console.log('查找到结果', getResult)
       // 将getResult.rows列表的doc进行解构
       const docList = getResult.docs
       // 将docList中的content进行解构
@@ -208,7 +195,6 @@ export const courierStore = defineStore("courier", {
         return item
       })
       let filterList = contentList.filter((item: any) => {
-        // console.log('查看',item.Traces.length);
         // if(item.Traces.length !== 0){
         //   return item
         // }
@@ -217,19 +203,14 @@ export const courierStore = defineStore("courier", {
       let sortedList = filterList.sort((item1, item2) => {
         return item2.createTime - item1.createTime
       })
-      // console.log('获取列表中的doc',filterList);
       this.orderList = [
         ...sortedList
       ]
-      console.log(this.orderList, '最终新表单')
     },
 
     // 删除db中存储的数据
     async removeDbData(item) {
-      // console.log('查看下标::>>',index);
-
       const rs = await tsbApi.db.remove(item)
-      // console.log('查看删除结果',res);
       this.getDbCourier()
       return rs
     },
@@ -244,7 +225,6 @@ export const courierStore = defineStore("courier", {
           }
         }
       })
-      console.log('查到隐藏订单',rs)
       return rs?.docs
     },
     async getHideCount() {
@@ -254,9 +234,7 @@ export const courierStore = defineStore("courier", {
     async updateOrder(id) {
       let order = await this.findDbItem(id)
       if (order) {
-        console.log('存在订单',order)
         if (order.store === 'jd') {
-          console.log('是京东订单',order)
           let promise=new Promise((resolve,reject)=>{
             grab.jd.getOrderDetail(order.content.detailUrl, async ({status, code, data}) => {
               if (status) {
@@ -281,7 +259,6 @@ export const courierStore = defineStore("courier", {
                   ...order,
                   content: content
                 })
-                console.log('写入结果',rs)
                 resolve(order)
               } else {
                 reject(false)
@@ -387,9 +364,7 @@ export const courierStore = defineStore("courier", {
             ...found?.docs[0],
             ...newData
           }
-          console.log('更新数据', data)
           let rs = await tsbApi.db.put(data); // 更新文档
-          console.log(rs)
           if (rs.ok) {
             await this.getDbCourier()
           }
@@ -447,7 +422,6 @@ export const courierStore = defineStore("courier", {
               store: 'jd',
               updateTime: Date.now()
             }
-            console.log('判断一下', order)
             if (order.latestNodes?.length === 0 && order.detail?.traceNodes.length > 0) {
               let date = ''
               order.latestNodes = order.detail.traceNodes.map(i => {
@@ -467,7 +441,6 @@ export const courierStore = defineStore("courier", {
 
           if (found.docs?.length) {
             //更新流程
-            console.log(found)
             let mapped = mapData(order)
             let foundOrder = found.docs[0]
             foundOrder = {
@@ -494,7 +467,6 @@ export const courierStore = defineStore("courier", {
               category: `courier:${now}`,
             }
             let addRs = await tsbApi.db.put(dbData)
-            console.log('插入结果', addRs)
             if (addRs?.ok) {
               updateCount++
             }

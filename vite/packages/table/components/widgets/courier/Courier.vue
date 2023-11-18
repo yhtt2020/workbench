@@ -343,6 +343,7 @@ export default {
     if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
       this.autoRefresh()
     }
+    this.handleResize()
 
   },
 

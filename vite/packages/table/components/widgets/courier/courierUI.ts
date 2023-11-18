@@ -29,7 +29,6 @@ const ui={
           let count = await store.saveJdOrders(args.data)
           tip &&  message.success({ content: '成功更新' + count + '个京东订单信息', key: 'loadingTip' })
           await store.getDbCourier()
-          console.log('刷新一下本地记录')
         } else {
           notification.info({
             message: '京东账号已过期，点击重新绑定后再刷新。',
@@ -55,8 +54,8 @@ const ui={
             message: '淘宝账号已过期，点击重新绑定。',
             onClick: () => {
               grab.tb.login((args) => {
-
-                console.log(args, '获取到的订单信息')
+                console.log(args, '获取到的淘宝订单信息')
+                //todo 往数据库插入淘宝订单
               })
             }
           })
@@ -103,13 +102,10 @@ const ui={
       key: 'loadingTip',
       duration: 0
     })
-
-    console.log('要执行的promises=',promises)
     let taskChunks=_.chunk(promises,5)
     for(const chunk of taskChunks){
       //切片并发5个
       await Promise.allSettled(chunk)
-      console.log('执行完成一个块',chunk)
     }
 
     tip &&  message.success({
@@ -117,7 +113,6 @@ const ui={
       key: 'loadingTip',
       duration: 4
     })
-    console.log('更新后的订单', store.storeInfo.jd.order)
   },
 
   /**
