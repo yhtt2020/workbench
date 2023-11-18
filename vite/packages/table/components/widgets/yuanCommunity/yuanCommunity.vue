@@ -200,7 +200,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: ' ',
+            defaultForum: {index:0,name:'版本更新',id:100304},
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -230,9 +230,8 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            // console.log(this.defaultForum);
+            console.log(this.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
-            console.log(this.communityPost.list,'this.communityPost.list')
             this.isLoading = false
         },
         // 查看内容详情
@@ -309,8 +308,6 @@ export default {
             return '392px'
         },
         forumList() {
-            // this.customData.forumList = this.myForumList.joined
-            // return this.customData.forumList
             if (this.customData && this.customData.forumList) {
                 return this.customData.forumList
             }
@@ -340,10 +337,9 @@ export default {
             }
         },
     },
-    async mounted() {
-        this.isLoading = true
-        // await this.getMyForumList()
-        // this.customData.forumList = this.myForumList.joined
+    async beforeMount() {
+        await this.getMyForumList()
+        this.customData.forumList = this.myForumList.joined
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
@@ -351,12 +347,17 @@ export default {
         } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList)
             this.defaultForum = this.customData.selectList[0]
+        }else{
+            return this.defaultForum
         }
-        
+    },
+    async mounted() {
+        this.isLoading = true
         // 判断组件名称
         if (this.customData.selectList && this.customData.selectList.length === 1) {
             this.options.title = this.customData.selectList[0].value.name
         }
+        // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
         window.addEventListener("resize", this.handleResize)
     },
@@ -369,7 +370,10 @@ export default {
             if (this.showForumList.length > 0) {
                 this.getCommunityPost(this.showForumList[0].value.id)
             }
-            this.isLoading = false
+            setTimeout(() => {
+                this.isLoading = false
+            });
+
         },
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
@@ -396,15 +400,12 @@ export default {
                 }
             }
         },
-        async settingVisible(){
-            
+        settingVisible(){
             // 加载已选择的模块
         if (this.customData && this.customData.selectList && this.settingVisible==true) {
             this.selectValue = this.customData.selectList.map((item) => {
                 return item.index
             })
-            await this.getMyForumList()
-            this.customData.forumList = this.myForumList.joined
         }
         }
     }
