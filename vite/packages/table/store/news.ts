@@ -21,15 +21,15 @@ export const newsStore = defineStore("news", {
       }
       let response = await get(juheGet, {
         apiName: 'toutiao.index',
-        params: {
+        params: JSON.stringify({
           type: tag,
           page_size: num,
-        },
-        options: {
+        }),
+        options: JSON.stringify({
           key: cacheTag,
           ttl: 300,
           cache: 1
-        }
+        })
       })
 
       if(response.status){

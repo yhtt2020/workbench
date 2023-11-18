@@ -46,11 +46,11 @@ export const oilStore = defineStore("OilPrices", {
                 apiName:'gnyj.query',
                 params:{
                 },
-                options:{
+                options:JSON.stringify({
                     key:'toutiao.gnyj.query',
                     ttl:60*60*12,
                     cache:1,
-                }
+                })
             })
             // console.log(res);
             
