@@ -3,8 +3,7 @@ import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
 import {timerStore} from "./timer";
 import {marketStore} from "./market";
-import {watch} from 'vue'
-import { noteStore } from "../apps/note/store";
+import {noteStore} from "../apps/note/store";
 // @ts-ignore
 export const cardStore = defineStore(
   "cardStore",
@@ -12,8 +11,6 @@ export const cardStore = defineStore(
     state: () => {
       return {
         moved: false,
-        currentDeskIndex: {},
-        currentDeskId:'',//当前桌面的deskId
         desks: [{
           name: '基础桌面',
           nanoid: nanoid(4),
@@ -30,7 +27,7 @@ export const cardStore = defineStore(
           marginTop: 0,
           cardMargin: 5
         },
-        countdownDay: [ {
+        countdownDay: [{
           "eventValue": "中秋节",
           "dateValue": {
             "year": 2023,
@@ -57,8 +54,8 @@ export const cardStore = defineStore(
         }],
         clockEvent: [],
         customComponents: [],
-        clockTag:'within30min',
-        chooseType:'1',
+        clockTag: 'within30min',
+        chooseType: '1',
         filterClockEvent: [],
         aidaData: null,
         // navigationList: [
@@ -298,8 +295,7 @@ export const cardStore = defineStore(
 
       };
     },
-    getters: {
-    },
+    getters: {},
     actions: {
       switchToDesk(index) {
         let desk = this.desks[index]
@@ -337,14 +333,14 @@ export const cardStore = defineStore(
         }
         let desk = {
           name: name,
-          id:nanoid(4),
+          id: nanoid(4),
           nanoid: nanoid(4),
           cards: cards
         }
         this.desks.push(desk)
         return desk
       },
-      addShareDesk(data,layoutSize,deskList){
+      addShareDesk(data, layoutSize, deskList) {
         setTimeout(() => {
           // let cardZoom;
           // if(this.deskSize.cardsHeight){
@@ -354,28 +350,28 @@ export const cardStore = defineStore(
           // }
           // let cardZoom = (data.settings.cardZoom * this.deskSize.cardsHeight/data.cardsHeight).toFixed()
           // data.settings.cardZoom =
-          console.log(data,'商品id')
+          console.log(data, '商品id')
           marketStore().incCount(data.dataNanoid)
-          data.settings.preparing=true//设置为未初始化，等到第一次进去的时候再初始化
-          data.settings.layoutSize=layoutSize
+          data.settings.preparing = true//设置为未初始化，等到第一次进去的时候再初始化
+          data.settings.layoutSize = layoutSize
           let desk = {
             name: data.title,
             nanoid: nanoid(4),
-            id:nanoid(4),
+            id: nanoid(4),
             cards: data.cards,
-            marketId:data.dataNanoid,
-            settings: {...data.settings,enableZoom:true},
+            marketId: data.dataNanoid,
+            settings: {...data.settings, enableZoom: true},
             // showSettings: true
           }
           this.aloneSettings = data.settings
-          console.log(desk,'需要添加的desk')
-          console.log(deskList,'父列表')
+          console.log(desk, '需要添加的desk')
+          console.log(deskList, '父列表')
           deskList.unshift(desk)
           //this.switchToDesk(this.deskList.length - 1)
           return desk
-          }, 350);
+        }, 350);
       },
-      setDeskSize(item){
+      setDeskSize(item) {
         this.deskSize = item
       },
       getCurrentDesk() {
@@ -494,37 +490,37 @@ export const cardStore = defineStore(
         }
         this.clockFlag = !this.clockFlag
       },
-      filterClock(tag,value) {
+      filterClock(tag, value) {
         // console.log(tag);
-        this.filterClockEvent=this.clockEvent
+        this.filterClockEvent = this.clockEvent
         // this.temp=value
         // console.log(value,'this.temp');
         // if(tag!==null || undefined){
-          // console.log(tag);
+        // console.log(tag);
 
-        this.clockTag=tag
-        this.chooseType=value
+        this.clockTag = tag
+        this.chooseType = value
 
         // }
         // console.log(this.clockTag);
-        if(this.clockTag=='within30min'){
+        if (this.clockTag == 'within30min') {
           this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime=parseInt(timerStore().appDate.hours)*60+parseInt(timerStore().appDate.minutes)
-            let targetTime=parseInt(value.dateValue.hours)*60+parseInt(value.dateValue.minutes)
-            let timeDiff=targetTime-totalTime
-            return timeDiff<=30 && timeDiff>0
+            let totalTime = parseInt(timerStore().appDate.hours) * 60 + parseInt(timerStore().appDate.minutes)
+            let targetTime = parseInt(value.dateValue.hours) * 60 + parseInt(value.dateValue.minutes)
+            let timeDiff = targetTime - totalTime
+            return timeDiff <= 30 && timeDiff > 0
 
           })
           // console.log(this.filterClockEvent);
 
-        }else if(this.clockTag=='within1hour'){
+        } else if (this.clockTag == 'within1hour') {
           this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime=parseInt(timerStore().appDate.hours)*60+parseInt(timerStore().appDate.minutes)
-            let targetTime=parseInt(value.dateValue.hours)*60+parseInt(value.dateValue.minutes)
-            let timeDiff=targetTime-totalTime
-            return timeDiff<=60 && timeDiff>0
+            let totalTime = parseInt(timerStore().appDate.hours) * 60 + parseInt(timerStore().appDate.minutes)
+            let targetTime = parseInt(value.dateValue.hours) * 60 + parseInt(value.dateValue.minutes)
+            let timeDiff = targetTime - totalTime
+            return timeDiff <= 60 && timeDiff > 0
           })
-        }else if(this.clockTag=='always'){
+        } else if (this.clockTag == 'always') {
           this.filterClockEvent = this.clockEvent
         }
         // console.log(this.clockTag,'this.clockTag');
@@ -540,38 +536,38 @@ export const cardStore = defineStore(
         // })
 
         // 便签卡片需要进行db存储
-        if (value.name == 'notes' && noteStore().initFlag && !flag ) {
-          let obj:any ={
+        if (value.name == 'notes' && noteStore().initFlag && !flag) {
+          let obj: any = {
             ...value,
-            customData:{
+            customData: {
               ...value.customData,
-              title:'桌面便签',
-              background:"#57BF60",
-              cardSize:'card',
-              colors:"#ffffff",
-              height:2,
-              width:1,
-              text:'',
-              dragCardSize:'card',
-              content:'',
+              title: '桌面便签',
+              background: "#57BF60",
+              cardSize: 'card',
+              colors: "#ffffff",
+              height: 2,
+              width: 1,
+              text: '',
+              dragCardSize: 'card',
+              content: '',
             },
-            _id:'note:' + value.id,
-            updateTime:value.id,
-            createTime:value.id,
-            name:'notes',
-            notes:'notes',
-            isDelete:false,
-            deskName:desk.name,
-            deskId:desk.id,
-            
+            _id: 'note:' + value.id,
+            updateTime: value.id,
+            createTime: value.id,
+            name: 'notes',
+            notes: 'notes',
+            isDelete: false,
+            deskName: desk.name,
+            deskId: desk.id,
+
           }
           desk.cards.push(obj)
-          
+
           await tsbApi.db.put(obj)
-        }else{
+        } else {
           desk.cards.push(value)
         }
-        
+
         // desk.cards.push(value)
       },
       /**
@@ -595,12 +591,12 @@ export const cardStore = defineStore(
       },
       async removeCard(customIndex, desk, flag) {
         // 切换卡片时不需要清除
-        if (!flag && noteStore().initFlag) {    
+        if (!flag && noteStore().initFlag) {
           // console.log('清除数据');
-          
+
           // 删除桌面便签时需要清除db数据
           let getDb = await tsbApi.db.find({
-            selector: { 
+            selector: {
               _id: 'note:' + customIndex,
             },
           })
@@ -614,7 +610,7 @@ export const cardStore = defineStore(
         desk.cards.splice(desk.cards.findIndex(item => {
           return String(item.id) === String(customIndex)
         }), 1)
-        console.log('删除 卡片:>> ', desk.cards );
+        console.log('删除 卡片:>> ', desk.cards);
 
         // this.customComponents.splice(customIndex,1);
 
@@ -634,7 +630,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'currentDeskIndex', 'moved','deskSize','lastHeight','clockTag','chooseType','currentDeskId'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'moved', 'deskSize', 'lastHeight', 'clockTag', 'chooseType'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]
