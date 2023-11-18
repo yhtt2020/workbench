@@ -209,8 +209,29 @@ export const noteStore = defineStore("noteStore", {
       
     },
 
-    // async
-    // 修改卡片内容
+    // 修改主应用卡片内容
+    async saveAppNote(id,value,content){
+      let now = new Date().getTime()
+      let tmp = await this.findId('note:'+id,false)
+      if (tmp) {
+        await tsbApi.db.put({
+          ...tmp[0],
+          customData:{
+            ...tmp[0].customData,
+            text:value,
+            content:content
+          },
+          updateTime:now,
+        })
+      }
+      // 遍历桌面卡片的时候会导致桌面卡片定位失效 
+      // 暂时解决办法 通过区分桌面便签和主应用便签
+      // 分别设置方法进行存储
+      // 期待后续优化
+      this.getNotes()
+    },
+
+    // 修改桌面卡片内容
     async saveDeskNote(id,value,content){
       let now = new Date().getTime()
       let tmp = await this.findId('note:'+id,false)
@@ -225,7 +246,6 @@ export const noteStore = defineStore("noteStore", {
           updateTime:now,
         })
       }
-      this.getNotes()
     },
 
     // 在应用里新建便签

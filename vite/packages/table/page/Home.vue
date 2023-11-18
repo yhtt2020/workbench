@@ -740,14 +740,14 @@ export default {
       this.menuVisible = false;
     },
     replaceIcon() {
-      navigationData.systemFillAppList.forEach((item) => {
+      navigationData.systemAppList.forEach((item) => {
         this.sideNavigationList.forEach((i) => {
           if (item.name === i.name) {
             i.icon = item.icon
           }
         })
       })
-      navigationData.systemFillAppList.forEach((item) => {
+      navigationData.systemAppList.forEach((item) => {
         this.rightNavigationList.forEach((i) => {
           if (item.name === i.name) {
             i.icon = item.icon
