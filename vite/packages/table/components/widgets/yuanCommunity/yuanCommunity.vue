@@ -66,7 +66,7 @@
         </Widget>
 
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"></YuanPublishModal>
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" @refresh-default-forum="refreshPost"></YuanPublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
