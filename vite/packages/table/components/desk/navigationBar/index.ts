@@ -53,18 +53,21 @@ export const moreMenus = [
     {
         title:'显示用户中心',
         icon:"fluent:person-16-regular",
-        visible:true
+        visible:true,
+        tag:'user'
     },
     {
         title:'显示社区助手',
         icon:"fluent:people-community-16-regular",
-        visible:true
+        visible:true,
+        tag:'community'
 
     },
     {
         title:'显示任务中心',
         icon:"fluent:task-list-square-16-regular",
-        visible:true
+        visible:true,
+        tag:'task'
     }
 ] 
 
