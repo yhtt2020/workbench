@@ -74,6 +74,7 @@ const canvasMenu = computed(() => {
 <template>
   <xt-drag
     boundary
+    resetPosition
     v-model:y="getFreeLayoutState.system.floatMenu.top"
     v-model:x="getFreeLayoutState.system.floatMenu.left"
     v-if="getFreeLayoutState.system.isFloatMenu"

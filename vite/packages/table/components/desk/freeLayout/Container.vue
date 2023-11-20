@@ -129,7 +129,7 @@ const a = ref(true);
 </script>
 
 <template>
-  <div
+  <!-- <div
     class="xt-theme-b h-full flex flex-wrap absolute"
     style="align-content: flex-start !important"
     :style="{
@@ -156,7 +156,7 @@ const a = ref(true);
       style="width: 280px; height: 204px; margin: 6px"
       class="xt-theme-b"
     ></div>
-  </div>
+  </div> -->
   <xt-drag
     parent
     boundary

@@ -1,0 +1,22 @@
+
+.draggable {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    text-align: center;
+    cursor: move;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    width: 80px;
+    height: 80px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+  
+  .grid {
+    border: 2px solid red;
+    border-radius: 12px;
+  }

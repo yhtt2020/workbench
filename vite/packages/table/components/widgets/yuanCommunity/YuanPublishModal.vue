@@ -159,7 +159,7 @@
             </vue-custom-scrollbar>
         </div>
 
-    </xt-modal>
+    </xt-old-modal>
 </template>
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed, watch } from 'vue'

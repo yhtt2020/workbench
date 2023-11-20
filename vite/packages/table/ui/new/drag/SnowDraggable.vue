@@ -1,15 +1,25 @@
 <template>
   <div
     ref="draggable"
+    style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
     @mousedown.stop="yDragStartFn"
   >
-    <slot>
-      <div class="draggable">
-        <div>长按开始</div>
-        <div>拖拽!👋</div>
-      </div>
-    </slot>
+    <div
+      v-element-size="getElementSize"
+      style="position: absolute; left: 50%; top: 50%; transform-origin: center"
+      :style="{
+        transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+      }"
+    >
+      <slot>
+        <!-- <div class="draggable">
+          <div>长按开始</div>
+          <div>拖拽!👋</div>
+        </div> -->
+        <img src="./snow.svg" alt="" style="display: block" />
+      </slot>
+    </div>
   </div>
   <div
     v-if="showGridPos"
@@ -20,8 +30,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, toRefs, computed, watch } from "vue";
-import { useElementSize } from "@vueuse/core";
 import { useWindowSize } from "./useWindowSize";
+import { useElementSize, vElementSize } from "./useElementSize";
+import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
 export interface DragProps {
   // 禁用组件拖拽
   disabled?: boolean;
@@ -38,9 +49,11 @@ export interface DragProps {
   magnet?: boolean;
   // 磁吸名称
   magnetName?: string | number;
+  // 磁吸范围
   magnetRange?: number;
+  // 磁吸边距
   magnetMargin?: number;
-  // 双向绑定xyz
+  // 双向绑定xyzr
   x?: number;
   y?: number;
   index?: number;
@@ -65,10 +78,16 @@ export interface DragProps {
   disabledHandle?: string | string[] | null;
   // 禁用默认事件
   disabledDefaultEvent: boolean;
+  // 拖拽样式
+  draggableClass?: string;
+  draggableStyle?: object | null;
+  // 网格样式
   gridClass?: string;
   gridStyle?: object | null;
-  resetPosition?: boolean;
+  // 重置位置
+  resetPosition: boolean;
 }
+
 const props = withDefaults(defineProps<DragProps>(), {
   disabled: false,
   parent: false,
@@ -76,7 +95,7 @@ const props = withDefaults(defineProps<DragProps>(), {
   collision: true,
   collisionName: "xiaoyang",
   collisionRestore: "before", // 'init'
-  magnet: false,
+  magnet: true,
   magnetRange: 15,
   magnetName: "xiaoyang",
   magnetMargin: 0,
@@ -93,10 +112,12 @@ const props = withDefaults(defineProps<DragProps>(), {
   gridMargin: 0,
   handle: null,
   disabledHandle: null,
-  disabledDefaultEvent: false,
+  disabledDefaultEvent: true,
+  draggableClass: "",
+  draggableStyle: null,
   gridClass: "grid",
   gridStyle: null,
-  resetPosition: true,
+  resetPosition: false,
 });
 const {
   disabled,
@@ -136,6 +157,7 @@ const emits = defineEmits([
   "auxLine",
 ]);
 const draggable: any = ref({}); // 可拖拽元素
+const elementSize: any = ref({});
 // const parentNode: any = ref(null)
 const parentSize: any = ref({}); // 边缘大小
 const draggableSize: any = ref({}); // 可拖拽元素大小
@@ -160,6 +182,8 @@ const gridPosTop = ref<number>(0);
 const draggableMode: any = computed(() => {
   return {
     position: parent.value ? "absolute" : "fixed",
+    width: draggableSize.value.width + "px",
+    height: draggableSize.value.height + "px",
     zoom: scale.value,
   };
 });
@@ -178,8 +202,6 @@ const gridPos: any = computed(() => {
   return {
     left: gridPosLeft.value + "px",
     top: gridPosTop.value + "px",
-    width: draggableSize.value.width + "px",
-    height: draggableSize.value.height + "px",
     zIndex: zIndex.value - 1,
   };
 });
@@ -213,8 +235,23 @@ watch(
     emits("update:y", newTop);
   }
 );
+
+watch(rotate, () => {
+  getElementSize(elementSize.value);
+});
+function getElementSize(size: any) {
+  elementSize.value = size;
+  const [newWidth, newHeight] = rotatedDimensions(
+    size.width,
+    size.height,
+    rotate.value
+  );
+  draggableSize.value = {
+    width: newWidth,
+    height: newHeight,
+  };
+}
 onMounted(() => {
-  draggableSize.value = useElementSize(draggable.value);
   // 父级窗口变化
   watch(
     parent,
@@ -267,34 +304,7 @@ onMounted(() => {
     }
   );
 });
-//
-function ResetElementPosition() {
-  if (resetPosition.value) {
-    if (left.value < 0 || top.value < 0) {
-      left.value = 0;
-      top.value = 0;
-    } else if (
-      left.value + draggableSize.value.width > parentSize.value.width ||
-      top.value + draggableSize.value.height > parentSize.value.height
-    ) {
-      // 视图大小
-      let vW = parentSize.value.width;
-      let vH = parentSize.value.height;
-      // 元素坐标
-      let posX = left.value;
-      let posY = top.value;
-      // 元素大小
-      let menuW = draggableSize.value.width;
-      let menuH = draggableSize.value.height;
 
-      posX = posX > vW - menuW ? vW - menuW : posX;
-      posY = posY > vH - menuH ? vH - menuH : posY;
-
-      left.value = posX;
-      top.value = posY;
-    }
-  }
-}
 // 拖拽开始
 function yDragStartFn(event: MouseEvent) {
   if (disabled.value) return;
@@ -346,7 +356,7 @@ function yDragFn(event: MouseEvent) {
     let newTop = initialTop.value + deltaY;
     let newLeft = initialLeft.value + deltaX;
 
-    const [snappedX, snappedY] = snapGridFn(
+    const [snappedX, snappedY] = snapGrid(
       grid.value,
       newLeft,
       newTop,
@@ -405,7 +415,7 @@ function yDragStopFn(event: MouseEvent) {
   }
   // 拖拽结束吸附网格
   if (afterDraggingAdsorbGrid.value) {
-    const [snappedX, snappedY] = snapGridFn(
+    const [snappedX, snappedY] = snapGrid(
       grid.value,
       left.value,
       top.value,
@@ -439,59 +449,33 @@ function yDragStopFn(event: MouseEvent) {
   window.removeEventListener("mouseup", yDragStopFn, { capture: true });
 }
 
-// 检查是否是有效的手柄实现
-function isValidHandle(event: any, handle: string | string[]) {
-  if (typeof handle === "string") {
-    return event.target?.closest(handle) !== null;
-  } else if (Array.isArray(handle) && handle.length > 0) {
-    return handle.some((selector) => event.target?.closest(selector) !== null);
+// 重置元素位置
+function ResetElementPosition() {
+  if (resetPosition.value) {
+    if (left.value < 0 || top.value < 0) {
+      left.value = 0;
+      top.value = 0;
+    } else if (
+      left.value + draggableSize.value.width > parentSize.value.width ||
+      top.value + draggableSize.value.height > parentSize.value.height
+    ) {
+      // 视图大小
+      let vW = parentSize.value.width;
+      let vH = parentSize.value.height;
+      // 元素坐标
+      let posX = left.value;
+      let posY = top.value;
+      // 元素大小
+      let menuW = draggableSize.value.width;
+      let menuH = draggableSize.value.height;
+
+      posX = posX > vW - menuW ? vW - menuW : posX;
+      posY = posY > vH - menuH ? vH - menuH : posY;
+
+      left.value = posX;
+      top.value = posY;
+    }
   }
-
-  return false;
-}
-
-// 旋转后大小实现
-function rotatedDimensions(width: number, height: number, angle: number) {
-  // 将角度转换为弧度
-  const radians = angle * (Math.PI / 180);
-  // 使用三角函数公式计算旋转后的宽度和高度
-  const newWidth =
-    Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
-  const newHeight =
-    Math.abs(width * Math.sin(radians)) + Math.abs(height * Math.cos(radians));
-  return [newWidth, newHeight];
-}
-// 吸附网格实现
-function snapGridFn(
-  grid: number[],
-  x: number,
-  y: number,
-  screenWidth: number,
-  screenHeight: number,
-  gridMargin: number
-) {
-  const cellWidth = grid[0] + 2 * gridMargin;
-  const cellHeight = grid[1] + 2 * gridMargin;
-
-  // 将坐标调整为最接近的格子
-  let snappedX =
-    Math.round((x - gridMargin) / cellWidth) * cellWidth + gridMargin;
-  let snappedY =
-    Math.round((y - gridMargin) / cellHeight) * cellHeight + gridMargin;
-
-  // 计算在屏幕宽度和高度内最多允许的格子数
-  const maxGridX = Math.floor((screenWidth - gridMargin) / cellWidth) - 1;
-  const maxGridY = Math.floor((screenHeight - gridMargin) / cellHeight) - 1;
-
-  // 确保不超出屏幕的右边和底边，同时不超过最大格子数
-  snappedX = Math.min(snappedX, maxGridX * cellWidth);
-  snappedY = Math.min(snappedY, maxGridY * cellHeight);
-
-  // 保证不小于0
-  snappedX = Math.max(snappedX, gridMargin);
-  snappedY = Math.max(snappedY, gridMargin);
-
-  return [snappedX, snappedY];
 }
 
 // 边缘检测实现
@@ -639,25 +623,5 @@ function magnetDetection(x: number, y: number) {
 }
 </script>
 <style scoped>
-.draggable {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-direction: column;
-  text-align: center;
-  cursor: move;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  width: 80px;
-  height: 80px;
-  padding: 12px;
-  font-size: 14px;
-  border-radius: 12px;
-  box-sizing: border-box;
-}
-
-.grid {
-  border: 2px solid red;
-  border-radius: 12px;
-}
+@import "./style.css";
 </style>

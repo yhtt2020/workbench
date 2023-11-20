@@ -267,17 +267,17 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-
-  <xt-modal v-model="settingVisible">
-    <XtTab
-      class="mb-2"
-      v-if="settingVisible"
-      style="height: 48px"
-      boxClass="p-1 xt-bg-2"
-      v-model="currentSettingTab"
-      :list="settingsTab"
-    ></XtTab>
-    <div class="xt-theme-b h-full" style="height:600px">
+  <!-- <xt-modal v-model="settingVisible"> 1233</xt-modal> -->
+<xt-modal v-model="settingVisible" :footer='1'>
+    <div class="xt-theme-b" style="height: calc(100vh);width: 650px;">
+      <XtTab
+        class="mb-2"
+        v-if="settingVisible"
+        style="height: 48px"
+        boxClass="p-1 xt-bg-2"
+        v-model="currentSettingTab"
+        :list="settingsTab"
+      ></XtTab>
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
         <FreeLayoutState
           v-if="$route.path == '/main' && freeLayout && 1"
@@ -371,8 +371,6 @@
         <slot name="settingsAllAfter"> </slot>
       </template>
     </div>
-    <!--
-   -->
   </xt-modal>
   <transition name="fade">
     <div

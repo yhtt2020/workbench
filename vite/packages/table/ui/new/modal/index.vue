@@ -3,7 +3,7 @@
     <!-- 弹窗 -->
     <div
       v-if="modelValue"
-      class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
+      class="flex flex-col h-full fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -12,12 +12,12 @@
         'z-index': index,
       }"
     >
-      <div class="flex w-full h-full">
+      <div class="flex w-full flex-1">
         <!-- 左侧 -->
         <nav v-if="nav">
           <slot name="nav"> </slot>
         </nav>
-        <main class="flex h-full flex-col">
+        <main class="h-full flex flex-1 flex-col">
           <header class="flex items-center mb-4" v-if="header">
             <!-- 标题左侧 -->
             <div class="flex items-center">
@@ -58,11 +58,29 @@
             </div>
           </header>
           <!-- 内容区 -->
-          <div class="xt-scrollbar">
+          <vue-custom-scrollbar
+            :settings="{
+              swipeEasing: true,
+              suppressScrollY: false,
+              suppressScrollX: true,
+              wheelPropagation: false,
+            }"
+            style="
+              position: relative;
+              /* height: calc(100vh); */
+              margin-right: -15px;
+              margin-left: -10px;
+              padding-left: 10px;
+              padding-top: 5px;
+              padding-right: 15px;
+            "
+            class="flex-1 xt-theme-b"
+          >
+
             <slot>
               <McDonalds />
             </slot>
-          </div>
+          </vue-custom-scrollbar>
         </main>
       </div>
 

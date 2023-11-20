@@ -162,7 +162,7 @@
         </div>
 
 
-    </xt-modal>
+    </xt-old-modal>
 </template>
 
 <script setup lang='ts'>
