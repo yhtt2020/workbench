@@ -307,8 +307,12 @@ export default {
             DTPWeb.checkServer((value) => {
               this.print.status = !!value
               this.print.printer = value
+              console.log(value)
               if (!value) {
                 message.error('打印助手不可用')
+              }if(this.api.getPrinters({ onlyLocal: true })){
+                this.print.status = false
+                message.error('暂无打印机连接')
               } else {
                 this.print.printers = this.print.printers = this.api.getPrinters({ onlyLocal: true })
                 this.selectedPrinter = this.api.getDefaultPrinter().printerName
@@ -318,8 +322,6 @@ export default {
                 })
               }
             })
-
-
           },
         },
         {
