@@ -71,10 +71,10 @@
                   :key="item.name"
                         :title="item.name"
                 >
-         <div 
+                <div 
          v-if="!(this.navList.includes(item.event) && this.isOffline)"
            @contextmenu.stop="enableDrag"
-           class="mr-6 pointer"
+           class="mr-3 pointer"
            style="white-space: nowrap; display: inline-block;border-radius: 18px;"
            @click.stop="clickNavigation(item)"
          >
@@ -106,6 +106,14 @@
            </div>
                 </div>
                </a-tooltip>
+               <!-- <div>
+                  <xt-task  id='M0104' no='4'  @cb="addEdit('foot')">
+                  <Icon icon="tianjia"
+                  style="width: 56px;height: 56px;color:var(--active-bg) !important;position:relative;top:2px;"
+                  class="mr-3 pointer" @click="addEdit('foot')"></Icon>
+                  </xt-task>
+                </div> -->
+                <AddIcon v-if="editBar" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="closeEdit"/>
               </div>
             </xt-task>
           </div>
@@ -208,7 +216,8 @@
   >
     <a-row>
       <a-col>
-        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+        <div class="flex items-center">
+          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
           <template v-if="item.icon=='fluent:compose-16-regular'">
             <xt-task  id='M0104' no="2" @cb="editNavigation(item)" >
             <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
@@ -232,6 +241,8 @@
             <span>{{ item.name }}</span>
           </div>
         </div>
+        </div>
+        
       </a-col>
     </a-row>
   </a-drawer>
@@ -312,6 +323,7 @@ import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
 import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
+import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -332,7 +344,8 @@ export default {
     Team,
     TaskBox,
     navIcon,
-    navigationSetting
+    navigationSetting,
+    AddIcon
   },
   data () {
     return {
@@ -369,6 +382,7 @@ export default {
       //screenWidth: document.body.clientWidth
       drawerMenus:[...extraRightMenu,...moreMenus],
       componentId: 'EditNavigation',
+      editBar:false
     }
   },
   props: {
@@ -573,6 +587,9 @@ export default {
     editNavigation (item) {
       if(item.component){
         this.componentId=item.component
+        if(item.component==='EditNavigation'){
+          this.editBar=true
+        }
       }else if(item.visible){
         console.log(111)
       }else{
@@ -584,7 +601,9 @@ export default {
     setQuick () {
       this.quick = false
     },
-
+    closeEdit(){
+      this.editBar=false
+    },
     openSetting () {
       this.$router.push({ name: 'setting' })
       this.hideMenu()
@@ -638,7 +657,10 @@ export default {
     },
 
     clickNavigation (item) {
-      this.hideMenu()
+      if(this.editBar){
+        return
+      }else{
+        this.hideMenu()
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
@@ -674,6 +696,8 @@ export default {
         default:
           require('electron').shell.openPath(item.path)
       }
+      }
+      
     },
     disableDrag () {
       if (this.sortable) {

@@ -200,7 +200,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: ' ',
+            defaultForum: {index:0,name:'版本更新',id:100304},
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -308,8 +308,6 @@ export default {
             return '392px'
         },
         forumList() {
-            // this.customData.forumList = this.myForumList.joined
-            // return this.customData.forumList
             if (this.customData && this.customData.forumList) {
                 return this.customData.forumList
             }
@@ -339,8 +337,7 @@ export default {
             }
         },
     },
-    async mounted() {
-        this.isLoading = true
+    async beforeMount() {
         await this.getMyForumList()
         this.customData.forumList = this.myForumList.joined
         // 判断是否刷新加载内容
@@ -350,16 +347,14 @@ export default {
         } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList)
             this.defaultForum = this.customData.selectList[0]
+        }else{
+            return this.defaultForum
         }
-        // 加载已选择的模块
-        if (this.customData && this.customData.selectList) {
-            this.selectValue = this.customData.selectList.map((item) => {
-                return item.index
-            })
-            // console.log(this.selectValue);
-        }
+    },
+    async mounted() {
+        this.isLoading = true
         // 判断组件名称
-        if (this.customData.selectList.length === 1) {
+        if (this.customData.selectList && this.customData.selectList.length === 1) {
             this.options.title = this.customData.selectList[0].value.name
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
@@ -405,6 +400,14 @@ export default {
                 }
             }
         },
+        settingVisible(){
+            // 加载已选择的模块
+        if (this.customData && this.customData.selectList && this.settingVisible==true) {
+            this.selectValue = this.customData.selectList.map((item) => {
+                return item.index
+            })
+        }
+        }
     }
 }
 </script>
