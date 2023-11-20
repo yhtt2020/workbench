@@ -1,42 +1,40 @@
 <template>
-  <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
-  width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <!-- {{ rightMenus }} -->
-  <!-- <RightMenu :menus="rightMenus"   @contextmenu="showMenu"> -->
-    <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " 
-         style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-          background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
-          overflow-x: hidden;border-radius: 18px;
-          padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent"
-         @contextmenu.stop="showMenu">
-      <div   style="width: 56px;padding-bottom: 12px;"  >
-        <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container" style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; " >
-          <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
-            <!-- 左右导航栏隐藏入口 -->
-            <div   :key="item.name" @click.stop="clickNavigation(item)">
-              <div v-if="!(this.isOffline && this.navList.includes(item.event))"  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
-                <!-- {{ iconMenus }} -->
-                <!-- <RightMenu :menus="iconMenus" @contextmenu=""> -->
-                <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'" >
-                  <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
-                           :class="{ 'active-color': current(item) }"></navIcon>
+    <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
+    width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
+    <!-- {{ rightMenus }} -->
+    <!-- <RightMenu :menus="rightMenus"   @contextmenu="showMenu"> -->
+      <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " 
+           style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
+            background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
+            overflow-x: hidden;border-radius: 18px; flex-wrap: nowrap;
+            padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent"
+           @contextmenu.stop="showMenu">
+        <div   style="width: 56px;padding-bottom: 12px;"  >
+          <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container" style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; " >
+            <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
+              <!-- 左右导航栏隐藏入口 -->
+              <div   :key="item.name" @click.stop="clickNavigation(item)">
+                <div v-if="!(this.isOffline && this.navList.includes(item.event))"  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
+                  <!-- {{ iconMenus }} -->
+                  <!-- <RightMenu :menus="iconMenus" @contextmenu=""> -->
+                  <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'" >
+                    <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;" :class="{ 'active-color': current(item) }"></navIcon>
+                  </div>
+                  <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+                  <!-- </RightMenu> -->
                 </div>
-                <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
-                <!-- </RightMenu> -->
               </div>
-            </div>
-          </a-tooltip>
-          
+            </a-tooltip>
+            
+          </div>
+          <div class="mt-3 mb-3">
+            <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="this.toggleEdit()" />
+          </div>
         </div>
-        <div>
-          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="this.toggleEdit()" />
-        </div>
+        
+        
       </div>
-      
-      
-    </div>
-  <!-- </RightMenu> -->
-
+    <!-- </RightMenu> -->
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>

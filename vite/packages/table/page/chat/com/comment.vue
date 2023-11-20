@@ -6,10 +6,10 @@
         </div>
         <a-spin v-if="isLoading" style="margin: 30% 50%;"/>
         <template v-else>
-            <DataStatu v-if="emptyState" imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无评论,快来抢占沙发吧"></DataStatu>
-            <template v-else>
+            <!-- <DataStatu v-if="emptyState" imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无评论,快来抢占沙发吧"></DataStatu>
+            <div v-else> -->
                 <MainReplyComment :commentList="item" v-for="(item, index) in moreComments" :key="index" :uid="props.uid"></MainReplyComment>
-            </template>
+            <!-- </div> -->
            
         </template>
         
