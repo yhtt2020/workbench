@@ -127,6 +127,7 @@ import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
+import { useCommunityStore } from '../../../page/chat/commun'
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
@@ -242,6 +243,8 @@ export default {
             // console.log(this.cardData);
         },
         closeDetail(value) {
+            this.communityPostDetail=[]
+            this.communityReply=[]
             this.showDetailModal = value
         },
         // 选择板块
@@ -294,6 +297,7 @@ export default {
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList','forumsList','defaultSection']),
+        ...mapWritableState(useCommunityStore,['communityReply','communityPostDetail']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {

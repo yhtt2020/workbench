@@ -252,28 +252,28 @@ export const navStore = defineStore("nav", {
     sideNavigationList: [
         {
             "type": "systemApp",
-            "icon": "fluent:home-16-filled",
+            "icon": "fluent:home-16-regular",
             "name": "主页",
             "event": "home"
         },
         {
             "type": "systemApp",
-            "icon": "fluent:grid-16-filled",
+            "icon": "fluent:grid-16-regular",
             "name": "应用管理",
             "event": "apps"
         },{
             "type": "systemApp",
-            "icon": "fluent:games-16-filled",
+            "icon": "fluent:games-16-regular",
             "name": "游戏",
             "event": "gameIndex"
         },{
             "type": "systemApp",
-            "icon": "fluent:music-note-2-16-filled",
+            "icon": "fluent:music-note-2-16-regular",
             "name": "音乐",
             "event": "music"
         },{
             "type": "systemApp",
-            "icon": "fluent:flash-16-filled",
+            "icon": "fluent:flash-16-regular",
             "name": "快捷指令",
             "event": "deck"
         },
