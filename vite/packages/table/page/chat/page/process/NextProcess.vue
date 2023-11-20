@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {} from '../../../../js/chat/chatList'
+import { randomName } from '../../../../js/data/chatList'
 
 export default {
  data(){
