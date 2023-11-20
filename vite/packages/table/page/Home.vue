@@ -169,11 +169,7 @@
               <div>飘落物</div>
             </div>
             <div class="xt-text-2 text-sm my-3">
-              <a-radio-group v-model:value="appSettings.down.type">
-                <a-radio value="rain">雨</a-radio>
-                <a-radio value="snow">雪</a-radio>
-                <a-radio value="leaf">叶</a-radio>
-              </a-radio-group>
+              <xt-tab class=" h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
             </div>
             <hr class="my-3" />
             <div class="flex justify-between my-3">
@@ -327,6 +323,7 @@ import Icon from "../components/Icon.vue";
 import Todo from "../components/widgets/todo/Todo.vue";
 import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
+import RadioTab from '../components/RadioTab.vue'
 // import News from "../components/widgets/news/NewsCard.vue";
 import {
   setTransparent,
@@ -357,7 +354,21 @@ export default {
         name: "",
         template: "daily",
       },
+      fallingList:[
+      {
+        value: "rain",
+        name: "雨",
+      },
+      {
+        value: "snow",
+        name: "雪",
+      },
+      {
+        value: "leaf",
+        name: "叶",
+      }
 
+      ],
       hide: false,
       menuVisible: false,
       settingVisible: false,
@@ -498,6 +509,7 @@ export default {
     Todo,
     EatToday,
     HotSearch,
+    RadioTab
   },
   computed: {
     ...mapWritableState(navStore, [
