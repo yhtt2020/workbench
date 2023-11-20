@@ -1,6 +1,10 @@
 <template>
-  <div v-if="hide" style="position: fixed; top: 0; bottom: 0; right: 0; left: 0" @click="hideDesk"
-    @contextmenu="hideDesk"></div>
+  <div
+    v-if="hide"
+    style="position: fixed; top: 0; bottom: 0; right: 0; left: 0"
+    @click="hideDesk"
+    @contextmenu="hideDesk"
+  ></div>
   <!--  <div v-if="!hide" @contextmenu="showMenu" style="-->
   <!--      display: flex;-->
   <!--      align-items: flex-start;-->
@@ -82,53 +86,103 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId">
+    <desk-group
+      @changeDesk="changeDesk"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+    >
       <template #settingsAll>
-        <xt-task :modelValue="m01033" to="">
-        </xt-task>
-        <div class="line-title xt-text">背景设置：</div>
-        <div class="line" @click="setTransparent()">
-          透明背景(透出系统桌面壁纸)：<a-switch v-model:checked="appSettings.transparent"></a-switch>
-        </div>
-        <div class="flex line" v-if="!appSettings.transparent">
-
-          <xt-task :modelValue="m01034" to="" @cb="goPaper">
-            <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
-          </xt-task>
-          <xt-button  size="mini" :w="80" :h="40" @click="clearWallpaper" >清除背景</xt-button>
-        </div>
-        <div v-if="!appSettings.transparent" class="line">
-          <div class="line">
-            背景模糊度：
-            <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
+        <div class="xt-bg-2 rounded-xl p-3 mb-4 text-base">
+          <div class="flex justify-between mb-3">
+            <div>桌面背景</div>
           </div>
-          <!--      <div class="line">-->
-          <!--        遮罩浓度：-->
-          <!--        <a-slider v-model:value="backgroundSettings.backGroundImgLight" :max="0.8" :min="0" :step="0.1"/>-->
-          <!--      </div>-->
-        </div>
+          <div class="xt-text-2 text-sm my-3">
+            选择喜欢的图片作为工作台桌面背景。
+          </div>
+          <div class="xt-text-2 flex text-sm my-3" v-if="!appSettings.transparent">
+            <xt-task :modelValue="m01034" to="" @cb="goPaper">
+              <xt-button
+                size="mini"
+                :w="80"
+                :h="40"
+                type="theme"
+                class="mr-3"
+                @click="goPaper"
+                >背景设置</xt-button
+              >
+            </xt-task>
+            <xt-button
+              size="mini"
+              class="xt-modal"
+              :w="80"
+              :h="40"
+              @click="clearWallpaper"
+              >清除背景</xt-button
+            >
+          </div>
+          <hr class="my-3" />
 
-        <div class="line-title">RGB<br />（此类功能性能消耗较高，请酌情开启）</div>
-        <div class="line">
-          边框跑马灯：
-          <a-switch v-model:checked="appSettings.houserun"></a-switch>
+          <template v-if="!appSettings.transparent">
+            <div class="flex justify-between mb-3">
+              <div>背景模糊度</div>
+            </div>
+            <div class="xt-text-2 text-sm my-3">开启后增加背景模糊度</div>
+            <div class="xt-text-2 text-sm my-3">
+              <a-slider
+                v-model:value="backgroundSettings.backGroundImgBlur"
+                :max="100"
+                :step="1"
+              />
+            </div>
+            <hr class="my-3" />
+          </template>
+          <div class="flex justify-between mb-3">
+            <div>透明背景</div>
+            <a-switch v-model:checked="appSettings.transparent" />
+          </div>
+          <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
+          <hr class="my-3" />
         </div>
-        <div class="line">
-          飘落特效：
-          <a-switch v-model:checked="appSettings.down.enable"></a-switch>
-        </div>
-        <div class="line" v-if="appSettings.down.enable">
-          飘落物：
-          <a-radio-group v-model:value="appSettings.down.type">
-            <a-radio value="rain">雨</a-radio>
-            <a-radio value="snow">雪</a-radio>
-            <a-radio value="leaf">叶</a-radio>
-          </a-radio-group>
-        </div>
-        <div class="line" v-if="appSettings.down.enable">
-          飘落物数量：
-          <a-input-number v-model:value="appSettings.down.count"></a-input-number>
+        <xt-task :modelValue="m01033" to=""> </xt-task>
+        <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
+          <div class="p-3 xt-modal rounded-xl xt-text-2">
+            此类功能性能消耗较高，请酌情开启
+          </div>
+          <div class="flex justify-between my-3">
+            <div>边框RGB灯</div>
+            <a-switch v-model:checked="appSettings.houserun" />
+          </div>
+          <div class="xt-text-2 text-sm my-3">
+            在工作台窗口四周显示RGB效果。
+          </div>
+          <hr class="my-3" />
+          <div class="flex justify-between mb-3">
+            <div>飘落效果</div>
+            <a-switch v-model:checked="appSettings.down.enable" />
+          </div>
+          <div class="xt-text-2 text-sm my-3">开启后页面会有炫酷的飘落效果</div>
+          <hr class="my-3" />
+          <template v-if="appSettings.down.enable">
+            <div class="flex justify-between my-3">
+              <div>飘落物</div>
+            </div>
+            <div class="xt-text-2 text-sm my-3">
+              <xt-tab class=" h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
+            </div>
+            <hr class="my-3" />
+            <div class="flex justify-between my-3">
+              <div>飘落物数量</div>
+            </div>
+            <div class="xt-text-2 text-sm my-3">
+              <xt-input
+                v-model="appSettings.down.count"
+                class="xt-modal xt-b"
+                style="height: 40px"
+              ></xt-input>
+            </div>
+          </template>
         </div>
       </template>
       <!--      <template #empty>-->
@@ -161,33 +215,45 @@
   </div>
 
   <transition name="fade">
-    <div class="" style="
-         position: fixed;
-         top: 0;
-         right: 0;
-         left: 0;
-         bottom: 0;
-         z-index: 999;
-       " v-if="iconVisible">
-      <AddIcon @setCustoms="setCustoms" @close="iconHide" :desk="currentDesk"></AddIcon>
+    <div
+      class=""
+      style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      "
+      v-if="iconVisible"
+    >
+      <AddIcon
+        @setCustoms="setCustoms"
+        @close="iconHide"
+        :desk="currentDesk"
+      ></AddIcon>
     </div>
   </transition>
   <!-- <div class="fixed inset-0 p-12 home-blur" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
 
-  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="agreeTest">
+  <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="agreeTest">
     <GuidePage></GuidePage>
   </div>
 
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
-  <div class="fixed inset-0 home-guide" style="z-index: 999;" v-if="infoVisible === true">
+  <div
+    class="fixed inset-0 home-guide"
+    style="z-index: 999"
+    v-if="infoVisible === true"
+  >
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 </template>
 
 <script>
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
@@ -227,46 +293,50 @@ import Remote from "../components/widgets/custom/Remote.vue";
 import { weatherStore } from "../store/weather";
 import GameEpic from "../components/widgets/games/GameEpic.vue";
 import CustomAssembly from "../components/widgets/custom/CustomAssembly.vue";
-import SignIn from "../components/widgets/SignIn.vue"
-import SingleFilm from "../components/widgets/film/SingleFilm.vue"
-import ManyFilm from "../components/widgets/film/ManyFilm.vue"
-import SteamFriends from '../components/widgets/games/SteamFriends.vue'
-import Muuri from 'muuri'
-import HorizontalPanel from '../components/HorizontalPanel.vue'
-import Clocks from '../components/widgets/clock/index.vue'
-import Notes from "../components/widgets/note/index.vue"
-import myIcons from "../components/widgets/myIcons/index.vue"
-import NewAddCard from "./app/card/NewAddCard.vue"
+import SignIn from "../components/widgets/SignIn.vue";
+import SingleFilm from "../components/widgets/film/SingleFilm.vue";
+import ManyFilm from "../components/widgets/film/ManyFilm.vue";
+import SteamFriends from "../components/widgets/games/SteamFriends.vue";
+import Muuri from "muuri";
+import HorizontalPanel from "../components/HorizontalPanel.vue";
+import Clocks from "../components/widgets/clock/index.vue";
+import Notes from "../components/widgets/note/index.vue";
+import myIcons from "../components/widgets/myIcons/index.vue";
+import NewAddCard from "./app/card/NewAddCard.vue";
 import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../apps/shortcutKey/page/NotShortcutKey.vue";
 import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
-import GameStrategy from '../components/widgets/games/GameStrategy.vue'
-import AddIcon from "./app/addIcon/index.vue"
+import GameStrategy from "../components/widgets/games/GameStrategy.vue";
+import AddIcon from "./app/addIcon/index.vue";
 import KeyBoard from "../apps/shortcutKey/components/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
-import AggregateSearch from '../components/widgets/aggregate/AggregateSearch.vue'
-import UpdateMyInfo from '../components/comp/UpdateMyInfo.vue';
-import ShareDesk from '../components/desk/ShareDesk.vue';
+import AggregateSearch from "../components/widgets/aggregate/AggregateSearch.vue";
+import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
+import ShareDesk from "../components/desk/ShareDesk.vue";
 import DeskMarket from "./app/card/DeskMarket.vue";
 import { deskStore } from "../store/desk";
-import DeskPreview from '../components/desk/DeskPreview.vue';
-import ExportDesk from "../components/desk/ExportDesk.vue"
-import DeskGroup from '../components/desk/DeskGroup.vue'
-import Template from '../../user/pages/Template.vue'
-import Icon from '../components/Icon.vue'
-import Todo from '../components/widgets/todo/Todo.vue'
-import EatToday from '../components/widgets/eat/EatToday.vue'
-import HotSearch from '../components/widgets/HotSearch.vue'
+import DeskPreview from "../components/desk/DeskPreview.vue";
+import ExportDesk from "../components/desk/ExportDesk.vue";
+import DeskGroup from "../components/desk/DeskGroup.vue";
+import Template from "../../user/pages/Template.vue";
+import Icon from "../components/Icon.vue";
+import Todo from "../components/widgets/todo/Todo.vue";
+import EatToday from "../components/widgets/eat/EatToday.vue";
+import HotSearch from "../components/widgets/HotSearch.vue";
+import RadioTab from '../components/RadioTab.vue'
 // import News from "../components/widgets/news/NewsCard.vue";
-import { setTransparent, detTransparent } from "../components/card/hooks/themeSwitch"
-import { taskStore } from "../apps/task/store"
-import navigationData from '../js/data/tableData'
-import { navStore } from '../store/nav'
+import {
+  setTransparent,
+  detTransparent,
+} from "../components/card/hooks/themeSwitch";
+import { taskStore } from "../apps/task/store";
+import navigationData from "../js/data/tableData";
+import { navStore } from "../store/nav";
 import { homeStore } from '../store/home'
 
-const { steamUser, steamSession, path, https, steamFs } = $models
+const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
-  const { LoginSession, EAuthTokenPlatformType } = steamSession
+  const { LoginSession, EAuthTokenPlatformType } = steamSession;
   var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
   var client = new steamUser({
     enablePicsCache: true,
@@ -285,7 +355,21 @@ export default {
         name: "",
         template: "daily",
       },
+      fallingList:[
+      {
+        value: "rain",
+        name: "雨",
+      },
+      {
+        value: "snow",
+        name: "雪",
+      },
+      {
+        value: "leaf",
+        name: "叶",
+      }
 
+      ],
       hide: false,
       menuVisible: false,
       settingVisible: false,
@@ -310,11 +394,11 @@ export default {
           horizontal: false,
           alignRight: false,
           alignBottom: false,
-          rounding: true
+          rounding: true,
         },
         targets: [
           {
-            element: '#scrollerBar>div',
+            element: "#scrollerBar>div",
           },
         ],
         handle: null,
@@ -336,30 +420,30 @@ export default {
       },
       openDesk: false,
       deskType: [
-        { title: '日常桌面', name: 'daily' },
-        { title: '游戏桌面', name: 'game' },
-        { title: '办公桌面', name: 'work' },
-        { title: '空白桌面', name: 'empty' },
+        { title: "日常桌面", name: "daily" },
+        { title: "游戏桌面", name: "game" },
+        { title: "办公桌面", name: "work" },
+        { title: "空白桌面", name: "empty" },
       ],
-      selectDesk: { title: '日常桌面', name: 'daily' },
-      deskTitle: '',
+      selectDesk: { title: "日常桌面", name: "daily" },
+      deskTitle: "",
       hotDesk: [],
       scheme: {},
       showModal: false,
-      deskCode: '',
+      deskCode: "",
       shareCode: false,
       panelIndex: 0,
       cardSettings: {},
-      cardDesk: 'all',
+      cardDesk: "all",
       cardDeskList: [
         { name: "通用桌面设置", value: "all" },
-        { name: "当前桌面设置", value: "current" }
+        { name: "当前桌面设置", value: "current" },
       ],
       cardSwitch: false,
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
       hasTriggered: 1,
-      replaceFlag: true
+      replaceFlag: true,
     };
   },
   components: {
@@ -425,10 +509,15 @@ export default {
     ExportDesk,
     Todo,
     EatToday,
-    HotSearch
+    HotSearch,
+    RadioTab
   },
   computed: {
-    ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(navStore, [
+      "sideNavigationList",
+      "footNavigationList",
+      "rightNavigationList",
+    ]),
     ...mapWritableState(cardStore, [
       "customComponents",
       "clockEvent",
@@ -436,7 +525,7 @@ export default {
       "desks",
       "moved",
       "currentDeskIndex",
-      "lastHeight"
+      "lastHeight",
     ]),
     ...mapWritableState(appStore, [
       "agreeTest",
@@ -452,11 +541,11 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
-    ...mapWritableState(deskStore, ['deskList']),
-    ...mapWritableState(taskStore, ['taskID', 'step']),
+    ...mapWritableState(deskStore, ["deskList"]),
+    ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore,['currentDeskId']),
     m01033() {
-      return this.taskID == "M0103" && this.step == 3
+      return this.taskID == "M0103" && this.step == 3;
     },
     m01034() {
       return this.taskID == "M0103" && this.step == 4;
@@ -479,7 +568,7 @@ export default {
             e.data = {};
           }
           if (!e.customData) {
-            e.customData = {}
+            e.customData = {};
           }
         });
         return find;
@@ -492,37 +581,35 @@ export default {
   },
   beforeUpdate() {
     if (this.hasTriggered <= 10) {
-      console.log('chufa')
-      this.replaceIcon()
-      this.hasTriggered++
+      console.log("chufa");
+      this.replaceIcon();
+      this.hasTriggered++;
     }
-
   },
   async mounted() {
-    this.replaceIcon()
+    this.replaceIcon();
     // setTimeout(() => {
     //   this.replaceIcon()
     // },500)
-    let n=0
+    let n = 0;
     if (navigator.connection.downlink < 1) {
-
-      let timer=setInterval(()=>{
-        if(n>3){
-          clearInterval(timer)
-          return
+      let timer = setInterval(() => {
+        if (n > 3) {
+          clearInterval(timer);
+          return;
         }
-        this.replaceIcon()
-        n++
-      },3000)
-    }else{
-      let timer=setInterval(()=>{
-        if(n>2){
-          clearInterval(timer)
-          return
+        this.replaceIcon();
+        n++;
+      }, 3000);
+    } else {
+      let timer = setInterval(() => {
+        if (n > 2) {
+          clearInterval(timer);
+          return;
         }
-        this.replaceIcon()
-        n++
-      },1000)
+        this.replaceIcon();
+        n++;
+      }, 1000);
     }
 
     // let counte=0
@@ -648,8 +735,8 @@ export default {
       this.desks[0].cards = this.customComponents;
       this.moved = true;
     }
-    if (this.currentDeskId === '') {
-      this.currentDeskId = this.desks[0].id
+    if (this.currentDeskId === "") {
+      this.currentDeskId = this.desks[0].id;
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
@@ -698,12 +785,12 @@ export default {
           e.data = {};
         }
         if (!e.customData) {
-          e.customData = {}
+          e.customData = {};
         }
         if (Object.keys(e.data).length > 0) {
-          e.customData = { ...e.customData, ...e.data }
-          e.data1 = e.data//转移备份
-          e.data = {}//修理掉
+          e.customData = { ...e.customData, ...e.data };
+          e.data1 = e.data; //转移备份
+          e.data = {}; //修理掉
         }
       });
     }
@@ -712,7 +799,6 @@ export default {
     //this.setAgreeTest(false)
   },
   unmounted() {
-
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
@@ -723,52 +809,57 @@ export default {
      */
     updateLayout() {
       if (this.$refs.grid) {
-        this.$refs.grid.update()
+        this.$refs.grid.update();
       }
     },
     learn() {
-      browser.openInTable('https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b')
+      browser.openInTable(
+        "https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b"
+      );
     },
     iconHide() {
       this.iconVisible = false;
     },
     hideAddCard() {
-      this.visibleAdd = false
+      this.visibleAdd = false;
     },
     // 添加图标
     newAddIcon() {
-      this.iconVisible = true
+      this.iconVisible = true;
       this.menuVisible = false;
     },
     replaceIcon() {
       navigationData.systemAppList.forEach((item) => {
         this.sideNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon = item.icon
+            i.icon = item.icon;
           }
-        })
-      })
+        });
+      });
       navigationData.systemAppList.forEach((item) => {
         this.rightNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon = item.icon
+            i.icon = item.icon;
           }
-        })
-      })
+        });
+      });
       navigationData.systemAppList.forEach((item) => {
         this.footNavigationList.forEach((i) => {
           if (item.name === i.name) {
-            i.icon = item.icon
+            i.icon = item.icon;
           }
-        })
-      })
-      this.replaceFlag = false
+        });
+      });
+      this.replaceFlag = false;
     },
     setTransparent() {
-      console.log('this.appSettings.transparent :>> ', this.appSettings.transparent);
+      console.log(
+        "this.appSettings.transparent :>> ",
+        this.appSettings.transparent
+      );
       if (this.appSettings.transparent) {
         // setWallpaperColor('none')
-        setTransparent()
+        setTransparent();
       } else {
         detTransparent();
       }
@@ -781,7 +872,7 @@ export default {
       // }
     },
     customEvent() {
-      this.updateLayout()
+      this.updateLayout();
     },
     touch(event) {
       // if (this.editing) {
@@ -797,7 +888,7 @@ export default {
       "removeDesk",
       "getCurrentIndex",
       "setDeskSize",
-      "addShareDesk"
+      "addShareDesk",
     ]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
@@ -834,10 +925,10 @@ export default {
       this.addDeskVisible = true;
     },
     delDesk() {
-      this.$refs.deskGroupRef.delDesk()
+      this.$refs.deskGroupRef.delDesk();
     },
     changeDesk(p) {
-      this.currentDeskId = p.id
+      this.currentDeskId = p.id;
     },
     doAddDesk() {
       if (this.deskTitle.trim() === "") {
@@ -863,8 +954,8 @@ export default {
         // this.cleanMuuriData(deskTemplate[this.newDesk.template])
       );
       this.switchToDesk(this.desks.length - 1);
-      this.deskTitle = ''
-      this.selectDesk = { title: '日常桌面', name: 'daily' }
+      this.deskTitle = "";
+      this.selectDesk = { title: "日常桌面", name: "daily" };
       // this.newDesk = {
       //   name: "",
       //   template: "daily",
@@ -874,9 +965,9 @@ export default {
       this.addDeskVisible = false;
     },
     exportDesk() {
-      this.exportModal = true
-      this.getHomeSize()
-      this.menuVisible = false
+      this.exportModal = true;
+      this.getHomeSize();
+      this.menuVisible = false;
     },
 
     clear() {
@@ -937,7 +1028,7 @@ export default {
       this.menuVisible = false;
     },
     newAddCard() {
-      this.$refs.deskGroupRef.addCard()
+      this.$refs.deskGroupRef.addCard();
     },
     showMenu() {
       this.menuVisible = true;
@@ -957,26 +1048,27 @@ export default {
     },
     setCustom() {
       this.custom = false;
-    }, setCustoms() {
+    },
+    setCustoms() {
       this.visibleAdd = false;
     },
     shareDesk() {
-      this.openDesk = true
+      this.openDesk = true;
       this.menuVisible = false;
     },
     openPerview({ scheme, showModal }) {
-      this.scheme = scheme
-      this.showModal = showModal
+      this.scheme = scheme;
+      this.showModal = showModal;
     },
     closePreview() {
-      this.showModal = false
-      this.getHomeSize()
+      this.showModal = false;
+      this.getHomeSize();
     },
     closeShare(val) {
-      this.openDesk = val
+      this.openDesk = val;
     },
     moreDesk() {
-      this.panelIndex = 1
+      this.panelIndex = 1;
       this.visibleAdd = true;
       this.addDeskVisible = false;
     },
@@ -984,18 +1076,18 @@ export default {
       this.$nextTick(() => {
         let height = document.getElementById("cardContent")?.offsetHeight;
         let width = document.getElementById("cardContent")?.offsetWidth;
-        const windowHeight = document.documentElement.clientHeight // 高
-        let windowWidth = document.documentElement.clientWidth // 宽
+        const windowHeight = document.documentElement.clientHeight; // 高
+        let windowWidth = document.documentElement.clientWidth; // 宽
         let size = {
           width,
           height,
           windowHeight,
           windowWidth,
-        }
+        };
         // console.log(cardsHeight)
-        console.log(size, '输出')
-        this.setDeskSize(size)
-      })
+        console.log(size, "输出");
+        this.setDeskSize(size);
+      });
     },
     switchChange(val) {
       if (!this.currentDesk.settings) {
@@ -1003,48 +1095,51 @@ export default {
           cardMargin: 5,
           cardZoom: 100,
           marginTop: 0,
-          enableZoom: true
-        }
+          enableZoom: true,
+        };
       } else {
-        this.currentDesk.settings.enableZoom = val
+        this.currentDesk.settings.enableZoom = val;
       }
       // this.currentDesk.settings.enableZoom = val
     },
     closeExport(val) {
-      this.exportModal = val
+      this.exportModal = val;
     },
     async importDesk() {
       let openPath = await tsbApi.dialog.showOpenDialog({
-        title: '选择导入的代码',
-        filters: [{ name: 'desk存档', extensions: ['desk'] }],
-      })
+        title: "选择导入的代码",
+        filters: [{ name: "desk存档", extensions: ["desk"] }],
+      });
       if (!openPath) {
-        return
+        return;
       }
-      let importJsonTxt = require('fs').readFileSync(openPath[0], 'utf-8')
-      let needImportDesk = []
+      let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
+      let needImportDesk = [];
       try {
-        needImportDesk = JSON.parse(importJsonTxt)
+        needImportDesk = JSON.parse(importJsonTxt);
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        needImportDesk.forEach(g => {
-          let cardZoom = (g.settings.cardZoom * cardsHeight / g.cardsHeight).toFixed()
+        needImportDesk.forEach((g) => {
+          let cardZoom = (
+            (g.settings.cardZoom * cardsHeight) /
+            g.cardsHeight
+          ).toFixed();
 
-          g.settings.cardZoom = parseInt(cardZoom)
-          g.nanoid = window.$models.nanoid.nanoid(8)
-          this.desks.push(g)
-        })
-        this.addDeskVisible = false
-        message.success('为您成功导入' + needImportDesk.length + '个桌面。')
+          g.settings.cardZoom = parseInt(cardZoom);
+          g.nanoid = window.$models.nanoid.nanoid(8);
+          this.desks.push(g);
+        });
+        this.addDeskVisible = false;
+        message.success("为您成功导入" + needImportDesk.length + "个桌面。");
       } catch (e) {
-        console.error(e)
-        message.error('导入失败，请检查代码。', e)
+        console.error(e);
+        message.error("导入失败，请检查代码。", e);
       }
     },
   },
   watch: {
     currentDeskIndex: {
       handler() {
-        this.updateLayout()
+        this.updateLayout();
       },
     },
 
@@ -1066,23 +1161,23 @@ export default {
       handler(newValue) {
         this.key = Date.now();
         // //$('.muuri-item').css('margin',newValue+'px')
-        this.updateLayout()
+        this.updateLayout();
       },
     },
     currentDesk: {
       deep: true,
       handler(val) {
         if (!val.settings) {
-          this.cardSettings = this.settings
-          this.cardSwitch = false
+          this.cardSettings = this.settings;
+          this.cardSwitch = false;
         } else if (val.settings.enableZoom) {
-          this.cardSettings = this.currentDesk.settings
-          this.cardSwitch = true
+          this.cardSettings = this.currentDesk.settings;
+          this.cardSwitch = true;
         } else {
-          this.cardSettings = this.settings
-          this.cardSwitch = false
+          this.cardSettings = this.settings;
+          this.cardSwitch = false;
         }
-      }
+      },
     },
     cardDesk(val) {
       //  switch (val) {
@@ -1104,7 +1199,6 @@ export default {
       //   // this.cardSettings = this.currentDesk.aloneSettings
       //     break;
       // }
-
       // if(this.currentDesk.aloneSettings){
       //   this.cardSettings = this.currentDesk.aloneSettings
       // }else{
@@ -1115,7 +1209,6 @@ export default {
       //     console.log("a11",this.settings)
       //     this.cardSettings = this.settings
       //     break;
-
       //   case 'current':
       //   this.cardSettings = this.currentDesk.aloneSettings
       //     break;
@@ -1144,10 +1237,9 @@ export default {
   },
   beforeUnmount() {
     let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-    this.lastHeight = cardsHeight
+    this.lastHeight = cardsHeight;
     // console.log("销毁组件",cardsHeight);
   },
-
 };
 </script>
 
@@ -1157,7 +1249,7 @@ export default {
 }
 
 :deep(.ant-result-subtitle) {
-  color: var(--secondary-text)
+  color: var(--secondary-text);
 }
 
 .grid {

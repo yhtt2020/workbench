@@ -65,7 +65,7 @@
     </div>
   </a-drawer> -->
   <teleport to="body">
-    
+
     <!-- 新设置 -->
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">
       <div style="width:500px;height:466px;">
@@ -81,7 +81,7 @@
               <div style="color:var(--primary-text);font-size: 16px;">小组件尺寸</div>
 
               <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="xt-bg-2 p-1 h-12 mb-3"  @click="__updateSize" :data="customData.dragCardSize"/> -->
-              
+
               <!-- <RadioTab  :navList="sizeType"  class="nav-type"
                         v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
 
@@ -167,7 +167,7 @@
           <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
             <div
-            class="flex justify-center items-center rounded-lg" 
+            class="flex justify-center items-center rounded-lg"
             style="width:48px;height:48px;background-color: var(--primary-bg);">
               <Icon icon="fluent:print-16-regular" width="20" height="20" />
             </div>
@@ -179,7 +179,7 @@
           </div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
             <div
-            class="flex justify-center items-center rounded-lg" 
+            class="flex justify-center items-center rounded-lg"
             style="width:48px;height:48px;background-color: var(--primary-bg);">
               <Icon icon="tabler:brand-bilibili" width="20" height="20" />
             </div>
@@ -483,7 +483,7 @@ export default {
 
     updateBackground (backgroundColor,n) {
       this.colorIndex = n
-      
+
       message.success({
         content: '设置卡片背景成功',
         key: 'bg',

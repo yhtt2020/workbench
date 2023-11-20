@@ -78,8 +78,11 @@ import FreeLayoutMask from "./freeLayout/Mask.vue";
 import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
 // import FreeLayoutFloatMenu from "./freeLayout/FloatMenu/Container.vue";
 import FloatMenu from './floatMenu/FloatMenu.vue'
+import RadioTab from '../../components/RadioTab.vue'
+
 export default {
   components: {
+    RadioTab,
     FreeLayoutScrollbar,
     FloatMenu,
     FreeLayoutContainer,

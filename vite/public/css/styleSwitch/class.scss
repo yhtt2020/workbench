@@ -86,6 +86,11 @@ body {
 .xt-text-2-bg {
   background: var(--secondary-text) !important;
 }
+
+// 次要透明背景色
+.xt-bg-t-2 {
+  background: var(--secondary-transp-bg) !important;
+}
 /**
 * 边框
 */
@@ -105,7 +110,7 @@ body {
 
 hr {
   height: 1px;
-  border: 1px solid var(--divider) !important;
+  border: 1px solid var(--divider-solid) !important;
 }
 /**
 * 功能性颜色

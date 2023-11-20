@@ -81,11 +81,11 @@
     <AddCourierModal ref="addCourierRef"/>
   </teleport>
   <teleport to='body'>
-    <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+    <xt-old-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
               :isHeader="false" :boxIndex="100" :maskIndex="99">
       <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
       <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers"/>
-    </xt-modal>
+    </xt-old-modal>
   </teleport>
   <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
   <teleport to='body'>

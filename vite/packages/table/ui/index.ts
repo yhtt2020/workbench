@@ -6,7 +6,7 @@ import XtCanvas from "./components/Canvas/index.vue"
 import XtGuided from "./components/Guided/index.vue"
 import XtLeftMenu from "./components/LeftMenu/index.vue"
 import XtMenu from "./components/Menu/index.vue"
-import XtModal from "./components/Modal/index.vue"
+import XtOldModal from "./components/OldModal/index.vue"
 import XtTask from "./components/Task/index.vue"
 import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
@@ -38,7 +38,7 @@ export default function (app: App): void {
   app.component('XtGuided',XtGuided )
   app.component('XtLeftMenu', XtLeftMenu)
   app.component('XtMenu', XtMenu)
-  app.component('XtModal', XtModal)
+  app.component('XtOldModal', XtOldModal)
   app.component('XtTask', XtTask)
   app.component('XtText', XtText)
   app.component('XtView', XtView)

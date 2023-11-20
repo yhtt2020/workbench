@@ -1,11 +1,7 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs, reactive } from "vue";
+import { ref, watch, toRefs } from "vue";
 import { storeToRefs } from "pinia";
-
-import DraggableBox from "./DraggableBox.vue";
-import DragPreview from "./DragPreview.vue";
-import Canvas from "./Canvas.vue";
 import { useFreeLayoutStore } from "./store";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
@@ -14,8 +10,13 @@ const props = defineProps({
 });
 
 const { currentDesk }: any = toRefs(props);
-const { freeLayoutData, getCurrentDeskId, getFreeLayoutData, freeLayoutEnv } =
-  storeToRefs(freeLayoutStore);
+const {
+  freeLayoutData,
+  getCurrentDeskId,
+  getFreeLayoutData,
+  freeLayoutEnv,
+  getFreeLayoutState,
+} = storeToRefs(freeLayoutStore);
 
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
@@ -86,8 +87,9 @@ function updateCards(data) {
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
       if (last.value) {
         getFreeLayoutData.value[id] = {
-          left: getFreeLayoutData.value[id].left,
-          top: getFreeLayoutData.value[id].top,
+          left: getFreeLayoutData.value[id].left || 0,
+          top: getFreeLayoutData.value[id].top || 0,
+          index: getFreeLayoutData.value[id].index || 1,
           id,
           name,
           customData,
@@ -96,10 +98,11 @@ function updateCards(data) {
       return;
     }
     // 优化3 抽离获取坐标过程
-    const { left, top } = await getPosition(item);
+    // const { left, top } = await getPosition(item);
     getFreeLayoutData.value[item.id] = {
-      left,
-      top,
+      left: 0,
+      top: 0,
+      index: 1,
       id,
       name,
       customData,
@@ -115,14 +118,21 @@ watch(currentDesk.value?.cards, (cards) => {
     updateCards(cards);
   }, 200);
 });
+const emits = defineEmits(["editStart", "editEnd"]);
+function drag() {
+  emits("editStart");
+}
+function dragStop() {
+  emits("editEnd");
+}
+const a = ref(true);
 </script>
 
 <template>
-  <div
-    ref="waterfallFlow"
-    class="flex flex-wrap justify-start items-start xt-theme-b fixed"
-    style="z-index: -1; overflow: hidden"
-    :style="{
+  <!-- <div    ref="waterfallFlow"
+    class="xt-theme-b h-full flex flex-wrap absolute fixed"
+    style="align-content: flex-start !important"
+       :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
       top: freeLayoutEnv?.scrollData?.top + 'px',
@@ -138,29 +148,30 @@ watch(currentDesk.value?.cards, (cards) => {
         height: item.height + 'px',
       }"
     ></div>
-  </div>
-  <!-- 拖拽层 -->
-  <teleport to="body">
-    <DragPreview>
-      <template #box="{ data }">
-        <slot name="box" :data="{ data }"></slot>
-      </template>
-    </DragPreview>
-  </teleport>
-  <!-- 整体画布层 -->
-
-  <!-- <Canvas> -->
-  <DraggableBox
+  </div> -->
+  <xt-drag
+    parent
+    boundary
     v-for="item in getFreeLayoutData"
-    :id="item.id"
-    :top="item.top"
-    :left="item.left"
+    v-model:y="item.top"
+    v-model:x="item.left"
+    v-model:index="item.index"
     :key="item.id"
-    :data="item"
+    :parentScale="getFreeLayoutState.canvas.zoom"
+    :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
+    :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
+    :gridLocation="getFreeLayoutState.option.afterDragging"
+    :collision="getFreeLayoutState.option.collision"
+    :magnet="getFreeLayoutState.option.magnet"
+    :gridMargin="6"
+    :magnetMargin="6"
+    disabledDefaultEvent
+    :grid="[134, 96]"
+    :gridStyle="{
+      border: '2px solid var(--active-bg)',
+    }"
   >
-    <template #box="{ data }">
-      <slot name="box" :data="{ data }"></slot>
-    </template>
-  </DraggableBox>
-  <!-- </Canvas> -->
+
+    <slot name="box" :data="{ ...item }"></slot>
+  </xt-drag>
 </template>

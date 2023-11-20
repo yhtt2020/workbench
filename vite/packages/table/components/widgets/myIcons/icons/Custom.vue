@@ -60,7 +60,7 @@
     ></Set>
   </XtDrawer>
   <Teleport to="body">
-    <xt-modal
+    <xt-old-modal
       v-model="titleVisible"
       @close="titleVisible = false"
       title="修改分组名"
@@ -69,7 +69,7 @@
       <div class="h-12" style="width: 400px">
         <XtInput v-model="title" @blur="titleBlur()"></XtInput>
       </div>
-    </xt-modal>
+    </xt-old-modal>
   </Teleport>
 </template>
 
