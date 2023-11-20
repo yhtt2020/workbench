@@ -34,7 +34,6 @@ export const communityStore = defineStore('communityStore',{
    async getMyCommunity(){
     let res = await post(getMyCommunity,{})
     // console.log('查看返回数据',res);
-    
     if(res?.data?.list){
       this.communityList = res.data.list.filter((item: any) => {
         return item.hasOwnProperty('communityInfo')
@@ -84,16 +83,14 @@ export const communityStore = defineStore('communityStore',{
         no:communityName?.communityInfo?.no,
         tree:categoryTreeList?.data?.treeList,
         category:categoryResList?.data?.list,
-        summary:communityName?.summary
+        summary:communityName?.communityInfo?.summary,
+        avatar:communityName?.communityInfo?.icon,
+        ...communityName?.communityInfo,
       }
-
       // console.log('查看数据',result)
-
       this.categoryList = result
-
     }
    },
-
 
    // 获取频道数据
    async getChannelList(id:any){

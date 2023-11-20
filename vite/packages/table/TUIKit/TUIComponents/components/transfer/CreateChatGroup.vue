@@ -11,7 +11,7 @@
     <div class="overflow-hidden">
      <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
     </div>
-    <CreateIcon icon="fluent:camera-16-regular" style="font-size: 1.5rem;width:32px;height:32px;position: absolute;bottom:-12px;right:-6px;border: 2px solid var(--divider);background:var(--active-bg);border-radius: 50%;"/>
+    <CreateIcon icon="fluent:camera-16-regular" style="font-size: 1.5rem;width:32px;height:32px;position: absolute;bottom:-12px;right:-6px;border: 2px solid var(--active-text);background:var(--active-bg);border-radius: 50%;"/>
    </div>
    <SelectIcon @isIconShow="iconVisible = false" :goodVisible="true" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
    <!-- <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div> -->

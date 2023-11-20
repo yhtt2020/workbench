@@ -1,8 +1,8 @@
 <template>
  <a-dropdown :trigger="['click']" :placement="title !== undefined ? 'bottom':'bottomRight'" :overlayStyle="{ zIndex:'10000 !important',minWidth:'0px !important'}">
   <div class="flex pointer items-center" :class="title !== undefined ? 'justify-between':'justify-center'">
-   <span class="font-16 font-500 xt-font xt-text">{{ title }}</span>
-   <DorpIcon :icon="newIcon" class="xt-text-2" style="font-size: 1.25rem;"></DorpIcon>
+   <span class="font-16 font-500 xt-font " :class="title !== undefined ? 'xt-active-text' : ''">{{ title }}</span>
+   <DorpIcon :icon="newIcon" :class="title !== undefined ? 'xt-active-text' : 'xt-text-2'" style="font-size: 1.25rem;"></DorpIcon>
   </div>
   <template #overlay>
    <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">

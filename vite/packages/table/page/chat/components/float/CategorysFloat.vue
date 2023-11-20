@@ -99,6 +99,7 @@
  <AddNewCategory ref="addCategoryRef" :no="categoryList.no"/>
  <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
  <AddInvite ref="addInviteRef" :no="categoryList.no"/>
+ <CommunityEditor ref="editorRef" :no="categoryList.no" :content="categoryList"/>
 </template>
 
 <script>
@@ -115,13 +116,14 @@ import EmptyAdd from '../empty/EmptyAdd.vue';
 import AddNewCategory from '../add/AddNewCategory.vue';
 import AddNewGroup from '../add/AddNewGroup.vue';
 import AddInvite from '../add/AddInvite.vue';
+import CommunityEditor from '../contact/CommunityEditor.vue';
 
 export default{
   props:[ 'communityID','float' ],
 
   components:{
     CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd,
-    AddNewCategory,AddNewGroup,AddInvite,
+    AddNewCategory,AddNewGroup,AddInvite,CommunityEditor,
   },
 
   data(){
@@ -185,7 +187,10 @@ export default{
           newIcon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',
           callBack:()=>{ this.setFloatVisible(false) }
         },
-        // {icon:'',title:'社群管理',type:'manage'},
+        {
+          newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
+          callBack:()=>{ this.$refs.editorRef.openEditorModal() }
+        },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         // {
         //   icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
@@ -205,7 +210,10 @@ export default{
           newIcon:'fluent:add-16-filled',title:'添加新分组',
           callBack:()=>{ this.$refs.addNewRef.openAddModal() }
         },
-        // {icon:'',title:'社群管理',type:'manage'},
+        {
+          newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
+          callBack:()=>{ this.$refs.editorRef.openEditorModal() },
+        },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         {
           newIcon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',
