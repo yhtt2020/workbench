@@ -221,9 +221,6 @@ export default {
                 dateValue: timeStamp(this.dateValue.valueOf()),
                 customIndex: this.customIndex
             });
-            // this.$router.push({
-            //   name: "home",
-            // });
             message.success("添加成功！");
         },
         addSettingClock() {
@@ -255,9 +252,6 @@ export default {
                 dateValue: timeSpan,
                 clockTimeStamp: timeSpan
             });
-            // this.$router.push({
-            //   name: "home",
-            // });
             message.success("添加成功！");
         },
         onContextMenuClick(e, index) {
@@ -271,8 +265,6 @@ export default {
             this.changeTopClockStatus(value)
         },
         changeDataType(value) {
-            // console.log(this.selectDataType[value.title]);
-            // console.log(value);
             let tag = this.selectDataType[value].tag
 
             let temp = this.selectDataType[value].type
@@ -280,8 +272,6 @@ export default {
         }
     },
     mounted() {
-        // console.log(this.chooseType, 'this.chooseType--isUndefined');
-        // console.log(this.checkTopClock,'this.checkTopClock');
         this.checked = this.checkTopClock
         if (this.chooseType == undefined) {
             this.defaultDataType = '显示30分钟内的闹钟'
@@ -297,9 +287,6 @@ export default {
         }
 
     },
-    /*
-        目前的主要问题是无法保存正确的页面数据，逻辑是没问题，但是表面的数据无法留存
-    */
     watch: {
         checkTopClock: {
             handler(value) {

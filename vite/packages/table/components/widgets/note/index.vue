@@ -8,6 +8,7 @@
     class="test"
     ref="homelSlotRef"
     :desk="desk"
+    style="background: #191919; !important"
   >
     <template #left-title-icon>
       <!-- 图标 -->
@@ -65,9 +66,6 @@
   </a-drawer> -->
   <teleport to="body">
 
-    <!-- <xt-modal :width="500" v-model="settingVisible">
-      dsadsad
-    </xt-modal> -->
     <!-- 新设置 -->
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">
       <div style="width:500px;height:466px;">
@@ -80,23 +78,55 @@
         <!--  -->
           <div class="w-full" style="padding:0 24px 24px 24px;height:400px;">
             <div class="w-full h-full rounded-lg p-4" style="background-color: var(--secondary-bg);">
-              <div style="color:var(--prinmary-text);font-size: 16px;">小组件尺寸</div>
-              <!-- <RadioTab :navList="sizeType" v-model:selectType="defaultSizeType"></RadioTab> -->
-              <xt-tab v-model="cardSize" :list="sizeType" class="xt-bg-2 p-1 h-12 mb-3" />
-              <div>支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
+              <div style="color:var(--primary-text);font-size: 16px;">小组件尺寸</div>
+
+              <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="xt-bg-2 p-1 h-12 mb-3"  @click="__updateSize" :data="customData.dragCardSize"/> -->
+
+              <!-- <RadioTab  :navList="sizeType"  class="nav-type"
+                        v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
+
+              <XtRadio class="mt-3 mb-3" @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
+
+              <div style="color: var(--secondary-text);">支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
+              <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
+              <div style="color:var(--primary-text);font-size: 16px;">便签主题色</div>
+              <div>
+                <div class="item-box mt-4">
+                  <div
+                    class="item mr-4 flex justify-center items-center"
+                    :key="item"
+                    :style="{ background: color[`${'color' + item}`] }"
+                    v-for="item,index in 6"
+                    @click="updateBackground(color[`${'color' + item}`],item)"
+                  >
+                  <Icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" width="20" height="20" />
+                  </div>
+                </div>
+              </div>
+              <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
+              <div class="flex" style="justify-content: space-between;" >
+                <div style="color:var(--primary-text);font-size: 16px;">仅在标题处显示主题色</div>
+                <a-switch @click="this.changeShowColor"  v-model:checked="options.showColor"></a-switch>
+              </div>
+              <div style="color: var(--secondary-text);">开启后小组件背景使用默认的编辑器颜色，标题部分使用上方选择的主题色。</div>
             </div>
           </div>
       </div>
     </Modal>
     <!-- 打印 -->
     <Modal v-if="printPreviewVisible" v-model:visible="printPreviewVisible" :blurFlag="true" :mask-no-close="false">
-      <div class="p-3" style="width:400px;height:auto">
-        <div class="p-3">设备要求：德佟P1；纸张：40*60，间隙纸</div>
-        <span v-if="!print.status">打印助手未就绪</span>
-
-        <template v-else>
-          <div class="px-3 pb-3">
-            <a-select
+      <div class="px-6" style="width:500px;height:500px;">
+        <div class="font-16 pt-4" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);" @click="print.status = !print.status">
+          <!-- <div class="w-full">打印</div> -->
+          打印
+          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="printPreviewVisible = false">
+            <Icon icon="fluent:dismiss-16-filled" />
+          </div>
+        </div>
+        <!-- 打印机就绪 -->
+        <div class="" v-if="print.status">
+          <div class="p-3 rounded-lg mb-4" style="background:var(--secondary-bg)">设备要求：德佟P1；纸张：40*60，间隙纸</div>
+          <a-select
               style="z-index: 99999999; position: relative;border:none"
               v-model:value="selectedPrinter"
               class="no-drag w-full rounded-xl printers"
@@ -111,20 +141,55 @@
               >{{ item.name }}
               </a-select-option>
             </a-select>
-
-            <div class="text-center" >
-              <div ref="previewText" class="rounded-lg mt-3  mb-3 "
-                   style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
-                <div ref="printContent" hidden v-html="print.previewHtml"></div>
-                <div ref="preivew" class="item-content "></div>
-              </div>
-            </div>
-
-            <div class="content-item">
-              <xt-button type="theme" @click="startPrint"  style="width:100%" :h="30">打印</xt-button>
+          <div class="text-center" >
+            <!-- 打印预览 -->
+            <div ref="previewText" class="rounded-lg mt-3  mb-3 "
+                  style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
+              <div ref="printContent" hidden v-html="print.previewHtml"></div>
+              <div ref="preivew" class="item-content "></div>
             </div>
           </div>
-        </template>
+          <div class="flex justify-end">
+            <xt-button type="primary" class="mt-2 font-16 xt-text"
+                style="width: 64px; height: 40px; background-color: var(--secondary-bg); "
+                @click="printPreviewVisible = false">取消</xt-button>
+            <xt-button type="primary" class="mt-2 font-16 xt-text ml-3"
+                style="width: 64px; height: 40px; background-color: var(--active-bg);"
+                @click="startPrint">确定</xt-button>
+          </div>
+        </div>
+        <!-- 打印机未就绪 -->
+        <div v-else class="p-6">
+          <div class="flex justify-center" style="margin-top:42px;">
+            <Icon icon="fluent-emoji:printer" width="56px" height="56px" />
+          </div>
+          <div class="font-14 text-center w-full mt-4" style="color:var(--secondary-text)">驱动未就绪，未检测到可用打印机</div>
+          <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
+          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
+            <div
+            class="flex justify-center items-center rounded-lg"
+            style="width:48px;height:48px;background-color: var(--primary-bg);">
+              <Icon icon="fluent:print-16-regular" width="20" height="20" />
+            </div>
+            <div class="flex ml-3" style="flex-direction:column;width:216px;">
+              <div>德佟 P1 标签打印机</div>
+              <div>纸张：40*60mm</div>
+            </div>
+            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32"   >立即购买</xt-button>
+          </div>
+          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
+            <div
+            class="flex justify-center items-center rounded-lg"
+            style="width:48px;height:48px;background-color: var(--primary-bg);">
+              <Icon icon="tabler:brand-bilibili" width="20" height="20" />
+            </div>
+            <div class="flex ml-3" style="flex-direction:column;width:216px;">
+              <div>想天工作台「德佟 P1 标签打印机」使用教程</div>
+            </div>
+            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32">观看视频</xt-button>
+          </div>
+
+        </div>
 
 
       </div>
@@ -147,6 +212,7 @@ import { mapActions, mapState, mapWritableState } from 'pinia'
 import { noteStore } from '../../../apps/note/store'
 import Modal from '../../Modal.vue'
 import { DTPWeb, LPA_JobNames } from 'dtpweb'
+import RadioTab from "../../../components/RadioTab.vue"
 
 const labelWidth = 40
 const labelHeight = 60
@@ -159,6 +225,7 @@ export default {
     Icon,
     cardDrag,
     Markdown,
+    RadioTab,
   },
   mixins: [cardDragHook, cardSizeHook],
   props: {
@@ -212,6 +279,7 @@ export default {
         //   message.success('已成功复制到剪切板')
         // },
         type: 'note',
+        showColor:true
 
       },
       settingVisible: false,
@@ -220,12 +288,12 @@ export default {
           newIcon: 'fluent:print-20-regular',
           title: '打印',
           fn: () => {
-
+            let html = this.customData.text
             this.printPreviewVisible = true
             this.print.previewHtml = this.$refs.mdEditor.getContent()
-            // const div = document.createElement('div')
-            // div.innerHTML = html
-            //this.print.previewText = div.innerText
+            const div = document.createElement('div')
+            div.innerHTML = html
+            this.print.previewText = div.innerText
             //console.log(div, html, this.print.previewText)
             this.api = DTPWeb.getInstance()
             DTPWeb.checkServer((value) => {
@@ -283,13 +351,21 @@ export default {
       icons: {
         notepad12Regular,
       },
-      cardSize: { name: '2x2', value: '2x2' },
+      cardSize: { name: '2x2', title: '2x2' },
       sizeType: [
+          { name: '2x2', title: '2x2' },
+          { name: '2x4', title: '2x4' },
+          { name: '4x4', title: '4x4' },
+          { name: '4x6', title: '4x6' },
+      ],
+      cardSize1: { name: '2x2', value: '2x2' },
+      sizeType1: [
           { name: '2x2', value: '2x2' },
           { name: '2x4', value: '2x4' },
           { name: '4x4', value: '4x4' },
           { name: '4x6', value: '4x6' },
       ],
+      colorIndex:1,
     }
   },
   created () {
@@ -312,6 +388,8 @@ export default {
   },
   mounted () {
     this.text = this.customData.text
+    this.colorIndex = this.customData.colorIndex
+    this.options.showColor = this.customData.showColor
     this.tmpTitle = this.customData.title
     this.background = this.customData.background
     this.colors = this.customData.color
@@ -368,6 +446,7 @@ export default {
           const img = document.createElement('img')
           img.setAttribute('style', 'object-fit:contains;width:100%;height:100%')
           img.src = page.data
+          console.log('img',img);
           this.$refs.preivew.appendChild(img)
           api.closePrinter()
         } else {
@@ -388,7 +467,9 @@ export default {
     //     // 将text存入db
     //   );
     // },
-    updateBackground (backgroundColor) {
+    updateBackground (backgroundColor,n) {
+      this.colorIndex = n
+
       message.success({
         content: '设置卡片背景成功',
         key: 'bg',
@@ -397,6 +478,7 @@ export default {
         this.customIndex,
         {
           background: backgroundColor,
+          colorIndex: n,
         },
         this.desk
       )
@@ -454,6 +536,14 @@ export default {
     },
     closeSetting(){
       this.settingVisible = false
+    },
+    changeShowColor(){
+      this.updateCustomData(this.customIndex, {
+        showColor: this.options.showColor,
+      }, this.desk)
+    },
+    test(){
+      console.log('触发了')
     }
   }
   ,
@@ -493,12 +583,11 @@ export default {
 }
 
 .item {
-  width: 56px;
-  height: 56px;
-  opacity: 0.65;
+  width: 40px;
+  height: 40px;
+  // opacity: 0.65;
   border-radius: 10px;
   cursor: pointer;
-  margin: 9px;
 }
 
 .drag-boxs {

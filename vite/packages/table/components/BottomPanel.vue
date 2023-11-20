@@ -14,6 +14,7 @@
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
+        border-radius: 18px;
       "
     >
       <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
@@ -34,7 +35,7 @@
         justify-items: center;
         align-content: center;
         align-items: center;
-        border-radius: 8px;
+        border-radius: 18px;
         height: 73px;
         overflow: hidden;
         margin-right: 10px;
@@ -73,12 +74,12 @@
          <div 
          v-if="!(this.navList.includes(item.event) && this.isOffline)"
            @contextmenu.stop="enableDrag"
-           class="mr-3 mr-6 pointer"
-           style="white-space: nowrap; display: inline-block"
+           class="mr-6 pointer"
+           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
            @click.stop="clickNavigation(item)"
          >
            <div
-             style="width: 56px; height: 56px"
+             style="width: 56px; height: 56px;border-radius: 12px;" 
              v-if="item.type === 'systemApp'"
              class="flex items-center justify-center rounded-lg s-item xt-bg-2"
            >
@@ -86,8 +87,8 @@
                :icon="item.icon"
                class="test"
                style="
-                 width: 32px;
-                 height: 32px;
+                 width: 28px;
+                 height: 28px;
                  fill: var(--primary-text);
                "
              ></navIcon>
@@ -110,7 +111,7 @@
           </div>
         </div>
 
-        <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
+        <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
           <div
             @click="appChange"
             v-if="isMain"
@@ -165,7 +166,7 @@
               >
             </template>
           </div>
-        </a-tooltip>
+        </a-tooltip> -->
       </div>
     </div>
 
@@ -207,19 +208,24 @@
   >
     <a-row>
       <a-col>
-        <div @click="editNavigation" class="relative btn">
-          <xt-task  id='M0104' no="2" @cb="editNavigation">
-            <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-            <div><span>编辑导航</span></div>
+        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+          <template v-if="item.icon=='fluent:compose-16-regular'">
+            <xt-task  id='M0104' no="2" @cb="editNavigation(item)" >
+            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
           </xt-task>
+          </template>
+          <template v-else>
+            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+            <div><span>{{ item.title }}</span></div>
+          </template>
+          
         </div>
-
         <div
           @click="clickNavigation(item)"
-          class=" btn"
+          class=" btn extra-btn"
           v-for="item in builtInFeatures"
           :key="item.name"
-
         >
           <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
           <div>
@@ -229,6 +235,9 @@
       </a-col>
     </a-row>
   </a-drawer>
+    <RightMenu :menus="builtInFeatures" v-model:value="menuVisible" @contextmenu="showDetailMenu">
+      
+    </RightMenu>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -244,7 +253,9 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <EditNavigation @setQuick="setQuick"></EditNavigation>
+      <EditNavigation @setQuick="setQuick" v-if="componentId==='EditNavigation'"></EditNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId==='navigationSetting'"></navigationSetting>
+      <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
 
@@ -270,6 +281,7 @@ import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
 import { mapWritableState, mapActions } from 'pinia'
+import {useWidgetStore} from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
@@ -298,6 +310,8 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import {Icon as navIcon} from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
+import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
+import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -318,6 +332,7 @@ export default {
     Team,
     TaskBox,
     navIcon,
+    navigationSetting
   },
   data () {
     return {
@@ -352,6 +367,8 @@ export default {
       rightNav: false,
       delNav: false,
       //screenWidth: document.body.clientWidth
+      drawerMenus:[...extraRightMenu,...moreMenus],
+      componentId: 'EditNavigation',
     }
   },
   props: {
@@ -435,6 +452,7 @@ export default {
       'mainNavigationList',
     ]),
     ...mapWritableState(offlineStore, ["isOffline",'navList']),
+    ...mapWritableState(useWidgetStore,['rightModel']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -552,7 +570,14 @@ export default {
       this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation () {
+    editNavigation (item) {
+      if(item.component){
+        this.componentId=item.component
+      }else if(item.visible){
+        console.log(111)
+      }else{
+        return
+      }
       this.quick = true
       this.menuVisible = false
     },
@@ -572,7 +597,13 @@ export default {
         this.$router.push({ path: '/status' })
       }
     },
-
+    showDetailMenu(){
+      if(this.rightModel=='follow'){
+        console.log(111)
+        this.menuVisible = true
+      }
+      
+    },
     power () {
       this.$router.push({ path: '/power' })
     },
@@ -757,10 +788,11 @@ export default {
   text-align: center;
   margin-right: 24px;
   border-radius: 12px;
-  width: 100px;
+  width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
+  margin-bottom: 24px;
 }
 
 .status-text {

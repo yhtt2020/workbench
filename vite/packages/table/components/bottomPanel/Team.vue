@@ -1,7 +1,7 @@
 <template>
   <div class="team-module">
     <div v-if='!isOffline' @click="toggleTeam" class="common-panel s-bg pointer "
-    style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);">
+    style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);border-radius: 18px;">
     <emoji style="width: 52px;height:52px" icon="glassface"></emoji>
     </div>
     <div class="team-box" v-if="openTeam">

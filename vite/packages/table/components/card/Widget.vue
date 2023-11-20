@@ -24,7 +24,7 @@
         <slot name="cardTitle">
           <div
             :class="options.noTitle === true ? 'no-title' : 'content-title'"
-            class="flex items-center justify-between pt-3 px-3"
+            class="flex items-center justify-between pt-3 px-3 "
           >
             <div class="left-title" v-if="options.noTitle !== true">
               <!-- 标题左侧插槽 -->
@@ -59,10 +59,12 @@
         </slot>
         <!-- 标题栏end   -->
         <PageState :env="env" :options="options">
-          <div class="px-3 pb-3 h-full">
-            <slot>
-              <!--  主体内容插槽1  -->
-            </slot>
+          <div class="flex-1 h-0">
+            <div class="px-3 pb-2 h-full rounded-b-lg" :style="{background: options.showColor ? '#191919': '' }">
+              <slot>
+                <!--  主体内容插槽1  -->
+              </slot>
+            </div>
           </div>
         </PageState>
       </div>

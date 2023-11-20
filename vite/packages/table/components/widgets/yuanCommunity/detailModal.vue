@@ -99,8 +99,8 @@
                                     <div>
                                         <div class="title" style="color: var(--primary-text);font-size: 16px; "
                                             v-if="cardData.title" :innerHTML="title"></div>
-                                        <div class="context"
-                                            style="color:  var(--secondary-text); word-break: pre-wrap;font-size: 14px;"
+                                        <div class="context" style=" color:var(--secondary-text); font-size: 14px;
+                                            white-space: pre-wrap; word-wrap: break-word; word-break: break-all;"
                                             :innerHTML="content"></div>
                                     </div>
 
@@ -110,7 +110,7 @@
                                         class="items-center p-0 mb-0 ">
                                         <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                                             <a-col class="flex flex-wrap mr-2 image-wrapper"
-                                                v-for="(img, index) in cardData.image_170_170" :span="11" style="">
+                                                v-for="(img, index) in cardData.image" :span="11" style="">
                                                 <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm"
                                                     :src="img.image" :data-source="cardData.image[index].image"
                                                     @contextmenu.stop="showMenu(img)"
