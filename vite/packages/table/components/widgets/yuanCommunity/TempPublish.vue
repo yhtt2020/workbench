@@ -1,6 +1,6 @@
 
 <template>
-    <xt-modal title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true"
+    <xt-old-modal title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true"
         @close="handleOk">
         <div class="w-full pl-4 pr-4"
             :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen ? '0px' : '12px' }">
@@ -55,7 +55,7 @@
                 <slot name="main">
                     <component :is="componentId"></component>
                 </slot>
-                
+
                 <div style=" " v-if="imageLoadVisible">
                     <a-upload v-model:file-list="fileList" action="" class="ml-1 text-base " list-type="picture-card"
                         multiple @preview="handlePreview">
@@ -85,7 +85,7 @@
                                 </vue-custom-scrollbar>
                             </template>
                             <!-- <button>表情</button> -->
-                            <xt-button type="text" class=" xt-text" :w="72" :h="32" 
+                            <xt-button type="text" class=" xt-text" :w="72" :h="32"
                                 style="color: var(--secondary-text) !important;">
                                 <div class="flex items-center justify-center">
                                     <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2"  style="margin-right: 4px;" /> 表情
@@ -125,8 +125,8 @@
                         </xt-button>
                         </div>
                         </slot>
-                        
-                        
+
+
                     </div>
 
                 </div>
@@ -136,11 +136,11 @@
                         <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
                     </div>
                 </slot>"
-                
+
                 <!-- foot -->
                 <div class="flex items-center justify-between h-[56px] ">
                     <a-select v-model:value="cascaderValue" :options="options" placeholder="选择版块" :bordered="false"
-                        @change="handleChange" 
+                        @change="handleChange"
                         style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;color: var(--primary-text);"
                         dropdownMenuStyle="{background: 'var(--primary-bg)'}" change-on-select>
 

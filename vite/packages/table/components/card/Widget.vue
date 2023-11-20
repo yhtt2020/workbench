@@ -89,13 +89,12 @@
 import { PropType } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import { MenuOutlined } from "@ant-design/icons-vue";
-import { Icon as MyIcon } from "@iconify/vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 
-import Template from "../../../user/pages/Template.vue";
+// import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import Drop from "./Drop.vue";
@@ -103,9 +102,8 @@ import { IOption, IMenuItem } from "./types";
 
 export default {
   components: {
-    Template,
+    // Template,
     MenuOutlined,
-    MyIcon,
     RightMenu,
     PageState,
     Drop,

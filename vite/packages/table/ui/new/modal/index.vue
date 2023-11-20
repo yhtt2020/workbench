@@ -12,12 +12,12 @@
         'z-index': index,
       }"
     >
-      <div class="flex w-full">
+      <div class="flex w-full h-full">
         <!-- 左侧 -->
         <nav v-if="nav">
           <slot name="nav"> </slot>
         </nav>
-        <main>
+        <main class="flex h-full flex-col">
           <header class="flex items-center mb-4" v-if="header">
             <!-- 标题左侧 -->
             <div class="flex items-center">
@@ -58,9 +58,11 @@
             </div>
           </header>
           <!-- 内容区 -->
-          <slot>
-            <McDonalds />
-          </slot>
+          <div class="xt-scrollbar">
+            <slot>
+              <McDonalds />
+            </slot>
+          </div>
         </main>
       </div>
 

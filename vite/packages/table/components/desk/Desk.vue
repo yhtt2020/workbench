@@ -60,13 +60,13 @@
             >
               <template #box="{ data }">
                 <div class="editing">
-                <component
-                  :desk="currentDesk"
-                  :is="data.name"
-                  :customIndex="data.id"
-                  :customData="data.customData"
-                  :editing="true"
-                />
+                  <component
+                    :desk="currentDesk"
+                    :is="data.name"
+                    :customIndex="data.id"
+                    :customData="data.customData"
+                    :editing="true"
+                  />
                 </div>
               </template>
             </FreeLayoutContainer>
@@ -267,7 +267,8 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <a-drawer v-model:visible="settingVisible" placement="right" :width="500">
+
+  <xt-modal v-model="settingVisible">
     <XtTab
       class="mb-2"
       v-if="settingVisible"
@@ -276,37 +277,79 @@
       v-model="currentSettingTab"
       :list="settingsTab"
     ></XtTab>
-    <template v-if="currentSettingTab === 'current' && currentDesk.settings">
-      <FreeLayoutState
-        v-if="$route.path == '/main' && freeLayout && 1"
-        @scrollbarRedirect="freeLayoutScrollbarRedirect"
-        @scrollbarUpdate="freeLayoutScrollbarUpdate"
-      ></FreeLayoutState>
-      <div class="line-title">基础设置</div>
-      <div class="mt-2 line">桌面名称：</div>
-      <div>
-        <a-input v-model:value="currentDesk.name"></a-input>
-      </div>
-      <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
-        <div class="flex justify-between mb-3">
-          <div>独立缩放</div>
-          <a-switch v-model:checked="settings.enableZoom" @change="update" />
+    <div class="xt-theme-b h-full" style="height:600px">
+      <template v-if="currentSettingTab === 'current' && currentDesk.settings">
+        <FreeLayoutState
+          v-if="$route.path == '/main' && freeLayout && 1"
+          @scrollbarRedirect="freeLayoutScrollbarRedirect"
+          @scrollbarUpdate="freeLayoutScrollbarUpdate"
+        ></FreeLayoutState>
+        <div class="line-title">基础设置</div>
+        <div class="mt-2 line">桌面名称：</div>
+        <div>
+          <a-input v-model:value="currentDesk.name"></a-input>
         </div>
-        <div class="xt-text-2 text-sm my-3">
-          开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
+        <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
+          <div class="flex justify-between mb-3">
+            <div>独立缩放</div>
+            <a-switch v-model:checked="settings.enableZoom" @change="update" />
+          </div>
+          <div class="xt-text-2 text-sm my-3">
+            开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
+          </div>
+          <hr class="my-3" />
         </div>
-        <hr class="my-3" />
-      </div>
-      <template v-if="settings.enableZoom">
-        <div class="line-title">卡片设置：</div>
+        <template v-if="settings.enableZoom">
+          <div class="line-title">卡片设置：</div>
 
+          <div class="line">
+            卡片缩放：
+            <a-slider
+              @afterChange="update"
+              :min="20"
+              :max="500"
+              v-model:value="settings.cardZoom"
+            ></a-slider>
+          </div>
+          <div class="line">
+            卡片空隙：(调大空隙可能变成瀑布流布局)
+            <a-slider
+              :min="5"
+              :max="30"
+              v-model:value="settings.cardMargin"
+            ></a-slider>
+          </div>
+          <div class="line">
+            距离顶部：
+            <a-slider
+              :min="0"
+              :max="200"
+              v-model:value="settings.marginTop"
+            ></a-slider>
+          </div>
+        </template>
+        <div>
+          桌面垂直布局：
+          <a-switch
+            v-model:checked="currentDesk.settings.vDirection"
+          ></a-switch>
+        </div>
+      </template>
+      <template v-else>
+        <div class="line-title">卡片设置：</div>
+        <template v-if="settings.enableZoom">
+          <div class="mb-2" style="color: orangered">
+            <icon icon="tishi-xianxing"></icon>
+            当前桌面正在使用独立设置，此处设置对当前桌面不起作用。
+          </div>
+        </template>
         <div class="line">
           卡片缩放：
           <a-slider
             @afterChange="update"
             :min="20"
             :max="500"
-            v-model:value="settings.cardZoom"
+            v-model:value="globalSettings.cardZoom"
           ></a-slider>
         </div>
         <div class="line">
@@ -314,7 +357,7 @@
           <a-slider
             :min="5"
             :max="30"
-            v-model:value="settings.cardMargin"
+            v-model:value="globalSettings.cardMargin"
           ></a-slider>
         </div>
         <div class="line">
@@ -322,52 +365,15 @@
           <a-slider
             :min="0"
             :max="200"
-            v-model:value="settings.marginTop"
+            v-model:value="globalSettings.marginTop"
           ></a-slider>
         </div>
+        <slot name="settingsAllAfter"> </slot>
       </template>
-      <div>
-        桌面垂直布局：
-        <a-switch v-model:checked="currentDesk.settings.vDirection"></a-switch>
-      </div>
-    </template>
-    <template v-else>
-      <div class="line-title">卡片设置：</div>
-      <template v-if="settings.enableZoom">
-        <div class="mb-2" style="color: orangered">
-          <icon icon="tishi-xianxing"></icon>
-          当前桌面正在使用独立设置，此处设置对当前桌面不起作用。
-        </div>
-      </template>
-      <div class="line">
-        卡片缩放：
-        <a-slider
-          @afterChange="update"
-          :min="20"
-          :max="500"
-          v-model:value="globalSettings.cardZoom"
-        ></a-slider>
-      </div>
-      <div class="line">
-        卡片空隙：(调大空隙可能变成瀑布流布局)
-        <a-slider
-          :min="5"
-          :max="30"
-          v-model:value="globalSettings.cardMargin"
-        ></a-slider>
-      </div>
-      <div class="line">
-        距离顶部：
-        <a-slider
-          :min="0"
-          :max="200"
-          v-model:value="globalSettings.marginTop"
-        ></a-slider>
-      </div>
-      <slot name="settingsAllAfter"> </slot>
-    </template>
-  </a-drawer>
-
+    </div>
+    <!--
+   -->
+  </xt-modal>
   <transition name="fade">
     <div
       class=""
