@@ -22,8 +22,9 @@
     </div> -->
     <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px] h-full active-item">
         <div class="flex flex-col ">
-            <div class="flex items-center">
-                <a-avatar :src="detailPost.user.avatar" :size="24"></a-avatar>
+            <div class="flex items-center" style="position: relative;">
+                <a-avatar :src="detailPost.user.avatar" :size="24" ></a-avatar>
+                <a-avatar :src="detailPost.user.attestation_icon" :size="12" v-if="detailPost.user.attestation_icon" style="position: absolute;top: 12px;left: 15px;"></a-avatar>
                 <div class="ml-2 text-sm xt-text-2 nickname" style="text-align: left;">
                     {{ detailPost.user.nickname }}
                 </div>
