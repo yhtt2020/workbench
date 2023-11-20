@@ -98,9 +98,6 @@ export default [
     name: "main",
     component: Main,
     children: [
-
-
-
       {
         path: '/power',
         name: 'power',
@@ -662,7 +659,7 @@ export default [
         name: "remoteCommunity",
         component: RemoteCommunity,
       },
-
     ],
   },
+ 
 ];

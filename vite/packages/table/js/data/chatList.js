@@ -99,50 +99,6 @@ export const chatList = [
   }
 ]
 
-
-export const hideDropList = [
-  {icon:'fluent:people-add-16-regular',title:'邀请其他人',type:'invited'},
-  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
-  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
-  // {icon:'',title:'社群管理',type:'manage'},
-  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
-  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-
-]
-
-export const showDropList = [
-  {icon:'fluent:people-add-16-regular',title:'邀请其他人',type:'invited'},
-  {icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'apply'},
-  {icon:'fluent:add-16-filled',title:'添加新分组',type:'category'},
-  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
-  // {icon:'',title:'社群管理',type:'manage'},
-  // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'}
-]
-
-export const memberDropList = [
-  {icon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',type:'hidden'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-]
-
-
-export const memberShowList = [
-  {icon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',type:'show'},
-  {icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',type:'change'},
-]
-
-export const categoryMenu = [
-  { icon:'fluent:apps-add-in-20-filled',title:'添加新应用',type:'addNewApp' },
-  { icon:'fluent:settings-16-regular',title:'分组设置',type:'packetSet'},
-  { icon:'akar-icons:trash-can',title:'删除分组',type:'deletePacket' }
- ]
-
-export const channelMenu = [
-  { icon:'fluent:settings-16-regular',title:'链接设置',type:'linkSet'},
-  { icon:'akar-icons:trash-can',title:'删除应用',type:'deleteApp' },
-]
-
-
 export const hotCommunityData = [
   {
     createTime: '2023-09-15 14:01:23',
@@ -209,3 +165,18 @@ export const hotCommunityData = [
     status: 1,
   }, 
 ]
+
+// 社群昵称随机模拟数据
+export const randomName = [
+  '飞行的猪','跳跃的草莓','疯狂的胡萝卜','快乐的火箭',' 梦想的旅行者',
+  '奇幻的月亮','轻盈的蝴蝶','爆笑的小丑鱼','冒险的火龙果','幸运的四叶草',
+  '惊喜的彩虹', '狂野的闪电','美味的冰淇淋','幸福的阳光','神秘的星辰',
+  '快乐的小松鼠','摇滚的奶茶','萌萌的小熊猫','奇幻的水晶球','非凡的奇迹',
+  '热情的火焰', '幸福的甜甜圈', '轻松的微笑','惊艳的彩色气球','梦幻的星空',
+  '爆笑的小黄鸭','冒险的宝藏猎人', '美丽的花海', '快乐的音符','神秘的黑夜',
+  '轻快的蜜蜂', '惊喜的小礼物','狂野的摩托飞车','幸福的甜蜜果冻', '奇幻的仙境',
+  '快乐的大象跳舞', '神秘的黑暗森林', '爆笑的小丑鱼缸', '冒险的海盗船长','萌萌的小狗狗', 
+  '幸福的彩虹糖果','非凡的超级英雄', '热情的火车头','梦想的宇航员','轻松的小懒猫',
+  '惊艳的水晶鞋子', '神秘的黑洞星系', '狂野的摇滚乐手','幸福的小幸运儿','奇幻的魔法城堡'
+]
+

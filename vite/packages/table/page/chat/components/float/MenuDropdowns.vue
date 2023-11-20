@@ -1,22 +1,24 @@
 <template>
-  <xt-menu name="name" :menus="menus" @contextmenu="revID = item">
+  <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
     <div class="flex items-center" @click="currentItem(item)">
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
-          <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25rem;"/>
         </template>
         <template v-if="item.type === 'link'">
-          <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 1.25rem;"/>
         </template>
         <template v-if="item.type === 'forum'">
-          <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+          <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 1.25rem;"/>
         </template>
       </div>
       <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
-      <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 24px"
+      <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
     </div>
   </xt-menu>
+
+  <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/>
 </template>
 
 <script>
@@ -25,11 +27,13 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 import { Modal,message } from 'ant-design-vue'
 import { communityStore } from '../../store/communityStore'
 
+import LinkSetting from '../knownCategory/LinkSetting.vue'
+
 export default {
   props:['item','type','no'],
 
   components:{
-    CommunityIcon
+    CommunityIcon,LinkSetting
   },
 
   data(){
@@ -38,7 +42,7 @@ export default {
         {
           name:'链接设置',
           newIcon:'fluent:settings-16-regular',
-          callBack:()=>{}
+          callBack:()=>{this.$refs.linkRef.openLinkModal()}
         },
         {
           name:'删除应用',
@@ -49,19 +53,19 @@ export default {
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                console.log(this.revID,this.no);
-                const result = await this.removeCategory(this.revID.id)
-                console.log('返回结果',result);
-                if(result?.status === 1){
-                 await this.getChannelList(this.no)
-                 await this.getCategoryData(this.no)
-                }
+                this.removeCategory(this.revID.id,this.no)
+                message.success('删除成功')
               }
             })
           }
         }
       ],
       menus:[
+        // {
+        //   name:'应用设置',
+        //   newIcon:'fluent:settings-16-regular',
+        //   callBack:()=>{}
+        // },
         {
           name:'删除应用',
           newIcon:'akar-icons:trash-can',
@@ -71,17 +75,12 @@ export default {
               content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
               centered:true,
               onOk: async ()=>{
-                console.log(this.revID,this.no);
-                const result = await this.removeCategory(this.revID.id)
-                console.log('返回结果',result);
-                if(result?.status === 1){
-                 await this.getChannelList(this.no)
-                 await this.getCategoryData(this.no)
-                }
+                this.removeCategory(this.revID.id,this.no)
+                message.success('删除成功')
               }
             })
           }
-        }
+        },
       ],
       revID:''
     }
