@@ -81,13 +81,8 @@ const emptyState=computed(()=>{
 })
 onMounted(() => {
     isLoading.value=true
-    console.log(commentList.value,list.value.length)
-    if(commentList.value ){
-        console.log(commentList.value,list.value.length)
-    }
 })
 watch(()=>commentList.value.list,()=>{
-    console.log(emptyState.value)
     isLoading.value=false
 })
 </script>

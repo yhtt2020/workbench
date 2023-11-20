@@ -1,40 +1,45 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-
-    <div @click.stop class="box common-panel hide-scrollbar s-bg " 
+  <!-- {{ rightMenus }} -->
+  <!-- <RightMenu :menus="rightMenus"   @contextmenu="showMenu"> -->
+    <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " 
          style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
           overflow-x: hidden;border-radius: 18px;
-          padding-top: 0;padding-bottom: 0;position:relative;" ref="sideContent"
+          padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
-      <div   style="width: 67px;overflow-x: hidden;"  >
-        <div :id="sortId" class="scroller-wrapper hide-scrollbar xt-container" style="width: 80px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start;" >
+      <div   style="width: 56px;"  >
+        <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container" style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; " >
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
             <div   :key="item.name" @click.stop="clickNavigation(item)">
               <div v-if="!(this.isOffline && this.navList.includes(item.event))"  @contextmenu.stop="enableDrag"   class="item-content item-nav" :class="{ 'active-back': current(item) }">
+                <!-- {{ iconMenus }} -->
+                <!-- <RightMenu :menus="iconMenus" @contextmenu=""> -->
                 <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'" >
                   <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
                            :class="{ 'active-color': current(item) }"></navIcon>
                 </div>
                 <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+                <!-- </RightMenu> -->
               </div>
             </div>
           </a-tooltip>
+          
         </div>
+        <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="this.toggleEdit()" />
       </div>
-
+      
     </div>
-  <RightMenu :menus="builtInFeatures" v-model:visible="menuVisible">
-    
-  </RightMenu>
+  <!-- </RightMenu> -->
 
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
-        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+        <div class="flex items-center">
+          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
           <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
           <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
           <div><span>{{ item.title }}</span></div>
@@ -44,6 +49,8 @@
           <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
           <div><span>{{ item.name }}</span></div>
         </div>
+        </div>
+        
       </a-col>
     </a-row>
   </a-drawer>
@@ -58,7 +65,7 @@
 
 <script>
 import {mapActions, mapState,mapWritableState} from "pinia";
-import EditNavigation from './bottomPanel/EditNavigation.vue';
+import {useNavigationStore} from './desk/navigationBar/navigationStore'
 import { navStore } from "../store/nav";
 import { cardStore } from '../store/card';
 import { offlineStore } from '../js/common/offline';
@@ -68,14 +75,19 @@ import { message } from 'ant-design-vue';
 import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
 import {renderIcon} from '../js/common/common'
-import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
+import {moreMenus,extraRightMenu,rightMenus,iconMenus} from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
+import RightMenu from "../components/desk/Rightmenu.vue";
+import AddIcon from './desk/navigationBar/components/AddIcon.vue'
+import EditNavigation from './bottomPanel/EditNavigation.vue';
 export default {
   name: 'SidePanel',
   components: {
     EditNavigation,
     navIcon,
-    navigationSetting
+    navigationSetting,
+    RightMenu,
+    AddIcon
   },
   data() {
     return {
@@ -87,6 +99,8 @@ export default {
       dragEvent:null,
       drawerMenus:[...extraRightMenu,...moreMenus],
       componentId: 'EditNavigation',
+      iconMenus,
+      rightMenus,
     }
   },
   props: {
@@ -141,6 +155,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline','navList']),
     ...mapWritableState(useWidgetStore,['rightModel']),
+    ...mapWritableState(useNavigationStore,['editToggle']),
   },
   mounted() {
     this.colDrop()
@@ -152,6 +167,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useNavigationStore,['toggleEdit']),
     renderIcon,
     disableDrag(){
       if(this.sortable){
@@ -306,7 +322,10 @@ export default {
     },
     showMenu() {
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
-      this.menuVisible = true
+      // if(this.rightModel !=='follow'){
+        this.menuVisible = true
+      // }
+      
     },
     setQuick() {
       this.quick = false
@@ -371,7 +390,6 @@ export default {
   align-items: center;
   cursor: pointer;
   border-radius: 12px;
-  margin-left: 5px;
   background-color: var(--secondary-bg);
   
 }

@@ -1,5 +1,6 @@
 <template>
   <div
+    @drop.prevent="drop"
     @click.stop
     class="flex flex-row items-center justify-center w-full mb-3 bottom-panel"
     style="text-align: center"
@@ -37,6 +38,7 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
+        max-width: 60%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -106,19 +108,14 @@
            </div>
                 </div>
                </a-tooltip>
-               <!-- <div>
-                  <xt-task  id='M0104' no='4'  @cb="addEdit('foot')">
-                  <Icon icon="tianjia"
-                  style="width: 56px;height: 56px;color:var(--active-bg) !important;position:relative;top:2px;"
-                  class="mr-3 pointer" @click="addEdit('foot')"></Icon>
-                  </xt-task>
-                </div> -->
-                <AddIcon v-if="editBar" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="closeEdit"/>
               </div>
             </xt-task>
           </div>
         </div>
-
+        <!-- <div class="mr-3"> -->
+          <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="this.toggleEdit()"/>
+        <!-- </div> -->
+        
         <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
           <div
             @click="appChange"
@@ -291,6 +288,7 @@ import PanelButton from './PanelButton.vue'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
+import {useNavigationStore} from './desk/navigationBar/navigationStore'
 import { mapWritableState, mapActions } from 'pinia'
 import {useWidgetStore} from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
@@ -382,7 +380,7 @@ export default {
       //screenWidth: document.body.clientWidth
       drawerMenus:[...extraRightMenu,...moreMenus],
       componentId: 'EditNavigation',
-      editBar:false
+      // editBar:false
     }
   },
   props: {
@@ -467,6 +465,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline",'navList']),
     ...mapWritableState(useWidgetStore,['rightModel']),
+    ...mapWritableState(useNavigationStore,['editToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain () {
@@ -509,6 +508,12 @@ export default {
         this.rightNav = val[1]
       },
     },
+    // editBar(val){
+    //   if(val){
+    //     console.log(val)
+    //     this.enableDrag()
+    //   }
+    // }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -518,6 +523,10 @@ export default {
       'sortFootNavigationList',
       'removeFootNavigationList',
     ]),
+    ...mapActions(useNavigationStore,['toggleEdit']),
+    drop(){
+      console.log(1111111,'is drop')
+    },
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -588,7 +597,7 @@ export default {
       if(item.component){
         this.componentId=item.component
         if(item.component==='EditNavigation'){
-          this.editBar=true
+          this.toggleEdit()
         }
       }else if(item.visible){
         console.log(111)
@@ -601,9 +610,9 @@ export default {
     setQuick () {
       this.quick = false
     },
-    closeEdit(){
-      this.editBar=false
-    },
+    // closeEdit(){
+    //   this.editBar=false
+    // },
     openSetting () {
       this.$router.push({ name: 'setting' })
       this.hideMenu()
@@ -657,8 +666,9 @@ export default {
     },
 
     clickNavigation (item) {
-      if(this.editBar){
+      if(this.editToggle){
         this.enableDrag ()
+        // return
       }else{
         this.hideMenu()
       switch (item.type) {
