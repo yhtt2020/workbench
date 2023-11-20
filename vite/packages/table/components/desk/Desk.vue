@@ -112,6 +112,7 @@
           <vuuri
             :key="key"
             v-if="currentDesk.cards && !hide"
+            item-key="id"
             :get-item-margin="
               () => {
                 return usingSettings.cardMargin * this.adjustZoom + 'px';
@@ -617,6 +618,7 @@ export default {
   },
   data() {
     return {
+      vurriEnable:false,
       freeDeskEdit: false,
       freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
