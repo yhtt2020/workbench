@@ -4,6 +4,7 @@ import {nanoid} from 'nanoid'
 import {timerStore} from "./timer";
 import {marketStore} from "./market";
 import {noteStore} from "../apps/note/store";
+import{homeStore} from "./home"
 // @ts-ignore
 export const cardStore = defineStore(
   "cardStore",
@@ -299,14 +300,14 @@ export const cardStore = defineStore(
     actions: {
       switchToDesk(index) {
         let desk = this.desks[index]
-        this.currentDeskIndex = {
+        homeStore().currentDeskIndex = {
           name: desk.nanoid,
           title: desk.name
         }
       },
       getCurrentIndex() {
         let deskIndex = this.desks.findIndex(item => {
-          return item.nanoid === this.currentDeskIndex.name
+          return item.nanoid === homeStore().currentDeskIndex.name
         })
         return deskIndex
       },
@@ -376,7 +377,7 @@ export const cardStore = defineStore(
       },
       getCurrentDesk() {
         let desk = this.desks.find(item => {
-          return item.nanoid === this.currentDeskIndex.name
+          return item.nanoid === homeStore().currentDeskIndex.name
         })
         return desk
       },
