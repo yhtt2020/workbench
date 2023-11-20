@@ -1,10 +1,12 @@
 <template>
   <div style="background: var(--main-mask-bg) !important;width: 100%;height:100%;" class="pt-6">
+    <!-- 返回 -->
     <transition name="fade">
       <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
         <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
       </div>
     </transition>
+    <!-- 主体部分 -->
     <transition name="fade">
       <div class="box-content" v-show="!editFlag" id="boxContent">
         <div class="box-center">
@@ -181,7 +183,7 @@
         </div>
       </div>
     </transition>
-
+    <!-- 弹窗选择部分 -->
     <transition name="fade">
       <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
         <div v-show="nowClassify!=='localApp'" class="h-full">
@@ -909,8 +911,14 @@ export default {
         }
       }
       // this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
-      this.dropFiles = await tsbApi.system.extractFileIcon(JSON.parse(JSON.stringify(filesArr)))
-      this.dropList.push(...this.dropFiles)
+      // this.dropFiles = await tsbApi.system.extractFileIcon(JSON.parse(JSON.stringify(filesArr)))
+      this.dropList =await Promise.all(filesArr.map(async(item)=>{
+          // console.log(item,'item')
+          const fileName = item.substring(item.lastIndexOf("\\") + 1);
+          let dropFiles =await tsbApi.system.extractFileIcon(item)
+          return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
+        }))
+      // this.dropList.push(...this.dropFiles)
       // this.dropList =await Promise.all(filesArr.map(async(item)=>{
       //     console.log(item,'item')
       //     let dropFiles =await tsbApi.system.extractFileIcon(item)
@@ -937,6 +945,7 @@ export default {
       this.$emit('setQuick')
       this.routeParams.url && setTimeout(() => {this.$router.push({ name: 'app', params: this.routeParams })}, 400)
     },
+    
     addEdit (val) {
       this.selectNav = val
       this.editFlag = true
