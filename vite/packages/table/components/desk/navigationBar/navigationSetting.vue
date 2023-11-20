@@ -1,6 +1,6 @@
 <template>
     <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <xt-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
+    <xt-old-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
         <div class="w-[500px] h-[614px]  rounded-xl p-3 wuzi">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
@@ -30,7 +30,7 @@
 
         </div>
         <!-- </Modal> -->
-    </xt-modal>
+    </xt-old-modal>
 </template>
 
 <script setup lang='ts'>
