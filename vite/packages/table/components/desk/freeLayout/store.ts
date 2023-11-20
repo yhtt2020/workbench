@@ -109,18 +109,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       //   : 0;
       return 6;
     },
-    // 获取当前状态
-    isFreeLayoutExist() {
-      return this.getFreeLayoutState;
-    },
   },
   actions: {
-
-    // 初始化自由布局组件数据
-    initFreeLayout() {
-      // 保存数据
-
-    },
     deepMerge(target, source) {
      for (let key in source) {
         if (source.hasOwnProperty(key)) {

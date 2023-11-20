@@ -73,7 +73,7 @@ import HorizontalPanel from "../HorizontalPanel.vue";
 import { useFreeLayoutStore } from "./../desk/freeLayout/store";
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutData } = storeToRefs(freeLayoutStore);
+const { getFreeLayoutData, isFreeLayout } = storeToRefs(freeLayoutStore);
 const emits = defineEmits(["sizeType", "onClick"]);
 
 const props = defineProps({
@@ -130,7 +130,7 @@ const menuList = computed(() => {
       }
     );
   }
-  if (rightModel.value == "follow") {
+  if (isFreeLayout.value) {
     // 数组倒数第二个位置添加内容
     array.splice(-1, 0, {
       newIcon: "fluent:window-new-16-regular",
