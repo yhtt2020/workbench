@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-bg-2 rounded-xl p-4 mb-1 text-base">
+  <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
     <div class="flex justify-between">
       <div class="flex justify-center">
         自由布局
@@ -26,8 +26,19 @@
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
-        <div>碰撞体积</div>
+        <div>卡片堆叠</div>
         <a-switch v-model:checked="getFreeLayoutState.option.collision" />
+      </div>
+      <div class="xt-text-2 text-sm my-3">
+        开启后组件可以叠加摆放，通过右键菜单层叠位置来设置层级
+      </div>
+      <hr class="my-3" />
+      <div class="flex justify-between mb-3">
+        <div>卡片吸附</div>
+        <a-switch v-model:checked="getFreeLayoutState.option.magnet" />
+      </div>
+      <div class="xt-text-2 text-sm my-3">
+        开启后会在组件拖拽时自动吸附到组件边缘
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
@@ -132,21 +143,27 @@
         ></a-input-number>
       </div>
       <hr class="my-3" />
-      <div class="mb-3">实验室功能</div>
-      <div class="flex justify-between">
-        <xt-button type="error" w="204" h="40" @click="clearAllFreeLayout">
-          重新排列所有组件</xt-button
+      <div class="mb-3">辅助功能</div>
+      <div class="xt-text-2 text-sm my-3"></div>
+      <div class="flex mb-3 justify-between">
+        <xt-button class="xt-bg" w="204" h="40" :copy="copyData">
+          分享自由布局</xt-button
         >
 
-        <xt-button type="error" w="204" h="40" @click="clearAllFreeLayout">
-          分享数据</xt-button
-        >
-      </div>
-
-      <div class="flex justify-between">
-        <xt-button type="error" w="204" h="40" @click="clearFreeLayout">
+        <!-- <xt-button class="xt-bg" w="204" h="40" @click="clearFreeLayout">
           删除自由布局</xt-button
-        >
+        > -->
+      </div>
+      <hr class="my-3" />
+      <div class="mb-3">实验室功能</div>
+      <div class="flex justify-between"></div>
+      <xt-button class="mr-3 xt-bg" w="204" h="40" @click="freeDeskResize()">
+        重新排列所有组件</xt-button
+      >
+      <xt-button class="xt-bg" w="204" h="40" :copy="copyData">
+        导入自由布局</xt-button
+      >
+      <div class="flex justify-between">
         <xt-button type="error" w="204" h="40" @click="clearAllFreeLayout">
           卡死重置</xt-button
         >
@@ -172,6 +189,7 @@ const {
   defaultState,
   freeLayoutState,
   getCurrentDeskId,
+  getFreeLayoutData,
 } = storeToRefs(freeLayoutStore);
 
 const maxCanvasSize = computed(() => {
@@ -180,7 +198,12 @@ const maxCanvasSize = computed(() => {
   }
   return 10000;
 });
-
+const copyData = computed(() => {
+  return JSON.stringify({
+    state: getFreeLayoutState.value,
+    data: getFreeLayoutData.value,
+  });
+});
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
@@ -231,7 +254,7 @@ function clearFreeLayout() {
 function clearAllFreeLayout() {
   freeLayoutSwitch.value = false;
   // cache.del("useFreeLayoutStore");
-  freeLayoutStore.clearAllFreeLayout();
+  // freeLayoutStore.clearAllFreeLayout();
 }
 </script>
 

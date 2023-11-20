@@ -64,9 +64,9 @@
     </div>
   </a-drawer> -->
   <teleport to="body">
-    
-    <!-- <xt-modal :width="500" v-model:visible="settingVisible">
-      dsadsad 
+
+    <!-- <xt-modal :width="500" v-model="settingVisible">
+      dsadsad
     </xt-modal> -->
     <!-- 新设置 -->
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">

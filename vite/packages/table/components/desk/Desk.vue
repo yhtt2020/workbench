@@ -47,21 +47,27 @@
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-      <!-- 悬浮菜单 -->
       <!-- 自由布局滚动 -->
       <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
-          <FreeLayoutCanvas>
-            <FreeLayoutContainer :currentDesk="currentDesk">
+          <FreeLayoutCanvas class="home-widgets">
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              @editStart="editStart"
+              @editEnd="freeDeskEdit = false"
+            >
               <template #box="{ data }">
+                <div class="editing">
                 <component
                   :desk="currentDesk"
                   :is="data.name"
                   :customIndex="data.id"
                   :customData="data.customData"
+                  :editing="true"
                 />
+                </div>
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
@@ -281,18 +287,15 @@
       <div>
         <a-input v-model:value="currentDesk.name"></a-input>
       </div>
-      <div class="my-3" style="font-size: 1.2em; font-weight: bold">
-        独立缩放：
-        <div
-          class="line xt-text-2"
-          style="font-size: 14px; font-weight: normal"
-        >
-          开启独立缩放后，将不再使用通用桌面设置中的缩放设置。
+      <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
+        <div class="flex justify-between mb-3">
+          <div>独立缩放</div>
+          <a-switch v-model:checked="settings.enableZoom" @change="update" />
         </div>
-        <a-switch
-          v-model:checked="settings.enableZoom"
-          @change="update"
-        ></a-switch>
+        <div class="xt-text-2 text-sm my-3">
+          开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
+        </div>
+        <hr class="my-3" />
       </div>
       <template v-if="settings.enableZoom">
         <div class="line-title">卡片设置：</div>
@@ -606,6 +609,7 @@ export default {
   },
   data() {
     return {
+      freeDeskEdit: false,
       freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
@@ -644,6 +648,10 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
+    editStart() {
+      console.log("222 :>> ", 222);
+      this.freeDeskEdit = true;
+    },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
@@ -881,7 +889,10 @@ export default {
     cursor: move;
   }
 }
-
+.editing {
+  pointer-events: none;
+  cursor: move !important;
+}
 .btn {
   text-align: center;
   display: flex;

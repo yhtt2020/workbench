@@ -2,7 +2,7 @@
   <div
     ref="draggable"
     :style="[draggableMode, draggablePos]"
-    @mousedown.stop="yStartDraggableFn"
+    @mousedown.stop="yDragStartFn"
   >
     <slot>
       <div class="draggable">
@@ -11,88 +11,197 @@
       </div>
     </slot>
   </div>
-  <div v-if="showGridPos" :style="[draggableMode, gridPos]" class="grid"></div>
+  <div
+    v-if="showGridPos"
+    :style="[draggableMode, gridPos, gridStyle]"
+    :class="gridClass"
+  ></div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, toRefs, computed, watch } from "vue";
-import { useWindowSize } from "@vueuse/core";
 import { useElementSize } from "@vueuse/core";
-import { snapToGrid } from "./utils";
+import { useWindowSize } from "./useWindowSize";
 export interface DragProps {
+  // 禁用组件拖拽
+  disabled?: boolean;
+  // 基于父级视图
   parent?: boolean;
+  // 边缘检测
   boundary?: boolean;
+  // 碰撞检测
   collision?: boolean;
+  collisionName?: string | number;
+  // 碰撞还原
+  collisionRestore?: string;
+  // 磁吸检测
   magnet?: boolean;
-  scale?: number;
-  parentScale?: number;
+  // 磁吸名称
+  magnetName?: string | number;
+  magnetRange?: number;
+  magnetMargin?: number;
+  // 双向绑定xyz
   x?: number;
   y?: number;
   index?: number;
-  afterDragging?: boolean;
-  whileDragging?: boolean;
-  showGrid?: boolean;
+  rotate?: number;
+  // 独立缩放
+  scale?: number;
+  // 父级缩放
+  parentScale?: number;
+  // 网格大小
   grid?: any;
-  margin?: number;
+  // 拖拽后吸附网格
+  afterDraggingAdsorbGrid?: boolean;
+  // 拖动时吸附网格
+  whileDraggingAdsorbGrid?: boolean;
+  // 拖动网格位置
+  gridLocation?: boolean;
+  // 网格边距
+  gridMargin?: number;
+  // 拖拽元素的选择器
+  handle?: string | string[] | null;
+  // 禁用拖拽元素的选择器
+  disabledHandle?: string | string[] | null;
+  // 禁用默认事件
+  disabledDefaultEvent: boolean;
+  gridClass?: string;
+  gridStyle?: object | null;
+  resetPosition?: boolean;
 }
 const props = withDefaults(defineProps<DragProps>(), {
+  disabled: false,
   parent: false,
   boundary: true,
-  collision: false,
+  collision: true,
+  collisionName: "xiaoyang",
+  collisionRestore: "before", // 'init'
   magnet: false,
-  scale: 1,
-  parentScale: 1,
+  magnetRange: 15,
+  magnetName: "xiaoyang",
+  magnetMargin: 0,
   x: 0,
   y: 0,
   index: 20,
-  afterDragging: false,
-  whileDragging: false,
-  showGrid: false,
+  rotate: 0,
+  scale: 1,
+  parentScale: 1,
+  afterDraggingAdsorbGrid: false,
+  whileDraggingAdsorbGrid: false,
+  gridLocation: false,
   grid: [134, 96],
-  margin: 6,
+  gridMargin: 0,
+  handle: null,
+  disabledHandle: null,
+  disabledDefaultEvent: false,
+  gridClass: "grid",
+  gridStyle: null,
+  resetPosition: true,
 });
 const {
+  disabled,
   parent,
   boundary,
   collision,
+  collisionName,
+  collisionRestore,
   magnet,
-  scale,
-  parentScale,
+  magnetName,
+  magnetRange,
+  magnetMargin,
   x,
   y,
   index,
-  afterDragging,
-  whileDragging,
-  showGrid,
+  rotate,
+  scale,
+  parentScale,
+  afterDraggingAdsorbGrid,
+  whileDraggingAdsorbGrid,
+  gridLocation,
   grid,
-  margin,
+  gridMargin,
+  handle,
+  disabledHandle,
+  disabledDefaultEvent,
+  resetPosition,
 } = toRefs(props);
 
-const draggable: any = ref(null); // 可拖拽元素
-const boundarySize: any = ref(null); // 边缘大小
-const draggableSize: any = ref(null); // 可拖拽元素大小
-const isDragging = ref(false);
+const emits = defineEmits([
+  "update:x",
+  "update:y",
+  "click",
+  "onDragStart",
+  "onDrag",
+  "onDragStop",
+  "auxLine",
+]);
+const draggable: any = ref({}); // 可拖拽元素
+// const parentNode: any = ref(null)
+const parentSize: any = ref({}); // 边缘大小
+const draggableSize: any = ref({}); // 可拖拽元素大小
+const isDragging = ref<boolean>(false);
 
-const initialMouseX = ref(0);
-const initialMouseY = ref(0);
-const initialTop = ref(0);
-const initialLeft = ref(0);
-const top = ref(y.value);
-const left = ref(x.value);
+const initialMouseX = ref<number>(0);
+const initialMouseY = ref<number>(0);
+const initialTop = ref<number>(0);
+const initialLeft = ref<number>(0);
+const top = ref<number>(y.value);
+const left = ref<number>(x.value);
 const zIndex = ref(index.value);
 
+const prevX = ref<number>(0);
+const prevY = ref<number>(0);
 // 网格数据
-const showGridPos = ref(false);
-const gridPosLeft = ref(0);
-const gridPosTop = ref(0);
-const emits = defineEmits(["update:x", "update:y", "click"]);
+const showGridPos = ref<boolean>(false);
+const gridPosLeft = ref<number>(0);
+const gridPosTop = ref<number>(0);
+
+// 拖拽基础样式
+const draggableMode: any = computed(() => {
+  return {
+    position: parent.value ? "absolute" : "fixed",
+    zoom: scale.value,
+  };
+});
+
+// 拖拽样式
+const draggablePos: any = computed(() => {
+  return {
+    left: left.value + "px",
+    top: top.value + "px",
+    zIndex: zIndex.value,
+  };
+});
+
+// 网格样式
+const gridPos: any = computed(() => {
+  return {
+    left: gridPosLeft.value + "px",
+    top: gridPosTop.value + "px",
+    width: draggableSize.value.width + "px",
+    height: draggableSize.value.height + "px",
+    zIndex: zIndex.value - 1,
+  };
+});
+const dragData = computed(() => {
+  return {
+    initX: initialLeft.value,
+    initY: initialTop.value,
+    x: left.value,
+    y: top.value,
+    width: draggableSize.value?.width || 0,
+    height: draggableSize.value?.height || 0,
+    scale: scale.value,
+    index: index.value,
+  };
+});
 // 同步最新的xy坐标
 watch(
   [x, y, index],
   () => {
     zIndex.value = index.value;
-    // left.value = x.value;
-    // top.value = y.value;
+    left.value = x.value;
+    top.value = y.value;
   },
   { immediate: true }
 );
@@ -104,112 +213,130 @@ watch(
     emits("update:y", newTop);
   }
 );
-// 同步最新的独立缩放
-watch(scale, () => {
-  if (collision.value) {
-    draggable.value.setAttribute("data-scale", scale.value);
-  }
-});
-// 处理冲突检测数据
-watch(collision, (val) => {
-  if (val) {
-    draggable.value.setAttribute("data-collision", true);
-    draggable.value.setAttribute("data-scale", scale.value);
-  } else {
-    draggable.value.removeAttribute("data-collision");
-    draggable.value.removeAttribute("data-scale");
-  }
-});
-// 拖拽基础样式
-const draggableMode: any = computed(() => {
-  return {
-    position: parent.value ? "absolute" : "fixed",
-    zoom: scale.value,
-    zIndex: zIndex.value,
-  };
-});
-
-// 拖拽样式
-const draggablePos: any = computed(() => {
-  if (parent.value) {
-    return {
-      transform: `translate(${left.value}px, ${top.value}px)`,
-    };
-  } else {
-    return {
-      left: left.value + "px",
-      top: top.value + "px",
-    };
-  }
-});
-
-// 网格样式
-const gridPos: any = computed(() => {
-  if (parent.value) {
-    return {
-      transform: `translate(${gridPosLeft.value}px, ${gridPosTop.value}px)`,
-      width: draggableSize.value.width + "px",
-      height: draggableSize.value.height + "px",
-      zIndex: -1,
-    };
-  } else {
-    return {
-      left: gridPosLeft.value + "px",
-      top: gridPosTop.value + "px",
-      width: draggableSize.value.width + "px",
-      height: draggableSize.value.height + "px",
-      zIndex: -1,
-    };
-  }
-});
 onMounted(() => {
-  if (parent.value) {
-    boundarySize.value = useElementSize(draggable.value.parentNode);
-  } else {
-    boundarySize.value = useWindowSize();
-  }
   draggableSize.value = useElementSize(draggable.value);
-  draggable.value.setAttribute("data-scale", scale.value);
-  draggable.value.setAttribute("data-magnet", true);
-
-  if (collision.value) {
-    draggable.value.setAttribute("data-collision", true);
-    draggable.value.setAttribute("data-scale", scale.value);
-  }
+  // 父级窗口变化
+  watch(
+    parent,
+    () => {
+      if (parent.value) {
+        parentSize.value = useElementSize(draggable.value.parentNode);
+      } else {
+        useWindowSize((size: any) => {
+          parentSize.value = size;
+          ResetElementPosition();
+        }, 200);
+      }
+    },
+    {
+      immediate: true,
+    }
+  );
+  // 边缘检测 磁吸变化
+  watch(
+    [() => collision, () => magnet],
+    ([newCollision, newMagnet], []) => {
+      if (newCollision) {
+        draggable.value.setAttribute(
+          `data-collision-${collisionName.value}`,
+          true
+        );
+      } else {
+        draggable.value.removeAttribute(
+          `data-collision-${collisionName.value}`
+        );
+      }
+      if (newMagnet) {
+        draggable.value.setAttribute(`data-magnet-${magnetName.value}`, true);
+      } else {
+        draggable.value.removeAttribute(`data-magnet-${magnetName.value}`);
+      }
+    },
+    {
+      immediate: true,
+    }
+  );
+  // 独立缩放
+  watch(
+    scale,
+    () => {
+      draggable.value.setAttribute("data-scale", scale.value);
+    },
+    {
+      immediate: true,
+    }
+  );
 });
+//
+function ResetElementPosition() {
+  if (resetPosition.value) {
+    if (left.value < 0 || top.value < 0) {
+      left.value = 0;
+      top.value = 0;
+    } else if (
+      left.value + draggableSize.value.width > parentSize.value.width ||
+      top.value + draggableSize.value.height > parentSize.value.height
+    ) {
+      // 视图大小
+      let vW = parentSize.value.width;
+      let vH = parentSize.value.height;
+      // 元素坐标
+      let posX = left.value;
+      let posY = top.value;
+      // 元素大小
+      let menuW = draggableSize.value.width;
+      let menuH = draggableSize.value.height;
 
+      posX = posX > vW - menuW ? vW - menuW : posX;
+      posY = posY > vH - menuH ? vH - menuH : posY;
+
+      left.value = posX;
+      top.value = posY;
+    }
+  }
+}
 // 拖拽开始
-function yStartDraggableFn(event: MouseEvent) {
-  console.log('1 :>> ', 1);
-  event.preventDefault();
-  event.stopPropagation();
+function yDragStartFn(event: MouseEvent) {
+  if (disabled.value) return;
   if (event instanceof MouseEvent && event.button !== 0) {
     return;
   }
-  event.preventDefault();
-  event.stopPropagation();
+  // 手柄区域
+  if (handle.value) {
+    const handleElement = isValidHandle(event, handle.value);
+    if (!handleElement) return;
+  } else if (disabledHandle.value) {
+    const isHandleDisabled = isValidHandle(event, disabledHandle.value);
+    if (isHandleDisabled) return;
+  }
+
   isDragging.value = true;
   initialMouseX.value = event.clientX;
   initialMouseY.value = event.clientY;
   initialTop.value = top.value;
   initialLeft.value = left.value;
-  // 显示网格位置
-  if (showGrid.value) {
-    showGridPos.value = true;
-  }
 
-  window.addEventListener("mousemove", yDraggableFn, { capture: true });
-  window.addEventListener("mouseup", yStopDraggableFn, { capture: true });
+  // 显示网格位置
+  prevY.value = top.value;
+  prevX.value = left.value;
+  emits("onDragStart", dragData.value);
+  window.addEventListener("mousemove", yDragFn, { capture: true });
+  window.addEventListener("mouseup", yDragStopFn, { capture: true });
 }
 // 拖拽过程
-const yDraggableFn = (event: MouseEvent) => {
-console.log('2 :>> ', 2);
-  event.preventDefault();
-  event.stopPropagation();
+function yDragFn(event: MouseEvent) {
   if (isDragging.value) {
+    // 阻止默认事件
+    if (disabledDefaultEvent.value) {
+      event.preventDefault();
+    }
+    if (gridLocation.value) {
+      showGridPos.value = true;
+    }
+
     const { clientX, clientY } = event;
 
-    // 计算鼠标在x轴上的移动距离。
+    // 计算鼠标在x轴上的移动距离
     const deltaX =
       (clientX - initialMouseX.value) / parentScale.value / scale.value;
     // 计算鼠标在y轴上的移动距离
@@ -219,69 +346,72 @@ console.log('2 :>> ', 2);
     let newTop = initialTop.value + deltaY;
     let newLeft = initialLeft.value + deltaX;
 
-    const [snappedX, snappedY] = snapToGrid(
+    const [snappedX, snappedY] = snapGridFn(
       grid.value,
       newLeft,
       newTop,
-      boundarySize.value.width / scale.value,
-      boundarySize.value.height / scale.value,
-      margin.value
+      parentSize.value.width / scale.value,
+      parentSize.value.height / scale.value,
+      gridMargin.value
     );
-
     // 拖拽时吸附网格
-    if (whileDragging.value) {
+    if (whileDraggingAdsorbGrid.value) {
       newLeft = snappedX;
       newTop = snappedY;
     }
-    // 拖拽时显示网格
-    if (showGrid.value) {
-      gridPosLeft.value = snappedX;
-      gridPosTop.value = snappedY;
-    }
+
     // 边缘检测
     if (boundary.value) {
-      const [boundaryX, boundaryY] = boundaryFn(newLeft, newTop);
+      const [boundaryX, boundaryY] = boundaryDetection(newLeft, newTop);
       newLeft = boundaryX;
       newTop = boundaryY;
     }
 
     // 冲突检测
-    if (collision.value && showGrid.value) {
-      const collisionRes = collisionFn();
-      if (collisionRes) {
-        showGridPos.value = false;
-      } else {
-        showGridPos.value = true;
-      }
+    if (collision.value) {
+      requestAnimationFrame(() => {
+        const collisionRes = collisionDetection();
+        if (!collisionRes) {
+          if (afterDraggingAdsorbGrid.value || whileDraggingAdsorbGrid.value) {
+            prevX.value = snappedX;
+            prevY.value = snappedY;
+            gridPosLeft.value = snappedX;
+            gridPosTop.value = snappedY;
+          } else {
+            prevY.value = top.value;
+            prevX.value = left.value;
+          }
+        }
+      });
     }
 
     top.value = newTop;
     left.value = newLeft;
-    // magnetFn(newLeft, newTop);
+    // 磁吸检测
+    if (magnet.value) {
+      magnetDetection(newLeft, newTop);
+    }
+    emits("onDrag", dragData.value);
   }
-};
+}
 
 // 拖拽结束
-const yStopDraggableFn = (event: MouseEvent) => {
-  console.log("event 33333333333>> ", event);
-
-  event.preventDefault();
-  event.stopPropagation();
+function yDragStopFn(event: MouseEvent) {
   isDragging.value = false;
 
   // 隐藏网格位置
-  if (showGrid.value) {
+  if (gridLocation.value) {
     showGridPos.value = false;
   }
   // 拖拽结束吸附网格
-  if (afterDragging.value) {
-    const [snappedX, snappedY] = snapToGrid(
+  if (afterDraggingAdsorbGrid.value) {
+    const [snappedX, snappedY] = snapGridFn(
       grid.value,
       left.value,
       top.value,
-      boundarySize.value.width / scale.value,
-      boundarySize.value.height / scale.value,
-      margin.value
+      parentSize.value.width / scale.value,
+      parentSize.value.height / scale.value,
+      gridMargin.value
     );
 
     // 更新位置
@@ -291,38 +421,99 @@ const yStopDraggableFn = (event: MouseEvent) => {
   // 冲突检测
   if (collision.value) {
     requestAnimationFrame(() => {
-      const collisionRes = collisionFn();
-
+      const collisionRes = collisionDetection();
       if (collisionRes) {
-        left.value = initialLeft.value;
-        top.value = initialTop.value;
+        if (collisionRestore.value == "before") {
+          left.value = prevX.value;
+          top.value = prevY.value;
+        } else {
+          left.value = initialLeft.value;
+          top.value = initialTop.value;
+        }
       }
     });
   }
-  window.removeEventListener("mousemove", yDraggableFn, { capture: true });
-  window.removeEventListener("mouseup", yStopDraggableFn, { capture: true });
-};
+
+  emits("onDragStop", dragData.value);
+  window.removeEventListener("mousemove", yDragFn, { capture: true });
+  window.removeEventListener("mouseup", yDragStopFn, { capture: true });
+}
+
+// 检查是否是有效的手柄实现
+function isValidHandle(event: any, handle: string | string[]) {
+  if (typeof handle === "string") {
+    return event.target?.closest(handle) !== null;
+  } else if (Array.isArray(handle) && handle.length > 0) {
+    return handle.some((selector) => event.target?.closest(selector) !== null);
+  }
+
+  return false;
+}
+
+// 旋转后大小实现
+function rotatedDimensions(width: number, height: number, angle: number) {
+  // 将角度转换为弧度
+  const radians = angle * (Math.PI / 180);
+  // 使用三角函数公式计算旋转后的宽度和高度
+  const newWidth =
+    Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
+  const newHeight =
+    Math.abs(width * Math.sin(radians)) + Math.abs(height * Math.cos(radians));
+  return [newWidth, newHeight];
+}
+// 吸附网格实现
+function snapGridFn(
+  grid: number[],
+  x: number,
+  y: number,
+  screenWidth: number,
+  screenHeight: number,
+  gridMargin: number
+) {
+  const cellWidth = grid[0] + 2 * gridMargin;
+  const cellHeight = grid[1] + 2 * gridMargin;
+
+  // 将坐标调整为最接近的格子
+  let snappedX =
+    Math.round((x - gridMargin) / cellWidth) * cellWidth + gridMargin;
+  let snappedY =
+    Math.round((y - gridMargin) / cellHeight) * cellHeight + gridMargin;
+
+  // 计算在屏幕宽度和高度内最多允许的格子数
+  const maxGridX = Math.floor((screenWidth - gridMargin) / cellWidth) - 1;
+  const maxGridY = Math.floor((screenHeight - gridMargin) / cellHeight) - 1;
+
+  // 确保不超出屏幕的右边和底边，同时不超过最大格子数
+  snappedX = Math.min(snappedX, maxGridX * cellWidth);
+  snappedY = Math.min(snappedY, maxGridY * cellHeight);
+
+  // 保证不小于0
+  snappedX = Math.max(snappedX, gridMargin);
+  snappedY = Math.max(snappedY, gridMargin);
+
+  return [snappedX, snappedY];
+}
 
 // 边缘检测实现
-const boundaryFn = (x: number, y: number) => {
+const boundaryDetection = (x: number, y: number) => {
   x = Math.min(
-    boundarySize.value.width / scale.value - draggableSize.value.width,
+    parentSize.value.width / scale.value - draggableSize.value.width,
     Math.max(0, x)
   );
   y = Math.min(
-    boundarySize.value.height / scale.value - draggableSize.value.height,
+    parentSize.value.height / scale.value - draggableSize.value.height,
     Math.max(0, y)
   );
   return [x, y];
 };
 
 // 冲突检测实现
-function collisionFn() {
+function collisionDetection() {
   const nodes = draggable.value.parentNode.childNodes;
   for (let item of nodes) {
     if (
       !(item instanceof HTMLDivElement) ||
-      item.getAttribute("data-collision") == null ||
+      item.getAttribute(`data-collision-${collisionName.value}`) == null ||
       item == draggable.value
     ) {
       continue;
@@ -345,30 +536,41 @@ function collisionFn() {
   return false;
 }
 
-// 磁吸元素实现
-
-function magnetFn(x: number, y: number) {
+// 磁吸检测实现
+function magnetDetection(x: number, y: number) {
   const nodes = draggable.value.parentNode.childNodes;
-  const parentNode = draggable.value.parentNode.getBoundingClientRect();
-  const parentLeft = parentNode.left;
-  const parentTop = parentNode.top;
-  console.log("parentNode :>> ", parentNode);
+  let parentLeft;
+  let parentTop;
+  if (parent.value) {
+    const parentNode = draggable.value.parentNode.getBoundingClientRect();
+    parentLeft = parentNode.left;
+    parentTop = parentNode.top;
+  } else {
+    parentLeft = 0;
+    parentTop = 0;
+  }
+  let objX: any = {
+    left: null,
+    center: null,
+    right: null,
+  };
   for (let item of nodes) {
     if (
       !(item instanceof HTMLDivElement) ||
-      item.getAttribute("data-magnet") == null ||
+      item.getAttribute(`data-magnet-${magnetName.value}`) == null ||
       item == draggable.value
     ) {
       continue;
     }
     const rect1 = draggable.value.getBoundingClientRect();
     const scale1 = draggable.value.getAttribute("data-scale");
-    const rect1Width = rect1.width * scale1;
+    const rect1Width = rect1.width;
+
     const rect1Height = rect1.height;
-    const rect1Top = y * scale1;
+    const rect1Top = y;
     const rect1Bottom = y + rect1.height;
-    const rect1Right = (x + rect1.width) * scale1;
-    const rect1Left = x * scale1;
+    const rect1Right = x + rect1.width;
+    const rect1Left = x;
     const rect1CenterX = rect1Width / 2;
     const rect1CenterY = rect1Height / 2;
 
@@ -376,56 +578,63 @@ function magnetFn(x: number, y: number) {
     const scale2: any = item.getAttribute("data-scale");
     const rect2Width = rect2.width;
     const rect2Height = rect2.height;
-    const rect2Top = rect2.top * scale2;
-    const rect2Bottom = rect2.bottom;
-    const rect2Left = rect2.left * scale2;
-    const rect2Right = rect2.right;
+    const rect2Top = rect2.top - parentTop;
+    const rect2Bottom = rect2.bottom - parentTop;
+    const rect2Left = rect2.left - parentLeft;
+    const rect2Right = rect2.right - parentLeft;
     const rect2CenterX = rect2Width / 2;
     const rect2CenterY = rect2Height / 2;
-    const num = 10;
-    // 右边对齐左边
-    if (Math.abs(rect1Right - rect2Left) <= num) {
-      left.value = rect2Left - rect1Width - margin.value;
+    // // 右边对齐左边
+    if (Math.abs(rect1Right - rect2Left) <= magnetRange.value) {
+      left.value = rect2Left - rect1Width - magnetMargin.value;
+      objX.right = left.value;
     }
-    // 左边对齐右边
-    if (Math.abs(rect1Left - rect2Right) <= num) {
-      left.value = rect2Right + margin.value;
+    // // 左边对齐右边
+    if (Math.abs(rect1Left - rect2Right) <= magnetRange.value) {
+      left.value = rect2Right + magnetMargin.value;
+      objX.left = left.value;
     }
-    // 上边对齐下边
-    if (Math.abs(rect1Top - rect2Bottom) <= num) {
-      top.value = rect2Bottom + margin.value;
+    // // 上边对齐下边
+    if (Math.abs(rect1Top - rect2Bottom) <= magnetRange.value) {
+      top.value = rect2Bottom + magnetMargin.value;
     }
-    // 下边对齐上边
-    if (Math.abs(rect1Bottom - rect2Top) <= num) {
-      top.value = rect2Top - rect1Height - margin.value;
+    // // 下边对齐上边
+    if (Math.abs(rect1Bottom - rect2Top) <= magnetRange.value) {
+      top.value = rect2Top - rect1Height - magnetMargin.value;
     }
     // 上边对齐上边
-    if (Math.abs(rect1Top - rect2Top) <= num) {
-      top.value = rect2.top;
+    if (Math.abs(rect1Top - rect2Top) <= magnetRange.value) {
+      top.value = rect2Top;
     }
     // 下边对齐下边
-    if (Math.abs(rect1Bottom - rect2Bottom) <= num) {
+    if (Math.abs(rect1Bottom - rect2Bottom) <= magnetRange.value) {
       top.value = rect2Bottom - rect1Height;
     }
     // 左边对齐左边
-    if (Math.abs(rect1Left - rect2Left) <= num) {
+    if (Math.abs(rect1Left - rect2Left) <= magnetRange.value) {
       left.value = rect2Left;
     }
     // 右边对齐右边
-    if (Math.abs(rect1Right - rect2Right) <= num) {
+    if (Math.abs(rect1Right - rect2Right) <= magnetRange.value) {
       left.value = rect2Right - rect1Width;
     }
     // 垂直方向对齐
     if (
-      Math.abs(rect1Left + rect1CenterX - (rect2Left + rect2CenterX)) <= num
+      Math.abs(rect1Left + rect1CenterX - (rect2Left + rect2CenterX)) <=
+      magnetRange.value
     ) {
       left.value = rect2Left + rect2CenterX - rect1CenterX;
+      objX.center = left.value;
     }
     // 水平方向对齐
-    if (Math.abs(rect1Top + rect1CenterY - (rect2Top + rect2CenterY)) <= num) {
+    if (
+      Math.abs(rect1Top + rect1CenterY - (rect2Top + rect2CenterY)) <=
+      magnetRange.value
+    ) {
       top.value = rect2Top + rect2CenterY - rect1CenterY;
     }
   }
+  emits("auxLine", objX);
   return;
 }
 </script>
@@ -439,15 +648,16 @@ function magnetFn(x: number, y: number) {
   cursor: move;
   border: 1px solid #ccc;
   background-color: #f0f0f0;
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   padding: 12px;
   font-size: 14px;
   border-radius: 12px;
+  box-sizing: border-box;
 }
 
 .grid {
-  border: 1px solid red;
+  border: 2px solid red;
   border-radius: 12px;
 }
 </style>

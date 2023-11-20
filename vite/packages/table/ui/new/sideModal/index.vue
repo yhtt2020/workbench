@@ -22,19 +22,21 @@
             <!-- 标题左侧 -->
             <div class="flex items-center">
               <slot name="header-left">
-                <xt-button
-                  w="32"
-                  h="32"
-                  radius="8"
-                  class="mr-4"
-                  @click="onNo()"
-                >
-                  <xt-new-icon
-                    icon="fluent:chevron-left-16-filled"
-                    size="16"
-                    class="xt-text-2"
-                  />
-                </xt-button>
+                <template v-if="back">
+                  <xt-button
+                    w="32"
+                    h="32"
+                    radius="8"
+                    class="mr-4"
+                    @click="onBack()"
+                  >
+                    <xt-new-icon
+                      icon="fluent:chevron-left-16-filled"
+                      size="16"
+                      class="xt-text-2"
+                    />
+                  </xt-button>
+                </template>
               </slot>
             </div>
             <!-- 标题中间 -->
@@ -85,48 +87,39 @@
   </Teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
-const props = defineProps({
-  // 弹窗显示状态
-  modelValue: {
-    default: false,
-  },
-  // 弹窗标题
-  title: {
-    default: "默认title",
-  },
-  noName: {
-    default: "取消",
-  },
-  okName: {
-    default: "确认",
-  },
-  // 弹窗层级
-  index: {
-    default: 1000,
-  },
-  maskIndex: {
-    default: 100,
-  },
-  mask: {
-    default: true,
-  },
-  // 左侧导航
-  nav: {
-    default: true,
-  },
-  // 头部
-  header: {
-    default: true,
-  },
-  // 尾部
-  footer: {
-    default: true,
-  },
+import { toRefs, onMounted, onBeforeUnmount } from "vue";
+export interface ModalProps {
+  modelValue?: boolean;
+  title?: string;
+  noName?: string;
+  okName?: string;
+  index?: number;
+  maskIndex?: number;
+  mask?: boolean;
+  nav?: boolean;
+  back?: boolean;
+  header?: boolean;
+  footer?: boolean;
+  esc?: boolean;
+}
+const props = withDefaults(defineProps<ModalProps>(), {
+  modelValue: false,
+  title: "麦当劳之歌",
+  noName: "取消",
+  okName: "确认",
+  index: 1000,
+  maskIndex: 100,
+  mask: true,
+  nav: true,
+  back: false,
+  header: true,
+  footer: true,
+  esc: false,
 });
-
-const emits = defineEmits(["ok", "no", "modelValue"]);
+const { esc } = toRefs(props);
+const emits = defineEmits(["ok", "no", "back", "update:modelValue"]);
 
 const onNo = () => {
   emits("update:modelValue", false);
@@ -136,6 +129,31 @@ const onOk = () => {
   emits("update:modelValue", false);
   emits("ok");
 };
+const onBack = () => {
+  emits("update:modelValue", false);
+  emits("back");
+};
+// esc关闭
+const handleEscKeyPressed = (event) => {
+  if (props.esc && event.keyCode === 27) {
+    onNo();
+  }
+};
+
+onMounted(() => {
+  if (esc.value) {
+    window.addEventListener("keydown", handleEscKeyPressed, {
+      capture: true,
+    });
+  }
+});
+onBeforeUnmount(() => {
+  if (esc.value) {
+    window.removeEventListener("keydown", handleEscKeyPressed, {
+      capture: true,
+    });
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

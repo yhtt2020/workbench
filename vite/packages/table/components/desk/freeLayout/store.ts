@@ -20,8 +20,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // 是否使用悬浮菜单
         isFloatMenu: true,
         floatMenu: {
-          top: 0,
-          left: 0,
+          top: 20,
+          left: 20,
         },
       },
       option: {
@@ -29,6 +29,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         whileDragging: false,
         collision: false,
         margin: 6, // 没用目前 可能会直接删
+        magnet: false,
       },
 
       // 辅助线数据
@@ -76,6 +77,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       const desk = desks.value.filter(
         (item) => item.id === currentDeskId.value
       );
+      console.log('desk :>> ', desk);
       return desk[0];
     },
     // 获取当前桌面Id
@@ -152,13 +154,25 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
       this.freeLayoutData[this.getCurrentDeskId] = cardDatas;
     },
-    // 初始化自由布局状态数据
-    initFreeLayoutState() {
-      for (let key in this.defaultState) {
-        if (!this.getFreeLayoutState.hasOwnProperty(key)) {
-          this.getFreeLayoutState[key] = this.defaultState[key];
+    deepMerge(target, source) {
+     for (let key in source) {
+        if (source.hasOwnProperty(key)) {
+           if (typeof source[key] === "object" && source[key] !== null) {
+            if (!target.hasOwnProperty(key)) {
+              Object.assign(target, { [key]: {} });
+            }
+            this.deepMerge(target[key], source[key]);
+          } else {
+            if (!target.hasOwnProperty(key)) {
+              Object.assign(target, { [key]: source[key] });
+            }
+          }
         }
       }
+    },
+    // 初始化自由布局状态数据
+    initFreeLayoutState() {
+      this.deepMerge(this.getFreeLayoutState, this.defaultState);
       console.log("初始化数据成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据

@@ -7,9 +7,7 @@ import Item from "./Item.vue";
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState }: any = storeToRefs(freeLayoutStore);
 
-function getFloatPosition(position) {
-  getFreeLayoutState.value.system.floatMenu = position;
-}
+
 const emits = defineEmits(["scrollbarRedirect"]);
 const freeLayoutMenu = computed(() => {
   return [
@@ -85,7 +83,6 @@ const canvasMenu = computed(() => {
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag"
       style="touch-action: none; width: 176px"
     >
-      {{ getFreeLayoutState.system.floatMenu.top }}
       <xt-text type="2">
         编辑桌面
         <template #right>

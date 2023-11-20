@@ -118,28 +118,43 @@ watch(currentDesk.value?.cards, (cards) => {
     updateCards(cards);
   }, 200);
 });
+const emits = defineEmits(["editStart", "editEnd"]);
+function drag() {
+  emits("editStart");
+}
+function dragStop() {
+  emits("editEnd");
+}
+const a = ref(true);
 </script>
 
 <template>
   <div
-    ref="waterfallFlow"
-    class="flex flex-wrap justify-start items-start xt-theme-b fixed"
-    style="z-index: -1; overflow: hidden"
+    class="xt-theme-b h-full flex flex-wrap absolute"
+    style="align-content: flex-start !important"
     :style="{
-      width: freeLayoutEnv.scrollData?.width + 'px',
-      height: 100 + '%',
-      top: freeLayoutEnv?.scrollData?.top + 'px',
-      left: freeLayoutEnv?.scrollData?.left + 'px',
+      width: '700px',
     }"
   >
     <div
-      class="rounded-xl xt-theme-b"
-      v-for="item in cards"
-      style="margin: 6px"
-      :style="{
-        width: item.width + 'px',
-        height: item.height + 'px',
-      }"
+      style="width: 280px; height: 204px; margin: 6px"
+      class="xt-theme-b"
+    ></div>
+    <div
+      style="width: 280px; height: 204px; margin: 6px"
+      class="xt-theme-b"
+    ></div>
+    <div
+      style="width: 280px; height: 204px; margin: 6px"
+      class="xt-theme-b"
+    ></div>
+    <div
+      style="width: 280px; height: 204px; margin: 6px"
+      class="xt-theme-b"
+    ></div>
+    <div
+      style="width: 280px; height: 204px; margin: 6px"
+      class="xt-theme-b"
     ></div>
   </div>
   <xt-drag
@@ -151,10 +166,20 @@ watch(currentDesk.value?.cards, (cards) => {
     v-model:index="item.index"
     :key="item.id"
     :parentScale="getFreeLayoutState.canvas.zoom"
-    :afterDragging="getFreeLayoutState.option.afterDragging"
-    :showGrid="getFreeLayoutState.option.afterDragging"
-    :whileDragging="getFreeLayoutState.option.whileDragging"
+    :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
+    :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
+    :gridLocation="getFreeLayoutState.option.afterDragging"
     :collision="getFreeLayoutState.option.collision"
+    :magnet="getFreeLayoutState.option.magnet"
+    @onDrag="drag"
+    :gridMargin="6"
+    :magnetMargin="6"
+    disabledDefaultEvent
+    @onDragStop="dragStop"
+    :gridStyle="{
+      border: '2px solid var(--active-bg)',
+    }"
+    :scale="1.5"
   >
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>
