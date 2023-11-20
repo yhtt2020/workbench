@@ -1,5 +1,3 @@
-import { rejects } from "assert";
-
 const userAgent = window.navigator.userAgent;
 const isXT = userAgent.indexOf("想天工作台") > -1;
 let model: any = "";
@@ -24,9 +22,16 @@ function getSign(): string {
 
 const dbStorage: Storage = {
   async setItem(key: string, value: string) {
-    await model.setItem(key, value, getSign());
+    const time=Date.now()
+    model.setItem(key, value, getSign()).then(()=>{
+      Date.now()-time>1&&console.log('写入完成',key,value,Date.now()-time+'ms')
+    });//异步写入，防止阻塞
+
   },
   async getItem(key: string): string | null | Promise<string> {
+    const time=Date.now()
+    console.log('准备取数据',key,time)
+
     let value = await model.getItem(key, getSign());
     if (!value) {
       try {
@@ -39,6 +44,7 @@ const dbStorage: Storage = {
       window.loadedStore = {};
     }
     window.loadedStore[key] = true;
+    console.log('取出数据',key,value,Date.now()-time+'ms')
     return value;
   },
 };
