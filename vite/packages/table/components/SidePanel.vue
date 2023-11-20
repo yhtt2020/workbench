@@ -9,7 +9,7 @@
           overflow-x: hidden;border-radius: 18px;
           padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent"
          @contextmenu.stop="showMenu">
-      <div   style="width: 56px;"  >
+      <div   style="width: 56px;padding-bottom: 12px;"  >
         <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container" style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; " >
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
@@ -28,8 +28,11 @@
           </a-tooltip>
           
         </div>
-        <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="this.toggleEdit()" />
+        <div>
+          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="this.toggleEdit()" />
+        </div>
       </div>
+      
       
     </div>
   <!-- </RightMenu> -->
@@ -434,13 +437,14 @@ export default {
 
 .btn {
   text-align: center;
-  margin-right: 24px;
+  margin-right: 12px;
   border-radius: 12px;
   width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
   margin-bottom: 24px;
+  flex-shrink: 0 ;
 }
 
 @media screen and (max-height: 510px) {

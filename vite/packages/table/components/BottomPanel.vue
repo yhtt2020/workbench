@@ -380,7 +380,8 @@ export default {
       //screenWidth: document.body.clientWidth
       drawerMenus:[...extraRightMenu,...moreMenus],
       componentId: 'EditNavigation',
-      // editBar:false
+      // editBar:false，
+      dropList:[]
     }
   },
   props: {
@@ -524,9 +525,22 @@ export default {
       'removeFootNavigationList',
     ]),
     ...mapActions(useNavigationStore,['toggleEdit']),
-    drop(){
-      console.log(1111111,'is drop')
-    },
+    // async drop (e) {
+    //   let files = e.dataTransfer.files
+    //   console.log(e)
+    //   let filesArr = []
+    //   if (files && files.length > 0) {
+    //     for (let i = 0; i < files.length; i++) {
+    //       filesArr.push(files[i].path)
+    //     }
+    //   }
+    //   this.dropList =await Promise.all(filesArr.map(async(item)=>{
+    //       const fileName = item.substring(item.lastIndexOf("\\") + 1);
+    //       let dropFiles =await tsbApi.system.extractFileIcon(item)
+    //       return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
+    //     }))
+    //   console.log(this.dropList)
+    // },
     async toggleTeam () {
       await this.updateMy(0)
       if (this.team.status === false) {
@@ -820,13 +834,14 @@ export default {
 
 .btn {
   text-align: center;
-  margin-right: 24px;
+  margin-right: 12px;
   border-radius: 12px;
   width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
   margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .status-text {
