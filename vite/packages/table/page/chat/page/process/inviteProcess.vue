@@ -1,6 +1,5 @@
 <template>
  <div style="height: 100vh;" class="xt-modal w-full flex flex-col items-center justify-center">
-  <xt-button @click="back" class="my-3">返回</xt-button>
   <div style="width: 600px; height: 379px;" class="flex items-center box-border flex-col xt-b justify-center rounded-xl xt-bg-2">
    <div class="flex items-center justify-center">
     <a-avatar shape="square" src="/icons/logo128.png" :size="64"></a-avatar>
@@ -31,10 +30,6 @@ export default {
  },
 
  methods:{
-  back(){
-   this.$router.go(-1)
-  },
-
   // 接受邀请
   acceptInvite(){
    this.$router.push({ name:'nextProcess' })
