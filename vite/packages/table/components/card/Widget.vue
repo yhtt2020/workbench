@@ -24,7 +24,7 @@
         <slot name="cardTitle">
           <div
             :class="options.noTitle === true ? 'no-title' : 'content-title'"
-            class="flex items-center justify-between pt-3 px-3 "
+            class="flex items-center justify-between pt-3 px-3"
           >
             <div class="left-title" v-if="options.noTitle !== true">
               <!-- 标题左侧插槽 -->
@@ -60,7 +60,10 @@
         <!-- 标题栏end   -->
         <PageState :env="env" :options="options">
           <div class="flex-1 h-0">
-            <div class="px-3 pb-2 h-full rounded-b-lg" :style="{background: options.showColor ? '#191919': '' }">
+            <div
+              class="px-3 pb-2 h-full rounded-b-lg"
+              :style="{ background: options.showColor ? '#191919' : '' }"
+            >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>
@@ -79,7 +82,6 @@
       <!-- 右上角抽屉扩展 end -->
     </RightMenu>
   </Drop>
-
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -97,7 +99,6 @@ import { offlineStore } from "../../js/common/offline";
 // import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
-import Drop from "./Drop.vue";
 import { IOption, IMenuItem } from "./types";
 
 export default {
@@ -106,7 +107,6 @@ export default {
     MenuOutlined,
     RightMenu,
     PageState,
-    Drop,
   },
   name: "Widget",
   props: {

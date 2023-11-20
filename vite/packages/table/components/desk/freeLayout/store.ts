@@ -5,7 +5,9 @@ import { cardStore } from "../../../store/card";
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
     // 自由布局数据
-    freeLayoutData: {},
+    freeLayoutData: {
+
+    },
     // 自由布局状态
     freeLayoutState: {},
 
@@ -77,7 +79,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       const desk = desks.value.filter(
         (item) => item.id === currentDeskId.value
       );
-      console.log('desk :>> ', desk);
       return desk[0];
     },
     // 获取当前桌面Id
@@ -114,45 +115,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
   },
   actions: {
-    // 吸附网格
-    snapToGrid(x: number, y: number): [number, number] {
-      /**
-       * @author 杨南南
-       * @date 2023-11-09
-       * @description 将输入的坐标对齐到网格的交点
-       *
-       * 核心算法
-       * 网格宽度：基础宽度 - 修正宽度 + 边距 * 2
-       * 网格高度：基础高度 - 修正高度 + 边距 * 2
-       * 对齐后的X坐标 = Math.round(视窗内的X坐标 / 网格宽度) * 网格宽度
-       * 对齐后的Y坐标 = Math.round(视窗内的Y坐标 / 网格高度) * 网格高度
-       *
-       */
-      let width = 140 - 6 + this.getFreeLayoutMargin * 2;
-      let height = 102 - 6 + this.getFreeLayoutMargin * 2;
-      const snappedX = Math.round(x / width) * width;
-      const snappedY = Math.round(y / height) * height;
-      return [snappedX, snappedY];
-    },
 
     // 初始化自由布局组件数据
     initFreeLayout() {
-      // 格式化数据
-      const desk = this.getCurrentDesk;
-      const cardDatas = {};
-      desk?.cards.forEach((item) => {
-        const { id, name, data, customData } = item;
-        cardDatas[item.id] = {
-          top: 0,
-          left: 0,
-          id,
-          name,
-          customData,
-        };
-      });
       // 保存数据
-      this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
-      this.freeLayoutData[this.getCurrentDeskId] = cardDatas;
+
     },
     deepMerge(target, source) {
      for (let key in source) {
@@ -183,7 +150,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
           !this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
       } else {
         // 否则进行初始化
-        this.initFreeLayout();
+        this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
+        this.freeLayoutData[this.getCurrentDeskId] = {};
       }
     },
     // 清空自由布局组件数据

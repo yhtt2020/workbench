@@ -96,20 +96,20 @@ const props = withDefaults(defineProps<DragProps>(), {
   collisionName: "xiaoyang",
   collisionRestore: "before", // 'init'
   magnet: true,
-  magnetRange: 15,
+  magnetRange: 10,
   magnetName: "xiaoyang",
-  magnetMargin: 0,
+  magnetMargin: 6,
   x: 0,
   y: 0,
   index: 20,
   rotate: 0,
   scale: 1,
   parentScale: 1,
-  afterDraggingAdsorbGrid: false,
+  afterDraggingAdsorbGrid: true,
   whileDraggingAdsorbGrid: false,
-  gridLocation: false,
+  gridLocation: true,
   grid: [134, 96],
-  gridMargin: 0,
+  gridMargin: 6,
   handle: null,
   disabledHandle: null,
   disabledDefaultEvent: true,
@@ -117,7 +117,7 @@ const props = withDefaults(defineProps<DragProps>(), {
   draggableStyle: null,
   gridClass: "grid",
   gridStyle: null,
-  resetPosition: false,
+  resetPosition: true,
 });
 const {
   disabled,
@@ -393,6 +393,9 @@ function yDragFn(event: MouseEvent) {
           }
         }
       });
+    } else {
+      gridPosLeft.value = snappedX;
+      gridPosTop.value = snappedY;
     }
 
     top.value = newTop;

@@ -3,7 +3,7 @@
     <!-- 弹窗 -->
     <div
       v-if="modelValue"
-      class="flex flex-col h-full fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
+      class="flex flex-col fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -40,7 +40,7 @@
               </slot>
             </div>
             <!-- 标题中间 -->
-            <div class="flex-1 text-center items-center">
+            <div class="flex flex-1 text-center items-center" >
               <slot name="header-center">
                 {{ title }}
               </slot>
@@ -67,14 +67,13 @@
             }"
             style="
               position: relative;
-              /* height: calc(100vh); */
               margin-right: -15px;
               margin-left: -10px;
               padding-left: 10px;
               padding-top: 5px;
               padding-right: 15px;
             "
-            class="flex-1 xt-theme-b"
+            class="flex-1"
           >
 
             <slot>

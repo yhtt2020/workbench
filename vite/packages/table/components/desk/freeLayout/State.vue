@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
+  <div class="xt-bg-2 rounded-xl p-3 mb-3 text-base">
     <div class="flex justify-between">
       <div class="flex justify-center">
         自由布局
@@ -26,11 +26,11 @@
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
-        <div>卡片堆叠</div>
-        <a-switch v-model:checked="getFreeLayoutState.option.collision" />
+        <div>卡片叠放</div>
+        <a-switch v-model:checked="stack" />
       </div>
       <div class="xt-text-2 text-sm my-3">
-        开启后组件可以叠加摆放，通过右键菜单层叠位置来设置层级
+        开启后组件不可以叠加摆放，通过右键菜单层叠位置来设置层级
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
@@ -156,7 +156,7 @@
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>
-      <div class="flex justify-between"></div>
+      <!-- <div class="flex justify-between"></div>
       <xt-button class="mr-3 xt-bg" w="204" h="40" @click="freeDeskResize()">
         重新排列所有组件</xt-button
       >
@@ -167,7 +167,7 @@
         <xt-button type="error" w="204" h="40" @click="clearAllFreeLayout">
           卡死重置</xt-button
         >
-      </div>
+      </div> -->
     </template>
   </div>
 </template>
@@ -228,6 +228,12 @@ const zoom = ref(
 watch(zoom, (newV) => {
   getFreeLayoutState.value.canvas.zoom = newV / 100;
   debounceScrollbarUpdate();
+});
+// 堆叠
+const stack = ref(getFreeLayoutState.value.option.collision ? false : true);
+watch(stack, (newV) => {
+  getFreeLayoutState.value.option.collision =
+    !getFreeLayoutState.value.option.collision;
 });
 
 watch(

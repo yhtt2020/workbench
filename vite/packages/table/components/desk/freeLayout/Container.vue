@@ -129,32 +129,24 @@ const a = ref(true);
 </script>
 
 <template>
-  <!-- <div
-    class="xt-theme-b h-full flex flex-wrap absolute"
+  <!-- <div    ref="waterfallFlow"
+    class="xt-theme-b h-full flex flex-wrap absolute fixed"
     style="align-content: flex-start !important"
-    :style="{
-      width: '700px',
+       :style="{
+      width: freeLayoutEnv.scrollData?.width + 'px',
+      height: 100 + '%',
+      top: freeLayoutEnv?.scrollData?.top + 'px',
+      left: freeLayoutEnv?.scrollData?.left + 'px',
     }"
   >
     <div
-      style="width: 280px; height: 204px; margin: 6px"
-      class="xt-theme-b"
-    ></div>
-    <div
-      style="width: 280px; height: 204px; margin: 6px"
-      class="xt-theme-b"
-    ></div>
-    <div
-      style="width: 280px; height: 204px; margin: 6px"
-      class="xt-theme-b"
-    ></div>
-    <div
-      style="width: 280px; height: 204px; margin: 6px"
-      class="xt-theme-b"
-    ></div>
-    <div
-      style="width: 280px; height: 204px; margin: 6px"
-      class="xt-theme-b"
+      class="rounded-xl xt-theme-b"
+      v-for="item in cards"
+      style="margin: 6px"
+      :style="{
+        width: item.width + 'px',
+        height: item.height + 'px',
+      }"
     ></div>
   </div> -->
   <xt-drag
@@ -171,16 +163,15 @@ const a = ref(true);
     :gridLocation="getFreeLayoutState.option.afterDragging"
     :collision="getFreeLayoutState.option.collision"
     :magnet="getFreeLayoutState.option.magnet"
-    @onDrag="drag"
     :gridMargin="6"
     :magnetMargin="6"
     disabledDefaultEvent
-    @onDragStop="dragStop"
+    :grid="[134, 96]"
     :gridStyle="{
       border: '2px solid var(--active-bg)',
     }"
-    :scale="1.5"
   >
+
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>
 </template>

@@ -101,7 +101,7 @@
           <div class="xt-text-2 text-sm my-3">
             选择喜欢的图片作为工作台桌面背景。
           </div>
-          <div class="xt-text-2 text-sm my-3" v-if="!appSettings.transparent">
+          <div class="xt-text-2 flex text-sm my-3" v-if="!appSettings.transparent">
             <xt-task :modelValue="m01034" to="" @cb="goPaper">
               <xt-button
                 size="mini"
