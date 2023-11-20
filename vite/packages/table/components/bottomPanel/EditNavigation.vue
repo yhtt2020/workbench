@@ -1,10 +1,12 @@
 <template>
   <div style="background: var(--main-mask-bg) !important;width: 100%;height:100%;" class="pt-6">
+    <!-- 返回 -->
     <transition name="fade">
       <div class="back pointer no-drag" @click="onBack" v-show="!editFlag">
         <Icon icon="xiangzuo" style="color: var(--primary-text);height: 24px;width: 24px"></Icon>
       </div>
     </transition>
+    <!-- 主体部分 -->
     <transition name="fade">
       <div class="box-content" v-show="!editFlag" id="boxContent">
         <div class="box-center">
@@ -181,7 +183,7 @@
         </div>
       </div>
     </transition>
-
+    <!-- 弹窗选择部分 -->
     <transition name="fade">
       <Classification :navClassify="navClassify" v-if="editFlag" v-model:show="editFlag" @clickLeftList="clickItem">
         <div v-show="nowClassify!=='localApp'" class="h-full">
@@ -902,20 +904,18 @@ export default {
     },
     async drop (e) {
       let files = e.dataTransfer.files
+      console.log(e)
       let filesArr = []
       if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
           filesArr.push(files[i].path)
         }
       }
-      // this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
-      this.dropFiles = await tsbApi.system.extractFileIcon(JSON.parse(JSON.stringify(filesArr)))
-      this.dropList.push(...this.dropFiles)
-      // this.dropList =await Promise.all(filesArr.map(async(item)=>{
-      //     console.log(item,'item')
-      //     let dropFiles =await tsbApi.system.extractFileIcon(item)
-      //     return `file:${dropFiles}`
-      //   }))
+      this.dropList =await Promise.all(filesArr.map(async(item)=>{
+          const fileName = item.substring(item.lastIndexOf("\\") + 1);
+          let dropFiles =await tsbApi.system.extractFileIcon(item)
+          return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
+        }))
     },
     clickItem (item) {
       this.activeRightItem = 0
@@ -937,6 +937,7 @@ export default {
       this.$emit('setQuick')
       this.routeParams.url && setTimeout(() => {this.$router.push({ name: 'app', params: this.routeParams })}, 400)
     },
+    
     addEdit (val) {
       this.selectNav = val
       this.editFlag = true
@@ -1019,6 +1020,7 @@ export default {
         }
       }
     },
+    // 在文件夹中添加自定义图标
     async showOpenFileDialog () {
       let savePath = await tsbApi.dialog.showOpenDialog({
         title: '选择', message: '请选择文件', multiple: 'true', properties: [
@@ -1036,33 +1038,12 @@ export default {
         // 原来的方法
         // let dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
         //   this.dropList.push(...dropFiles)
-
-        
-        // console.log(JSON.parse(JSON.stringify(filesArr)))
-        
         this.dropList =await Promise.all(filesArr.map(async(item)=>{
           // console.log(item,'item')
           const fileName = item.substring(item.lastIndexOf("\\") + 1);
           let dropFiles =await tsbApi.system.extractFileIcon(item)
           return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
         }))
-        // this.dropList=(this.dropList).toString()
-        // console.log(this.dropList,'dropList')
-
-        
-        // let dropFiles
-        // for(const item of filesArr){
-        //   console.log(item,'item')
-        //   let dropFiles =await tsbApi.system.extractFileIcon(JSON.stringify(item))
-        //   // let result=''
-        //   // for(const item of dropFiles){
-        //   //   result+=item
-        //   // }
-        //   this.dropList.push(...dropFiles)
-        // }
-        // let dropFiles =await tsbApi.system.extractFileIcon(filesArr)
-        // this.dropList.push(...dropFiles)
-        // console.log(this.dropList,'dropList')
       } else {
         // console.log('取消选择')
       }

@@ -61,6 +61,7 @@ import { fileUpload } from '../../../components/card/hooks/imageProcessing'
 import { useCommunityStore } from '../commun'
 import { Icon as replyIcon } from '@iconify/vue'
 import fluentEmojis from '../../../js/chat/fulentEmojis'
+import {message} from 'ant-design-vue'
 const useCommunStore = useCommunityStore()
 const userStore = appStore()
 const value = ref('')
@@ -78,7 +79,8 @@ const addEmoji = (item) => {
 
 const emit = defineEmits(['addComment'])
 const addComment = async () => {
-    if (value.value || fileList.value.length > 0) {
+    try {
+        if (value.value || fileList.value.length > 0) {
         const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
             const url = await fileUpload(item.originFileObj);
             return url;
@@ -87,19 +89,28 @@ const addComment = async () => {
         let authorid = useCommunStore.communityPostDetail.author_uid;
         let content = value.value;
         let threadId = useCommunStore.communityPostDetail.pay_set.tid || useCommunStore.communityPostDetail.id;
-
-        setTimeout(async () => {
-            const imageList = JSON.stringify(imageUrlList);
-            await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
-            await useCommunStore.getCommunityPostDetail(threadId);
-            await useCommunStore.getCommunityPostReply(threadId);
-
+        
+        // setTimeout(async () => {
+        const imageList = JSON.stringify(imageUrlList);
+        await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
+        await useCommunStore.getCommunityPostDetail(threadId);
+        await useCommunStore.getCommunityPostReply(threadId);
+            
+        // });
+        setTimeout(() => {
+            message.success('评论成功')
             value.value = '';
             fileList.value = [];
-        });
+        }, 1000);
     }
+    } catch (error) {
+        message.error('评论失败')
+    } finally{
+        emit('addComment', commentList);
+    }
+    
 
-    emit('addComment', commentList);
+    
 }
 const fileList = ref<UploadProps['fileList']>([
 ]);

@@ -258,7 +258,7 @@ const addEmojiContent = () => {
 const imageLoadVisible = computed(() => {
     return fileList.value?.length > 0
 })
-const emit = defineEmits(['handleOk'])
+const emit = defineEmits(['handleOk','refreshDefaultForum'])
 onMounted(async () => {
     // 表情转换
     Object.values(fluentEmojis).forEach((item) => {
@@ -290,6 +290,9 @@ const handleChange = (value) => {
 const handleOk = () => {
     emit('handleOk', false)
 };
+const refreshDefaultForum = () => {
+    emit('refreshDefaultForum')
+}
 const postContent = computed(() => {
     return useYuanCommunityStore.postContent
 })
@@ -327,8 +330,9 @@ const publishPost = async () => {
         setTimeout(() => {
           message.success('发布成功')
           handleOk()
-          clearAllContent()  
-        });
+          clearAllContent()
+          refreshDefaultForum()  
+        },1000);
         
         
     } catch (error) {
