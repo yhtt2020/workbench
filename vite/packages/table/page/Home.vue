@@ -524,7 +524,7 @@ export default {
       "settings",
       "desks",
       "moved",
-      "currentDeskIndex",
+
       "lastHeight",
     ]),
     ...mapWritableState(appStore, [
@@ -543,7 +543,7 @@ export default {
     }),
     ...mapWritableState(deskStore, ["deskList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore,['currentDeskId']),
+    ...mapWritableState(homeStore,['currentDeskId', "currentDeskIndex"]),
     m01033() {
       return this.taskID == "M0103" && this.step == 3;
     },
