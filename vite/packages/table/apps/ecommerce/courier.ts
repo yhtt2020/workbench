@@ -477,6 +477,94 @@ export const courierStore = defineStore("courier", {
       return updateCount
 
 
+    },
+    /**
+     * 保存、更新淘宝订单
+     * @param orderInfo
+     */
+    async saveTbOrders(orders) {
+      await tsbApi.db.createIndex({
+        index: {
+          fields: ['store', 'orderId', 'hide', 'followed']
+        }
+      })
+      let updateCount = 0
+
+      if (orders) {
+        orders = orders.reverse()
+        for (const order of orders) {
+          let found = await tsbApi.db.find({
+            selector: {
+              _id: {
+                $regex: new RegExp(`^courier:`)
+              },
+              store: "tb",
+              orderId: order.id,
+            },
+          })
+
+          function mapData(order) {
+            let data = {
+              content: order,
+              title: order?.items[0].name,
+              cover: order?.items[0].cover,
+              shipperCode: order.shipperCode,
+              logisticCode: order.logisticCode,
+              customerName: order.customerName,
+              orderId: order.id,
+              store: 'tb',
+              updateTime: Date.now()
+            }
+            if (order.latestNodes?.length === 0 && order.detail?.traceNodes.length > 0) {
+              let date = ''
+              order.latestNodes = order.detail.traceNodes.map(i => {
+                if (i.date) {
+                  date = i.date
+                }
+                return {
+                  time: date + ' ' + i.time,
+                  txt: i.txt
+                }
+              })
+
+            }
+            return data
+          }
+          if (found.docs?.length) {
+            //更新流程
+            let mapped = mapData(order)
+            let foundOrder = found.docs[0]
+            foundOrder = {
+              ...foundOrder,
+              ...mapped,
+              title: foundOrder.edited ? foundOrder.title : mapped.title//单独处理title
+            }
+
+            let putRs = await tsbApi.db.put(foundOrder)
+            if (putRs.ok) {
+              updateCount++
+            }
+
+          } else {
+            let now = Date.now()
+            const dbData = {
+              ...mapData(order),
+              _id: `courier:${now}`,
+              createTime: now,
+              title: order.items[0].name,
+              shipperCode: order.shipperCode,
+              logisticCode: order.logisticCode,
+              customerName: order.customerName,
+              category: `courier:${now}`,
+            }
+            let addRs = await tsbApi.db.put(dbData)
+            if (addRs?.ok) {
+              updateCount++
+            }
+          }
+        }
+      }
+      return updateCount
     }
 
 

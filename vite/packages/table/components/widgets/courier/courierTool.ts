@@ -33,6 +33,14 @@ export function preHandleItem(item){
       newItem.lastNodeTime = content.latestNodes[0]?.time
       newItem.lastNodeSummary = content.latestNodes[0]?.txt
     }
+  } else if(newItem.store==='tb'){
+    newItem.company = content.expressType.slice(0, content.expressType.indexOf('快递') + 2)
+    newItem.stateText = content.status
+    newItem.tagColor = convertJdStatusColor(content.status)
+    if (content.latestNodes && content.latestNodes.length > 0) {
+      newItem.lastNodeTime = content.latestNodes[0]?.time
+      newItem.lastNodeSummary = content.latestNodes[0]?.txt
+    }
   }
   return newItem
 }

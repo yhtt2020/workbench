@@ -100,6 +100,7 @@ import { message, Modal } from 'ant-design-vue'
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
 import Disassociation from "./Disassociation.vue";
+import ui from '../courierUI'
 
 export default {
   components: {
@@ -127,7 +128,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore,['getOrderDetail','clearDb']),
+    ...mapActions(courierStore,['clearDb']),
     clear(){
       Modal.confirm({
         centered:true,
@@ -161,8 +162,7 @@ export default {
             duration: 3,
           });
           this.storeInfo.jd.order = data;
-          await this.getOrderDetail(data.orders);
-          console.log(data);
+          await ui.getJdOrderDetail(data.orders);
         });
       }
     },
@@ -173,30 +173,7 @@ export default {
         this.dealType = 'tb'
         this.$refs.dealModalRef.openDealDetail()
       }else {
-        message.loading({
-          content:  "已绑定淘宝账号：" + this.storeInfo.tb.nickname + "，正在为您更新订单信息，请稍候…",
-          key: "loadingTip",
-          duration: 0,
-        });
-        grab.tb.getOrder((args) => {
-          if (args.status === 0) {
-            if (args.code === 401) {
-              message.error("获取订单失败，检测到登录信息过期，请重新登录。");
-              this.storeInfo.tb.nickname = null;
-              this.bindTb();
-              return;
-            }
-            message.error("获取订单意外失败。");
-            return;
-          }
-          message.success({
-            content:  "更新订单成功!本次共更新：" +  args.data.orders.length + "条订单信息",
-            key: "loadingTip",
-            duration: 3,
-          });
-          this.getOrderDetail(data.orders)
-          console.log(args);
-        });
+        ui.getTbOrders()
       }
     },
 
