@@ -6,7 +6,11 @@
         </div>
         <a-spin v-if="isLoading" style="margin: 30% 50%;"/>
         <template v-else>
-            <MainReplyComment :commentList="item" v-for="(item, index) in moreComments" :key="index" :uid="props.uid"></MainReplyComment>
+            <DataStatu v-if="emptyState" imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无评论,快来抢占沙发吧"></DataStatu>
+            <template v-else>
+                <MainReplyComment :commentList="item" v-for="(item, index) in moreComments" :key="index" :uid="props.uid"></MainReplyComment>
+            </template>
+           
         </template>
         
         <!-- <a-pagination v-model:current="current" :total="totalReply" simple @change="changePage" v-if="paginationVisible" class="xt-text-2"/> -->
@@ -19,6 +23,7 @@ import { ref, computed,onMounted,watch } from 'vue'
 import MainReplyComment from './MainReplyComment.vue'
 import reply from './Reply.vue'
 import {useCommunityStore} from '../commun'
+import DataStatu from "../../../components/widgets/DataStatu.vue"
 const current = ref(1)
 const list=ref([])
 const isLoading=ref(false)
@@ -65,6 +70,15 @@ const moreComments=computed(()=>{
         return commentList.value.list
     }
 })
+const emptyState=computed(()=>{
+    let comList=commentList.value.list || []
+    if(list.value.length>0 || comList.length>0){
+        return false
+    }else{
+        return true
+        
+    }
+})
 onMounted(() => {
     isLoading.value=true
     console.log(commentList.value,list.value.length)
@@ -73,7 +87,7 @@ onMounted(() => {
     }
 })
 watch(()=>commentList.value.list,()=>{
-    console.log(commentList.value.list)
+    console.log(emptyState.value)
     isLoading.value=false
 })
 </script>

@@ -332,7 +332,7 @@ const publishPost = async () => {
           handleOk()
           clearAllContent()
           refreshDefaultForum()  
-        });
+        },1000);
         
         
     } catch (error) {
