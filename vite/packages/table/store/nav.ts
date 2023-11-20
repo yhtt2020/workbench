@@ -318,7 +318,7 @@ export const navStore = defineStore("nav", {
         this.footNavigationList.splice(evt.newIndex, 0, temp)
     },
     setFootNavigationList(item) {
-        this.footNavigationList.push(item)
+        this.footNavigationList.unshift(item)
     },
     removeSideNavigationList(index) {
         this.sideNavigationList.splice(index, 1)
@@ -335,7 +335,7 @@ export const navStore = defineStore("nav", {
       // }else if(itemNav.name === '快捷指令'){
       //   itemNav.icon = 'kuaijie1'
       // }
-      this.sideNavigationList.push(itemNav)
+      this.sideNavigationList.unshift(itemNav)
     },
     removeRightNavigationList(index) {
         this.rightNavigationList.splice(index, 1)
@@ -352,7 +352,7 @@ export const navStore = defineStore("nav", {
       // }else if(itemNav.name === '快捷指令'){
       //   itemNav.icon = 'kuaijie1'
       // }
-      this.rightNavigationList.push(itemNav)
+      this.rightNavigationList.unshift(itemNav)
     },
     setNavigationToggle(type,val){
       switch (type) {

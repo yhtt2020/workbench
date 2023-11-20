@@ -658,7 +658,7 @@ export default {
 
     clickNavigation (item) {
       if(this.editBar){
-        return
+        this.enableDrag ()
       }else{
         this.hideMenu()
       switch (item.type) {
@@ -708,7 +708,7 @@ export default {
       }
     },
     enableDrag () {
-      if (this.sortable) {
+      if (this.sortable ) {
         return
       }
       document.addEventListener('click', this.disableDrag)
