@@ -37,9 +37,9 @@
   </div>
 
   <!-- 充值 -->
-  <xt-modal v-model="buyVisible" title="购买" :isFooter="false">
+  <xt-old-modal v-model="buyVisible" title="购买" :isFooter="false">
     <Store style="width: 440px"></Store>
-  </xt-modal>
+  </xt-old-modal>
   <!-- 编辑 -->
   <XtDrawer placement="right" v-model="settingVisible">
     <template #title>

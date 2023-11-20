@@ -7,9 +7,9 @@
   </xt-left-menu>
 
   <!-- 新建对话  -->
-  <xt-modal v-model="createChatVisible"  title="新建模板"  :isFooter="false">
+  <xt-old-modal v-model="createChatVisible"  title="新建模板"  :isFooter="false">
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
-  </xt-modal>
+  </xt-old-modal>
   <!-- 系统设置 -->
   <xt-drawer title="12" v-model="setVisible" placement="right">
     <template #title>

@@ -70,7 +70,10 @@ import { useWidgetStore } from "./store.ts";
 import Menu from "../../ui/components/Menu/index.vue";
 import BottomEdit from "./BottomEdit.vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
-
+import { useFreeLayoutStore } from "./../desk/freeLayout/store";
+// 初始化操作
+const freeLayoutStore = useFreeLayoutStore();
+const { getFreeLayoutData, isFreeLayout } = storeToRefs(freeLayoutStore);
 const emits = defineEmits(["sizeType", "onClick"]);
 
 const props = defineProps({
@@ -88,6 +91,7 @@ const props = defineProps({
       return [];
     },
   },
+  customIndex: {},
   sizeType: {},
   model: {
     default: "contextmenu",
@@ -113,8 +117,9 @@ function beforeCreateMenu() {
 
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
+  let array = [...menus.value];
   if (rightModel.value == "follow" && sizes.value.length > 0) {
-    let array = [
+    array.unshift(
       {
         slot: "cardSize",
         title: "小组件尺寸",
@@ -122,12 +127,40 @@ const menuList = computed(() => {
       },
       {
         divider: true,
-      },
-      ...menus.value,
-    ];
-    return array;
+      }
+    );
   }
-  return menus.value;
+  if (isFreeLayout.value) {
+    // 数组倒数第二个位置添加内容
+    array.splice(-1, 0, {
+      newIcon: "fluent:window-new-16-regular",
+      title: "层叠位置",
+      lock: true,
+      children: [
+        {
+          newIcon: "fluent:chevron-left-16-filled",
+          name: "上移一层",
+          fn: indexAdd,
+        },
+        {
+          newIcon: "fluent:chevron-left-16-filled",
+          name: "下移一层",
+          fn: indexSub,
+        },
+        {
+          newIcon: "fluent:arrow-download-20-filled",
+          name: "置于顶层",
+          fn: () => {},
+        },
+        {
+          newIcon: "fluent:arrow-download-20-filled",
+          name: "置于底层",
+          fn: () => {},
+        },
+      ],
+    });
+  }
+  return array;
 });
 
 // 卡片大小监听
@@ -149,6 +182,15 @@ const updateCardSize = (item) => {
 const rightMenuState = () => {
   if (!menuState.value) menuVisible.value = true;
 };
+
+function indexAdd() {
+  getFreeLayoutData.value[props.customIndex].index++;
+}
+function indexSub() {
+  if (getFreeLayoutData.value[props.customIndex].index > 1) {
+    getFreeLayoutData.value[props.customIndex].index--;
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

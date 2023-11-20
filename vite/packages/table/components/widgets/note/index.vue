@@ -65,7 +65,7 @@
     </div>
   </a-drawer> -->
   <teleport to="body">
-    
+
     <!-- 新设置 -->
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" :mask-no-close="false">
       <div style="width:500px;height:466px;">
@@ -81,7 +81,7 @@
               <div style="color:var(--primary-text);font-size: 16px;">小组件尺寸</div>
 
               <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="xt-bg-2 p-1 h-12 mb-3"  @click="__updateSize" :data="customData.dragCardSize"/> -->
-              
+
               <!-- <RadioTab  :navList="sizeType"  class="nav-type"
                         v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
 
@@ -131,7 +131,7 @@
               v-model:value="selectedPrinter"
               class="no-drag w-full rounded-xl printers"
               size="large"
-              @change="handleChange"
+              @change="handleChangePrinter"
               :dropdownStyle="{
               'z-index': 999999999999,
               backgroundColor: 'var(--secondary-bg)',
@@ -155,7 +155,7 @@
                 @click="printPreviewVisible = false">取消</xt-button>
             <xt-button type="primary" class="mt-2 font-16 xt-text ml-3"
                 style="width: 64px; height: 40px; background-color: var(--active-bg);"
-                @click="startPrint">确定</xt-button>
+                @click="printing">确定</xt-button>
           </div>
         </div>
         <!-- 打印机未就绪 -->
@@ -167,7 +167,7 @@
           <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
             <div
-            class="flex justify-center items-center rounded-lg" 
+            class="flex justify-center items-center rounded-lg"
             style="width:48px;height:48px;background-color: var(--primary-bg);">
               <Icon icon="fluent:print-16-regular" width="20" height="20" />
             </div>
@@ -179,7 +179,7 @@
           </div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
             <div
-            class="flex justify-center items-center rounded-lg" 
+            class="flex justify-center items-center rounded-lg"
             style="width:48px;height:48px;background-color: var(--primary-bg);">
               <Icon icon="tabler:brand-bilibili" width="20" height="20" />
             </div>
@@ -213,6 +213,8 @@ import { noteStore } from '../../../apps/note/store'
 import Modal from '../../Modal.vue'
 import { DTPWeb, LPA_JobNames } from 'dtpweb'
 import RadioTab from "../../../components/RadioTab.vue"
+
+import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
 
 const labelWidth = 40
 const labelHeight = 60
@@ -257,8 +259,11 @@ export default {
     return {
       selectedPrinter: '',
       print: {
+        // 打印机状态
         status: false,
+        // 当前选中打印机
         printer: {},
+        // 可用打印机列表
         printers: []//所有打印机
       },
       printPreviewVisible: false,
@@ -288,32 +293,35 @@ export default {
           newIcon: 'fluent:print-20-regular',
           title: '打印',
           fn: () => {
-            let html = this.customData.text
-            this.printPreviewVisible = true
-            this.print.previewHtml = this.$refs.mdEditor.getContent()
-            const div = document.createElement('div')
-            div.innerHTML = html
-            this.print.previewText = div.innerText
-            //console.log(div, html, this.print.previewText)
+
             this.api = DTPWeb.getInstance()
+            this.printPreviewVisible = true
+
+            const div = document.createElement('div')
+            this.print.previewText = div.innerText
+            this.print.previewHtml = this.$refs.mdEditor.getContent()
+
+
+
+            // 打印驱动检测  需要判断两个 目前只有一个
             DTPWeb.checkServer((value) => {
               this.print.status = !!value
               this.print.printer = value
+              console.log(value)
               if (!value) {
-
                 message.error('打印助手不可用')
+              }if(this.api.getPrinters({ onlyLocal: true })){
+                this.print.status = false
+                message.error('暂无打印机连接')
               } else {
                 this.print.printers = this.print.printers = this.api.getPrinters({ onlyLocal: true })
                 this.selectedPrinter = this.api.getDefaultPrinter().printerName
                 this.$nextTick(()=>{
+                  // 去生成预览图
                   this.doPreview()
                 })
-                // setTimeout(() => {
-                //
-                // }, 1000)
               }
             })
-
           },
         },
         {
@@ -401,75 +409,81 @@ export default {
   methods: {
 
     ...mapActions(noteStore, ['changeDeskBg', 'saveDeskTitle']),
-    startPrint () {
-      this.doJob('default',() => {
-          api.closePrinter()
-        })
-    },
-    doJob (jobName = 'default', callback) {
-      if (!this.selectedPrinter) {
-        return message.error('请选择打印机')
-      }
-      const printerName = this.selectedPrinter
+    // 开始打印
+    // startPrint () {
+    //   const api = this.api
+    //   doJob('default',this.selectedPrinter,this.$refs.printContent.innerText,() => {
+    //     // 打印结束 关闭打印机以及弹窗
+    //     api.closePrinter()
+    //     this.printPreviewVisible = false
+    //   })
+    // },
 
-      const api = this.api
-      const text = this.$refs.printContent.innerText
-      console.log('需要打印的文本', text)
-      if (!api) return message.error('api初始化失败')
-      api.openPrinter(printerName, (success) => {
-        if (success) {
-          api.startJob({ orientation: 0, width: labelWidth, height: labelHeight, jobName: jobName })
-          //api.startPage()
-          api.drawText(
-            {
-              text: text,
-              x: 2,
-              y: 2,
-              lineSpace: '1_2',
-              width: labelWidth - 4,
-              height: labelHeight - 4,
-              fontHeight
-            })
-          //api.endPage()
-          api.commitJob({
-            callback: callback
-          })
-        }
-      })
-    },
+    // doJob (jobName = 'default', callback) {
+    //   // 
+    //   if (!this.selectedPrinter) {
+    //     return message.error('请选择打印机')
+    //   }
+    //   const printerName = this.selectedPrinter
+
+    //   const api = this.api
+    //   const text = this.$refs.printContent.innerText
+    //   console.log('需要打印的文本', text)
+    //   if (!api) return message.error('api初始化失败')
+    //   // 判断打印机是否链接
+    //   api.openPrinter(printerName, (success) => {
+    //     if (success) {
+    //       api.startJob({ orientation: 0, width: labelWidth, height: labelHeight, jobName: jobName })
+    //       //api.startPage()
+    //       api.drawText(
+    //         {
+    //           text: text,
+    //           x: 2,
+    //           y: 2,
+    //           lineSpace: '1_2',
+    //           width: labelWidth - 4,
+    //           height: labelHeight - 4,
+    //           fontHeight
+    //         })
+    //       //api.endPage()
+    //       // 这里进行打印
+    //       api.commitJob({
+    //         callback: callback
+    //       })
+    //     }
+    //   })
+    // },
+    // 因为传递预览图会导致无法渲染 此方法暂时无法抽离
     doPreview () {
       const api = this.api
-      this.doJob(LPA_JobNames.Preview, (success) => {
+      doJob(LPA_JobNames.Preview,this.selectedPrinter,this.$refs.printContent.innerText, (success) => {
         if (success) {
-          const info = api.getPageInfo()
+          // 当内容过长时 需要添加分页打印
           let page = api.getPageImage({ page: 0 })
           const img = document.createElement('img')
           img.setAttribute('style', 'object-fit:contains;width:100%;height:100%')
           img.src = page.data
-          console.log('img',img);
           this.$refs.preivew.appendChild(img)
           api.closePrinter()
         } else {
           message.error('生成预览图失败')
-          console.log(success)
         }
       })
-
+    },
+    printing(){
+      // this.startPrint()
+      startPrint(this.selectedPrinter,this.$refs.printContent.innerText)      
     },
 
-    // updateText() {
-    //   this.updateCustomData(
-    //     this.customIndex,
-    //     {
-    //       text: this.text,
-    //     },
-    //     this.desk
-    //     // 将text存入db
-    //   );
-    // },
+    // 更换打印机
+    handleChangePrinter(){
+      this.doPreview()
+      // this.$refs.preivew.appendChild(img)
+    },
+
     updateBackground (backgroundColor,n) {
       this.colorIndex = n
-      
+
       message.success({
         content: '设置卡片背景成功',
         key: 'bg',
@@ -542,9 +556,6 @@ export default {
         showColor: this.options.showColor,
       }, this.desk)
     },
-    test(){
-      console.log('触发了')
-    }
   }
   ,
 }

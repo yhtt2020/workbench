@@ -7,9 +7,7 @@ import Item from "./Item.vue";
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState }: any = storeToRefs(freeLayoutStore);
 
-function getFloatPosition(position) {
-  getFreeLayoutState.value.system.floatMenu = position;
-}
+
 const emits = defineEmits(["scrollbarRedirect"]);
 const freeLayoutMenu = computed(() => {
   return [
@@ -74,38 +72,36 @@ const canvasMenu = computed(() => {
 </script>
 
 <template>
-  <div style="z-index: 9999">
-    <xt-drag
-      boundaryDetection
-      :initTop="getFreeLayoutState.system.floatMenu.top"
-      :initLeft="getFreeLayoutState.system.floatMenu.left"
-      @floatPosition="getFloatPosition"
-      v-if="getFreeLayoutState.system.isFloatMenu"
-      initIndex="20000"
+  <xt-drag
+    boundary
+    resetPosition
+    v-model:y="getFreeLayoutState.system.floatMenu.top"
+    v-model:x="getFreeLayoutState.system.floatMenu.left"
+    v-if="getFreeLayoutState.system.isFloatMenu"
+    :index="20000"
+  >
+    <div
+      class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag"
+      style="touch-action: none; width: 176px"
     >
-      <div
-        class="select-none cursor-move z-24 xt-modal rounded-xl p-3"
-        style="touch-action: none; width: 176px"
-      >
-        <xt-text type="2">
-          编辑桌面
-          <template #right>
-            <xt-button w="32" h="32" radius="8">
-              <xt-new-icon
-                icon="fluent:dismiss-16-filled"
-                class="text-2"
-                size="16"
-                style="color: var(--secondary-text) !important"
-              />
-            </xt-button>
-          </template>
-        </xt-text>
-        <xt-text type="2" class="my-3">自由布局</xt-text>
-        <Item :menus="freeLayoutMenu"></Item>
-        <div class="my-3">画布缩放</div>
-        <Item :menus="canvasMenu"></Item>
-        <div>👋</div>
-      </div>
-    </xt-drag>
-  </div>
+      <xt-text type="2">
+        编辑桌面
+        <template #right>
+          <xt-button w="32" h="32" radius="8">
+            <xt-new-icon
+              icon="fluent:dismiss-16-filled"
+              class="text-2"
+              size="16"
+              style="color: var(--secondary-text) !important"
+            />
+          </xt-button>
+        </template>
+      </xt-text>
+      <xt-text type="2" class="my-3">自由布局</xt-text>
+      <Item :menus="freeLayoutMenu"></Item>
+      <div class="my-3">画布缩放</div>
+      <Item :menus="canvasMenu"></Item>
+      <div>👋</div>
+    </div>
+  </xt-drag>
 </template>

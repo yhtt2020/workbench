@@ -3,8 +3,9 @@
         <!-- {{ userUid}} -->
         <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(userUid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
-            style="cursor: default;" @keyup.enter="addComment" />
+        <!-- <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
+            style="cursor: default;" @keyup.enter="addComment" /> -->
+        <a-textarea @keyup.enter="addComment" v-model:value="value" placeholder="评论" :auto-size="{minRows:1,maxRows:5}" class=" xt-bg comment-input btn" bordered="false"/>
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
@@ -206,10 +207,15 @@ onMounted(async () => {
 
 .comment-input {
     border-radius: 8px;
-    height: 40px;
+    // height: 40px !important;
+    line-height: 30px;
     // width: 300px;
     width: calc(100% - 45px);
     // cursor: cursor;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    
 }
 
 .active-btn {
