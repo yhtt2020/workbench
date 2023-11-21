@@ -12,6 +12,7 @@ import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
 import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
+import XtSelectNav from "./components/SelectNav/index.vue"
 // 基础组件
 import XtBaseColor from "./libs/BaseColor/index.vue"
 import XtBaseIcon from "./libs/BaseIcon/index.vue"
@@ -65,4 +66,5 @@ export default function (app: App): void {
   app.component('XtTextarea', XtTextarea)
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
+  app.component('XtSelectNav',XtSelectNav)
 }
