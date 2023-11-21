@@ -66,6 +66,12 @@
                 <a-switch @click="this.changeOffline"  v-model:checked="isOffline"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div  class="relative btn">
+                辅助模式<br />
+                <a-switch @click="this.toggleAided"  v-model:checked="aided"></a-switch>
+              </div>
+            </a-col>
           </a-row>
 
           <div></div>
@@ -238,7 +244,7 @@ import { setThemeSwitch } from "./../components/card/hooks/themeSwitch/";
 import ChooseScreen from "./ChooseScreen.vue";
 import { appStore } from "../store";
 import { mapWritableState } from "pinia";
-import { message, Modal } from "ant-design-vue";
+import { message, Modal,notification } from "ant-design-vue";
 import { mapActions } from "pinia";
 import { codeStore } from "../store/code";
 import SecondPanel from "../components/SecondPanel.vue";
@@ -293,6 +299,7 @@ export default {
       "settings",
       "saving",
       "simple",
+      "aided",
       "styles",
       "style",
       "showWindowController",
@@ -343,6 +350,18 @@ export default {
           "使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。",
         centered: true,
       });
+    },
+    toggleAided(){
+      if(this.aided){
+        notification.info({
+          message:'开启辅助模式后，工作台将无法被聚焦。此时无法输入任何内容，但是也不会因为点击工作台而切换焦点。可防止游戏窗口失焦。或者搭配快捷键使用。'
+        })
+        tsbApi.window.setFocusable(false)
+      }else{
+        tsbApi.window.setFocusable(true)
+        message.success('已为您关闭辅助模式')
+      }
+
     },
     tipSimple() {
       Modal.info({

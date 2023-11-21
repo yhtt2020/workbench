@@ -174,7 +174,7 @@ export default {
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
+    ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(offlineStore, ['isOffline']),
   },
@@ -270,6 +270,10 @@ export default {
     },
 
     async afterLaunch () {
+      if(this.aided){
+        message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
+        tsbApi.window.setFocusable(true)
+      }
       this.bindCaptureIPC()
 
       this.bindClientEvents()
