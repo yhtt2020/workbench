@@ -85,6 +85,7 @@
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
+  <slot name="msg"></slot>
 </template>
 
 <script lang="ts">
@@ -189,7 +190,17 @@ export default {
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
-          fn: this.doRemoveCard,
+          fn: ()=>{
+            if(this.options?.type == 'note'){
+              // 需要加一个回调判断删除的是否是便签组件
+
+              this.doRemoveCard()
+            }else{
+              // console.log('不是便签');
+              this.doRemoveCard()
+                    
+            }
+          },
           title: "删除小组件",
           color: "#FF4D4F",
         },
