@@ -19,7 +19,7 @@
    <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
      <!-- 替换成图标选择器 -->
     <div class="rounded-lg flex pointer items-center justify-center"
-    style="width: 64px;height: 64px; position:relative"  @click="onShowSelect"
+    style="width: 64px;height: 64px; position:relative"  @click="modelValue = true"
     >
     <!--头像 -->
      <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
@@ -31,7 +31,11 @@
      color="var(--secondary-text)"/>
    </div>
 
-   <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :goodVisible="true" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+   <!-- <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :goodVisible="true" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon> -->
+
+   <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" :isUpload="true"></xt-selectIcon>
+
+
 
     <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
     <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
@@ -80,6 +84,7 @@ export default {
      customTitle:'推荐图片尺寸：256*256，不能超过4MB',
      // 改变图标颜色
      bgColor:'',
+     modelValue:false,
    }
  },
 
@@ -97,12 +102,6 @@ export default {
  methods:{
    ...mapActions(communityStore,['createCommunity','getMyCommunity']),
 
-   onShowSelect(){
-     this.iconVisible= !this.iconVisible
-     // console.log(window);
-     // console.log(window.innerHeight);
-     this.innerHeight = window.innerHeight
-   },
 
    closeCreateCom(){
      this.$emit('close')
