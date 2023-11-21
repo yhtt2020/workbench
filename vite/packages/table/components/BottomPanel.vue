@@ -191,7 +191,10 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation>
+      <!-- 老版 -->
+      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
+      <!-- 新版 -->
+      <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>
@@ -243,6 +246,7 @@ import { offlineStore } from "../js/common/offline";
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
+import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -264,7 +268,8 @@ export default {
     TaskBox,
     navIcon,
     navigationSetting,
-    AddIcon
+    AddIcon,
+    EditNewNavigation
   },
   data() {
     return {
