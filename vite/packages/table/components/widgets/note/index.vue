@@ -310,7 +310,7 @@ export default {
               console.log(value)
               if (!value) {
                 message.error('打印助手不可用')
-              }if(this.api.getPrinters({ onlyLocal: true })){
+              }if(!this.api.getPrinters({ onlyLocal: true })){
                 this.print.status = false
                 message.error('暂无打印机连接')
               } else {
