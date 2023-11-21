@@ -33,7 +33,7 @@
 
    <!-- <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :goodVisible="true" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon> -->
 
-   <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" :isUpload="true"></xt-selectIcon>
+   <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
 
 
 
