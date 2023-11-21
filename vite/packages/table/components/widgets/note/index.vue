@@ -166,16 +166,15 @@
           <div class="font-14 text-center w-full mt-4" style="color:var(--secondary-text)">驱动未就绪，未检测到可用打印机</div>
           <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
-            <div
-            class="flex justify-center items-center rounded-lg"
-            style="width:48px;height:48px;background-color: var(--primary-bg);">
-              <Icon icon="fluent:print-16-regular" width="20" height="20" />
-            </div>
+            <a-image src="https://a.apps.vip/element/p1cover.jpg" style="width: 45px;border-radius: 6px" />
             <div class="flex ml-3" style="flex-direction:column;width:216px;">
               <div>德佟 P1 标签打印机</div>
               <div>纸张：40*60mm</div>
             </div>
-            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32"   >立即购买</xt-button>
+            <Modal teleport="body" v-model:visible="showBuy" v-if="showBuy">
+              <a-image style="border-radius: 8px" src="https://a.apps.vip/element/p1qrcode.jpg"></a-image>
+            </Modal>
+            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32"  @click="showBuy=true"  >扫码购买</xt-button>
           </div>
           <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
             <div
@@ -257,6 +256,7 @@ export default {
   },
   data () {
     return {
+      showBuy:false,
       selectedPrinter: '',
       print: {
         // 打印机状态
@@ -420,7 +420,7 @@ export default {
     // },
 
     // doJob (jobName = 'default', callback) {
-    //   // 
+    //   //
     //   if (!this.selectedPrinter) {
     //     return message.error('请选择打印机')
     //   }
@@ -472,7 +472,7 @@ export default {
     },
     printing(){
       // this.startPrint()
-      startPrint(this.selectedPrinter,this.$refs.printContent.innerText)      
+      startPrint(this.selectedPrinter,this.$refs.printContent.innerText)
     },
 
     // 更换打印机
