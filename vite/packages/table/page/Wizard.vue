@@ -396,29 +396,6 @@ export default {
       key += e.code
       return key
     },
-    replaceIcon () {
-      navigationData.systemFillAppList.forEach((item) => {
-        this.sideNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
-      navigationData.systemFillAppList.forEach((item) => {
-        this.rightNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
-      navigationData.systemAppList.forEach((item) => {
-        this.footNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon
-          }
-        })
-      })
-    }
   }
 }
 </script>

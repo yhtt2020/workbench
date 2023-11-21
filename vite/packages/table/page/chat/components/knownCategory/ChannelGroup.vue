@@ -1,43 +1,31 @@
 <template>
   <div class="flex flex-col my-3" style="width:500px;" v-if="chatShow === false">
-    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-     <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-      <ChannelIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);" />
-     </div>
-     <span class="font-16 font-400" style="color:var(--primary-text);">添加群聊</span>
-     <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-      <ChannelIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color: var(--secondary-text);" />
-     </div>
-    </div>
-  
+    <ModalTop title="添加群聊" back="true" @close="closeChannel" @back="backChannel"/>
     <div class="px-6 flex-col mt-4">
-     <div v-for="item in list" class="flex flex-col p-4 mb-4 rounded-lg pointer"  @click="selectChannel(item)"
-     style="background: var(--secondary-bg);" :class="{'select-bg':listIndex === item.type}">
-      <span class="font-16 font-400 mb-2.5" style="color:var(--primary-text);">{{ item.title }}</span>
-      <span class="font-14 font-400" style="color:var(--secondary-text);">{{ item.summary }}</span>
+     <div v-for="item in list" class="flex flex-col p-4 mb-4 xt-bg-2 rounded-lg pointer"  @click="selectChannel(item)" :class="{'select-bg':listIndex === item.type}">
+      <span class="font-16 font-400 mb-2.5 xt-text xt-font">{{ item.title }}</span>
+      <span class="font-14 font-400 xt-text-2 xt-font">{{ item.summary }}</span>
      </div>
-    </div>
-  
-    <div class="px-6">
      <div class="flex items-center justify-end">
-      <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">取消</XtButton>
-      <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);"  @click="selectSubmit">选择</XtButton>
+      <xt-button w="64" h="40" class="category-button mr-3" @click="closeChannel">取消</xt-button>
+      <xt-button w="64" h="40" type="theme" class="category-button" @click="selectSubmit">确定</xt-button>
      </div>
     </div>
   </div>
-  
   <ChannelGroupChat v-if="listIndex === 'already' && chatShow" :id="id" :no="no" @close="closeChannel"  @back="chatShow = false"/>
   <ChannelNewGroup v-if="listIndex === 'create' && chatShow" :id="id" :no="no" @close="closeChannel"  @back="chatShow = false"/>
 </template>
 
 <script>
-import { Icon as ChannelIcon } from '@iconify/vue'
-import ChannelGroupChat from './ChannelGroupChat.vue'
-import ChannelNewGroup from './ChannelNewGroup.vue'
+import { Icon as ChannelIcon } from '@iconify/vue';
+
+import ChannelGroupChat from './ChannelGroupChat.vue';
+import ChannelNewGroup from './ChannelNewGroup.vue';
+import ModalTop from '../ModalTop.vue';
 
 export default {
   components:{
-    ChannelIcon,ChannelGroupChat,ChannelNewGroup,
+    ChannelIcon,ChannelGroupChat,ChannelNewGroup,ModalTop,
   },
 
   props:['no','id'],

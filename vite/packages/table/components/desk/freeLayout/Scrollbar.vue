@@ -25,11 +25,16 @@ import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 
 // import Container from "./FloatMenu/Container.vue";
-
+const aa = ref(true);
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
-const { getFreeLayoutState, dragData, freeLayoutEnv ,getFreeLayoutData} =
-  storeToRefs(freeLayoutStore);
+const {
+  getFreeLayoutState,
+  dragData,
+  freeLayoutEnv,
+  getFreeLayoutData,
+  getCurrentDesk,
+} = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 const scrollData = ref();
@@ -63,43 +68,10 @@ onMounted(() => {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  const zoom = getFreeLayoutState.value.canvas.zoom;
-  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
-  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
-
-  // scrollbar.value.scrollLeft =
-  //   getFreeLayoutState.value.position.x -
-  //   (getFreeLayoutState.value.width * zoom) / 2;
-
-  // console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
-  // scrollbar.value.scrollTop =
-  //   getFreeLayoutState.value.position.y -
-  //   (getFreeLayoutState.value.height * zoom) / 2;
-
-  //   console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
-
-  /**
-   * @author 杨南南
-   * @date 2023-11-09
-   * @description 根据X,Y轴定位到当前屏幕居中位置
-   *
-   * 核心算法
-   * 滚动X位置 = (可视宽度 - 滚动区宽度 * 缩放比例) / 2 + 滚动区指定的X坐标 * 缩放比例
-   * 滚动Y位置 = (可视高度 - 滚动区高度 * 缩放比例) / 2 + 滚动区指定的Y坐标 * 缩放比例
-   *
-   */
-  const x =
-    (width.value - getFreeLayoutState.value.canvas.width * zoom) / 2 +
-    getFreeLayoutState.value.line.centerLine.x * zoom;
-  const y =
-    (height.value - getFreeLayoutState.value.canvas.height * zoom) / 2 +
-    getFreeLayoutState.value.line.centerLine.y * zoom;
-  scrollbar.value.scrollLeft = x;
-  scrollbar.value.scrollTop = y;
-
-  // scrollbar.value.scrollLeft = desiredScrollLeft;
-
-  // scrollbar.value.scrollTop = desiredScrollTop;
+  scrollbar.value.scrollLeft =
+    getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  scrollbar.value.scrollTop =
+    getFreeLayoutState.value.line.centerLine.y - height.value / 2;
   return;
   // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
   // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;

@@ -6,7 +6,7 @@
      class="h-10 ml-3" @pressEnter="findSearch" @input="findSearch" ref="findSearchRef"
     >
       <template #suffix>
-        <SearchIcon class="pointer category-button" icon="fluent:search-20-filled" style="font-size: 1.43rem;"  @click="findSearch"/>
+        <SearchIcon class="pointer xt-text-2 category-button" icon="fluent:search-20-filled" style="font-size: 1.43rem;"  @click="findSearch"/>
       </template>
     </a-input>
    </div>
@@ -100,5 +100,13 @@ export default {
   border-radius: 8px !important;
   font-size:16px;
   font-weight: 400;
+}
+:deep(.ant-input) {
+  color: var(--secondary-text) !important;
+  font-size: 14px;
+  font-weight: 400;
+  &::placeholder {
+    color: var(--secondary-text) !important;
+  }
 }
 </style>

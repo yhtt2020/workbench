@@ -2,10 +2,9 @@
  <div class="my-4 flex justify-between">
   <a-breadcrumb :separator="separator">
    <a-breadcrumb-item v-for="(item, index) in breadcrumb" class="pointer " :key="index" @click="backCrumb(item)">
-    <span :style="{color:item.color}" class="category-14-400">{{ item.name }}</span>
+    <span :style="item.color ? {color:`${item.color}`} : {color:'var(--secondary-text)'}" class="category-14-400">{{ item.name }}</span>
    </a-breadcrumb-item>
   </a-breadcrumb>
-  
   <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" >全选</a-checkbox>
  </div>
 
@@ -30,7 +29,7 @@ export default {
   return{
    breadcrumb: [
     {name:'联系人',path:'/',type:'contact',color:'var(--active-bg)'},
-    {name:'我的好友',path:'/myFriend',type:'friend'}
+    {name:'我的好友',path:'/myFriend',type:'friend',}
    ],
    separator: '/',
    friendList:[],

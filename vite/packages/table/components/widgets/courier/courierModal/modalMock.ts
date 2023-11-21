@@ -1,4 +1,5 @@
 import {getOrderState} from "../courierTool";
+import {courierStore} from "../../../../apps/ecommerce/courier";
 
 export const courierDetailList = [
   {
@@ -168,6 +169,7 @@ export const courierType = [
   {title: '发货中', name: 'onDelivery'},
   {title: "已签收", name: "signed", color: "var(--success)"},
   {title: "已揽收", name: "collect", color: "rgba(67,202,222,1)"},
+  {title: "隐藏", name: "hide", color: "rgba(67,202,222,1)"},
 ];
 
 export const commonExpress = [
@@ -962,47 +964,50 @@ export const autoCancelTime = [
 
 
 // 筛选tab栏数据
-export function selectTab(item: any, list: any) {
-  let count=0
+export async function selectTab(item: any, list: any) {
+  let count = 0
   switch (item.name) {
     case 'all':
-      count=list.length
+      count = list.length
       break
     case 'subscribe':
       let subscribed = list.filter(li => {
         return li.followed
       })
-      count=subscribed.length
+      count = subscribed.length
       break
     case 'enRoute':
       const routeList = list.filter((item: any) => {
-       return getOrderState(item)==='onRoad'
+        return getOrderState(item) === 'onRoad'
       })
-      count=routeList.length
+      count = routeList.length
       break
     case 'delivery':
-      count=list.filter((item)=>{
-        return getOrderState(item)==='delivery'
+      count = list.filter((item) => {
+        return getOrderState(item) === 'delivery'
       }).length
       break
     case 'onDelivery':
-      count=list.filter((item)=>{
-        return getOrderState(item)==='preparing'
+      count = list.filter((item) => {
+        return getOrderState(item) === 'preparing'
       }).length
       break
     case 'collect':
-      count=list.filter((item)=>{
-        return getOrderState(item)==='collected'
+      count = list.filter((item) => {
+        return getOrderState(item) === 'collected'
       }).length
       break
     case 'signed':
-      count=list.filter((item)=>{
-        return getOrderState(item)==='signed'
+      count = list.filter((item) => {
+        return getOrderState(item) === 'signed'
       }).length
-
+      break
+    case 'hide':
+      count = await courierStore().getHideCount()
+      break
   }
   return {
-    title: `${item.title}${count==0 ? '':'（'+ count+'）'}`,
+    title: `${item.title}${count == 0 ? '' : '（' + count + '）'}`,
     name: item.name
   };
 }
@@ -1036,5 +1041,7 @@ export function selectData(item: any, list: any) {
       return list.filter(item=>{
         return getOrderState(item)==='signed'
       })
+    case 'hide':
+      return list
   }
 }

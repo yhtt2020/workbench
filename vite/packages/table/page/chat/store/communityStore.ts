@@ -34,7 +34,6 @@ export const communityStore = defineStore('communityStore',{
    async getMyCommunity(){
     let res = await post(getMyCommunity,{})
     // console.log('查看返回数据',res);
-    
     if(res?.data?.list){
       this.communityList = res.data.list.filter((item: any) => {
         return item.hasOwnProperty('communityInfo')
@@ -61,15 +60,16 @@ export const communityStore = defineStore('communityStore',{
    },
 
    //  创建社群频道
-   async createChannel(data:any){
-    return await post(createChannels,data)
+   async createChannel(data:any,no:any){
+    const res = await post(createChannels,data)
+    if(res.status === 1 && no !== 1){
+      this.getCategoryData(no)
+      this.getChannelList(no)
+    }
    },
 
    // 获取社群频道目录
    async getCategoryData(id:any){
-
-    // console.log('获取数值',id,)
-
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const categoryResList = await post(getChannelList,option)
@@ -83,76 +83,56 @@ export const communityStore = defineStore('communityStore',{
         no:communityName?.communityInfo?.no,
         tree:categoryTreeList?.data?.treeList,
         category:categoryResList?.data?.list,
-        summary:communityName?.summary
+        summary:communityName?.communityInfo?.summary,
+        avatar:communityName?.communityInfo?.icon,
+        ...communityName?.communityInfo,
       }
-
       // console.log('查看数据',result)
-
       this.categoryList = result
-
     }
-   
    },
-
 
    // 获取频道数据
    async getChannelList(id:any){
     if(!isNaN(parseInt(id))){
       const option = { communityNo:parseInt(id), cache:1 }
       const res =  await post(getChannelList,option)
-      // console.log('排查数据',res)
       if(res?.data?.list){
         const filterCategoryRes = res?.data?.list.filter((item:any)=>{
          return item.role === 'category'
         })
-
         const filterTypeChannel = res?.data?.list.filter((item:any)=>{
          return item.role === 'channel'
         })
-        // console.log('排查过滤后的有子级目录数据',filterCategoryRes)
-        // console.log('排查过滤后的没有子级目录数据',filterTypeChannel)
-
         this.categoryClass  = filterCategoryRes
         this.channelList = filterTypeChannel
       }
-
-      // const filterCategoryRes = res?.data?.list.filter((item:any)=>{
-      //   return item.role === 'category'
-      // })
-
-      // const filterTypeChannel = res?.data?.list.filter((item:any)=>{
-      //   return item.role === 'channel'
-      // })
-
-
-      // // console.log('排查过滤后的数据',filterCategoryRes)
-
-      // if(filterCategoryRes?.length !== 0 && filterTypeChannel?.length !== 0){
-        // this.categoryClass  = filterCategoryRes
-        // this.channelList = filterTypeChannel
-      // }
-
     }
    },
 
    // 更新社群频道
-   async updateChannel(data:any){
-     return  await  post(sUrl("/app/community/channel/updateProfile"),data)
+   async updateChannel(data:any,no:any){
+    const res  =  await  post(sUrl("/app/community/channel/updateProfile"),data)
+    if(res.status === 1){
+      this.getChannelList(no)
+      this. getCategoryData(no)
+    }
    },
 
    // 替换数组
    updateCategoryClass(val:any){
     this.categoryClass = val
    },
- 
 
    // 删除社群频道
-   async removeCategory(id:any){
-    return await post(deleteCategory,{id:id})
-   }
-
-
-
+   async removeCategory(id:any,no:any){
+    const res = await post(deleteCategory,{id:id})
+    console.log('查看结果',res);
+    if(res.status === 1 && no !== 1){
+      this.getCategoryData(no)
+      this.getChannelList(no)
+    }
+   },
 
   },
 

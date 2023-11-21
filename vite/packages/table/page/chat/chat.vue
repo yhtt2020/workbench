@@ -3,18 +3,11 @@
     <div class="w-full">
       <router-view ></router-view>
     </div>
-
     <template #communityFloat>
-      <div class="flex flex-col" style="height:500px;" v-if="communityNo !== 1">
-        <CategoryFloat :communityID="{no:communityNo}" :float="true"></CategoryFloat>
-      </div>
-      <div class="flex flex-col" style="height:500px;" v-else>
-        <DefaultFloat :float="true"></DefaultFloat>
-      </div>
+      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :float="true"  @clickItem="currentItem"></CategoryFloat>
+      <DefaultFloat v-else :float="true"></DefaultFloat>
     </template>
   </xt-left-menu>
-  
-
   <teleport to='body'>
     <Modal v-if="chatVisible" v-model:visible="chatVisible" :blurFlag="true">
       <AddFriend v-if="addIndex === 'launch'" @close="chatVisible = false"></AddFriend>
@@ -24,7 +17,6 @@
       <JoinCommunity v-if="addIndex === 'joinCom'" @close="chatVisible = false"></JoinCommunity>
     </Modal>
   </teleport>
-
 </template>
 
 <script>
@@ -36,7 +28,6 @@ import { communityStore } from "./store/communityStore";
 import config from './config'
 import { appStore } from '../../store'
 import { chatStore } from '../../store/chat'
-
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -64,7 +55,6 @@ export default {
     const { userInfo } = appS;
     const router = useRouter()
     const TUIServer = window.$TUIKit
-
 
     const leftList = ref([
       {
@@ -143,7 +133,6 @@ export default {
       }
     ]);
     
-
     const data = reactive({
       chatVisible:false,
       addIndex:'',
@@ -165,7 +154,6 @@ export default {
       data.chatVisible = true
       data.addIndex = 'createCom'
     }
-
     // 切换左侧tab
     const selectTab = async (item)=>{
       data.index = item.type
@@ -184,8 +172,6 @@ export default {
       data.chatVisible = true
     }
     
-
-
     watch(()=>communityList.value,(newVal)=>{
       if(newVal.length !== undefined && newVal.length !== 0){
         const mapNewVal = newVal.map((item)=>{
@@ -226,7 +212,6 @@ export default {
       }
     }) 
 
-
     onMounted(() => {
       nextTick(() => {
         com.getMyCommunity();
@@ -244,8 +229,8 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.tippy-content){
- padding: 12px 12px 16px 12px !important;
- width:336px !important;
+ padding: 0 !important;
+ // width:336px !important;
 }
 :deep(.tippy-box){
  border-radius: 12px !important;
@@ -253,5 +238,11 @@ export default {
  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2), 0px 0px 20px 0px rgba(0,0,0,0.1), 0px 0px 40px 0px rgba(0,0,0,0.2);
 }
 
+:deep(.menu-item )+div{
+  z-index: 90 !important;
+}
 
+:deep(.xt-br){
+  margin: 0 !important;
+}
 </style>

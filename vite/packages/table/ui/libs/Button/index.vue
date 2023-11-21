@@ -1,8 +1,8 @@
 <template>
   <button
-    @click.stop="handleClick"
+    @click="handleClick"
     :disabled="disabled"
-    class="xt-text text-base flex items-center justify-center"
+    class="flex items-center justify-center text-base xt-text"
     :class="[buttonStyle]"
     :style="{
       width: block ? '100%' : w + 'px',

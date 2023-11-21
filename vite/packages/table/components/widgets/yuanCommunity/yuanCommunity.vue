@@ -66,7 +66,7 @@
         </Widget>
 
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"></YuanPublishModal>
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" @refresh-default-forum="refreshPost"></YuanPublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -127,6 +127,7 @@ import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
+import { useCommunityStore } from '../../../page/chat/commun'
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import DataStatu from "../DataStatu.vue"
 import YuanPublishModal from './YuanPublishModal.vue';
@@ -200,7 +201,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: ' ',
+            defaultForum: {index:0,name:'版本更新',id:100304},
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -242,6 +243,8 @@ export default {
             // console.log(this.cardData);
         },
         closeDetail(value) {
+            this.communityPostDetail=[]
+            this.communityReply=[]
             this.showDetailModal = value
         },
         // 选择板块
@@ -294,6 +297,7 @@ export default {
     },
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList','forumsList','defaultSection']),
+        ...mapWritableState(useCommunityStore,['communityReply','communityPostDetail']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -308,8 +312,6 @@ export default {
             return '392px'
         },
         forumList() {
-            // this.customData.forumList = this.myForumList.joined
-            // return this.customData.forumList
             if (this.customData && this.customData.forumList) {
                 return this.customData.forumList
             }
@@ -339,8 +341,7 @@ export default {
             }
         },
     },
-    async mounted() {
-        this.isLoading = true
+    async beforeMount() {
         await this.getMyForumList()
         this.customData.forumList = this.myForumList.joined
         // 判断是否刷新加载内容
@@ -350,16 +351,14 @@ export default {
         } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList)
             this.defaultForum = this.customData.selectList[0]
+        }else{
+            return this.defaultForum
         }
-        // 加载已选择的模块
-        if (this.customData && this.customData.selectList) {
-            this.selectValue = this.customData.selectList.map((item) => {
-                return item.index
-            })
-            // console.log(this.selectValue);
-        }
+    },
+    async mounted() {
+        this.isLoading = true
         // 判断组件名称
-        if (this.customData.selectList.length === 1) {
+        if (this.customData.selectList && this.customData.selectList.length === 1) {
             this.options.title = this.customData.selectList[0].value.name
         }
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
@@ -405,6 +404,14 @@ export default {
                 }
             }
         },
+        settingVisible(){
+            // 加载已选择的模块
+        if (this.customData && this.customData.selectList && this.settingVisible==true) {
+            this.selectValue = this.customData.selectList.map((item) => {
+                return item.index
+            })
+        }
+        }
     }
 }
 </script>

@@ -94,7 +94,7 @@ export default {
       "activeTask",
       "currentTasks",
       "tasks",
-      "displayList",
+      "list",
     ]),
   },
   methods: {

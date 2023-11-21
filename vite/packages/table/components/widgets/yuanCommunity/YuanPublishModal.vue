@@ -1,11 +1,11 @@
 
 <template>
-    <xt-modal title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true"
+    <xt-old-modal title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" :esc="true"
         @close="handleOk">
         <div class="w-full pl-4 pr-4"
             :style="{ height: fullScreen ? `${windowHeight}px` : 'auto', width: fullScreen ? `${windoWidth}px` : '500px', borderRadius: fullScreen ? '0px' : '12px' }">
             <!-- header -->
-            <div class="flex justify-between w-full h-[64px] items-center ">
+            <div class="flex justify-between w-full h-[54px] items-center ">
                 <div class="flex justify-center w-full ">
                     <div class="flex justify-center ml-12">
                         <a-select autoClearSearchValue="false"
@@ -52,7 +52,7 @@
                 style="height: calc(100% - 80px) ;overflow: hidden;flex-shrink: 0;max-width: 1000px;margin: 0 auto;">
                 <!-- 动态组件 -->
                 <!-- body -->
-                {{ props.forum }}
+                <!-- {{ props.forum }} -->
                 <!-- <slot name="content" /> -->
                 <component :is="componentId"></component>
                 <div style=" " v-if="imageLoadVisible">
@@ -159,7 +159,7 @@
             </vue-custom-scrollbar>
         </div>
 
-    </xt-modal>
+    </xt-old-modal>
 </template>
 <script setup lang='ts'>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
@@ -258,7 +258,7 @@ const addEmojiContent = () => {
 const imageLoadVisible = computed(() => {
     return fileList.value?.length > 0
 })
-const emit = defineEmits(['handleOk'])
+const emit = defineEmits(['handleOk','refreshDefaultForum'])
 onMounted(async () => {
     // 表情转换
     Object.values(fluentEmojis).forEach((item) => {
@@ -273,10 +273,10 @@ onMounted(async () => {
             label: item.name
         })
     })
-    cascaderValue.value = selectOptions.value.find((item)=>{
-        return item.label===useYuanCommunityStore.defaultSection.value.name
+    let res = selectOptions.value.find((item) => {
+        return item.label === useYuanCommunityStore.defaultSection.value.name
     })
-    // console.log(useYuanCommunityStore.forumsList,useYuanCommunityStore.defaultSection)
+    cascaderValue.value=res.value
 })
 
 // 选择发帖板块
@@ -290,6 +290,9 @@ const handleChange = (value) => {
 const handleOk = () => {
     emit('handleOk', false)
 };
+const refreshDefaultForum = () => {
+    emit('refreshDefaultForum')
+}
 const postContent = computed(() => {
     return useYuanCommunityStore.postContent
 })
@@ -310,22 +313,32 @@ watch(coverList, async () => {
     useYuanCommunityStore.postContent.coverList = coversList.toString()
 })
 const publishPost = async () => {
-    if (dynamicContent.value.content || dynamicContent.value.imagesList.length > 0 && defaultType.value.value == 'dynamic') {
-        let dynamic = dynamicContent.value
-        setTimeout(async () => {
-            await useCommunStore.getCommunityPublishPost(cascaderValue.value, dynamic.imagesList, dynamic.content)
-        });
-    } else if (postContent.value.content || postContent.value.imagesList.length > 0 && defaultType.value.value == 'post') {
-        let post = postContent.value
-        const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
-        setTimeout(async () => {
-            // console.log(cascaderValue.value, post.imagesList, post.content, title, post.coverList, 'post-publish')
-            await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
-        });
+    try {
+        if (dynamicContent.value.content || dynamicContent.value.imagesList.length > 0 && defaultType.value.value == 'dynamic') {
+            let dynamic = dynamicContent.value
+            setTimeout(async () => {
+                await useCommunStore.getCommunityPublishPost(cascaderValue.value, dynamic.imagesList, dynamic.content)
+            });
+        } else if (postContent.value.content || postContent.value.imagesList.length > 0 && defaultType.value.value == 'post') {
+            let post = postContent.value
+            const title = post.title.length > 5 ? post.title : post.content.slice(0, 5)
+            setTimeout(async () => {
+                // console.log(cascaderValue.value, post.imagesList, post.content, title, post.coverList, 'post-publish')
+                await useCommunStore.getPublishPost(cascaderValue.value, post.imagesList, post.content, title, post.coverList)
+            });
+        }
+        setTimeout(() => {
+          message.success('发布成功')
+          handleOk()
+          clearAllContent()
+          refreshDefaultForum()  
+        },1000);
+        
+        
+    } catch (error) {
+        message.error('发布失败')
     }
-    message.success('发布成功')
-    handleOk()
-    clearAllContent()
+
 }
 const clearAllContent = () => {
     if (defaultType.value.value === 'dynamic') {

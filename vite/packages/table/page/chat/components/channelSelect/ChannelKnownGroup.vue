@@ -1,35 +1,20 @@
 <template>
   <div class="flex flex-col my-3" style="width:667px;" v-if="nextShow === false">
-    <!-- 顶部关闭按钮和返回按钮 -->
-    <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-      <div class="back-button w-10 h-10 flex items-center rounded-lg pointer category-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
-        <ChatIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color:var(--secondary-text);"/>
-      </div>
+    <ModalTop title="选择群聊" back="true" @back="backChannel"  @close="closeChannel"/>
 
-      <span class="font-16 font-400" style="color:var(--primary-text);">选择群聊</span>
-
-      <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer category-button justify-center"  style="background: var(--secondary-bg);" @click="closeChannel">
-        <ChatIcon icon="fluent:dismiss-16-filled" style="font-size: 1.25rem;color:var(--secondary-text);"/>
-      </div>
-    </div>
-
-    <!-- 内容区域 -->
     <div class="flex px-6">
       <div class="flex flex-col" style="width: 293px;">
-        <!-- 搜索区域 -->
         <a-input class="h-10 search" ref="searchRef" v-model:value="searchKeyWord" style="border-radius: 12px;" placeholder="搜索群名称、ID" @pressEnter="groupSearch" @input="groupSearch">
           <template #suffix>
-            <ChatIcon icon="fluent:search-20-filled" style="font-size: 1.25rem;color:var(--secondary-text);" class="pointer" @click="groupSearch"/>
+            <ChatIcon icon="fluent:search-20-filled" style="font-size: 1.25rem;" class="pointer xt-text" @click="groupSearch"/>
           </template>
         </a-input>
-
-        <span class="my-4 font-14 font-400" style="color:var(--secondary-text);">{{title}}</span>
-
+        <span class="my-4 font-14 font-400 xt-text-2 xt-font">{{title}}</span>
         <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
           <div class="flex flex-col">
             <div v-for="(item,index) in filterList" :class="{'select-bg':isSelected(index)}" class="flex pointer rounded-lg items-center px-4 py-3 mb-3" @click="leftListClick(item)">
              <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
-             <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
+             <span class="font-16 font-400 ml-4 xt-text xt-font" >{{ item.name }}</span>
             </div>
           </div>
         </vue-custom-scrollbar>
@@ -37,58 +22,46 @@
 
       <a-divider type="vertical" style="height:442px; margin: 0 16px; background-color:var(--divider);" />
 
-      <!-- 右侧选中内容 -->
       <div class="flex flex-col justify-between" style="width: 293px;">
-        <span class="category-14-400" style="color:var(--secondary-text);">已选({{ selectGroup.length }}个)</span>
+        <span class="font-14 font-400 xt-text-2 xt-font">已选({{ selectGroup.length }}个)</span>
         <vue-custom-scrollbar :settings="settingsScroller" style="height:335px;">
           <div class="flex flex-col">
-           <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
-             <div class="flex items-center">
-              <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
-              <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.name }}</span>
-             </div>
-
-             <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
-               <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color: var(--disable-text);"/>
-             </div>
-           </div>
+            <div v-for="item in selectGroup" class="flex  items-center justify-between px-4 py-3 mb-2">
+              <div class="flex items-center">
+                <a-avatar shape="square" :size="40" :src="item.avatar"></a-avatar>
+                <span class="font-16 font-400 ml-4 xt-text xt-font">{{ item.name }}</span>
+              </div>
+              <div class="flex items-center pointer justify-center" @click="removeGroup(item)">
+                <ChatIcon icon="zondicons:minus-solid" style="font-size: 1.25rem;color: var(--disable-text);"/>
+              </div>
+            </div>
           </div>
         </vue-custom-scrollbar>
-
-        <!-- 底部按钮 -->
         <div class="flex items-center justify-end">
-          <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeChannel">
-            取消
-          </XtButton>
-       
-          <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="selectSubmit">
-            选择
-          </XtButton>
+          <xt-button w="64" h="40" class="category-button mr-3" @click="closeChannel">取消</xt-button>
+          <xt-button w="64" h="40" type="theme" class="category-button"  @click="selectSubmit">确定</xt-button>
         </div>
       </div>
-      
     </div>
-
   </div>
-
-  <ChannelClassification v-if="nextShow === true" :no="no" :type="type" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false">
-  </ChannelClassification>
-
+  <ChannelClassification v-if="nextShow === true" :no="no" type="group" :data="selectGroup"  @close="closeChannel" @classBack="nextShow = false" />
 </template>
 
 <script>
-import {mapActions,mapWritableState,storeToRefs} from 'pinia'
-import { Icon as ChatIcon } from '@iconify/vue'
-import _ from 'lodash-es'
-import { message } from 'ant-design-vue'
-import { communityStore } from '../../store/communityStore'
+import {mapActions,mapWritableState,storeToRefs} from 'pinia';
+import { Icon as ChatIcon } from '@iconify/vue';
+import _ from 'lodash-es';
+import { message } from 'ant-design-vue';
+import { communityStore } from '../../store/communityStore';
 
-import ChannelClassification from './ChannelClassification.vue'
+import ChannelClassification from './ChannelClassification.vue';
+import ModalTop from '../ModalTop.vue';
 
 export default {
-  props:['no','type'],
+  props:['no'],
   components:{
-    ChatIcon,ChannelClassification
+    ChatIcon,ChannelClassification,
+    ModalTop,
   },
 
   data(){
@@ -182,9 +155,7 @@ export default {
       * **/
       if(this.searchKeyWord !== ''){
         this.filterList = [];
-
         const chineseRegex = /[\u4e00-\u9fa5]/;
-
         // 判断搜索是否为中文
         if(chineseRegex.test(this.searchKeyWord)){
           // console.log('测试搜索::>>',this.searchKeyWord);
@@ -196,7 +167,6 @@ export default {
           this.filterList = mapList
 
         }
-
         else{
           // console.log('获取搜索关键字',this.searchKeyWord);
           const groupID = String(this.searchKeyWord)
@@ -204,43 +174,21 @@ export default {
           // console.log('获取搜索的群聊',res);
           this.filterList = [res?.data?.group]
         }
-
-        
-
       }else{
        this.title = '我创建的群聊'
        this.getList()
        evt.preventDefault()
       }
     },
-
-   
-
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-.close-channel{
- position: absolute;
- top:1px;
- right:12px;
-}
-
-
-.back-button{
-  position: absolute;
-  top: 1px ;
-  left: 12px;
-}
-
-
 .select-bg{
   background: var(--active-secondary-bg) !important;
   border:1px solid var(--active-bg) !important;
 }
-
 :deep(.ant-input){
   font-size: 1.15em;
   &::placeholder{

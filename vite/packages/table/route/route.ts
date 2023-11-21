@@ -7,7 +7,11 @@ import Splash from '../page/Splash.vue'
 //import index from './index'
 // 快捷键
 import CreativeMarket from "../apps/shortcutKey/page/CreativeMarket.vue"
-import MarketList from "../apps/shortcutKey/page/MarketList.vue"
+import MarketList from "../apps/shortcutKey/page/MarketList.vue";
+
+// 社群邀请流程
+import InviteProcess from '../page/chat/page/process/inviteProcess.vue';
+import NextProcess from '../page/chat/page/process/NextProcess.vue';
 
 const routes = [
   ...main,
@@ -43,6 +47,17 @@ const routes = [
     //     component: MarketList
     //   },
     // ]
+  },
+
+  {
+    path:'/process',
+    name:'process',
+    component:InviteProcess,
+  },
+  {
+    path:'/nextProcess',
+    name:'nextProcess',
+    component:NextProcess,
   }
 ]
 

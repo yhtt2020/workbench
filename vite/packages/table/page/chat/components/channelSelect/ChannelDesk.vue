@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
  <div class="flex flex-col my-3" style="width:500px;">
   <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
    <div class="back-button w-10 h-10 flex items-center rounded-lg pointer active-button justify-center" style="background: var(--secondary-bg);" @click="backChannel">
@@ -78,4 +78,4 @@ export default defineComponent({
  top: 1px ;
  left: 12px;
 }
-</style>
+</style> -->

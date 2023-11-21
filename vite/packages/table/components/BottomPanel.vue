@@ -1,22 +1,14 @@
 <template>
-  <div
-    @click.stop
-    class="flex flex-row items-center justify-center w-full mb-3 bottom-panel"
-    style="text-align: center"
-    @contextmenu.stop="showMenu"
-  >
+  <div @drop.prevent="drop" @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel"
+    style="text-align: center" @contextmenu.stop="showMenu">
     <!-- 快速搜索 底部 用户栏 -->
-    <div
-      v-if=" (!simple || settings.enableChat) && !this.isOffline"
-      class="flex flex-row common-panel user s-bg"
-      style="
+    <div v-if="(!simple || settings.enableChat) && !this.isOffline" class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
-      "
-    >
+      ">
       <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
       <div v-show="settings.enableChat" class="pointer">
         <ChatButton></ChatButton>
@@ -25,10 +17,7 @@
 
 
     <!-- 快速搜索 底部栏区域 -->
-    <div
-      v-show="navigationToggle[2]"
-      class="flex flex-row items-center pl-4 s-bg"
-      style="
+    <div v-show="navigationToggle[2]" class="flex flex-row items-center pl-4 s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -37,14 +26,13 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
+        max-width: 60%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-      "
-    >
-      <div
-        style="
+      ">
+      <div style="
           display: flex;
           flex-direction: row;
           width: 100%;
@@ -52,64 +40,33 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        "
-      >
+        ">
         <div @contextmenu.stop="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-          <div
-            class="mr-6 scroll-content"
-            style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
-            ref="content"
-          >
+          <div class="mr-6 scroll-content" style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex" ref="content">
             <xt-task id='M0104' no='1' @cb="showMenu">
-              <div
-                style="white-space: nowrap; display: flex; align-items: center"
-                id="bottomContent"
-              >
+              <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                 <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip
-                  v-for="item in footNavigationList"
-                  :key="item.name"
-                        :title="item.name"
-                >
-         <div 
-         v-if="!(this.navList.includes(item.event) && this.isOffline)"
-           @contextmenu.stop="enableDrag"
-           class="mr-6 pointer"
-           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-           @click.stop="clickNavigation(item)"
-         >
-           <div
-             style="width: 56px; height: 56px;border-radius: 12px;" 
-             v-if="item.type === 'systemApp'"
-             class="flex items-center justify-center rounded-lg s-item xt-bg-2"
-           >
-             <navIcon
-               :icon="item.icon"
-               class="test"
-               style="
-                 width: 28px;
-                 height: 28px;
-                 fill: var(--primary-text);
-               "
-             ></navIcon>
-           </div>
-           <div
-             v-else
-             style="width: 45px; height: 45px"
-             class="flex items-center justify-center"
-           >
-             <a-avatar
-               :size="40"
-               shape="square"
-               :src="renderIcon(item.icon)"
-             ></a-avatar>
-           </div>
-                </div>
-               </a-tooltip>
+                <a-tooltip v-for="item in footNavigationList" :key="item.name" :title="item.name">
+                  <div v-if="!(this.navList.includes(item.event) && this.isOffline)" @contextmenu.stop="enableDrag"
+                    class="mr-3 pointer" style="white-space: nowrap; display: inline-block;border-radius: 18px;"
+                    @click.stop="clickNavigation(item)">
+                    <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                      class="flex items-center justify-center rounded-lg s-item xt-bg-2">
+                      <navIcon :icon="item.icon" class="test" style="width:28px;height:28px;fill:var(--primary-text);"></navIcon>
+                    </div>
+                    <div v-else style="width: 45px; height: 45px" class="flex items-center justify-center">
+                      <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+                    </div>
+                  </div>
+                </a-tooltip>
               </div>
             </xt-task>
           </div>
         </div>
+        <!-- <div class="mr-3"> -->
+        <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
+          @completeEdit="this.toggleEdit()" />
+        <!-- </div> -->
 
         <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
           <div
@@ -170,74 +127,55 @@
       </div>
     </div>
 
-    <template v-if="!simple && isMain">
-      <Team></Team>
-    </template>
-
-    <TaskBox></TaskBox>
+    <template v-if="!simple && isMain"> <Team></Team> </template>
+    <TaskBox v-if="taskBoxVisible"></TaskBox>
   </div>
 
-  <div
-    id="trans"
-    v-show="visibleTrans"
-    style="
+  <div id="trans" v-show="visibleTrans" style="
       position: fixed;
       left: 0;
       top: 0;
       width: 100vw;
       height: 100vh;
       background: #2c2c2c;
-    "
-  >
-    <a-button
-      @click="visibleTrans = false"
-      style="position: fixed; left: 10px; top: 10px"
-    >取消
-    </a-button
-    >
+    ">
+    <a-button @click="visibleTrans = false" style="position: fixed; left: 10px; top: 10px">取消
+    </a-button>
     <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
     </iframe>
   </div>
-  <a-drawer
-    :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }"
-    class="drawer"
-    :closable="true"
-    placement="bottom"
-    :visible="menuVisible"
-    @close="onClose"
-  >
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+    placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
-        <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-          <template v-if="item.icon=='fluent:compose-16-regular'">
-            <xt-task  id='M0104' no="2" @cb="editNavigation(item)" >
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-          </xt-task>
-          </template>
-          <template v-else>
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-          </template>
-          
-        </div>
-        <div
-          @click="clickNavigation(item)"
-          class=" btn extra-btn"
-          v-for="item in builtInFeatures"
-          :key="item.name"
-        >
-          <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
-          <div>
-            <span>{{ item.name }}</span>
+        <div class="flex items-center">
+          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+            <template v-if="item.icon == 'fluent:compose-16-regular'">
+              <xt-task id='M0104' no="2" @cb="editNavigation(item)">
+                <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+                <div><span>{{ item.title }}</span></div>
+              </xt-task>
+            </template>
+            <template v-else>
+              <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+              <div><span>{{ item.title }}</span></div>
+            </template>
+
+          </div>
+          <div @click="clickNavigation(item)" class=" btn extra-btn" v-for="item in builtInFeatures" :key="item.name">
+            <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
+            <div>
+              <span>{{ item.name }}</span>
+            </div>
           </div>
         </div>
+
       </a-col>
     </a-row>
   </a-drawer>
-    <RightMenu :menus="builtInFeatures" v-model:value="menuVisible" @contextmenu="showDetailMenu">
-      
-    </RightMenu>
+  <RightMenu :menus="builtInFeatures" v-model:value="menuVisible" @contextmenu="showDetailMenu">
+
+  </RightMenu>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
@@ -253,24 +191,15 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
-      <EditNavigation @setQuick="setQuick" v-if="componentId==='EditNavigation'"></EditNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId==='navigationSetting'"></navigationSetting>
+      <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
 
-  <div
-    class="fixed inset-0 home-blur"
-    style="z-index: 999; background: var(--mask-background-color)"
-    v-if="changeFlag"
-    @click="closeChangeApp"
-  >
-    <ChangeApp
-      :tab="tab"
-      @closeChangeApp="closeChangeApp"
-      :full="full"
-      @setFull="setFull"
-    ></ChangeApp>
+  <div class="fixed inset-0 home-blur" style="z-index: 999; background: var(--mask-background-color)" v-if="changeFlag"
+    @click="closeChangeApp">
+    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
@@ -280,8 +209,9 @@ import PanelButton from './PanelButton.vue'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
+import { useNavigationStore } from './desk/navigationBar/navigationStore'
 import { mapWritableState, mapActions } from 'pinia'
-import {useWidgetStore} from '../components/card/store'
+import { useWidgetStore } from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
@@ -299,7 +229,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
-import { toggleFullScreen ,renderIcon} from '../js/common/common'
+import { toggleFullScreen, renderIcon } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
@@ -307,11 +237,12 @@ import { message } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
-import {Icon as navIcon} from '@iconify/vue'
+import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import {moreMenus,extraRightMenu} from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
+import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -332,9 +263,10 @@ export default {
     Team,
     TaskBox,
     navIcon,
-    navigationSetting
+    navigationSetting,
+    AddIcon
   },
-  data () {
+  data() {
     return {
       sortable: null,
 
@@ -367,8 +299,10 @@ export default {
       rightNav: false,
       delNav: false,
       //screenWidth: document.body.clientWidth
-      drawerMenus:[...extraRightMenu,...moreMenus],
+      drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: 'EditNavigation',
+      // editBar:false，
+      dropList: []
     }
   },
   props: {
@@ -377,7 +311,7 @@ export default {
       default: () => false,
     },
   },
-  unmounted () {
+  unmounted() {
     let that = this
     window.removeEventListener('resize', that.checkScroll)
     clearInterval(this.updateMessageTimer)
@@ -385,7 +319,7 @@ export default {
       clearInterval(this.timerRunning)
     }
   },
-  mounted () {
+  mounted() {
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
@@ -432,7 +366,7 @@ export default {
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
         if (item.name === i.name) {
-          i.icon=item.icon
+          i.icon = item.icon
         }
       })
     })
@@ -451,14 +385,15 @@ export default {
       'rightNavigationList',
       'mainNavigationList',
     ]),
-    ...mapWritableState(offlineStore, ["isOffline",'navList']),
-    ...mapWritableState(useWidgetStore,['rightModel']),
+    ...mapWritableState(offlineStore, ["isOffline", 'navList']),
+    ...mapWritableState(useWidgetStore, ['rightModel']),
+    ...mapWritableState(useNavigationStore, ['editToggle','taskBoxVisible']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
-    isMain () {
+    isMain() {
       return isMain()
     },
-    runningScreen () {
+    runningScreen() {
       let count = 0
       this.screens.forEach((s) => {
         if (s.running) {
@@ -470,7 +405,7 @@ export default {
   },
   watch: {
     footNavigationList: {
-      handler () {
+      handler() {
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -484,17 +419,23 @@ export default {
       immediate: true,
       deep: true,
     },
-    delZone (val) {
+    delZone(val) {
       this.delNav = val
     },
     navigationToggle: {
       immediate: true,
       deep: true,
-      handler (val) {
+      handler(val) {
         this.leftNav = val[0]
         this.rightNav = val[1]
       },
     },
+    // editBar(val){
+    //   if(val){
+    //     console.log(val)
+    //     this.enableDrag()
+    //   }
+    // }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -504,7 +445,24 @@ export default {
       'sortFootNavigationList',
       'removeFootNavigationList',
     ]),
-    async toggleTeam () {
+    ...mapActions(useNavigationStore, ['toggleEdit','toggleTaskBox']),
+    // async drop (e) {
+    //   let files = e.dataTransfer.files
+    //   console.log(e)
+    //   let filesArr = []
+    //   if (files && files.length > 0) {
+    //     for (let i = 0; i < files.length; i++) {
+    //       filesArr.push(files[i].path)
+    //     }
+    //   }
+    //   this.dropList =await Promise.all(filesArr.map(async(item)=>{
+    //       const fileName = item.substring(item.lastIndexOf("\\") + 1);
+    //       let dropFiles =await tsbApi.system.extractFileIcon(item)
+    //       return {icon:`${dropFiles}`,name:`${fileName}`,path:item}
+    //     }))
+    //   console.log(this.dropList)
+    // },
+    async toggleTeam() {
       await this.updateMy(0)
       if (this.team.status === false) {
         this.teamKey = Date.now()
@@ -513,10 +471,10 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
-    closeDrawer () {
+    closeDrawer() {
       this.menuVisible = false
     },
-    checkScroll () {
+    checkScroll() {
       // this.$nextTick(() => {
       //   if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
       //     this.$refs.content.style.marginTop = '17px'
@@ -525,71 +483,87 @@ export default {
       //   }
       // })
     },
-    goMy () {
+    goMy() {
       this.$router.push({ name: 'socialMy' })
     },
     ...mapActions(appStore, ['setUser']),
-    setFull (value) {
+    setFull(value) {
       this.full = value
     },
-    appChange () {
+    appChange() {
       if (this.showScreen) {
         this.tab = 'screen'
         this.routeParams.url &&
-        ipc.send('hideTableApp', {
-          app: JSON.parse(JSON.stringify(this.routeParams)),
-        })
+          ipc.send('hideTableApp', {
+            app: JSON.parse(JSON.stringify(this.routeParams)),
+          })
       } else {
         this.tab = 'apps'
         this.routeParams.url &&
-        ipc.send('hideTableApp', {
-          app: JSON.parse(JSON.stringify(this.routeParams)),
-        })
+          ipc.send('hideTableApp', {
+            app: JSON.parse(JSON.stringify(this.routeParams)),
+          })
       }
       this.changeFlag = true
     },
-    closeChangeApp () {
+    closeChangeApp() {
       this.routeParams.url &&
-      setTimeout(() => {
-        this.$router.push({ name: 'app', params: this.routeParams })
-      }, 400)
+        setTimeout(() => {
+          this.$router.push({ name: 'app', params: this.routeParams })
+        }, 400)
       this.changeFlag = false
     },
-    showMenu () {
+    showMenu() {
       this.routeParams.url &&
-      ipc.send('hideTableApp', {
-        app: JSON.parse(JSON.stringify(this.routeParams)),
-      })
+        ipc.send('hideTableApp', {
+          app: JSON.parse(JSON.stringify(this.routeParams)),
+        })
       this.menuVisible = true
     },
-    hideMenu () {
+    hideMenu() {
       this.menuVisible = false
     },
-    onClose () {
+    onClose() {
       this.routeParams.url &&
-      this.$router.push({ name: 'app', params: this.routeParams })
+        this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
-    editNavigation (item) {
-      if(item.component){
-        this.componentId=item.component
-      }else if(item.visible){
-        console.log(111)
-      }else{
+    editNavigation(item) {
+      if (item.component) {
+        this.componentId = item.component
+        if (item.component === 'EditNavigation') {
+          this.toggleEdit()
+        }
+        this.quick = true
+      } else if (item.visible) {
+        switch (item.tag) {
+          case 'task':
+            this.toggleTaskBox()
+            break;
+          case 'community':
+            console.log(111)
+            break;
+          case 'user':
+            console.log(2222)
+            break;
+        }
+      } else {
         return
       }
-      this.quick = true
+      
       this.menuVisible = false
     },
-    setQuick () {
+    setQuick() {
       this.quick = false
     },
-
-    openSetting () {
+    // closeEdit(){
+    //   this.editBar=false
+    // },
+    openSetting() {
       this.$router.push({ name: 'setting' })
       this.hideMenu()
     },
-    openStatus () {
+    openStatus() {
       this.hideMenu()
       if (this.$route.path === '/status') {
         this.$router.go(-1)
@@ -597,20 +571,20 @@ export default {
         this.$router.push({ path: '/status' })
       }
     },
-    showDetailMenu(){
-      if(this.rightModel=='follow'){
+    showDetailMenu() {
+      if (this.rightModel == 'follow') {
         console.log(111)
         this.menuVisible = true
       }
-      
+
     },
-    power () {
+    power() {
       this.$router.push({ path: '/power' })
     },
-    lock () {
+    lock() {
       this.$router.push({ path: '/lock' })
     },
-    transFile () {
+    transFile() {
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
       // console.log('发送消息')
@@ -626,7 +600,7 @@ export default {
         },
       })
     },
-    async setFullScreen () {
+    async setFullScreen() {
       // await tsbApi.window.isFullScreen()
       if (this.full) {
         this.full = false
@@ -637,45 +611,51 @@ export default {
       }
     },
 
-    clickNavigation (item) {
-      this.hideMenu()
-      switch (item.type) {
-        case 'systemApp':
-          if (item.event === 'fullscreen') {
-            toggleFullScreen()
-            this.full = !this.full
-          } else if (item.event === '/status') {
-            if (this.$route.path === '/status') {
-              this.$router.go(-1)
+    clickNavigation(item) {
+      if (this.editToggle) {
+        this.enableDrag()
+        // return
+      } else {
+        this.hideMenu()
+        switch (item.type) {
+          case 'systemApp':
+            if (item.event === 'fullscreen') {
+              toggleFullScreen()
+              this.full = !this.full
+            } else if (item.event === '/status') {
+              if (this.$route.path === '/status') {
+                this.$router.go(-1)
+              } else {
+                this.$router.push({ path: '/status' })
+              }
+            } else if (item.data) {
+              this.$router.push({
+                name: 'app',
+                params: item.data,
+              })
             } else {
-              this.$router.push({ path: '/status' })
+              this.$router.push({ name: item.event })
             }
-          } else if (item.data) {
+            break
+          case 'coolApp':
             this.$router.push({
               name: 'app',
               params: item.data,
             })
-          } else {
-            this.$router.push({ name: item.event })
-          }
-          break
-        case 'coolApp':
-          this.$router.push({
-            name: 'app',
-            params: item.data,
-          })
-          break
-        case 'localApp':
-          require('electron').shell.openPath(item.path)
-          break
-        case 'lightApp':
-          ipc.send('executeAppByPackage', { package: item.package })
-          break
-        default:
-          require('electron').shell.openPath(item.path)
+            break
+          case 'localApp':
+            require('electron').shell.openPath(item.path)
+            break
+          case 'lightApp':
+            ipc.send('executeAppByPackage', { package: item.package })
+            break
+          default:
+            require('electron').shell.openPath(item.path)
+        }
       }
+
     },
-    disableDrag () {
+    disableDrag() {
       if (this.sortable) {
         document.removeEventListener('click', this.disableDrag)
         this.sortable.destroy()
@@ -683,7 +663,7 @@ export default {
         message.info('已中止导航栏调整')
       }
     },
-    enableDrag () {
+    enableDrag() {
       if (this.sortable) {
         return
       }
@@ -755,7 +735,7 @@ export default {
       message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
     renderIcon,
-    delNavigation (sumList, oneNav, index, delMethod) {
+    delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
         //如果不是必须的
         delMethod(index)
@@ -786,13 +766,14 @@ export default {
 
 .btn {
   text-align: center;
-  margin-right: 24px;
+  margin-right: 12px;
   border-radius: 12px;
   width: 110px;
   height: 100px;
   padding-top: 16px;
   line-height: 30px;
   margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .status-text {

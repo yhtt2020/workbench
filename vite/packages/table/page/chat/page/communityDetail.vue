@@ -1,14 +1,15 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col  class="flex flex-col h-full pr-3 find-left" v-if="isFloat === false"
+    <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false"
      style=" border-right:1px solid var(--divider);"
     >
       <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
       <!-- flex=" 0 1 300px" -->
 
       <CategoryFloat :float="false" :communityID="routeData"
-      @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"
+      @updateColumn="updateColumn" @createCategory="clickEmptyButton"
       ></CategoryFloat>
+      <!--  @clickItem="currentItem" -->
 
     </a-col>
 
@@ -96,11 +97,11 @@
 
   </a-row>
 
-  <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
+  <!-- <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
     <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
     <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
     <InviteOther v-if="type === 'inviteOther'" :no="routeData" @close="addShow = false" />
-  </Modal>
+  </Modal> -->
 </template>
 
 <script>
@@ -114,18 +115,22 @@ import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
 import Modal from '../../../components/Modal.vue'
-import CreateNewChannel from '../components/CreateNewChannels.vue'
-import CreateNewGroup from '../components/CreateNewCategory.vue'
+// import CreateNewChannel from '../components/CreateNewChannels.vue'
+// import CreateNewGroup from '../components/CreateNewCategory.vue'
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
 import Article from '../../../components/Article.vue'
 import CategoryFloat from '../components/float/CategorysFloat.vue'
 import Commun from '../Commun.vue'
-import InviteOther from '../components/InviteOthers.vue'
+// import InviteOther from '../components/InviteOthers.vue'
 
 export default {
   components:{
-    CategoryFloat,Modal,CreateNewChannel,
-    CreateNewGroup,VueCustomScrollbar,CommunityIcon,Article,Commun,InviteOther
+    CategoryFloat,Modal,
+    // CreateNewChannel,
+    // CreateNewGroup,
+    VueCustomScrollbar,CommunityIcon,Article,
+    Commun,
+    // InviteOther
   },
 
   computed:{
@@ -143,7 +148,10 @@ export default {
     // console.log('启动')
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
-    // console.log(rs)
+    // 监听当前事件触发
+    this.$mit.on('clickItem',(item)=>{
+      this.currentItem(item)
+    })
   },
 
   data(){
@@ -190,9 +198,6 @@ export default {
         const index = groups.findIndex((findItem)=>{ return findItem.groupID === changeData.groupID })
         const enableGroup = await checkGroupShip([`${changeData.groupID}`]) // 有没有添加群聊
         this.isChat = enableGroup[0]
-
-        // console.log('获取数据',groups[index].type === 'Private');
-
         if(groups[index].type === 'Private'){
           const isDisable = groups[index].joinOption === "DisableApply"
           if(enableGroup[0] === 'yes'){
@@ -209,7 +214,6 @@ export default {
               message.warn('该群禁止加入')
             }
           }
-
         }else{
           const res = await window.$chat.searchGroupByID(changeData.groupID)
           const isDisable = res.data.group.joinOption !== 'DisableApply'
@@ -225,18 +229,14 @@ export default {
             // isDisable判断群聊是否禁止加入
             if (isDisable) {
              this.group = res.data.group
-             // data.showModal = true
             } else {
               message.warn('该群禁止加入')
             }
           }
         }
-
       }
-
       // 其他
       this.currentChannel = {...item,props:JSON.parse(item.props)}
-
     },
 
     clickEmptyButton(item){

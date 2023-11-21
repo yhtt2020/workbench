@@ -124,7 +124,7 @@
         ref="currentDeskRef"
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
-        :key="key"
+        :key="currentDeskId"
 
       >
         <!-- 拿菜单数据 -->
@@ -885,6 +885,7 @@ export default {
       this.addDeskVisible = false;
     },
     cleanMuuriData(list) {
+      console.log('清楚muuriId2')
       list.forEach((li) => {
         li.id = Date.now();
         delete li["_$muuri_id"];

@@ -1,5 +1,5 @@
 <template>
-    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
+    <xt-old-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99"
         :esc="true" @close="closeDetail">
         <div class=" maxDetail"
             :style="{ width: isFullScreen ? `${windoWidth}px` : '1000px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
@@ -162,7 +162,7 @@
         </div>
 
 
-    </xt-modal>
+    </xt-old-modal>
 </template>
 
 <script setup lang='ts'>

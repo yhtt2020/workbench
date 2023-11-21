@@ -16,7 +16,7 @@
         </div>
       </xt-button>
     </div>
-    <div class="flex flex-col w-full" style="height: calc(100% - 30px)">
+    <div class="flex flex-col w-full" style="height: calc(100% - 12px)">
       <!-- <template v-if="!showWay"> -->
       <!-- <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
           <div class="xt-text xt-font ">快递筛选</div>
@@ -35,7 +35,7 @@
           <div v-if="showWay">
             <MinEmpty v-if="displayList.length === 0"/>
             <MinCourierItem v-else :courier="displayList[0]"
-                            @click.stop="viewDeliveryDetails(this.deliveryDetails[0])">
+                            @click.stop="showDetail(displayList[0])">
             </MinCourierItem>
           </div>
           <template v-else>
@@ -45,7 +45,7 @@
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
                                     class="courier-item mt-2">
                 <div v-for="(item, index) in displayList">
-                  <ListItem :no-bg="true" :item="item" @goDetail="viewDeliveryDetails(item)"></ListItem>
+                  <ListItem :no-bg="true" :item="item" @goDetail="showDetail(item)"></ListItem>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
                 </div>
 
@@ -62,19 +62,19 @@
             </template>
           </template>
         </template>
-        <template v-if="allCourierVisible">
-          <LargeCourierModal v-if="courierShow" :show="allCourierVisible" @close-modal="changeState"/>
-          <SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>
-        </template>
+<!--        <template v-if="allCourierVisible">-->
+<!--          <LargeCourierModal :route="showCourierDetail?'detail':'list'" :mode="modalMode" :show="courierModalVisible" @close-modal="changeState"/>-->
+<!--&lt;!&ndash;          //<SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>&ndash;&gt;-->
+<!--        </template>-->
         <teleport to='body'>
-          <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+          <xt-old-modal v-if="courierModalVisible" v-model:visible="courierModalVisible" title="" :isFooter="false" zIndex="9"
                     :isHeader="false" :boxIndex="100" :maskIndex="99">
-            <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false;getDbCourier()"/>
-            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>
-          </xt-modal>
+            <LargeCourierDetail @change-route="changeRoute" :route="showCourierDetail?'detail':'list'" :mode="modalMode" @close="courierModalVisible = false;getDbCourier()"/>
+<!--            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>-->
+          </xt-old-modal>
         </teleport>
       </div>
-      <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
+<!--      <SmallCourierModal :show="showSmallDetail" :route="showCourierDetail?'detail':'list'" @close-modal="smallDetailsVisible"/>-->
     </div>
 
 
@@ -96,7 +96,6 @@ import grab from './grab'
 import ListItem from './ListItem.vue'
 import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
-import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue'
@@ -117,7 +116,6 @@ export default {
     ListItem,
     Widget,
     newIcon,
-    CourierItem,
     MinCourierItem,
     Empty,
     MinEmpty,
@@ -184,7 +182,8 @@ export default {
           newIcon: 'fluent:box-16-regular',
           title: '全部快递',
           fn: () => {
-            this.allCourierVisible = true
+            this.showCourierDetail=false
+            this.courierModalVisible = true
           },
         },
         {
@@ -207,11 +206,12 @@ export default {
       },
       isLoading: false,
       allCourierVisible: false,
-      courierShow: true,
+      modalMode: 'large',
       deliveryDetails: [],
-      showCourierDetail: false,
+      showCourierDetail: false,//显示详情
       showSmallDetail: false,
       largeDetailVisible: true,
+      courierModalVisible:false,//显示模态弹窗
       env: {
         web: false,
         mobile: false,
@@ -229,26 +229,30 @@ export default {
       this.allCourierVisible = false
       this.getDbCourier()
     },
+    changeRoute(route){
+      this.showCourierDetail=(route==='detail')
+    },
     refreshCourier () {
       this.refreshCouriers()
     },
-    viewDeliveryDetails (item) {
+    showDetail (item) {
       this.currentDetail = item
-      this.showCourierDetail = true
+      this.courierModalVisible = true
+      this.showCourierDetail=true
       // console.log(this.currentDetail);
     },
     closeCourierDetail () {
-      this.showCourierDetail = false
+      this.courierModalVisible = false
     },
     handleResize () {
-      let windoWidth = window.innerWidth
+      let windowWidth = window.innerWidth
       // console.log(windoWidth);
-      if (windoWidth > 1200) {
+      if (windowWidth > 1200) {
         this.largeDetailVisible = true
-        this.courierShow = true
+        this.modalMode = 'large'
       } else {
         this.largeDetailVisible = false
-        this.courierShow = false
+        this.modalMode = 'small'
       }
     },
     refreshAll: ui.refreshAll,
@@ -339,6 +343,7 @@ export default {
     if (this.storeInfo.jd.order.orders?.length > 0 || this.storeInfo.tb.order?.length > 0) {
       this.autoRefresh()
     }
+    this.handleResize()
 
   },
 

@@ -33,6 +33,14 @@ export function preHandleItem(item){
       newItem.lastNodeTime = content.latestNodes[0]?.time
       newItem.lastNodeSummary = content.latestNodes[0]?.txt
     }
+  } else if(newItem.store==='tb'){
+    newItem.company = content.expressType.slice(0, content.expressType.indexOf('快递') + 2)
+    newItem.stateText = content.status
+    newItem.tagColor = convertJdStatusColor(content.status)
+    if (content.latestNodes && content.latestNodes.length > 0) {
+      newItem.lastNodeTime = content.latestNodes[0]?.time
+      newItem.lastNodeSummary = content.latestNodes[0]?.txt
+    }
   }
   return newItem
 }
@@ -50,12 +58,14 @@ export function generateTitle(orderContent,store=''){
   }
 }
 
+
+
 /**
  * 统一获取标准化的订单状态
  * @param order
  */
 export function getOrderState(order){
-  const states=['onRoad','delivery','preparing','signed','collected']
+  const states=['onRoad','delivery','preparing','signed','collected','canceled']
   const words=['在途中','派送中','发货中','已签收','已揽收']
   if(order.store==='jd'){
     //京东订单处理
@@ -78,6 +88,8 @@ export function getJdState(order){
       return 'preparing'
     case '已完成':
       return 'signed'
+    case '已取消':
+      return 'canceled'
   }
 }
 export function getExpressState(order){

@@ -1,56 +1,46 @@
 import { communityStore } from '../../page/chat/store/communityStore'
 
 export const channelClass = {
- 
  async secondaryChannel(data:any){
-  // console.log('获取参数::>>',data)
   const community:any = communityStore()
-  
+  const no = data.no;
   const option = {
    communityNo:data.no,
    role:'channel',
    parentId:data.id === undefined ? 0 : data.id,
    type:data.type
   }
-  
-  if(data.type === 'link'){ // 创建链接频道
-   // console.log('查看参数', data.content)
-
+  // 创建链接频道
+  if(data.type === 'link'){ 
    const linkOption = {
     ...option,
     name:data.content.name,
     props:JSON.stringify(data.content.props),
    }
-   
-   //  console.log('查看参数::>>',linkOption)
-
-   return await community.createChannel(linkOption)
+   community.createChannel(linkOption,no) 
   }
-
-  if(data.type === 'group' ){  // 创建群聊频道
-    const res  = await community.createChannel( {
+  // 创建群聊频道
+  if(data.type === 'group' ){  
+    const chatOption = {
       ...option,
       name:data?.content.name,
       props:JSON.stringify(data?.content.props)
-    })
-    return res
-    
+    } 
+    community.createChannel(chatOption,no)
   }
-
-  if(data.type === 'forum'){ // 创建社区频道
-    // console.log('查看参数',data);
+  // 创建社区频道
+  if(data.type === 'forum'){
     const forumOption = {
       ...option,
       name:data.content.name,
       props:JSON.stringify(data.content)
     }
-
-    return await community.createChannel(forumOption)
+    community.createChannel(forumOption,no)
   }
+  // 创建桌面频道
+  if(data.type === 'desk'){  }
 
-  if(data.type === 'desk'){  // 创建桌面频道
-
-  }
- }
+ },
+ 
 }
 

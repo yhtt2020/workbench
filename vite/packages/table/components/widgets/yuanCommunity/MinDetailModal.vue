@@ -1,5 +1,5 @@
 <template>
-    <xt-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" @close="closeDetail"
+    <xt-old-modal v-model="custom" title="" :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99" @close="closeDetail"
         :esc="true">
         <div class="w-[600px] h-[700px] maxDetail " :style="{ width: isFullScreen ? `${windoWidth}px` : '600px', height: isFullScreen ? `${windowHeight}px` : '700px' }">
             <div class="w-full pl-4 pr-4 card-content">
@@ -11,7 +11,7 @@
                                 <div class="flex items-center juscify-center">
                                     <Icon class=" xt-text pointer active-icon"  icon="fluent:chat-16-regular" />
                                 </div>
-                                
+
                             </xt-button>
                         </a-tooltip>
                         <a-tooltip title="全屏" placement="bottom">
@@ -20,27 +20,27 @@
                                     <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-maximize-16-filled"  v-if="!isFullScreen" />
                                     <Icon class=" xt-text pointer active-icon" icon="fluent:full-screen-minimize-16-filled"  v-else />
                                 </div>
-                                
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-tooltip title="刷新" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="refresh" class="ml-3">
                                 <div class="flex items-center juscify-center">
                                     <Icon class=" xt-text pointer active-icon" icon="akar-icons:arrow-clockwise"  />
                                 </div>
-                                
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-tooltip title="外部打开" placement="bottom">
                             <xt-button :w="22" :h="22" style="background: transparent;" @click="goYuan" class="ml-3">
                                 <div class="flex items-center juscify-center">
                                     <Icon class=" xt-text pointer active-icon" icon="majesticons:open"/>
                                 </div>
-                                
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                         <a-divider class="w-[3px]  " type="vertical" style="color: var(--divider);" />
                         <a-tooltip title="关闭" placement="bottom" >
@@ -48,9 +48,9 @@
                                 <div class="flex items-center juscify-center">
                                      <Icon class=" xt-text pointer active-icon"  icon="akar-icons:cross"/>
                                 </div>
-                               
+
                             </xt-button>
-                            
+
                         </a-tooltip>
                     </div>
                 </div>
@@ -144,9 +144,9 @@
                                         style="width: 57px;height: 32px;border: none;cursor: pointer;">
                                         <div class="flex items-center justify-center">
                                            <img src="../../../../../public/icons/like.png" alt="" class="w-[20px] h-[20px] mr-1">
-                                        {{ cardData.support_count }} 
+                                        {{ cardData.support_count }}
                                         </div>
-                                        
+
                                     </xt-button>
                                     <!-- </div> -->
 
@@ -178,7 +178,7 @@
         </div>
 
 
-    </xt-modal>
+    </xt-old-modal>
 </template>
 
 <script setup lang='ts'>
