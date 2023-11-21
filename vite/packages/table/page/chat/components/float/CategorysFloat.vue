@@ -189,7 +189,11 @@ export default{
         },
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
-          callBack:()=>{ this.$refs.editorRef.openEditorModal() }
+          callBack:()=>{
+            this.$refs.editorRef.openEditorModal() 
+            // this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+          }
+          // 
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         // {
@@ -212,7 +216,9 @@ export default{
         },
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
-          callBack:()=>{ this.$refs.editorRef.openEditorModal() },
+          callBack:()=>{
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+          },
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         {
