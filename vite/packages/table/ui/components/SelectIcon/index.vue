@@ -86,10 +86,11 @@
     v-show="modelValue"
       @click.stop.self="colseClick()"
       class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
-      :style="{
-        'z-index': maskIndex,
-      }"
+      style="z-index:900"
     ></div>
+      <!-- :style="{
+        'z-index': maskIndex,
+      }" -->
   </template>
   
   <script setup>
