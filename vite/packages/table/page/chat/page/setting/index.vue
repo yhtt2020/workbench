@@ -51,8 +51,6 @@ export default {
 
  mounted() {  
   this.$nextTick(()=>{
-    console.log('排查报错',this.$route.meta.tab4 === undefined);
-    console.log('查看路由',this.$route);
     if(this.$route.meta.tab4 === undefined){
       const data = this.classNav[0]
       const route = data.route
