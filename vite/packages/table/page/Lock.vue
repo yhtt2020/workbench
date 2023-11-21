@@ -186,9 +186,9 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
-    })
+    // this.$nextTick(() => {
+    //   $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
+    // })
     $('#displayMiddle').fadeIn(1000)
     setTimeout(() => {
       $('#tip').fadeOut(1000)
@@ -456,12 +456,14 @@ export default {
 }
 
 #displayMiddle {
-  position: fixed;
-  left: 10vw;
-  top: 10vh;
-  height: 80vh;
-  width: 80vw;
   z-index: 9999999;
+  position: absolute;
+  padding-bottom: 90vh;
+  padding-top: 10vh;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  width: calc(100% - 20vw);
+  overflow: visible;
   flex-direction: column;
 }
 
@@ -505,5 +507,10 @@ export default {
       font-size: 16px;
     }
   }
+}
+</style>
+<style>
+.spl-prev{
+  z-index:99999999999999
 }
 </style>

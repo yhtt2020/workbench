@@ -9,7 +9,7 @@
     :env="env"
   >
     <template #right-menu>
-      <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px">
+      <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px;">
         <RightOutlined />
       </div>
     </template>
@@ -26,7 +26,7 @@
 
       </div>
 
-      <div @click.stop style="cursor: auto;height:calc( 100% - 30px);position: relative" class="mt-2 ">
+      <div @click.stop style="cursor: auto;height:calc( 100% - 10px);position: relative" class="mt-2 ">
         <Tasklist class="content-box " :data="notFinish"></Tasklist>
 
         <div style="position:absolute;display: flex;right:0;align-content: end;bottom:0;z-index: 99">

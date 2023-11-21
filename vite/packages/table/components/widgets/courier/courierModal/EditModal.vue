@@ -15,11 +15,13 @@
 
         <div class="mb-4 px-6 flex flex-col">
           <div class="flex items-center mb-4">
-            <div class="flex items-center mr-3 justify-center rounded-lg w-14 h-14 pointer category-button xt-bg-2"
+            <div class="flex items-center mr-3 justify-center rounded-lg w-14 h-14 pointer category-button "
                  @click="onUpdateImg">
-              <a-avatar :size="32" :src="editAvatar"></a-avatar>
+              <Cover :cover="form.cover" :store="order.store"></Cover>
+
             </div>
-            <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar"/>
+
+            <GoodIcon :default-avatar="order.store?order.content?.items[0].cover:''" v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar"/>
             <a-input @keydown.enter="submitEdit" ref="titleRef" class="xt-bg-2 h-10" v-model:value="form.title" style="width:383px;border-radius: 8px;"></a-input>
           </div>
           <div class="flex " v-if="!order.store">
@@ -61,9 +63,11 @@ import GoodIcon from '../../../../../selectIcon/page/index.vue'
 import { courierStore } from '../../../../apps/ecommerce/courier'
 import { message } from 'ant-design-vue'
 import { generateTitle } from '../courierTool'
+import Cover from '../component/Cover.vue'
 
 export default {
   components: {
+    Cover,
     Modal, EditIcon, GoodIcon
   },
 
@@ -131,7 +135,8 @@ export default {
       } else {
         this.bgColor = ''
       }
-      this.editAvatar = avatar
+      this.form.cover = avatar
+      this.goodIconVisible=false
     },
 
    async  submitEdit () {
@@ -142,6 +147,7 @@ export default {
       let data={
         _id:this.order._id,
         title: this.form.title.trim(),
+        cover:this.form.cover,
         edited:true,//标记已编辑
       }
       if(!this.order.store){
@@ -154,6 +160,7 @@ export default {
       if(rs){
         message.success('编辑成功')
         this.order.title=this.form.title
+        this.order.cover=this.form.cover
         this.order.logisticCode=this.form.logisticCode
         this.order.customerName=this.form.customerName
         this.order.shipperCode=this.form.shipperCode

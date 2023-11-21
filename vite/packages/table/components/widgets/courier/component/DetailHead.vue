@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between mb-3">
     <div class="flex">
-      <div class="flex items-center justify-center rounded-lg w-14 h-14 pointer category-button " @click="onUpdateImg">
+      <div class="flex items-center justify-center rounded-lg w-14 h-14 pointer category-button "  @click="editCourier" >
         <Cover :cover="orderData.cover" :store="orderData.store" bg="var(--secondary-bg)"></Cover>
       </div>
       <div class="flex flex-col ml-3">
@@ -13,7 +13,7 @@
           <div v-if="orderData.store==='tb'" class="flex items-center rounded-md xt-active-text justify-center w-6 h-6 "
                style="background: #FA5000;">淘
           </div>
-          <span class="mx-1 xt-font font-16 font-600 xt-text truncate" style="width:200px">{{ orderData?.title }}</span>
+          <span class="mx-1 xt-font font-16 font-600 xt-text truncate" style="max-width:200px">{{ orderData?.title }}</span>
           <SmallIcon icon="akar-icons:edit" class="xt-text pointer" style="font-size: 1.5rem;" @click="editCourier"/>
         </div>
         <div class="flex items-center">
@@ -32,7 +32,6 @@
       </div>
     </div>
 
-    <GoodIcon v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar"/>
 
     <div class="flex items-center">
       <xt-button @click="toggleFollow" w="32" h="32" style="border-radius: 8px;">
@@ -44,8 +43,7 @@
         </div>
       </xt-button>
 
-      <MoreDrop v-if="orderData.store==='jd' || orderData.store==='tb'" class="ml-3" :navList="jdTbList"/>
-      <MoreDrop v-else class="ml-3" :navList="moreList"/>
+
     </div>
   </div>
 
@@ -54,23 +52,21 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import { kdCompany } from '../../mock'
+import { kdCompany } from '../mock'
 import { Modal, message } from 'ant-design-vue'
 import useClipboard from 'vue-clipboard3'
 
-import GoodIcon from '../../../../../../selectIcon/page/index.vue'
-import MoreDrop from '../dropdown/MoreDropIcon.vue'
-import Cover from '../../component/Cover.vue'
-import EditModal from '../EditModal.vue'
-import { courierStore } from '../../../../../apps/ecommerce/courier'
+import MoreDrop from '../courierModal/dropdown/MoreDropIcon.vue'
+import Cover from './Cover.vue'
+import EditModal from '../courierModal/EditModal.vue'
+import { courierStore } from '../../../../apps/ecommerce/courier'
 import { mapActions } from 'pinia'
 
 export default {
   props: ['orderData'],
   components: {
     Cover,
-    SmallIcon,
-    GoodIcon, MoreDrop, EditModal
+    SmallIcon,  MoreDrop, EditModal
   },
   data () {
     return {
@@ -131,9 +127,6 @@ export default {
     editCourier () {
       this.$refs.courierEditRef.openEditModal()
     },
-    onUpdateImg () {
-      this.goodIconVisible = !this.goodIconVisible
-    },
     toggleFollow () {
       if (this.orderData.followed) {
         this.unfollow()
@@ -174,8 +167,8 @@ export default {
     // 复制订单号
     async copyOrderNum () {
       const { toClipboard } = useClipboard()
-      const res = await toClipboard(this.orderData?.LogisticCode)
-      if (res.text !== '') {
+      await toClipboard(this.orderData?.logisticCode)
+      if (this.orderData?.LogisticCode !== '') {
         message.success('订单号复制成功')
       }
     }

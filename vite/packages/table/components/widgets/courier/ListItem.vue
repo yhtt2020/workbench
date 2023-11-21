@@ -4,25 +4,48 @@ import {message, Modal} from "ant-design-vue";
 import {mapActions, mapWritableState} from "pinia";
 import {courierStore} from "../../../apps/ecommerce/courier";
 import {Icon as SmallIcon} from '@iconify/vue'
+import browser from "../../../js/common/browser";
 
 export default {
   name: "ListItem",
   components: {Cover, SmallIcon},
-  props: ['item','noBg'],
+  props: ['item', 'noBg'],
   methods: {
-    ...mapActions(courierStore, ['removeDbData', 'putSortList', 'followCourier', 'unfollowCourier']),
+    ...mapActions(courierStore, ['updateOrder', 'removeDbData', 'putSortList', 'followCourier', 'unfollowCourier', 'setTopCourier', 'hideCourier', 'showCourier']),
     goDetail() {
       this.$emit('goDetail', this.item)
     },
-  },
-  data() {
-    return {
+    setFirstActive() {
+      if (this.orderList.length > 0) {
+        this.currentDetail = this.orderList[0]
+      } else {
+        this.currentDetail = null
+      }
     }
   },
+  data() {
+    return {}
+  },
   computed: {
-    ...mapWritableState(courierStore, ['currentDetail']),
+    ...mapWritableState(courierStore, ['currentDetail', 'orderList']),
     menus() {
-      return [
+      let menus = [
+        {
+          name: '更新此订单',
+          callBack: async () => {
+            let rs = await this.updateOrder(this.item._id)
+            if (rs) {
+              for (const key of Object.keys(rs)) {
+                this.item[key] = rs[key] //全键更新
+              }
+              console.log(rs, this.item)
+              message.success('刷新订单成功')
+            } else {
+              message.error('刷新订单失败')
+            }
+          },
+          newIcon: 'fluent:arrow-counterclockwise-20-filled'
+        },
         this.item.followed ? {
             name: '取消关注',
             callBack: async () => {
@@ -37,9 +60,8 @@ export default {
             newIcon: 'fluent:star-12-regular'
           } :
           {
-            name: '关注物流',
+            name: '关注订单',
             callBack: async () => {
-              console.log('item', this.item)
               let rs = await this.followCourier(this.item._id)
               if (rs) {
                 this.item.followed = true
@@ -52,7 +74,51 @@ export default {
           }
         ,
         {
-          name: '删除快递',
+          name: '移至顶部',
+          newIcon: 'fluent:arrow-upload-16-filled',
+          callBack: async () => {
+            let rs = await this.setTopCourier(this.item._id)
+            if (rs) {
+              this.item.followed = true
+              message.success('置顶成功')
+              this.setFirstActive()
+              this.$emit('scrollToCurrent')
+            } else {
+              message.error('置顶失败')
+            }
+          }
+        },
+        this.item.hide ? {
+          name: '显示订单',
+          callBack: async () => {
+            let rs = await this.showCourier(this.item._id)
+            if (rs) {
+              message.success('显示成功。')
+              this.$emit('showItem', this.item)
+            }
+          },
+          newIcon: 'fluent:eye-off-16-regular'
+
+        } : {
+          name: '隐藏订单',
+          callBack: () => {
+            Modal.confirm({
+              content: '隐藏订单后，即使重新获取订单也不会再出现。需要手动单独在隐藏订单中恢复。',
+              centered: true,
+              okText: '确认隐藏',
+              onOk: async () => {
+                let rs = await this.hideCourier(this.item._id)
+                if (rs) {
+                  message.success('隐藏成功。')
+                  this.$emit('hideItem', this.item)
+                }
+              }
+            })
+          },
+          newIcon: 'fluent:eye-off-16-regular'
+        },
+        {
+          name: '删除订单',
           callBack: () => {
             Modal.confirm({
               content: '确认删除订单？删除的订单在下次同步的时候仍然会被添加回列表。如果不希望显示此订单，请使用隐藏功能。',
@@ -62,14 +128,24 @@ export default {
                 if (rs) {
                   message.success('删除成功。')
                   this.$emit('removeItem', this.item)
+                  this.$emit('afterRemove', this.item)
                 }
               }
             })
           },
           newIcon: 'akar-icons:trash-can',
-          color: 'var(--error)'
-        },
+        }
       ]
+      if (this.item.store) {
+        menus.push({
+          name: '查看原始订单',
+          newIcon: 'akar-icons:link-out',
+          callBack: () => {
+            browser.openInUserSelect(this.item.content.detailUrl)
+          }
+        })
+      }
+      return menus
     }
   }
 }
@@ -77,7 +153,7 @@ export default {
 
 <template>
   <xt-menu name="name" :menus="menus">
-    <div :class="{ 'select': this.currentDetail?._id ===  item._id ,'xt-bg-2':!noBg,'mb-3':!noBg }"
+    <div ref="itemRef" :class="{ 'select': this.currentDetail?._id ===  item._id ,'xt-bg-2':!noBg,'mb-3':!noBg }"
          class="flex flex-col p-3  rounded-lg xt-text pointer courier-item hover-bg"
          @click="goDetail">
       <div class="flex">
@@ -95,7 +171,7 @@ export default {
               </div>
               <div class="xt-font font-14 font-600 mx-1.5  flex-1 w-0 flex mt-1" style="width: calc(100% - 70px); ">
                 <div :title="item.title" class="truncate">{{ item.title }}</div>
-                <span class="fav-icon">
+                <span class="fav-icon ml-1">
                       <SmallIcon v-if="!item.followed" icon="fluent:star-12-regular"/>
                       <SmallIcon icon="fluent:star-16-filled" v-else style="color:var(--warning);"/></span>
               </div>
@@ -110,7 +186,7 @@ export default {
                 拆
               </div>
               <div class="xt-text" v-if="item.content.arrivalAt">
-                {{ item.content.arrivalAt?.replace('您的订单','').replace('您手中','') }}
+                {{ item.content.arrivalAt?.replace('您的订单', '').replace('您手中', '') }}
               </div>
             </div>
           </div>
@@ -135,6 +211,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
+.courier-item {
+  border: 2px solid transparent;
+}
+
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;

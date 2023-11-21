@@ -114,7 +114,7 @@ export default {
         this.$router.replace({ name: 'home' })
         this.launching = false
         // 暂时还没有排查到卡顿原因
-        
+
       }
     }, 3000)
     this.timeout()
@@ -131,7 +131,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
-    this.initStore(taskStore, 'taskStore')
+    this.initStore(taskStore, 'task')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -151,12 +151,14 @@ export default {
         if (!this.launching) {
           return
         }
-        if (Object.keys(window.loadedStore).some(key => {
+        let haventOk=Object.keys(window.loadedStore).filter(key => {
           let check = !window.loadedStore[key]
           if (window.loadedStore[key] === false)
             return check
-        })) {
+        })
+        if (haventOk.length) {
           //未全部搞定
+          console.log(haventOk)
           return
         } else {
           //已经全部搞定
