@@ -19,6 +19,8 @@ export interface IOption {
   // 背景色
   background?: string;
   titleRoute:any;
+  // 便签全背景色
+  showColor:boolean;
 }
 
 // 菜单项

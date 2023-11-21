@@ -82,6 +82,7 @@ import {Notifications} from './js/common/sessionNotice'
 
 
 import WujieVue from 'wujie-vue3'
+import mitt from 'mitt'
 // const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 // Your SDKAppID
 // init TUIKit
@@ -89,6 +90,8 @@ import WujieVue from 'wujie-vue3'
 
 const notice = new Notifications()
 window.$notice = notice
+
+const Mit = mitt()
 
 
 dayjs.locale('zh-cn');
@@ -107,6 +110,7 @@ app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
+app.config.globalProperties.$mit = Mit
 
 const pinia = createPinia()
 pinia.use(piniaPersist)

@@ -1,6 +1,6 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
-export default () => {
+export default (callback?: Function) => {
   // 创建窗口大小
   const windowWidth = ref(document.documentElement.clientWidth);
   const windowHeight = ref(document.documentElement.clientHeight);
@@ -13,6 +13,11 @@ export default () => {
     resizeTimer = setTimeout(() => {
       windowWidth.value = document.documentElement.clientWidth;
       windowHeight.value = document.documentElement.clientHeight;
+      callback &&
+        callback({
+          windowWidth,
+          windowHeight,
+        });
     }, 200); // 设置防抖延迟为200毫秒
   };
 

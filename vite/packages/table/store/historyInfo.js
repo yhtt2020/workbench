@@ -10,14 +10,16 @@ export async function getHistoryInfo(url){
     let date = now.getMonth() +1  + '/' + now.getDate()
     let params = { 
         apiName:"todayOnhistory.queryEvent|php",
-        params:{
+        params:JSON.stringify({
             date:date.toString()
-        },
-        options:{"cache":1,"ttl":60,"key":"todayOnhistory.queryEvent"}
+        }),
+        options:JSON.stringify({"cache":1,"ttl":60,"key":"todayOnhistory.queryEvent"})
     }
     let getData = ""
     await get(sUrl("/app/juhe/get"),params).then(res=>{
-        getData = res.data[0]
+        if (res.data.length) {
+            getData = res.data[0]
+        }
     })
     return getData;
 }

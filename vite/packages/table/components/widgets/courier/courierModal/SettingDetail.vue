@@ -37,6 +37,7 @@
 
       <span class="mt-4 xt-text-2 xt-font font-14 font-400">仅对电商平台快递订单有效。（自定义添加的快递订单默认会定期自动更新，不需要设置）</span>
 
+      <xt-button @click="clear" :radius="6" type="error" size="mini"  :h="34"  class="mt-2 " style="width: 100%"> 清空全部数据</xt-button>
     </div>
 
     <div class="flex flex-col w-full p-4 rounded-lg xt-bg-2 items-enter">
@@ -94,11 +95,12 @@ import { mapActions, mapWritableState } from "pinia";
 import { courierStore } from "../../../../apps/ecommerce/courier";
 import { autoRefreshTime, autoCancelTime } from "./modalMock";
 import { appStore } from "../../../../store";
-import { message } from "ant-design-vue";
+import { message, Modal } from 'ant-design-vue'
 
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
 import Disassociation from "./Disassociation.vue";
+import ui from '../courierUI'
 
 export default {
   components: {
@@ -114,7 +116,7 @@ export default {
       ],
       defaultAuto: { title: "精准匹配", name: "preciseMatch" },
 
-      statusSelect: [{ value: "未完成快递" ,name:'unCompleted'}, { value: "特别关注（关注物流）",name:'specialAttention' }],
+      statusSelect: [{ value: "unFinished" ,label:'未完成订单'}, { value: "followed",label:'关注的订单' }],
       autoRefreshTime,
       autoCancelTime,
       dealType:''
@@ -126,7 +128,21 @@ export default {
   },
 
   methods: {
-    ...mapActions(courierStore,['getOrderDetail']),
+    ...mapActions(courierStore,['clearDb']),
+    clear(){
+      Modal.confirm({
+        centered:true,
+        content:'是否清空全部的数据？此操作不可恢复。清空后仍可通过刷新重新获取订单。',
+        onOk:async () => {
+          let rs = await this.clearDb()
+          if (rs) {
+            message.success('清空数据成功。')
+          } else {
+            message.error('清空失败。')
+          }
+        }
+      })
+    },
     // 关联京东
     bindJd() {
       if (!this.storeInfo.jd.nickname){
@@ -146,8 +162,7 @@ export default {
             duration: 3,
           });
           this.storeInfo.jd.order = data;
-          await this.getOrderDetail(data.orders);
-          console.log(data);
+          await ui.getJdOrderDetail(data.orders);
         });
       }
     },
@@ -158,30 +173,7 @@ export default {
         this.dealType = 'tb'
         this.$refs.dealModalRef.openDealDetail()
       }else {
-        message.loading({
-          content:  "已绑定淘宝账号：" + this.storeInfo.tb.nickname + "，正在为您更新订单信息，请稍候…",
-          key: "loadingTip",
-          duration: 0,
-        });
-        grab.tb.getOrder((args) => {
-          if (args.status === 0) {
-            if (args.code === 401) {
-              message.error("获取订单失败，检测到登录信息过期，请重新登录。");
-              this.storeInfo.tb.nickname = null;
-              this.bindTb();
-              return;
-            }
-            message.error("获取订单意外失败。");
-            return;
-          }
-          message.success({
-            content:  "更新订单成功!本次共更新：" +  args.data.orders.length + "条订单信息",
-            key: "loadingTip",
-            duration: 3,
-          });
-          this.getOrderDetail(data.orders)
-          console.log(args);
-        });
+        ui.getTbOrders()
       }
     },
 

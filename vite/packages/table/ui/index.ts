@@ -6,11 +6,12 @@ import XtCanvas from "./components/Canvas/index.vue"
 import XtGuided from "./components/Guided/index.vue"
 import XtLeftMenu from "./components/LeftMenu/index.vue"
 import XtMenu from "./components/Menu/index.vue"
-import XtModal from "./components/Modal/index.vue"
+import XtOldModal from "./components/OldModal/index.vue"
 import XtTask from "./components/Task/index.vue"
 import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
 import XtZoom from "./components/Zoom/index.vue"
+import XtSelectIcon from "./components/SelectIcon/index.vue"
 // 基础组件
 import XtBaseColor from "./libs/BaseColor/index.vue"
 import XtBaseIcon from "./libs/BaseIcon/index.vue"
@@ -38,7 +39,7 @@ export default function (app: App): void {
   app.component('XtGuided',XtGuided )
   app.component('XtLeftMenu', XtLeftMenu)
   app.component('XtMenu', XtMenu)
-  app.component('XtModal', XtModal)
+  app.component('XtOldModal', XtOldModal)
   app.component('XtTask', XtTask)
   app.component('XtText', XtText)
   app.component('XtView', XtView)
@@ -63,4 +64,5 @@ export default function (app: App): void {
   app.component('XtTab',XtTab )
   app.component('XtTextarea', XtTextarea)
   app.component('XtTitle',XtTitle )
+  app.component('XtSelectIcon',XtSelectIcon )
 }

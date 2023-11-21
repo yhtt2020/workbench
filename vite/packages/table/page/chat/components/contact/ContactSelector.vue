@@ -1,12 +1,11 @@
 <template>
   <div class="flex px-6">
     <div class="flex flex-col" style="width:293px;" >
-     <a-input    class="h-11" ref="searchRef"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search" @input="search" style="border-radius: 10px;">
+     <a-input class="h-11" ref="searchRef"  v-model:value="searchKeyword"  placeholder="搜索" @pressEnter="search" @input="search" style="border-radius: 10px;">
       <template #suffix>
-       <DirectlyIcon icon="fluent:search-20-filled" style="font-size: 1.5rem;cursor: pointer;" @click="search"/>
+       <DirectlyIcon icon="fluent:search-20-filled" class="pointer xt-text-2" style="font-size: 1.5rem;" @click="search"/>
       </template>
      </a-input>
-
      <template v-if="inviteMode === 'direct'">
       <template v-if="crumbsShow === false">
         <div class="flex my-3" v-if="inviteMode === 'direct'">
@@ -17,28 +16,21 @@
             <span class="ml-3 font-16 font-400" style="color:var(--primary-text);">{{ item.name }}</span>
           </div>
         </div>
-  
         <div class="flex items-center justify-between mb-2">
          <div class="font-14 font-400" style="color: var(--secondary-text);">{{teamTitle}}</div>
          <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
         </div>
-  
         <div class="flex items-center h-full justify-center" v-if="teamList?.length === 0">
           <EmptyStatus />
         </div>
-    
-        <vue-custom-scrollbar v-else class="flex flex-col" :settings="settingsScroller" style="height:320px;">
-         
+        <vue-custom-scrollbar v-else class="flex flex-col justify-between" :settings="settingsScroller" style="height:320px;">
          <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
-          class="flex rounded-lg items-center pointer mb-4 p-3"
-          @click="selectCurrentContact(item)"
+          class="flex rounded-lg items-center pointer p-3" @click="selectCurrentContact(item)"
          >
-         
           <template v-if="item.userInfo">
            <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
            <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
           </template>
-          
           <template v-else>
            <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
            <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
@@ -46,32 +38,25 @@
          </div>
         </vue-custom-scrollbar>
       </template>
-      
       <FriendCrumb v-else-if="crumbsShow && crumbsType === 'myFriend'" :selectList="selectedList" @currentClick="selectCurrentContact" @updateList="updateList"  @back="crumbsShow = false"/>
-      
      </template>
-
      <template v-else>
       <div class="flex items-center justify-between">
         <div class="font-14 font-400 my-3" style="color: var(--secondary-text);">{{teamTitle}}</div>
         <a-checkbox class="custom-checkbox-font" v-model:checked="settings.isAllSelected" @change="handleSelectAllChange($event)" >全选</a-checkbox>
       </div>
-
       <div class="flex items-center h-full justify-center" v-if="teamList?.length === 0">
         <EmptyStatus />
       </div>
-    
-      <vue-custom-scrollbar class="flex flex-col" v-else :settings="settingsScroller" style="height:430px;">
+      <vue-custom-scrollbar class="flex flex-col justify-between" v-else :settings="settingsScroller" style="height:430px;">
         <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
-         class="flex rounded-lg items-center pointer mb-4 p-3"
+         class="flex rounded-lg items-center pointer  p-3"
          @click="selectCurrentContact(item,index)"
         >
-         
          <template v-if="item.userInfo">
           <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
          </template>
-    
          <template v-else>
           <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
@@ -79,40 +64,29 @@
         </div>
       </vue-custom-scrollbar>
      </template>
-  
-  
     </div>
-    
     <a-divider type="vertical" style="margin: 0 16px; height: 530px; background-color:var(--divider);" />
-  
     <div style="width:293px" class="flex flex-col">
-     <div class="mb-4">已选({{ selectedList.length }}个)</div>
-
-  
+     <div class="mb-4 xt-text-2 xt-font font-14 font-400">已选({{ selectedList.length }}个)</div>
      <vue-custom-scrollbar class="flex flex-col" :settings="settingsScroller" style="height:440px;">
       <div v-for="item in selectedList"  class="flex rounded-lg items-center justify-between pointer mb-2 p-3">
        <div class="flex items-center" v-if="item.userInfo">
         <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
         <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span>
        </div>
-  
        <div class="flex items-center" v-else>
         <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
         <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span>
        </div>
-  
-  
        <div class="flex items-center justify-center category-button" @click="deleteSelected(item)">
-        <DirectlyIcon icon="zondicons:minus-solid" style="font-size: 1.29rem;color:var(--secondary-text);" />
+        <DirectlyIcon icon="zondicons:minus-solid" style="font-size: 1.29rem;" class="xt-text-2" />
        </div>
       </div>
      </vue-custom-scrollbar>
-  
      <div class="flex justify-end mt-4">
       <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeButton">取消</XtButton>
       <div class="flex items-center justify-center pointer category-button rounded-lg" style="width: 64px;background: var(--active-bg);">确定</div>
      </div>
-  
     </div>
   </div>
 </template>

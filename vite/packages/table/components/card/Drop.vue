@@ -1,6 +1,7 @@
 <!-- 小组件放置层 -->
 <template>
-  <div ref="container" v-element-size="elementSize">
+  <!-- <div ref="container" v-element-size="elementSize"> -->
+  <div ref="container">
     <slot></slot>
   </div>
 </template>

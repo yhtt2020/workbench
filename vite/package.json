@@ -40,6 +40,7 @@
     "lodash-es": "^4.17.21",
     "math-expression-evaluator": "^2.0.3",
     "md-editor-v3": "^4.3.0",
+    "mitt": "^3.0.1",
     "muuri": "^0.9.5",
     "nanoid": "^4.0.0",
     "nprogress": "^0.2.0",

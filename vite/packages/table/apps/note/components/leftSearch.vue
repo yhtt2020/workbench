@@ -36,7 +36,7 @@
                             <div class="ml-2">{{ item.hasOwnProperty('customData')?item.customData.title:'' }}</div>
                         </div>
                         <!-- 菜单 -->
-                        <xt-menu :menus="menus" model="click">
+                        <xt-menu @mounted="changeMenu(index)" :menus="menus" model="click">
                             <div class="flex items-center pointer note-menu">
                                 <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20" />
                             </div>

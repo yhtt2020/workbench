@@ -1,109 +1,71 @@
 <template>
- <div class="flex flex-col my-3" style="width:500px;">
-  <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
-   <span class="font-16-400" style="color:var(--primary-text);">分组设置</span>
-   <div class="close-channel w-10 h-10 flex items-center rounded-lg pointer active-button justify-center"  style="background: var(--secondary-bg);" @click="closeNewGroup">
-    <CategoryIcon icon="fluent:dismiss-16-filled"  style="font-size: 1.25em;color: var(--secondary-text);"/>
-   </div>
-  </div>
-
-  <div class="flex flex-col px-6">
-   <a-input :placeholder="categoryName" v-model:value="categoryName" class="h-10 search" style="border-radius: 8px;text-align: center;" @pressEnter="submitCategory"></a-input>
-   <div class="mt-4 flex items-center justify-end pt-4">
-    <XtButton style="width: 64px;height:40px;margin-right: 12px;" @click="closeNewGroup">取消</XtButton>
-    <XtButton style="width: 64px;height:40px; background: var(--active-bg);color:var(--active-text);" @click="submitCategory">确定</XtButton>
-   </div>
-  </div>
- </div>
+  <teleport to='body'>
+    <Modal v-if="setVisible" :blurFlag="true" v-model:visible="setVisible" style="z-index: 200 !important;">
+      <div class="flex flex-col my-3" style="width:500px;">
+        <ModalTop  title="分组设置" @close="setVisible = false"/>
+        <div class="flex flex-col px-6">
+          <a-input placeholder="分组名称" v-model:value="categoryName" class="h-10 search" style="border-radius: 8px;text-align: center;" @pressEnter="submitCategory" />
+          <div class="mt-4 flex items-center justify-end pt-4">
+            <xt-button w="64" h="40" class="mr-3 category-button" @click="setVisible = false">取消</xt-button>
+            <xt-button w="64" h="40" type="theme" class="category-button" @click="submitCategory">确定</xt-button>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  </teleport>
 </template>
 
 <script>
 import { mapActions,mapWritableState } from 'pinia'
-import { Icon as  CategoryIcon } from '@iconify/vue'
 import { communityStore } from '../../store/communityStore'
 import { message } from 'ant-design-vue'
 
+import Modal from '../../../../components/Modal.vue';
+import ModalTop from '../ModalTop.vue';
+
 export default {
+  components:{
+    Modal,ModalTop,
+  },
+
   props: ["no","item"],
 
-  components:{
-   CategoryIcon
-  },
-
-  data() {
-    return {
-     categoryName:this.item.name,
+  data(){
+    return{
+      setVisible:false,
+      categoryName: this.item?.name ,
     }
   },
 
-  mounted(){
-    this.$nextTick(()=>{
-      const inputDom = document.querySelector('.search')
-      inputDom.focus()
-      // inputDom.select()
-    })
-  },
-
-  methods: {
-   ...mapActions(communityStore,['updateChannel','getCategoryData']),
-   // 关闭弹窗
-   closeNewGroup(){
-    this.$emit('close')
-   },
-
-   // 创建完成
-   async submitCategory(){
-    if(this.categoryName !== '' && this.no !== '1'){
-      const categoryRes =  await this.updateChannel({...this.item,name:this.categoryName})
-      if(categoryRes.status === 1){
-        message.success(`${categoryRes.info}`)
-        await this.getCategoryData(this.no)
-        this.closeNewGroup()
+  methods:{
+    ...mapActions(communityStore,['updateChannel']),
+    openSetModal(){
+      this.setVisible = true
+      this.$nextTick(()=>{
+       const inputDom = document.querySelector('.search')
+       inputDom.focus()
+       inputDom.select()
+      })
+    },
+    // 完成更新
+    submitCategory(evt){
+      if(this.categoryName !== '' && this.no !== '1'){
+        const option = {
+          ...this.item,
+          name:this.categoryName
+        }
+        console.log('查看option',option);
+        this.updateChannel(option,this.no)
+        message.success('数据更新成功')
+        this.setVisible = false
       }else{
-       message.error(`${categoryRes.info}`)
-       this.closeNewGroup()
+        message.error('数据不能为空')
+        evt.preventDefault();
       }
-
     }
-
-   }
-
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-.font-16-400 {
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.close-channel {
-  position: absolute;
-  top: 1px;
-  right: 12px;
-}
-
-.active-button {
-  &:active {
-    filter: brightness(0.8);
-    opacity: 0.8;
-  }
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.font-14-400 {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-:deep(.ant-input){
-  color: var(--secondary-text) !important;
-  font-size: 1rem;
-  &::placeholder{
-    color: var(--secondary-text) !important;
-  }
-}
 </style>

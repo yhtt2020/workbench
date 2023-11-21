@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex flex-col h-full" v-if="emptyObj">
-    <UpdateIcon :orderData="detail"/>
+    <DetailHead :orderData="detail"/>
 
     <!--  商品订单详情  -->
     <template v-if="detail.store">
@@ -95,15 +95,16 @@ import { Icon as DetailIcon } from '@iconify/vue'
 import useClipboard from 'vue-clipboard3'
 import { message, Modal } from 'ant-design-vue'
 
-import TimeLine from '../timeLine/index.vue'
-import UpdateIcon from '../updateIcon/index.vue'
+import TimeLine from '../../component/TimeLine.vue'
 import EmptyModal from '../../EmptyModal.vue'
+import DetailHead from '../../component/DetailHead.vue'
 
 export default {
   props: ['detail'],
 
   components: {
-    TimeLine, UpdateIcon, EmptyModal, DetailIcon
+    DetailHead,
+    TimeLine, EmptyModal, DetailIcon
   },
 
   data () {

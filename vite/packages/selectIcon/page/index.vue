@@ -28,13 +28,13 @@
         </a-tooltip>
         <!-- 颜色选择 -->
         <div v-show="selIndex == 2" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
-          
+
           <a-tooltip>
             <template #title>颜色选择</template>
             <!-- <div class="circle" :style="{background:bgColor[selBgColor]}" ></div> -->
             <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
           </a-tooltip>
-          
+
           <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
             <div class="ml-4 mt-2">自定义</div>
             <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
@@ -93,7 +93,7 @@
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
         <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ this.customTitle }}</div>
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
-        
+
       </div>
 
 
@@ -101,7 +101,7 @@
 
 
 </template>
-  
+
   <script>
   import icon from '../components/IconListData/icon'
   import emojis from '../components/IconListData/emojis'
@@ -118,12 +118,15 @@
       icon,
     },
     props:{
+      defaultAvatar:{
+        type:String
+      },
       isCustom:Boolean,
       customTitle:String,
       windowHeight:Number,
       goodVisible:Boolean,
     },
-          
+
     computed:{
       searchIcon(){
         let tmpList = []
@@ -147,7 +150,7 @@
       },
     },
     data() {
-      return { 
+      return {
         // 上传头像
         avatarUrl:'',
         // 选择图标的类型
@@ -168,14 +171,14 @@
         iconList:icon.list,
         emojisList:this.goodVisible ?  emojis.list : goodList,
         topHeight:0,
-        
-      }  
+
+      }
     },
     mounted(){
       this.topHeight = document.getElementById('selectIcon').getBoundingClientRect().top;
       // console.log(111111111111);
     },
-    
+
     methods: {
       // 选择图标类型
       onSelChange(n){
@@ -188,7 +191,7 @@
       onSelectIcon(n,type,url){
         this.selectIcon = n
         if(this.selIndex==1){
-          
+
           if(this.goodVisible){
             this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+url+'.svg')
           }else{
@@ -197,12 +200,12 @@
         }else{
           this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+url+'.svg?color=' + this.bgColor[this.selBgColor])
         }
-        
+
         this.$emit('isIconShow')
 
       },
 
-      //随机图标 
+      //随机图标
       onRandom(){
         let randomLength = this.selIndex==1?this.emojisList.length:this.iconList.length
         let randomNum = Math.round(Math.random()*randomLength);
@@ -242,20 +245,20 @@
       // 清楚已上传信息
       clearAvatar(){
         this.avatarUrl=''
-        this.$emit('getAvatar','https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn')
+        this.$emit('getAvatar',this.defaultAvatar||'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn')
 
       },
       // 确认
       changeAvatar(){
         this.$emit('getAvatar',this.avatarUrl)
-        
+
         this.$emit('isIconShow')
       },
 
     },
   }
   </script>
-  
+
   <style lang="scss" scoped>
   .top-triangle{
     width: 0;
@@ -290,7 +293,7 @@
       justify-content: space-between;
     }
 
-    
+
     .top-icon .type-select span{
       display: flex;
       height: 48px;
@@ -304,7 +307,7 @@
       border-bottom: 2px solid transparent;
     }
 
-    
+
     .active{
       font-weight: 600 !important;
       border-bottom: 2px solid #508BFE !important;
@@ -342,4 +345,3 @@
       }
      }
   </style>
-  

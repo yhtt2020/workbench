@@ -1,6 +1,6 @@
  <template>
  <div class="h-full w-full box" style="">
-    <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;" ></div>
+    <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;position: relative;top: 5%;" ></div>
  </div>
 
  </template>
@@ -11,8 +11,8 @@ import {
     validateFile,
     fileUpload,
 } from "../../../components/card/hooks/imageProcessing";
- import Vditor from 'vditor'
- import 'vditor/dist/index.css'
+import Vditor from 'vditor'
+import 'vditor/dist/index.css'
 import {cardStore} from "../../../store/card";
 import {noteStore} from "../../../apps/note/store";
 import {mapActions, mapState,mapWritableState} from "pinia";

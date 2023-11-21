@@ -51,25 +51,29 @@
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
       </div>
-
       <template v-else>
-        <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                              style="height: calc(100% - 25px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
-          <CourierItem v-for="(item, index) in orderList" :key="index" :courier="item"
-                       @click="viewDeliveryDetails(item)"/>
+        <div  v-if="displayList.length===0" class="mt-16">
+          <Empty >
+
+          </Empty>
+        </div>
+        <vue-custom-scrollbar v-else class="mt-2" ref="threadListRef" :key="currentPage" :settings="outerSettings"
+                              style="height: calc(100% - 35px) ;overflow: hidden;flex-shrink: 0;width: 100%;">
+          <ListItem v-for="(item, index) in displayList" :key="index" :item="item"
+                    @goDetail="viewDeliveryDetails(item)"/>
         </vue-custom-scrollbar>
       </template>
 
     </div>
   </div>
-  <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar  && orderList.length>0"
+  <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar   "
              style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
              @click="showTopCourier">
     <div class="flex items-center justify-between">
       <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>
-      <span
+      <span v-if="list.length>0"
         style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-          couriersCount
+          list.length
         }}</span>
     </div>
   </xt-button>
@@ -77,11 +81,11 @@
     <AddCourierModal ref="addCourierRef"/>
   </teleport>
   <teleport to='body'>
-    <xt-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
+    <xt-old-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
               :isHeader="false" :boxIndex="100" :maskIndex="99">
       <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
       <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers"/>
-    </xt-modal>
+    </xt-old-modal>
   </teleport>
   <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
   <teleport to='body'>
@@ -91,7 +95,6 @@
 <script>
 import Widget from '../../card/Widget.vue'
 import { Icon as newIcon } from '@iconify/vue'
-import CourierItem from './CourierItem.vue'
 import MinCourierItem from './MinCourierItem.vue'
 import Empty from './Empty.vue'
 import MinEmpty from './MinEmpty.vue'
@@ -105,16 +108,18 @@ import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue'
 import ui from './courierUI'
+import ListItem from './ListItem.vue'
+import { getOrderState, preHandle } from './courierTool'
 
 export default {
   name: '我的快递',
   components: {
     Widget,
     newIcon,
-    CourierItem,
     MinCourierItem,
     Empty,
     MinEmpty,
+    ListItem,
     AddCourierModal,
     LogisticsDetail,
     CourierSetting,
@@ -125,6 +130,7 @@ export default {
   },
   data () {
     return {
+      list: [],
       settingVisible: false,
       outerSettings: {
         useBothWheelAxes: true,
@@ -146,13 +152,18 @@ export default {
         {
           title: '淘宝',
           name: '淘宝',
-          type: 'TB'
+          type: 'tb'
         },
         {
           title: '京东',
           name: '京东',
-          type: 'JD'
+          type: 'jd'
         },
+        {
+          title: '普快',
+          name: '普快',
+          type: 'common'
+        }
 
       ],
       largeDetailVisible: true,
@@ -174,7 +185,7 @@ export default {
           }
         },
       ],
-      defaultType: '',
+      defaultType: {},
     }
   },
   methods: {
@@ -201,9 +212,9 @@ export default {
 
     // }
     viewDeliveryDetails (item) {
-      this.showCourierDetail = true
-      this.orderNum = item
+      this.currentDetail = item
       this.topCourierVisible = false
+      this.showCourierDetail = true
       // console.log(this.currentDetail)
     },
     closeCourierDetail () {
@@ -229,17 +240,28 @@ export default {
       // console.log(windoWidth);
       if (windoWidth > 1200) {
         this.largeDetailVisible = true
-        // this.courierShow = true;
+        // this.modalMode = true;
       } else {
         this.largeDetailVisible = false
-        // this.courierShow = false;
+        // this.modalMode = false;
       }
       // console.log(windoWidth,'windoWidth')
     },
-
+    reload (list) {
+      this.list = preHandle(list)
+      if (this.settings.courierStatus.currentStatus === 'followed') {
+        this.list = this.list.filter(li => {
+          return li.followed
+        })
+      } else {
+        this.list = this.list.filter(li => {
+          return getOrderState(li) !== 'signed' && getOrderState(li) !== 'canceled'
+        })
+      }
+    }
   },
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings']),
+    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail']),
     config () {
       return {
         jdOrder: this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
@@ -251,52 +273,48 @@ export default {
       }
     },
     filterType () {
-      if (this.config.jdOrder || this.config.tbOrder || this.config.otherOrder) {
-        const list = [...this.typeList]
-        const filterList = list.map((item) => {
-          switch (item.type) {
-            case 'all':
-              return {
-                title: `${item.title}${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength) !== 0 ? `(${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-            case 'JD':
-              return {
-                title: `${item.title}${this.config.jdLength !== 0 ? `(${this.config.jdLength})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-            case 'TB':
-              return {
-                title: `${item.title}${this.config.tbLength !== 0 ? `(${this.config.tbLength})` : ''}`,
-                name: item.name,
-                type: item.type
-              }
-          }
-        })
-        return filterList
-      }
+      const list = [...this.typeList]
+      const filterList = list.map((item) => {
+        let count = 0
+        let returnItem = {
+          title: item.title,
+          name: item.name,
+          type: item.type
+        }
+        if (item.name === 'all') {
+          count = this.orderList.length
+        } else {
+          count = ui.filterOrder('all', item.type, this.list).length
+        }
+        returnItem.title = returnItem.title + (count > 0 ? '（' + count + '）' : '')
+        return returnItem
+      })
+      return filterList
     },
     currentType () {
-      if (this.config.jdOrder || this.config.tbOrder || this.config.otherOrder) {
-        return {
-          title: `全部  (${parseInt(this.config.allLength + this.config.tbLength + this.config.jdLength)})`,
-          name: '全部',
-          type: 'all'
-        }
-      }
+      return this.defaultType
     },
     displayList () {
+      let list = this.list
+      list = list.filter(li => {
+        if (this.defaultType.type === 'all') {
+          return true
+        } else if (this.defaultType.type === 'common') {
+          return !li.store
+        } else {
+          return li.store === this.defaultType.type
+        }
+      })
 
-    },
-    couriersCount () {
-      return this.orderList.length
+      return list
+
     }
+
   },
   mounted () {
     this.getDbCourier()
     window.addEventListener('resize', this.handleResize)
+    this.defaultType = this.filterType[0]
     setTimeout(() => {
       this.defaultType = this.currentType
     }, 2000)
@@ -308,7 +326,18 @@ export default {
   watch: {
     currentType () {
       this.defaultType = this.currentType
+    },
+    'orderList': {
+      handler (newVal) {
+        this.reload(newVal)
+      }
+    },
+    'settings.courierStatus.currentStatus': {
+      handler (newVal) {
+        this.reload(this.orderList)
+      }
     }
+
   }
 }
 </script>
