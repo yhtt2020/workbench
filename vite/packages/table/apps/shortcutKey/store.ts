@@ -145,7 +145,9 @@ export const keyStore = defineStore("key", {
         exeName: exeName
       })
       if (rs.ok) {
-        return rs.doc
+        return rs
+      }else{
+        return false
       }
     },
     setShortcutKeyList(item) {
