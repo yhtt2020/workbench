@@ -159,3 +159,38 @@ export const iconMenus = [
         fn:()=>{}
     }
 ]
+
+export const webMenus=[
+    {
+        name:'新闻资讯',
+        tag:'news'
+    },
+    {
+        name:'文档表单',
+        tag:'doc'
+    },
+    {
+        name:'常用邮箱',
+        tag:'email'
+    },
+    {
+        name:'程序开发',
+        tag:'program'
+    },
+    {
+        name:'效率工具',
+        tag:'tool'
+    },
+    {
+        name:'设计工具',
+        tag:'design'
+    },
+    {
+        name:'即时通讯',
+        tag:'im'
+    },
+    {
+        name:'休闲娱乐',
+        tag:'amusement'
+    },
+]
