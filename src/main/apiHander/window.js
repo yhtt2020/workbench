@@ -18,7 +18,6 @@ class Window extends Base {
 
     this.on('setFocusable', (event, args, instance) => {
       if (instance.window) {
-        console.log('设置窗口可否聚焦',args.flag)
         instance.window.setFocusable(args)
       }
     })
@@ -26,7 +25,7 @@ class Window extends Base {
       if (instance.window) {
         instance.window.setSkipTaskbar(args)
       }
-    })ddd
+    })
     this.on('focus', (event, args, instance) => {
       if (instance.window) {
         instance.window.focus()
