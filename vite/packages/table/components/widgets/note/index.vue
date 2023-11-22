@@ -5,7 +5,6 @@
     :customIndex="customIndex"
     :options="{...this.options,background:this.customData.background,title:this.customData.title}"
     :menuList="menuList"
-    class="test"
     ref="homelSlotRef"
     :desk="desk"
     style="background: #191919; !important"
@@ -17,6 +16,17 @@
         <Icon :icon="icons.notepad12Regular" width="20" height="20"/>
       </div>
     </template>
+    <!-- <template #msg>
+      <teleport to="body">
+        <xt-msg title="确定删除小组件" text="默认仅删除小组件，便签数据不会删除。" >
+          <template #checkbox>
+            <div class="font-14" style="color: var(--secondary-text) !important;">
+              <a-checkbox v-model:checked="isRemove">同时删除便签数据</a-checkbox>
+            </div>
+          </template>
+        </xt-msg>
+      </teleport>
+    </template> -->
     <!-- 窗口化 -->
     <!-- <template #right-menu>
       <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
@@ -116,7 +126,7 @@
     <!-- 打印 -->
     <Modal v-if="printPreviewVisible" v-model:visible="printPreviewVisible" :blurFlag="true" :mask-no-close="false">
       <div class="px-6" style="width:500px;height:500px;">
-        <div class="font-16 pt-4" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);" @click="print.status = !print.status">
+        <div class="font-16 pt-4" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);">
           <!-- <div class="w-full">打印</div> -->
           打印
           <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="printPreviewVisible = false">
@@ -239,9 +249,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    menuList: {
-      type: Array,
-    },
     desk: {
       type: Object,
     },
@@ -257,6 +264,8 @@ export default {
   },
   data () {
     return {
+      // 是否删除数据
+      isRemove:false,
       selectedPrinter: '',
       print: {
         // 打印机状态
@@ -293,15 +302,12 @@ export default {
           newIcon: 'fluent:print-20-regular',
           title: '打印',
           fn: () => {
-
             this.api = DTPWeb.getInstance()
             this.printPreviewVisible = true
 
             const div = document.createElement('div')
             this.print.previewText = div.innerText
             this.print.previewHtml = this.$refs.mdEditor.getContent()
-
-
 
             // 打印驱动检测  需要判断两个 目前只有一个
             DTPWeb.checkServer((value) => {
@@ -343,7 +349,6 @@ export default {
               }
             })
           }
-
         }
       ],
       color: {

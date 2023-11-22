@@ -32,30 +32,32 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar shape="square" :size="100" :src="form.icon"/>
+            <a-avatar shape="square"  :size="100" :src="avatarUrl" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 200px 0)`:'',transform:bgColor?'translateX(-200px)':''}"/>
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
+        <xt-selectIcon :menus="['emoji','goods']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
         <div class="ml-10 xt-text-2" style="font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
 
-          <a-upload
+          <!-- <a-upload
             name="file"
             :showUploadList="false"
             :customRequest="uploadImage"
             :beforeUpload="beforeUpload"
             accept="image/jpeg,image/jpg,image/png"
-          >
+          > -->
             <div class="flex mt-2">
               <xt-button class="mr-2" type="theme"
-                         @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传
-              </xt-button>
-              <xt-button
-                @click.stop="resetIcon" style="width:120px; height:48px;">同软件图标
-              </xt-button>
+              @click="modelValue = true" style="width:120px; height:48px;">自定义
+            </xt-button>
+            <!-- @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传 -->
+              <!-- <xt-button
+                @click="resetIcon" style="width:120px; height:48px;">同软件图标
+              </xt-button> -->
             </div>
-          </a-upload>
+          <!-- </a-upload> -->
         </div>
       </div>
       <span>方案名称</span>
@@ -330,7 +332,10 @@ export default {
       selectKey: {},//选中的快捷键
       stagingKey: [],// 暂存的Key
       bulkEditKey: false,
-      addNumber: 0
+      addNumber: 0,
+      modelValue: false,
+     // 改变图标颜色
+     bgColor:'',
     }
   },
   watch: {
@@ -378,6 +383,16 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp','getScheme']),
+    // 获取头像
+    getAvatar(avatar){
+      if(avatar.indexOf('color=') >= 0){
+        let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
+        this.bgColor = color
+      }else{
+        this.bgColor = ''
+      }
+      this.avatarUrl = avatar
+    },
     completeEdit () {
       this.saved = false
       message.success('完成编辑')
@@ -421,6 +436,7 @@ export default {
             this.introduce = item.commonUse
             this.form.exeName = (item.exeName instanceof Array) ? item.exeName.join(',') : item.exeName
             this.form.icon = this.file.path ? this.file.path : this.icon
+            this.avatarUrl = this.file.path ? this.file.path : this.icon
           }
 
         })
@@ -438,6 +454,7 @@ export default {
           console.log('查到app', app)
           this.applyName = app.alias
           this.form.icon = app.icon
+          this.avatarUrl = app.icon
           this.form.exeName = app.exeName
         }
 
@@ -482,7 +499,8 @@ export default {
           }
         })
         if (this.paramsId !== -1) {
-          this.appContent.icon = this.form.icon
+          // this.appContent.icon = this.form.icon
+          this.appContent.icon = avatarUrl
           this.appContent.keyList = this.keyList
           this.appContent.name = this.applyName
           this.appContent.commonUse = this.introduce
@@ -493,7 +511,8 @@ export default {
           const time = new Date().valueOf()
           this.appContent = {
             id: nanoid(),  //唯一标识
-            icon: this.form.icon, //方案的图片
+            icon: this.avatarUrl, //方案的图片
+            // icon: this.form.icon, //方案的图片
             name: this.applyName, //方案名称
             number: this.keyList.length, //快捷键总数
             commonUse: this.introduce, //方案简介
@@ -891,6 +910,7 @@ export default {
     },
     resetIcon () {
       this.form.icon = ''
+      this.avatarUrl = ''
     },
     // 上传头像
     uploadImage (file) {
