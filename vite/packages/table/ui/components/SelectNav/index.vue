@@ -11,7 +11,7 @@
     </div>
    </div>
   </div>
-  <div class="right-content">
+  <div class="right-content h-full">
    <slot></slot>
   </div>
  </div>

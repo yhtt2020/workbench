@@ -1,5 +1,5 @@
 <template>
- <div class="w-full p-4 xt-text-2">
+ <div class="w-full p-4 h-full xt-text-2">
   <xt-selectNav :navList="classNav" lw="128" v-model:selectItem="classItem" :enableRoute="true">
     <div class="w-full px-4">
       <router-view />
@@ -27,12 +27,12 @@ export default {
        name:'member'
       }
      },
-     {
-      name:'role',cname:'角色权限',
-      route:{
-       name:'role'
-      }
-     },
+    //  {
+    //   name:'role',cname:'角色权限',
+    //   route:{
+    //    name:'role'
+    //   }
+    //  },
      {
       name:'more',cname:'更多设置',
       route:{

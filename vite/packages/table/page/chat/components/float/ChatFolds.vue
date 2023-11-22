@@ -12,7 +12,7 @@
    </div>
 
    <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
-    <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :list="dorpList"></ChatDropDown>
+    <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :id="null" :unbutton="true" :enableButton="true" :list="dorpList"></ChatDropDown>
    </div>
    <transition name="collapse">
     <!-- class="content" -->
