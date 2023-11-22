@@ -321,6 +321,7 @@ export default {
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
+    ...mapActions(appStore,['enterAided','leaveAided']),
     isMain: isMain,isWin,
     goApps(){
       this.$router.push({
@@ -356,9 +357,9 @@ export default {
         notification.info({
           message:'开启辅助模式后，工作台将无法被聚焦。此时无法输入任何内容，但是也不会因为点击工作台而切换焦点。可防止游戏窗口失焦。或者搭配快捷键使用。'
         })
-        tsbApi.window.setFocusable(false)
+        this.enterAided()
       }else{
-        tsbApi.window.setFocusable(true)
+        this.leaveAided()
         message.success('已为您关闭辅助模式')
       }
 

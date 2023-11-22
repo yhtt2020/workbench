@@ -182,7 +182,7 @@ export default {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
     timeout () {
@@ -272,7 +272,7 @@ export default {
     async afterLaunch () {
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
-        tsbApi.window.setFocusable(true)
+        this.enterAided()
       }
       this.bindCaptureIPC()
 
