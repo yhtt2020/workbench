@@ -192,9 +192,9 @@
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
       <!-- 老版 -->
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
+      <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation>
       <!-- 新版 -->
-      <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
+      <!-- <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation> -->
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>

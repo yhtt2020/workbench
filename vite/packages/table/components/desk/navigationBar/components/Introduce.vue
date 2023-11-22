@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full">
-    <div v-if="props.recommendation.tag === 'recommendation'">
+    <div v-if="selectTag === 'recommendation'">
       <div class="flex justify-center"><xt-new-icon icon="fluent-emoji:rocket" size="50" /></div>
       <div class="flex justify-between p-2 mt-5 rounded-lg xt-bg-2">
         <div class="xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
@@ -10,7 +10,7 @@
     <div class="xt-text-2 w-[790px] h-[52px] xt-bg-2 rounded-xl flex items-center p-4" v-if="tagText">
       {{ tagText }}</div>
     <!-- {{ sideBar[currentIndex].tag == 'webNavigation' }} -->
-    <div class="flex " v-if="props.recommendation.tag == 'webNavigation'">
+    <div class="flex " v-if="selectTag == 'webNavigation'">
       <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent' }"
         v-for="(item, index) in webMenus" :key="index">{{ item.name }}</xt-button>
@@ -35,8 +35,8 @@ const onClick=(index)=>{
   console.log(list.value)
 }
 const tagText = computed(() => {
-  const currentTag = props.recommendation.tag
-  switch (currentTag) {
+  // const currentTag = props.recommendation.tag
+  switch (selectTag.value) {
     case 'coolApp':
       return '基于工作台深度优化和适配的应用，支持多选批量添加。'
       break;

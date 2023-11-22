@@ -1,8 +1,8 @@
 <template>
-    <NewModel style="max-width: 1000px; max-height: 720px" :modelValue="modelValue" :nav="true" :header="true"
+    <NewModel style="max-width: 1000px; height: 600px;"  :modelValue="modelValue" :nav="true" :header="true"
         :footer="false" :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="1000">
         <template #nav>
-            <div class="p-3 -mt-4 -ml-4 xt-bg " style="border-radius: 12px 0px 0px 12px;width: 185px;height: 100%;">
+            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 656px;">
                 <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
                     <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
                     <div class="ml-4 text-base xt-text">图标</div>
@@ -12,9 +12,7 @@
                     'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
                 }" @click="onSelect(index)"
                     class="flex flex-col items-center justify-center mt-2 text-base xt-text hover-style">
-                    <div>
-                        {{ item.name }}
-                    </div>
+                    <div> {{ item.name }}</div>
                 </xt-button>
             </div>
 
@@ -33,7 +31,7 @@
 
             </div>
             <!-- 输入框 -->
-            <a-input v-if="sideBar[currentIndex].tag !== 'tableApp' && sideBar[currentIndex].tag !== 'recommendation'"
+            <a-input v-if="sideBar[currentIndex].tag !== 'tableApp' && sideBar[currentIndex].tag !== 'recommendation' && sideBar[currentIndex].tag !== 'custom'"
                 placeholder="搜索" style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px">
                 <template #suffix>
                     <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
@@ -59,8 +57,10 @@
 
 
         </template>
-        <div class="w-[850px] ml-3 " style="max-height: 520px;">
-            <Introduce :recommendation="sideBar[currentIndex]" :selectList="this.otherList" />
+        <div class="w-[850px] ml-3 " style="height: 540px;">
+            <Custom v-if="sideBar[currentIndex].tag === 'custom'" />
+            <Introduce v-else :recommendation="sideBar[currentIndex]" :selectList="this.otherList" />
+            
         </div>
     </NewModel>
 </template>
@@ -144,12 +144,14 @@ import Introduce from './components/Introduce.vue'
 import { webMenus } from './index'
 import navigationData from '../../../js/data/tableData'
 import { getNavList } from '../../../page/app/addIcon/api/api'
+import Custom from './components/Coutom.vue'
 const { appModel } = window.$models
 export default {
     name: 'EditNewNavigation',
     components: {
         NewModel,
-        Introduce
+        Introduce,
+        Custom
     },
     data() {
         return {
@@ -340,5 +342,8 @@ export default {
     &:hover {
         background: var(--active-secondary-bg) !important;
     }
+}
+:deep(nav){
+    background-color: red !important;
 }
 </style>

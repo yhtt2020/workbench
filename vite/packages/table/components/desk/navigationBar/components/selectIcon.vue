@@ -13,7 +13,7 @@
             <!-- {{ item }} -->
         </div>
         <div class="mt-3 mb-2 text-base xt-text">{{ item.name }}</div>
-        <div class=" xt-text-2" style="font-size: 14px;">{{ props.recommendation.name }}</div>
+        <div class="pl-1 pr-1  xt-text-2 omit" style="font-size: 14px;">{{ item.summary || props.recommendation.name }}</div>
         <div class="absolute top-3 right-3">
             <xt-button :w="24" :h="24" style="background: var(--active-bg) !important;">
                 <div class="flex items-center justify-center"><xt-new-icon icon="fluent:add-16-regular" class="xt-text"
