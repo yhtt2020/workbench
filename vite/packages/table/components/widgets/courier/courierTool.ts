@@ -72,7 +72,8 @@ export function getOrderState(order){
     return getJdState(order)
   }else if(order.store==='tb')
   {
-
+    //淘宝订单处理
+    return getTbState(order)
   }else if(order.store=='pdd'){
 
   }else{
@@ -89,6 +90,19 @@ export function getJdState(order){
     case '已完成':
       return 'signed'
     case '已取消':
+      return 'canceled'
+  }
+}
+export function getTbState(order){
+  switch (order.content.status){
+    case '卖家已发货':
+      return 'onRoad'
+    case '正在出库':
+      //淘宝不存在这个状态
+      return 'preparing'
+    case '交易成功':
+      return 'signed'
+    case '交易关闭':
       return 'canceled'
   }
 }
