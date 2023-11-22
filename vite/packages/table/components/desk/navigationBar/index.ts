@@ -163,11 +163,11 @@ export const iconMenus = [
 export const webMenus=[
     {
         name:'新闻资讯',
-        tag:'news'
+        tag:'information'
     },
     {
         name:'文档表单',
-        tag:'doc'
+        tag:'docx'
     },
     {
         name:'常用邮箱',
@@ -175,11 +175,11 @@ export const webMenus=[
     },
     {
         name:'程序开发',
-        tag:'program'
+        tag:'code'
     },
     {
         name:'效率工具',
-        tag:'tool'
+        tag:'effect'
     },
     {
         name:'设计工具',
@@ -187,10 +187,11 @@ export const webMenus=[
     },
     {
         name:'即时通讯',
-        tag:'im'
+        tag:'message'
     },
     {
         name:'休闲娱乐',
-        tag:'amusement'
+        tag:'game'
     },
 ]
+

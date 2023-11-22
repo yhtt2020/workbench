@@ -52,7 +52,7 @@
                     @click.stop="clickNavigation(item)">
                     <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                       class="flex items-center justify-center rounded-lg s-item xt-bg-2">
-                      <navIcon :icon="item.icon" class="test" style="width:28px;height:28px;fill:var(--primary-text);" ></navIcon>
+                      <navIcon :icon="item.icon"  class="test " style="width:28px;height:28px;fill:var(--primary-text);" ></navIcon>
                     </div>
                     <div v-else style="width: 45px; height: 45px" class="flex items-center justify-center">
                       <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
@@ -435,12 +435,9 @@ export default {
         this.rightNav = val[1]
       },
     },
-    // editBar(val){
-    //   if(val){
-    //     console.log(val)
-    //     this.enableDrag()
-    //   }
-    // }
+    shake(){
+      return this.editToggle
+    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -538,6 +535,7 @@ export default {
         this.componentId = item.component
         if (item.component === 'EditNavigation') {
           this.toggleEdit()
+          message.success('进入编辑模式')
         }
         this.quick = true
       } else if (item.visible) {
