@@ -77,7 +77,7 @@ export function getOrderState(order){
   }else if(order.store=='pdd'){
 
   }else{
-    return getExpressState(order)
+    return getKdniaoState(order)
   }
 
 }
@@ -106,7 +106,12 @@ export function getTbState(order){
       return 'canceled'
   }
 }
-export function getExpressState(order){
+
+/**
+ * 获取快递鸟的订单状态
+ * @param order
+ */
+export function getKdniaoState(order){
   switch (order.content.State) {
     case '202':
       return 'delivery'
