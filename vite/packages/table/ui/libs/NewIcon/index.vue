@@ -3,7 +3,8 @@
     class="xt-active xt-base-btn xt-text"
     :style="[boxStyle, boxBgStyle]"
     :class="[bgClass]"
-  >
+    style="background-color:var(--mask-bg);"
+    >
     <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>

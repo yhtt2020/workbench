@@ -12,13 +12,13 @@
     <template #left-title-icon>
       <!-- 图标 -->
       <div class="icon flex justify-center align-center"
-           style="width: 35px;height: 24px;position: absolute;left: 3px;top:16px;">
-        <Icon :icon="icons.notepad12Regular" width="20" height="20"/>
+           style="width: 35px;height: 24px;position: absolute;left: 3px;top:16px;color:#fff">
+        <Icon :icon="icons.notepad12Regular" width="20" height="20" />
       </div>
     </template>
-    <!-- <template #msg>
+    <template #msg>
       <teleport to="body">
-        <xt-msg title="确定删除小组件" text="默认仅删除小组件，便签数据不会删除。" >
+        <xt-msg title="确定删除小组件" text="默认仅删除小组件，便签数据不会删除。"  :modelValue="modelValue" @no="no" @ok="ok">
           <template #checkbox>
             <div class="font-14" style="color: var(--secondary-text) !important;">
               <a-checkbox v-model:checked="isRemove">同时删除便签数据</a-checkbox>
@@ -26,7 +26,7 @@
           </template>
         </xt-msg>
       </teleport>
-    </template> -->
+    </template>
     <!-- 窗口化 -->
     <!-- <template #right-menu>
       <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
@@ -264,6 +264,7 @@ export default {
   },
   data () {
     return {
+      modelValue:false,
       // 是否删除数据
       isRemove:false,
       selectedPrinter: '',
@@ -293,7 +294,11 @@ export default {
         //   message.success('已成功复制到剪切板')
         // },
         type: 'note',
-        showColor:true
+        showColor:true,
+        removeCard:()=>{
+          this.modelValue = true
+          this.isRemove = false
+        }
 
       },
       settingVisible: false,
@@ -458,7 +463,31 @@ export default {
     //     }
     //   })
     // },
-    // 因为传递预览图会导致无法渲染 此方法暂时无法抽离
+    // 因为传递预览图会导致无法渲染 此方法暂时无法抽离\
+    no(){
+      this.modelValue = false
+    },
+    async ok(){
+      this.modelValue = false
+      // 删除桌面便签时需要清除db数据
+      let getDb = await tsbApi.db.find({
+        selector: {
+          _id: 'note:' + this.customIndex,
+        },
+      })
+      this.$refs.homelSlotRef.doRemoveCard()
+      if(this.isRemove){
+        // 清除数据
+        if (getDb.docs.length) {
+          await tsbApi.db.remove(getDb.docs[0])
+        }
+      }else{
+        await tsbApi.db.put({
+          ...getDb.docs[0],
+          isDelete:true,
+        })
+      }
+    },
     doPreview () {
       const api = this.api
       doJob(LPA_JobNames.Preview,this.selectedPrinter,this.$refs.printContent.innerText, (success) => {

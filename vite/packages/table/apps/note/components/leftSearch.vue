@@ -2,18 +2,18 @@
     <div class="flex flex-col justify-between h-full xt-br mr-3">
       <div class="h-full flex" style="max-width: 308px;flex-direction: column;" >
         <!-- class="xt-scrollbar" -->
-        <div class="flex w-full pr-3 mt-3 mb-4" style="height: 40px;">
+        <div class="flex w-full pr-3 mb-4" style="height: 40px;">
             <a-input
-                style="height:40px;background: var(--secondary-bg);
+                style="height:40px;background: var(--mask-bg);
                 color: var(--primary-text);
-                border: 1px solid rgba(255,255,255,0.1);flex:1;width: 80%;
+                border: 1px solid rgba(255,255,255,0.1);flex:1;
                 border-radius: 10px;"
                 placeholder="搜索"
                 maxlength="10"
                 v-model:value="this.searchValue"
                 @change="this.searchNote(this.searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
-            <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background:var(--secondary-bg);border-radius: 10px;" @click="addNote">
+            <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background:var(--mask-bg);border-radius: 10px;" @click="addNote">
             <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
           </xt-button>
         </div>
