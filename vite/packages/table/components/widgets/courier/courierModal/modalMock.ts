@@ -1,4 +1,4 @@
-import {getOrderState} from "../courierTool";
+import {getOrderState} from "../lib/courierTool";
 import {courierStore} from "../../../../apps/ecommerce/courier";
 
 export const courierDetailList = [

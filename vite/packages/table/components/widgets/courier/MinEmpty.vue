@@ -22,7 +22,7 @@
 import { ref, reactive } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AddCourierModal from "./courierModal/AddCourierModal.vue";
-import grab from './grab';
+import grab from './lib/grab';
 import BandCouriersVue from './BandCouriers.vue';
 const addCourierRef = ref(null)
 

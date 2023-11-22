@@ -39,9 +39,9 @@
 import { ref, reactive,computed,onMounted } from 'vue'
 import { Icon as newIcon } from '@iconify/vue'
 import { courierStore } from '../../../apps/ecommerce/courier'
-import { kdCompany, kdState,switchColor } from './mock'
+import { kdCompany, kdState,switchColor } from './lib/mock'
 import Cover from './component/Cover.vue'
-import { preHandleItem } from './courierTool'
+import { preHandleItem } from './lib/courierTool'
 const useCourierStore = courierStore()
 
 const props = defineProps({ courier: Object })

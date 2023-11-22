@@ -100,7 +100,7 @@ import { message, Modal } from 'ant-design-vue'
 import RadioTab from "../../../RadioTab.vue";
 import DealModal from "./DealModal.vue";
 import Disassociation from "./Disassociation.vue";
-import ui from '../courierUI'
+import ui from '../lib/courierUI'
 
 export default {
   components: {

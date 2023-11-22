@@ -87,12 +87,12 @@
 
 <script>
 import { Icon as newIcon } from '@iconify/vue'
-import { courier } from './mock'
+import { courier } from './lib/mock'
 import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { appStore } from '../../../store'
 import { mapWritableState, mapActions } from 'pinia'
 import { message, Modal as antModal, notification } from 'ant-design-vue'
-import grab from './grab'
+import grab from './lib/grab'
 import ListItem from './ListItem.vue'
 import Modal from '../../Modal.vue'
 import Widget from '../../card/Widget.vue'
@@ -107,8 +107,8 @@ import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import CourierSetting from './courierModal/CourierSetting.vue'
 
 import { autoRefreshTime } from './courierModal/modalMock'
-import ui from './courierUI'
-import { preHandle } from './courierTool'
+import ui from './lib/courierUI'
+import { preHandle } from './lib/courierTool'
 
 export default {
   name: '我的快递',
