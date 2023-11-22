@@ -573,7 +573,7 @@ export const courierStore = defineStore("courier", {
     enabled: true,
     strategies: [
       {
-        storage: dbStorage,
+        storage: localStorage,
         paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList', 'settings'],
       }
     ]
