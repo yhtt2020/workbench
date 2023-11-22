@@ -34,6 +34,7 @@ import XtState from "./libs/State/index.vue"
 import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
+import XtScrollbar from "./components/Scrollbar/index.vue"
 
 export default function (app: App): void {
   app.component('XtCanvas', XtCanvas)
@@ -67,4 +68,5 @@ export default function (app: App): void {
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
   app.component('XtSelectNav',XtSelectNav)
+  app.component('XtScrollbar',XtScrollbar)
 }

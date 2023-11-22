@@ -27,7 +27,9 @@
       {{ text }}
     </div>
     <slot name="handle">
-      <div class="flex justify-end">
+      <div class="flex justify-end items-center">
+        <!-- 勾选框 -->
+        <slot name="checkbox"></slot>
         <xt-button w="64" h="40" @click="onNo()">
           <span class="xt-text-2">{{ noName }}</span>
         </xt-button>

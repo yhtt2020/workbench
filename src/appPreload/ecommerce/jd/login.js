@@ -4,7 +4,7 @@ const {
   args,
   intervalEvent
 } = require('../../app.js')
-const { isLogged, getNickname } = require('util')
+const { isLogged, getNickname } = require('./util')
 intervalEvent((clear) => {
   let logged = isLogged()
   console.log('取到我的订单', logged)
