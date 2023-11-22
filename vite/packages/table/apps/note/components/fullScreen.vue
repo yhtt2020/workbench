@@ -3,11 +3,11 @@
       <img class="pop-container" :src="this.backgroundImage.path" alt="" />
       <div class="pop-box flex flex-wrap justify-center">
         <!-- 顶部 -->
-        <div style="justify-content: space-between;background-color: var(--secondary-bg);height: 64px;" class="flex w-full items-center pl-3 pr-3"> 
+        <div style="justify-content: space-between;background-color: var(--secondary-bg);height: 64px;" class="flex w-full items-center px-3"> 
           <div class="flex items-center">
             <div
               class="flex justify-center items-center mr-3 pointer center no-drag"
-              style="background-color: var(--mask-bg);border-radius:10px;height: 40px;padding: 0 10px;"
+              style="background-color: var(--mask-bg);border-radius:10px;height: 40px;padding: 0 10px;color: var(--primary-text);"
               @click="changeDesk"
             >
               <Icon icon="majesticons:monitor-line" width="20" height="20" />
@@ -30,24 +30,24 @@
                   @click="changeBgColor(index)"></div>
             </div>
           <div class="flex items-center pointer justify-center mr-3"
-              style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
+              style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;color: var(--primary-text);"
               @click="changeIsFull">
               <Icon icon="fluent:full-screen-minimize-16-filled" width="20" height="20" />
           </div>
           <xt-menu :menus="menus" model="click">
             <div class="flex items-center pointer justify-center no-drag"
-                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;">
+                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;color: var(--primary-text);">
               <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20"/>
             </div>
           </xt-menu>
           </div>
         </div>
         <!-- 主体 -->
-        <div class="h-full" style="width:950px;margin-top: 75px;">
+        <div class="h-full" style="width:950px;margin-top: 20px;">
           <div class="shadow overflow-hidden h-full" style="border-radius: 12px;padding: 24px 0 0 0 ;"
                 :style="{background:background}">
             <a-input
-              style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
+              style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
               border: none;box-shadow: none;padding: 0 0 0 50px; "
               v-model:value="this.selNoteTitle"
               maxlength="15"
@@ -261,13 +261,8 @@
     flex-wrap: wrap;
   }
 
-    
-  :deep(.vditor-toolbar){
-    background: #212121 !important;
-    
-  }
   :deep(.vditor-reset){
-    background: #191919 !important;
+    background: var(--main-bg) !important;
   }
 
   // :deep(.vditor-toolbar){
@@ -277,5 +272,9 @@
   :deep(.vditor-toolbar .vditor-toolbar--pin){
     position: absolute;
     height: 100px !important;
+  }
+  
+  :deep(.vditor-toolbar__item .vditor-tooltipped){
+    color: var(--primary-text) !important;
   }
   </style>

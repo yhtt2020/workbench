@@ -592,19 +592,19 @@ export const cardStore = defineStore(
       },
       async removeCard(customIndex, desk, flag) {
         // 切换卡片时不需要清除
-        if (!flag && noteStore().initFlag) {
-          // console.log('清除数据');
+        // if (!flag && noteStore().initFlag) {
+        //   // console.log('清除数据');
 
-          // 删除桌面便签时需要清除db数据
-          let getDb = await tsbApi.db.find({
-            selector: {
-              _id: 'note:' + customIndex,
-            },
-          })
-          if (getDb.docs.length) {
-            await tsbApi.db.remove(getDb.docs[0])
-          }
-        }
+        //   // 删除桌面便签时需要清除db数据
+        //   let getDb = await tsbApi.db.find({
+        //     selector: {
+        //       _id: 'note:' + customIndex,
+        //     },
+        //   })
+        //   if (getDb.docs.length) {
+        //     await tsbApi.db.remove(getDb.docs[0])
+        //   }
+        // }
 
         let currentDesk = this.getCurrentDesk()
         desk = desk || currentDesk
