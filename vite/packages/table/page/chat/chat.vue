@@ -56,12 +56,31 @@ export default {
     const router = useRouter()
     const TUIServer = window.$TUIKit
 
+    const data = reactive({
+      chatVisible:false,
+      addIndex:'',
+      index: 'chat',
+      env: TUIServer.TUIEnv,
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
+      communityNo:'',
+    })
+
+    const unReadNum = ref(0)
+    
+
     const leftList = ref([
       {
         newIcon: "fluent:chat-16-regular",
         tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
+        unread:unReadNum > 99 ? 99 : unReadNum
       },
       {
         tab: "contact",
@@ -132,22 +151,7 @@ export default {
         ]
       }
     ]);
-    
-    const data = reactive({
-      chatVisible:false,
-      addIndex:'',
-      index: 'chat',
-      env: TUIServer.TUIEnv,
-      settingsScroller: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      },
-      communityNo:'',
-
-    })
+  
 
     // 触发社群创建入口
     const createCommunity = () =>{
@@ -215,11 +219,15 @@ export default {
     onMounted(() => {
       nextTick(() => {
         com.getMyCommunity();
+        window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
+          console.log('查看e.data',e.data);
+          unReadNum.value = e.data
+        })
       });
     });
 
     return {
-      leftList,filterList,
+      leftList,filterList,unReadNum,
       ...toRefs(data),createCommunity,
       selectTab,triggerAddModal,
     };
