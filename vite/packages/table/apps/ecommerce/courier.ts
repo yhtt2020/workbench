@@ -488,10 +488,10 @@ export const courierStore = defineStore("courier", {
           fields: ['store', 'orderId', 'hide', 'followed']
         }
       })
-      let updateCount = 0
-
+      let dbOrders=[]
       if (orders) {
         orders = orders.reverse()
+
         for (const order of orders) {
           let found = await tsbApi.db.find({
             selector: {
@@ -542,7 +542,9 @@ export const courierStore = defineStore("courier", {
 
             let putRs = await tsbApi.db.put(foundOrder)
             if (putRs.ok) {
-              updateCount++
+              dbOrders.push({
+                ...foundOrder
+              })
             }
 
           } else {
@@ -559,12 +561,15 @@ export const courierStore = defineStore("courier", {
             }
             let addRs = await tsbApi.db.put(dbData)
             if (addRs?.ok) {
-              updateCount++
+              dbOrders.push({
+                _id:addRs.id,
+                ...dbData
+              })
             }
           }
         }
       }
-      return updateCount
+      return dbOrders
     }
 
 
