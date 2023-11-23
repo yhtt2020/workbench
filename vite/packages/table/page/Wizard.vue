@@ -1,168 +1,173 @@
 <template>
-  <div style="background: #333333;height: 100vh;width: 100vw">
-    <h2 style="text-align: center;padding: 1em;-webkit-app-region:drag">
-      <Icon icon="jurassic_nav" style="font-size: 1.2em"></Icon>
-      工作台使用向导
-    </h2>
-    <div
-      style="text-align: left;font-size: 1.2em;line-height: 2;width: 600px;margin: auto;position: relative;height: 80vh">
-      <div style="padding: 0.5em">
-        <a-steps :current="step" size="large">
-          <a-step v-for="item in steps" :title="item.title"/>
-        </a-steps>
+  <div style="background-image: url('../../../../img/defaultBg.jpg') no-repeat ;height: 100vh;width: 100vw" class="flex items-center justify-center">
+    <div class="p-4" style="background: #212121;height: 600px;width: 800px;border-radius: 12px;border: 1px solid rgba(255,255,255,0.1);
+box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.2);">
+      <div style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);margin-top: 64px;">
+        <!-- <Icon icon="jurassic_nav" style="font-size: 1.2em"></Icon> -->
+        想天工作台使用向导
       </div>
-      <div v-if="step===0">
-        <div style="margin-bottom: 2em;margin-top:1em" v-if="true">
-          如果您正在使用副屏，则推荐您使用副屏模式获得最佳体验。
-          <div style="color:#999;font-size: 0.9em">
-            <bulb-filled/>
-            还没有扩展屏？
-            <br/><a @click="openVideo">
-            <play-circle-filled/>
-            点击了解</a> Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！
+      <div
+      class="mt-4"
+        style="text-align: left;font-size: 1.2em;line-height: 2;width: 600px;margin: auto;position: relative;">
+        <!-- <div style="padding: 0.5em">
+          <a-steps :current="step" size="large">
+            <a-step v-for="item in steps" :title="item.title"/>
+          </a-steps>
+        </div> -->
+        <div v-if="step===0">
+          <div style="margin-bottom: 2em;margin-top:1em;text-align: center;color: var(--secondary-text);" v-if="true">
+            如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
+            <div style="color:#999;font-size: 0.9em">
+              <!-- <bulb-filled/>
+              还没有扩展屏？ -->
+              <br/>
+              没有副屏？点击了解
+              <a @click="openVideo">
+              <play-circle-filled/>
+              Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
+            </div>
           </div>
-        </div>
-        <div style="margin-bottom: 1em" v-else>
-          您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
-        </div>
-        <a-row :gutter="20">
-          <a-col :span="12">
-            <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
-              <div class="title">
-                <icon icon="touping" style="font-size: 1.2em"></icon>
-                副屏全屏模式
+          <div style="margin-bottom: 1em" v-else>
+            您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
+          </div>
+          <a-row :gutter="20" class="flex justify-center">
+            <a-col >
+              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
+                <div class="title">
+                  <icon icon="touping" style="font-size: 56px"></icon>
+                  <div>副屏全屏模式</div>
+                </div>
+                <p>
+                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
+                </p>
               </div>
+            </a-col>
+            <a-col >
+              <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer">
+                <div class="title">
+                  <icon icon="kuaijie" style="font-size: 56px"></icon>
+                  <div>窗口模式</div>
+                </div>
+                <p>
+                  以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
+                </p></div>
+            </a-col>
+          </a-row>
+  
+  
+        </div>
+        <div v-if="step===1 && mod==='second-screen'">
+  
+          <div v-if="screenSettingTab==='none'">
+  
+            <a-row class="screen-section">
+              <a-col :span="20">
+                <div style="font-size: 1.3em">
+                  <Icon icon="Touch"/>
+                  副屏是否已经可正确识别触摸？
+                </div>
+                <div style="color: #999">异常情况：触摸副屏，反馈在主屏的情况。</div>
+              </a-col>
+              <a-col :span="4">
+                <a-button v-if="screenSettingTab!=='touch'" @click="screenSettingTab='touch'" type="primary"> 矫正屏幕
+                </a-button>
+              </a-col>
+            </a-row>
+            <a-row class="screen-section">
+              <a-col :span="20">
+                <div style="font-size: 1.3em">
+                  <Icon icon="touping"/>
+                  工作台是否显示在了您期望的屏幕上？
+                </div>
+              </a-col>
+              <a-col :span="4">
+                <a-button @click="screenSettingTab='choose'" type="primary">选择屏幕</a-button>
+              </a-col>
+            </a-row>
+            <a-row class="screen-section">
+              <a-col :span="20">
+                <div style="font-size: 1.3em">
+                  <Icon icon="wenzidaxiao2"></Icon>
+                  工作台界面显示不自然？
+                </div>
+                <div style="color: #999">异常情况：字体过小、难以触摸、边缘留白过大、显示不全。</div>
+              </a-col>
+              <a-col :span="4">
+                <a-button @click="screenSettingTab='scale'" type="primary">设置缩放</a-button>
+              </a-col>
+            </a-row>
+            <div></div>
+          </div>
+  
+          <div v-if="screenSettingTab==='touch'">
+            <div class="screen-section" style="line-height: 2;margin-top: 3em" v-if="screenSettingTab==='touch'">
               <p>
-                此模式专为副屏优化，将自动放大字体。并提供更适合触摸的交互。
+                如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
+              <p>矫正方法：</p>
+              <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
+              <p style="text-align: center">
+                <a-button class="mr-10" type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
+                <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button>
               </p>
             </div>
-          </a-col>
-          <a-col :span="12">
-            <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer">
-              <div class="title">
-                <icon icon="kuaijie" style="font-size: 1.2em"></icon>
-                窗口模式
-              </div>
-              <p>
-                在主屏上以窗口模式运行，通过默认快捷键 【Alt】+【Z】 显示/隐藏。
-              </p></div>
-          </a-col>
-        </a-row>
-
-
-      </div>
-      <div v-if="step===1 && mod==='second-screen'">
-
-        <div v-if="screenSettingTab==='none'">
-
-          <a-row class="screen-section">
-            <a-col :span="20">
-              <div style="font-size: 1.3em">
-                <Icon icon="Touch"/>
-                副屏是否已经可正确识别触摸？
-              </div>
-              <div style="color: #999">异常情况：触摸副屏，反馈在主屏的情况。</div>
-            </a-col>
-            <a-col :span="4">
-              <a-button v-if="screenSettingTab!=='touch'" @click="screenSettingTab='touch'" type="primary"> 矫正屏幕
-              </a-button>
-            </a-col>
-          </a-row>
-          <a-row class="screen-section">
-            <a-col :span="20">
-              <div style="font-size: 1.3em">
-                <Icon icon="touping"/>
-                工作台是否显示在了您期望的屏幕上？
-              </div>
-            </a-col>
-            <a-col :span="4">
-              <a-button @click="screenSettingTab='choose'" type="primary">选择屏幕</a-button>
-            </a-col>
-          </a-row>
-          <a-row class="screen-section">
-            <a-col :span="20">
-              <div style="font-size: 1.3em">
-                <Icon icon="wenzidaxiao2"></Icon>
-                工作台界面显示不自然？
-              </div>
-              <div style="color: #999">异常情况：字体过小、难以触摸、边缘留白过大、显示不全。</div>
-            </a-col>
-            <a-col :span="4">
-              <a-button @click="screenSettingTab='scale'" type="primary">设置缩放</a-button>
-            </a-col>
-          </a-row>
-          <div></div>
+  
+          </div>
+  
+  
+          <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">
+            选择您要显示工作台的屏幕，直接点击屏幕即可。
+            <a-button style="margin-bottom: 2em" v-if="canTouch" type="primary">
+              <Icon icon="touping"/>
+              矫正屏幕
+            </a-button>
+            <ChooseScreen></ChooseScreen>
+          </div>
+  
+          <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
+            <div style="color: #999">
+              如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
+            </div>
+            <ZoomUI></ZoomUI>
+          </div>
+  
+  
         </div>
-
-        <div v-if="screenSettingTab==='touch'">
-          <div class="screen-section" style="line-height: 2;margin-top: 3em" v-if="screenSettingTab==='touch'">
-            <p>
-              如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
+        <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
+          <div class="mt-3 mb-3" style="background: #f15460;padding: 1em;border-radius: 8px 8px;color: white">
+            <AutoRun/>
+          </div>
+          <div style="text-align: center">
+            <KeySetting></KeySetting>
+          </div>
+          <div class="panel" style="line-height: 1" v-if="!canTouch">
+            <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
             <p>矫正方法：</p>
             <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
             <p style="text-align: center">
-              <a-button class="mr-10" type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
-              <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button>
+              <a-button type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
             </p>
           </div>
-
         </div>
-
-
-        <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">
-          选择您要显示工作台的屏幕，直接点击屏幕即可。
-          <a-button style="margin-bottom: 2em" v-if="canTouch" type="primary">
-            <Icon icon="touping"/>
-            矫正屏幕
-          </a-button>
-          <ChooseScreen></ChooseScreen>
-        </div>
-
-        <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
-          <div style="color: #999">
-            如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
-          </div>
-          <ZoomUI></ZoomUI>
-        </div>
-
-
+  
+        
+        
       </div>
-      <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
-        <div class="mt-3 mb-3" style="background: #f15460;padding: 1em;border-radius: 8px 8px;color: white">
-          <AutoRun/>
-        </div>
-        <div style="text-align: center">
-          <KeySetting></KeySetting>
-        </div>
-        <div class="panel" style="line-height: 1" v-if="!canTouch">
-          <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
-          <p>矫正方法：</p>
-          <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
-          <p style="text-align: center">
-            <a-button type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
-          </p>
-        </div>
-      </div>
-
-
-      <div style="position: fixed;bottom: 1em;width:100%;left: 0;right: 0">
-        <div class="flex item-content" v-if="screenSettingTab==='none'">
-          <xt-button v-if="step!==0" @click="prevStep" style="" size="large">上一步</xt-button>
-          <xt-button v-if="(mod==='second-screen' && step!==2 ) || (mod==='bootstrap' && step!==1) " @click="nextStep"   size="large"
+      <div class="flex mt-3" style="width:100%;justify-content: flex-end">
+        <div class="flex" v-if="screenSettingTab==='none'">
+          <xt-button v-if="step!==0" @click="prevStep" style="" size="large" class="button-bottom">上一步</xt-button>
+          <xt-button v-if="(mod==='second-screen' && step!==2 ) || (mod==='bootstrap' && step!==1) " class="button-bottom" @click="nextStep"   size="large"
                     type="theme">下一步
           </xt-button>
-          <xt-button type="theme" v-else @click="finish" style="margin-left: 6em" size="large" >完成
+          <xt-button type="theme" v-else @click="finish" style="margin-left: 6em" size="large"  class="button-bottom">完成
           </xt-button>
         </div>
         <div v-else class="pl-20">
-          <a-button @click="screenSettingTab='none'" type="primary" size="large">
+          <a-button @click="screenSettingTab='none'" type="primary" size="large" class="button-bottom">
             <Icon class="mr-3" icon="yixuan"></Icon>
             问题解决
           </a-button>
         </div>
-
       </div>
-
     </div>
 
   </div>
@@ -407,12 +412,14 @@ export default {
   background: #3d3d3d;
   padding: 0.5em;
 
-  min-height: 10.5em;
+  height:240px;
+  width:240px;
 }
 
 .title {
   font-weight: bold;
   font-size: 1.1em;
+  text-align: center;
 }
 
 .active {
@@ -432,4 +439,8 @@ export default {
   color: orangered
 }
 
+.button-bottom{
+  width: 95px;
+  height: 40px;
+}
 </style>

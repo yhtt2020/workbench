@@ -139,13 +139,13 @@
                   <div>应用管理</div>
                 </div>
               </a-col>
-<!--              <a-col v-if="isMain()" :span="6">-->
-<!--                <div @click="wizard" class="btn">-->
-<!--                  <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>-->
-<!--                  <Iconify icon="fluent:star-settings-24-regular" style="font-size: 2em" />-->
-<!--                  <div>配置向导</div>-->
-<!--                </div>-->
-<!--              </a-col>-->
+             <a-col v-if="isMain()" :span="6">
+               <div @click="wizard" class="btn">
+                 <!-- <Icon icon="jurassic_nav" style="font-size: 2em"></Icon> -->
+                 <Iconify icon="fluent:star-settings-24-regular" style="font-size: 2em" />
+                 <div>配置向导</div>
+               </div>
+             </a-col>
 
               <a-col :span="6">
                 <div @click="papersSettings" class="btn">
