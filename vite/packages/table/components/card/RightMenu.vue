@@ -8,7 +8,7 @@
     :beforeCreate="beforeCreateMenu"
     @destroyed="close"
   >
-    <div @contextmenu="rightMenuState()">
+    <div @contextmenu="rightMenuState()" @click="defaultMenuClick()">
       <slot></slot>
     </div>
     <template #cardSize v-if="sizes.length > 0">
@@ -97,7 +97,7 @@ const props = defineProps({
     default: "contextmenu",
   },
 });
-const { menus, sizes } = toRefs(props);
+const { menus, sizes, model } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -108,13 +108,14 @@ const menuState = computed(() => {
   return rightModel.value == "follow" ? true : false;
 });
 
-function beforeCreateMenu() {
+function beforeCreateMenu(e) {
+  return menuState.value;
+}
+const clickMenu = () => {
   if (!menuState.value) {
     menuVisible.value = true;
   }
-  return menuState.value;
-}
-
+};
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
   let array = [...menus.value];
@@ -182,7 +183,9 @@ const updateCardSize = (item) => {
 const rightMenuState = () => {
   if (!menuState.value) menuVisible.value = true;
 };
-
+const defaultMenuClick = () => {
+  if (!menuState.value && model.value == "all") menuVisible.value = true;
+};
 function indexAdd() {
   getFreeLayoutData.value[props.customIndex].index++;
 }

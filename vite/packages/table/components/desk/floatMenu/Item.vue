@@ -1,27 +1,20 @@
 <template>
-  <div class="flex flex-wrap justify-around">
-    <xt-button
-      :title="item.title"
-      v-for="item in menus"
-      @click="item.fn"
-      :type="item.type"
-      w="40"
-      h="40"
-      radius="8"
-      class="mb-3"
-    >
-      <xt-new-icon
-        :icon="item.icon"
-        class="text-2"
-        size="20"
-      />
-    </xt-button>
-  </div>
+  <xt-button
+    :title="item.title"
+    @click="item.fn"
+    :type="item.type"
+    w="40"
+    h="40"
+    radius="8"
+    class="floatMenu"
+  >
+    <xt-new-icon :icon="item.icon" class="text-2" size="20" />
+  </xt-button>
 </template>
 
 <script setup>
 const props = defineProps({
-  menus: {},
+  item: {},
 });
 </script>
 
