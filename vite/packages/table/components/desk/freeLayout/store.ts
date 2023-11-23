@@ -1,14 +1,12 @@
 import { defineStore, storeToRefs } from "pinia";
 
 import { cardStore } from "../../../store/card";
-import {homeStore} from "../../../store/home";
+import { homeStore } from "../../../store/home";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
     // 自由布局数据
-    freeLayoutData: {
-
-    },
+    freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
 
@@ -113,9 +111,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   },
   actions: {
     deepMerge(target, source) {
-     for (let key in source) {
+      for (let key in source) {
         if (source.hasOwnProperty(key)) {
-           if (typeof source[key] === "object" && source[key] !== null) {
+          if (typeof source[key] === "object" && source[key] !== null) {
             if (!target.hasOwnProperty(key)) {
               Object.assign(target, { [key]: {} });
             }
@@ -138,7 +136,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 如果自由布局数据存在进行切换
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
-          !this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
+          !this.freeLayoutState[this.getCurrentDeskId]?.system?.isFreeLayout;
+
+        console.log(
+          "  this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout :>> ",
+          this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout
+        );
       } else {
         // 否则进行初始化
         this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
@@ -157,7 +160,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
-
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);

@@ -330,6 +330,7 @@
           v-if="$route.path == '/main' && freeLayout"
           @scrollbarRedirect="freeLayoutScrollbarRedirect"
           @scrollbarUpdate="freeLayoutScrollbarUpdate"
+          :id="currentDesk.id"
         ></FreeLayoutState>
       </template>
       <template v-else>
@@ -665,10 +666,6 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
-    editStart() {
-      console.log("222 :>> ", 222);
-      this.freeDeskEdit = true;
-    },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
