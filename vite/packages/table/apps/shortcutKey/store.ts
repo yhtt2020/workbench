@@ -124,15 +124,28 @@ export const keyStore = defineStore("key", {
      */
     async saveScheme(scheme) {
       console.error('执行了一次保存操作')
-      let rs = await tsbApi.db.put({
-        ...scheme
+      let doc=await tsbApi.db.find({
+        selector:{
+          _id:scheme._id
+        }
       })
-      console.log('保存结果',rs)
-      if (rs.ok) {
-        return rs
+      if(doc.docs.length>0){
+        let originDoc=doc.docs[0]
+        delete scheme._rev
+        let rs = await tsbApi.db.put({
+          ...originDoc,
+          ...scheme
+        })
+        if (rs.ok) {
+          return rs
+        }else{
+          return false
+        }
       }else{
+        console.error('文档不存在')
         return false
       }
+
     },
     /**
      * 添加方案
@@ -312,9 +325,6 @@ export const keyStore = defineStore("key", {
         if (foundSchemes.docs.length > 0) {
           scheme._id = 'shortcut:scheme:' + Date.now()
         }
-        scheme.id = nanoid()
-        scheme.name = scheme.name + '_' + (scheme.id.slice(0, 4))
-
         scheme.selected = false
         delete scheme._rev
         insertSchemes.push(scheme)
