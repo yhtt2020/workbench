@@ -3,6 +3,7 @@ import grab from "./grab";
 import _ from 'lodash-es'
 import {courierStore} from "../../../../apps/ecommerce/courier";
 import {getOrderState} from "./courierTool";
+import {queueStore} from "../../../../apps/queue/store";
 
 const ui = {
   /**
@@ -51,9 +52,9 @@ const ui = {
       })
     }
     if (store.storeInfo.tb.nickname) {
-     ui.getTbOrders(()=>{
+      ui.getTbOrders(() => {
 
-     })
+      })
       //淘宝绑定了
     }
     //todo 刷新其他订单
@@ -164,9 +165,10 @@ const ui = {
         key: "loadingTip",
         duration: 3,
       });
-      await store.saveTbOrders(args.orders)
+      let orders= await store.saveTbOrders(args.orders)
+      await ui.getTbOrderDetail(orders)
       await store.getDbCourier()
-      await ui.getTbOrderDetail(args.orders)
+
 
     });
   },
@@ -176,7 +178,39 @@ const ui = {
    * @param tip
    */
   async getTbOrderDetail(orders, tip = true) {
-
+    const store = courierStore()
+    const queue = queueStore()
+    for (const order of orders) {
+      const content=order.content
+      if (order.content.detailUrl && content.status==='卖家已发货') {
+        queue.log('添加任务：' + order.id)
+        queue.add({
+          name: '淘宝物流详情更新任务:[' + content.id + ']' + order.title, func: () => {
+            queue.log('执行任务：' + content.id)
+            grab.tb.getOrderDetail(content.detailUrl, async ({status, code, data}) => {
+              if (status) {
+                content.detail = {}
+                content.detail.expressNo = data.expressNo
+                content.expressNo=data.expressNo
+                content.expressType= data.expressType
+                content.detail.traceNodes = data.traceNodes
+                content.detail.expressType = data.expressType
+                content.detail.updateTime = Date.now()
+                order.logisticCode=data.expressNo
+                content.latestNodes=data.traceNodes
+                console.log('需要更新物流的订单',order)
+                await store.updateDbItem(order)
+                await store.getDbCourier()
+                queue.log('任务成功，更新订单：' + content.id)
+              } else {
+                queue.log('任务失败：失败订单号：' + content.id, 'error')
+              }
+            })
+          }
+        }, 10000)
+        queue.run()
+      }
+    }
   },
   /**
    * 根据订单的状态、平台筛选订单，默认以全部订单，可提交初次筛选后的列表
