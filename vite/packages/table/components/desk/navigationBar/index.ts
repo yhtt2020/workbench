@@ -195,4 +195,70 @@ export const webMenus=[
     },
 ]
 
+export const iconSize=[
+    {
+        title:'1x1',
+        value:'mini'
+    },
+    {
+        title:'2x1',
+        value:'mini1'
+    },
+    {
+        title:'2x2',
+        value:'small'
+    },
+    {
+        title:'4x2',
+        value:'long'
+    },
+    {
+        title:'4x4',
+        value:'big'
+    },
+]
 
+export const iconShape=[
+    {
+        title:'正方形',
+        value:'square'
+    },
+    {
+        title:'长方形',
+        value:'rectangle'
+    }
+]
+
+export const iconStatus=[
+    {
+        title:'覆盖',
+        value:'cover'
+    },
+    {
+        title:'填充',
+        value:'fill'
+    },
+    {
+        title:'缩小',
+        value:'small'
+    },
+    {
+        title:"放大",
+        value:'big'
+    }
+]
+
+export const localFiles=[
+    {
+        name:'全部',
+        tag:'all'
+    },
+    {
+        name:'快捷方式',
+        tag:'shortcut'
+    },
+    {
+        name:'软件',
+        tag:'software'
+    }
+]

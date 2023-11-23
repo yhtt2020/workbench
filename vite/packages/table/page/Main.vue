@@ -33,7 +33,7 @@
         <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div class="del-icon" id="delIcon2" v-show="delZone">拖到此处删除图标</div>
+        <div class="del-icon" id="delIcon2" v-show="delZone" style="z-index:500">拖到此处删除图标</div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
