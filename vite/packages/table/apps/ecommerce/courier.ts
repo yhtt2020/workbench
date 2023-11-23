@@ -5,6 +5,7 @@ import {post} from "../../js/axios/kdniaoPost";
 import {localCache} from '../../js/axios/serverCache'
 import {generateTitle} from "../../components/widgets/courier/lib/courierTool";
 import grab from "../../components/widgets/courier/lib/grab";
+import courierUI from "../../components/widgets/courier/lib/courierUI";
 
 const kdniao = sUrl('/app/kdniao/realTimeQuery')
 
@@ -267,7 +268,11 @@ export const courierStore = defineStore("courier", {
           })
           let rs= await promise
           return rs
-        }else{
+        }
+        else if(order.store === 'tb'){
+          courierUI.updateTbOrder(order)
+        }
+        else{
           //快递鸟订单
           let res = await post(kdniao, {
             shipperCode: order.shipperCode,
