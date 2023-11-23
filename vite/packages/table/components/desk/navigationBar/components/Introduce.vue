@@ -4,7 +4,7 @@
       <div class="flex justify-center"><xt-new-icon icon="fluent-emoji:rocket" size="50" /></div>
       <div class="flex justify-between p-2 mt-5 rounded-lg xt-bg-2">
         <div class="xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
-        <div class="pointer" style="color:var(--active-bg)">全部添加</div>
+        <div class="pointer" style="color:var(--active-bg)" @click="addAllIcon">全部添加</div>
       </div>
     </div>
     <div class="xt-text-2 w-[790px] h-[52px] xt-bg-2 rounded-xl flex items-center p-4" v-if="tagText">
@@ -15,7 +15,7 @@
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent' }"
         v-for="(item, index) in webMenus" :key="index">{{ item.name }}</xt-button>
     </div>
-    <div class="flex flex-wrap mt-3">
+    <div class="flex flex-wrap justify-center mt-3">
       <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation" @addIcon="addIcon(item,index)"/>
     </div>
   </div>
@@ -195,6 +195,7 @@ export default {
   watch: {
     filterList() {
       this.currentList = this.filterList
+      this.updateMainNav()
     }
   },
   mounted() {

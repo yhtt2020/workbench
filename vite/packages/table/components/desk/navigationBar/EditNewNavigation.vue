@@ -1,6 +1,6 @@
 <template>
     <NewModel style="max-width: 1000px; height: 540px;" :modelValue="modelValue" :nav="true" :header="true" :footer="false"
-        :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="1000">
+        :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="100">
         <template #nav>
             <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 636px;">
                 <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">

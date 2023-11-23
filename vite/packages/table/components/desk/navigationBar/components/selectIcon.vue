@@ -13,8 +13,8 @@
             </div>
             <!-- {{ index }} -->
         </div>
-        <div class="pl-1 pr-1 mt-3 mb-2 text-base xt-text omit">{{ item.name }}</div>
-        <div class="pl-1 pr-1 xt-text-2 omit" style="font-size: 14px;text-align: center;">{{ item.summary || props.recommendation.name }}</div>
+        <div class="pl-3 pr-3 mt-3 mb-2 text-base xt-text omit">{{ item.name }}</div>
+        <div class="pl-3 pr-3 xt-text-2 omit" style="font-size: 14px;text-align: center;">{{ item.summary || props.recommendation.name }}</div>
         <div class="absolute top-3 right-3">
             <xt-button :w="24" :h="24" :style="{ background: isAdd ? '#52C41A' : 'var(--active-bg)' }" @click="addIcon">
                 <div class="flex items-center justify-center" v-if="isAdd">
