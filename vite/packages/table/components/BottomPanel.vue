@@ -66,7 +66,7 @@
         </div>
         <!-- <div class="mr-3"> -->
         <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
-          @completeEdit="this.toggleEdit()" />
+          @completeEdit="completeEdit" />
         <!-- </div> -->
 
         <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
@@ -656,10 +656,14 @@ export default {
             ipc.send('executeAppByPackage', { package: item.package })
             break
           default:
-            require('electron').shell.openPath(item.path)
+            require('electron').shell.openPath(item.path?item.path:item.url)
         }
       }
 
+    },
+    completeEdit(){
+      this.toggleEdit()
+      this.setQuick()
     },
     disableDrag() {
       if (this.sortable) {

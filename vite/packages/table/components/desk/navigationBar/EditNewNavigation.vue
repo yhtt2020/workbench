@@ -1,8 +1,8 @@
 <template>
-    <NewModel style="max-width: 1000px; height: 540px;" :modelValue="modelValue" :nav="true" :header="true" :footer="false"
+    <NewModel class="bottom-edit"  :modelValue="modelValue" :nav="true" :header="true" :footer="false"
         :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="100">
         <template #nav>
-            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 636px;">
+            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 596px;">
                 <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
                     <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
                     <div class="ml-4 text-base xt-text">图标</div>
@@ -11,8 +11,8 @@
                 <xt-button v-for="(item, index) in sideBar" style="border-radius: 10px;" :w="160" :h="48" :style="{
                     'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
                 }" @click="onSelect(index)"
-                    class="flex flex-col items-center justify-center mt-2 text-base xt-text hover-style">
-                    <div> {{ item.name }}</div>
+                    class="flex flex-col mt-2 text-base xt-text hover-style">
+                    <div style="text-align: left !important;"> {{ item.name }}</div>
                 </xt-button>
             </div>
 
@@ -58,7 +58,7 @@
 
 
         </template>
-        <div class="w-[850px] ml-3 " style="height: 520px;">
+        <div class="w-[850px] ml-3 " style="height: 480px;">
             <Custom v-if="sideBar[currentIndex].tag === 'custom'" />
             <Introduce v-else :recommendation="sideBar[currentIndex]" :selectList="this.otherList" />
         </div>
@@ -116,11 +116,6 @@ export default {
                 {
                     name: 'windows',
                     tag: 'tableApp',
-                    active: 0
-                },
-                {
-                    name: '自定义',
-                    tag: 'custom',
                     active: 0
                 },
             ],
@@ -216,100 +211,6 @@ export default {
             this.clickIndex = index
 
         },
-        updateMainNav(addItem, type) {
-            this.mainNavList = this.currentList
-            let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-            if (type) {
-                this.mainNavList.forEach(item => {
-                    if (item.name === addItem.name) {
-                        if (type === 'add') {
-                            item.addNav = true
-                        } else if (type === 'del') {
-                            item.addNav = false
-                        }
-                    }
-                })
-            } else {
-                for (const i in this.mainNavList) {
-                    let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-                    this.mainNavList[i].addNav = stateNav
-                }
-            }
-        },
-        // 添加图标的主要函数
-        clickRightListItem(item, index) {
-            this.activeRightItem = index
-            //   this.editFlag = false
-            if (this.selectNav === 'foot') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-                            this.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setFootNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.footNavigationList.length; i++) {
-                        if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setFootNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.content
-                        scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'left') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
-                            this.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setSideNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.sideNavigationList.length; i++) {
-                        if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setSideNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.sideContent
-                        scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'right') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
-                            this.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setRightNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.rightNavigationList.length; i++) {
-                        if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setRightNavigationList(item)
-                }
-            }
-        },
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav','currentList']),
@@ -349,9 +250,5 @@ export default {
     &:hover {
         background: var(--active-secondary-bg) !important;
     }
-}
-
-:deep(nav) {
-    background-color: red !important;
 }
 </style>
