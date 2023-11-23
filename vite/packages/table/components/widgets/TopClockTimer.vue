@@ -454,7 +454,7 @@ watch(countDownDate, (newVal, oldVal) => {
         return totalTime.trim()
     })
     if (newVal < 0) {
-        const key = `open${Date.now()}`
+        // const key = `open${Date.now()}`
         let message = `${countDownTotalTime.value}到了`
         notifications.clockToast(message, '计时器', false)
     }
@@ -466,14 +466,14 @@ watch(countDownDate, (newVal, oldVal) => {
 // 闹钟完成时弹出
 watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
     // const audio = new Audio('/sound/clock.mp3')
-    // console.log(useTimerStore.appDate.minutes, 'useTimerStore.appDate.minutes');
+    // console.log(useTimerStore.appDate.hours == firstClockTime.value?.hours , 'useTimerStore.appDate.minutes');
     const firstClock = computed(() => {
         return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
     })
     useCardStore.sortClock()
     if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
-        useTimerStore.appDate.hours === firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
-        const key = `open${Date.now()}`
+        useTimerStore.appDate.hours == firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
+        // const key = `open${Date.now()}`
         let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
         notifications.clockToast(message, '闹钟', true)
         if (clockEvent.value[0].clockType === '不重复') {

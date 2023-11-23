@@ -257,46 +257,46 @@ export default {
       }
       // document.body.attributes['background']=''
     },
-    "appDate.minutes": {
-      handler(newVal, oldVal) {
-        this.sortClock()
-        try {
-          if (
-            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
-          ) {
-            this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 1000)
-          }
-        } catch (err) {
+    // "appDate.minutes": {
+    //   handler(newVal, oldVal) {
+    //     this.sortClock()
+    //     try {
+    //       if (
+    //         this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+    //         this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+    //       ) {
+    //         this.visible = true;
+    //         setTimeout(() => {
+    //           this.$refs.clock.play();
+    //         }, 1000)
+    //       }
+    //     } catch (err) {
 
-        }
-      },
-      immediate: true,
-    },
-    "clockFlag": {
-      handler(newVal, oldVal) {
-        try {
-          if (
-            this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
-          ) {
-            this.visible = true;
-            setTimeout(() => {
-              this.$refs.clock.play();
-            }, 1000)
-          } else {
-            this.visible = false;
-            this.$refs.clock.pause()
-          }
-        } catch (err) {
+    //     }
+    //   },
+    //   immediate: true,
+    // },
+    // "clockFlag": {
+    //   handler(newVal, oldVal) {
+    //     try {
+    //       if (
+    //         this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
+    //         this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
+    //       ) {
+    //         this.visible = true;
+    //         setTimeout(() => {
+    //           this.$refs.clock.play();
+    //         }, 1000)
+    //       } else {
+    //         this.visible = false;
+    //         this.$refs.clock.pause()
+    //       }
+    //     } catch (err) {
 
-        }
-      },
-      immediate: true,
-    },
+    //     }
+    //   },
+    //   immediate: true,
+    // },
     "userInfo.onlineGradeExtra": {
       handler(newVal, oldVal) {
         window.lv = 1
