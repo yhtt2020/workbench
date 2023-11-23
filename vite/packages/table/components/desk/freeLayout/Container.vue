@@ -117,6 +117,8 @@ watch(currentDesk.value?.cards, (cards) => {
   updateCardTimer = setTimeout(() => {
     updateCards(cards);
   }, 200);
+},{
+  immediate: true
 });
 const emits = defineEmits(["editStart", "editEnd"]);
 function drag() {
