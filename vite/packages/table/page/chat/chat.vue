@@ -50,7 +50,7 @@ export default {
     const com = communityStore();
     const { communityList } = storeToRefs(com);
     const chat = chatStore();
-    const { settings } = storeToRefs(chat)
+    const { settings,contactsSet } = storeToRefs(chat)
     const appS = appStore();
     const { userInfo } = appS;
     const router = useRouter()
@@ -177,6 +177,7 @@ export default {
     }
     
     watch(()=>communityList.value,(newVal)=>{
+
       if(newVal.length !== undefined && newVal.length !== 0){
         const mapNewVal = newVal.map((item)=>{
           if(item){
@@ -187,7 +188,8 @@ export default {
             noBg:true,type:`community${item.cno}`,
             route:{ name:'myCommunity',params:{no: info.no}},
             callBack:(item)=>{ selectTab(item) },
-            id:item.cno
+            id:item.cno,
+            
             }
           }
         })
@@ -219,9 +221,37 @@ export default {
     onMounted(() => {
       nextTick(() => {
         com.getMyCommunity();
-        window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
-          console.log('查看e.data',e.data);
+        window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           unReadNum.value = e.data
+        })
+        // 接收消息,根据消息返回的groupID进行适配
+        window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(e)=>{
+          const data = e.data[0]
+          const store = window.$TUIKit.store.store
+          const conversation = store.TUIConversation
+          const list = conversation.conversationList
+          if(list.length !== 0){
+            const conversationID = data.to
+            const findItem = list.find((find)=>{
+             const findGroupID = find.groupProfile.groupID
+             return String(findGroupID) === String(conversationID)
+            })
+            if(findItem !== undefined){
+              const findGroupID = findItem.groupProfile.groupID
+              const index = contactsSet.value.unReadMsgNum.findIndex((item)=>{
+                return item.groupID === findGroupID
+              })
+              const option =  {
+                groupID:findGroupID,
+                unreadCount:findItem.unreadCount
+              }
+              if(index === -1){
+                contactsSet.value.unReadMsgNum.push(option)
+              }else{
+                contactsSet.value.unReadMsgNum[index] = option
+              }
+            }
+          }
         })
       });
     });

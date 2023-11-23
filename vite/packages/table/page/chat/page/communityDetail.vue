@@ -94,7 +94,7 @@ export default {
 
   computed:{
     ...mapWritableState(communityStore,['']),
-    ...mapWritableState(chatStore,['settings']),
+    ...mapWritableState(chatStore,['settings','contactsSet']),
     isFloat(){
       return this.settings.enableHide
     },
@@ -110,6 +110,19 @@ export default {
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
       this.currentItem(item)
+      if(item.type === 'group'){
+        const data = JSON.parse(item.props)
+        const groupID = data.groupID
+        const index = this.contactsSet.unReadMsgNum.findIndex((find)=>{
+          return find.groupID === groupID
+        })
+        const option = {
+          groupID:groupID,
+          unreadCount:0
+        }
+        console.log('查看index',index);
+        this.contactsSet.unReadMsgNum.splice(index,0,option)
+      }
     })
     this.$mit.on('currentSet',(args)=>{
       console.log('查看args',args);
