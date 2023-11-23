@@ -302,9 +302,6 @@ export default {
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
     ...mapActions(offlineStore, ["getIsOffline"]),
-    showDrawer(e) {
-      this.menuVisible = true;
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
