@@ -1,6 +1,6 @@
 <template>
   <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
-    <div class="flex items-center" @click="currentItem(item)">
+    <div class="flex items-center relative" @click="currentItem(item)">
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
           <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25rem;"/>
@@ -12,9 +12,14 @@
           <CommunityIcon icon="fluent-emoji-flat:placard" style="font-size: 1.25rem;"/>
         </template>
       </div>
-      <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
+      <span class="font-16 font-500 ml-2 truncate" style="color: var(--primary-text);max-width: 110px;">{{ item.name || item.title }}</span>
       <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
+       <div style="position: absolute;top:0px;right: -10px;width:12px;height: 12px;background: red; font-size: 10px;" 
+        class="rounded-full flex items-center justify-center"   v-if="getUnreadNum !== null && getUnreadNum?.unreadCount !== 0"
+       >
+        {{ getUnreadNum?.unreadCount }}
+       </div>
     </div>
   </xt-menu>
 
@@ -22,10 +27,12 @@
 </template>
 
 <script>
-import { mapActions,mapWritableState } from 'pinia'
+import {ref,reactive,computed,nextTick,toRefs,watch} from 'vue'
+import { mapActions,mapWritableState,storeToRefs } from 'pinia'
 import { Icon as CommunityIcon } from '@iconify/vue'
 import { Modal,message } from 'ant-design-vue'
-import { communityStore } from '../../store/communityStore'
+import { communityStore } from '../../store/communityStore';
+import { chatStore } from '../../../../store/chat'
 
 import LinkSetting from '../knownCategory/LinkSetting.vue'
 
@@ -36,70 +43,88 @@ export default {
     CommunityIcon,LinkSetting
   },
 
-  data(){
-    return{
-      linkMenus:[
-        {
-          name:'链接设置',
-          newIcon:'fluent:settings-16-regular',
-          callBack:()=>{this.$refs.linkRef.openLinkModal()}
-        },
-        {
-          name:'删除应用',
-          newIcon:'akar-icons:trash-can',
-          color: 'var(--error)',
-          callBack:()=>{
-            Modal.confirm({
-              content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-              centered:true,
-              onOk: async ()=>{
-                this.removeCategory(this.revID.id,this.no)
-                message.success('删除成功')
-              }
-            })
-          }
-        }
-      ],
-      menus:[
-        // {
-        //   name:'应用设置',
-        //   newIcon:'fluent:settings-16-regular',
-        //   callBack:()=>{}
-        // },
-        {
-          name:'删除应用',
-          newIcon:'akar-icons:trash-can',
-          color: 'var(--error)',
-          callBack:()=>{
-            Modal.confirm({
-              content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-              centered:true,
-              onOk: async ()=>{
-                this.removeCategory(this.revID.id,this.no)
-                message.success('删除成功')
-              }
-            })
-          }
-        },
-      ],
-      revID:''
-    }
-  },
+  setup(props,ctx){
+    const linkRef = ref(null)
 
-  computed:{
-    menus(){
-      if(this.type === 'link'){
-        return this.linkMenus
-      }else{
-        return this.menus
+    const community = communityStore()
+    const chat = chatStore()
+    const { contactsSet } = storeToRefs(chat)
+    const getUnreadNum = ref(null)
+
+    const data = reactive({
+      revID:'',
+    })
+    const linkMenus = ref([
+     {
+      name:'链接设置', newIcon:'fluent:settings-16-regular',
+      callBack:()=>{ linkRef.value.openLinkModal()}
+     },
+     {
+      name:'删除应用', newIcon:'akar-icons:trash-can',color: 'var(--error)',
+      callBack:()=>{
+        Modal.confirm({
+          content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+          centered:true,
+          onOk: async ()=>{
+            community.removeCategory(data.revID.id,props.no)
+            message.success('删除成功')
+          }
+        })
       }
-    }
-  },
+     }
+    ])
+    const menuList = ref([
+      // {
+      //   name:'应用设置',
+      //   newIcon:'fluent:settings-16-regular',
+      //   callBack:()=>{}
+      // },
+      {
+        name:'删除应用',newIcon:'akar-icons:trash-can',color: 'var(--error)',
+        callBack:()=>{
+          Modal.confirm({
+            content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+            centered:true,
+            onOk: async ()=>{
+              community.removeCategory(data.revID.id,props.no)
+              message.success('删除成功')
+            }
+          })
+        }
+      },
+    ])
 
-  methods:{
-    ...mapActions(communityStore,['removeCategory','getCategoryData','getChannelList']),
-    currentItem(item){
-      this.$emit('currentItem',item)
+    const menus = computed(()=>{
+      if(props.type === 'link'){
+        return linkMenus.value
+      }else{
+        return menuList.value
+      }
+    })
+
+    const currentItem = (item) =>{
+      ctx.emit('currentItem',item)
+    }
+    // 监听频道列表中的群聊未读数据
+    watch(()=>contactsSet.value.unReadMsgNum,(newVal)=>{
+      const prop = JSON.parse(props.item.props);
+      const type = props.item.type
+      if(newVal.length !== 0 && type === 'group'){
+        const groupID = prop.groupID;
+        const find = newVal.find((item)=>{ return String(item.groupID) === String(groupID) })
+        if(find !== undefined){ 
+          getUnreadNum.value = find 
+        }
+      }else{
+        return;
+      }
+    },
+    {deep:true,immediate:true}
+    )
+
+    return{
+      linkRef,menus,linkMenus,menuList,getUnreadNum,
+     ...toRefs(data),currentItem,
     }
   }
 };

@@ -1,21 +1,19 @@
 <template>
  <div class="collapse-container" style="position: relative;">
-   <div class="header pl-2 mb-2 flex  justify-between rounded-md h-8" @click.stop="toggleCollapse">
-     <div class="flex items-center">
-      <div class="flex items-center justify-center" :class="['icon', { 'rotate': collapsed }]">
-        <FoldIcon  icon="fluent:caret-down-16-filled" style="font-size: 1.5rem;"/>
-      </div>
-      <span class="font-14 ml-2 xt-text-2 xt-font font-400" >
-       {{ title }}
-      </span>
+  <div class="header pl-2 mb-2 flex  justify-between rounded-md h-8" @click.stop="toggleCollapse">
+    <div class="flex items-center">
+     <div class="flex items-center justify-center" :class="['icon', { 'rotate': collapsed }]">
+       <FoldIcon  icon="fluent:caret-down-16-filled" style="font-size: 1.5rem;"/>
      </div>
-   </div>
-
-   <div style="position:absolute; top:6px;right:10px;" v-if="no !== 1">
-    <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :list="dorpList"></ChatDropDown>
-   </div>
+     <span class="font-14 ml-2 xt-text-2 xt-font font-400" >
+      {{ title }}
+     </span>
+    </div>
+  </div>
+  <div style="position:absolute; top:16px;right:16px;" v-if="no !== 1">
+   <ChatDropDown newIcon="fluent:more-horizontal-16-filled" :id="null" :unbutton="true" :enableButton="true" :list="dorpList"></ChatDropDown>
+  </div>
    <transition name="collapse">
-    <!-- class="content" -->
     <div v-if="!collapsed" >
       <slot></slot>
     </div>
