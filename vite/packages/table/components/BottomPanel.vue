@@ -52,7 +52,7 @@
                     @click.stop="clickNavigation(item)">
                     <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                       class="flex items-center justify-center rounded-lg s-item xt-bg-2">
-                      <navIcon :icon="item.icon" class="test" style="width:28px;height:28px;fill:var(--primary-text);"></navIcon>
+                      <navIcon :icon="item.icon"  class="test " style="width:28px;height:28px;fill:var(--primary-text);" ></navIcon>
                     </div>
                     <div v-else style="width: 45px; height: 45px" class="flex items-center justify-center">
                       <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
@@ -191,7 +191,10 @@
 
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
+      <!-- 老版 -->
       <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation>
+      <!-- 新版 -->
+      <!-- <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation> -->
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>
@@ -243,6 +246,7 @@ import { offlineStore } from "../js/common/offline";
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
+import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -264,7 +268,8 @@ export default {
     TaskBox,
     navIcon,
     navigationSetting,
-    AddIcon
+    AddIcon,
+    EditNewNavigation
   },
   data() {
     return {
@@ -430,12 +435,9 @@ export default {
         this.rightNav = val[1]
       },
     },
-    // editBar(val){
-    //   if(val){
-    //     console.log(val)
-    //     this.enableDrag()
-    //   }
-    // }
+    shake(){
+      return this.editToggle
+    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -533,6 +535,7 @@ export default {
         this.componentId = item.component
         if (item.component === 'EditNavigation') {
           this.toggleEdit()
+          message.success('进入编辑模式')
         }
         this.quick = true
       } else if (item.visible) {
@@ -555,6 +558,7 @@ export default {
     },
     setQuick() {
       this.quick = false
+      this.editToggle = false
     },
     // closeEdit(){
     //   this.editBar=false
@@ -786,6 +790,32 @@ export default {
 
 .bottom-panel .common-panel {
   padding: 0.2em 1em 0.2em 1em !important;
+}
+.shaking-element {
+    // animation: shake 0.5s infinite;
+    animation: shake 1.5s ease-in-out;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateX(-5px) ;
+    }
+
+    50% {
+        transform: translateY(5px) ;
+    }
+
+    75% {
+        transform: translateY(-5px) ;
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
 
 //
