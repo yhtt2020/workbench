@@ -10,13 +10,14 @@
     <div class="xt-text-2 w-[790px] h-[52px] xt-bg-2 rounded-xl flex items-center p-4" v-if="tagText">
       {{ tagText }}</div>
     <!-- {{ sideBar[currentIndex].tag == 'webNavigation' }} -->
-    <div class="flex " v-if="selectTag == 'webNavigation'">
+    <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
       <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent' }"
-        v-for="(item, index) in webMenus" :key="index">{{ item.name }}</xt-button>
+        v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
     <div class="flex flex-wrap justify-center mt-3">
-      <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation" @addIcon="addIcon(item,index)"/>
+      <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
+        @addIcon="addIcon(item, index)" />
     </div>
   </div>
 </template>
@@ -25,8 +26,8 @@ import { navStore } from '../../../../store/nav'
 import { useNavigationStore } from '../navigationStore'
 import { mapActions, mapWritableState } from 'pinia'
 import selectIcon from './selectIcon.vue'
-import { webMenus } from '../index'
-import {message} from 'ant-design-vue'
+import { webMenus, localFiles } from '../index'
+import { message } from 'ant-design-vue'
 export default {
   name: 'Introduce',
   components: {
@@ -36,7 +37,8 @@ export default {
     return {
       webMenus,
       currentIndex: 0,
-      clickIndex: 0
+      clickIndex: 0,
+      localFiles,
     }
   },
   props: {
@@ -143,18 +145,21 @@ export default {
         }
       }
     },
-    addIcon(item,index){
-      console.log(item,index,'item,index-->>>')
-      this.clickRightListItem(item,index)
+    addIcon(item, index) {
+      // console.log(item,index,'item,index-->>>')
+      this.clickRightListItem(item, index)
+    },
+    addAllIcon() {
+      this.clickRightListItem(this.filterList)
     }
   },
   computed: {
-    ...mapWritableState(useNavigationStore, ['selectNav','currentList']),
+    ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),
     ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
     filterList() {
       if (this.selectTag === 'webNavigation') {
         return this.webList[0]
-      } else {
+      }  else {
         return this.selectList
       }
     },
@@ -190,7 +195,15 @@ export default {
         // 如果 selectTag.value 不等于 'webNavigation'，返回一个默认值（这里返回一个空数组）
         return [];
       }
+    },
+    filterMenus() {
+      if (this.selectTag === 'webNavigation') {
+        return this.webMenus
+      } else {
+        return this.localFiles
+      }
     }
+
   },
   watch: {
     filterList() {

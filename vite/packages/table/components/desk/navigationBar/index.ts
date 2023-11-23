@@ -247,3 +247,18 @@ export const iconStatus=[
         value:'big'
     }
 ]
+
+export const localFiles=[
+    {
+        name:'全部',
+        tag:'all'
+    },
+    {
+        name:'快捷方式',
+        tag:'shortcut'
+    },
+    {
+        name:'软件',
+        tag:'software'
+    }
+]

@@ -23,7 +23,7 @@
                 class="ml-3 xt-bg-2 h-[52px] rounded-xl flex items-center p-4 justify-between">
                 <div class="text-sm xt-text-2">选择你的windows桌面图标，支持多选批量添加。</div>
                 <div class="flex items-center ">
-                    <div style="color:var(--active-bg)" class="mr-3 pointer">全选</div>
+                    <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>
                     <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
                         <div class="flex items-center justify-center xt-text ">批量添加(3)</div>
                     </xt-button>
@@ -211,6 +211,9 @@ export default {
             this.clickIndex = index
 
         },
+        selectAll(){
+            Mit.emit('selectAll')
+        }
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav','currentList']),
