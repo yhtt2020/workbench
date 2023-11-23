@@ -8,7 +8,7 @@
     :beforeCreate="beforeCreateMenu"
     @destroyed="close"
   >
-    <div @contextmenu="rightMenuState()" @click="rightMenuState()">
+    <div @contextmenu="rightMenuState()" @click="defaultMenuClick()">
       <slot></slot>
     </div>
     <template #cardSize v-if="sizes.length > 0">
@@ -97,7 +97,7 @@ const props = defineProps({
     default: "contextmenu",
   },
 });
-const { menus, sizes,model } = toRefs(props);
+const { menus, sizes, model } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -181,9 +181,11 @@ const updateCardSize = (item) => {
 };
 
 const rightMenuState = () => {
+  if (!menuState.value) menuVisible.value = true;
+};
+const defaultMenuClick = () => {
   if (!menuState.value && model.value == "all") menuVisible.value = true;
 };
-
 function indexAdd() {
   getFreeLayoutData.value[props.customIndex].index++;
 }
