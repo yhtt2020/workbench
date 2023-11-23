@@ -110,7 +110,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { courierStore } from '../../../../../apps/ecommerce/courier'
 import { courierType,selectData,selectTab } from '../modalMock'
 import { Icon as SmallIcon } from '@iconify/vue'
-import { kdCompany, kdState, switchColor } from '../../mock'
+import { kdCompany, kdState, switchColor } from '../../lib/mock'
 import { Modal,message } from 'ant-design-vue'
 import { appStore } from '../../../../../store'
 

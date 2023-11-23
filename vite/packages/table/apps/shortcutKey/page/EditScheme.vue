@@ -500,7 +500,7 @@ export default {
         })
         if (this.paramsId !== -1) {
           // this.appContent.icon = this.form.icon
-          this.appContent.icon = avatarUrl
+          this.appContent.icon = this.avatarUrl
           this.appContent.keyList = this.keyList
           this.appContent.name = this.applyName
           this.appContent.commonUse = this.introduce

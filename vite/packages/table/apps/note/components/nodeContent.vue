@@ -48,7 +48,7 @@
         <div class="mt-4 shadow overflow-hidden h-full" style="border-radius: 12px;padding: 24px 0 0 0 ;"
              :style="{background:background}">
           <a-input
-            style="color: var(--primary-text);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
+            style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 50px; "
             v-model:value="this.selNoteTitle"
             maxlength="15"
@@ -268,10 +268,10 @@ export default {
 }
 
 :deep(.vditor-toolbar){
-    background: #212121 !important;
+    background: var(--main-bg) !important;
 }
 :deep(.vditor-reset){
-    background: #191919 !important;
+    background: var(--main-bg) !important;
 }
 
 </style>

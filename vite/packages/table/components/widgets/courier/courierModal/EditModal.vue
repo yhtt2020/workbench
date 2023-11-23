@@ -64,7 +64,7 @@ import Modal from '../../../Modal.vue'
 import GoodIcon from '../../../../../selectIcon/page/index.vue'
 import { courierStore } from '../../../../apps/ecommerce/courier'
 import { message } from 'ant-design-vue'
-import { generateTitle } from '../courierTool'
+import { generateTitle } from '../lib/courierTool'
 import Cover from '../component/Cover.vue'
 
 export default {

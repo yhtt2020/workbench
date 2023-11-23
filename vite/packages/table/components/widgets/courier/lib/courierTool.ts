@@ -77,7 +77,7 @@ export function getOrderState(order){
   }else if(order.store=='pdd'){
 
   }else{
-    return getExpressState(order)
+    return getKdniaoState(order)
   }
 
 }
@@ -106,7 +106,12 @@ export function getTbState(order){
       return 'canceled'
   }
 }
-export function getExpressState(order){
+
+/**
+ * 获取快递鸟的订单状态
+ * @param order
+ */
+export function getKdniaoState(order){
   switch (order.content.State) {
     case '202':
       return 'delivery'
@@ -137,8 +142,12 @@ export function convertStatusToColor(status){
       return '#508BFE';//在途中
       break;
     case "signed":
-      return '#FA7B14';//签收
+      return '#52c31a';//签收
       break;
+    case 'delivery':
+      return '#FA7B14';
+    case 'canceled':
+      return '#464646';
     case "4":
       return '#FF4D4F ';//问题件
       break;

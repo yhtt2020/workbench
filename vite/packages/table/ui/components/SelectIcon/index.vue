@@ -77,7 +77,7 @@
           <Icon icon="fluent:add-16-filled" width="20" height="20"/>
         </div>
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
-        <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ this.customTitle }}</div>
+        <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
       </div>
     </div>
@@ -156,6 +156,9 @@
       isUpload:{
           default:false
       },
+      title:{
+        default:''
+      }
     
     });
     const { menus } = toRefs(props);

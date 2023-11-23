@@ -40,7 +40,7 @@ export default {
             },
             // 编辑器工具参数
             // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-            toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'preview', 'devtools', 'upload', 'help', 'br'],
+            toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'devtools', 'upload', 'help', 'br'],
             after: () => {
                 if (this.selNote >= 0 && this.noteList.length) {
                     this.contentEditor.setValue(this.noteList[this.selNote].customData.text)
@@ -122,7 +122,7 @@ export default {
         // width: 90%;
     }
     .box .vditor-reset{
-        color: #fff !important;
+        color: var(--primary-text) !important;
         height: 96% !important;
     }
 
@@ -150,36 +150,44 @@ export default {
     .vditor-toolbar{
         border: none;
         padding: 0 8% !important;
+        display: flex;
+        justify-content: center !important;
+        flex-wrap: wrap;
 
     }
     .vditor-toolbar__item{
         -webkit-app-region: no-drag;
-
+        margin-right: 6px;
     }
 
     .box .vditor-markdown{
         border: none;
         border-radius: 0;
         z-index: 100 !important;
+    }
 
+    .box .vditor-toolbar__item .vditor-tooltipped{
+        color: var(--primary-text) !important;
     }
 
     // 以下样式针对全屏模式下的便签编辑器调整
     .pop-box .vditor-toolbar{
         position: absolute;
-        // padding: 0;
-        width: 100%;
-        left: 0; 
+        padding: 0 !important;
+        // width: 75%;
+        // left: 0; 
         height: 52px;
-        top: 64px;
+        top: 6px;
         display: flex;
         // flex-;
         justify-content: center !important;
         flex-wrap: wrap;
+        background-color: transparent !important;
+
     }
 
     .pop-box .vditor-reset{
-        height: 90% !important;
+        // height: 90% !important;
         padding: 20px 49px !important;
     }
 
@@ -188,6 +196,8 @@ export default {
         padding: 0 8px;
         display: flex !important;
         align-items: center;
+        color: var(--primary-text) !important;
+        // padding: 0 !important;
     }
 
 

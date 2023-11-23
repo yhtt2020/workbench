@@ -62,8 +62,8 @@
           <div class="flex-1 h-0">
             <div
               class="px-3 pb-2 h-full rounded-b-lg"
-              :style="{ background: options.showColor ? '#191919' : '' }"
-            >
+              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
+              >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>
@@ -191,14 +191,11 @@ export default {
         {
           newIcon: "akar-icons:trash-can",
           fn: ()=>{
-            if(this.options?.type == 'note'){
-              // 需要加一个回调判断删除的是否是便签组件
-
+            if(this.options?.type != 'note'){
               this.doRemoveCard()
             }else{
-              // console.log('不是便签');
-              this.doRemoveCard()
-                    
+              // 便签单独处理
+              this.options?.removeCard()
             }
           },
           title: "删除小组件",
