@@ -16,7 +16,6 @@ export const chatStore = defineStore('chatStore',{
   state:()=> ({
     userSig: '',
     limitTotal: '200',
-
     users:[
       {uid: '4', reason: '阿皮大号' },
       {uid: '36', reason: '想天小客服'},
@@ -31,33 +30,27 @@ export const chatStore = defineStore('chatStore',{
       {groupID: '3dprint'}, {groupID: 'screen_diy'},
       {groupID: 'player'}, {groupID: '3cdigital'},
     ],
-
     //是否在加载中
     isLoading: false,
-
     //推荐数据
     recommendData: {
       users: [],
       groups: []
     },
-
     // 存储上一次会话记录
     conversations: {
       conversationID: (window as any).$TUIKit.TUIServer?.TUIConversation.currentStore?.currentConversationID,
     },
-
     //  开关设置
     settings:{
       showDouble: false,  // 是否展示社群双列
       enableHide:false, // 隐藏边栏
     },
-
-
     //通讯录数据存储
     contactsSet:{
       noticeNum:0,
+      unReadMsgNum:[], // 群聊消息未读数
     }
-
   }),
 
   actions:{

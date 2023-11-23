@@ -1,9 +1,16 @@
 <template>
- <a-dropdown :trigger="['click']" :placement="title !== undefined ? 'bottom':'bottomRight'" :overlayStyle="{ zIndex:'10000 !important',minWidth:'0px !important'}">
-  <div class="flex pointer items-center" :class="title !== undefined ? 'justify-between':'justify-center'">
+ <a-dropdown :trigger="['click']" :placement="title !== undefined ? 'bottom':'bottomRight'" :overlayStyle="{ zIndex:'10000 !important',minWidth:'0px !important'}" @visible-change="callBackData">
+  <div v-if="enableButton === false" class="flex pointer items-center" :class="title !== undefined ? 'justify-between':'justify-center'">
    <span class="font-16 font-500 xt-font " :class="title !== undefined ? 'xt-active-text' : ''">{{ title }}</span>
    <DorpIcon :icon="newIcon" :class="title !== undefined ? 'xt-active-text' : 'xt-text-2'" style="font-size: 1.25rem;"></DorpIcon>
   </div>
+
+  <xt-button class="xt-bg category-button" v-else :style="unbutton ? {width:'0',height:'0'} : {height:'40px',width:'40px'}">
+    <div class="flex items-center justify-center">
+      <DorpIcon :icon="newIcon" :class="title !== undefined ? 'xt-active-text' : 'xt-text-2'" style="font-size: 1.25rem;"></DorpIcon>
+    </div>
+  </xt-button>
+
   <template #overlay>
    <a-menu class="custom-dropdown-menu flex-col flex items-center justify-center" style="background: var(--secondary-bg);">
     <template v-for="(item,index) in list">
@@ -30,11 +37,20 @@
 import {Icon as DorpIcon} from '@iconify/vue'
 
 export default {
- props:['newIcon','list','title'],
+ props:['newIcon','list','title','enableButton','id','unbutton'],
  components:{
   DorpIcon
  },
-
+ methods:{
+  callBackData(){
+    if(this.id !== null ){
+      this.$emit('callbackParams',this.id)
+    }else{
+      return;
+    }
+    
+  }
+ }
 }
 </script>
 

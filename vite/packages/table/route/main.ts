@@ -83,6 +83,10 @@ import Channel from '../page/channels/Channels.vue'
 import ChannelIndex from '../page/channels/ChannelsIndex.vue'
 import Circle from '../page/channels/Groups.vue'
 import CircleDetail from '../page/channels/GroupsDetail.vue'
+import CommunitySetting from '../page/chat/page/setting/communitySetting.vue'
+import MemberManage from '../page/chat/page/setting/memberManage.vue'
+import MoreSetting from '../page/chat/page/setting/moreSetting.vue'
+import RoleAuthority from '../page/chat/page/setting/roleAuthority.vue'
 /**聊天团队模式结束**/
 
 //导入应用路由
@@ -293,7 +297,53 @@ export default [
                   tab1:'community',
                   tab2: 'chat',
                   tab3:'community_{no}',
-                }
+                },
+                children:[
+                  {
+                    path:'/myCommunity/:no/communitySet',
+                    name:'communitySettings',
+                    component:CommunitySetting,
+                    meta: {
+                      tab1:'community',
+                      tab2: 'chat',
+                      tab3:'community_{no}',
+                      tab4:'communitySettings'
+                    }
+                  },
+                  {
+                    path:'/myCommunity/:no/member',
+                    name:'member',
+                    component:MemberManage,
+                    meta: {
+                      tab1:'community',
+                      tab2: 'chat',
+                      tab3:'community_{no}',
+                      tab4:'member'
+                    }
+                  },
+                  {
+                    path:'/myCommunity/:no/more',
+                    name:'more',
+                    component:MoreSetting,
+                    meta: {
+                      tab1:'community',
+                      tab2: 'chat',
+                      tab3:'community_{no}',
+                      tab4:'more'
+                    }
+                  },
+                  {
+                    path:'/myCommunity/:no/role',
+                    name:'role',
+                    component:RoleAuthority,
+                    meta: {
+                      tab1:'community',
+                      tab2: 'chat',
+                      tab3:'community_{no}',
+                      tab4:'role'
+                    }
+                  }
+                ]
               }
             ]
           },
