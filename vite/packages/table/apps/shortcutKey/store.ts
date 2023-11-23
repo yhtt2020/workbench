@@ -30,6 +30,7 @@ export const keyStore = defineStore("key", {
     settings: {
       enableAutoChange: false,
       enableAutoEnter: true,
+      zoom:1
     }
   }),
   actions: {

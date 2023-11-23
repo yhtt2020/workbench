@@ -54,7 +54,7 @@
       </div>
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
-                            :style="showSide ? 'width: 80%;' : 'width:100%'">
+                            :style="{width:showSide ? '80%;' : '100%',zoom:settings.zoom}">
         <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
           此方案暂时没有任何快捷键
           <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
@@ -105,6 +105,15 @@
       <a-tooltip title="开启辅助模式后，工作台将不再聚焦，开启后才可以使用点击触发快捷键。">
         <strong>辅助模式：</strong></a-tooltip>
       <a-switch @click="ensureAided" v-model:checked="aided"></a-switch>
+      <div class="float-right flex">
+        <xt-button v-if="settings.zoom!==1" @click="resetZoom" size="mini" :w="40" :h="30">
+          <xt-new-icon icon="fluent:arrow-clockwise-48-filled"></xt-new-icon>
+        </xt-button>
+        <span class="mr-2 p-1">{{(settings.zoom*100).toFixed(0)}}%</span>
+        <xt-button @click="zoomUp" size="mini" class="mr-2" :w="40" :h="30">+</xt-button>
+        <xt-button class="mr-2" @click="zoomDown" size="mini" :w="40" :h="30">-</xt-button>
+
+      </div>
     </div>
   </div>
 
@@ -282,6 +291,15 @@ export default {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
     ...mapActions(appStore, ['enterAided', 'leaveAided']),
     isWin, isGroupLast, isGroupFirst,
+    zoomUp(){
+      this.settings.zoom+=0.1
+    },
+    zoomDown(){
+      this.settings.zoom-=0.1
+    },
+    resetZoom(){
+      this.settings.zoom=1
+    },
     ensureAided () {
       if (this.aided) {
         this.enterAided()
