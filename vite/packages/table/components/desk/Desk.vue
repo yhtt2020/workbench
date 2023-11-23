@@ -39,9 +39,14 @@
       </div>
     </div>
     <FloatMenu
-      v-if="isFreeLayout"
+      v-if="editing"
+      @add="newAddCard"
+      @set="showSetting"
+      @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
-    ></FloatMenu>
+      @exit="toggleEditing"
+      v-model:zoom="globalSettings.cardZoom"
+    />
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
@@ -55,19 +60,20 @@
           <FreeLayoutCanvas class="home-widgets">
             <FreeLayoutContainer
               :currentDesk="currentDesk"
+              :isFreeLayoutDrag="editing"
               @editStart="editStart"
               @editEnd="freeDeskEdit = false"
             >
               <template #box="{ data }">
-                <!-- <div class="editing"> -->
-                <component
-                  :desk="currentDesk"
-                  :is="data.name"
-                  :customIndex="data.id"
-                  :customData="data.customData"
-                  :editing="true"
-                />
-                <!-- </div> -->
+                <div :class="[{ editing: editing }]">
+                  <component
+                    :desk="currentDesk"
+                    :is="data.name"
+                    :customIndex="data.id"
+                    :customData="data.customData"
+                    :editing="true"
+                  />
+                </div>
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
@@ -550,7 +556,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout", "getCurrentDesk"]),
+    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
@@ -722,7 +728,6 @@ export default {
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
             desk.cards = [];
-            // this.getCurrentDesk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },
