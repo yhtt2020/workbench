@@ -4,7 +4,13 @@ export const useNavigationStore=defineStore('useNavigationStore',{
     state:()=>{
         return {
             editToggle:false,
-            taskBoxVisible:true
+            taskBoxVisible:true,
+            iconSetting:{
+                iconName:true,
+                iconRounded:true,
+                iconBackground:false
+            }
+            
         }
     },
     actions:{
@@ -19,7 +25,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle'],
+            paths: ['editToggle','taskBoxVisible','iconSetting'],
             // storage: dbStorage,
             storage: localStorage,
           },
