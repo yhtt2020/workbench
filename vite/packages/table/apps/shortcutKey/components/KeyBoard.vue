@@ -490,6 +490,10 @@ export default {
             key: '=',
             checked: false,
           },
+          {
+            key: '`',
+            checked: false,
+          },
         ],
         [
           {
