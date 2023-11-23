@@ -31,6 +31,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
+        z-index: 99;
       ">
       <div style="
           display: flex;
@@ -65,7 +66,7 @@
         </div>
         <!-- <div class="mr-3"> -->
         <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
-          @completeEdit="this.toggleEdit()" />
+          @completeEdit="completeEdit" />
         <!-- </div> -->
 
         <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
@@ -190,11 +191,11 @@
   </a-drawer> -->
 
   <transition name="fade">
-    <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
       <!-- 老版 -->
-      <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation>
+      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <!-- 新版 -->
-      <!-- <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation> -->
+      <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>
@@ -392,7 +393,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle','taskBoxVisible']),
+    ...mapWritableState(useNavigationStore, ['editToggle','taskBoxVisible','selectNav']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -535,6 +536,7 @@ export default {
         this.componentId = item.component
         if (item.component === 'EditNavigation') {
           this.toggleEdit()
+          this.selectNav='foot'
           message.success('进入编辑模式')
         }
         this.quick = true
@@ -654,10 +656,14 @@ export default {
             ipc.send('executeAppByPackage', { package: item.package })
             break
           default:
-            require('electron').shell.openPath(item.path)
+            require('electron').shell.openPath(item.path?item.path:item.url)
         }
       }
 
+    },
+    completeEdit(){
+      this.toggleEdit()
+      this.setQuick()
     },
     disableDrag() {
       if (this.sortable) {

@@ -7,6 +7,7 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
   currentDesk: {},
+  isFreeLayoutDrag: {},
 });
 
 const { currentDesk }: any = toRefs(props);
@@ -112,12 +113,18 @@ function updateCards(data) {
   last.value = false;
 }
 
-watch(currentDesk.value?.cards, (cards) => {
-  clearTimeout(updateCardTimer);
-  updateCardTimer = setTimeout(() => {
-    updateCards(cards);
-  }, 200);
-});
+watch(
+  currentDesk.value?.cards,
+  (cards) => {
+    clearTimeout(updateCardTimer);
+    updateCardTimer = setTimeout(() => {
+      updateCards(cards);
+    }, 200);
+  },
+  {
+    immediate: true,
+  }
+);
 const emits = defineEmits(["editStart", "editEnd"]);
 function drag() {
   emits("editStart");
@@ -166,12 +173,12 @@ const a = ref(true);
     :gridMargin="6"
     :magnetMargin="6"
     disabledDefaultEvent
+    :handle="isFreeLayoutDrag ? null : '.2221122'"
     :grid="[134, 96]"
     :gridStyle="{
       border: '2px solid var(--active-bg)',
     }"
   >
-
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>
 </template>

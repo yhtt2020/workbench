@@ -838,7 +838,7 @@ export default {
               1
             );
             this.$emit("changeDesk", {id: this.deskList[0].id});
-          this.clearFreeLayout(this.deskList[0].id)
+          this.clearFreeLayout(this.currentDeskId)
             // 删除桌面数据
             this.key = Date.now();
             if (this.displayDesks.length === 1) {
