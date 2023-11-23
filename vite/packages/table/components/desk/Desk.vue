@@ -722,7 +722,7 @@ export default {
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
             desk.cards = [];
-            this.getCurrentDesk.cards = [];
+            // this.getCurrentDesk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },
