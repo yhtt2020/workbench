@@ -123,7 +123,7 @@ export default {
 
    // 获取头像
    getAvatar(avatar){
-     if(avatar.indexOf('color=') >= 0){
+     if(avatar?.indexOf('color=') >= 0){
        let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
        this.bgColor = color
      }else{

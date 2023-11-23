@@ -14,7 +14,7 @@
         <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
       </div>
       <!--  搜索栏 随机 颜色选择 -->
-      <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != 3">
+      <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != menus.length">
         <a-input
           style="height:40px;background: var(--secondary-bg);
           color: var(--primary-text);
@@ -71,15 +71,17 @@
 
       </div>
       <!-- 自定义上传 -->
-      <div v-if="selIndex == menus.length" class="flex pl-1 pr-1 items-center flex-wrap flex-col" style="height:330px;">
+      <div v-if="selIndex == menus.length" class="flex items-center flex-wrap flex-col px-6" style="height:330px;">
         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
         <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
           <Icon icon="fluent:add-16-filled" width="20" height="20"/>
         </div>
-        <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
+        <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl + '?imageMogr2/crop/260x260/gravity/center'"></a-avatar>
         <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
+        <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
       </div>
+      
     </div>
     <!-- 遮罩层 -->
     <div
@@ -124,7 +126,8 @@
   const selBgColor = ref(0)
   // 是否展开颜色选择
   const isShowBgColor = ref(false)
-
+  //进度条
+  const percent = ref(0)
 
 
     const props = defineProps({
@@ -157,7 +160,10 @@
           default:false
       },
       title:{
-        default:''
+        default:'推荐尺寸：256*256px，最大不超过2MB'
+      },
+      maxSize:{
+        default:2
       }
     
     });
@@ -228,11 +234,25 @@
     }
 
       // 上传文件
-    const getFileInfo = async (evt) => {
+    const getFileInfo = async (evt) => 
+    { 
+        console.log('开始上传');
+        let timer = setInterval(()=>{
+          percent.value +=1
+          if (percent == 99) {
+            clearInterval(timer)
+            timer = null
+          }
+        },50)
         const files = evt.target.files[0]
-        const res  = await fileUpload(files)
-        avatarUrl.value = res
-        emits('getAvatar',res)
+        await fileUpload(files).then(res=>{
+          // 上传结束后自动完成 并清空
+          percent.value = 0
+          clearInterval(timer)
+          timer = null
+          avatarUrl.value = res
+          emits('getAvatar',res)
+        })
     }
 
       // 更换头像
