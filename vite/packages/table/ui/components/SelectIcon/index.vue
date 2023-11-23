@@ -81,7 +81,6 @@
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
         <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
       </div>
-      
     </div>
     <!-- 遮罩层 -->
     <div
@@ -236,9 +235,8 @@
       // 上传文件
     const getFileInfo = async (evt) => 
     { 
-        console.log('开始上传');
         let timer = setInterval(()=>{
-          percent.value +=1
+          percent.value += 1
           if (percent == 99) {
             clearInterval(timer)
             timer = null

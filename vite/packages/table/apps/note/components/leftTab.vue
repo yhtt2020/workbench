@@ -28,7 +28,6 @@ export default {
             this.getNotes()
             this.menuList[0].isSel=true
             this.menuList[1].isSel=false
-
             this.selNote=-1
             this.searchValue = ''
           },
