@@ -4,7 +4,7 @@
     <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
 
      <a-tooltip>
-       <QueueWidget :show="true"></QueueWidget>
+       <QueueWidget></QueueWidget>
      </a-tooltip>
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
         <div class="mr-2 cursor-pointer no-drag" @click="enterClipboard">
