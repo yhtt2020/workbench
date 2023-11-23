@@ -9,8 +9,9 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 iconName:true,
                 iconRounded:true,
                 iconBackground:false
-            }
-            
+            },
+            selectNav:'',
+            currentList:[],
         }
     },
     actions:{
@@ -25,7 +26,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','taskBoxVisible','iconSetting'],
+            paths: ['editToggle','taskBoxVisible','iconSetting','selectNav'],
             // storage: dbStorage,
             storage: localStorage,
           },

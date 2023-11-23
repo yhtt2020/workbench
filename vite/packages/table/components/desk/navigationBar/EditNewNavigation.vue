@@ -1,8 +1,8 @@
 <template>
-    <NewModel style="max-width: 1000px; height: 600px;"  :modelValue="modelValue" :nav="true" :header="true"
-        :footer="false" :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="1000">
+    <NewModel style="max-width: 1000px; height: 540px;" :modelValue="modelValue" :nav="true" :header="true" :footer="false"
+        :esc="true" :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="1000">
         <template #nav>
-            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 656px;">
+            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 636px;">
                 <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
                     <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
                     <div class="ml-4 text-base xt-text">图标</div>
@@ -31,7 +31,8 @@
 
             </div>
             <!-- 输入框 -->
-            <a-input v-if="sideBar[currentIndex].tag !== 'tableApp' && sideBar[currentIndex].tag !== 'recommendation' && sideBar[currentIndex].tag !== 'custom'"
+            <a-input
+                v-if="sideBar[currentIndex].tag !== 'tableApp' && sideBar[currentIndex].tag !== 'recommendation' && sideBar[currentIndex].tag !== 'custom'"
                 placeholder="搜索" style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px">
                 <template #suffix>
                     <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
@@ -57,88 +58,16 @@
 
 
         </template>
-        <div class="w-[850px] ml-3 " style="height: 540px;">
+        <div class="w-[850px] ml-3 " style="height: 520px;">
             <Custom v-if="sideBar[currentIndex].tag === 'custom'" />
             <Introduce v-else :recommendation="sideBar[currentIndex]" :selectList="this.otherList" />
-            
         </div>
     </NewModel>
 </template>
-
-<!-- <script setup lang='ts'>
-import { ref, reactive ,computed} from 'vue'
-import NewModel from '../../../ui/new/modal/index.vue'
-import Introduce from './components/Introduce.vue'
-import { webMenus } from './index'
-import navigationData from '../../../js/data/tableData'
-// const {appModel}=window.config.globalProperties.$models
-const tagText = ref('')
-const ClassifyData=ref([...navigationData.coolAppList, ...navigationData.systemAppList])
-const modelValue = ref(true)
-const currentIndex = ref(0)
-const emit=defineEmits(['setQuick'])
-const sideBar = ref([
-    {
-        name: '推荐',
-        tag: 'recommendation',
-        active: 0
-    },
-    {
-        name: '网址导航',
-        tag: 'webNavigation',
-        active: 0
-    },
-    {
-        name: '酷应用',
-        tag: 'ColApp',
-        active: 0
-    },
-    {
-        name: '轻应用',
-        tag: 'QingApp',
-        active: 0
-    },
-    {
-        name: '系统功能',
-        tag: 'systemFunction',
-        active: 0
-    },
-    {
-        name: 'windows',
-        tag: 'windows',
-        active: 0
-    },
-    {
-        name: '自定义',
-        tag: 'custom',
-        active: 0
-    },
-])
-const onSelect = (index: number) => {
-    currentIndex.value = index
-}
-const tagText=computed(()=>{
-    let currentTag=sideBar.value[currentIndex.value].tag
-    switch (currentTag) {
-        case 'ColApp':
-            return '基于工作台深度优化和适配的应用，支持多选批量添加。'
-            break;
-        case 'QingApp':
-            return '来自「想天浏览器」的轻应用，支持多选批量添加。'
-            break;
-        case 'systemFunction':
-            return '工作台内置功能项，支持直接添加到桌面，支持多选批量添加。'
-        default:
-            break;
-    }
-})
-
-const setQuick=()=>{
-    emit('setQuick')
-}
-
-</script> -->
 <script>
+import { useNavigationStore } from './navigationStore'
+import { navStore } from '../../../store/nav'
+import { mapActions, mapWritableState } from 'pinia'
 import NewModel from '../../../ui/new/modal/index.vue'
 import Introduce from './components/Introduce.vue'
 import { webMenus } from './index'
@@ -155,7 +84,6 @@ export default {
     },
     data() {
         return {
-            tagText: '',
             ClassifyData: [...navigationData.coolAppList, ...navigationData.systemAppList],
             modelValue: true,
             currentIndex: 0,
@@ -262,7 +190,6 @@ export default {
     methods: {
         onSelect(index) {
             this.currentIndex = index
-            console.log(this.otherList, 'res')
         },
         setQuick() {
             this.$emit('setQuick')
@@ -288,24 +215,105 @@ export default {
         onClick(index) {
             this.clickIndex = index
 
-        }
-    },
-    computed: {
-        tagText() {
-            let currentTag = this.sideBar[this.currentIndex].tag
-            switch (currentTag) {
-                case 'ColApp':
-                    return '基于工作台深度优化和适配的应用，支持多选批量添加。'
-                    break;
-                case 'QingApp':
-                    return '来自「想天浏览器」的轻应用，支持多选批量添加。'
-                    break;
-                case 'systemFunction':
-                    return '工作台内置功能项，支持直接添加到桌面，支持多选批量添加。'
-                default:
-                    break;
+        },
+        updateMainNav(addItem, type) {
+            this.mainNavList = this.currentList
+            let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+            if (type) {
+                this.mainNavList.forEach(item => {
+                    if (item.name === addItem.name) {
+                        if (type === 'add') {
+                            item.addNav = true
+                        } else if (type === 'del') {
+                            item.addNav = false
+                        }
+                    }
+                })
+            } else {
+                for (const i in this.mainNavList) {
+                    let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+                    this.mainNavList[i].addNav = stateNav
+                }
             }
         },
+        // 添加图标的主要函数
+        clickRightListItem(item, index) {
+            this.activeRightItem = index
+            //   this.editFlag = false
+            if (this.selectNav === 'foot') {
+                if (item instanceof Array) {
+                    for (let i = 0; i < item.length; i++) {
+                        if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+                            this.updateMainNav(item[i], 'add')
+                            item[i].addNav = true
+                            this.setFootNavigationList(item[i])
+                        } else {
+                            message.info('已添加', 1)
+                        }
+                    }
+                    this.dropList = []
+                } else {
+                    for (let i = 0; i < this.footNavigationList.length; i++) {
+                        if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+                    }
+                    this.updateMainNav(item, 'add')
+                    item.addNav = true
+                    this.setFootNavigationList(item)
+                    this.$nextTick(() => {
+                        let scrollElem = this.$refs.content
+                        scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+                    })
+                }
+            } else if (this.selectNav === 'left') {
+                if (item instanceof Array) {
+                    for (let i = 0; i < item.length; i++) {
+                        if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
+                            this.updateMainNav(item[i], 'add')
+                            item[i].addNav = true
+                            this.setSideNavigationList(item[i])
+                        } else {
+                            message.info('已添加', 1)
+                        }
+                    }
+                    this.dropList = []
+                } else {
+                    for (let i = 0; i < this.sideNavigationList.length; i++) {
+                        if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
+                    }
+                    this.updateMainNav(item, 'add')
+                    item.addNav = true
+                    this.setSideNavigationList(item)
+                    this.$nextTick(() => {
+                        let scrollElem = this.$refs.sideContent
+                        scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
+                    })
+                }
+            } else if (this.selectNav === 'right') {
+                if (item instanceof Array) {
+                    for (let i = 0; i < item.length; i++) {
+                        if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
+                            this.updateMainNav(item[i], 'add')
+                            item[i].addNav = true
+                            this.setRightNavigationList(item[i])
+                        } else {
+                            message.info('已添加', 1)
+                        }
+                    }
+                    this.dropList = []
+                } else {
+                    for (let i = 0; i < this.rightNavigationList.length; i++) {
+                        if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
+                    }
+                    this.updateMainNav(item, 'add')
+                    item.addNav = true
+                    this.setRightNavigationList(item)
+                }
+            }
+        },
+    },
+    computed: {
+        ...mapWritableState(useNavigationStore, ['selectNav','currentList']),
+        ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
             return this.ClassifyData.filter(i => {
                 const sideBarTag = this.sideBar[this.currentIndex].tag
@@ -321,7 +329,6 @@ export default {
         },
         otherList() {
             const sideBarTag = this.sideBar[this.currentIndex].tag;
-
             if (sideBarTag === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {
@@ -343,7 +350,8 @@ export default {
         background: var(--active-secondary-bg) !important;
     }
 }
-:deep(nav){
+
+:deep(nav) {
     background-color: red !important;
 }
 </style>

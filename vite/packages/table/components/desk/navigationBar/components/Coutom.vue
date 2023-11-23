@@ -47,9 +47,9 @@
                 <RadioTab :navList="iconSize" v-model:selectType="defaultSize"/>
                 <div class="flex justify-between mt-4 mb-8">
                     <div class="title-font">图标圆角：{{sliderValue}}px</div>
-                    <a-switch v-model:checked="iconSettings.iconRounded"/>
+                    <a-switch v-model:checked="iconSettings.iconRounded" />
                 </div>
-                <a-slider v-model:value="sliderValue" :tooltip-visible="true" />
+                <a-slider v-model:value="sliderValue" max="24" step="2"  />
                 <div class="mt-8">
                     <div class="mb-4 title-font">图标形状</div>
                     <RadioTab :navList="iconShape" v-model:selectType="defaultShape" />

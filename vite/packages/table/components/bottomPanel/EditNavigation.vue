@@ -947,6 +947,7 @@ export default {
     closeAdd () {
       this.editFlag = false
     },
+    // 添加图标的主要函数
     clickRightListItem (item, index) {
       this.activeRightItem = index
       this.editFlag = false
