@@ -60,13 +60,13 @@
             >
               <template #box="{ data }">
                 <!-- <div class="editing"> -->
-                  <component
-                    :desk="currentDesk"
-                    :is="data.name"
-                    :customIndex="data.id"
-                    :customData="data.customData"
-                    :editing="true"
-                  />
+                <component
+                  :desk="currentDesk"
+                  :is="data.name"
+                  :customIndex="data.id"
+                  :customData="data.customData"
+                  :editing="true"
+                />
                 <!-- </div> -->
               </template>
             </FreeLayoutContainer>
@@ -510,7 +510,14 @@ export default {
       // }
       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
     },
-
+    "currentDesk.id": {
+      handler(newVal) {
+        // this.freeLayoutID = newVal
+        console.log("桌面ID this.freeLayoutID  :>> ", newVal);
+      },
+      deep: true,
+      immediate: true,
+    },
     "currentDesk.settings": {
       handler(newVal) {
         console.log("更改了方向");
@@ -618,7 +625,7 @@ export default {
   },
   data() {
     return {
-      vurriEnable:false,
+      vurriEnable: false,
       freeDeskEdit: false,
       freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
