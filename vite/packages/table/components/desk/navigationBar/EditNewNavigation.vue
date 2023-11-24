@@ -118,6 +118,10 @@ export default {
                     tag: 'tableApp',
                     active: 0
                 },
+                {
+                    name:'自定义',
+                    tag:'custom'
+                }
             ],
             suggestNavigationList: [
 

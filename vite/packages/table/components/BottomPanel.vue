@@ -129,7 +129,7 @@
     </div>
 
     <template v-if="!simple && isMain"> <Team></Team> </template>
-    <TaskBox v-if="taskBoxVisible"></TaskBox>
+    <TaskBox ></TaskBox>
   </div>
 
   <div id="trans" v-show="visibleTrans" style="

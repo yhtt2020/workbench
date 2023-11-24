@@ -16,8 +16,17 @@
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
     <div class="flex flex-wrap justify-center mt-3">
-      <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
+      <template v-if="this.filterList.length>0">
+        <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
         @addIcon="addIcon(item, index)" />
+      </template>
+      <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
+      <div v-else class="flex flex-col items-center justify-center mt-10">
+        <div>
+          <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
+        </div>
+        <div class="mt-4 text-base xt-text">暂无数据</div>
+      </div>
     </div>
   </div>
 </template>
@@ -28,10 +37,12 @@ import { mapActions, mapWritableState } from 'pinia'
 import selectIcon from './selectIcon.vue'
 import { webMenus, localFiles,doc } from '../index'
 import { message } from 'ant-design-vue'
+import DataStatu from "../../../widgets/DataStatu.vue";
 export default {
   name: 'Introduce',
   components: {
-    selectIcon
+    selectIcon,
+    DataStatu
   },
   data() {
     return {

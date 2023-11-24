@@ -1,6 +1,6 @@
 <template>
     <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <xt-old-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
+    <xt-old-modal :isFooter="false" zIndex="300" :isHeader="false" :boxIndex="420" :maskIndex="300">
         <div class="w-[500px] h-[614px]  rounded-xl p-3 wuzi">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
@@ -15,14 +15,14 @@
             </div>
             <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4 mt-4">
                 <div v-for="(item, index) in navigationPosition">
-                    <settingItem :settingItem="item" :index="index"></settingItem>
+                    <settingItem :settingItem="item" :index="index" :position="true"></settingItem>
                     <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index != navigationPosition.length - 1">
                     </div>
                 </div>
             </div>
             <div class="w-full h-[255px] xt-bg-2 rounded-xl mt-4 p-4">
                 <div v-for="(item, index) in navigationFunction">
-                    <settingItem :settingItem="item"></settingItem>
+                    <settingItem :settingItem="item" :index="index" :position="false"></settingItem>
                     <div class="w-full h-[1px] bg-[var(--divider)] mt-4 mb-4" v-if="index != navigationFunction.length - 1">
                     </div>
                 </div>
