@@ -132,7 +132,9 @@ const exit1 = () => {
 };
 
 const currentMode = ref(isFreeLayout.value ? "free" : "default");
-
+watch(currentMode, (newV) => {
+  freeLayoutStore.renewFreeLayout();
+});
 // 缩放比例
 const freeLayoutZoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.canvas.zoom * 100 : 100
