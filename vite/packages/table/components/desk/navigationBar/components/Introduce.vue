@@ -26,7 +26,7 @@ import { navStore } from '../../../../store/nav'
 import { useNavigationStore } from '../navigationStore'
 import { mapActions, mapWritableState } from 'pinia'
 import selectIcon from './selectIcon.vue'
-import { webMenus, localFiles } from '../index'
+import { webMenus, localFiles,doc } from '../index'
 import { message } from 'ant-design-vue'
 export default {
   name: 'Introduce',
@@ -39,6 +39,7 @@ export default {
       currentIndex: 0,
       clickIndex: 0,
       localFiles,
+      doc
     }
   },
   props: {
@@ -159,7 +160,27 @@ export default {
     filterList() {
       if (this.selectTag === 'webNavigation') {
         return this.webList[0]
-      }  else {
+      } else if (this.selectTag === 'tableApp') {
+        const current = this.filterMenus[this.clickIndex].tag;
+        switch (current) {
+          case 'all':
+            return this.selectList;
+            break;
+          case 'shortcut':
+            return this.selectList.filter((item) => item.ext === '.exe');
+            break;
+          case 'docx':
+            return this.selectList.filter((item) => doc.includes(item.ext));
+            break;
+          case "other":
+            return this.selectList.filter((item)=>!doc.includes(item.ext) && item.ext !== '.exe')
+            break;
+          default:
+            return [];
+            break;
+        }
+      }
+      else {
         return this.selectList
       }
     },
@@ -209,12 +230,20 @@ export default {
     filterList() {
       this.currentList = this.filterList
       this.updateMainNav()
+    },
+    footNavigationList(oldVal,newVal){
+    if(newVal.length<oldVal.length){
+      console.log(111111);
+      this.updateMainNav()
     }
+    console.log(2222222222);
+  }
   },
   mounted() {
     this.currentList = this.filterList
     this.updateMainNav()
   },
+  
 }
 </script>
 <style lang='scss' scoped></style>

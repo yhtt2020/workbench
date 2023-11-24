@@ -254,11 +254,17 @@ export const localFiles=[
         tag:'all'
     },
     {
-        name:'快捷方式',
+        name:'软件',
         tag:'shortcut'
     },
     {
-        name:'软件',
-        tag:'software'
+        name:'文档',
+        tag:'docx'
+    },
+    {
+        name:"其他",
+        tag:'other'
     }
 ]
+
+export const doc=[".docx",".pptx",'.txt','.pdf','.xlsx','.doc','.ppt','.xls','.md']
