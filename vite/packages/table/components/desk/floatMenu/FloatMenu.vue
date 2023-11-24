@@ -199,7 +199,7 @@ watch(defaultZoom, (newV) => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-model="freeLayoutZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden"
+            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"
           >
             <template #addonAfter>
@@ -235,7 +235,7 @@ watch(defaultZoom, (newV) => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-model="defaultZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden"
+            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"
           >
             <template #addonAfter>
