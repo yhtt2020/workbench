@@ -141,11 +141,15 @@ const freeLayoutZoom = ref(
 );
 watch(freeLayoutZoom, (newV) => {
   getFreeLayoutState.value.canvas.zoom = newV / 100;
+  const int = Math.round(newV);
+  freeLayoutZoom.value = int;
 });
 
 const defaultZoom = ref(zoom.value);
-watch(defaultZoom, (newV) => {
-  emits("update:zoom", newV);
+watch(defaultZoom, (newV: any) => {
+  const int = Math.round(newV);
+  defaultZoom.value = int;
+  emits("update:zoom", int);
 });
 </script>
 
