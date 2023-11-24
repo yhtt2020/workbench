@@ -1,20 +1,13 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false"
-     style=" border-right:1px solid var(--divider);"
-    >
-      <CategoryFloat :float="false" :communityID="routeData"
-      @updateColumn="updateColumn" @createCategory="clickEmptyButton"
-      ></CategoryFloat>
+    <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
+      <CategoryFloat :float="false" :communityID="routeData" @createCategory="clickEmptyButton" />
     </a-col>
-
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <CommunityHeader :headerContent="currentChannel"/>
-
       <div v-if="isChat === 'not'" class="flex items-center justify-center h-full">
         <ValidateModal :data="group"></ValidateModal>
       </div>
-
       <div style="height: 0;flex:1;position:relative;" v-else>
         <template v-if="!currentChannel.name && channelList.length>0">
           <div class="flex flex-col items-center justify-center h-full">
@@ -92,44 +85,6 @@ export default {
     CommunityHeader,
   },
 
-  computed:{
-    ...mapWritableState(communityStore,['']),
-    ...mapWritableState(chatStore,['settings','contactsSet']),
-    isFloat(){
-      return this.settings.enableHide
-    },
-    // doubleCol(){
-    //   return this.settings.showDouble
-    // }
-  },
-
-  async mounted(){
-    // console.log('启动')
-    const rs = await articleService.getOne('community_after_created_empty')
-    this.emptyArticle = rs
-    // 监听当前事件触发
-    this.$mit.on('clickItem',(item)=>{
-      this.currentItem(item)
-      if(item.type === 'group'){
-        const data = JSON.parse(item.props)
-        const groupID = data.groupID
-        const index = this.contactsSet.unReadMsgNum.findIndex((find)=>{
-          return find.groupID === groupID
-        })
-        const option = {
-          groupID:groupID,
-          unreadCount:0
-        }
-        console.log('查看index',index);
-        this.contactsSet.unReadMsgNum.splice(index,0,option)
-      }
-    })
-    this.$mit.on('currentSet',(args)=>{
-      console.log('查看args',args);
-      this.currentChannel = args
-    })
-  },
-
   data(){
     return{
       emptyArticle: {
@@ -148,9 +103,41 @@ export default {
     }
   },
 
+  computed:{
+    ...mapWritableState(chatStore,['settings','contactsSet']),
+    isFloat(){
+      return this.settings.enableHide
+    },
+  },
+
+  async mounted(){
+    const rs = await articleService.getOne('community_after_created_empty')
+    this.emptyArticle = rs
+    // 监听当前事件触发
+    this.$mit.on('clickItem',(item)=>{
+      this.currentItem(item)
+      // if(item.type === 'group'){
+      //   const data = JSON.parse(item.props)
+      //   const groupID = data.groupID
+      //   const index = this.contactsSet.unReadMsgNum.findIndex((find)=>{
+      //     return find.groupID === groupID
+      //   })
+      //   const option = {
+      //     groupID:groupID,
+      //     unreadCount:0
+      //   }
+      //   console.log('查看index',index);
+      //   this.contactsSet.unReadMsgNum.splice(index,0,option)
+      // }
+    })
+    this.$mit.on('currentSet',(args)=>{
+      console.log('查看args',args);
+      this.currentChannel = args
+    })
+  },
+
   methods:{
     updateColumn(){},
-
     // 当前点击
     async currentItem(item){
       // 链接
@@ -166,7 +153,6 @@ export default {
            break;
         }
       }
-
       // 群聊
       if(item.type === 'group'){
         const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
@@ -225,16 +211,11 @@ export default {
     }
   },
 
-
-
   watch:{
     // 通过监听方式获取社群号
     '$route':{
       handler(to,from){
-      //  console.log('参数1::>>',to.params.no);
-       //  console.log('参数2::>>',from);
        this.routeData = to.params.no
-
       },
       immediate:true,
       deep:true,

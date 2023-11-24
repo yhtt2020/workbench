@@ -21,7 +21,7 @@
 
 <script>
 import { ref, reactive, toRefs, computed, onMounted, nextTick,watch } from "vue";
-import { useRouter,} from "vue-router";
+import { useRouter,useRoute} from "vue-router";
 import { storeToRefs } from "pinia";
 import { Icon as ChatIcon } from "@iconify/vue";
 import { communityStore } from "./store/communityStore";
@@ -54,6 +54,7 @@ export default {
     const appS = appStore();
     const { userInfo } = appS;
     const router = useRouter()
+    const route = useRoute()
     const TUIServer = window.$TUIKit
 
     const data = reactive({
@@ -70,10 +71,7 @@ export default {
       },
       communityNo:'',
     })
-
     const unReadNum = ref(0)
-    
-
     const leftList = ref([
       {
         newIcon: "fluent:chat-16-regular",
@@ -151,7 +149,6 @@ export default {
         ]
       }
     ]);
-  
 
     // 触发社群创建入口
     const createCommunity = () =>{
@@ -177,35 +174,44 @@ export default {
     }
     
     watch(()=>communityList.value,(newVal)=>{
-
-      if(newVal.length !== undefined && newVal.length !== 0){
-        const mapNewVal = newVal.map((item)=>{
-          if(item){
-            const info = {...item.communityInfo}
+      nextTick(()=>{
+        if(newVal.length !== undefined && newVal.length !== 0){
+         const mapNewVal = newVal.map((item)=>{
+          const info = {...item.communityInfo}
+          if(item && item.unread !== undefined){
             return { 
-            img:info.icon, float:'',
-            name:info.name, tab:`community_${info.no}`,
-            noBg:true,type:`community${item.cno}`,
-            route:{ name:'myCommunity',params:{no: info.no}},
-            callBack:(item)=>{ selectTab(item) },
-            id:item.cno,
-            
+             img:info.icon, float:'',
+             name:info.name, tab:`community_${info.no}`,
+             noBg:true,type:`community${item.cno}`,
+             route:{ name:'myCommunity',params:{no: info.no}},
+             callBack:(item)=>{ selectTab(item) },
+             id:item.cno,
+             unread:item.unread,
+            }
+          }else{
+            return { 
+             img:info.icon, float:'',
+             name:info.name, tab:`community_${info.no}`,
+             noBg:true,type:`community${item.cno}`,
+             route:{ name:'myCommunity',params:{no: info.no}},
+             callBack:(item)=>{ selectTab(item) },
+             id:item.cno,
+             unread:0,
             }
           }
-        })
-        for(const items of mapNewVal){
+         })
+         console.log('执行...查看变化后',mapNewVal);
+         for(const items of mapNewVal){
           const index = leftList.value.findIndex((item)=>{
             return items.id === item.id
           })
           if(index === -1){
             leftList.value.splice(4,0,items)
           }
+         }
         }
-        // console.log('查看leftList',leftList.value);
-      }else{
-        return
-      }
-    },{immediate:true})
+      })
+    },{immediate:true,deep:true})
 
     const filterList = computed(()=>{
       if(settings.value.enableHide){
@@ -218,39 +224,45 @@ export default {
       }
     }) 
 
+    watch(()=>contactsSet.value.unReadMsgNum,(newVal)=>{
+      if(newVal !== null){
+        const unReadMsgNum = contactsSet.value.unReadMsgNum
+        const unreadNo =  unReadMsgNum.no
+        const unreadTotal =  unReadMsgNum.unreadTotal
+        const emptyCommunity = communityList.value.length !== undefined && communityList.value.length !== 0;
+        if(emptyCommunity){
+          const list = communityList.value.map((item)=>{
+            const communityNo = item.communityInfo.no
+            if(String(unreadNo) === String(communityNo)){
+               return {
+                ...item,
+                unread:unreadTotal,
+               }
+            }else{
+              return item
+            }
+          })
+          communityList.value = list
+        }
+      }
+    },{immediate:true,deep:true})
+
+    console.log('执行....查看leftList',leftList);
+
     onMounted(() => {
       nextTick(() => {
         com.getMyCommunity();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           unReadNum.value = e.data
-        })
-        // 接收消息,根据消息返回的groupID进行适配
-        window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(e)=>{
-          const data = e.data[0]
-          const store = window.$TUIKit.store.store
-          const conversation = store.TUIConversation
-          const list = conversation.conversationList
-          if(list.length !== 0){
-            const conversationID = data.to
-            const findItem = list.find((find)=>{
-             const findGroupID = find.groupProfile.groupID
-             return String(findGroupID) === String(conversationID)
-            })
-            if(findItem !== undefined){
-              const findGroupID = findItem.groupProfile.groupID
-              const index = contactsSet.value.unReadMsgNum.findIndex((item)=>{
-                return item.groupID === findGroupID
-              })
-              const option =  {
-                groupID:findGroupID,
-                unreadCount:findItem.unreadCount
-              }
-              if(index === -1){
-                contactsSet.value.unReadMsgNum.push(option)
-              }else{
-                contactsSet.value.unReadMsgNum[index] = option
-              }
-            }
+        });
+        // 接收社群消息未读数据
+        window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(args)=>{
+          const no = route.params.no
+          const arg = args.data[0]
+          if(no !== '' && no !== 1){
+            chat.receiveUnreadMsgData(arg,no)
+          }else{
+            return;
           }
         })
       });

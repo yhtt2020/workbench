@@ -270,7 +270,7 @@ export default{
   },
 
   methods:{
-    ...mapActions(communityStore,['removeCategory']),
+    ...mapActions(communityStore,['removeCategory','getCategoryData']),
     ...mapActions(chatStore,['setFloatVisible','setDouble']),
     currentItem(item){
       this.currentID = item.id

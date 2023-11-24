@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import {defineStore,storeToRefs} from "pinia";
 import dbStorage from "./dbStorage";
 import {sUrl} from "../consts";
 import {get, post} from "../js/axios/request";
@@ -49,7 +49,7 @@ export const chatStore = defineStore('chatStore',{
     //通讯录数据存储
     contactsSet:{
       noticeNum:0,
-      unReadMsgNum:[], // 群聊消息未读数
+      unReadMsgNum:null, // 群聊消息未读数
     }
   }),
 
@@ -60,20 +60,14 @@ export const chatStore = defineStore('chatStore',{
         this.userSig = getRs.data
       }
     },
-
-
     async updateUserInfo() {
-      let userInfo = appStore().userInfo
-      // let rs =
+      let userInfo = appStore().userInfo;
       await (window as any).$TUIKit.tim.updateMyProfile({
         nick: userInfo.nickname,
         avatar: userInfo.avatar,
         selfSignature: String(userInfo.signature),
       })
-      // console.log('尝试更新用户信息结果', rs)
     },
-
-
     async login() {
       await this.getUserSig()
       await (window as any).$TUIKit.login({
@@ -83,8 +77,6 @@ export const chatStore = defineStore('chatStore',{
       await this.updateUserInfo()
       communityStore().getMyCommunity()
     },
-
-
     // 遍历获取推荐用户数据
     async loadRecommendUsers(){
       const findStore = appStore()
@@ -109,7 +101,6 @@ export const chatStore = defineStore('chatStore',{
       this.recommendData.users = users //常规写法
       return users
     },
-
     // 遍历获取推荐群聊数据
     async loadRecommendGroups(){
       let groups = []
@@ -117,16 +108,9 @@ export const chatStore = defineStore('chatStore',{
       for (let i = 0; i < this.group.length; i++){
         try {
           const option = this.group[i].groupID
-
-          // console.log('排查配置项',option);
-
           const result = await (window as any).$chat.searchGroupByID(option)
-
-          // console.log('排查结果',result);
-
           const group = {...result.data.group, relationShip: ''}
           groups.push(group)
-
         } catch (error) {
           console.warn(this.group[i].groupID, error)
         }
@@ -134,15 +118,12 @@ export const chatStore = defineStore('chatStore',{
       this.recommendData.groups = groups
       return groups
     },
-
-
     // 判断推荐用户好友关系
     async updateUsersRelationship() {
       let users = this.recommendData.users
       let uids = this.users.map(u => {
         return u.uid
       })
-
       //todo 当只有一个用户的时候，这个返回的是一个字符串，而不是数组
       let relations = await sns.checkFriendship(uids)
       //用户后处理，处理他的好友关系
@@ -158,8 +139,6 @@ export const chatStore = defineStore('chatStore',{
         }
       }
     },
-
-
     // 判断推荐群关系
     async updateGroupRelationship() {
       let groups = this.recommendData.groups
@@ -175,16 +154,11 @@ export const chatStore = defineStore('chatStore',{
         }
       }
     },
-
     // 同时获取推荐数据
     async loadRecommendData(){
       Promise.all([this.loadRecommendUsers(),this.loadRecommendGroups()]).then((result:any)=>{
         this.updateUsersRelationship()
         this.updateGroupRelationship()
-
-        // console.log('获取结果',);
-        // console.log('排查结果::>>', );
-
         this.isLoading = false
         // 判断是否为空数据,如果不是就进行缓存
         if(this.recommendData.groups.length !== 0 &&  this.recommendData.users !== 0 && !result.includes(undefined)){
@@ -193,10 +167,7 @@ export const chatStore = defineStore('chatStore',{
         }
       })
     },
-
-
     async getReferData(){
-      // this.loadRecommendData()
       try {
         if (this.recommendData.users.length) {
           this.recommendData.users.forEach(user => {
@@ -208,54 +179,105 @@ export const chatStore = defineStore('chatStore',{
             delete group.relationship
           })
         }
-
         const result = await serverCache.getDataWithLocalCache('findData', {
           localCache: true, ttl: 10 * 60,
           cache: false
         })
-        // console.log('排查数据',result);
-
         if(result && result !== undefined){
           this.recommendData = result
           this.updateUsersRelationship()
           this.updateGroupRelationship()
           this.isLoading = false
         }else{
-          // this.recommendData = {
-          //   users: [],
-          //   groups: []
-          // }
-
           console.warn('获取数据失败,返回undefined', result);
           this.isLoading = this.recommendData.users.length === 0
           this.loadRecommendData()
         }
-
       } catch (error) {
         console.error('获取数据失败', error)
       }
     },
-
-
-    setDouble() {
-      this.settings.showDouble=!this.settings.showDouble
-    },
-
+    setDouble() { this.settings.showDouble=!this.settings.showDouble },
     setFloatVisible(value:any){
       localCache.set('float',value,30*60)
       this.settings.enableHide = localCache.get('float')
     },
+    updateNum(option:any){  this.contactsSet = option },
+    updateConversation(val:any){ this.conversations.conversationID = val },
 
-
-    updateNum(option:any){
-      this.contactsSet = option
-    },
-
-    updateConversation(val:any){
-      this.conversations.conversationID = val
-    },
-
-
+    /**
+     *  接收社群消息未读数据
+     * @param args  //接收消息参数
+     * @param no    // 社群id
+     * **/
+    receiveUnreadMsgData(args:any,no:any){
+      // 获取会话列表进行匹配
+      const store = (window as any).$TUIKit.store.store;
+      const conversation = store.TUIConversation;
+      const list = conversation.conversationList;
+      // 获取社群频道列表进行匹配
+      const community = communityStore();
+      community.getCategoryData(no);
+      const { categoryList } = storeToRefs(community);
+      // 获取树状结构的数据进行数组转换
+      const treeList = categoryList.value.tree;
+      const childrenList = {
+        list:[],
+        noList:[]
+      };
+      for(const item of treeList){
+        if(item.hasOwnProperty('children')){
+          childrenList.list = item.children;
+        }else{
+          const index = childrenList.noList.findIndex((find:any)=>{
+            return find.id === item.id;
+          })
+          if(index === -1){
+            childrenList.noList.push(item as never);
+          }
+        }
+      }
+      // 将两组数组进行合并
+      const newList = childrenList.list.concat(childrenList.noList);
+      // 将数组中的props进行转换
+      const mapNewList = newList.map((item:any)=>{
+        const jsonItem = JSON.parse(item.props);
+        return jsonItem.groupID;
+      });    
+      
+      // 判断会话列表数组不为空,以及容错,获取unreadCount字段
+      if(list !== undefined && list.length !== 0){
+        const subList = [] 
+        for(const item of list){
+          const itemFile = item.groupProfile;
+          const index = subList.findIndex((find:any)=>{  return find.groupID === itemFile.groupID })
+          if(index === -1){
+            const obj = {
+              groupID:itemFile.groupID,
+              unreadCount:item.unreadCount,
+              name:itemFile.name
+            }
+            subList.push(obj as never);
+          }
+        }
+        let total = 0;
+        for(const item of mapNewList){
+          const findItem = subList.find((find:any)=>{
+            return find.groupID === item
+          })
+          if(findItem !== undefined){
+            total += findItem.unreadCount;
+          }
+        }
+        console.log('执行...查看',total);
+        const obj = {
+          no:no,
+          list:subList,
+          unreadTotal:total,
+        }
+        this.contactsSet.unReadMsgNum = obj
+      }
+    }
 
   },
 

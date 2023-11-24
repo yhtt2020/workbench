@@ -40,8 +40,8 @@ export function preHandleItem(item){
     }
   }
   newItem.tagColor=convertStatusToColor(getOrderState(item))
-  console.log('取到的状态',getOrderState(item))
-  console.log('取到的标签颜色',newItem.tagColor)
+  // console.log('取到的状态',getOrderState(item))
+  // console.log('取到的标签颜色',newItem.tagColor)
   return newItem
 }
 
