@@ -58,10 +58,7 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer
-              :currentDesk="currentDesk"
-              :isDrag="editing"
-            >
+            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
               <template #box="{ data }">
                 <div :class="[{ editing: editing }]">
                   <component
@@ -548,6 +545,18 @@ export default {
         console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
+    },
+    isFreeLayout: {
+      handler(newVal) {
+        console.log("3333333333333333333 :>> ", newVal);
+        if (newVal) {
+          this.hide = true;
+        }else {
+          this.hide = false;
+
+        }
+      },
+      immediate: true,
     },
   },
   computed: {

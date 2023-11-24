@@ -179,7 +179,6 @@ const updateCardSize = (item) => {
 
   emits("update:sizeType", item);
 };
-
 const rightMenuState = () => {
   if (!menuState.value) menuVisible.value = true;
 };
