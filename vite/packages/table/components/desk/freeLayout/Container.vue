@@ -85,30 +85,16 @@ function updateCards(data) {
   data.forEach(async (item) => {
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
-    if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
-      if (last.value) {
-        getFreeLayoutData.value[id] = {
-          left: getFreeLayoutData.value[id].left || 0,
-          top: getFreeLayoutData.value[id].top || 0,
-          index: getFreeLayoutData.value[id].index || 1,
-          id,
-          name,
-          customData,
-        };
-      }
-      return;
-    }
-    // 优化3 抽离获取坐标过程
-    // const { left, top } = await getPosition(item);
-    getFreeLayoutData.value[item.id] = {
-      left: 0,
-      top: 0,
-      index: 1,
+    // const scrollTop = freeLayoutEnv.value.scrollTop;
+    // const scrollLeft = freeLayoutEnv.value.scrollLeft;
+    getFreeLayoutData.value[id] = {
+      top: getFreeLayoutData.value[id]?.top || freeLayoutEnv.value.scrollTop,
+      left: getFreeLayoutData.value[id]?.left || freeLayoutEnv.value.scrollLeft,
+      index: getFreeLayoutData.value[id]?.index || 1,
       id,
       name,
       customData,
     };
-    console.log("更新了数据 :>> ");
   });
   last.value = false;
 }
