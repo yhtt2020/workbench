@@ -88,6 +88,7 @@ export const rightMenus=[
         id:3,
         name:'导航栏设置',
         newIcon:'fluent:settings-16-regular',
+        color: "#FF4D4F",
         fn:()=>{}
     },
     {
@@ -140,6 +141,7 @@ export const iconMenus = [
         id:3,
         name:'删除',
         newIcon:'fluent:delete-16-regular',
+        color: "#FF4D4F",
         fn:()=>{}
     },
     {
@@ -254,8 +256,12 @@ export const localFiles=[
         tag:'all'
     },
     {
-        name:'软件',
+        name:'快捷方式',
         tag:'shortcut'
+    },
+    {
+        name:'软件',
+        tag:"software"
     },
     {
         name:'文档',
@@ -267,4 +273,36 @@ export const localFiles=[
     }
 ]
 
-export const doc=[".docx",".pptx",'.txt','.pdf','.xlsx','.doc','.ppt','.xls','.md']
+export const doc=[
+    ".docx",
+    ".pptx",
+    '.txt',
+    '.pdf',
+    '.xlsx',
+    '.doc',
+    '.ppt',
+    '.xls',
+    '.md',
+    '.xml',
+    '.docm',
+    '.odt',
+    '.csv',
+    '.pptm',
+    '.ppsm',
+]
+
+
+export const addIconPosition=[
+    {
+        title:'左侧',
+        value:'left'
+    },
+    {
+        title:'右侧',
+        value:'right'
+    },
+    {
+        title:'底部',
+        value:'foot'
+    }
+]
