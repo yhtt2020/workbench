@@ -60,9 +60,7 @@
           <FreeLayoutCanvas class="home-widgets">
             <FreeLayoutContainer
               :currentDesk="currentDesk"
-              :isFreeLayoutDrag="editing"
-              @editStart="editStart"
-              @editEnd="freeDeskEdit = false"
+              :isDrag="editing"
             >
               <template #box="{ data }">
                 <div :class="[{ editing: editing }]">
@@ -77,7 +75,6 @@
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
-          <!-- 自由布局画布 -->
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar

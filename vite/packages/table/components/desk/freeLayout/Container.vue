@@ -7,6 +7,7 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
   currentDesk: {},
+  isDrag: {},
 });
 
 const { currentDesk }: any = toRefs(props);
@@ -132,8 +133,8 @@ watch(
 <template>
   <div
     ref="waterfallFlow"
-    class="xt-theme-b h-full flex flex-wrap absolute "
-    style="align-content: flex-start !important;    visibility: hidden;  "
+    class="xt-theme-b h-full flex flex-wrap absolute"
+    style="align-content: flex-start !important; visibility: hidden"
     :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
@@ -172,6 +173,7 @@ watch(
     :gridStyle="{
       border: '2px solid var(--active-bg)',
     }"
+    :disabledHandle="isDrag ? '' : '.#123'"
   >
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>

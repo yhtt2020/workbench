@@ -148,16 +148,16 @@ const menuList = computed(() => {
           name: "下移一层",
           fn: indexSub,
         },
-        {
-          newIcon: "fluent:arrow-download-20-filled",
-          name: "置于顶层",
-          fn: () => {},
-        },
-        {
-          newIcon: "fluent:arrow-download-20-filled",
-          name: "置于底层",
-          fn: () => {},
-        },
+        // {
+        //   newIcon: "fluent:arrow-download-20-filled",
+        //   name: "置于顶层",
+        //   fn: () => {},
+        // },
+        // {
+        //   newIcon: "fluent:arrow-download-20-filled",
+        //   name: "置于底层",
+        //   fn: () => {},
+        // },
       ],
     });
   }
