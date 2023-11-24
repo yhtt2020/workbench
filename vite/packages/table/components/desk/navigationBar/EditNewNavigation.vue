@@ -1,8 +1,8 @@
 <template>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :back="false" @no="setQuick" title="" :mask="false" :mask-index="99" :index="100">
+        :back="false" @no="setQuick" title="" :mask="false" :maskIndex="99" :index="300">
         <template #nav>
-            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 596px;">
+            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 516px;">
                 <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
                     <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
                     <div class="ml-4 text-base xt-text">图标</div>
@@ -28,8 +28,8 @@
             </a-input>
             <!-- windows应用 -->
             <div v-if="currentTag === 'tableApp'"
-                class="ml-3 xt-bg-2 h-[52px] rounded-xl flex items-center p-4 justify-between">
-                <div class="text-sm xt-text-2">选择你的windows桌面图标，支持多选批量添加。</div>
+                class="ml-2 xt-bg-2 h-[52px] rounded-xl flex items-center p-2  justify-between">
+                <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
                 <div class="flex items-center ">
                     <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>
                     <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
@@ -64,11 +64,11 @@
                 <template #overlay>
                     <a-menu  class="rounded-xl xt-bg" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item,index) in addIconPosition" class="flex items-center justify-center hover-style ">
-                            <div class="flex items-center justify-center xt-text hover-style rounded-md">{{ item.title }}</div>
+                            <div class="flex items-center justify-center xt-text rounded-md">{{ item.title }}</div>
                         </a-menu-item>
                     </a-menu>
                 </template>
-                <xt-button :w="120" :h="40" class="ml-3">
+                <xt-button :w="120" :h="40" class="ml-2">
                     <div class="flex justify-between">
                         <div class="xt-text text-base">{{ defaultTitle.title }}</div>
                         <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
@@ -77,7 +77,7 @@
                 </xt-button>
             </a-dropdown>
         </template>
-        <div class="w-[850px] ml-3 " style="height: 480px;">
+        <div class="w-[850px] ml-3 " style="height: 400px;">
             <Custom v-if="currentTag === 'custom'" />
             <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList" :inputValue="inputValue"/>
         </div>
@@ -295,6 +295,11 @@ export default {
     color: var(--secondary-text);
     &::placeholder {
         color: var(--secondary-text);
+    }
+}
+:deep(.ant-dropdown-menu-item){
+    &:hover{
+        background: var(--active-secondary-bg) !important;
     }
 }
 </style>

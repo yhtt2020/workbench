@@ -31,7 +31,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-        z-index: 99;
+        z-index: 299;
       ">
       <div style="
           display: flex;
@@ -535,7 +535,7 @@ export default {
       if (item.component) {
         this.componentId = item.component
         if (item.component === 'EditNavigation') {
-          this.toggleEdit()
+          this.editToggle=true
           this.selectNav='foot'
           message.success('进入编辑模式')
         }

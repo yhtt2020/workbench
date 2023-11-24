@@ -1,23 +1,23 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
-    width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
+  width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <!-- {{ rightMenus }} -->
   <RightMenu :menus="rightMenus">
     <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-            background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;
-            overflow-x: hidden;border-radius: 18px; flex-wrap: nowrap;
-            padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
+          background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;
+          overflow-x: hidden;border-radius: 18px;
+          padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 12px;">
         <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
             <RightMenu :menus="iconMenus">
-              <div :key="item.name" @click.stop="clickNavigation(item)">
-                <!-- @contextmenu.stop="enableDrag"  -->
+              <div :key="item.name" @click="clickNavigation(item)">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <!-- {{ iconMenus }} -->
+
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
                       :class="{ 'active-color': current(item) }"></navIcon>
@@ -28,17 +28,21 @@
               </div>
             </RightMenu>
           </a-tooltip>
+          <div class="mt-3">
+            <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
+              @completeEdit="this.toggleEdit()" />
+          </div>
 
         </div>
-        <div class="mt-3 mb-3">
-          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
-            @completeEdit="this.toggleEdit()" />
+        <div>
+
         </div>
       </div>
 
 
     </div>
   </RightMenu>
+
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
@@ -61,7 +65,8 @@
   </a-drawer>
 
   <transition name="fade">
-    <div class="fixed inset-0 home-blur" style="z-index: 99" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 190" v-if="quick">
+      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
     </div>
@@ -106,7 +111,43 @@ export default {
       dragEvent: null,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: 'EditNavigation',
-      iconMenus,
+      iconMenus: [
+        {
+          id: 1,
+          newIcon: 'fluent:open-16-regular',
+          name: "打开",
+          fn: () => { console.log("添加导航图标") },
+        },
+        {
+          id: 2,
+          name: '编辑',
+          newIcon: "fluent:compose-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+        },
+        {
+          id: 3,
+          name: '删除',
+          newIcon: 'fluent:delete-16-regular',
+          color: "#FF4D4F",
+          fn: () => { }
+        },
+        {
+          id: 4,
+          divider: true
+        },
+        {
+          id: 5,
+          name: '编辑导航',
+          newIcon: "fluent:compose-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+        },
+        {
+          id: 6,
+          name: '导航栏设置',
+          newIcon: 'fluent:settings-16-regular',
+          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+        }
+      ],
       rightMenus: [
         {
           id: 1,
@@ -158,28 +199,28 @@ export default {
         },
         {
           type: "systemApp",
-          icon: "fluent:lock-closed-16-regular",
+          newIcon: "fluent:lock-closed-16-regular",
           name: "锁定屏幕",
           event: "lock",
           fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
         },
         {
           type: "systemApp",
-          icon: "fluent:settings-16-regular",
+          newIcon: "fluent:settings-16-regular",
           name: "基础设置",
           event: "setting",
           fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
         },
         {
           type: "systemApp",
-          icon: "fluent:full-screen-maximize-16-filled",
+          newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏显示",
           event: "fullscreen",
           fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
         },
         {
           type: "systemApp",
-          icon: "fluent:slide-settings-24-regular",
+          newIcon: "fluent:slide-settings-24-regular",
           name: "设备设置",
           event: "status",
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
@@ -240,9 +281,6 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle']),
-    rightMenu() {
-      return [...this.rightMenus, ...this.builtInFeatures]
-    }
   },
   mounted() {
     this.colDrop()

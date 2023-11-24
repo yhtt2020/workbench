@@ -11,11 +11,12 @@
       {{ tagText }}</div>
     <!-- {{ sideBar[currentIndex].tag == 'webNavigation' }} -->
     <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
-      <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)" 
+      <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent', 'color': clickIndex === index ? 'rgba(255, 255, 255, 0.85) !important' : 'var(--primary-text)' }"
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
-    <div class="flex flex-wrap justify-center mt-3">
+    <!-- <div class="flex " > -->
+    <div class="flex flex-wrap items-start justify-center mt-3">
       <template v-if="this.filterList.length > 0">
         <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
           @addIcon="addIcon(item, index)" />
@@ -28,6 +29,8 @@
         <div class="mt-4 text-base xt-text">暂无数据</div>
       </div>
     </div>
+    <!-- </div> -->
+
   </div>
 </template>
 <script>
