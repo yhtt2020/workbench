@@ -83,13 +83,14 @@ function updateCards(data) {
   }
   // 添加逻辑
   data.forEach(async (item) => {
+    const zoom = getFreeLayoutState.value.canvas.zoom;
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
     // const scrollTop = freeLayoutEnv.value.scrollTop;
     // const scrollLeft = freeLayoutEnv.value.scrollLeft;
     getFreeLayoutData.value[id] = {
-      top: getFreeLayoutData.value[id]?.top || freeLayoutEnv.value.scrollTop,
-      left: getFreeLayoutData.value[id]?.left || freeLayoutEnv.value.scrollLeft,
+      top: getFreeLayoutData.value[id]?.top || freeLayoutEnv.value.scrollTop / zoom,
+      left: getFreeLayoutData.value[id]?.left || freeLayoutEnv.value.scrollLeft / zoom,
       index: getFreeLayoutData.value[id]?.index || 1,
       id,
       name,
