@@ -60,7 +60,7 @@
           <FreeLayoutCanvas class="home-widgets">
             <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
               <template #box="{ data }">
-                <div :class="[{ editing: editing }]">
+                <!-- <div :class="[{ editing: editing }]"> -->
                   <component
                     :desk="currentDesk"
                     :is="data.name"
@@ -68,7 +68,7 @@
                     :customData="data.customData"
                     :editing="true"
                   />
-                </div>
+                <!-- </div> -->
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
