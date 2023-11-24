@@ -95,9 +95,9 @@ const canvasMenu = computed(() => {
       title: "放大",
       fn: () => {
         if (currentMode.value === "free") {
-          freeLayoutZoom.value += 1;
+          freeLayoutZoom.value += 5;
         } else {
-          defaultZoom.value += 1;
+          defaultZoom.value += 5;
         }
       },
     },
@@ -107,9 +107,9 @@ const canvasMenu = computed(() => {
       type: "default",
       fn: () => {
         if (currentMode.value === "free") {
-          freeLayoutZoom.value -= 1;
+          freeLayoutZoom.value -= 5;
         } else {
-          defaultZoom.value -= 1;
+          defaultZoom.value -= 5;
         }
       },
     },
@@ -122,7 +122,7 @@ const deskList = ref([
     value: "default",
   },
   {
-    name: "自由布局",
+    name: "自由模式",
     value: "free",
   },
 ]);
