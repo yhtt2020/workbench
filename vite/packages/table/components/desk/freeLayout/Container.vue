@@ -132,8 +132,8 @@ watch(
 <template>
   <div
     ref="waterfallFlow"
-    class="xt-theme-b h-full flex flex-wrap absolute"
-    style="align-content: flex-start !important"
+    class="xt-theme-b h-full flex flex-wrap absolute "
+    style="align-content: flex-start !important;    visibility: hidden;  "
     :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
