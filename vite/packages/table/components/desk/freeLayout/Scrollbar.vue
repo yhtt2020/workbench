@@ -11,9 +11,9 @@
     "
     @mouseover="handleMouseMove"
   >
-    <template v-if="freeLayoutEnv.loading">
-      <slot> </slot>
-    </template>
+    <!-- <template v-if="freeLayoutEnv.loading"> -->
+    <slot> </slot>
+    <!-- </template> -->
   </div>
 </template>
 <script setup>
@@ -63,7 +63,7 @@ onMounted(() => {
 
     // 完成操作 开启
     freeLayoutEnv.value.loading = true;
-    redirect();
+    // redirect();
   }, 1);
 });
 // 重置中心区域
