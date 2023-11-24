@@ -1,7 +1,6 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
-    v-show="freeLayoutEnv.loading"
     ref="scrollbar"
     class="no-drag relative w-full"
     style="
@@ -12,7 +11,9 @@
     "
     @mouseover="handleMouseMove"
   >
-    <slot> </slot>
+    <template v-if="freeLayoutEnv.loading">
+      <slot> </slot>
+    </template>
   </div>
 </template>
 <script setup>
@@ -37,18 +38,17 @@ const {
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
-const scrollData = ref();
+
 onMounted(() => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  // scrollData.value =
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
-  setTimeout(async () => {
+  setTimeout(() => {
     // 初始化自由布局定位
-    await redirect();
+    redirect();
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -63,36 +63,22 @@ onMounted(() => {
 
     // 完成操作 开启
     freeLayoutEnv.value.loading = true;
-  }, 100);
+    redirect();
+  }, 1);
 });
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  scrollbar.value.scrollLeft =
-    getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  scrollbar.value.scrollTop =
-    getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  return;
-  // const scrollTop = (height.value - getFreeLayoutState.value.height * zoom) / 2;
-  // const scrollLeft = (width.value - getFreeLayoutState.value.width * zoom) / 2;
-  if (getFreeLayoutState.value.position == "top center") {
-    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
-    scrollbar.value.scrollTop = 0;
-  } else if (getFreeLayoutState.value.position == "center") {
-    scrollbar.value.scrollLeft = Math.abs(scrollLeft);
-    scrollbar.value.scrollTop = Math.abs(scrollTop);
-  } else {
-    scrollbar.value.scrollLeft = 0;
-    scrollbar.value.scrollTop = 0;
-  }
+  let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  scrollbar.value.scrollLeft = w;
+  let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  scrollbar.value.scrollTop = h;
+  freeLayoutEnv.value.scrollLeft = w;
+  freeLayoutEnv.value.scrollTop = h;
 }
 // 页面缩放更新布局
 function update() {
   perfectScrollbar.value.update();
-}
-
-function handleClick(e) {
-  console.log("e :>> ", e);
 }
 
 // 监听画布缩放情况

@@ -7,7 +7,6 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
   currentDesk: {},
-  isFreeLayoutDrag: {},
 });
 
 const { currentDesk }: any = toRefs(props);
@@ -71,9 +70,11 @@ async function getPosition(item) {
  */
 let updateCardTimer: any = null;
 function updateCards(data) {
-  let obj = {};
-
   // 优化1 抽离删除过程
+  console.log(
+    " freeLayoutEnv.value.scrollTop :>> ",
+    freeLayoutEnv.value.scrollTop
+  );
   let cardObj = {};
   data.forEach((item) => (cardObj[item.id] = item));
   for (const key in getFreeLayoutData.value) {
@@ -83,19 +84,33 @@ function updateCards(data) {
   }
   // 添加逻辑
   data.forEach(async (item) => {
-    const zoom = getFreeLayoutState.value.canvas.zoom;
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
-    // const scrollTop = freeLayoutEnv.value.scrollTop;
-    // const scrollLeft = freeLayoutEnv.value.scrollLeft;
-    getFreeLayoutData.value[id] = {
-      top: getFreeLayoutData.value[id]?.top || freeLayoutEnv.value.scrollTop / zoom,
-      left: getFreeLayoutData.value[id]?.left || freeLayoutEnv.value.scrollLeft / zoom,
-      index: getFreeLayoutData.value[id]?.index || 1,
-      id,
-      name,
-      customData,
-    };
+    if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
+      getFreeLayoutData.value[id] = {
+        left: getFreeLayoutData.value[id].left || 0,
+        top: getFreeLayoutData.value[id].top || 0,
+        index: getFreeLayoutData.value[id].index || 1,
+        id,
+        name,
+        customData,
+      };
+      return;
+    }
+    // 优化3 抽离获取坐标过程
+    setTimeout(async () => {
+      const { left, top } = await getPosition(item);
+      console.log("left,top :>> ", left, top);
+      getFreeLayoutData.value[item.id] = {
+        left,
+        top,
+        index: 1,
+        id,
+        name,
+        customData,
+      };
+    }, 10);
+    console.log("更新了数据 :>> ");
   });
   last.value = false;
 }
@@ -112,25 +127,18 @@ watch(
     immediate: true,
   }
 );
-const emits = defineEmits(["editStart", "editEnd"]);
-function drag() {
-  emits("editStart");
-}
-function dragStop() {
-  emits("editEnd");
-}
-const a = ref(true);
 </script>
 
 <template>
-  <!-- <div    ref="waterfallFlow"
-    class="xt-theme-b h-full flex flex-wrap absolute fixed"
+  <div
+    ref="waterfallFlow"
+    class="xt-theme-b h-full flex flex-wrap absolute"
     style="align-content: flex-start !important"
-       :style="{
+    :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
-      top: freeLayoutEnv?.scrollData?.top + 'px',
-      left: freeLayoutEnv?.scrollData?.left + 'px',
+      top: 0 + 'px',
+      left: 0 + 'px',
     }"
   >
     <div
@@ -142,7 +150,7 @@ const a = ref(true);
         height: item.height + 'px',
       }"
     ></div>
-  </div> -->
+  </div>
   <xt-drag
     parent
     boundary
@@ -160,7 +168,6 @@ const a = ref(true);
     :gridMargin="6"
     :magnetMargin="6"
     disabledDefaultEvent
-    :handle="isFreeLayoutDrag ? null : '.2221122'"
     :grid="[134, 96]"
     :gridStyle="{
       border: '2px solid var(--active-bg)',
