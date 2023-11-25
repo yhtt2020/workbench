@@ -3,32 +3,13 @@
     <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false"
      style=" border-right:1px solid var(--divider);"
     >
-      <!-- :style="doubleCol ? { width:'336px !important' } :{ width:'240px !important'}" -->
-      <!-- flex=" 0 1 300px" -->
-
       <CategoryFloat :float="false" :communityID="routeData"
       @updateColumn="updateColumn" @createCategory="clickEmptyButton"
       ></CategoryFloat>
-      <!--  @clickItem="currentItem" -->
-
     </a-col>
 
-
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
-      <div class="px-4 mb-0 line-title flex items-center ">
-        <div class="flex items-center justify-center">
-          <template v-if="currentChannel.type === 'group'">
-            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;"/>
-          </template>
-          <template v-if="currentChannel.type === 'link'">
-            <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;"/>
-          </template>
-          <template v-if="currentChannel.type === 'forum'">
-            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
-          </template>
-        </div>
-        <span class="ml-2">{{ currentChannel.name }} </span>
-      </div>
+      <CommunityHeader :headerContent="currentChannel"/>
 
       <div v-if="isChat === 'not'" class="flex items-center justify-center h-full">
         <ValidateModal :data="group"></ValidateModal>
@@ -70,38 +51,18 @@
             <xt-button @click="openLink(currentChannel.props.url)" :w="120" :h="40">浏览器打开</xt-button>
           </div>
         </template>
-
+        <template v-else-if="currentChannel.type === 'communitySet'">
+          <CommunitySetting :no="currentChannel.data.no"/>
+        </template>
         <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
            <!-- 空状态，取文章 -->
           <div class="community-article h-full">
-            <!-- <vue-custom-scrollbar class="h-full" :settings=" {
-              default: {
-                useBothWheelAxes: true,
-                swipeEasing: true,
-                suppressScrollY: false,
-                suppressScrollX: true,
-                wheelPropagation: true
-              }
-            }">
-              <h2 v-html="emptyArticle.title"></h2>
-              <div v-html="emptyArticle.content"></div>
-            </vue-custom-scrollbar> -->
             <Article :artName="artName"></Article>
           </div>
-
-
         </a-col>
-
       </div>
     </a-col>
-
   </a-row>
-
-  <!-- <Modal v-if="addShow" v-model:visible="addShow" :blurFlag="true">
-    <CreateNewChannel v-if="type === 'addChannel'" :no="routeData" @close="addShow = false"></CreateNewChannel>
-    <CreateNewGroup v-if="type === 'addNewGroup' " :no="routeData" @close="addShow = false"></CreateNewGroup>
-    <InviteOther v-if="type === 'inviteOther'" :no="routeData" @close="addShow = false" />
-  </Modal> -->
 </template>
 
 <script>
@@ -114,28 +75,26 @@ import browser from '../../../js/common/browser'
 import { checkGroupShip } from '../../../js/common/sns'
 import { Icon as CommunityIcon } from '@iconify/vue'
 
-import Modal from '../../../components/Modal.vue'
-// import CreateNewChannel from '../components/CreateNewChannels.vue'
-// import CreateNewGroup from '../components/CreateNewCategory.vue'
-import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue'
-import Article from '../../../components/Article.vue'
-import CategoryFloat from '../components/float/CategorysFloat.vue'
-import Commun from '../Commun.vue'
-// import InviteOther from '../components/InviteOthers.vue'
+import Modal from '../../../components/Modal.vue';
+import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue';
+import Article from '../../../components/Article.vue';
+import CategoryFloat from '../components/float/CategorysFloat.vue';
+import Commun from '../Commun.vue';
+import CommunitySetting from './setting/index.vue';
+import CommunityHeader from '../components/float/CommunityHeader.vue'
 
 export default {
   components:{
     CategoryFloat,Modal,
-    // CreateNewChannel,
-    // CreateNewGroup,
     VueCustomScrollbar,CommunityIcon,Article,
     Commun,
-    // InviteOther
+    CommunitySetting,
+    CommunityHeader,
   },
 
   computed:{
     ...mapWritableState(communityStore,['']),
-    ...mapWritableState(chatStore,['settings']),
+    ...mapWritableState(chatStore,['settings','contactsSet']),
     isFloat(){
       return this.settings.enableHide
     },
@@ -151,6 +110,23 @@ export default {
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
       this.currentItem(item)
+      if(item.type === 'group'){
+        const data = JSON.parse(item.props)
+        const groupID = data.groupID
+        const index = this.contactsSet.unReadMsgNum.findIndex((find)=>{
+          return find.groupID === groupID
+        })
+        const option = {
+          groupID:groupID,
+          unreadCount:0
+        }
+        console.log('查看index',index);
+        this.contactsSet.unReadMsgNum.splice(index,0,option)
+      }
+    })
+    this.$mit.on('currentSet',(args)=>{
+      console.log('查看args',args);
+      this.currentChannel = args
     })
   },
 

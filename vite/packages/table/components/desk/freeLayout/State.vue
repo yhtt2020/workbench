@@ -146,13 +146,13 @@
       <div class="mb-3">辅助功能</div>
       <div class="xt-text-2 text-sm my-3"></div>
       <div class="flex mb-3 justify-between">
-        <xt-button class="xt-bg" w="204" h="40" :copy="copyData">
+        <xt-button class="xt-bg mr-3" w="204" h="40" :copy="copyData">
           分享自由布局</xt-button
         >
 
-        <!-- <xt-button class="xt-bg" w="204" h="40" @click="clearFreeLayout">
+        <xt-button class="xt-bg" w="204" h="40" @click="clearFreeLayout">
           删除自由布局</xt-button
-        > -->
+        >
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>
@@ -246,15 +246,10 @@ watch(
   }
 );
 
-// 分享当前自由布局数据
-function shareFreeLayout() {
-  // freeLayoutSwitch.value = false;
-}
 function clearFreeLayout() {
   freeLayoutSwitch.value = false;
-  freeLayoutData.value[getCurrentDeskId.value].value = {};
-  freeLayoutState.value[getCurrentDeskId.value].value = {};
-  freeLayoutStore.clearFreeLayout();
+  console.log('getCurrentDeskId.value :>> ', getCurrentDeskId.value);
+  freeLayoutStore.clearFreeLayout(getCurrentDeskId.value);
 }
 // 清除所有自由布局
 function clearAllFreeLayout() {

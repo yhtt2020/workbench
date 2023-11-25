@@ -3,7 +3,7 @@
   <img :src="textUrl" class="w-full h-full object-cover" :class="settings.enableHide ? 'rounded-t-xl':''"/>
   <div class="community-name h-11 w-full com-line-bg">
     <div class="m-1.5 px-3 items-center drop-hover rounded-lg flex justify-between h-8">
-      <ChatDropDown class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :title="categoryList.name" :list="floatList" /> 
+      <ChatDropDown class="w-full" :id="null" :enableButton="false" newIcon="fluent:line-horizontal-3-20-filled" :title="categoryList.name" :list="floatList" /> 
     </div>
   </div>
  </div>
@@ -99,7 +99,6 @@
  <AddNewCategory ref="addCategoryRef" :no="categoryList.no"/>
  <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
  <AddInvite ref="addInviteRef" :no="categoryList.no"/>
- <CommunityEditor ref="editorRef" :no="categoryList.no" :content="categoryList"/>
 </template>
 
 <script>
@@ -116,14 +115,13 @@ import EmptyAdd from '../empty/EmptyAdd.vue';
 import AddNewCategory from '../add/AddNewCategory.vue';
 import AddNewGroup from '../add/AddNewGroup.vue';
 import AddInvite from '../add/AddInvite.vue';
-import CommunityEditor from '../contact/CommunityEditor.vue';
 
 export default{
   props:[ 'communityID','float' ],
 
   components:{
     CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd,
-    AddNewCategory,AddNewGroup,AddInvite,CommunityEditor,
+    AddNewCategory,AddNewGroup,AddInvite,
   },
 
   data(){
@@ -188,8 +186,11 @@ export default{
           callBack:()=>{ this.setFloatVisible(false) }
         },
         {
-          newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
-          callBack:()=>{ this.$refs.editorRef.openEditorModal() }
+          newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
+          callBack:()=>{
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+          }
+          // 
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         // {
@@ -211,8 +212,10 @@ export default{
           callBack:()=>{ this.$refs.addNewRef.openAddModal() }
         },
         {
-          newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
-          callBack:()=>{ this.$refs.editorRef.openEditorModal() },
+          newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
+          callBack:()=>{
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+          },
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         {

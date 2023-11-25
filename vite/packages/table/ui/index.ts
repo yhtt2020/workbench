@@ -14,6 +14,7 @@ import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
 import XtLogin from "./components/Login/index.vue"
 
+import XtSelectNav from "./components/SelectNav/index.vue"
 // 基础组件
 import XtBaseColor from "./libs/BaseColor/index.vue"
 import XtBaseIcon from "./libs/BaseIcon/index.vue"
@@ -69,5 +70,6 @@ export default function (app: App): void {
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
   app.component('XtLogin',XtLogin )
+  app.component('XtSelectNav',XtSelectNav)
   app.component('XtScrollbar',XtScrollbar)
 }

@@ -64,7 +64,6 @@ export async function* gpt(messages) {
           role: "assistant",
           id: createdID,
         };
-        console.log("2222 :>> ", 2222);
       }
     }
   }

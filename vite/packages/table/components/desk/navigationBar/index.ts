@@ -159,3 +159,106 @@ export const iconMenus = [
         fn:()=>{}
     }
 ]
+
+export const webMenus=[
+    {
+        name:'新闻资讯',
+        tag:'information'
+    },
+    {
+        name:'文档表单',
+        tag:'docx'
+    },
+    {
+        name:'常用邮箱',
+        tag:'email'
+    },
+    {
+        name:'程序开发',
+        tag:'code'
+    },
+    {
+        name:'效率工具',
+        tag:'effect'
+    },
+    {
+        name:'设计工具',
+        tag:'design'
+    },
+    {
+        name:'即时通讯',
+        tag:'message'
+    },
+    {
+        name:'休闲娱乐',
+        tag:'game'
+    },
+]
+
+export const iconSize=[
+    {
+        title:'1x1',
+        value:'mini'
+    },
+    {
+        title:'2x1',
+        value:'mini1'
+    },
+    {
+        title:'2x2',
+        value:'small'
+    },
+    {
+        title:'4x2',
+        value:'long'
+    },
+    {
+        title:'4x4',
+        value:'big'
+    },
+]
+
+export const iconShape=[
+    {
+        title:'正方形',
+        value:'square'
+    },
+    {
+        title:'长方形',
+        value:'rectangle'
+    }
+]
+
+export const iconStatus=[
+    {
+        title:'覆盖',
+        value:'cover'
+    },
+    {
+        title:'填充',
+        value:'fill'
+    },
+    {
+        title:'缩小',
+        value:'small'
+    },
+    {
+        title:"放大",
+        value:'big'
+    }
+]
+
+export const localFiles=[
+    {
+        name:'全部',
+        tag:'all'
+    },
+    {
+        name:'快捷方式',
+        tag:'shortcut'
+    },
+    {
+        name:'软件',
+        tag:'software'
+    }
+]
