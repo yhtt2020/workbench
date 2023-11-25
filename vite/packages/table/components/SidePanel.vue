@@ -2,7 +2,7 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <!-- {{ rightMenus }} -->
-  <RightMenu :menus="rightMenus">
+  <!-- <RightMenu :menus="rightMenus"> -->
     <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;
           overflow-x: hidden;border-radius: 18px;
@@ -41,7 +41,7 @@
 
 
     </div>
-  </RightMenu>
+  <!-- </RightMenu> -->
 
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">

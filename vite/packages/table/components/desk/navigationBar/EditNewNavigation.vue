@@ -1,4 +1,10 @@
 <template>
+    <div id="left-drop" style="position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;"></div>
+    <div id="foot-drop"
+        style="position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;"></div>
+    <div id="right-drop"
+        style="position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );border: 1px solid red;">
+    </div>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
         :back="false" @no="setQuick" title="" :mask="false" :maskIndex="99" :index="300">
         <template #nav>
@@ -18,10 +24,9 @@
         </template>
         <template #header-left>
             <!-- 输入框 -->
-            <a-input
-                v-if=" currentTag !== 'recommendation' && currentTag !== 'custom'"
-                placeholder="搜索" style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px"
-                v-model:value="inputValue" @keydown.enter="onSearch">
+            <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
+                style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
+                @keydown.enter="onSearch">
                 <template #suffix>
                     <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
                 </template>
@@ -33,12 +38,13 @@
                 <div class="flex items-center ">
                     <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>
                     <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
-                        <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">批量添加(3)</div>
+                        <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
+                            批量添加(3)</div>
                     </xt-button>
                 </div>
 
             </div>
-            
+
             <!-- 下拉选择 -->
             <a-dropdown v-if="currentTag == 'webNavigation'">
                 <template #overlay>
@@ -62,8 +68,9 @@
         <template #header-right>
             <a-dropdown trigger="['click']">
                 <template #overlay>
-                    <a-menu  class="rounded-xl xt-bg" style="border-radius: 12px !important;">
-                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item,index) in addIconPosition" class="flex items-center justify-center hover-style ">
+                    <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
+                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
+                            class="flex items-center justify-center hover-style ">
                             <div class="flex items-center justify-center xt-text rounded-md">{{ item.title }}</div>
                         </a-menu-item>
                     </a-menu>
@@ -77,9 +84,10 @@
                 </xt-button>
             </a-dropdown>
         </template>
-        <div class="w-[850px] ml-3 " style="height: 400px;">
+        <div class="w-[850px] ml-3 mainList" style="height: 400px;">
             <Custom v-if="currentTag === 'custom'" />
-            <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList" :inputValue="inputValue"/>
+            <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
+                :inputValue="inputValue" />
         </div>
     </NewModel>
 </template>
@@ -93,7 +101,9 @@ import { webMenus } from './index'
 import navigationData from '../../../js/data/tableData'
 import { getNavList } from '../../../page/app/addIcon/api/api'
 import Custom from './components/Coutom.vue'
-import {addIconPosition} from './index' 
+import { addIconPosition } from './index'
+import Sortable from 'sortablejs'
+import {message} from 'ant-design-vue'
 const { appModel } = window.$models
 export default {
     name: 'EditNewNavigation',
@@ -206,13 +216,16 @@ export default {
             webList: [],
             inputValue: '',
             addIconPosition,
-            defaultTitle:{},
+            defaultTitle: {},
+            targetDivName:'',
+            darggingCore:false,
         }
     },
     methods: {
+        ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
         onSelect(index) {
             this.currentIndex = index
-            this.inputValue=''
+            this.inputValue = ''
         },
         setQuick() {
             this.$emit('setQuick')
@@ -238,10 +251,48 @@ export default {
         selectAll() {
             this.$refs.introduce.addAllIcon()
         },
-        handleMenuClick(item){
-            this.defaultTitle=item
-            this.selectNav=item.value
-        }
+        handleMenuClick(item) {
+            this.defaultTitle = item
+            this.selectNav = item.value
+        },
+        // 拖拽
+        mainDrop() {
+            let that = this
+            const main= this.$refs.introduce.$el.querySelector('.mainList')
+            // console.log(main,'className');
+            // let main = document.querySelector('.mainList')
+            Sortable.create(main, {
+                sort: false,
+                animation: 150,
+                removeCloneOnHide: true,
+                forceFallback: false,
+                onStart(evt) {
+                    that.darggingCore = true
+                    that.draggingArea('left-drop', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
+                    that.draggingArea('right-drop', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.currentList)
+                    that.draggingArea('foot-drop', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
+                },
+            })
+        },
+        draggingArea(id, oldIndex, NavigationList, setNavigationList, source, compare = true) {
+            let that = this
+            let slider = document.getElementById(id)
+            slider.ondragover = function (ev) {
+                ev.preventDefault()
+            }
+            slider.ondrop = () => {
+                if (that.darggingCore || compare === false) {
+                    if (!NavigationList.find(j => j.name === source[oldIndex].name)) {
+                        console.log(source[oldIndex]);
+                        setNavigationList(source[oldIndex])
+                        that.updateMainNav()
+                        that.updateSuggestNav()
+                    } else {
+                        message.info('已添加', 1)
+                    }
+                }
+            }
+        },
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),
@@ -269,11 +320,11 @@ export default {
                 return this.filterList;
             }
         },
-        currentTag(){
+        currentTag() {
             return this.sideBar[this.currentIndex].tag
         },
-        currentNav(){
-            return this.addIconPosition.find(i=>i.value===this.selectNav)
+        currentNav() {
+            return this.addIconPosition.find(i => i.value === this.selectNav)
         }
 
     },
@@ -281,7 +332,14 @@ export default {
         this.loadDeskIconApps()
     },
     mounted() {
-        this.defaultTitle=this.currentNav
+        this.defaultTitle = this.currentNav
+        this.targetDivName = this.$refs.introduce.$refs.targetDiv
+
+        this.$nextTick(() => {
+            this.mainDrop()
+            // const className = list.querySelector('.mainList')
+            // console.log(className, list)
+        })
     },
 }
 </script>
@@ -291,14 +349,17 @@ export default {
         background: var(--active-secondary-bg) !important;
     }
 }
-:deep(.ant-input){
+
+:deep(.ant-input) {
     color: var(--secondary-text);
+
     &::placeholder {
         color: var(--secondary-text);
     }
 }
-:deep(.ant-dropdown-menu-item){
-    &:hover{
+
+:deep(.ant-dropdown-menu-item) {
+    &:hover {
         background: var(--active-secondary-bg) !important;
     }
 }

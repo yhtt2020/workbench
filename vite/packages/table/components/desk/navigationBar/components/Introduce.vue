@@ -16,7 +16,7 @@
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
     <!-- <div class="flex " > -->
-    <div class="flex flex-wrap items-start justify-center mt-3">
+    <div class="flex flex-wrap items-start justify-center mt-3 mainList" ref="targetDiv" >
       <template v-if="this.filterList.length > 0">
         <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
           @addIcon="addIcon(item, index)" />
