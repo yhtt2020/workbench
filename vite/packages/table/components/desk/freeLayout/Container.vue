@@ -99,7 +99,7 @@ function updateCards(data) {
         name,
         customData,
       };
-    }, 10);
+    }, 1);
     console.log("更新了数据 :>> ");
   });
   last.value = false;

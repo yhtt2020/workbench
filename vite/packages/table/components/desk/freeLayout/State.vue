@@ -207,6 +207,7 @@ const copyData = computed(() => {
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
+  console.log('执行了 :>> ', );
   freeLayoutStore.renewFreeLayout();
 });
 

@@ -4,10 +4,6 @@
     ref="scrollbar"
     class="no-drag relative w-full"
     style="
-      /* cursor:move;
-    cursor:crosshair; */
-      cursor: grabbing;
-      cursor: grab;
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
@@ -17,9 +13,7 @@
       cursor: dragStyle,
     }"
   >
-    <!-- <template v-if="freeLayoutEnv.loading"> -->
     <slot> </slot>
-    <!-- </template> -->
   </div>
 </template>
 <script setup>

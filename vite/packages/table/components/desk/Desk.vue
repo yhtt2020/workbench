@@ -58,20 +58,26 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :isDrag="editing"
+              @editStart="editStart"
+              @editEnd="freeDeskEdit = false"
+            >
               <template #box="{ data }">
                 <!-- <div :class="[{ editing: editing }]"> -->
-                  <component
-                    :desk="currentDesk"
-                    :is="data.name"
-                    :customIndex="data.id"
-                    :customData="data.customData"
-                    :editing="true"
-                  />
+                <component
+                  :desk="currentDesk"
+                  :is="data.name"
+                  :customIndex="data.id"
+                  :customData="data.customData"
+                  :editing="true"
+                />
                 <!-- </div> -->
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
+          <!-- 自由布局画布 -->
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
@@ -545,18 +551,6 @@ export default {
         console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
-    },
-    isFreeLayout: {
-      handler(newVal) {
-        console.log("3333333333333333333 :>> ", newVal);
-        if (newVal) {
-          this.hide = true;
-        }else {
-          this.hide = false;
-
-        }
-      },
-      immediate: true,
     },
   },
   computed: {
