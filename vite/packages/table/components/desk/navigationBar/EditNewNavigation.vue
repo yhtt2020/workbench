@@ -1,10 +1,10 @@
 <template>
-    <div id="left-drop" style="position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;" @drop.prevent="drop"></div>
+    <div id="left-drop" style="z-index: 99999; position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;" @drop.prevent="drop"></div>
     <div id="foot-drop" @drop.prevent="drop"
-        style="position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;">
+        style="z-index: 999; position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;">
     </div>
     <div id="right-drop" @drop.prevent="drop"
-        style="position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );border: 1px solid red;">
+        style="z-index: 999; position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );border: 1px solid red;">
     </div>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
         :back="false" @no="setQuick" title="" :mask="false" :maskIndex="99" :index="300">
@@ -296,7 +296,12 @@ export default {
         },
         async drop(e) {
             let files = e.dataTransfer.files
-            console.log(e)
+            console.log(e.x)
+            if(e.x<300){
+                this.selectNav='left'
+            }else if(e.x>300){
+                this.selectNav='foot'
+            }
             let filesArr = []
             if (files && files.length > 0) {
                 for (let i = 0; i < files.length; i++) {
