@@ -22,12 +22,6 @@ const {
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
 
-// 1 获取页面数据
-// const scrollWidth = freeLayoutEnv.value.scrollWidth;
-// const scrollHeight = freeLayoutEnv.value.scrollHeight;
-// const scrollTop = freeLayoutEnv.value.scrollTop;
-// const scrollLeft = freeLayoutEnv.value.scrollLeft;
-
 // 滚动清除cards数据
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
@@ -72,10 +66,6 @@ async function getPosition(item) {
 let updateCardTimer: any = null;
 function updateCards(data) {
   // 优化1 抽离删除过程
-  console.log(
-    " freeLayoutEnv.value.scrollTop :>> ",
-    freeLayoutEnv.value.scrollTop
-  );
   let cardObj = {};
   data.forEach((item) => (cardObj[item.id] = item));
   for (const key in getFreeLayoutData.value) {
@@ -101,7 +91,6 @@ function updateCards(data) {
     // 优化3 抽离获取坐标过程
     setTimeout(async () => {
       const { left, top } = await getPosition(item);
-      console.log("left,top :>> ", left, top);
       getFreeLayoutData.value[item.id] = {
         left,
         top,

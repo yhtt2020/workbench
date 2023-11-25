@@ -4,12 +4,18 @@
     ref="scrollbar"
     class="no-drag relative w-full"
     style="
+      /* cursor:move;
+    cursor:crosshair; */
+      cursor: grabbing;
+      cursor: grab;
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
       height: 100%;
     "
-    @mouseover="handleMouseMove"
+    :style="{
+      cursor: dragStyle,
+    }"
   >
     <!-- <template v-if="freeLayoutEnv.loading"> -->
     <slot> </slot>
@@ -17,13 +23,27 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
+import {
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  nextTick,
+  computed,
+} from "vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
+const dragStyle = computed(() => {
+  if (isKey.value && isDragging.value) {
+    return "grabbing";
+  } else if (isKey.value) {
+    return "grab";
+  }
+});
 
 // import Container from "./FloatMenu/Container.vue";
 const aa = ref(true);
@@ -64,8 +84,59 @@ onMounted(() => {
     // 完成操作 开启
     freeLayoutEnv.value.loading = true;
     // redirect();
+
+    // 监听键盘按下事件
+    window.addEventListener("keydown", handleKeyDown);
+    // 监听键盘抬起事件
+    window.addEventListener("keyup", handleKeyUp);
+    // 监听鼠标按下事件
+    window.addEventListener("mousedown", handleMouseDown);
+    // 监听鼠标移动事件
+    window.addEventListener("mousemove", handleMouseMove);
+    // 监听鼠标抬起事件;
+    window.addEventListener("mouseup", handleMouseUp);
   }, 1);
 });
+
+// 鼠标按下
+
+function handleMouseDown(event) {
+  if (event.buttons === 1) {
+    isDragging.value = true;
+    initialMousePosition.value = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+  }
+}
+// 鼠标移动
+function handleMouseMove(event) {
+  if (isDragging.value && isKey.value) {
+    const dx = event.clientX - initialMousePosition.value.x;
+    const dy = event.clientY - initialMousePosition.value.y;
+    scrollbar.value.scrollTop -= dy;
+    scrollbar.value.scrollLeft -= dx;
+
+    initialMousePosition.value = { x: event.clientX, y: event.clientY };
+  }
+}
+
+// 鼠标抬起
+function handleMouseUp(event) {
+  isDragging.value = false;
+  isKey.value = false;
+}
+
+// 键盘按下
+function handleKeyDown(event) {
+  if (event.key == "Alt") {
+    isKey.value = true;
+  }
+}
+// 键盘抬起
+function handleKeyUp(event) {
+  isKey.value = false;
+}
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
@@ -112,41 +183,13 @@ watch(
 const scrollThreshold = 300; // 边缘滚动阈值
 const scrollAmount = 100; // 每次滚动的距离
 
+let isDragging = ref(false);
+let isKey = ref(false);
+let initialMousePosition = ref(null);
+let scrollElement = ref(null);
+
 // 鼠标拖拽元素 被zoom影响了位置
 
-function handleMouseMove(event) {
-  return;
-  if (scrollbar.value && Object.keys(dragData.value).length !== 0) {
-    const { clientX, clientY } = event;
-    const { left, top, right, bottom } =
-      scrollbar.value.getBoundingClientRect();
-
-    // 向左滚动
-    if (clientX <= left + scrollThreshold) {
-      console.log("左 :>> ", 2222);
-      scrollbar.value.scrollLeft -= scrollAmount;
-    }
-
-    // 向右滚动
-    if (clientX >= right - scrollThreshold) {
-      console.log("右 :>> ", 1111);
-      scrollbar.value.scrollLeft += scrollAmount;
-    }
-
-    // 向上滚动
-    if (clientY <= top + scrollThreshold) {
-      console.log("上 :>> ", 4444);
-      scrollbar.value.scrollTop -= scrollAmount;
-    }
-
-    // 向下滚动
-    if (clientY >= bottom - scrollThreshold) {
-      console.log("下 :>> ", 3333);
-      // scrollbar.value.scrollTop += scrollAmount;
-      scrollbar.value.scrollBy({ top: scrollAmount });
-    }
-  }
-}
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
@@ -155,6 +198,11 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+  window.removeEventListener("mousedown", handleMouseDown);
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("mouseup", handleMouseUp);
 });
 defineExpose({
   redirect,
