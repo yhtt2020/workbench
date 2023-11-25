@@ -1,8 +1,9 @@
 <template>
-    <div id="left-drop" style="position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;"></div>
-    <div id="foot-drop"
-        style="position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;"></div>
-    <div id="right-drop"
+    <div id="left-drop" style="position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;" @drop.prevent="drop"></div>
+    <div id="foot-drop" @drop.prevent="drop"
+        style="position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;">
+    </div>
+    <div id="right-drop" @drop.prevent="drop"
         style="position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );border: 1px solid red;">
     </div>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
@@ -103,7 +104,7 @@ import { getNavList } from '../../../page/app/addIcon/api/api'
 import Custom from './components/Coutom.vue'
 import { addIconPosition } from './index'
 import Sortable from 'sortablejs'
-import {message} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 const { appModel } = window.$models
 export default {
     name: 'EditNewNavigation',
@@ -217,8 +218,9 @@ export default {
             inputValue: '',
             addIconPosition,
             defaultTitle: {},
-            targetDivName:'',
-            darggingCore:false,
+            targetDivName: '',
+            darggingCore: false,
+            dropList:[]
         }
     },
     methods: {
@@ -258,7 +260,7 @@ export default {
         // 拖拽
         mainDrop() {
             let that = this
-            const main= this.$refs.introduce.$el.querySelector('.mainList')
+            const main = this.$refs.introduce.$el.querySelector('.mainList')
             // console.log(main,'className');
             // let main = document.querySelector('.mainList')
             Sortable.create(main, {
@@ -283,15 +285,32 @@ export default {
             slider.ondrop = () => {
                 if (that.darggingCore || compare === false) {
                     if (!NavigationList.find(j => j.name === source[oldIndex].name)) {
-                        console.log(source[oldIndex]);
+                        // console.log(source[oldIndex]);
                         setNavigationList(source[oldIndex])
-                        that.updateMainNav()
-                        that.updateSuggestNav()
+                        that.$refs.introduce.updateMainNav()
                     } else {
                         message.info('已添加', 1)
                     }
                 }
             }
+        },
+        async drop(e) {
+            let files = e.dataTransfer.files
+            console.log(e)
+            let filesArr = []
+            if (files && files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    filesArr.push(files[i].path)
+                }
+            }
+            this.dropList = await Promise.all(filesArr.map(async (item) => {
+                const fileName = item.substring(item.lastIndexOf("\\") + 1);
+                let dropFiles = await tsbApi.system.extractFileIcon(item)
+                return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+            }))
+            this.$refs.introduce.clickRightListItem(this.dropList)
+            // 添加完后清空
+            this.dropList=[]
         },
     },
     computed: {
@@ -323,6 +342,7 @@ export default {
         currentTag() {
             return this.sideBar[this.currentIndex].tag
         },
+        // 当前添加图标的导航栏
         currentNav() {
             return this.addIconPosition.find(i => i.value === this.selectNav)
         }

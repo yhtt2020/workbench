@@ -16,18 +16,20 @@
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
     <!-- <div class="flex " > -->
-    <div class="flex flex-wrap items-start justify-center mt-3 mainList" ref="targetDiv" >
-      <template v-if="this.filterList.length > 0">
-        <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
-          @addIcon="addIcon(item, index)" />
-      </template>
-      <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu> -->
-      <div v-else class="flex flex-col items-center justify-center mt-10">
-        <div>
-          <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
+    <div class="flex flex-wrap items-center justify-center mt-3 mainList" ref="targetDiv">
+      <!-- <div class="flex flex-wrap"> -->
+        <template v-if="this.filterList.length > 0">
+          <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
+            @addIcon="addIcon(item, index)" />
+        </template>
+        <div v-else class="flex flex-col items-center justify-center mt-10">
+          <div>
+            <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
+          </div>
+          <div class="mt-4 text-base xt-text">暂无数据</div>
         </div>
-        <div class="mt-4 text-base xt-text">暂无数据</div>
-      </div>
+      <!-- </div> -->
+
     </div>
     <!-- </div> -->
 
