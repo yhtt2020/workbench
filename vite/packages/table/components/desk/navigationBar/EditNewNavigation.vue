@@ -34,7 +34,7 @@
             </a-input>
             <!-- windows应用 -->
             <div v-if="currentTag === 'tableApp'"
-                class="ml-2 xt-bg-2 h-[52px] rounded-xl flex items-center p-2  justify-between">
+                class="ml-2 xt-bg-2 h-[40px] rounded-xl flex items-center p-2  justify-between">
                 <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
                 <div class="flex items-center ">
                     <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>

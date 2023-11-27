@@ -186,11 +186,8 @@ export default {
           case 'all':
             return this.filterIcon(this.selectList);
             break;
-          case 'shortcut':
-            return this.filterIcon(this.selectList.filter((item) => item.name.includes('-')));
-            break;
           case 'software':
-            return this.filterIcon(this.selectList.filter((item) => item.path.includes('.exe') && !item.name.includes('-')));
+            return this.filterIcon(this.selectList.filter((item) => item.path.includes('.exe') ));
             break;
           case 'docx':
             return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));

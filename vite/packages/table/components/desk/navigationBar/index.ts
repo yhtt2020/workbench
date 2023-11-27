@@ -256,10 +256,6 @@ export const localFiles=[
         tag:'all'
     },
     {
-        name:'快捷方式',
-        tag:'shortcut'
-    },
-    {
         name:'软件',
         tag:"software"
     },

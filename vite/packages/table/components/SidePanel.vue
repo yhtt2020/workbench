@@ -3,9 +3,9 @@
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <!-- <RightMenu :menus="rightMenus"> -->
     <div @click.stop class="flex flex-col box common-panel s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-          background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;border-radius: 18px;
+          background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;border-radius: 18px;
           padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
-      <div style="width: 56px;padding-bottom: 12px;" class="w-full">
+      <div style="width: 56px;padding-bottom: 3px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container" :style="{'max-height':editToggle?'80%':'100%'}"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
@@ -25,7 +25,7 @@
             </RightMenu>
           </a-tooltip>
         </div>
-        <div class="mt-3 h-[100px]"  >
+        <div class="mt-3"  >
             <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
               @completeEdit="completeEdit" />
           </div>
@@ -60,7 +60,7 @@
   </a-drawer>
 
   <transition name="fade">
-    <div class="fixed inset-0 home-blur" style="z-index: 99" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="completeEdit" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
@@ -430,25 +430,38 @@ export default {
     },
     editNavigation(item) {
       if (item.component) {
-        console.log(item)
         this.componentId = item.component
+        if (item.component === 'EditNavigation') {
+          this.editToggle=true
+          this.selectNav='left'
+          message.success('进入编辑模式')
+        }
+        this.quick = true
       } else if (item.visible) {
-        console.log(111)
+        switch (item.tag) {
+          case 'task':
+            this.toggleTaskBox()
+            break;
+          case 'community':
+            console.log(111)
+            break;
+          case 'user':
+            console.log(2222)
+            break;
+        }
       } else {
         return
       }
-      this.quick = true
+      
       this.menuVisible = false
-      this.editToggle = true
     },
     showMenu() {
-      // if (this.rightModel === 'follow') {
-      //   return
-      // }
+      if (this.rightModel === 'follow') {
+        return
+      }
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       // if(this.rightModel !=='follow'){
       this.menuVisible = true
-      this.selectNav='left'
       // this.editToggle=true
       // }
 
