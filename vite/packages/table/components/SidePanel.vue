@@ -2,13 +2,12 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <!-- <RightMenu :menus="rightMenus"> -->
-    <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-          background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;
-          overflow-x: hidden;border-radius: 18px;
+    <div @click.stop class="flex flex-col box common-panel s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
+          background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;border-radius: 18px;
           padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
-      <div style="width: 56px;padding-bottom: 12px;">
-        <div :id="sortId" class="flex flex-col items-center scroller-wrapper hide-scrollbar xt-container"
-          style="width: 56px;overflow-y:auto;max-height: 100%;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
+      <div style="width: 56px;padding-bottom: 12px;" class="w-full">
+        <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container" :style="{'max-height':editToggle?'80%':'100%'}"
+          style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
             <RightMenu :menus="iconMenus">
@@ -25,12 +24,11 @@
               </div>
             </RightMenu>
           </a-tooltip>
-          <div class="mt-3">
-            <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
-              @completeEdit="this.toggleEdit()" />
-          </div>
-
         </div>
+        <div class="mt-3 h-[100px]"  >
+            <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
+              @completeEdit="completeEdit" />
+          </div>
         <div>
 
         </div>
@@ -62,9 +60,9 @@
   </a-drawer>
 
   <transition name="fade">
-    <div class="fixed inset-0 home-blur" style="z-index: 190" v-if="quick">
+    <div class="fixed inset-0 home-blur" style="z-index: 99" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
+      <EditNewNavigation @setQuick="completeEdit" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
     </div>
   </transition>
@@ -277,7 +275,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle']),
+    ...mapWritableState(useNavigationStore, ['editToggle','selectNav']),
   },
   mounted() {
     this.colDrop()
@@ -441,16 +439,23 @@ export default {
       }
       this.quick = true
       this.menuVisible = false
+      this.editToggle = true
     },
     showMenu() {
-      if (this.rightModel === 'follow') {
-        return
-      }
+      // if (this.rightModel === 'follow') {
+      //   return
+      // }
       this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       // if(this.rightModel !=='follow'){
       this.menuVisible = true
+      this.selectNav='left'
+      // this.editToggle=true
       // }
 
+    },
+    completeEdit(){
+      this.toggleEdit()
+      this.setQuick()
     },
     setQuick() {
       this.quick = false

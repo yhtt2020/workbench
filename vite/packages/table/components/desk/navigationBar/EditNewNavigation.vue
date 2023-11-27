@@ -72,18 +72,25 @@
                     <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
                             class="flex items-center justify-center hover-style ">
-                            <div class="flex items-center justify-center xt-text rounded-md">{{ item.title }}</div>
+                            <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
                         </a-menu-item>
                     </a-menu>
                 </template>
                 <xt-button :w="120" :h="40" class="ml-2">
                     <div class="flex justify-between">
-                        <div class="xt-text text-base">{{ defaultTitle.title }}</div>
+                        <div class="text-base xt-text">{{ defaultTitle.title }}</div>
                         <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
                             class="-rotate-90 xt-text"></xt-new-icon>
                     </div>
                 </xt-button>
             </a-dropdown>
+            <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
+                <xt-new-icon
+                  icon="fluent:dismiss-16-filled"
+                  size="16"
+                  class="xt-text-2"
+                />
+              </xt-button> -->
         </template>
         <div class="w-[850px] ml-3 mainList" style="height: 400px;">
             <Custom v-if="currentTag === 'custom'" />
@@ -294,13 +301,16 @@ export default {
                 }
             }
         },
+        // 拖拽桌面图标
         async drop(e) {
+            const width=window.innerWidth
             let files = e.dataTransfer.files
-            console.log(e.x)
-            if(e.x<300){
+            if(e.x<=300){
                 this.selectNav='left'
-            }else if(e.x>300){
+            }else if(e.x>300 && e.x<width-300){
                 this.selectNav='foot'
+            }else if(e.x>=width-300){
+                this.selectNav='right'
             }
             let filesArr = []
             if (files && files.length > 0) {

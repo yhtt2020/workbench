@@ -437,9 +437,6 @@ export default {
         this.rightNav = val[1]
       },
     },
-    shake(){
-      return this.editToggle
-    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -675,7 +672,7 @@ export default {
       }
     },
     enableDrag() {
-      if (this.sortable) {
+      if (this.sortable || !this.editToggle) {
         return
       }
       document.addEventListener('click', this.disableDrag)
