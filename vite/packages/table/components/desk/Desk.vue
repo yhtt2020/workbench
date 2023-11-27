@@ -71,7 +71,7 @@
                   :is="data.name"
                   :customIndex="data.id"
                   :customData="data.customData"
-                  :editing="editing"
+                  :editing="true"
                 />
                 <!-- </div> -->
               </template>
@@ -279,7 +279,7 @@
     <template #header-center>
       <XtTab
         v-if="settingVisible"
-        style="height: 34px; width: 300px"
+        style="height: 34px;width: 300px;"
         boxClass="p-1 xt-bg-2"
         v-model="currentSettingTab"
         :list="settingsTab"
@@ -503,16 +503,6 @@ export default {
     },
   },
   watch: {
-    isFreeLayout: {
-      handler(newVal) {
-        if (!newVal && this.editing) {
-          this.hide = false;
-        } else if (this.editing) {
-          this.hide = true;
-        }
-      },
-      immediate: true,
-    },
     currentDesk(newVal) {
       newVal.layoutSize = this.getLayoutSize();
       // if (!newVal.settings) {
@@ -560,15 +550,6 @@ export default {
         console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
-    },
-    isFreeLayout: {
-      handler(newVal) {
-        if (newVal) {
-          this.hide = true;
-        } else {
-          this.hide = false;
-        }
-      },
     },
   },
   computed: {

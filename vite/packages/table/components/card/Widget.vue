@@ -1,5 +1,5 @@
 <template>
-  <!-- <Drop v-model:widgetSize="widgetSize"> -->
+  <Drop v-model:widgetSize="widgetSize">
     <RightMenu
       :menus="menus"
       :sizes="sizeList"
@@ -63,7 +63,7 @@
             <div
               class="px-3 pb-2 h-full rounded-b-lg"
               :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-            >
+              >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>
@@ -81,7 +81,7 @@
       </template>
       <!-- 右上角抽屉扩展 end -->
     </RightMenu>
-  <!-- </Drop> -->
+  </Drop>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -101,13 +101,15 @@ import { offlineStore } from "../../js/common/offline";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
-// import Drop from "./Drop.vue";
+import Drop from "./Drop.vue";
+
 export default {
   components: {
     // Template,
     MenuOutlined,
     RightMenu,
     PageState,
+    Drop
   },
   name: "Widget",
   props: {
@@ -190,12 +192,12 @@ export default {
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
-          fn: () => {
-            if (this.options?.type != "note") {
-              this.doRemoveCard();
-            } else {
+          fn: ()=>{
+            if(this.options?.type != 'note'){
+              this.doRemoveCard()
+            }else{
               // 便签单独处理
-              this.options?.removeCard();
+              this.options?.removeCard()
             }
           },
           title: "删除小组件",
@@ -278,6 +280,20 @@ export default {
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
+          },
+          this.desk
+        );
+      },
+    },
+    // 更新最新的widget框架大小
+    widgetSize: {
+      handler(newVal) {
+        this.updateCustomData(
+          this.$parent.customIndex ||
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
+          {
+            widgetSize: this.widgetSize,
           },
           this.desk
         );

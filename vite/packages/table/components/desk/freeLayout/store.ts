@@ -9,7 +9,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
-    freetest: {},
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -170,6 +169,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
+      console.log("id :>> ", id);
+
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);
@@ -189,7 +190,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["freeLayoutData", "freeLayoutState", "freetest"],
+        paths: ["freeLayoutData", "freeLayoutState"],
         storage: localStorage,
       },
     ],
