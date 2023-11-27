@@ -1,7 +1,7 @@
 <template>
   <a-row class="w-full h-full">
     <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
-      <CategoryFloat :float="false" :communityID="routeData" @createCategory="clickEmptyButton" />
+      <CategoryFloat :float="false" :communityID="routeData" :data="detailData" @createCategory="clickEmptyButton" />
     </a-col>
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <CommunityHeader :headerContent="currentChannel"/>
@@ -105,9 +105,13 @@ export default {
 
   computed:{
     ...mapWritableState(chatStore,['settings','contactsSet']),
+    ...mapWritableState(communityStore,['getCommunityDetail']),
     isFloat(){
       return this.settings.enableHide
     },
+    detailData(){
+      return this.getCommunityDetail(this.routeData)
+    }
   },
 
   async mounted(){
@@ -115,20 +119,8 @@ export default {
     this.emptyArticle = rs
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
-      this.currentItem(item)
-      // if(item.type === 'group'){
-      //   const data = JSON.parse(item.props)
-      //   const groupID = data.groupID
-      //   const index = this.contactsSet.unReadMsgNum.findIndex((find)=>{
-      //     return find.groupID === groupID
-      //   })
-      //   const option = {
-      //     groupID:groupID,
-      //     unreadCount:0
-      //   }
-      //   console.log('查看index',index);
-      //   this.contactsSet.unReadMsgNum.splice(index,0,option)
-      // }
+      this.currentItem(item);
+      this.updateMsgStatus();
     })
     this.$mit.on('currentSet',(args)=>{
       console.log('查看args',args);
@@ -138,6 +130,7 @@ export default {
 
   methods:{
     updateColumn(){},
+    ...mapActions(communityStore,['updateMsgStatus']),
     // 当前点击
     async currentItem(item){
       // 链接

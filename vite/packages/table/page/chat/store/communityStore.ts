@@ -2,7 +2,8 @@ import {defineStore} from "pinia";
 import dbStorage from "../../../store/dbStorage";
 import {sUrl} from "../../../consts";
 import {post} from "../../../js/axios/request";
-import { chatList } from '../../../js/data/chatList'
+import { chatList } from '../../../js/data/chatList';
+import _ from 'lodash-es';
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -22,7 +23,19 @@ export const communityStore = defineStore('communityStore',{
     categoryList:{}, // 频道目录列表
     categoryClass:[],
     channelList:[],
+    currentNo:""
   }),
+
+  getters:{
+    getCommunityDetail:(state)=>(no:any)=>{
+      const isNull = state.communityList.length !== undefined && state.communityList.length !== 0;
+      if(isNull){
+        const list = state.communityList;
+        const find = _.find(list,function(find:any){ return String(find.no) === String(no) });
+        return find !== undefined ? find : {};
+      }
+    }
+  },
 
   actions: {
    // 创建社群
@@ -32,18 +45,39 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取我的社群
    async getMyCommunity(){
-    let res = await post(getMyCommunity,{})
-    // console.log('查看返回数据',res);
-    if(res?.data?.list){
-      this.communityList = res.data.list.filter((item: any) => {
-        return item.hasOwnProperty('communityInfo')
-      })
-    }
+    post(getMyCommunity,{}).then(async (res)=>{
+      const list = res?.data?.list;
+      const mapList = list.map(async (item:any)=>{
+        if(item.hasOwnProperty('communityInfo')){
+          const data = item?.communityInfo;
+          const communityNo = data.no;
+          const itemRes = await this.getCategoryData(communityNo)
+          const itemOption ={
+            ...data,
+            ...item,
+            tree:itemRes.tree,
+            summary:'',
+            uid:item.uid,
+            unreadTree:itemRes.unreadTree,
+            unread:0,
+            category:itemRes.category,
+          };
+          return itemOption;
+        }
+      });
+      const results = await Promise.all(mapList);
+      const filterUndefinedList = results.filter((item:any)=>{
+        if(item !== undefined){
+          return item;
+        }
+      });
+      this.communityList = filterUndefinedList;
+    });
    },
 
    // 申请加入社群
    async joinCommunity(option:any){
-    return await post(applyJoin,option)
+    return await post(applyJoin,option);
    },
 
    // 获取推荐社群
@@ -63,6 +97,7 @@ export const communityStore = defineStore('communityStore',{
    async createChannel(data:any,no:any){
     const res = await post(createChannels,data)
     if(res.status === 1 && no !== 1){
+      this.getMyCommunity()
       this.getCategoryData(no)
       this.getChannelList(no)
     }
@@ -71,26 +106,49 @@ export const communityStore = defineStore('communityStore',{
    // 获取社群频道目录
    async getCategoryData(id:any){
     if(!isNaN(parseInt(id))){
-      const option = { communityNo:parseInt(id), cache:1 }
-      const categoryResList = await post(getChannelList,option)
-      const categoryTreeList = await post(getChannelTree,option)
-      const communityName = this.communityList?.find((item:any)=>{
-        return String(item.communityInfo.no) === String(id)
-      })
-      const result = {
-        name:communityName?.communityInfo?.name,
-        role:communityName?.role,
-        no:communityName?.communityInfo?.no,
-        tree:categoryTreeList?.data?.treeList,
-        category:categoryResList?.data?.list,
-        summary:communityName?.communityInfo?.summary,
-        avatar:communityName?.communityInfo?.icon,
-        ...communityName?.communityInfo,
+      const option = { communityNo:parseInt(id), cache:1 };
+      const result = await Promise.all(
+        [
+          post(getChannelList,option).then((res:any)=>{ return res }),
+          post(getChannelTree,option).then((res:any)=>{ return res })
+        ]
+      );
+      const tree = result[1]?.data?.treeList;
+      const category = result[0]?.data?.list;
+      let unreadTree = [];
+      if(tree.length !== 0){
+        let childrenList = {
+          list:[],
+          noList:[]
+        };
+        for(const item of tree){
+          if(item.hasOwnProperty('children')){
+            const jsonItem = item.children.map((mapItem)=>{
+              const jsonProp = JSON.parse(mapItem.props)
+              return {
+                ...item,
+                ...jsonProp
+              }
+            })
+            childrenList.list = jsonItem;
+          }else{
+            const index = childrenList.noList.findIndex((find:any)=>{
+              return find.id === item.id;
+            });
+            if(index === -1){
+              const jsonData = JSON.parse(item.props)
+              childrenList.noList.push({...item,...jsonData} as never);
+            }
+          }
+        }
+        unreadTree = childrenList.list.concat(childrenList.noList);
+      }else{
+        unreadTree = [];
       }
-      // console.log('查看数据',result)
-      this.categoryList = result
+      return {tree:tree,category:category,unreadTree:unreadTree};
     }
    },
+
 
    // 获取频道数据
    async getChannelList(id:any){
@@ -114,6 +172,7 @@ export const communityStore = defineStore('communityStore',{
    async updateChannel(data:any,no:any){
     const res  =  await  post(sUrl("/app/community/channel/updateProfile"),data)
     if(res.status === 1){
+      this.getMyCommunity()
       this.getChannelList(no)
       this. getCategoryData(no)
     }
@@ -129,10 +188,73 @@ export const communityStore = defineStore('communityStore',{
     const res = await post(deleteCategory,{id:id})
     console.log('查看结果',res);
     if(res.status === 1 && no !== 1){
+      this.getMyCommunity()
       this.getCategoryData(no)
       this.getChannelList(no)
     }
    },
+
+   // 更新社群消息提示状态
+   updateMsgStatus(){
+    const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList;
+    const mapList = list.map((item:any)=>{
+      const fileInfo = item.groupProfile;
+      return {
+        groupID:fileInfo.groupID,
+        unread:item.unreadCount
+      }
+    })
+    const updateList = this.communityList.map((mapItem:any)=>{
+      const isTreeNull = mapItem.tree.length !== 0;
+      if(isTreeNull){
+        const list = mapItem.tree;
+        const updateTree = list.map((item:any)=>{
+        const isChildren = item.hasOwnProperty('children');
+         if(isChildren){
+            if(item.type === 'group'){
+              const childrenList = item.children.map((childrenItem:any)=>{
+                const jsonItem = JSON.parse(childrenItem.props);
+                const findList =  _.find(mapList,function(find:any){ return String(jsonItem.groupID) === String(find.groupID) })
+                const option = {
+                  ...jsonItem,
+                  unread:findList !== undefined ? findList.unread : 0,
+                };
+                const restJSON = JSON.stringify(option);
+                return {...childrenItem,props:restJSON};
+              })
+              return {
+                ...item,
+                children:childrenList
+              }
+            }else{
+              return item;
+            }
+         }else{
+          if(item.type === 'group'){
+            const jsonData = JSON.parse(item.props);
+            const findLists =  _.find(mapList,function(find:any){ return String(jsonData.groupID) === String(find.groupID) })
+            const option = {
+              ...jsonData,
+              unread: findLists !== undefined ? findLists.unread : 0,
+            };
+            const restJSON = JSON.stringify(option);
+            return {...item,props:restJSON};
+          }else{
+            return item;
+          }
+         }
+        })
+        return {
+          ...mapItem,
+          tree:updateTree,
+        }
+      }else{
+        return mapItem;
+      }
+    })
+    console.log('执行....查看',updateList);
+    this.communityList = updateList
+   }
 
   },
 
@@ -141,7 +263,7 @@ export const communityStore = defineStore('communityStore',{
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      storage: dbStorage,
+      storage: localStorage,
       paths: ['myCommunityList','recommendCommunityList','categoryList','categoryClass']
       // state 中的字段名，按组打包储存
     }]

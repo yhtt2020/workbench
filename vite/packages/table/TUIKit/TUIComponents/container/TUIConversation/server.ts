@@ -1,6 +1,6 @@
 import IComponentServer from '../IComponentServer';
 import { storeToRefs } from 'pinia';
-import { chatStore } from '../../../../store/chat'
+import { communityStore } from '../../../../page/chat/store/communityStore'
 
 /**
  * class TUIConversationServer
@@ -274,24 +274,7 @@ export default class TUIConversationServer extends IComponentServer {
     this.setMessageRead(value.conversationID);
 
     // 切换会话将社群消息数进行清除
-    const chat = chatStore()
-    const { contactsSet } = storeToRefs(chat)
-    const groupID = value.groupProfile.groupID
-    const obj:any = contactsSet.value.unReadMsgNum
-    if(obj !== null){
-      const list = obj.list
-      const index = list.findIndex((item:any)=>{
-        return String(item.groupID) === String(groupID)
-      })
-      if(index !== -1){
-        const option:object = {
-          groupID:groupID,
-          unreadCount:0
-        };
-        obj.list.splice(index,1,option as never)
-      }else{
-        return
-      }
-    }
+    const community:any = communityStore();
+    community.updateMsgStatus();
   }
 }
