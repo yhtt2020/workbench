@@ -34,13 +34,13 @@ export const extraRightMenu =  [
     {
         title:'添加导航图标',
         icon:'fluent:add-16-regular',
-        component:'EditNavigation',
+        component:'EditNavigationIcon',
 
     },
     {
         title:'编辑导航',
         icon:"fluent:compose-16-regular",
-        component:'EditNavigation',
+        component:'editNavigation',
     },
     {
         title:'导航栏设置',

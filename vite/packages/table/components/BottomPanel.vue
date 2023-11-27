@@ -18,7 +18,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div v-show="navigationToggle[2]" class="flex flex-row items-center pl-4 s-bg" style="
+      <div v-show="navigationToggle[2]" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -49,9 +49,10 @@
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <!-- <RightMenu :menus="iconMenus"> -->
-                    <a-tooltip v-for="item in footNavigationList" :key="item.name" :title="item.name">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="mr-3 pointer"
+
+                  <a-tooltip v-for="item in footNavigationList" :key="item.name" :title="item.name">
+                    <RightMenu :menus="iconMenus">
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
                         <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
@@ -66,8 +67,8 @@
                             :class="{ 'shaking-element': editToggle }"></a-avatar>
                         </div>
                       </div>
-                    </a-tooltip>
-                  <!-- </RightMenu> -->
+                    </RightMenu>
+                  </a-tooltip>
                 </div>
               </xt-task>
             </div>
@@ -174,7 +175,7 @@
 
             </div>
             <div @click="clickNavigation(item)" class=" btn extra-btn" v-for="item in builtInFeatures" :key="item.name">
-              <navIcon style="font-size: 3em;vertical-align:bottom;" :icon="item.icon"></navIcon>
+              <navIcon style="font-size: 3em;" :icon="item.icon"></navIcon>
               <div>
                 <span>{{ item.name }}</span>
               </div>
@@ -205,7 +206,7 @@
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
-        <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
+        <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
         <!-- <component :is='componentId'></component> -->
       </div>
@@ -350,7 +351,7 @@ export default {
           id: 5,
           name: '编辑导航',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 6,
@@ -565,6 +566,15 @@ export default {
         this.rightNav = val[1]
       },
     },
+    editToggle(){
+      if(this.editToggle){
+        this.enableDrag()
+        console.log('===>>>开始执行');
+      }else{
+        this.disableDrag()
+        console.log('===>>>停止执行');
+      }
+    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -663,11 +673,18 @@ export default {
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
-        if (item.component === 'EditNavigation') {
+        // console.log(this.componentId,'===>>1');
+        if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
+        }else if(item.component === 'editNavigation'){
+          this.componentId=''
+          this.editToggle=true
+          this.selectNav='foot'
+          // this.enableDrag()
         }
+        // console.log(this.componentId,'===>>2');
         this.quick = true
       } else if (item.visible) {
         switch (item.tag) {
@@ -748,8 +765,8 @@ export default {
 
     clickNavigation(item) {
       if (this.editToggle) {
-        this.enableDrag()
-        // return
+        // this.enableDrag()
+        return
       } else {
         this.hideMenu()
         switch (item.type) {
@@ -795,18 +812,18 @@ export default {
       this.setQuick()
     },
     disableDrag() {
-      if (this.sortable) {
+      // if (this.sortable) {
         document.removeEventListener('click', this.disableDrag)
         this.sortable.destroy()
         this.sortable = null
         message.info('已中止导航栏调整')
-      }
+      // }
     },
     enableDrag() {
-      if (this.sortable || !this.editToggle) {
-        return
-      }
-      document.addEventListener('click', this.disableDrag)
+      // if (this.sortable || !this.editToggle) {
+      //   return
+      // }
+      // document.addEventListener('click', this.disableDrag)
       let that = this
       let drop = document.getElementById('bottomContent')
       this.sortable = Sortable.create(drop, {
@@ -929,7 +946,7 @@ export default {
 
 .shaking-element {
   // animation: shake 0.5s infinite;
-  animation: shake 2s 1s ease ;
+  animation: shake 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 2 alternate;
 }
 
 @keyframes shake {

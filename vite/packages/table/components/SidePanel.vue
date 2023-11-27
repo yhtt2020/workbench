@@ -62,7 +62,7 @@
   <transition name="fade">
     <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="completeEdit" v-if="componentId === 'EditNavigation'"></EditNewNavigation>
+      <EditNewNavigation @setQuick="completeEdit" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
     </div>
   </transition>
@@ -117,7 +117,7 @@ export default {
           id: 2,
           name: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 3,
@@ -134,7 +134,7 @@ export default {
           id: 5,
           name: '编辑导航',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 6,
@@ -284,27 +284,36 @@ export default {
   watch: {
     delZone(val) {
       this.delNav = val
+    },
+    editToggle(){
+      if(this.editToggle){
+        this.enableDrag()
+        console.log('===>>>开始执行');
+      }else{
+        this.disableDrag()
+        console.log('===>>>停止执行');
+      }
     }
   },
   methods: {
     ...mapActions(useNavigationStore, ['toggleEdit']),
     renderIcon,
     disableDrag() {
-      if (this.sortable) {
+      // if (this.sortable) {
         document.removeEventListener('click', this.disableDrag)
         this.sortable.destroy()
         this.sortable = null
         message.info('已中止侧栏调整')
         return
-      }
+      // }
     },
     enableDrag() {
-      if (this.sortable) {
-        return
-      }
+      // if (this.sortable) {
+      //   return
+      // }
       let that = this
       let drop = document.getElementById(this.sortId)
-      document.addEventListener('click', this.disableDrag)
+      // document.addEventListener('click', this.disableDrag)
 
       this.sortable = Sortable.create(drop, {
         sort: true,
@@ -376,6 +385,10 @@ export default {
       }
     },
     clickNavigation(item) {
+      if(this.editToggle){
+        this.enableDrag()
+        return
+      }
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
@@ -431,11 +444,17 @@ export default {
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
-        if (item.component === 'EditNavigation') {
-          this.editToggle=true
-          this.selectNav='left'
+        // console.log(this.componentId,'===>>1');
+        if (item.component === 'EditNavigationIcon') {
+          this.editToggle = true
+          this.selectNav = 'foot'
           message.success('进入编辑模式')
+        }else if(item.component === 'editNavigation'){
+          this.componentId=''
+          this.editToggle=true
+          this.selectNav='foot'
         }
+        // console.log(this.componentId,'===>>2');
         this.quick = true
       } else if (item.visible) {
         switch (item.tag) {
