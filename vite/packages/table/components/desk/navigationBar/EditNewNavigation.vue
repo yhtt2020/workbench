@@ -1,10 +1,10 @@
 <template>
-    <div id="left-drop" style="z-index: 99999; position: fixed; top: 0; left: 0;width: 300px;height: 100vh;border: 1px solid red;" @drop.prevent="drop"></div>
-    <div id="foot-drop" @drop.prevent="drop"
-        style="z-index: 999; position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;border: 1px solid red;">
+    <div id="left-drop" style=" position: fixed; top: 0; left: 0;width: 300px;height: 100vh;" @drop="drop"></div>
+    <div id="foot-drop" @drop="drop"
+        style=" position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;">
     </div>
     <div id="right-drop" @drop.prevent="drop"
-        style="z-index: 999; position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );border: 1px solid red;">
+        style=" position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );">
     </div>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
         :back="false" @no="setQuick" title="" :mask="false" :maskIndex="99" :index="300">
@@ -366,6 +366,11 @@ export default {
             // console.log(className, list)
         })
     },
+    watch: {
+        selectNav() {
+            this.defaultTitle = this.currentNav
+        }
+    }
 }
 </script>
 <style lang='scss' scoped>

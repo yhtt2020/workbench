@@ -53,10 +53,10 @@
                     @click.stop="clickNavigation(item)">
                     <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                       class="flex items-center justify-center rounded-lg s-item xt-bg-2">
-                      <navIcon :icon="item.icon"  class="test " style="width:28px;height:28px;fill:var(--primary-text);" ></navIcon>
+                      <navIcon :icon="item.icon"  class="test " style="width:28px;height:28px;fill:var(--primary-text);" :class="{ 'shaking-element': editToggle }"></navIcon>
                     </div>
                     <div v-else style="width: 45px; height: 45px" class="flex items-center justify-center">
-                      <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+                      <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)" :class="{ 'shaking-element': editToggle }"></a-avatar>
                     </div>
                   </div>
                 </a-tooltip>
@@ -348,6 +348,7 @@ export default {
     //   })
     //   localStorage.setItem('insertBird','1')
     // }
+    this.enableDrag()
     this.getMessageIndex().then()
     //每3分钟刷新一次消息
     this.updateMessageTimer = setInterval(() => {
@@ -674,6 +675,9 @@ export default {
       }
     },
     enableDrag() {
+      if(this.editToggle){
+        this.sortable=true
+      }
       if (this.sortable) {
         return
       }
@@ -799,7 +803,7 @@ export default {
 }
 .shaking-element {
     // animation: shake 0.5s infinite;
-    animation: shake 1.5s ease-in-out;
+    animation: shake 1s ease-in-out;
 }
 
 @keyframes shake {
@@ -808,15 +812,15 @@ export default {
     }
 
     25% {
-        transform: translateX(-5px) ;
+        transform:  rotate3d(0, 0, 1, -15deg);
     }
 
     50% {
-        transform: translateY(5px) ;
+        transform:  rotate3d(0, 0, 1, 15deg);
     }
 
     75% {
-        transform: translateY(-5px) ;
+        transform:  rotate3d(0, 0, 1, -15deg);
     }
 
     100% {
