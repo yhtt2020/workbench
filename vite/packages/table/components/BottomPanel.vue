@@ -348,7 +348,7 @@ export default {
     //   })
     //   localStorage.setItem('insertBird','1')
     // }
-    this.enableDrag()
+    // this.enableDrag()
     this.getMessageIndex().then()
     //每3分钟刷新一次消息
     this.updateMessageTimer = setInterval(() => {
@@ -675,9 +675,6 @@ export default {
       }
     },
     enableDrag() {
-      if(this.editToggle){
-        this.sortable=true
-      }
       if (this.sortable) {
         return
       }

@@ -1,7 +1,6 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <!-- {{ rightMenus }} -->
   <!-- <RightMenu :menus="rightMenus"> -->
     <div @click.stop class="flex flex-col box common-panel hide-scrollbar s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
           background: var(--primary-bg); z-index: 199;width: 80px;max-height: 100%;
@@ -16,13 +15,11 @@
               <div :key="item.name" @click="clickNavigation(item)">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
-                  <!-- {{ iconMenus }} -->
-
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
-                      :class="{ 'active-color': current(item) }"></navIcon>
+                      :class="{ 'active-color': current(item), 'shaking-element': editToggle }"></navIcon>
                   </div>
-                  <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)"></a-avatar>
+                  <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)" :class="{'shaking-element': editToggle}"></a-avatar>
 
                 </div>
               </div>
@@ -493,15 +490,41 @@ export default {
 .item:hover {
   background: var(--active-bg) !important;
 
-  :deep(.icon) {
-    // fill: var(--primary-text) !important
-  }
+  // :deep(.icon) {
+  //   // fill: var(--primary-text) !important
+  // }
 }
 
-.active-back {
-  :deep(.icon) {
-    // fill: var(--active-bg) !important
-  }
+// .active-back {
+//   :deep(.icon) {
+//     // fill: var(--active-bg) !important
+//   }
+// }
+.shaking-element {
+    // animation: shake 0.5s infinite;
+    animation: shake 1s ease-in-out;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform:  rotate3d(0, 0, 1, -15deg);
+    }
+
+    50% {
+        transform:  rotate3d(0, 0, 1, 15deg);
+    }
+
+    75% {
+        transform:  rotate3d(0, 0, 1, -15deg);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
 
 .item {
