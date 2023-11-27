@@ -18,9 +18,9 @@
           <slot name="nav"> </slot>
         </nav>
         <main class="h-full flex flex-1 flex-col">
-          <header class="flex items-center mb-4" v-if="header">
+          <header class="flex items-center mb-4 relative" v-if="header">
             <!-- 标题左侧 -->
-            <div class="flex items-center">
+            <div class="flex items-center z-20 flex-1">
               <slot name="header-left">
                 <template v-if="back">
                   <xt-button
@@ -40,13 +40,15 @@
               </slot>
             </div>
             <!-- 标题中间 -->
-            <div class="flex flex-1 text-center items-center" >
+            <div
+              class="flex flex-1 text-center items-center absolute left-1/2 -translate-x-1/2 z-10"
+            >
               <slot name="header-center">
                 {{ title }}
               </slot>
             </div>
             <!-- 标题右侧 -->
-            <div class="flex items-center">
+            <div class="flex items-center z-20 right-0">
               <slot name="header-right"> </slot>
               <xt-button class="ml-3" w="32" h="32" radius="8" @click="onNo()">
                 <xt-new-icon
@@ -75,7 +77,6 @@
             "
             class="flex-1"
           >
-
             <slot>
               <McDonalds />
             </slot>
