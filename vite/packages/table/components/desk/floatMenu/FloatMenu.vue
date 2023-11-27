@@ -169,14 +169,13 @@ watch(defaultZoom, (newV: any) => {
       <xt-text type="2" class="mb-3">
         <template #center> 编辑桌面 </template>
         <template #right>
-          <xt-button w="20" h="20" radius="50" class="floatMenu" @click="exit1">
-            <xt-new-icon
-              icon="fluent:dismiss-16-filled"
-              class="text-2"
-              size="12"
-              style="color: var(--secondary-text) !important"
-            />
-          </xt-button>
+          <xt-new-icon
+            @click="exit1"
+            icon="akar-icons:circle-x-fill"
+            class="text-2 floatMenu"
+            size="20"
+            style="color: var(--secondary-text) !important"
+          />
         </template>
       </xt-text>
       <xt-tab

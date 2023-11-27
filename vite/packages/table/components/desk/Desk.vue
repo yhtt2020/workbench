@@ -71,7 +71,7 @@
                   :is="data.name"
                   :customIndex="data.id"
                   :customData="data.customData"
-                  :editing="true"
+                  :editing="editing"
                 />
                 <!-- </div> -->
               </template>
@@ -278,9 +278,9 @@
   <xt-modal v-model="settingVisible" :footer="0" title="桌面设置">
     <template #header-center>
       <XtTab
-        class="w-full"
+        class=""
         v-if="settingVisible"
-        style="height: 34px"
+        style="height: 34px; width: 300px; margin-right: 0"
         boxClass="p-1 xt-bg-2"
         v-model="currentSettingTab"
         :list="settingsTab"
@@ -551,6 +551,15 @@ export default {
         console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
+    },
+    isFreeLayout: {
+      handler(newVal) {
+        if (newVal) {
+          this.hide = true;
+        } else {
+          this.hide = false;
+        }
+      },
     },
   },
   computed: {
