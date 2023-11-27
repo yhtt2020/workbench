@@ -1,7 +1,7 @@
 <template>
     <teleport to="body">
       <img class="pop-container" :src="this.backgroundImage.path" alt="" />
-      <div class="pop-box flex flex-wrap justify-center">
+      <div class="pop-box flex flex-wrap justify-center" style="min-width: 1000px;">
         <!-- 顶部 -->
         <div style="justify-content: space-between;background-color: var(--secondary-bg);height: 64px;" class="flex w-full items-center px-3"> 
           <div class="flex items-center">

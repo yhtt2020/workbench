@@ -101,10 +101,14 @@ export default {
             }
         },
         time() {
+          const currentNote = this.noteList[this.selNote]
             // return 
             if (this.selNote>=0 && this.noteList) {
-                if(this.noteList[this.selNote]){
-                    let timestamp = this.noteList[this.selNote].updateTime; // 假设您已经获取了时间戳
+                if(currentNote){
+                    let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
+                    if (timestamp == undefined) {
+                      timestamp = currentNote.createTime
+                    }
                     return formatTime(timestamp)
                 }else{
                     return 
@@ -229,7 +233,7 @@ export default {
       }
     },
     watchEditorValue(value){
-      this.$refs.child.childEvent(value);
+      this.$refs.child?.childEvent(value);
     },
     
   },

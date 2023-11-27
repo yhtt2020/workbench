@@ -3,6 +3,7 @@ import dbStorage from "../../store/dbStorage";
 import { cardStore } from '../../store/card';
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { useToast } from "vue-toastification";
+import { v4 as uuidv4 } from 'uuid'
 const toast = useToast()
 // @ts-ignore
 export const noteStore = defineStore("noteStore", {
@@ -120,6 +121,7 @@ export const noteStore = defineStore("noteStore", {
               }
               delete tmp._$muuri_id
               delete tmp.$muuri_id
+              delete tmp._rev
               tmpList.push({
                 ...tmp,
                 deskName:item.name,
@@ -160,7 +162,10 @@ export const noteStore = defineStore("noteStore", {
         if (nowIndex>=0) {
           cardStore().removeCard(this.noteList[selNote].id,this.deskList[nowIndex],true)
         }
-        cardStore().addCard({...this.noteList[selNote]},this.deskList[selIndex], true)
+        cardStore().addCard({
+          ...this.noteList[selNote],
+          _$muuri_id:uuidv4()
+        },this.deskList[selIndex], true)
         let tmp = await this.findId(this.noteList[selNote]._id,this.isSelTab)
 
         this.noteList[selNote].deskId=this.deskList[selIndex].id
@@ -351,7 +356,12 @@ export const noteStore = defineStore("noteStore", {
         }
       })
       if (n>=0) {
-        cardStore().addCard(this.noteList[this.selNote],this.deskList[n],true)
+        cardStore().addCard(
+          {
+            ...this.noteList[this.selNote],
+            _$muuri_id:uuidv4()
+          }
+          ,this.deskList[n],true)
       }
       let tmp = await this.findId(this.noteList[this.selNote]._id,true)
 

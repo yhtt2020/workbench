@@ -21,10 +21,10 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <!-- <div @click="this.dbClear">清除数据</div>
+            <div @click="this.dbClear">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div> -->
+            <div @click="this.findAll">db数据</div>
             <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
             >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
@@ -46,7 +46,9 @@
                         {{ item.hasOwnProperty('customData')?item.customData.content:'' }}
                     </div>
                     <div class="bottom mt-3" style="color: var(--secondary-text);font-size: 14px;">
-                        {{ formatTimestamp(item.id) }}{{ item.deskName!=''?' · '+item.deskName:'' }}
+                        {{ formatTimestamp(item.id)  }}
+                        <!-- {{ time }} -->
+                        {{ item.deskName!=''?' · '+item.deskName:'' }}
                     </div>
                 </div>
             </xt-menu>
@@ -61,8 +63,8 @@
   import search20Filled from '@iconify-icons/fluent/search-20-filled';
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
-  import { formatTimestamp } from '../../../util'
-  import { cardStore } from "../../../store/card";
+  import { formatTimestamp, formatTime } from '../../../util'
+import { cardStore } from "../../../store/card";
 import { message } from 'ant-design-vue';
 
   export default {
@@ -141,6 +143,13 @@ import { message } from 'ant-design-vue';
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
         ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
+        // time(item) {
+        //     let timestamp = item.updateTime // 假设您已经获取了时间戳
+        //     if (timestamp == undefined) {
+        //       timestamp = item.createTime
+        //     }
+        //     return formatTime(timestamp)
+        // },
     },
     mounted() {
     },
@@ -173,7 +182,7 @@ import { message } from 'ant-design-vue';
         },
         changeMenu(index){
             this.selNote = index
-        }
+        },
     },
   };
   </script>
