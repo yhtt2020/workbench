@@ -6,7 +6,8 @@
           background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;border-radius: 18px;
           padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
-        <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container" :style="{'max-height':editToggle?'80%':'100%'}"
+        <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
+          :style="{ 'max-height': editToggle ? '80%' : '100%' }"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
             <!-- 左右导航栏隐藏入口 -->
@@ -18,17 +19,17 @@
                     <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
                       :class="{ 'active-color': current(item), 'shaking-element': editToggle }"></navIcon>
                   </div>
-                  <a-avatar v-else :size="37" shape="square" :src="renderIcon(item.icon)" :class="{'shaking-element': editToggle}"></a-avatar>
+                  <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"
+                    :class="{ 'shaking-element': editToggle }"></a-avatar>
 
                 </div>
               </div>
             </RightMenu>
           </a-tooltip>
         </div>
-        <div class="mt-3"  >
-            <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')"
-              @completeEdit="completeEdit" />
-          </div>
+        <div class="mt-3">
+          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="completeEdit" />
+        </div>
         <div>
 
         </div>
@@ -36,36 +37,37 @@
 
 
     </div>
+
+
+    <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+      placement="bottom" :visible="menuVisible" @close="onClose">
+      <a-row>
+        <a-col>
+          <div class="flex items-center">
+            <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+              <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
+              <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+              <div><span>{{ item.title }}</span></div>
+              <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
+            </div>
+            <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
+              <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
+              <div><span>{{ item.name }}</span></div>
+            </div>
+          </div>
+
+        </a-col>
+      </a-row>
+    </a-drawer>
+
+    <transition name="fade">
+      <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
+        <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
+        <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
+        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+      </div>
+    </transition>
   <!-- </RightMenu> -->
-
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
-    placement="bottom" :visible="menuVisible" @close="onClose">
-    <a-row>
-      <a-col>
-        <div class="flex items-center">
-          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-            <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-            <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
-          </div>
-          <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
-            <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
-            <div><span>{{ item.name }}</span></div>
-          </div>
-        </div>
-
-      </a-col>
-    </a-row>
-  </a-drawer>
-
-  <transition name="fade">
-    <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="completeEdit" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
-    </div>
-  </transition>
 </template>
 
 <script>
@@ -275,7 +277,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle','selectNav']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav']),
   },
   mounted() {
     this.colDrop()
@@ -285,11 +287,11 @@ export default {
     delZone(val) {
       this.delNav = val
     },
-    editToggle(){
-      if(this.editToggle){
+    editToggle() {
+      if (this.editToggle) {
         this.enableDrag()
         console.log('===>>>开始执行');
-      }else{
+      } else {
         this.disableDrag()
         console.log('===>>>停止执行');
       }
@@ -300,11 +302,11 @@ export default {
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
-        document.removeEventListener('click', this.disableDrag)
-        this.sortable.destroy()
-        this.sortable = null
-        message.info('已中止侧栏调整')
-        return
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+      message.info('已中止侧栏调整')
+      return
       // }
     },
     enableDrag() {
@@ -385,7 +387,7 @@ export default {
       }
     },
     clickNavigation(item) {
-      if(this.editToggle){
+      if (this.editToggle) {
         this.enableDrag()
         return
       }
@@ -449,10 +451,10 @@ export default {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
-        }else if(item.component === 'editNavigation'){
-          this.componentId=''
-          this.editToggle=true
-          this.selectNav='foot'
+        } else if (item.component === 'editNavigation') {
+          this.componentId = ''
+          this.editToggle = true
+          this.selectNav = 'foot'
         }
         // console.log(this.componentId,'===>>2');
         this.quick = true
@@ -471,7 +473,7 @@ export default {
       } else {
         return
       }
-      
+
       this.menuVisible = false
     },
     showMenu() {
@@ -485,12 +487,13 @@ export default {
       // }
 
     },
-    completeEdit(){
+    completeEdit() {
       this.toggleEdit()
       this.setQuick()
     },
     setQuick() {
       this.quick = false
+      this.editToggle = false
     },
     onClose() {
       this.routeParams.url && this.$router.push({ name: 'app', params: this.routeParams })
@@ -538,30 +541,30 @@ export default {
 //   }
 // }
 .shaking-element {
-    // animation: shake 0.5s infinite;
-    animation: shake 1s ease-in-out;
+  // animation: shake 0.5s infinite;
+  animation: shake 1s ease-in-out;
 }
 
 @keyframes shake {
-    0% {
-        transform: translateY(0);
-    }
+  0% {
+    transform: translateY(0);
+  }
 
-    25% {
-        transform:  rotate3d(0, 0, 1, -15deg);
-    }
+  25% {
+    transform: rotate3d(0, 0, 1, -15deg);
+  }
 
-    50% {
-        transform:  rotate3d(0, 0, 1, 15deg);
-    }
+  50% {
+    transform: rotate3d(0, 0, 1, 15deg);
+  }
 
-    75% {
-        transform:  rotate3d(0, 0, 1, -15deg);
-    }
+  75% {
+    transform: rotate3d(0, 0, 1, -15deg);
+  }
 
-    100% {
-        transform: translateY(0);
-    }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .item {
@@ -660,4 +663,5 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}</style>
+}
+</style>

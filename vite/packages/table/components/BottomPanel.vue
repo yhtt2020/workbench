@@ -320,7 +320,7 @@ export default {
       delNav: false,
       //screenWidth: document.body.clientWidth
       drawerMenus: [...extraRightMenu, ...moreMenus],
-      componentId: 'EditNavigation',
+      componentId: 'EditNavigationIcon',
       // editBar:false，
       dropList: [],
       iconMenus: [
@@ -814,9 +814,9 @@ export default {
     disableDrag() {
       // if (this.sortable) {
         document.removeEventListener('click', this.disableDrag)
-        this.sortable.destroy()
+        // this.sortable.destroy()
         this.sortable = null
-        message.info('已中止导航栏调整')
+        // message.info('已中止导航栏调整')
       // }
     },
     enableDrag() {
@@ -888,7 +888,7 @@ export default {
           that.$emit('getDelIcon', false)
         },
       })
-      message.success('开始调整底部栏，点击导航外部即可终止调整。')
+      // message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
