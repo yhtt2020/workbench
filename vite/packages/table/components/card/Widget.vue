@@ -1,5 +1,5 @@
 <template>
-  <Drop v-model:widgetSize="widgetSize">
+  <!-- <Drop v-model:widgetSize="widgetSize"> -->
     <RightMenu
       :menus="menus"
       :sizes="sizeList"
@@ -81,7 +81,7 @@
       </template>
       <!-- 右上角抽屉扩展 end -->
     </RightMenu>
-  </Drop>
+  <!-- </Drop> -->
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -101,14 +101,13 @@ import { offlineStore } from "../../js/common/offline";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
-import Drop from "./Drop.vue";
+// import Drop from "./Drop.vue";
 export default {
   components: {
     // Template,
     MenuOutlined,
     RightMenu,
     PageState,
-    Drop
   },
   name: "Widget",
   props: {
@@ -279,20 +278,6 @@ export default {
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
-          },
-          this.desk
-        );
-      },
-    },
-    // 更新最新的widget框架大小
-    widgetSize: {
-      handler(newVal) {
-        this.updateCustomData(
-          this.$parent.customIndex ||
-            this.$parent.$parent.customIndex ||
-            this.$parent.$attrs.customIndex,
-          {
-            widgetSize: this.widgetSize,
           },
           this.desk
         );

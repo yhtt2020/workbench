@@ -71,7 +71,7 @@
                   :is="data.name"
                   :customIndex="data.id"
                   :customData="data.customData"
-                  :editing="true"
+                  :editing="editing"
                 />
                 <!-- </div> -->
               </template>
@@ -560,6 +560,15 @@ export default {
         console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
+    },
+    isFreeLayout: {
+      handler(newVal) {
+        if (newVal) {
+          this.hide = true;
+        } else {
+          this.hide = false;
+        }
+      },
     },
   },
   computed: {
