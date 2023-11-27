@@ -21,10 +21,10 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <div @click="this.dbClear">清除数据</div>
+            <!-- <div @click="this.dbClear">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div>
+            <div @click="this.findAll">db数据</div> -->
             <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
             >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
