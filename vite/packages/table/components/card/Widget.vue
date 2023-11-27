@@ -63,7 +63,7 @@
             <div
               class="px-3 pb-2 h-full rounded-b-lg"
               :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-              >
+            >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>
@@ -102,7 +102,6 @@ import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
 import Drop from "./Drop.vue";
-
 export default {
   components: {
     // Template,
@@ -192,12 +191,12 @@ export default {
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
-          fn: ()=>{
-            if(this.options?.type != 'note'){
-              this.doRemoveCard()
-            }else{
+          fn: () => {
+            if (this.options?.type != "note") {
+              this.doRemoveCard();
+            } else {
               // 便签单独处理
-              this.options?.removeCard()
+              this.options?.removeCard();
             }
           },
           title: "删除小组件",

@@ -39,8 +39,6 @@ const dragStyle = computed(() => {
   }
 });
 
-// import Container from "./FloatMenu/Container.vue";
-const aa = ref(true);
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
 const {
@@ -53,16 +51,16 @@ const {
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 
-onMounted(() => {
+onMounted(async () => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
-  setTimeout(() => {
+  setTimeout(async () => {
     // 初始化自由布局定位
-    redirect();
+    await redirect();
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -118,7 +116,6 @@ function handleMouseMove(event) {
 // 鼠标抬起
 function handleMouseUp(event) {
   isDragging.value = false;
-  isKey.value = false;
 }
 
 // 键盘按下

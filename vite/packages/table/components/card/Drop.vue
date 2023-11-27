@@ -21,7 +21,7 @@ onMounted(() => {
     width: containerRef.getBoundingClientRect().width,
     height: containerRef.getBoundingClientRect().height,
   };
-  emits("update:widgetSize", obj);
+  // emits("update:widgetSize", obj);
 });
 </script>
 

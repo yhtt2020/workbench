@@ -278,9 +278,8 @@
   <xt-modal v-model="settingVisible" :footer="0" title="桌面设置">
     <template #header-center>
       <XtTab
-        class="w-full"
         v-if="settingVisible"
-        style="height: 34px"
+        style="height: 34px; width: 300px"
         boxClass="p-1 xt-bg-2"
         v-model="currentSettingTab"
         :list="settingsTab"
@@ -504,6 +503,16 @@ export default {
     },
   },
   watch: {
+    isFreeLayout: {
+      handler(newVal) {
+        if (!newVal && this.editing) {
+          this.hide = false;
+        } else if (this.editing) {
+          this.hide = true;
+        }
+      },
+      immediate: true,
+    },
     currentDesk(newVal) {
       newVal.layoutSize = this.getLayoutSize();
       // if (!newVal.settings) {

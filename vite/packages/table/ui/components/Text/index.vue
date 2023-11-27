@@ -3,13 +3,13 @@
     class="w-full flex justify-between items-center relative"
     :class="[textClass]"
   >
-    <div class="flex items-center">
+    <div class="flex flex-1 items-center z-20">
       <slot></slot>
     </div>
-    <div class="flex-1 w-0  text-center">
+    <div class="flex-1 absolute left-1/2 -translate-x-1/2 z-10">
       <slot name="center"> {{ title }}</slot>
     </div>
-    <div>
+    <div class="z-20">
       <slot name="right"></slot>
     </div>
   </div>
