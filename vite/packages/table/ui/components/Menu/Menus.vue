@@ -40,7 +40,7 @@
               v-for="data in menu.children"
               :name="name"
             >
-              <Item :data="data" :isBg="true" />
+              <Item :data="data" :isBg="true" :name="name" />
             </div>
           </div>
         </template>

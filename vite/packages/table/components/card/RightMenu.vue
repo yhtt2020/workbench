@@ -1,6 +1,43 @@
 <!-- 处理右键菜单内容 -->
 <template>
-  <Menu
+  <xt-fun-menu name="title" fn="fn" :menus="menuList" :height="sizes && sizes.length > 0 ? 120 : 0">
+    <div>
+      <slot></slot>
+    </div>
+    <template #follow v-if="sizes.length > 0">
+      <div class="flex flex-wrap mb-2 ml-2 my-1">
+        <div
+          v-for="item in sizes"
+          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
+          style="border-radius: 16px"
+          @click="updateCardSize(item)"
+        >
+          {{ item.title }}
+        </div>
+      </div>
+    </template>
+
+    <template #drawer>
+      <div
+        class="flex flex-row items-center mb-3 ml-4"
+        v-if="sizes && sizes.length > 0"
+      >
+        <div class="mr-4">小组件尺寸</div>
+        <HorizontalPanel
+          :navList="sizes"
+          v-model:selectType="cardSize"
+          bgColor="drawer-item-select-bg"
+        />
+        <slot name="old"></slot>
+      </div>
+      <hr
+        style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)"
+        class="my-8 ml-4 mr-4"
+        v-if="sizes && sizes.length > 0"
+      />
+    </template>
+  </xt-fun-menu>
+  <!-- <Menu
     name="title"
     fn="fn"
     :model="model"
@@ -54,13 +91,8 @@
     <div class="flex flex-row">
       <slot name="menuExtra"></slot>
       <BottomEdit :menuList="menuList" @close="menuVisible = false" />
-      <!--      <div class="w-24 h-24 ml-4 option" @click="onCopy"-->
-      <!--           v-if="options.type.includes('CPU') || options.type.includes('GPU')">-->
-      <!--        <Icon class="icon" icon="fuzhi"></Icon>-->
-      <!--        复制数据-->
-      <!--      </div>-->
     </div>
-  </a-drawer>
+  </a-drawer> -->
 </template>
 
 <script setup>
@@ -140,12 +172,12 @@ const menuList = computed(() => {
       children: [
         {
           newIcon: "fluent:chevron-left-16-filled",
-          name: "上移一层",
+          title: "上移一层",
           fn: indexAdd,
         },
         {
           newIcon: "fluent:chevron-left-16-filled",
-          name: "下移一层",
+          title: "下移一层",
           fn: indexSub,
         },
         // {
