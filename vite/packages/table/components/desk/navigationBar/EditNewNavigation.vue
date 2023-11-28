@@ -52,16 +52,13 @@
                     <a-dropdown v-if="currentTag == 'webNavigation'">
                         <template #overlay>
                             <a-menu @click="handleMenuClick">
-                                <a-menu-item key="1">
-                                    综合排序
-                                </a-menu-item>
+                                <a-menu-item key="1">综合排序</a-menu-item>
                             </a-menu>
                         </template>
                         <xt-button :w="160" :h="40" class="ml-3">
                             <div class="flex justify-between">
                                 <div>综合排序</div>
-                                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
-                                    class="-rotate-90 xt-text"></xt-new-icon>
+                                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20" class="-rotate-90 xt-text"></xt-new-icon>
                             </div>
                         </xt-button>
                     </a-dropdown>
