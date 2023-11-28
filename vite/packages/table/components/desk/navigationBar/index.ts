@@ -34,13 +34,13 @@ export const extraRightMenu =  [
     {
         title:'添加导航图标',
         icon:'fluent:add-16-regular',
-        component:'EditNavigation',
+        component:'EditNavigationIcon',
 
     },
     {
         title:'编辑导航',
         icon:"fluent:compose-16-regular",
-        component:'EditNavigation',
+        component:'editNavigation',
     },
     {
         title:'导航栏设置',
@@ -88,6 +88,7 @@ export const rightMenus=[
         id:3,
         name:'导航栏设置',
         newIcon:'fluent:settings-16-regular',
+        color: "#FF4D4F",
         fn:()=>{}
     },
     {
@@ -140,6 +141,7 @@ export const iconMenus = [
         id:3,
         name:'删除',
         newIcon:'fluent:delete-16-regular',
+        color: "#FF4D4F",
         fn:()=>{}
     },
     {
@@ -254,11 +256,49 @@ export const localFiles=[
         tag:'all'
     },
     {
-        name:'快捷方式',
-        tag:'shortcut'
+        name:'软件',
+        tag:"software"
     },
     {
-        name:'软件',
-        tag:'software'
+        name:'文档',
+        tag:'docx'
+    },
+    {
+        name:"其他",
+        tag:'other'
+    }
+]
+
+export const doc=[
+    ".docx",
+    ".pptx",
+    '.txt',
+    '.pdf',
+    '.xlsx',
+    '.doc',
+    '.ppt',
+    '.xls',
+    '.md',
+    '.xml',
+    '.docm',
+    '.odt',
+    '.csv',
+    '.pptm',
+    '.ppsm',
+]
+
+
+export const addIconPosition=[
+    {
+        title:'左侧',
+        value:'left'
+    },
+    {
+        title:'右侧',
+        value:'right'
+    },
+    {
+        title:'底部',
+        value:'foot'
     }
 ]

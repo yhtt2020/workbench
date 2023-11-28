@@ -101,6 +101,7 @@ import { offlineStore } from "../../js/common/offline";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
+import Drop from "./Drop.vue";
 
 export default {
   components: {
@@ -108,6 +109,7 @@ export default {
     MenuOutlined,
     RightMenu,
     PageState,
+    Drop
   },
   name: "Widget",
   props: {
