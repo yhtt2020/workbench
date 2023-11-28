@@ -23,7 +23,6 @@ export const communityStore = defineStore('communityStore',{
     categoryList:{}, // 频道目录列表
     categoryClass:[],
     channelList:[],
-    currentNo:""
   }),
 
   getters:{
@@ -45,33 +44,31 @@ export const communityStore = defineStore('communityStore',{
 
    // 获取我的社群
    async getMyCommunity(){
-    post(getMyCommunity,{}).then(async (res)=>{
-      const list = res?.data?.list;
+    post(getMyCommunity,{}).then(async (res)=>{ //  请求左侧列表
+      const list = res?.data?.list; // 将list进行去重预防报错
       const mapList = list.map(async (item:any)=>{
         if(item.hasOwnProperty('communityInfo')){
-          const data = item?.communityInfo;
-          const communityNo = data.no;
-          const itemRes = await this.getCategoryData(communityNo)
-          const itemOption ={
+          const data = item?.communityInfo; // 取出data下的数据进行操作,预防报错处理
+          const communityNo = data.no;  // 取出communityNo预防报错
+          const itemRes = await this.getCategoryData(communityNo)  // 通过communityNo请求频道列表详情
+          const itemOption ={  // 将数据进行解构返回出去
             ...data,
             ...item,
             tree:itemRes.tree,
             summary:'',
             uid:item.uid,
-            unreadTree:itemRes.unreadTree,
-            unread:0,
             category:itemRes.category,
           };
           return itemOption;
         }
       });
-      const results = await Promise.all(mapList);
-      const filterUndefinedList = results.filter((item:any)=>{
+      const results = await Promise.all(mapList); // 获取数据
+      const filterUndefinedList = results.filter((item:any)=>{  // 过滤去重
         if(item !== undefined){
           return item;
         }
       });
-      this.communityList = filterUndefinedList;
+      this.communityList = filterUndefinedList;  
     });
    },
 
@@ -106,46 +103,16 @@ export const communityStore = defineStore('communityStore',{
    // 获取社群频道目录
    async getCategoryData(id:any){
     if(!isNaN(parseInt(id))){
-      const option = { communityNo:parseInt(id), cache:1 };
-      const result = await Promise.all(
+      const option = { communityNo:parseInt(id), cache:1 };  // 请求数据配置项
+      const result = await Promise.all(  // 将社群子级频道和父级频道同时请求返回,提升性能消耗
         [
           post(getChannelList,option).then((res:any)=>{ return res }),
           post(getChannelTree,option).then((res:any)=>{ return res })
         ]
       );
-      const tree = result[1]?.data?.treeList;
-      const category = result[0]?.data?.list;
-      let unreadTree = [];
-      if(tree.length !== 0){
-        let childrenList = {
-          list:[],
-          noList:[]
-        };
-        for(const item of tree){
-          if(item.hasOwnProperty('children')){
-            const jsonItem = item.children.map((mapItem)=>{
-              const jsonProp = JSON.parse(mapItem.props)
-              return {
-                ...item,
-                ...jsonProp
-              }
-            })
-            childrenList.list = jsonItem;
-          }else{
-            const index = childrenList.noList.findIndex((find:any)=>{
-              return find.id === item.id;
-            });
-            if(index === -1){
-              const jsonData = JSON.parse(item.props)
-              childrenList.noList.push({...item,...jsonData} as never);
-            }
-          }
-        }
-        unreadTree = childrenList.list.concat(childrenList.noList);
-      }else{
-        unreadTree = [];
-      }
-      return {tree:tree,category:category,unreadTree:unreadTree};
+      const tree = result[1]?.data?.treeList; // 社群子级频道
+      const category = result[0]?.data?.list; // 社群父级频道
+      return {tree:tree,category:category}; 
     }
    },
 
@@ -196,42 +163,42 @@ export const communityStore = defineStore('communityStore',{
 
    // 更新社群消息提示状态
    updateMsgStatus(){
-    const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList;
-    const mapList = list.map((item:any)=>{
+    const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList; // 群聊会话列表
+    const mapList = list.map((item:any)=>{  // 取群聊中unreadCount字段
       const fileInfo = item.groupProfile;
       return {
         groupID:fileInfo.groupID,
         unread:item.unreadCount
       }
     })
-    const updateList = this.communityList.map((mapItem:any)=>{
-      const isTreeNull = mapItem.tree.length !== 0;
+    const updateList = this.communityList.map((mapItem:any)=>{ // 将unreadCount字段更新进去
+      const isTreeNull = mapItem.tree.length !== 0; // 容错处理
       if(isTreeNull){
-        const list = mapItem.tree;
+        const list = mapItem.tree;  // 获取社群右侧列表进行操作处理
         const updateTree = list.map((item:any)=>{
-        const isChildren = item.hasOwnProperty('children');
+         const isChildren = item.hasOwnProperty('children'); // 判断是否存在children属性
          if(isChildren){
-            if(item.type === 'group'){
-              const childrenList = item.children.map((childrenItem:any)=>{
-                const jsonItem = JSON.parse(childrenItem.props);
-                const findList =  _.find(mapList,function(find:any){ return String(jsonItem.groupID) === String(find.groupID) })
-                const option = {
-                  ...jsonItem,
-                  unread:findList !== undefined ? findList.unread : 0,
-                };
-                const restJSON = JSON.stringify(option);
-                return {...childrenItem,props:restJSON};
-              })
-              return {
-                ...item,
-                children:childrenList
-              }
+           const childrenList = item.children.map((childrenItem:any)=>{
+            if(childrenItem.type === 'group'){
+              const jsonItem = JSON.parse(childrenItem.props);
+              const findList =  _.find(mapList,function(find:any){ return String(jsonItem.groupID) === String(find.groupID) })
+              const option = {
+                ...jsonItem,
+                unread:findList !== undefined ? findList.unread : 0,
+              };
+              const restJSON = JSON.stringify(option);
+              return {...childrenItem,props:restJSON};
             }else{
-              return item;
+              return childrenItem;
             }
+           })
+           return {
+             ...item,
+             children:childrenList
+           };
          }else{
-          if(item.type === 'group'){
-            const jsonData = JSON.parse(item.props);
+          if(item.type === 'group'){  
+            const jsonData = JSON.parse(item.props);  // JSON反序列化
             const findLists =  _.find(mapList,function(find:any){ return String(jsonData.groupID) === String(find.groupID) })
             const option = {
               ...jsonData,
@@ -252,7 +219,6 @@ export const communityStore = defineStore('communityStore',{
         return mapItem;
       }
     })
-    console.log('执行....查看',updateList);
     this.communityList = updateList
    }
 

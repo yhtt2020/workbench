@@ -24,12 +24,13 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(communityStore,['categoryList','channelList']),
+    ...mapWritableState(communityStore,['getCommunityDetail']),
     joinChatList(){
-      if(this.categoryList.tree.length !== 0){
+      const categoryList = this.getCommunityDetail(this.$route.params.no);
+      if(categoryList.tree.length !== 0){
         const channel = []
         const category = []
-        for(const cateItem of this.categoryList.tree){
+        for(const cateItem of categoryList.tree){
          if(cateItem.role === 'channel'){
           const index = channel.findIndex((item)=>{
             return item.id === cateItem.id

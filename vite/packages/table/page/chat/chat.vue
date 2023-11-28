@@ -4,7 +4,7 @@
       <router-view ></router-view>
     </div>
     <template #communityFloat>
-      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :float="true"  @clickItem="currentItem"></CategoryFloat>
+      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :data="communityData" :float="true"  @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else :float="true"></DefaultFloat>
     </template>
   </xt-left-menu>
@@ -71,7 +71,8 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      communityNo:'',
+      communityData:null,
+      communityNo:1,
     })
 
     // 聊天入口消息提示状态
@@ -85,16 +86,13 @@ export default {
     }
     // 切换左侧tab
     const selectTab = async (item)=>{
-      data.index = item.type
-      if(item.route.params.no !== 1){
-        data.communityNo = item.route.params.no
-        await com.getCategoryData(item.route.params.no)
-      }else{
-        data.communityNo = 1
-        await com.getCategoryData('')
+      data.index = item.type;
+      const no = item.route.params.no; // 取出社群id
+      data.communityNo = item.route.params.no;
+      if(no !== 1){
+        data.communityData = com.getCommunityDetail(item.route.params.no)
       }
       router.push(item.route)
-      com.currentNo  = item.no
     }
     // 触发添加入口
     const triggerAddModal = (item)=>{
@@ -177,9 +175,60 @@ export default {
     ])
     /**初始ref定义数组结束**/
 
+    /**计算社群消息未读数的总和开始**/
+    const mergeChildren = (no) =>{
+      if(no !== undefined){
+        const totalUnread = {
+          unread:0
+        };
+        const list = [];
+        const find = communityList.value.find((find)=>{
+          return String(find.no) === String(no);
+        })
+        if(find !== undefined){
+          for(const item of find.tree){
+            if(item.hasOwnProperty('children') && item.children.length !== 0){
+              for(const childrenItem of item.children){
+                if(childrenItem.type === 'group'){
+                  const jsonChildren = JSON.parse(childrenItem.props);
+                  const index = _.findIndex(list,(find)=>{
+                   return String(find.groupID) === String(jsonChildren.groupID);
+                  })
+                  if(index === -1){
+                    list.push(childrenItem);
+                  }
+                }
+               }
+            }else{
+              
+              if(item.type === 'group'){
+                const jsonItem = JSON.parse(item.props);
+                const index = _.findIndex(list,(find)=>{
+                return String(find.groupID) === String(jsonItem.groupID);
+                })
+                if(index === -1){
+                  list.push(item);
+                }
+              }
+            }
+          }
+        }
+        for(const item of list){
+          const jsonPropItem = JSON.parse(item.props);
+          if(jsonPropItem.hasOwnProperty('unread')){
+            totalUnread.unread += jsonPropItem.unread
+          }else{
+            totalUnread.unread = 0
+          }
+        }
+        // console.log('执行...排查',totalUnread.unread);
+        return totalUnread.unread;
+      }
+    }
+    /**计算社群消息未读数的总和结束**/
+
     /**监听communityList开始**/
     watch(()=>communityList.value,(newVal)=>{
-      console.log('执行...测试',newVal);
       const isNull = newVal.length !== undefined && newVal.length !== 0;
       if(isNull){
         const communityData = communityList.value;
@@ -206,7 +255,12 @@ export default {
           return find.id === item.id
         })
         if(index === -1){
-          uniqueList.push(item)
+          const itemOption = {
+            ...item,
+            unread:mergeChildren(item.no) !== undefined && mergeChildren(item.no) !== 0  ? mergeChildren(item.no) : 0,
+          }
+          // console.log('执行....测试', itemOption);
+          uniqueList.push(itemOption)
         }
       }
       const lastList = [
@@ -241,6 +295,7 @@ export default {
       filterList, createCommunityList,unReadNum,
       ...toRefs(data),createCommunity,
       selectTab,triggerAddModal,
+      mergeChildren,
     }
   }
  

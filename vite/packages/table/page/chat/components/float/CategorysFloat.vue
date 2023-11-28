@@ -159,7 +159,7 @@ export default{
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
           callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
           }
           // 
         },
@@ -185,7 +185,7 @@ export default{
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
           callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
           },
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
