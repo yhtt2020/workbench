@@ -1,10 +1,8 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <!-- <RightMenu :menus="rightMenus"> -->
-    <div @click.stop class="flex flex-col box common-panel s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-          background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;border-radius: 18px;
-          padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
+  <RightMenu :menus="rightMenus" class="h-full">
+    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
           :style="{ 'max-height': editToggle ? 'calc(100% - 120px)' : '100%' }"
@@ -38,7 +36,7 @@
 
 
     </div>
-
+  </RightMenu>
 
     <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
       placement="bottom" :visible="menuVisible" @close="onClose">
@@ -68,7 +66,7 @@
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       </div>
     </transition>
-  <!-- </RightMenu> -->
+  
 </template>
 
 <script>
@@ -443,7 +441,7 @@ export default {
           ipc.send('executeAppByPackage', { package: item.package })
           break
         default:
-          require('electron').shell.openPath(item.path)
+          require('electron').shell.openPath(item.path ? item.path : item.url)
       }
     },
     // scrollNav(refVal, scrollDirection) {
