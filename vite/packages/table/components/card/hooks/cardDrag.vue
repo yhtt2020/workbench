@@ -103,7 +103,7 @@ export default {
       );
     },
   },
-  unmounted() {
+  beforeUnmount() {
     let dragRef = this.$refs.dragRef;
     dragRef.removeEventListener("mousedown", () => {});
   },
