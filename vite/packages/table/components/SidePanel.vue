@@ -28,9 +28,6 @@
         <!-- <div class="mt-3">
           <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
         </div> -->
-        <div>
-
-        </div>
       </div>
 
 
@@ -605,7 +602,7 @@ export default {
   align-items: center;
   cursor: pointer;
   border-radius: 12px;
-  background-color: var(--secondary-bg);
+  background-color: var(--secondary-transp-bg);
 
 }
 
@@ -637,7 +634,7 @@ export default {
   // border: 1px solid red;
 
   // color: var(--primary-text) !important;
-  background: var(--active-bg);
+  // background: var(--active-bg);
 
   :deep(.icon) {
     fill: rgba(255, 255, 255, 0.9) !important;

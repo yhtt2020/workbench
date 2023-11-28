@@ -55,16 +55,18 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
-                          class="flex items-center justify-center rounded-lg s-item xt-bg-2">
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                          class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
                             :class="{ 'shaking-element': shakeElement }"></navIcon>
+                          <navIcon icon="fluent:delete-16-regular" class="delete-icon" v-if="this.delItemIcon"/>
                         </div>
                         <div v-else style="width: 56px; height: 56px;"
-                          class="flex items-center justify-center xt-bg-2 rounded-xl">
+                          class="relative flex items-center justify-center icon-bg rounded-xl">
                           <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                            <navIcon icon="fluent:delete-16-regular" class="delete-icon" v-if="this.delItemIcon"/>
                         </div>
                       </div>
                     </RightMenu>
@@ -440,7 +442,8 @@ export default {
       ],
       shakeElement:false,
       currentIndex:null,
-      currentItem:null
+      currentItem:null,
+      delItemIcon:false
     }
   },
   props: {
@@ -843,6 +846,8 @@ export default {
         animation: 150,
         onStart: function (event) {
           let delIcon = document.getElementById('delIcon2')
+          this.delItemIcon=true
+          console.log(this.delItemIcon,'====>>>>delItemIcon')
           that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
@@ -851,6 +856,7 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
+            
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
@@ -931,7 +937,17 @@ export default {
 .common-panel {
   margin-bottom: 0;
 }
-
+.icon-bg{
+  background-color: var(--secondary-transp-bg);
+}
+.delete-icon{
+  width: 14px;
+  height: 14px;
+  color: #FF4D4F;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
 .btn {
   text-align: center;
   margin-right: 12px;
