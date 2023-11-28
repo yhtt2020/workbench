@@ -12,7 +12,6 @@
           </div>
         </div>
         <div>{{ title }}</div>
-        {{ step }}
       </div>
       <div
       class="mt-4 w-full"
@@ -23,11 +22,11 @@
           </a-steps>
         </div> -->
         <div v-if="step===0">
-          <div class="font-16" style="margin-bottom: 2em;margin-top:1em;text-align: center;color: var(--secondary-text);" v-if="true">
+          <div class="font-16" style="margin-bottom: 2em;text-align: center;color: var(--secondary-text);" v-if="true">
             如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
             <div class="flex justify-center">
               没有副屏？点击了解 &nbsp;
-              <a @click="openVideo" class="flex items-center">
+              <a @click="openVideo" class="flex items-center" style="color: #00AEEC;">
               <MyIcon icon="tabler:brand-bilibili" width="20" height="20"  />&nbsp;
               Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
             </div>
@@ -40,9 +39,9 @@
               <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
                 <div class="title">
                   <MyIcon icon="fluent:tablet-16-regular" width="50px" height="50px" color="var(--primary-text)" />
-                  <div>副屏全屏模式</div>
+                  <div class="mt-2">副屏全屏模式</div>
                 </div>
-                <div class="content">
+                <div class="content mt-4">
                   专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
                 </div>
               </div>
@@ -52,9 +51,9 @@
                 <div class="title">
                   <!-- <icon icon="kuaijie" style="font-size: 50px"></icon> -->
                   <MyIcon icon="fluent:window-multiple-16-filled" width="50px" height="50px" color="var(--primary-text)" />
-                  <div>窗口模式</div>
+                  <div class="mt-2">窗口模式</div>
                 </div>
-                <div class="content">
+                <div class="content mt-4">
                   以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
                 </div>
               </div>
@@ -115,8 +114,6 @@
                   <MyIcon icon="fluent:hand-draw-16-regular" width="20" height="20" />&nbsp;触摸矫正</a>
                 <a class="flex items-center"  @click="adjustPen">
                   <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
-                <!-- <a-button class="mr-10" type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
-                <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button> -->
               </p>
             </div>
   
@@ -168,21 +165,46 @@
           </div>
         </div>
         <div v-if="step==3">
-          <div>你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
-          <div>
-            <a-row v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.backgound}">
-              <!-- {{ item.backgound }} -->
-            <!-- <a-row v-for="(item,index) in loginList" :key="index" :style="{'background-image':item.backgound}"> -->
-              <a-col :span="4">
-                <MyIcon :icon="item.icon" color='var(--secondary-text)'/>
+          <div class="text-center xt-text-2 font-16">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
+          <div class="flex flex-wrap justify-center">
+            <a-row class="bg-tab" v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.background}">
+              <a-col :span="6" class="h-full w-full justify-center items-center" style="display:flex;">
+                <MyIcon :icon="item.icon"  height="40" width="40" />
               </a-col>
-              <a-col :span="5" class="font-button">
-                <div>{{item.title}}</div>
-                <div>{{ item.content }}</div>
+              <a-col :span="18" class="flex  ">
+                <div class="font-16" style="color:rgba(255, 255, 255, 0.85)">{{item.title}}</div>
+                <div class="font-14" style="color:rgba(255, 255, 255, 0.6)">{{ item.content }}</div>
               </a-col>
             </a-row>
           </div>
-
+        </div>
+        <div v-if="step==4">
+          <div class="text-center xt-text-2 font-16">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
+          <a-row :gutter="20" class="flex justify-center mt-6">
+            <a-col >
+              <div :class="{'active':desktopSetting==='default'}" @click="this.desktopSetting='default'" class="setting-panel pointer px-4 pt-5">
+                <div class="title">
+                  <MyIcon icon="fluent-emoji:desktop-computer" width="50px" height="50px" color="var(--primary-text)" />
+                  <div class="mt-2">默认桌面</div>
+                </div>
+                <div class="content mt-4">
+                  使用推荐的默认设置，快速开始。
+                </div>
+              </div>
+            </a-col>
+            <a-col >
+              <div :class="{'active':desktopSetting==='custom'}" @click="this.desktopSetting='custom'" class="setting-panel pointer px-4 pt-5">
+                <div class="title">
+                  <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
+                  <div class="mt-2">定制桌面</div>
+                </div>
+                <div class="content mt-4">
+                  通过一系列设置，帮你搭建最合适的桌面。
+                </div>
+              </div>
+            </a-col>
+          </a-row>
+          <div class="text-center mt-4" style="color:red;">暂不支持定制桌面</div>
         </div>
   
 
@@ -190,33 +212,22 @@
         
       </div>
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
-        <div class="flex" v-if="screenSettingTab==='none'">
-          
-          <xt-button  v-if="(mod==='second-screen' && step!==3 && step!==4) || (mod==='bootstrap' && step!==1) " class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">{{ step!==1?'下一步':'没有问题'}}
-          </xt-button>
-          <xt-button  v-else-if="step == 4" class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">快速开始
-          </xt-button>
-          <!-- <xt-button v-if="step===1 && mod==='second-screen'" class="button-bottom ml-3" @click="nextStep"   size="large"
-                    type="theme">已解决
-          </xt-button> -->
-          <div v-else class="flex">
-            <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录
+        <div class="flex">
+          <div v-if="step == 1 && (screenSettingTab == 'choose' || screenSettingTab == 'scale' || screenSettingTab == 'touch')" class="pl-20">
+            <xt-button  @click="screenSettingTab='none'" type="theme" size="large" class="button-bottom">
+              已解决
             </xt-button>
-            <xt-button type="theme" @click="nextStep" size="large"  class="button-bottom ml-3">立即登录</xt-button>
-            <!-- <xt-button type="theme" @click="finish" size="large"  class="button-bottom ml-3">立即登录</xt-button> -->
-          </div>
         </div>
-        <div v-else class="pl-20">
-          <xt-button  @click="screenSettingTab='none'" type="theme" size="large" class="button-bottom">
-            已解决
+        <div v-else-if="step == 3" class="flex">
+          <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button>
+          <xt-button type="theme" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
         </div>
-        <!-- <div v-else class="pl-20">
-          <a-button @click="screenSettingTab='none'" type="primary" size="large" class="button-bottom">
-            <Icon class="mr-3" icon="yixuan"></Icon>
-            问题解决
-          </a-button>
-        </div> -->
+        <xt-button  v-else-if="(mod==='second-screen' && step!==3 && step!==4) || (mod==='bootstrap' && step!==4) " class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">{{ step!==1?'下一步':'没有问题'}}
+        </xt-button>
+        <xt-button  v-else-if="step == 4" class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
+        </div>
+        
       </div>
     </div>
 
@@ -242,6 +253,7 @@ import { useWidgetStore } from '../components/card/store'
 import { Icon as MyIcon } from '@iconify/vue';
 // 修改浅色模式
 import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
+import { chatStore } from '../store/chat'
 
 const { settings } = window.$models
 export default {
@@ -263,6 +275,8 @@ export default {
     title(){
       if(this.step == 0){
         return '想天工作台使用向导'
+      }else if((this.step===1 && this.mod==='bootstrap') || (this.step===2 && this.mod==='second-screen')){
+        return '更多设置'
       }else if(this.step == 1 && this.screenSettingTab == 'none'){
         return '是否遇到以下问题？'
       }else if(this.step == 1 && this.screenSettingTab == 'touch'){
@@ -271,8 +285,6 @@ export default {
         return '选择屏幕'
       }else if(this.step == 1 && this.screenSettingTab == 'scale'){
         return '设置缩放'
-      }else if(this.step == 2){
-        return '更多设置'
       }else if(this.step == 3){
         return '登录工作台'
       }else if(this.step == 4){
@@ -330,6 +342,8 @@ export default {
   },
   data () {
     return {
+      // 默认、定制桌面
+      desktopSetting:'default',
       screenSettingTab: 'none',
       currentWidth: '-',
       currentHeight: '-',
@@ -381,25 +395,25 @@ export default {
           title:'元社区',
           content:'开放式社区，与全网小伙伴一同交流你的热爱，欢饮你的加入！',
           icon:'fluent-emoji:bubbles',
-          backgound:'linear-gradient(107deg, #3E619E 0%, #5D367A 100%);',
+          background:'linear-gradient(107deg, #3E619E 0%, #5D367A 100%)',
         },
         {
           title:'小队',
           content:'与全网工作台小伙伴自由组成小队，为你带来一种不一样的陪伴感。',
           icon:'fluent-emoji:grinning-face-with-smiling-eyes',
-          backgound:' linear-gradient(107deg, #3E9E51 0%, #36407A 100%);',
+          background:' linear-gradient(107deg, #3E9E51 0%, #36407A 100%)',
         },
         {
           title:'社群',
           content:'以兴趣、协作、游戏等等各种主题，免费创建属于你的社群。',
           icon:'fluent-emoji:doughnut',
-          backgound:'linear-gradient(107deg, #9E903E 0%, #7A3E36 100%);',
+          background:'linear-gradient(107deg, #9E903E 0%, #7A3E36 100%)',
         },
         {
           title:'等级权益',
           content:'提升你的账号在线等级，解锁体验更多高级功能。',
           icon:'fluent-emoji:star',
-          backgound:' linear-gradient(107deg, #9E3E3E 0%, #6C367A 100%);',
+          background:' linear-gradient(107deg, #9E3E3E 0%, #6C367A 100%)',
         },
       ]
     }
@@ -421,7 +435,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(appStore, ['finishWizard', 'settings']),
+    ...mapActions(appStore, ['finishWizard', 'settings', 'getUserInfo']),
+    // 登录模块迁移
+    login () {
+      tsbApi.user.login((data) => {
+        this.getUserInfo()
+        this.finish();
+        // this.nextStep()
+      })
+    },
 
     async restore () {
       await tsbApi.window.setZoomFactor(1)
@@ -476,6 +498,9 @@ export default {
       } else {
         this.steps = this.stepsBoot
       }
+      if (this.step===3 && this.mod==='bootstrap') {
+        this.step--
+      }
       this.step--
     },
     nextStep () {
@@ -485,6 +510,9 @@ export default {
       } else {
         this.rightModel =  'follow'
         this.steps = this.stepsBoot
+      }
+      if (this.step===1 && this.mod==='bootstrap') {
+        this.step++
       }
       this.step++
     },
@@ -509,7 +537,6 @@ export default {
     themeSwitch(){
       this.styles = !this.styles
       setThemeSwitch(this.styles);
-      console.log(this.styles);
     },
   }
 }
@@ -520,9 +547,15 @@ export default {
   border: 2px solid transparent;
   border-radius: 0.5em;
   background: var(--secondary-bg);
-
   height:240px;
   width:240px;
+}
+.setting-panel {
+  border: 2px solid transparent;
+  border-radius: 0.5em;
+  background: var(--secondary-bg);
+  height:200px;
+  width:200px;
 }
 
 .title {
@@ -609,4 +642,13 @@ export default {
 
 }
 
+.bg-tab{
+  width: 340px;
+  height: 104px;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-left: 16px;
+  cursor: pointer;
+}
 </style>

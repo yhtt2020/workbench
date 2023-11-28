@@ -1,12 +1,11 @@
 <template>
-  <div class="flex flex-col h-full items-center justify-between p-5" v-if="showModal === false">
+  <div class="flex flex-col items-center justify-between px-5 xt-modal panel " v-if="showModal === false">
     <!-- 返回按钮 -->
-    <div class="guide-button" v-if="isShow === false ">
-    <div class="flex guide-page-bg button-active pointer w-12 h-12 rounded-lg items-center justify-center "
-     @click="backSplash"
-    >
-     <Icon icon="xiangzuo" style="font-size: 1.75em;"></Icon>
-    </div>
+    <div class="w-full flex justify-start" style="height:64px;">
+      <div v-if="isShow === false"  class="mt-4 flex guide-page-bg button-active pointer w-8 h-8 rounded-lg items-center justify-center"  @click="prevButton">
+        <!-- @click="backSplash" -->
+        <MyIcon icon="fluent:chevron-left-16-filled" class="xt-text-2"  />
+      </div>
     </div>
 
 
@@ -16,18 +15,19 @@
     <template v-if="step === 0">
       <div class="flex flex-col items-center">
         <div class="flex flex-col items-center mb-8">
-          <span class="primary-title mb-3">选择适合您的使用场景</span>
-          <span class="secondary-title">完成选择后，会内置对应模式的功能方案，你仍然可以在后续自定义修改各个功能和布局。</span>
+          <span class="primary-title mb-3">选择设置</span>
+          <span class="secondary-title">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</span>
         </div>
         <div class="flex relative">
-          <div class="guide-divider"></div>
           <div v-for="(item,index) in guideData" :class="{'mode-active-bg': isActive(item)}"
-           class="flex flex-col pointer mode-width max-width mode-width clear-mr guide-page-bg rounded-lg items-center justify-center px-5 py-2 mr-8"
+           class="flex flex-col pointer guide-page-bg rounded-lg items-center justify-center tab-panel px-5"
            @click="selectWorkMode(item,index)"
           >
-          <!--  -->
-            <div style="width: 100px;height: 100px;">
-              <img :src="guideImg(item.url)" class="w-full h-full" alt="">
+            <div style="" class="flex">
+                <div v-for="(i,key) in item.url" :key="key" class="flex items-center">
+                    <MyIcon class="ml-1 mr-1" height="20" width="20" v-if="key>0"  icon="fluent:add-16-filled"/>
+                    <MyIcon :icon="i" class="icon-setting"/>
+                </div> 
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
@@ -98,13 +98,12 @@
 
 
    <!-- 上下一步点击按钮 -->
-   <div class="flex">
-    <xt-button  class="mr-10 w-40 h-12 rounded-lg" style="color: var(--active-text);" v-if="step !== 0" @click="prevButton">
-      上一步
+   <div class="flex justify-between w-full" style="height:72px;">
+    <a class="flex items-center font-16"><MyIcon width="20" height="20"  icon="majesticons:monitor-line" />&nbsp;预览桌面</a>
+    <xt-button type="theme" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);width:80px;height:40px;" @click="nextButton">
+      {{ step === 2 ? '完成':'下一步' }}
     </xt-button>
-    <xt-button type="theme" :disabled="!isNext" class="w-40 h-12 rounded-lg" style="color: var(--active-text);" @click="nextButton">
-      {{ step === 2 ? 'GO':'下一步' }}
-    </xt-button>
+
    </div>
    <!--
     新用户须知后期需要的话再考虑使用,现在暂时不使用
@@ -147,11 +146,13 @@ import cache from '../../../components/card/hooks/cache';
 import {setThemeSwitch} from '../../../components/card/hooks/themeSwitch/index';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
+import { Icon as MyIcon } from '@iconify/vue';
 
 export default {
   components:{
     // GradeNotice,
-    HorizontalPanel
+    HorizontalPanel,
+    MyIcon,
   },
   data(){
     return{
@@ -375,27 +376,19 @@ export default {
   -webkit-line-clamp:4;
   white-space: break-spaces;
   margin: 0 !important;
-  font-size: 14px;
+  font-size: 16px;
   color:var(--secondary-text);
   font-weight: 400;
 }
-.max-width{
-  &:last-of-type{
-    margin-left: 32px !important;
-    padding:34px 64px !important;
-    .container{
-      max-width: 272px;
-    }
-  }
-}
-.guide-divider{
-  position: absolute;
-  top: 0;
-  right:41%;
-  width: 1px;
-  height: 100%;
-  background: var(--divider);
-}
+// .max-width{
+//   &:last-of-type{
+//     margin-left: 32px !important;
+//     padding:34px 64px !important;
+//     .container{
+//       max-width: 272px;
+//     }
+//   }
+// }
 .px-25{
   padding-left: 6.875rem;
   padding-right: 6.875rem;
@@ -407,53 +400,62 @@ export default {
   border: 1px solid var(--active-bg);
   color:var(--active-text);
 }
-.clear-mr{
-  &:last-of-type{
-    margin-right: 0 !important;
-  }
-}
-.guide-button{
-  position: fixed;
-  top: 12px;
-  left:12px;
-}
+// .clear-mr{
+//   &:last-of-type{
+//     margin-right: 0 !important;
+//   }
+// }
+
 .mode-image{
   max-width:720px;
   max-height: 405px;
 }
 
 // 最小高度响应
-@media screen and(max-height:600px) {
-  .mode-image{
-    max-width:540px !important;
-    max-height: 540px !important;
-  }
-  // 最小高度的底部间距
-  .min-mb{
-    margin-bottom: 16px !important;
-  }
-}
+// @media screen and(max-height:600px) {
+//   .mode-image{
+//     max-width:540px !important;
+//     max-height: 540px !important;
+//   }
+//   // 最小高度的底部间距
+//   .min-mb{
+//     margin-bottom: 16px !important;
+//   }
+// }
 
 // 最小宽度响应
-@media screen and(max-width:840px) {
-  .guide-divider{
-    position: absolute;
-    top: 0;
-    right:34.25% !important;
-    width: 1px;
-    height: 100%;
-    background: var(--divider);
-  }
-  .container{
-    width: calc(100% / 1.25);
-  }
-  .mode-width{
-    padding:10px 5px !important;
-    &:last-of-type{
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-  }
+// @media screen and(max-width:840px) {
+
+//   .container{
+//     width: calc(100% / 1.25);
+//   }
+//   .mode-width{
+//     padding:10px 5px !important;
+//     &:last-of-type{
+//       padding: 0 !important;
+//       margin: 0 !important;
+//     }
+//   }
+// }
+.panel{
+  min-width: 800px;
+  height: 600px;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.2);
+  border-radius: 12px;
 }
 
+.icon-setting{
+  height: 56px;
+  width: 56px;
+}
+
+.tab-panel{
+  width:200px;
+  height:200px;
+}
+.tab-panel:not(:first-of-type){
+  margin-left:16px;
+}
 </style>
