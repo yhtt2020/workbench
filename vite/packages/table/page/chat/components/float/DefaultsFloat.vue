@@ -3,7 +3,7 @@
     <img :src="textUrl" class="w-full h-full object-cover" :class="settings.enableHide ? 'rounded-t-xl':''"/>
     <div class="community-name h-11 w-full com-line-bg">
       <div class="m-1.5 px-3 items-center rounded-lg drop-hover flex justify-between h-8">
-        <ChatDropDown class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :title="defaultCategory?.name" :list="floatList" /> 
+        <ChatDropDown :id="null" class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :enableButton="false" :title="defaultCategory.name" :list="floatList" /> 
       </div>
     </div>
   </div>

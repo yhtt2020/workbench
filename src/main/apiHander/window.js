@@ -18,7 +18,17 @@ class Window extends Base {
 
     this.on('setFocusable', (event, args, instance) => {
       if (instance.window) {
-        instance.window.setFocusable(args.flag)
+        instance.window.setFocusable(args)
+      }
+    })
+    this.on('setSkipTaskbar', (event, args, instance) => {
+      if (instance.window) {
+        instance.window.setSkipTaskbar(args)
+      }
+    })
+    this.on('focus', (event, args, instance) => {
+      if (instance.window) {
+        instance.window.focus()
       }
     })
 

@@ -29,16 +29,16 @@
          </div>
        </div>
       </div>
-      <div class="flex" style="width: 320px;">
-       <div class="w-full xt-bg-2  rounded-md" style="padding: 30px 20px;">
-         <div class="h-full xt-bg mb-4 rounded-xl" style="width: 280px;">
+      <div class="flex" style="width: 320px; ">
+       <div class="w-full xt-bg-2  rounded-md" style="padding: 30px 20px;height: 400px;">
+         <div class="h-full xt-bg rounded-xl" style="width: 280px;height: 340px;">
           <div style="width: 280px;height: 150px;" class="relative">
            <img :src="cover" class="w-full h-full object-cover rounded-t-xl"/>
            <div class="w-12 h-12 flex items-center justify-center" style="position: absolute; bottom:-16px;left:16px;">
             <a-avatar shape="square" :size="48" :src="avatar"></a-avatar>
            </div>
           </div>
-          <div class="flex flex-col  px-4" style="margin-top: 30px;">
+          <div class="flex flex-col pb-4 px-4" style="margin-top: 30px;">
            <span class="xt-text font-18 font-500 xt-font">{{ editorValue }}</span>
            <div class="flex" style="padding: 14px 0 15px 0;">
             <span class="xt-theme-bg-2 mr-3.5 rounded-md py-0.5 px-1.5" style="color:var(--active-bg)">
@@ -48,10 +48,10 @@
              {{ content.level }}级
             </span>
            </div>
-           <div class="summary xt-font xt-text font-14 font-400  pb-4">
+           <div class="summary xt-font xt-text font-14 font-400  pb-2">
             {{ summary }}
            </div>
-           <div class="flex w-full justify-between">
+           <div class="flex w-full justify-between  ">
             <span class="xt-text-2 xt-font font-12 font-400">{{ content.memberNum}}人</span>
             <span class="xt-text-2 xt-font font-12 font-400">{{join}}</span>
            </div>

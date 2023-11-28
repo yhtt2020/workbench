@@ -107,9 +107,9 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 import LargeCourierDetail from './courierModal/content/LargeCourierDetail.vue'
 import SmallCourierModal from './courierModal/SmallCourierModal.vue'
 import DropIndex from './courierModal/dropdown/DropIndex.vue'
-import ui from './courierUI'
+import ui from './lib/courierUI'
 import ListItem from './ListItem.vue'
-import { getOrderState, preHandle } from './courierTool'
+import { getOrderState, preHandle } from './lib/courierTool'
 
 export default {
   name: '我的快递',

@@ -1,7 +1,7 @@
 import {message, notification} from "ant-design-vue";
 import grab from "./grab";
 import _ from 'lodash-es'
-import {courierStore} from "../../../apps/ecommerce/courier";
+import {courierStore} from "../../../../apps/ecommerce/courier";
 import {getOrderState} from "./courierTool";
 
 const ui = {

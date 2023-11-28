@@ -11,7 +11,7 @@
             }}</span>
         </div>
         <!-- 快捷键 -->
-        <div v-else class="border-right key-item" :style="{backgroundColor:getColor(keyList,index)}"
+        <div  v-else class="border-right key-item pointer" :style="{backgroundColor:getColor(keyList,index)}"
              @click="toggleKey(item.id)">
           <div class="flex">
             <div v-for="i in item.keys" :key="i" class="flex">
@@ -31,6 +31,7 @@
 
 <script>
 import { getColor } from '../lib/lib'
+import * as shorcutTools from '../shortcutTools'
 
 export default {
   name: 'ShortcutKeyList',
@@ -69,8 +70,9 @@ export default {
   },
   methods: {
     getColor,
-    toggleKey (id) {
-      this.$emit('setKeyItem', id)
+    toggleKey (item) {
+      shorcutTools.doKey(item)
+      this.$emit('setKeyItem', item.id)
     },
   },
   mounted () {
@@ -106,7 +108,6 @@ export default {
   border-radius: 8px;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
   border-radius: 8px;
 }
 

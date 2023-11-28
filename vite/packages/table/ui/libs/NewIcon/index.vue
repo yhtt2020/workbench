@@ -3,7 +3,7 @@
     class="xt-active xt-base-btn xt-text"
     :style="[boxStyle, boxBgStyle]"
     :class="[bgClass]"
-  >
+    >
     <myIcon :icon="icon" :style="iconSize"></myIcon>
   </div>
 </template>

@@ -39,14 +39,20 @@
       </div>
     </div>
     <FloatMenu
-      v-if="isFreeLayout"
+      v-if="editing"
+      @add="newAddCard"
+      @set="showSetting"
+      @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
-    ></FloatMenu>
+      @exit="toggleEditing"
+      v-model:zoom="globalSettings.cardZoom"
+    />
     <RightMenu
       :menus="dropdownMenu"
       class="w-full h-full"
       @contextmenu="showMenu"
     >
+
       <!-- 自由布局滚动 -->
       <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"
@@ -55,18 +61,19 @@
           <FreeLayoutCanvas class="home-widgets">
             <FreeLayoutContainer
               :currentDesk="currentDesk"
+              :isDrag="editing"
               @editStart="editStart"
               @editEnd="freeDeskEdit = false"
             >
               <template #box="{ data }">
-                <!-- <div class="editing"> -->
-                  <component
-                    :desk="currentDesk"
-                    :is="data.name"
-                    :customIndex="data.id"
-                    :customData="data.customData"
-                    :editing="true"
-                  />
+                <!-- <div :class="[{ editing: editing }]"> -->
+                <component
+                  :desk="currentDesk"
+                  :is="data.name"
+                  :customIndex="data.id"
+                  :customData="data.customData"
+                  :editing="true"
+                />
                 <!-- </div> -->
               </template>
             </FreeLayoutContainer>
@@ -272,9 +279,8 @@
   <xt-modal v-model="settingVisible" :footer="0" title="桌面设置">
     <template #header-center>
       <XtTab
-        class="w-full"
         v-if="settingVisible"
-        style="height: 34px"
+        style="height: 34px;width: 300px;"
         boxClass="p-1 xt-bg-2"
         v-model="currentSettingTab"
         :list="settingsTab"
@@ -330,6 +336,7 @@
           v-if="$route.path == '/main' && freeLayout"
           @scrollbarRedirect="freeLayoutScrollbarRedirect"
           @scrollbarUpdate="freeLayoutScrollbarUpdate"
+          :id="currentDesk.id"
         ></FreeLayoutState>
       </template>
       <template v-else>
@@ -510,7 +517,14 @@ export default {
       // }
       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
     },
-
+    "currentDesk.id": {
+      handler(newVal) {
+        // this.freeLayoutID = newVal
+        console.log("桌面ID this.freeLayoutID  :>> ", newVal);
+      },
+      deep: true,
+      immediate: true,
+    },
     "currentDesk.settings": {
       handler(newVal) {
         console.log("更改了方向");
@@ -542,7 +556,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout", "getCurrentDesk"]),
+    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
@@ -618,7 +632,7 @@ export default {
   },
   data() {
     return {
-      vurriEnable:false,
+      vurriEnable: false,
       freeDeskEdit: false,
       freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
@@ -658,10 +672,6 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
-    editStart() {
-      console.log("222 :>> ", 222);
-      this.freeDeskEdit = true;
-    },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
@@ -718,7 +728,6 @@ export default {
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
             desk.cards = [];
-            this.getCurrentDesk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

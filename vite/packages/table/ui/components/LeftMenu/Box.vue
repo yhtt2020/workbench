@@ -2,9 +2,17 @@
   <!-- 统一选择模板 -->
   <div
     :class="[{ active: activeState }, boxClass]"
-    class="xt-base-btn menu-item"
+    class="xt-base-btn menu-item relative"
     style=""
   >
+   <template v-if="item.unread !== 0 && item.unread !== undefined">
+    <div class="rounded-full flex items-center justify-center font-400"
+     style="width:18px;height: 18px; position: absolute; background:red;font-size: 10px;z-index: 1000;"
+     :style="activeState ? {right:'-1px',top:'-7px'} :{right:'0', top:'0'}"
+    >
+      {{ item.unread }}
+    </div>
+   </template>
     <slot></slot>
   </div>
 </template>

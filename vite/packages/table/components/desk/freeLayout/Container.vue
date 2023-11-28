@@ -7,6 +7,7 @@ import { useFreeLayoutStore } from "./store";
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
   currentDesk: {},
+  isDrag: {},
 });
 
 const { currentDesk }: any = toRefs(props);
@@ -21,12 +22,6 @@ const {
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
 
-// 1 获取页面数据
-// const scrollWidth = freeLayoutEnv.value.scrollWidth;
-// const scrollHeight = freeLayoutEnv.value.scrollHeight;
-// const scrollTop = freeLayoutEnv.value.scrollTop;
-// const scrollLeft = freeLayoutEnv.value.scrollLeft;
-
 // 滚动清除cards数据
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
@@ -38,41 +33,39 @@ watch(
 // 绘制图形
 const cards: any = ref([]);
 const waterfallFlow: any = ref(null);
-async function drawGraph(item) {
-  const { customData } = item;
-  const { width, height } = customData.widgetSize;
-
-  cards.value.push({
-    width,
-    height,
-  });
-}
-const last = ref(true);
-// 获取位置
 async function getPosition(item) {
-  await drawGraph(item);
-  const childDiv = await waterfallFlow.value?.getElementsByTagName("div");
-  const { left, top } =
-    childDiv[cards.value.length - 1].getBoundingClientRect();
-
-  const { left: waterfallFlowLeft, top: waterfallFlowTop } =
-    waterfallFlow.value.getBoundingClientRect();
-  const scrollTop = freeLayoutEnv.value.scrollTop;
-  const scrollLeft = freeLayoutEnv.value.scrollLeft;
-  return {
-    left: left - waterfallFlowLeft + scrollLeft,
-    top: top - waterfallFlowTop + scrollTop,
-  };
+  cards.value.push(item);
+  const nodes = await waterfallFlow.value?.getElementsByTagName("div");
+  for (let node of nodes) {
+    if (
+      !(node instanceof HTMLDivElement) ||
+      node.getAttribute(`data-id`) != item.id.toString()
+    ) {
+      continue;
+    }
+    const { left: waterfallFlowLeft, top: waterfallFlowTop } =
+      waterfallFlow.value.getBoundingClientRect();
+    const { id, name, customData } = item;
+    const { left, top } = node.getBoundingClientRect();
+    const scrollTop = freeLayoutEnv.value.scrollTop;
+    const scrollLeft = freeLayoutEnv.value.scrollLeft;
+    getFreeLayoutData.value[item.id] = {
+      left: left - waterfallFlowLeft + scrollLeft,
+      top: top - waterfallFlowTop + scrollTop,
+      index: 1,
+      id,
+      name,
+      customData,
+    };
+  }
 }
 
 /**
  * 更新自由布局数据
  */
 let updateCardTimer: any = null;
-function updateCards(data) {
-  let obj = {};
-
-  // 优化1 抽离删除过程
+function updateCard(data) {
+  let startTime = new Date().getTime();
   let cardObj = {};
   data.forEach((item) => (cardObj[item.id] = item));
   for (const key in getFreeLayoutData.value) {
@@ -80,75 +73,65 @@ function updateCards(data) {
       delete getFreeLayoutData.value[key];
     }
   }
-  // 添加逻辑
   data.forEach(async (item) => {
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
-      if (last.value) {
-        getFreeLayoutData.value[id] = {
-          left: getFreeLayoutData.value[id].left || 0,
-          top: getFreeLayoutData.value[id].top || 0,
-          index: getFreeLayoutData.value[id].index || 1,
-          id,
-          name,
-          customData,
-        };
-      }
-      return;
+      getFreeLayoutData.value[id] = {
+        left: getFreeLayoutData.value[id].left || 0,
+        top: getFreeLayoutData.value[id].top || 0,
+        index: getFreeLayoutData.value[id].index || 1,
+        id,
+        name,
+        customData,
+      };
+    } else {
+      getPosition(item);
     }
-    // 优化3 抽离获取坐标过程
-    // const { left, top } = await getPosition(item);
-    getFreeLayoutData.value[item.id] = {
-      left: 0,
-      top: 0,
-      index: 1,
-      id,
-      name,
-      customData,
-    };
-    console.log("更新了数据 :>> ");
   });
-  last.value = false;
+  var endTime = new Date().getTime();
+  var executionTime = endTime - startTime; // 计算执行时间（毫秒）
+  console.log(" time: " + executionTime + "ms");
 }
-
-watch(currentDesk.value?.cards, (cards) => {
-  clearTimeout(updateCardTimer);
-  updateCardTimer = setTimeout(() => {
-    updateCards(cards);
-  }, 200);
-});
-const emits = defineEmits(["editStart", "editEnd"]);
-function drag() {
-  emits("editStart");
-}
-function dragStop() {
-  emits("editEnd");
-}
-const a = ref(true);
+watch(
+  currentDesk.value?.cards,
+  (card) => {
+    clearTimeout(updateCardTimer);
+    updateCardTimer = setTimeout(() => {
+      updateCard(card);
+    }, 500);
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <template>
-  <!-- <div    ref="waterfallFlow"
-    class="xt-theme-b h-full flex flex-wrap absolute fixed"
-    style="align-content: flex-start !important"
-       :style="{
+  <div
+    ref="waterfallFlow"
+    class="xt-theme-b h-full flex flex-wrap absolute"
+    style="align-content: flex-start !important; visibility: hidden"
+    :style="{
       width: freeLayoutEnv.scrollData?.width + 'px',
       height: 100 + '%',
-      top: freeLayoutEnv?.scrollData?.top + 'px',
-      left: freeLayoutEnv?.scrollData?.left + 'px',
+      top: 0 + 'px',
+      left: 0 + 'px',
     }"
   >
     <div
       class="rounded-xl xt-theme-b"
       v-for="item in cards"
+      :data-id="item.id"
       style="margin: 6px"
       :style="{
         width: item.width + 'px',
         height: item.height + 'px',
       }"
-    ></div>
-  </div> -->
+    >
+      <slot name="box" :data="{ ...item }"></slot>
+    </div>
+  </div>
   <xt-drag
     parent
     boundary
@@ -170,8 +153,8 @@ const a = ref(true);
     :gridStyle="{
       border: '2px solid var(--active-bg)',
     }"
+    :disabledHandle="isDrag ? '' : '.#123'"
   >
-
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>
 </template>

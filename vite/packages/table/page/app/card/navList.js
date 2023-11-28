@@ -110,20 +110,7 @@ export const NavList = [
         ],
         time: "2023/5/31",
       },
-      {
-        name: "notes",
-        cname: "桌面便签",
-        detail: "一个可自由修改内容，调整大小的桌面便签。",
-        sizes: ["自定义大小"],
-        option: [
-          {
-            name: "notes",
-            size: "自定义大小",
-            zoom: "18",
-          },
-        ],
-        time: "2023/5/31",
-      },
+
       {
         name: "fish",
         cname: "木鱼",
@@ -162,19 +149,7 @@ export const NavList = [
         ],
         time: "2023/6/28",
       },
-      {
-        name:'OilPrices',
-        cname: '今日油价',
-        detail:'时刻关注你所在的城市的92号，96号，98号，0号油价',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'OilPrices',
-            size: '2x4',
-            zoom: '16'
-          }
-        ]
-      },
+
       {
         name: "supervisory",
         cname: "系统性能监控",
@@ -279,7 +254,7 @@ export const NavList = [
     ],
   },
   {
-    cname: "资讯",
+    cname: "娱乐资讯",
     children: [
       {
         name: 'singleDoubanFilm',
@@ -315,6 +290,19 @@ export const NavList = [
         time: "2023/8/18",
       },
       {
+        name:'OilPrices',
+        cname: '今日油价',
+        detail:'时刻关注你所在的城市的92号，96号，98号，0号油价',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'OilPrices',
+            size: '2x4',
+            zoom: '16'
+          }
+        ]
+      },
+      {
         name: 'HotSearch',
         cname: '微博热搜',
         detail: '最近都发生了啥？看看微博上最新热门博文',
@@ -328,6 +316,68 @@ export const NavList = [
         ],
         time: '2023/5/31'
       },
+      {
+        name: "music",
+        cname: "网易云音乐",
+        detail: "基于网易云音乐网页版功能，支持基础播放控制功能。",
+        sizes: ["2x2"],
+        option: [
+          {
+            name: "music",
+            size: "2x2",
+            zoom: "20",
+          },
+        ],
+        time: "2023/5/31",
+      },
+      {
+        name: "fish",
+        cname: "木鱼",
+        detail: "休闲减压神器，每天敲一敲，积攒功德。",
+        sizes: ["2x2"],
+        option: [
+          {
+            name: "fish",
+            size: "2x2",
+            zoom: "20",
+          },
+        ],
+        time: "2023/5/31",
+      },
+      {
+        name: "singleDoubanFilm",
+        cname: "正在热映",
+        detail: "电影荒了？来看看近期正在上映的热门电影。",
+        sizes: ["2x4", "2x4"],
+        option: [
+          {
+            name: "SingleFilm",
+            size: "2x4",
+            zoom: "11",
+          },
+          {
+            name: "ManyFilm",
+            size: "2x4",
+            zoom: "11",
+          },
+        ],
+        time: "2023/5/31",
+      },
+      {
+        name: 'historyInfo',
+        cname: '历史上的今天',
+        detail: '历史上的今天都发生了什么大事呢？',
+        sizes: ['2x2'],
+        option: [
+          {
+            name: 'historyInfo',
+            size: '2x2',
+            zoom: '20'
+          },
+        ],
+        time: '2023/9/9'
+      },
+
     ],
   },
   {
@@ -482,7 +532,20 @@ export const NavList = [
         ],
         time: "2023/5/24",
       },
-
+      {
+        name: "notes",
+        cname: "桌面便签",
+        detail: "一个可自由修改内容，调整大小的桌面便签。",
+        sizes: ["自定义大小"],
+        option: [
+          {
+            name: "notes",
+            size: "自定义大小",
+            zoom: "18",
+          },
+        ],
+        time: "2023/5/31",
+      },
       {
         name: "eatToday",
         cname: "今天吃什么小组件",
@@ -515,6 +578,23 @@ export const NavList = [
           },
         ],
         time: "2023/6/28",
+      },
+      {
+        name: "Audio",
+        cname: "音频",
+        detail: "快速调整音量大小，音频设备选择，一键开启静音模式。",
+        sizes: ["2x4", "2种样式"],
+        option: [
+          {
+            name: "audio",
+            size: "2x4",
+          },
+          {
+            name: "voice",
+            size: "2x2",
+          },
+        ],
+        time: "2023/5/31",
       },
       {
         name: "capture",
@@ -564,23 +644,7 @@ export const NavList = [
         ],
         time: "2023/5/31",
       },
-      {
-        name: "Audio",
-        cname: "音频",
-        detail: "快速调整音量大小，音频设备选择，一键开启静音模式。",
-        sizes: ["2x4", "2种样式"],
-        option: [
-          {
-            name: "audio",
-            size: "2x4",
-          },
-          {
-            name: "voice",
-            size: "2x2",
-          },
-        ],
-        time: "2023/5/31",
-      },
+
     ],
   },
   {
@@ -700,73 +764,6 @@ export const NavList = [
     ],
   },
   {
-    cname: "娱乐",
-    children: [
-      {
-        name: "music",
-        cname: "网易云音乐",
-        detail: "基于网易云音乐网页版功能，支持基础播放控制功能。",
-        sizes: ["2x2"],
-        option: [
-          {
-            name: "music",
-            size: "2x2",
-            zoom: "20",
-          },
-        ],
-        time: "2023/5/31",
-      },
-      {
-        name: "fish",
-        cname: "木鱼",
-        detail: "休闲减压神器，每天敲一敲，积攒功德。",
-        sizes: ["2x2"],
-        option: [
-          {
-            name: "fish",
-            size: "2x2",
-            zoom: "20",
-          },
-        ],
-        time: "2023/5/31",
-      },
-      {
-        name: "singleDoubanFilm",
-        cname: "正在热映",
-        detail: "电影荒了？来看看近期正在上映的热门电影。",
-        sizes: ["2x4", "2x4"],
-        option: [
-          {
-            name: "SingleFilm",
-            size: "2x4",
-            zoom: "11",
-          },
-          {
-            name: "ManyFilm",
-            size: "2x4",
-            zoom: "11",
-          },
-        ],
-        time: "2023/5/31",
-      },
-      {
-        name: 'historyInfo',
-        cname: '历史上的今天',
-        detail: '历史上的今天都发生了什么大事呢？',
-        sizes: ['2x2'],
-        option: [
-          {
-            name: 'historyInfo',
-            size: '2x2',
-            zoom: '20'
-          },
-        ],
-        time: '2023/9/9'
-      },
-
-    ],
-  },
-  {
     cname: "社区",
     children: [
       {
@@ -782,6 +779,20 @@ export const NavList = [
           },
         ],
         time: "2023/5/31",
+      },
+      {
+        name:'yuanCommunity',
+        cname:'社区动态',
+        detail:'元社区里又发了什么好玩的事情？时刻关注热门和最新动态。',
+        sizes:['4x4','4x6'],
+        option:[
+          {
+            name:'yuanCommunity',
+            size:'4x4',
+            zoom:'24'
+          }
+        ],
+        time:'2023/10/11'
       },
     ],
   },
@@ -934,20 +945,7 @@ export const NavList = [
         ],
         time: '2023/9/19'
       },
-      {
-        name:'yuanCommunity',
-        cname:'元社区动态(开发中)',
-        detail:'元社区里又发了什么好玩的事情？时刻关注热门和最新动态。',
-        sizes:['4x4','4x6'],
-        option:[
-          {
-            name:'yuanCommunity',
-            size:'4x4',
-            zoom:'24'
-          }
-        ],
-        time:'2023/10/11'
-      },
+
       {
         name:'Courier',
         cname:'我的快递',

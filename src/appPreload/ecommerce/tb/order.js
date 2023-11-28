@@ -16,15 +16,11 @@ intervalEvent((clear) => {
     main()
   } else {
     if (window.location.href.includes('login')) {
-      ipc.send('api.web.callback', {
-        args: {
-          cbId: args.cbId,
-          status: 0,
-          info: '淘宝掉登录',
-          code: 401
-        }
+      callback({
+        status: 0,
+        info: '淘宝掉登录',
+        code: 401
       })
-
       clear()
       closeSelf()
     }
@@ -75,24 +71,18 @@ function main () {
 
         console.log(orders)
         console.log(parentOrders)
-        callback(orders)
-        // ipc.send('api.web.callback', {
-        //   args: {
-        //     status: 1,
-        //     info: '成功获取',
-        //     cbId: args.cbId,
-        //     data:
-        //   }
-        // })
-        // clearInterval(interval)
+        callback({
+          status: 1,
+          orders: orders,
+          info: '获取成功'
+        })
         clear()
-        closeSelf()
+        //closeSelf()
       }
 
     } catch (error) {
       clear()
       callback({
-        cbId: args.cbId,
         status: 0,
         info: '获取报错',
         error: error
@@ -109,14 +99,10 @@ function main () {
     function finish () {
       clearInterval(tipInterval)
       callback({
-        args: {
-          status: 1,
-          info: '成功获取',
-          cbId: args.cbId,
-          data: window.callbackData
-        }
+        status: 1,
+        info: '成功获取',
+        data: window.callbackData
       })
-      // ipc.send('closeSelf')
     }
 
     const tips = $('.status .tooltip') //这个时候肯定已经有了，可以直接执行mouse事件。
@@ -196,9 +182,15 @@ function getOrderInfo ($item) {
   // const statusParent=$item.find('table tbody:eq(1) tr:eq(0) td:eq(5)')
   // console.log(statusParent)
   order.status = $item.find('tbody').eq(1).find('td').eq(5).find('p[style=\'margin-bottom:3px;\'] span.text-mod__link___1rXmw').text()
-  order.detailUrl = fixProtocol($item.find('a').filter(function () {
-    return $(this).text() === '订单详情'
-  }).attr('href'))
+  const detail=$item.find('a').filter(function () {
+    return $(this).text() === '查看物流'
+  }).attr('href')
+  if(detail){
+    order.detailUrl = detail
+  }else{
+    order.detailUrl=null
+  }
+
   return order
 }
 

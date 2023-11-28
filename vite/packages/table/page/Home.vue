@@ -143,7 +143,6 @@
             <a-switch v-model:checked="appSettings.transparent" />
           </div>
           <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
-          <hr class="my-3" />
         </div>
         <xt-task :modelValue="m01033" to=""> </xt-task>
         <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">

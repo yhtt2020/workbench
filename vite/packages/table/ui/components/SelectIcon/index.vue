@@ -1,14 +1,6 @@
 <template>
-    <!-- 弹窗层 -->
-    <!-- <div
-      v-if="modelValue"
-      class="xt-text xt-modal xt-shadow fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl p-3"
-      :style="{
-        'z-index': boxIndex,
-      }"
-    > -->
     <div 
-    v-if="modelValue"
+    v-show="modelValue"
      style='width:400px;height:400px;background:var(--modal-bg);
      border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
      border-radius: 10px;z-index: 1000;
@@ -17,9 +9,6 @@
       <div class="top-icon flex">
         <div class="type-select flex" style="color:var(--primary-text)">
             <span v-for="(item,index) in menus" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item,index }}</span>
-            <!-- <span @click="onSelChange(1)" :class="selIndex == 1 ? 'active':''">Emojis</span>
-            <span @click="onSelChange(2)" v-show="goodVisible" :class="selIndex == 2 ? 'active':''">Icons</span>
-            -->
             <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
         </div>
         <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
@@ -64,41 +53,23 @@
         </div>
       </div>
 
-      <!-- 搜索结果 -->
-      <!-- <div v-if="searchValue" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
-        <div v-for="(item,index) in searchIcon" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <a-tooltip v-if="goodVisible">
-            <template #title>{{ item.alias }}</template>
-            <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/iconSelect/emoji/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
-            <a-avatar v-show="selIndex==2"  :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20"></a-avatar>
-          </a-tooltip>
-          <a-tooltip v-else>
-            <template #title>{{ item.alias }}</template>
-            <a-avatar v-show="selIndex==1" :src="'https://a.apps.vip/icons/goodSelect/'+item.name+'.svg'" :alt="item.alias" width="32" height="32"></a-avatar>
-          </a-tooltip>
-        </div>
-      </div> -->
+      
       <!-- 渲染的列表 -->
-      <!-- {{ list }} -->
-      <div v-for="(value,key) in handleList" v-show="key == menus[selIndex]"  :key="key" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
-        <div v-for="(item,index) in value" :key="index" @click="onSelectIcon(index,'emoji',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+      <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
+        <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
           <a-tooltip>
             <template #title>{{ item.alias }}</template>
-            <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${menus[selIndex]}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+            <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
           </a-tooltip>
         </div>
+        <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <a-tooltip>
+            <template #title>{{ item.alias }}</template>
+            <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+          </a-tooltip>
+        </div>
+
       </div>
-      <!-- icon -->
-      <!-- <div v-else-if="this.selIndex == 2" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
-        <div v-for="(item,index) in iconList" :key="index" @click="onSelectIcon(index,'icon',item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-          <a-tooltip>
-            <template #title>{{ item.alias }}</template>
-            <div>
-              <a-avatar :style="{'filter': `drop-shadow(${bgColor[selBgColor]} 80px 0)`,transform:'translateX(-80px)'}"  :src="'https://a.apps.vip/icons/iconSelect/icon/'+item.name+'.svg'" :alt="item.alias"  width="20" height="20"></a-avatar>
-            </div>
-          </a-tooltip>
-        </div>
-      </div> -->
       <!-- 自定义上传 -->
       <div v-if="selIndex == menus.length" class="flex pl-1 pr-1 items-center flex-wrap flex-col" style="height:330px;">
         <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
@@ -106,22 +77,20 @@
           <Icon icon="fluent:add-16-filled" width="20" height="20"/>
         </div>
         <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl"></a-avatar>
-        <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ this.customTitle }}</div>
+        <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
         <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
       </div>
-                                                                                                                                                       
-
     </div>
-
     <!-- 遮罩层 -->
     <div
-    v-if="modelValue"
+    v-show="modelValue"
       @click.stop.self="colseClick()"
       class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
-      :style="{
-        'z-index': maskIndex,
-      }"
+      style="z-index:900"
     ></div>
+      <!-- :style="{
+        'z-index': maskIndex,
+      }" -->
   </template>
   
   <script setup>
@@ -155,85 +124,59 @@
   const selBgColor = ref(0)
   // 是否展开颜色选择
   const isShowBgColor = ref(false)
-  // 当前渲染的列表
-//   const list = ref([])
-
-  
 
 
 
-
-  const props = defineProps({
-    // 遮罩层级
-    maskIndex: {
-      default: 999,
-    },
-    // 弹窗层级
-    boxIndex: {
-      default: 1000,
-    },
-    // 标题
-    title: {
-      default: "默认标题",
-    },
-
-    // 快速关闭底部
-    isFooter: {
+    const props = defineProps({
+      // 按esc关闭窗口
+      esc: {
         default: true,
-    },
-    // 快速关闭头部
-    isHeader: {
-        default: true,
-    },
+      },
+      // 窗口显示状态
+      modelValue: {
+        default: false,
+      },
+      // 选择器数组
+      menus:{
+          default: () => {
+              return ['icon', 'emoji']
+          }
+      },
+      // 颜色数组
+      bgColor:{
+          default: ()=>{
+              return ['#508bfe','#ff6c61','#73cf77','#3dffed','#ed7149','#ffffff','#000000']
+          }
+      },
+      // 默认返回图标
+      defaultIcon:{
+          default:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
+      },
+      // 是否开启图标上传
+      isUpload:{
+          default:false
+      },
+      title:{
+        default:''
+      }
     
-    
-    // 按esc关闭窗口
-    esc: {
-      default: true,
-    },
-    // 窗口显示状态
-    modelValue: {
-      default: false,
-    },
-    // 选择器数组
-    menus:{
-        default: () => {
-            return ['icon', 'emoji']
-        }
-    },
-    // 颜色数组
-    bgColor:{
-        default: ()=>{
-            return ['#508bfe','#ff6c61','#73cf77','#3dffed','#ed7149','#ffffff','#000000']
-        }
-    },
-    // 默认返回图标
-    defaultIcon:{
-        default:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
-    },
-    // 是否开启图标上传
-    isUpload:{
-        default:false
-    },
-    
-  });
-  const { menus } = toRefs(props);
-  // 渲染在列表的数组
-//   const list = computed(() => {
-//     // console.log(menus.value);
-//     // console.log(menus.value[selIndex.value]);
-    
-//     if (selIndex.value <= menus.value.length) {
-//         const index = menus.value[selIndex.value]
+    });
+    const { menus } = toRefs(props);
 
-//         // console.log(menus.value[selIndex.value]);
-//         // console.log('all',allList[index]);
-//         // return menus.value[selIndex.value];
-//         return handleList.value[index]
-//     }else{
-//         return false
-//     }
-//   });
+    // 动态搜索
+    const search = computed(() => {
+      let tmpList = []
+      const type = menus.value[selIndex.value]
+      const list = handleList.value[type]
+      if (list && searchValue.value != '') {
+        list.forEach(i=>{
+          if (i.alias.indexOf(searchValue.value)>=0 || i.name.indexOf(searchValue.value)>=0) {
+            tmpList.push(i)
+          }
+        })        
+      }
+      return tmpList
+    });
 
     // 选择图标类型
     const onSelChange = (n) =>{
@@ -242,19 +185,16 @@
         searchValue.value = ''
     }
 
-        // 选择图标
-    const onSelectIcon = (n,type,url) => {
-    selectIcon.value = n
-        if(selIndex.value==1){
-            if(this.goodVisible){
-            this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+url+'.svg')
-            }else{
-            this.$emit('getAvatar','https://a.apps.vip/icons/goodSelect/'+url+'.svg')
-            }
-        }else{
-            this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+url+'.svg?color=' + this.bgColor[this.selBgColor])
-        }
-        this.$emit('isIconShow')
+    // 选择图标
+    const onSelectIcon = (name) => {
+      const type = menus.value[selIndex.value]
+      if (type == 'icon') {
+        const color = props.bgColor[selBgColor.value]
+        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`)
+      }else{
+        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
+      }
+      colseClick()
     }
 
 
@@ -263,38 +203,28 @@
         const type = menus.value[selIndex.value]
         const randomLength = handleList.value[type].length
         let randomNum = Math.round(Math.random()*randomLength);
+        const name = handleList.value[type][randomNum].name
         selectIcon.value = randomNum;
-        // message.$success=handleList.value[menus.value[selIndex.value]][randomNum].alias
-        // if(this.selIndex == 1){
-        //     if(this.goodVisible){
-        //     this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/emoji/'+this.emojisList[randomNum].name+'.svg')
-        //     }else{
-        //     this.$emit('getAvatar','https://a.apps.vip/icons/goodSelect/'+this.emojisList[randomNum].name+'.svg')
-        //     }
-        // }else{
-        //     this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+this.iconList[randomNum].name+'.svg?color=' + this.bgColor[this.selBgColor])
-        // }
-        // console.log(handleList.value[type][randomNum].name)
-        // console.log(menus.value[selIndex.value]);
-        // icon 的背景颜色需要特殊处理
-        // if (type == 'icon') {
-        //     emits('getAvatar',)
-        // }else{
-        //     emits('getAvatar',)
-        // }
+        if (type == 'icon') {
+          const color = props.bgColor[selBgColor.value]
+          emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`)
+        }else{
+          emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
+        }
     }
 
 
     // 改变颜色
     const changeBgColor = (n) => {
         selBgColor.value = n
-        // console.log(selBgColor.value);
-        // console.log(props.bgColor[selBgColor.value]);
-        // props.bgColor[n] = props.bgColor[selBgColor.value]
-        if(menus.value[selIndex.value] == 'icon' && selIndex.value >= 0){
-            // emits('getAvatar',`https://a.apps.vip/icons/iconSelect/icon/`)
-            // this.$emit('getAvatar','https://a.apps.vip/icons/iconSelect/icon/'+this.iconList[this.selectIcon].name+'.svg?color=' + this.bgColor[this.selBgColor])
-        }
+        // 如果此时已经选择了图标需要同步修改颜色
+        // if(menus.value[selIndex.value] == 'icon' && selIndex.value >= 0){
+        //     const type = menus.value[selIndex.value]
+        //     const name = handleList.value[name][selectIcon.value].name
+        //     const color = props.bgColor[selBgColor.value]
+        //     emits('getAvatar','https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color)
+        //     console.log('https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color);
+        // }
     }
 
       // 上传文件
@@ -322,59 +252,49 @@
     }
 
 
-    // 检查是否是有效的手柄实现
-    // const isValidHandle = (event: any, handle: string | string[]) => {
-    //     if (typeof handle === "string") {
-    //         return event.target?.closest(handle) !== null
-    //     } else if (Array.isArray(handle) && handle.length > 0) {
-    //         return handle.some((selector) => event.target?.closest(selector) !== null)
-    //     }
-    //     return false
-    // }
+    const emits = defineEmits(["close", "ok", "modelValue",'getAvatar']);
+    
+    // 关闭
+    const colseClick = () => {
+      emits("update:modelValue", false);
+      emits("close");
+    };
+    
+    // 完成
+    const okClick = () => {
+      emits("update:modelValue", false);
+      emits("ok");
+    };
+    
+    // esc关闭
+    const handleEscKeyPressed = (event) => {
+      if (props.esc && event.keyCode === 27) {
+        colseClick();
+      }
+    };
+    onMounted(() => {
+      // 后续用于其他功能
+      // document.addEventListener('mouseup', (e) => {
+      //     e.stopPropagation();
+      //     console.log(e.target)
+      // });
+      // 处理渲染的列表
+      props.menus.forEach(i => {
+          if (allList[i] != undefined) {
+              handleList.value[i] = allList[i]
+          }
+      });
 
-  const emits = defineEmits(["close", "ok", "modelValue",'getAvatar']);
-  
-  // 关闭
-  const colseClick = () => {
-    emits("update:modelValue", false);
-    emits("close");
-  };
-  
-  // 完成
-  const okClick = () => {
-    emits("update:modelValue", false);
-    emits("ok");
-  };
-  
-  // esc关闭
-  const handleEscKeyPressed = (event) => {
-    if (props.esc && event.keyCode === 27) {
-      colseClick();
-    }
-  };
-  onMounted(() => {
-    // 后续用于其他功能
-    // document.addEventListener('mouseup', (e) => {
-    //     e.stopPropagation();
-    //     console.log(e.target)
-    // });
-    // 处理渲染的列表
-    props.menus.forEach(i => {
-        if (allList[i] != undefined) {
-            handleList.value[i] = allList[i]
-        }
+      window.addEventListener("keydown", handleEscKeyPressed, {
+        capture: true,
+      });
     });
-
-    window.addEventListener("keydown", handleEscKeyPressed, {
-      capture: true,
+    onBeforeUnmount(() => {
+      window.removeEventListener("keydown", handleEscKeyPressed, {
+        capture: true,
+      });
     });
-  });
-  onBeforeUnmount(() => {
-    window.removeEventListener("keydown", handleEscKeyPressed, {
-      capture: true,
-    });
-  });
-  </script>
+    </script>
   
   <style lang="scss" scoped>
   .top-triangle{

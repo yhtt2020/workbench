@@ -39,9 +39,10 @@
     <div class="key-list">
       <!-- 侧边栏 -->
       <div class="side-nav" v-if="currentScheme.showSide">
+        <XtScrollbar :x="false" :y="true">
         <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
         <div class="nav-box">
-          <a-tooltip v-for="(item,index) in sideNav" :title="item.groupName">
+          <a-tooltip v-for="(item,index) in sideNav" placement="left" :title="item.groupName">
             <div class="nav-item  truncate " :style="{backgroundColor:getColor(this.sideNav,index)}"
                  :key="item.id"
                  @click="updateNavIndex(item, index)">
@@ -49,6 +50,7 @@
             </div>
           </a-tooltip>
         </div>
+        </XtScrollbar>
       </div>
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
@@ -75,7 +77,7 @@
             <div v-else class="border-right key-item"
                  :class="{active:keyIndex === item.id,'rounded-top':isGroupFirst(this.filteredKeyList,index) ,'rounded-bottom':isGroupLast(this.filteredKeyList,index)}"
                  :style="{backgroundColor:getColor(this.filteredKeyList,index)}"
-                 @click="setKeyItem(item.id)">
+                 @click="setKeyItem(item)">
               <div class="flex w-full">
                 <div v-for="i in item.keys" :key="i" class="flex">
                   <span style="min-width:32px;padding:0 8px;"
@@ -99,6 +101,10 @@
         <strong>自动切换方案：</strong></a-tooltip>
       <a-switch v-model:checked="settings.enableAutoEnter"></a-switch>
       <span class="ml-2" v-if="!isWin()">非Windows平台暂不支持自动切换快捷键方案！</span>
+      <span class="ml-2 mr-2 xt-text-2">| </span>
+      <a-tooltip title="开启辅助模式后，工作台将不再聚焦，开启后才可以使用点击触发快捷键。">
+        <strong>辅助模式：</strong></a-tooltip>
+      <a-switch @click="ensureAided" v-model:checked="aided"></a-switch>
     </div>
   </div>
 
@@ -196,7 +202,8 @@ import { message, Modal } from 'ant-design-vue'
 import { isGroupLast, isGroupFirst } from '../lib/lib'
 import XtButton from '../../../ui/libs/Button/index.vue'
 import { isWin } from '../../../js/common/screenUtils'
-
+import * as shorcutTools from '../shortcutTools'
+import { appStore } from '../../../store'
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -236,6 +243,7 @@ export default {
     }
   },
   computed: {
+    ...mapWritableState(appStore, ['aided']),
     ...mapWritableState(keyStore, ['recentlyUsedList', 'currentApp', 'settings', 'currentScheme', 'settings']),
     filteredKeyList () {
       if (this.keywords) {
@@ -272,7 +280,15 @@ export default {
   },
   methods: {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    ...mapActions(appStore, ['enterAided', 'leaveAided']),
     isWin, isGroupLast, isGroupFirst,
+    ensureAided () {
+      if (this.aided) {
+        this.enterAided()
+      } else {
+        this.leaveAided()
+      }
+    },
     getColor (array, index, field = 'groupName') {
       for (let i = index; i >= 0; i--) {
         if (array[i][field]) {
@@ -293,10 +309,10 @@ export default {
       this.schemeList = this.recentlyUsedList
       if (this.schemeList.length === 0) {
         this.$router.replace({ name: 'home' })
-      return
+        return
       }
       this.currentScheme = this.schemeList[0]
-      if (!!!this.currentScheme){
+      if (!!!this.currentScheme) {
         this.$router.replace({ name: 'home' })
         return
       }
@@ -333,8 +349,10 @@ export default {
       this.navIndex = 0
 
     },
-    setKeyItem (id) {
-      this.keyIndex = id
+    setKeyItem (item) {
+
+      shorcutTools.doKey(item)
+      this.keyIndex = item.id
     },
     onBack () {
       this.$router.go(-1)

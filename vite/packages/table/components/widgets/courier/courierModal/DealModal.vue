@@ -45,12 +45,12 @@
 <script>
 import { mapActions, mapWritableState } from "pinia";
 import { Icon as DealIcon } from '@iconify/vue'
-import grab from "../grab";
+import grab from "../lib/grab";
 import { message } from "ant-design-vue";
 import { courierStore } from "../../../../apps/ecommerce/courier";
 
 import Modal from '../../../Modal.vue';
-import ui from '../courierUI'
+import ui from '../lib/courierUI'
 
 export default {
  props:['type'],

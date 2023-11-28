@@ -41,8 +41,14 @@ const windowApi = {
   setFocusable(flag){
     send('setFocusable',flag)
   },
+  async setSkipTaskbar(flag){
+    send('setSkipTaskbar',flag)
+  },
   async isFocusable () {
-    return await sendSync('isFocusable',)
+    return await sendSync('isFocusable')
+  },
+  async focus(){
+    send('focus')
   },
   setFullScreen(flag){
     send('setFullScreen',flag)

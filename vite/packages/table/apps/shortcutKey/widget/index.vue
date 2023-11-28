@@ -65,7 +65,7 @@
           </div>
           <div class="key-body">
             <!-- 循环类型 -->
-            <div class=" key-wrapper" :style="{backgroundColor:!item.groupName?getColor(currentKeyList,index+(page-1)*12) :'' }"
+            <div   @click="clickItem(item)" class="pointer key-wrapper " :style="{backgroundColor:!item.groupName?getColor(currentKeyList,index+(page-1)*12) :'' }"
                  v-for="(item,index) in keyList" :key="item.id">
               <!-- 标题 -->
               <div class="key-item" v-if="item.groupName">
@@ -75,12 +75,12 @@
                 </div>
               </div>
               <!-- 快捷键 -->
-              <div class="key-item" v-if="item.keyStr !== ''">
+              <div  class="key-item pointer" v-if="item.keyStr !== ''">
                 <div class="key-item">
                   <span v-for="(keySpan,index) in item.keys" :key="index">{{ keySpan }}</span>
                 </div>
               </div>
-              <div class="key-title">{{ item.title }}</div>
+              <div  class="key-title">{{ item.title }}</div>
             </div>
           </div>
         </template>
@@ -122,6 +122,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { keyStore } from '../store'
 import { mapState, mapActions } from 'pinia'
 import { getColor } from '../lib/lib'
+import * as shortcutTools from '../shortcutTools'
 // import BottomEdit from "..";
 export default {
   components: {
@@ -535,6 +536,9 @@ export default {
   methods: {
     getColor,
     ...mapActions(keyStore, ['setRecentlyUsedList']),
+    clickItem(item){
+      shortcutTools.doKey(item)
+    },
     saveData () {
       this.customData.defaultType = this.defaultType
       this.customData.selctedSchemeId = this.selValue
@@ -753,7 +757,9 @@ i:hover {
   line-height: 32px;
   padding: 5px;
 }
-
+.key-item{
+ cursor: pointer;
+}
 .key-item span:nth-of-type(1) {
   margin-left: -10px;
   // display: flex;

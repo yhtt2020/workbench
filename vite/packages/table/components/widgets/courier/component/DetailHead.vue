@@ -52,7 +52,7 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import { kdCompany } from '../mock'
+import { kdCompany } from '../lib/mock'
 import { Modal, message } from 'ant-design-vue'
 import useClipboard from 'vue-clipboard3'
 

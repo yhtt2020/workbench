@@ -24,7 +24,7 @@
 import { courierStore } from '../../../apps/ecommerce/courier.ts'
 import { mapWritableState, mapActions } from 'pinia'
 import AddCourierModal from './courierModal/AddCourierModal.vue'
-import grab from './grab'
+import grab from './lib/grab'
 import { Icon as newIcon } from '@iconify/vue'
 import { message, Modal } from 'ant-design-vue'
 import DealModal from './courierModal/DealModal.vue'

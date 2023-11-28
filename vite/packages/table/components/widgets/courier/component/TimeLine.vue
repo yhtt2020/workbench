@@ -14,7 +14,7 @@
 
 <script>
 import { Icon as SmallIcon } from '@iconify/vue'
-import {kdState} from '../mock'
+import {kdState} from '../lib/mock'
 export default {
  props:['list'],
  components:{

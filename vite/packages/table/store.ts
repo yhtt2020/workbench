@@ -31,6 +31,7 @@ export const appStore = defineStore('appStore', {
     styles: false,  // 浅色切换功能
     stylesIndex:0, // 主题模式下标
     saving: true,//性能模式
+    aided:false,//辅助模式
 
     simple: false,//极简模式
     agreeTest: false,
@@ -109,6 +110,23 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
+
+    enterAided(){
+      if(!this.aided){
+        this.aided=true
+      }
+      tsbApi.window.setFocusable(false)
+
+    },
+    leaveAided(){
+      if(this.aided){
+        this.aided=false
+      }
+      tsbApi.window.setFocusable(true)
+      tsbApi.window.setSkipTaskbar(false)
+      tsbApi.window.focus()
+    },
+
 
     async showUserCard(uid, userInfo = null) {
       this.userCardUid = Number(uid)
@@ -260,7 +278,7 @@ export const appStore = defineStore('appStore', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['currentRoute','status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen','aggList'],
+      paths: ['aided','currentRoute','status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible','backgroundImage', 'saving', 'simple', 'styles','stylesIndex', 'style','windowFullScreen','aggList'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

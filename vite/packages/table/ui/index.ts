@@ -12,6 +12,7 @@ import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
 import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
+import XtSelectNav from "./components/SelectNav/index.vue"
 // 基础组件
 import XtBaseColor from "./libs/BaseColor/index.vue"
 import XtBaseIcon from "./libs/BaseIcon/index.vue"
@@ -33,6 +34,7 @@ import XtState from "./libs/State/index.vue"
 import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
+import XtScrollbar from "./components/Scrollbar/index.vue"
 
 export default function (app: App): void {
   app.component('XtCanvas', XtCanvas)
@@ -65,4 +67,6 @@ export default function (app: App): void {
   app.component('XtTextarea', XtTextarea)
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
+  app.component('XtSelectNav',XtSelectNav)
+  app.component('XtScrollbar',XtScrollbar)
 }

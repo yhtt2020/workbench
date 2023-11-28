@@ -268,20 +268,20 @@ export default {
           <!--          <span class="button-active pointer" @click="setShow = true">-->
           <!--                <Icon icon="setting" style="width: 20px;height: 20px;color:var(&#45;&#45;primary-text);"></Icon>-->
           <!--            </span>-->
-          <xt-button @click="createScheme">
+          <xt-button class="mr-2" @click="createScheme">
             <Icon class="icon" icon="akar-icons:edit"> </Icon> 创建
           </xt-button>
           <template v-if="selecting">
-            <xt-button v-if="selecting" @click="importSchemes">
+            <xt-button class="mr-2" v-if="selecting" @click="importSchemes">
               <Icon class="icon" icon="akar-icons:download"> </Icon> 导入
             </xt-button>
-            <xt-button type="theme" v-if="selecting" @click="doExport">
+            <xt-button class="mr-2" type="theme" v-if="selecting" @click="doExport">
               <Icon class="icon" icon="akar-icons:share-box"> </Icon> 导出
             </xt-button>
-            <xt-button type="error" v-if="selecting" @click="remove">
+            <xt-button  type="error" v-if="selecting" @click="remove">
               <Icon class="icon" icon="akar-icons:trash-can"> </Icon>  删除
             </xt-button>
-            <xt-button class="ml-10" v-if="selecting" @click="cancelExport">
+            <xt-button  class="ml-10" v-if="selecting" @click="cancelExport">
              <Icon class="icon" icon="akar-icons:x-small"> </Icon>  退出
             </xt-button>
           </template>

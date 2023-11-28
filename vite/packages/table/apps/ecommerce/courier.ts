@@ -3,8 +3,8 @@ import dbStorage from "../../store/dbStorage";
 import {sUrl} from "../../consts";
 import {post} from "../../js/axios/kdniaoPost";
 import {localCache} from '../../js/axios/serverCache'
-import {generateTitle} from "../../components/widgets/courier/courierTool";
-import grab from "../../components/widgets/courier/grab";
+import {generateTitle} from "../../components/widgets/courier/lib/courierTool";
+import grab from "../../components/widgets/courier/lib/grab";
 
 const kdniao = sUrl('/app/kdniao/realTimeQuery')
 
@@ -573,7 +573,7 @@ export const courierStore = defineStore("courier", {
     enabled: true,
     strategies: [
       {
-        storage: dbStorage,
+        storage: localStorage,
         paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList', 'settings'],
       }
     ]

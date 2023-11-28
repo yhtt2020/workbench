@@ -62,8 +62,8 @@
           <div class="flex-1 h-0">
             <div
               class="px-3 pb-2 h-full rounded-b-lg"
-              :style="{ background: options.showColor ? '#191919' : '' }"
-            >
+              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
+              >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>
@@ -85,6 +85,7 @@
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
+  <slot name="msg"></slot>
 </template>
 
 <script lang="ts">
@@ -100,6 +101,7 @@ import { offlineStore } from "../../js/common/offline";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
+import Drop from "./Drop.vue";
 
 export default {
   components: {
@@ -107,6 +109,7 @@ export default {
     MenuOutlined,
     RightMenu,
     PageState,
+    Drop
   },
   name: "Widget",
   props: {
@@ -189,7 +192,14 @@ export default {
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
-          fn: this.doRemoveCard,
+          fn: ()=>{
+            if(this.options?.type != 'note'){
+              this.doRemoveCard()
+            }else{
+              // 便签单独处理
+              this.options?.removeCard()
+            }
+          },
           title: "删除小组件",
           color: "#FF4D4F",
         },
@@ -294,9 +304,6 @@ export default {
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
     ...mapActions(offlineStore, ["getIsOffline"]),
-    showDrawer(e) {
-      this.menuVisible = true;
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
