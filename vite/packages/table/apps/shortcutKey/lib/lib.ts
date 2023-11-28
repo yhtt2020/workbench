@@ -5,8 +5,6 @@
  * @param field
  */
 export function getColor(array,index,field='groupName'){
-
-  console.log(array, index)
   for(let i=index;i>=0;i--){
     if(array[i]){
       if(array[i][field]){
