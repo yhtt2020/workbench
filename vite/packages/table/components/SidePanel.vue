@@ -4,8 +4,7 @@
   <RightMenu :menus="rightMenus" class="h-full">
     <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
-        <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
-          :style="{ 'max-height': editToggle ? 'calc(100% - 120px)' : '100%' }"
+        <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="(item,index) in sideNavigationList" placement="right" @mouseenter="showElement(item,index)">
             <!-- 左右导航栏隐藏入口 -->
@@ -26,9 +25,9 @@
             </RightMenu>
           </a-tooltip>
         </div>
-        <div class="mt-3">
+        <!-- <div class="mt-3">
           <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
-        </div>
+        </div> -->
         <div>
 
         </div>
@@ -133,9 +132,9 @@ export default {
         },
         {
           id: 5,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          name: '添加导航图标',
+          newIcon: "fluent:add-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
@@ -153,16 +152,17 @@ export default {
         },
         {
           id: 2,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
-        },
-        {
-          id: 3,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           fn: () => { this.editNavigation(this.drawerMenus[2]) },
         },
+        {
+          id: 3,
+          name: '隐藏当前导航',
+          newIcon: "fluent:eye-off-16-regular",
+          fn: () => { this.navVisible() },
+        },
+        
         {
           id: 4,
           name: '更多',
@@ -276,7 +276,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList','sideNavigationList','rightNavigationList']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList','sideNavigationList','rightNavigationList','navigationToggle']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -317,7 +317,7 @@ export default {
       document.removeEventListener('click', this.disableDrag)
       // this.sortable.destroy()
       this.sortable = null
-      message.info('已中止侧栏调整')
+      // message.info('已中止侧栏调整')
       return
       // }
     },
@@ -384,7 +384,7 @@ export default {
           that.$emit('getDelIcon', false)
         }
       })
-      message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
+      // message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
     },
     current(item) {
       if (item.tab) {
@@ -452,6 +452,13 @@ export default {
     //   //   content[scrollDirection] += event.deltaY
     //   // });
     // },
+    navVisible(){
+      if(this.currentList==='left'){
+        this.navigationToggle[0]=false
+      }else{
+        this.navigationToggle[1]=false
+      }
+    },
     closeDrawer() {
       this.menuVisible = false
     },

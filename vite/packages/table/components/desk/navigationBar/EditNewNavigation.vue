@@ -135,6 +135,17 @@ export default {
                     name: '推荐',
                     tag: 'recommendation',
                     active: 0
+                    
+                },
+                {
+                    name: '桌面图标',
+                    tag: 'tableApp',
+                    active: 0
+                },
+                {
+                    name: '系统功能',
+                    tag: 'systemApp',
+                    active: 0
                 },
                 {
                     name: '网址导航',
@@ -151,16 +162,7 @@ export default {
                     tag: 'lightApp',
                     active: 0
                 },
-                {
-                    name: '系统功能',
-                    tag: 'systemApp',
-                    active: 0
-                },
-                {
-                    name: 'windows',
-                    tag: 'tableApp',
-                    active: 0
-                },
+                
             ],
             suggestNavigationList: [
 

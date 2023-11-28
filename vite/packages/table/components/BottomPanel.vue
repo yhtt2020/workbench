@@ -74,8 +74,8 @@
             </div>
           </div>
           <!-- <div class="mr-3"> -->
-          <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
-            @completeEdit="completeEdit" />
+          <!-- <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
+            @completeEdit="completeEdit" /> -->
           <!-- </div> -->
 
           <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
@@ -349,9 +349,9 @@ export default {
         },
         {
           id: 5,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          name: '添加导航图标',
+          newIcon: "fluent:add-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
@@ -369,15 +369,15 @@ export default {
         },
         {
           id: 2,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
-        },
-        {
-          id: 3,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           fn: () => { this.editNavigation(this.drawerMenus[2]) },
+        },
+        {
+          id: 3,
+          name: '隐藏当前导航',
+          newIcon: "fluent:eye-off-16-regular",
+          fn: () => { this.navigationToggle[2]=false },
         },
         {
           id: 4,
@@ -523,6 +523,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
+      'navigationToggle'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
