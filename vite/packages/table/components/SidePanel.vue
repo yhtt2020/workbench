@@ -9,18 +9,19 @@
         <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
           :style="{ 'max-height': editToggle ? '80%' : '100%' }"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
-          <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
+          <a-tooltip :title="item.name" v-for="(item,index) in sideNavigationList" placement="right" @mouseenter="showElement(item,index)">
             <!-- 左右导航栏隐藏入口 -->
+            <!-- {{ index }} -->
             <RightMenu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
-                      :class="{ 'active-color': current(item), 'shaking-element': editToggle }"></navIcon>
+                      :class="{ 'active-color': current(item), 'shaking-element': shakeElement }"></navIcon>
                   </div>
                   <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"
-                    :class="{ 'shaking-element': editToggle }"></a-avatar>
+                    :class="{ 'shaking-element': shakeElement }"></a-avatar>
 
                 </div>
               </div>
@@ -113,20 +114,20 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           name: "打开",
-          fn: () => { console.log("添加导航图标") },
+          fn: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
           name: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { }
+          fn: () => {this.removeSideNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -222,7 +223,10 @@ export default {
           event: "status",
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
-      ]
+      ],
+      shakeElement:false,
+      currentItem: null,
+      currentIndex:null,
     }
   },
   props: {
@@ -278,6 +282,7 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav']),
+    
   },
   mounted() {
     this.colDrop()
@@ -290,14 +295,17 @@ export default {
     editToggle() {
       if (this.editToggle) {
         this.enableDrag()
-        console.log('===>>>开始执行');
+        this.shakeElement=true
+        setTimeout(()=>{
+          this.shakeElement=false
+        },2000)
       } else {
         this.disableDrag()
-        console.log('===>>>停止执行');
       }
     }
   },
   methods: {
+    ...mapActions(navStore, ['removeSideNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     renderIcon,
     disableDrag() {
@@ -515,6 +523,12 @@ export default {
           message.info(`导航栏中至少保留一个「${oneNav.name}」`)
         }
       }
+    },
+    showElement(item,index){
+      // console.log(item,index,'====>>>1111');
+      // this.clickNavigation(item)
+      this.currentItem=item
+      this.currentIndex=index
     },
   }
 }
