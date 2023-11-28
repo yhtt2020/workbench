@@ -8,10 +8,11 @@ export default {
       height: 0,
       WIDTH: 280,
       HEIGHT: 205,
+      timer: null,
     };
   },
   created() {},
-  mounted() {
+  async mounted() {
     // 初始化类名
     if (!this.customData.dragCardSize) {
       this.customData.dragCardSize = this.options.className;
@@ -27,7 +28,7 @@ export default {
     this.width = this.customData.width;
     this.height = this.customData.height;
     this.reSizeInit(this.dragCardSize);
-    this.updateSize(this.dragCardSize);
+    await this.updateSize(this.dragCardSize);
   },
   computed: {
     // 动态计算卡片大小
@@ -93,7 +94,13 @@ export default {
     },
     updateSize(e) {
       this.$nextTick(() => {
-        this.$refs.drag?.dragCallBack(e);
+        this.timer = setInterval(() => {
+          if (this.$refs.drag) {
+            clearInterval(this.timer);
+            this.$refs.drag.dragCallBack(e);
+            this.timer = null;
+          }
+        }, 50);
       });
     },
   },
