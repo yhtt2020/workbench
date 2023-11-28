@@ -52,7 +52,6 @@
       class="w-full h-full"
       @contextmenu="showMenu"
     >
-
       <!-- 自由布局滚动 -->
       <FreeLayoutMask
         v-if="isFreeLayout && $route.path == '/main' && freeLayout"

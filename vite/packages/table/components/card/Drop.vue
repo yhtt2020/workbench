@@ -1,7 +1,7 @@
 <!-- 小组件放置层 -->
 <template>
   <div ref="container">
-    <xt-fun-menu> <slot></slot> </xt-fun-menu>
+    <!-- <xt-fun-menu> <slot></slot> </xt-fun-menu> -->
   </div>
 </template>
 

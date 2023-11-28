@@ -161,43 +161,12 @@ function update() {
   perfectScrollbar.value.update();
 }
 
-// 监听画布缩放情况
-watch(
-  () => getFreeLayoutState.value?.canvas.zoom,
-  () => {
-    // console.log(
-    //   "freeLayoutEnv.value.loading :>> ",
-    //   freeLayoutEnv.value.loading
-    // );
-    // if (!freeLayoutEnv.value.loading) {
-    //   console.log("222222222 :>> ", 222222222);
-    //   return;
-    // }
-    // let { width, height } = scrollbar.value.getBoundingClientRect();
-    // let currentWidth =
-    //   getFreeLayoutState.value?.width * getFreeLayoutState.value?.zoom;
-    // let currentHeight =
-    //   getFreeLayoutState.value?.height * getFreeLayoutState.value?.zoom;
-    // if (currentWidth < width && getFreeLayoutState.value?.width < 10000) {
-    //   console.log("宽度增加 :>> ", 222);
-    //   getFreeLayoutState.value.width += 1000;
-    // }
-    // if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
-    //   console.log("gao度增加 :>> ", 222);
-    //   getFreeLayoutState.value.height += 1000;
-    // }
-  }
-);
+
 // 鼠标滚动
-const scrollThreshold = 300; // 边缘滚动阈值
-const scrollAmount = 100; // 每次滚动的距离
 
 let isDragging = ref(false);
 let isKey = ref(false);
 let initialMousePosition = ref(null);
-let scrollElement = ref(null);
-
-// 鼠标拖拽元素 被zoom影响了位置
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
@@ -207,11 +176,21 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  window.removeEventListener("keydown", handleKeyDown);
-  window.removeEventListener("keyup", handleKeyUp);
-  window.removeEventListener("mousedown", handleMouseDown);
-  window.removeEventListener("mousemove", handleMouseMove);
-  window.removeEventListener("mouseup", handleMouseUp);
+  window.removeEventListener("keydown", handleKeyDown, {
+    capture: true,
+  });
+  window.removeEventListener("keyup", handleKeyUp, {
+    capture: true,
+  });
+  window.removeEventListener("mousedown", handleMouseDown, {
+    capture: true,
+  });
+  window.removeEventListener("mousemove", handleMouseMove, {
+    capture: true,
+  });
+  window.removeEventListener("mouseup", handleMouseUp, {
+    capture: true,
+  });
   window.document.body.removeEventListener('keydown',ignoreSpace);
 });
 defineExpose({

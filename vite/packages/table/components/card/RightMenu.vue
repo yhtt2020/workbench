@@ -1,6 +1,6 @@
 <!-- 处理右键菜单内容 -->
 <template>
-  <xt-fun-menu name="title" fn="fn" :menus="menuList" :height="sizes && sizes.length > 0 ? 120 : 0">
+  <xt-mix-menu name="title" fn="fn"  :model="model" :menus="menuList" :height="sizes && sizes.length > 0 ? 120 : 0">
     <div>
       <slot></slot>
     </div>
@@ -36,7 +36,7 @@
         v-if="sizes && sizes.length > 0"
       />
     </template>
-  </xt-fun-menu>
+  </xt-mix-menu>
   <!-- <Menu
     name="title"
     fn="fn"
@@ -171,12 +171,12 @@ const menuList = computed(() => {
       lock: true,
       children: [
         {
-          newIcon: "fluent:chevron-left-16-filled",
+          newIcon: "fluent:chevron-up-16-filled",
           title: "上移一层",
           fn: indexAdd,
         },
         {
-          newIcon: "fluent:chevron-left-16-filled",
+          newIcon: "fluent:chevron-down-16-filled",
           title: "下移一层",
           fn: indexSub,
         },

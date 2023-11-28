@@ -23,6 +23,8 @@
       @close="drawerVisible = false"
     ></DefaultItem>
   </xt-drawer>
+
+
 </template>
 
 <script setup>
