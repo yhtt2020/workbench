@@ -7,7 +7,7 @@
           padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
-          :style="{ 'max-height': editToggle ? '80%' : '100%' }"
+          :style="{ 'max-height': editToggle ? 'calc(100% - 120px)' : '100%' }"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="(item,index) in sideNavigationList" placement="right" @mouseenter="showElement(item,index)">
             <!-- 左右导航栏隐藏入口 -->
@@ -29,7 +29,7 @@
           </a-tooltip>
         </div>
         <div class="mt-3">
-          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="completeEdit" />
+          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
         </div>
         <div>
 
@@ -127,7 +127,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => {this.removeSideNavigationList(this.currentIndex) }
+          fn: () => {this.currentList==='right'?this.removeRightNavigationList(this.currentIndex):this.removeSideNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -227,6 +227,7 @@ export default {
       shakeElement:false,
       currentItem: null,
       currentIndex:null,
+      currentList:'left',
     }
   },
   props: {
@@ -277,7 +278,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList','sideNavigationList','rightNavigationList']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -287,6 +288,11 @@ export default {
   mounted() {
     this.colDrop()
     // this.scrollNav('sideContent', 'scrollTop')
+    if(this.sideNavigationList===this.rightNavigationList){
+      console.log(1111111111111,'===>>>>');
+      // this.selectNav='right'
+      this.currentList='right'
+    }
   },
   watch: {
     delZone(val) {
@@ -305,7 +311,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList']),
+    ...mapActions(navStore, ['removeSideNavigationList','removeRightNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     renderIcon,
     disableDrag() {
@@ -457,12 +463,12 @@ export default {
         // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
-          this.selectNav = 'foot'
+          this.selectNav = this.currentList
           message.success('进入编辑模式')
         } else if (item.component === 'editNavigation') {
           this.componentId = ''
           this.editToggle = true
-          this.selectNav = 'foot'
+          this.selectNav = this.currentList
         }
         // console.log(this.componentId,'===>>2');
         this.quick = true
