@@ -87,7 +87,7 @@ export default {
         };
     },
     async mounted() {
-        await this.onGetInfo()
+      this.onGetInfo()
     },
     methods:{
         async onGetInfo(){

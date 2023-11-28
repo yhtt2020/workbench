@@ -11,10 +11,10 @@
         <!-- <div class="icon" @click="onHistoryMessage">
             <CalendarOutlined style="width:20px;height:20px;" />
         </div> -->
-        
+
 
         <div class="box-flex">
-            <div>{{this.history.date}}</div> 
+            <div>{{this.history.date}}</div>
             <div>{{ this.history.title }}</div>
         </div>
     </Widget>
@@ -74,7 +74,7 @@ export default {
         };
     },
     async mounted() {
-        await this.onHistoryMessage()
+        this.onHistoryMessage()
         // 设置一次性定时器 当天12点过后自动触发事件
         let now = new Date;
         var midnight = new Date();

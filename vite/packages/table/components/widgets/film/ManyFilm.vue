@@ -151,20 +151,22 @@
     },
     async mounted() {
       this.isLoading = true
-      await this.getData()
-      if(!this.data){
-        this.pageToggle = false
-      }else{
-        this.filmList = this.data.list || []
-        if(!this.filmList.length){
+      this.getData().then(()=>{
+        if(!this.data){
           this.pageToggle = false
+        }else{
+          this.filmList = this.data.list || []
+          if(!this.filmList.length){
+            this.pageToggle = false
+          }
+          this.filmPart = _.sampleSize(this.filmList, 8)
+          this.getDoubanList()
         }
-        this.filmPart = _.sampleSize(this.filmList, 8)
-        this.getDoubanList()
-      }
-      setTimeout(() => {
-        this.isLoading = false
+        setTimeout(() => {
+          this.isLoading = false
+        })
       })
+
     },
   };
 </script>

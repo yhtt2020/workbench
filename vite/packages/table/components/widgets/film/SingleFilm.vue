@@ -108,19 +108,21 @@
     },
     async mounted() {
       this.isLoading = true
-      await this.getData()
-      if(!this.data){
-        this.pageToggle = false
-      }else{
-        this.filmList = this.data.list || []
-        if(!this.filmList.length){
+      this.getData().then(()=>{
+        if(!this.data){
           this.pageToggle = false
+        }else{
+          this.filmList = this.data.list || []
+          if(!this.filmList.length){
+            this.pageToggle = false
+          }
+          this.singleFilm = _.sampleSize(this.filmList,1)[0]
         }
-        this.singleFilm = _.sampleSize(this.filmList,1)[0]
-      }
-      setTimeout(() => {
-        this.isLoading = false
+        setTimeout(() => {
+          this.isLoading = false
+        })
       })
+
     },
   };
 </script>
