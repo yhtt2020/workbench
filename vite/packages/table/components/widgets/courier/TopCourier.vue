@@ -67,7 +67,7 @@
     </div>
   </div>
   <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar   "
-             style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
+             style="background-color: var(--active-secondary-bg);margin-right:10px;position: relative;color: var(--primary-text); border-radius: 6px !important;"
              @click="showTopCourier">
     <div class="flex items-center justify-between">
       <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>

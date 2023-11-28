@@ -1,119 +1,78 @@
 <template>
-  <div class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
-
-    <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
-      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
-        <div class="mr-2 cursor-pointer no-drag" @click="enterClipboard">
-          <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
-        </div>
+  <div class=" top-shadow  flex  justify-between w-full drag">
+    <div @contextmenu.prevent="toggleAppStats" class="flex pl-2.5 py-2.5 flex-1 items-center no-drag">
+      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" placement="top" v-if="enable">
+        <xt-button w="28" h="28" class="xt-bg-t-2" style="border-radius:6px !important;"  @click="enterClipboard">
+          <div class="flex items-center justify-center">
+            <icon style="font-size:20px;vertical-align: text-top" class="xt-text-2" icon="xiangmu"></icon>
+          </div>
+        </xt-button>
       </a-tooltip>
 
-      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
-        v-if="runningGame.appid">
-        <a-avatar :size="22" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
-        {{ runningGame.chineseName }}
-      </div>
-      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部" v-else-if="status.music.playing && status.music.title && status.music">
-        <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);"
-          @click="enterMusic">
-          <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
-          {{ status.music.title }} {{ status.music.singer }}
+      <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)" 
+       style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+      >
+        <div class="flex items-center justify-center">
+          <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
+          <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
         </div>
-      </a-tooltip>
+      </xt-button>
+
       <TopCourier />
-    </div>
-    <div class="flex max-search" hidden="">
-      <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
-        style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
-        <Icon icon="sousuo"></Icon>
-      </div>
-    </div>
-    <div class="flex items-end justify-end flex-1 right-area align-items-end xt-text" style="position: relative;">
-      <div class="top-state">
-        <!-- 番茄钟 -->
-        <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible"/>
-      </div>
 
-      <div v-if="status.show && hasChat" class="flex items-center no-drag pointer" @click="messageAlert"
-        style="color: var(--primary-text);">
-        <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
-          <img src="/icons/logo128.png" class="object-cover w-full h-full">
-          <div class="new-message-tag"></div>
+      <TopTomato />
+      <TopClockTimer v-if="topClockTimerVisible"/>
+
+      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部" v-if="status.music.playing && status.music.title && status.music">
+        <xt-button h="28"  class="xt-bg-t-2 mr-2.5" style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+         @click="enterMusic"
+        >
+          <div class="flex items-center justify-center">
+            <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
+            <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">
+              {{ status.music.title }} {{ status.music.singer }}
+            </span>
+          </div>
+        </xt-button>
+      </a-tooltip>
+
+
+    </div>
+
+    <div class="flex h-12 justify-end no-drag" style="width:550px;">
+      <xt-button h="48" style="background:transparent !important;width:auto !important;margin:0 16px 0 0 !important"  @click="toggleRightDrawer">
+        <div class="flex items-center">
+          <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
+          <div class="xt-text font-14  xt-font">
+           <span  v-if="appSettings.showTopbarTime"> {{ dateTime.month }}月 {{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }} · </span>
+           <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
+            {{ city.now.text }}  {{ city.now.temp }}℃
+            <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
+           </span>
+          </div>
         </div>
-        <div class="pl-1 primary-title pointer" style="color: var(--primary-text);">新消息</div>
-        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 " />
+      </xt-button>
+      <div class="xt-bg rounded-bl-xl h-9" v-if="showWindowController" id="windowController">
+        <WindowController></WindowController>
       </div>
-
-      <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert"
-        style="color: var(--primary-text);">
-        <Icon icon="notification" style="font-size:1.5em;"></Icon>
-      </div>
-
-      <div class="mr-2"
-        style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
-        <div class="truncate no-drag" v-if="!loading">
-          <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
-            <!-- {{ lockTimeoutDisplay }}后锁屏 -->
-          </span>
-          <span v-if="appSettings.showTopbarTime">
-               {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }}
-          {{ dateTime.week }}
-          </span>
-
-          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
-            <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
-          </span>
-        </div>
-      </div>
-
-    </div>
-    <div id="windowController" v-if="showWindowController" class="flex rounded-bl-lg s-item s-bg btn-container "
-      style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
-      <WindowController></WindowController>
     </div>
   </div>
 
-
-  <a-drawer :width="500" :closable="false" style="z-index:1000;" placement="right" v-model:visible="messageDrawer"
-    :bodyStyle="{ padding: '0', overflow: 'hidden !important', }" @closeMessage="messageDrawer = false">
-    <MessagePopup @closeMessage="messageDrawer = false"></MessagePopup>
-  </a-drawer>
-  <a-drawer v-model:visible="appStats" placement="left">
-    <div class="app-stats">
-      <div @click="enterClipboard" class="cursor-pointer app" v-if="enable">
-        <a-row>
-          <a-col :span="5">
-            <icon style="font-size: 48px;vertical-align: text-top" icon="xiangmu"></icon>
-          </a-col>
-          <a-col>
-            <div class="font-bold app-title">
-              剪切板
-            </div>
-            <div class="app-des xt-text-2">
-              剪切板监听中…
-            </div>
-          </a-col>
-        </a-row>
-
-      </div>
-      <div @click="enterMusic" class="app" v-if="status.music.playing && status.music.title && status.music">
-        <a-row>
-          <a-col :span="5">
-            <a-avatar style="margin-right: 0.5em" :size="48" :src="status.music.cover"></a-avatar>
-          </a-col>
-          <a-col>
-            <div class="font-bold app-title">
-              网易云音乐
-            </div>
-            <div class="app-des xt-text-2">
-              {{ status.music.title }} {{ status.music.singer }}
-            </div>
-          </a-col>
-        </a-row>
-      </div>
+  <TopPanelLeftDrawer ref="leftDrawerRef">
+    <div class="flex items-center justify-center">
+      <xt-button h="64" style="width:auto !important;background:transparent !important;" @click="enterMusic">
+        <div class="flex items-center justify-center">
+          <a-avatar style="margin-right: 0.5em" :size="48" :src="status.music.cover"></a-avatar>
+          <div class="flex flex-col">
+            <span class="xt-text font-14 truncate font-500 xt-font">网易云音乐</span>
+            <span class="xt-text font-14 truncate font-500 xt-font" style="max-width:110px;"> {{ status.music.title }} {{ status.music.singer }}</span>
+          </div>
+        </div>
+      </xt-button>
     </div>
-  </a-drawer>
+
+  </TopPanelLeftDrawer>
+  <TopPanelRightDrawer ref="rightDrawerRef"/>
 </template>
 
 <script>
@@ -127,24 +86,25 @@ import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
-import WindowController from './WindowController.vue'
-import MessagePopup from '../page/notice/noticeIndex.vue'
 import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
+
+import WindowController from './WindowController.vue'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 import TopCourier from './widgets/courier/TopCourier.vue'
+import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
+import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 
 export default {
   name: 'TopPanel',
   components: {
-    WindowController,
-    MessagePopup,
-    TopTomato,
-    TopClockTimer,
-    TopCourier
+    WindowController,TopTomato,TopClockTimer, 
+    TopCourier, 
+    TopPanelLeftDrawer,TopPanelRightDrawer,
   },
+
   data() {
     return {
       loading: true,
@@ -157,13 +117,12 @@ export default {
       topClockTimerVisible: false,
     }
   },
+
   computed: {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
     ...mapWritableState(appStore,['status','showWindowController']),
-    ...mapWritableState(appStore,{
-      appSettings: 'settings'
-    }),
+    ...mapWritableState(appStore,{ appSettings: 'settings' }),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(timerStore, ['lockTimeout']),
@@ -177,7 +136,7 @@ export default {
       // }else{
       //   return this.lockTimeout+'秒'
       // }
-      function secTotime(s) {
+      function secToTime(s) {
         var t = ''
         if (s > -1) {
           var hour = Math.floor(s / 3600)
@@ -201,236 +160,121 @@ export default {
         }
         return t
       }
-
-      return secTotime(this.lockTimeout)
+      return secToTime(this.lockTimeout);
     },
     city() {
-      if (this.cities[0]) {
-        return this.cities[0]
-      } else {
-        return {}
-      }
-
+      if (this.cities[0]) { return this.cities[0]; } 
+      else { return {}; }
     },
-    hasWeather() {
-      return this.cities.length > 0
-    },
-
-    hasChat() {
-      return this.$route.path !== '/chatMain'
-    },
-
+    hasWeather() { return this.cities.length > 0; },
+    hasChat() { return this.status.show; },
   },
-  async mounted() {
-    window.onblur = () => {
-      this.setLockTimer()
-    }
-    window.onfocus = () => {
-      this.clearLockTimer()
-    }
-    this.loading = false
-    if (!this.timer) {
-      setInterval(this.getTime, 1000)
-    }
+  mounted() {
+    window.onblur = () => { this.setLockTimer(); }
+    window.onfocus = () => { this.clearLockTimer(); }
+    this.loading = false;
+    if (!this.timer) { setInterval(this.getTime, 1000); }
     this.filterClock(this.clockTag)
   },
   created() {
-    this.getTime()
+    this.getTime();
   },
   methods: {
-    getClientIcon,
-    getIcon,
-    getCover,
+    getClientIcon,getIcon,getCover,
     ...mapActions(cardStore, ['setAppDate','filterClock']),
     ...mapActions(appStore,['hideNoticeEntry']),
     clearLockTimer() {
       if (this.lockTimer) {
-        clearInterval(this.lockTimer)
-        this.lockTimer = null
-        this.lockTimeout = this.settings.lockTimeout
-        this.showLockTip = false
+        clearInterval(this.lockTimer);
+        this.lockTimer = null;
+        this.lockTimeout = this.settings.lockTimeout;
+        this.showLockTip = false;
       }
-    },
-    toggleAppStats() {
-      this.appStats = !this.appStats
     },
     enterClipboard() {
       this.$router.push({
         name: 'clipboard'
-      })
+      });
     },
     setLockTimer() {
       if (this.settings.enable) {
         //只有启用了锁屏才会触发这个效果
         if (this.lockTimer) {
-          this.lockTimeout = (this.settings.lockTimeout || 300) - 1
+          this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
         } else {
-          this.lockTimeout = (this.settings.lockTimeout || 300) - 1
-          this.showLockTip = true
+          this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
+          this.showLockTip = true;
           this.lockTimer = setInterval(() => {
-            this.lockTimeout--
+            this.lockTimeout--;
             if (this.lockTimeout === 0) {
-              this.clearLockTimer()
-              this.$router.push('/lock')
+              this.clearLockTimer();
+              this.$router.push('/lock');
             }
-          }, 1000)
+          }, 1000);
         }
       }
     },
+    // 全局搜索
     openGlobalSearch() {
-      ipc.send('openGlobalSearch')
+      ipc.send('openGlobalSearch');
     },
     getTime() {
-      this.dateTime = getDateTime()
-      this.setAppDate(this.dateTime)
+      this.dateTime = getDateTime();
+      this.setAppDate(this.dateTime);
     },
+    // 进入网易云音乐界面
     enterMusic() {
       this.$router.push({
         name: 'music',
-      })
+      });
     },
+    // 进入游戏桌面
     enterGameDesk(appid) {
       this.$router.push({
         name: 'gameIndex',
         params: {
           appid: appid
         }
-      })
+      });
     },
-
-    messageAlert() {
-      this.hideNoticeEntry();
-      this.messageDrawer = true
-    },
-
-
     topClockTimerVisibleSetting() {
       this.filterClock(this.clockTag,this.chooseType)
       if(this.checkTopClock===true){
         if (this.filterClockEvent.length > 0) {
           // console.log(this.filterClockEvent.length);
-          this.topClockTimerVisible = true
+          this.topClockTimerVisible = true;
         }
         else if (this.countDowntime.seconds !== undefined) {
           // console.log(this.countDowndate);
-          this.topClockTimerVisible = true
+          this.topClockTimerVisible = true;
         }
         else {
           // console.log(this.countDowndate,this.clockEvent);
-          this.topClockTimerVisible = false
+          this.topClockTimerVisible = false;
         }
       }else{
-        this.topClockTimerVisible=false
-
+        this.topClockTimerVisible=false;
       }
       // console.log(this.clockTag);
-
-
-
     },
-
-
+    // 点击顶部状态栏左侧抽屉菜单
+    toggleAppStats() {
+      this.$refs.leftDrawerRef.openLeftDrawer()
+    },
+    // 点击顶部状态栏右侧抽屉菜单
+    toggleRightDrawer() {
+      this.$refs.rightDrawerRef.openRightDrawer();
+      this.hideNoticeEntry();
+    },
   },
   beforeUpdate() {
-    this.topClockTimerVisibleSetting()
+    this.topClockTimerVisibleSetting();
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.top-panel {
-  padding: 0.8em 0 0 0.8em;
-  display: flex;
-}
-
-.input-box {
-  height: 2em;
-  border-radius: 100px;
-  border: 1px solid #c4c4c4;
-}
-
-.new-message {
-  position: fixed;
-  top: 11px;
-  left: 71.5%;
-}
-
-.primary-title {
-
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.max-search {
-  width: 320px;
-}
-
-@media screen and(max-width: 840px) {
-  .max-search {
-    width: 60px !important;
-  }
-}
-
-@media screen and(min-width: 1050px) {
-  .max-search {
-    width: 320px !important;
-  }
-}
-
-.app-stats {
-  .app {
-    background: var(--secondary-bg);
-    padding: 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    margin-bottom: 10px;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.9;
-    }
-  }
-}
-
-.new-message-tag::after {
-  content: "";
-  display: block;
-  width: 7px;
-  height: 7px;
-  background-color: var(--error);
-  border-radius: 50%;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-}
-
-
-.notification {
-  //禁用闪烁特效，减少gpu占用
-  //animation: blink 1s infinite;
-  //
-  //@keyframes blink {
-  //  0% {
-  //    opacity: 0;
-  //  }
-  //
-  //  50% {
-  //    opacity: 1;
-  //  }
-  //
-  //  100% {
-  //    opacity: 0;
-  //  }
-  //}
-}
-
-.top-state {
-  display: flex;
-  // position: relative;
-}
-.right-area{
-  display: flex;
-  align-items: center;
-  height: 25px;
+.top-shadow{
+  background: linear-gradient(to,bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.18) 51%, rgba(25,25,25,0.00) 100%);
 }
 </style>
