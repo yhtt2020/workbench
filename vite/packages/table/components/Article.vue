@@ -1,7 +1,7 @@
 <template>
     <vueCustomScrollbar  :settings="settingsScroller"  style="height: 100%;width: 100%;">
         <div v-for="(item,index) in article" :key="index">
-            <h2 :class="titleStyle" v-html="item.title"></h2>
+            <h2 v-if="showTitle" :class="titleStyle" v-html="item.title"></h2>
             <div :class="contentStyle" v-html="item.content"></div>
         </div>
     </vueCustomScrollbar>
@@ -12,6 +12,10 @@ import articleService from '../js/service/articleService'
   export default {
     name: 'Article',
     props:{
+        showTitle:{
+          type:Boolean,
+          default:true
+        },
         artName:{
             type: String,
             // default:''
@@ -29,7 +33,7 @@ import articleService from '../js/service/articleService'
         },
 
     },
-    components: { 
+    components: {
         // VueCustomScrollbar
     },
     computed: {
@@ -68,7 +72,7 @@ import articleService from '../js/service/articleService'
     },
   }
   </script>
-  
+
   <style scoped>
     .box-title{
       height: 22px;
@@ -81,7 +85,7 @@ import articleService from '../js/service/articleService'
       margin-top: 24px;
       margin-left: 16px;
     }
-    
+
     .box-content{
         margin: 24px 16px;
         padding: 16px 16px 0 16px;
@@ -96,4 +100,3 @@ import articleService from '../js/service/articleService'
     }
 
   </style>
-  
