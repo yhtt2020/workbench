@@ -302,6 +302,9 @@ const dynamicContent = computed(() => {
 // 监听图片
 watch(fileList, async () => {
     let imagesList = await translateImage(fileList.value)
+    imagesList=imagesList.map((item)=>{
+        return `${item}?imageMogr2/crop/340x340/gravity/center`
+    })
     if (defaultType.value.value == 'dynamic') {
         useYuanCommunityStore.dynamicContent.imagesList = JSON.stringify(imagesList)
     } else if (defaultType.value.value == 'post') {
@@ -310,6 +313,9 @@ watch(fileList, async () => {
 })
 watch(coverList, async () => {
     let coversList = await translateImage(coverList.value)
+    coversList=coversList.map((item)=>{
+        return `${item}?imageMogr2/crop/340x340/gravity/center`
+    })
     useYuanCommunityStore.postContent.coverList = coversList.toString()
 })
 const publishPost = async () => {
