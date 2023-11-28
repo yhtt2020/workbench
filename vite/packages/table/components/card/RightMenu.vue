@@ -171,12 +171,12 @@ const menuList = computed(() => {
       lock: true,
       children: [
         {
-          newIcon: "fluent:chevron-left-16-filled",
+          newIcon: "fluent:chevron-up-16-filled",
           title: "上移一层",
           fn: indexAdd,
         },
         {
-          newIcon: "fluent:chevron-left-16-filled",
+          newIcon: "fluent:chevron-down-16-filled",
           title: "下移一层",
           fn: indexSub,
         },
