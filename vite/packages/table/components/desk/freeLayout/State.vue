@@ -150,9 +150,6 @@
           分享自由布局</xt-button
         >
 
-        <xt-button class="xt-bg" w="204" h="40" @click="clearFreeLayout">
-          删除自由布局</xt-button
-        >
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>
@@ -207,6 +204,7 @@ const copyData = computed(() => {
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
+  console.log('执行了 :>> ', );
   freeLayoutStore.renewFreeLayout();
 });
 
@@ -246,17 +244,7 @@ watch(
   }
 );
 
-function clearFreeLayout() {
-  freeLayoutSwitch.value = false;
-  console.log('getCurrentDeskId.value :>> ', getCurrentDeskId.value);
-  freeLayoutStore.clearFreeLayout(getCurrentDeskId.value);
-}
-// 清除所有自由布局
-function clearAllFreeLayout() {
-  freeLayoutSwitch.value = false;
-  // cache.del("useFreeLayoutStore");
-  // freeLayoutStore.clearAllFreeLayout();
-}
+
 </script>
 
 <style lang="scss" scoped></style>
