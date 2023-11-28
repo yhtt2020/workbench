@@ -86,8 +86,8 @@ export default {
             }
         };
     },
-    async mounted() {
-        await this.onGetInfo()
+    mounted() {
+      this.onGetInfo()
     },
     methods:{
         async onGetInfo(){

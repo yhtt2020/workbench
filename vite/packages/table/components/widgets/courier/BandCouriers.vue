@@ -18,7 +18,7 @@
 
   </div>
   <AddCourierModal ref="addCourierRef"/>
-  <DealModal ref="dealModalRef" :type="dealType"/>
+  <DealModal @close="close" ref="dealModalRef" :type="dealType"/>
 </template>
 <script>
 import { courierStore } from '../../../apps/ecommerce/courier.ts'
@@ -65,6 +65,9 @@ export default {
       }
     },
 
+    close(){
+      this.$emit('close')
+    },
     // 关联淘宝
     bindTb () {
       if (!this.storeInfo.tb.nickname) {

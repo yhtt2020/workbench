@@ -89,6 +89,9 @@ import { message } from 'ant-design-vue'
         ...mapActions(noteStore, ['saveDeskNote']),
      getContent(){
           return this.contentEditor.getHTML()
+     },
+     getMarkdown(){
+       return this.contentEditor.getValue()
      }
 
 

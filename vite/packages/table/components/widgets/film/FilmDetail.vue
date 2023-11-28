@@ -142,8 +142,7 @@
     },
     async mounted() {
       this.isLoading = true
-      await this.getFilmDetail()
-      setTimeout(() => {
+      this.getFilmDetail().then(()=>{
         this.isLoading = false
       })
     },

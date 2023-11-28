@@ -40,21 +40,21 @@
       <!-- 侧边栏 -->
       <div class="side-nav" v-if="currentScheme.showSide">
         <XtScrollbar :x="false" :y="true">
-        <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
-        <div class="nav-box">
-          <a-tooltip v-for="(item,index) in sideNav" placement="left" :title="item.groupName">
-            <div class="nav-item  truncate " :style="{backgroundColor:getColor(this.sideNav,index)}"
-                 :key="item.id"
-                 @click="updateNavIndex(item, index)">
-              {{ item.groupName }}
-            </div>
-          </a-tooltip>
-        </div>
+          <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
+          <div class="nav-box">
+            <a-tooltip v-for="(item,index) in sideNav" placement="left" :title="item.groupName">
+              <div class="nav-item  truncate " :style="{backgroundColor:getColor(this.sideNav,index)}"
+                   :key="item.id"
+                   @click="updateNavIndex(item, index)">
+                {{ item.groupName }}
+              </div>
+            </a-tooltip>
+          </div>
         </XtScrollbar>
       </div>
       <!-- 快捷键列表 -->
       <vue-custom-scrollbar id="scrollCus" :settings="settingsScroller" style="height:100%;"
-                            :style="showSide ? 'width: 80%;' : 'width:100%'">
+                            :style="{width:showSide ? '80%;' : '100%',zoom:appContent.singleZoom?appContent.zoom:settings.zoom}">
         <div v-if="keyList.length===0" class="text-center pt-10 flex justify-center items-center">
           此方案暂时没有任何快捷键
           <xt-button class="ml-6" @click="btnEdit" type="theme" size="mini" :w="80" :h="40">编辑方案</xt-button>
@@ -105,6 +105,26 @@
       <a-tooltip title="开启辅助模式后，工作台将不再聚焦，开启后才可以使用点击触发快捷键。">
         <strong>辅助模式：</strong></a-tooltip>
       <a-switch @click="ensureAided" v-model:checked="aided"></a-switch>
+      <div class="float-right flex">
+
+        <span class="mr-2 mt-1"> <a-switch @change="setSingleZoom" checked-children="独立" un-checked-children="通用"
+                                           v-model:checked="appContent.singleZoom"></a-switch></span>
+        <xt-button v-if="settings.zoom!==1" @click="resetZoom" size="mini" :w="40" :h="30">
+          <xt-new-icon icon="fluent:arrow-clockwise-48-filled"></xt-new-icon>
+        </xt-button>
+        <template v-if="!appContent.singleZoom">
+          <span class="mr-2 p-1">{{ (settings.zoom * 100).toFixed(0) }}%</span>
+          <xt-button @click="zoomUp" size="mini" class="mr-2" :w="40" :h="30">+</xt-button>
+          <xt-button class="mr-2" @click="zoomDown" size="mini" :w="40" :h="30">-</xt-button>
+        </template>
+        <template v-else>
+          <span class="mr-2 p-1">{{ (appContent.zoom * 100).toFixed(0) }}%</span>
+          <xt-button @click="singleZoomUp" size="mini" class="mr-2" :w="40" :h="30">+</xt-button>
+          <xt-button class="mr-2" @click="singleZoomDown" size="mini" :w="40" :h="30">-</xt-button>
+        </template>
+
+
+      </div>
     </div>
   </div>
 
@@ -204,6 +224,7 @@ import XtButton from '../../../ui/libs/Button/index.vue'
 import { isWin } from '../../../js/common/screenUtils'
 import * as shorcutTools from '../shortcutTools'
 import { appStore } from '../../../store'
+
 export default {
   name: 'ShortcutKeyDetail',
   components: {
@@ -282,12 +303,53 @@ export default {
     ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
     ...mapActions(appStore, ['enterAided', 'leaveAided']),
     isWin, isGroupLast, isGroupFirst,
+    zoomUp () {
+      this.settings.zoom += 0.1
+    },
+    zoomDown () {
+      this.settings.zoom -= 0.1
+    },
+    singleZoomUp () {
+      if (!this.appContent.zoom) {
+        this.appContent.zoom = 1.1
+      } else {
+        this.appContent.zoom += 0.1
+      }
+      this.saveScheme(this.appContent)
+    },
+    singleZoomDown () {
+      if (!this.appContent.zoom) {
+        this.appContent.zoom = 0.9
+      } else {
+        this.appContent.zoom -= 0.1
+      }
+      this.saveScheme(this.appContent)
+    },
+    resetZoom () {
+      if (this.appContent.singleZoom) {
+        this.appContent.zoom = 1
+        this.saveScheme(this.appContent)
+      } else {
+        this.settings.zoom = 1
+      }
+    },
     ensureAided () {
       if (this.aided) {
         this.enterAided()
       } else {
         this.leaveAided()
       }
+    },
+    setSingleZoom (value) {
+      this.appContent.singleZoom = value
+      if (!this.appContent.zoom) this.appContent.zoom = 1
+      this.saveScheme(this.appContent)
+      if (value) {
+        message.success('启用方案独立缩放。')
+      } else {
+        message.success('关闭方案独立缩放。')
+      }
+
     },
     getColor (array, index, field = 'groupName') {
       for (let i = index; i >= 0; i--) {
@@ -336,7 +398,8 @@ export default {
      * 切换方案
      * @param index
      * @param item
-     */ async switchScheme (index, item) {
+     */
+    async switchScheme (index, item) {
       await this.setRecentlyUsedList(item)
       this.currentScheme = item
       this.navIndex = index
@@ -350,7 +413,6 @@ export default {
 
     },
     setKeyItem (item) {
-
       shorcutTools.doKey(item)
       this.keyIndex = item.id
     },

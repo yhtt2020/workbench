@@ -2,6 +2,10 @@
   <div class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
 
     <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
+
+     <a-tooltip>
+       <QueueWidget></QueueWidget>
+     </a-tooltip>
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
         <div class="mr-2 cursor-pointer no-drag" @click="enterClipboard">
           <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
@@ -80,6 +84,10 @@
     <MessagePopup @closeMessage="messageDrawer = false"></MessagePopup>
   </a-drawer>
   <a-drawer v-model:visible="appStats" placement="left">
+    <div>应用状态</div>
+    <div class="app-stats">
+      <QueueWidget :show="true"></QueueWidget>
+    </div>
     <div class="app-stats">
       <div @click="enterClipboard" class="cursor-pointer app" v-if="enable">
         <a-row>
@@ -135,7 +143,7 @@ import { clipboardStore } from '../apps/clipboard/store'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 import TopCourier from './widgets/courier/TopCourier.vue'
-
+import QueueWidget from '../apps/queue/topWidget/index.vue'
 export default {
   name: 'TopPanel',
   components: {
@@ -143,7 +151,8 @@ export default {
     MessagePopup,
     TopTomato,
     TopClockTimer,
-    TopCourier
+    TopCourier,
+    QueueWidget
   },
   data() {
     return {

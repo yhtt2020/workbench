@@ -304,6 +304,36 @@ export default {
       settingVisible: false,
       menuList: [
         {
+          newIcon: 'fluent:copy-20-regular',
+          title: '复制内容',
+          fn: () => {
+            let content =this.$refs.mdEditor.getContent()
+            require('electron').clipboard.writeHTML(content)
+            message.success('复制内容成功')
+            console.log(content,'md内容')
+          }
+        },
+        {
+          newIcon: 'fluent:markdown-20-regular',
+          title: '复制MD文本',
+          fn: () => {
+            let content =this.$refs.mdEditor.getMarkdown()
+            require('electron').clipboard.writeText(content)
+            message.success('复制内容成功')
+            console.log(content,'md内容')
+          }
+        },
+        {
+          newIcon: 'fluent:clipboard-code-24-regular',
+          title: '复制HTML代码',
+          fn: () => {
+            let content =this.$refs.mdEditor.getContent()
+            require('electron').clipboard.writeText(content)
+            message.success('复制内容成功')
+            console.log(content,'md内容')
+          }
+        },
+        {
           newIcon: 'fluent:print-20-regular',
           title: '打印',
           fn: () => {

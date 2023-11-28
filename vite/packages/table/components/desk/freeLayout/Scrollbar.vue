@@ -87,11 +87,21 @@ onMounted(async () => {
     window.addEventListener("mousemove", handleMouseMove);
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
+    // document.body.addEventListener('keydown',ignoreSpace);
   }, 1);
 });
+function ignoreSpace(event){
+  var e = window.event || event;
+  if(e.keyCode===32){
+    if(e.preventDefault){
+      e.preventDefault();
+    }else{
+      window.event.returnValue = false;
+    }
+  }
+}
 
 // 鼠标按下
-
 function handleMouseDown(event) {
   if (event.buttons === 1) {
     isDragging.value = true;
@@ -120,13 +130,20 @@ function handleMouseUp(event) {
 
 // 键盘按下
 function handleKeyDown(event) {
-  if (event.key == "Alt") {
+  if (event.code === "Space") {
     isKey.value = true;
+    event.preventDefault()
+    event.stopPropagation()
+    return false
   }
 }
 // 键盘抬起
 function handleKeyUp(event) {
   isKey.value = false;
+  if (event.code === "Space") {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 }
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
@@ -158,21 +175,12 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  window.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  window.removeEventListener("keyup", handleKeyUp, {
-    capture: true,
-  });
-  window.removeEventListener("mousedown", handleMouseDown, {
-    capture: true,
-  });
-  window.removeEventListener("mousemove", handleMouseMove, {
-    capture: true,
-  });
-  window.removeEventListener("mouseup", handleMouseUp, {
-    capture: true,
-  });
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+  window.removeEventListener("mousedown", handleMouseDown);
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("mouseup", handleMouseUp);
+  // window.document.body.removeEventListener('keydown',ignoreSpace);
 });
 defineExpose({
   redirect,
