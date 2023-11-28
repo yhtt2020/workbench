@@ -149,7 +149,7 @@
         this.detailToggle = val
       }
     },
-    async mounted() {
+    mounted() {
       this.isLoading = true
       this.getData().then(()=>{
         if(!this.data){
