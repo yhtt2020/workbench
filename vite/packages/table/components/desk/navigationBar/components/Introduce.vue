@@ -12,13 +12,27 @@
     <!-- {{ sideBar[currentIndex].tag == 'webNavigation' }} -->
     <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
       <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
-        :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent' }"
+        :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent', 'color': clickIndex === index ? 'rgba(255, 255, 255, 0.85) !important' : 'var(--primary-text)' }"
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
-    <div class="flex flex-wrap justify-center mt-3">
-      <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
-        @addIcon="addIcon(item, index)" />
+    <!-- <div class="flex " > -->
+    <div class="flex flex-wrap items-center justify-center mt-3 mainList" ref="targetDiv">
+      <!-- <div class="flex flex-wrap"> -->
+        <template v-if="this.filterList.length > 0">
+          <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
+            @addIcon="addIcon(item, index)" />
+        </template>
+        <div v-else class="flex flex-col items-center justify-center mt-10">
+          <div>
+            <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
+          </div>
+          <div class="mt-4 text-base xt-text">暂无数据</div>
+        </div>
+      <!-- </div> -->
+
     </div>
+    <!-- </div> -->
+
   </div>
 </template>
 <script>
@@ -26,12 +40,14 @@ import { navStore } from '../../../../store/nav'
 import { useNavigationStore } from '../navigationStore'
 import { mapActions, mapWritableState } from 'pinia'
 import selectIcon from './selectIcon.vue'
-import { webMenus, localFiles } from '../index'
+import { webMenus, localFiles, doc } from '../index'
 import { message } from 'ant-design-vue'
+import DataStatu from "../../../widgets/DataStatu.vue";
 export default {
   name: 'Introduce',
   components: {
-    selectIcon
+    selectIcon,
+    DataStatu
   },
   data() {
     return {
@@ -39,11 +55,13 @@ export default {
       currentIndex: 0,
       clickIndex: 0,
       localFiles,
+      doc
     }
   },
   props: {
     recommendation: String,
-    selectList: Array
+    selectList: Array,
+    inputValue: String
   },
   methods: {
     // ...mapActions(useNavigationStore, ['updateCurrentList']),
@@ -151,6 +169,9 @@ export default {
     },
     addAllIcon() {
       this.clickRightListItem(this.filterList)
+    },
+    filterIcon(list) {
+      return list.filter(i => i.name.includes(this.inputValue))
     }
   },
   computed: {
@@ -158,9 +179,29 @@ export default {
     ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
     filterList() {
       if (this.selectTag === 'webNavigation') {
-        return this.webList[0]
-      }  else {
-        return this.selectList
+        return this.filterIcon(this.webList[0])
+      } else if (this.selectTag === 'tableApp') {
+        const current = this.filterMenus[this.clickIndex].tag;
+        switch (current) {
+          case 'all':
+            return this.filterIcon(this.selectList);
+            break;
+          case 'software':
+            return this.filterIcon(this.selectList.filter((item) => item.path.includes('.exe') ));
+            break;
+          case 'docx':
+            return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));
+            break;
+          case "other":
+            return this.filterIcon(this.selectList.filter((item) => !doc.includes(item.ext) && item.ext !== '.exe'))
+            break;
+          default:
+            return [];
+            break;
+        }
+      }
+      else {
+        return this.filterIcon(this.selectList)
       }
     },
     selectTag() {
@@ -209,12 +250,13 @@ export default {
     filterList() {
       this.currentList = this.filterList
       this.updateMainNav()
-    }
+    },
   },
   mounted() {
     this.currentList = this.filterList
     this.updateMainNav()
   },
+
 }
 </script>
 <style lang='scss' scoped></style>

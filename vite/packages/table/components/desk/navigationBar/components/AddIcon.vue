@@ -6,7 +6,7 @@
     <div class=" rounded-xl xt-bg flex-center pointer" :class="widthHeight" @click="completeEdit">
         <xt-button :w="24" :h="24" @click="completeEdit">
             <div class="w-[24px] h-[24px] rounded-xl flex-center " style="background-color: var(--active-bg);">
-                <navIcon icon="fluent:checkmark-16-regular" class="text-base" />
+                <navIcon icon="fluent:checkmark-16-regular" class="text-base" style="color: rgba(255, 255, 255, 0.85) !important;"/>
             </div>
         </xt-button>
 

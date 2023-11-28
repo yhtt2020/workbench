@@ -4,7 +4,12 @@ export const useNavigationStore=defineStore('useNavigationStore',{
     state:()=>{
         return {
             editToggle:false,
-            taskBoxVisible:true,
+            bottomToggle:[
+                {userCenterVisible:true},
+                {teamVisible:true},
+                {taskBoxVisible:true},
+            ],
+            
             iconSetting:{
                 iconName:true,
                 iconRounded:true,
