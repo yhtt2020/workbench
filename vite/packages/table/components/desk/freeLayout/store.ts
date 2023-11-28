@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from "pinia";
-
+import cache from "../../../components/card/hooks/cache";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
 // @ts-ignore
@@ -9,7 +9,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
-
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -96,6 +95,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局是否开启
     isFreeLayout() {
+      console.log("开始加载自由布局:>>\n 当前桌面id ", this.getCurrentDeskId);
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
       }
@@ -134,6 +134,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 更新自由布局数据
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
+      console.log(" this.freeLayoutState :>> ", this.freeLayoutState);
+      console.log(
+        "this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId) :>> ",
+        this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)
+      );
+      console.log("this.getCurrentDeskId :>> ", this.getCurrentDeskId);
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
           !this.freeLayoutState[this.getCurrentDeskId]?.system?.isFreeLayout;
@@ -144,8 +150,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         );
       } else {
         // 否则进行初始化
+        cache.set("freeTest", {});
+        console.log("this.getCurrentDeskId :>> ", this.getCurrentDeskId);
         this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
         this.freeLayoutData[this.getCurrentDeskId] = {};
+        console.log("执行了初始化 :>> ");
       }
     },
     // 清空自由布局组件数据
@@ -160,6 +169,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
+      console.log("id :>> ", id);
+
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);
@@ -180,7 +191,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     strategies: [
       {
         paths: ["freeLayoutData", "freeLayoutState"],
-        // storage: dbStorage,
         storage: localStorage,
       },
     ],

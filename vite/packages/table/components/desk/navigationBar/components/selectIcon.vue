@@ -18,11 +18,10 @@
         <div class="absolute top-3 right-3">
             <xt-button :w="24" :h="24" :style="{ background: isAdd ? '#52C41A' : 'var(--active-bg)' }" @click="addIcon">
                 <div class="flex items-center justify-center" v-if="isAdd">
-                    <xt-new-icon icon="fluent:checkmark-16-regular" class="xt-text " size="20"
-                        style="padding:2px"></xt-new-icon>
+                    <xt-new-icon icon="fluent:checkmark-16-regular"  size="20" style="padding:2px;color: rgba(255, 255, 255, 0.85) !important;"></xt-new-icon>
                 </div>
                 <div v-else class="flex items-center justify-center"><xt-new-icon icon="fluent:add-16-regular" class="xt-text"
-                        size="20" style="padding:2px;margin-left:2px;margin-top:2px"></xt-new-icon></div>
+                        size="20" style="padding:2px;margin-left:2px;margin-top:1px;color: rgba(255, 255, 255, 0.85) !important;"></xt-new-icon></div>
             </xt-button>
         </div>
 
