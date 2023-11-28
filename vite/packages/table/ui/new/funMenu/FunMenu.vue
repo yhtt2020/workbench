@@ -8,10 +8,14 @@
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
   >
-      <slot>  </slot>
+    <slot> </slot>
+    <template #cardSize>
+      <slot name="follow"></slot>
+    </template>
   </xt-menu>
 
-  <xt-drawer v-model="drawerVisible" :height="height">
+  <xt-drawer v-model="drawerVisible" :height="h">
+    <slot name="drawer"></slot>
     <DefaultItem
       :menus="menuList"
       :name="name"
@@ -33,9 +37,11 @@ const props = defineProps({
   },
   name: { default: "name" },
   fn: { default: "fn" },
-
+  height: {
+    default: 0,
+  },
 });
-const { menus, model } = toRefs(props);
+const { menus, model,height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -49,10 +55,10 @@ const menuList = computed(() => {
     return followList.value;
   }
 });
-const height= ref(200)
+const h = ref();
 const defaultList = computed(() => {
   let list = [];
-  height.value = 200;
+  h.value = 200 + height.value;
 
   menus.value?.forEach((item) => {
     if (item?.children) {
@@ -61,7 +67,7 @@ const defaultList = computed(() => {
       });
     } else {
       if (item?.divider) {
-        height.value += 115;
+        h.value += 115;
       }
       list.push(item);
     }
