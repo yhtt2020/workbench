@@ -1,7 +1,7 @@
 <!-- 小组件放置层 -->
 <template>
   <div ref="container">
-    <slot></slot>
+    <xt-fun-menu> <slot></slot> </xt-fun-menu>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ onMounted(() => {
     width: containerRef.getBoundingClientRect().width,
     height: containerRef.getBoundingClientRect().height,
   };
-  emits("update:widgetSize", obj);
+  // emits("update:widgetSize", obj);
 });
 </script>
 
