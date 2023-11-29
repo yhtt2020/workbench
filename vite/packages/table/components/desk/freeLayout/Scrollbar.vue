@@ -58,7 +58,7 @@ onMounted(async () => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
-  // setTimeout(async () => {
+  setTimeout(async () => {
     // 初始化自由布局定位
     redirect();
 
@@ -88,7 +88,7 @@ onMounted(async () => {
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
     document.body.addEventListener('keydown',ignoreSpace);
-  // }, 1);
+  }, 1);
 });
 function ignoreSpace(event) {
   var e = window.event || event;
