@@ -50,7 +50,7 @@
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
 
-                  <a-tooltip v-for="item in footNavigationList" :key="item.name" :title="item.name">
+                  <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
                     <RightMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
@@ -59,12 +59,12 @@
                           class="flex items-center justify-center rounded-lg s-item xt-bg-2">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
-                            :class="{ 'shaking-element': editToggle }"></navIcon>
+                            :class="{ 'shaking-element': shakeElement }"></navIcon>
                         </div>
                         <div v-else style="width: 56px; height: 56px;"
                           class="flex items-center justify-center xt-bg-2 rounded-xl">
                           <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
-                            :class="{ 'shaking-element': editToggle }"></a-avatar>
+                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
                     </RightMenu>
@@ -74,8 +74,8 @@
             </div>
           </div>
           <!-- <div class="mr-3"> -->
-          <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
-            @completeEdit="completeEdit" />
+          <!-- <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
+            @completeEdit="completeEdit" /> -->
           <!-- </div> -->
 
           <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
@@ -202,7 +202,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
+      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}" v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -328,7 +328,7 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           name: "打开",
-          fn: () => { console.log("添加导航图标") },
+          fn: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
@@ -341,7 +341,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { }
+          fn: () => {this.removeFootNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -349,9 +349,9 @@ export default {
         },
         {
           id: 5,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          name: '添加导航图标',
+          newIcon: "fluent:add-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
@@ -369,15 +369,15 @@ export default {
         },
         {
           id: 2,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
-        },
-        {
-          id: 3,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           fn: () => { this.editNavigation(this.drawerMenus[2]) },
+        },
+        {
+          id: 3,
+          name: '隐藏当前导航',
+          newIcon: "fluent:eye-off-16-regular",
+          fn: () => { this.navigationToggle[2]=false },
         },
         {
           id: 4,
@@ -437,7 +437,10 @@ export default {
           event: "status",
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
-      ]
+      ],
+      shakeElement:false,
+      currentIndex:null,
+      currentItem:null
     }
   },
   props: {
@@ -520,6 +523,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
+      'navigationToggle'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -569,10 +573,12 @@ export default {
     editToggle(){
       if(this.editToggle){
         this.enableDrag()
-        console.log('===>>>开始执行');
+        this.shakeElement=true
+        setTimeout(()=>{
+          this.shakeElement=false
+        },2000)
       }else{
         this.disableDrag()
-        console.log('===>>>停止执行');
       }
     }
   },
@@ -609,6 +615,12 @@ export default {
       } else {
         this.teamVisible = !this.teamVisible
       }
+    },
+    showElement(item,index){
+      // console.log(item,index,'====>>>1111');
+      // this.clickNavigation(item)
+      this.currentItem=item
+      this.currentIndex=index
     },
     closeDrawer() {
       this.menuVisible = false

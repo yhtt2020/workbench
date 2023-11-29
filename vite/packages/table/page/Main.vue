@@ -33,7 +33,7 @@
         <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div class="del-icon" id="delIcon2" v-show="delZone" style="z-index:500">拖到此处删除图标</div>
+        <div class="del-icon" id="delIcon2" v-show="delZone" style="z-index:500"></div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
@@ -142,9 +142,9 @@ export default {
   width: 100%;
   height: 100%;
   // opacity: 0.5;
-  background: var(--secondary-bg);
-  backdrop-filter: blur(8px);
-  border: 1px dashed rgba(255, 255, 255, 0.4);
+  // background: var(--secondary-bg);
+  // backdrop-filter: blur(8px);
+  // border: 1px dashed rgba(255, 255, 255, 0.4);
   border-radius: 16px;
   display: flex;
   align-items: center;
