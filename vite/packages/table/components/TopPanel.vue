@@ -43,12 +43,11 @@
 
     </div>
 
-    <div class="flex max-search" > 
-      <!-- hidden="" -->
-      <!-- <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
+    <div class="flex max-search" hidden=""> 
+      <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
         style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
-      </div> -->
+      </div>
     </div>
 
     <div class="flex h-12 justify-end no-drag" style="width:550px;">
@@ -109,6 +108,7 @@
       </div>
     </div>
   </TopPanelLeftDrawer>
+  
   <TopPanelRightDrawer ref="rightDrawerRef" />
 </template>
 
