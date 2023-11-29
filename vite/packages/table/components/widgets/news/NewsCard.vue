@@ -281,11 +281,10 @@ export default {
   },
   async mounted() {
     this.isLoading = true
-    await this.getNewsMsg(this.showList[this.currentIndex].tag)
-    // await this.getNewsData()
-    setTimeout(() => {
+    this.getNewsMsg(this.showList[this.currentIndex].tag).then(()=>{
       this.isLoading = false
     })
+    // await this.getNewsData()
   }
 }
 </script>

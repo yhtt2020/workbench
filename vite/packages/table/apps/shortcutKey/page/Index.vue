@@ -1,5 +1,4 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
 import XtButton from "../../../ui/libs/Button/index.vue";
 import {SettingFilled} from "@ant-design/icons-vue";
 import {mapActions, mapWritableState} from "pinia";
@@ -59,7 +58,7 @@ export default {
           return i.tab != 'store'
         })
       }
-      
+
       const endMenu = [
         {
           full: true,

@@ -490,6 +490,10 @@ export default {
             key: '=',
             checked: false,
           },
+          {
+            key: '`',
+            checked: false,
+          },
         ],
         [
           {
@@ -586,14 +590,14 @@ export default {
       })
 
       //选择数不能大于三
-      flag = this.keyContent.keyArr.length >= 3
+      flag = this.keyContent.keyArr.length >= 4
       // 再次点击选择的【取消选择】
       if (hasKeyIndex != -1) {
         flag = false
       }
 
       if (flag) {
-        message.info('最多选择三个快捷按钮')
+        message.info('最多选择4个快捷按钮')
         return
       }
 

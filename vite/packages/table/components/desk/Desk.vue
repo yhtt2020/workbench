@@ -658,7 +658,11 @@ export default {
       resizeHandler: null,
     };
   },
+  beforeMount () {
+    window.time=Date.now()
+  },
   mounted() {
+    console.log('桌面加载总耗时',Date.now()-window.time+'ms')
     this.resizeHandler = () => {
       this.currentDesk.layoutSize = this.getLayoutSize();
     };

@@ -32,16 +32,15 @@ export function preHandleItem(item){
       newItem.lastNodeSummary = content.latestNodes[0]?.txt
     }
   } else if(newItem.store==='tb'){
-    newItem.company = content.expressType.slice(0, content.expressType.indexOf('快递') + 2)
+    newItem.company = content.expressType
     newItem.stateText = content.status
     if (content.latestNodes && content.latestNodes.length > 0) {
       newItem.lastNodeTime = content.latestNodes[0]?.time
+      newItem.lastNodeStatus=content.latestNodes[0]?.status
       newItem.lastNodeSummary = content.latestNodes[0]?.txt
     }
   }
   newItem.tagColor=convertStatusToColor(getOrderState(item))
-  // console.log('取到的状态',getOrderState(item))
-  // console.log('取到的标签颜色',newItem.tagColor)
   return newItem
 }
 

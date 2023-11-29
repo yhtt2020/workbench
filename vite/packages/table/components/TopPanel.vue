@@ -1,6 +1,10 @@
 <template>
   <div class="flex justify-between w-full top-shadow drag">
     <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  h-12 items-center no-drag">
+
+     <a-tooltip>
+       <QueueWidget></QueueWidget>
+     </a-tooltip>
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
         <xt-button w="28" h="28" class="xt-bg-t-2 mr-2.5" style="border-radius:6px !important;"  @click="enterClipboard">
           <div class="flex items-center justify-center">
@@ -67,6 +71,10 @@
   </div>
   
   <TopPanelLeftDrawer ref="leftDrawerRef">
+    <div>应用状态</div>
+    <div class="app-stats">
+      <QueueWidget :show="true"></QueueWidget>
+    </div>
     <div class="app-stats">
       <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
         <a-row>
@@ -125,6 +133,7 @@ import MessagePopup from '../page/notice/noticeIndex.vue'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 import TopCourier from './widgets/courier/TopCourier.vue'
+import QueueWidget from '../apps/queue/topWidget/index.vue'
 import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 
@@ -136,7 +145,8 @@ export default {
     MessagePopup,
     TopTomato,
     TopClockTimer,
-    TopCourier,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon
+    TopCourier,
+    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon
   },
 
   data() {

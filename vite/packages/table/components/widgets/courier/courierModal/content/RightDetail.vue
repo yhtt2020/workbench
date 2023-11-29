@@ -70,7 +70,7 @@
           <TimeLine :list="content?.Traces"/>
         </vue-custom-scrollbar>
       </template>
-      <template v-if="detail.store==='jd'">
+      <template v-if="detail.store==='jd' || detail.store==='tb'">
         <template v-if="traces.length === 0">
           <EmptyModal/>
         </template>
@@ -146,10 +146,10 @@ export default {
     refreshData(){
       this.orderNum=this.detail.orderId
       this.content = this.detail.content
-      if(this.detail.store==='jd'){
+      if(this.detail.store==='jd'||this.detail.store==='tb'){
         this.traces=[]
         for(const t of this.content.latestNodes){
-          this.traces.push({
+          this.traces.unshift({
             AcceptTime:t.time,
             AcceptStation:t.txt
           })

@@ -51,7 +51,7 @@ export const newsStore = defineStore("news", {
     enabled: true,
     strategies: [
       {
-        storage: dbStorage,
+        storage: localStorage,
         paths: ['newsMsgList'],
       }
     ]

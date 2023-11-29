@@ -1,103 +1,108 @@
 <template>
-    <div id="left-drop" style=" position: fixed; top: 0; left: 0;width: 300px;height: 100vh;" @drop="drop"></div>
-    <div id="foot-drop" @drop="drop"
-        style=" position: fixed;bottom: 0;left: 300px;right: 300px;width:calc(100vw - 600px);height: 300px;">
-    </div>
-    <div id="right-drop" @drop.prevent="drop"
-        style=" position: fixed;bottom: 0px; right: 0;width: 300px;height:calc(100vh );">
-    </div>
-    <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :back="false" @no="setQuick" title="" :mask="false" :maskIndex="99" :index="300">
-        <template #nav>
-            <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;height: 516px;">
-                <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
-                    <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
-                    <div class="ml-4 text-base xt-text">图标</div>
-                </div>
-                <div class="w-full h-[1px]  mt-3" style="background: var(--divider);"></div>
-                <xt-button v-for="(item, index) in sideBar" style="border-radius: 10px;" :w="160" :h="48" :style="{
-                    'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
-                }" @click="onSelect(index)" class="flex flex-col mt-2 text-base xt-text hover-style">
-                    <div style="text-align: left !important;"> {{ item.name }}</div>
-                </xt-button>
+    <!-- <div class="flex flex-col"> -->
+        <div class="flex justify-between">
+            <div id="left-drop" class="border-index xt-bg-2" style=" width: 300px;height: 100vh;" @drop="drop" ></div>
+            <div class="flex flex-col justify-end">
+                <div id="foot-drop" class="border-index xt-bg-2" @drop="drop" style="width:calc(100vw - 600px);height: 300px;"></div>
             </div>
-
-        </template>
-        <template #header-left>
-            <!-- 输入框 -->
-            <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
-                style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
-                @keydown.enter="onSearch">
-                <template #suffix>
-                    <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
-                </template>
-            </a-input>
-            <!-- windows应用 -->
-            <div v-if="currentTag === 'tableApp'"
-                class="ml-2 xt-bg-2 h-[40px] rounded-xl flex items-center p-2  justify-between">
-                <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
-                <div class="flex items-center ">
-                    <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>
-                    <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
-                        <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
-                            批量添加(3)</div>
-                    </xt-button>
-                </div>
-
-            </div>
-
-            <!-- 下拉选择 -->
-            <a-dropdown v-if="currentTag == 'webNavigation'">
-                <template #overlay>
-                    <a-menu @click="handleMenuClick">
-                        <a-menu-item key="1">
-                            综合排序
-                        </a-menu-item>
-                    </a-menu>
-                </template>
-                <xt-button :w="160" :h="40" class="ml-3">
-                    <div class="flex justify-between">
-                        <div>综合排序</div>
-                        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
-                            class="-rotate-90 xt-text"></xt-new-icon>
+            <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );"></div>
+            <NewModel class="bottom-edit"  :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
+                :back="false" @no="setQuick" title="" :mask="false" :index="200">
+                <template #nav>
+                    <div class="p-3 -mt-4 -mb-4 -ml-4 xt-bg"
+                        style="border-radius: 12px 0px 0px 12px;width: 185px;height: 516px;">
+                        <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
+                            <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
+                            <div class="ml-4 text-base xt-text">图标</div>
+                        </div>
+                        <div class="w-full h-[1px]  mt-3" style="background: var(--divider);"></div>
+                        <xt-button v-for="(item, index) in sideBar" style="border-radius: 10px;" :w="160" :h="48" :style="{
+                            'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
+                        }" @click="onSelect(index)" class="flex flex-col mt-2 text-base xt-text hover-style">
+                            <div style="text-align: left !important;"> {{ item.name }}</div>
+                        </xt-button>
                     </div>
-                </xt-button>
-            </a-dropdown>
 
-
-        </template>
-        <template #header-right>
-            <a-dropdown trigger="['click']">
-                <template #overlay>
-                    <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
-                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
-                            class="flex items-center justify-center hover-style ">
-                            <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
-                        </a-menu-item>
-                    </a-menu>
                 </template>
-                <xt-button :w="120" :h="40" class="ml-2">
-                    <div class="flex justify-between">
-                        <div class="text-base xt-text">{{ defaultTitle.title }}</div>
-                        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
-                            class="-rotate-90 xt-text"></xt-new-icon>
+                <template #header-left>
+                    <!-- 输入框 -->
+                    <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
+                        style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
+                        @keydown.enter="onSearch">
+                        <template #suffix>
+                            <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
+                        </template>
+                    </a-input>
+                    <!-- windows应用 -->
+                    <div v-if="currentTag === 'tableApp'"
+                        class="ml-2 xt-bg-2 h-[40px] rounded-xl flex items-center p-2  justify-between">
+                        <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
+                        <div class="flex items-center ">
+                            <div style="color:var(--active-bg)" class="mr-3 pointer" @click="selectAll">全选</div>
+                            <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
+                                <div class="flex items-center justify-center"
+                                    style="color: rgba(255, 255, 255, 0.85) !important;">
+                                    批量添加(3)</div>
+                            </xt-button>
+                        </div>
+
                     </div>
-                </xt-button>
-            </a-dropdown>
-            <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
+
+                    <!-- 下拉选择 -->
+                    <a-dropdown v-if="currentTag == 'webNavigation'">
+                        <template #overlay>
+                            <a-menu @click="handleMenuClick">
+                                <a-menu-item key="1">综合排序</a-menu-item>
+                            </a-menu>
+                        </template>
+                        <xt-button :w="160" :h="40" class="ml-3">
+                            <div class="flex justify-between">
+                                <div>综合排序</div>
+                                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20" class="-rotate-90 xt-text"></xt-new-icon>
+                            </div>
+                        </xt-button>
+                    </a-dropdown>
+
+
+                </template>
+                <template #header-right>
+                    <a-dropdown trigger="['click']">
+                        <template #overlay>
+                            <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
+                                <a-menu-item @click="handleMenuClick(item)" key="index"
+                                    v-for="(item, index) in addIconPosition"
+                                    class="flex items-center justify-center hover-style ">
+                                    <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                        <xt-button :w="120" :h="40" class="ml-2">
+                            <div class="flex justify-between">
+                                <div class="text-base xt-text">{{ defaultTitle.title }}</div>
+                                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
+                                    class="-rotate-90 xt-text"></xt-new-icon>
+                            </div>
+                        </xt-button>
+                    </a-dropdown>
+                    <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
                 <xt-new-icon
                   icon="fluent:dismiss-16-filled"
                   size="16"
                   class="xt-text-2"
                 />
               </xt-button> -->
-        </template>
-        <div class="w-[850px] ml-3 mainList" style="height: 400px;">
-            <Custom v-if="currentTag === 'custom'" />
-            <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
-                :inputValue="inputValue" />
+                </template>
+                <div class="w-[850px] ml-3 mainList" style="height: 400px;">
+                    <Custom v-if="currentTag === 'custom'" />
+                    <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
+                        :inputValue="inputValue" />
+                </div>
+            </NewModel>
+            
         </div>
-    </NewModel>
+
+        
+    <!-- </div> -->
 </template>
 <script>
 import { useNavigationStore } from './navigationStore'
@@ -130,6 +135,17 @@ export default {
                     name: '推荐',
                     tag: 'recommendation',
                     active: 0
+                    
+                },
+                {
+                    name: '桌面图标',
+                    tag: 'tableApp',
+                    active: 0
+                },
+                {
+                    name: '系统功能',
+                    tag: 'systemApp',
+                    active: 0
                 },
                 {
                     name: '网址导航',
@@ -146,20 +162,7 @@ export default {
                     tag: 'lightApp',
                     active: 0
                 },
-                {
-                    name: '系统功能',
-                    tag: 'systemApp',
-                    active: 0
-                },
-                {
-                    name: 'windows',
-                    tag: 'tableApp',
-                    active: 0
-                },
-                {
-                    name: '自定义',
-                    tag: 'custom'
-                }
+                
             ],
             suggestNavigationList: [
 
@@ -227,7 +230,7 @@ export default {
             defaultTitle: {},
             targetDivName: '',
             darggingCore: false,
-            dropList:[]
+            dropList: []
         }
     },
     methods: {
@@ -303,14 +306,15 @@ export default {
         },
         // 拖拽桌面图标
         async drop(e) {
-            const width=window.innerWidth
+            // this.modelValue=false
+            const width = window.innerWidth
             let files = e.dataTransfer.files
-            if(e.x<=300){
-                this.selectNav='left'
-            }else if(e.x>300 && e.x<width-300){
-                this.selectNav='foot'
-            }else if(e.x>=width-300){
-                this.selectNav='right'
+            if (e.x <= 300) {
+                this.selectNav = 'left'
+            } else if (e.x > 300 && e.x < width - 300) {
+                this.selectNav = 'foot'
+            } else if (e.x >= width - 300) {
+                this.selectNav = 'right'
             }
             let filesArr = []
             if (files && files.length > 0) {
@@ -325,7 +329,8 @@ export default {
             }))
             this.$refs.introduce.clickRightListItem(this.dropList)
             // 添加完后清空
-            this.dropList=[]
+            this.dropList = []
+            // this.modelValue=true
         },
     },
     computed: {
@@ -384,6 +389,10 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+.border-index{
+    border: 1px solid red;
+    z-index: 999;
+}
 .hover-style {
     &:hover {
         background: var(--active-secondary-bg) !important;
