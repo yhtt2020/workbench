@@ -190,6 +190,8 @@ export default {
         justify-content: center !important;
         flex-wrap: wrap;
         background-color: transparent !important;
+        overflow: hidden;
+        padding: 0 10% !important;
 
 }
 
