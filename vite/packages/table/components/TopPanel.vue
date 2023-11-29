@@ -1,7 +1,6 @@
 <template>
-  <div class="flex justify-between w-full top-shadow drag">
-    <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  h-12 items-center no-drag">
-
+  <div class="flex items-center justify-between w-full h-12 top-shadow py-2.5  drag">
+    <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  items-center no-drag">
      <a-tooltip>
        <QueueWidget></QueueWidget>
      </a-tooltip>
@@ -50,30 +49,31 @@
       </div>
     </div>
 
-    <div class="flex h-12 justify-end no-drag" style="width:550px;">
-      <xt-button h="48" style="background:transparent !important;width:auto !important;margin:0 16px 0 0 !important"  @click="toggleRightDrawer">
+    <div class="flex items-center  justify-end relative drag" style="width:550px;">
+      <TopPanelButton />
+
+      <xt-button h="48" style="background:transparent !important;width:auto !important;"   @click="toggleRightDrawer"
+       :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " class="no-drag"
+      >
         <div class="flex items-center">
           <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
           <div class="xt-text font-14  xt-font">
-           <span  v-if="appSettings.showTopbarTime"> {{ dateTime.month }}月 {{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }} · </span>
+           <span  v-if="appSettings.showTopbarTime"> {{ dateTime.month }}月 {{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
            <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
-            {{ city.now.text }}  {{ city.now.temp }}℃
+             · {{ city.now.text }}  {{ city.now.temp }}℃
             <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
            </span>
           </div>
         </div>
       </xt-button>
-      <div class="xt-bg rounded-bl-xl h-9" v-if="showWindowController" id="windowController">
+
+      <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
         <WindowController></WindowController>
       </div>
     </div>
   </div>
   
   <TopPanelLeftDrawer ref="leftDrawerRef">
-    <div>应用状态</div>
-    <div class="app-stats">
-      <QueueWidget :show="true"></QueueWidget>
-    </div>
     <div class="app-stats">
       <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
         <a-row>
@@ -106,6 +106,10 @@
           </a-col>
         </a-row>
       </div>
+      <div class="app flex">
+        <div>应用状态</div>
+        <QueueWidget :show="true"></QueueWidget>
+      </div>
     </div>
   </TopPanelLeftDrawer>
   
@@ -136,6 +140,7 @@ import TopCourier from './widgets/courier/TopCourier.vue'
 import QueueWidget from '../apps/queue/topWidget/index.vue'
 import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
+import TopPanelButton from './drawer/TopPanelButton.vue'
 
 export default {
   name: 'TopPanel',
@@ -146,7 +151,7 @@ export default {
     TopTomato,
     TopClockTimer,
     TopCourier,
-    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon
+    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon,TopPanelButton
   },
 
   data() {
