@@ -14,7 +14,7 @@
         />
         <div
           class="absolute flex overflow-hidden text-center -translate-x-1/2 rounded-md xt-text left-1/2"
-          style="width: 90%; bottom: 4px; height: 20px; z-index: 9999"
+          style="width: 60%; bottom: 4px; height: 20px; z-index: 9999"
         >
           <div class="xt-active-bg" :style="[progress]"></div>
           <div class="flex-1 xt-bg-2"></div>
@@ -22,7 +22,7 @@
             class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
             style="width: 60px; font-size: 11px"
           >
-            主线 {{ width }} %
+            {{ width }}%
           </div>
         </div>
       </div>

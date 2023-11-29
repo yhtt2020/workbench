@@ -26,7 +26,15 @@ const dbStorage: Storage = {
     const time=Date.now()
     model.setItem(key, value, getSign()).then(()=>{
       if(debug){
-        Date.now()-time>1&&console.log('写入完成',key,value,Date.now()-time+'ms')
+        if(!window.writeLog){
+          window.writeLog=[]
+        }
+        window.writeLog.push({
+          key,
+          value,
+          useTime:Date.now()-time+'ms',
+          time:time
+        })
       }
     });//异步写入，防止阻塞
 
@@ -58,6 +66,7 @@ const dbStorage: Storage = {
     if(debug){
       record.useTime=Date.now()-time+'ms'
       record.value=value
+      console.log('加载',key,'完成')
     }
     return value;
   },

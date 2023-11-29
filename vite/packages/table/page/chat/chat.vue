@@ -4,7 +4,7 @@
       <router-view ></router-view>
     </div>
     <template #communityFloat>
-      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :float="true"  @clickItem="currentItem"></CategoryFloat>
+      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :data="communityData" :float="true"  @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else :float="true"></DefaultFloat>
     </template>
   </xt-left-menu>
@@ -21,13 +21,14 @@
 
 <script>
 import { ref, reactive, toRefs, computed, onMounted, nextTick,watch } from "vue";
-import { useRouter,} from "vue-router";
+import { useRouter,useRoute} from "vue-router";
 import { storeToRefs } from "pinia";
 import { Icon as ChatIcon } from "@iconify/vue";
 import { communityStore } from "./store/communityStore";
 import config from './config'
 import { appStore } from '../../store'
-import { chatStore } from '../../store/chat'
+import { chatStore } from '../../store/chat';
+import _ from 'lodash-es';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -48,12 +49,14 @@ export default {
 
   setup(props, ctx) {
     const com = communityStore();
-    const { communityList } = storeToRefs(com);
+    
+    const { communityList,currentNo } = storeToRefs(com);
     const chat = chatStore();
     const { settings,contactsSet } = storeToRefs(chat)
     const appS = appStore();
     const { userInfo } = appS;
     const router = useRouter()
+    const route = useRoute()
     const TUIServer = window.$TUIKit
 
     const data = reactive({
@@ -68,105 +71,26 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      communityNo:'',
+      communityData:null,
+      communityNo:1,
     })
 
-    const unReadNum = ref(0)
-    
+    // 聊天入口消息提示状态
+    const unReadNum = ref(0)  
 
-    const leftList = ref([
-      {
-        newIcon: "fluent:chat-16-regular",
-        tab: "session",
-        route: { name: "chatMain", params: { no: "" } },
-        callBack: (item) => { selectTab(item) },
-        unread:unReadNum > 99 ? 99 : unReadNum
-      },
-      {
-        tab: "contact",
-        newIcon: "fluent:people-16-regular",
-        route: { name: "contact", params: { no: "" } },
-        callBack: (item) => { selectTab(item) },
-      },
-
-      ...(config.adminUids.includes(userInfo.uid) ? [
-        {
-          icon: "diannao", type: "admin", tab: "admin",
-          title: "管理面板(仅管理员可见)",
-          route: {  name: "chatAdmin", params: { no: ""}},
-          callBack: (item) => { selectTab(item) },
-        },
-      ]: []),
-
-      {
-        tab:'find',type: 'find', newIcon:'eva:compass-outline',
-        route:{ name: 'chatFind', params: { no: "" }},
-        callBack: (item) => { selectTab(item) }
-        
-      },
-      // 写社群相关静态内容时临时打开的路由
-      {
-        img: '/icons/logo128.png',   icon: '',float: "", 
-        noBg: true,tab:'community',type: 'community',
-        route:{ name: 'defaultCommunity',params:{no:1} },
-        callBack: (item) => { selectTab(item) }
-      },
-      {
-        newIcon:'fluent:add-16-filled',
-        callBack: () => {
-          createCommunity()
-        }
-      },
-      {
-        full: true,
-      },
-      {
-        newIcon:'fluent:add-16-filled', icon: 'tianjia2',
-        children:[
-          {
-            icon: 'message',
-            newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
-            callBack: (item) => { triggerAddModal(item) }
-          },
-          {
-            icon: 'team',
-            newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
-            callBack: (item) => { triggerAddModal(item) }
-          },
-          { 
-            icon: 'tianjiachengyuan',
-            newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
-            callBack: (item) => { triggerAddModal(item) }
-          },
-          {
-            icon: 'smile',
-            newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',
-            callBack: () => { createCommunity() }
-          },
-          {
-            icon: 'team',
-            newIcon:'fluent:people-16-regular', index: 'joinCom', name: '加入社群',
-            callBack: (item) => { triggerAddModal(item) }
-          }
-        ]
-      }
-    ]);
-  
-
-    // 触发社群创建入口
-    const createCommunity = () =>{
+    /**事件开始**/ 
+    //触发社群创建入口
+    const createCommunity = () =>{  
       data.chatVisible = true
       data.addIndex = 'createCom'
     }
     // 切换左侧tab
     const selectTab = async (item)=>{
-      data.index = item.type
-      if(item.route.params.no !== 1){
-        data.communityNo = item.route.params.no
-        await com.getCategoryData(item.route.params.no)
-      }else{
-        data.communityNo = 1
-        await com.getCategoryData('')
+      data.index = item.type;
+      const no = item.route.params.no; // 取出社群id
+      data.communityNo = item.route.params.no;
+      if(no !== 1){
+        data.communityData = com.getCommunityDetail(item.route.params.no)
       }
       router.push(item.route)
     }
@@ -175,93 +99,206 @@ export default {
       data.addIndex = item.index
       data.chatVisible = true
     }
-    
-    watch(()=>communityList.value,(newVal)=>{
+    /**事件结束**/
 
-      if(newVal.length !== undefined && newVal.length !== 0){
-        const mapNewVal = newVal.map((item)=>{
-          if(item){
-            const info = {...item.communityInfo}
-            return { 
-            img:info.icon, float:'',
-            name:info.name, tab:`community_${info.no}`,
-            noBg:true,type:`community${item.cno}`,
-            route:{ name:'myCommunity',params:{no: info.no}},
-            callBack:(item)=>{ selectTab(item) },
-            id:item.cno,
-            
+    /**初始ref定义数组开始**/
+    const headList = ref([
+      {
+        newIcon: "fluent:chat-16-regular",  tab: "session",
+        route: { name: "chatMain", params: { no: "" } },
+        callBack: (item) => { selectTab(item) },
+        unread:unReadNum > 99 ? 99 : unReadNum
+      },
+      {
+        tab: "contact", newIcon: "fluent:people-16-regular",
+        route: { name: "contact", params: { no: "" } },
+        callBack: (item) => { selectTab(item) },
+      },
+      ...(config.adminUids.includes(userInfo.uid) ? [
+        {
+          icon: "diannao", type: "admin", tab: "admin",title: "管理面板(仅管理员可见)",
+          route: {  name: "chatAdmin", params: { no: ""}},
+          callBack: (item) => { selectTab(item) },
+        },
+      ]: []),
+      {
+        tab:'find',type: 'find', newIcon:'eva:compass-outline',
+        route:{ name: 'chatFind', params: { no: "" }},
+        callBack: (item) => { selectTab(item) }
+      },
+    ])
+    const bodyList = ref([
+      // 写社群相关静态内容时临时打开的路由
+      {
+        img: '/icons/logo128.png',   icon: '',float: "", id:0,
+        noBg: true,tab:'community',type: 'community',
+        route:{ name: 'defaultCommunity',params:{no:1} },
+        callBack: (item) => { selectTab(item) }
+      },
+    ])
+    const footList = ref([
+      {
+        full: true,
+      },
+      {
+        newIcon:'fluent:add-16-filled', icon: 'tianjia2',
+        children:[
+          {
+            icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
+            callBack: (item) => { triggerAddModal(item) }
+          },
+          {
+            icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
+            callBack: (item) => { triggerAddModal(item) }
+          },
+          { 
+            icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
+            callBack: (item) => { triggerAddModal(item) }
+          },
+          {
+            icon: 'smile',  newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',
+            callBack: () => { createCommunity() }
+          },
+          {
+            icon: 'team',  newIcon:'fluent:people-16-regular', index: 'joinCom', name: '加入社群',
+            callBack: (item) => { triggerAddModal(item) }
+          }
+        ]
+      }
+    ])
+    const createCommunityList = ref([
+      {
+        newIcon:'fluent:add-16-filled',
+        id:2,
+        callBack: () => { createCommunity() }
+      },
+    ])
+    /**初始ref定义数组结束**/
+
+    /**计算社群消息未读数的总和开始**/
+    const mergeChildren = (no) =>{
+      if(no !== undefined){
+        const totalUnread = {
+          unread:0
+        };
+        const list = [];
+        const find = communityList.value.find((find)=>{
+          return String(find.no) === String(no);
+        })
+        if(find !== undefined){
+          for(const item of find.tree){
+            if(item.hasOwnProperty('children') && item.children.length !== 0){
+              for(const childrenItem of item.children){
+                if(childrenItem.type === 'group'){
+                  const jsonChildren = JSON.parse(childrenItem.props);
+                  const index = _.findIndex(list,(find)=>{
+                   return String(find.groupID) === String(jsonChildren.groupID);
+                  })
+                  if(index === -1){
+                    list.push(childrenItem);
+                  }
+                }
+               }
+            }else{
+              
+              if(item.type === 'group'){
+                const jsonItem = JSON.parse(item.props);
+                const index = _.findIndex(list,(find)=>{
+                return String(find.groupID) === String(jsonItem.groupID);
+                })
+                if(index === -1){
+                  list.push(item);
+                }
+              }
             }
           }
-        })
-        for(const items of mapNewVal){
-          const index = leftList.value.findIndex((item)=>{
-            return items.id === item.id
-          })
-          if(index === -1){
-            leftList.value.splice(4,0,items)
+        }
+        for(const item of list){
+          const jsonPropItem = JSON.parse(item.props);
+          if(jsonPropItem.hasOwnProperty('unread')){
+            totalUnread.unread += jsonPropItem.unread
+          }else{
+            totalUnread.unread = 0
           }
         }
-        // console.log('查看leftList',leftList.value);
-      }else{
-        return
+        // console.log('执行...排查',totalUnread.unread);
+        return totalUnread.unread;
       }
-    },{immediate:true})
+    }
+    /**计算社群消息未读数的总和结束**/
 
-    const filterList = computed(()=>{
+    /**监听communityList开始**/
+    watch(()=>communityList.value,(newVal)=>{
+      const isNull = newVal.length !== undefined && newVal.length !== 0;
+      if(isNull){
+        const communityData = communityList.value;
+        const mapCommunityData = communityData.map((item)=>{
+          return {
+            ...item,
+            img:item.icon,float:'',
+            tab:`community_${item.no}`,  noBg:true,
+            type:`community${item.cno}`,
+            route:{ name:'myCommunity',params:{no: item.no}},
+            callBack:(item)=>{ selectTab(item) },
+          }
+        });
+        const mergeArray = bodyList.value.concat(mapCommunityData.concat(createCommunityList.value));
+        bodyList.value = mergeArray;
+      }
+    })
+    /**监听communityList结束**/
+
+    const filterList  = computed(()=>{
+      const uniqueList = [];
+      for(const item of bodyList.value){
+        const index = uniqueList.findIndex((find)=>{
+          return find.id === item.id
+        })
+        if(index === -1){
+          const itemOption = {
+            ...item,
+            unread:mergeChildren(item.no) !== undefined && mergeChildren(item.no) !== 0  ? mergeChildren(item.no) : 0,
+          }
+          // console.log('执行....测试', itemOption);
+          uniqueList.push(itemOption)
+        }
+      }
+      const lastList = [
+        ...headList.value,
+        ...uniqueList,
+        ...footList.value
+      ]
       if(settings.value.enableHide){
-        const mapFloatLeft = leftList.value.map((item)=>{
+        const mapFloatLeft = lastList.map((item)=>{
           return {...item,float:item.float === '' ? "communityFloat" : ''}
         });
         return mapFloatLeft
       }else{
-        return leftList.value
+        return lastList
       }
-    }) 
+    })
 
-    onMounted(() => {
-      nextTick(() => {
+    /**初始化挂载开始**/
+    onMounted(()=>{
+      nextTick(()=>{
         com.getMyCommunity();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
-          unReadNum.value = e.data
-        })
-        // 接收消息,根据消息返回的groupID进行适配
-        window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(e)=>{
-          const data = e.data[0]
-          const store = window.$TUIKit.store.store
-          const conversation = store.TUIConversation
-          const list = conversation.conversationList
-          if(list.length !== 0){
-            const conversationID = data.to
-            const findItem = list.find((find)=>{
-             const findGroupID = find.groupProfile.groupID
-             return String(findGroupID) === String(conversationID)
-            })
-            if(findItem !== undefined){
-              const findGroupID = findItem.groupProfile.groupID
-              const index = contactsSet.value.unReadMsgNum.findIndex((item)=>{
-                return item.groupID === findGroupID
-              })
-              const option =  {
-                groupID:findGroupID,
-                unreadCount:findItem.unreadCount
-              }
-              if(index === -1){
-                contactsSet.value.unReadMsgNum.push(option)
-              }else{
-                contactsSet.value.unReadMsgNum[index] = option
-              }
-            }
-          }
-        })
-      });
-    });
+          unReadNum.value = e.data;
+          com.updateMsgStatus();
+        });
+      })
+    })
+    /**初始化挂载结束**/
 
-    return {
-      leftList,filterList,unReadNum,
+    return{
+      headList,bodyList,footList,
+      filterList, createCommunityList,unReadNum,
       ...toRefs(data),createCommunity,
       selectTab,triggerAddModal,
-    };
-  },
+      mergeChildren,
+    }
+  }
+ 
 };
 </script>
 

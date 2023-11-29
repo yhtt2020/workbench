@@ -11,7 +11,7 @@
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-          <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{GPUData.useGPU.value}}%</div>
+          <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{GPUData.useGPU.value.toFixed(1)}}%</div>
           <div style="color:var(--primary-text);font-size: 14px;margin-top: 6px">负载</div>
         </template>
       </a-progress>
@@ -20,7 +20,7 @@
         <div class="cpu">
           <div class="cpu-number">
             <span>温度</span>
-            <span style="font-weight: 700;">{{GPUData.warmGPU.value}}℃</span></div>
+            <span style="font-weight: 700;">{{GPUData.warmGPU.value.toFixed(1)}}℃</span></div>
         </div>
         <a-progress :showInfo="false" :status="GPUData.warmGPU.value===0?'':'active'" :percent="GPUData.warmGPU.value" :stroke-color="{
         '0%': '#60BFFF',
@@ -104,6 +104,9 @@ export default {
         }
         this.GPUData.useGPU.value&& this.GPUList.push(this.GPUData.useGPU.value)
         this.GPUList.shift();
+        if(!document.getElementById('myGPUCanvas')){
+          return
+        }
         this.initCanvas('myGPUCanvas',this.GPUList,6,12,"#515151","#3B8FFA")
       },
       deep: true,

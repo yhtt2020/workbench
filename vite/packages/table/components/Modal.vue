@@ -25,11 +25,13 @@ export default {
         this.className +='-close'
         setTimeout(()=>{
           this.$emit('update:visible',false)
+          this.$emit('close')
           this.className = this.animationName
           this.flag = false
         },500)
       }else{
         this.$emit('update:visible',false)
+        this.$emit('close')
       }
     },
     Keyboard(e){  // 键盘关闭事件

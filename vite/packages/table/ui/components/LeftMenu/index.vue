@@ -7,7 +7,7 @@
     <!-- 左侧区域开始 -->
     <div
       class="flex flex-col items-center h-full xt-br mr-3"
-      style="width: 72px; min-width: 72px"
+      style="width: 72px; min-width: 72px;position: relative;"
     >
       <div v-for="list in listOption" :class="list?.class">
         <Float

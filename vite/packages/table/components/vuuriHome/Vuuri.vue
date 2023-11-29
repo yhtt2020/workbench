@@ -27,6 +27,7 @@ import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
 import { deckStore } from '../../apps/deck/store'
 import { message } from 'ant-design-vue'
+
 export default {
   name: 'Vuuri',
   date(){
@@ -162,18 +163,21 @@ export default {
     /**
      * Manually update the items in the muuri grid
      */
-    update () {
+    update (callback) {
       this.$nextTick(() => {
         this.muuri
           .refreshItems()
           .layout(true, () => this.$emit('updated')).synchronize()
+        this.$nextTick(()=>{
+          callback&&callback()
+        })
       })
     },
     /**
      * Prepares the muuri instance
      * @private
      */
-    _setup () {
+    _setup (callback) {
       this.muuri = new Muuri(this.selector, {
         ...this.muuriOptions,
         // dragStartPredicate: function (item, e) {
@@ -201,6 +205,7 @@ export default {
       this.$nextTick(() => {
         GridStore.setItemsForGridId(this.gridKey, this.modelValue)
       })
+      callback && callback()
     },
     /**
      * @private
@@ -524,8 +529,10 @@ export default {
     this._setupOptions()
   },
   mounted () {
-    this._setup()
-    this._registerEvents()
+    this._setup(()=>{
+      //clearInterval(timer)
+      this._registerEvents()
+    })
   },
   beforeDestroy () {
     this._unregisterEvents()

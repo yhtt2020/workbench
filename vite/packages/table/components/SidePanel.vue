@@ -1,35 +1,33 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <!-- <RightMenu :menus="rightMenus"> -->
-    <div @click.stop class="flex flex-col box common-panel s-bg " style="display: flex;flex-direction: row;justify-items: center;justify-content: center;
-          background: var(--primary-bg); z-index: 99;width: 80px;max-height: 100%;border-radius: 18px;
-          padding-top: 0;padding-bottom: 0px;position:relative;" ref="sideContent" @contextmenu="showMenu">
+  <RightMenu :menus="rightMenus" class="h-full">
+    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
-        <div :id="sortId" class="flex flex-col items-center flex-1 scroller-wrapper hide-scrollbar xt-container"
-          :style="{ 'max-height': editToggle ? '80%' : '100%' }"
+        <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
-          <a-tooltip :title="item.name" v-for="item in sideNavigationList" placement="right">
+          <a-tooltip :title="item.name" v-for="(item,index) in sideNavigationList" placement="right" @mouseenter="showElement(item,index)">
             <!-- 左右导航栏隐藏入口 -->
+            <!-- {{ index }} -->
             <RightMenu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
-                      :class="{ 'active-color': current(item), 'shaking-element': editToggle }"></navIcon>
+                      :class="{ 'active-color': current(item), 'shaking-element': shakeElement }"></navIcon>
                   </div>
                   <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"
-                    :class="{ 'shaking-element': editToggle }"></a-avatar>
+                    :class="{ 'shaking-element': shakeElement }"></a-avatar>
 
                 </div>
               </div>
             </RightMenu>
           </a-tooltip>
         </div>
-        <div class="mt-3">
-          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="addEdit('left')" @completeEdit="completeEdit" />
-        </div>
+        <!-- <div class="mt-3">
+          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
+        </div> -->
         <div>
 
         </div>
@@ -37,7 +35,7 @@
 
 
     </div>
-
+  </RightMenu>
 
     <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
       placement="bottom" :visible="menuVisible" @close="onClose">
@@ -61,13 +59,13 @@
     </a-drawer>
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" style="z-index: 90" v-if="quick">
+      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 199 : 90}" v-if="quick">
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       </div>
     </transition>
-  <!-- </RightMenu> -->
+  
 </template>
 
 <script>
@@ -113,20 +111,20 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           name: "打开",
-          fn: () => { console.log("添加导航图标") },
+          fn: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
           name: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { }
+          fn: () => {this.currentList==='right'?this.removeRightNavigationList(this.currentIndex):this.removeSideNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -134,9 +132,9 @@ export default {
         },
         {
           id: 5,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          name: '添加导航图标',
+          newIcon: "fluent:add-16-regular",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
@@ -154,16 +152,17 @@ export default {
         },
         {
           id: 2,
-          name: '编辑导航',
-          newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
-        },
-        {
-          id: 3,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           fn: () => { this.editNavigation(this.drawerMenus[2]) },
         },
+        {
+          id: 3,
+          name: '隐藏当前导航',
+          newIcon: "fluent:eye-off-16-regular",
+          fn: () => { this.navVisible() },
+        },
+        
         {
           id: 4,
           name: '更多',
@@ -222,7 +221,11 @@ export default {
           event: "status",
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
-      ]
+      ],
+      shakeElement:false,
+      currentItem: null,
+      currentIndex:null,
+      currentList:'left',
     }
   },
   props: {
@@ -273,15 +276,21 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList','sideNavigationList','rightNavigationList','navigationToggle']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav']),
+    
   },
   mounted() {
     this.colDrop()
     // this.scrollNav('sideContent', 'scrollTop')
+    if(this.sideNavigationList===this.rightNavigationList){
+      console.log(1111111111111,'===>>>>');
+      // this.selectNav='right'
+      this.currentList='right'
+    }
   },
   watch: {
     delZone(val) {
@@ -290,14 +299,17 @@ export default {
     editToggle() {
       if (this.editToggle) {
         this.enableDrag()
-        console.log('===>>>开始执行');
+        this.shakeElement=true
+        setTimeout(()=>{
+          this.shakeElement=false
+        },2000)
       } else {
         this.disableDrag()
-        console.log('===>>>停止执行');
       }
     }
   },
   methods: {
+    ...mapActions(navStore, ['removeSideNavigationList','removeRightNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     renderIcon,
     disableDrag() {
@@ -305,7 +317,7 @@ export default {
       document.removeEventListener('click', this.disableDrag)
       // this.sortable.destroy()
       this.sortable = null
-      message.info('已中止侧栏调整')
+      // message.info('已中止侧栏调整')
       return
       // }
     },
@@ -372,7 +384,7 @@ export default {
           that.$emit('getDelIcon', false)
         }
       })
-      message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
+      // message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
     },
     current(item) {
       if (item.tab) {
@@ -429,7 +441,7 @@ export default {
           ipc.send('executeAppByPackage', { package: item.package })
           break
         default:
-          require('electron').shell.openPath(item.path)
+          require('electron').shell.openPath(item.path ? item.path : item.url)
       }
     },
     // scrollNav(refVal, scrollDirection) {
@@ -440,6 +452,13 @@ export default {
     //   //   content[scrollDirection] += event.deltaY
     //   // });
     // },
+    navVisible(){
+      if(this.currentList==='left'){
+        this.navigationToggle[0]=false
+      }else{
+        this.navigationToggle[1]=false
+      }
+    },
     closeDrawer() {
       this.menuVisible = false
     },
@@ -449,12 +468,12 @@ export default {
         // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
-          this.selectNav = 'foot'
+          this.selectNav = this.currentList
           message.success('进入编辑模式')
         } else if (item.component === 'editNavigation') {
           this.componentId = ''
           this.editToggle = true
-          this.selectNav = 'foot'
+          this.selectNav = this.currentList
         }
         // console.log(this.componentId,'===>>2');
         this.quick = true
@@ -515,6 +534,12 @@ export default {
           message.info(`导航栏中至少保留一个「${oneNav.name}」`)
         }
       }
+    },
+    showElement(item,index){
+      // console.log(item,index,'====>>>1111');
+      // this.clickNavigation(item)
+      this.currentItem=item
+      this.currentIndex=index
     },
   }
 }

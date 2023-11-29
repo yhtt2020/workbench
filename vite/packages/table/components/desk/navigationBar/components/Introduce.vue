@@ -18,16 +18,16 @@
     <!-- <div class="flex " > -->
     <div class="flex flex-wrap items-center justify-center mt-3 mainList" ref="targetDiv">
       <!-- <div class="flex flex-wrap"> -->
-        <template v-if="this.filterList.length > 0">
-          <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
-            @addIcon="addIcon(item, index)" />
-        </template>
-        <div v-else class="flex flex-col items-center justify-center mt-10">
-          <div>
-            <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
-          </div>
-          <div class="mt-4 text-base xt-text">暂无数据</div>
+      <template v-if="this.filterList.length > 0">
+        <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
+          @addIcon="addIcon(item, index)" />
+      </template>
+      <div v-else class="flex flex-col items-center justify-center mt-10">
+        <div>
+          <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
         </div>
+        <div class="mt-4 text-base xt-text">暂无数据</div>
+      </div>
       <!-- </div> -->
 
     </div>
@@ -171,8 +171,10 @@ export default {
       this.clickRightListItem(this.filterList)
     },
     filterIcon(list) {
-      return list.filter(i => i.name.includes(this.inputValue))
+      const inputValueLowerCase = this.inputValue.toLowerCase();
+      return list.filter(i => i.name.toLowerCase().includes(inputValueLowerCase));
     }
+
   },
   computed: {
     ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),
@@ -187,7 +189,7 @@ export default {
             return this.filterIcon(this.selectList);
             break;
           case 'software':
-            return this.filterIcon(this.selectList.filter((item) => item.path.includes('.exe') ));
+            return this.filterIcon(this.selectList.filter((item) => item.path.endsWith('.exe')));
             break;
           case 'docx':
             return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));

@@ -77,7 +77,6 @@ import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { screenStore } from '../store/screen'
 import { isMain } from '../js/common/screenUtils'
-import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
@@ -137,7 +136,6 @@ export default {
     this.initStore(deckStore, 'deck')
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
-    this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
     // this.initStore(browserStore,'browserStore')
