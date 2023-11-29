@@ -230,5 +230,9 @@ import { message } from 'ant-design-vue';
     :deep(.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover){
         background-color: var(--active-secondary-bg);
     }
+
+    input[type="text"]::-webkit-input-placeholder{
+        color:var(--secondary-text)
+    }
 </style>
   

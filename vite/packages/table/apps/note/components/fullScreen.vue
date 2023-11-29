@@ -20,11 +20,11 @@
               style="width:40px;height:40px;border-radius: 10px;" :style="{background:background}"
               @click="isColor=!isColor"></div>
           <!-- 颜色选择 -->
-          <div v-show="isColor"
+          <div v-show="isColor" 
               style="justify-content: space-around;position: absolute;
                     width: 146px;height: 103px;top: 46px;left: -118px;
                     background-color: #2A2A2A;z-index: 100;
-                    padding: 8px 5px 4px 5px;border-radius: 12px;" class="flex flex-wrap">
+                    padding: 8px 5px 4px 5px;border-radius: 12px;" class="flex flex-wrap no-drag">
             <div class="flex rounded-lg pointer" style="height:40px;width:40px;"
                 v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}"
                 @click="changeBgColor(index)"></div>

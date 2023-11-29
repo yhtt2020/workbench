@@ -106,10 +106,14 @@ export default {
   watch: {
     selNote (newval, oldval) {
       if (newval >= 0 && this.noteList.length >= 0) {
-        this.tmpData = this.noteList[newval].customData.text
+        this.tmpData = this.noteList[newval]?.customData.text
         this.contentEditor.setValue(this.tmpData)
       }
     },
+    // noteList (newval, oldval){
+    //   this.tmpData = this.noteList[newval]?.customData.text
+    //   this.contentEditor.setValue(this.tmpData)
+    // }
 
   }
 }

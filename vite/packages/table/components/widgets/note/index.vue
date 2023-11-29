@@ -47,6 +47,7 @@
       "
         maxlength="15"
         v-model:value="this.tmpTitle"
+        spellcheck="false"
         @blur="changeNoteTitle"
       ></a-input>
     </template>
