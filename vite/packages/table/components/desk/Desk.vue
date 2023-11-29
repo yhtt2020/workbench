@@ -129,12 +129,9 @@
               class="grid home-widgets"
               ref="grid"
               :options="muuriOptions"
-
             >
               <template #item="{ item }">
                 <div
-                  :class="{ editing: editing }"
-                  :editing="editing"
                   :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -147,7 +144,7 @@
                     :is="item.name"
                     :customIndex="item.id"
                     :customData="item.customData"
-                    :editing="editing"
+
                   ></component>
                 </div>
               </template>
