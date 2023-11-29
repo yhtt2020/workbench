@@ -228,7 +228,7 @@ watch(zoom, (newV) => {
   debounceScrollbarUpdate();
 });
 // 堆叠
-const stack = ref(getFreeLayoutState.value?.option.collision ? false : true);
+const stack = ref(getFreeLayoutState.value?.option?.collision ? false : true);
 watch(stack, (newV) => {
   getFreeLayoutState.value.option.collision =
     !getFreeLayoutState.value?.option.collision;

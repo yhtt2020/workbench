@@ -75,6 +75,7 @@
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
+        v-else
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -109,48 +110,55 @@
           }"
           :class="notTrigger ? 'trigger' : ''"
         >
-          <vuuri
-            :key="key"
-            v-if="currentDesk.cards && !hide"
-            item-key="id"
-            :get-item-margin="
+            <vuuri v-show="showGrid"
+              :key="key"
+              v-if="currentDesk.cards.length>0 && !hide "
+              item-key="id"
+              :get-item-margin="
               () => {
                 return usingSettings.cardMargin * this.adjustZoom + 'px';
               }
             "
-            group-id="grid.id"
-            :drag-enabled="editing"
-            v-model="currentDesk.cards"
-            :style="{
+              group-id="grid.id"
+              :drag-enabled="editing"
+              v-model="currentDesk.cards"
+              :style="{
               width: settings.vDirection ? '100%' : 'auto',
               height: settings.vDirection ? 'auto' : '100%',
             }"
-            class="grid home-widgets"
-            ref="grid"
-            :options="muuriOptions"
-          >
-            <!-- :class="{ editing: editing }"
-                :editing="editing" -->
-            <template #item="{ item }">
-              <div
-                :style="{
+              class="grid home-widgets"
+              ref="grid"
+              :options="muuriOptions"
+
+            >
+              <template #item="{ item }">
+                <div
+                  :class="{ editing: editing }"
+                  :editing="editing"
+                  :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
                     100
                   ).toFixed(2),
                 }"
-              >
-                <component
-                  :desk="currentDesk"
-                  :is="item.name"
-                  :customIndex="item.id"
-                  :customData="item.customData"
-                ></component>
-              </div>
-            </template>
-          </vuuri>
+                >
+                  <component
+                    :desk="currentDesk"
+                    :is="item.name"
+                    :customIndex="item.id"
+                    :customData="item.customData"
+                    :editing="editing"
+                  ></component>
+                </div>
+              </template>
+            </vuuri>
+          <div class="xt-text" v-show="!showGrid" style="text-align: center;font-size: 32px;margin: auto;position: fixed;top: 50%;transform: translateY(-50%) translateX(-50%);left: 50%;">
+            <loading-outlined />
+          </div>
+
         </div>
       </vue-custom-scrollbar>
+
     </RightMenu>
   </div>
 
@@ -404,7 +412,7 @@ import { message, Modal } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
-
+import {LoadingOutlined} from '@ant-design/icons-vue'
 import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import componentsMinis from "./components.ts";
@@ -413,7 +421,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-
+  components:{LoadingOutlined},
   props: {
     freeLayout: {
       default: true,
@@ -496,43 +504,56 @@ export default {
     },
   },
   watch: {
+    loaded:{
+      handler(){
+       this.$nextTick(()=>{
+         setTimeout(()=>{
+           if(!window.showed){
+             window.showed=true
+           }
+           this.showGrid=true
+         },800)
+       })
+      }
+    },
     currentDesk(newVal) {
-      newVal.layoutSize = this.getLayoutSize();
-      // if (!newVal.settings) {
-      //   newVal.settings=
-      //     .settings = {
-      //     cardZoom: 100,
-      //     marginTop: 0,
-      //     cardMargin: 5,//卡片间隙
-      //     vDirection: false,
-      //   }
-      // }
-      this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+      if(!this.isFreeLayout){
+        newVal.layoutSize = this.getLayoutSize();
+        // if (!newVal.settings) {
+        //   newVal.settings=
+        //     .settings = {
+        //     cardZoom: 100,
+        //     marginTop: 0,
+        //     cardMargin: 5,//卡片间隙
+        //     vDirection: false,
+        //   }
+        // }
+        this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+      }
     },
     "currentDesk.settings": {
       handler(newVal) {
-        console.log("更改了方向");
-        console.log();
-        if (!newVal) {
-          newVal = {
-            cardZoom: 100,
-            marginTop: 0,
-            cardMargin: 5, //卡片间隙
-            vDirection: false,
-          };
+        if(!this.isFreeLayout) {
+          console.log();
+          if (!newVal) {
+            newVal = {
+              cardZoom: 100,
+              marginTop: 0,
+              cardMargin: 5, //卡片间隙
+              vDirection: false,
+            };
+          }
+          this.muuriOptions.layout.horizontal = !newVal.vDirection;
+          this.currentDesk.settings = newVal;
+          this.update();
         }
-        this.muuriOptions.layout.horizontal = !newVal.vDirection;
-        this.currentDesk.settings = newVal;
-        this.update();
       },
       deep: true,
       immediate: true,
     },
     "currentDesk.settings.vDirection": {
       handler(newVal) {
-        console.log("更新了方向，重载");
         this.key = Date.now();
-        console.log(this.muuriOptions.layout, "murri参数");
       },
       deep: true,
     },
@@ -631,6 +652,8 @@ export default {
   },
   data() {
     return {
+      showGrid:false,
+      loaded:false,
       vurriEnable: false,
       freeDeskEdit: false,
       freeDeskState: false,
@@ -662,19 +685,24 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    console.log("桌面加载总耗时", Date.now() - window.time + "ms");
+    if(window.showed){
+      this.showGrid=true
+    }
+    console.log('桌面加载总耗时',Date.now()-window.time+'ms')
     this.resizeHandler = () => {
       this.currentDesk.layoutSize = this.getLayoutSize();
     };
-    this.getLayoutSize();
-
+      this.getLayoutSize();
     window.addEventListener("resize", this.resizeHandler);
+    this.loaded=true
+    console.log('loaded=true')
   },
   unmounted() {
     window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
+
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
@@ -686,9 +714,9 @@ export default {
         "https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b"
       );
     },
-    update() {
+    update(callback) {
       if (this.$refs.grid) {
-        this.$refs.grid.update();
+        this.$refs.grid.update(callback);
       }
     },
     hideMenu() {
@@ -789,47 +817,48 @@ export default {
      * @returns {{width: number, height: number}}
      */
     getLayoutSize() {
-      this.currentDesk.layoutSize = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
-      };
-      if (this.currentDesk?.settings?.preparing) {
-        message.loading({
-          content: "此桌面为首次使用，正在为您适配您的桌面…",
-          key: "preparing",
-        });
-        this.setFullScreen(true, () => {
-          setTimeout(() => {
-            this.$nextTick(() => {
-              const fullLayoutSize = {
-                width: this.$refs.deskContainer.clientWidth,
-                height: this.$refs.deskContainer.clientHeight,
-              };
-              const settings = this.currentDesk.settings;
-              const oldLayoutSize = this.settings.layoutSize;
-              settings.cardZoom = (
-                (settings.cardZoom * fullLayoutSize.height) /
-                oldLayoutSize.height /
-                this.adjustZoom
-              ).toFixed();
-              settings.cardMargin = (
-                (settings.cardMargin * fullLayoutSize.height) /
-                oldLayoutSize.height /
-                this.adjustZoom
-              ).toFixed();
-              //todo竖屏界面不一样
-              message.success({
-                content: "此桌面为首次使用，已为您适配您的当前窗口。",
-                key: "preparing",
+      if(!this.isFreeLayout) {
+        this.currentDesk.layoutSize = {
+          width: this.$refs.deskContainer.clientWidth,
+          height: this.$refs.deskContainer.clientHeight,
+        };
+        if (this.currentDesk?.settings?.preparing) {
+          message.loading({
+            content: "此桌面为首次使用，正在为您适配您的桌面…",
+            key: "preparing",
+          });
+          this.setFullScreen(true, () => {
+            setTimeout(() => {
+              this.$nextTick(() => {
+                const fullLayoutSize = {
+                  width: this.$refs.deskContainer.clientWidth,
+                  height: this.$refs.deskContainer.clientHeight,
+                };
+                const settings = this.currentDesk.settings;
+                const oldLayoutSize = this.settings.layoutSize;
+                settings.cardZoom = (
+                  (settings.cardZoom * fullLayoutSize.height) /
+                  oldLayoutSize.height /
+                  this.adjustZoom
+                ).toFixed();
+                settings.cardMargin = (
+                  (settings.cardMargin * fullLayoutSize.height) /
+                  oldLayoutSize.height /
+                  this.adjustZoom
+                ).toFixed();
+                //todo竖屏界面不一样
+                message.success({
+                  content: "此桌面为首次使用，已为您适配您的当前窗口。",
+                  key: "preparing",
+                });
+                settings.preparing = false;
+                this.setFullScreen(false);
+                delete settings.layoutSize;
               });
-              settings.preparing = false;
-              this.setFullScreen(false);
-              delete settings.layoutSize;
-            });
-          }, 1000);
-        });
+            }, 1000);
+          });
+        }
       }
-
       return this.currentDesk.layoutSize;
     },
     setFullScreen(flag, cb) {

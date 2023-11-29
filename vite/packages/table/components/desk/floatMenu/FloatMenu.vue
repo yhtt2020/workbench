@@ -135,11 +135,11 @@ const canvasMenu = computed(() => {
 
 const deskList = ref([
   {
-    name: "固定布局",
+    name: "自动排列",
     value: "default",
   },
   {
-    name: "自由模式",
+    name: "自由布局",
     value: "free",
   },
 ]);
