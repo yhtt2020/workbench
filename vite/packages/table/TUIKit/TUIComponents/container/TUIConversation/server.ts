@@ -1,4 +1,6 @@
 import IComponentServer from '../IComponentServer';
+import { storeToRefs } from 'pinia';
+import { communityStore } from '../../../../page/chat/store/communityStore'
 
 /**
  * class TUIConversationServer
@@ -257,7 +259,6 @@ export default class TUIConversationServer extends IComponentServer {
   public handleCurrentConversation(value: any) {
     // 通知 TUIChat 切换会话或关闭会话
     this.TUICore.getStore().TUIChat.conversation = value || {};
-
     if (!value?.conversationID) {
       this.currentStore.currentConversationID = '';
       return;
@@ -271,5 +272,9 @@ export default class TUIConversationServer extends IComponentServer {
     }
     this.currentStore.currentConversationID = value?.conversationID;
     this.setMessageRead(value.conversationID);
+
+    // 切换会话将社群消息数进行清除
+    const community:any = communityStore();
+    community.updateMsgStatus();
   }
 }

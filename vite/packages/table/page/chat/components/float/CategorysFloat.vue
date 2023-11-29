@@ -3,7 +3,7 @@
   <img :src="textUrl" class="w-full h-full object-cover" :class="settings.enableHide ? 'rounded-t-xl':''"/>
   <div class="community-name h-11 w-full com-line-bg">
     <div class="m-1.5 px-3 items-center drop-hover rounded-lg flex justify-between h-8">
-      <ChatDropDown class="w-full" :id="null" :enableButton="false" newIcon="fluent:line-horizontal-3-20-filled" :title="categoryList.name" :list="floatList" /> 
+      <ChatDropDown class="w-full" :id="null" :enableButton="false" newIcon="fluent:line-horizontal-3-20-filled" :title="data?.name" :list="floatList" /> 
     </div>
   </div>
  </div>
@@ -12,11 +12,11 @@
     <!-- 双列 -->
     <template v-if="isDoubleColumn">
       <div class="font-14 summary font-400 mb-3 xt-font xt-text-2 summary-2">
-        {{ categoryList.summary }}
+        {{ data?.summary }}
       </div>
       <div class="w-full flex items-center justify-start">
         <div class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mb-2 " :class="settings.enableHide ? '' :'xt-bg'" style="width:120px;">
-          社群号：{{ categoryList.no }}
+          社群号：{{ data?.no }}
         </div>
       </div>
       <div>
@@ -34,7 +34,7 @@
     <template v-else>
       <div class="flex  items-center" hidden="">
         <div class="font-14 summary font-400 mb-3 xt-font xt-text-2" :class="collapsed ? 'summary-3' :'summary-1'">
-          {{ categoryList.summary }}
+          {{ data?.summary }}
         </div>
         <xt-button w="32" h="32" style="background: none !important;" @click="openHideContent">
           <div class="flex items-center justify-center" v-if="collapsed">
@@ -47,7 +47,7 @@
       </div>
       <div class="flex items-center mt-2">
         <span class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3 " :class="settings.enableHide ? '' :'xt-bg'">
-          社群号：{{ categoryList.no }}
+          社群号：{{data?.no }}
         </span>
         <span class="px-2 rounded-md xt-active-bg xt-active-text">0 级</span>
       </div>
@@ -55,9 +55,9 @@
     </template>
     <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
     <!-- 空状态 -->
-    <template v-if="categoryList?.tree?.length === 0 ">
-      <div class="flex items-center justify-center flex-col" v-if="categoryList?.role !== 'member'" style="height:450px;">
-        <EmptyAdd :no="categoryList.no"/>
+    <template v-if="data?.tree?.length === 0 ">
+      <div class="flex items-center justify-center flex-col" v-if="data?.role !== 'member'" style="height:450px;">
+        <EmptyAdd :no="data?.no"/>
       </div>
       <div v-else  class="flex items-center h-full justify-center" style="height:450px;">
         <a-empty :image="emptyImage" description="这里还没有内容"></a-empty>
@@ -75,20 +75,20 @@
       <template v-else>
         <div class="flex grid grid-cols-2 gap-1 " :class="channelList.length !== 0 ? 'mb-3' : 'm-0'">
           <div v-for="item in channelList" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-            <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem"/>
+            <MenuDropdown :type="item.type" :no="data?.no" :item="item" @currentItem="currentItem"/>
           </div>
         </div>
       </template>
       <div v-for="(item,index) in categoryFilterList" >
-        <ChatFold :title="item.name" :content="item" :show="true" :no="categoryList.no">
+        <ChatFold :title="item.name" :content="item" :show="true" :no="data?.no">
           <div class="flex flex-col" v-if="isDoubleColumn === false">
             <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-              <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem"/>
+              <MenuDropdown :type="item.type" :no="data?.no" :item="item" @currentItem="currentItem"/>
             </div>
           </div>
           <div class="flex grid grid-cols-2 gap-1" v-else>
             <div v-for="(item,index) in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-              <MenuDropdown :type="item.type" :no="categoryList.no" :item="item" @currentItem="currentItem" />
+              <MenuDropdown :type="item.type" :no="data?.no" :item="item" @currentItem="currentItem" />
             </div>
           </div>
         </ChatFold>  
@@ -96,9 +96,9 @@
     </vue-custom-scrollbar>
   </div>
  </div>
- <AddNewCategory ref="addCategoryRef" :no="categoryList.no"/>
- <AddNewGroup ref="addNewRef" :no="categoryList.no"/>
- <AddInvite ref="addInviteRef" :no="categoryList.no"/>
+ <AddNewCategory ref="addCategoryRef" :no="data?.no"/>
+ <AddNewGroup ref="addNewRef" :no="data?.no"/>
+ <AddInvite ref="addInviteRef" :no="data?.no"/>
 </template>
 
 <script>
@@ -117,7 +117,7 @@ import AddNewGroup from '../add/AddNewGroup.vue';
 import AddInvite from '../add/AddInvite.vue';
 
 export default{
-  props:[ 'communityID','float' ],
+  props:[ 'communityID','float','data'],
 
   components:{
     CommunityIcon,ChatDropDown,ChatFold,MenuDropdown,EmptyAdd,
@@ -139,35 +139,6 @@ export default{
        suppressScrollX: true,
        wheelPropagation: true
       },
-      // floatMenu:[
-      //   {
-      //     name:'分组设置',
-      //     newIcon:'fluent:settings-16-regular',
-      //     callBack:()=>{
-      //       this.$refs.packRef.openSetModal()
-      //     }
-      //   },
-      //   {
-      //     name:'删除分组',
-      //     newIcon:'akar-icons:trash-can',
-      //     color: 'var(--error)',
-      //     callBack:()=>{
-      //       Modal.confirm({
-      //         content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-      //         centered:true,
-      //         onOk: async ()=>{
-      //           const comNo = parseInt(this.categoryList.no)
-      //           if(comNo !== NaN && comNo !== undefined){
-      //             this.removeCategory(this.revID.id,comNo)
-      //             message.success('删除成功')
-      //           }else{
-      //             return
-      //           }
-      //         }
-      //       })
-      //     }
-      //   }
-      // ],
       hideList:[
         {
           newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
@@ -188,7 +159,7 @@ export default{
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
           callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
           }
           // 
         },
@@ -214,7 +185,7 @@ export default{
         {
           newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
           callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.categoryList})
+            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
           },
         },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
@@ -232,7 +203,7 @@ export default{
   },
 
   computed:{
-    ...mapWritableState(communityStore,['categoryList']),
+    ...mapWritableState(communityStore,['categoryList','communityList','currentNo']),
     ...mapWritableState(chatStore,['settings']),
     isDoubleColumn(){
       return this.settings.showDouble
@@ -246,8 +217,8 @@ export default{
       }
     },
     channelList(){
-      if(this.categoryList.tree !== undefined){
-        const list = this.categoryList.tree.filter((item)=>{
+      if(this.data?.tree !== undefined){
+        const list = this.data?.tree.filter((item)=>{
          return item.role !== 'category'
         })
         return list
@@ -257,8 +228,8 @@ export default{
     },
     categoryFilterList(){
       // console.log('获取数据::>>222',this.categoryList.tree.length);
-      if(this.categoryList.tree !== undefined){
-        const list = this.categoryList.tree.filter((item)=>{
+      if(this.data?.tree !== undefined){
+        const list = this.data?.tree.filter((item)=>{
          return item.role !== 'channel'
         })
         return list
@@ -270,7 +241,7 @@ export default{
   },
 
   methods:{
-    ...mapActions(communityStore,['removeCategory']),
+    ...mapActions(communityStore,['removeCategory','getCategoryData']),
     ...mapActions(chatStore,['setFloatVisible','setDouble']),
     currentItem(item){
       this.currentID = item.id
@@ -280,6 +251,10 @@ export default{
     // 展示单列时所有内容
     openHideContent(){
       this.collapsed = !this.collapsed
+    },
+    test() {
+      console.log('执行',this.communityList);
+      this.currentNo= 1
     }
   },
 }
