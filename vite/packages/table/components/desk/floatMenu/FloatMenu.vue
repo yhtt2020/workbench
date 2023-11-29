@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs } from "vue";
+import { ref, computed, watch, toRefs, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../freeLayout/store";
+import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
+
 // 初始化操作
+const widgetStore = useWidgetStore();
+widgetStore.edit = true;
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState, freeLayoutEnv, isFreeLayout }: any =
   storeToRefs(freeLayoutStore);
@@ -78,7 +82,7 @@ const freeLayoutMenu = computed(() => {
     {
       icon: "fluent:timeline-20-regular",
       title: "拖拽结束吸附于网格",
-      type: getFreeLayoutState.value.afterDrop ? "theme" : "default",
+      type: getFreeLayoutState.value.option.afterDragging  ? "theme" : "default",
       fn: () => {
         getFreeLayoutState.value.option.afterDragging =
           !getFreeLayoutState.value.option.afterDragging;
@@ -151,6 +155,18 @@ watch(defaultZoom, (newV: any) => {
   defaultZoom.value = int;
   emits("update:zoom", int);
 });
+
+// 还原缩放
+const resetZoom = () => {
+  if (currentMode.value === "free") {
+    freeLayoutZoom.value = 100;
+  } else {
+    defaultZoom.value = 100;
+  }
+};
+onBeforeUnmount(() => {
+  widgetStore.edit = false;
+});
 </script>
 
 <template>
@@ -193,7 +209,7 @@ watch(defaultZoom, (newV: any) => {
         <div class="mb-3 mt-2 flex items-center">
           画布缩放
           <xt-new-icon
-            @click="getFreeLayoutState.canvas.zoom = 1"
+            @click="resetZoom()"
             class="xt-text-2 ml-1"
             color="var(--secondary-text)"
             size="16"
@@ -229,7 +245,7 @@ watch(defaultZoom, (newV: any) => {
         <div class="mb-3 mt-2 flex items-center">
           小组件缩放
           <xt-new-icon
-            @click="defaultZoom = 100"
+            @click="resetZoom()"
             class="xt-text-2 ml-1"
             color="var(--secondary-text)"
             size="16"

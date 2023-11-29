@@ -1,85 +1,89 @@
 <template>
-    <RightMenu
-      :menus="menus"
-      :sizes="sizeList"
-      :customIndex="customIndex"
-      @removeCard="doRemoveCard"
-      v-model:sizeType="sizeType"
-      v-model:oldMenuVisible="menuVisible"
+  <RightMenu
+    :menus="menus"
+    :sizes="sizeList"
+    :customIndex="customIndex"
+    @removeCard="doRemoveCard"
+    v-model:sizeType="sizeType"
+    v-model:oldMenuVisible="menuVisible"
+    class="relative"
+  >
+    <div
+      v-if="!options?.hide"
+      class="flex flex-col"
+      :class="[edit ? 'editing' : '', classes]"
+      style="color: var(--primary-text); padding: 0"
+      :style="{
+        display: options.hide == true ? 'none' : '',
+        width: customSize.width,
+        height: customSize.height,
+        background: options.background || 'var( --primary-bg)',
+      }"
     >
-      <div
-        v-if="!options?.hide"
-        :class="classes"
-        class="flex flex-col"
-        style="color: var(--primary-text); padding: 0"
-        :style="{
-          display: options.hide == true ? 'none' : '',
-          width: customSize.width,
-          height: customSize.height,
-          background: options.background || 'var( --primary-bg)',
-        }"
-      >
-        <!--标题栏start-->
-        <slot name="cardTitle">
-          <div
-            :class="options.noTitle === true ? 'no-title' : 'content-title'"
-            class="flex items-center justify-between pt-3 px-3"
-          >
-            <div class="left-title" v-if="options.noTitle !== true">
-              <!-- 标题左侧插槽 -->
-              <slot name="left-title-icon"></slot>
-              <!-- 标题旧版左侧图标 -->
-              <Icon :icon="options.icon" class="title-icon" />
-              <div class="flex w-2/3">
-                <!-- 卡片标题插槽 -->
-                <slot name="title-text">
-                  {{ options.title }}
-                </slot>
-                <!-- 标题右侧插槽 -->
-                <slot name="left-title"></slot>
-              </div>
-            </div>
-            <div class="z-10 right-title flex" v-if="showRightIcon">
-              <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
-              <slot name="right-menu"> </slot>
-              <RightMenu
-                :menus="menus"
-                :sizes="sizeList"
-                :customIndex="customIndex"
-                model="all"
-                @removeCard="doRemoveCard"
-                v-model:sizeType="sizeType"
-                v-model:oldMenuVisible="menuVisible"
-              >
-                <MenuOutlined class="pointer" />
-              </RightMenu>
-            </div>
-          </div>
-        </slot>
-        <!-- 标题栏end   -->
-        <PageState :env="env" :options="options">
-          <div class="flex-1 h-0">
-            <div
-              class="px-3 pb-2 h-full rounded-b-lg"
-              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-              >
-              <slot>
-                <!--  主体内容插槽1  -->
+      <!--标题栏start-->
+      <slot name="cardTitle">
+        <div
+          :class="options.noTitle === true ? 'no-title' : 'content-title'"
+          class="flex items-center justify-between pt-3 px-3"
+        >
+          <div class="left-title" v-if="options.noTitle !== true">
+            <!-- 标题左侧插槽 -->
+            <slot name="left-title-icon"></slot>
+            <!-- 标题旧版左侧图标 -->
+            <Icon :icon="options.icon" class="title-icon" />
+            <div class="flex w-2/3">
+              <!-- 卡片标题插槽 -->
+              <slot name="title-text">
+                {{ options.title }}
               </slot>
+              <!-- 标题右侧插槽 -->
+              <slot name="left-title"></slot>
             </div>
           </div>
-        </PageState>
-      </div>
-      <slot v-else>
+          <div class="z-10 right-title flex" v-if="showRightIcon">
+            <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
+            <slot name="right-menu"> </slot>
+            <RightMenu
+              :menus="menus"
+              :sizes="sizeList"
+              :customIndex="customIndex"
+              model="all"
+              @removeCard="doRemoveCard"
+              v-model:sizeType="sizeType"
+              v-model:oldMenuVisible="menuVisible"
+            >
+              <MenuOutlined class="pointer" />
+            </RightMenu>
+          </div>
+        </div>
+      </slot>
+      <!-- 标题栏end   -->
+      <PageState :env="env" :options="options">
+        <div class="flex-1 h-0">
+          <div
+            class="px-3 pb-2 h-full rounded-b-lg"
+            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
+          >
+            <slot>
+              <!--  主体内容插槽1  -->
+            </slot>
+          </div>
+        </div>
+      </PageState>
+    </div>
+    <div v-else :class="[edit ? 'editing' : '']">
+      <slot>
         <!--  主体内容插槽2  -->
       </slot>
-      <!-- 卡片整体区域end -->
-      <!-- 右上角抽屉菜单扩展 start  -->
-      <template #menuExtra>
-        <slot name="menuExtra"></slot>
-      </template>
-      <!-- 右上角抽屉扩展 end -->
-    </RightMenu>
+    </div>
+
+    <!-- 卡片整体区域end -->
+    <!-- 右上角抽屉菜单扩展 start  -->
+    <template #menuExtra>
+      <slot name="menuExtra"></slot>
+    </template>
+    <!-- 右上角抽屉扩展 end -->
+  </RightMenu>
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
@@ -99,7 +103,7 @@ import { offlineStore } from "../../js/common/offline";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
-import Drop from "./Drop.vue";
+import { useWidgetStore } from "./store";
 
 export default {
   components: {
@@ -132,11 +136,6 @@ export default {
     menuList: {
       type: Array as PropType<IMenuItem>,
       default: () => [],
-    },
-    //是否编辑中，如果为是，则屏蔽鼠标事件，使卡片无法被点击，一般用于调整布局
-    editing: {
-      type: Boolean,
-      default: false,
     },
     //组件索引
     customIndex: {
@@ -184,17 +183,18 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ["customComponents"]),
+    ...mapWritableState(useWidgetStore, ["edit"]),
     menus() {
       return [
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
-          fn: ()=>{
-            if(this.options?.type != 'note'){
-              this.doRemoveCard()
-            }else{
+          fn: () => {
+            if (this.options?.type != "note") {
+              this.doRemoveCard();
+            } else {
               // 便签单独处理
-              this.options?.removeCard()
+              this.options?.removeCard();
             }
           },
           title: "删除小组件",
@@ -326,5 +326,20 @@ export default {
   }
 
   position: relative;
+}
+
+.editing {
+  &::before {
+    content: "";
+    position: absolute;
+    cursor: grab !important;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0);
+    z-index: 999;
+  }
 }
 </style>

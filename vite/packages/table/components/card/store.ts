@@ -5,6 +5,7 @@ import dbStorage from "../../store/dbStorage";
 export const useWidgetStore = defineStore("useWidgetStore", {
   state: () => ({
     rightModel: "default",
+    edit: false,
   }),
   getters: {},
   actions: {},

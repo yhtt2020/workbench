@@ -185,6 +185,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
+    // 更新坐标
+    
   },
   persist: {
     enabled: true,
