@@ -1,7 +1,7 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <RightMenu :menus="rightMenus" class="h-full">
+  <RightMenu :menus="rightMenus" class="flex max-h-full">
     <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;padding-bottom: 3px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -169,19 +169,19 @@ export default {
               id: 1,
               name: '显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
             }
           ]
 
@@ -277,15 +277,14 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle']),
     
   },
   mounted() {
+    this.enableDrag()
     this.colDrop()
     // this.scrollNav('sideContent', 'scrollTop')
     if(this.sideNavigationList===this.rightNavigationList){
-      console.log(1111111111111,'===>>>>');
-      // this.selectNav='right'
       this.currentList='right'
     }
   },

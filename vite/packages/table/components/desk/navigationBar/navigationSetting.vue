@@ -1,7 +1,7 @@
 <template>
     <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <xt-old-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
-        <div class="w-[400px] h-[484px]  rounded-xl pl-4 pr-4 pb-4  wuzi">
+    <Modal :zIndex="99" :maskNoClose="true" v-model:visible="settingVisible" >
+        <div class="w-[420px] h-[514px]  rounded-xl p-4">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="ml-8 text-base xt-text">导航栏设置</div>
@@ -30,7 +30,7 @@
 
         </div>
         <!-- </Modal> -->
-    </xt-old-modal>
+    </Modal>
 </template>
 
 <script setup lang='ts'>
@@ -39,7 +39,9 @@ import { navigationPosition, navigationFunction } from './index'
 import settingItem from './settingItem.vue';
 import { Icon as newIcon } from '@iconify/vue';
 import {navStore} from '../../../store/nav'
+import Modal from '../../Modal.vue';
 const useNavStore = navStore()
+const settingVisible = ref(true)
 const emit = defineEmits(['setQuick'])
 const close = () => {
     emit('setQuick')

@@ -20,7 +20,7 @@
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
-
+            
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="relative btn">
                 节能模式<br />
@@ -241,6 +241,7 @@ import {
   setWallpaperColor,
 } from "./../components/card/hooks/styleSwitch/setStyle";
 import { setThemeSwitch } from "./../components/card/hooks/themeSwitch/";
+import {useNavigationStore} from '../components/desk/navigationBar/navigationStore'
 import ChooseScreen from "./ChooseScreen.vue";
 import { appStore } from "../store";
 import { mapWritableState } from "pinia";
@@ -307,7 +308,7 @@ export default {
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
-
+    ...mapWritableState(useNavigationStore,['bottomToggle']),
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
     },

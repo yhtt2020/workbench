@@ -3,7 +3,7 @@
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel" style="text-align: center"
       @contextmenu="showMenu">
       <!-- 快速搜索 底部 用户栏 -->
-      <div v-if="(!simple || settings.enableChat) && !this.isOffline" class="flex flex-row common-panel user s-bg" style="
+      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]" class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
         margin-top: 0;
         background: var(--primary-bg);
@@ -27,7 +27,7 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
-        max-width: 60%;
+        max-width: 90%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -44,7 +44,7 @@
           justify-content: center;
         ">
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-            <div class="mr-6 scroll-content" style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
+            <div class="mr-6 scroll-content" style=" flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
@@ -139,10 +139,10 @@
         </div>
       </div>
 
-      <template v-if="!simple && isMain">
+      <template v-if="!simple && isMain && this.bottomToggle[1]">
         <Team></Team>
       </template>
-      <TaskBox></TaskBox>
+      <TaskBox v-if="this.bottomToggle[2]"></TaskBox>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -204,7 +204,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}" v-if="quick">
+      <div class="fixed inset-0 home-blur"  v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -388,21 +388,21 @@ export default {
           children: [
             {
               id: 1,
-              name: '显示用户中心',
+              name:'显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
             }
           ]
 
@@ -461,6 +461,8 @@ export default {
     }
   },
   mounted() {
+    this.enableDrag()
+
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
@@ -530,7 +532,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -693,11 +695,6 @@ export default {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
-        }else if(item.component === 'editNavigation'){
-          this.componentId=''
-          this.editToggle=true
-          this.selectNav='foot'
-          // this.enableDrag()
         }
         // console.log(this.componentId,'===>>2');
         this.quick = true
