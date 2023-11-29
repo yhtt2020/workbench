@@ -43,7 +43,6 @@ export default {
   },
   methods: {
     dragCallBack(e) {
-      console.log("crrent e :>> ", e);
       if (e == "card1") {
         this.w = `${540}px`;
         this.h = `${140}px`;

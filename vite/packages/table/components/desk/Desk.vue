@@ -46,6 +46,8 @@
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
       @exit="toggleEditing"
       v-model:zoom="globalSettings.cardZoom"
+      v-model:aloneZoom="settings.cardZoom"
+      :alone="settings.enableZoom"
     />
     <RightMenu
       :menus="dropdownMenu"
@@ -132,7 +134,7 @@
             ref="grid"
             :options="muuriOptions"
           >
-          <!-- :class="{ editing: editing }"
+            <!-- :class="{ editing: editing }"
                 :editing="editing" -->
             <template #item="{ item }">
               <div
@@ -302,7 +304,7 @@
             开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
           </div>
           <template v-if="settings.enableZoom">
-            <div class="mb-3">卡片缩放</div>
+            <div class="mb-3">卡片缩放222</div>
             <a-slider
               @afterChange="update"
               :min="20"
@@ -512,14 +514,6 @@ export default {
       // }
       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
     },
-    "currentDesk.id": {
-      handler(newVal) {
-        // this.freeLayoutID = newVal
-        console.log("桌面ID this.freeLayoutID  :>> ", newVal);
-      },
-      deep: true,
-      immediate: true,
-    },
     "currentDesk.settings": {
       handler(newVal) {
         console.log("更改了方向");
@@ -554,8 +548,7 @@ export default {
           setTimeout(() => {
             this.hide = false;
           }, 100);
-        } else {
-          this.hide = false;
+        } else if (!this.isFreeLayou) {
         }
       },
       immediate: true,
