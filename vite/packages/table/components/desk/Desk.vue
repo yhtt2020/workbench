@@ -712,6 +712,7 @@ export default {
     },
     update(callback) {
       if (this.$refs.grid) {
+        console.log('☆执行desk的update')
         this.$refs.grid.update(callback);
       }
     },
