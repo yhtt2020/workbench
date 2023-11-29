@@ -63,8 +63,6 @@
             <FreeLayoutContainer
               :currentDesk="currentDesk"
               :isDrag="editing"
-              @editStart="editStart"
-              @editEnd="freeDeskEdit = false"
             >
               <template #box="{ data }">
                 <component
