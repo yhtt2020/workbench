@@ -39,10 +39,10 @@ export default {
       },
       // 编辑器工具参数
       // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check', 'outdent', 'indent', 'code', 'inline-code', 'insert-before', 'link', 'table', 'insert-after', 'devtools', 'upload', 'help', 'br'],
+      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'devtools', 'upload', 'help', 'br'],
       after: () => {
         if (this.selNote >= 0 && this.noteList.length) {
-          this.contentEditor.setValue(this.noteList[this.selNote].customData.text)
+          this.contentEditor.setValue(this.noteList[this.selNote]?.customData.text)
         }
       },
       blur: (value) => {

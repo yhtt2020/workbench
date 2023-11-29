@@ -273,6 +273,8 @@ export default {
 
 :deep(.vditor-toolbar){
     background: var(--main-bg) !important;
+    height: 35px;
+    overflow: hidden;
 }
 :deep(.vditor-reset){
     background: var(--main-bg) !important;

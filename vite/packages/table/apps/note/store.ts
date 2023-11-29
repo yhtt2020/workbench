@@ -279,6 +279,7 @@ export const noteStore = defineStore("noteStore", {
           await tsbApi.db.put(obj)
           this.getNotes()
           this.selNote = 0
+          this.selNoteTitle = '桌面便签'
           // this.selNote>=0?this.selNote++:''
         }
         this.flag = true
