@@ -7,6 +7,7 @@
     h="40"
     radius="8"
     class="floatMenu"
+    :throttleTime="0"
   >
     <xt-new-icon :icon="item.icon" class="text-2" size="20" />
   </xt-button>

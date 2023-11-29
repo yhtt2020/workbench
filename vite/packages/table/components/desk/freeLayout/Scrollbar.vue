@@ -60,7 +60,7 @@ onMounted(async () => {
 
   setTimeout(async () => {
     // 初始化自由布局定位
-    await redirect();
+    redirect();
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -90,19 +90,18 @@ onMounted(async () => {
     document.body.addEventListener('keydown',ignoreSpace);
   }, 1);
 });
-function ignoreSpace(event){
+function ignoreSpace(event) {
   var e = window.event || event;
-  if(e.keyCode===32){
-    if(e.preventDefault){
+  if (e.keyCode === 32) {
+    if (e.preventDefault) {
       e.preventDefault();
-    }else{
+    } else {
       window.event.returnValue = false;
     }
   }
 }
 
 // 鼠标按下
-
 function handleMouseDown(event) {
   if (event.buttons === 1) {
     isDragging.value = true;
@@ -133,25 +132,27 @@ function handleMouseUp(event) {
 function handleKeyDown(event) {
   if (event.code === "Space") {
     isKey.value = true;
-    event.preventDefault()
-    event.stopPropagation()
-    return false
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
   }
 }
 // 键盘抬起
 function handleKeyUp(event) {
   isKey.value = false;
   if (event.code === "Space") {
-    event.preventDefault()
-    event.stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
   }
 }
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
+  // let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
   let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
   scrollbar.value.scrollLeft = w;
-  let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  // let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  let h = getFreeLayoutState.value.line.centerLine.y;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
@@ -160,7 +161,6 @@ function redirect() {
 function update() {
   perfectScrollbar.value.update();
 }
-
 
 // 鼠标滚动
 

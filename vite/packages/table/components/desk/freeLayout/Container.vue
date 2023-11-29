@@ -153,7 +153,7 @@ watch(
     :gridStyle="{
       border: '2px solid var(--active-bg)',
     }"
-    :disabledHandle="isDrag ? '' : '.#123'"
+    :handle="isDrag ? '' : '.#123'"
   >
     <slot name="box" :data="{ ...item }"></slot>
   </xt-drag>
