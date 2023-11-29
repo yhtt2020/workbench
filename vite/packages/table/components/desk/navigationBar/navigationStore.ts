@@ -12,22 +12,26 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 iconBackground:false
             },
             selectNav:'',
-            currentList:[],
+            currentList:{
+                name:'',
+                tag:'',
+                list:[],
+
+            },
+            // 第一次进入，显示推荐
+            introduceVisible:true,
         }
     },
     actions:{
         toggleEdit(){
             this.editToggle=!this.editToggle
         },
-        toggleTaskBox(){
-            this.taskBoxVisible=!this.taskBoxVisible
-        }
     },
     persist: {
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','taskBoxVisible','iconSetting','selectNav'],
+            paths: ['editToggle','iconSetting','selectNav','introduceVisible'],
             // storage: dbStorage,
             storage: localStorage,
           },

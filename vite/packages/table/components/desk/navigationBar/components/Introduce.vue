@@ -1,9 +1,20 @@
 <template>
   <div class="w-full h-full">
+    <!-- windows应用 -->
+    <div v-if="selectTag === 'tableApp'" class="mb-2  xt-bg-2 h-[40px] rounded-xl flex items-center p-2  justify-between">
+      <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
+      <div class="flex items-center ">
+        <div style="color:var(--active-bg)" class="mr-3 pointer" @click="addAllIcon">全选</div>
+        <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
+          <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
+            批量添加(3)</div>
+        </xt-button>
+      </div>
+
+    </div>
     <div v-if="selectTag === 'recommendation'">
-      <div class="flex justify-center"><xt-new-icon icon="fluent-emoji:rocket" size="50" /></div>
-      <div class="flex justify-between p-2 mt-5 rounded-lg xt-bg-2">
-        <div class="xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
+      <div class="flex flex-col justify-between p-2 mt-5 rounded-lg xt-bg-2 ">
+        <div class="mb-2 xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
         <div class="pointer" style="color:var(--active-bg)" @click="addAllIcon">全部添加</div>
       </div>
     </div>

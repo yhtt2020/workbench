@@ -290,15 +290,15 @@ export const doc=[
 
 export const addIconPosition=[
     {
-        title:'左侧',
+        title:'左侧导航',
         value:'left'
     },
     {
-        title:'右侧',
+        title:'右侧导航',
         value:'right'
     },
     {
-        title:'底部',
+        title:'底部导航',
         value:'foot'
     }
 ]

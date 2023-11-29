@@ -1,7 +1,6 @@
 <template>
-    <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <Modal :zIndex="99" :maskNoClose="true" v-model:visible="settingVisible" >
-        <div class="w-[420px] h-[514px]  rounded-xl p-4">
+    <Modal :zIndex="99" :maskNoClose="true" v-model:visible="settingVisible" :blurFlag="false">
+        <div class="w-[420px] h-[518px]  rounded-xl p-4">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="ml-8 text-base xt-text">导航栏设置</div>
