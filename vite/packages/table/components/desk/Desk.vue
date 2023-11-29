@@ -60,10 +60,7 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer
-              :currentDesk="currentDesk"
-              :isDrag="editing"
-            >
+            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
@@ -541,7 +538,10 @@ export default {
     },
     editing: {
       handler(newVal) {
-        if (newVal && !this.isFreeLayout) {
+        // if (this.isFreeLayout) {
+        //   this.hide = true;
+        // } else
+         if (newVal && !this.isFreeLayout) {
           this.hide = true;
           setTimeout(() => {
             this.hide = false;
