@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: calc(100% - 20px)" v-if="currentDesk.cards">
+  <div style="height: 100%; width: calc(100% - 00px)" v-if="currentDesk.cards">
     <div
       style="width: 100%; height: 100%"
       :class="notTrigger ? 'trigger' : ''"
@@ -46,6 +46,8 @@
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
       @exit="toggleEditing"
       v-model:zoom="globalSettings.cardZoom"
+      v-model:aloneZoom="settings.cardZoom"
+      :alone="settings.enableZoom"
     />
     <RightMenu
       :menus="dropdownMenu"
@@ -58,22 +60,14 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer
-              :currentDesk="currentDesk"
-              :isDrag="editing"
-              @editStart="editStart"
-              @editEnd="freeDeskEdit = false"
-            >
+            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
               <template #box="{ data }">
-                <!-- <div :class="[{ editing: editing }]"> -->
                 <component
                   :desk="currentDesk"
                   :is="data.name"
                   :customIndex="data.id"
                   :customData="data.customData"
-                  :editing="true"
                 />
-                <!-- </div> -->
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
@@ -135,12 +129,9 @@
               class="grid home-widgets"
               ref="grid"
               :options="muuriOptions"
-
             >
               <template #item="{ item }">
                 <div
-                  :class="{ editing: editing }"
-                  :editing="editing"
                   :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -153,7 +144,7 @@
                     :is="item.name"
                     :customIndex="item.id"
                     :customData="item.customData"
-                    :editing="editing"
+
                   ></component>
                 </div>
               </template>
@@ -286,7 +277,7 @@
     <template #header-center>
       <XtTab
         v-if="settingVisible"
-        style="height: 34px;width: 300px;"
+        style="height: 34px; width: 300px"
         boxClass="p-1 xt-bg-2"
         v-model="currentSettingTab"
         :list="settingsTab"
@@ -313,7 +304,7 @@
             开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
           </div>
           <template v-if="settings.enableZoom">
-            <div class="mb-3">卡片缩放</div>
+            <div class="mb-3">卡片缩放222</div>
             <a-slider
               @afterChange="update"
               :min="20"
@@ -537,14 +528,6 @@ export default {
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
     },
-    "currentDesk.id": {
-      handler(newVal) {
-        // this.freeLayoutID = newVal
-        console.log("桌面ID this.freeLayoutID  :>> ", newVal);
-      },
-      deep: true,
-      immediate: true,
-    },
     "currentDesk.settings": {
       handler(newVal) {
         if(!this.isFreeLayout) {
@@ -570,6 +553,21 @@ export default {
         this.key = Date.now();
       },
       deep: true,
+    },
+    editing: {
+      handler(newVal) {
+        // if (this.isFreeLayout) {
+        //   this.hide = true;
+        // } else
+         if (newVal && !this.isFreeLayout) {
+          this.hide = true;
+          setTimeout(() => {
+            this.hide = false;
+          }, 100);
+        } else if (!this.isFreeLayou) {
+        }
+      },
+      immediate: true,
     },
   },
   computed: {
@@ -680,14 +678,13 @@ export default {
       resizeHandler: null,
     };
   },
-  beforeMount () {
-    window.time=Date.now()
+  beforeMount() {
+    window.time = Date.now();
   },
   mounted() {
     if(window.showed){
       this.showGrid=true
     }
-    console.log('桌面加载总耗时',Date.now()-window.time+'ms')
     this.resizeHandler = () => {
       this.currentDesk.layoutSize = this.getLayoutSize();
     };
