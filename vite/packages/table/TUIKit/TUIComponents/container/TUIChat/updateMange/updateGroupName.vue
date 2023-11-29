@@ -4,7 +4,7 @@
       <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;position:relative;">
         <div class="flex items-center flex-col justify-center" style="margin-bottom: 28px;">
           <!-- 替换成图标选择器 -->
-         <div class="rounded-lg flex pointer items-center justify-center" style="width: 64px;height: 64px; position:relative"  @click="onShowSelect">
+         <div class="rounded-lg flex pointer items-center justify-center" style="width: 64px;height: 64px; position:relative"  @click="modelValue = true">
           <!--头像 -->
           <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
           <div class="overflow-hidden">
@@ -12,7 +12,8 @@
           </div>
           <UpdateIcon icon="fluent:camera-16-regular" width="20" height="20" style="font-size: 1.5rem;width:24px;height:24px;position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);background:var(--active-bg);border-radius: 50%;" color="var(--secondary-text)"/>
          </div>
-         <SelectIcon @isIconShow="iconVisible = false" :goodVisible="true" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon>
+         <xt-select-icon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-select-icon>
+         <!-- <SelectIcon @isIconShow="iconVisible = false" :goodVisible="true" :windowHeight="innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon> -->
          <!-- <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div> -->
          <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
          </div>
@@ -48,7 +49,7 @@ export default {
   data(){
     return{
       avatar:this.info.avatar,
-      iconVisible:false,
+      modelValue:false,
       innerHeight:100,
       bgColor:'',
       isCustom:true,

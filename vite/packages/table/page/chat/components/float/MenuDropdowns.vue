@@ -15,10 +15,10 @@
       <span class="font-16 font-500 ml-2 truncate" style="color: var(--primary-text);max-width: 110px;">{{ item.name || item.title }}</span>
       <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
        v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-       <div style="position: absolute;top:0px;right: -10px;width:12px;height: 12px;background: red; font-size: 10px;" 
-        class="rounded-full flex items-center justify-center"   v-if="getUnreadNum !== null && getUnreadNum?.unreadCount !== 0"
+       <div style="width:12px;height: 12px;background: red; font-size: 10px;" 
+        class="rounded-full flex items-center justify-center ml-2"   v-if="unread !== null && unread !== 0"
        >
-        {{ getUnreadNum?.unreadCount }}
+        {{ unread }}
        </div>
     </div>
   </xt-menu>
@@ -53,6 +53,7 @@ export default {
 
     const data = reactive({
       revID:'',
+      prop:JSON.parse(props.item.props),
     })
     const linkMenus = ref([
      {
@@ -105,25 +106,20 @@ export default {
     const currentItem = (item) =>{
       ctx.emit('currentItem',item)
     }
-    // 监听频道列表中的群聊未读数据
-    watch(()=>contactsSet.value.unReadMsgNum,(newVal)=>{
-      const prop = JSON.parse(props.item.props);
-      const type = props.item.type
-      if(newVal.length !== 0 && type === 'group'){
-        const groupID = prop.groupID;
-        const find = newVal.find((item)=>{ return String(item.groupID) === String(groupID) })
-        if(find !== undefined){ 
-          getUnreadNum.value = find 
-        }
+
+    const unread = computed(()=>{
+      const jsonProp = JSON.parse(props.item.props);
+      if(jsonProp.hasOwnProperty('unread')){
+        return jsonProp.unread > 99 ? 99 : jsonProp.unread;
       }else{
-        return;
+        return 0;
       }
-    },
-    {deep:true,immediate:true}
-    )
+    })
 
     return{
-      linkRef,menus,linkMenus,menuList,getUnreadNum,
+      linkRef,menus,linkMenus,menuList,
+      // getUnreadNum,
+      unread,
      ...toRefs(data),currentItem,
     }
   }

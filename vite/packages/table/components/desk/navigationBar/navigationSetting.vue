@@ -1,6 +1,6 @@
 <template>
     <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <xt-old-modal :isFooter="false" zIndex="300" :isHeader="false" :boxIndex="420" :maskIndex="300">
+    <xt-old-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
         <div class="w-[400px] h-[484px]  rounded-xl pl-4 pr-4 pb-4  wuzi">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">

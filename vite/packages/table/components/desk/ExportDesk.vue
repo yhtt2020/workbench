@@ -2,11 +2,11 @@
   <!-- 导出模态框 -->
   <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99999;" v-if="openModal" >
     <div
-         class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col"
+         class="fixed flex flex-col text-white -translate-x-1/2 -translate-y-1/2 rounded-lg xt-modal top-1/2 left-1/2"
          style=";width: 480px;height: 425px;background:  #282828">
       <div class="head-nav">
         <span class="ml-2" style="font-size: 16px;color: var(--primary-text);font-weight: 500;">导出桌面</span>
-        <div @click="close" class="h-11 w-11 flex justify-center items-center xt-bg-2 rounded-lg pointer">
+        <div @click="close" class="flex items-center justify-center rounded-lg h-11 w-11 xt-bg-2 pointer">
           <Icon icon="guanbi" style="color:var(--primary-text);font-size:24px"></Icon>
         </div>
       </div>
@@ -14,7 +14,7 @@
         <span class="title">选择导出桌面：</span>
         <a-select
           :bordered="false"
-          class="input rounded-lg  text-xs"
+          class="text-xs rounded-lg input"
           size="large"
           mode="multiple"
           :dropdownStyle="{ 'z-index': 9999999,backgroundColor: 'var(--secondary-bg)' }"
@@ -24,24 +24,24 @@
           @change="onChange"
         >
           <template #suffixIcon>
-            <Icon icon="xiangyou" class="h-4 w-4" @click="delLabel(index)"></Icon>
+            <Icon icon="xiangyou" class="w-4 h-4" @click="delLabel(index)"></Icon>
           </template>
           <a-select-option v-for="(item,index) in deskType" :key="index" :value="index">{{ item }}</a-select-option>
         </a-select>
         <span class="title">桌面数据：</span>
-        <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">选择是否需要保留卡片的设置或数据，比如「便签」中的内容。</div>
+        <div style="font-size: 14px;" class="mt-2 mb-4 xt-text-2">选择是否需要保留卡片的设置或数据，比如「便签」中的内容。</div>
         <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
-        <div class="title mt-2">桌面显示尺寸：{{displaySize.width}} * {{displaySize.height}}</div>
+        <div class="mt-2 title">桌面显示尺寸：{{displaySize.width}} * {{displaySize.height}}</div>
 
       </div>
       <div class="flex justify-center mt-4">
         <div style="width: 120px;height: 48px;"
           @click="close"
-           class="flex justify-center items-center xt-text xt-bg-2 rounded-lg pointer">
+           class="flex items-center justify-center rounded-lg xt-text xt-bg-2 pointer">
         取消
         </div>
         <div style="width: 120px;height: 48px;background-color: var(--active-bg);"
-            class=" ml-3 flex justify-center items-center rounded-lg pointer" @click="exportBtn">
+            class="flex items-center justify-center ml-3 rounded-lg  pointer" @click="exportBtn">
           确定导出
         </div>
       </div>
@@ -200,7 +200,7 @@ export default {
         this.deskType = this.desks.map(item => item.name)
         this.defaultType = {title: '不保留数据', icon: 'yuanquan', name: 'notData'}
         this.desks.map((item,index) => {
-          if(item.nanoid === this.currentDeskIndex.name){
+          if(item.nanoid === this.currentDeskIndex?.name){
             this.desk = [index]
             this.onChange([index])
           }

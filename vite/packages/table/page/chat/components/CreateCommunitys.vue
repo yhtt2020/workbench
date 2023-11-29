@@ -26,7 +26,7 @@
      <div class="overflow-hidden">
        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
      </div>
-     <communityIcon icon="akar-icons:cloud-upload" width="20" height="20"
+     <communityIcon icon="fluent:camera-16-regular" width="20" height="20"
      style="font-size: 1.5rem;width:24px;height:24px;background:var(--active-bg);position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);border-radius: 50%;"
      color="var(--secondary-text)"/>
    </div>
