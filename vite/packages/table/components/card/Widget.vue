@@ -183,7 +183,7 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(cardStore, ["customComponents"]),
+    //...mapWritableState(cardStore, ["customComponents"]),
     menus() {
       return [
         ...this.menuList,
@@ -205,9 +205,6 @@ export default {
 
     isCustomData() {
       return Object.keys(this.customData).length !== 0;
-    },
-    isCode() {
-      return this.customData.hasOwnProperty("Code");
     },
     customSize() {
       return {
