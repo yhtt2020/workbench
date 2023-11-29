@@ -1,10 +1,11 @@
 <template>
-  <xt-button @click="onChangeFull" :h="30" :w="80" v-if="this.isState&&this.running" class="tomato-timer pointer no-drag   mr-2 "
-             :style="{'background' : this.isColor,'border-radius':'6px',}">
-    <div style="display: flex;justify-content: space-evenly;
-        align-items: center;font-family: Oswald-SemiBold;color: rgba(255, 255, 255, 0.85);" >
-      <Icon class="mr-1" icon="fluent-emoji:tomato" style="font-size: 20px;"/>
-      {{ displayNum(minutes) }}:{{ displayNum(seconds) }}
+  <xt-button @click="onChangeFull" h="28" v-if="this.isState&&this.running" class="tomato-timer pointer no-drag   mr-2 "
+             :style="{'background' : 'var(--secondary-transp-bg)','border-radius':'6px',width:'auto !important',padding:'4px !important'}">
+    <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center w-5 h-5">
+        <Icon class="mr-0.5" icon="fluent-emoji:tomato"  style="font-size: 20px;"/>
+      </div>
+      <span class="xt-text xt-font font-14 ">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</span>
     </div>
     <div style="position: absolute;left:0;top:31px" v-show="isFullState">
       <TomatoTimer :isTop="true"/>
@@ -50,7 +51,7 @@ export default {
 <style scoped>
 
 .tomato-timer {
-  background: #E7763E;
+  background: var(--secondary-transp-bg);
   z-index: 100;
   position: relative;
 }
