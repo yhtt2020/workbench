@@ -27,7 +27,7 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
-        max-width: 90%;
+        max-width: 60%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -44,7 +44,7 @@
           justify-content: center;
         ">
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-            <div class="mr-6 scroll-content" style=" flex: 1; display: flex"
+            <div class="mr-6 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
