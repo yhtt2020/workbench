@@ -1,7 +1,7 @@
 <!-- 带头像框组件 -->
 <template>
   <tippy :z-index="9999999" :append-to="docBody" v-if="frameUrl" :trigger="frame.name?'mouseenter':''" :placement="framePlacement"  :interactive="true">
-    <div style="position: relative !important;display: inline-block;zoom: 0.8"
+    <div style="position: relative !important;display: inline-block;zoom: 0.8;transform:translateX(0%) translateY(8%)"
          :style="{width:avatarSize+'px',height:avatarSize+'px'}">
       <transition name="fade">
 

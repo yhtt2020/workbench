@@ -122,11 +122,7 @@ export default {
     ...mapWritableState(appStore,['settings'])
   },
   async mounted () {
-    this.defaultOutput = await getDefaultVolume()
-    this.defaultMic=await getDefaultMic()
-    this.muteShow=!this.defaultOutput.muted
-    this.microphoneShow=!this.defaultMic.muted
-    this.startListenAudioTest()
+    this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({
     //   acceptAllDevices: true
@@ -141,6 +137,13 @@ export default {
   },
   methods:{
     ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
+    async init(){
+      this.defaultOutput = await getDefaultVolume()
+      this.defaultMic=await getDefaultMic()
+      this.muteShow=!this.defaultOutput.muted
+      this.microphoneShow=!this.defaultMic.muted
+      this.startListenAudioTest()
+    },
     selectOutputVoice(){
       this.outputShow = true
     },

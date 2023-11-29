@@ -80,8 +80,8 @@ const freeLayoutMenu = computed(() => {
       title: "拖拽结束吸附于网格",
       type: getFreeLayoutState.value.afterDrop ? "theme" : "default",
       fn: () => {
-        getFreeLayoutState.value.afterDrop =
-          !getFreeLayoutState.value.afterDrop;
+        getFreeLayoutState.value.option.afterDragging =
+          !getFreeLayoutState.value.option.afterDragging;
       },
     },
   ];
@@ -95,9 +95,9 @@ const canvasMenu = computed(() => {
       title: "放大",
       fn: () => {
         if (currentMode.value === "free") {
-          freeLayoutZoom.value += 1;
+          freeLayoutZoom.value += 5;
         } else {
-          defaultZoom.value += 1;
+          defaultZoom.value += 5;
         }
       },
     },
@@ -107,9 +107,9 @@ const canvasMenu = computed(() => {
       type: "default",
       fn: () => {
         if (currentMode.value === "free") {
-          freeLayoutZoom.value -= 1;
+          freeLayoutZoom.value -= 5;
         } else {
-          defaultZoom.value -= 1;
+          defaultZoom.value -= 5;
         }
       },
     },
@@ -122,7 +122,7 @@ const deskList = ref([
     value: "default",
   },
   {
-    name: "自由布局",
+    name: "自由模式",
     value: "free",
   },
 ]);
@@ -132,18 +132,24 @@ const exit1 = () => {
 };
 
 const currentMode = ref(isFreeLayout.value ? "free" : "default");
-
+watch(currentMode, (newV) => {
+  freeLayoutStore.renewFreeLayout();
+});
 // 缩放比例
 const freeLayoutZoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.canvas.zoom * 100 : 100
 );
 watch(freeLayoutZoom, (newV) => {
   getFreeLayoutState.value.canvas.zoom = newV / 100;
+  const int = Math.round(newV);
+  freeLayoutZoom.value = int;
 });
 
 const defaultZoom = ref(zoom.value);
-watch(defaultZoom, (newV) => {
-  emits("update:zoom", newV);
+watch(defaultZoom, (newV: any) => {
+  const int = Math.round(newV);
+  defaultZoom.value = int;
+  emits("update:zoom", int);
 });
 </script>
 
@@ -163,14 +169,13 @@ watch(defaultZoom, (newV) => {
       <xt-text type="2" class="mb-3">
         <template #center> 编辑桌面 </template>
         <template #right>
-          <xt-button w="20" h="20" radius="50" class="floatMenu" @click="exit1">
-            <xt-new-icon
-              icon="fluent:dismiss-16-filled"
-              class="text-2"
-              size="12"
-              style="color: var(--secondary-text) !important"
-            />
-          </xt-button>
+          <xt-new-icon
+            @click="exit1"
+            icon="akar-icons:circle-x-fill"
+            class="text-2 floatMenu"
+            size="20"
+            style="color: var(--secondary-text) !important"
+          />
         </template>
       </xt-text>
       <xt-tab
@@ -199,7 +204,7 @@ watch(defaultZoom, (newV) => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-model="freeLayoutZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden"
+            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"
           >
             <template #addonAfter>
@@ -235,7 +240,7 @@ watch(defaultZoom, (newV) => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-model="defaultZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden"
+            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"
           >
             <template #addonAfter>

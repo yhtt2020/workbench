@@ -84,8 +84,10 @@ export default {
     ...mapWritableState(hotStore,['data'])
   },
   async mounted() {
-    await this.getData()
-    this.hotList = this.data
+    this.getData().then(()=>{
+      this.hotList = this.data
+    })
+
 
   },
   methods: {

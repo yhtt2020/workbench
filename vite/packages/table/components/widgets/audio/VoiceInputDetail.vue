@@ -38,7 +38,9 @@ export default {
     }
   },
   async mounted () {
-    this.inputList = await listInputs()
+      listInputs().then(data=>{
+        this.inputList =data
+      })
   },
   methods:{
     selectAudio(item,list){

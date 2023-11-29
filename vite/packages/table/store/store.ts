@@ -30,8 +30,8 @@ export const oilStore = defineStore("OilPrices", {
             this.cityOilList=data
             // console.log('city2',data);
             // console.log('city1',this.cityOilList);
-            
-            
+
+
             return this.cityOilList
         },
 
@@ -53,7 +53,7 @@ export const oilStore = defineStore("OilPrices", {
                 })
             })
             // console.log(res);
-            
+
             if(res.status){
                 if(res.data instanceof Array){
                     this.cityOilData=res.data
@@ -74,7 +74,7 @@ export const oilStore = defineStore("OilPrices", {
                 // console.log(res.data.adcode.p);
                 this.currentCity=res.data.adcode
                 // console.log(this.currentCity);
-                
+
             }
         }
 
@@ -83,7 +83,7 @@ export const oilStore = defineStore("OilPrices", {
         enabled: true,
         strategies: [
           {
-            storage: dbStorage,
+            storage: localStorage,
             paths: ['cityOilData','currentCity'],
           }
         ]

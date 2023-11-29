@@ -186,33 +186,35 @@ export default {
   },
   async mounted() {
     this.isLoading = true
-    await this.getCity()
-    //  console.log(this.currentCity);
-    //  await this.getCityOilData()
-    // 判断用户ip是否在国内省市
-    const isCity = this.city.some(item => item.city == this.currentCity.p)
-    // console.log(isCity);
-    if (this.customData && this.customData.city) {
-      // console.log(this.customData.city);
-      this.cityOil(this.customData.city)
-    } else {
-      if (isCity && this.currentCity.p) {
-        // this.customData.city=this.currentCity.p
-        let city = this.currentCity.p
-        this.customData.city = city
+    this.getCity().then(()=>{
+      //  console.log(this.currentCity);
+      //  await this.getCityOilData()
+      // 判断用户ip是否在国内省市
+      const isCity = this.city.some(item => item.city == this.currentCity.p)
+      // console.log(isCity);
+      if (this.customData && this.customData.city) {
+        // console.log(this.customData.city);
         this.cityOil(this.customData.city)
-
       } else {
-        this.customData.city=this.city[this.defaultCityIndex].city
-        this.cityOil(this.city[this.defaultCityIndex].city)
-      }
-      // this.customData.city=this.city[this.defaultCityIndex].city
-      // this.cityOil(this.city[this.defaultCityIndex].city)
+        if (isCity && this.currentCity.p) {
+          // this.customData.city=this.currentCity.p
+          let city = this.currentCity.p
+          this.customData.city = city
+          this.cityOil(this.customData.city)
 
-    }
-    setTimeout(() => {
-      this.isLoading = false
-    }, 0);
+        } else {
+          this.customData.city=this.city[this.defaultCityIndex].city
+          this.cityOil(this.city[this.defaultCityIndex].city)
+        }
+        // this.customData.city=this.city[this.defaultCityIndex].city
+        // this.cityOil(this.city[this.defaultCityIndex].city)
+
+      }
+      setTimeout(() => {
+        this.isLoading = false
+      }, 0);
+    })
+
   }
 
 }

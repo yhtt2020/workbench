@@ -339,7 +339,7 @@ export default {
     console.log('与阿婆', this.detailList)
     this.scrollToItem(this.currentDetail._id)
     await this.getTabList()
-    this.defaultFlow = (await this.getTabList())[0]
+    //this.defaultFlow = (await this.getTabList())[0]
     // console.log(this.list, 'display',this.$refs)
     // setTimeout(()=>{
     //   console.log('全部',this.itemRefs)
