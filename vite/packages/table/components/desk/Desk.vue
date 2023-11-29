@@ -60,12 +60,7 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer
-              :currentDesk="currentDesk"
-              :isDrag="editing"
-              @editStart="editStart"
-              @editEnd="freeDeskEdit = false"
-            >
+            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
@@ -134,13 +129,9 @@
               class="grid home-widgets"
               ref="grid"
               :options="muuriOptions"
-
             >
-              <!--
-                  :class="{ editing: editing }"
-                  :editing="editing"-->
-            <template #item="{ item }">
-              <div
+              <template #item="{ item }">
+                <div
                   :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -161,6 +152,7 @@
           <div class="xt-text" v-show="!showGrid" style="text-align: center;font-size: 32px;margin: auto;position: fixed;top: 50%;transform: translateY(-50%) translateX(-50%);left: 50%;">
             <loading-outlined />
           </div>
+
         </div>
       </vue-custom-scrollbar>
 
@@ -564,7 +556,10 @@ export default {
     },
     editing: {
       handler(newVal) {
-        if (newVal && !this.isFreeLayout) {
+        // if (this.isFreeLayout) {
+        //   this.hide = true;
+        // } else
+         if (newVal && !this.isFreeLayout) {
           this.hide = true;
           setTimeout(() => {
             this.hide = false;
@@ -690,7 +685,6 @@ export default {
     if(window.showed){
       this.showGrid=true
     }
-    console.log("桌面加载总耗时", Date.now() - window.time + "ms");
     this.resizeHandler = () => {
       this.currentDesk.layoutSize = this.getLayoutSize();
     };
