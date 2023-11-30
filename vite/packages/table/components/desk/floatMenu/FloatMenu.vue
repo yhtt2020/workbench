@@ -107,6 +107,7 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
+          console.log('123 :>> ', 123);
           if (alone.value) {
             defaultAloneZoom.value += 5;
           } else {
@@ -197,7 +198,7 @@ watch(defaultZoom, (newV: any) => {
 const defaultAloneZoom = ref(aloneZoom.value);
 watch(defaultAloneZoom, (val: any) => {
   const int = Math.round(val);
-  freeLayoutZoom.value = int;
+  defaultAloneZoom.value = int;
   if (int >= 0) {
     emits("update:aloneZoom", int);
   } else {
@@ -291,9 +292,6 @@ onBeforeUnmount(() => {
           </XtInput>
         </div>
       </template>
-      <div v-if="!isFreeLayout && currentMode === 'free'">
-        你尚未开启自由布局
-      </div>
       <template v-if="currentMode == 'default'">
         <div class="mb-3 mt-2 flex items-center">
           小组件缩放
