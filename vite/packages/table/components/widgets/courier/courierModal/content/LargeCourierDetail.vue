@@ -1,6 +1,6 @@
 <template>
   <div :class="{'small':mode==='small'}" class="flex flex-col" style="" :style="mode==='small'?'width:580px;height:700px':'width: 976px;height: 600px;'">
-    <div class="flex items-center justify-center w-full py-4 mb-4" style="position: relative;">
+    <div class="flex items-center justify-center w-full py-0 mb-4" style="position: relative;">
 <!--      {{mode}} {{route}}-->
       <div class="flex" v-if="mode==='large'">
         <HorizontalPanel :navList="tabs.slice(0,4)" v-model:selectType="defaultFlow"/>
@@ -40,7 +40,7 @@
               <div  class="mr-2">
                 <a-input size="large" v-model:value="searchWords" allow-clear class="rounded-full"></a-input>
               </div>
-              <xt-button  @click="findVisible=false;searchWords=''" w="40" h="40"> <CloseOutlined  style="font-size: 1.1em"/></xt-button>
+              <xt-button  @click="findVisible=false;searchWords=''" w="40" h="40"> <CloseOutlined  style="font-size: 1.1em"/> </xt-button>
             </div>
             <div class="flex " v-else>
               <xt-button  w="40" h="40" class="category-button mr-2" @click="showFind">
@@ -75,7 +75,7 @@
           </div>
         </div>
         <div style="" :style="{width:mode==='small'?'100%':'452px'}" class="h-full" v-if="route==='detail' || mode==='large'">
-          <div class="left-back">
+          <div class="left-back" v-if="mode==='small'">
             <a-tooltip placement="top">
               <template #title>
                 <span class="xt-text-2">返回</span>
@@ -380,7 +380,7 @@ export default {
 <style lang="scss" scoped>
 .right-button {
   position: absolute;
-  top: 16px;
+  top: 0px;
   right: 16px;
 }
 
@@ -441,5 +441,9 @@ export default {
     top:0px;
     right:0px
   }
+}
+
+:deep(.main-model){
+  margin: 0 !important;
 }
 </style>
