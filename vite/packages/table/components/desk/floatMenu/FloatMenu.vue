@@ -28,6 +28,7 @@ const emits = defineEmits([
   "hide",
   "update:zoom",
   "update:aloneZoom",
+  "resetLayout",
 ]);
 // 基础
 const defaultMenu = computed(() => {
@@ -106,8 +107,9 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
+          console.log('123 :>> ', 123);
           if (alone.value) {
-            currentAloneZoom.value += 5;
+            defaultAloneZoom.value += 5;
           } else {
             defaultZoom.value += 5;
           }
@@ -123,7 +125,7 @@ const canvasMenu = computed(() => {
           freeLayoutZoom.value -= 5;
         } else {
           if (alone.value) {
-            currentAloneZoom.value -= 5;
+            defaultAloneZoom.value -= 5;
           } else {
             defaultZoom.value -= 5;
           }
@@ -149,9 +151,24 @@ const exit1 = () => {
 };
 
 const currentMode = ref(isFreeLayout.value ? "free" : "default");
-watch(currentMode, (newV) => {
-  freeLayoutStore.renewFreeLayout();
-});
+watch(
+  currentMode,
+  (newV) => {
+    if (newV == "default") {
+      emits("resetLayout");
+      if (isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    } else if (newV == "free") {
+      if (!isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 // 缩放比例
 const freeLayoutZoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.canvas.zoom * 100 : 100
@@ -177,12 +194,15 @@ watch(defaultZoom, (newV: any) => {
     defaultZoom.value = 1;
   }
 });
-const currentAloneZoom = ref(aloneZoom.value);
-watch(currentAloneZoom, (val: any) => {
-  if (val >= 0) {
-    emits("update:aloneZoom", val);
+// 默认桌面独立缩放
+const defaultAloneZoom = ref(aloneZoom.value);
+watch(defaultAloneZoom, (val: any) => {
+  const int = Math.round(val);
+  defaultAloneZoom.value = int;
+  if (int >= 0) {
+    emits("update:aloneZoom", int);
   } else {
-    currentAloneZoom.value = 1;
+    defaultAloneZoom.value = 1;
   }
 });
 
@@ -192,7 +212,7 @@ const resetZoom = () => {
     freeLayoutZoom.value = 100;
   } else {
     if (alone.value) {
-      currentAloneZoom.value = 100;
+      defaultAloneZoom.value = 100;
     } else {
       defaultZoom.value = 100;
     }
@@ -272,9 +292,6 @@ onBeforeUnmount(() => {
           </XtInput>
         </div>
       </template>
-      <div v-if="!isFreeLayout && currentMode === 'free'">
-        你尚未开启自由布局
-      </div>
       <template v-if="currentMode == 'default'">
         <div class="mb-3 mt-2 flex items-center">
           小组件缩放
@@ -290,7 +307,7 @@ onBeforeUnmount(() => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-if="alone"
-            v-model="currentAloneZoom"
+            v-model="defaultAloneZoom"
             class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"
           >
