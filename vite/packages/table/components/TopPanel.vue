@@ -52,8 +52,8 @@
     <div class="flex items-center  justify-end relative drag" style="width:550px;">
       <TopPanelButton />
 
-      <xt-button h="48" style="background:transparent !important;width:auto !important;"   @click="toggleRightDrawer"
-       :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " class="no-drag btn-hover"
+      <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " 
+       class="no-drag btn-hover category-button p-1 rounded-md pointer"
       >
         <div class="flex items-center">
           <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
@@ -65,7 +65,7 @@
            </span>
           </div>
         </div>
-      </xt-button>
+      </div>
 
       <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
         <WindowController></WindowController>
@@ -292,31 +292,31 @@ export default {
       this.hideNoticeEntry();
     },
 
-    topClockTimerVisibleSetting(){
-      this.filterClock(this.clockTag,this.chooseType);
-      if(this.checkTopClock===true){
-        if (this.filterClockEvent.length > 0){
-          // console.log(this.filterClockEvent.length);
-          this.topClockTimerVisible = true;
-        }
-        else if (this.countDowntime.seconds !== undefined){
-          // console.log(this.countDowndate);
-          this.topClockTimerVisible = true;
-        }
-        else {
-          // console.log(this.countDowndate,this.clockEvent);
-          this.topClockTimerVisible = false;
-        }
-      }
-      else{
-        this.topClockTimerVisible=false;
-      }
-      // console.log(this.clockTag);
-    }
+    // topClockTimerVisibleSetting(){
+    //   this.filterClock(this.clockTag,this.chooseType);
+    //   if(this.checkTopClock===true){
+    //     if (this.filterClockEvent.length > 0){
+    //       // console.log(this.filterClockEvent.length);
+    //       this.topClockTimerVisible = true;
+    //     }
+    //     else if (this.countDowntime.seconds !== undefined){
+    //       // console.log(this.countDowndate);
+    //       this.topClockTimerVisible = true;
+    //     }
+    //     else {
+    //       // console.log(this.countDowndate,this.clockEvent);
+    //       this.topClockTimerVisible = false;
+    //     }
+    //   }
+    //   else{
+    //     this.topClockTimerVisible=false;
+    //   }
+    //   // console.log(this.clockTag);
+    // }
   },
 
   beforeUpdate() {
-    this.topClockTimerVisibleSetting();
+    // this.topClockTimerVisibleSetting();
   }
 }
 </script>
