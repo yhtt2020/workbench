@@ -96,10 +96,8 @@
       </div>
     </div>
   </div>
-
-  <!-- 全屏模式 -->
-  <FullScreen v-if="isFull" :changeIsFull="changeIsFull" :watchEditorValue="watchEditorValue"
-              :selDesk="selDesk"></FullScreen>
+    <!-- 全屏模式 -->
+    <FullScreen :menus="menus" v-if="isFull" :changeIsFull="changeIsFull" :watchEditorValue="watchEditorValue" :selDesk="selDesk"></FullScreen>
 </template>
 
 <script>
@@ -122,36 +120,38 @@ export default {
     Markdown,
     FullScreen,
   },
-  props: ['selDesk'],
+  props: ['selDesk','menus'],
   computed: {
     ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
     deskName () {
       if (this.noteList.length) {
-        return this.selNote >= 0 ? this.noteList[this.selNote].deskName : ''
+        return this.selNote >= 0 ? this.noteList[this.selNote]?.deskName : ''
       }
     },
     background () {
       if (this.noteList.length) {
         if (this.selNote >= 0) {
-          return this.selNote >= 0 ? this.noteList[this.selNote].customData.background : ''
+          return this.selNote >= 0 ? this.noteList[this.selNote]?.customData.background : ''
         } else {
           return
         }
       }
     },
-    time () {
+    time () {const currentNote = this.noteList[this.selNote]
       // return
       if (this.selNote >= 0 && this.noteList) {
-        if (this.noteList[this.selNote]) {
-          let timestamp = this.noteList[this.selNote].updateTime // 假设您已经获取了时间戳
-          return formatTime(timestamp)
+        if (currentNote) {
+          let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
+          if (timestamp == undefined) {
+                  timestamp = currentNote.createTime
+                }return formatTime(timestamp)
         } else {
           return
         }
       } else {
-        return
-      }
-    },
+        return}
+      },
+
   },
   data () {
     return {
@@ -310,21 +310,10 @@ export default {
       }
     },
     watchEditorValue (value) {
-      this.$refs.child.childEvent(value)
+      this.$refs.child?.childEvent(value)
     },
 
   },
-  watch: {
-    isSelTab (newval, oldval) {
-      if (newval) {
-        this.menus[0].label = '还原'
-        this.menus[2].label = '彻底删除'
-      } else {
-        this.menus[0].label = '添加到桌面'
-        this.menus[2].label = '删除便签'
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -350,6 +339,8 @@ export default {
 
 :deep(.vditor-toolbar) {
   background: var(--main-bg) !important;
+    // height: 35px;
+    // overflow: hidden;
 }
 
 :deep(.vditor-reset) {

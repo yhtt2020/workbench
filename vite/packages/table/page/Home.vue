@@ -236,8 +236,8 @@
   <!-- <div class="fixed inset-0 p-12 home-blur" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
-
-  <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="agreeTest">
+  <!-- 引导暂时隐藏 等后续开发 -->
+  <div class="fixed inset-0 flex justify-center items-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
   </div>
 

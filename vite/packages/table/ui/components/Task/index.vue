@@ -91,7 +91,7 @@ export default defineComponent({
       this.$emit("cb");
       this.tour.next();
       this.step++;
-      if (this.task.success) {
+      if (this.task?.success) {
         this.success = true;
         // 发奖励
       }
