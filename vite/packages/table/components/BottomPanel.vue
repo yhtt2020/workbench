@@ -3,7 +3,8 @@
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel" style="text-align: center"
       @contextmenu="showMenu" v-if="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
-      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]" class="flex flex-row common-panel user s-bg" style="
+      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
+        class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
         margin-top: 0;
         background: var(--primary-bg);
@@ -18,7 +19,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div  class="flex flex-row items-center s-bg" style="
+      <div class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -42,19 +43,20 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        ">        
+        ">
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
             <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                    @mouseenter="showElement(item, index)">
                     <RightMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
+                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -201,7 +203,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}"  v-if="quick">
+      <div class="fixed inset-0 " :style="{ zIndex: componentId === 'navigationSetting' ? 99 : 90 }" v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -248,7 +250,7 @@ import { toggleFullScreen, renderIcon } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
-import { message } from 'ant-design-vue'
+import { message,notification, Button } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
@@ -340,7 +342,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => {this.removeFootNavigationList(this.currentIndex) }
+          fn: () => { this.removeFootNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -356,7 +358,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       rightMenus: [
@@ -376,7 +378,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2]=false },
+          fn: () => { this.navigationToggle[2] = false },
         },
         {
           id: 4,
@@ -385,27 +387,27 @@ export default {
           children: [
             {
               id: 1,
-              name:'显示用户中心',
+              name: '显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
+              fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
+              fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
+              fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
             },
             {
               id: 4,
               name: '显示社群沟通',
               newIcon: "fluent:chat-16-regular",
-              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+              fn: () => { this.settings.enableChat = !this.settings.enableChat }
             },
           ]
 
@@ -443,10 +445,10 @@ export default {
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
-      shakeElement:false,
-      currentIndex:null,
-      currentItem:null,
-      delItemIcon:false
+      shakeElement: false,
+      currentIndex: null,
+      currentItem: null,
+      delItemIcon: false
     }
   },
   props: {
@@ -535,7 +537,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -578,18 +580,18 @@ export default {
         this.rightNav = val[1]
       },
     },
-    editToggle(){
-      if(this.editToggle){
+    editToggle() {
+      if (this.editToggle) {
         this.enableDrag()
-        this.shakeElement=true
-        setTimeout(()=>{
-          this.shakeElement=false
-        },2000)
-      }else{
+        this.shakeElement = true
+        setTimeout(() => {
+          this.shakeElement = false
+        }, 2000)
+      } else {
         this.disableDrag()
       }
     },
-    delItemIcon(){
+    delItemIcon() {
       console.log(this.delItemIcon);
     }
   },
@@ -627,11 +629,11 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
-    showElement(item,index){
+    showElement(item, index) {
       // console.log(item,index,'====>>>1111');
       // this.clickNavigation(item)
-      this.currentItem=item
-      this.currentIndex=index
+      this.currentItem = item
+      this.currentIndex = index
     },
     closeDrawer() {
       this.menuVisible = false
@@ -707,19 +709,19 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-          this.bottomToggle[2]=!this.bottomToggle[2] 
+            this.bottomToggle[2] = !this.bottomToggle[2]
             break;
           case 'community':
-          this.bottomToggle[1]=!this.bottomToggle[1] 
+            this.bottomToggle[1] = !this.bottomToggle[1]
             break;
           case 'user':
-            this.bottomToggle[0]=!this.bottomToggle[0] 
+            this.bottomToggle[0] = !this.bottomToggle[0]
             break;
           case 'chat':
-            this.settings.enableChat=!this.settings.enableChat
+            this.settings.enableChat = !this.settings.enableChat
             break;
           case 'hide':
-          this.navigationToggle[2]=false
+            this.navigationToggle[2] = false
             break;
         }
       } else {
@@ -837,10 +839,10 @@ export default {
     },
     disableDrag() {
       // if (this.sortable) {
-        document.removeEventListener('click', this.disableDrag)
-        // this.sortable.destroy()
-        this.sortable = null
-        // message.info('已中止导航栏调整')
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+      // message.info('已中止导航栏调整')
       // }
     },
     enableDrag() {
@@ -855,8 +857,6 @@ export default {
         animation: 150,
         onStart: function (event) {
           let delIcon = document.getElementById('delIcon2')
-          that.delItemIcon=true
-          that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
             delIcon.ondragover = function (ev) {
@@ -864,7 +864,7 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
-            that.delItemIcon=false
+            that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
@@ -894,8 +894,8 @@ export default {
             )
           }
         },
-        dropstart(){
-          console.log(1111111,'====>>>>>drop');
+        dropstart() {
+          console.log(1111111, '====>>>>>drop');
         },
         onUpdate: function (event) {
           let newIndex = event.newIndex,
@@ -948,10 +948,12 @@ export default {
 .common-panel {
   margin-bottom: 0;
 }
-.icon-bg{
+
+.icon-bg {
   background-color: var(--secondary-transp-bg);
 }
-.delete-icon{
+
+.delete-icon {
   width: 14px;
   height: 14px;
   color: #FF4D4F;
@@ -959,9 +961,11 @@ export default {
   top: 5px;
   right: 5px;
 }
-.cursor-style{
-  cursor: url('/img/test/load-ail.png'),pointer;
+
+.cursor-style {
+  cursor: url('/img/test/load-ail.png'), pointer;
 }
+
 .btn {
   text-align: center;
   margin-right: 12px;
@@ -1063,5 +1067,4 @@ export default {
   :last-child {
     margin-right: 0;
   }
-}
-</style>
+}</style>
