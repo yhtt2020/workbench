@@ -2,7 +2,6 @@ export const NavList = [
   {
     cname: "推荐",
     children: [
-
       {
         name: "myIcons",
         cname: "图标组件",
@@ -24,7 +23,7 @@ export const NavList = [
         sizes: ['2x2','2x4'],
         option: [
           {
-            name: 'AIaides',
+            name: 'aiAssistant',
             size: '2x2',
             zoom: '18'
           },
@@ -38,7 +37,7 @@ export const NavList = [
         sizes: ["自定义大小", "6种样式", "全屏模式"],
         option: [
           {
-            name: "clocks",
+            name: "clock",
             size: "自定义大小",
             zoom: "20",
           },
@@ -59,6 +58,7 @@ export const NavList = [
           {
             name: "voice",
             size: "2x2",
+            zoom: "11",
           },
         ],
         time: "2023/5/31",
@@ -70,7 +70,7 @@ export const NavList = [
         sizes: ["2x2", "2x4"],
         option: [
           {
-            name: "countdownDay",
+            name: "memorialDay",
             size: "2x2",
             zoom: "18",
           },
@@ -100,12 +100,12 @@ export const NavList = [
           {
             name: "middleWallpaper",
             size: "4x4",
-            zoom: "5",
+            zoom: "24",
           },
           {
             name: "smallWallpaper",
             size: "2x2",
-            zoom: "11",
+            zoom: "12",
           },
         ],
         time: "2023/5/31",
@@ -139,12 +139,12 @@ export const NavList = [
           {
             name: "capture",
             size: "2x2",
-            zoom: "14",
+            zoom: "18",
           },
           {
-            name: "CaptureNewCard",
+            name: "captureNewCard",
             size: "4x4",
-            zoom: "11",
+            zoom: "18",
           },
         ],
         time: "2023/6/28",
@@ -157,24 +157,24 @@ export const NavList = [
         sizes: ["2*2", "2x4", "4种样式"],
         option: [
           {
-            name: "CPULineChart",
+            name: "cpuLineChart",
             size: "2*4",
-            zoom: "8",
+            zoom: "12",
           },
           {
-            name: "CPUFourCard",
+            name: "cpuFourCard",
             size: "2*4",
-            zoom: "11",
+            zoom: "12",
           },
           {
-            name: "SmallCPUCard",
+            name: "smallCPU",
             size: "2*2",
-            zoom: "11",
+            zoom: "18",
           },
           {
-            name: "SmallGPUCard",
+            name: "smallGPU",
             size: "2*2",
-            zoom: "11",
+            zoom: "18",
           },
         ],
         time: "2023/5/31",
@@ -188,7 +188,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             size: "4x4",
-            zoom: "5",
+            zoom: "11",
           },
           {
             name: "smallWallpaper",
@@ -263,13 +263,13 @@ export const NavList = [
         sizes: ['2x4', '2x4'],
         option: [
           {
-            name: 'SingleFilm',
+            name: 'hotScreening',
             size: '2x4',
-            zoom: '11'
+            zoom: '12'
           }, {
-            name: 'ManyFilm',
+            name: 'hotScreeningDetail',
             size: '2x4',
-            zoom: '8'
+            zoom: '12'
           },
         ],
         time: '2023/5/31'
@@ -296,7 +296,7 @@ export const NavList = [
         sizes: ['2x4'],
         option: [
           {
-            name: 'OilPrices',
+            name: 'oilPrices',
             size: '2x4',
             zoom: '16'
           }
@@ -309,7 +309,7 @@ export const NavList = [
         sizes: ['2x4'],
         option: [
           {
-            name: 'HotSearch',
+            name: 'hotSearch',
             size: '2x4',
             zoom: '18'
           },
@@ -351,14 +351,14 @@ export const NavList = [
         sizes: ["2x4", "2x4"],
         option: [
           {
-            name: "SingleFilm",
+            name: "hotScreening",
             size: "2x4",
-            zoom: "11",
+            zoom: "12",
           },
           {
-            name: "ManyFilm",
+            name: "hotScreeningDetail",
             size: "2x4",
-            zoom: "11",
+            zoom: "12",
           },
         ],
         time: "2023/5/31",
@@ -390,7 +390,7 @@ export const NavList = [
         sizes: ['2x2','2x4'],
         option: [
           {
-            name: 'AIaides',
+            name: 'aiAssistant',
             size: '2x2',
             zoom: '18'
           },
@@ -404,7 +404,7 @@ export const NavList = [
         sizes: ["自定义大小", "6种样式", "全屏模式"],
         option: [
           {
-            name: "clocks",
+            name: "clock",
             size: "自定义大小",
             zoom: "20",
           },
@@ -418,19 +418,14 @@ export const NavList = [
         sizes: ['2x2'],
         option: [
           {
-            name: 'TimerClock',
+            name: 'tomatoClock',
             size: '2x2',
             zoom: '18'
           },
           {
-            name: 'TimerChart',
+            name: 'tomatoChart',
             size: '2x2',
             zoom: '20'
-          },
-          {
-            name: "timer",
-            size: "2x2",
-            zoom: "11",
           },
         ],
         time: '2023/9/23'
@@ -442,9 +437,9 @@ export const NavList = [
         sizes: ['4x4'],
         option: [
           {
-            name: 'shortcutKey',
+            name: 'shortCutKey',
             size: '4x4',
-            zoom: '20'
+            zoom: '11'
           },
         ],
         time: '2023/9/13'
@@ -468,7 +463,7 @@ export const NavList = [
         sizes: ["2x2", "2x4"],
         option: [
           {
-            name: "countdownDay",
+            name: "memorialDay",
             size: "2x2",
             zoom: "18",
           },
@@ -476,13 +471,13 @@ export const NavList = [
         time: "2023/5/31",
       },
       {
-        name: "customTimer",
+        name: "",
         cname: "日历",
         detail: "追踪当月日期，查看临近节日和假期。",
         sizes: ["2x4"],
         option: [
           {
-            name: "customTimer",
+            name: "calendar",
             size: "2x4",
             zoom: "18",
           },
@@ -497,7 +492,7 @@ export const NavList = [
         sizes: ["2x2"],
         option: [
           {
-            name: "clock",
+            name: "alarmClock",
             size: "2x2",
             zoom: "20",
           },
@@ -511,7 +506,7 @@ export const NavList = [
         sizes: ["2x2", "4x2"],
         option: [
           {
-            name: "AggregateSearch",
+            name: "aggregateSearch",
             size: "2x4",
             zoom: "20",
           },
@@ -525,9 +520,9 @@ export const NavList = [
         sizes: ["2x2", "2x4"],
         option: [
           {
-            name: "Todo",
+            name: "wait",
             size: "2x2",
-            zoom: "35",
+            zoom: "18",
           },
         ],
         time: "2023/5/24",
@@ -608,7 +603,7 @@ export const NavList = [
             zoom: "11",
           },
           {
-            name: "CaptureNewCard",
+            name: "captureNewCard",
             size: "4x4",
             zoom: "11",
           },
@@ -622,22 +617,22 @@ export const NavList = [
         sizes: ["2*2", "2x4", "4种样式"],
         option: [
           {
-            name: "CPULineChart",
+            name: "cpuLineChart",
             size: "2*4",
             zoom: "8",
           },
           {
-            name: "CPUFourCard",
+            name: "cpuFourCard",
             size: "2*4",
             zoom: "11",
           },
           {
-            name: "SmallCPUCard",
+            name: "smallCPU",
             size: "2*2",
             zoom: "11",
           },
           {
-            name: "SmallGPUCard",
+            name: "smallGPU",
             size: "2*2",
             zoom: "11",
           },
@@ -662,7 +657,7 @@ export const NavList = [
             zoom: "11",
           },
           {
-            name: "CaptureNewCard",
+            name: "captureNewCard",
             size: "4x4",
             zoom: "11",
           },
@@ -676,14 +671,14 @@ export const NavList = [
         sizes: ["2x4"],
         option: [
           {
-            name: "GamesDiscount",
+            name: "steamDiscount",
             size: "2x4",
-            zoom: "11",
+            zoom: "12",
           },
           {
-            name: "DiscountPercentage",
+            name: "discountPercentage",
             size: "2x4",
-            zoom: "18",
+            zoom: "12",
           },
         ],
         time: "2023/5/31",
@@ -695,7 +690,7 @@ export const NavList = [
         sizes: ["2x2", "2x4"],
         option: [
           {
-            name: "MyGameSmall",
+            name: "mySteamGame",
             size: "2x2",
             zoom: "11",
           },
@@ -709,7 +704,7 @@ export const NavList = [
         sizes: ["2x2"],
         option: [
           {
-            name: "SteamFriends",
+            name: "steamFriends",
             size: "2x2",
             zoom: "20",
           },
@@ -723,7 +718,7 @@ export const NavList = [
         sizes: ["2x4"],
         option: [
           {
-            name: "GameEpic",
+            name: "steamEpic",
             size: "2x4",
             zoom: "16",
           },
@@ -754,7 +749,7 @@ export const NavList = [
         sizes: ["4x4"],
         option: [
           {
-            name: "GameStrategy",
+            name: "gameStrategy",
             size: "4x4",
             zoom: "11",
           },
@@ -789,7 +784,7 @@ export const NavList = [
           {
             name:'yuanCommunity',
             size:'4x4',
-            zoom:'24'
+            zoom:'11'
           }
         ],
         time:'2023/10/11'
@@ -820,7 +815,7 @@ export const NavList = [
         sizes: ["自定义大小"],
         option: [
           {
-            name: "customAssembly",
+            name: "customPicture",
             size: "自定义大小",
             zoom: "18",
           },
@@ -834,7 +829,7 @@ export const NavList = [
         sizes: ["社区分享", "自定义大小"],
         option: [
           {
-            name: "Remote",
+            name: "remote",
             size: "自定义大小",
             zoom: "18",
           },
@@ -896,7 +891,7 @@ export const NavList = [
         sizes: ['2x4','4x4'],
         option: [
           {
-            name: 'Dashboard',
+            name: 'shortCommunityDataKanban',
             size: '2x4',
             zoom: '11'
           },
@@ -910,7 +905,7 @@ export const NavList = [
         sizes: ['2x4'],
         option: [
           {
-            name: 'ShortTodo',
+            name: 'shortTodo',
             size: '2x4',
             zoom: '20'
           },
@@ -924,7 +919,7 @@ export const NavList = [
         sizes: ['2x4'],
         option: [
           {
-            name: 'Guider',
+            name: 'shortCommunityAssistant',
             size: '2x4',
             zoom: '20'
           },
@@ -938,7 +933,7 @@ export const NavList = [
         sizes: ['4x4'],
         option: [
           {
-            name: 'ShortChart',
+            name: 'shortChart',
             size: '4x4',
             zoom: '11'
           },
@@ -953,9 +948,9 @@ export const NavList = [
         sizes:['2x2','4x4','4x6'],
         option:[
           {
-            name:'Courier',
+            name:'courier',
             size:'4x6',
-            zoom:'24'
+            zoom:'11'
           }
         ],
         time:'2023/10/27'
