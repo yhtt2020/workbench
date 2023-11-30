@@ -5,10 +5,10 @@
       <div class="text-base xt-text-2">选择windows桌面图标，支持多选批量添加。</div>
       <div class="flex items-center ">
         <div style="color:var(--active-bg)" class="mr-3 pointer" @click="addAllIcon">全选</div>
-        <!-- <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
+        <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);" @click="this.clickRightListItem(this.$refs.selectIcon.selectList)">
           <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
-            批量添加(3)</div>
-        </xt-button> -->
+            批量添加({{ this.$refs.selectIcon.selectList.length }})</div>
+        </xt-button>
       </div>
 
     </div>
