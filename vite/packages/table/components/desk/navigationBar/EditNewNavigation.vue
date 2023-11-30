@@ -1,11 +1,11 @@
 <template>
     <!-- <div class="flex flex-col"> -->
     <div class="flex justify-between">
-        <div id="left-drop" class="border-index " style=" width: 300px;height: 100vh;" @drop="drop"></div>
+        <div id="left-drop" class="border-index " style=" width: 300px;height: 100vh;" @drop.prevent="drop" @dragover.prevent=""></div>
         <div class="flex flex-col justify-end">
-            <div id="foot-drop" class="border-index " @drop="drop" style="width:calc(100vw - 600px);height: 300px;"></div>
+            <div id="foot-drop" class="border-index " @drop.prevent="drop" style="width:calc(100vw - 600px);height: 300px;" @dragover.prevent=""></div>
         </div>
-        <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );"></div>
+        <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );" @dragover.prevent=""></div>
         <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
             :back="false" @no="setQuick" title="" :mask="false" :index="100">
             <template #nav>
@@ -378,10 +378,7 @@ export default {
 
         this.$nextTick(() => {
             this.mainDrop()
-            // const className = list.querySelector('.mainList')
-            // console.log(className, list)
         })
-        console.log(this.sideBar, '=====>>>>navList');
     },
     watch: {
         selectNav() {
@@ -392,7 +389,6 @@ export default {
         if (this.introduceVisible) {
             this.introduceVisible = false
         }
-        console.log(this.introduceVisible, '====>>>>1111');
 
     },
 }

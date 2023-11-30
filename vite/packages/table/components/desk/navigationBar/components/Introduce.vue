@@ -30,7 +30,7 @@
     <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
       <!-- <div class="flex flex-wrap"> -->
       <template v-if="this.filterList.length > 0">
-        <selectIcon :filterList="filterList" :recommendation="recommendation" />
+        <selectIcon :filterList="filterList" :recommendation="recommendation"  ref="selectIcon"/>
       </template>
       <div v-else class="flex flex-col items-center justify-center w-full h-full mt-10">
         <div>
