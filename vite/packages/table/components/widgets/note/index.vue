@@ -47,6 +47,7 @@
       "
         maxlength="15"
         v-model:value="this.tmpTitle"
+        spellcheck="false"
         @blur="changeNoteTitle"
       ></a-input>
     </template>
@@ -308,7 +309,8 @@ export default {
           title: '复制内容',
           fn: () => {
             let content =this.$refs.mdEditor.getContent()
-            require('electron').clipboard.writeHTML(content)
+            // require('electron').clipboard.writeHTML(content)
+            require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
             console.log(content,'md内容')
           }

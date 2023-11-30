@@ -1,29 +1,29 @@
 <template>
   <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
-        <div class="title" @click="test">番茄时间</div>
-        <div class="time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
-        <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
-        <div class="icon-box" style="color: rgba(255,255,255,0.85);">
-          <!-- 开始 -->
-          <div class="icon" v-if="running && isPause" @click="onPause">
-            <Icon icon="fluent:play-16-filled" />
-          </div>
-          <!-- 暂停 -->
-          <div class="icon" v-if="running && !isPause" @click="onPause">
-            <Icon icon="akar-icons:pause" />
-          </div>
-          <!-- 结束 -->
-          <div class="icon" v-if="running" @click="onStop">
-            <Icon icon="fluent:stop-16-filled" />
-          </div>
-          <xt-button style="background: rgba(255, 255, 255, 0.4) !important;border-radius: 50px;color: rgba(255, 255, 255, 0.85) !important;" v-if="!running" @click="onPlay">
-            <span>立即开始</span>
-          </xt-button>
-          <div class="icon" @click="this.onFullScreen">
-            <!-- 全屏 -->
-            <Icon icon="fluent:full-screen-maximize-16-filled" />
-          </div>
-        </div>
+    <div class="title" @click="test">番茄时间</div>
+    <div class="time flex justify-center items-center">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
+    <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
+    <div class="icon-box pb-3" style="color: rgba(255,255,255,0.85);">
+      <!-- 开始 -->
+      <div class="icon" v-if="running && isPause" @click="onPause">
+        <Icon icon="fluent:play-16-filled" />
+      </div>
+      <!-- 暂停 -->
+      <div class="icon" v-if="running && !isPause" @click="onPause">
+        <Icon icon="akar-icons:pause" />
+      </div>
+      <!-- 结束 -->
+      <div class="icon" v-if="running" @click="onStop">
+        <Icon icon="fluent:stop-16-filled" />
+      </div>
+      <xt-button style="background: rgba(255, 255, 255, 0.4) !important;border-radius: 50px;color: rgba(255, 255, 255, 0.85) !important;" v-if="!running" @click="onPlay">
+        <span>立即开始</span>
+      </xt-button>
+      <div class="icon" @click="this.onFullScreen">
+        <!-- 全屏 -->
+        <Icon icon="fluent:full-screen-maximize-16-filled" />
+      </div>
+    </div>
         <!-- 全屏 -->
         <FullScreen
           v-if="this.isFullScreen"
@@ -155,7 +155,6 @@
 
   <style scoped lang="scss">
     .title{
-
       font-size: 14px;
       color: rgba(255,255,255,0.60);
       font-weight: 400;
@@ -163,6 +162,7 @@
       letter-spacing: 1px;
     }
     .time{
+      height:63px;
       font-family: Oswald-SemiBold;
       font-size: 40px;
       color: rgba(255,255,255,0.85);

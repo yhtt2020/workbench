@@ -1,16 +1,16 @@
 <template>
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <RightMenu :menus="rightMenus" class="h-full">
+  <RightMenu :menus="rightMenus" class="flex max-h-full">
     <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
-      <div style="width: 56px;padding-bottom: 3px;" class="w-full">
+      <div style="width: 56px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
           <a-tooltip :title="item.name" v-for="(item,index) in sideNavigationList" placement="right" @mouseenter="showElement(item,index)">
             <!-- 左右导航栏隐藏入口 -->
             <!-- {{ index }} -->
             <RightMenu :menus="iconMenus">
-              <div :key="item.name" @click="clickNavigation(item)">
+              <div :key="item.name" @click="clickNavigation(item)" :style="{paddingBottom:index===sideNavigationList.length-1?'12px':'0px'}">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
@@ -28,9 +28,6 @@
         <!-- <div class="mt-3">
           <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
         </div> -->
-        <div>
-
-        </div>
       </div>
 
 
@@ -41,7 +38,7 @@
       placement="bottom" :visible="menuVisible" @close="onClose">
       <a-row>
         <a-col>
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
               <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
               <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
@@ -59,7 +56,7 @@
     </a-drawer>
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 199 : 90}" v-if="quick">
+      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 100 : 90}" v-if="quick">
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
@@ -72,6 +69,7 @@
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useNavigationStore } from './desk/navigationBar/navigationStore'
 import { navStore } from "../store/nav";
+import { appStore } from '../store'
 import { cardStore } from '../store/card';
 import { offlineStore } from '../js/common/offline';
 import { useWidgetStore } from '../components/card/store'
@@ -154,7 +152,7 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
@@ -172,20 +170,26 @@ export default {
               id: 1,
               name: '显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { }
-            }
+              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
+            },
+            {
+              id: 4,
+              name: '显示社群沟通',
+              newIcon: "fluent:chat-16-regular",
+              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+            },
           ]
 
         },
@@ -280,15 +284,14 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav']),
-    
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle']),
+    ...mapWritableState(appStore,['settings'])
   },
   mounted() {
+    this.enableDrag()
     this.colDrop()
     // this.scrollNav('sideContent', 'scrollTop')
     if(this.sideNavigationList===this.rightNavigationList){
-      console.log(1111111111111,'===>>>>');
-      // this.selectNav='right'
       this.currentList='right'
     }
   },
@@ -480,13 +483,19 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-            this.toggleTaskBox()
+          this.bottomToggle[2]=!this.bottomToggle[2] 
             break;
           case 'community':
-            console.log(111)
+          this.bottomToggle[1]=!this.bottomToggle[1] 
             break;
           case 'user':
-            console.log(2222)
+            this.bottomToggle[0]=!this.bottomToggle[0] 
+            break;
+          case 'chat':
+            this.settings.enableChat=!this.settings.enableChat
+            break;
+          case 'hide':
+            this.navVisible()
             break;
         }
       } else {
@@ -605,7 +614,7 @@ export default {
   align-items: center;
   cursor: pointer;
   border-radius: 12px;
-  background-color: var(--secondary-bg);
+  background-color: var(--secondary-transp-bg);
 
 }
 
@@ -637,7 +646,7 @@ export default {
   // border: 1px solid red;
 
   // color: var(--primary-text) !important;
-  background: var(--active-bg);
+  // background: var(--active-bg);
 
   :deep(.icon) {
     fill: rgba(255, 255, 255, 0.9) !important;

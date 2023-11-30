@@ -1,9 +1,9 @@
 <template>
   <RightMenu :menus="rightMenus">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel" style="text-align: center"
-      @contextmenu="showMenu">
+      @contextmenu="showMenu" v-if="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
-      <div v-if="(!simple || settings.enableChat) && !this.isOffline" class="flex flex-row common-panel user s-bg" style="
+      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]" class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
         margin-top: 0;
         background: var(--primary-bg);
@@ -11,14 +11,14 @@
         border-radius: 18px;
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
-        <div v-show="settings.enableChat" class="pointer">
+        <div v-show="settings.enableChat && !simple" class="pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div v-show="navigationToggle[2]" class="flex flex-row items-center s-bg" style="
+      <div  class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -42,27 +42,26 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        ">
+        ">        
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-            <div class="mr-6 scroll-content" style="overflow-y: hidden; overflow-x: auto; flex: 1; display: flex"
+            <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-
                   <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
                     <RightMenu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer"
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
-                          class="flex items-center justify-center rounded-lg s-item xt-bg-2">
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
+                          class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
                             :class="{ 'shaking-element': shakeElement }"></navIcon>
                         </div>
                         <div v-else style="width: 56px; height: 56px;"
-                          class="flex items-center justify-center xt-bg-2 rounded-xl">
+                          class="relative flex items-center justify-center icon-bg rounded-xl">
                           <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
@@ -137,10 +136,10 @@
         </div>
       </div>
 
-      <template v-if="!simple && isMain">
+      <template v-if="!simple && isMain && this.bottomToggle[1]">
         <Team></Team>
       </template>
-      <TaskBox></TaskBox>
+      <TaskBox v-if="!simple && this.bottomToggle[2]"></TaskBox>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -160,7 +159,7 @@
       placement="bottom" :visible="menuVisible" @close="onClose">
       <a-row>
         <a-col>
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
               <template v-if="item.icon == 'fluent:compose-16-regular'">
                 <xt-task id='M0104' no="2" @cb="editNavigation(item)">
@@ -202,7 +201,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}" v-if="quick">
+      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}"  v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -371,7 +370,7 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
@@ -386,22 +385,28 @@ export default {
           children: [
             {
               id: 1,
-              name: '显示用户中心',
+              name:'显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => { }
+              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { }
-            }
+              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
+            },
+            {
+              id: 4,
+              name: '显示社群沟通',
+              newIcon: "fluent:chat-16-regular",
+              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+            },
           ]
 
         },
@@ -440,7 +445,8 @@ export default {
       ],
       shakeElement:false,
       currentIndex:null,
-      currentItem:null
+      currentItem:null,
+      delItemIcon:false
     }
   },
   props: {
@@ -458,6 +464,8 @@ export default {
     }
   },
   mounted() {
+    this.enableDrag()
+
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
@@ -527,7 +535,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -580,6 +588,9 @@ export default {
       }else{
         this.disableDrag()
       }
+    },
+    delItemIcon(){
+      console.log(this.delItemIcon);
     }
   },
   methods: {
@@ -690,24 +701,25 @@ export default {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
-        }else if(item.component === 'editNavigation'){
-          this.componentId=''
-          this.editToggle=true
-          this.selectNav='foot'
-          // this.enableDrag()
         }
         // console.log(this.componentId,'===>>2');
         this.quick = true
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-            this.toggleTaskBox()
+          this.bottomToggle[2]=!this.bottomToggle[2] 
             break;
           case 'community':
-            console.log(111)
+          this.bottomToggle[1]=!this.bottomToggle[1] 
             break;
           case 'user':
-            console.log(2222)
+            this.bottomToggle[0]=!this.bottomToggle[0] 
+            break;
+          case 'chat':
+            this.settings.enableChat=!this.settings.enableChat
+            break;
+          case 'hide':
+          this.navigationToggle[2]=false
             break;
         }
       } else {
@@ -843,6 +855,7 @@ export default {
         animation: 150,
         onStart: function (event) {
           let delIcon = document.getElementById('delIcon2')
+          that.delItemIcon=true
           that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
@@ -851,6 +864,7 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
+            that.delItemIcon=false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
@@ -880,12 +894,15 @@ export default {
             )
           }
         },
+        dropstart(){
+          console.log(1111111,'====>>>>>drop');
+        },
         onUpdate: function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-
+          console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -931,7 +948,20 @@ export default {
 .common-panel {
   margin-bottom: 0;
 }
-
+.icon-bg{
+  background-color: var(--secondary-transp-bg);
+}
+.delete-icon{
+  width: 14px;
+  height: 14px;
+  color: #FF4D4F;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.cursor-style{
+  cursor: url('/img/test/load-ail.png'),pointer;
+}
 .btn {
   text-align: center;
   margin-right: 12px;
