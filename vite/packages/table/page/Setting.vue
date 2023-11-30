@@ -294,6 +294,10 @@ export default {
         this.bottomToggle[0]=false
         this.bottomToggle[1]=false
         this.bottomToggle[2]=false
+      }else{
+        this.bottomToggle[0]=true
+        this.bottomToggle[1]=true
+        this.bottomToggle[2]=true
       }
     },
     bottomToggle:{

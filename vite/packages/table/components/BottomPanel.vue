@@ -1,7 +1,7 @@
 <template>
   <RightMenu :menus="rightMenus">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel" style="text-align: center"
-      @contextmenu="showMenu">
+      @contextmenu="showMenu" v-if="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]" class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
@@ -18,7 +18,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div v-show="navigationToggle[2]" class="flex flex-row items-center s-bg" style="
+      <div  class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -42,31 +42,28 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        ">
+        ">        
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-            <div class="mr-6 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
+            <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-
                   <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
                     <RightMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" @dragstart="dropstart"
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
                             :class="{ 'shaking-element': shakeElement }"></navIcon>
-                          <navIcon icon="fluent:delete-16-regular" class="delete-icon" v-if="this.delItemIcon"/>
                         </div>
                         <div v-else style="width: 56px; height: 56px;"
                           class="relative flex items-center justify-center icon-bg rounded-xl">
                           <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                            <navIcon icon="fluent:delete-16-regular" class="delete-icon" v-if="this.delItemIcon"/>
                         </div>
                       </div>
                     </RightMenu>
@@ -591,6 +588,9 @@ export default {
       }else{
         this.disableDrag()
       }
+    },
+    delItemIcon(){
+      console.log(this.delItemIcon);
     }
   },
   methods: {
@@ -855,8 +855,7 @@ export default {
         animation: 150,
         onStart: function (event) {
           let delIcon = document.getElementById('delIcon2')
-          this.delItemIcon=true
-          console.log(this.delItemIcon,'====>>>>delItemIcon')
+          that.delItemIcon=true
           that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
@@ -865,7 +864,7 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
-            
+            that.delItemIcon=false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
@@ -903,7 +902,7 @@ export default {
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-
+          console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -961,7 +960,7 @@ export default {
   right: 5px;
 }
 .cursor-style{
-  cursor: url('/img/test/load-ail.png'),default;
+  cursor: url('/img/test/load-ail.png'),pointer;
 }
 .btn {
   text-align: center;
