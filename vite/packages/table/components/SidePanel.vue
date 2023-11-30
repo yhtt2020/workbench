@@ -38,7 +38,7 @@
       placement="bottom" :visible="menuVisible" @close="onClose">
       <a-row>
         <a-col>
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
               <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
               <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
@@ -152,7 +152,7 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
@@ -484,13 +484,19 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-            this.toggleTaskBox()
+          this.bottomToggle[2]=!this.bottomToggle[2] 
             break;
           case 'community':
-            console.log(111)
+          this.bottomToggle[1]=!this.bottomToggle[1] 
             break;
           case 'user':
-            console.log(2222)
+            this.bottomToggle[0]=!this.bottomToggle[0] 
+            break;
+          case 'chat':
+            this.settings.enableChat=!this.settings.enableChat
+            break;
+          case 'hide':
+            this.navVisible()
             break;
         }
       } else {

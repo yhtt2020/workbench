@@ -52,10 +52,10 @@
 
                   <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
                     <RightMenu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer"
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" @dragstart="dropstart"
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -162,7 +162,7 @@
       placement="bottom" :visible="menuVisible" @close="onClose">
       <a-row>
         <a-col>
-          <div class="flex items-center">
+          <div class="flex flex-wrap items-center">
             <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
               <template v-if="item.icon == 'fluent:compose-16-regular'">
                 <xt-task id='M0104' no="2" @cb="editNavigation(item)">
@@ -373,7 +373,7 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
@@ -707,13 +707,19 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-            this.toggleTaskBox()
+          this.bottomToggle[2]=!this.bottomToggle[2] 
             break;
           case 'community':
-            console.log(111)
+          this.bottomToggle[1]=!this.bottomToggle[1] 
             break;
           case 'user':
-            console.log(2222)
+            this.bottomToggle[0]=!this.bottomToggle[0] 
+            break;
+          case 'chat':
+            this.settings.enableChat=!this.settings.enableChat
+            break;
+          case 'hide':
+          this.navigationToggle[2]=false
             break;
         }
       } else {
@@ -889,6 +895,9 @@ export default {
             )
           }
         },
+        dropstart(){
+          console.log(1111111,'====>>>>>drop');
+        },
         onUpdate: function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
@@ -950,6 +959,9 @@ export default {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+.cursor-style{
+  cursor: url('/img/test/load-ail.png'),default;
 }
 .btn {
   text-align: center;

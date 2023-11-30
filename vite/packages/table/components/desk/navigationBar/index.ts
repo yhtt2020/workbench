@@ -46,15 +46,16 @@ export const extraRightMenu =  [
 
     },
     {
-        title:'编辑导航',
-        icon:"fluent:compose-16-regular",
-        component:'editNavigation',
-    },
-    {
         title:'导航栏设置',
         icon:'fluent:settings-16-regular',
         component:'navigationSetting',
-    }
+    },
+    {
+        title:'隐藏当前导航',
+        icon:'fluent:eye-off-16-regular',
+        visible:true,
+        tag:'hide',
+    },
 ]
 
 export const moreMenus = [
@@ -76,6 +77,12 @@ export const moreMenus = [
         icon:"fluent:task-list-square-16-regular",
         visible:true,
         tag:'task'
+    },
+    {
+        title:'显示社群沟通',
+        icon:"fluent:chat-16-regular",
+        visible:true,
+        tag:'chat'
     }
 ] 
 
