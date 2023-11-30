@@ -235,6 +235,12 @@ app.whenReady().then(() => {
     }
   })
 
+  ipc.on('openDevTool',async()=>{
+    if (TableManager.alive()) {
+      global.tableWin.window.webContents.openDevTools()
+    }
+  })
+
   ipc.on('transFile', async () => {
     if (transWin === null) {
       tansWin = await windowManager.create({
