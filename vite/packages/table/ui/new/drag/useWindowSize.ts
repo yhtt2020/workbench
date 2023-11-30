@@ -24,6 +24,7 @@ export const useWindowSize = (callback?: Function, timer = 200) => {
 
   onBeforeUnmount(() => {
     window.removeEventListener("resize", updateWindowSize)
+    console.log("resize销毁了");
     clearTimeout(resizeTimer)
   })
 

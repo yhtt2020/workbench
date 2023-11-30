@@ -26,6 +26,8 @@ export function useElementSize(el: HTMLElement, callback: Function = () => {}) {
   resizeObserver.observe(el)
   onBeforeUnmount(() => {
     resizeObserver.unobserve(el)
+    console.log("resizeObserver销毁了");
+
   })
   return { width: width, height: height }
 }
@@ -37,6 +39,8 @@ export const vElementSize = {
   },
   unmounted: (el: Element) => {
     resizeObserver.unobserve(el)
+    console.log("resizeObserver销毁了");
+
   },
   install: (app: App) => {
     app.directive("elementSize", vElementSize)

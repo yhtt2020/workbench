@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRefs, computed, watch } from "vue";
+import { ref, onMounted, toRefs, computed, watch, onBeforeUnmount } from "vue";
 import { useWindowSize } from "./useWindowSize";
 import { useElementSize, vElementSize } from "./useElementSize";
 import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
@@ -147,6 +147,9 @@ const {
   resetPosition,
 } = toRefs(props);
 
+onBeforeUnmount(() => {
+  console.log("销毁了组件");
+});
 const emits = defineEmits([
   "update:x",
   "update:y",

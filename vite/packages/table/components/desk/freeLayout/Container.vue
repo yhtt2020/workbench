@@ -132,29 +132,31 @@ watch(
       <slot name="box" :data="{ ...item }"></slot>
     </div>
   </div>
-  <xt-drag
-    parent
-    boundary
-    v-for="item in getFreeLayoutData"
-    v-model:y="item.top"
-    v-model:x="item.left"
-    v-model:index="item.index"
-    :key="item.id"
-    :parentScale="getFreeLayoutState.canvas.zoom"
-    :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
-    :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
-    :gridLocation="getFreeLayoutState.option.afterDragging"
-    :collision="getFreeLayoutState.option.collision"
-    :magnet="getFreeLayoutState.option.magnet"
-    :gridMargin="6"
-    :magnetMargin="6"
-    disabledDefaultEvent
-    :grid="[134, 96]"
-    :gridStyle="{
-      border: '2px solid var(--active-bg)',
-    }"
-    :handle="isDrag ? '' : '.#123'"
-  >
-    <slot name="box" :data="{ ...item }"></slot>
-  </xt-drag>
+  <template v-for="item in getFreeLayoutData">
+    <xt-drag
+      parent
+      boundary
+      v-if="item.id != ''"
+      :key="item.id"
+      v-model:y="item.top"
+      v-model:x="item.left"
+      v-model:index="item.index"
+      :parentScale="getFreeLayoutState.canvas.zoom"
+      :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
+      :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
+      :gridLocation="getFreeLayoutState.option.afterDragging"
+      :collision="getFreeLayoutState.option.collision"
+      :magnet="getFreeLayoutState.option.magnet"
+      :gridMargin="6"
+      :magnetMargin="6"
+      disabledDefaultEvent
+      :grid="[134, 96]"
+      :gridStyle="{
+        border: '2px solid var(--active-bg)',
+      }"
+      :handle="isDrag ? '' : '.#123'"
+    >
+      <slot name="box" :data="{ ...item }"></slot>
+    </xt-drag>
+  </template>
 </template>
