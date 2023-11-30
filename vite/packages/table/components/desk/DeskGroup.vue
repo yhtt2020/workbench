@@ -51,38 +51,38 @@
       <div v-if="showTools">
         <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
-          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
-            <div
-              @click="startEdit"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <icon
-                class="icon"
-                style="font-size: 22px"
-                icon="line-dragdroptuofang"
-              ></icon>
-            </div>
-          </a-tooltip>
-          <a-tooltip v-else title="停止调整桌面" placement="bottom">
-            <div
-              @click="stopEdit"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <icon
-                class="icon"
-                style="font-size: 22px; color: red"
-                icon="tingzhi"
-              ></icon>
-            </div>
-          </a-tooltip>
-          <a-tooltip title="全屏" placement="bottom">
-            <div
-              @click="setFullScreen"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <Icon style="font-size: 18px" icon="fullscreen"></Icon>
-            </div>
-          </a-tooltip>
+<!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
+<!--            <div-->
+<!--              @click="startEdit"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <icon-->
+<!--                class="icon"-->
+<!--                style="font-size: 22px"-->
+<!--                icon="line-dragdroptuofang"-->
+<!--              ></icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
+<!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
+<!--            <div-->
+<!--              @click="stopEdit"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <icon-->
+<!--                class="icon"-->
+<!--                style="font-size: 22px; color: red"-->
+<!--                icon="tingzhi"-->
+<!--              ></icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
+<!--          <a-tooltip title="全屏" placement="bottom">-->
+<!--            <div-->
+<!--              @click="setFullScreen"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
           <a-tooltip title="菜单" placement="bottom">
 
             <div class="pl-3">
@@ -216,12 +216,8 @@
               </xt-button>
             </div>
           </div>
-          <div class="text-center mt-2 xt-text" style="font-size: 18px">
-            <icon
-              icon="arrowdown"
-              style="font-size: 1.2em; vertical-align: text-bottom"
-            ></icon>
-            为您推荐（左右滑动）
+          <div class="text-center mt-5 xt-text" style="font-size: 18px">
+            推荐桌面
           </div>
           <vue-custom-scrollbar
             :scrollbarSettings="scrollbarSettings"
@@ -239,7 +235,7 @@
               :items="recommendList"
               :closeParent="true"
               @openPreview="openPreview"
-              deskItemStyle="width:435px; height:300px"
+              deskItemStyle="width:385px; height:300px"
             ></DeskMarket>
           </vue-custom-scrollbar>
         </div>
