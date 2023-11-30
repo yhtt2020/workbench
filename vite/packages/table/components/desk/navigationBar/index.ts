@@ -19,14 +19,22 @@ export const navigationFunction=[
     {
         title:'用户中心',
         description:'在工作台底部显示用户中心',
+        tag:'user',
     },
     {
         title:'社区助手',
         description:'在工作台底部显示社区助手',
+        tag:'community',
     },
     {
         title:'任务中心',
         description:'在工作台底部显示任务中心',
+        tag:'task',
+    },
+    {
+        title:'社群沟通',
+        description:'在工作台底部显示社群沟通',
+        tag:'chat',
     }
 ]
 

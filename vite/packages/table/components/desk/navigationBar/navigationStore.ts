@@ -12,14 +12,24 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 iconBackground:false
             },
             selectNav:'',
-            currentList:{
-                name:'',
-                tag:'',
-                list:[],
-
-            },
+            currentList:{},
             // 第一次进入，显示推荐
             introduceVisible:true,
+            // 导航栏数据结构
+            navList:{
+                // 导航名称
+                name:'',
+                // 导航标签
+                tag:'',
+                // 导航类型
+                type:"",
+                // 导航图标列表
+                iconList:[]
+            },
+            // 导航栏数据
+            navObj:{},
+            // 存储改变前的数据
+            oldToggle:[],
         }
     },
     actions:{

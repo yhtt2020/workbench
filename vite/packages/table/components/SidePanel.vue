@@ -69,6 +69,7 @@
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useNavigationStore } from './desk/navigationBar/navigationStore'
 import { navStore } from "../store/nav";
+import { appStore } from '../store'
 import { cardStore } from '../store/card';
 import { offlineStore } from '../js/common/offline';
 import { useWidgetStore } from '../components/card/store'
@@ -182,7 +183,13 @@ export default {
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
               fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
-            }
+            },
+            {
+              id: 4,
+              name: '显示社群沟通',
+              newIcon: "fluent:chat-16-regular",
+              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+            },
           ]
 
         },
@@ -278,6 +285,7 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle']),
+    ...mapWritableState(appStore,['settings'])
     
   },
   mounted() {

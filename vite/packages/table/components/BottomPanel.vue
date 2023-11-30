@@ -11,7 +11,7 @@
         border-radius: 18px;
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
-        <div v-show="settings.enableChat" class="pointer">
+        <div v-show="settings.enableChat && !simple" class="pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -142,7 +142,7 @@
       <template v-if="!simple && isMain && this.bottomToggle[1]">
         <Team></Team>
       </template>
-      <TaskBox v-if="this.bottomToggle[2]"></TaskBox>
+      <TaskBox v-if="!simple && this.bottomToggle[2]"></TaskBox>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -403,7 +403,13 @@ export default {
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
               fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
-            }
+            },
+            {
+              id: 4,
+              name: '显示社群沟通',
+              newIcon: "fluent:chat-16-regular",
+              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+            },
           ]
 
         },

@@ -15,6 +15,7 @@
 <script setup lang='ts'>
 import {ref,reactive} from 'vue'
 import {navStore} from '../../../store/nav'
+import { appStore } from '../../../store'; 
 import { useNavigationStore } from './navigationStore';
 const useNavStore = navStore()
 const navigationStore=useNavigationStore()

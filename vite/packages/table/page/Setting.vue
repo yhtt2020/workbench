@@ -289,6 +289,25 @@ export default {
     wallpaperColor(newV) {
       setWallpaperColor(newV);
     },
+    simple(){
+      if(this.simple){
+        this.bottomToggle[0]=false
+        this.bottomToggle[1]=false
+        this.bottomToggle[2]=false
+      }
+    },
+    bottomToggle:{
+      deep:true,
+      handler(newV,oldV){
+        this.oldToggle=[...oldV]
+        console.log(this.oldToggle);
+        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
+          this.simple=false
+        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
+          this.simple=true
+        }
+      }
+    }
   },
   mounted() {
     this.bgColor = getBgColor();
@@ -308,7 +327,7 @@ export default {
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
-    ...mapWritableState(useNavigationStore,['bottomToggle']),
+    ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle']),
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
     },
