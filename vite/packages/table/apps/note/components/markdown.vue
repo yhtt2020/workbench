@@ -31,8 +31,12 @@ export default {
       height: '100%',
       mode: 'ir',
       theme: 'dark',
+      // counter:{
+        //   enable:true,
+        // },
       toolbarConfig: {
         pin: true,
+        tipPosition:'s',
       },
       cache: {
         enable: false,
@@ -51,7 +55,7 @@ export default {
           // 定义一个虚拟元素提取文本
           let tmpDiv = document.createElement('div')
           tmpDiv.innerHTML = this.contentEditor.getHTML()
-          let content = tmpDiv.textContent || tmpDiv.innerText || ''
+          // let content = tmpDiv.textContent || tmpDiv.innerText || ''
           if (this.noteList[this.selNote].deskName != '') {
             let n = -1
             this.deskList.forEach((item, index) => {
@@ -70,7 +74,8 @@ export default {
             }
           }
           this.noteList[this.selNote].customData.text = value
-          this.saveAppNote(this.noteList[this.selNote].id, value, content)
+          this.saveAppNote(this.noteList[this.selNote].id, value)
+          // this.saveAppNote(this.noteList[this.selNote].id, value, content)
         }
       },
       upload: {
@@ -165,6 +170,11 @@ export default {
   flex-wrap: wrap;
 
 }
+  // 字数统计
+  // .vditor-counter{
+  //   position: absolute;
+  //   right: 0;
+  // }
 
 .vditor-toolbar__item {
   -webkit-app-region: no-drag;
@@ -181,110 +191,117 @@ export default {
   color: var(--primary-text) !important;
 }
 
-    // 以下样式针对全屏模式下的便签编辑器调整
-    .pop-box .vditor-toolbar{
-        position: absolute;
-        // padding: 0 !important;
-        // width: 75%;
-        // left: 0; 
-        height: 52px;
-        top: 6px;
-        display: flex;
-        // flex-;
-        justify-content: center !important;
-        flex-wrap: wrap;
-        background-color: transparent !important;
-        overflow: hidden;
-        padding: 0 10% !important;
+  .vditor-img__btn{
+    -webkit-app-region:no-drag;
+  }
 
-}
+  // 以下样式针对全屏模式下的便签编辑器调整
+  .pop-box .vditor-toolbar{
+      position: absolute;
+      // padding: 0 !important;
+      // width: 75%;
+      // left: 0; 
+      height: 52px;
+      top: 6px;
+      display: flex;
+      // flex-;
+      justify-content: center !important;
+      flex-wrap: wrap;
+      background-color: transparent !important;
+      // overflow: hidden;
+      padding: 0 10% !important;
+  }
+  .pop-box .vditor-panel{
+    position: absolute;
+    top: 50px;
+  }
 
-.pop-box .vditor-reset {
-  // height: 90% !important;
-  padding: 20px 49px !important;
-}
+  .pop-box .vditor-reset {
+    // height: 90% !important;
+    padding: 20px 49px !important;
+  }
 
-.pop-box .vditor-toolbar .vditor-toolbar__item {
-  height: 100%;
-  padding: 0 8px;
-  display: flex !important;
-  align-items: center;
-  color: var(--primary-text) !important;
-  // padding: 0 !important;
-}
+  .pop-box .vditor-toolbar .vditor-toolbar__item {
+    height: 100%;
+    padding: 0 8px;
+    display: flex !important;
+    align-items: center;
+    color: var(--primary-text) !important;
+    // padding: 0 !important;
+  }
 
 
-// 以下样式针对markdown特殊格式进行调整
-.vditor-ir h1 {
-  margin: 16px 0 12px;
-  font-size: 22px;
-  font-weight: 85;
-}
+  // 以下样式针对markdown特殊格式进行调整
+  .vditor-ir h1 {
+    margin: 16px 0 12px;
+    font-size: 22px;
+    font-weight: 85;
+  }
 
-.vditor-ir h2 {
-  margin: 16px 0 12px;
-  font-size: 20px;
-  font-weight: 85;
-}
+  .vditor-ir h2 {
+    margin: 16px 0 12px;
+    font-size: 20px;
+    font-weight: 85;
+  }
 
-.vditor-ir h3 {
-  margin: 16px 0 12px;
-  font-size: 18px;
-  font-weight: 85;
-}
+  .vditor-ir h3 {
+    margin: 16px 0 12px;
+    font-size: 18px;
+    font-weight: 85;
+  }
 
-.vditor-ir h4 {
-  margin: 16px 0 12px;
-  font-size: 16px;
-  font-weight: 85;
-}
+  .vditor-ir h4 {
+    margin: 16px 0 12px;
+    font-size: 16px;
+    font-weight: 85;
+  }
 
-.vditor-ir h5 {
-  margin: 16px 0 12px;
-  font-size: 15px;
-  font-weight: 85;
-}
+  .vditor-ir h5 {
+    margin: 16px 0 12px;
+    font-size: 15px;
+    font-weight: 85;
+  }
 
-.vditor-ir h6 {
-  margin: 16px 0 12px;
-  font-size: 15px;
-  font-weight: 85;
-}
+  .vditor-ir h6 {
+    margin: 16px 0 12px;
+    font-size: 15px;
+    font-weight: 85;
+  }
 
-.vditor-ir [data-type='em'] {
-  font-size: 15px;
-  font-weight: 55;
-}
+  .vditor-ir [data-type='em'] {
+    font-size: 15px;
+    font-weight: 55;
+  }
 
-.vditor-ir [data-type='strong'] {
-  font-size: 15px;
-  font-weight: 75;
-}
+  .vditor-ir [data-type='strong'] {
+    font-size: 15px;
+    font-weight: bolder;
+  }
 
-.vditor-ir [data-type='s'] {
-  font-size: 15px;
-  font-weight: 60;
-}
+  .vditor-ir [data-type='s'] {
+    font-size: 15px;
+    font-weight: 60;
+  }
 
-.vditor-ir blockquote {
-  font-size: 15px;
-  background: #2A2A2A;
-  color: #e6e6e6 !important;
-}
+  .vditor-ir blockquote {
+    font-size: 15px;
+    background: #2A2A2A;
+    color: #e6e6e6 !important;
+  }
 
-.vditor-ir ol {
-  font-size: 15px;
-  font-weight: 55;
-}
+  .vditor-ir ol {
+    font-size: 15px;
+    font-weight: 55;
+  }
 
-.vditor-ir ul {
-  font-size: 15px;
-  font-weight: 55;
-}
+  .vditor-ir ul {
+    font-size: 15px;
+    font-weight: 55;
+  }
 
-.vditor-ir table {
-  font-size: 15px;
-  font-weight: 55;
-  color: #000 !important;
-}
+  .vditor-ir table {
+    font-size: 15px;
+    font-weight: 55;
+    color: #000 !important;
+  }
 </style>

@@ -88,13 +88,13 @@ export default {
         ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
         deskName(){
             if (this.noteList.length) {
-                return this.selNote>=0?this.noteList[this.selNote].deskName:"" 
+                return this.selNote>=0?this.noteList[this.selNote]?.deskName:"" 
             }
         },
         background(){
             if (this.noteList.length) {
                 if(this.selNote>=0){
-                    return this.selNote>=0?this.noteList[this.selNote].customData.background:''
+                    return this.selNote>=0?this.noteList[this.selNote]?.customData.background:''
                 }else{
                     return 
                 }
@@ -117,6 +117,21 @@ export default {
                 return
             }
         },
+        noteDesk(){
+          if(this.isSelTab){
+            return '添加到桌面'
+          }else{
+            return '还原'
+          }
+        },
+        noteDelete(){
+          if(this.isSelTab){
+            return '删除便签'
+          }else{
+            return '彻底删除'
+          }
+        }
+        
    },
    data() {
     return {
@@ -127,7 +142,7 @@ export default {
         isFull:false,
         menus:[
             { 
-                label: "添加到桌面", 
+                label: this.noteDesk, 
                 newIcon: "fluent:open-20-filled",
                 callBack: ()=>{
                     // 修改当前选中桌面
@@ -168,7 +183,6 @@ export default {
                 newIcon: "akar-icons:trash-can",
                 color:'#FF4D4F',
                 callBack:()=>{
-                    // this.menus.
                     if (!this.isSelTab) {
                         // 删除
                         this.moveToTrash()
@@ -237,17 +251,17 @@ export default {
     },
     
   },
-  watch: {
-    isSelTab (newval, oldval) {
-      if (newval) {
-        this.menus[0].label = '还原'
-        this.menus[2].label = '彻底删除'
-      } else {
-        this.menus[0].label = '添加到桌面'
-        this.menus[2].label = '删除便签'
-      }
-    }
-  }
+  // watch: {
+  //   isSelTab (newval, oldval) {
+  //     if (newval) {
+  //       this.menus[0].label = '还原'
+  //       this.menus[2].label = '彻底删除'
+  //     } else {
+  //       this.menus[0].label = '添加到桌面'
+  //       this.menus[2].label = '删除便签'
+  //     }
+  //   }
+  // }
 }
 </script>
 <style lang="scss" scoped>
@@ -273,8 +287,8 @@ export default {
 
 :deep(.vditor-toolbar){
     background: var(--main-bg) !important;
-    height: 35px;
-    overflow: hidden;
+    // height: 35px;
+    // overflow: hidden;
 }
 :deep(.vditor-reset){
     background: var(--main-bg) !important;

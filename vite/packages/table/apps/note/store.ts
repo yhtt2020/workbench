@@ -35,7 +35,7 @@ export const noteStore = defineStore("noteStore", {
       text:'',
       width:1,
       title:'桌面便签',
-      content:'',
+      // content:'',
     },
     // 桌面信息
     deskList:[],
@@ -215,7 +215,7 @@ export const noteStore = defineStore("noteStore", {
     },
 
     // 修改主应用卡片内容
-    async saveAppNote(id,value,content){
+    async saveAppNote(id,value){
       let now = new Date().getTime()
       let tmp = await this.findId('note:'+id,false)
       if (tmp) {
@@ -224,7 +224,7 @@ export const noteStore = defineStore("noteStore", {
           customData:{
             ...tmp[0].customData,
             text:value,
-            content:content
+            // content:content
           },
           updateTime:now,
         })
@@ -237,7 +237,7 @@ export const noteStore = defineStore("noteStore", {
     },
 
     // 修改桌面卡片内容
-    async saveDeskNote(id,value,content){
+    async saveDeskNote(id,value){
       let now = new Date().getTime()
       let tmp = await this.findId('note:'+id,false)
       if (tmp) {
@@ -246,7 +246,7 @@ export const noteStore = defineStore("noteStore", {
           customData:{
             ...tmp[0].customData,
             text:value,
-            content:content
+            // content:content
           },
           updateTime:now,
         })
@@ -280,6 +280,7 @@ export const noteStore = defineStore("noteStore", {
           this.getNotes()
           this.selNote = 0
           this.selNoteTitle = '桌面便签'
+          this.searchValue = ''
           // this.selNote>=0?this.selNote++:''
         }
         this.flag = true
