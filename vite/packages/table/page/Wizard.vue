@@ -218,8 +218,8 @@
             </xt-button>
         </div>
         <div v-else-if="step == 3" class="flex">
-          <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
-          </xt-button>
+          <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
+          </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
         </div>

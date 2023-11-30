@@ -63,6 +63,7 @@ export const noteStore = defineStore("noteStore", {
       // 回收站不需要进行检测
       if (!this.isSelTab) {
         if (getDb.docs.length) {
+          // 走检测机制
           let tmpArr = [] as any[]
           let deskArr = [] as any[]
           let dbArr = [] as any[]

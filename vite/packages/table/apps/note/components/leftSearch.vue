@@ -71,98 +71,20 @@ import { message } from 'ant-design-vue';
     components: {
         Icon,
     },
-    props:['selDesk'],
+    props:['selDesk', 'menus'],
     data() {
       return {  
 			icons: {
 				add16Filled,
 				search20Filled,
 			},
-            menus:[
-                // { 
-                //     label: "小窗模式", 
-                //     // callBack: this.callBack, 
-                //     newIcon: "fluent:window-multiple-16-filled",
-                // },
-                { 
-                    // label: this.isSelTab?'添加到桌面':'还原', 
-                    label: "添加到桌面", 
-                    callBack: ()=>{
-                        // 修改当前选中桌面
-                        if (!this.isSelTab) {
-                            // 添加到桌面
-                            this.selDesk()
-                        }else{
-                            // 还原
-                            this.restore()
-                        }
-                    }, 
-                    newIcon: "fluent:open-20-filled",
-                },
-                { 
-                    label: "跳转到桌面", 
-                    newIcon: "majesticons:monitor-line",
-                    callBack:()=>{
-                        if (this.noteList[this.selNote].deskName) {
-                            this.deskList.forEach((item,index)=>{
-                                if (this.noteList[this.selNote].deskId == item.id) {
-                                    this.currentDeskId = item.id
-                                    this.$router.push({
-                                        name:'home',
-                                    })
-                                }
-                            })
-                        }else{
-                            if (this.isSelTab) {
-                                message.error('该便签已被删除')
-                            }else{
-                                message.error('请先添加桌面')
-                            }
-                        }
-                    }
-                },
-                { 
-                    // name:"删除便签",
-                    label: "删除便签", 
-                    newIcon: "akar-icons:trash-can",
-                    color:'#FF4D4F',
-                    callBack:()=>{
-                        if (!this.isSelTab) {
-                            // 删除
-                            this.moveToTrash()
-                        }else{
-                            // 彻底删除
-                            this.deleteNote()
-
-                        }
-                    }
-                },
-            ]
       };
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isSelTab','searchValue','deskList']),
         ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
-        // time(item) {
-        //     let timestamp = item.updateTime // 假设您已经获取了时间戳
-        //     if (timestamp == undefined) {
-        //       timestamp = item.createTime
-        //     }
-        //     return formatTime(timestamp)
-        // },
     },
     mounted() {
-    },
-    watch: {
-        isSelTab(newval,oldval){
-            if (newval) {
-                this.menus[0].label = '还原'
-                this.menus[2].label = '彻底删除'
-            }else{
-                this.menus[0].label = '添加到桌面'
-                this.menus[2].label = '删除便签'
-            }
-        }
     },
     methods: {
         ...mapActions(noteStore,['moveToTrash','dbClear','addNote','restore','searchNote','findAll','deleteNote']),

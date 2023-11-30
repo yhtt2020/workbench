@@ -62,7 +62,7 @@
     </div>
   </div>
     <!-- 全屏模式 -->
-    <FullScreen v-if="isFull" :changeIsFull="changeIsFull" :watchEditorValue="watchEditorValue" :selDesk="selDesk"></FullScreen>
+    <FullScreen :menus="menus" v-if="isFull" :changeIsFull="changeIsFull" :watchEditorValue="watchEditorValue" :selDesk="selDesk"></FullScreen>
 </template>
 
 <script>
@@ -83,54 +83,40 @@ export default {
     Markdown,
     FullScreen,
    },
-   props:['selDesk'],
+   props:['selDesk','menus'],
    computed: {
-        ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
-        deskName(){
-            if (this.noteList.length) {
-                return this.selNote>=0?this.noteList[this.selNote]?.deskName:"" 
-            }
-        },
-        background(){
-            if (this.noteList.length) {
-                if(this.selNote>=0){
-                    return this.selNote>=0?this.noteList[this.selNote]?.customData.background:''
-                }else{
-                    return 
-                }
-            }
-        },
-        time() {
-          const currentNote = this.noteList[this.selNote]
-            // return 
-            if (this.selNote>=0 && this.noteList) {
-                if(currentNote){
-                    let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
-                    if (timestamp == undefined) {
-                      timestamp = currentNote.createTime
-                    }
-                    return formatTime(timestamp)
-                }else{
-                    return 
-                }
-            }else{
-                return
-            }
-        },
-        noteDesk(){
-          if(this.isSelTab){
-            return '添加到桌面'
-          }else{
-            return '还原'
-          }
-        },
-        noteDelete(){
-          if(this.isSelTab){
-            return '删除便签'
-          }else{
-            return '彻底删除'
-          }
+    ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
+    deskName(){
+        if (this.noteList.length) {
+            return this.selNote>=0?this.noteList[this.selNote]?.deskName:"" 
         }
+    },
+    background(){
+        if (this.noteList.length) {
+            if(this.selNote>=0){
+                return this.selNote>=0?this.noteList[this.selNote]?.customData.background:''
+            }else{
+                return 
+            }
+        }
+    },
+    time() {
+      const currentNote = this.noteList[this.selNote]
+        // return 
+        if (this.selNote>=0 && this.noteList) {
+            if(currentNote){
+                let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
+                if (timestamp == undefined) {
+                  timestamp = currentNote.createTime
+                }
+                return formatTime(timestamp)
+            }else{
+                return 
+            }
+        }else{
+            return
+        }
+    },
         
    },
    data() {
@@ -140,60 +126,6 @@ export default {
         },
         isColor:false,
         isFull:false,
-        menus:[
-            { 
-                label: this.noteDesk, 
-                newIcon: "fluent:open-20-filled",
-                callBack: ()=>{
-                    // 修改当前选中桌面
-                    if (!this.isSelTab) {
-                        // 添加到桌面
-                        this.selDesk()
-                    }else{
-                        // 还原
-                        this.restore()
-                    }
-                }, 
-                
-            },
-            { 
-                label: "跳转到桌面", 
-                newIcon: "majesticons:monitor-line",
-                callBack:()=>{
-                    if (this.noteList[this.selNote].deskName) {
-                        this.deskList.forEach((item,index)=>{
-                            if (this.noteList[this.selNote].deskId == item.id) {
-                                this.currentDeskId = item.id
-                                this.$router.push({
-                                    name:'home',
-                                })
-                            }
-                        })
-                    }else{
-                        if (this.isSelTab) {
-                            message.error('该便签已被删除')
-                        }else{
-                            message.error('请先添加桌面')
-                        }
-                    }
-                }
-            },
-            { 
-                label: "删除便签", 
-                newIcon: "akar-icons:trash-can",
-                color:'#FF4D4F',
-                callBack:()=>{
-                    if (!this.isSelTab) {
-                        // 删除
-                        this.moveToTrash()
-                    }else{
-                        // 彻底删除
-                        this.deleteNote()
-
-                    }
-                }
-            },
-        ],
     }
   },
   mounted () {
@@ -251,17 +183,6 @@ export default {
     },
     
   },
-  // watch: {
-  //   isSelTab (newval, oldval) {
-  //     if (newval) {
-  //       this.menus[0].label = '还原'
-  //       this.menus[2].label = '彻底删除'
-  //     } else {
-  //       this.menus[0].label = '添加到桌面'
-  //       this.menus[2].label = '删除便签'
-  //     }
-  //   }
-  // }
 }
 </script>
 <style lang="scss" scoped>

@@ -77,7 +77,7 @@ export default {
     Icon,
     Markdown,
   },
-  props: ['changeIsFull', 'selDesk', 'watchEditorValue'],
+  props: ['changeIsFull', 'selDesk', 'watchEditorValue','menus'],
   watch: {},
   computed: {
     ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
@@ -117,91 +117,6 @@ export default {
   data () {
     return {
       isColor: false,
-      menus: [
-        {
-          newIcon: 'fluent:copy-20-regular',
-          label: '复制内容',
-          callBack: () => {
-            let content = this.$refs.mdEditor.getContent()
-            require('electron').clipboard.writeHTML(content)
-            message.success('复制内容成功')
-            console.log(content, 'md内容')
-          }
-        },
-        {
-          newIcon: 'fluent:markdown-20-regular',
-          label: '复制MD文本',
-          callBack: () => {
-            let content = this.$refs.mdEditor.getMarkdown()
-            require('electron').clipboard.writeText(content)
-            message.success('复制内容成功')
-            console.log(content, 'md内容')
-          }
-        },
-        {
-          newIcon: 'fluent:clipboard-code-24-regular',
-          label: '复制HTML代码',
-          callBack: () => {
-            let content = this.$refs.mdEditor.getContent()
-            require('electron').clipboard.writeText(content)
-            message.success('复制内容成功')
-            console.log(content, 'md内容')
-          }
-        },
-        {
-          label: '添加到桌面',
-          newIcon: 'fluent:open-20-filled',
-          callBack: () => {
-            // 修改当前选中桌面
-            if (!this.isSelTab) {
-              // 添加到桌面
-              this.selDesk()
-            } else {
-              // 还原
-              this.restore()
-            }
-          },
-
-        },
-        {
-          label: '跳转到桌面',
-          newIcon: 'majesticons:monitor-line',
-          callBack: () => {
-            if (this.noteList[this.selNote].deskName) {
-              this.deskList.forEach((item, index) => {
-                if (this.noteList[this.selNote].deskId == item.id) {
-                  this.currentDeskId = item.id
-                  this.$router.push({
-                    name: 'home',
-                  })
-                }
-              })
-            } else {
-              if (this.isSelTab) {
-                message.error('该便签已被删除')
-              } else {
-                message.error('请先添加桌面')
-              }
-            }
-          }
-        },
-        {
-          label: '删除便签',
-          newIcon: 'akar-icons:trash-can',
-          color: '#FF4D4F',
-          callBack: () => {
-            // this.menus.
-            if (!this.isSelTab) {
-              // 删除
-              this.moveToTrash()
-            } else {
-              // 彻底删除
-              this.deleteNote()
-
-            }
-          }
-        },
-      ],
     }
   },
   unmounted () {
