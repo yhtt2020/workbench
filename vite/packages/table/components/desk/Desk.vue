@@ -45,7 +45,6 @@
       @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
       @exit="toggleEditing"
-      @resetLayout="resetLayout"
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
@@ -61,7 +60,7 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
+            <FreeLayoutContainer :currentDesk="currentDesk" :currentID="currentDesk.id" :isDrag="editing">
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
@@ -134,8 +133,6 @@
           >
             <template #item="{ item }">
               <div
-                :class="{ editing: editing }"
-                :editing="editing"
                 :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -368,9 +365,10 @@
             v-model:value="globalSettings.cardZoom"
           ></a-slider>
           <hr class="my-3" />
+
           <div class="mb-3">小组件间隙</div>
           <div class="xt-text-2 text-sm my-3">
-            调节小组件之间的间距，默认为 5。
+            调节小组件之间的间距，默认为 12。
           </div>
           <a-slider
             :min="5"
@@ -566,21 +564,28 @@ export default {
       },
       deep: true,
     },
-    editing: {
-      handler(newVal) {
-        // if (this.isFreeLayout) {
-        //   this.hide = true;
-        // } else
-        // if (newVal && !this.isFreeLayout) {
-        //   this.hide = true;
-        //   setTimeout(() => {
-        //     this.hide = false;
-        //   }, 100);
-        // } else if (!this.isFreeLayou) {
-        // }
-      },
-      immediate: true,
-    },
+    // isFreeLayout: {
+    //   handler(newVal) {
+    //     if (this.editing && !this.isFreeLayout) {
+    //       this.hide = true;
+    //       setTimeout(() => {
+    //         this.hide = false;
+    //       }, 100);
+    //     }
+    //   },
+    //   immediate: true,
+    // },
+    // editing: {
+    //   handler(newVal) {
+    //     if (this.editing && !this.isFreeLayout) {
+    //       this.hide = true;
+    //       setTimeout(() => {
+    //         this.hide = false;
+    //       }, 100);
+    //     }
+    //   },
+    //   immediate: true,
+    // },
   },
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
@@ -710,15 +715,7 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
-    resetLayout() {
-      console.log("触发了 resetLayout:>> ");
-      // if (this.editing && !this.isFreeLayout) {
-      this.hide = true;
-      setTimeout(() => {
-        this.hide = false;
-      }, 100);
-      // }
-    },
+
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },

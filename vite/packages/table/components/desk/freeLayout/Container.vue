@@ -1,24 +1,26 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, toRefs, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
   currentDesk: {},
+  currentID: {},
   isDrag: {},
 });
 
-const { currentDesk }: any = toRefs(props);
+const { currentDesk, currentID }: any = toRefs(props);
 const {
   freeLayoutData,
   getCurrentDeskId,
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
+  test,
 } = storeToRefs(freeLayoutStore);
-
+onMounted(() => {});
 // 调用自由画布初始化状态
 freeLayoutStore.initFreeLayoutState();
 
@@ -49,7 +51,7 @@ async function getPosition(item) {
     const { left, top } = node.getBoundingClientRect();
     const scrollTop = freeLayoutEnv.value.scrollTop;
     const scrollLeft = freeLayoutEnv.value.scrollLeft;
-    getFreeLayoutData.value[item.id] = {
+    getFreeLayoutData.value[id] = {
       left: left - waterfallFlowLeft + scrollLeft,
       top: top - waterfallFlowTop + scrollTop,
       index: 1,
@@ -65,7 +67,8 @@ async function getPosition(item) {
  */
 let updateCardTimer: any = null;
 function updateCard(data) {
-  let startTime = new Date().getTime();
+  console.log("自由布局数据更新 :>> ");
+  console.time("Free Layout Run Time");
   let cardObj = {};
   data.forEach((item) => (cardObj[item.id] = item));
   for (const key in getFreeLayoutData.value) {
@@ -77,6 +80,8 @@ function updateCard(data) {
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
+      console.log("旧数据处理 :>> ");
+
       getFreeLayoutData.value[id] = {
         left: getFreeLayoutData.value[id].left || 0,
         top: getFreeLayoutData.value[id].top || 0,
@@ -86,7 +91,8 @@ function updateCard(data) {
         customData,
       };
     } else {
-      getFreeLayoutData.value[id] = {
+      console.log("新数据处理 :>> ");
+      freeLayoutData.value[currentID.value][id] = {
         left: 0,
         top: 0,
         index: 1,
@@ -94,12 +100,10 @@ function updateCard(data) {
         name,
         customData,
       };
-      getPosition(item);
+      await getPosition(item);
     }
   });
-  var endTime = new Date().getTime();
-  var executionTime = endTime - startTime; // 计算执行时间（毫秒）
-  console.log(" time: " + executionTime + "ms");
+  console.timeEnd("Free Layout Run Time");
 }
 watch(
   currentDesk.value?.cards,
@@ -107,7 +111,7 @@ watch(
     clearTimeout(updateCardTimer);
     updateCardTimer = setTimeout(() => {
       updateCard(card);
-    }, 500);
+    }, 400);
   },
   {
     immediate: true,

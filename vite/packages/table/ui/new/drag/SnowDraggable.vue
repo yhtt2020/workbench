@@ -148,7 +148,7 @@ const {
 } = toRefs(props);
 
 onBeforeUnmount(() => {
-  console.log("销毁了组件");
+
 });
 const emits = defineEmits([
   "update:x",
