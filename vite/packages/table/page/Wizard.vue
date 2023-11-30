@@ -196,7 +196,7 @@
               <div :class="{'active':desktopSetting==='custom'}" @click="this.desktopSetting='custom'" class="setting-panel pointer px-4 pt-5">
                 <div class="title">
                   <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
-                  <div class="mt-2">定制桌面</div>
+                  <div class="mt-2">定制桌面（未开放）</div>
                 </div>
                 <div class="content mt-4">
                   通过一系列设置，帮你搭建最合适的桌面。
@@ -204,7 +204,6 @@
               </div>
             </a-col>
           </a-row>
-          <div class="text-center mt-4" style="color:red;">暂不支持定制桌面</div>
         </div>
   
 
@@ -221,6 +220,7 @@
         <div v-else-if="step == 3" class="flex">
           <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button>
+          <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
         </div>
         <xt-button  v-else-if="(mod==='second-screen' && step!==3 && step!==4) || (mod==='bootstrap' && step!==4) " class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">{{ step!==1?'下一步':'没有问题'}}
