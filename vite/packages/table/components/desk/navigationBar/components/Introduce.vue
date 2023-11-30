@@ -1,14 +1,14 @@
 <template>
   <div class="w-full h-full">
     <!-- windows应用 -->
-    <div v-if="selectTag === 'tableApp'" class="mb-2  xt-bg-2 h-[40px] rounded-xl flex items-center p-2  justify-between">
-      <div class="text-sm xt-text-2">选择windows桌面图标,支持多选批量添加</div>
+    <div v-if="selectTag === 'tableApp'" class="mb-2  xt-bg-2 h-[54px] rounded-xl flex items-center p-2  justify-between">
+      <div class="text-base xt-text-2">选择windows桌面图标，支持多选批量添加。</div>
       <div class="flex items-center ">
         <div style="color:var(--active-bg)" class="mr-3 pointer" @click="addAllIcon">全选</div>
-        <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
+        <!-- <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);">
           <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
             批量添加(3)</div>
-        </xt-button>
+        </xt-button> -->
       </div>
 
     </div>
@@ -27,13 +27,12 @@
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
     <!-- <div class="flex " > -->
-    <div class="flex flex-wrap items-center justify-center mt-3 mainList" ref="targetDiv">
+    <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
       <!-- <div class="flex flex-wrap"> -->
       <template v-if="this.filterList.length > 0">
-        <selectIcon v-for="(item, index) in filterList" :index="index" :item="item" :recommendation="recommendation"
-          @addIcon="addIcon(item, index)" />
+        <selectIcon :filterList="filterList" :recommendation="recommendation" />
       </template>
-      <div v-else class="flex flex-col items-center justify-center mt-10">
+      <div v-else class="flex flex-col items-center justify-center w-full h-full mt-10">
         <div>
           <img src="/img/test/load-ail.png" style="width: 100px;height: 100px">
         </div>

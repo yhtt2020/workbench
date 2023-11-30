@@ -201,7 +201,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 home-blur" :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}"  v-if="quick">
+      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}"  v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
