@@ -1,6 +1,6 @@
 <template>
   <div :class="{'small':mode==='small'}" class="flex flex-col" style="" :style="mode==='small'?'width:580px;height:700px':'width: 976px;height: 600px;'">
-    <div class="flex items-center justify-center w-full pb-4 mb-4" style="position: relative;">
+    <div class="flex items-center justify-center w-full pb-0 mb-4" style="position: relative;">
 <!--      {{mode}} {{route}}-->
       <div class="flex" v-if="mode==='large'">
         <HorizontalPanel :navList="tabs.slice(0,4)" v-model:selectType="defaultFlow"/>
