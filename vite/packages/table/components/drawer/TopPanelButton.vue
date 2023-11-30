@@ -1,7 +1,7 @@
 <template>
  <div class="flex items-center justify-center h-12 relative mr-3 no-drag">
-  <xt-button  v-if="assistStatus" style="background: transparent !important; width:auto !important;" 
-  @contextmenu.stop="closeAided" class="px-1"
+  <xt-button  v-if="!assistStatus" style="background: transparent !important; width:auto !important;" 
+  @click="closeAided" class="px-1 btn-hover"
  >
   <div class="flex items-center justify-center">
    <div class="mr-1 flex items-center justify-center">
@@ -38,7 +38,7 @@ const assistStatus = computed(()=>{
 const showClose = ref(false);
 
 const closeAided = () =>{
- showClose.value = true;
+ showClose.value = !showClose.value;
 }
 
 const closeAidedModal = () =>{
@@ -49,5 +49,9 @@ const closeAidedModal = () =>{
 </script>
 
 <style lang="scss" scoped>
-
+.btn-hover{
+ &:hover{
+  background: var(--secondary-transp-bg) !important;
+ }
+}
 </style>

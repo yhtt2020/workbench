@@ -53,7 +53,7 @@
       <TopPanelButton />
 
       <xt-button h="48" style="background:transparent !important;width:auto !important;"   @click="toggleRightDrawer"
-       :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " class="no-drag"
+       :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " class="no-drag btn-hover"
       >
         <div class="flex items-center">
           <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
@@ -421,4 +421,9 @@ export default {
   height: 25px;
 }
 
+.btn-hover{
+  &:hover{
+   background: var(--secondary-transp-bg) !important;
+  }
+}
 </style>
