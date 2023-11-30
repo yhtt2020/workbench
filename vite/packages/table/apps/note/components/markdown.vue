@@ -46,32 +46,7 @@ export default {
         }
       },
       blur: (value) => {
-        if (this.tmpData != value && this.noteList.length > 0) {
-          // 存在桌面就去修改
-          // 定义一个虚拟元素提取文本
-          let tmpDiv = document.createElement('div')
-          tmpDiv.innerHTML = this.contentEditor.getHTML()
-          let content = tmpDiv.textContent || tmpDiv.innerText || ''
-          if (this.noteList[this.selNote].deskName != '') {
-            let n = -1
-            this.deskList.forEach((item, index) => {
-              if (item.id == this.noteList[this.selNote].deskId) {
-                n = index
-              }
-            })
-            if (n >= 0) {
-              this.updateCustomData(
-                this.noteList[this.selNote].id,
-                {
-                  text: value,
-                },
-                this.deskList[n]
-              )
-            }
-          }
-          this.noteList[this.selNote].customData.text = value
-          this.saveAppNote(this.noteList[this.selNote].id, value, content)
-        }
+       this.save(value)
       },
       upload: {
         multiple: true,
@@ -101,6 +76,36 @@ export default {
     },
     getMarkdown () {
       return this.contentEditor.getValue()
+    },
+    async save(value) {
+      if (this.tmpData != value && this.noteList.length > 0) {
+        // 存在桌面就去修改
+        // 定义一个虚拟元素提取文本
+        let tmpDiv = document.createElement('div')
+        tmpDiv.innerHTML = this.contentEditor.getHTML()
+        let content = tmpDiv.textContent || tmpDiv.innerText || ''
+        if (this.noteList[this.selNote].deskName != '') {
+          let n = -1
+          this.deskList.forEach((item, index) => {
+            if (item.id == this.noteList[this.selNote].deskId) {
+              n = index
+            }
+          })
+          if (n >= 0) {
+            this.updateCustomData(
+              this.noteList[this.selNote].id,
+              {
+                text: value,
+              },
+              this.deskList[n]
+            )
+          }
+        }
+        this.noteList[this.selNote].customData.text = value
+        return this.saveAppNote(this.noteList[this.selNote].id, value, content)
+      }else{
+        return false
+      }
     }
   },
   watch: {
