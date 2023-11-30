@@ -69,7 +69,7 @@
         <div>中心线</div>
         <a-switch v-model:checked="getFreeLayoutState.line.isCenterLine" />
       </div>
-      <div class="xt-text-2 text-sm my-3">在桌面是显示画布的中心线。</div>
+      <div class="xt-text-2 text-sm my-3">在桌面上显示画布的中心线。</div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
         <div>拖拽自动吸附到网格</div>

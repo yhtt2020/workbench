@@ -368,10 +368,9 @@
             v-model:value="globalSettings.cardZoom"
           ></a-slider>
           <hr class="my-3" />
-
           <div class="mb-3">小组件间隙</div>
           <div class="xt-text-2 text-sm my-3">
-            调节小组件之间的间距，默认为 6。
+            调节小组件之间的间距，默认为 5。
           </div>
           <a-slider
             :min="5"
