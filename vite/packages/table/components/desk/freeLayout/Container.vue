@@ -86,6 +86,14 @@ function updateCard(data) {
         customData,
       };
     } else {
+      getFreeLayoutData.value[id] = {
+        left: 0,
+        top: 0,
+        index: 1,
+        id,
+        name,
+        customData,
+      };
       getPosition(item);
     }
   });

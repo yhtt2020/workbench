@@ -571,13 +571,13 @@ export default {
         // if (this.isFreeLayout) {
         //   this.hide = true;
         // } else
-        if (newVal && !this.isFreeLayout) {
-          this.hide = true;
-          setTimeout(() => {
-            this.hide = false;
-          }, 100);
-        } else if (!this.isFreeLayou) {
-        }
+        // if (newVal && !this.isFreeLayout) {
+        //   this.hide = true;
+        //   setTimeout(() => {
+        //     this.hide = false;
+        //   }, 100);
+        // } else if (!this.isFreeLayou) {
+        // }
       },
       immediate: true,
     },
