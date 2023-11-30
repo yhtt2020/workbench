@@ -1,6 +1,6 @@
  <template>
- <div class="h-full w-full box" style="">
-    <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;position: relative;top: 5%;" ></div>
+ <div class="h-full w-full box" style="position: relative;top: 6px;">
+    <div ref="vditor" :id="vid" class="h-full " style="border-radius:10px;padding: 0;" ></div>
  </div>
 
  </template>
@@ -51,7 +51,7 @@ import { message } from 'ant-design-vue'
                 // 定义一个虚拟元素提取文本
                 let tmpDiv = document.createElement('div')
                 tmpDiv.innerHTML = this.contentEditor.getHTML()
-                let content = tmpDiv.textContent || tmpDiv.innerText || ''
+                // let content = tmpDiv.textContent || tmpDiv.innerText || ''
 
                 if (this.tmpData != value) {
                     this.updateCustomData(
@@ -64,7 +64,7 @@ import { message } from 'ant-design-vue'
                     this.tmpData = value
                     // 如果用户没有进行初始化 不加载
                     if (this.initFlag) {
-                        this.saveDeskNote(this.customIndex,value,content)
+                        this.saveDeskNote(this.customIndex,value)
                     }
                 }
             },
@@ -99,6 +99,9 @@ import { message } from 'ant-design-vue'
  };
  </script>
  <style lang="scss" scoped>
+    .box{
+        border-radius: 0 !important;
+    }
     :deep(.vditor){
         border: none;
     }
