@@ -224,7 +224,6 @@ export default {
     bindUserInfoResponse () {
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
-        console.error(args, '参数')
         if (args.data.uid === -2) {
           this.netError = true
           message.error({

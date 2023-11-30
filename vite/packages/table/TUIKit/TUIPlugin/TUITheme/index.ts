@@ -9,7 +9,6 @@ function plugin(TUICore:any) {
 }
 
 function install(app:any) {
-  console.log('app', app);
 }
 
 const TUIColor = {
