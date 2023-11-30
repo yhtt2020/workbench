@@ -45,6 +45,7 @@
       @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
       @exit="toggleEditing"
+      @resetLayout="resetLayout"
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
@@ -60,7 +61,11 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer :currentDesk="currentDesk" :currentID="currentDesk.id" :isDrag="editing">
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :currentID="currentDesk.id"
+              :isDrag="editing"
+            >
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
@@ -314,7 +319,7 @@
             开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
           </div>
           <template v-if="settings.enableZoom">
-            <div class="mb-3">卡片缩放222</div>
+            <div class="mb-3">卡片缩放</div>
             <a-slider
               @afterChange="update"
               :min="20"
@@ -715,7 +720,12 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
-
+    resetLayout() {
+      this.hide = true;
+      setTimeout(() => {
+        this.hide = false;
+      }, 1);
+    },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },

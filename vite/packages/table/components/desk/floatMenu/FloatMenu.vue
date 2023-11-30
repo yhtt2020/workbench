@@ -150,12 +150,24 @@ const exit1 = () => {
 };
 
 const currentMode = ref(isFreeLayout.value ? "free" : "default");
-watch(currentMode, (newV) => {
-  if (newV == "default") {
-    emits("resetLayout");
+watch(
+  currentMode,
+  (newV) => {
+    if (newV == "default") {
+      emits("resetLayout");
+      if (isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    } else if (newV == "free") {
+      if (!isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    }
+  },
+  {
+    immediate: true,
   }
-  freeLayoutStore.renewFreeLayout();
-});
+);
 // 缩放比例
 const freeLayoutZoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.canvas.zoom * 100 : 100
@@ -184,8 +196,10 @@ watch(defaultZoom, (newV: any) => {
 // 默认桌面独立缩放
 const defaultAloneZoom = ref(aloneZoom.value);
 watch(defaultAloneZoom, (val: any) => {
-  if (val >= 0) {
-    emits("update:aloneZoom", val);
+  const int = Math.round(val);
+  freeLayoutZoom.value = int;
+  if (int >= 0) {
+    emits("update:aloneZoom", int);
   } else {
     defaultAloneZoom.value = 1;
   }
