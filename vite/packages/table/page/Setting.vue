@@ -20,7 +20,7 @@
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
-
+            
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="relative btn">
                 节能模式<br />
@@ -241,6 +241,7 @@ import {
   setWallpaperColor,
 } from "./../components/card/hooks/styleSwitch/setStyle";
 import { setThemeSwitch } from "./../components/card/hooks/themeSwitch/";
+import {useNavigationStore} from '../components/desk/navigationBar/navigationStore'
 import ChooseScreen from "./ChooseScreen.vue";
 import { appStore } from "../store";
 import { mapWritableState } from "pinia";
@@ -288,6 +289,29 @@ export default {
     wallpaperColor(newV) {
       setWallpaperColor(newV);
     },
+    simple(){
+      if(this.simple){
+        this.bottomToggle[0]=false
+        this.bottomToggle[1]=false
+        this.bottomToggle[2]=false
+      }else{
+        this.bottomToggle[0]=true
+        this.bottomToggle[1]=true
+        this.bottomToggle[2]=true
+      }
+    },
+    bottomToggle:{
+      deep:true,
+      handler(newV,oldV){
+        this.oldToggle=[...oldV]
+        console.log(this.oldToggle);
+        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
+          this.simple=false
+        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
+          this.simple=true
+        }
+      }
+    }
   },
   mounted() {
     this.bgColor = getBgColor();
@@ -307,7 +331,7 @@ export default {
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
-
+    ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle']),
     m03011() {
       return this.taskID == "M0301" && this.step == 1;
     },
@@ -367,7 +391,7 @@ export default {
     tipSimple() {
       Modal.info({
         content:
-          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如小队功能。",
+          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能。",
         centered: true,
       });
     },
