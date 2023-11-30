@@ -25,7 +25,11 @@
           </div>
         </div>
         <div class="flex justify-center my-1">
-          <XtButton @click="download()" type="theme" style="width: 240px"
+          <XtButton
+            @click="download()"
+            type="theme"
+            style="width: 240px"
+            :disabled="item?.disabled"
             >前往下载</XtButton
           >
         </div>

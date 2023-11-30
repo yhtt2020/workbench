@@ -8,6 +8,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
+    test: {},
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -133,11 +134,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 更新自由布局数据
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
+      console.log("自由布局创建 :>> ");
       console.log(" this.freeLayoutState :>> ", this.freeLayoutState);
-      console.log(
-        "this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId) :>> ",
-        this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)
-      );
       console.log("this.getCurrentDeskId :>> ", this.getCurrentDeskId);
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
@@ -184,13 +182,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
     // 更新坐标
-
   },
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ["freeLayoutData", "freeLayoutState"],
+        paths: ["freeLayoutData", "freeLayoutState", "test"],
         storage: localStorage,
       },
     ],
