@@ -1,3 +1,35 @@
+html {
+  background: #00000000 !important;
+}
+
+/*此处是窗口圆角的实现样式，最大化的时候去除window样式*/
+.window {
+  .top-shadow{
+    border-radius: 8px 8px 0 0;
+  }
+  #windowController{
+    border-top-right-radius: 8px
+  }
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: #00000000 !important;
+  .bg-image {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #00000000 !important;
+  }
+  .none-bg {
+    background: #262626;
+    z-index: -1;
+    border-radius: 8px
+  }
+}
+
+//html,body,.bg-image{
+//  background: #00000000 !important;
+//}
+
+
 .ant-picker-dropdown, .ant-drawer-content-wrapper {
   -webkit-app-region: no-drag;
 }
@@ -62,6 +94,7 @@
   background: var(--primary-bg-solid) !important;
   color: var(--primary-text);
 }
-.ant-modal-confirm-content{
-  color:var(--primary-text) !important;
+
+.ant-modal-confirm-content {
+  color: var(--primary-text) !important;
 }
