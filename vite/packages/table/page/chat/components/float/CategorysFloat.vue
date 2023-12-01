@@ -140,10 +140,10 @@ export default{
        wheelPropagation: true
       },
       hideList:[
-        {
-          newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
-          callBack:()=>{ this.$refs.addInviteRef.openAddInvite() }
-        },
+        // {
+        //   newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
+        //   callBack:()=>{ this.$refs.addInviteRef.openAddInvite() }
+        // },
         {
           newIcon:'fluent:apps-add-in-20-filled',title:'添加新应用',
           callBack:()=>{ this.$refs.addCategoryRef.openAddNewCategory() }
@@ -156,13 +156,13 @@ export default{
           newIcon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',
           callBack:()=>{ this.setFloatVisible(false) }
         },
-        {
-          newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
-          callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
-          }
-          // 
-        },
+        
+        // {
+        //   newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
+        //   callBack:()=>{
+        //     this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
+        //   }
+        // },
         // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
         // {
         //   icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
@@ -170,10 +170,10 @@ export default{
         // },
       ],
       showList:[
-        {
-          newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
-          callBack:()=>{ this.$refs.addInviteRef.openAddInvite()  }
-        },
+        // {
+        //   newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
+        //   callBack:()=>{ this.$refs.addInviteRef.openAddInvite()  }
+        // },
         {
           newIcon:'fluent:apps-add-in-20-filled',title:'添加新应用',
           callBack:()=>{ this.$refs.addCategoryRef.openAddNewCategory() }
@@ -183,13 +183,6 @@ export default{
           callBack:()=>{ this.$refs.addNewRef.openAddModal() }
         },
         {
-          newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
-          callBack:()=>{
-            this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
-          },
-        },
-        // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
-        {
           newIcon:'fluent:text-indent-decrease-16-filled',title:'收起边栏',
           callBack:()=>{ this.setFloatVisible(true) }
         },
@@ -197,10 +190,19 @@ export default{
           newIcon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
           callBack:()=>{ this.setDouble() }
         },
+
+        // {
+        //   newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
+        //   callBack:()=>{
+        //     this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
+        //   },
+        // },
+        // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
       ],
       collapsed:false,
     }
   },
+  
 
   computed:{
     ...mapWritableState(communityStore,['categoryList','communityList','currentNo']),

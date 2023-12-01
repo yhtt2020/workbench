@@ -28,12 +28,12 @@ export default {
  data(){
   return{
    emptyList: [
-    { 
-     icon:'fluent:people-add-16-regular', name: '邀请其他人',
-     callBack:()=>{
-      this.$refs.addInviteRef.openAddInvite()
-     }
-    },
+    // { 
+    //  icon:'fluent:people-add-16-regular', name: '邀请其他人',
+    //  callBack:()=>{
+    //   this.$refs.addInviteRef.openAddInvite()
+    //  }
+    // },
     { 
      icon:'fluent:apps-add-in-20-filled', name: '添加新应用', 
      callBack:()=>{
