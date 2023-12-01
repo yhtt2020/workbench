@@ -78,7 +78,7 @@ import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled'
 import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
-
+import {Modal as AntModal} from 'ant-design-vue'
 export default {
   name: 'note',
   components: {
@@ -96,7 +96,41 @@ export default {
     return {
       // 右键菜单
       showVersion: false,
-      menus: [
+
+      icons: {
+        dismiss16Filled,
+      },
+      // 弹窗
+      promptVisible: false,
+
+    }
+  },
+  watch: {
+
+  },
+  mounted () {
+    // 重置默认数据
+    this.selNote = -1
+    if (this.$route.params.customIndex) {
+      this.isSelTab = false
+    }
+    // 处理从桌面跳转过来的数据
+    this.getNotes().then(() => {
+      if (this.$route.params.customIndex) {
+        this.noteList.forEach((item, index) => {
+          if (item.id == this.$route.params.customIndex) {
+            this.selNote = index
+            this.selNoteTitle = this.noteList[this.selNote]?.customData.title
+          }
+        })
+      }
+    })
+  },
+  computed: {
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
+    ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    menus(){
+      return [
         // {
         //     label: "小窗模式",
         //     // callBack: this.callBack,
@@ -104,6 +138,7 @@ export default {
         // },
         {
           label: '版本历史',
+          newIcon:'fluent:history-48-filled',
           callBack: async () => {
             this.showVersion = true
 
@@ -144,15 +179,15 @@ export default {
           }
         },
         {
-          label: '添加到桌面',
+          label: this.isTrash?'还原':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
-            if (!this.isTrash) {
-              // 添加到桌面
-              this.selDesk()
-            } else {
+            if (this.isTrash) {
               // 还原
               this.restore()
+            } else {
+              // 添加到桌面
+              this.selDesk()
             }
           },
           newIcon: 'fluent:open-20-filled',
@@ -171,7 +206,7 @@ export default {
                 }
               })
             } else {
-              if (this.isTrash) {
+              if (this.isSelTab) {
                 message.error('该便签已被删除')
               } else {
                 message.error('请先添加桌面')
@@ -180,89 +215,54 @@ export default {
           }
         },
         {
-          label: '删除便签',
+          label: this.isTrash?'彻底删除':'删除',
           newIcon: 'akar-icons:trash-can',
           color: '#FF4D4F',
           callBack: () => {
-            if (!this.isTrash) {
+            if (this.isTrash) {
+              // 彻底删除
+              AntModal.confirm({
+                content:'彻底删除后无法还原，请确认。',
+                okText:'确认删除',
+                centered:true,
+                onOk:()=>{
+                  this.deleteNote()
+                }
+              })
+            } else {
               // 删除
               this.moveToTrash()
-            } else {
-              // 彻底删除
-              this.deleteNote(this.noteList[this.selNote]._id)
-
             }
           }
         },
-      ],
-      icons: {
-        dismiss16Filled,
-      },
-      // 弹窗
-      promptVisible: false,
-
-      }
+      ]
+    }
+  },
+  methods: {
+    ...mapActions(noteStore, ['getNotes', 'switchDesk', 'selDesk', 'restore', 'moveToTrash', 'deleteNote']),
+    // 选择便签
+    changeSelIndex (n) {
+      this.selIndex = n
     },
-    watch: {
-        isTrash(newval,oldval){
-            if (newval) {
-                this.menus[3].label = '还原'
-                this.menus[5].label = '彻底删除'
-            }else{
-                this.menus[3].label = '添加到桌面'
-                this.menus[5].label = '删除便签'
-            }
-        }
-    },
-    mounted () {
-      // 重置默认数据
-      this.selNote = -1
-      this.isTrash = false
-      if (this.$route.params.customIndex) {
-          this.isTrash = false
-      }
-      // 处理从桌面跳转过来的数据 
-      this.getNotes().then(()=>{
-        if (this.$route.params.customIndex) {
-          this.noteList.forEach((item,index)=>{
-            if (item.id  == this.$route.params.customIndex) {
-              this.selNote = index
-              this.selNoteTitle = this.noteList[this.selNote]?.customData.title
-            }
-          })
+    // 选择桌面
+    selDesk () {
+      this.desks.forEach((item, index) => {
+        if (item.id == this.noteList[this.selNote].deskId) {
+          this.selIndex = index
         }
       })
+      this.promptVisible = true
     },
-    computed: {
-      ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isTrash','deskList','selNoteTitle']),
-      ...mapWritableState(cardStore, ['desks','selIndex']),
+    // 切换便签在不同的桌面
+    changeDesk () {
+      this.promptVisible = false
+      this.switchDesk(this.selNote, this.selIndex)
     },
-    methods: {
-      ...mapActions(noteStore,['getNotes','switchDesk','selDesk','restore','moveToTrash','deleteNote']),
-      // 选择便签
-      changeSelIndex(n){
-        this.selIndex = n
-      },
-      // 选择桌面
-      selDesk(){
-        this.desks.forEach((item,index) => {
-          if(item.id == this.noteList[this.selNote].deskId){
-            this.selIndex = index
-          }
-        });
-        this.promptVisible = true
-      },
-      // 切换便签在不同的桌面
-      changeDesk(){
-        this.promptVisible = false
-        this.switchDesk(this.selNote,this.selIndex)
-      },
-      
-    }
+
   }
-  </script>
-  
-  <style scoped>
-  
-  </style>
-  
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -15,16 +15,26 @@
       </div>
       <a-switch v-model:checked="freeLayoutSwitch" />
     </div>
+
     <template v-if="freeLayoutSwitch">
       <div class="xt-text-2 text-sm my-3">
         开放式桌面画布，支持自定义每个组件的位置、缩放，还可以实现层叠等操作（当前功能尚未完成，可能会产生严重Bug，仅限尝鲜体验）
       </div>
       <hr class="my-3" />
-      <div class="flex justify-between mb-3">
-        <div>悬浮操作栏</div>
-        <a-switch v-model:checked="getFreeLayoutState.system.isFloatMenu" />
+      <div class="flex justify-center items-center mb-3">
+        <div style="width: 120px">中心线X轴：</div>
+        <xt-select
+          v-model="getFreeLayoutState.line.centerPosition.x"
+          :list="positionList"
+        />
       </div>
-      <hr class="my-3" />
+      <div class="flex justify-center items-center mb-3">
+        <div style="width: 120px">中心线Y轴：</div>
+        <xt-select
+          v-model="getFreeLayoutState.line.centerPosition.y"
+          :list="positionList"
+        />
+      </div>
       <div class="flex justify-between mb-3">
         <div>卡片叠放</div>
         <a-switch v-model:checked="stack" />
@@ -149,7 +159,6 @@
         <xt-button class="xt-bg mr-3" w="204" h="40" :copy="copyData">
           分享自由布局</xt-button
         >
-
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>
@@ -204,7 +213,7 @@ const copyData = computed(() => {
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
-  console.log('开始构建自由布局 :>> ', );
+  console.log("开始构建自由布局 :>> ");
   freeLayoutStore.renewFreeLayout();
 });
 
@@ -244,7 +253,16 @@ watch(
   }
 );
 
-
+const positionList = ref([
+  {
+    name: "顶部对齐",
+    value: "top",
+  },
+  {
+    name: "居中对齐",
+    value: "center",
+  },
+]);
 </script>
 
 <style lang="scss" scoped></style>

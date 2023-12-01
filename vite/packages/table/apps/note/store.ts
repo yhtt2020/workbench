@@ -235,6 +235,22 @@ export const noteStore = defineStore("noteStore", {
         content: content
       })
     },
+    /**
+     * 删除某个文档的全部历史记录
+     * @param noteId
+     */
+    async removeHistory(noteId){
+      let rs= await tsbApi.db.find({
+       selector:{
+         noteId:noteId
+       }
+      })
+      if(rs.docs){
+        for(const doc of rs.docs){
+          await tsbApi.db.remove(doc)
+        }
+      }
+    },
     // 修改主应用卡片内容
     async saveAppNote(id, value) {
       let now = new Date().getTime()
@@ -430,9 +446,14 @@ export const noteStore = defineStore("noteStore", {
         await tsbApi.db.remove(tt.rows[i].doc)
       }
     },
+
+
     // 彻底remove tsbApi中的数据
-    async deleteNote() {
-      let tmp = await this.findId(this.not1eList[this.selNote]._id, true)
+    async deleteNote(noteId) {
+      if(!noteId){
+       noteId=this.noteList[this.selNote]._id
+      }
+      let tmp = await this.findId(noteId, true)
       if (tmp) {
         await tsbApi.db.remove(tmp[0]).then(res=>{
           if (res?.ok) {
@@ -442,6 +463,7 @@ export const noteStore = defineStore("noteStore", {
           }
         })
       }
+      await this.removeHistory(noteId)
       this.selNote = -1
       this.getNotes()
     },

@@ -32,7 +32,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-        z-index: 99;
+        /* z-index: 99; */
       ">
         <div style="
           display: flex;
@@ -42,7 +42,7 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        ">        
+        ">
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
             <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
@@ -54,7 +54,7 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -244,7 +244,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
-import { toggleFullScreen, renderIcon } from '../js/common/common'
+import { renderIcon } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
@@ -356,7 +356,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       rightMenus: [
@@ -596,6 +596,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
+    ...mapActions(appStore,['toggleFullScreen']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',
@@ -707,13 +708,13 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-          this.bottomToggle[2]=!this.bottomToggle[2] 
+          this.bottomToggle[2]=!this.bottomToggle[2]
             break;
           case 'community':
-          this.bottomToggle[1]=!this.bottomToggle[1] 
+          this.bottomToggle[1]=!this.bottomToggle[1]
             break;
           case 'user':
-            this.bottomToggle[0]=!this.bottomToggle[0] 
+            this.bottomToggle[0]=!this.bottomToggle[0]
             break;
           case 'chat':
             this.settings.enableChat=!this.settings.enableChat
@@ -796,8 +797,7 @@ export default {
         switch (item.type) {
           case 'systemApp':
             if (item.event === 'fullscreen') {
-              toggleFullScreen()
-              this.full = !this.full
+              this.toggleFullScreen()
             } else if (item.event === '/status') {
               if (this.$route.path === '/status') {
                 this.$router.go(-1)

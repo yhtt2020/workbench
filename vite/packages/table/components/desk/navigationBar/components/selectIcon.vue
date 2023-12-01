@@ -1,6 +1,7 @@
 <template>
     <div class="flex flex-wrap" v-for="(item, index) in filterList">
-        <div @click="clickRightListItem(item, index)"
+        <!-- @contextmenu="addIcon(item, index)" -->
+        <div @click="clickRightListItem(item, index)" 
             class="w-[188px] h-[188px] xt-bg-2 rounded-xl flex justify-center items-center flex-col relative mr-3 mb-3 pointer">
             <div class="w-[64px] h-[64px] rounded-xl xt-bg flex items-center justify-center">
                 <div style="width: 32px; height: 32px;border-radius: 8px;" v-if="item.type === 'systemApp'"
@@ -57,7 +58,8 @@ export default {
     },
     data() {
         return {
-
+            // 批量添加
+            selectList: []
         }
     },
     props: {
@@ -163,6 +165,19 @@ export default {
                 }
             }
         },
+        addIcon(item, index) {
+            const exists = this.selectList.some(selectItem => selectItem.name === item.name);
+
+            // 如果不存在，则将其添加到 selectList
+            if (!exists) {
+                this.selectList.push(item);
+                this.updateMainNav(item, 'add')
+            } else {
+                this.updateMainNav(item, 'del')
+                this.selectList = this.selectList.filter(selectItem => selectItem.name !== item.name);
+                console.log('Item already exists in selectList:', item);
+            }
+        }
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),

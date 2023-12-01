@@ -253,7 +253,6 @@
               <a-col>
                 <div @click="showAddDeskForm" class="btn">
           <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
-1
                   <div><span>添加桌面</span></div>
                 </div>
               </a-col>
@@ -729,6 +728,7 @@ export default {
     stopEdit() {
       this.key = Date.now();
       this.editing = false;
+    console.log('11111 :>> ', 11111);
     },
     addCard() {
       this.$refs.currentDeskRef.newAddCard();

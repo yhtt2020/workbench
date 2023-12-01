@@ -87,7 +87,7 @@ onMounted(async () => {
     window.addEventListener("mousemove", handleMouseMove);
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
-    document.body.addEventListener('keydown',ignoreSpace);
+    document.body.addEventListener("keydown", ignoreSpace);
   }, 1);
 });
 function ignoreSpace(event) {
@@ -148,11 +148,18 @@ function handleKeyUp(event) {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  // let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  let w, h;
+  if (getFreeLayoutState.value.line.centerPosition.x == "top") {
+    w = getFreeLayoutState.value.line.centerLine.x;
+  } else {
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  }
   scrollbar.value.scrollLeft = w;
-  // let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  let h = getFreeLayoutState.value.line.centerLine.y;
+  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
+    h = getFreeLayoutState.value.line.centerLine.y;
+  } else {
+    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  }
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
@@ -191,7 +198,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mouseup", handleMouseUp, {
     capture: true,
   });
-  window.document.body.removeEventListener('keydown',ignoreSpace);
+  window.document.body.removeEventListener("keydown", ignoreSpace);
 });
 defineExpose({
   redirect,
