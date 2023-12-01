@@ -18,12 +18,8 @@ const {
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
-  freeLayoutID,
-  test,
 } = storeToRefs(freeLayoutStore);
 onMounted(() => {});
-// 调用自由画布初始化状态
-freeLayoutStore.initFreeLayoutState();
 
 // 滚动清除cards数据
 watch(
@@ -58,14 +54,9 @@ async function getPosition(item) {
       index: 1,
       id,
       name,
-      customData,
     };
-
-    if (freeLayoutData.value[getCurrentDeskId.value][id]) {
-      console.log(
-        "新数据赋值成功 :>> ",
-        freeLayoutData.value[getCurrentDeskId.value][id]
-      );
+    if (getFreeLayoutData.value[id]) {
+      console.log("新数据赋值成功 :>> ", getFreeLayoutData.value[id]);
     }
   }
 }
@@ -73,45 +64,40 @@ async function getPosition(item) {
 /**
  * 更新自由布局数据
  */
+
 let updateCardTimer: any = null;
+const currentData: any = ref(null);
 function updateCard(data) {
-  console.log("自由布局数据更新 :>> ");
+  console.log("--------------- 自由布局数据更新开始 ---------------");
   console.time("Free Layout Run Time");
-  let cardObj = {};
-  data.forEach((item) => (cardObj[item.id] = item));
+  console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
+  let dataObj = {};
+  currentData.value = dataObj;
+  data.forEach((item) => (dataObj[item.id] = item));
   for (const key in getFreeLayoutData.value) {
-    if (!(key in cardObj)) {
+    if (!(key in dataObj)) {
       delete getFreeLayoutData.value[key];
     }
   }
+
   data.forEach(async (item) => {
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
       console.log("旧数据处理 :>> ");
-
       getFreeLayoutData.value[id] = {
         left: getFreeLayoutData.value[id].left || 0,
         top: getFreeLayoutData.value[id].top || 0,
         index: getFreeLayoutData.value[id].index || 1,
         id,
         name,
-        customData,
       };
     } else {
-      freeLayoutData.value[getCurrentDeskId.value][id] = {
-        left: 0,
-        top: 0,
-        index: 1,
-        id,
-        name,
-        customData,
-      };
-
-      await getPosition(item);
+      getPosition(item);
     }
   });
   console.timeEnd("Free Layout Run Time");
+  console.log("--------------- 自由布局数据更新结束 ---------------");
 }
 watch(
   currentDesk.value?.cards,
@@ -119,7 +105,7 @@ watch(
     clearTimeout(updateCardTimer);
     updateCardTimer = setTimeout(() => {
       updateCard(card);
-    }, 400);
+    }, 500);
   },
   {
     immediate: true,
@@ -176,12 +162,9 @@ watch(
       }"
       :handle="isDrag ? '' : '.#123'"
     >
-      <xt-button
-        >{{ currentID }} --- {{ freeLayoutID }}--{{
-          getCurrentDeskId
-        }}</xt-button
-      >
-      <slot name="box" :data="{ ...item }"></slot>
+      <template v-if="currentData">
+        <slot name="box" :data="currentData[item.id]"></slot>
+      </template>
     </xt-drag>
   </template>
 </template>

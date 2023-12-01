@@ -21,11 +21,6 @@
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
-        <div>悬浮操作栏</div>
-        <a-switch v-model:checked="getFreeLayoutState.system.isFloatMenu" />
-      </div>
-      <hr class="my-3" />
-      <div class="flex justify-between mb-3">
         <div>卡片叠放</div>
         <a-switch v-model:checked="stack" />
       </div>

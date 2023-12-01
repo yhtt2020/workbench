@@ -66,9 +66,7 @@
               :currentID="currentDesk.id"
               :isDrag="editing"
             >
-
               <template #box="{ data }">
-                {{ currentDesk.id }}
                 <component
                   :desk="currentDesk"
                   :is="data.name"
@@ -81,6 +79,7 @@
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
+        v-else
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -138,6 +137,8 @@
           >
             <template #item="{ item }">
               <div
+                :class="{ editing: editing }"
+                :editing="editing"
                 :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -370,10 +371,9 @@
             v-model:value="globalSettings.cardZoom"
           ></a-slider>
           <hr class="my-3" />
-
           <div class="mb-3">小组件间隙</div>
           <div class="xt-text-2 text-sm my-3">
-            调节小组件之间的间距，默认为 12。
+            调节小组件之间的间距，默认为 5。
           </div>
           <a-slider
             :min="5"
@@ -528,7 +528,6 @@ export default {
         });
       },
     },
-
     currentDesk(newVal) {
       if (!this.isFreeLayout) {
         newVal.layoutSize = this.getLayoutSize();
@@ -543,15 +542,6 @@ export default {
         // }
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
-    },
-    "currentDesk.id": {
-      handler(newVal) {
-        console.log("newVal :>> ", newVal);
-        this.freeLayoutID = newVal;
-      },
-
-      deep: true,
-      immediate: true,
     },
     "currentDesk.settings": {
       handler(newVal) {
@@ -579,33 +569,11 @@ export default {
       },
       deep: true,
     },
-    // isFreeLayout: {
-    //   handler(newVal) {
-    //     if (this.editing && !this.isFreeLayout) {
-    //       this.hide = true;
-    //       setTimeout(() => {
-    //         this.hide = false;
-    //       }, 100);
-    //     }
-    //   },
-    //   immediate: true,
-    // },
-    // editing: {
-    //   handler(newVal) {
-    //     if (this.editing && !this.isFreeLayout) {
-    //       this.hide = true;
-    //       setTimeout(() => {
-    //         this.hide = false;
-    //       }, 100);
-    //     }
-    //   },
-    //   immediate: true,
-    // },
   },
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout", "freeLayoutID"]),
+    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
@@ -724,6 +692,7 @@ export default {
     window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
     console.log("loaded=true");
+    this.resetLayout();
   },
   unmounted() {
     window.removeEventListener("resize", this.resizeHandler);
@@ -731,10 +700,13 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     resetLayout() {
+      console.log("触发了 resetLayout:>> ");
+      // if (this.editing && !this.isFreeLayout) {
       this.hide = true;
       setTimeout(() => {
         this.hide = false;
-      }, 1);
+      }, 100);
+      // }
     },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
@@ -756,6 +728,8 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
+      this.editing = !this.editing;
+      console.log('      this.editing :>> ',       this.editing);
       if (this.editing) {
         message.info("已关闭拖拽调整");
       } else {

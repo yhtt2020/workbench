@@ -1,6 +1,8 @@
 import { defineStore, storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
+
+import dbStorage from "../../../store/dbStorage";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
@@ -8,8 +10,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutData: {},
     // 自由布局状态
     freeLayoutState: {},
-    test: {},
-    freeLayoutID: "",
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -18,12 +18,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       system: {
         // 是否使用自由布局
         isFreeLayout: true,
-        // 是否使用悬浮菜单
-        isFloatMenu: true,
-        floatMenu: {
-          top: 20,
-          left: 20,
-        },
       },
       option: {
         afterDragging: false,
@@ -41,6 +35,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         centerLine: {
           x: 2500,
           y: 2500,
+        },
+        centerLinePosition: {
+          x: "center",
+          y: "top",
         },
       },
       // 画布数据
@@ -130,13 +128,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 初始化自由布局状态数据
     initFreeLayoutState() {
       this.deepMerge(this.getFreeLayoutState, this.defaultState);
-      console.log("初始化数据成功 :>> ", this.getFreeLayoutState);
+      console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
       console.log(
-        "自由布局开始创建 :>> \n当前自由布局ID  :>> ",
+        "自由布局状态开始创建 :>> \n当前自由布局ID  :>> ",
         this.getCurrentDeskId
       );
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
@@ -149,6 +147,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         this.freeLayoutData[this.getCurrentDeskId] = {};
         console.log("自由布局执行初始化 :>> ");
       }
+      this.initFreeLayoutState();
     },
     // 清空自由布局组件数据
     clearFreeLayoutData() {
@@ -185,7 +184,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     strategies: [
       {
         paths: ["freeLayoutData", "freeLayoutState", "test"],
-        storage: localStorage,
+        // storage: localStorage,
+        storage: dbStorage,
       },
     ],
   },

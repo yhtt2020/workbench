@@ -732,6 +732,7 @@ export default {
     stopEdit() {
       this.key = Date.now();
       this.editing = false;
+    console.log('11111 :>> ', 11111);
     },
     addCard() {
       this.$refs.currentDeskRef.newAddCard();
