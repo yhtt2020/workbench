@@ -18,7 +18,7 @@ import { cardStore } from '../../../store/card'
 export default {
   components: {},
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList']),
   },
   data () {
     return {
@@ -85,9 +85,11 @@ export default {
       if (this.tmpData != value && this.noteList.length > 0) {
         // 存在桌面就去修改
         // 定义一个虚拟元素提取文本
-        let tmpDiv = document.createElement('div')
-        tmpDiv.innerHTML = this.contentEditor.getHTML()
-        //let content = tmpDiv.textContent || tmpDiv.innerText || ''
+        // let tmpDiv = document.createElement('div')
+        // tmpDiv.innerHTML = this.contentEditor.getHTML()
+        if(!value){
+          value = this.$refs.vditor.getValue()
+        }
         if (this.noteList[this.selNote].deskName != '') {
           let n = -1
           this.deskList.forEach((item, index) => {

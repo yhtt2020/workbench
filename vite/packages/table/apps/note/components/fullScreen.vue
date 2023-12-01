@@ -80,7 +80,7 @@ export default {
   props: ['changeIsFull', 'selDesk', 'watchEditorValue','menus'],
   watch: {},
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isTrash']),
     ...mapState(appStore, ['userInfo', 'backgroundImage']),
     deskName () {
       if (this.noteList.length) {
@@ -165,7 +165,7 @@ export default {
       }
     },
     changeDesk () {
-      if (!this.isSelTab) {
+      if (!this.isTrash) {
         this.selDesk()
       }
     },

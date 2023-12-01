@@ -147,7 +147,7 @@ export default {
           label: '添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
-            if (!this.isSelTab) {
+            if (!this.isTrash) {
               // 添加到桌面
               this.selDesk()
             } else {
@@ -171,7 +171,7 @@ export default {
                 }
               })
             } else {
-              if (this.isSelTab) {
+              if (this.isTrash) {
                 message.error('该便签已被删除')
               } else {
                 message.error('请先添加桌面')
@@ -184,7 +184,7 @@ export default {
           newIcon: 'akar-icons:trash-can',
           color: '#FF4D4F',
           callBack: () => {
-            if (!this.isSelTab) {
+            if (!this.isTrash) {
               // 删除
               this.moveToTrash()
             } else {
@@ -204,7 +204,7 @@ export default {
       }
     },
     watch: {
-        isSelTab(newval,oldval){
+        isTrash(newval,oldval){
             if (newval) {
                 this.menus[3].label = '还原'
                 this.menus[5].label = '彻底删除'
@@ -217,9 +217,9 @@ export default {
     mounted () {
       // 重置默认数据
       this.selNote = -1
-      this.isSelTab = false
+      this.isTrash = false
       if (this.$route.params.customIndex) {
-          this.isSelTab = false
+          this.isTrash = false
       }
       // 处理从桌面跳转过来的数据 
       this.getNotes().then(()=>{
@@ -234,7 +234,7 @@ export default {
       })
     },
     computed: {
-      ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isSelTab','deskList','selNoteTitle']),
+      ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isTrash','deskList','selNoteTitle']),
       ...mapWritableState(cardStore, ['desks','selIndex']),
     },
     methods: {
