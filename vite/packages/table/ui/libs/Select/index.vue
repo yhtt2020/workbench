@@ -8,6 +8,7 @@
     :dropdownStyle="{
       'z-index': 999999999999,
       backgroundColor: 'var(--secondary-bg)',
+      backgroundColor: 'red',
     }"
   >
     <a-select-option class="no-drag" v-for="item in list" :value="item.value"
@@ -49,4 +50,9 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-select-selector) {
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+</style>
