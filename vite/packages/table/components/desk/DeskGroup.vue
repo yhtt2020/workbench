@@ -618,6 +618,7 @@ export default {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
     getStep() {
       if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) {
         return true;
@@ -751,7 +752,6 @@ export default {
     },
     showMenu() {
       this.$refs.currentDeskRef.showMenu();
-      console.log('object :>> ', this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");
@@ -771,11 +771,16 @@ export default {
         return;
       }
       let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-      let needImportDesk = [];
+      let needImportDesk:any ;
+
       try {
         needImportDesk = JSON.parse(importJsonTxt);
+        const  {desk,  freeLayoutData,  freeLayoutState } =needImportDesk
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        needImportDesk.forEach((g) => {
+         desk.forEach((g) => {
+          let oldId= g.id
+
+
           //修正一下老版本导出的数据
           if (g.cardsHeight) {
             g.deskHeight = g.cardsHeight;
@@ -787,13 +792,18 @@ export default {
             (g.settings.zoom * cardsHeight) /
             g.deskHeight
           ).toFixed();
+
           g.icon = "desktop";
           g.settings.zoom = parseInt(cardZoom);
           g.id = window.$models.nanoid.nanoid(8);
+  if (freeLayoutState[oldId] ) {
+              this.freeLayoutData[g.id] = freeLayoutData[oldId]
+              this.freeLayoutState[g.id] =freeLayoutState[oldId]
+            }
           this.deskList.unshift(g);
         });
         this.addDeskVisible = false;
-        message.success("为您成功导入" + needImportDesk.length + "个桌面。");
+        message.success("为您成功导入" + desk.length + "个桌面。");
       } catch (e) {
         console.warn(e);
         message.error("导入失败，请检查代码。");
