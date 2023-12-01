@@ -88,7 +88,7 @@ export default {
         // let tmpDiv = document.createElement('div')
         // tmpDiv.innerHTML = this.contentEditor.getHTML()
         if(!value){
-          value = this.$refs.vditor.getValue()
+          value = this.contentEditor.getValue()
         }
         if (this.noteList[this.selNote].deskName != '') {
           let n = -1
