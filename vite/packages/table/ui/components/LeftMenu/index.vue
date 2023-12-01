@@ -147,7 +147,9 @@ const fullState = (state) => {
 };
 // 点击事件
 const itemClick = (item) => {
-  if (item?.children) {
+  if (item.full) {
+    return;
+  } if (item?.children) {
     return;
   }
   selectClick(item.id, item.flag);

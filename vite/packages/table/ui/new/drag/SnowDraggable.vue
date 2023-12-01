@@ -17,7 +17,7 @@
           <div>长按开始</div>
           <div>拖拽!👋</div>
         </div> -->
-        <img src="./snow.svg" alt="" style="display: block" />
+        <!-- <img src="./snow.svg" alt="" style="display: block" /> -->
       </slot>
     </div>
   </div>
