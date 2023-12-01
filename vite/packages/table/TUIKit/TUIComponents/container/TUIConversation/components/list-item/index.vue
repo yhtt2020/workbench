@@ -27,9 +27,11 @@
       >
       </div>
 
-      <span class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
-        {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }}
-      </span>
+      <div class="num" v-if="conversation.unreadCount > 0 && conversation.messageRemindType !== 'AcceptNotNotify'">
+         <span :class="conversation.unreadCount > 99 ? 'num-large':'num-small'">
+          {{ conversation.unreadCount > 99 ? '99+' : conversation.unreadCount }} 
+         </span>
+      </div>
 
       <span class="num-notify" v-if="conversation.unreadCount > 0 && conversation.messageRemindType === 'AcceptNotNotify'">
       </span>
