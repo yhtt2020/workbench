@@ -345,6 +345,8 @@ export const noteStore = defineStore("noteStore", {
         await tsbApi.db.put({
           ...tmp[0],
           isDelete:true,
+          deskId:'',
+          deskName:'',
         })
       }
       this.selNote=-1

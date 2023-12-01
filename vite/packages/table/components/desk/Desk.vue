@@ -754,6 +754,12 @@ export default {
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
+
+            // console.log(desk.cards);
+            // desk.cards.forEach(item=>{
+            //   console.log(item);
+            // })
+            
             desk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();

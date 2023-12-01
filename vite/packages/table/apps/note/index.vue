@@ -193,6 +193,7 @@
     mounted () {
       // 重置默认数据
       this.selNote = -1
+      this.isSelTab = false
       if (this.$route.params.customIndex) {
           this.isSelTab = false
       }
