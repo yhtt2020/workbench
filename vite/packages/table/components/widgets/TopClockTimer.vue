@@ -3,7 +3,7 @@
     <div style="position: absolute; top: 31px;z-index: 1000;">
         <!-- 闹钟设置界面 -->
         <div v-show="clockSettingVisible"
-            style="position: absolute;left:-330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2); "
+            style="position: absolute;left:330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2); "
             class="p-3 rounded-lg xt-bg-2">
             <vue-custom-scrollbar :settings="outerSettings"
                 style="position: relative; height: 520px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -68,7 +68,7 @@
         </div>
         <!-- 倒计时设置界面 -->
         <div v-show="countDownVisible"
-            style="position: absolute; left:-330px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);"
+            style="position: absolute; left:310px;top: -1px;box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);"
             class="p-3 rounded-lg xt-bg-2">
             <vue-custom-scrollbar :settings="outerSettings"
                 style="position: relative; height: 400px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -207,24 +207,28 @@
     </div>
 
     <!-- `linear-gradient(to-right,${currentColor.value} ${100-progress.value}% ,${targetColor.value} ${progress.value}%)` -->
-    <div style="position: relative" class="no-drag">
-        <xt-button class="mr-3 rounded-md clock-timer progress-bar" @click="closeDetail"
-            v-if="useCountDownStore.countDowntime.hours !== undefined" style="width: 150px; height: 30px;"
-            :style="{ background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  ` }">
+    <div style="position: relative" class="no-drag" v-if="topClockVisible">
+        <xt-button class="mr-3 rounded-md xt-bg-t-2 p-1 clock-timer progress-bar" @click="closeDetail"  h="28"
+            v-if="useCountDownStore.countDowntime.hours !== undefined"  style="width:auto !important;"
+            :style="{ 
+                background: `linear-gradient(to-right, var(--secondary-bg) ${100 - useCountDownStore.progress}%, var(--warning) ${useCountDownStore.progress}%)  `,
+                'border-radius':'6px', padding:'4px !important'
+            }"
+        >
             <div class="flex items-center" >
-                <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
-                <div class="mr-1 xt-text font-14">倒计时</div>
-                <div class="xt-text font-14">{{ useCountDownStore.countDowntime.hours }} : {{
-                    useCountDownStore.countDowntime.minutes }} : {{ useCountDownStore.countDowntime.seconds }}</div>
+                <clockIcon icon="fluent:clock-16-regular" style="font-size: 1.25rem;" class="mr-1 text-base"></clockIcon>
+                <div class="xt-text font-14">
+                    {{ useCountDownStore.countDowntime.hours }}:{{useCountDownStore.countDowntime.minutes }}:{{ useCountDownStore.countDowntime.seconds }}
+                </div>
             </div>
-
         </xt-button>
-        <xt-button class="mr-3 rounded-md clock-timer top-bar" v-else @click="closeDetail" :throttleTime="0"
-            style="width: 82px; height: 30px;background: rgba(80,139,254,0.20);">
+        <xt-button class="mr-3 rounded-md xt-bg-t-2 p-1  clock-timer top-bar" v-else @click="closeDetail" :throttleTime="0"
+            style="width:auto !important;border-radius: 6px !important; padding: 4px !important;" h="28">
             <div class="flex items-center">
-                <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-1 text-base"></clockIcon>
-                <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">{{ firstClockTime?.hours }} : {{
-                    firstClockTime?.minutes }} </div>
+                <clockIcon icon="fluent:clock-alarm-16-regular"  style="font-size: 1.25rem;" class="mr-1 text-base"></clockIcon>
+                <div class="xt-text font-14" v-if="firstClockTime?.hours !== undefined">
+                    {{ firstClockTime?.hours }}:{{firstClockTime?.minutes }} 
+                </div>
             </div>
         </xt-button>
         <!-- <button v-else @click="test">1111</button> -->
@@ -313,6 +317,15 @@ const heightScorll=computed(()=>{
         return 'calc(100% - 56px)'
     }
 })
+
+const topClockVisible=computed(()=>{
+    if(useCountDownStore.countDowntime.minutes || firstClockTime.value){
+        return true
+    }else{
+        return false
+    }
+})
+
 const addSettingClock = () => {
     if (eventValue.value === "") {
         if (flag.value !== true) return;

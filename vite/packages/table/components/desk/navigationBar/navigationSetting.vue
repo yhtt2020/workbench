@@ -1,7 +1,6 @@
 <template>
-    <!-- <Modal  v-model:visible="settingVisible" :maskNoClose="true" > -->
-    <xt-old-modal :isFooter="false" zIndex="9" :isHeader="false" :boxIndex="100" :maskIndex="99">
-        <div class="w-[400px] h-[484px]  rounded-xl pl-4 pr-4 pb-4  wuzi">
+    <Modal :zIndex="99" :maskNoClose="true" v-model:visible="settingVisible" :blurFlag="false">
+        <div class="w-[420px] h-[583px]  rounded-xl p-4">
             <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="ml-8 text-base xt-text">导航栏设置</div>
@@ -15,14 +14,39 @@
             </div>
             <div class="w-full h-[215px] xt-bg-2 rounded-xl p-3 mt-3">
                 <div v-for="(item, index) in navigationPosition">
-                    <settingItem :settingItem="item" :index="index" :position="true"></settingItem>
+                    <div class="flex justify-between w-full">
+                        <div class="text-base xt-text">{{ item.title }}</div>
+                        <a-switch  v-model:checked="useNavStore.navigationToggle[index]" />
+                    </div>
+                    <!-- {{ navigationStore.bottomToggle[0] }} -->
+                    <div class="mt-2 text-sm xt-text-2">
+                        {{ item.description }}
+                    </div>
                     <div class="w-full h-[1px] bg-[var(--divider)] mt-2 mb-2" v-if="index != navigationPosition.length - 1">
                     </div>
                 </div>
             </div>
-            <div class="w-full h-[215px] xt-bg-2 rounded-xl mt-3 p-3">
+            <div class="w-full h-[280px] xt-bg-2 rounded-xl mt-3 p-3">
                 <div v-for="(item, index) in navigationFunction">
-                    <settingItem :settingItem="item" :index="index" :position="false"></settingItem>
+                    <div v-if="item.tag!=='chat'" class="w-full">
+                        <div class="flex justify-between w-full" >
+                        <div class="text-base xt-text">{{ item.title }}</div>
+                        <a-switch  v-model:checked="navigationStore.bottomToggle[index]" />
+                    </div>
+                    <div class="mt-2 text-sm xt-text-2">
+                        {{ item.description }}
+                    </div>
+                    </div>
+                    <div v-else class="w-full">
+                        <div class="flex justify-between w-full" >
+                        <div class="text-base xt-text">{{ item.title }}</div>
+                        <a-switch  v-model:checked="useAppStore.settings.enableChat" />
+                    </div>
+                    <div class="mt-2 text-sm xt-text-2">
+                        {{ item.description }}
+                    </div>
+                    </div>
+                    
                     <div class="w-full h-[1px] bg-[var(--divider)] mt-2 mb-2" v-if="index != navigationFunction.length - 1">
                     </div>
                 </div>
@@ -30,27 +54,36 @@
 
         </div>
         <!-- </Modal> -->
-    </xt-old-modal>
+    </Modal>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,onBeforeMount } from 'vue'
+import { ref, reactive, onBeforeMount,watch } from 'vue'
 import { navigationPosition, navigationFunction } from './index'
+import { useNavigationStore } from './navigationStore';
 import settingItem from './settingItem.vue';
+import { appStore } from '../../../store';
 import { Icon as newIcon } from '@iconify/vue';
-import {navStore} from '../../../store/nav'
+import { navStore } from '../../../store/nav'
+import Modal from '../../Modal.vue';
 const useNavStore = navStore()
+const useAppStore=appStore()
+const navigationStore=useNavigationStore()
+const settingVisible = ref(true)
 const emit = defineEmits(['setQuick'])
 const close = () => {
     emit('setQuick')
 }
-const navigationSwitch=ref([])
-onBeforeMount(() => {
-    navigationSwitch.value=navigationPosition.map((item,index)=>{
-        item.switch=useNavStore.navigationToggle[index]
-        return item
-    })
-    // console.log(navigationSwitch.value)
-})
+// onBeforeMount(()=>{
+//     bottomList.value=[...navigationStore.bottomToggle,useAppStore.settings.enableChat]
+// })
+// const bottomList=ref([])
+// watch(()=>navigationStore.bottomToggle,(val)=>{
+    
+//     bottomList.value=[...val,useAppStore.settings.enableChat]
+// })
+// watch(()=>useAppStore.settings.enableChat,(val)=>{
+//     bottomList.value=[...navigationStore.bottomToggle,val]
+// })
 </script>
 <style lang='scss' scoped></style>

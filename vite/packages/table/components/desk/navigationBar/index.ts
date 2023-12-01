@@ -19,14 +19,22 @@ export const navigationFunction=[
     {
         title:'用户中心',
         description:'在工作台底部显示用户中心',
+        tag:'user',
     },
     {
         title:'社区助手',
         description:'在工作台底部显示社区助手',
+        tag:'community',
     },
     {
         title:'任务中心',
         description:'在工作台底部显示任务中心',
+        tag:'task',
+    },
+    {
+        title:'社群沟通',
+        description:'在工作台底部显示社群沟通',
+        tag:'chat',
     }
 ]
 
@@ -38,15 +46,16 @@ export const extraRightMenu =  [
 
     },
     {
-        title:'编辑导航',
-        icon:"fluent:compose-16-regular",
-        component:'editNavigation',
-    },
-    {
         title:'导航栏设置',
         icon:'fluent:settings-16-regular',
         component:'navigationSetting',
-    }
+    },
+    {
+        title:'隐藏当前导航',
+        icon:'fluent:eye-off-16-regular',
+        visible:true,
+        tag:'hide',
+    },
 ]
 
 export const moreMenus = [
@@ -68,6 +77,12 @@ export const moreMenus = [
         icon:"fluent:task-list-square-16-regular",
         visible:true,
         tag:'task'
+    },
+    {
+        title:'显示社群沟通',
+        icon:"fluent:chat-16-regular",
+        visible:true,
+        tag:'chat'
     }
 ] 
 
@@ -290,15 +305,15 @@ export const doc=[
 
 export const addIconPosition=[
     {
-        title:'左侧',
+        title:'左侧导航',
         value:'left'
     },
     {
-        title:'右侧',
+        title:'右侧导航',
         value:'right'
     },
     {
-        title:'底部',
+        title:'底部导航',
         value:'foot'
     }
 ]

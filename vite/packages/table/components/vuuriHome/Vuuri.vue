@@ -25,9 +25,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { GridEvent } from './GridEvent'
 import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
-import { deckStore } from '../../apps/deck/store'
-import { message } from 'ant-design-vue'
-
+import _ from 'lodash-es'
 export default {
   name: 'Vuuri',
   date(){
@@ -163,16 +161,16 @@ export default {
     /**
      * Manually update the items in the muuri grid
      */
-    update (callback) {
-      this.$nextTick(() => {
-        this.muuri
-          .refreshItems()
-          .layout(true, () => this.$emit('updated')).synchronize()
-        this.$nextTick(()=>{
-          callback&&callback()
+    update: _.debounce((callback)=>{
+        this.$nextTick(() => {
+          this.muuri
+            .refreshItems()
+            .layout(true, () => this.$emit('updated')).synchronize()
+          this.$nextTick(()=>{
+            callback&&callback()
+          })
         })
-      })
-    },
+    },1000),
     /**
      * Prepares the muuri instance
      * @private
@@ -534,7 +532,7 @@ export default {
       this._registerEvents()
     })
   },
-  beforeDestroy () {
+  unmounted () {
     this._unregisterEvents()
     this.$emit('on-destroy', this)
   }

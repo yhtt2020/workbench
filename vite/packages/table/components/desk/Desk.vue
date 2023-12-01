@@ -45,6 +45,7 @@
       @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect"
       @exit="toggleEditing"
+      @resetLayout="resetLayout"
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
@@ -60,7 +61,11 @@
       >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer :currentDesk="currentDesk" :isDrag="editing">
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :currentID="currentDesk.id"
+              :isDrag="editing"
+            >
               <template #box="{ data }">
                 <component
                   :desk="currentDesk"
@@ -110,52 +115,62 @@
           }"
           :class="notTrigger ? 'trigger' : ''"
         >
-            <vuuri v-show="showGrid"
-              :key="key"
-              v-if="currentDesk.cards.length>0 && !hide "
-              item-key="id"
-              :get-item-margin="
+          <vuuri
+            v-show="showGrid"
+            :key="key"
+            v-if="currentDesk.cards.length > 0 && !hide"
+            item-key="id"
+            :get-item-margin="
               () => {
                 return usingSettings.cardMargin * this.adjustZoom + 'px';
               }
             "
-              group-id="grid.id"
-              :drag-enabled="editing"
-              v-model="currentDesk.cards"
-              :style="{
+            group-id="grid.id"
+            :drag-enabled="editing"
+            v-model="currentDesk.cards"
+            :style="{
               width: settings.vDirection ? '100%' : 'auto',
               height: settings.vDirection ? 'auto' : '100%',
             }"
-              class="grid home-widgets"
-              ref="grid"
-              :options="muuriOptions"
-            >
-              <template #item="{ item }">
-                <div
-                  :style="{
+            class="grid home-widgets"
+            ref="grid"
+            :options="muuriOptions"
+          >
+            <template #item="{ item }">
+              <div
+                :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
                     100
                   ).toFixed(2),
                 }"
-                >
-                  <component
-                    :desk="currentDesk"
-                    :is="item.name"
-                    :customIndex="item.id"
-                    :customData="item.customData"
-
-                  ></component>
-                </div>
-              </template>
-            </vuuri>
-          <div class="xt-text" v-show="!showGrid" style="text-align: center;font-size: 32px;margin: auto;position: fixed;top: 50%;transform: translateY(-50%) translateX(-50%);left: 50%;">
+              >
+                <component
+                  :desk="currentDesk"
+                  :is="item.name"
+                  :customIndex="item.id"
+                  :customData="item.customData"
+                ></component>
+              </div>
+            </template>
+          </vuuri>
+          <div
+            class="xt-text"
+            v-show="!showGrid"
+            style="
+              text-align: center;
+              font-size: 32px;
+              margin: auto;
+              position: fixed;
+              top: 50%;
+              transform: translateY(-50%) translateX(-50%);
+              left: 50%;
+            "
+          >
             <loading-outlined />
           </div>
-
         </div>
       </vue-custom-scrollbar>
-
     </RightMenu>
   </div>
 
@@ -304,7 +319,7 @@
             开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
           </div>
           <template v-if="settings.enableZoom">
-            <div class="mb-3">卡片缩放222</div>
+            <div class="mb-3">卡片缩放</div>
             <a-slider
               @afterChange="update"
               :min="20"
@@ -409,7 +424,7 @@ import { message, Modal } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
-import {LoadingOutlined} from '@ant-design/icons-vue'
+import { LoadingOutlined } from "@ant-design/icons-vue";
 import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import componentsMinis from "./components.ts";
@@ -418,7 +433,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-  components:{LoadingOutlined},
+  components: { LoadingOutlined },
   props: {
     freeLayout: {
       default: true,
@@ -501,20 +516,20 @@ export default {
     },
   },
   watch: {
-    loaded:{
-      handler(){
-       this.$nextTick(()=>{
-         setTimeout(()=>{
-           if(!window.showed){
-             window.showed=true
-           }
-           this.showGrid=true
-         },800)
-       })
-      }
+    loaded: {
+      handler() {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            if (!window.showed) {
+              window.showed = true;
+            }
+            this.showGrid = true;
+          }, 800);
+        });
+      },
     },
     currentDesk(newVal) {
-      if(!this.isFreeLayout){
+      if (!this.isFreeLayout) {
         newVal.layoutSize = this.getLayoutSize();
         // if (!newVal.settings) {
         //   newVal.settings=
@@ -530,7 +545,7 @@ export default {
     },
     "currentDesk.settings": {
       handler(newVal) {
-        if(!this.isFreeLayout) {
+        if (!this.isFreeLayout) {
           console.log();
           if (!newVal) {
             newVal = {
@@ -554,21 +569,28 @@ export default {
       },
       deep: true,
     },
-    editing: {
-      handler(newVal) {
-        // if (this.isFreeLayout) {
-        //   this.hide = true;
-        // } else
-         if (newVal && !this.isFreeLayout) {
-          this.hide = true;
-          setTimeout(() => {
-            this.hide = false;
-          }, 100);
-        } else if (!this.isFreeLayou) {
-        }
-      },
-      immediate: true,
-    },
+    // isFreeLayout: {
+    //   handler(newVal) {
+    //     if (this.editing && !this.isFreeLayout) {
+    //       this.hide = true;
+    //       setTimeout(() => {
+    //         this.hide = false;
+    //       }, 100);
+    //     }
+    //   },
+    //   immediate: true,
+    // },
+    // editing: {
+    //   handler(newVal) {
+    //     if (this.editing && !this.isFreeLayout) {
+    //       this.hide = true;
+    //       setTimeout(() => {
+    //         this.hide = false;
+    //       }, 100);
+    //     }
+    //   },
+    //   immediate: true,
+    // },
   },
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
@@ -619,15 +641,21 @@ export default {
         },
         {
           id: 6,
+          newIcon: "lets-icons:full" ,
+          name: "全屏桌面",
+          fn: this.setFullScreen,
+        },
+        {
+          id: 7,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
           name: this.hide ? "显示小组件" : "隐藏小组件",
           fn: this.hide ? this.showDesk : this.hideDesk,
         },
-        { id: 7, divider: true },
+        { id: 8, divider: true },
         {
-          id: 8,
+          id: 9,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,
@@ -649,8 +677,8 @@ export default {
   },
   data() {
     return {
-      showGrid:false,
-      loaded:false,
+      showGrid: false,
+      loaded: false,
       vurriEnable: false,
       freeDeskEdit: false,
       freeDeskState: false,
@@ -682,23 +710,27 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    if(window.showed){
-      this.showGrid=true
+    if (window.showed) {
+      this.showGrid = true;
     }
     this.resizeHandler = () => {
       this.currentDesk.layoutSize = this.getLayoutSize();
     };
-      this.getLayoutSize();
+    this.getLayoutSize();
     window.addEventListener("resize", this.resizeHandler);
     this.loaded=true
-    console.log('loaded=true')
   },
   unmounted() {
     window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
-
+    resetLayout() {
+      this.hide = true;
+      setTimeout(() => {
+        this.hide = false;
+      }, 1);
+    },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
     },
@@ -712,6 +744,7 @@ export default {
     },
     update(callback) {
       if (this.$refs.grid) {
+        console.log('☆执行desk的update')
         this.$refs.grid.update(callback);
       }
     },
@@ -831,7 +864,7 @@ export default {
      * @returns {{width: number, height: number}}
      */
     getLayoutSize() {
-      if(!this.isFreeLayout) {
+      if (!this.isFreeLayout) {
         this.currentDesk.layoutSize = {
           width: this.$refs.deskContainer.clientWidth,
           height: this.$refs.deskContainer.clientHeight,

@@ -1,181 +1,205 @@
 <template>
-    <div class="mr-3 h-full overflow-hidden" style="min-width: 400px;">
-      <LeftTab>
-          <div class="h-full w-full flex">
-              <div class="flex h-full">
-              <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
-              </div>
-              <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-                <NodeContent :menus="menus" :selDesk="selDesk" v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
-              </div>
-          </div>
-      </LeftTab>
-      <Modal v-if="promptVisible" blurFlag="true" style="z-index:99999;"  >
-        <div class="p-5 pt-1 pb-1 flex flex-col justify-center" style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);">
-          <div  style="width:100%;height:46px;position:relative;color: var(--primary-text);">
-            <div class='flex h-full items-center justify-center font-16'>添加到桌面</div>
-            <div class="flex justify-center items-center pointer btn-active" style='position:absolute;top:-5px;right:-7px;background: var(--secondary-bg);border-radius: 10px;width:40px;height:40px;' @click='promptVisible=false'>
-              <Icon :icon="icons.dismiss16Filled" />
-            </div>
-          </div>
-          <div class="mt-1">
-            <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
-            <div style="background: var(--secondary-bg);border-radius: 10px; padding: 10px 12px;color: var(--primary-text);">将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。</div>
-            <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
-              <div class="w-full flex items-center rounded-lg pointer" 
-                style="height: 64px;background: var(--secondary-bg);justify-content: space-between;padding: 0 24px;" 
-                v-for="(item,index) in this.desks" 
-                :key="index" 
-                :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : 'var(--secondary-bg)',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
-                'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
-                 
-                @click="changeSelIndex(index)">
-                <div style="font-size: 16px;color: var(--primary-text);" class="flex items-center">
-                  <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" class="mr-4"/>
-                  {{ item.name }}
-                </div>
-                <!-- <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div> -->
-                
-              </div>
-            </div>
-          </div>
-          <div class='flex font-16 mt-2' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
-            <xt-button style="width: 64px;height:40px;" class="mr-3" @click="this.promptVisible = false">取消</xt-button>
-            <xt-button style="width: 64px;height:40px;" class="xt-active-btn" @click="changeDesk">选择</xt-button>
+  <div class="mr-3 h-full overflow-hidden" style="min-width: 400px;">
+    <LeftTab>
+      <div class="h-full w-full flex">
+        <div class="flex h-full">
+          <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
+        </div>
+        <div class="flex h-full flex-col w-full" style="min-width: 400px;">
+          <NodeContent :menus="menus" :selDesk="selDesk"
+                       v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
+        </div>
+      </div>
+    </LeftTab>
+    <Modal v-if="promptVisible" blurFlag="true" style="z-index:99999;">
+      <div class="p-5 pt-1 pb-1 flex flex-col justify-center"
+           style="width:500px;height:516px;border-radius:12px;border: 1px solid rgba(255,255,255,0.1);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);">
+        <div style="width:100%;height:46px;position:relative;color: var(--primary-text);">
+          <div class='flex h-full items-center justify-center font-16'>添加到桌面</div>
+          <div class="flex justify-center items-center pointer btn-active"
+               style='position:absolute;top:-5px;right:-7px;background: var(--secondary-bg);border-radius: 10px;width:40px;height:40px;'
+               @click='promptVisible=false'>
+            <Icon :icon="icons.dismiss16Filled"/>
           </div>
         </div>
+        <div class="mt-1">
+          <!-- <div class="mb-4">我的桌面（{{ this.desks.length }}）</div> -->
+          <div
+            style="background: var(--secondary-bg);border-radius: 10px; padding: 10px 12px;color: var(--primary-text);">
+            将当前便签添加到指定桌面，你可以再桌面上快速查看和编辑。
+          </div>
+          <div class="overflow-hidden xt-scrollbar mt-3" style="height: 336px;">
+            <div class="w-full flex items-center rounded-lg pointer"
+                 style="height: 64px;background: var(--secondary-bg);justify-content: space-between;padding: 0 24px;"
+                 v-for="(item,index) in this.desks"
+                 :key="index"
+                 :style="{background: this.selIndex == index? 'rgba(80,139,254,0.20)' : 'var(--secondary-bg)',border:this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' ,
+                'margin-bottom': index == this.desks.length-1? '0' : '16px'}"
+
+                 @click="changeSelIndex(index)">
+              <div style="font-size: 16px;color: var(--primary-text);" class="flex items-center">
+                <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" class="mr-4"/>
+                {{ item.name }}
+              </div>
+              <!-- <div style="font-size: 14px;color: var(--secondary-text);">主页桌面</div> -->
+
+            </div>
+          </div>
+        </div>
+        <div class='flex font-16 mt-2' style='color: rgba(255,255,255,0.60);width:100%;justify-content: flex-end;'>
+          <xt-button style="width: 64px;height:40px;" class="mr-3" @click="this.promptVisible = false">取消</xt-button>
+          <xt-button style="width: 64px;height:40px;" class="xt-active-btn" @click="changeDesk">选择</xt-button>
+        </div>
+      </div>
+    </Modal>
+    <teleport to="body">
+
+      <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
+        <div class="p-6 flex" style="width: 600px">
+          <history-list :noteId="noteList[selNote]._id"></history-list>
+        </div>
+
       </Modal>
 
-    </div>
-  
-  </template>
-  
-  <script>
-  import NodeContent from "./components/nodeContent.vue";
-  import LeftTab from "./components/leftTab.vue";
-  import LeftSearch from "./components/leftSearch.vue";
-  import {mapActions, mapState,mapWritableState} from "pinia";
-  import { noteStore } from './store'
-  import Modal from '../../components/Modal.vue'
-  import { Icon } from '@iconify/vue';
-  import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled';
-  import { cardStore } from '../../store/card'
-  import { message } from 'ant-design-vue';
+    </teleport>
+  </div>
 
-  export default {
-    name: 'note',
-    components:{
-        LeftTab,
-        LeftSearch,
-        NodeContent,
-        Modal,
-        Icon,
-    },
-    props:{
-      customIndex:String
-    },
-    data () {
-      return {
-        // 右键菜单
-        
-        menus:[
-          // { 
-          //     label: "小窗模式", 
-          //     // callBack: this.callBack, 
-          //     newIcon: "fluent:window-multiple-16-filled",
-          // },
-          {
-            newIcon: 'fluent:copy-20-regular',
-            label: '复制内容',
-            callBack: () => {
-              // let content = this.$refs.mdEditor.getContent()
-              
-              let content = this.noteList[this.selNote]?.customData.text
-              require('electron').clipboard.writeHTML(content)
-              message.success('复制内容成功')
-              console.log(content, 'md内容')
-            }
-          },
-          {
-            newIcon: 'fluent:markdown-20-regular',
-            label: '复制MD文本',
-            callBack: () => {
-              let content = this.noteList[this.selNote]?.customData.text
-              // let content = this.$refs.mdEditor.getMarkdown()
-              require('electron').clipboard.writeText(content)
-              message.success('复制内容成功')
-              console.log(content, 'md内容')
-            }
-          },
-          {
-            newIcon: 'fluent:clipboard-code-24-regular',
-            label: '复制HTML代码',
-            callBack: () => {
-              let content = this.noteList[this.selNote]?.customData.text
-              // let content = this.$refs.mdEditor.getContent()
-              require('electron').clipboard.writeText(content)
-              message.success('复制内容成功')
-              console.log(content, 'md内容')
-            }
-          },
-          {
-              label: '添加到桌面', 
-              callBack: ()=>{
-                  // 修改当前选中桌面
-                  if (!this.isSelTab) {
-                      // 添加到桌面
-                      this.selDesk()
-                  }else{
-                      // 还原
-                      this.restore()
-                  }
-              }, 
-              newIcon: "fluent:open-20-filled",
-          },
-          { 
-              label: "跳转到桌面", 
-              newIcon: "majesticons:monitor-line",
-              callBack:()=>{
-                  if (this.noteList[this.selNote].deskName) {
-                      this.deskList?.forEach((item,index)=>{
-                          if (this.noteList[this.selNote].deskId == item.id) {
-                              this.currentDeskId = item.id
-                              this.$router.push({
-                                  name:'home',
-                              })
-                          }
-                      })
-                  }else{
-                      if (this.isSelTab) {
-                          message.error('该便签已被删除')
-                      }else{
-                          message.error('请先添加桌面')
-                      }
-                  }
-              }
-          },
-          { 
-            label: '删除便签', 
-            newIcon: "akar-icons:trash-can",
-            color:'#FF4D4F',
-            callBack:()=>{
-                if (!this.isSelTab) {
-                    // 删除
-                    this.moveToTrash()
-                }else{
-                    // 彻底删除
-                    this.deleteNote()
+</template>
 
-                }
-            }
-          },
-      ],
-        icons: {
-          dismiss16Filled,
+<script>
+import NodeContent from './components/nodeContent.vue'
+import LeftTab from './components/leftTab.vue'
+import LeftSearch from './components/leftSearch.vue'
+import { mapActions, mapState, mapWritableState } from 'pinia'
+import { noteStore } from './store'
+import Modal from '../../components/Modal.vue'
+import { Icon } from '@iconify/vue'
+import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled'
+import { cardStore } from '../../store/card'
+import { message } from 'ant-design-vue'
+import HistoryList from './components/HistoryList.vue'
+
+export default {
+  name: 'note',
+  components: {
+    HistoryList,
+    LeftTab,
+    LeftSearch,
+    NodeContent,
+    Modal,
+    Icon,
+  },
+  props: {
+    customIndex: String
+  },
+  data () {
+    return {
+      // 右键菜单
+      showVersion: false,
+      menus: [
+        // {
+        //     label: "小窗模式",
+        //     // callBack: this.callBack,
+        //     newIcon: "fluent:window-multiple-16-filled",
+        // },
+        {
+          label: '版本历史',
+          callBack: async () => {
+            this.showVersion = true
+
+          }
         },
-        // 弹窗
-        promptVisible:false,
+        {
+          newIcon: 'fluent:copy-20-regular',
+          label: '复制内容',
+          callBack: () => {
+            // let content = this.$refs.mdEditor.getContent()
 
+            let content = this.noteList[this.selNote]?.customData.text
+            require('electron').clipboard.writeHTML(content)
+            message.success('复制内容成功')
+            console.log(content, 'md内容')
+          }
+        },
+        {
+          newIcon: 'fluent:markdown-20-regular',
+          label: '复制MD文本',
+          callBack: () => {
+            let content = this.noteList[this.selNote]?.customData.text
+            // let content = this.$refs.mdEditor.getMarkdown()
+            require('electron').clipboard.writeText(content)
+            message.success('复制内容成功')
+            console.log(content, 'md内容')
+          }
+        },
+        {
+          newIcon: 'fluent:clipboard-code-24-regular',
+          label: '复制HTML代码',
+          callBack: () => {
+            let content = this.noteList[this.selNote]?.customData.text
+            // let content = this.$refs.mdEditor.getContent()
+            require('electron').clipboard.writeText(content)
+            message.success('复制内容成功')
+            console.log(content, 'md内容')
+          }
+        },
+        {
+          label: '添加到桌面',
+          callBack: () => {
+            // 修改当前选中桌面
+            if (!this.isSelTab) {
+              // 添加到桌面
+              this.selDesk()
+            } else {
+              // 还原
+              this.restore()
+            }
+          },
+          newIcon: 'fluent:open-20-filled',
+        },
+        {
+          label: '跳转到桌面',
+          newIcon: 'majesticons:monitor-line',
+          callBack: () => {
+            if (this.noteList[this.selNote].deskName) {
+              this.deskList?.forEach((item, index) => {
+                if (this.noteList[this.selNote].deskId == item.id) {
+                  this.currentDeskId = item.id
+                  this.$router.push({
+                    name: 'home',
+                  })
+                }
+              })
+            } else {
+              if (this.isSelTab) {
+                message.error('该便签已被删除')
+              } else {
+                message.error('请先添加桌面')
+              }
+            }
+          }
+        },
+        {
+          label: '删除便签',
+          newIcon: 'akar-icons:trash-can',
+          color: '#FF4D4F',
+          callBack: () => {
+            if (!this.isSelTab) {
+              // 删除
+              this.moveToTrash()
+            } else {
+              // 彻底删除
+              this.deleteNote()
+
+            }
+          }
+        },
+      ],
+      icons: {
+        dismiss16Filled,
+      },
+      // 弹窗
+      promptVisible: false,
 
       }
     },
