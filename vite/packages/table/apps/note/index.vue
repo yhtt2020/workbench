@@ -96,7 +96,41 @@ export default {
     return {
       // 右键菜单
       showVersion: false,
-      menus: [
+
+      icons: {
+        dismiss16Filled,
+      },
+      // 弹窗
+      promptVisible: false,
+
+    }
+  },
+  watch: {
+
+  },
+  mounted () {
+    // 重置默认数据
+    this.selNote = -1
+    if (this.$route.params.customIndex) {
+      this.isSelTab = false
+    }
+    // 处理从桌面跳转过来的数据
+    this.getNotes().then(() => {
+      if (this.$route.params.customIndex) {
+        this.noteList.forEach((item, index) => {
+          if (item.id == this.$route.params.customIndex) {
+            this.selNote = index
+            this.selNoteTitle = this.noteList[this.selNote]?.customData.title
+          }
+        })
+      }
+    })
+  },
+  computed: {
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isSelTab', 'deskList', 'selNoteTitle']),
+    ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    menus(){
+      return [
         // {
         //     label: "小窗模式",
         //     // callBack: this.callBack,
@@ -144,7 +178,7 @@ export default {
           }
         },
         {
-          label: '添加到桌面',
+          label: !this.isSelTab?'添加到桌面':'还原',
           callBack: () => {
             // 修改当前选中桌面
             if (!this.isSelTab) {
@@ -180,7 +214,7 @@ export default {
           }
         },
         {
-          label: '删除便签',
+          label: !this.isSelTab?'删除':'彻底删除',
           newIcon: 'akar-icons:trash-can',
           color: '#FF4D4F',
           callBack: () => {
@@ -194,47 +228,8 @@ export default {
             }
           }
         },
-      ],
-      icons: {
-        dismiss16Filled,
-      },
-      // 弹窗
-      promptVisible: false,
-
+      ]
     }
-  },
-  watch: {
-    isSelTab (newval, oldval) {
-      if (newval) {
-        this.menus[3].label = '还原'
-        this.menus[5].label = '彻底删除'
-      } else {
-        this.menus[3].label = '添加到桌面'
-        this.menus[5].label = '删除便签'
-      }
-    }
-  },
-  mounted () {
-    // 重置默认数据
-    this.selNote = -1
-    if (this.$route.params.customIndex) {
-      this.isSelTab = false
-    }
-    // 处理从桌面跳转过来的数据
-    this.getNotes().then(() => {
-      if (this.$route.params.customIndex) {
-        this.noteList.forEach((item, index) => {
-          if (item.id == this.$route.params.customIndex) {
-            this.selNote = index
-            this.selNoteTitle = this.noteList[this.selNote]?.customData.title
-          }
-        })
-      }
-    })
-  },
-  computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isSelTab', 'deskList', 'selNoteTitle']),
-    ...mapWritableState(cardStore, ['desks', 'selIndex']),
   },
   methods: {
     ...mapActions(noteStore, ['getNotes', 'switchDesk', 'selDesk', 'restore', 'moveToTrash', 'deleteNote']),
