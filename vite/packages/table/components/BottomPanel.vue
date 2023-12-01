@@ -32,7 +32,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-        z-index: 99;
+        /* z-index: 99; */
       ">
         <div style="
           display: flex;
@@ -356,7 +356,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       rightMenus: [
