@@ -149,7 +149,6 @@
         <xt-button class="xt-bg mr-3" w="204" h="40" :copy="copyData">
           分享自由布局</xt-button
         >
-
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>
@@ -204,7 +203,7 @@ const copyData = computed(() => {
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
-  console.log('开始构建自由布局 :>> ', );
+  console.log("开始构建自由布局 :>> ");
   freeLayoutStore.renewFreeLayout();
 });
 
@@ -243,8 +242,6 @@ watch(
     debounceScrollbarUpdate();
   }
 );
-
-
 </script>
 
 <style lang="scss" scoped></style>

@@ -18,6 +18,7 @@ const {
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
+  freeLayoutID,
   test,
 } = storeToRefs(freeLayoutStore);
 onMounted(() => {});
@@ -59,6 +60,13 @@ async function getPosition(item) {
       name,
       customData,
     };
+
+    if (freeLayoutData.value[getCurrentDeskId.value][id]) {
+      console.log(
+        "新数据赋值成功 :>> ",
+        freeLayoutData.value[getCurrentDeskId.value][id]
+      );
+    }
   }
 }
 
@@ -91,8 +99,7 @@ function updateCard(data) {
         customData,
       };
     } else {
-      console.log("新数据处理 :>> ");
-      freeLayoutData.value[currentID.value][id] = {
+      freeLayoutData.value[getCurrentDeskId.value][id] = {
         left: 0,
         top: 0,
         index: 1,
@@ -100,6 +107,7 @@ function updateCard(data) {
         name,
         customData,
       };
+
       await getPosition(item);
     }
   });
@@ -168,6 +176,11 @@ watch(
       }"
       :handle="isDrag ? '' : '.#123'"
     >
+      <xt-button
+        >{{ currentID }} --- {{ freeLayoutID }}--{{
+          getCurrentDeskId
+        }}</xt-button
+      >
       <slot name="box" :data="{ ...item }"></slot>
     </xt-drag>
   </template>

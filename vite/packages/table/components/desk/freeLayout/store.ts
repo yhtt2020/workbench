@@ -9,6 +9,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 自由布局状态
     freeLayoutState: {},
     test: {},
+    freeLayoutID: "",
     // 拖拽时的数据
     dragData: {},
     // 默认状态数据
@@ -134,23 +135,19 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 更新自由布局数据
     renewFreeLayout() {
       // 如果自由布局数据存在进行切换
-      console.log("自由布局创建 :>> ");
-      console.log(" this.freeLayoutState :>> ", this.freeLayoutState);
-      console.log("this.getCurrentDeskId :>> ", this.getCurrentDeskId);
+      console.log(
+        "自由布局开始创建 :>> \n当前自由布局ID  :>> ",
+        this.getCurrentDeskId
+      );
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout =
           !this.freeLayoutState[this.getCurrentDeskId]?.system?.isFreeLayout;
-
-        console.log(
-          "  this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout :>> ",
-          this.freeLayoutState[this.getCurrentDeskId].system.isFreeLayout
-        );
+        console.log("自由布局执行激活 :>> ");
       } else {
         // 否则进行初始化
-        console.log("this.getCurrentDeskId :>> ", this.getCurrentDeskId);
         this.freeLayoutState[this.getCurrentDeskId] = this.defaultState;
         this.freeLayoutData[this.getCurrentDeskId] = {};
-        console.log("执行了初始化 :>> ");
+        console.log("自由布局执行初始化 :>> ");
       }
     },
     // 清空自由布局组件数据

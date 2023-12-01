@@ -66,7 +66,9 @@
               :currentID="currentDesk.id"
               :isDrag="editing"
             >
+
               <template #box="{ data }">
+                {{ currentDesk.id }}
                 <component
                   :desk="currentDesk"
                   :is="data.name"
@@ -76,11 +78,9 @@
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
-          <!-- 自由布局画布 -->
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
-        v-else
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -528,6 +528,7 @@ export default {
         });
       },
     },
+
     currentDesk(newVal) {
       if (!this.isFreeLayout) {
         newVal.layoutSize = this.getLayoutSize();
@@ -542,6 +543,15 @@ export default {
         // }
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
+    },
+    "currentDesk.id": {
+      handler(newVal) {
+        console.log("newVal :>> ", newVal);
+        this.freeLayoutID = newVal;
+      },
+
+      deep: true,
+      immediate: true,
     },
     "currentDesk.settings": {
       handler(newVal) {
@@ -595,7 +605,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
+    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout", "freeLayoutID"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
