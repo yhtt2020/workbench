@@ -42,7 +42,7 @@ export const noteStore = defineStore("noteStore", {
     // 选中桌面
     selIndex: -1,
     // 选中左侧便签 true 回收站
-    isSelTab: false,
+    isTrash: false,
     // 搜索
     searchValue: '',
     // 开关
@@ -57,11 +57,11 @@ export const noteStore = defineStore("noteStore", {
       let getDb = await tsbApi.db.find({
         selector: {
           notes: "notes",
-          isDelete: this.isSelTab,
+          isDelete: this.isTrash,
         },
       })
       // 回收站不需要进行检测
-      if (!this.isSelTab) {
+      if (!this.isTrash) {
         if (getDb.docs.length) {
           // 走检测机制
           let tmpArr = [] as any[]
@@ -91,7 +91,7 @@ export const noteStore = defineStore("noteStore", {
           }
         } else {
           // 判断是否是回收站
-          if (!this.isSelTab) {
+          if (!this.isTrash) {
             tmpList = this.searchCardForDesk()
           }
           // 从桌面拿的初始化的数据需要进行排序
@@ -167,7 +167,7 @@ export const noteStore = defineStore("noteStore", {
           ...this.noteList[selNote],
           _$muuri_id:uuidv4()
         }, this.deskList[selIndex], true)
-        let tmp = await this.findId(this.noteList[selNote]._id, this.isSelTab)
+        let tmp = await this.findId(this.noteList[selNote]._id, this.isTrash)
 
         this.noteList[selNote].deskId = this.deskList[selIndex].id
         this.noteList[selNote].deskName = this.deskList[selIndex].name
@@ -185,7 +185,7 @@ export const noteStore = defineStore("noteStore", {
     // 改变卡片颜色
     async changeBg(bgColor) {
       let now = new Date().getTime()
-      let tmp = await this.findId(this.noteList[this.selNote]._id, this.isSelTab)
+      let tmp = await this.findId(this.noteList[this.selNote]._id, this.isTrash)
       if (tmp.length) {
         await tsbApi.db.put({
           ...tmp[0],
@@ -302,7 +302,7 @@ export const noteStore = defineStore("noteStore", {
     async addNote() {
       if (this.flag) {
         this.flag = false
-        if (!this.isSelTab) {
+        if (!this.isTrash) {
           let now = new Date().getTime()
           let obj = {
             customData: {
@@ -339,7 +339,7 @@ export const noteStore = defineStore("noteStore", {
       oldval >= 0 ? n = oldval : n = this.selNote
       let tmp = []
 
-      tmp = await this.findId(this.noteList[n]._id, this.isSelTab)
+      tmp = await this.findId(this.noteList[n]._id, this.isTrash)
 
       if (tmp) {
         let now = new Date().getTime()
@@ -393,6 +393,8 @@ export const noteStore = defineStore("noteStore", {
         await tsbApi.db.put({
           ...tmp[0],
           isDelete: true,
+          deskId:'',
+          deskName:'',
         })
       }
       this.selNote = -1
@@ -473,7 +475,7 @@ export const noteStore = defineStore("noteStore", {
           $regex: new RegExp(`^note:`)
         },
       }
-      map.isDelete = this.isSelTab
+      map.isDelete = this.isTrash
       if (searchValue) {
         //替换掉特殊字符，保证查询准确性
         function escapeSpecialChars(str) {

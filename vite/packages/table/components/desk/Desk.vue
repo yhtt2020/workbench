@@ -787,6 +787,24 @@ export default {
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
+            desk.cards.forEach(item=>{
+              if (item.name == 'notes') {
+                tsbApi.db.find({
+                  selector: {
+                    _id: 'note:' + item.id,
+                  },
+                }).then(res=>{
+                   if (res?.docs.length) {
+                    tsbApi.db.put({
+                      ...res.docs[0],
+                      // isDelete:true,
+                      deskId:'',
+                      deskName:'',
+                    })
+                  }
+                })
+              }
+            })
             desk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();
