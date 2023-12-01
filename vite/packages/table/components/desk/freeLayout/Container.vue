@@ -20,7 +20,7 @@ const {
   getFreeLayoutState,
 } = storeToRefs(freeLayoutStore);
 onMounted(() => {});
-
+freeLayoutStore.initFreeLayoutState();
 // 滚动清除cards数据
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
@@ -80,7 +80,7 @@ function updateCard(data) {
     }
   }
 
-  data.forEach(async (item) => {
+  data.forEach((item) => {
     const { id, name, customData } = item;
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {

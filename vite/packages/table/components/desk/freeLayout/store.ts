@@ -36,7 +36,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
           x: 2500,
           y: 2500,
         },
-        centerLinePosition: {
+        centerPosition: {
           x: "center",
           y: "top",
         },
