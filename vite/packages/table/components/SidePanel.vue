@@ -2,7 +2,7 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <RightMenu :menus="rightMenus" class="flex max-h-full">
-    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="z-index: 99" ref="sideContent" @contextmenu="showMenu">
+    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="" ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
@@ -138,7 +138,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       rightMenus: [
