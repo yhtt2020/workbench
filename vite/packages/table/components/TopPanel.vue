@@ -49,24 +49,21 @@
       </div>
     </div>
 
-    <div class="flex items-center  justify-end relative drag" style="width:550px;">
-      <TopPanelButton />
-
+    <div class="flex items-center  justify-end relative drag">
+      <TopPanelButton/>
       <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " 
        class="no-drag btn-hover category-button p-1 rounded-md pointer"
       >
-        <div class="flex items-center">
-          <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
+        <div class="flex items-center" style="max-width:270px;">
+          <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
           <div class="xt-text font-14  xt-font">
-           <span  v-if="appSettings.showTopbarTime"> {{ dateTime.month }}月 {{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
-           <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
-             · {{ city.now.text }}  {{ city.now.temp }}℃
+           <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+           <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
             <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
            </span>
           </div>
         </div>
       </div>
-
       <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
         <WindowController></WindowController>
       </div>
