@@ -39,7 +39,9 @@
       }
     },
     async mounted () {
-      this.outputList = await listOutputs()
+        listOutputs().then(data=>{
+          this.outputList =data
+        })
       // audio.getDevices(devices => {
       //   this.outputList = devices.outputs
       //   this.defaultItem = this.outputList.find(li => {

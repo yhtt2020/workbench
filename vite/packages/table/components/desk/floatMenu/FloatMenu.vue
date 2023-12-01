@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs } from "vue";
+import { ref, computed, watch, toRefs, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../freeLayout/store";
+import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
+import { useFloatMenuStore } from "./store";
 // 初始化操作
+const widgetStore = useWidgetStore();
+widgetStore.edit = true;
+const floatMenuStore = useFloatMenuStore();
+
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState, freeLayoutEnv, isFreeLayout }: any =
   storeToRefs(freeLayoutStore);
 const props = defineProps({
   zoom: {},
+  aloneZoom: {},
+  alone: {},
 });
-const { zoom }: any = toRefs(props);
+const { zoom, alone, aloneZoom }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
@@ -19,6 +27,8 @@ const emits = defineEmits([
   "set",
   "hide",
   "update:zoom",
+  "update:aloneZoom",
+  "resetLayout",
 ]);
 // 基础
 const defaultMenu = computed(() => {
@@ -78,7 +88,7 @@ const freeLayoutMenu = computed(() => {
     {
       icon: "fluent:timeline-20-regular",
       title: "拖拽结束吸附于网格",
-      type: getFreeLayoutState.value.afterDrop ? "theme" : "default",
+      type: getFreeLayoutState.value.option.afterDragging ? "theme" : "default",
       fn: () => {
         getFreeLayoutState.value.option.afterDragging =
           !getFreeLayoutState.value.option.afterDragging;
@@ -97,7 +107,12 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
-          defaultZoom.value += 5;
+          console.log('123 :>> ', 123);
+          if (alone.value) {
+            defaultAloneZoom.value += 5;
+          } else {
+            defaultZoom.value += 5;
+          }
         }
       },
     },
@@ -109,7 +124,11 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value -= 5;
         } else {
-          defaultZoom.value -= 5;
+          if (alone.value) {
+            defaultAloneZoom.value -= 5;
+          } else {
+            defaultZoom.value -= 5;
+          }
         }
       },
     },
@@ -118,11 +137,11 @@ const canvasMenu = computed(() => {
 
 const deskList = ref([
   {
-    name: "固定布局",
+    name: "自动排列",
     value: "default",
   },
   {
-    name: "自由模式",
+    name: "自由布局",
     value: "free",
   },
 ]);
@@ -132,24 +151,75 @@ const exit1 = () => {
 };
 
 const currentMode = ref(isFreeLayout.value ? "free" : "default");
-watch(currentMode, (newV) => {
-  freeLayoutStore.renewFreeLayout();
-});
+watch(
+  currentMode,
+  (newV) => {
+    if (newV == "default") {
+      emits("resetLayout");
+      if (isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    } else if (newV == "free") {
+      if (!isFreeLayout.value) {
+        freeLayoutStore.renewFreeLayout();
+      }
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 // 缩放比例
 const freeLayoutZoom = ref(
   getFreeLayoutState?.value ? getFreeLayoutState?.value.canvas.zoom * 100 : 100
 );
 watch(freeLayoutZoom, (newV) => {
-  getFreeLayoutState.value.canvas.zoom = newV / 100;
-  const int = Math.round(newV);
-  freeLayoutZoom.value = int;
+  if (newV >= 0) {
+    getFreeLayoutState.value.canvas.zoom = newV / 100;
+    const int = Math.round(newV);
+    freeLayoutZoom.value = int;
+  } else {
+    getFreeLayoutState.value.canvas.zoom = 1;
+    freeLayoutZoom.value = 1;
+  }
 });
 
 const defaultZoom = ref(zoom.value);
 watch(defaultZoom, (newV: any) => {
-  const int = Math.round(newV);
-  defaultZoom.value = int;
-  emits("update:zoom", int);
+  if (newV >= 0) {
+    const int = Math.round(newV);
+    defaultZoom.value = int;
+    emits("update:zoom", int);
+  } else {
+    defaultZoom.value = 1;
+  }
+});
+// 默认桌面独立缩放
+const defaultAloneZoom = ref(aloneZoom.value);
+watch(defaultAloneZoom, (val: any) => {
+  const int = Math.round(val);
+  defaultAloneZoom.value = int;
+  if (int >= 0) {
+    emits("update:aloneZoom", int);
+  } else {
+    defaultAloneZoom.value = 1;
+  }
+});
+
+// 还原缩放
+const resetZoom = () => {
+  if (currentMode.value === "free") {
+    freeLayoutZoom.value = 100;
+  } else {
+    if (alone.value) {
+      defaultAloneZoom.value = 100;
+    } else {
+      defaultZoom.value = 100;
+    }
+  }
+};
+onBeforeUnmount(() => {
+  widgetStore.edit = false;
 });
 </script>
 
@@ -157,8 +227,8 @@ watch(defaultZoom, (newV: any) => {
   <xt-drag
     boundary
     resetPosition
-    :y="20"
-    :x="20"
+    v-model:y="floatMenuStore.y"
+    v-model:x="floatMenuStore.x"
     :index="100"
     disabledHandle=".floatMenu"
   >
@@ -193,7 +263,7 @@ watch(defaultZoom, (newV: any) => {
         <div class="mb-3 mt-2 flex items-center">
           画布缩放
           <xt-new-icon
-            @click="getFreeLayoutState.canvas.zoom = 1"
+            @click="resetZoom()"
             class="xt-text-2 ml-1"
             color="var(--secondary-text)"
             size="16"
@@ -222,14 +292,11 @@ watch(defaultZoom, (newV: any) => {
           </XtInput>
         </div>
       </template>
-      <div v-if="!isFreeLayout && currentMode === 'free'">
-        你尚未开启自由布局
-      </div>
       <template v-if="currentMode == 'default'">
         <div class="mb-3 mt-2 flex items-center">
           小组件缩放
           <xt-new-icon
-            @click="defaultZoom = 100"
+            @click="resetZoom()"
             class="xt-text-2 ml-1"
             color="var(--secondary-text)"
             size="16"
@@ -239,6 +306,26 @@ watch(defaultZoom, (newV: any) => {
         <div class="flex items-center">
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
+            v-if="alone"
+            v-model="defaultAloneZoom"
+            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
+            style="width: 60px; height: 40px"
+          >
+            <template #addonAfter>
+              <div
+                class="h-full flex items-center xt-text justify-between px-3.5 relative xt-bg"
+                style="border-radius: 0px 8px 8px 0"
+              ></div>
+              <div
+                class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
+                style="left: 7px"
+              >
+                %
+              </div>
+            </template>
+          </XtInput>
+          <XtInput
+            v-else
             v-model="defaultZoom"
             class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
             style="width: 60px; height: 40px"

@@ -60,7 +60,8 @@ import Sortable from "sortablejs";
 import { Icon as ClassIcon } from "@iconify/vue";
 import { communityStore } from "../../store/communityStore";
 import { message, Modal as ClassModal } from "ant-design-vue";
-import { channelClass } from '../../../../js/chat/createChannelClass'
+import { channelClass } from '../../../../js/chat/createChannelClass';
+import _ from 'lodash-es';
 
 import ModalTop from "../ModalTop.vue";
 
@@ -205,7 +206,7 @@ export default {
     },
 
     // 完成并且创建
-    finshCategoryCreate(){
+    async finshCategoryCreate(){
       const option = {
         type: this.type,
         id: this.classItem.id === undefined ? 0 : this.classItem.id,
@@ -220,10 +221,11 @@ export default {
               props:{
                 groupID:item.groupID,
                 avatar:item.avatar,
-                type:item.type
+                type:item.type,
               }
             }
           }
+          console.log('执行....查看',item,chatOption);
           channelClass.secondaryChannel(chatOption)
         }
         this.closeButton()

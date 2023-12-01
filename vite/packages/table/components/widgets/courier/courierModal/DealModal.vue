@@ -28,8 +28,8 @@
       </div>
 
 
-      <div class="flex xt-bg-2 items-center justify-center rounded-lg" style="height: 264px;">
-        协议内容
+      <div class="flex xt-bg-2 items-center justify-center rounded-lg p-4" style="height: 264px;">
+       <Article style="line-height: 1.2" contentStyle="content-style" :showTitle="false" art-name="courier_bind_protocol"></Article>
       </div>
      </div>
 
@@ -51,11 +51,13 @@ import { courierStore } from "../../../../apps/ecommerce/courier";
 
 import Modal from '../../../Modal.vue';
 import ui from '../lib/courierUI'
+import Article from '../../../Article.vue'
 
 export default {
  props:['type'],
 
  components:{
+   Article,
   Modal,DealIcon
  },
 
@@ -81,7 +83,9 @@ export default {
   // 同意关联
   agreeRelevance(){
     if(this.type === 'tb'){
-      ui.bindTb()
+      ui.bindTb(()=>{
+        this.dealVisible=false
+      })
     }else{
       grab.jd.login(({ data }) => {
         this.storeInfo.jd.nickname = data.nickname;
@@ -119,5 +123,8 @@ export default {
  position: absolute;
  top: 16px;
  right: 16px;
+}
+.content-style{
+  line-height: 1.5;
 }
 </style>

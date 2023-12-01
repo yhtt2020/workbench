@@ -2,6 +2,8 @@ import { communityStore } from '../../page/chat/store/communityStore'
 
 export const channelClass = {
  async secondaryChannel(data:any){
+  console.log('执行...创建',data);
+  
   const community:any = communityStore()
   const no = data.no;
   const option = {

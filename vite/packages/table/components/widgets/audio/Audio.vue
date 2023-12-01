@@ -120,13 +120,8 @@ export default {
       }
     }
   },
-  async mounted () {
-    this.outputList=await listOutputs()
-    this.inputList=await listInputs()
-    this.defaultOutput = await getDefaultVolume()
-    this.defaultMic=await getDefaultMic()
-    this.muteShow=!this.defaultOutput.muted
-    this.microphoneShow=!this.defaultMic.muted
+  mounted () {
+    this.init()
   },
   data(){
     return{
@@ -172,6 +167,14 @@ export default {
   methods:{
     ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
     // 选中输入设备
+    async init(){
+      this.outputList=await listOutputs()
+      this.inputList=await listInputs()
+      this.defaultOutput = await getDefaultVolume()
+      this.defaultMic=await getDefaultMic()
+      this.muteShow=!this.defaultOutput.muted
+      this.microphoneShow=!this.defaultMic.muted
+    },
     selectInputDevice(item,index){
       item.isDefaultForMultimedia=true
 

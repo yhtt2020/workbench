@@ -21,10 +21,10 @@
         class=" xt-scrollbar h-full scroll-color pr-3" 
         style="width: 306px;"
         >
-            <!-- <div @click="this.dbClear">清除数据</div>
+            <div @click="this.dbClear">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
-            <div @click="this.findAll">db数据</div> -->
+            <div @click="this.findAll">db数据</div>
             <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
             >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
@@ -43,10 +43,12 @@
                         </xt-menu>
                     </div>
                     <div class="mt-2 w-full two-hidden" style="min-height:22px;color: var(--secondary-text);font-size: 16px;word-wrap: break-word;">
-                        {{ item.hasOwnProperty('customData')?item.customData.content:'' }}
+                        {{ item.customData.text }}
                     </div>
                     <div class="bottom mt-3" style="color: var(--secondary-text);font-size: 14px;">
-                        {{ formatTimestamp(item.id) }}{{ item.deskName!=''?' · '+item.deskName:'' }}
+                        {{ formatTimestamp(item.id)  }}
+                        <!-- {{ time }} -->
+                        {{ item.deskName!=''?' · '+item.deskName:'' }}
                     </div>
                 </div>
             </xt-menu>
@@ -61,81 +63,21 @@
   import search20Filled from '@iconify-icons/fluent/search-20-filled';
   import {mapActions, mapState,mapWritableState} from "pinia";
   import { noteStore } from '../store'
-  import { formatTimestamp } from '../../../util'
-  import { cardStore } from "../../../store/card";
+  import { formatTimestamp, formatTime } from '../../../util'
+import { cardStore } from "../../../store/card";
 import { message } from 'ant-design-vue';
 
   export default {
     components: {
         Icon,
     },
-    props:['selDesk'],
+    props:['selDesk', 'menus'],
     data() {
       return {  
 			icons: {
 				add16Filled,
 				search20Filled,
 			},
-            menus:[
-                // { 
-                //     label: "小窗模式", 
-                //     // callBack: this.callBack, 
-                //     newIcon: "fluent:window-multiple-16-filled",
-                // },
-                { 
-                    // label: this.isSelTab?'添加到桌面':'还原', 
-                    label: "添加到桌面", 
-                    callBack: ()=>{
-                        // 修改当前选中桌面
-                        if (!this.isSelTab) {
-                            // 添加到桌面
-                            this.selDesk()
-                        }else{
-                            // 还原
-                            this.restore()
-                        }
-                    }, 
-                    newIcon: "fluent:open-20-filled",
-                },
-                { 
-                    label: "跳转到桌面", 
-                    newIcon: "majesticons:monitor-line",
-                    callBack:()=>{
-                        if (this.noteList[this.selNote].deskName) {
-                            this.deskList.forEach((item,index)=>{
-                                if (this.noteList[this.selNote].deskId == item.id) {
-                                    this.currentDeskId = item.id
-                                    this.$router.push({
-                                        name:'home',
-                                    })
-                                }
-                            })
-                        }else{
-                            if (this.isSelTab) {
-                                message.error('该便签已被删除')
-                            }else{
-                                message.error('请先添加桌面')
-                            }
-                        }
-                    }
-                },
-                { 
-                    // name:"删除便签",
-                    label: "删除便签", 
-                    newIcon: "akar-icons:trash-can",
-                    color:'#FF4D4F',
-                    callBack:()=>{
-                        if (!this.isSelTab) {
-                            // 删除
-                            this.moveToTrash()
-                        }else{
-                            // 彻底删除
-                            this.deleteNote()
-
-                        }
-                    }
-                },
-            ]
       };
     },
     computed: {
@@ -143,17 +85,6 @@ import { message } from 'ant-design-vue';
         ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
     },
     mounted() {
-    },
-    watch: {
-        isSelTab(newval,oldval){
-            if (newval) {
-                this.menus[0].label = '还原'
-                this.menus[2].label = '彻底删除'
-            }else{
-                this.menus[0].label = '添加到桌面'
-                this.menus[2].label = '删除便签'
-            }
-        }
     },
     methods: {
         ...mapActions(noteStore,['moveToTrash','dbClear','addNote','restore','searchNote','findAll','deleteNote']),
@@ -173,7 +104,7 @@ import { message } from 'ant-design-vue';
         },
         changeMenu(index){
             this.selNote = index
-        }
+        },
     },
   };
   </script>
@@ -220,6 +151,10 @@ import { message } from 'ant-design-vue';
 
     :deep(.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover){
         background-color: var(--active-secondary-bg);
+    }
+
+    input[type="text"]::-webkit-input-placeholder{
+        color:var(--secondary-text)
     }
 </style>
   

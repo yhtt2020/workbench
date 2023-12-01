@@ -3,7 +3,7 @@
   <Widget  :options="options" @pickFilterChange="pickFilterChange" :customIndex="customIndex"
                      :menuList="menuList" ref="cardSlot" :desk="desk">
     <div class="small-wallpaper">
-      <div class="absolute inset-0 " style="border-radius: 8px;z-index: -1">
+      <div class="absolute inset-0 " style="border-radius: 8px;z-index:1;">
         <div class=" w-full   " style="margin-top: 15%;text-align: center" v-if="imgList.length<=0">
           <a-empty :image="simpleImage"/>
           <div class="item-content">
@@ -21,7 +21,7 @@
 
         </div>
       </div>
-      <div class="home-blur absolute inset-0  small-blur" style="border-radius: 8px;z-index: -1;"  v-if="imgList.length>0">
+      <div class="home-blur absolute inset-0  small-blur" style="border-radius: 8px;z-index: 1;"  v-if="imgList.length>0">
         <div class="item-icon flex justify-center items-center pointer mx-auto mt-2" @click="randomImg">
           <Icon class="icon " :class="randomFlag?'replace-it':''" icon="reload"></Icon>
         </div>

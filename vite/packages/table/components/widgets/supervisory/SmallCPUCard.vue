@@ -20,9 +20,9 @@
         <div class="cpu right-content">
         <div class="cpu-number">
           <span>温度</span>
-          <span style="font-weight: 700;">{{CPUData.warmCPU.value}}℃</span></div>
+          <span style="font-weight: 700;">{{CPUData.warmCPU?.value}}℃</span></div>
       </div>
-        <a-progress :showInfo="false" :status="CPUData.warmCPU.value==0|| saving?'':'active'"  :percent="CPUData.warmCPU.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.warmCPU?.value==0|| saving?'':'active'"  :percent="CPUData.warmCPU?.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -110,6 +110,9 @@ export default {
         }
         this.CPUData.useCPU.value&&  this.CPUList.push(this.CPUData.useCPU.value)
         this.CPUList.shift();
+        if(!document.getElementById('myCPUCanvas')){
+          return
+        }
         this.initCanvas('myCPUCanvas',this.CPUList,6,12,"#515151","#3B8FFA")
       },
       deep: true,

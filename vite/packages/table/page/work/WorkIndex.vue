@@ -94,7 +94,7 @@ export default defineComponent({
           }
         },
         {
-          title:'便签(开发)',
+          title:'备忘录',
           name:'note',
           icon:'check-square',
           route:{

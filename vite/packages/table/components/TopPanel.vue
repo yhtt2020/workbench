@@ -1,87 +1,81 @@
 <template>
-  <div class="flex items-center justify-between w-full top-panel drag" style="width: calc(100%);">
-
-    <div @contextmenu.stop="toggleAppStats" class="flex flex-row items-center no-drag">
-      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="enable">
-        <div class="mr-2 cursor-pointer no-drag" @click="enterClipboard">
-          <icon style="font-size: 24px;vertical-align: text-top" icon="xiangmu"></icon>
-        </div>
+  <div class="flex items-center justify-between w-full h-12 top-shadow py-2.5  drag">
+    <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  items-center no-drag">
+     <a-tooltip>
+       <QueueWidget></QueueWidget>
+     </a-tooltip>
+      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
+        <xt-button w="28" h="28" class="xt-bg-t-2 mr-2.5" style="border-radius:6px !important;"  @click="enterClipboard">
+          <div class="flex items-center justify-center">
+            <TopIcon style="font-size:20px;" class="xt-text" icon="fluent:clipboard-bullet-list-16-regular"/>
+          </div>
+        </xt-button>
       </a-tooltip>
 
-      <div class="pointer no-drag text-more" style="display: inline-block" @click="enterGameDesk(runningGame.appid)"
-        v-if="runningGame.appid">
-        <a-avatar :size="22" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
-        {{ runningGame.chineseName }}
-      </div>
-      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部" v-else-if="status.music.playing && status.music.title && status.music">
-        <div class="pointer no-drag text-more" style="display: inline-block;color: var(--primary-text);"
-          @click="enterMusic">
-          <a-avatar style="margin-right: 0.5em" :size="22" :src="status.music.cover"></a-avatar>
-          {{ status.music.title }} {{ status.music.singer }}
-        </div>
+      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部">
+        <xt-button h="28"  class="xt-bg-t-2 mr-2.5"  v-if="status.music.playing && status.music.title && status.music" style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+        @click="enterMusic"
+       >
+         <div class="flex items-center justify-center">
+           <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
+           <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">
+             {{ status.music.title }} {{ status.music.singer }}
+           </span>
+         </div>
+       </xt-button>
       </a-tooltip>
+      
+      <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)" 
+       style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+      >
+       <div class="flex items-center justify-center">
+         <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
+         <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
+       </div>
+      </xt-button>
+
       <TopCourier />
+      
+      <TopClockTimer/>
+
+      <TopTomato />
+
     </div>
-    <div class="flex max-search" hidden="">
+
+    <div class="flex max-search" hidden=""> 
       <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
         style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
-    <div class="flex items-end justify-end flex-1 right-area align-items-end xt-text" style="position: relative;">
-      <div class="top-state">
-        <!-- 番茄钟 -->
-        <TopTomato />
-        <TopClockTimer v-if="topClockTimerVisible"/>
-      </div>
 
-      <div v-if="status.show && hasChat" class="flex items-center no-drag pointer" @click="messageAlert"
-        style="color: var(--primary-text);">
-        <div class="flex items-center justify-center notification" style="width: 20px;height: 20px;position: relative;">
-          <img src="/icons/logo128.png" class="object-cover w-full h-full">
-          <div class="new-message-tag"></div>
-        </div>
-        <div class="pl-1 primary-title pointer" style="color: var(--primary-text);">新消息</div>
-        <a-divider type="vertical" style="height: 18px;width: 1px; background: var(--primary-text);opacity: 0.2 " />
-      </div>
+    <div class="flex items-center  justify-end relative drag" style="width:550px;">
+      <TopPanelButton />
 
-      <div v-else class="flex items-center justify-center pr-3 no-drag pointer" @click="messageAlert"
-        style="color: var(--primary-text);">
-        <Icon icon="notification" style="font-size:1.5em;"></Icon>
-      </div>
-
-      <div class="mr-2"
-        style="text-align: right;display: flex;flex-direction: row;align-items: flex-end;justify-content: flex-end;color: var(--primary-text);">
-        <div class="truncate no-drag" v-if="!loading">
-          <span hidden style=" font-size: 0.8em; margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
-            <!-- {{ lockTimeoutDisplay }}后锁屏 -->
-          </span>
-          <span v-if="appSettings.showTopbarTime">
-               {{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }}
-          {{ dateTime.week }}
-          </span>
-
-          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
-            <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> {{ city.now.temp }}℃
-          </span>
+      <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " 
+       class="no-drag btn-hover category-button p-1 rounded-md pointer"
+      >
+        <div class="flex items-center">
+          <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息 ·</div>
+          <div class="xt-text font-14  xt-font">
+           <span  v-if="appSettings.showTopbarTime"> {{ dateTime.month }}月 {{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+           <span v-if="hasWeather && city.now && appSettings.showTopbarWeather">
+             · {{ city.now.text }}  {{ city.now.temp }}℃
+            <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
+           </span>
+          </div>
         </div>
       </div>
 
-    </div>
-    <div id="windowController" v-if="showWindowController" class="flex rounded-bl-lg s-item s-bg btn-container "
-      style=" background: var(--primary-bg) !important;margin-top: -11px;overflow: hidden">
-      <WindowController></WindowController>
+      <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
+        <WindowController></WindowController>
+      </div>
     </div>
   </div>
-
-
-  <a-drawer :width="500" :closable="false" style="z-index:1000;" placement="right" v-model:visible="messageDrawer"
-    :bodyStyle="{ padding: '0', overflow: 'hidden !important', }" @closeMessage="messageDrawer = false">
-    <MessagePopup @closeMessage="messageDrawer = false"></MessagePopup>
-  </a-drawer>
-  <a-drawer v-model:visible="appStats" placement="left">
+  
+  <TopPanelLeftDrawer ref="leftDrawerRef">
     <div class="app-stats">
-      <div @click="enterClipboard" class="cursor-pointer app" v-if="enable">
+      <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
         <a-row>
           <a-col :span="5">
             <icon style="font-size: 48px;vertical-align: text-top" icon="xiangmu"></icon>
@@ -112,8 +106,14 @@
           </a-col>
         </a-row>
       </div>
+      <div class="app flex">
+        <div>应用状态</div>
+        <QueueWidget :show="true"></QueueWidget>
+      </div>
     </div>
-  </a-drawer>
+  </TopPanelLeftDrawer>
+  
+  <TopPanelRightDrawer ref="rightDrawerRef" />
 </template>
 
 <script>
@@ -127,24 +127,33 @@ import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { timerStore } from '../store/timer'
-import WindowController from './WindowController.vue'
-import MessagePopup from '../page/notice/noticeIndex.vue'
 import { steamUserStore } from '../store/steamUser'
 import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { clipboardStore } from '../apps/clipboard/store'
+import { Icon as TopIcon } from '@iconify/vue'
+
+import WindowController from './WindowController.vue'
+import MessagePopup from '../page/notice/noticeIndex.vue'
 import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
 import TopClockTimer from './widgets/TopClockTimer.vue'
 import TopCourier from './widgets/courier/TopCourier.vue'
+import QueueWidget from '../apps/queue/topWidget/index.vue'
+import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
+import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
+import TopPanelButton from './drawer/TopPanelButton.vue'
 
 export default {
   name: 'TopPanel',
+
   components: {
     WindowController,
     MessagePopup,
     TopTomato,
     TopClockTimer,
-    TopCourier
+    TopCourier,
+    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon,TopPanelButton
   },
+
   data() {
     return {
       loading: true,
@@ -157,187 +166,165 @@ export default {
       topClockTimerVisible: false,
     }
   },
-  computed: {
+
+  computed:{
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
     ...mapWritableState(appStore,['status','showWindowController']),
-    ...mapWritableState(appStore,{
-      appSettings: 'settings'
-    }),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(timerStore, ['lockTimeout']),
     ...mapWritableState(steamUserStore, ['runningGame']),
-    ...mapState(clipboardStore, ['enable']),
+    ...mapState(clipboardStore, ['settings']),
     ...mapWritableState(topClockSettingStore, ['checkTopClock']),
+    ...mapWritableState(appStore,{appSettings: 'settings'}),
     isMain,
-    lockTimeoutDisplay() {
+
+    lockTimeoutDisplay(){
       // if(this.lockTimeout>=60){
-      //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'
+      //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒';
       // }else{
-      //   return this.lockTimeout+'秒'
+      //   return this.lockTimeout+'秒';
       // }
-      function secTotime(s) {
-        var t = ''
-        if (s > -1) {
-          var hour = Math.floor(s / 3600)
-          var min = Math.floor(s / 60) % 60
-          var sec = s % 60
-          if (hour === 0)
-            t = ''
-          else if (hour < 10) {
-            t = '0' + hour + '小时'
-          } else {
-            t = hour + '小时'
-          }
-          if (min < 10) {
-            t += '0'
-          }
-          t += min + '分'
-          if (sec < 10) {
-            t += '0'
-          }
-          t += sec.toFixed(0) + '秒'
+      function secToTime(s){
+        var t = '';
+        if (s > -1){
+          var hour = Math.floor(s / 3600);
+          var min = Math.floor(s / 60) % 60;
+          var sec = s % 60;
+          if (hour === 0){ t = ''; }
+          else if (hour < 10){  t = '0' + hour + '小时'; }
+          else{   t = hour + '小时'; }
+
+          if (min < 10) {  t += '0'; }
+          t += min + '分';
+          if (sec < 10){    t += '0'; }
+          t += sec.toFixed(0) + '秒';
         }
-        return t
+        return t;
       }
-
-      return secTotime(this.lockTimeout)
+      return secToTime(this.lockTimeout);
     },
-    city() {
-      if (this.cities[0]) {
-        return this.cities[0]
-      } else {
-        return {}
-      }
-
+    city(){
+      if (this.cities[0]) { return this.cities[0]; }
+      else{ return {}; }
     },
-    hasWeather() {
-      return this.cities.length > 0
-    },
-
-    hasChat() {
-      return this.$route.path !== '/chatMain'
-    },
-
+    hasWeather(){  return this.cities.length > 0; },
+    hasEnable(){ return this.settings.enable; },
+    hasChat(){ return this.status.show;  },
+   
   },
-  async mounted() {
-    window.onblur = () => {
-      this.setLockTimer()
-    }
-    window.onfocus = () => {
-      this.clearLockTimer()
-    }
-    this.loading = false
-    if (!this.timer) {
-      setInterval(this.getTime, 1000)
-    }
-    this.filterClock(this.clockTag)
+
+  mounted(){
+    window.onblur = () => { this.setLockTimer(); };
+    window.onfocus = () => { this.clearLockTimer(); };
+    this.loading = false;
+    if (!this.timer){  setInterval(this.getTime, 1000); };
+    this.filterClock(this.clockTag);
   },
-  created() {
-    this.getTime()
+
+  created(){
+    this.getTime();
   },
-  methods: {
-    getClientIcon,
-    getIcon,
-    getCover,
+
+  methods:{
+    getClientIcon, getIcon, getCover,
     ...mapActions(cardStore, ['setAppDate','filterClock']),
     ...mapActions(appStore,['hideNoticeEntry']),
-    clearLockTimer() {
-      if (this.lockTimer) {
-        clearInterval(this.lockTimer)
-        this.lockTimer = null
-        this.lockTimeout = this.settings.lockTimeout
-        this.showLockTip = false
+
+    clearLockTimer(){
+      if (this.lockTimer){
+        clearInterval(this.lockTimer);
+        this.lockTimer = null;
+        this.lockTimeout = this.settings.lockTimeout;
+        this.showLockTip = false;
       }
     },
-    toggleAppStats() {
-      this.appStats = !this.appStats
+    // 顶部左侧状态鼠标右键触发左侧抽屉菜单
+    toggleAppStats(){
+      this.$refs.leftDrawerRef.openLeftDrawer();
     },
-    enterClipboard() {
-      this.$router.push({
-        name: 'clipboard'
-      })
+    // 进入剪贴板应用
+    enterClipboard(){
+      this.$router.push({  name: 'clipboard'});
     },
-    setLockTimer() {
-      if (this.settings.enable) {
+    setLockTimer(){
+      if (this.settings.enable){ 
         //只有启用了锁屏才会触发这个效果
-        if (this.lockTimer) {
-          this.lockTimeout = (this.settings.lockTimeout || 300) - 1
-        } else {
-          this.lockTimeout = (this.settings.lockTimeout || 300) - 1
-          this.showLockTip = true
-          this.lockTimer = setInterval(() => {
-            this.lockTimeout--
-            if (this.lockTimeout === 0) {
-              this.clearLockTimer()
-              this.$router.push('/lock')
-            }
-          }, 1000)
-        }
+        this.lockTimeout = (this.settings.lockTimeout || 300) - 1; 
+      }
+      else{
+        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
+        this.showLockTip = true;
+        this.lockTimer = setInterval(() => {
+          this.lockTimeout--;
+          if (this.lockTimeout === 0) {
+            this.clearLockTimer();
+            this.$router.push('/lock');
+          }
+        }, 1000);
       }
     },
-    openGlobalSearch() {
-      ipc.send('openGlobalSearch')
+    // 顶部栏搜索
+    openGlobalSearch(){
+      ipc.send('openGlobalSearch');
     },
-    getTime() {
-      this.dateTime = getDateTime()
-      this.setAppDate(this.dateTime)
+    getTime(){
+      this.dateTime = getDateTime();
+      this.setAppDate(this.dateTime);
     },
-    enterMusic() {
-      this.$router.push({
-        name: 'music',
-      })
+    // 进入网易云音乐应用
+    enterMusic(){
+      this.$router.push({ name: 'music', });
     },
-    enterGameDesk(appid) {
+    // 进入Steam游戏应用
+    enterGameDesk(appid){
       this.$router.push({
         name: 'gameIndex',
         params: {
           appid: appid
         }
-      })
+      });
     },
-
-    messageAlert() {
+    // 打开右侧抽屉菜单
+    toggleRightDrawer(){
+      this.$refs.rightDrawerRef.openRightDrawer();
       this.hideNoticeEntry();
-      this.messageDrawer = true
     },
 
-
-    topClockTimerVisibleSetting() {
-      this.filterClock(this.clockTag,this.chooseType)
-      if(this.checkTopClock===true){
-        if (this.filterClockEvent.length > 0) {
-          // console.log(this.filterClockEvent.length);
-          this.topClockTimerVisible = true
-        }
-        else if (this.countDowntime.seconds !== undefined) {
-          // console.log(this.countDowndate);
-          this.topClockTimerVisible = true
-        }
-        else {
-          // console.log(this.countDowndate,this.clockEvent);
-          this.topClockTimerVisible = false
-        }
-      }else{
-        this.topClockTimerVisible=false
-
-      }
-      // console.log(this.clockTag);
-
-
-
-    },
-
-
+    // topClockTimerVisibleSetting(){
+    //   this.filterClock(this.clockTag,this.chooseType);
+    //   if(this.checkTopClock===true){
+    //     if (this.filterClockEvent.length > 0){
+    //       // console.log(this.filterClockEvent.length);
+    //       this.topClockTimerVisible = true;
+    //     }
+    //     else if (this.countDowntime.seconds !== undefined){
+    //       // console.log(this.countDowndate);
+    //       this.topClockTimerVisible = true;
+    //     }
+    //     else {
+    //       // console.log(this.countDowndate,this.clockEvent);
+    //       this.topClockTimerVisible = false;
+    //     }
+    //   }
+    //   else{
+    //     this.topClockTimerVisible=false;
+    //   }
+    //   // console.log(this.clockTag);
+    // }
   },
+
   beforeUpdate() {
-    this.topClockTimerVisibleSetting()
-  },
+    // this.topClockTimerVisibleSetting();
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.top-shadow{
+  background: linear-gradient(to bottom, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.18) 51%, rgba(25,25,25,0.00) 100%) !important;
+}
 .top-panel {
   padding: 0.8em 0 0 0.8em;
   display: flex;
@@ -432,5 +419,11 @@ export default {
   display: flex;
   align-items: center;
   height: 25px;
+}
+
+.btn-hover{
+  &:hover{
+   background: var(--secondary-transp-bg) !important;
+  }
 }
 </style>

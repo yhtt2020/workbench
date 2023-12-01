@@ -64,13 +64,14 @@ export default {
  },
 
  computed: {
-  ...mapWritableState(communityStore,['categoryList']),
+  ...mapWritableState(communityStore,['getCommunityDetail']),
   getSetData(){
    const no = this.$route.params.no
-   const setContent = this.categoryList
+   const setContent = this.getCommunityDetail(no);
    return {
     no:no,
     ...setContent,
+    avatar:setContent.icon,
    }
   }
  },

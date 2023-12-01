@@ -186,7 +186,9 @@ export default {
       no:this.no,
       content:{
        name:data.name,
-       props:data,
+       props:{
+        ...data,
+       },
       }
      };
      channelClass.secondaryChannel(channelOption);

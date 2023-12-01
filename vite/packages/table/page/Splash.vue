@@ -77,7 +77,6 @@ import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 import { screenStore } from '../store/screen'
 import { isMain } from '../js/common/screenUtils'
-import { inspectorStore } from '../store/inspector'
 import { teamStore } from '../store/team'
 import { steamUserStore } from '../store/steamUser'
 import { captureStore } from '../store/capture'
@@ -109,14 +108,22 @@ export default {
     }
   },
   async mounted () {
+    // 暂时直接跳转到新登录
+    
+    // this.$router.replace({ name: 'wizard' })
     setTimeout(() => {
-      if (window.$isOffline && this.init) {
+      if(this.init){
         this.$router.replace({ name: 'home' })
-        this.launching = false
-        // 暂时还没有排查到卡顿原因
-
+      }else{
+        this.$router.replace({ name: 'wizard' })
       }
-    }, 3000)
+
+      // if (window.$isOffline && this.init) {
+      //   this.$router.replace({ name: 'home' })
+      //   this.launching = false
+      //   // 暂时还没有排查到卡顿原因
+      // }
+    }, 2000)
     this.timeout()
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
@@ -129,7 +136,6 @@ export default {
     this.initStore(deckStore, 'deck')
     this.initStore(screenStore, 'screen')
     this.initStore(teamStore, 'teamStore')
-    this.initStore(inspectorStore, 'inspectorStore')
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
     // this.initStore(browserStore,'browserStore')

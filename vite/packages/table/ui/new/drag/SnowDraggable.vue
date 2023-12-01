@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRefs, computed, watch } from "vue";
+import { ref, onMounted, toRefs, computed, watch, onBeforeUnmount } from "vue";
 import { useWindowSize } from "./useWindowSize";
 import { useElementSize, vElementSize } from "./useElementSize";
 import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
@@ -77,7 +77,7 @@ export interface DragProps {
   // 禁用拖拽元素的选择器
   disabledHandle?: string | string[] | null;
   // 禁用默认事件
-  disabledDefaultEvent: boolean;
+  disabledDefaultEvent?: boolean;
   // 拖拽样式
   draggableClass?: string;
   draggableStyle?: object | null;
@@ -85,7 +85,7 @@ export interface DragProps {
   gridClass?: string;
   gridStyle?: object | null;
   // 重置位置
-  resetPosition: boolean;
+  resetPosition?: boolean;
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
@@ -93,11 +93,11 @@ const props = withDefaults(defineProps<DragProps>(), {
   parent: false,
   boundary: true,
   collision: true,
-  collisionName: "xiaoyang",
+  collisionName: "snow",
   collisionRestore: "before", // 'init'
   magnet: false,
   magnetRange: 10,
-  magnetName: "xiaoyang",
+  magnetName: "snow",
   magnetMargin: 6,
   x: 0,
   y: 0,
@@ -147,6 +147,9 @@ const {
   resetPosition,
 } = toRefs(props);
 
+onBeforeUnmount(() => {
+
+});
 const emits = defineEmits([
   "update:x",
   "update:y",

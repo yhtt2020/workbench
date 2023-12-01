@@ -60,7 +60,7 @@ onMounted(async () => {
 
   setTimeout(async () => {
     // 初始化自由布局定位
-    await redirect();
+    redirect();
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -87,11 +87,21 @@ onMounted(async () => {
     window.addEventListener("mousemove", handleMouseMove);
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
+    document.body.addEventListener('keydown',ignoreSpace);
   }, 1);
 });
+function ignoreSpace(event) {
+  var e = window.event || event;
+  if (e.keyCode === 32) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    } else {
+      window.event.returnValue = false;
+    }
+  }
+}
 
 // 鼠标按下
-
 function handleMouseDown(event) {
   if (event.buttons === 1) {
     isDragging.value = true;
@@ -120,20 +130,29 @@ function handleMouseUp(event) {
 
 // 键盘按下
 function handleKeyDown(event) {
-  if (event.key == "Alt") {
+  if (event.code === "Space") {
     isKey.value = true;
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
   }
 }
 // 键盘抬起
 function handleKeyUp(event) {
   isKey.value = false;
+  if (event.code === "Space") {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
+  // let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
   let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
   scrollbar.value.scrollLeft = w;
-  let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  // let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  let h = getFreeLayoutState.value.line.centerLine.y;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
@@ -143,43 +162,11 @@ function update() {
   perfectScrollbar.value.update();
 }
 
-// 监听画布缩放情况
-watch(
-  () => getFreeLayoutState.value?.canvas.zoom,
-  () => {
-    // console.log(
-    //   "freeLayoutEnv.value.loading :>> ",
-    //   freeLayoutEnv.value.loading
-    // );
-    // if (!freeLayoutEnv.value.loading) {
-    //   console.log("222222222 :>> ", 222222222);
-    //   return;
-    // }
-    // let { width, height } = scrollbar.value.getBoundingClientRect();
-    // let currentWidth =
-    //   getFreeLayoutState.value?.width * getFreeLayoutState.value?.zoom;
-    // let currentHeight =
-    //   getFreeLayoutState.value?.height * getFreeLayoutState.value?.zoom;
-    // if (currentWidth < width && getFreeLayoutState.value?.width < 10000) {
-    //   console.log("宽度增加 :>> ", 222);
-    //   getFreeLayoutState.value.width += 1000;
-    // }
-    // if (currentHeight < height && getFreeLayoutState.value.height < 10000) {
-    //   console.log("gao度增加 :>> ", 222);
-    //   getFreeLayoutState.value.height += 1000;
-    // }
-  }
-);
 // 鼠标滚动
-const scrollThreshold = 300; // 边缘滚动阈值
-const scrollAmount = 100; // 每次滚动的距离
 
 let isDragging = ref(false);
 let isKey = ref(false);
 let initialMousePosition = ref(null);
-let scrollElement = ref(null);
-
-// 鼠标拖拽元素 被zoom影响了位置
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
@@ -189,11 +176,22 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  window.removeEventListener("keydown", handleKeyDown);
-  window.removeEventListener("keyup", handleKeyUp);
-  window.removeEventListener("mousedown", handleMouseDown);
-  window.removeEventListener("mousemove", handleMouseMove);
-  window.removeEventListener("mouseup", handleMouseUp);
+  window.removeEventListener("keydown", handleKeyDown, {
+    capture: true,
+  });
+  window.removeEventListener("keyup", handleKeyUp, {
+    capture: true,
+  });
+  window.removeEventListener("mousedown", handleMouseDown, {
+    capture: true,
+  });
+  window.removeEventListener("mousemove", handleMouseMove, {
+    capture: true,
+  });
+  window.removeEventListener("mouseup", handleMouseUp, {
+    capture: true,
+  });
+  window.document.body.removeEventListener('keydown',ignoreSpace);
 });
 defineExpose({
   redirect,

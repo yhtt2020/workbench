@@ -267,14 +267,16 @@ onMounted(async () => {
     })
     windoWidth.value = window.innerWidth
     windowHeight.value = window.innerHeight
-    await useYuanCommunityStore.getMyForumList()
-    communCate.value.forEach((item) => {
+    useYuanCommunityStore.getMyForumList().then(()=>{
+      communCate.value.forEach((item) => {
         options.value.push({
-            value: item.id,
-            label: item.name
+          value: item.id,
+          label: item.name
         })
+      })
+      cascaderValue.value = options.value[0]
     })
-    cascaderValue.value = options.value[0]
+
 })
 
 // 选择发帖板块

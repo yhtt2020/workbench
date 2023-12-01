@@ -1,8 +1,7 @@
 <template>
-  <div class="p-3   box h-full " style="overflow: hidden">
+  <div class="p-3 box h-full  flex flex-col relative">
     <!-- 头部导航栏 -->
-
-    <div class="flex    ">
+    <div class="flex" style="position:absolute;width: 100%">
       <div class="flex flex-1">
         <div @click="onBack"
              class="pointer button-active xt-mask h-12 w-12 flex items-center rounded-lg justify-center mr-3">
@@ -32,11 +31,13 @@
       <div class="flex">
         <div class="avatar">
           <div>
-            <a-avatar shape="square"  :size="100" :src="avatarUrl" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 200px 0)`:'',transform:bgColor?'translateX(-200px)':''}"/>
+            <a-avatar shape="square" :size="100" :src="avatarUrl"
+                      :style="{'filter': bgColor?`drop-shadow(#${bgColor} 200px 0)`:'',transform:bgColor?'translateX(-200px)':''}"/>
           </div>
           <span v-if="icon || file.path" @click="delIcon"><Icon icon="guanbi2" style="font-size: 1.5em;"></Icon></span>
         </div>
-        <xt-selectIcon :menus="['emoji','goods']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
+        <xt-selectIcon :menus="['emoji','goods']" v-model="modelValue" @getAvatar="getAvatar"
+                       isUpload="true"></xt-selectIcon>
         <div class="ml-10 xt-text-2" style="font-size: 16px;">
           <div>推荐图片尺寸：256*256，不要超过2MB</div>
           <!-- <div class="pointer xt-mask flex items-center rounded-lg justify-center mr-3 mt-2" @click="imageSelect" style="width:120px; height:48px;">自定义上传</div> -->
@@ -48,15 +49,15 @@
             :beforeUpload="beforeUpload"
             accept="image/jpeg,image/jpg,image/png"
           > -->
-            <div class="flex mt-2">
-              <xt-button class="mr-2" type="theme"
-              @click="modelValue = true" style="width:120px; height:48px;">自定义
+          <div class="flex mt-2">
+            <xt-button class="mr-2" type="theme"
+                       @click="modelValue = true" style="width:120px; height:48px;">自定义
             </xt-button>
             <!-- @click.stop="imageSelect" style="width:120px; height:48px;">自定义上传 -->
-              <!-- <xt-button
-                @click="resetIcon" style="width:120px; height:48px;">同软件图标
-              </xt-button> -->
-            </div>
+            <!-- <xt-button
+              @click="resetIcon" style="width:120px; height:48px;">同软件图标
+            </xt-button> -->
+          </div>
           <!-- </a-upload> -->
         </div>
       </div>
@@ -75,7 +76,7 @@
       </div>
     </div>
     <!-- 快捷键 -->
-    <div class="key-content" v-show="defaultNavType.name === 'shortcutkey'">
+    <div class="key-content flex flex-col" v-show="defaultNavType.name === 'shortcutkey'">
       <!-- 提示 -->
       <div class="prompt mt-4 mx-3 px-4 flex justify-between items-center" v-show="closePrompt">
         <span class="flex items-center">
@@ -87,7 +88,7 @@
       </div>
       <!-- 快捷键列表 -->
       <!-- <div :style="closePrompt ? 'height:90%' : 'height:100%'"> -->
-      <vue-custom-scrollbar :settings="settingsScroller" :style="closePrompt ? 'height:90%' : 'height:100%'">
+      <vue-custom-scrollbar :settings="settingsScroller"  class="flex-1 h-0 w-full">
         <div @click.self="completeEdit" class="key-box" :style="keyBoxStyle" id="keyBox">
           <div v-for="(item,index) in keyList" :key="item.id">
             <!-- 分组名称 -->
@@ -334,8 +335,8 @@ export default {
       bulkEditKey: false,
       addNumber: 0,
       modelValue: false,
-     // 改变图标颜色
-     bgColor:'',
+      // 改变图标颜色
+      bgColor: '',
     }
   },
   watch: {
@@ -382,13 +383,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp','getScheme']),
+    ...mapActions(keyStore, ['setSchemeList', 'setShortcutKeyList', 'setMarketList', 'delRecentlyEmpty', 'addScheme', 'saveScheme', 'getCustomApp', 'getScheme']),
     // 获取头像
-    getAvatar(avatar){
-      if(avatar.indexOf('color=') >= 0){
-        let color = avatar.substr(avatar.indexOf('color=') + 7 ,6)
+    getAvatar (avatar) {
+      if (avatar.indexOf('color=') >= 0) {
+        let color = avatar.substr(avatar.indexOf('color=') + 7, 6)
         this.bgColor = color
-      }else{
+      } else {
         this.bgColor = ''
       }
       this.avatarUrl = avatar
@@ -420,11 +421,11 @@ export default {
             let item = JSON.parse(JSON.stringify(this.deepClone({}, i)))
             //this.appContent = item
             let data = await this.getScheme(item._id)
-            if(data?.docs.length>0){
-              console.log(data.docs[0],'找到的方案')
-              this.appContent=data.docs[0]
-             // this.appContent=
-            }else{
+            if (data?.docs.length > 0) {
+              console.log(data.docs[0], '找到的方案')
+              this.appContent = data.docs[0]
+              // this.appContent=
+            } else {
               message.error('方案不存在')
               this.$router.go(-1)
               return
@@ -444,7 +445,7 @@ export default {
         this.addShortcutKey()
       } else {
         //全新创建
-        this.defaultNavType={
+        this.defaultNavType = {
           name: 'info',
         }
 
@@ -477,9 +478,9 @@ export default {
     delNotData () {
       // 检测快捷键列表中的空数据后进行删除操作
       this.keyList = this.keyList.filter(item => {
-        const avaliable=item.keyStr !== '' || item.groupName !== '' || item.title !== '' //只要存在其中一项就当做不是空的
-        if(!avaliable){
-          console.error('无效的键位',item)
+        const avaliable = item.keyStr !== '' || item.groupName !== '' || item.title !== '' //只要存在其中一项就当做不是空的
+        if (!avaliable) {
+          console.error('无效的键位', item)
         }
         return avaliable
       })
@@ -529,21 +530,21 @@ export default {
             keyList: this.keyList, //快捷键列表
             exeName: this.form.exeName,
           }
-          saveResult=await this.addScheme(this.appContent, this.form.exeName)
+          saveResult = await this.addScheme(this.appContent, this.form.exeName)
         }
 
-        if(saveResult){
+        if (saveResult) {
           this.saved = true
           message.success('成功保存')
           setTimeout(() => {
             this.$router.go(-1)
           }, 200)
-        }else{
+        } else {
           message.error('方案保存失败。')
         }
       } catch (e) {
         console.error(e)
-        message.error('存储方案意外失败，失败原因：', e )
+        message.error('存储方案意外失败，失败原因：', e)
         console.log(this.appContent)
       }
 
@@ -1019,7 +1020,8 @@ export default {
 }
 
 .key-content {
-  height: 90%;
+  flex: 1;
+  height: 0
 }
 
 .add-box {
