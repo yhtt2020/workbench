@@ -236,7 +236,6 @@ export const noteStore = defineStore("noteStore", {
     },
     // 修改主应用卡片内容
     async saveAppNote(id, value) {
-      console.log('content',content)
       let now = new Date().getTime()
       let rs
       let tmp = await this.findId('note:' + id, false)
@@ -248,12 +247,12 @@ export const noteStore = defineStore("noteStore", {
             text: value,
             // content: content
           },
-          content: content,
+          content: value,
           updateTime: now,
         }
         rs = await tsbApi.db.put(note)
         //记录版本
-        await this.saveHistory(note._id, content)
+        await this.saveHistory(note._id, value)
       }
       // 遍历桌面卡片的时候会导致桌面卡片定位失效
       // 暂时解决办法 通过区分桌面便签和主应用便签
