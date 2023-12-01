@@ -1,34 +1,19 @@
 <template>
-  <div
-    class="xt-text flex h-full xt-bg"
-    style="box-sizing: border-box"
-    :class="[typeClass]"
-  >
+  <div class="xt-text flex h-full xt-bg" style="box-sizing: border-box" :class="[typeClass]">
     <!-- 左侧区域开始 -->
-    <div
-      class="flex flex-col items-center h-full xt-br mr-3"
-      style="width: 72px; min-width: 72px;position: relative;"
-    >
+    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px;position: relative;">
       <div v-for="list in listOption" :class="list?.class">
-        <Float
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in list.array"
-          :data="item"
-        >
-          <Box
-            :item="item"
-            :id="currentIndex"
-            :boxClass="list?.boxClass"
-            :model="model"
-          >
-            <Item :item="item" v-bind="list?.itemOption">
+        <Float @itemClick="itemClick" :list="item.children" v-for="item in list.array" :data="item">
+          <Box :item="item" :id="currentIndex" :boxClass="list?.boxClass" :model="model">
+            <Item @fullState="fullState" :item="item" v-bind="list?.itemOption">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
               </template>
             </Item>
           </Box>
-          <template #content> <slot :name="item.float"> </slot> </template>
+          <template #content>
+            <slot :name="item.float"> </slot>
+          </template>
         </Float>
       </div>
     </div>
@@ -94,16 +79,11 @@ const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
     return isFull.value && fullScreen.value
-      ? " fixed left-0 right-0 top-0 bottom-0 pr-3 py-3 "
+      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3"
       : "xt-bg pr-3 py-3 rounded-xl";
   }
 });
 
-// const route = useRoute();
-// const currentPage = ref(route.path);
-// watch(route, (newRoute) => {
-//   if (full.value && currentPage !== newRoute.path) isFull.value = false;
-// });
 const { list } = toRefs(props);
 // 动态添加ID
 const newList = computed(() => {
@@ -162,13 +142,12 @@ const selectClick = (id, flag) => {
   if (flag) return;
   currentIndex.value = id;
 };
-
+const fullState = (state) => {
+  isFull.value = !isFull.value;
+};
 // 点击事件
 const itemClick = (item) => {
-  if (item?.full) {
-    isFull.value = !isFull.value;
-    return;
-  } else if (item?.children) {
+  if (item?.children) {
     return;
   }
   selectClick(item.id, item.flag);
