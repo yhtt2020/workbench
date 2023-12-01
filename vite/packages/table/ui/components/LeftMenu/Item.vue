@@ -67,7 +67,7 @@ const props = defineProps({
     default: "base",
   },
   bg: {
-    default: "var(--secondary-bg)",
+    default: "var(--mask-bg)",
   },
   full: {},
 });

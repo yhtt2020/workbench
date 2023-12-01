@@ -66,26 +66,25 @@
 
     </div>
   </div>
-  <xt-button :w="60" :h="27" v-if="this.settings.courierStatus.statusBar   "
-             style="background-color: var(--active-secondary-bg);margin-left: 12px;position: relative;color: var(--primary-text);"
-             @click="showTopCourier">
-    <div class="flex items-center justify-between">
-      <newIcon icon="fluent-emoji:package" style="font-size: 20px;margin-right: 4px;vertical-align: sub"/>
-      <span v-if="list.length>0"
-        style="display: inline-block; width: 20px; height: 20px;background-color: var(--active-bg);border-radius: 50%;text-align: center;line-height: 20px;font-size: 14px;color: rgba(255,255,255,0.85);">{{
-          list.length
-        }}</span>
-    </div>
+  <xt-button  h="28" v-if="this.settings.courierStatus.statusBar" class="xt-bg-t-2"
+    style="margin-right:10px;position: relative;color: var(--primary-text); border-radius: 6px !important; padding: 0 4px !important;" 
+    @click="showTopCourier" :style=" list.length !== 0 ? { width:'auto !important' } : { width:'28px !important' }"
+  >  
+   <div class="flex items-center justify-center">
+    <newIcon icon="fluent:box-16-regular" style="font-size: 1.25rem;vertical-align: sub" :style=" list.length !== 0 ? { 'margin-right': '4px' } : { 'margin-right': '0px;' }"/>
+    <span v-if=" list.length !== 0" class="xt-text xt-font font-14">
+      {{ list.length }}
+    </span>
+   </div>
   </xt-button>
   <teleport to='body'>
     <AddCourierModal ref="addCourierRef"/>
   </teleport>
   <teleport to='body'>
-    <xt-old-modal v-if="showCourierDetail" v-model:visible="showCourierDetail" title="" :isFooter="false" zIndex="9"
-              :isHeader="false" :boxIndex="100" :maskIndex="99">
+    <xt--modal v-if="showCourierDetail" v-model="showCourierDetail" title="" :footer="false" index="100"  :header="false">
       <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
       <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers"/>
-    </xt-old-modal>
+    </xt--modal>
   </teleport>
   <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
   <teleport to='body'>

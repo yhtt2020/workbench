@@ -1,6 +1,6 @@
 <template>
  <div style="overflow: hidden">
-  <div @click="fixed" :class="{active:alwaysTop}" class="flex pointer   btn-top-active  items-center no-drag">
+  <div @click="fixed" :class="{active:alwaysTop}" class="flex pointer rounded-bl-xl  btn-top-active  items-center no-drag">
     <Icon icon="Pushpin" style="font-size: 1.2em;zoom:1.1"></Icon>
   </div>
   <div @click="minimize" class="flex  items-center btn-top-active pointer no-drag">

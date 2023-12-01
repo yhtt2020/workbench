@@ -3,11 +3,10 @@
       <LeftTab>
           <div class="h-full w-full flex">
               <div class="flex h-full">
-              <!-- <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft> -->
-              <LeftSearch :selDesk="selDesk"></LeftSearch>
+              <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
               </div>
               <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-                <NodeContent :selDesk="selDesk" v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
+                <NodeContent :menus="menus" :selDesk="selDesk" v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
               </div>
           </div>
       </LeftTab>
@@ -61,6 +60,7 @@
   import { Icon } from '@iconify/vue';
   import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled';
   import { cardStore } from '../../store/card'
+  import { message } from 'ant-design-vue';
 
   export default {
     name: 'note',
@@ -76,51 +76,144 @@
     },
     data () {
       return {
+        // 右键菜单
+        
+        menus:[
+          // { 
+          //     label: "小窗模式", 
+          //     // callBack: this.callBack, 
+          //     newIcon: "fluent:window-multiple-16-filled",
+          // },
+          {
+            newIcon: 'fluent:copy-20-regular',
+            label: '复制内容',
+            callBack: () => {
+              // let content = this.$refs.mdEditor.getContent()
+              
+              let content = this.noteList[this.selNote]?.customData.text
+              require('electron').clipboard.writeHTML(content)
+              message.success('复制内容成功')
+              console.log(content, 'md内容')
+            }
+          },
+          {
+            newIcon: 'fluent:markdown-20-regular',
+            label: '复制MD文本',
+            callBack: () => {
+              let content = this.noteList[this.selNote]?.customData.text
+              // let content = this.$refs.mdEditor.getMarkdown()
+              require('electron').clipboard.writeText(content)
+              message.success('复制内容成功')
+              console.log(content, 'md内容')
+            }
+          },
+          {
+            newIcon: 'fluent:clipboard-code-24-regular',
+            label: '复制HTML代码',
+            callBack: () => {
+              let content = this.noteList[this.selNote]?.customData.text
+              // let content = this.$refs.mdEditor.getContent()
+              require('electron').clipboard.writeText(content)
+              message.success('复制内容成功')
+              console.log(content, 'md内容')
+            }
+          },
+          {
+              label: '添加到桌面', 
+              callBack: ()=>{
+                  // 修改当前选中桌面
+                  if (!this.isSelTab) {
+                      // 添加到桌面
+                      this.selDesk()
+                  }else{
+                      // 还原
+                      this.restore()
+                  }
+              }, 
+              newIcon: "fluent:open-20-filled",
+          },
+          { 
+              label: "跳转到桌面", 
+              newIcon: "majesticons:monitor-line",
+              callBack:()=>{
+                  if (this.noteList[this.selNote].deskName) {
+                      this.deskList?.forEach((item,index)=>{
+                          if (this.noteList[this.selNote].deskId == item.id) {
+                              this.currentDeskId = item.id
+                              this.$router.push({
+                                  name:'home',
+                              })
+                          }
+                      })
+                  }else{
+                      if (this.isSelTab) {
+                          message.error('该便签已被删除')
+                      }else{
+                          message.error('请先添加桌面')
+                      }
+                  }
+              }
+          },
+          { 
+            label: '删除便签', 
+            newIcon: "akar-icons:trash-can",
+            color:'#FF4D4F',
+            callBack:()=>{
+                if (!this.isSelTab) {
+                    // 删除
+                    this.moveToTrash()
+                }else{
+                    // 彻底删除
+                    this.deleteNote()
+
+                }
+            }
+          },
+      ],
         icons: {
           dismiss16Filled,
         },
         // 弹窗
         promptVisible:false,
 
+
       }
     },
-    async mounted () {
+    watch: {
+        isSelTab(newval,oldval){
+            if (newval) {
+                this.menus[3].label = '还原'
+                this.menus[5].label = '彻底删除'
+            }else{
+                this.menus[3].label = '添加到桌面'
+                this.menus[5].label = '删除便签'
+            }
+        }
+    },
+    mounted () {
+      // 重置默认数据
       this.selNote = -1
       if (this.$route.params.customIndex) {
           this.isSelTab = false
       }
-      await this.getNotes().then(()=>{
+      // 处理从桌面跳转过来的数据 
+      this.getNotes().then(()=>{
         if (this.$route.params.customIndex) {
           this.noteList.forEach((item,index)=>{
             if (item.id  == this.$route.params.customIndex) {
               this.selNote = index
+              this.selNoteTitle = this.noteList[this.selNote]?.customData.title
             }
           })
         }
       })
     },
     computed: {
-          ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isSelTab']),
-          ...mapWritableState(cardStore, ['desks','selIndex']),
-          // backgroundImage(){
-          //   if (this.noteList.length) {
-          //     return this.selIndex == index? 'rgba(80,139,254,0.20)' : '#2A2A2A' 
-          //   }
-          // },
-          // border(){
-          //   if (this.noteList.length) {
-          //     return this.selIndex == index? '1px solid rgba(80,139,254,1)' : '1px solid transparent' 
-          //   }
-          // },
-          // marginBottom(){
-          //   if (this.noteList.length) {
-          //     return index == this.desks.length-1? '0' : '16px'
-          //   }
-          // },
-          
+      ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','isSelTab','deskList','selNoteTitle']),
+      ...mapWritableState(cardStore, ['desks','selIndex']),
     },
     methods: {
-      ...mapActions(noteStore,['getNotes','switchDesk']),
+      ...mapActions(noteStore,['getNotes','switchDesk','selDesk','restore','moveToTrash','deleteNote']),
       // 选择便签
       changeSelIndex(n){
         this.selIndex = n

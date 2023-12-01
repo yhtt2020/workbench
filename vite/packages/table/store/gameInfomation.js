@@ -21,7 +21,7 @@ export async function getGameInfo(url){
     }
     let dataList =[];
     await get(sUrl(url),params).then(res=>{
-        if(res.status){
+        if(res?.status){
             if (res.data.allnum) {
                 dataList = res.data.newslist
             }

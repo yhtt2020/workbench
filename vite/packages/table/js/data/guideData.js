@@ -1,17 +1,30 @@
 // 步骤一选择工作台模式数据
 export const guideData = [
   {
-    title: '游戏娱乐', url: 'joystick_3d', id: 'gr',
-    explain: '在左侧栏添加游戏助手，支持steam平台游戏，录屏截屏，查看攻略；支持系统CPU、GPU、内存、游戏帧数检测。'
+    title: '默认桌面', 
+    url: ['fluent-emoji:desktop-computer'], 
+    id: 'de',
+    explain: '为你添加游戏娱乐相关的桌面组件和设置。'
   },
   {
-    title: '效率办公', url: 'keyboard_3d', id: 'wf',
-    explain: '在左侧栏添加办公应用，支持快捷键、剪切板、AI、待办。'
+    title: '游戏娱乐', 
+    url: ['fluent-emoji:joystick'], 
+    id: 'gr',
+    explain: '为你添加游戏娱乐相关的桌面组件和设置。'
   },
   {
-    title: '极简DIY', url: 'magic_wand_3d', id: 'dy',
-    explain: '无内置推荐数据，仅保留基础核心功能模块，从0开始DIY你的专属工作台。建议老用户选择。'
-  }
+    title: '效率办公', 
+    url: ['fluent-emoji:card-index'], 
+    id: 'wf',
+    explain: '为你添加效率办公相关的桌面组件和设置。'
+  },
+  {
+    title: '游戏+效率', 
+    url: ['fluent-emoji:card-index', 'fluent-emoji:joystick'], 
+    id: 'dy',
+    explain: '同时添加效率办公、游戏娱乐相关功能。'
+  },
+
 ]
 
 // 步骤二选择工作台主题模式数据
