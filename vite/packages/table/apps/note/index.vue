@@ -78,7 +78,7 @@ import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled'
 import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
-
+import {Modal as AntModal} from 'ant-design-vue'
 export default {
   name: 'note',
   components: {
@@ -127,11 +127,8 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isSelTab', 'deskList', 'selNoteTitle']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
     ...mapWritableState(cardStore, ['desks', 'selIndex']),
-    isInTrash(){
-      return this.isSelTab
-    },
     menus(){
       return [
         // {
@@ -141,6 +138,7 @@ export default {
         // },
         {
           label: '版本历史',
+          newIcon:'fluent:history-48-filled',
           callBack: async () => {
             this.showVersion = true
 
@@ -181,10 +179,10 @@ export default {
           }
         },
         {
-          label: this.isInTrash?'还原':'添加到桌面',
+          label: this.isTrash?'还原':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
-            if (this.isInTrash) {
+            if (this.isTrash) {
               // 还原
               this.restore()
             } else {
@@ -217,13 +215,20 @@ export default {
           }
         },
         {
-          label: this.isInTrash?'彻底删除':'删除',
+          label: this.isTrash?'彻底删除':'删除',
           newIcon: 'akar-icons:trash-can',
           color: '#FF4D4F',
           callBack: () => {
-            if (this.isInTrash) {
+            if (this.isTrash) {
               // 彻底删除
-              this.deleteNote()
+              AntModal.confirm({
+                content:'彻底删除后无法还原，请确认。',
+                okText:'确认删除',
+                centered:true,
+                onOk:()=>{
+                  this.deleteNote()
+                }
+              })
             } else {
               // 删除
               this.moveToTrash()
