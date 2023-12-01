@@ -4,6 +4,7 @@ import {cardStore} from '../../store/card';
 import {mapActions, mapState, mapWritableState} from "pinia";
 import {useToast} from "vue-toastification";
 import { v4 as uuidv4 } from 'uuid'
+import { message } from 'ant-design-vue'
 const toast = useToast()
 // @ts-ignore
 export const noteStore = defineStore("noteStore", {
@@ -379,6 +380,12 @@ export const noteStore = defineStore("noteStore", {
           isDelete: true,
           deskId:'',
           deskName:'',
+        }).then(res=>{
+          if (res?.ok) {
+            message.success('删除成功')
+          }else{
+            message.error('删除失败')
+          }
         })
       }
       this.selNote = -1
@@ -404,6 +411,12 @@ export const noteStore = defineStore("noteStore", {
         await tsbApi.db.put({
           ...tmp[0],
           isDelete: false,
+        }).then(res=>{
+          if (res?.ok) {
+            message.success('还原成功')
+          }else{
+            message.error('还原失败')
+          }
         })
       }
 
@@ -419,9 +432,15 @@ export const noteStore = defineStore("noteStore", {
     },
     // 彻底remove tsbApi中的数据
     async deleteNote() {
-      let tmp = await this.findId(this.noteList[this.selNote]._id, true)
+      let tmp = await this.findId(this.not1eList[this.selNote]._id, true)
       if (tmp) {
-        await tsbApi.db.remove(tmp[0])
+        await tsbApi.db.remove(tmp[0]).then(res=>{
+          if (res?.ok) {
+            message.success('删除成功')
+          }else{
+            message.error('删除失败')
+          }
+        })
       }
       this.selNote = -1
       this.getNotes()

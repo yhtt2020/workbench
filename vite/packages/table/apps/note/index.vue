@@ -189,7 +189,7 @@ export default {
               this.moveToTrash()
             } else {
               // 彻底删除
-              this.deleteNote()
+              this.deleteNote(this.noteList[this.selNote]._id)
 
             }
           }

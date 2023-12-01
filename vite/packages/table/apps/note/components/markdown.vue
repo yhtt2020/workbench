@@ -31,9 +31,10 @@ export default {
       height: '100%',
       mode: 'ir',
       theme: 'dark',
+      placeholder: "备忘录是一款想天工作台的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式",
       // counter:{
-        //   enable:true,
-        // },
+      //     enable:true,
+      //   },
       toolbarConfig: {
         pin: true,
         tipPosition:'s',
@@ -43,7 +44,22 @@ export default {
       },
       // 编辑器工具参数
       // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'devtools', 'upload', 'help', 'br'],
+      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'upload',
+      {
+          name: "more",
+          toolbar: [
+              // "both",
+              // "code-theme",
+              // "content-theme",
+              "export",
+              "outline",
+              "preview",
+              "devtools",
+              // "info",
+              "help",
+          ],
+      },
+      ],
       after: () => {
         if (this.selNote >= 0 && this.noteList.length) {
           this.contentEditor.setValue(this.noteList[this.selNote]?.customData.text)
@@ -177,14 +193,18 @@ export default {
 
 }
   // 字数统计
-  // .vditor-counter{
-  //   position: absolute;
-  //   right: 0;
-  // }
+  .vditor-counter{
+    // position: absolute;
+    // right: 0;
+  }
 
 .vditor-toolbar__item {
   -webkit-app-region: no-drag;
   margin-right: 6px;
+}
+
+.vditor-outline__title{
+  text-align: center;
 }
 
 .box .vditor-markdown {
@@ -200,7 +220,9 @@ export default {
   .vditor-img__btn{
     -webkit-app-region:no-drag;
   }
-
+  .vditor-ir .vditor-reset > h1:before{
+    color: var(--primary-text);
+  }
   // 以下样式针对全屏模式下的便签编辑器调整
   .pop-box .vditor-toolbar{
       position: absolute;
@@ -235,43 +257,52 @@ export default {
     color: var(--primary-text) !important;
     // padding: 0 !important;
   }
-
+  // 大纲
+  .vditor-outline{
+    width: 25%;
+  }
 
   // 以下样式针对markdown特殊格式进行调整
   .vditor-ir h1 {
     margin: 16px 0 12px;
     font-size: 22px;
     font-weight: 85;
+    color:var(--primary-text);
   }
-
+  
   .vditor-ir h2 {
     margin: 16px 0 12px;
     font-size: 20px;
     font-weight: 85;
+    color:var(--primary-text);
   }
-
+  
   .vditor-ir h3 {
     margin: 16px 0 12px;
     font-size: 18px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h4 {
     margin: 16px 0 12px;
     font-size: 16px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h5 {
     margin: 16px 0 12px;
     font-size: 15px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h6 {
     margin: 16px 0 12px;
     font-size: 15px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir [data-type='em'] {
