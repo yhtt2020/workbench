@@ -125,7 +125,7 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="!simple" :style="{ width: '11em'}">
+  <div v-else-if="!simple" :style="{ width: '5em'}">
     <div class="pointer" @click="social">
       <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->

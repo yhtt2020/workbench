@@ -10,7 +10,7 @@
         color: var(--primary-text);
         border-radius: 18px;
       ">
-        <MyAvatar v-if="!simple" :chat="true" :level="true"></MyAvatar>
+        <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
         <div v-show="settings.enableChat && !simple" class="pointer">
           <ChatButton></ChatButton>
         </div>
@@ -32,7 +32,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-        /* z-index: 99; */
+        z-index: 99;
       ">
         <div style="
           display: flex;
@@ -201,7 +201,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 99 : 90}"  v-if="quick">
+      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 100 : 90}"  v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -260,6 +260,7 @@ import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import RightMenu from "../components/desk/Rightmenu.vue";
+import { Notifications } from '../js/common/sessionNotice' 
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -356,7 +357,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          fn: () => { this.editNavigation(this.drawerMenus[2]) }
         }
       ],
       rightMenus: [
@@ -446,7 +447,8 @@ export default {
       shakeElement:false,
       currentIndex:null,
       currentItem:null,
-      delItemIcon:false
+      delItemIcon:false,
+      notifications:new Notifications()
     }
   },
   props: {
@@ -535,7 +537,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle','popVisible']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -854,6 +856,9 @@ export default {
         sort: true,
         animation: 150,
         onStart: function (event) {
+          if(that.popVisible){
+            that.notifications.NoticeToast()
+          }
           let delIcon = document.getElementById('delIcon2')
           that.delItemIcon=true
           that.$emit('getDelIcon', true)

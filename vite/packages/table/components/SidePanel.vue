@@ -2,7 +2,8 @@
   <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
   width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
   <RightMenu :menus="rightMenus" class="flex max-h-full">
-    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full" style="" ref="sideContent" @contextmenu="showMenu">
+    <!-- style="z-index: 99" -->
+    <div @click.stop class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full"  ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;" class="w-full">
         <div :id="sortId" class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
@@ -84,6 +85,7 @@ import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import RightMenu from "../components/desk/Rightmenu.vue";
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNavigation from './bottomPanel/EditNavigation.vue';
+import { Notifications } from '../js/common/sessionNotice' 
 export default {
   name: 'SidePanel',
   components: {
@@ -138,7 +140,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          fn: () => { this.editNavigation(this.drawerMenus[2]) }
         }
       ],
       rightMenus: [
@@ -230,6 +232,7 @@ export default {
       currentItem: null,
       currentIndex:null,
       currentList:'left',
+      notifications:new Notifications()
     }
   },
   props: {
@@ -284,7 +287,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle','popVisible']),
     ...mapWritableState(appStore,['settings'])
   },
   mounted() {
@@ -336,6 +339,9 @@ export default {
         sort: true,
         animation: 150,
         onStart: function (event) {
+          if(that.popVisible){
+            that.notifications.NoticeToast()
+          }
           let delIcon = document.getElementById('delIcon2')
           that.$emit('getDelIcon', true)
           this.delNav = true
