@@ -129,6 +129,9 @@ export default {
   computed: {
     ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isSelTab', 'deskList', 'selNoteTitle']),
     ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    isInTrash(){
+      return this.isSelTab
+    },
     menus(){
       return [
         // {
@@ -178,15 +181,15 @@ export default {
           }
         },
         {
-          label: !this.isSelTab?'添加到桌面':'还原',
+          label: this.isInTrash?'还原':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
-            if (!this.isSelTab) {
-              // 添加到桌面
-              this.selDesk()
-            } else {
+            if (this.isInTrash) {
               // 还原
               this.restore()
+            } else {
+              // 添加到桌面
+              this.selDesk()
             }
           },
           newIcon: 'fluent:open-20-filled',
@@ -214,17 +217,16 @@ export default {
           }
         },
         {
-          label: !this.isSelTab?'删除':'彻底删除',
+          label: this.isInTrash?'彻底删除':'删除',
           newIcon: 'akar-icons:trash-can',
           color: '#FF4D4F',
           callBack: () => {
-            if (!this.isSelTab) {
-              // 删除
-              this.moveToTrash()
-            } else {
+            if (this.isInTrash) {
               // 彻底删除
               this.deleteNote()
-
+            } else {
+              // 删除
+              this.moveToTrash()
             }
           }
         },
