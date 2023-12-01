@@ -319,11 +319,22 @@ const heightScorll=computed(()=>{
 })
 
 const topClockVisible=computed(()=>{
-    if(useCountDownStore.countDowntime.minutes || firstClockTime.value){
-        return true
+    if (usetopClockSettingStore.checkTopClock){
+        if (useCardStore.filterClockEvent.length > 0){
+            return true;
+        }else if(useCountDownStore.countDowntime.seconds !==undefined){
+            return true;
+        }else{
+            return false;
+        }
     }else{
         return false
     }
+    // if(useCountDownStore.countDowntime.minutes || firstClockTime.value){
+    //     return true
+    // }else{
+    //     return false
+    // }
 })
 
 const addSettingClock = () => {

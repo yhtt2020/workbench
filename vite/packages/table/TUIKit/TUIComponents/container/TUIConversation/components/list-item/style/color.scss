@@ -5,8 +5,14 @@
     }
     .left {
       .num {
-        background: red;
-        color: #ffffff;
+        &-small{
+          background: red;
+          color: #ffffff;
+        }
+        &-large{
+          background: red;
+          color: #ffffff;
+        }
         &-notify {
           background: red;
           color: #ffffff;
