@@ -274,11 +274,11 @@ export const noteStore = defineStore("noteStore", {
             text: value,
             // content: content
           },
-          content: content,
+          content: value,
           updateTime: now,
         })
         //记录版本
-        await this.saveHistory('note:' + id, content)
+        await this.saveHistory('note:' + id, value)
       }
     },
 
