@@ -12,15 +12,14 @@
       </div>
       <div class="px-8">
         <span class="title">选择导出桌面：</span>
-        {{ desk }}
-        <!-- :default-value="desk" -->
+        <!-- -->
         <a-select
           :bordered="false"
           class="text-xs rounded-lg input"
           size="large"
           mode="multiple"
           :dropdownStyle="{ 'z-index': 9999999,backgroundColor: 'var(--secondary-bg)' }"
-          v-model:value="selectDesk"
+          :default-value="desk"
           style="width:416px;height:48px; border:none;"
           placeholder="请选择"
           @change="onChange"
@@ -106,8 +105,6 @@ export default {
       this.$emit('closeExport',false)
     },
     onChange(val){
-      console.log('val :>> ', val);
-      console.log('this.desks :>> ', this.desks);
       this.selectedDesk = []
       const deskSize=this.layoutSize||this.deskSize //取出布局尺寸
       let desks = JSON.parse(JSON.stringify(this.desks))
@@ -173,7 +170,6 @@ export default {
           }
         }
       })
-      console.log('2输出了',this.selectedDesk);
     },
     async exportBtn() {
       if (!this.selectedDesk.length) {
@@ -181,7 +177,6 @@ export default {
         return
       }
       this.dataInit()
-      console.log('this.getShareJson() :>> ', this.getShareJson());
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: '我的桌面分享.desk',

@@ -756,7 +756,6 @@ export default {
     },
     showMenu() {
       this.$refs.currentDeskRef.showMenu();
-      console.log('object :>> ', this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");
@@ -780,8 +779,6 @@ export default {
 
       try {
         needImportDesk = JSON.parse(importJsonTxt);
-        console.log('this.freeLayoutData :>> ', this.freeLayoutData);
-        console.log('this.freeLayoutState :>> ', this.freeLayoutState);
         const  {desk,  freeLayoutData,  freeLayoutState } =needImportDesk
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
          desk.forEach((g) => {
@@ -804,12 +801,9 @@ export default {
           g.settings.zoom = parseInt(cardZoom);
           g.id = window.$models.nanoid.nanoid(8);
   if (freeLayoutState[oldId] ) {
-
-    console.log('有自由布局',oldId);
               this.freeLayoutData[g.id] = freeLayoutData[oldId]
               this.freeLayoutState[g.id] =freeLayoutState[oldId]
             }
-    console.log('有自由布局',       this.freeLayoutState);
           this.deskList.unshift(g);
         });
         this.addDeskVisible = false;
