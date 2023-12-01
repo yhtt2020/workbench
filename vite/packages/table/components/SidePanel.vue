@@ -62,7 +62,7 @@
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       </div>
     </transition>
-  
+
 </template>
 
 <script>
@@ -160,7 +160,7 @@ export default {
           newIcon: "fluent:eye-off-16-regular",
           fn: () => { this.navVisible() },
         },
-        
+
         {
           id: 4,
           name: '更多',
@@ -285,7 +285,7 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav','bottomToggle']),
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings' ])
   },
   mounted() {
     this.enableDrag()
@@ -314,6 +314,7 @@ export default {
   methods: {
     ...mapActions(navStore, ['removeSideNavigationList','removeRightNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
+    ...mapActions(appStore,['toggleFullScreen']),
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
@@ -409,13 +410,7 @@ export default {
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
-            if (this.full) {
-              this.full = false
-              tsbApi.window.setFullScreen(false)
-            } else {
-              this.full = true
-              tsbApi.window.setFullScreen(true)
-            }
+            this.toggleFullScreen()
           } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)
@@ -483,13 +478,13 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-          this.bottomToggle[2]=!this.bottomToggle[2] 
+          this.bottomToggle[2]=!this.bottomToggle[2]
             break;
           case 'community':
-          this.bottomToggle[1]=!this.bottomToggle[1] 
+          this.bottomToggle[1]=!this.bottomToggle[1]
             break;
           case 'user':
-            this.bottomToggle[0]=!this.bottomToggle[0] 
+            this.bottomToggle[0]=!this.bottomToggle[0]
             break;
           case 'chat':
             this.settings.enableChat=!this.settings.enableChat
