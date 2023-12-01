@@ -137,8 +137,6 @@
           >
             <template #item="{ item }">
               <div
-                :class="{ editing: editing }"
-                :editing="editing"
                 :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
@@ -569,6 +567,12 @@ export default {
       },
       deep: true,
     },
+    editing(val) {
+      // console.log("val :>> ", val);
+      // if (!val) {
+      //   this.toggleEditing();
+      // }
+    },
   },
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
@@ -706,12 +710,10 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     resetLayout() {
       console.log("触发了 resetLayout:>> ");
-      // if (this.editing && !this.isFreeLayout) {
       this.hide = true;
       setTimeout(() => {
         this.hide = false;
-      }, 100);
-      // }
+      }, 1);
     },
     freeLayoutScrollbarRedirect() {
       this.$refs.freeLayoutScrollbar.redirect();
@@ -734,8 +736,7 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
-      this.editing = !this.editing;
-      console.log('      this.editing :>> ',       this.editing);
+      console.log('触发了 :>> ', );
       if (this.editing) {
         message.info("已关闭拖拽调整");
       } else {

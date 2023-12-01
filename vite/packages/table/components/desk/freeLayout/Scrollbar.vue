@@ -1,18 +1,13 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <div
-    ref="scrollbar"
-    class="no-drag relative w-full"
-    style="
+  <div ref="scrollbar" class="no-drag relative w-full" style="
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
       height: 100%;
-    "
-    :style="{
+    " :style="{
       cursor: dragStyle,
-    }"
-  >
+    }">
     <slot> </slot>
   </div>
 </template>
@@ -116,8 +111,14 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-    scrollbar.value.scrollTop -= dy;
-    scrollbar.value.scrollLeft -= dx;
+
+    try {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    } catch (error) {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    }
 
     initialMousePosition.value = { x: event.clientX, y: event.clientY };
   }
@@ -177,10 +178,10 @@ let initialMousePosition = ref(null);
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
     capture: true,
   });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
     capture: true,
   });
   window.removeEventListener("keydown", handleKeyDown, {
