@@ -1,4 +1,6 @@
 <template>
+
+
   <div class="w-full h-full flex justify-center items-center">
     <div class="w-full center overflow-hidden flex justify-center flex-wrap h-full">
       <!-- 顶部 -->
@@ -9,7 +11,7 @@
             style="background-color: var(--mask-bg);border-radius:10px;height: 40px;padding: 0 10px;"
             @click="changeDesk"
           >
-            <Icon icon="majesticons:monitor-line" width="20" height="20" />
+            <Icon icon="majesticons:monitor-line" width="20" height="20"/>
             <div class="ml-2" v-if="deskName">{{ deskName }}</div>
           </div>
           <div style="font-size: 14px;color: var(--secondary-text);">{{ time }}</div>
@@ -28,16 +30,21 @@
                  v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}"
                  @click="changeBgColor(index)"></div>
           </div>
-            <!-- 全屏 -->
-            <div class="flex items-center pointer justify-center mr-3"
-                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
-                @click="changeIsFull">
-                <Icon icon="fluent:full-screen-maximize-16-filled" width="20" height="20"/>
-            </div>
-            <!-- 设置 -->
+          <div class="flex items-center pointer justify-center mr-3"
+               style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
+               @click="save(true)">
+            <Icon icon="fluent:save-16-regular" width="20" height="20"/>
+          </div>
+          <!-- 全屏 -->
+          <div class="flex items-center pointer justify-center mr-3"
+               style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
+               @click="changeIsFull">
+            <Icon icon="fluent:full-screen-maximize-16-filled" width="20" height="20"/>
+          </div>
+          <!-- 设置 -->
           <xt-menu :menus="menus" model="click">
             <div class="flex items-center pointer justify-center no-drag"
-                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;">
+                 style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;">
               <Icon icon="fluent:more-horizontal-16-filled" width="20" height="20"/>
             </div>
           </xt-menu>
@@ -47,15 +54,15 @@
       <div class="h-full" style="width:950px;">
         <div class="mt-4 shadow overflow-hidden h-full" style="border-radius: 12px;padding: 24px 0 0 0 ;"
              :style="{background:background}">
-          <a-input
-            style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
+          <a-input placeholder="标题"
+                   style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 50px; "
-            v-model:value="this.selNoteTitle"
-            maxlength="15"
-            @blur="changeNoteTitle"
+                   v-model:value="this.selNoteTitle"
+                   maxlength="15"
+                   @blur="changeNoteTitle"
           ></a-input>
           <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">
-            <Markdown ref="child"></Markdown>
+            <Markdown ref="editor"></Markdown>
           </div>
         </div>
       </div>
@@ -71,61 +78,61 @@ import moreHorizontal16Filled from '@iconify-icons/fluent/more-horizontal-16-fil
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import { noteStore } from '../store'
 import { cardStore } from '../../../store/card'
-import { formatTime } from '../../../util'
+import { formatTime, formatTimestamp } from '../../../util'
 import Markdown from './markdown.vue'
 import FullScreen from './fullScreen.vue'
 
 import { message } from 'ant-design-vue'
+import Modal from '../../../components/Modal.vue'
 
 export default {
   components: {
+    Modal,
     Icon,
     Markdown,
     FullScreen,
-   },
-   props:['selDesk','menus'],
-   computed: {
-    ...mapWritableState(noteStore, ['noteList','selNote','noteBgColor','selNoteTitle','selNoteText','deskList','isSelTab']),
-    deskName(){
-        if (this.noteList.length) {
-            return this.selNote>=0?this.noteList[this.selNote]?.deskName:"" 
-        }
+  },
+  props: ['selDesk','menus'],
+  computed: {
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    deskName () {
+      if (this.noteList.length) {
+        return this.selNote >= 0 ? this.noteList[this.selNote]?.deskName : ''
+      }
     },
-    background(){
-        if (this.noteList.length) {
-            if(this.selNote>=0){
-                return this.selNote>=0?this.noteList[this.selNote]?.customData.background:''
-            }else{
-                return 
-            }
+    background () {
+      if (this.noteList.length) {
+        if (this.selNote >= 0) {
+          return this.selNote >= 0 ? this.noteList[this.selNote]?.customData.background : ''
+        } else {
+          return
         }
+      }
     },
-    time() {
-      const currentNote = this.noteList[this.selNote]
-        // return 
-        if (this.selNote>=0 && this.noteList) {
-            if(currentNote){
-                let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
-                if (timestamp == undefined) {
+    time () {const currentNote = this.noteList[this.selNote]
+      // return
+      if (this.selNote >= 0 && this.noteList) {
+        if (currentNote) {
+          let timestamp = currentNote.updateTime // 假设您已经获取了时间戳
+          if (timestamp == undefined) {
                   timestamp = currentNote.createTime
-                }
-                return formatTime(timestamp)
-            }else{
-                return 
-            }
-        }else{
-            return
+                }return formatTime(timestamp)
+        } else {
+          return
         }
-    },
-        
-   },
-   data() {
+      } else {
+        return}
+      },
+
+  },
+  data () {
     return {
-        icons: {
-            moreHorizontal16Filled,
-        },
-        isColor:false,
-        isFull:false,
+
+      icons: {
+        moreHorizontal16Filled,
+      },
+      isColor: false,
+      isFull: false,
     }
   },
   mounted () {
@@ -134,8 +141,9 @@ export default {
   methods: {
     ...mapActions(cardStore, ['updateCustomData']),
     ...mapActions(noteStore, ['saveNoteDb', 'getNotes', 'addNoteToDesk', 'changeBg', 'moveToTrash', 'restore', 'deleteNote']),
-    changeIsFull(){
-        this.isFull = !this.isFull
+    formatTime,
+    changeIsFull () {
+      this.isFull = !this.isFull
     },
     // 修改当前便签颜色
     changeBgColor (i) {
@@ -173,15 +181,29 @@ export default {
         this.saveNoteDb()
       }
     },
+    async save () {
+      let saveRs = await this.$refs.editor.save()
+      if (saveRs) {
+        message.success({
+          content: '保存成功。', key: 'save'
+        })
+      } else {
+        message.error({
+          content: '保存失败，请手动将当前文本复制，以免丢失内容。', key: 'save'
+        })
+      }
+      console.log('保存结果', saveRs)
+
+    },
     changeDesk () {
       if (!this.isSelTab) {
         this.selDesk()
       }
     },
-    watchEditorValue(value){
-      this.$refs.child?.childEvent(value);
+    watchEditorValue (value) {
+      this.$refs.editor?.childEvent(value)
     },
-    
+
   },
 }
 </script>
@@ -206,13 +228,14 @@ export default {
   border-radius: 6px; /* 轨道圆角 */
 }
 
-:deep(.vditor-toolbar){
-    background: var(--main-bg) !important;
+:deep(.vditor-toolbar) {
+  background: var(--main-bg) !important;
     // height: 35px;
     // overflow: hidden;
 }
-:deep(.vditor-reset){
-    background: var(--main-bg) !important;
+
+:deep(.vditor-reset) {
+  background: var(--main-bg) !important;
 }
 
 </style>

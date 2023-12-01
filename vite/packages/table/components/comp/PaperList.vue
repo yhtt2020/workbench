@@ -32,7 +32,6 @@
       <div @click="setAppPaper" class="btn relative">
         <Icon style="font-size: 3em" icon="tianjia1"></Icon>
         <div>设为工作台背景</div>
-        <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
       </div>
     </a-col>
   </a-row>
@@ -111,7 +110,7 @@ export default {
       }else{
         // console.log('测试::>>',this.paperCurrent)
         this.doStartDownload(this.paperCurrent.src)
-        
+
       }
     },
 

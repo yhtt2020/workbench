@@ -641,15 +641,21 @@ export default {
         },
         {
           id: 6,
+          newIcon: "lets-icons:full" ,
+          name: "全屏桌面",
+          fn: this.setFullScreen,
+        },
+        {
+          id: 7,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
           name: this.hide ? "显示小组件" : "隐藏小组件",
           fn: this.hide ? this.showDesk : this.hideDesk,
         },
-        { id: 7, divider: true },
+        { id: 8, divider: true },
         {
-          id: 8,
+          id: 9,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,
@@ -712,8 +718,7 @@ export default {
     };
     this.getLayoutSize();
     window.addEventListener("resize", this.resizeHandler);
-    this.loaded = true;
-    console.log("loaded=true");
+    this.loaded=true
   },
   unmounted() {
     window.removeEventListener("resize", this.resizeHandler);
@@ -739,6 +744,7 @@ export default {
     },
     update(callback) {
       if (this.$refs.grid) {
+        console.log('☆执行desk的update')
         this.$refs.grid.update(callback);
       }
     },

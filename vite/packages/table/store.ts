@@ -3,10 +3,11 @@ import dbStorage from "./store/dbStorage";
 import {sUrl} from './consts'
 
 const userCardUrl = sUrl('/app/com/userCard')
-import axios from 'axios'
-import {getConfig} from "./js/axios/serverApi";
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
+
+
+
 
 // @ts-ignore
 // @ts-ignore
@@ -45,6 +46,7 @@ export const appStore = defineStore('appStore', {
     showWindowController:true,//窗口全屏，这个和上面的全屏不是同一个，区别是这个只影响窗体在系统层面上的最大化。
 
     settings: {
+      enableDev:false,//开发者模式
       transparent: false,//透明背景
       duck:false,//音量控制的时候，鸭子叫
       down: {
