@@ -32,7 +32,7 @@
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
-        z-index: 99;
+        /* z-index: 99; */
       ">
         <div style="
           display: flex;
