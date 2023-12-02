@@ -10,7 +10,6 @@ export let  socket:any ={}
 
 export const initSocket = async () => {
   let config = await getConfig()
-  console.log(config,'获得到的config')
   const socketConfig={
     debug:true,
     autoConnect: false,
@@ -29,13 +28,10 @@ export const initSocket = async () => {
     socketConfig.secure=true
     //不是开发环境下，单独适配
   }
-
-  console.log('连接头',socketConfig)
   socket = io(dev?socketDevUrl:socketPrdUrl, socketConfig);
 
   socket.open();
   socket.on('connect', () => {
-    console.log("连接成功");
     // 接收socket连接成功返回的消息
     socket.on('message', data => {
       console.log("socket连接成功的消息", data);

@@ -60,6 +60,13 @@ const menus = [
     route: {
       name: 'barrageSetting'
     }
+  },
+  {
+    title: '开发',
+    name: 'dev',
+    route: {
+      name: 'devSetting'
+    }
   }
 
 ]

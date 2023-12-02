@@ -29,10 +29,10 @@ export default defineComponent({
   <div @click.stop="enterIM" style="padding:0.6em !important;;position:relative;" >
     <emoji style="width: 52px;height:52px" icon="chat"></emoji>
     <div class="rounded-full flex items-center justify-center  ml-3 p-0.5"
-         style="width:25px;height:25px; background:var(--error);color:var(--active-text); position: absolute;right:4px;top:4px"
+         style="width:20px;height:20px; background:red;color:var(--active-text); position: absolute;right:4px;top:4px"
          v-if="unReadStatus !== undefined &&  unReadStatus !== 0"
     >
-      <span v-if="unReadStatus > 99 "  style="font-size: 12px;">99+</span>
+      <span v-if="unReadStatus > 99 "  style="font-size:9px;">99+</span>
       <span v-else> {{ unReadStatus }} </span>
     </div>
   </div>

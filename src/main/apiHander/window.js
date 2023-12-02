@@ -21,6 +21,12 @@ class Window extends Base {
         instance.window.setFocusable(args)
       }
     })
+    this.on('setResizable', (event, args, instance) => {
+      if (instance.window) {
+        console.log('设置了resizeable',args)
+        instance.window.setResizable(args)
+      }
+    })
     this.on('setSkipTaskbar', (event, args, instance) => {
       if (instance.window) {
         instance.window.setSkipTaskbar(args)

@@ -18,7 +18,7 @@ import { cardStore } from '../../../store/card'
 export default {
   components: {},
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList']),
   },
   data () {
     return {
@@ -31,9 +31,10 @@ export default {
       height: '100%',
       mode: 'ir',
       theme: 'dark',
+      placeholder: "备忘录是一款想天工作台的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式",
       // counter:{
-        //   enable:true,
-        // },
+      //     enable:true,
+      //   },
       toolbarConfig: {
         pin: true,
         tipPosition:'s',
@@ -43,40 +44,29 @@ export default {
       },
       // 编辑器工具参数
       // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'devtools', 'upload', 'help', 'br'],
+      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'upload',
+      {
+          name: "more",
+          toolbar: [
+              // "both",
+              // "code-theme",
+              // "content-theme",
+              "export",
+              "outline",
+              "preview",
+              "devtools",
+              // "info",
+              "help",
+          ],
+      },
+      ],
       after: () => {
         if (this.selNote >= 0 && this.noteList.length) {
           this.contentEditor.setValue(this.noteList[this.selNote]?.customData.text)
         }
       },
       blur: (value) => {
-        if (this.tmpData != value && this.noteList.length > 0) {
-          // 存在桌面就去修改
-          // 定义一个虚拟元素提取文本
-          let tmpDiv = document.createElement('div')
-          tmpDiv.innerHTML = this.contentEditor.getHTML()
-          // let content = tmpDiv.textContent || tmpDiv.innerText || ''
-          if (this.noteList[this.selNote].deskName != '') {
-            let n = -1
-            this.deskList.forEach((item, index) => {
-              if (item.id == this.noteList[this.selNote].deskId) {
-                n = index
-              }
-            })
-            if (n >= 0) {
-              this.updateCustomData(
-                this.noteList[this.selNote].id,
-                {
-                  text: value,
-                },
-                this.deskList[n]
-              )
-            }
-          }
-          this.noteList[this.selNote].customData.text = value
-          this.saveAppNote(this.noteList[this.selNote].id, value)
-          // this.saveAppNote(this.noteList[this.selNote].id, value, content)
-        }
+       this.save(value)
       },
       upload: {
         multiple: true,
@@ -106,6 +96,38 @@ export default {
     },
     getMarkdown () {
       return this.contentEditor.getValue()
+    },
+    async save(value) {
+      if (this.tmpData != value && this.noteList.length > 0) {
+        // 存在桌面就去修改
+        // 定义一个虚拟元素提取文本
+        // let tmpDiv = document.createElement('div')
+        // tmpDiv.innerHTML = this.contentEditor.getHTML()
+        if(!value){
+          value = this.contentEditor.getValue()
+        }
+        if (this.noteList[this.selNote].deskName != '') {
+          let n = -1
+          this.deskList.forEach((item, index) => {
+            if (item.id == this.noteList[this.selNote].deskId) {
+              n = index
+            }
+          })
+          if (n >= 0) {
+            this.updateCustomData(
+              this.noteList[this.selNote].id,
+              {
+                text: value,
+              },
+              this.deskList[n]
+            )
+          }
+        }
+        this.noteList[this.selNote].customData.text = value
+        return this.saveAppNote(this.noteList[this.selNote].id, value)//, content)
+      }else{
+        return false
+      }
     }
   },
   watch: {
@@ -171,14 +193,18 @@ export default {
 
 }
   // 字数统计
-  // .vditor-counter{
-  //   position: absolute;
-  //   right: 0;
-  // }
+  .vditor-counter{
+    // position: absolute;
+    // right: 0;
+  }
 
 .vditor-toolbar__item {
   -webkit-app-region: no-drag;
   margin-right: 6px;
+}
+
+.vditor-outline__title{
+  text-align: center;
 }
 
 .box .vditor-markdown {
@@ -194,13 +220,15 @@ export default {
   .vditor-img__btn{
     -webkit-app-region:no-drag;
   }
-
+  .vditor-ir .vditor-reset > h1:before{
+    color: var(--primary-text);
+  }
   // 以下样式针对全屏模式下的便签编辑器调整
   .pop-box .vditor-toolbar{
       position: absolute;
       // padding: 0 !important;
       // width: 75%;
-      // left: 0; 
+      // left: 0;
       height: 52px;
       top: 6px;
       display: flex;
@@ -229,43 +257,52 @@ export default {
     color: var(--primary-text) !important;
     // padding: 0 !important;
   }
-
+  // 大纲
+  .vditor-outline{
+    width: 25%;
+  }
 
   // 以下样式针对markdown特殊格式进行调整
   .vditor-ir h1 {
     margin: 16px 0 12px;
     font-size: 22px;
     font-weight: 85;
+    color:var(--primary-text);
   }
-
+  
   .vditor-ir h2 {
     margin: 16px 0 12px;
     font-size: 20px;
     font-weight: 85;
+    color:var(--primary-text);
   }
-
+  
   .vditor-ir h3 {
     margin: 16px 0 12px;
     font-size: 18px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h4 {
     margin: 16px 0 12px;
     font-size: 16px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h5 {
     margin: 16px 0 12px;
     font-size: 15px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir h6 {
     margin: 16px 0 12px;
     font-size: 15px;
     font-weight: 85;
+    color:var(--primary-text);
   }
 
   .vditor-ir [data-type='em'] {

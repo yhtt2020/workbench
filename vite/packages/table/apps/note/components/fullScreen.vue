@@ -16,7 +16,7 @@
           <div style="font-size: 14px;color: var(--secondary-text);">{{ time }}</div>
         </div>
         <div class="flex" style="position: relative;">
-          <div class="flex justify-center items-center mr-3 pointer shadow"
+          <div class="flex justify-center items-center mr-3 pointer shadow no-drag"
               style="width:40px;height:40px;border-radius: 10px;" :style="{background:background}"
               @click="isColor=!isColor"></div>
           <!-- 颜色选择 -->
@@ -29,8 +29,8 @@
                 v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}"
                 @click="changeBgColor(index)"></div>
           </div>
-        <div class="flex items-center pointer justify-center mr-3"
-            style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;color: var(--primary-text);"
+        <div class="flex items-center pointer justify-center mr-3 xt-mask rounded-lg xt-text no-drag"
+            style="width: 40px;height:40px;"
             @click="changeIsFull">
             <Icon icon="fluent:full-screen-minimize-16-filled" width="20" height="20" />
         </div>
@@ -80,7 +80,7 @@ export default {
   props: ['changeIsFull', 'selDesk', 'watchEditorValue','menus'],
   watch: {},
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isTrash']),
     ...mapState(appStore, ['userInfo', 'backgroundImage']),
     deskName () {
       if (this.noteList.length) {
@@ -165,7 +165,7 @@ export default {
       }
     },
     changeDesk () {
-      if (!this.isSelTab) {
+      if (!this.isTrash) {
         this.selDesk()
       }
     },

@@ -41,6 +41,9 @@ const windowApi = {
   setFocusable(flag){
     send('setFocusable',flag)
   },
+  setResizable(flag){
+    send('setResizable',flag)
+  },
   async setSkipTaskbar(flag){
     send('setSkipTaskbar',flag)
   },
