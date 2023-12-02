@@ -44,7 +44,11 @@ const defaultMenu = computed(() => {
       icon: "fluent:eye-off-16-regular",
       title: "隐藏小组件",
       fn: () => {
-        emits("hide");
+        if (currentMode.value == 'free') {
+          getFreeLayoutState.value.system.hide =!getFreeLayoutState.value.system.hide;
+        } else {
+          emits("hide");
+        }
       },
     },
     {
@@ -107,7 +111,6 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
-          console.log('123 :>> ', 123);
           if (alone.value) {
             defaultAloneZoom.value += 5;
           } else {
