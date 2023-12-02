@@ -4,14 +4,16 @@
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
-        class="flex flex-row common-panel user s-bg" style="
-        vertical-align: top;
+        class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
+        /* vertical-align: top; */
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
+        width: 160px;
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
+        <div class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 84px;"></div>
         <div v-show="settings.enableChat && !simple" class="pointer">
           <ChatButton></ChatButton>
         </div>

@@ -85,8 +85,8 @@
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <!-- <Msg :modalVisible="modalVisible" :title="defaultTitle.title" :text='msgText' @onNo="modalVisible = false" @onOk="onOk">
-    </Msg> -->
+    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk">
+    </Msg>
 
     <!-- </div> -->
 </template>
@@ -265,6 +265,19 @@ export default {
         handleMenuClick(item) {
             this.defaultTitle = item
             this.selectNav = item.value
+        },
+        onOk(){
+            console.log(111111);
+            if(this.selectNav==='foot'){
+                this.navigationToggle[2]=true
+                this.modalVisible=false
+            }else if(this.selectNav==='left' ){
+                this.navigationToggle[0]=true
+                this.modalVisible=false
+            }else if(this.selectNav==='right'){
+                this.navigationToggle[1]=true
+                this.modalVisible=false
+            }
         },
         // 拖拽
         mainDrop() {
@@ -498,7 +511,17 @@ export default {
     watch: {
         selectNav() {
             this.defaultTitle = this.currentNav
-        }
+            if(this.selectNav==='foot' && !this.navigationToggle[2]){
+                this.modalVisible=true
+            }else if(this.selectNav==='left' && !this.navigationToggle[0]){
+                this.modalVisible=true
+            }else if(this.selectNav==='right' && !this.navigationToggle[1]){
+                this.modalVisible=true
+            }else{
+                this.modalVisible=false
+            }
+        },
+        
     },
     unmounted() {
         if (this.introduceVisible) {

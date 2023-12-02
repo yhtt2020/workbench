@@ -125,7 +125,7 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="!simple" :style="{ width: '5em'}" class="relative">
+  <div v-else-if="!simple" :style="{ width: '4em'}" class="relative">
     <div class="pointer" @click="social">
       <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
@@ -176,7 +176,7 @@ export default {
       </div>
       
     </div>
-    <div class="h-full w-[1px] absolute top-0 " style="background-color: var(--divider);left: 72px;"></div>
+    
   </div>
   <template v-else>
     <div  class="btn" v-if="isMain()"   @click="social" >
