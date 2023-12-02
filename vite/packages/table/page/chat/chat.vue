@@ -3,10 +3,14 @@
     <div class="w-full">
       <router-view ></router-view>
     </div>
-    <template #communityFloat>
-      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :data="communityData" :float="true"  @clickItem="currentItem"></CategoryFloat>
+    <template v-for="item in filterList" #[item.float]>
+      <CategoryFloat v-if="item.route.params.no !== 1" :communityID="{no:item.route.params.no}" :data="item" :float="true"  @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else :float="true"></DefaultFloat>
     </template>
+    <!-- <template #communityFloat>
+      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :data="communityData" :float="true"  @clickItem="currentItem"></CategoryFloat>
+      <DefaultFloat v-else :float="true"></DefaultFloat>
+    </template> -->
   </xt-left-menu>
   <teleport to='body'>
     <Modal v-if="chatVisible" v-model:visible="chatVisible" :blurFlag="true">
@@ -270,7 +274,7 @@ export default {
       ]
       if(settings.value.enableHide){
         const mapFloatLeft = lastList.map((item)=>{
-          return {...item,float:item.float === '' ? "communityFloat" : ''}
+          return {...item,float:item.float === '' ? `communityFloat${item.no}` : ''}
         });
         return mapFloatLeft
       }else{
