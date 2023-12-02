@@ -14,7 +14,7 @@ export default {
   components: {
   },
   computed: {
-      ...mapWritableState(noteStore, ['isSelTab','selNote','searchValue']),
+      ...mapWritableState(noteStore, ['isTrash','selNote','searchValue']),
     },
     data() {
       return {
@@ -27,7 +27,7 @@ export default {
             callBack: () => {
               if (this.flag) {
                 this.flag=false
-                this.isSelTab = false
+                this.isTrash = false
                 this.getNotes().then(()=>{
                   this.menuList[0].isSel=true
                   this.menuList[1].isSel=false
@@ -45,7 +45,7 @@ export default {
             callBack: () => {
               if (this.flag) {
                 this.flag=false
-                this.isSelTab = true
+                this.isTrash = true
                 this.getNotes().then(()=>{
                   this.menuList[0].isSel=false
                   this.menuList[1].isSel=true

@@ -30,6 +30,7 @@
                  v-for="(item,index) in this.noteBgColor" :key="index" :style="{background:item}"
                  @click="changeBgColor(index)"></div>
           </div>
+          <!-- 保存 -->
           <div class="flex items-center pointer justify-center mr-3"
                style="width: 40px;height:40px;background: var(--mask-bg);border-radius: 10px;"
                @click="save(true)">
@@ -94,7 +95,7 @@ export default {
   },
   props: ['selDesk','menus'],
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isSelTab']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isTrash']),
     deskName () {
       if (this.noteList.length) {
         return this.selNote >= 0 ? this.noteList[this.selNote]?.deskName : ''
@@ -183,6 +184,7 @@ export default {
     },
     async save () {
       let saveRs = await this.$refs.editor.save()
+
       if (saveRs) {
         message.success({
           content: '保存成功。', key: 'save'
@@ -196,7 +198,7 @@ export default {
 
     },
     changeDesk () {
-      if (!this.isSelTab) {
+      if (!this.isTrash) {
         this.selDesk()
       }
     },

@@ -21,7 +21,7 @@
         <xt-msg title="确定删除小组件" text="默认仅删除小组件，便签数据不会删除。"  :modelValue="modelValue" @no="no" @ok="ok">
           <template #checkbox>
             <div class="font-14" style="color: var(--secondary-text) !important;">
-              <a-checkbox v-model:checked="isRemove">同时删除便签数据</a-checkbox>
+              <a-checkbox class="xt-text-2" v-model:checked="isRemove">同时删除便签数据</a-checkbox>
             </div>
           </template>
         </xt-msg>

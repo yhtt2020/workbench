@@ -12,6 +12,7 @@
       </div>
       <div class="px-8">
         <span class="title">选择导出桌面：</span>
+        <!-- -->
         <a-select
           :bordered="false"
           class="text-xs rounded-lg input"
@@ -54,6 +55,7 @@ import RadioTab from '../RadioTab.vue'
 import {cardStore} from '../../store/card'
 import { mapActions, mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
+import { useFreeLayoutStore } from './freeLayout/store'
 export default {
   name: "ExportDesk",
   components: {
@@ -61,6 +63,9 @@ export default {
   },
   data() {
     return {
+      selectFreeLayoutData:{},
+      selectFreeLayoutState:{},
+      selectDesk:[''],
       dataType: [
         {title: '保留数据', name: 'data'},
         {title: '不保留数据', name: 'notData'}
@@ -86,6 +91,7 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['settings','deskSize','countdownDay','currentDeskIndex']),
+    ...mapWritableState(useFreeLayoutStore, ['freeLayoutState','freeLayoutData']),
     displaySize(){
       if(this.layoutSize){
         return this.layoutSize
@@ -140,7 +146,7 @@ export default {
           case 'AggregateSearch':
             item.customData.sortType = 'work'
             delete item.customData.sortList
-            break; 
+            break;
           case 'myIcons':
             item.customData.iconList[0].backgroundColor = ''
             item.customData.iconList[0].backgroundIndex = 0
@@ -150,7 +156,18 @@ export default {
             item.customData.iconList[0].isRadius = true
             item.customData.iconList[0].radius = 5
             item.customData.iconList[0].size = 'mini'
-            break; 
+            break;
+        }
+      })
+    },
+    dataInit() {
+      this.selectedDesk.forEach(item => {
+        if(this.defaultType.name === 'notData'){
+          this.setData(item)
+          if (this.freeLayoutState[item.id]) {
+            this.selectFreeLayoutData[item.id] = this.freeLayoutData[item.id]
+            this.selectFreeLayoutState[item.id] = this.freeLayoutState[item.id]
+          }
         }
       })
     },
@@ -159,9 +176,7 @@ export default {
         message.error('您至少选择一个桌面。')
         return
       }
-      this.selectedDesk.forEach(item => {
-        if(this.defaultType.name === 'notData')this.setData(item)
-      })
+      this.dataInit()
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: '我的桌面分享.desk',
@@ -188,7 +203,11 @@ export default {
       })
     },
     getShareJson() {
-      return JSON.stringify(this.selectedDesk)
+      return JSON.stringify({
+        desk: this.selectedDesk,
+        freeLayoutData: this.selectFreeLayoutData,
+        freeLayoutState: this.selectFreeLayoutState
+      })
     },
   },
   mounted(){

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between w-full h-12 top-shadow py-2.5  drag">
+  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow py-2.5  drag">
     <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  items-center no-drag">
      <a-tooltip>
        <QueueWidget></QueueWidget>
@@ -24,8 +24,8 @@
          </div>
        </xt-button>
       </a-tooltip>
-      
-      <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)" 
+
+      <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)"
        style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
       >
        <div class="flex items-center justify-center">
@@ -35,23 +35,23 @@
       </xt-button>
 
       <TopCourier />
-      
+
       <TopClockTimer/>
 
       <TopTomato />
 
     </div>
 
-    <div class="flex max-search" hidden=""> 
+    <div class="flex max-search" hidden="">
       <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
         style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
 
-    <div class="flex items-center  justify-end relative drag">
+    <div class="flex items-center  justify-end relative ">
       <TopPanelButton/>
-      <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} " 
+      <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
        class="no-drag btn-hover category-button p-1 rounded-md pointer"
       >
         <div class="flex items-center" style="max-width:270px;">
@@ -69,7 +69,7 @@
       </div>
     </div>
   </div>
-  
+
   <TopPanelLeftDrawer ref="leftDrawerRef">
     <div class="app-stats">
       <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
@@ -109,7 +109,7 @@
       </div>
     </div>
   </TopPanelLeftDrawer>
-  
+
   <TopPanelRightDrawer ref="rightDrawerRef" />
 </template>
 
@@ -209,7 +209,7 @@ export default {
     hasWeather(){  return this.cities.length > 0; },
     hasEnable(){ return this.settings.enable; },
     hasChat(){ return this.status.show;  },
-   
+
   },
 
   mounted(){
@@ -246,9 +246,9 @@ export default {
       this.$router.push({  name: 'clipboard'});
     },
     setLockTimer(){
-      if (this.settings.enable){ 
+      if (this.settings.enable){
         //只有启用了锁屏才会触发这个效果
-        this.lockTimeout = (this.settings.lockTimeout || 300) - 1; 
+        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
       }
       else{
         this.lockTimeout = (this.settings.lockTimeout || 300) - 1;

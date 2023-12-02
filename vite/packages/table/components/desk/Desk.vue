@@ -76,7 +76,6 @@
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
-          <!-- 自由布局画布 -->
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
       <vue-custom-scrollbar
@@ -370,10 +369,9 @@
             v-model:value="globalSettings.cardZoom"
           ></a-slider>
           <hr class="my-3" />
-
           <div class="mb-3">小组件间隙</div>
           <div class="xt-text-2 text-sm my-3">
-            调节小组件之间的间距，默认为 12。
+            调节小组件之间的间距，默认为 5。
           </div>
           <a-slider
             :min="5"
@@ -569,28 +567,12 @@ export default {
       },
       deep: true,
     },
-    // isFreeLayout: {
-    //   handler(newVal) {
-    //     if (this.editing && !this.isFreeLayout) {
-    //       this.hide = true;
-    //       setTimeout(() => {
-    //         this.hide = false;
-    //       }, 100);
-    //     }
-    //   },
-    //   immediate: true,
-    // },
-    // editing: {
-    //   handler(newVal) {
-    //     if (this.editing && !this.isFreeLayout) {
-    //       this.hide = true;
-    //       setTimeout(() => {
-    //         this.hide = false;
-    //       }, 100);
-    //     }
-    //   },
-    //   immediate: true,
-    // },
+    editing(val) {
+      // console.log("val :>> ", val);
+      // if (!val) {
+      //   this.toggleEditing();
+      // }
+    },
   },
   computed: {
     ...mapWritableState(appStore, ["fullScreen"]),
@@ -718,7 +700,8 @@ export default {
     };
     this.getLayoutSize();
     window.addEventListener("resize", this.resizeHandler);
-    this.loaded=true
+    this.loaded = true;
+    this.resetLayout();
   },
   unmounted() {
     window.removeEventListener("resize", this.resizeHandler);
@@ -726,6 +709,7 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     resetLayout() {
+      console.log("触发了 resetLayout:>> ");
       this.hide = true;
       setTimeout(() => {
         this.hide = false;
@@ -752,6 +736,7 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
+      console.log('触发了 :>> ', );
       if (this.editing) {
         message.info("已关闭拖拽调整");
       } else {
@@ -787,6 +772,24 @@ export default {
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
+            desk.cards.forEach(item=>{
+              if (item.name == 'notes') {
+                tsbApi.db.find({
+                  selector: {
+                    _id: 'note:' + item.id,
+                  },
+                }).then(res=>{
+                   if (res?.docs.length) {
+                    tsbApi.db.put({
+                      ...res.docs[0],
+                      // isDelete:true,
+                      deskId:'',
+                      deskName:'',
+                    })
+                  }
+                })
+              }
+            })
             desk.cards = [];
             this.menuVisible = false;
             this.clearFreeLayoutData();

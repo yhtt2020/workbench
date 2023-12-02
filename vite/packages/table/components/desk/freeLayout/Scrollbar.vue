@@ -1,18 +1,13 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <div
-    ref="scrollbar"
-    class="no-drag relative w-full"
-    style="
+  <div ref="scrollbar" class="no-drag relative w-full" style="
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
       height: 100%;
-    "
-    :style="{
+    " :style="{
       cursor: dragStyle,
-    }"
-  >
+    }">
     <slot> </slot>
   </div>
 </template>
@@ -87,7 +82,7 @@ onMounted(async () => {
     window.addEventListener("mousemove", handleMouseMove);
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
-    document.body.addEventListener('keydown',ignoreSpace);
+    document.body.addEventListener("keydown", ignoreSpace);
   }, 1);
 });
 function ignoreSpace(event) {
@@ -116,8 +111,14 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-    scrollbar.value.scrollTop -= dy;
-    scrollbar.value.scrollLeft -= dx;
+
+    try {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    } catch (error) {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    }
 
     initialMousePosition.value = { x: event.clientX, y: event.clientY };
   }
@@ -148,11 +149,18 @@ function handleKeyUp(event) {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  // let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  let w, h;
+  if (getFreeLayoutState.value.line.centerPosition.x == "top") {
+    w = getFreeLayoutState.value.line.centerLine.x;
+  } else {
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  }
   scrollbar.value.scrollLeft = w;
-  // let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  let h = getFreeLayoutState.value.line.centerLine.y;
+  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
+    h = getFreeLayoutState.value.line.centerLine.y;
+  } else {
+    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  }
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
@@ -170,10 +178,10 @@ let initialMousePosition = ref(null);
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
     capture: true,
   });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
     capture: true,
   });
   window.removeEventListener("keydown", handleKeyDown, {
@@ -191,7 +199,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mouseup", handleMouseUp, {
     capture: true,
   });
-  window.document.body.removeEventListener('keydown',ignoreSpace);
+  window.document.body.removeEventListener("keydown", ignoreSpace);
 });
 defineExpose({
   redirect,
