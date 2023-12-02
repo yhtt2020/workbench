@@ -1079,7 +1079,7 @@ export default {
 }
 
 .bottom-panel .common-panel {
-  padding: 0.2em 1em 0.2em 1em !important;
+  padding: 0.2em 0.8em 0.2em 0.8em !important;
 }
 
 .shaking-element {
