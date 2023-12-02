@@ -111,6 +111,16 @@ watch(
     immediate: true,
   }
 );
+const drag = (data) => {
+  const { initX, initY, x, y } = data;
+  // 偏移坐标
+  console.log('initX :>> ', initX);
+  const offsetX =  initX-x ;
+  const offsetY = y - initY;
+  console.log("initX :>> ", initX);
+  freeLayoutStore.updatePositionX(offsetX);
+  freeLayoutStore.updatePositionY(offsetY);
+};
 </script>
 
 <template>
@@ -140,6 +150,7 @@ watch(
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
+      resetPosition
       parent
       boundary
       v-if="item.id != ''"
@@ -161,6 +172,7 @@ watch(
         border: '2px solid var(--active-bg)',
       }"
       :handle="isDrag ? '' : '.#123'"
+      @onDrag="drag"
     >
       <template v-if="currentData">
         <slot name="box" :data="currentData[item.id]"></slot>

@@ -177,7 +177,21 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
+    // 拷贝原数据
+    copyData() {
+      this.deepMerge(this.getFreeLayoutData, this.freeLayoutData);
+    },
     // 更新坐标
+    updatePositionX(num) {
+      for (const key in this.getFreeLayoutData) {
+        this.getFreeLayoutData[key].left += num;
+      }
+    },
+    updatePositionY(num) {
+      for (const key in this.getFreeLayoutData) {
+        this.getFreeLayoutData[key].top += num;
+      }
+    },
   },
   persist: {
     enabled: true,
