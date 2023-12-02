@@ -1,7 +1,7 @@
 <template>
   <RightMenu :menus="rightMenus">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
-      style="text-align: center" @contextmenu="showMenu" v-if="navigationToggle[2]">
+      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="flex flex-row common-panel user s-bg" style="
@@ -470,7 +470,6 @@ export default {
   },
   mounted() {
     this.enableDrag()
-
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
