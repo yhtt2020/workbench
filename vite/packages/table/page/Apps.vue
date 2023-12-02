@@ -296,21 +296,21 @@ export default {
             })
           }
         },
-        {
-          icon: 'https://a.apps.vip/icons/tomato.png',
-          name: '番茄钟',
-          summary: '一个时间管理工具。',
-          needInstall: false,
-          data: {
-            fullScreen: false,
-            theme: '#030c13',
-            name: 'tomato',
-            type: 'system',//网页助手
-            route: JSON.stringify({
-              name: 'tomato',
-            })
-          }
-        },
+        // {
+        //   icon: 'https://a.apps.vip/icons/tomato.png',
+        //   name: '番茄钟',
+        //   summary: '一个时间管理工具。',
+        //   needInstall: false,
+        //   data: {
+        //     fullScreen: false,
+        //     theme: '#030c13',
+        //     name: 'tomato',
+        //     type: 'system',//网页助手
+        //     route: JSON.stringify({
+        //       name: 'tomato',
+        //     })
+        //   }
+        // },
         {
           icon: 'https://a.apps.vip/icons/tomato.png',
           name: '便签',
