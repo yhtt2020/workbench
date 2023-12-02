@@ -1,9 +1,10 @@
 <template>
   <RightMenu :menus="rightMenus">
-    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel" style="text-align: center"
-      @contextmenu="showMenu" v-if="navigationToggle[2]">
+    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
+      style="text-align: center" @contextmenu="showMenu" v-if="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
-      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]" class="flex flex-row common-panel user s-bg" style="
+      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
+        class="flex flex-row common-panel user s-bg" style="
         vertical-align: top;
         margin-top: 0;
         background: var(--primary-bg);
@@ -18,7 +19,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div  class="flex flex-row items-center s-bg" style="
+      <div @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -42,19 +43,20 @@
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
-        ">        
+        ">
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
             <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
               <xt-task id='M0104' no='1' @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                    @mouseenter="showElement(item, index)">
                     <RightMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
+                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -201,11 +203,12 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div class="fixed inset-0 " :style="{zIndex: componentId === 'navigationSetting'? 100 : 90}"  v-if="quick">
+      <div  :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
-        <EditNewNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
+        <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+        </EditNewNavigation>
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
         <!-- <component :is='componentId'></component> -->
       </div>
@@ -260,7 +263,7 @@ import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import RightMenu from "../components/desk/Rightmenu.vue";
-import { Notifications } from '../js/common/sessionNotice' 
+import { Notifications } from '../js/common/sessionNotice'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -341,7 +344,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => {this.removeFootNavigationList(this.currentIndex) }
+          fn: () => { this.removeFootNavigationList(this.currentIndex) }
         },
         {
           id: 4,
@@ -357,7 +360,7 @@ export default {
           id: 6,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[2]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       rightMenus: [
@@ -377,7 +380,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2]=false },
+          fn: () => { this.navigationToggle[2] = false },
         },
         {
           id: 4,
@@ -386,27 +389,27 @@ export default {
           children: [
             {
               id: 1,
-              name:'显示用户中心',
+              name: '显示用户中心',
               newIcon: "fluent:person-16-regular",
-              fn: () => {this.bottomToggle[0]=!this.bottomToggle[0] }
+              fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
             },
             {
               id: 2,
               name: '显示社区助手',
               newIcon: "fluent:people-community-16-regular",
-              fn: () => {this.bottomToggle[1]=!this.bottomToggle[1] }
+              fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
             },
             {
               id: 3,
               name: '显示任务中心',
               newIcon: "fluent:task-list-square-16-regular",
-              fn: () => {this.bottomToggle[2]=!this.bottomToggle[2] }
+              fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
             },
             {
               id: 4,
               name: '显示社群沟通',
               newIcon: "fluent:chat-16-regular",
-              fn: () => {this.settings.enableChat=!this.settings.enableChat }
+              fn: () => { this.settings.enableChat = !this.settings.enableChat }
             },
           ]
 
@@ -444,11 +447,11 @@ export default {
           fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
-      shakeElement:false,
-      currentIndex:null,
-      currentItem:null,
-      delItemIcon:false,
-      notifications:new Notifications()
+      shakeElement: false,
+      currentIndex: null,
+      currentItem: null,
+      delItemIcon: false,
+      notifications: new Notifications()
     }
   },
   props: {
@@ -537,7 +540,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav','bottomToggle','popVisible']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible','currentList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -580,18 +583,18 @@ export default {
         this.rightNav = val[1]
       },
     },
-    editToggle(){
-      if(this.editToggle){
+    editToggle() {
+      if (this.editToggle) {
         this.enableDrag()
-        this.shakeElement=true
-        setTimeout(()=>{
-          this.shakeElement=false
-        },2000)
-      }else{
+        this.shakeElement = true
+        setTimeout(() => {
+          this.shakeElement = false
+        }, 2000)
+      } else {
         this.disableDrag()
       }
     },
-    delItemIcon(){
+    delItemIcon() {
       console.log(this.delItemIcon);
     }
   },
@@ -629,11 +632,11 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
-    showElement(item,index){
+    showElement(item, index) {
       // console.log(item,index,'====>>>1111');
       // this.clickNavigation(item)
-      this.currentItem=item
-      this.currentIndex=index
+      this.currentItem = item
+      this.currentIndex = index
     },
     closeDrawer() {
       this.menuVisible = false
@@ -709,19 +712,19 @@ export default {
       } else if (item.visible) {
         switch (item.tag) {
           case 'task':
-          this.bottomToggle[2]=!this.bottomToggle[2] 
+            this.bottomToggle[2] = !this.bottomToggle[2]
             break;
           case 'community':
-          this.bottomToggle[1]=!this.bottomToggle[1] 
+            this.bottomToggle[1] = !this.bottomToggle[1]
             break;
           case 'user':
-            this.bottomToggle[0]=!this.bottomToggle[0] 
+            this.bottomToggle[0] = !this.bottomToggle[0]
             break;
           case 'chat':
-            this.settings.enableChat=!this.settings.enableChat
+            this.settings.enableChat = !this.settings.enableChat
             break;
           case 'hide':
-          this.navigationToggle[2]=false
+            this.navigationToggle[2] = false
             break;
         }
       } else {
@@ -833,16 +836,99 @@ export default {
       }
 
     },
+    // 拖拽桌面图标
+    async drop(e) {
+      // this.modelValue=false
+      const width = window.innerWidth
+      let files = e.dataTransfer.files
+      if (e.x <= 300) {
+        this.selectNav = 'left'
+      } else if (e.x > 300 && e.x < width - 300) {
+        this.selectNav = 'foot'
+      } else if (e.x >= width - 300) {
+        this.selectNav = 'right'
+      }
+      let filesArr = []
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          filesArr.push(files[i].path)
+        }
+      }
+      this.dropList = await Promise.all(filesArr.map(async (item) => {
+        const fileName = item.substring(item.lastIndexOf("\\") + 1);
+        let dropFiles = await tsbApi.system.extractFileIcon(item)
+        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+      }))
+      this.clickRightListItem(this.dropList)
+      // this.dropList.forEach((item)=>{
+      //   this.setFootNavigationList(item)
+      // })
+      
+      // 添加完后清空
+      this.dropList = []
+      // this.modelValue=true
+    },
+    // 添加图标的主要函数
+    clickRightListItem(item, index) {
+      this.activeRightItem = index
+      //   this.editFlag = false
+      if (this.selectNav === 'foot') {
+        if (item instanceof Array) {
+          for (let i = 0; i < item.length; i++) {
+            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+              this.updateMainNav(item[i], 'add')
+              item[i].addNav = true
+              this.setFootNavigationList(item[i])
+            } else {
+              message.info('已添加', 1)
+            }
+          }
+          this.dropList = []
+        } else {
+          for (let i = 0; i < this.footNavigationList.length; i++) {
+            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+          }
+          this.updateMainNav(item, 'add')
+          item.addNav = true
+          this.setFootNavigationList(item)
+          this.$nextTick(() => {
+            let scrollElem = this.$refs.content
+            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+          })
+        }
+      }
+    },
+    updateMainNav(addItem, type) {
+      this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
+      console.log(this.mainNavList, 'this.mainNavList')
+      let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+      if (type) {
+        this.mainNavList.forEach(item => {
+          if (item?.name === addItem.name) {
+            if (type === 'add') {
+              item.addNav = true
+            } else if (type === 'del') {
+              item.addNav = false
+            }
+          }
+        })
+      } else {
+        for (const i in this.mainNavList) {
+          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+          this.mainNavList[i].addNav = stateNav
+        }
+      }
+    },
     completeEdit() {
       this.toggleEdit()
       this.setQuick()
     },
     disableDrag() {
       // if (this.sortable) {
-        document.removeEventListener('click', this.disableDrag)
-        // this.sortable.destroy()
-        this.sortable = null
-        // message.info('已中止导航栏调整')
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+      // message.info('已中止导航栏调整')
       // }
     },
     enableDrag() {
@@ -856,11 +942,11 @@ export default {
         sort: true,
         animation: 150,
         onStart: function (event) {
-          if(that.popVisible){
+          if (that.popVisible) {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
-          that.delItemIcon=true
+          that.delItemIcon = true
           that.$emit('getDelIcon', true)
           this.delNav = true
           if (this.delNav) {
@@ -869,7 +955,7 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
-            that.delItemIcon=false
+            that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
@@ -899,8 +985,8 @@ export default {
             )
           }
         },
-        dropstart(){
-          console.log(1111111,'====>>>>>drop');
+        dropstart() {
+          console.log(1111111, '====>>>>>drop');
         },
         onUpdate: function (event) {
           let newIndex = event.newIndex,
@@ -953,10 +1039,12 @@ export default {
 .common-panel {
   margin-bottom: 0;
 }
-.icon-bg{
+
+.icon-bg {
   background-color: var(--secondary-transp-bg);
 }
-.delete-icon{
+
+.delete-icon {
   width: 14px;
   height: 14px;
   color: #FF4D4F;
@@ -964,9 +1052,11 @@ export default {
   top: 5px;
   right: 5px;
 }
-.cursor-style{
-  cursor: url('/img/test/load-ail.png'),pointer;
+
+.cursor-style {
+  cursor: url('/img/test/load-ail.png'), pointer;
 }
+
 .btn {
   text-align: center;
   margin-right: 12px;

@@ -1,6 +1,6 @@
 <template>
     <!-- <div class="flex flex-col"> -->
-    <div class="flex justify-between">
+    <!-- <div class="flex justify-between">
         <div id="left-drop" class="border-index " style=" width: 300px;height: 100vh;" @drop.prevent="drop"
             @dragover.prevent=""></div>
         <div class="flex flex-col justify-end">
@@ -9,81 +9,84 @@
         </div>
         <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );"
             @dragover.prevent=""></div>
-        <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true" :boxPadding="'pr-4 pt-4'"
-            :back="false" @no="setQuick" title="" :mask="false" :index="100">
-            <template #nav>
-                <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
-                    :style="{ height: `${navHeight}px` }">
-                    <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
-                        <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
-                        <div class="ml-4 text-base xt-text">图标</div>
-                    </div>
-                    <div class="w-full h-[1px]  mt-3" style="background: var(--divider);"></div>
-                    <div v-for="(item, index) in sideBar" style="border-radius: 10px;" :style="{
-                        'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
-                    }" @click="onSelect(index)"
-                        class="flex flex-col justify-center mt-2 text-base xt-text hover-style w-[160px] h-[48px] pointer">
-                        <div style="text-align: left !important;" class="ml-12 text-base xt-text"> {{ item.name }}</div>
-                    </div>
-                    <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
-                        <a-tooltip title="推荐">
-                            <xt-button :w="40" :h="40" @click="this.currentIndex = 0"><xt-new-icon
-                                    icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
-                        </a-tooltip>
 
+
+    </div> -->
+    <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
+        :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        <template #nav>
+            <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
+                :style="{ height: `${navHeight}px` }">
+                <div class=" flex w-full h-[48px] items-center" style="line-height: 48px;">
+                    <xt-new-icon icon="fluent:grid-16-regular" size="20" class="ml-3 xt-text-2" />
+                    <div class="ml-4 text-base xt-text">图标</div>
+                </div>
+                <div class="w-full h-[1px]  mt-3" style="background: var(--divider);"></div>
+                <div v-for="(item, index) in sideBar" style="border-radius: 10px;" :style="{
+                    'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
+                }" @click="onSelect(index)"
+                    class="flex flex-col justify-center mt-2 text-base xt-text hover-style w-[160px] h-[48px] pointer">
+                    <div style="text-align: left !important;" class="ml-12 text-base xt-text"> {{ item.name }}</div>
+                </div>
+                <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
+                    <a-tooltip title="推荐">
+                        <xt-button :w="40" :h="40" @click="this.currentIndex = 0"><xt-new-icon
+                                icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
+                    </a-tooltip>
+
+                </div>
+            </div>
+        </template>
+        <template #header-left>
+            <!-- 输入框 -->
+            <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
+                style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
+                @keydown.enter="onSearch" class="">
+                <template #suffix>
+                    <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
+                </template>
+            </a-input>
+            <div class="flex" v-if="currentTag == 'recommendation'">
+                <div class="flex justify-center ml-3 mr-2"><xt-new-icon icon="fluent-emoji:rocket" size="25" /></div>
+                <div class="xt-base xt-text">推荐</div>
+            </div>
+        </template>
+        <template #header-right>
+            <div class="ml-3 text-base xt-text">添加到：</div>
+            <a-dropdown trigger="['click']">
+                <template #overlay>
+                    <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
+                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
+                            class="flex items-center justify-center hover-style ">
+                            <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
+                        </a-menu-item>
+                    </a-menu>
+                </template>
+                <xt-button :w="120" :h="32" class="">
+                    <div class="flex justify-between">
+                        <div class="text-base xt-text">{{ defaultTitle.title }}</div>
+                        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
+                            class="-rotate-90 xt-text"></xt-new-icon>
                     </div>
-                </div>
-            </template>
-            <template #header-left>
-                <!-- 输入框 -->
-                <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
-                    style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
-                    @keydown.enter="onSearch" class="">
-                    <template #suffix>
-                        <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
-                    </template>
-                </a-input>
-                <div class="flex" v-if="currentTag == 'recommendation'">
-                    <div class="flex justify-center ml-3 mr-2"><xt-new-icon icon="fluent-emoji:rocket" size="25" /></div>
-                    <div class="xt-base xt-text">推荐</div>
-                </div>
-            </template>
-            <template #header-right>
-                <div class="ml-3 text-base xt-text">添加到：</div>
-                <a-dropdown trigger="['click']">
-                    <template #overlay>
-                        <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
-                            <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
-                                class="flex items-center justify-center hover-style ">
-                                <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                    <xt-button :w="120" :h="32" class="">
-                        <div class="flex justify-between">
-                            <div class="text-base xt-text">{{ defaultTitle.title }}</div>
-                            <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
-                                class="-rotate-90 xt-text"></xt-new-icon>
-                        </div>
-                    </xt-button>
-                </a-dropdown>
-                <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
+                </xt-button>
+            </a-dropdown>
+            <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
                 <xt-new-icon
                   icon="fluent:dismiss-16-filled"
                   size="16"
                   class="xt-text-2"
                 />
               </xt-button> -->
-            </template>
-            <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`,width:`${contentWidth}px` }" style="box-sizing: border-box;">
-                <Custom v-if="currentTag === 'custom'" />
-                <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
-                    :inputValue="inputValue" />
-            </div>
-        </NewModel>
-
-    </div>
-
+        </template>
+        <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
+            style="box-sizing: border-box;">
+            <Custom v-if="currentTag === 'custom'" />
+            <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
+                :inputValue="inputValue" />
+        </div>
+    </NewModel>
+    <!-- <Msg :modalVisible="modalVisible" :title="defaultTitle.title" :text='msgText' @onNo="modalVisible = false" @onOk="onOk">
+    </Msg> -->
 
     <!-- </div> -->
 </template>
@@ -100,13 +103,15 @@ import Custom from './components/Coutom.vue'
 import { addIconPosition } from './index'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
+import Msg from '../../../ui/new/msg/index.vue'
 const { appModel } = window.$models
 export default {
     name: 'EditNewNavigation',
     components: {
         NewModel,
         Introduce,
-        Custom
+        Custom,
+        Msg,
     },
     data() {
         return {
@@ -225,9 +230,11 @@ export default {
             windowHeight: 720,
             navHeight: 512,
             contentHeight: 420,
-            contentWidth:800,
+            contentWidth: 800,
+            modalVisible: false
         }
     },
+    props: ['parentElement'],
     methods: {
         ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
         onSelect(index) {
@@ -271,16 +278,30 @@ export default {
                 removeCloneOnHide: true,
                 forceFallback: false,
                 onStart(evt) {
+                    const currentDiv = document.getElementById('left')
+                    console.log(currentDiv, '====>>>CurrentDiv');
                     that.darggingCore = true
-                    that.draggingArea('left-drop', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
-                    that.draggingArea('right-drop', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.currentList)
-                    that.draggingArea('foot-drop', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
+                    if (that.selectNav === 'left') {
+                        that.draggingArea('left-bar', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
+                    } else if (that.selectNav === 'right') {
+                        that.draggingArea('right-bar', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.currentList)
+                    } else if (that.selectNav === 'foot') {
+                        that.draggingArea('bottom-bar', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
+                    }
+                    // that.draggingArea('left-drop', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
+
+                    // that.draggingArea('right-drop', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.currentList)
+
+                    // that.draggingArea('foot-drop', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
+
+
                 },
             })
         },
         draggingArea(id, oldIndex, NavigationList, setNavigationList, source, compare = true) {
             let that = this
             let slider = document.getElementById(id)
+            console.log(slider, id);
             slider.ondragover = function (ev) {
                 ev.preventDefault()
             }
@@ -409,7 +430,7 @@ export default {
             } else {
                 this.navHeight = 526
                 this.contentHeight = 436
-                this.contentWidth=600
+                this.contentWidth = 600
             }
         }
     },
@@ -452,6 +473,9 @@ export default {
             } else {
                 return this.sideBar
             }
+        },
+        msgText() {
+            return `当前${this.defaultTitle.title}没有开启，是否选择开启导航栏`
         }
 
     },
@@ -487,7 +511,7 @@ export default {
 <style lang='scss' scoped>
 .border-index {
     // border: 1px solid red;
-    z-index: 999;
+    z-index: 200;
 }
 
 .hover-style {
