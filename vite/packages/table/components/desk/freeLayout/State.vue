@@ -7,7 +7,6 @@
       </div>
       <a-switch v-model:checked="freeLayoutSwitch" />
     </div>
-
     <template v-if="freeLayoutSwitch">
       <div class="xt-text-2 text-sm my-3">
         开放式桌面画布，支持自定义每个组件的位置、缩放，还可以实现层叠等操作（当前功能尚未完成，可能会产生严重Bug，仅限尝鲜体验）

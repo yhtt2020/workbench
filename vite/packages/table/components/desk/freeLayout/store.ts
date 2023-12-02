@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
+import _ from "lodash";
 
 import dbStorage from "../../../store/dbStorage";
 // @ts-ignore
@@ -12,6 +13,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutState: {},
     // 拖拽时的数据
     dragData: {},
+    // 临时数据
+    tempData: {},
+    isSelectAll: false,
     // 默认状态数据
     defaultState: {
       // 系统数据
@@ -179,17 +183,17 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 拷贝原数据
     copyData() {
-      this.deepMerge(this.getFreeLayoutData, this.freeLayoutData);
+      this.tempData = _.cloneDeep(this.getFreeLayoutData);
     },
     // 更新坐标
     updatePositionX(num) {
       for (const key in this.getFreeLayoutData) {
-        this.getFreeLayoutData[key].left += num;
+        this.getFreeLayoutData[key].left = this.tempData[key].left + num;
       }
     },
     updatePositionY(num) {
       for (const key in this.getFreeLayoutData) {
-        this.getFreeLayoutData[key].top += num;
+        this.getFreeLayoutData[key].top = this.tempData[key].top + num;
       }
     },
   },

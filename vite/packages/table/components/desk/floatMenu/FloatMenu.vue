@@ -12,7 +12,7 @@ widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
 
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutState, freeLayoutEnv, isFreeLayout }: any =
+const { getFreeLayoutState, freeLayoutEnv, isFreeLayout ,isSelectAll}: any =
   storeToRefs(freeLayoutStore);
 const props = defineProps({
   zoom: {},
@@ -219,6 +219,7 @@ const resetZoom = () => {
   }
 };
 onBeforeUnmount(() => {
+  isSelectAll.value = false;
   widgetStore.edit = false;
 });
 </script>
