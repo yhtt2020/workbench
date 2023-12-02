@@ -13,8 +13,8 @@
 
     </div> -->
     <div v-if="selectTag === 'recommendation'">
-      <div class="flex flex-col justify-between p-2 mt-5 rounded-lg xt-bg-2 ">
-        <div class="mb-2 xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
+      <div class="flex items-center p-2 mt-5 rounded-lg xt-bg-2 ">
+        <div class=" xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
         <!-- <div class="pointer" style="color:var(--active-bg)" @click="addAllIcon">全部添加</div> -->
       </div>
     </div>
@@ -99,89 +99,16 @@ export default {
         }
       }
     },
-    // 添加图标的主要函数
-    clickRightListItem(item, index) {
-      this.activeRightItem = index
-      //   this.editFlag = false
-      if (this.selectNav === 'foot') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setFootNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setFootNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.content
-            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-          })
-        }
-      } else if (this.selectNav === 'left') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setSideNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.sideNavigationList.length; i++) {
-            if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setSideNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.sideContent
-            scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
-          })
-        }
-      } else if (this.selectNav === 'right') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setRightNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.rightNavigationList.length; i++) {
-            if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setRightNavigationList(item)
-        }
-      }
-    },
+    
     // 批量添加
-    addIcon(item, index) {
-      // console.log(item,index,'item,index-->>>')
-      this.clickRightListItem(item, index)
-    },
+    // addIcon(item, index) {
+    //   // console.log(item,index,'item,index-->>>')
+    //   this.clickRightListItem(item, index)
+    // },
     // 全部添加
-    addAllIcon() {
-      this.clickRightListItem(this.filterList)
-    },
+    // addAllIcon() {
+    //   this.clickRightListItem(this.filterList)
+    // },
     // 搜索目标图标
     filterIcon(list) {
       const inputValueLowerCase = this.inputValue.toLowerCase();
