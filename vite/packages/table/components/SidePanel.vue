@@ -309,7 +309,6 @@ export default {
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'
     }
-    this.popVisible = true
   },
   watch: {
     delZone(val) {
