@@ -18,7 +18,7 @@
     </template>
     <template #msg>
       <teleport to="body">
-        <xt-msg title="确定删除小组件" text="默认仅删除小组件，便签数据不会删除。"  :modelValue="modelValue" @no="no" @ok="ok">
+        <xt-msg title="确定删除小组件" text="默认仅删除小组件，备忘录数据不会清除。"  :removeValue="removeValue" @no="no" @ok="ok">
           <template #checkbox>
             <div class="font-14" style="color: var(--secondary-text) !important;">
               <a-checkbox class="xt-text-2" v-model:checked="isRemove">同时删除便签数据</a-checkbox>
@@ -52,6 +52,7 @@
       ></a-input>
     </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
+    
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <Markdown ref="mdEditor" :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
@@ -82,7 +83,7 @@
       <div style="width:500px;height:466px;">
         <div class="p-4 font-16" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);">
           「桌面便签」设置
-          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="closeSetting">
+          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="settingVisible = false">
             <Icon icon="fluent:dismiss-16-filled" />
           </div>
         </div>
@@ -124,87 +125,8 @@
           </div>
       </div>
     </Modal>
-    <!-- 打印 -->
-    <Modal v-if="printPreviewVisible" v-model:visible="printPreviewVisible" :blurFlag="true" :mask-no-close="false">
-      <div class="px-6" style="width:500px;height:500px;">
-        <div class="font-16 pt-4" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);">
-          <!-- <div class="w-full">打印</div> -->
-          打印
-          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="printPreviewVisible = false">
-            <Icon icon="fluent:dismiss-16-filled" />
-          </div>
-        </div>
-        <!-- 打印机就绪 -->
-        <div class="" v-if="print.status">
-          <div class="p-3 rounded-lg mb-4" style="background:var(--secondary-bg)">设备要求：德佟P1；纸张：40*60，间隙纸</div>
-          <a-select
-              style="z-index: 99999999; position: relative;border:none"
-              v-model:value="selectedPrinter"
-              class="no-drag w-full rounded-xl printers"
-              size="large"
-              @change="handleChangePrinter"
-              :dropdownStyle="{
-              'z-index': 999999999999,
-              backgroundColor: 'var(--secondary-bg)',
-            }"
-            >
-              <a-select-option class="no-drag" v-for="item in print.printers" :value="item.name"
-              >{{ item.name }}
-              </a-select-option>
-            </a-select>
-          <div class="text-center" >
-            <!-- 打印预览 -->
-            <div ref="previewText" class="rounded-lg mt-3  mb-3 "
-                  style="display:inline-block;background:white;color:black;width:160px;height:240px;font-size:12px;overflow: hidden">
-              <div ref="printContent" hidden v-html="print.previewHtml"></div>
-              <div ref="preivew" class="item-content "></div>
-            </div>
-          </div>
-          <div class="flex justify-end">
-            <xt-button type="primary" class="mt-2 font-16 xt-text"
-                style="width: 64px; height: 40px; background-color: var(--secondary-bg); "
-                @click="printPreviewVisible = false">取消</xt-button>
-            <xt-button type="primary" class="mt-2 font-16 xt-text ml-3"
-                style="width: 64px; height: 40px; background-color: var(--active-bg);"
-                @click="printing">确定</xt-button>
-          </div>
-        </div>
-        <!-- 打印机未就绪 -->
-        <div v-else class="p-6">
-          <div class="flex justify-center" style="margin-top:42px;">
-            <Icon icon="fluent-emoji:printer" width="56px" height="56px" />
-          </div>
-          <div class="font-14 text-center w-full mt-4" style="color:var(--secondary-text)">驱动未就绪，未检测到可用打印机</div>
-          <div class="p-3 rounded-lg mt-4" style="background:var(--secondary-bg)">仅支持德佟标签打印机，推荐使用「德佟 P1 标签打印机」</div>
-          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
-            <a-image src="https://a.apps.vip/element/p1cover.jpg" style="width: 45px;border-radius: 6px" />
-            <div class="flex ml-3" style="flex-direction:column;width:216px;">
-              <div>德佟 P1 标签打印机</div>
-              <div>纸张：40*60mm</div>
-            </div>
-            <Modal teleport="body" v-model:visible="showBuy" v-if="showBuy">
-              <a-image style="border-radius: 8px" src="https://a.apps.vip/element/p1qrcode.jpg"></a-image>
-            </Modal>
-            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32"  @click="showBuy=true"  >扫码购买</xt-button>
-          </div>
-          <div class="flex p-3 items-center mt-4 rounded-lg" style="background:var(--secondary-bg)">
-            <div
-            class="flex justify-center items-center rounded-lg"
-            style="width:48px;height:48px;background-color: var(--primary-bg);">
-              <Icon icon="tabler:brand-bilibili" width="20" height="20" />
-            </div>
-            <div class="flex ml-3" style="flex-direction:column;width:216px;">
-              <div>想天工作台「德佟 P1 标签打印机」使用教程</div>
-            </div>
-            <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32">观看视频</xt-button>
-          </div>
-
-        </div>
-
-
-      </div>
-
-    </Modal>
+    <xt-print  v-if="modelValue" v-model="modelValue"  :content="content"></xt-print>
+    <!-- :content="this.$refs.mdEditor?.getContent()" -->
   </teleport>
 
 </template>
@@ -226,9 +148,6 @@ import RadioTab from "../../../components/RadioTab.vue"
 
 import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
 
-const labelWidth = 40
-const labelHeight = 60
-const fontHeight = 3
 export default {
   name: '便签',
   components: {
@@ -261,29 +180,20 @@ export default {
   },
   computed: {
     ...mapWritableState(noteStore, ['selNoteText', 'initFlag']),
+    content(){
+      return this.customData.text
+    }
   },
   data () {
     return {
-      showBuy:false,
-      modelValue:false,
+      api:{},
       // 是否删除数据
       isRemove:false,
-      selectedPrinter: '',
-      print: {
-        // 打印机状态
-        status: false,
-        // 当前选中打印机
-        printer: {},
-        // 可用打印机列表
-        printers: []//所有打印机
-      },
-      printPreviewVisible: false,
+      removeValue:false,
+      modelValue:false,
       fontColors: ['white', 'black', 'red', 'green', 'blue'],
       fontColor: 'white',
       tmpTitle: '桌面标签',
-      printSetting:{
-
-      },
       options: {
         className: 'card',
         title: '桌面便签',
@@ -297,7 +207,7 @@ export default {
         type: 'note',
         showColor:true,
         removeCard:()=>{
-          this.modelValue = true
+          this.removeValue = true
           this.isRemove = false
         }
 
@@ -340,31 +250,7 @@ export default {
           title: '打印',
           fn: () => {
             this.api = DTPWeb.getInstance()
-            this.printPreviewVisible = true
-
-            const div = document.createElement('div')
-            this.print.previewText = div.innerText
-            this.print.previewHtml = this.$refs.mdEditor.getContent()
-
-            // 打印驱动检测  需要判断两个 目前只有一个
-            DTPWeb.checkServer((value) => {
-              this.print.status = !!value
-              this.print.printer = value
-              console.log(value)
-              if (!value) {
-                message.error('打印助手不可用')
-              }if(!this.api.getPrinters({ onlyLocal: true })){
-                this.print.status = false
-                message.error('暂无打印机连接')
-              } else {
-                this.print.printers = this.print.printers = this.api.getPrinters({ onlyLocal: true })
-                this.selectedPrinter = this.api.getDefaultPrinter().printerName
-                this.$nextTick(()=>{
-                  // 去生成预览图
-                  this.doPreview()
-                })
-              }
-            })
+            this.modelValue = true
           },
         },
         {
@@ -451,56 +337,13 @@ export default {
   methods: {
 
     ...mapActions(noteStore, ['changeDeskBg', 'saveDeskTitle']),
-    // 开始打印
-    // startPrint () {
-    //   const api = this.api
-    //   doJob('default',this.selectedPrinter,this.$refs.printContent.innerText,() => {
-    //     // 打印结束 关闭打印机以及弹窗
-    //     api.closePrinter()
-    //     this.printPreviewVisible = false
-    //   })
-    // },
 
-    // doJob (jobName = 'default', callback) {
-    //   //
-    //   if (!this.selectedPrinter) {
-    //     return message.error('请选择打印机')
-    //   }
-    //   const printerName = this.selectedPrinter
-
-    //   const api = this.api
-    //   const text = this.$refs.printContent.innerText
-    //   console.log('需要打印的文本', text)
-    //   if (!api) return message.error('api初始化失败')
-    //   // 判断打印机是否链接
-    //   api.openPrinter(printerName, (success) => {
-    //     if (success) {
-    //       api.startJob({ orientation: 0, width: labelWidth, height: labelHeight, jobName: jobName })
-    //       //api.startPage()
-    //       api.drawText(
-    //         {
-    //           text: text,
-    //           x: 2,
-    //           y: 2,
-    //           lineSpace: '1_2',
-    //           width: labelWidth - 4,
-    //           height: labelHeight - 4,
-    //           fontHeight
-    //         })
-    //       //api.endPage()
-    //       // 这里进行打印
-    //       api.commitJob({
-    //         callback: callback
-    //       })
-    //     }
-    //   })
-    // },
-    // 因为传递预览图会导致无法渲染 此方法暂时无法抽离\
+    // 替换原有删除逻辑
     no(){
-      this.modelValue = false
+      this.removeValue = false
     },
     async ok(){
-      this.modelValue = false
+      this.removeValue = false
       // 删除桌面便签时需要清除db数据
       let getDb = await tsbApi.db.find({
         selector: {
@@ -508,43 +351,20 @@ export default {
         },
       })
       this.$refs.homelSlotRef.doRemoveCard()
-      if(this.isRemove){
-        // 清除数据
-        if (getDb.docs.length) {
-          await tsbApi.db.remove(getDb.docs[0])
-        }
-      }else{
+      if(this.isRemove && getDb.docs.length){
         await tsbApi.db.put({
           ...getDb.docs[0],
           isDelete:true,
+          deskId:'',
+          deskName:'',
+        })
+      }else{
+        await tsbApi.db.put({
+          ...getDb.docs[0],
+          deskId:'',
+          deskName:'',
         })
       }
-    },
-    doPreview () {
-      const api = this.api
-      doJob(LPA_JobNames.Preview,this.selectedPrinter,this.$refs.printContent.innerText, (success) => {
-        if (success) {
-          // 当内容过长时 需要添加分页打印
-          let page = api.getPageImage({ page: 0 })
-          const img = document.createElement('img')
-          img.setAttribute('style', 'object-fit:contains;width:100%;height:100%')
-          img.src = page.data
-          this.$refs.preivew.appendChild(img)
-          api.closePrinter()
-        } else {
-          message.error('生成预览图失败')
-        }
-      })
-    },
-    printing(){
-      // this.startPrint()
-      startPrint(this.selectedPrinter,this.$refs.printContent.innerText)
-    },
-
-    // 更换打印机
-    handleChangePrinter(){
-      this.doPreview()
-      // this.$refs.preivew.appendChild(img)
     },
 
     updateBackground (backgroundColor,n) {
@@ -614,9 +434,7 @@ export default {
         this.saveDeskTitle(this.customIndex, this.tmpTitle)
       }
     },
-    closeSetting(){
-      this.settingVisible = false
-    },
+    // 修改桌面便签的主题色
     changeShowColor(){
       this.updateCustomData(this.customIndex, {
         showColor: this.options.showColor,
