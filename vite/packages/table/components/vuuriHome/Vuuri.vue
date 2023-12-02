@@ -26,9 +26,10 @@ import { GridEvent } from './GridEvent'
 import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
 import _ from 'lodash-es'
+
 export default {
   name: 'Vuuri',
-  date(){
+  date () {
     currentDragGrid:''
   },
   props: {
@@ -80,10 +81,10 @@ export default {
       required: false,
       default: () => ItemSize.height
     },
-    getItemMargin:{
-      type:Function,
-      required:false,
-      default:()=>ItemSize.margin
+    getItemMargin: {
+      type: Function,
+      required: false,
+      default: () => ItemSize.margin
     },
     /**
      * Enable drag and drop feature on the grid
@@ -117,7 +118,9 @@ export default {
     }
   },
   data () {
+
     return {
+      updateEvent:null,
       /**
        * Deep copy of props items
        * @type Array<*>
@@ -131,21 +134,22 @@ export default {
       /*
       * The generated Muuri Options object
       */
-      muuriOptions: { }
+      muuriOptions: {}
     }
   },
   watch: {
     modelValue: {
       deep: true,
       handler (newItems, oldValue) {
+        console.log('数据变化')
         if (!this.internallySet) {
           this._sync(newItems, this.copiedItems)
         }
       }
     },
-    'settings.iconSize':{
-      deep:true,
-      handler(){
+    'settings.iconSize': {
+      deep: true,
+      handler () {
         if (!this.internallySet) {
           this.update()
         }
@@ -161,16 +165,21 @@ export default {
     /**
      * Manually update the items in the muuri grid
      */
-    update: _.debounce((callback)=>{
-        this.$nextTick(() => {
-          this.muuri
-            .refreshItems()
-            .layout(true, () => this.$emit('updated')).synchronize()
-          this.$nextTick(()=>{
-            callback&&callback()
+    update(){
+      if(!this.updateEvent) {
+        this.updateEvent=_.debounce((callback) => {
+          this.$nextTick(() => {
+            this.muuri
+              .refreshItems()
+              .layout(true, () => this.$emit('updated')).synchronize()
+            this.$nextTick(() => {
+              callback && callback()
+            })
           })
-        })
-    },1000),
+        }, 100)
+      }
+      this.updateEvent()
+    },
     /**
      * Prepares the muuri instance
      * @private
@@ -268,7 +277,7 @@ export default {
           sortDuringScroll: false,
           syncAfterScroll: false,
         },
-        layout:{
+        layout: {
           ...this.options.layout
         },
 
@@ -326,8 +335,8 @@ export default {
     _onDragReleaseEnd (item) {
       if (this.currentDragGrid) {
 
-        this.muuri.send(item,this.currentDragGrid,-1)
-        this.currentDragGrid = null;
+        this.muuri.send(item, this.currentDragGrid, -1)
+        this.currentDragGrid = null
       }
     },
     /**
@@ -394,7 +403,7 @@ export default {
       return {
         width: this.getItemWidth(item),
         height: this.getItemHeight(item),
-        margin:this.getItemMargin(item)
+        margin: this.getItemMargin(item)
       }
     },
     /**
@@ -523,6 +532,7 @@ export default {
     }
   },
   created () {
+    console.log('执行一次create事件')
     this._setupNonReactiveProps()
     this._setupOptions()
   },
@@ -568,9 +578,7 @@ export default {
   width: 100%;
   height: 100%;
   color: #ffffff;
-//min-width: 80px;
-//min-height: 80px;
-  border-radius: 0.4em;
+//min-width: 80px; //min-height: 80px; border-radius: 0.4em;
 }
 
 .muuri-item-placeholder {

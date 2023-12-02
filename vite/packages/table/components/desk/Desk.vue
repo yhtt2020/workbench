@@ -522,7 +522,7 @@ export default {
               window.showed = true;
             }
             this.showGrid = true;
-          }, 800);
+          }, 1000);
         });
       },
     },

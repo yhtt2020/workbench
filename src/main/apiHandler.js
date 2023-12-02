@@ -73,7 +73,6 @@ class ApiHandler {
     })
 
     ApiHandler.on('dialog', 'showOpenDialog', (event, args, instance) => {
-      console.log(args)
       event.returnValue = require('electron').dialog.showOpenDialogSync(instance.window || instance.view, args)
     })
     ApiHandler.on('dialog', 'showSaveDialog', (event, args, instance) => {
