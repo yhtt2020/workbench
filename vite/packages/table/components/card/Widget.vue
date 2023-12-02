@@ -99,15 +99,14 @@ import _ from "lodash-es";
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 
-// import Template from "../../../user/pages/Template.vue";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
 import { useWidgetStore } from "./store";
+import {useFreeLayoutStore} from '../desk/freeLayout/store'
 
 export default {
   components: {
-    // Template,
     MenuOutlined,
     RightMenu,
     PageState,
@@ -182,14 +181,17 @@ export default {
     };
   },
   computed: {
-    //...mapWritableState(cardStore, ["customComponents"]),
     ...mapWritableState(useWidgetStore, ["edit"]),
+    ...mapWritableState(useFreeLayoutStore, ["isSelectAll"]),
     menus() {
       return [
         ...this.menuList,
         {
           newIcon: "akar-icons:trash-can",
           fn: () => {
+            if (this.isSelectAll) {
+
+            }
             if (this.options?.type != "note") {
               this.doRemoveCard();
             } else {
