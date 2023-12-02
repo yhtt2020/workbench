@@ -112,7 +112,7 @@ watch(
     immediate: true,
   }
 );
-
+const test: any = ref(null);
 const drag = (obj) => {
   if (isSelectAll.value) {
     const { initX, initY, x, y, data } = obj;
@@ -121,6 +121,7 @@ const drag = (obj) => {
     const offsetY = y - initY;
     freeLayoutStore.updatePositionX(offsetX);
     freeLayoutStore.updatePositionY(offsetY);
+    console.log("test.value :>> ", test.value[0].data);
   }
 };
 
@@ -190,6 +191,7 @@ const dragStop = () => {};
           :style="{
             border: isSelectAll ? '3px solid var(--active-bg) ' : '',
           }"
+          ref="test"
         >
           <slot name="box" :data="currentData[item.id]"></slot>
         </div>

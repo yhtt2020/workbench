@@ -22,6 +22,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       system: {
         // 是否使用自由布局
         isFreeLayout: true,
+        // 隐藏组件
+        hide: false,
       },
       option: {
         afterDragging: false,
