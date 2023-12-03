@@ -266,17 +266,16 @@ export default {
             this.defaultTitle = item
             this.selectNav = item.value
         },
-        onOk(){
-            console.log(111111);
-            if(this.selectNav==='foot'){
-                this.navigationToggle[2]=true
-                this.modalVisible=false
-            }else if(this.selectNav==='left' ){
-                this.navigationToggle[0]=true
-                this.modalVisible=false
-            }else if(this.selectNav==='right'){
-                this.navigationToggle[1]=true
-                this.modalVisible=false
+        onOk() {
+            if (this.selectNav === 'foot') {
+                this.navigationToggle[2] = true
+                this.modalVisible = false
+            } else if (this.selectNav === 'left') {
+                this.navigationToggle[0] = true
+                this.modalVisible = false
+            } else if (this.selectNav === 'right') {
+                this.navigationToggle[1] = true
+                this.modalVisible = false
             }
         },
         // 拖拽
@@ -291,8 +290,6 @@ export default {
                 removeCloneOnHide: true,
                 forceFallback: false,
                 onStart(evt) {
-                    const currentDiv = document.getElementById('left')
-                    console.log(currentDiv, '====>>>CurrentDiv');
                     that.darggingCore = true
                     if (that.selectNav === 'left') {
                         that.draggingArea('left-bar', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
@@ -314,7 +311,6 @@ export default {
         draggingArea(id, oldIndex, NavigationList, setNavigationList, source, compare = true) {
             let that = this
             let slider = document.getElementById(id)
-            console.log(slider, id);
             slider.ondragover = function (ev) {
                 ev.preventDefault()
             }
@@ -445,7 +441,22 @@ export default {
                 this.contentHeight = 436
                 this.contentWidth = 600
             }
+        },
+        // 区分推荐图标属于哪个分类
+        updateIntroduce() {
+            this.suggestNavigationList.forEach((item) => {
+                const foundItem = this.ClassifyData.find((i) => i.name === item.name);
+                if (foundItem) {
+                    const found = this.sideBar.find((i) => i.tag === foundItem.type)
+                    item.className = foundItem.summary || found.name;
+                } else if (item.type) {
+                    const found = this.sideBar.find((i) => i.tag === item.type)
+                    item.className = found.name;
+                } 
+
+            });
         }
+
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible']),
@@ -498,7 +509,7 @@ export default {
     mounted() {
         this.defaultTitle = this.currentNav
         this.targetDivName = this.$refs.introduce.$refs.targetDiv
-
+        this.updateIntroduce()
         this.$nextTick(() => {
             this.mainDrop()
         })
@@ -511,17 +522,17 @@ export default {
     watch: {
         selectNav() {
             this.defaultTitle = this.currentNav
-            if(this.selectNav==='foot' && !this.navigationToggle[2]){
-                this.modalVisible=true
-            }else if(this.selectNav==='left' && !this.navigationToggle[0]){
-                this.modalVisible=true
-            }else if(this.selectNav==='right' && !this.navigationToggle[1]){
-                this.modalVisible=true
-            }else{
-                this.modalVisible=false
+            if (this.selectNav === 'foot' && !this.navigationToggle[2]) {
+                this.modalVisible = true
+            } else if (this.selectNav === 'left' && !this.navigationToggle[0]) {
+                this.modalVisible = true
+            } else if (this.selectNav === 'right' && !this.navigationToggle[1]) {
+                this.modalVisible = true
+            } else {
+                this.modalVisible = false
             }
         },
-        
+
     },
     unmounted() {
         if (this.introduceVisible) {
