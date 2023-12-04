@@ -896,7 +896,7 @@ export default {
         li.id = nanoid(8);
         delete li["_$muuri_id"];
       });
-      return list;
+      return [...list];
     },
   },
 };
