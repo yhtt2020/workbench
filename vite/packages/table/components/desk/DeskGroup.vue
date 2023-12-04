@@ -102,16 +102,7 @@
         </div>
       </div>
     </div>
-    <div v-if="fullScreen" class="no-drag">
-      <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
-        <div
-          @click="setFullScreen(false)"
-          class="btn-bg no-drag pointer w-10 rounded-md flex justify-center items-center ml-3"
-        >
-          <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
-        </div>
-      </div>
-    </div>
+
     <div
       style="flex: 1; height: 0"
       v-if="currentDesk && currentDesk?.cards?.length > 0"
@@ -740,15 +731,7 @@ export default {
       this.deskMarketVisible = true;
     },
     setFullScreen(flag = true) {
-      this.$refs.currentDeskRef.stashLayout();
-      this.fullScreen = flag;
-      this.$nextTick(() => {
-        if (flag === false) {
-          this.$refs.currentDeskRef.restoreLayout(1);
-        } else {
-          this.$refs.currentDeskRef.restoreLayout();
-        }
-      });
+      this.$refs.currentDeskRef.setFullScreen(flag)
     },
     showMenu() {
       this.$refs.currentDeskRef.showMenu();

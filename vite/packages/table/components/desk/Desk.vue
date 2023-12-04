@@ -1,4 +1,14 @@
 <template>
+  <div v-if="fullScreen" class="no-drag">
+    <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
+      <xt-button
+        @click="setFullScreen(false)"
+        :w="40" :h="40" type="theme"
+      >
+        <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
+      </xt-button>
+    </div>
+  </div>
   <div style="height: 100%; width: calc(100% - 00px)" v-if="currentDesk.cards">
     <div style="width: 100%; height: 100%" :class="notTrigger ? 'trigger' : ''" class="m-auto"
       v-if="currentDesk.cards.length === 0">
@@ -582,6 +592,9 @@ export default {
     this.resetLayout();
   },
   unmounted() {
+    if(this.fullScreen){
+      this.fullScreen=false
+    }
     window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
@@ -767,7 +780,7 @@ export default {
       }
       return this.currentDesk.layoutSize;
     },
-    setFullScreen(flag, cb) {
+    setFullScreen(flag, cb=null) {
       this.stashLayout();
       this.fullScreen = flag;
       this.$nextTick(() => {
