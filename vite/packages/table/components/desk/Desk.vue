@@ -423,7 +423,7 @@ export default {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
         let exists = arr.findIndex((item) => item.id === 4);
-        if (!exists) {
+        if (exists===-1) {
           arr.push({
             id: 4,
             newIcon: "fluent:circle-off-16-regular",
