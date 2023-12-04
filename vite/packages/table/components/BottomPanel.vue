@@ -10,11 +10,11 @@
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
-        width: 160px;
+        /* width: 160px; */
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
-        <div class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 84px;"></div>
-        <div v-show="settings.enableChat && !simple" class="pointer">
+        <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div>
+        <div v-show="settings.enableChat && !simple" class="ml-5 pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
