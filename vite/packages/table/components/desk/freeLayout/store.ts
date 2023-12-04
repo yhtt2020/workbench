@@ -1,6 +1,7 @@
 import { defineStore, storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
+import _ from "lodash";
 
 import dbStorage from "../../../store/dbStorage";
 // @ts-ignore
@@ -12,12 +13,17 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     freeLayoutState: {},
     // 拖拽时的数据
     dragData: {},
+    // 临时数据
+    tempData: {},
+    isSelectAll: false,
     // 默认状态数据
     defaultState: {
       // 系统数据
       system: {
         // 是否使用自由布局
         isFreeLayout: true,
+        // 隐藏组件
+        hide: false,
       },
       option: {
         afterDragging: false,
@@ -72,7 +78,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前桌面数据
     getCurrentDesk() {
       const card: any = cardStore();
-      const { currentDeskId, desks } = storeToRefs(card);
+      const home: any = homeStore();
+      const {  desks } = storeToRefs(card);
+      const {currentDeskId}=storeToRefs(home);
       const desk = desks.value?.filter(
         (item) => item.id === currentDeskId.value
       );
@@ -80,8 +88,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前桌面Id
     getCurrentDeskId() {
-      const card: any = homeStore();
-      const { currentDeskId } = storeToRefs(card);
+      const home: any = homeStore();
+      const { currentDeskId } = storeToRefs(home);
       return currentDeskId.value;
     },
     // 获取当前自由布局数据
@@ -177,7 +185,21 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
       console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
+    // 拷贝原数据
+    copyData() {
+      this.tempData = _.cloneDeep(this.getFreeLayoutData);
+    },
     // 更新坐标
+    updatePositionX(num) {
+      for (const key in this.getFreeLayoutData) {
+        this.getFreeLayoutData[key].left = this.tempData[key].left + num;
+      }
+    },
+    updatePositionY(num) {
+      for (const key in this.getFreeLayoutData) {
+        this.getFreeLayoutData[key].top = this.tempData[key].top + num;
+      }
+    },
   },
   persist: {
     enabled: true,

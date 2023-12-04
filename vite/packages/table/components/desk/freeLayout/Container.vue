@@ -18,6 +18,7 @@ const {
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
+  isSelectAll,
 } = storeToRefs(freeLayoutStore);
 onMounted(() => {});
 freeLayoutStore.initFreeLayoutState();
@@ -111,6 +112,23 @@ watch(
     immediate: true,
   }
 );
+const test: any = ref(null);
+const drag = (obj) => {
+  if (isSelectAll.value) {
+    const { initX, initY, x, y, data } = obj;
+    // 偏移坐标
+    const offsetX = x - initX;
+    const offsetY = y - initY;
+    freeLayoutStore.updatePositionX(offsetX);
+    freeLayoutStore.updatePositionY(offsetY);
+    console.log("test.value :>> ", test.value[0].data);
+  }
+};
+
+const dragStart = () => {
+  freeLayoutStore.copyData();
+};
+const dragStop = () => {};
 </script>
 
 <template>
@@ -140,9 +158,11 @@ watch(
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
+      resetPosition
       parent
       boundary
-      v-if="item.id != ''"
+      v-if="!getFreeLayoutState.system.hide"
+      :data="item"
       :key="item.id"
       v-model:y="item.top"
       v-model:x="item.left"
@@ -161,9 +181,20 @@ watch(
         border: '2px solid var(--active-bg)',
       }"
       :handle="isDrag ? '' : '.#123'"
+      @onDragStart="dragStart"
+      @onDrag="drag"
+      @onDragStop="dragStop"
     >
       <template v-if="currentData">
-        <slot name="box" :data="currentData[item.id]"></slot>
+        <div
+          class="rounded-xl"
+          :style="{
+            border: isSelectAll ? '3px solid var(--active-bg) ' : '',
+          }"
+          ref="test"
+        >
+          <slot name="box" :data="currentData[item.id]"></slot>
+        </div>
       </template>
     </xt-drag>
   </template>

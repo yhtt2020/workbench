@@ -289,7 +289,12 @@ export const appStore = defineStore('appStore', {
      */
     async enterFullScreen(tip = true,updateOrigin=true) {
       const topBar = document.getElementById('topBar')
+
       topBar.classList.remove('drag')
+      //移除子元素的拖拽属性
+      for(let i=0 ;i<topBar.children.length;i++){
+        topBar.children[i].classList.remove('drag')
+      }
       topBar.classList.add('no-drag')
       this.showWindowController = false
       tip && notification.info({
@@ -324,6 +329,10 @@ export const appStore = defineStore('appStore', {
         document.body.classList.add('window')
       }, 200)
       const topBar = document.getElementById('topBar')
+      //移除子元素的拖拽属性
+      for(let i=0 ;i<topBar.children.length;i++){
+        topBar.children[i].classList.add('drag')
+      }
       topBar.classList.remove('no-drag')
       topBar.classList.add('drag')
       tsbApi.window.setResizable(true)

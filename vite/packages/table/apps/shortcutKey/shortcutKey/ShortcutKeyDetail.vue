@@ -300,7 +300,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(keyStore, ['removeShortcutKeyList', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
+    ...mapActions(keyStore, ['removeScheme', 'setMarketList', 'loadShortcutSchemes', 'setRecentlyUsedList', 'saveScheme']),
     ...mapActions(appStore, ['enterAided', 'leaveAided']),
     isWin, isGroupLast, isGroupFirst,
     zoomUp () {
@@ -428,9 +428,16 @@ export default {
         centered: true,
         content: '是否删除此方案？此操作不可恢复。',
         onOk: async () => {
-          await this.removeShortcutKeyList(this.appContent)
-          message.success('删除成功')
-          this.onBack()
+          let rs=await this.removeScheme(this.appContent)
+          if(rs){
+            message.success('删除成功')
+            this.$router.push({
+              name:'schemeIndex'
+            })
+          }else{
+            message.error('删除失败')
+          }
+
         }
       })
 

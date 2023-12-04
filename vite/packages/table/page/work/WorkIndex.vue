@@ -33,15 +33,15 @@ export default defineComponent({
   data(){
     return {
       tabs:[
-        {
-          title:'桌面',
-          name:'desk',
-          icon:'desktop',
-          tab:'workDesk',
-          route:{
-            name:'workDesk'
-          }
-        },
+        // {
+        //   title:'桌面',
+        //   name:'desk',
+        //   icon:'desktop',
+        //   tab:'workDesk',
+        //   route:{
+        //     name:'workDesk'
+        //   }
+        // },
         {
           title:'AI助手',
           name:'ai',
@@ -85,14 +85,14 @@ export default defineComponent({
             name:'todo'
           }
         },
-        {
-          title:'番茄钟',
-          name:'tomato',
-          icon:'naozhong',
-          route:{
-            name:'tomatoStart'
-          }
-        },
+        // {
+        //   title:'番茄钟',
+        //   name:'tomato',
+        //   icon:'naozhong',
+        //   route:{
+        //     name:'tomatoStart'
+        //   }
+        // },
         {
           title:'备忘录',
           name:'note',

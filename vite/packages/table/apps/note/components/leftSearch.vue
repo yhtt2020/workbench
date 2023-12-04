@@ -17,15 +17,15 @@
                 <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
             </xt-button>
         </div>
-        <div 
-        class=" xt-scrollbar h-full scroll-color pr-3" 
+        <div
+        class=" xt-scrollbar h-full scroll-color pr-3"
         style="width: 306px;"
         >
             <!-- <div @click="this.dbClear">清除数据</div>
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
             <div @click="this.findAll">db数据</div> -->
-            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)" 
+            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)"
             >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"
@@ -56,7 +56,7 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import { Icon } from '@iconify/vue';
   import add16Filled from '@iconify-icons/fluent/add-16-filled';
@@ -66,6 +66,7 @@
   import { formatTimestamp, formatTime } from '../../../util'
 import { cardStore } from "../../../store/card";
 import { message } from 'ant-design-vue';
+  import { homeStore } from '../../../store/home'
 
   export default {
     components: {
@@ -73,7 +74,7 @@ import { message } from 'ant-design-vue';
     },
     props:['selDesk', 'menus'],
     data() {
-      return {  
+      return {
 			icons: {
 				add16Filled,
 				search20Filled,
@@ -82,7 +83,7 @@ import { message } from 'ant-design-vue';
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isTrash','searchValue','deskList']),
-        ...mapWritableState(cardStore, ['currentDeskIndex','currentDeskId']),
+      ...mapWritableState(homeStore, ['currentDeskIndex','currentDeskId']),
     },
     mounted() {
     },
@@ -94,7 +95,7 @@ import { message } from 'ant-design-vue';
             this.selNote = n
             this.selNoteTitle = this.noteList[n].customData.title
             this.selNoteText = this.noteList[n].customData.text
-            
+
         },
         showData(){
             console.log(this.noteList);
@@ -108,7 +109,7 @@ import { message } from 'ant-design-vue';
     },
   };
   </script>
-  
+
   <style lang="scss" scoped>
     .note-active{
         background: rgba(80,139,254,0.20);
@@ -140,7 +141,7 @@ import { message } from 'ant-design-vue';
         background-color: #ccc; /* 滚动条颜色 */
         border-radius: 6px; /* 滚动条圆角 */
     }
-    
+
     .scroll-color::-webkit-scrollbar-thumb:hover {
         background-color: #999; /* 悬停时滚动条颜色 */
     }
@@ -157,4 +158,3 @@ import { message } from 'ant-design-vue';
         color:var(--secondary-text)
     }
 </style>
-  

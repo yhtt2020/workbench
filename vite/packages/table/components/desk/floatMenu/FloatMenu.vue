@@ -12,14 +12,15 @@ widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
 
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutState, freeLayoutEnv, isFreeLayout }: any =
+const { getFreeLayoutState, freeLayoutEnv, isFreeLayout, isSelectAll }: any =
   storeToRefs(freeLayoutStore);
 const props = defineProps({
   zoom: {},
   aloneZoom: {},
   alone: {},
+  hide: {},
 });
-const { zoom, alone, aloneZoom }: any = toRefs(props);
+const { zoom, alone, aloneZoom, hide }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
@@ -31,6 +32,21 @@ const emits = defineEmits([
   "resetLayout",
 ]);
 // 基础
+const baseHide = computed(() => {
+  if (currentMode.value == "free") {
+    if (getFreeLayoutState.value.system.hide) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    if (hide.value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
 const defaultMenu = computed(() => {
   return [
     {
@@ -42,9 +58,15 @@ const defaultMenu = computed(() => {
     },
     {
       icon: "fluent:eye-off-16-regular",
-      title: "隐藏小组件",
+      title: baseHide.value ? "隐藏小组件" : "显示小组件",
+      type: baseHide.value ? "theme" : "default",
       fn: () => {
-        emits("hide");
+        if (currentMode.value == "free") {
+          getFreeLayoutState.value.system.hide =
+            !getFreeLayoutState.value.system.hide;
+        } else {
+          emits("hide");
+        }
       },
     },
     {
@@ -107,7 +129,6 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
-          console.log('123 :>> ', 123);
           if (alone.value) {
             defaultAloneZoom.value += 5;
           } else {
@@ -219,6 +240,7 @@ const resetZoom = () => {
   }
 };
 onBeforeUnmount(() => {
+  isSelectAll.value = false;
   widgetStore.edit = false;
 });
 </script>

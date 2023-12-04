@@ -20,7 +20,7 @@
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
-            
+
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="relative btn">
                 节能模式<br />
@@ -372,7 +372,7 @@ export default {
     tipSaving() {
       Modal.info({
         content:
-          "使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。",
+          "使用节能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。",
         centered: true,
       });
     },

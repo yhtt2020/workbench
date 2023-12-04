@@ -58,11 +58,11 @@ export default {
       }
     },
     selectedCount() {
-      return this.schemes.length
+      return  this.selectedSchemes.length
     },
     selectedSchemes() {
       let selected = this.schemes.filter(s => {
-        return s.selected
+        return this.isSelected(s.id)
       })
 
       if (selected) {
@@ -130,6 +130,7 @@ export default {
       try {
         let inserted = await this.import(downloadSchemes)
         message.success('成功导入' + inserted.length + '个方案')
+        this.selectedSchemeIds=[]
       } catch (e) {
         console.error(e)
       }
@@ -290,7 +291,7 @@ export default {
       </vue-custom-scrollbar>
 
       <!-- 预览 -->
-      <Preview :keyScheme="previewKeys" :showModal="previewVisible" @closePreview="closePreview"></Preview>
+      <Preview :keyScheme="previewKeys" v-model:showModal="previewVisible" @closePreview="closePreview"></Preview>
     </div>
 
 

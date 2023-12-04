@@ -135,11 +135,10 @@ export default {
           if (!isPaused) {
             this.pause()
           }
-
         }
       })
     }else{
-      history.go(-1)
+      next()
     }
   },
   methods: {

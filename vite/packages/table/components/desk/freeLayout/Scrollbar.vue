@@ -1,13 +1,18 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <div ref="scrollbar" class="no-drag relative w-full" style="
+  <div
+    ref="scrollbar"
+    class="no-drag relative w-full"
+    style="
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
       height: 100%;
-    " :style="{
+    "
+    :style="{
       cursor: dragStyle,
-    }">
+    }"
+  >
     <slot> </slot>
   </div>
 </template>
@@ -20,6 +25,7 @@ import {
   nextTick,
   computed,
 } from "vue";
+import { message } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -42,6 +48,7 @@ const {
   freeLayoutEnv,
   getFreeLayoutData,
   getCurrentDesk,
+  isSelectAll
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
@@ -135,7 +142,16 @@ function handleKeyDown(event) {
     isKey.value = true;
     event.preventDefault();
     event.stopPropagation();
-    return false;
+  }
+  if ((event.ctrlKey && event.key === "A") || event.key === "a") {
+    isSelectAll.value = !isSelectAll.value;
+    if (isSelectAll.value) {
+      // message.success("Ctrl + A was pressed!");
+      
+
+    } else {
+    }
+
   }
 }
 // 键盘抬起
@@ -178,10 +194,10 @@ let initialMousePosition = ref(null);
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => { }, {
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
   window.removeEventListener("keydown", handleKeyDown, {

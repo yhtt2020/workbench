@@ -1,12 +1,9 @@
 <template>
-  <!-- -->
   <xt-left-menu :list="test" last="2" end="2">
     <template #test> 123 </template>
     <template #test1> test1 </template>
-    <div>
-      <xt-button @click="a = !a"></xt-button>
-      {{ test }}
-    </div>
+    <template v-for="item in test2" #[item.float]>{{ item }}</template>
+    <xt-button @click="a = !a"></xt-button>
   </xt-left-menu>
 </template>
 
@@ -17,7 +14,13 @@ export default {
       return [
         {
           icon: "message",
-          float: this.a ? "test" : "",
+          float: "a",
+          id: 1,
+        },
+        {
+          icon: "message",
+          float: "b",
+          id: 2,
         },
         {
           icon: "message",
@@ -53,6 +56,18 @@ export default {
           ],
         },
       ];
+    },
+    test2() {
+      let arr = [];
+      this.test.forEach((item) => {
+        if (item.float) {
+          arr.push({
+            float: item.float,
+            id: item.id,
+          });
+        }
+      });
+      return arr;
     },
   },
   data() {

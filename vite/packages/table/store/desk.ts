@@ -3,6 +3,7 @@ import dbStorage from "./dbStorage";
 
 export const deskStore = defineStore("desk", {
   state: () => ({
+    deskList:[],
     //桌面市场列表
     apiList: [
       {

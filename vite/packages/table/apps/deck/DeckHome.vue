@@ -258,12 +258,12 @@
           <div>删除分组</div>
         </div>
       </a-col>
-      <a-col>
-        <div class="btn">
-          <Icon style="font-size: 3em" icon="shezhi"></Icon>
-          <div>设置</div>
-        </div>
-      </a-col>
+<!--      <a-col>-->
+<!--        <div class="btn">-->
+<!--          <Icon style="font-size: 3em" icon="shezhi"></Icon>-->
+<!--          <div>设置</div>-->
+<!--        </div>-->
+<!--      </a-col>-->
 
 
     </a-row>

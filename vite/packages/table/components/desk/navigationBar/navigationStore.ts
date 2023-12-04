@@ -30,6 +30,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             navObj:{},
             // 存储改变前的数据
             oldToggle:[],
+            // 弹窗次数
+            popVisible:true
         }
     },
     actions:{
@@ -41,7 +43,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','iconSetting','selectNav','introduceVisible'],
+            paths: ['editToggle','iconSetting','selectNav','introduceVisible','popVisible'],
             // storage: dbStorage,
             storage: localStorage,
           },

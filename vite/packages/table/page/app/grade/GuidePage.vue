@@ -27,7 +27,7 @@
                 <div v-for="(i,key) in item.url" :key="key" class="flex items-center">
                     <MyIcon class="ml-1 mr-1" height="20" width="20" v-if="key>0"  icon="fluent:add-16-filled"/>
                     <MyIcon :icon="i" class="icon-setting"/>
-                </div> 
+                </div>
             </div>
             <span class="my-4 primary-title">{{ item.title }}</span>
             <div class="container flex items-center justify-center">
@@ -147,6 +147,7 @@ import {setThemeSwitch} from '../../../components/card/hooks/themeSwitch/index';
 import HorizontalPanel from '../../../components/HorizontalPanel.vue'
 import _ from 'lodash-es'
 import { Icon as MyIcon } from '@iconify/vue';
+import { homeStore } from '../../../store/home'
 
 export default {
   components:{
@@ -170,7 +171,7 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['styles','simple','stylesIndex','userInfo']),
-    ...mapWritableState(cardStore,['currentDeskId','currentDeskIndex']),
+    ...mapWritableState(homeStore,['currentDeskId','currentDeskIndex']),
     //是否禁用下一步
     isNext(){
       return this.statusIndex === 2 || this.selectItem.length > 0

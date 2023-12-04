@@ -10,10 +10,25 @@ import TIM from '../../TUIKit/TUICore/tim';
 import ClockNoticeToast from '../../page/notice/toast/ClockNoticeToast.vue'
 import SystemNoticeToast from '../../page/notice/toast/SystemNoticeToast.vue'
 import MessageNoticeToast from '../../page/notice/toast/MessageNoticeToast.vue'
+import NoticeToast from '../../page/notice/toast/NoticeToast.vue'
 
 const toast =  useToast()
 
 export class Notifications{
+  public NoticeToast(){
+    toast.info({
+      component:NoticeToast,
+      props:{noticeType:'notice',},
+      listeners:{
+        'nowCheck':function(){
+          appStore().hideNoticeEntry()
+        },
+      }
+    },{
+      icon:false,closeOnClick:false, closeButton:false,pauseOnFocusLoss:true,
+      pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
+    })
+  }
 
   // 闹钟的通知
   public clockToast(msg:any,title:any,changeIcon:any){

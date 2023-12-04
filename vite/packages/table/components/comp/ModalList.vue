@@ -1,7 +1,7 @@
 <template>
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg modal-list px-6 py-4 xt-modal "  >
       <div class="flex flex-row items-center xt-text ">
-        <div class="ml-auto text-lg pl-12 ">{{title}}1</div>
+        <div class="ml-auto text-lg pl-12 ">{{title}}</div>
         <div @click="closeModal" class="pointer ml-auto h-12 w-12 rounded-lg flex " style="">
           <Icon icon="guanbi" class="no-drag m-auto" style="width:18px;height:18px;color: rgba(255, 255, 255, 0.85);" ></Icon>
         </div>

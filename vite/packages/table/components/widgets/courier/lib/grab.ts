@@ -56,7 +56,7 @@ const grab = {
     },
     getOrder(callback, page = 1) {
       tsbApi.web.openPreloadWindow({
-        background: false,
+        background: true,
         url: 'https://order.jd.com/center/list.action' + '?page=' + page,
         preload: appDirName + '/../appPreload/ecommerce/jd/order.js',
         callback: (data) => {
