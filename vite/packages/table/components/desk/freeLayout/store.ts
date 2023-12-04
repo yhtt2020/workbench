@@ -78,7 +78,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前桌面数据
     getCurrentDesk() {
       const card: any = cardStore();
-      const { currentDeskId, desks } = storeToRefs(card);
+      const home: any = homeStore();
+      const {  desks } = storeToRefs(card);
+      const {currentDeskId}=storeToRefs(home);
       const desk = desks.value?.filter(
         (item) => item.id === currentDeskId.value
       );
@@ -86,8 +88,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前桌面Id
     getCurrentDeskId() {
-      const card: any = homeStore();
-      const { currentDeskId } = storeToRefs(card);
+      const home: any = homeStore();
+      const { currentDeskId } = storeToRefs(home);
       return currentDeskId.value;
     },
     // 获取当前自由布局数据
