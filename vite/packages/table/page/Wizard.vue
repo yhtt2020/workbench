@@ -623,10 +623,10 @@ export default {
 }
 
 .bg-image{
-  background-image: url('../../../public/img/defaultBg.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: url('../../../public/img/defaultBg.jpg') !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
 }
 
 .top-icon{

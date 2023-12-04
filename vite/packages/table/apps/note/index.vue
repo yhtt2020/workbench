@@ -61,6 +61,7 @@
 
       </Modal>
 
+      <xt-print  v-if="modelValue" v-model="modelValue"  :content="content"></xt-print>
     </teleport>
   </div>
 
@@ -94,6 +95,8 @@ export default {
   },
   data () {
     return {
+      // 打印
+      modelValue: false,
       // 右键菜单
       showVersion: false,
 
@@ -104,9 +107,6 @@ export default {
       promptVisible: false,
 
     }
-  },
-  watch: {
-
   },
   mounted () {
     // 重置默认数据
@@ -129,6 +129,9 @@ export default {
   computed: {
     ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
     ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    content(){
+      return this.noteList[this.selNote].customData?.text
+    },
     menus(){
       return [
         // {
@@ -143,6 +146,13 @@ export default {
             this.showVersion = true
 
           }
+        },
+        {
+          newIcon: 'fluent:print-20-regular',
+          label: '打印',
+          callBack: () => {
+            this.modelValue = true
+          },
         },
         {
           newIcon: 'fluent:copy-20-regular',

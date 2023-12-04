@@ -124,7 +124,10 @@ export default {
       //   // 暂时还没有排查到卡顿原因
       // }
     }, 2000)
-    this.timeout()
+    console.log('userinfo',this.userInfo.uid);
+    if(this.userInfo.uid){
+      this.timeout()
+    }
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的

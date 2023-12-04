@@ -85,14 +85,14 @@ export default defineComponent({
             name:'todo'
           }
         },
-        {
-          title:'番茄钟',
-          name:'tomato',
-          icon:'naozhong',
-          route:{
-            name:'tomatoStart'
-          }
-        },
+        // {
+        //   title:'番茄钟',
+        //   name:'tomato',
+        //   icon:'naozhong',
+        //   route:{
+        //     name:'tomatoStart'
+        //   }
+        // },
         {
           title:'备忘录',
           name:'note',

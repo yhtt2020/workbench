@@ -5,10 +5,24 @@
        暂无卡片
 
     </div>
-    <FloatMenu v-if="editing" @add="newAddCard" @set="showSetting" @hide="showDesk"
-      @scrollbarRedirect="freeLayoutScrollbarRedirect" @exit="toggleEditing" @resetLayout="resetLayout"
-      v-model:zoom="globalSettings.cardZoom" v-model:aloneZoom="settings.cardZoom" :alone="settings.enableZoom" />
-    <RightMenu :currentIndex="currentDesk.id" :menus="dropdownMenu" class="w-full h-full" @contextmenu="showMenu">
+    <FloatMenu
+      v-if="editing"
+      @add="newAddCard"
+      @set="showSetting"
+      @hide="showDesk"
+      @scrollbarRedirect="freeLayoutScrollbarRedirect"
+      @exit="toggleEditing"
+      @resetLayout="resetLayout"
+      v-model:zoom="globalSettings.cardZoom"
+      v-model:aloneZoom="settings.cardZoom"
+      :alone="settings.enableZoom"
+      :hide="hide"
+    />
+    <RightMenu
+      :menus="dropdownMenu"
+      class="w-full h-full"
+      @contextmenu="showMenu"
+    >
       <!-- 自由布局滚动 -->
       <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
