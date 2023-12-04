@@ -64,7 +64,7 @@
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation"v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
+      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
         <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
       </div>
     </transition>
