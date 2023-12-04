@@ -595,9 +595,6 @@ export default {
         this.disableDrag()
       }
     },
-    delItemIcon() {
-      console.log(this.delItemIcon);
-    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -755,7 +752,7 @@ export default {
     },
     showDetailMenu() {
       if (this.rightModel == 'follow') {
-        console.log(111)
+        // console.log(111)
         this.menuVisible = true
       }
 
@@ -901,7 +898,7 @@ export default {
     },
     updateMainNav(addItem, type) {
       this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-      console.log(this.mainNavList, 'this.mainNavList')
+      // console.log(this.mainNavList, 'this.mainNavList')
       let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
       if (type) {
         this.mainNavList.forEach(item => {
@@ -986,15 +983,12 @@ export default {
             )
           }
         },
-        dropstart() {
-          console.log(1111111, '====>>>>>drop');
-        },
         onUpdate: function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-          console.log('newIndex', oldItem)
+          // console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作

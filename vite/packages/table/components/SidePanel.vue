@@ -555,7 +555,7 @@ export default {
     },
     updateMainNav(addItem, type) {
       this.mainNavList = this.currentList.length ? this.currentList : this.navigationList
-      console.log(this.mainNavList, 'this.mainNavList')
+      // console.log(this.mainNavList, 'this.mainNavList')
       let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
       if (type) {
         this.mainNavList.forEach(item => {

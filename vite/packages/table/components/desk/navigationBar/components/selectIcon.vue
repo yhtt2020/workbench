@@ -175,7 +175,7 @@ export default {
             } else {
                 this.updateMainNav(item, 'del')
                 this.selectList = this.selectList.filter(selectItem => selectItem.name !== item.name);
-                console.log('Item already exists in selectList:', item);
+                // console.log('Item already exists in selectList:', item);
             }
         }
     },
