@@ -1,7 +1,8 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow py-2.5  drag">
-    <div @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5  items-center no-drag">
-     <a-tooltip>
+  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow pt-2.5 mb-2.5 drag">
+    <div id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5 drag  items-center">
+     <div class="no-drag">
+      <a-tooltip>
        <QueueWidget></QueueWidget>
      </a-tooltip>
       <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
@@ -39,17 +40,17 @@
       <TopClockTimer/>
 
       <TopTomato />
-
+    </div>
     </div>
 
-    <div class="flex max-search" hidden="">
+    <div id="topCenterPart" class="flex max-search drag" hidden="">
       <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
         style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
         <Icon icon="sousuo"></Icon>
       </div>
     </div>
 
-    <div class="flex items-center  justify-end relative ">
+    <div id="topRightPart" class="flex items-center drag justify-end relative ">
       <TopPanelButton/>
       <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
        class="no-drag btn-hover category-button p-1 rounded-md pointer"
