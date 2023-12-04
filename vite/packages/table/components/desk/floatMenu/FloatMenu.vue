@@ -6,7 +6,6 @@ import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
-import test from "./test.vue";
 // 初始化操作
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;

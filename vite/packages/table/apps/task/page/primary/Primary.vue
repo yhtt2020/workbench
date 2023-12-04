@@ -47,7 +47,7 @@ import { ref, reactive, computed } from "vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0101";
+  store.taskID = "M0104";
   store.success = false;
   store.step = -1;
 };

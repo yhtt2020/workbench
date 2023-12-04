@@ -147,7 +147,7 @@
         </div>
       </a-col>
       <a-col :span="4">
-      <xt-task  id="m0103" no="7"  @cb="setAppPaper">
+      <xt-task  id="M0103" no="7"  @cb="setAppPaper">
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设为工作台背景</div>

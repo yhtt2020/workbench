@@ -1,9 +1,8 @@
 <template>
   <div ref="el" @click="next($event)" @contextmenu="next($event)" class="box">
     <div :class="{ 'xt-task-container': zIndexValue }">
-      {{ zIndexValue }}
       <slot></slot>
-      <div class="" :class="{ 'xt-task-overlay': zIndexValue }"></div>
+      <div :class="{ 'xt-task-overlay': zIndexValue }"></div>
     </div>
   </div>
 </template>
@@ -18,6 +17,8 @@ export default defineComponent({
   data() {
     return {
       tour: null,
+      isMask: this.mask,
+      cb: () => {},
     };
   },
   props: {
@@ -25,9 +26,12 @@ export default defineComponent({
       default: false,
     },
     fn: {},
-    id: null,
-    no: null,
-    mask: true,
+    id: {},
+    no: {},
+    list: {},
+    mask: {
+      default: true,
+    },
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
@@ -35,7 +39,7 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      return this.state && this.mask;
+      return this.state && this.isMask;
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
@@ -44,13 +48,31 @@ export default defineComponent({
     },
     //
     state() {
-      if (this.id && this.no) {
+      let currentState = false;
+      // 数组形式
+      if (this.list && this.list.length > 0) {
+        this.list.forEach((item) => {
+          if (item?.feature && item.feature != item.isFeature) return;
+          this.isMask = item?.mask ? false : true;
+          if (item.id == this.taskID && item.no == this.step) {
+            this.start();
+            this.cb = item.cb;
+            currentState = true;
+            return true;
+          }
+        });
+      } else if (this.id && this.no) {
+        // 配置形式
         let flag = this.taskID == this.id && this.step == this.no;
         if (flag) this.start();
+        currentState = flag;
         return flag;
       } else {
+        // 自定义形式
+        currentState = this.modelValue;
         return this.modelValue;
       }
+      return currentState;
     },
   },
   watch: {
@@ -78,6 +100,7 @@ export default defineComponent({
     },
     action() {
       this.$emit("cb");
+      this.cb && this.cb();
       this.tour.next();
       this.step++;
       if (this.task?.success) {
@@ -85,7 +108,7 @@ export default defineComponent({
         // 发奖励
       }
     },
-    start() {
+    start(cb) {
       this.$nextTick(() => {
         setTimeout(() => {
           this.createTour();
@@ -106,6 +129,7 @@ export default defineComponent({
           {
             text: this.currentStep,
             action: (tour) => {
+              // 指引下一步的回调
               this.action();
             },
           },
@@ -166,8 +190,12 @@ export default defineComponent({
 <style>
 .xt-task-container {
   position: relative;
+  border: 0.1px solid red;
   cursor: pointer;
-  z-index: 99999;
+
+  z-index: 9999999;
+  width: 100%;
+  height: 100%;
 }
 
 .xt-task-container::before {
@@ -236,7 +264,7 @@ export default defineComponent({
 /* 箭头 */
 .shepherd-arrow:before {
   z-index: 9999999999999 !important;
-  border: 1px solid var(--divider) !important;
+  /* border: 1px solid var(--divider) !important; */
   background: var(--modal-bg) !important;
 }
 

@@ -101,8 +101,12 @@
           <div class="xt-text-2 text-sm my-3">
             选择喜欢的图片作为工作台桌面背景。
           </div>
-          <div class="xt-text-2 flex text-sm my-3" v-if="!appSettings.transparent">
-            <xt-task id="m0103" no="4" to="" @cb="goPaper">
+          <div
+            class="xt-text-2 flex text-sm my-3"
+            v-if="!appSettings.transparent"
+          >
+            <xt-task id="M0103" no="3" to=""> </xt-task>
+            <xt-task id="M0103" no="4" to="" @cb="goPaper">
               <xt-button
                 size="mini"
                 :w="80"
@@ -144,7 +148,6 @@
           </div>
           <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
         </div>
-        <xt-task  id="m0103" no="3" to=""> </xt-task>
         <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
           <div class="p-3 xt-modal rounded-xl xt-text-2">
             此类功能性能消耗较高，请酌情开启
@@ -168,7 +171,11 @@
               <div>飘落物</div>
             </div>
             <div class="xt-text-2 text-sm my-3">
-              <xt-tab class=" h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
+              <xt-tab
+                class="h-10"
+                v-model="appSettings.down.type"
+                :list="fallingList"
+              ></xt-tab>
             </div>
             <hr class="my-3" />
             <div class="flex justify-between my-3">
@@ -237,7 +244,11 @@
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div class="fixed inset-0 flex justify-center items-center" style="z-index: 999" v-if="false">
+  <div
+    class="fixed inset-0 flex justify-center items-center"
+    style="z-index: 999"
+    v-if="false"
+  >
     <GuidePage></GuidePage>
   </div>
 
@@ -322,7 +333,7 @@ import Icon from "../components/Icon.vue";
 import Todo from "../components/widgets/todo/Todo.vue";
 import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
-import RadioTab from '../components/RadioTab.vue'
+import RadioTab from "../components/RadioTab.vue";
 // import News from "../components/widgets/news/NewsCard.vue";
 import {
   setTransparent,
@@ -331,7 +342,7 @@ import {
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
-import { homeStore } from '../store/home'
+import { homeStore } from "../store/home";
 
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
@@ -354,20 +365,19 @@ export default {
         name: "",
         template: "daily",
       },
-      fallingList:[
-      {
-        value: "rain",
-        name: "雨",
-      },
-      {
-        value: "snow",
-        name: "雪",
-      },
-      {
-        value: "leaf",
-        name: "叶",
-      }
-
+      fallingList: [
+        {
+          value: "rain",
+          name: "雨",
+        },
+        {
+          value: "snow",
+          name: "雪",
+        },
+        {
+          value: "leaf",
+          name: "叶",
+        },
       ],
       hide: false,
       menuVisible: false,
@@ -509,7 +519,7 @@ export default {
     Todo,
     EatToday,
     HotSearch,
-    RadioTab
+    RadioTab,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -542,7 +552,7 @@ export default {
     }),
     ...mapWritableState(deskStore, ["deskList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore,['currentDeskId', "currentDeskIndex"]),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex"]),
 
     desksList() {
       return this.desks.map((desk) => {

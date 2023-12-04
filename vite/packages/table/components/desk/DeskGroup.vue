@@ -3,7 +3,10 @@
     <!--  工具栏-->
     <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
-      <div class="tabs flex flex-row mb-3 ml-3" v-if="showTabs && displayDesks.length>1">
+      <div
+        class="tabs flex flex-row mb-3 ml-3"
+        v-if="showTabs && displayDesks.length > 1"
+      >
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
         <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
         <!--        主桌面-->
@@ -51,52 +54,57 @@
       <div v-if="showTools">
         <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
-<!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
-<!--            <div-->
-<!--              @click="startEdit"-->
-<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
-<!--            >-->
-<!--              <icon-->
-<!--                class="icon"-->
-<!--                style="font-size: 22px"-->
-<!--                icon="line-dragdroptuofang"-->
-<!--              ></icon>-->
-<!--            </div>-->
-<!--          </a-tooltip>-->
-<!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
-<!--            <div-->
-<!--              @click="stopEdit"-->
-<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
-<!--            >-->
-<!--              <icon-->
-<!--                class="icon"-->
-<!--                style="font-size: 22px; color: red"-->
-<!--                icon="tingzhi"-->
-<!--              ></icon>-->
-<!--            </div>-->
-<!--          </a-tooltip>-->
-<!--          <a-tooltip title="全屏" placement="bottom">-->
-<!--            <div-->
-<!--              @click="setFullScreen"-->
-<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
-<!--            >-->
-<!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
-<!--            </div>-->
-<!--          </a-tooltip>-->
+          <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="startEdit"-->
+          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--            >-->
+          <!--              <icon-->
+          <!--                class="icon"-->
+          <!--                style="font-size: 22px"-->
+          <!--                icon="line-dragdroptuofang"-->
+          <!--              ></icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
+          <!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="stopEdit"-->
+          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--            >-->
+          <!--              <icon-->
+          <!--                class="icon"-->
+          <!--                style="font-size: 22px; color: red"-->
+          <!--                icon="tingzhi"-->
+          <!--              ></icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
+          <!--          <a-tooltip title="全屏" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="setFullScreen"-->
+          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--            >-->
+          <!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
           <a-tooltip title="菜单" placement="bottom">
-
             <div class="pl-3">
               <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
-                <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='all' :stopPropagation="false">
+                <RightMenu
+                  :menus="$refs.currentDeskRef?.dropdownMenu"
+                  model="all"
+                  :stopPropagation="false"
+                >
                   <div
                     @click="showMenu"
                     class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
                   >
-                    <xt-new-icon size='18' icon="fluent:more-horizontal-16-filled"/>
+                    <xt-new-icon
+                      size="18"
+                      icon="fluent:more-horizontal-16-filled"
+                    />
                   </div>
                 </RightMenu>
               </xt-task>
-
             </div>
           </a-tooltip>
         </div>
@@ -117,7 +125,7 @@
       v-if="currentDesk && currentDesk?.cards?.length > 0"
     >
       <Desk
-        :deskGroupMenu='deskGroupMenu'
+        :deskGroupMenu="deskGroupMenu"
         @changeEditing="editing = !editing"
         :global-settings="settings"
         :editing="editing"
@@ -125,7 +133,6 @@
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
-
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
@@ -196,21 +203,25 @@
             <!--            <p style="font-size: 16px">-->
             <!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
             <!--            </p>-->
-            <div class="w-full flex justify-items-center justify-center align-items-center ">
-              <xt-button :w="160"
-                         style="color: var(--active-text)"
-                         @click="moreDesk"
-                         class="mr-10 xt-active-bg rounded-full border-none  "
-                         key="console"
-                         type="primary"
+            <div
+              class="w-full flex justify-items-center justify-center align-items-center"
+            >
+              <xt-button
+                :w="160"
+                style="color: var(--active-text)"
+                @click="moreDesk"
+                class="mr-10 xt-active-bg rounded-full border-none"
+                key="console"
+                type="primary"
               >
                 <icon class="mr-1" icon="shop" style="font-size: 18px"></icon
                 >&nbsp;查看桌面市场
               </xt-button>
-              <xt-button :w="140"
-                         @click="newAddCard"
-                         class="mr-10 rounded-full xt-bg-2 border-none"
-                         key="console"
+              <xt-button
+                :w="140"
+                @click="newAddCard"
+                class="mr-10 rounded-full xt-bg-2 border-none"
+                key="console"
               >
                 <icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
               </xt-button>
@@ -244,7 +255,7 @@
         <Desk
           ref="currentDeskRef"
           :currentDesk="currentDesk"
-          :deskGroupMenu='deskGroupMenu'
+          :deskGroupMenu="deskGroupMenu"
           :key="key"
           :editing="editing"
         >
@@ -252,13 +263,16 @@
             <a-row class="text-center" style="margin-top: 20px" :gutter="20">
               <a-col>
                 <div @click="showAddDeskForm" class="btn">
-          <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
+                  <xt-new-icon icon="fluent:eye-off-16-regular" size="42" />
                   <div><span>添加桌面</span></div>
                 </div>
               </a-col>
               <a-col>
                 <div @click="importDesk" class="btn">
-          <xt-new-icon  icon='fluent:arrow-download-20-filled' size='42' />
+                  <xt-new-icon
+                    icon="fluent:arrow-download-20-filled"
+                    size="42"
+                  />
 
                   <div><span>导入桌面</span></div>
                 </div>
@@ -269,7 +283,7 @@
                   class="btn"
                   style="opacity: 0.5"
                 >
-          <xt-new-icon  icon='akar-icons:trash-can' size='42' />
+                  <xt-new-icon icon="akar-icons:trash-can" size="42" />
 
                   <div><span>删除桌面</span></div>
                 </div>
@@ -280,13 +294,16 @@
               </a-col>
               <a-col>
                 <div @click="shareDesk" class="btn">
-          <xt-new-icon  icon='fluent:share-android-24-regular' size='42' />
+                  <xt-new-icon
+                    icon="fluent:share-android-24-regular"
+                    size="42"
+                  />
                   <div><span>分享桌面</span></div>
                 </div>
               </a-col>
               <a-col>
                 <div @click="exportDesk" class="btn">
-          <xt-new-icon  icon='fluent:open-20-filled' size='42' />
+                  <xt-new-icon icon="fluent:open-20-filled" size="42" />
                   <div><span>导出桌面</span></div>
                 </div>
               </a-col>
@@ -322,16 +339,13 @@
     title="添加桌面"
     @close="shareCode = false"
   >
-
     <HorizontalPanel
       :nav-list="currentAddMethod"
       v-model:select-type="currentAddTab"
     >
     </HorizontalPanel>
-    <xt-task id="M0302" no="3">
-    </xt-task>
+    <xt-task id="M0302" no="3"> </xt-task>
     <div v-if="currentAddTab.name === 'market'">
-
       <!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
       <!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
@@ -361,8 +375,7 @@
       </div>
     </div>
     <div v-else>
-      <xt-task id="M0102" no="3">
-      </xt-task>
+      <xt-task id="M0102" no="3"> </xt-task>
       <div class="desk-title mt-4">标题</div>
       <a-input
         v-model:value="deskTitle"
@@ -380,7 +393,13 @@
           ></HorizontalPanel>
         </div>
         <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
-        <xt-button style="width: 100%;" type="theme" @click="doAddDesk" class="mt-4">立即添加</xt-button>
+        <xt-button
+          style="width: 100%"
+          type="theme"
+          @click="doAddDesk"
+          class="mt-4"
+          >立即添加</xt-button
+        >
       </xt-task>
 
       <div>
@@ -399,8 +418,6 @@
         aria-placeholder="font-size: 16px;"
       />
     </div>
-
-
   </a-drawer>
   <ShareDesk
     :deskList="deskList"
@@ -442,28 +459,28 @@
 
 <script lang="ts">
 import Desk from "./Desk.vue";
-import {appStore} from "../../store";
-import {taskStore} from "../../apps/task/store";
-import {mapActions, mapWritableState, mapWritableState} from "pinia";
+import { appStore } from "../../store";
+import { taskStore } from "../../apps/task/store";
+import { mapActions, mapWritableState, mapWritableState } from "pinia";
 import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
-import {message, Modal, notification} from "ant-design-vue";
+import { message, Modal, notification } from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 import Template from "../../../user/pages/Template.vue";
 
-import {deskTemplates} from "../../js/data/deskTemplates";
+import { deskTemplates } from "../../js/data/deskTemplates";
 import DeskMarket from "../../page/app/card/DeskMarket.vue";
-import {deskStore} from "../../store/desk";
+import { deskStore } from "../../store/desk";
 import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
-import {marketStore} from "../../store/market";
+import { marketStore } from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
-import RightMenu from "./RightMenu.vue"
+import RightMenu from "./RightMenu.vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
 export default {
   name: "DeskGroup",
@@ -521,41 +538,40 @@ export default {
           id: 3,
           newIcon: "fluent:slide-add-16-regular",
           name: "添加桌面",
-          fn: this.showAddDeskForm
+          fn: this.showAddDeskForm,
         },
         {
           id: 9,
           newIcon: "fluent:more-horizontal-16-filled",
           name: "更多",
-            lock:true,
+          lock: true,
           children: [
             {
               id: 1,
               newIcon: "fluent:arrow-download-20-filled",
               name: "导入桌面",
-              fn: this.importDesk
+              fn: this.importDesk,
             },
             {
               id: 2,
               newIcon: "fluent:open-20-filled",
               name: "导出桌面",
-              fn: this.exportDesk
+              fn: this.exportDesk,
             },
             {
               id: 3,
               newIcon: "fluent:share-android-24-regular",
               name: "分享桌面",
-              fn: this.shareDesk
+              fn: this.shareDesk,
             },
             {
               id: 5,
               newIcon: "akar-icons:trash-can",
               name: "删除桌面",
-              fn: this.delDesk
-            }
-
+              fn: this.delDesk,
+            },
           ],
-        }
+        },
       ],
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -565,7 +581,7 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
-      currentAddTab: {name: "market"},
+      currentAddTab: { name: "market" },
       key: Date.now(),
       moreDesksVisible: false, //显示更多桌面
       allDeskListVisible: false,
@@ -574,12 +590,12 @@ export default {
       addDeskVisible: false,
       shareDeskVisible: false,
       deskType: [
-        {title: "日常桌面", name: "daily"},
-        {title: "游戏桌面", name: "game"},
-        {title: "办公桌面", name: "work"},
-        {title: "空白桌面", name: "empty"},
+        { title: "日常桌面", name: "daily" },
+        { title: "游戏桌面", name: "game" },
+        { title: "办公桌面", name: "work" },
+        { title: "空白桌面", name: "empty" },
       ],
-      selectDesk: {title: "日常桌面", name: "daily"},
+      selectDesk: { title: "日常桌面", name: "daily" },
       deskTitle: "",
       hotDesk: [],
       scheme: {},
@@ -587,12 +603,12 @@ export default {
       deskCode: "",
       shareCode: false,
       exportModal: false,
-      layoutSize: {width: 0, height: 0},
+      layoutSize: { width: 0, height: 0 },
       deskMarketVisible: false, //桌面市场
       panelIndex: 0,
       currentAddMethod: [
-        {title: "从市场添加", name: "market"},
-        {title: "自行添加", name: "custom"},
+        { title: "从市场添加", name: "market" },
+        { title: "自行添加", name: "custom" },
       ],
 
       recommendList: [], //推荐桌面
@@ -609,15 +625,25 @@ export default {
     });
 
     this.hotDesk.push(this.apiList[0].children[0]);
-    this.recommendList = await this.getRecommend({goodType: "desk"});
+    this.recommendList = await this.getRecommend({ goodType: "desk" });
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
+    ...mapWritableState(useFreeLayoutStore, [
+      "freeLayoutData",
+      "freeLayoutState",
+    ]),
     getStep() {
-      if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) {
+      if (
+        (this.taskID == "M0101" ||
+          this.taskID == "M0102" ||
+          this.taskID == "M0103" ||
+          this.taskID == "M0201" ||
+          this.taskID == "M0302") &&
+        this.step == 1
+      ) {
         return true;
       }
     },
@@ -628,7 +654,7 @@ export default {
       return this.taskID == "M0302" && this.step == 2;
     },
     mixTask() {
-      return this.M01022 || this.M03022
+      return this.M01022 || this.M03022;
     },
     // getHomeSize(){
     //   this.$nextTick(() => {
@@ -651,7 +677,7 @@ export default {
       let currentDesk = this.deskList.find((desk) => {
         return desk.id === this.currentDeskId;
       });
-      this.key = Date.now()
+      this.key = Date.now();
       return currentDesk;
     },
 
@@ -676,7 +702,7 @@ export default {
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-    ...mapActions(useFreeLayoutStore,['clearFreeLayout']) ,
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
@@ -693,7 +719,7 @@ export default {
     afterAdded() {
       this.hideMarket();
     },
-    openPreview({scheme, showModal}) {
+    openPreview({ scheme, showModal }) {
       this.scheme = scheme;
       this.showModal = showModal;
     },
@@ -714,7 +740,7 @@ export default {
     stopEdit() {
       this.key = Date.now();
       this.editing = false;
-    console.log('11111 :>> ', 11111);
+      console.log("11111 :>> ", 11111);
     },
     addCard() {
       this.$refs.currentDeskRef.newAddCard();
@@ -750,21 +776,20 @@ export default {
     async importDesk() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
-        filters: [{name: "desk存档", extensions: ["desk"]}],
+        filters: [{ name: "desk存档", extensions: ["desk"] }],
       });
       if (!openPath) {
         return;
       }
       let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-      let needImportDesk:any ;
+      let needImportDesk: any;
 
       try {
         needImportDesk = JSON.parse(importJsonTxt);
-        const  {desk,  freeLayoutData,  freeLayoutState } =needImportDesk
+        const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-         desk.forEach((g) => {
-          let oldId= g.id
-
+        desk.forEach((g) => {
+          let oldId = g.id;
 
           //修正一下老版本导出的数据
           if (g.cardsHeight) {
@@ -781,10 +806,10 @@ export default {
           g.icon = "desktop";
           g.settings.zoom = parseInt(cardZoom);
           g.id = window.$models.nanoid.nanoid(8);
-  if (freeLayoutState[oldId] ) {
-              this.freeLayoutData[g.id] = freeLayoutData[oldId]
-              this.freeLayoutState[g.id] =freeLayoutState[oldId]
-            }
+          if (freeLayoutState[oldId]) {
+            this.freeLayoutData[g.id] = freeLayoutData[oldId];
+            this.freeLayoutState[g.id] = freeLayoutState[oldId];
+          }
           this.deskList.unshift(g);
         });
         this.addDeskVisible = false;
@@ -796,14 +821,13 @@ export default {
     },
     showAddDeskForm() {
       if (this.M01022) {
-        this.deskTitle = '新桌面'
+        this.deskTitle = "新桌面";
         this.currentAddTab = {
-          "title": "自行添加",
-          "name": "custom",
-          "state": false
-        }
+          title: "自行添加",
+          name: "custom",
+          state: false,
+        };
       }
-
 
       this.$refs.currentDeskRef.hideMenu();
       this.menuVisible = false;
@@ -828,17 +852,16 @@ export default {
               }),
               1
             );
-            this.$emit("changeDesk", {id: this.deskList[0].id});
-          this.clearFreeLayout(this.currentDeskId)
+            this.$emit("changeDesk", { id: this.deskList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
             // 删除桌面数据
             this.key = Date.now();
             if (this.displayDesks.length === 1) {
-              notification.open(
-                {
-                  message: '提示',
-                  description: '当前可用桌面为1个，自动为您隐藏切换桌面菜单。至少有2个桌面的时候才会显示快速切换栏。'
-                }
-              )
+              notification.open({
+                message: "提示",
+                description:
+                  "当前可用桌面为1个，自动为您隐藏切换桌面菜单。至少有2个桌面的时候才会显示快速切换栏。",
+              });
             }
           },
           okText: "删除桌面",
@@ -870,13 +893,13 @@ export default {
       };
 
       this.deskList.unshift(desk);
-      this.$emit("changeDesk", {id: desk.id});
+      this.$emit("changeDesk", { id: desk.id });
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
     },
     cleanMuuriData(list) {
-      console.log('清楚muuriId2')
+      console.log("清楚muuriId2");
       list.forEach((li) => {
         li.id = Date.now();
         delete li["_$muuri_id"];

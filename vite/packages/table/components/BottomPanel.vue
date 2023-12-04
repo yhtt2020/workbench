@@ -46,7 +46,7 @@
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
             <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
-              <xt-task id='M0104' no='1' @cb="showMenu">
+              <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item,index) in footNavigationList" :key="item.name" :title="item.name" @mouseenter="showElement(item,index)">
