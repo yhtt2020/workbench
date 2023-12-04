@@ -78,9 +78,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取当前桌面数据
     getCurrentDesk() {
       const card: any = cardStore();
-      const { currentDeskId, desks } = storeToRefs(card);
+      const { desks } = storeToRefs(card);
+console.log('card,desks :>> ', card,desks);
       const desk = desks.value?.filter(
-        (item) => item.id === currentDeskId.value
+        (item) => item.id === this.getCurrentDeskId
       );
       return desk[0];
     },
@@ -160,6 +161,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       if (this.getFreeLayoutData) {
         this.freeLayoutData[this.getCurrentDeskId] = {};
       }
+      console.log("    this.getCurrentDesk :>> ", this.getCurrentDesk);
+      this.getCurrentDesk.cards = [];
     },
     // 删除自由布局组件数据
     clearFreeLayoutState() {

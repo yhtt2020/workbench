@@ -581,7 +581,7 @@ export default {
     ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
-        let arr = [...this.deskGroupMenu[1].children];
+        let arr = _.cloneDeep(this.deskGroupMenu[1].children);
         let exists = arr.some((item) => item.id === 4);
         if (!exists) {
           arr.push({
@@ -624,7 +624,7 @@ export default {
         },
         {
           id: 6,
-          newIcon: "lets-icons:full" ,
+          newIcon: "lets-icons:full",
           name: "全屏桌面",
           fn: this.setFullScreen,
         },
@@ -729,7 +729,7 @@ export default {
     },
     update(callback) {
       if (this.$refs.grid) {
-        console.log('☆执行desk的update')
+        console.log("☆执行desk的update");
         this.$refs.grid.update(callback);
       }
     },
@@ -737,7 +737,7 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
-      console.log('触发了 :>> ', );
+      console.log("触发了 :>> ");
       if (this.editing) {
         message.info("已关闭拖拽调整");
       } else {
@@ -766,6 +766,7 @@ export default {
       this.menuVisible = false;
     },
     clear() {
+      console.log('this.currentDesk :>> ', this.currentDesk);
       this.menuVisible = false;
       let desk = this.currentDesk;
       if (desk) {
@@ -773,25 +774,28 @@ export default {
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
-            desk.cards.forEach(item=>{
-              if (item.name == 'notes') {
-                tsbApi.db.find({
-                  selector: {
-                    _id: 'note:' + item.id,
-                  },
-                }).then(res=>{
-                   if (res?.docs.length) {
-                    tsbApi.db.put({
-                      ...res.docs[0],
-                      // isDelete:true,
-                      deskId:'',
-                      deskName:'',
-                    })
-                  }
-                })
+            desk.cards.forEach((item) => {
+              if (item.name == "notes") {
+                tsbApi.db
+                  .find({
+                    selector: {
+                      _id: "note:" + item.id,
+                    },
+                  })
+                  .then((res) => {
+                    if (res?.docs.length) {
+                      tsbApi.db.put({
+                        ...res.docs[0],
+                        // isDelete:true,
+                        deskId: "",
+                        deskName: "",
+                      });
+                    }
+                  });
               }
-            })
+            });
             desk.cards = [];
+            console.log(desk);
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

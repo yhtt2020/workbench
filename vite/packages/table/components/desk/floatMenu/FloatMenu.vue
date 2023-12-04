@@ -6,6 +6,7 @@ import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
+import test from "./test.vue";
 // 初始化操作
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;
@@ -276,6 +277,8 @@ onBeforeUnmount(() => {
         class="h-10 p-1 xt-bg-2 mb-3"
         style="font-size: 14px !important"
       />
+      <xt-modal :modelValue="1"> <test></test></xt-modal>
+
       <div class="flex my-3">
         <Item v-for="item in defaultMenu" :item="item" class="mr-3" />
       </div>
