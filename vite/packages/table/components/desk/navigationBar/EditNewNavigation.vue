@@ -349,85 +349,12 @@ export default {
                 let dropFiles = await tsbApi.system.extractFileIcon(item)
                 return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
             }))
-            this.clickRightListItem(this.dropList)
+            this.$refs.introduce.clickRightListItem(this.dropList)
             // 添加完后清空
             this.dropList = []
             // this.modelValue=true
         },
-        // 添加图标的主要函数
-        clickRightListItem(item, index) {
-            this.activeRightItem = index
-            //   this.editFlag = false
-            if (this.selectNav === 'foot') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setFootNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.footNavigationList.length; i++) {
-                        if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setFootNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.content
-                        scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'left') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setSideNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.sideNavigationList.length; i++) {
-                        if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setSideNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.sideContent
-                        scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'right') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setRightNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.rightNavigationList.length; i++) {
-                        if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setRightNavigationList(item)
-                }
-            }
-        },
+        
         handleResize() {
             this.windowHeight = window.innerHeight
             if (this.windowHeight > 1000) {
