@@ -129,10 +129,8 @@ export default {
         title: false
       })
     },
-    goHome(){
-      this.$router.push({
-        name:'setting'
-      })
+    goHome() {
+      this.$router.go(-1)
     }
   },
 }
