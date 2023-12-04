@@ -1,6 +1,6 @@
 <template>
   <div class="main-box">
-    <template v-for="(item, index) in navLists" :key="item.name">
+    <template v-for="(item, index) in displayList" :key="item.name">
       <template v-if="item.name == 'clocks' && M01013">
         <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
           <div>
@@ -127,8 +127,12 @@ import { taskStore } from "../../../apps/task/store";
 export default {
   emits: ["close", "addSuccess"],
   props: {
-    navList: {
-      type: Object,
+    allList: {
+      type: Array,
+      default: true,
+    },
+    cardList: {
+      type: Array,
       default: true,
     },
     search: {
@@ -139,6 +143,9 @@ export default {
       required: true,
       default: () => { },
     },
+    keywords:{
+      type:String
+    }
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
@@ -146,6 +153,15 @@ export default {
     M01013() {
       return this.taskID == "M0101" && this.step == 3;
     },
+    displayList(){
+      return this.allList.filter(item=>{
+        if(this.keywords){
+          return item.cname.toLowerCase().includes(this.keywords.toLowerCase()) || item.detail.toLowerCase().includes(this.keywords.toLowerCase())
+        }else{
+          return true
+        }
+      })
+    }
   },
   data() {
     return {
@@ -167,7 +183,7 @@ export default {
     navList: {
       immediate: true,
       handler() {
-        this.navLists = JSON.parse(JSON.stringify(this.navList));
+        this.navLists = JSON.parse(JSON.stringify(this.cardList));
       },
     },
     search: {
@@ -177,7 +193,7 @@ export default {
           this.navLists = this.mySort(this.navLists, "download");
         else if (newV == "更新时间")
           this.navLists = this.mySort(this.navLists, "time");
-        else this.navLists = this.navList;
+        else this.navLists = this.cardList;
       },
     },
   },
