@@ -30,7 +30,8 @@
     <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
       <!-- <div class="flex flex-wrap"> -->
       <template v-if="this.filterList.length > 0">
-        <selectIcon :filterList="filterList" :recommendation="recommendation"  ref="selectIcon"/>
+        <selectIcon :filterList="filterList" :recommendation="recommendation" ref="selectIcon"
+          @clickRightListItem="clickListItem" />
       </template>
       <div v-else class="flex flex-col items-center justify-center w-full h-full mt-10">
         <div>
@@ -99,7 +100,53 @@ export default {
         }
       }
     },
-    
+    // 添加图标的主要函数
+    clickRightListItem(item, index,navigationList,setNavigationList) {
+      this.activeRightItem = index
+      //   this.editFlag = false
+      // if (this.selectNav === 'foot') {
+      if (item instanceof Array) {
+        for (let i = 0; i < item.length; i++) {
+          if (!navigationList.find(j => j.name === item[i].name)) {
+            this.updateMainNav(item[i], 'add')
+            item[i].addNav = true
+            setNavigationList(item[i])
+          } else {
+            message.info('已添加', 1)
+          }
+        }
+        this.dropList = []
+      } else {
+        for (let i = 0; i <navigationList.length; i++) {
+          if (navigationList[i].name === item.name) return message.info('已添加', 1)
+        }
+        this.updateMainNav(item, 'add')
+        item.addNav = true
+        setNavigationList(item)
+        this.$nextTick(() => {
+          let scrollElem = this.$refs.content
+          scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+        })
+      }
+      // } 
+    },
+    // 添加图标函数
+    clickListItem(item,index){
+      switch (this.selectNav) {
+        case 'foot':
+          this.clickRightListItem(item,index,this.footNavigationList,this.setFootNavigationList)
+          break;
+        case 'left':
+          this.clickRightListItem(item,index,this.sideNavigationList,this.setSideNavigationList)
+          break;
+        case 'right':
+          this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
+          break;
+      
+        default:
+          break;
+      }
+    },
     // 批量添加
     // addIcon(item, index) {
     //   // console.log(item,index,'item,index-->>>')

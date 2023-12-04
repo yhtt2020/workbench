@@ -85,8 +85,8 @@
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <!-- <Msg :modalVisible="modalVisible" :title="defaultTitle.title" :text='msgText' @onNo="modalVisible = false" @onOk="onOk">
-    </Msg> -->
+    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk">
+    </Msg>
 
     <!-- </div> -->
 </template>
@@ -266,6 +266,18 @@ export default {
             this.defaultTitle = item
             this.selectNav = item.value
         },
+        onOk() {
+            if (this.selectNav === 'foot') {
+                this.navigationToggle[2] = true
+                this.modalVisible = false
+            } else if (this.selectNav === 'left') {
+                this.navigationToggle[0] = true
+                this.modalVisible = false
+            } else if (this.selectNav === 'right') {
+                this.navigationToggle[1] = true
+                this.modalVisible = false
+            }
+        },
         // 拖拽
         mainDrop() {
             let that = this
@@ -278,8 +290,6 @@ export default {
                 removeCloneOnHide: true,
                 forceFallback: false,
                 onStart(evt) {
-                    const currentDiv = document.getElementById('left')
-                    console.log(currentDiv, '====>>>CurrentDiv');
                     that.darggingCore = true
                     if (that.selectNav === 'left') {
                         that.draggingArea('left-bar', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
@@ -301,7 +311,6 @@ export default {
         draggingArea(id, oldIndex, NavigationList, setNavigationList, source, compare = true) {
             let that = this
             let slider = document.getElementById(id)
-            console.log(slider, id);
             slider.ondragover = function (ev) {
                 ev.preventDefault()
             }
@@ -340,85 +349,12 @@ export default {
                 let dropFiles = await tsbApi.system.extractFileIcon(item)
                 return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
             }))
-            this.clickRightListItem(this.dropList)
+            this.$refs.introduce.clickRightListItem(this.dropList)
             // 添加完后清空
             this.dropList = []
             // this.modelValue=true
         },
-        // 添加图标的主要函数
-        clickRightListItem(item, index) {
-            this.activeRightItem = index
-            //   this.editFlag = false
-            if (this.selectNav === 'foot') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setFootNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.footNavigationList.length; i++) {
-                        if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setFootNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.content
-                        scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'left') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setSideNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.sideNavigationList.length; i++) {
-                        if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setSideNavigationList(item)
-                    this.$nextTick(() => {
-                        let scrollElem = this.$refs.sideContent
-                        scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
-                    })
-                }
-            } else if (this.selectNav === 'right') {
-                if (item instanceof Array) {
-                    for (let i = 0; i < item.length; i++) {
-                        if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
-                            this.$refs.introduce.updateMainNav(item[i], 'add')
-                            item[i].addNav = true
-                            this.setRightNavigationList(item[i])
-                        } else {
-                            message.info('已添加', 1)
-                        }
-                    }
-                    this.dropList = []
-                } else {
-                    for (let i = 0; i < this.rightNavigationList.length; i++) {
-                        if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
-                    }
-                    this.$refs.introduce.updateMainNav(item, 'add')
-                    item.addNav = true
-                    this.setRightNavigationList(item)
-                }
-            }
-        },
+        
         handleResize() {
             this.windowHeight = window.innerHeight
             if (this.windowHeight > 1000) {
@@ -432,7 +368,22 @@ export default {
                 this.contentHeight = 436
                 this.contentWidth = 600
             }
+        },
+        // 区分推荐图标属于哪个分类
+        updateIntroduce() {
+            this.suggestNavigationList.forEach((item) => {
+                const foundItem = this.ClassifyData.find((i) => i.name === item.name);
+                if (foundItem) {
+                    const found = this.sideBar.find((i) => i.tag === foundItem.type)
+                    item.className = foundItem.summary || found.name;
+                } else if (item.type) {
+                    const found = this.sideBar.find((i) => i.tag === item.type)
+                    item.className = found.name;
+                } 
+
+            });
         }
+
     },
     computed: {
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible']),
@@ -485,20 +436,30 @@ export default {
     mounted() {
         this.defaultTitle = this.currentNav
         this.targetDivName = this.$refs.introduce.$refs.targetDiv
-
+        this.updateIntroduce()
         this.$nextTick(() => {
             this.mainDrop()
         })
         window.addEventListener("resize", this.handleResize)
         this.handleResize()
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.handleResize)
     },
     watch: {
         selectNav() {
             this.defaultTitle = this.currentNav
-        }
+            if (this.selectNav === 'foot' && !this.navigationToggle[2]) {
+                this.modalVisible = true
+            } else if (this.selectNav === 'left' && !this.navigationToggle[0]) {
+                this.modalVisible = true
+            } else if (this.selectNav === 'right' && !this.navigationToggle[1]) {
+                this.modalVisible = true
+            } else {
+                this.modalVisible = false
+            }
+        },
+
     },
     unmounted() {
         if (this.introduceVisible) {

@@ -26,7 +26,6 @@
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
-      :hide="hide"
     />
     <RightMenu
       :menus="dropdownMenu"
@@ -251,7 +250,7 @@
           <hr class="my-3" />
           <div class="mb-3">小组件间隙</div>
           <div class="my-3 text-sm xt-text-2">
-            调节小组件之间的间距，默认为 5。
+            调节小组件之间的间距，默认为 12。
           </div>
           <a-slider :min="5" :max="30" v-model:value="globalSettings.cardMargin"></a-slider>
           <hr class="my-3" />
