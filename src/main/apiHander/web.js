@@ -12,7 +12,6 @@ class Web extends Base {
   bindIPC () {
 
     this.on('callback',async(event,args,instance)=>{
-      console.log('子窗体回调到达',args)
       let ins=this.callbacks[args.cbId]
       ins.table.window.webContents.send(args.cbId,{
         ...args
@@ -33,7 +32,6 @@ class Web extends Base {
       //   })
       // }
       const name='api_web_' + args.cbId
-      console.log('创建一个cbid',args.cbId)
       let windowInstance = await global.windowManager.create({
         name: name ,
         show: !args.background,//不显示

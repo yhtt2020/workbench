@@ -1,5 +1,5 @@
 <template>
-  <div class="cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around" :data-index="index"
+  <div class="box cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around" :data-index="index"
     @click.stop="iconClick($event)" :style="[iconSize]">
     <div class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
       :style="[bgSize, backgroundState]" :data-index="index">

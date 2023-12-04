@@ -3,38 +3,22 @@
     <div class="flex justify-between">
       <div class="flex justify-center">
         自由布局
-        <xt-button
-          w="44"
-          h="22"
-          type="warn"
-          style="font-size: 12px"
-          class="ml-3"
-          radius="8"
-          >开发中</xt-button
-        >
+        <xt-button w="44" h="22" type="warn" style="font-size: 12px" class="ml-3" radius="8">开发中</xt-button>
       </div>
       <a-switch v-model:checked="freeLayoutSwitch" />
     </div>
-
     <template v-if="freeLayoutSwitch">
       <div class="xt-text-2 text-sm my-3">
         开放式桌面画布，支持自定义每个组件的位置、缩放，还可以实现层叠等操作（当前功能尚未完成，可能会产生严重Bug，仅限尝鲜体验）
       </div>
+      <xt-button @click=" freeLayoutStore.updatePosition">X轴偏移</xt-button>
       <hr class="my-3" />
-      <div class="flex justify-center items-center mb-3">
-        <div style="width: 120px">中心线X轴：</div>
-        <xt-select
-          v-model="getFreeLayoutState.line.centerPosition.x"
-          :list="positionList"
-        />
-      </div>
-      <div class="flex justify-center items-center mb-3">
-        <div style="width: 120px">中心线Y轴：</div>
-        <xt-select
-          v-model="getFreeLayoutState.line.centerPosition.y"
-          :list="positionList"
-        />
-      </div>
+      <div class="my-3">中心线X轴</div>
+      <xt-select v-model="getFreeLayoutState.line.centerPosition.x" :list="positionList" />
+      <hr class="my-3" />
+      <div class="my-3">中心线Y轴</div>
+      <xt-select v-model="getFreeLayoutState.line.centerPosition.y" :list="positionList" />
+      <hr class="my-3" />
       <div class="flex justify-between mb-3">
         <div>卡片叠放</div>
         <a-switch v-model:checked="stack" />
@@ -62,11 +46,8 @@
       </div>
       <div class="flex mb-3 justify-between">
         <xt-button class="mr-3 xt-bg" w="204" h="40" @click="freeDeskResize()">
-          回到中心点</xt-button
-        >
-        <xt-button @click="updatePosition" w="204" h="40" class="xt-bg"
-          >修改中心点</xt-button
-        >
+          回到中心点</xt-button>
+        <xt-button @click="updatePosition" w="204" h="40" class="xt-bg">修改中心点</xt-button>
       </div>
       <hr class="my-3" />
       <div class="flex justify-between mb-3">
@@ -98,67 +79,36 @@
       <div class="mb-1">画布缩放</div>
       <div class="flex">
         <div class="w-full mr-3">
-          <a-slider
-            v-model:value="zoom"
-            :min="1"
-            :max="200"
-            :step="1"
-            :tooltipOpen="true"
-          />
+          <a-slider v-model:value="zoom" :min="1" :max="200" :step="1" :tooltipOpen="true" />
         </div>
-        <a-input-number
-          v-model:value="zoom"
-          :min="1"
-          :max="200"
-          :step="1"
-        ></a-input-number>
+        <a-input-number v-model:value="zoom" :min="1" :max="200" :step="1"></a-input-number>
       </div>
       <hr class="my-3" />
       <div class="mb-1">画布长度</div>
       <div class="flex">
         <div class="w-full mr-3">
-          <a-slider
-            class="flex-1"
-            v-model:value="getFreeLayoutState.canvas.height"
-            :min="1000"
-            :max="maxCanvasSize"
-            :step="500"
-            :tooltipOpen="true"
-          />
+          <a-slider class="flex-1" v-model:value="getFreeLayoutState.canvas.height" :min="1000" :max="maxCanvasSize"
+            :step="500" :tooltipOpen="true" />
         </div>
-        <a-input-number
-          v-model:value="getFreeLayoutState.canvas.height"
-          :min="1000"
-          :step="500"
-          :max="maxCanvasSize"
-        ></a-input-number>
+        <a-input-number v-model:value="getFreeLayoutState.canvas.height" :min="1000" :step="500"
+          :max="maxCanvasSize"></a-input-number>
       </div>
       <hr class="my-3" />
       <div class="mb-1">画布宽度</div>
       <div class="flex">
         <div class="w-full mr-3">
-          <a-slider
-            v-model:value="getFreeLayoutState.canvas.width"
-            :min="1000"
-            :max="maxCanvasSize"
-            :step="500"
-            :tooltipOpen="true"
-          />
+          <a-slider v-model:value="getFreeLayoutState.canvas.width" :min="1000" :max="maxCanvasSize" :step="500"
+            :tooltipOpen="true" />
         </div>
-        <a-input-number
-          v-model:value="getFreeLayoutState.canvas.width"
-          :min="1000"
-          :step="500"
-          :max="maxCanvasSize"
-        ></a-input-number>
+        <a-input-number v-model:value="getFreeLayoutState.canvas.width" :min="1000" :step="500"
+          :max="maxCanvasSize"></a-input-number>
       </div>
       <hr class="my-3" />
       <div class="mb-3">辅助功能</div>
       <div class="xt-text-2 text-sm my-3"></div>
       <div class="flex mb-3 justify-between">
         <xt-button class="xt-bg mr-3" w="204" h="40" :copy="copyData">
-          分享自由布局</xt-button
-        >
+          分享自由布局</xt-button>
       </div>
       <hr class="my-3" />
       <div class="mb-3">实验室功能</div>

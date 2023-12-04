@@ -65,7 +65,6 @@ class TableManager {
           //focusable:false, //辅助模式，无法被聚焦
           skipTaskbar: !showInTaskbar,
           transparent: true,
-          //backgroundColor: '#fff',
         },
         webPreferences: {
           webSecurity: false,

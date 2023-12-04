@@ -11,8 +11,9 @@
         style="right: 8px; top: 4px"
       ></XtBaseIcon>
       <div
-        class="text-center cursor-pointer mx-auto truncate"
+        class="text-center cursor-pointer mx-auto truncate flex  justify-center items-center"
         :style="[titleSize]"
+        style="height: 30px;"
         @click="titleVisible = true"
       >
         {{ groupTitle }}
@@ -144,7 +145,7 @@ export default {
     getAppCount() {
       const w = parseFloat(this.w);
       const h = parseFloat(this.h);
-      const title = 22 * w;
+      const title = 30 * w;
       let icons = w * h - title;
       let icon = sizeValues[this.icons].w * sizeValues[this.icons].h;
 
@@ -209,5 +210,9 @@ export default {
 }
 .controller:hover .icon {
   display: block !important;
+}
+
+:deep(.box) {
+  height: 86px !important;
 }
 </style>
