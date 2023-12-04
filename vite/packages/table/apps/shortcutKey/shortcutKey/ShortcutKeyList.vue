@@ -11,12 +11,12 @@
             }}</span>
         </div>
         <!-- 快捷键 -->
-        <div  v-else class="border-right key-item pointer" :style="{backgroundColor:getColor(keyList,index)}"
-             @click="toggleKey(item.id)">
+        <div  v-else :class="{pointer:!noClick}" class="border-right key-item " :style="{backgroundColor:getColor(keyList,index)}"
+             @click="clickKey(item.id)">
           <div class="flex">
             <div v-for="i in item.keys" :key="i" class="flex">
               <span style="min-width:32px;padding:0 8px;"
-                    class="xt-mask h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
+                    class="xt-bg-2 xt-text h-8 flex items-center rounded-lg justify-center mr-3">{{ i }}</span>
             </div>
           </div>
           <div class="key-title truncate">{{ item.title }}</div>
@@ -36,6 +36,11 @@ import * as shorcutTools from '../shortcutTools'
 export default {
   name: 'ShortcutKeyList',
   props: {
+    noClick:{
+      //无法被点击
+      type:Boolean,
+      default:false
+    },
     // 快捷键列表
     keyList: {
       type: Array,
@@ -70,7 +75,10 @@ export default {
   },
   methods: {
     getColor,
-    toggleKey (item) {
+    clickKey (item) {
+      if(this.noClick){
+        return
+      }
       shorcutTools.doKey(item)
       this.$emit('setKeyItem', item.id)
     },

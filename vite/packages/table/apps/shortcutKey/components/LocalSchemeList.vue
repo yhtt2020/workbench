@@ -291,7 +291,7 @@ export default {
       </vue-custom-scrollbar>
 
       <!-- 预览 -->
-      <Preview :keyScheme="previewKeys" :showModal="previewVisible" @closePreview="closePreview"></Preview>
+      <Preview :keyScheme="previewKeys" v-model:showModal="previewVisible" @closePreview="closePreview"></Preview>
     </div>
 
 
