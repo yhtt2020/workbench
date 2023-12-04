@@ -4,13 +4,9 @@
       <router-view ></router-view>
     </div>
     <template v-for="item in filterList" #[item.float]>
-      <CategoryFloat v-if="item.route.params.no !== 1" :communityID="{no:item.route.params.no}" :data="item" :float="true"  @clickItem="currentItem"></CategoryFloat>
-      <DefaultFloat v-else :float="true"></DefaultFloat>
+      <CategoryFloat v-if="item.route.params.no !== 1" :no="item.route.params.no" @clickItem="currentItem"></CategoryFloat>
+      <DefaultFloat v-else></DefaultFloat>
     </template>
-    <!-- <template #communityFloat>
-      <CategoryFloat v-if="communityNo !== 1" :communityID="{no:communityNo}" :data="communityData" :float="true"  @clickItem="currentItem"></CategoryFloat>
-      <DefaultFloat v-else :float="true"></DefaultFloat>
-    </template> -->
   </xt-left-menu>
   <teleport to='body'>
     <Modal v-if="chatVisible" v-model:visible="chatVisible" :blurFlag="true">
@@ -18,7 +14,7 @@
       <CreateGroup v-if="addIndex === 'addGroup'" @close="chatVisible = false" :isH5="env.isH5"/>
       <Transfer v-if="addIndex === 'addFriend'" @close="chatVisible = false" :isH5="env.isH5"></Transfer>
       <CreateCommunity v-if="addIndex === 'createCom'" @close="chatVisible = false"></CreateCommunity>
-      <JoinCommunity v-if="addIndex === 'joinCom'" @close="chatVisible = false"></JoinCommunity>
+      <JoinCommunitys v-if="addIndex === 'joinCom'" @close="chatVisible = false"></JoinCommunitys>
     </Modal>
   </teleport>
 </template>
@@ -38,23 +34,23 @@ import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
 import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
-import JoinCommunity from './components/JoinCommunity.vue';
 import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue';
 import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
+import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
 
 export default {
   name: "chat",
   components: {
     ChatIcon,CreateCommunity,Modal,AddFriend,
-    Transfer,JoinCommunity,CreateGroup,
-    CategoryFloat,DefaultFloat
+    Transfer,CreateGroup,CategoryFloat,DefaultFloat,
+    JoinCommunitys,
   },
 
   setup(props, ctx) {
     const com = communityStore();
     
-    const { communityList,currentNo } = storeToRefs(com);
+    const { community } = storeToRefs(com);
     const chat = chatStore();
     const { settings,contactsSet } = storeToRefs(chat)
     const appS = appStore();
@@ -92,10 +88,10 @@ export default {
     const selectTab = async (item)=>{
       data.index = item.type;
       const no = item.route.params.no; // 取出社群id
-      data.communityNo = item.route.params.no;
-      if(no !== 1){
-        data.communityData = com.getCommunityDetail(item.route.params.no)
-      }
+      data.communityNo = no;
+      // if(no !== 1){
+      //   data.communityData = com.getCommunityDetail(item.route.params.no)
+      // }
       router.push(item.route)
     }
     // 触发添加入口
@@ -105,13 +101,25 @@ export default {
     }
     /**事件结束**/
 
+
+    const unreadTotal = computed(()=>{
+      const list = window.$TUIKit.store.store.TUIConversation.conversationList;
+      const total = { unread:0 };
+      for(const item of list){
+       total.unread += item.unreadCount;
+      }
+      console.log('执行.....测试11',total);
+      return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
+    })
+
     /**初始ref定义数组开始**/
     const headList = ref([
       {
         newIcon: "fluent:chat-16-regular",  tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
-        unread:unReadNum > 99 ? 99 : unReadNum
+        unread: unreadTotal.value,
+        // getUnreadTotal().unread
       },
       {
         tab: "contact", newIcon: "fluent:people-16-regular",
@@ -180,62 +188,62 @@ export default {
     /**初始ref定义数组结束**/
 
     /**计算社群消息未读数的总和开始**/
-    const mergeChildren = (no) =>{
-      if(no !== undefined){
-        const totalUnread = {
-          unread:0
-        };
-        const list = [];
-        const find = communityList.value.find((find)=>{
-          return String(find.no) === String(no);
-        })
-        if(find !== undefined){
-          for(const item of find.tree){
-            if(item.hasOwnProperty('children') && item.children.length !== 0){
-              for(const childrenItem of item.children){
-                if(childrenItem.type === 'group'){
-                  const jsonChildren = JSON.parse(childrenItem.props);
-                  const index = _.findIndex(list,(find)=>{
-                   return String(find.groupID) === String(jsonChildren.groupID);
-                  })
-                  if(index === -1){
-                    list.push(childrenItem);
-                  }
-                }
-               }
-            }else{
+    // const mergeChildren = (no) =>{
+    //   if(no !== undefined){
+    //     const totalUnread = {
+    //       unread:0
+    //     };
+    //     const list = [];
+    //     const find = communityList.value.find((find)=>{
+    //       return String(find.no) === String(no);
+    //     })
+    //     if(find !== undefined){
+    //       for(const item of find.tree){
+    //         if(item.hasOwnProperty('children') && item.children.length !== 0){
+    //           for(const childrenItem of item.children){
+    //             if(childrenItem.type === 'group'){
+    //               const jsonChildren = JSON.parse(childrenItem.props);
+    //               const index = _.findIndex(list,(find)=>{
+    //                return String(find.groupID) === String(jsonChildren.groupID);
+    //               })
+    //               if(index === -1){
+    //                 list.push(childrenItem);
+    //               }
+    //             }
+    //            }
+    //         }else{
               
-              if(item.type === 'group'){
-                const jsonItem = JSON.parse(item.props);
-                const index = _.findIndex(list,(find)=>{
-                return String(find.groupID) === String(jsonItem.groupID);
-                })
-                if(index === -1){
-                  list.push(item);
-                }
-              }
-            }
-          }
-        }
-        for(const item of list){
-          const jsonPropItem = JSON.parse(item.props);
-          if(jsonPropItem.hasOwnProperty('unread')){
-            totalUnread.unread += jsonPropItem.unread
-          }else{
-            totalUnread.unread = 0
-          }
-        }
-        // console.log('执行...排查',totalUnread.unread);
-        return totalUnread.unread;
-      }
-    }
+    //           if(item.type === 'group'){
+    //             const jsonItem = JSON.parse(item.props);
+    //             const index = _.findIndex(list,(find)=>{
+    //             return String(find.groupID) === String(jsonItem.groupID);
+    //             })
+    //             if(index === -1){
+    //               list.push(item);
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //     for(const item of list){
+    //       const jsonPropItem = JSON.parse(item.props);
+    //       if(jsonPropItem.hasOwnProperty('unread')){
+    //         totalUnread.unread += jsonPropItem.unread
+    //       }else{
+    //         totalUnread.unread = 0
+    //       }
+    //     }
+    //     // console.log('执行...排查',totalUnread.unread);
+    //     return totalUnread.unread;
+    //   }
+    // }
     /**计算社群消息未读数的总和结束**/
 
     /**监听communityList开始**/
-    watch(()=>communityList.value,(newVal)=>{
+    watch(()=>community.value.communityList,(newVal)=>{
       const isNull = newVal.length !== undefined && newVal.length !== 0;
       if(isNull){
-        const communityData = communityList.value;
+        const communityData = newVal;
         const mapCommunityData = communityData.map((item)=>{
           return {
             ...item,
@@ -261,9 +269,8 @@ export default {
         if(index === -1){
           const itemOption = {
             ...item,
-            unread:mergeChildren(item.no) !== undefined && mergeChildren(item.no) !== 0  ? mergeChildren(item.no) : 0,
+            // unread:mergeChildren(item.no) !== undefined && mergeChildren(item.no) !== 0  ? mergeChildren(item.no) : 0,
           }
-          // console.log('执行....测试', itemOption);
           uniqueList.push(itemOption)
         }
       }
@@ -281,14 +288,15 @@ export default {
         return lastList
       }
     })
-
+    
     /**初始化挂载开始**/
     onMounted(()=>{
       nextTick(()=>{
-        com.getMyCommunity();
+        // com.getMyCommunity();
+        // com.getCommunityTree();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
-          unReadNum.value = e.data;
-          com.updateMsgStatus();
+          headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+          // com.getCommunityTree();
         });
       })
     })
@@ -299,7 +307,7 @@ export default {
       filterList, createCommunityList,unReadNum,
       ...toRefs(data),createCommunity,
       selectTab,triggerAddModal,
-      mergeChildren,
+      // mergeChildren,
     }
   }
  

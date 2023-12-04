@@ -1,5 +1,5 @@
 <template>
-  <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
+  <!-- <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
     <div class="flex items-center relative" @click="currentItem(item)">
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
@@ -21,9 +21,9 @@
         {{ unread }}
        </div>
     </div>
-  </xt-menu>
+  </xt-menu> -->
 
-  <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/>
+  <!-- <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/> -->
 </template>
 
 <script>
@@ -37,92 +37,92 @@ import { chatStore } from '../../../../store/chat'
 import LinkSetting from '../knownCategory/LinkSetting.vue'
 
 export default {
-  props:['item','type','no'],
+  // props:['item','type','no'],
 
-  components:{
-    CommunityIcon,LinkSetting
-  },
+  // components:{
+  //   CommunityIcon,LinkSetting
+  // },
 
-  setup(props,ctx){
-    const linkRef = ref(null)
+  // setup(props,ctx){
+  //   const linkRef = ref(null)
 
-    const community = communityStore()
-    const chat = chatStore()
-    const { contactsSet } = storeToRefs(chat)
-    const getUnreadNum = ref(null)
+  //   const community = communityStore()
+  //   const chat = chatStore()
+  //   const { contactsSet } = storeToRefs(chat)
+  //   const getUnreadNum = ref(null)
 
-    const data = reactive({
-      revID:'',
-      prop:JSON.parse(props.item.props),
-    })
-    const linkMenus = ref([
-     {
-      name:'链接设置', newIcon:'fluent:settings-16-regular',
-      callBack:()=>{ linkRef.value.openLinkModal()}
-     },
-     {
-      name:'删除应用', newIcon:'akar-icons:trash-can',color: 'var(--error)',
-      callBack:()=>{
-        Modal.confirm({
-          content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-          centered:true,
-          onOk: async ()=>{
-            community.removeCategory(data.revID.id,props.no)
-            message.success('删除成功')
-          }
-        })
-      }
-     }
-    ])
-    const menuList = ref([
-      // {
-      //   name:'应用设置',
-      //   newIcon:'fluent:settings-16-regular',
-      //   callBack:()=>{}
-      // },
-      {
-        name:'删除应用',newIcon:'akar-icons:trash-can',color: 'var(--error)',
-        callBack:()=>{
-          Modal.confirm({
-            content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-            centered:true,
-            onOk: async ()=>{
-              community.removeCategory(data.revID.id,props.no)
-              message.success('删除成功')
-            }
-          })
-        }
-      },
-    ])
+  //   const data = reactive({
+  //     revID:'',
+  //     prop:JSON.parse(props.item.props),
+  //   })
+  //   const linkMenus = ref([
+  //    {
+  //     name:'链接设置', newIcon:'fluent:settings-16-regular',
+  //     callBack:()=>{ linkRef.value.openLinkModal()}
+  //    },
+  //    {
+  //     name:'删除应用', newIcon:'akar-icons:trash-can',color: 'var(--error)',
+  //     callBack:()=>{
+  //       Modal.confirm({
+  //         content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+  //         centered:true,
+  //         onOk: async ()=>{
+  //           // community.removeCategory(data.revID.id,props.no)
+  //           // message.success('删除成功')
+  //         }
+  //       })
+  //     }
+  //    }
+  //   ])
+  //   const menuList = ref([
+  //     // {
+  //     //   name:'应用设置',
+  //     //   newIcon:'fluent:settings-16-regular',
+  //     //   callBack:()=>{}
+  //     // },
+  //     {
+  //       name:'删除应用',newIcon:'akar-icons:trash-can',color: 'var(--error)',
+  //       callBack:()=>{
+  //         Modal.confirm({
+  //           content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
+  //           centered:true,
+  //           onOk: async ()=>{
+  //             // community.removeCategory(data.revID.id,props.no)
+  //             // message.success('删除成功')
+  //           }
+  //         })
+  //       }
+  //     },
+  //   ])
 
-    const menus = computed(()=>{
-      if(props.type === 'link'){
-        return linkMenus.value
-      }else{
-        return menuList.value
-      }
-    })
+  //   const menus = computed(()=>{
+  //     if(props.type === 'link'){
+  //       return linkMenus.value
+  //     }else{
+  //       return menuList.value
+  //     }
+  //   })
 
-    const currentItem = (item) =>{
-      ctx.emit('currentItem',item)
-    }
+  //   const currentItem = (item) =>{
+  //     ctx.emit('currentItem',item)
+  //   }
 
-    const unread = computed(()=>{
-      const jsonProp = JSON.parse(props.item.props);
-      if(jsonProp.hasOwnProperty('unread')){
-        return jsonProp.unread > 99 ? 99 : jsonProp.unread;
-      }else{
-        return 0;
-      }
-    })
+  //   const unread = computed(()=>{
+  //     // const jsonProp = JSON.parse(props.item.props);
+  //     // if(jsonProp.hasOwnProperty('unread')){
+  //     //   return jsonProp.unread > 99 ? 99 : jsonProp.unread;
+  //     // }else{
+  //     //   return 0;
+  //     // }
+  //   })
 
-    return{
-      linkRef,menus,linkMenus,menuList,
-      // getUnreadNum,
-      unread,
-     ...toRefs(data),currentItem,
-    }
-  }
+  //   return{
+  //     linkRef,menus,linkMenus,menuList,
+  //     // getUnreadNum,
+  //     unread,
+  //    ...toRefs(data),currentItem,
+  //   }
+  // }
 };
 </script>
 

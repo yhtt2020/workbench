@@ -5,10 +5,10 @@
     <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
    </div>
  </xt-button>
-
  <AddNewGroup ref="addNewRef" :no="no"/>
  <AddNewCategory ref="addCategoryRef" :no="no"/>
- <AddInvite ref="addInviteRef" :no="no"/>
+
+<!--   <AddNewCategory ref="addCategoryRef" :no="no"/>-->
 </template>
 
 <script>

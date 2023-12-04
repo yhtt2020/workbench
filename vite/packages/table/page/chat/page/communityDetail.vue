@@ -1,7 +1,7 @@
 <template>
   <a-row class="w-full h-full">
     <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
-      <CategoryFloat :float="false" :communityID="routeData" :data="detailData" @createCategory="clickEmptyButton" />
+      <CategoryFloat :float="false" :no="routeData"  @createCategory="clickEmptyButton" />
     </a-col>
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <CommunityHeader :headerContent="currentChannel"/>
@@ -105,12 +105,13 @@ export default {
 
   computed:{
     ...mapWritableState(chatStore,['settings','contactsSet']),
-    ...mapWritableState(communityStore,['getCommunityDetail']),
+    ...mapWritableState(communityStore,[]),
+    // 'getCommunityDetail'
     isFloat(){
       return this.settings.enableHide
     },
     detailData(){
-      return this.getCommunityDetail(this.routeData)
+      // return this.getCommunityDetail(this.routeData)
     }
   },
 
@@ -120,7 +121,7 @@ export default {
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
       this.currentItem(item);
-      this.updateMsgStatus();
+      // this.updateMsgStatus();
     })
     this.$mit.on('currentSet',(args)=>{
       console.log('查看args',args);

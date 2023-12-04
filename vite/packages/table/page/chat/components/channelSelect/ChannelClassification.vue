@@ -95,11 +95,11 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(communityStore, ["categoryClass"]),
+    // ...mapWritableState(communityStore, ["categoryClass"]),
   },
 
   mounted(){
-    this.getChannelList(this.no);
+    // this.getChannelList(this.no);
     const el = this.$refs.classSortTab;
     new Sortable(el, {
       group: "sortableGroup",
@@ -109,8 +109,8 @@ export default {
 
   methods: {
     ...mapActions(communityStore,[
-      'removeCategory','createChannel','getChannelList',
-      'updateCategoryClass',
+      // 'removeCategory','createChannel','getChannelList',
+      // 'updateCategoryClass',
     ]),
     // 拖拽排序
     onSortEnd(evt){
@@ -128,7 +128,7 @@ export default {
       let temp = cloneTemp[evt.oldIndex]; // 获取旧的下标
       cloneTemp.splice(evt.oldIndex, 1); // 移除旧的下标
       cloneTemp.splice(evt.newIndex, 0, temp); // 将旧的下标进行替换
-      this.updateCategoryClass(cloneTemp);
+      // this.updateCategoryClass(cloneTemp);
     },
     // 关闭
     closeButton() {
