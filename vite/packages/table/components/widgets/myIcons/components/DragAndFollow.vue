@@ -62,7 +62,6 @@ export default {
     ...mapActions(useFreeLayoutStore, ["isFreeLayout"]),
     // 鼠标按下事件处理方法
     handleMouseDown(event) {
-      if (this.isFreeLayout) return;
       this.followPosition = { x: event.clientX, y: event.clientY }; // 初始化拖拽元素坐标
       event.preventDefault();
       event.stopPropagation();

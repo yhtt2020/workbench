@@ -51,38 +51,38 @@
       <div v-if="showTools">
         <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
-          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">
-            <div
-              @click="startEdit"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <icon
-                class="icon"
-                style="font-size: 22px"
-                icon="line-dragdroptuofang"
-              ></icon>
-            </div>
-          </a-tooltip>
-          <a-tooltip v-else title="停止调整桌面" placement="bottom">
-            <div
-              @click="stopEdit"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <icon
-                class="icon"
-                style="font-size: 22px; color: red"
-                icon="tingzhi"
-              ></icon>
-            </div>
-          </a-tooltip>
-          <a-tooltip title="全屏" placement="bottom">
-            <div
-              @click="setFullScreen"
-              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
-            >
-              <Icon style="font-size: 18px" icon="fullscreen"></Icon>
-            </div>
-          </a-tooltip>
+<!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
+<!--            <div-->
+<!--              @click="startEdit"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <icon-->
+<!--                class="icon"-->
+<!--                style="font-size: 22px"-->
+<!--                icon="line-dragdroptuofang"-->
+<!--              ></icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
+<!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
+<!--            <div-->
+<!--              @click="stopEdit"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <icon-->
+<!--                class="icon"-->
+<!--                style="font-size: 22px; color: red"-->
+<!--                icon="tingzhi"-->
+<!--              ></icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
+<!--          <a-tooltip title="全屏" placement="bottom">-->
+<!--            <div-->
+<!--              @click="setFullScreen"-->
+<!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+<!--            >-->
+<!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
+<!--            </div>-->
+<!--          </a-tooltip>-->
           <a-tooltip title="菜单" placement="bottom">
 
             <div class="pl-3">
@@ -216,12 +216,8 @@
               </xt-button>
             </div>
           </div>
-          <div class="text-center mt-2 xt-text" style="font-size: 18px">
-            <icon
-              icon="arrowdown"
-              style="font-size: 1.2em; vertical-align: text-bottom"
-            ></icon>
-            为您推荐（左右滑动）
+          <div class="text-center mt-5 xt-text" style="font-size: 18px">
+            推荐桌面
           </div>
           <vue-custom-scrollbar
             :scrollbarSettings="scrollbarSettings"
@@ -239,7 +235,7 @@
               :items="recommendList"
               :closeParent="true"
               @openPreview="openPreview"
-              deskItemStyle="width:435px; height:300px"
+              deskItemStyle="width:385px; height:300px"
             ></DeskMarket>
           </vue-custom-scrollbar>
         </div>
@@ -257,7 +253,6 @@
               <a-col>
                 <div @click="showAddDeskForm" class="btn">
           <xt-new-icon  icon='fluent:eye-off-16-regular' size='42' />
-1
                   <div><span>添加桌面</span></div>
                 </div>
               </a-col>
@@ -623,6 +618,7 @@ export default {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
     getStep() {
       if ((this.taskID == "M0101" || this.taskID == "M0102" || this.taskID == "M0103" || this.taskID == "M0201" || this.taskID == "M0302") && this.step == 1) {
         return true;
@@ -733,6 +729,7 @@ export default {
     stopEdit() {
       this.key = Date.now();
       this.editing = false;
+    console.log('11111 :>> ', 11111);
     },
     addCard() {
       this.$refs.currentDeskRef.newAddCard();
@@ -755,7 +752,6 @@ export default {
     },
     showMenu() {
       this.$refs.currentDeskRef.showMenu();
-      console.log('object :>> ', this.$refs.currentDeskRef.dropdownMenu);
     },
     showMore() {
       this.$emit("showMore");
@@ -775,11 +771,16 @@ export default {
         return;
       }
       let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-      let needImportDesk = [];
+      let needImportDesk:any ;
+
       try {
         needImportDesk = JSON.parse(importJsonTxt);
+        const  {desk,  freeLayoutData,  freeLayoutState } =needImportDesk
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        needImportDesk.forEach((g) => {
+         desk.forEach((g) => {
+          let oldId= g.id
+
+
           //修正一下老版本导出的数据
           if (g.cardsHeight) {
             g.deskHeight = g.cardsHeight;
@@ -791,13 +792,18 @@ export default {
             (g.settings.zoom * cardsHeight) /
             g.deskHeight
           ).toFixed();
+
           g.icon = "desktop";
           g.settings.zoom = parseInt(cardZoom);
           g.id = window.$models.nanoid.nanoid(8);
+  if (freeLayoutState[oldId] ) {
+              this.freeLayoutData[g.id] = freeLayoutData[oldId]
+              this.freeLayoutState[g.id] =freeLayoutState[oldId]
+            }
           this.deskList.unshift(g);
         });
         this.addDeskVisible = false;
-        message.success("为您成功导入" + needImportDesk.length + "个桌面。");
+        message.success("为您成功导入" + desk.length + "个桌面。");
       } catch (e) {
         console.warn(e);
         message.error("导入失败，请检查代码。");

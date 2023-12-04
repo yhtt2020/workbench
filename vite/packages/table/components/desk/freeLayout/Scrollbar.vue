@@ -25,6 +25,7 @@ import {
   nextTick,
   computed,
 } from "vue";
+import { message } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -47,6 +48,7 @@ const {
   freeLayoutEnv,
   getFreeLayoutData,
   getCurrentDesk,
+  isSelectAll
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
@@ -87,7 +89,7 @@ onMounted(async () => {
     window.addEventListener("mousemove", handleMouseMove);
     // 监听鼠标抬起事件;
     window.addEventListener("mouseup", handleMouseUp);
-    document.body.addEventListener('keydown',ignoreSpace);
+    document.body.addEventListener("keydown", ignoreSpace);
   }, 1);
 });
 function ignoreSpace(event) {
@@ -116,8 +118,14 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-    scrollbar.value.scrollTop -= dy;
-    scrollbar.value.scrollLeft -= dx;
+
+    try {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    } catch (error) {
+      scrollbar.value.scrollTop -= dy;
+      scrollbar.value.scrollLeft -= dx;
+    }
 
     initialMousePosition.value = { x: event.clientX, y: event.clientY };
   }
@@ -134,7 +142,16 @@ function handleKeyDown(event) {
     isKey.value = true;
     event.preventDefault();
     event.stopPropagation();
-    return false;
+  }
+  if ((event.ctrlKey && event.key === "A") || event.key === "a") {
+    isSelectAll.value = !isSelectAll.value;
+    if (isSelectAll.value) {
+      // message.success("Ctrl + A was pressed!");
+      
+
+    } else {
+    }
+
   }
 }
 // 键盘抬起
@@ -148,11 +165,18 @@ function handleKeyUp(event) {
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  // let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  let w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  let w, h;
+  if (getFreeLayoutState.value.line.centerPosition.x == "top") {
+    w = getFreeLayoutState.value.line.centerLine.x;
+  } else {
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  }
   scrollbar.value.scrollLeft = w;
-  // let h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  let h = getFreeLayoutState.value.line.centerLine.y;
+  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
+    h = getFreeLayoutState.value.line.centerLine.y;
+  } else {
+    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  }
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
@@ -191,7 +215,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mouseup", handleMouseUp, {
     capture: true,
   });
-  window.document.body.removeEventListener('keydown',ignoreSpace);
+  window.document.body.removeEventListener("keydown", ignoreSpace);
 });
 defineExpose({
   redirect,

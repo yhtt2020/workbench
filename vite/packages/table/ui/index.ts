@@ -12,6 +12,7 @@ import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
 import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
+import XtPrint from "./components/Print/index.vue"
 import XtLogin from "./components/Login/index.vue"
 
 import XtSelectNav from "./components/SelectNav/index.vue"
@@ -69,6 +70,7 @@ export default function (app: App): void {
   app.component('XtTextarea', XtTextarea)
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
+  app.component('XtPrint',XtPrint )
   app.component('XtLogin',XtLogin )
   app.component('XtSelectNav',XtSelectNav)
   app.component('XtScrollbar',XtScrollbar)

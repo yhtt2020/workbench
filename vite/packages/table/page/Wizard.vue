@@ -221,7 +221,8 @@
           <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
-          <xt-button type="theme" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
+          <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
+          <xt-button type="theme" v-if="this.userInfo.uid" @click="nextStep" size="large"  class="button-bottom ml-3">已登录</xt-button>
         </div>
         <xt-button  v-else-if="(mod==='second-screen' && step!==3 && step!==4) || (mod==='bootstrap' && step!==4) " class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">{{ step!==1?'下一步':'没有问题'}}
         </xt-button>
@@ -268,7 +269,7 @@ export default {
   },
   computed: {
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(appStore, ['settings', 'init', 'styles']),
+    ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
 
     // 标题名称
@@ -440,8 +441,7 @@ export default {
     login () {
       tsbApi.user.login((data) => {
         this.getUserInfo()
-        this.finish();
-        // this.nextStep()
+        this.step = 4
       })
     },
 
@@ -608,7 +608,7 @@ export default {
   line-height: 16px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 }
 
 .body-shadow{
@@ -623,10 +623,10 @@ export default {
 }
 
 .bg-image{
-  background-image: url('../../../public/img/defaultBg.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: url('../../../public/img/defaultBg.jpg') !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
 }
 
 .top-icon{

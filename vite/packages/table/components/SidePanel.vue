@@ -329,6 +329,7 @@ export default {
   methods: {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList','setSideNavigationList','setRightNavigationList','setRightNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
+    ...mapActions(appStore,['toggleFullScreen']),
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
@@ -427,13 +428,7 @@ export default {
       switch (item.type) {
         case 'systemApp':
           if (item.event === 'fullscreen') {
-            if (this.full) {
-              this.full = false
-              tsbApi.window.setFullScreen(false)
-            } else {
-              this.full = true
-              tsbApi.window.setFullScreen(true)
-            }
+            this.toggleFullScreen()
           } else if (item.event === '/status') {
             if (this.$route.path === '/status') {
               this.$router.go(-1)

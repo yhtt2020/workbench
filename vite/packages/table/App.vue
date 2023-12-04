@@ -3,7 +3,7 @@
 
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
-  <a-config-provider :locale="locale">
+  <a-config-provider :locale="locale" >
     <div class="a-container " :class="{ dark: settings ? settings.darkMod : '', 'horse_run': this.settings.houserun }">
       <DndProvider :backend="HTML5Backend">
         <router-view></router-view>
@@ -38,15 +38,26 @@
     </template>
   </a-modal> -->
   <audio ref="clock" src="/sound/clock.mp3"></audio>
-  <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath && !settings.transparent">
-    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
-      <source :src="videoPath" type="video/mp4" id="bgVid">
-    </video>
+  <template v-if="settings.transparent">
+<!--    <div class="fixed inset-0 video-container " style="background: #00000000">-->
+<!--    </div>-->
+  </template>
+  <template v-else>
+    <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath">
+      <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
+        <source :src="videoPath" type="video/mp4" id="bgVid">
+      </video>
 
-  </div>
-  <div v-else-if="backgroundImage.path && !settings.transparent" class="fixed inset-0 video-container ">
-    <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
-  </div>
+    </div>
+    <div v-else-if="backgroundImage.path " class="fixed bg-image inset-0 video-container ">
+      <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
+    </div>
+    <div v-else>
+      <div class="fixed inset-0  none-bg" >
+      </div>
+    </div>
+  </template>
+
   <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
@@ -75,7 +86,7 @@
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import {mapActions, mapState, mapWritableState} from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
 import {appStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
@@ -88,9 +99,6 @@ import browser from './js/common/browser';
 import UserCard from "./components/small/UserCard.vue";
 import Modal from './components/Modal.vue'
 import {timerStore} from "./store/timer";
-import {Modal as antModal} from 'ant-design-vue'
-import {toggleFullScreen} from "./js/common/common";
-// improt "/vite/src/util/"
 import {
   initStyle
 } from "./components/card/hooks/styleSwitch/";
@@ -101,6 +109,11 @@ import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
 
 import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import {notification} from "ant-design-vue";
+notification.config({
+  top: '70px',//设置notification默认距离顶部位置
+  rtl: false,
+});
 window.browser = browser
 const {appModel} = window.$models
 let startX,
@@ -127,6 +140,12 @@ export default {
   },
 
   async mounted() {
+    window.addEventListener('resize',()=>{
+      document.body.classList.add('window')
+    })
+    setTimeout(()=>{
+      this.ensureFullScreen()
+    },1000)
     initTheme()
     initStyle()
     window.toggleFrameStore=()=>{
@@ -183,19 +202,19 @@ export default {
     ...mapWritableState(steamUserStore, ['steamLoginData']),
   },
   methods: {
-    ...mapActions(appStore, ['setMusic', 'reset']),
+    ...mapActions(appStore, ['setMusic', 'reset','toggleFullScreen','exitFullScreen','ensureFullScreen']),
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
     KeyDown(event) {
       if (event.keyCode === 122) {
-        toggleFullScreen()
+        this.toggleFullScreen()
         event.preventDefault()
         event.stopPropagation()
       }
       if(this.fullScreen){
         if(event.keyCode===27){
-          this.fullScreen=false
+          this.exitFullScreen()
           event.preventDefault()
           event.stopPropagation()
         }
@@ -310,10 +329,10 @@ export default {
     "backgroundImage": {
       handler() {
         if (this.backgroundImage.runpath) {
-          document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
-          document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
-          document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
-          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
+          // document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
+          // document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
+          // document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
+          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
 
           document.body.style.backgroundImage = ""
           this.videoPath = this.backgroundImage.runpath
@@ -323,16 +342,16 @@ export default {
 
           })
         } else if (this.backgroundImage.path !== "") {
-          document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
-          document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
-          document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
-          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
+          // document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
+          // document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
+          // document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
+          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
 
         } else {
-          document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
-          document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
-          document.body.style.setProperty('--gradient', "linear-gradient(-33deg,#333333, #212121)");
-          document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px");
+          // document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
+          // document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
+          // document.body.style.setProperty('--gradient', "linear-gradient(-33deg,#333333, #212121)");
+          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px");
 
           document.body.style.background = '#191919'
         }

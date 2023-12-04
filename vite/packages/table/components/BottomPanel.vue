@@ -58,7 +58,7 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -249,7 +249,7 @@ import { teamStore } from '../store/team'
 import { messageStore } from '../store/message'
 import { appsStore } from '../store/apps'
 import { screenStore } from '../store/screen'
-import { toggleFullScreen, renderIcon } from '../js/common/common'
+import { renderIcon } from '../js/common/common'
 import MyAvatar from './small/MyAvatar.vue'
 import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
@@ -599,6 +599,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
+    ...mapActions(appStore,['toggleFullScreen']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',
@@ -799,8 +800,7 @@ export default {
         switch (item.type) {
           case 'systemApp':
             if (item.event === 'fullscreen') {
-              toggleFullScreen()
-              this.full = !this.full
+              this.toggleFullScreen()
             } else if (item.event === '/status') {
               if (this.$route.path === '/status') {
                 this.$router.go(-1)

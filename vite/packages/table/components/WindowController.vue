@@ -48,7 +48,14 @@ export default {
     async maximize () {
       if (await tsbApi.window.isMaximized()) {
         tsbApi.window.unMaximize()
+        setTimeout(()=>{
+          document.body.classList.add('window')
+        },200)
       } else {
+        setTimeout(()=>{
+          document.body.classList.remove('window')
+        },200)
+
         tsbApi.window.maximize()
       }
     },

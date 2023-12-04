@@ -65,7 +65,6 @@ class TableManager {
           //focusable:false, //辅助模式，无法被聚焦
           skipTaskbar: !showInTaskbar,
           transparent: true,
-          //backgroundColor: '#fff',
         },
         webPreferences: {
           webSecurity: false,
@@ -232,6 +231,12 @@ app.whenReady().then(() => {
     //监听showInTaskBar
     if (TableManager.alive()) {
       global.tableWin.window.setSkipTaskbar(!value)
+    }
+  })
+
+  ipc.on('openDevTool',async()=>{
+    if (TableManager.alive()) {
+      global.tableWin.window.webContents.openDevTools()
     }
   })
 

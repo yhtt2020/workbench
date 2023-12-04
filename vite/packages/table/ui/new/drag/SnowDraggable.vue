@@ -17,7 +17,7 @@
           <div>长按开始</div>
           <div>拖拽!👋</div>
         </div> -->
-        <img src="./snow.svg" alt="" style="display: block" />
+        <!-- <img src="./snow.svg" alt="" style="display: block" /> -->
       </slot>
     </div>
   </div>
@@ -86,6 +86,8 @@ export interface DragProps {
   gridStyle?: object | null;
   // 重置位置
   resetPosition?: boolean;
+  // 用户数据
+  data?: any;
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
@@ -118,6 +120,7 @@ const props = withDefaults(defineProps<DragProps>(), {
   gridClass: "grid",
   gridStyle: null,
   resetPosition: true,
+  data: {},
 });
 const {
   disabled,
@@ -145,11 +148,10 @@ const {
   disabledHandle,
   disabledDefaultEvent,
   resetPosition,
+  data,
 } = toRefs(props);
 
-onBeforeUnmount(() => {
-
-});
+onBeforeUnmount(() => {});
 const emits = defineEmits([
   "update:x",
   "update:y",
@@ -218,6 +220,7 @@ const dragData = computed(() => {
     height: draggableSize.value?.height || 0,
     scale: scale.value,
     index: index.value,
+    data: data.value,
   };
 });
 // 同步最新的xy坐标

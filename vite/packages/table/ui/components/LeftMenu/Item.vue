@@ -82,6 +82,7 @@ const imgSize = computed(() => {
 
 // 全屏控制
 const data = ref(false);
+const emits = defineEmits("fullState")
 const full = computed(() => {
   fullScreen.value = data.value ? true : false;
   return data.value
@@ -91,6 +92,7 @@ const full = computed(() => {
 const itemClick = () => {
   if (props.item.full) {
     data.value = !data.value;
+    emits("fullState", data.value);
   }
 };
 

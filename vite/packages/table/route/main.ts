@@ -9,6 +9,7 @@ import SocialMy from "../page/social/My.vue";
 import Invite from "../page/social/Invite.vue";
 import Grade from "../page/social/Grade.vue";
 import BasicSetting from "../page/settings/Basic.vue";
+import DevSetting from '../page/settings/Dev.vue'
 import Key from "../page/settings/Key.vue";
 import Apps from "../page/Apps.vue";
 import AppFrame from "../page/AppFrame.vue";
@@ -636,6 +637,12 @@ export default [
             name: "barrageSetting",
             component: BarrageSetting,
           },
+
+          {
+            path: "/dev",
+            name: "devSetting",
+            component: DevSetting,
+          },
         ],
       },
       {
@@ -711,5 +718,5 @@ export default [
       },
     ],
   },
- 
+
 ];

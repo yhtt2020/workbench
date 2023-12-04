@@ -16,9 +16,33 @@
 
       .num {
         position: absolute;
-        display: inline-block;
-        right: 0px;
+        right: 0;
+        top: 0;
+        &-large{
+          width:15px;
+          height: 15px;
+          display: flex ;
+          justify-content: center;
+          line-height: 15px;
+          align-items: center;
+          border-radius:100%;
+          font-size:8px;
+        }
+        &-small{
+          width:15px;
+          height: 15px;
+          display: flex ;
+          justify-content: center;
+          align-items: center;
+          border-radius:100%;
+          font-size: 10px;
+          padding:0 2px 0 1px;
+        }
+
+        /**
+        padding:0 1px;
         top: -5px;
+        display: inline-block;
         min-width: 10px;
         width: fit-content;
         padding: 0 2.5px;
@@ -27,6 +51,7 @@
         text-align: center;
         line-height: 15px;
         border-radius: 7.5px;
+        **/ 
       }
 
       .num-notify {
