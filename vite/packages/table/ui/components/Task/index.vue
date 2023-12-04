@@ -1,19 +1,9 @@
 <template>
-  <div
-    v-if="slot == 'default'"
-    ref="el"
-    @click="next($event)"
-    @contextmenu="next($event)"
-    class="box"
-  >
+  <div ref="el" @click="next($event)" @contextmenu="next($event)" class="box">
     <div :class="{ 'xt-task-container': zIndexValue }">
+      {{ zIndexValue }}
       <slot></slot>
       <div class="" :class="{ 'xt-task-overlay': zIndexValue }"></div>
-    </div>
-  </div>
-  <div v-else-if="slot == 'noMenu'" ref="el" @click.prevent.stop="next($event)">
-    <div :class="{ 'xt-task-container': zIndexValue }">
-      <slot></slot>
     </div>
   </div>
 </template>
@@ -31,15 +21,13 @@ export default defineComponent({
     };
   },
   props: {
-    slot: {
-      default: "default",
-    },
     modelValue: {
       default: false,
     },
     fn: {},
-    id: {},
-    no: {},
+    id: null,
+    no: null,
+    mask: true,
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
@@ -47,7 +35,7 @@ export default defineComponent({
       return guide[this.taskID][this.step];
     },
     zIndexValue() {
-      return this.state ? true : null;
+      return this.state && this.mask;
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
@@ -83,9 +71,10 @@ export default defineComponent({
   },
   methods: {
     next(event) {
-      if (!this.modelValue) return;
+      if (!this.state) return;
       this.action();
-      event.stopPropagation(); // 阻止事件冒泡
+      event.stopPropagation();
+      event.preventDefault();
     },
     action() {
       this.$emit("cb");
@@ -175,7 +164,6 @@ export default defineComponent({
 </script>
 
 <style>
-
 .xt-task-container {
   position: relative;
   cursor: pointer;

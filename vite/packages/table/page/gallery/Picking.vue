@@ -147,7 +147,7 @@
         </div>
       </a-col>
       <a-col :span="4">
-      <xt-task :modelValue="m01037"  @cb="setAppPaper">
+      <xt-task  id="m0103" no="7"  @cb="setAppPaper">
         <div @click="setAppPaper" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设为工作台背景</div>
@@ -183,9 +183,7 @@ export default defineComponent({
     m01036() {
         return  this.step === 6 && this.taskID == "M0103"
     },
-    m01037() {
-        return this.taskID == "M0103" && this.step ==7
-    }
+
   },
   data() {
     return {

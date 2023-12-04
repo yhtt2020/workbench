@@ -79,7 +79,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     getCurrentDesk() {
       const card: any = cardStore();
       const { desks } = storeToRefs(card);
-console.log('card,desks :>> ', card,desks);
       const desk = desks.value?.filter(
         (item) => item.id === this.getCurrentDeskId
       );

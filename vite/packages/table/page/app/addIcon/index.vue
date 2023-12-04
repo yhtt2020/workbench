@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="pl-2 w-full h-full">
-        <xt-task :modelValue="m02013"></xt-task>
+        <xt-task  id="m0201" no="3"></xt-task>
         <component
           ref="apps"
           :is="name"
@@ -59,7 +59,7 @@
         v-model:data="type"
         :list="linkList"
       ></XtTab>
-      <xt-task :modelValue="m02015" @cb="commitIcons">
+      <xt-task id="m0201" no="5" @cb="commitIcons">
         <XtButton type="theme" class="ml-2" @click="commitIcons()">
           确认
         </XtButton>
@@ -157,12 +157,10 @@ export default {
     m02013() {
       if (this.taskID == "M0201" && this.step == 3) {
         this.name = "Desktop";
-        return this.taskID == "M0201" && this.step == 3;
+        return this.taskID == "M0201"
       }
     },
-    m02015() {
-      return this.taskID == "M0201" && this.step == 5;
-    },
+
     height() {
       let h = this.screenHeight;
       if (h > 901) return 415;

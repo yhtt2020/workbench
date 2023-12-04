@@ -102,7 +102,7 @@
             选择喜欢的图片作为工作台桌面背景。
           </div>
           <div class="xt-text-2 flex text-sm my-3" v-if="!appSettings.transparent">
-            <xt-task :modelValue="m01034" to="" @cb="goPaper">
+            <xt-task id="m0103" no="4" to="" @cb="goPaper">
               <xt-button
                 size="mini"
                 :w="80"
@@ -144,7 +144,7 @@
           </div>
           <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
         </div>
-        <xt-task :modelValue="m01033" to=""> </xt-task>
+        <xt-task  id="m0103" no="3" to=""> </xt-task>
         <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
           <div class="p-3 xt-modal rounded-xl xt-text-2">
             此类功能性能消耗较高，请酌情开启
@@ -543,12 +543,7 @@ export default {
     ...mapWritableState(deskStore, ["deskList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore,['currentDeskId', "currentDeskIndex"]),
-    m01033() {
-      return this.taskID == "M0103" && this.step == 3;
-    },
-    m01034() {
-      return this.taskID == "M0103" && this.step == 4;
-    },
+
     desksList() {
       return this.desks.map((desk) => {
         return {

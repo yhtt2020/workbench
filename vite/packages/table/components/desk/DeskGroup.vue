@@ -86,8 +86,8 @@
           <a-tooltip title="菜单" placement="bottom">
 
             <div class="pl-3">
-              <xt-task :modelValue="getStep" @cb="showMenu">
-                <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='click'>
+              <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
+                <RightMenu :menus='$refs.currentDeskRef?.dropdownMenu' model='all' :stopPropagation="false">
                   <div
                     @click="showMenu"
                     class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
@@ -328,7 +328,7 @@
       v-model:select-type="currentAddTab"
     >
     </HorizontalPanel>
-    <xt-task :modelValue="M03023">
+    <xt-task id="M0302" no="3">
     </xt-task>
     <div v-if="currentAddTab.name === 'market'">
 
@@ -344,7 +344,7 @@
           <span class="desk-title mr-2">热门桌面</span>
           <Icon style="font-size: 20px" icon="daohang_remen-xuanzhong"></Icon>
         </span>
-        <xt-task :modelValue="M03024" @cb="moreDesk">
+        <xt-task id="M0302" no="4" @cb="moreDesk">
           <div class="btn-item" @click="moreDesk" style="width: 160px">
             更多桌面分享
           </div>
@@ -361,11 +361,8 @@
       </div>
     </div>
     <div v-else>
-
-      <xt-task :modelValue="M01023">
+      <xt-task id="M0102" no="3">
       </xt-task>
-
-
       <div class="desk-title mt-4">标题</div>
       <a-input
         v-model:value="deskTitle"
@@ -374,7 +371,7 @@
         placeholder="请输入"
         aria-placeholder="font-size: 16px;"
       />
-      <xt-task :modelValue="M01024" @cb="doAddDesk">
+      <xt-task id="M0102" no="4" @cb="doAddDesk">
         <span class="desk-title">初始布局</span>
         <div class="mt-6">
           <HorizontalPanel
@@ -632,18 +629,6 @@ export default {
     },
     mixTask() {
       return this.M01022 || this.M03022
-    },
-    M01023() {
-      return this.taskID == "M0102" && this.step == 3
-    },
-    M03023() {
-      return this.taskID == "M0302" && this.step == 3
-    },
-    M03024() {
-      return this.taskID == "M0302" && this.step == 4
-    },
-    M01024() {
-      return this.taskID == "M0102" && this.step == 4
     },
     // getHomeSize(){
     //   this.$nextTick(() => {
