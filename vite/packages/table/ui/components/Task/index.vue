@@ -93,7 +93,9 @@ export default defineComponent({
   },
   methods: {
     next(event) {
+      console.log("11111 :>> ", 11111);
       if (!this.state) return;
+      console.log("22222 :>> ", 22222);
       this.action();
       event.stopPropagation();
       event.preventDefault();

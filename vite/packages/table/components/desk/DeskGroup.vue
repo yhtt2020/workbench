@@ -158,7 +158,7 @@
             </a-col>
             <a-col>
               <div
-                v-if="this.currentDesk.lock"
+                v-if="this.currentDesk?.lock"
                 class="btn"
                 style="opacity: 0.5"
               >
@@ -279,7 +279,7 @@
               </a-col>
               <a-col>
                 <div
-                  v-if="this.currentDesk.lock"
+                  v-if="this.currentDesk?.lock"
                   class="btn"
                   style="opacity: 0.5"
                 >

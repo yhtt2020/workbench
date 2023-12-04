@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="pl-2 w-full h-full">
-        <xt-task  id="m0201" no="3"></xt-task>
+        <xt-task :modelValue="m02013"></xt-task>
         <component
           ref="apps"
           :is="name"
@@ -59,7 +59,7 @@
         v-model:data="type"
         :list="linkList"
       ></XtTab>
-      <xt-task id="m0201" no="5" @cb="commitIcons">
+      <xt-task id="M0201" no="5" @cb="commitIcons">
         <XtButton type="theme" class="ml-2" @click="commitIcons()">
           确认
         </XtButton>

@@ -24,6 +24,13 @@
           isFeature: data[`${name}`],
           cb: data[`${fn}`],
         },
+        {
+          id: 'M0201',
+          no: '2',
+          feature: '添加图标',
+          isFeature: data[`${name}`],
+          cb: data[`${fn}`],
+        },
       ]"
     >
       <div
