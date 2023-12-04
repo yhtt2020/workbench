@@ -758,6 +758,7 @@ export default {
     },
     setCurrentDeskId(id) {
       this.$emit("update:currentDeskId", id);
+      this.$emit('changeDesk',{id:id})
     },
     showAll() {
       this.allDeskListVisible = true;
@@ -891,9 +892,8 @@ export default {
       this.addDeskVisible = false;
     },
     cleanMuuriData(list) {
-      console.log('清楚muuriId2')
       list.forEach((li) => {
-        li.id = Date.now();
+        li.id = nanoid(8);
         delete li["_$muuri_id"];
       });
       return list;
