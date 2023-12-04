@@ -109,7 +109,7 @@ export default {
   },
   async mounted () {
     // 暂时直接跳转到新登录
-    
+
     // this.$router.replace({ name: 'wizard' })
     setTimeout(() => {
       if(this.init){
@@ -220,7 +220,7 @@ export default {
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          if (['lock', 'power'].includes(currentRoute.name)) {
+          if (['lock', 'power' ].includes(currentRoute.name)) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
