@@ -58,7 +58,7 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div  style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'" 
+                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
                           class="relative flex items-center justify-center rounded-lg s-item icon-bg">
                           <navIcon :icon="item.icon" class="test "
                             style="width:28px;height:28px;fill:var(--primary-text);"
@@ -205,7 +205,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div  :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
+      <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -346,7 +346,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.removeFootNavigationList(this.currentIndex) }
+          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -388,7 +388,7 @@ export default {
           id: 4,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
-          children: [ ]
+          children: []
 
         },
         {
@@ -516,7 +516,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible','currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -560,9 +560,9 @@ export default {
       ]
 
     },
-    rightMenus(){
+    rightMenus() {
       // const arr=[...this.mainMenus[3].children]
-      this.mainMenus[3].children=[...this.childrenMenu]
+      this.mainMenus[3].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
     }
@@ -609,7 +609,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(appStore,['toggleFullScreen']),
+    ...mapActions(appStore, ['toggleFullScreen']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',
@@ -746,6 +746,25 @@ export default {
       this.quick = false
       this.editToggle = false
     },
+    delCurrentIcon(currentIndex, currentItem) {
+      console.log(currentIndex, currentItem, '====>>>>11111');
+      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
+        this.delNavList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList1.concat(this.otherNavList2)
+      } else if (this.otherSwitch1 && !this.otherSwitch2) {
+        arr = this.otherNavList1
+      } else if (!this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList2
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
+    },
     // closeEdit(){
     //   this.editBar=false
     // },
@@ -871,7 +890,7 @@ export default {
       // this.dropList.forEach((item)=>{
       //   this.setFootNavigationList(item)
       // })
-      
+
       // 添加完后清空
       this.dropList = []
       // this.modelValue=true

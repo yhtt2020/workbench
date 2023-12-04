@@ -129,7 +129,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.currentNav === 'right' ? this.removeRightNavigationList(this.currentIndex) : this.removeSideNavigationList(this.currentIndex) }
+          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -304,9 +304,9 @@ export default {
       ]
 
     },
-    rightMenus(){
+    rightMenus() {
       // const arr=[...this.mainMenus[3].children]
-      this.mainMenus[3].children=[...this.childrenMenu]
+      this.mainMenus[3].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
     }
@@ -577,6 +577,24 @@ export default {
           this.mainNavList[i].addNav = stateNav
         }
       }
+    },
+    delCurrentIcon(currentIndex, currentItem) {
+      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
+        this.delNavList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList1.concat(this.otherNavList2)
+      } else if (this.otherSwitch1 && !this.otherSwitch2) {
+        arr = this.otherNavList1
+      } else if (!this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList2
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
     },
     navVisible() {
       if (this.currentNav === 'left') {
