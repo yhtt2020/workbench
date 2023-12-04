@@ -16,10 +16,10 @@
               <div class="left no-drag" @click="fullScreen(item)">
                 <template v-if="item.option.length > 1">
                   <div class="top">
-                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
+                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
                   </div>
                   <div class="bottom">
-                    <img  class="small-cover"  v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
                   </div>
                 </template>
                 <img v-else:src="getImg(item.option[0].name)" alt="" :style="[
@@ -28,7 +28,7 @@
                       ? item.option[0].zoom + '%'
                       : '11%',
                   },
-                ]" />
+                ]"/>
               </div>
               <div class="right" style="">
                 <div class="title" style="color: var(--primary-text)">
@@ -39,7 +39,7 @@
                 </div>
                 <div class="icon">
                   <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i"
-                    style="color: var(--secondary-text)" :class="i === '社区分享' ? 'share' : ''">
+                       style="color: var(--secondary-text)" :class="i === '社区分享' ? 'share' : ''">
                     {{ i }}
                   </div>
                 </div>
@@ -69,15 +69,15 @@
           <div class="left no-drag" @click="fullScreen(item)">
             <template v-if="item.option.length > 1">
               <div class="top">
-                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt="" />
+                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
               </div>
               <div class="bottom">
-                <img  class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt="" />
+                <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
               </div>
             </template>
             <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
               { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
-            ]" />
+            ]"/>
           </div>
           <div class="right" style="">
             <div class="title" style="color: var(--primary-text)">
@@ -88,7 +88,7 @@
             </div>
             <div class="icon">
               <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i" style="color: var(--secondary-text)"
-                :class="i === '社区分享' ? 'share' : ''">
+                   :class="i === '社区分享' ? 'share' : ''">
                 {{ i }}
               </div>
             </div>
@@ -108,24 +108,25 @@
     <div class="box" style="opacity: 0; height: 1px"></div>
   </div>
   <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
-    :cardDetails="cardDetails">
+                         :cardDetails="cardDetails">
   </NewPreviewCardDetails>
   <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
   <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
 </template>
 
 <script>
-import { mapActions, mapWritableState } from "pinia";
-import { cardStore } from "../../../store/card";
-import { message } from "ant-design-vue";
-import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
-import Edit from "../../../components/widgets/myIcons/edit/index.vue";
-import RemoteMarket from "./RemoteMarket.vue";
-import { myIcons } from "../../../store/myIcons.ts";
-import _ from "lodash-es";
-import { taskStore } from "../../../apps/task/store";
+import { mapActions, mapWritableState } from 'pinia'
+import { cardStore } from '../../../store/card'
+import { message } from 'ant-design-vue'
+import NewPreviewCardDetails from './NewPreviewCardDetails.vue'
+import Edit from '../../../components/widgets/myIcons/edit/index.vue'
+import RemoteMarket from './RemoteMarket.vue'
+import { myIcons } from '../../../store/myIcons.ts'
+import _ from 'lodash-es'
+import { taskStore } from '../../../apps/task/store'
+
 export default {
-  emits: ["close", "addSuccess"],
+  emits: ['close', 'addSuccess'],
   props: {
     allList: {
       type: Array,
@@ -143,27 +144,29 @@ export default {
       required: true,
       default: () => { },
     },
-    keywords:{
-      type:String
+    keywords: {
+      type: String
     }
   },
   computed: {
-    ...mapWritableState(myIcons, ["iconOption", "edit"]),
-    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
-    M01013() {
-      return this.taskID == "M0101" && this.step == 3;
+    ...mapWritableState(myIcons, ['iconOption', 'edit']),
+    ...mapWritableState(taskStore, ['taskID', 'step', 'success']),
+    M01013 () {
+      return this.taskID == 'M0101' && this.step == 3
     },
-    displayList(){
-      return this.allList.filter(item=>{
-        if(this.keywords){
+    displayList () {
+      if (this.keywords) {
+        return this.allList.filter(item => {
+
           return item.cname.toLowerCase().includes(this.keywords.toLowerCase()) || item.detail.toLowerCase().includes(this.keywords.toLowerCase())
-        }else{
-          return true
-        }
-      })
+
+        })
+      } else {
+        return this.cardList
+      }
     }
   },
-  data() {
+  data () {
     return {
       navLists: [],
       carouselIndex: 0,
@@ -172,7 +175,7 @@ export default {
       settingVisible: false,
       openRemote: false,
       remoteContent: {},
-    };
+    }
   },
   components: {
     NewPreviewCardDetails,
@@ -182,111 +185,111 @@ export default {
   watch: {
     navList: {
       immediate: true,
-      handler() {
-        this.navLists = JSON.parse(JSON.stringify(this.cardList));
+      handler () {
+        this.navLists = JSON.parse(JSON.stringify(this.cardList))
       },
     },
     search: {
       immediate: true,
-      handler(newV, oldV) {
-        if (newV == "下载次数")
-          this.navLists = this.mySort(this.navLists, "download");
-        else if (newV == "更新时间")
-          this.navLists = this.mySort(this.navLists, "time");
-        else this.navLists = this.cardList;
+      handler (newV, oldV) {
+        if (newV == '下载次数')
+          this.navLists = this.mySort(this.navLists, 'download')
+        else if (newV == '更新时间')
+          this.navLists = this.mySort(this.navLists, 'time')
+        else this.navLists = this.cardList
       },
     },
   },
   methods: {
-    ...mapActions(cardStore, ["addCard"]),
+    ...mapActions(cardStore, ['addCard']),
     // 添加图标保存
-    save() {
-      if (this.edit.src.length === 0) return message.error("图标不能为空");
-      this.settingVisible = false;
+    save () {
+      if (this.edit.src.length === 0) return message.error('图标不能为空')
+      this.settingVisible = false
       this.addCard(
         {
-          name: "myIcons",
+          name: 'myIcons',
           id: Date.now(),
           customData: { iconList: [{ ...this.edit }] },
         },
         this.desk
-      );
-      this.edit = {};
-      this.$emit("addSuccess");
-      message.success("添加成功！");
+      )
+      this.edit = {}
+      this.$emit('addSuccess')
+      message.success('添加成功！')
     },
-    getImg(url) {
-      return "/img/addCard/" + url + ".png";
+    getImg (url) {
+      return '/img/addCard/' + url + '.png'
     },
-    mySort(data, property, asc) {
-      let datas = [...data];
+    mySort (data, property, asc) {
+      let datas = [...data]
       return datas.sort(function (a, b) {
-        a = a[property];
-        b = b[property];
-        if (asc) return a - b;
-        else return b - a;
-      });
+        a = a[property]
+        b = b[property]
+        if (asc) return a - b
+        else return b - a
+      })
     },
-    formatTimestamp(timestamp) {
-      const date = new Date(timestamp);
-      const year = date.getFullYear().toString();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
-      return `${year}-${month}-${day}`;
+    formatTimestamp (timestamp) {
+      const date = new Date(timestamp)
+      const year = date.getFullYear().toString()
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      return `${year}-${month}-${day}`
     },
-    closeCardDetails() {
-      this.isCardDetails = false;
+    closeCardDetails () {
+      this.isCardDetails = false
     },
-    addImgClass(index) {
+    addImgClass (index) {
       this.$nextTick(() => {
-        let img = this.$refs.imgRef;
-        let width = img[index].naturalWidth;
-        let height = img[index].naturalHeight;
-        if (width > height) img[index].setAttribute("class", "img-w");
-        else img[index].setAttribute("class", "img-h");
-      });
+        let img = this.$refs.imgRef
+        let width = img[index].naturalWidth
+        let height = img[index].naturalHeight
+        if (width > height) img[index].setAttribute('class', 'img-w')
+        else img[index].setAttribute('class', 'img-h')
+      })
     },
-    addNewCard(item) {
+    addNewCard (item) {
 
       if (item.option[1] != undefined) {
-        this.fullScreen(item);
+        this.fullScreen(item)
       } else {
-        if (item.name === "remote") {
-          this.openRemote = true;
-          this.remoteContent = item;
-          return;
+        if (item.name === 'remote') {
+          this.openRemote = true
+          this.remoteContent = item
+          return
         }
-        this.addCardAchieve(item);
+        this.addCardAchieve(item)
       }
     },
-    fullScreen(item) {
-      this.cardDetails = item;
-      this.isCardDetails = true;
+    fullScreen (item) {
+      this.cardDetails = item
+      this.isCardDetails = true
     },
-    addCardAchieve(item, i) {
+    addCardAchieve (item, i) {
       // 添加图标前处理
-      if (item.name == "myIcons") {
-        this.edit = _.cloneDeep(this.iconOption);
-        this.settingVisible = true;
-        return;
+      if (item.name == 'myIcons') {
+        this.edit = _.cloneDeep(this.iconOption)
+        this.settingVisible = true
+        return
       }
-      this.add(item, i);
+      this.add(item, i)
     },
-    add(item, index) {
-      index = index ?? this.carouselIndex;
+    add (item, index) {
+      index = index ?? this.carouselIndex
 
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
-      );
-      this.$emit("addSuccess");
-      message.success("添加成功！");
+      )
+      this.$emit('addSuccess')
+      message.success('添加成功！')
     },
-    closeMarket(val) {
-      this.openRemote = val;
+    closeMarket (val) {
+      this.openRemote = val
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -370,7 +373,7 @@ export default {
 
       img {
 
-        zoom: 0.07 ;
+        zoom: 0.07;
         border-radius: 8px;
         object-fit: contain;
       }
@@ -382,15 +385,16 @@ export default {
     }
 
     .bottom {
-      .small-cover{
+      .small-cover {
         width: 90%;
         height: 90%;
       }
+
       width: 100%;
       height: 62px;
       border-radius: 0px 0px 0px 12px;
       display: flex;
-      gap:5px;
+      gap: 5px;
       justify-content: space-around;
       padding: 10px;
 
