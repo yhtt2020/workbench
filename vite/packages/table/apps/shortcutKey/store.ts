@@ -172,7 +172,23 @@ export const keyStore = defineStore("key", {
      * @param item
      */
     async removeScheme(item) {
-      await tsbApi.db.remove(item)
+      let findRs=await this.getScheme(item._id)
+      if(findRs.docs.length>0){
+        let rs=await tsbApi.db.remove(findRs.docs[0])
+        if(rs.ok){
+          this.recentlyUsedList.map((i, index) => {
+            if (item.id === i.id) this.recentlyUsedList.splice(index, 1)
+          })
+          this.marketList[this.marketList.length - 1].children.map((i, index) => {
+            if (item.id === i.id) this.marketList[this.marketList.length - 1].children.splice(index, 1)
+          })
+          return true
+        }else{
+          return false
+        }
+      }
+
+
       // let itemIndex = this.items.findIndex(li => {
       //   if (li._id === item._id) {
       //     return true
@@ -184,12 +200,7 @@ export const keyStore = defineStore("key", {
       // this.shortcutKeyList.map((i, index) => {
       //   if (item.id === i.id) this.shortcutKeyList.splice(index, 1)
       // })
-      this.recentlyUsedList.map((i, index) => {
-        if (item.id === i.id) this.recentlyUsedList.splice(index, 1)
-      })
-      this.marketList[this.marketList.length - 1].children.map((i, index) => {
-        if (item.id === i.id) this.marketList[this.marketList.length - 1].children.splice(index, 1)
-      })
+
     },
     setMarketList(item) {
       if (this.marketList[this.marketList.length - 1].children.find(i => i.id === item.id)) {
