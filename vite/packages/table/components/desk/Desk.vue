@@ -2,32 +2,13 @@
   <div style="height: 100%; width: calc(100% - 00px)" v-if="currentDesk.cards">
     <div style="width: 100%; height: 100%" :class="notTrigger ? 'trigger' : ''" class="m-auto"
       v-if="currentDesk.cards.length === 0">
-      <div style="width: 100%; height: 100%">
-        <a-result class="m-auto rounded-lg s-bg" style="margin: auto" status="success" title="使用卡片桌面"
-          sub-title="您可以长按空白处、右键添加小组件。">
-          <template #extra>
-            <a-button style="color: var(--active-text)" @click="newAddCard" class="mr-10 xt-active-bg" key="console"
-              type="primary">添加第一张卡片
-            </a-button>
-            <a-button key="buy" @click="learn">学习</a-button>
-          </template>
+       暂无卡片
 
-          <div class="desc">
-            <p style="font-size: 16px">
-              <strong>您可以通过桌面设置调节卡片到合适的大小</strong>
-            </p>
-            <p>
-              从社区获得分享代码（此功能暂未上线，请耐心等待）
-              <a>从社区导入 &gt;</a>
-            </p>
-          </div>
-        </a-result>
-      </div>
     </div>
     <FloatMenu v-if="editing" @add="newAddCard" @set="showSetting" @hide="showDesk"
       @scrollbarRedirect="freeLayoutScrollbarRedirect" @exit="toggleEditing" @resetLayout="resetLayout"
       v-model:zoom="globalSettings.cardZoom" v-model:aloneZoom="settings.cardZoom" :alone="settings.enableZoom" />
-    <RightMenu :menus="dropdownMenu" class="w-full h-full" @contextmenu="showMenu">
+    <RightMenu :currentIndex="currentDesk.id" :menus="dropdownMenu" class="w-full h-full" @contextmenu="showMenu">
       <!-- 自由布局滚动 -->
       <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
@@ -404,7 +385,6 @@ export default {
     "currentDesk.settings": {
       handler(newVal) {
         if (!this.isFreeLayout) {
-          console.log();
           if (!newVal) {
             newVal = {
               cardZoom: 100,
@@ -442,14 +422,25 @@ export default {
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         let arr = [...this.deskGroupMenu[1].children];
-        let exists = arr.some((item) => item.id === 4);
+        let exists = arr.findIndex((item) => item.id === 4);
         if (!exists) {
           arr.push({
             id: 4,
             newIcon: "fluent:circle-off-16-regular",
             name: "清空桌面",
-            fn: this.clear,
+            fn: ()=>{
+              this.clear(this.currentDesk)
+            },
           });
+        }else{
+          arr.splice(exists,1,{
+            id: 4,
+            newIcon: "fluent:circle-off-16-regular",
+            name: "清空桌面",
+            fn: ()=>{
+              this.clear(this.currentDesk)
+            },
+          })
         }
         arr.sort((a, b) => a.id - b.id);
         let deskGroupMenu = [...this.deskGroupMenu];
@@ -582,7 +573,6 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     resetLayout() {
-      console.log("触发了 resetLayout:>> ");
       this.hide = true;
       setTimeout(() => {
         this.hide = false;
@@ -601,7 +591,6 @@ export default {
     },
     update(callback) {
       if (this.$refs.grid) {
-        console.log('☆执行desk的update')
         this.$refs.grid.update(callback);
       }
     },
@@ -609,7 +598,6 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
-      console.log('触发了 :>> ', );
       if (this.editing) {
         message.info("已关闭拖拽调整");
       } else {
@@ -619,7 +607,6 @@ export default {
       this.$emit("changeEditing", this.editing);
       this.menuVisible = false;
       this.key = Date.now();
-      console.log(this.muuriOptions, "ediingt输出");
     },
     showSetting() {
       this.settingVisible = true;
@@ -637,16 +624,16 @@ export default {
       this.hide = !this.hide;
       this.menuVisible = false;
     },
-    clear() {
+    clear(desk) {
       this.menuVisible = false;
-      let desk = this.currentDesk;
       if (desk) {
         Modal.confirm({
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
             desk.cards.forEach(item=>{
-              if (item.name == 'notes') {
+              //移除桌面相关的便签卡片
+              if (item.name === 'notes') {
                 tsbApi.db.find({
                   selector: {
                     _id: 'note:' + item.id,
