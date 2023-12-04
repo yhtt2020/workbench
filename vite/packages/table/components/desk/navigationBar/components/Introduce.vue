@@ -30,7 +30,8 @@
     <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
       <!-- <div class="flex flex-wrap"> -->
       <template v-if="this.filterList.length > 0">
-        <selectIcon :filterList="filterList" :recommendation="recommendation" ref="selectIcon" @clickRightListItem="clickRightListItem"/>
+        <selectIcon :filterList="filterList" :recommendation="recommendation" ref="selectIcon"
+          @clickRightListItem="clickListItem" />
       </template>
       <div v-else class="flex flex-col items-center justify-center w-full h-full mt-10">
         <div>
@@ -100,80 +101,52 @@ export default {
       }
     },
     // 添加图标的主要函数
-    clickRightListItem(item, index) {
+    clickRightListItem(item, index,navigationList,setNavigationList) {
       this.activeRightItem = index
       //   this.editFlag = false
-      if (this.selectNav === 'foot') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setFootNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
+      // if (this.selectNav === 'foot') {
+      if (item instanceof Array) {
+        for (let i = 0; i < item.length; i++) {
+          if (!navigationList.find(j => j.name === item[i].name)) {
+            this.updateMainNav(item[i], 'add')
+            item[i].addNav = true
+            setNavigationList(item[i])
+          } else {
+            message.info('已添加', 1)
           }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setFootNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.content
-            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-          })
         }
-      } else if (this.selectNav === 'left') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.sideNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setSideNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.sideNavigationList.length; i++) {
-            if (this.sideNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setSideNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.sideContent
-            scrollElem.scrollTo({ top: scrollElem.scrollHeigth, behavior: 'smooth' })
-          })
+        this.dropList = []
+      } else {
+        for (let i = 0; i <navigationList.length; i++) {
+          if (navigationList[i].name === item.name) return message.info('已添加', 1)
         }
-      } else if (this.selectNav === 'right') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.rightNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setRightNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.rightNavigationList.length; i++) {
-            if (this.rightNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setRightNavigationList(item)
-        }
+        this.updateMainNav(item, 'add')
+        item.addNav = true
+        setNavigationList(item)
+        this.$nextTick(() => {
+          let scrollElem = this.$refs.content
+          scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+        })
+      }
+      // } 
+    },
+    // 添加图标函数
+    clickListItem(item,index){
+      switch (this.selectNav) {
+        case 'foot':
+          this.clickRightListItem(item,index,this.footNavigationList,this.setFootNavigationList)
+          break;
+        case 'left':
+          this.clickRightListItem(item,index,this.sideNavigationList,this.setSideNavigationList)
+          break;
+        case 'right':
+          this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
+          break;
+      
+        default:
+          break;
       }
     },
-
     // 批量添加
     // addIcon(item, index) {
     //   // console.log(item,index,'item,index-->>>')

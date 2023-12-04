@@ -148,7 +148,7 @@ export default {
           fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
-      rightMenus: [
+      mainMenus: [
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
@@ -172,33 +172,7 @@ export default {
           id: 4,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
-          children: [
-            {
-              id: 1,
-              name: '显示用户中心',
-              newIcon: "fluent:person-16-regular",
-              fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
-            },
-            {
-              id: 2,
-              name: '显示社区助手',
-              newIcon: "fluent:people-community-16-regular",
-              fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
-            },
-            {
-              id: 3,
-              name: '显示任务中心',
-              newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
-            },
-            {
-              id: 4,
-              name: '显示社群沟通',
-              newIcon: "fluent:chat-16-regular",
-              fn: () => { this.settings.enableChat = !this.settings.enableChat }
-            },
-          ]
-
+          children: []
         },
         {
           divider: true,
@@ -292,7 +266,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible','currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
     ...mapWritableState(appStore, ['settings']),
     currentId() {
       if (this.currentNav === 'left') {
@@ -300,6 +274,41 @@ export default {
       } else if (this.currentNav === 'right') {
         return 'right-bar'
       }
+    },
+    childrenMenu() {
+      return [
+        {
+          id: 1,
+          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          newIcon: "fluent:person-16-regular",
+          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+        },
+        {
+          id: 2,
+          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          newIcon: "fluent:people-community-16-regular",
+          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+        },
+        {
+          id: 3,
+          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          newIcon: "fluent:task-list-square-16-regular",
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+        },
+        {
+          id: 4,
+          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          newIcon: "fluent:chat-16-regular",
+          fn: () => { this.settings.enableChat = !this.settings.enableChat }
+        },
+      ]
+
+    },
+    rightMenus(){
+      // const arr=[...this.mainMenus[3].children]
+      this.mainMenus[3].children=[...this.childrenMenu]
+      // this.mainMenus[3].children=arr
+      return this.mainMenus
     }
   },
   mounted() {
@@ -327,9 +336,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList','setSideNavigationList','setRightNavigationList','setRightNavigationList']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
-    ...mapActions(appStore,['toggleFullScreen']),
+    ...mapActions(appStore, ['toggleFullScreen']),
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
