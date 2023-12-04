@@ -161,7 +161,7 @@ const dragStop = () => {};
       resetPosition
       parent
       boundary
-      v-if="item.id != ''"
+      v-if="!getFreeLayoutState.system.hide"
       :data="item"
       :key="item.id"
       v-model:y="item.top"

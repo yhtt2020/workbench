@@ -49,6 +49,7 @@
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
+      :hide="hide"
     />
     <RightMenu
       :menus="dropdownMenu"
