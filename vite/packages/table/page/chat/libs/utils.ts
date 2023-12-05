@@ -5,12 +5,17 @@ import _ from 'lodash-es';
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
   // 群聊会话列表
-  const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList; 
-  const find = list.find((item:any)=>{ 
+  const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList;
+  const find = list.find((item:any)=>{
     const itemInfo = item.groupProfile;
-    return String(itemInfo.groupID) === String(groupID);
+    return String(itemInfo?.groupID) === String(groupID);
   });
-  return { unreadCount:find.unreadCount };
+  if(find){
+    return { unreadCount:find.unreadCount };
+  }else{
+    return 0
+  }
+
 }
 
 // 将社群频道目录进行更换
@@ -65,7 +70,7 @@ export function updateTree(list:any){
 // 计算消息状态提示总数
 export function communityTotal(no:any){
   const com:any = communityStore();
-  const { community } = storeToRefs(com); 
+  const { community } = storeToRefs(com);
   const list = community.value.communityTree;
   const find = _.find(list,function(find:any){ return String(find.no) === String(no) });
   if(find !== undefined){
@@ -78,7 +83,7 @@ export function communityTotal(no:any){
     for(const item of arr){
       const type = item.type === 'group';
       const hasChildren = item.hasOwnProperty('children');
-      if(type){ 
+      if(type){
         const jsonProp = item.props;
         const index = _.findIndex(arrList,function(find:any){ return String(find.props.groupID) === String(jsonProp.groupID) });
         if(index === -1){
@@ -97,7 +102,7 @@ export function communityTotal(no:any){
           }
         }
       }
-      
+
     }
     if(arrList.length !== 0){
       for(const item of arrList){
