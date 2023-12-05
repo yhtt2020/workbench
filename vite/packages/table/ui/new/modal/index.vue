@@ -121,7 +121,7 @@ export interface ModalProps {
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
-  title: "麦当劳之歌",
+  title: "",
   noName: "取消",
   okName: "确认",
   index: 1000,
