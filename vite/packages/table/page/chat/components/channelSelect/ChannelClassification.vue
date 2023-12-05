@@ -95,7 +95,10 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(communityStore, ["categoryClass"]),
+    ...mapWritableState(communityStore, ["community"]),
+    categoryClass(){
+      return this.community.categoryClass;
+    }
   },
 
   mounted(){
@@ -110,7 +113,7 @@ export default {
   methods: {
     ...mapActions(communityStore,[
       'removeCategory','createChannel','getChannelList',
-      'updateCategoryClass',
+      // 'updateCategoryClass',
     ]),
     // 拖拽排序
     onSortEnd(evt){
@@ -128,7 +131,7 @@ export default {
       let temp = cloneTemp[evt.oldIndex]; // 获取旧的下标
       cloneTemp.splice(evt.oldIndex, 1); // 移除旧的下标
       cloneTemp.splice(evt.newIndex, 0, temp); // 将旧的下标进行替换
-      this.updateCategoryClass(cloneTemp);
+      // this.updateCategoryClass(cloneTemp);
     },
     // 关闭
     closeButton() {
@@ -140,7 +143,7 @@ export default {
     },
     // 添加新分组
     addClassItem(){
-      this.categoryClass.unshift({ name: "分类名称" });
+      this.community.categoryClass.unshift({ name: "分类名称" });
       this.edit(0);
     },
     // 编辑中
@@ -180,7 +183,7 @@ export default {
           }
         })
       }else{
-        const index = this.categoryClass.findIndex((findItem) => {
+        const index = this.community.categoryClass.findIndex((findItem) => {
           return findItem.name === item.name;
         });
         this.categoryClass.splice(index, 1);

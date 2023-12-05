@@ -1,7 +1,7 @@
 <template>
   <a-row class="w-full h-full">
     <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
-      <CategoryFloat :float="false" :communityID="routeData" :data="detailData" @createCategory="clickEmptyButton" />
+      <CategoryFloat :float="false" :no="routeData"  @createCategory="clickEmptyButton" />
     </a-col>
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <CommunityHeader :headerContent="currentChannel"/>
@@ -105,13 +105,9 @@ export default {
 
   computed:{
     ...mapWritableState(chatStore,['settings','contactsSet']),
-    ...mapWritableState(communityStore,['getCommunityDetail']),
     isFloat(){
       return this.settings.enableHide
     },
-    detailData(){
-      return this.getCommunityDetail(this.routeData)
-    }
   },
 
   async mounted(){
@@ -120,22 +116,20 @@ export default {
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
       this.currentItem(item);
-      this.updateMsgStatus();
     })
     this.$mit.on('currentSet',(args)=>{
-      console.log('查看args',args);
       this.currentChannel = args
     })
   },
 
   methods:{
     updateColumn(){},
-    ...mapActions(communityStore,['updateMsgStatus']),
+    ...mapActions(communityStore,['updateMsgStatus','getCommunityTree']),
     // 当前点击
     async currentItem(item){
       // 链接
       if(item.type === 'link' && item.name !== 'Roadmap'){
-        const data = JSON.parse(item.props)
+        const data = item.props
         // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
         switch (data.openMethod){
           case 'userSelect':
@@ -148,7 +142,7 @@ export default {
       }
       // 群聊
       if(item.type === 'group'){
-        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
+        const changeData = item.props[0] !== undefined ? item.props[0] : item.props;
         const groups = window.$TUIKit.store.store.TUIGroup.groupList
         const index = groups.findIndex((findItem)=>{ return findItem.groupID === changeData.groupID })
         const enableGroup = await checkGroupShip([`${changeData.groupID}`]) // 有没有添加群聊
@@ -191,7 +185,7 @@ export default {
         }
       }
       // 其他
-      this.currentChannel = {...item,props:JSON.parse(item.props)}
+      this.currentChannel = {...item,props:{ ...item.props }};
     },
 
     clickEmptyButton(item){
@@ -209,6 +203,7 @@ export default {
     '$route':{
       handler(to,from){
        this.routeData = to.params.no
+      //  this.getCommunityTree(to.params.no)
       },
       immediate:true,
       deep:true,
