@@ -308,9 +308,6 @@ export default {
           this.simple=false
         }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
           this.simple=true
-        }else if(!this.bottomToggle[0]){
-          this.settings.enableChat=false
-          console.log(1111111111);
         }
       }
     }
