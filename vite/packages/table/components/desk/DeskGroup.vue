@@ -560,6 +560,7 @@ export default {
               newIcon: "akar-icons:trash-can",
               name: "删除桌面",
               fn: this.delDesk,
+              color: "#FF4D4F",
             },
           ],
         },
