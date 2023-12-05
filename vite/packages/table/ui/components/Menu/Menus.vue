@@ -17,15 +17,7 @@
       </template>
       <xt-divider v-else-if="menu.divider" class="mx-auto" style="width: 90%" />
       <div v-else-if="menu.children" class="" :key="menu[`${name}`]">
-        <xt-popover
-          trigger="hover"
-          overlayClassName="bgg "
-          placement="right"
-          :mouseLeaveDelay="111110.1"
-          :overlayInnerStyle="{
-            // 'padding-left': '20px',
-          }"
-        >
+        <xt-popover>
           <template #content>
             <div class="w-full h-full px-2 xt-b rounded-lg">
               <div

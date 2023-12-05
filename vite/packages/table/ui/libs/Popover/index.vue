@@ -4,7 +4,7 @@
       trigger="hover"
       overlayClassName="bgg"
       placement="right"
-      :mouseLeaveDelay="1110.1"
+      :mouseLeaveDelay="0.1"
       :overlayInnerStyle="{
         'padding-left': '20px',
       }"
