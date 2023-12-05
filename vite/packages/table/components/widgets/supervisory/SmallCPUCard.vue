@@ -11,7 +11,7 @@
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-            <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{CPUData.useCPU.value.toFixed(1)}}%</div>
+            <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{CPUData.useCPU.value?.toFixed(1)}}%</div>
             <div style="color:var(--primary-text);font-size: 14px;margin-top: 6px;">负载</div>
         </template>
       </a-progress>

@@ -1,7 +1,7 @@
 <template>
-    <Modal :zIndex="99" :maskNoClose="true" v-model:visible="settingVisible" :blurFlag="false">
-        <div class="w-[420px] h-[583px]  rounded-xl p-4">
-            <div class="flex justify-between w-full h-[32px] items-center ">
+    <xt-modal :zIndex="99" title="导航栏设置" :modelValue="modelValue" :mask="false" @no="close" :footer="false">
+        <div class=" rounded-xl" :style="{height:`${windowHeight}px`,width:`${windowWidth}px`}">
+            <!-- <div class="flex justify-between w-full h-[32px] items-center ">
                 <div class="flex justify-center w-full">
                     <div class="ml-8 text-base xt-text">导航栏设置</div>
                 </div>
@@ -11,29 +11,29 @@
                         <newIcon class="text-base xt-text pointer" icon="akar-icons:cross" />
                     </div>
                 </xt-button>
-            </div>
-            <div class="w-full h-[215px] xt-bg-2 rounded-xl p-3 mt-3">
+            </div> -->
+            <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4">
                 <div v-for="(item, index) in navigationPosition">
                     <div class="flex justify-between w-full">
                         <div class="text-base xt-text">{{ item.title }}</div>
                         <a-switch  v-model:checked="useNavStore.navigationToggle[index]" />
                     </div>
                     <!-- {{ navigationStore.bottomToggle[0] }} -->
-                    <div class="mt-2 text-sm xt-text-2">
+                    <div class="mt-3 text-sm xt-text-2">
                         {{ item.description }}
                     </div>
-                    <div class="w-full h-[1px] bg-[var(--divider)] mt-2 mb-2" v-if="index != navigationPosition.length - 1">
+                    <div class="w-full h-[1px] bg-[var(--divider)] mt-3 mb-4" v-if="index != navigationPosition.length - 1">
                     </div>
                 </div>
             </div>
-            <div class="w-full h-[280px] xt-bg-2 rounded-xl mt-3 p-3">
+            <div class="w-full h-[340px] xt-bg-2 rounded-xl mt-3 p-4">
                 <div v-for="(item, index) in navigationFunction">
                     <div v-if="item.tag!=='chat'" class="w-full">
                         <div class="flex justify-between w-full" >
                         <div class="text-base xt-text">{{ item.title }}</div>
                         <a-switch  v-model:checked="navigationStore.bottomToggle[index]" />
                     </div>
-                    <div class="mt-2 text-sm xt-text-2">
+                    <div class="mt-3 text-sm xt-text-2">
                         {{ item.description }}
                     </div>
                     </div>
@@ -42,48 +42,54 @@
                         <div class="text-base xt-text">{{ item.title }}</div>
                         <a-switch  v-model:checked="useAppStore.settings.enableChat" />
                     </div>
-                    <div class="mt-2 text-sm xt-text-2">
+                    <div class="mt-3 text-sm xt-text-2">
                         {{ item.description }}
                     </div>
                     </div>
                     
-                    <div class="w-full h-[1px] bg-[var(--divider)] mt-2 mb-2" v-if="index != navigationFunction.length - 1">
+                    <div class="w-full h-[1px] bg-[var(--divider)] mt-3 mb-4" v-if="index != navigationFunction.length - 1">
                     </div>
                 </div>
             </div>
 
         </div>
         <!-- </Modal> -->
-    </Modal>
+    </xt-modal>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onBeforeMount,watch } from 'vue'
+import { ref,onBeforeUnmount,onMounted } from 'vue'
 import { navigationPosition, navigationFunction } from './index'
 import { useNavigationStore } from './navigationStore';
 import settingItem from './settingItem.vue';
 import { appStore } from '../../../store';
-import { Icon as newIcon } from '@iconify/vue';
 import { navStore } from '../../../store/nav'
-import Modal from '../../Modal.vue';
 const useNavStore = navStore()
 const useAppStore=appStore()
 const navigationStore=useNavigationStore()
-const settingVisible = ref(true)
+const modelValue = ref(true)
+const windowHeight=ref(480)
+const windowWidth=ref(400)
 const emit = defineEmits(['setQuick'])
 const close = () => {
     emit('setQuick')
 }
-// onBeforeMount(()=>{
-//     bottomList.value=[...navigationStore.bottomToggle,useAppStore.settings.enableChat]
-// })
-// const bottomList=ref([])
-// watch(()=>navigationStore.bottomToggle,(val)=>{
-    
-//     bottomList.value=[...val,useAppStore.settings.enableChat]
-// })
-// watch(()=>useAppStore.settings.enableChat,(val)=>{
-//     bottomList.value=[...navigationStore.bottomToggle,val]
-// })
+const handleResize = () => {
+    const currentHeight = window.innerHeight
+    if(currentHeight>900){
+        windowHeight.value=610
+        windowWidth.value=460
+    }else{
+        windowHeight.value=480
+        windowWidth.value=400
+    }
+}
+onMounted(()=>{
+    handleResize()
+    window.addEventListener('resize', handleResize)
+})
+onBeforeUnmount(()=>{
+    window.removeEventListener('resize', handleResize)
+})
 </script>
 <style lang='scss' scoped></style>

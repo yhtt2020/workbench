@@ -276,6 +276,8 @@ onBeforeUnmount(() => {
         class="h-10 p-1 xt-bg-2 mb-3"
         style="font-size: 14px !important"
       />
+      <!-- <xt-modal :modelValue="1"> <test></test></xt-modal> -->
+
       <div class="flex my-3">
         <Item v-for="item in defaultMenu" :item="item" class="mr-3" />
       </div>

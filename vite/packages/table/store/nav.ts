@@ -240,13 +240,13 @@ export const navStore = defineStore("nav", {
         name:'主页',
         event:'home',
       },
-      {
-        type:'systemApp',
-        icon:'fluent:settings-16-regular',
-        name:'基础设置',
-        event:'setting',
-        fn:()=>{  vm.$router.push({ name: 'setting' })}
-      },
+      // {
+      //   type:'systemApp',
+      //   icon:'fluent:settings-16-regular',
+      //   name:'基础设置',
+      //   event:'setting',
+      //   fn:()=>{  vm.$router.push({ name: 'setting' })}
+      // },
     ],
     footNavigationList: [...arrData],
     sideNavigationList: [
