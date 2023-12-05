@@ -198,7 +198,7 @@
         </div>
       </div>
     </vue-custom-scrollbar>
-
+  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" @no="this.simpleVisible=false" @ok="this.simpleVisible=false"></xt-msg>
   <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="editNavigationVisible">
     <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>
@@ -274,6 +274,7 @@ export default {
         wheelPropagation: true,
       },
       editNavigationVisible: false,
+      simpleVisible:false
     };
   },
   watch: {
@@ -303,12 +304,13 @@ export default {
     bottomToggle:{
       deep:true,
       handler(newV,oldV){
-        this.oldToggle=[...oldV]
-        console.log(this.oldToggle);
         if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
           this.simple=false
         }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
           this.simple=true
+        }else if(!this.bottomToggle[0]){
+          this.settings.enableChat=false
+          console.log(1111111111);
         }
       }
     }
@@ -389,11 +391,12 @@ export default {
 
     },
     tipSimple() {
-      Modal.info({
-        content:
-          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能。",
-        centered: true,
-      });
+      // Modal.info({
+      //   content:
+      //     "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能。",
+      //   centered: true,
+      // });
+      this.simpleVisible=true
     },
     tipOffline() {
       Modal.info({

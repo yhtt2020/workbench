@@ -39,7 +39,7 @@
 
     </div>
   </RightMenu>
-
+  <Common ref="common"></Common>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
@@ -91,6 +91,7 @@ import RightMenu from "../components/desk/Rightmenu.vue";
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
+import Common from './desk/navigationBar/components/Common.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -99,7 +100,8 @@ export default {
     navigationSetting,
     RightMenu,
     AddIcon,
-    EditNewNavigation
+    EditNewNavigation,
+    Common
   },
   data() {
     return {
@@ -333,7 +335,7 @@ export default {
       } else {
         this.disableDrag()
       }
-    }
+    },
   },
   methods: {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
