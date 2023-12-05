@@ -26,6 +26,7 @@
       v-model:zoom="globalSettings.cardZoom"
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
+      :hide="hide"
     />
     <!-- 自由布局滚动 -->
     <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
@@ -155,6 +156,8 @@
         v-if="settingVisible"
         style="height: 34px; width: 300px"
         boxClass="p-1 xt-bg-2"
+        :boxStyle="{ 'border-radius': '10px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentSettingTab"
         :list="settingsTab"
       ></XtTab>
