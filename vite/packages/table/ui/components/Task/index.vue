@@ -231,6 +231,7 @@ export default defineComponent({
 
 .shepherd-element {
   border: 1px solid var(--divider) !important;
+  background: none !important;
 }
 
 .shepherd-content,
@@ -243,6 +244,7 @@ export default defineComponent({
   z-index: 9999999999999 !important;
   margin-top: 12px;
   background: none;
+  border: 1px solid var(--divider) !important;
 }
 
 /* 内容文本 */
@@ -265,6 +267,7 @@ export default defineComponent({
   z-index: 9999999999999 !important;
   /* border: 1px solid var(--divider) !important; */
   background: var(--modal-bg) !important;
+  border: 1px solid var(--divider);
 }
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
