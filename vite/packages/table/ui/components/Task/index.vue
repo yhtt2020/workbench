@@ -190,7 +190,6 @@ export default defineComponent({
 <style>
 .xt-task-container {
   position: relative;
-  border: 0.1px solid red;
   cursor: pointer;
 
   z-index: 9999999;
