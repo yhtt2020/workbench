@@ -68,14 +68,7 @@
               suppressScrollX: true,
               wheelPropagation: false,
             }"
-            style="
-              position: relative;
-              margin-right: -15px;
-              margin-left: -10px;
-              padding-left: 10px;
-              padding-top: 5px;
-              padding-right: 15px;
-            "
+            style="position: relative; margin-left: 8px; margin-right: 8px;padding-right: 8px; padding-left: 8px;"
             class="flex-1"
           >
             <slot>
@@ -124,7 +117,7 @@ export interface ModalProps {
   header?: boolean;
   footer?: boolean;
   esc?: boolean;
-  boxPadding?:string
+  boxPadding?: string;
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -139,7 +132,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   header: true,
   footer: true,
   esc: false,
-  boxPadding:'p-4'
+  boxPadding: "p-4",
 });
 const { esc } = toRefs(props);
 const emits = defineEmits(["ok", "no", "back", "update:modelValue"]);

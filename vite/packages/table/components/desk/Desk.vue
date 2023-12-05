@@ -197,18 +197,21 @@
       <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2" v-model="currentSettingTab"
         :list="settingsTab"></XtTab>
     </template>
-    <div style="height: calc(80vh); width: 400px">
+    <div style="height: calc(80vh); width: 500px">
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
           <div class="mb-4">桌面图标和名称</div>
+
           <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
         </div>
+
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-4">
             <div>垂直布局</div>
             <a-switch v-model:checked="currentDesk.settings.vDirection" />
           </div>
           <div class="my-34 text-sm xt-text-2">使桌面滚动方式改为垂直滚动。</div>
+
           <hr class="my-4" />
           <div class="flex justify-between mb-4">
             <div>独立缩放</div>

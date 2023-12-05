@@ -165,7 +165,7 @@
             <a-switch v-model:checked="appSettings.down.enable" />
           </div>
           <div class="xt-text-2 text-sm my-4">开启后页面会有炫酷的飘落效果</div>
-          <hr class="my-4" />
+          <hr class="my-4" style="height: 0.5px" />
           <template v-if="appSettings.down.enable">
             <div class="flex justify-between my-4">
               <div>飘落物</div>
@@ -181,7 +181,7 @@
             <div class="flex justify-between my-4">
               <div>飘落物数量</div>
             </div>
-            <div class="xt-text-2 text-sm my-4">
+            <div class="xt-text-2 text-sm mt-4">
               <xt-input
                 v-model="appSettings.down.count"
                 class="xt-modal xt-b"
@@ -930,14 +930,14 @@ export default {
     },
     changeDesk(p) {
       this.currentDeskId = p.id;
-      let found = this.desks.find(desk=>{
-        return desk.id===p.id
-      })
-      if(found){
-        this.currentDeskIndex= {
-          id:found.id,
-          title:found.name
-        }
+      let found = this.desks.find((desk) => {
+        return desk.id === p.id;
+      });
+      if (found) {
+        this.currentDeskIndex = {
+          id: found.id,
+          title: found.name,
+        };
       }
     },
     doAddDesk() {
