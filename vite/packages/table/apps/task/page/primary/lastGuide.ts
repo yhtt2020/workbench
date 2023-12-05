@@ -7,7 +7,7 @@ const getDesk = () => {
   const task: any = taskStore();
   task.deskID = nanoid(4);
   let name = "任务桌面" + Date.now();
-  console.log('name :>> ', name);
+  console.log("name :>> ", name);
   store.desks = store.desks.filter((item) => item.name !== name);
   let obj = {
     name: "任务桌面",
@@ -52,7 +52,7 @@ export const lastGuide = {
       backgroundIndex: 0,
     };
     const card: any = cardStore();
-
+    console.log("card :>> ", card);
     card.addCard(
       {
         name: "myIcons",

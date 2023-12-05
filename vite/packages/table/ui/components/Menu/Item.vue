@@ -31,6 +31,13 @@
           isFeature: data[`${name}`],
           cb: data[`${fn}`],
         },
+        {
+          id: 'M0302',
+          no: '2',
+          feature: '添加桌面',
+          isFeature: data[`${name}`],
+          cb: data[`${fn}`],
+        },
       ]"
     >
       <div
