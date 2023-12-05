@@ -1,5 +1,5 @@
 <template>
-  <!-- <xt-button @click="test()">任务重置</xt-button> -->
+  <xt-button @click="test()">任务重置</xt-button>
   <template v-if="store.taskID">
     <div class="xt-bg-2 rounded-xl p-3">
       <xt-title m="">
@@ -29,7 +29,7 @@
         <xt-title type="text" v-if="currentTask.guide"
           >提示：当前任务含有操作引导</xt-title
         >
-        <StatrTask :task="currentTask"></StatrTask>
+        <StartTask :task="currentTask"></StartTask>
       </div>
     </div>
   </template>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import StatrTask from "./StatrTask.vue";
+import StartTask from "./StartTask.vue";
 
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
@@ -47,7 +47,7 @@ import { ref, reactive, computed } from "vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0302";
+  store.taskID = "M0101";
   store.success = false;
   store.step = -1;
 };

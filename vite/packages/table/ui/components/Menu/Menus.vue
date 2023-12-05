@@ -1,8 +1,8 @@
 <template>
   <template v-for="menu in props.menus">
     <template v-if="menu.slot">
-      <div class="item rounded-lg">
-        <Item :data="menu" :name="name" />
+      <div class="rounded-lg w-full">
+        <Item :data="menu" :name="name" :fn="fn" />
       </div>
       <div
         @click="
@@ -15,14 +15,10 @@
       </div>
     </template>
     <xt-divider v-else-if="menu.divider" class="my-3" />
-    <div
-      v-else-if="menu.children"
-      class="item rounded-lg"
-      :key="menu[`${name}`]"
-    >
+    <div v-else-if="menu.children" class="rounded-lg" :key="menu[`${name}`]">
       <xt-popover>
-        <xt-text class="w-full h-full">
-          <Item :data="menu" :name="name" />
+        <xt-text class="w-full h-full items">
+          <Item :data="menu" :name="name" :isBg="false" :fn="fn" />
           <template #right>
             <xt-new-icon
               size="20"
@@ -35,20 +31,20 @@
         <template #content>
           <div class="list w-full h-full p-1">
             <div
-              class="item"
+              class=""
               @click="handleClick(data, true)"
               v-for="data in menu.children"
               :name="name"
             >
-              <Item :data="data" :isBg="true" :name="name" />
+              <Item :data="data" :name="name" :fn="fn" />
             </div>
           </div>
         </template>
       </xt-popover>
     </div>
-    <div v-else class="item rounded-lg" @click="handleClick(menu)">
+    <div v-else class="rounded-lg " @click="handleClick(menu)">
       <xt-text class="w-full h-full">
-        <Item :data="menu" :name="name" />
+        <Item :data="menu" :name="name" :fn="fn" />
       </xt-text>
     </div>
   </template>
@@ -82,13 +78,13 @@ const handleClick = (item, flag = null) => {
 </script>
 
 <style lang="scss" scoped>
-.item {
+.items {
   box-sizing: border-box;
   height: 40px;
 
   &:hover {
     background: var(--active-secondary-bg);
-    cursor: pointer;
+    border-radius: 8px;
   }
 }
 </style>

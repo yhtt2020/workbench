@@ -73,6 +73,7 @@
     "vue3-dnd": "^2.0.4",
     "vue3-resize": "^0.2.0",
     "vue3-seamless-scroll": "^2.0.1",
+    "vue3-selecto": "^1.12.2",
     "vuex": "^4.0.2",
     "wujie-vue3": "^1.0.18",
     "xgplayer": "^2.32.2"
