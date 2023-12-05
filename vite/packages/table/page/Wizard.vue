@@ -59,13 +59,13 @@
               </div>
             </a-col>
           </a-row>
-  
-  
+
+
         </div>
         <div v-if="step===1 && mod==='second-screen'" class="flex justify-center">
-  
+
           <div v-if="screenSettingTab==='none'" class="mt-6">
-  
+
             <a-row class="screen-section" @click="screenSettingTab='touch'">
               <a-col :span="19">
                 <div>
@@ -102,7 +102,7 @@
               </a-col>
             </a-row>
           </div>
-  
+
           <div v-if="screenSettingTab==='touch'">
             <div class="screen-section xt-text" style="line-height: 2;margin-top: 3em;padding: 32px;" v-if="screenSettingTab==='touch'">
               <p>
@@ -116,10 +116,10 @@
                   <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
               </p>
             </div>
-  
+
           </div>
-  
-  
+
+
           <div class="screen-section mt-6" style="height: 320px;padding: 16px 24px;" v-if="screenSettingTab==='choose'">
             <div class="flex justify-between">
               <div>
@@ -136,7 +136,7 @@
               <ChooseScreen></ChooseScreen>
             </div>
           </div>
-  
+
           <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
             <div style="color: #999">
               如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
@@ -145,8 +145,8 @@
               <ZoomUI></ZoomUI>
             </div>
           </div>
-  
-  
+
+
         </div>
         <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')" class="px-6">
           <div class="mt-3 mb-3 flex justify-center xt-bg-2" style="padding: 1em;border-radius: 8px 8px;color: white">
@@ -205,10 +205,10 @@
             </a-col>
           </a-row>
         </div>
-  
 
-        
-        
+
+
+
       </div>
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex">
@@ -228,7 +228,7 @@
         </xt-button>
         <xt-button  v-else-if="step == 4" class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
         </div>
-        
+
       </div>
     </div>
 
@@ -563,7 +563,7 @@ export default {
   font-size: 18px;
   text-align: center;
   color: var(--primary-text);
-  
+
 }
 
 .content{
@@ -623,7 +623,7 @@ export default {
 }
 
 .bg-image{
-  background-image: url('../../../public/img/defaultBg.jpg') !important;
+  background-image: url('https://a.apps.vip/icons/defaultBg.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
