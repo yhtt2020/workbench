@@ -110,12 +110,9 @@
         </div>
       </div>
     </div>
-
-    <div
-      style="flex: 1; height: 0"
-      v-if="currentDesk && currentDesk?.cards?.length > 0"
-    >
+    <xt-mix-menu :menus="menus" class="w-full h-full">
       <Desk
+        v-if="currentDesk && currentDesk?.cards?.length > 0"
         :deskGroupMenu="deskGroupMenu"
         @changeEditing="editing = !editing"
         :global-settings="settings"
@@ -129,180 +126,86 @@
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
         </template>
-
-        <template #outMenu>
-          <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-            <xt-task :modelValue="mixTask" to="" @cb="showAddDeskForm">
-              <a-col>
-                <div @click="showAddDeskForm" class="btn">
-                  <Icon style="font-size: 3em" icon="desktop"></Icon>
-                  <div><span>添加桌面</span></div>
-                </div>
-              </a-col>
-            </xt-task>
-
-            <a-col>
-              <div @click="importDesk" class="btn">
-                <Icon style="font-size: 3em" icon="daoru"></Icon>
-                <div><span>导入桌面</span></div>
-              </div>
-            </a-col>
-            <a-col>
-              <div
-                v-if="this.currentDesk?.lock"
-                class="btn"
-                style="opacity: 0.5"
-              >
-                <Icon style="font-size: 3em" icon="shanchu"></Icon>
-                <div><span>删除桌面</span></div>
-              </div>
-              <div v-else @click="delDesk" class="btn">
-                <Icon style="font-size: 3em" icon="shanchu"></Icon>
-                <div><span>删除桌面</span></div>
-              </div>
-            </a-col>
-            <a-col>
-              <div @click="shareDesk" class="btn">
-                <Icon style="font-size: 3em" icon="fenxiang"></Icon>
-                <div><span>分享桌面</span></div>
-              </div>
-            </a-col>
-            <a-col>
-              <div @click="exportDesk" class="btn">
-                <Icon style="font-size: 3em" icon="upload"></Icon>
-                <div><span>导出桌面</span></div>
-              </div>
-            </a-col>
-          </a-row>
-        </template>
       </Desk>
-    </div>
-    <template v-else>
-      <slot name="empty">
-        <div
-          class="s-bg rounded-3xl p-4"
-          style="width: 80%; height: auto; margin: auto"
-        >
-          <div class="text-center">
-            <div
-              class="line-title xt-text"
-              style="font-size: 24px; margin-bottom: 10px"
-            >
-              欢迎使用完全DIY的卡片桌面
-            </div>
-
-            <!--            <p style="font-size: 16px">-->
-            <!--              <strong class="xt-text"><icon icon="smile" style="font-size: 1.2em"></icon> 您可以通过桌面设置调节卡片到合适的大小</strong>-->
-            <!--            </p>-->
-            <div
-              class="w-full flex justify-items-center justify-center align-items-center"
-            >
-              <xt-button
-                :w="160"
-                style="color: var(--active-text)"
-                @click="moreDesk"
-                class="mr-10 xt-active-bg rounded-full border-none"
-                key="console"
-                type="primary"
-              >
-                <icon class="mr-1" icon="shop" style="font-size: 18px"></icon
-                >&nbsp;查看桌面市场
-              </xt-button>
-              <xt-button
-                :w="140"
-                @click="newAddCard"
-                class="mr-10 rounded-full xt-bg-2 border-none"
-                key="console"
-              >
-                <icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
-              </xt-button>
-            </div>
-          </div>
-          <div class="text-center mt-5 xt-text" style="font-size: 18px">
-            推荐桌面
-          </div>
-          <vue-custom-scrollbar
-            :scrollbarSettings="scrollbarSettings"
-            class="mt-3"
-            style="width: 100%; height: 315px"
+      <template v-else>
+        <slot name="empty">
+          <div
+            class="w-full h-full xt-b"
+            style="border: 1px solid red; height: 100% !important"
           >
-            <DeskMarket
-              :wrapperStyle="{
-                height: '100%',
-                flexWrap: 'nowrap',
-                overflow: 'visible',
-                width: 'auto',
-              }"
-              :desks="deskList"
-              :items="recommendList"
-              :closeParent="true"
-              @openPreview="openPreview"
-              deskItemStyle="width:385px; height:300px"
-            ></DeskMarket>
-          </vue-custom-scrollbar>
-        </div>
-      </slot>
-      <span v-show="false">
-        <Desk
-          ref="currentDeskRef"
-          :currentDesk="currentDesk"
-          :deskGroupMenu="deskGroupMenu"
-          :key="key"
-          :editing="editing"
-        >
-          <template #outMenu>
-            <a-row class="text-center" style="margin-top: 20px" :gutter="20">
-              <a-col>
-                <div @click="showAddDeskForm" class="btn">
-                  <xt-new-icon icon="fluent:eye-off-16-regular" size="42" />
-                  <div><span>添加桌面</span></div>
-                </div>
-              </a-col>
-              <a-col>
-                <div @click="importDesk" class="btn">
-                  <xt-new-icon
-                    icon="fluent:arrow-download-20-filled"
-                    size="42"
-                  />
-
-                  <div><span>导入桌面</span></div>
-                </div>
-              </a-col>
-              <a-col>
+            <div class="s-bg rounded-3xl p-4" style="width: 80%; margin: auto">
+              <div class="text-center">
                 <div
-                  v-if="this.currentDesk?.lock"
-                  class="btn"
-                  style="opacity: 0.5"
+                  class="line-title xt-text"
+                  style="font-size: 24px; margin-bottom: 10px"
                 >
-                  <xt-new-icon icon="akar-icons:trash-can" size="42" />
-
-                  <div><span>删除桌面</span></div>
+                  欢迎使用完全DIY的卡片桌面
                 </div>
-                <div v-else @click="delDesk" class="btn">
-                  <Icon style="font-size: 3em" icon="shanchu"></Icon>
-                  <div><span>删除桌面</span></div>
+                <div
+                  class="w-full flex justify-items-center justify-center align-items-center"
+                >
+                  <xt-button
+                    :w="160"
+                    style="color: var(--active-text)"
+                    @click="moreDesk"
+                    class="mr-10 xt-active-bg rounded-full border-none"
+                    key="console"
+                    type="primary"
+                  >
+                    <icon
+                      class="mr-1"
+                      icon="shop"
+                      style="font-size: 18px"
+                    ></icon
+                    >&nbsp;查看桌面市场
+                  </xt-button>
+                  <xt-button
+                    :w="140"
+                    @click="newAddCard"
+                    class="mr-10 rounded-full xt-bg-2 border-none"
+                    key="console"
+                  >
+                    <icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
+                  </xt-button>
                 </div>
-              </a-col>
-              <a-col>
-                <div @click="shareDesk" class="btn">
-                  <xt-new-icon
-                    icon="fluent:share-android-24-regular"
-                    size="42"
-                  />
-                  <div><span>分享桌面</span></div>
-                </div>
-              </a-col>
-              <a-col>
-                <div @click="exportDesk" class="btn">
-                  <xt-new-icon icon="fluent:open-20-filled" size="42" />
-                  <div><span>导出桌面</span></div>
-                </div>
-              </a-col>
-            </a-row>
-          </template>
-        </Desk>
-      </span>
-    </template>
+              </div>
+              <div class="text-center mt-5 xt-text" style="font-size: 18px">
+                推荐桌面
+              </div>
+              <vue-custom-scrollbar
+                :scrollbarSettings="scrollbarSettings"
+                class="mt-3"
+                style="width: 100%; height: 315px"
+              >
+                <DeskMarket
+                  :wrapperStyle="{
+                    height: '100%',
+                    flexWrap: 'nowrap',
+                    overflow: 'visible',
+                    width: 'auto',
+                  }"
+                  :desks="deskList"
+                  :items="recommendList"
+                  :closeParent="true"
+                  @openPreview="openPreview"
+                  deskItemStyle="width:385px; height:300px"
+                ></DeskMarket>
+              </vue-custom-scrollbar>
+            </div>
+          </div>
+        </slot>
+        <span v-show="false">
+          <Desk
+            ref="currentDeskRef"
+            :currentDesk="currentDesk"
+            :deskGroupMenu="deskGroupMenu"
+            :key="key"
+            :editing="editing"
+          >
+          </Desk>
+        </span>
+      </template>
+    </xt-mix-menu>
   </div>
 
   <a-drawer
@@ -433,19 +336,6 @@
       @closePreview="closePreview"
     ></DeskPreview>
   </div>
-  <div
-    class=""
-    style="position: fixed; top: 0; right: 0; left: 0; bottom: 0; z-index: 999"
-    v-if="deskMarketVisible"
-  >
-    <NewAddCard
-      v-if="deskMarketVisible"
-      :deskList="deskList"
-      @onClose="hideMarket"
-      :desk="currentDesk"
-      :panelIndex="panelIndex"
-    ></NewAddCard>
-  </div>
 </template>
 
 <script lang="ts">
@@ -473,6 +363,7 @@ import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
 import RightMenu from "./RightMenu.vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
+import { useFloatMenuStore } from "./floatMenu/store";
 export default {
   name: "DeskGroup",
   components: {
@@ -623,6 +514,7 @@ export default {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useFreeLayoutStore, [
       "freeLayoutData",
       "freeLayoutState",
@@ -742,7 +634,7 @@ export default {
       this.deskMarketVisible = true;
     },
     setFullScreen(flag = true) {
-      this.$refs.currentDeskRef.setFullScreen(flag)
+      this.$refs.currentDeskRef.setFullScreen(flag);
     },
     showMenu() {
       this.$refs.currentDeskRef.showMenu();
@@ -752,7 +644,7 @@ export default {
     },
     setCurrentDeskId(id) {
       this.$emit("update:currentDeskId", id);
-      this.$emit('changeDesk',{id:id})
+      this.$emit("changeDesk", { id: id });
     },
     showAll() {
       this.allDeskListVisible = true;

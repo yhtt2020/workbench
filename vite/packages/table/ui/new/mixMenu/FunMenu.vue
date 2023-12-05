@@ -7,6 +7,7 @@
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
+    class="w-full h-full"
   >
     <slot> </slot>
     <template #cardSize>
@@ -23,8 +24,6 @@
       @close="drawerVisible = false"
     ></DefaultItem>
   </xt-drawer>
-
-
 </template>
 
 <script setup>
@@ -43,7 +42,7 @@ const props = defineProps({
     default: 0,
   },
 });
-const { menus, model,height } = toRefs(props);
+const { menus, model, height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
