@@ -1,19 +1,19 @@
 <template>
   <div v-if="fullScreen" class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
-      <xt-button
-        @click="setFullScreen(false)"
-        :w="40" :h="40" type="theme"
-      >
+      <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
       </xt-button>
     </div>
   </div>
   <div style="height: 100%; width: calc(100% - 00px)" v-if="currentDesk.cards">
-    <div style="width: 100%; height: 100%" :class="notTrigger ? 'trigger' : ''" class="m-auto"
-      v-if="currentDesk.cards.length === 0">
-       暂无卡片
-
+    <div
+      style="width: 100%; height: 100%"
+      :class="notTrigger ? 'trigger' : ''"
+      class="m-auto"
+      v-if="currentDesk.cards.length === 0"
+    >
+      暂无卡片
     </div>
     <FloatMenu
       v-if="editing"
@@ -33,22 +33,39 @@
       @contextmenu="showMenu"
     >
       <!-- 自由布局滚动 -->
-      <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
+      <FreeLayoutMask
+        v-if="isFreeLayout && $route.path == '/main' && freeLayout"
+      >
         <FreeLayoutScrollbar ref="freeLayoutScrollbar">
           <FreeLayoutCanvas class="home-widgets">
-            <FreeLayoutContainer :currentDesk="currentDesk" :currentID="currentDesk.id" :isDrag="editing">
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :currentID="currentDesk.id"
+              :isDrag="editing"
+            >
               <template #box="{ data }">
-                <component :desk="currentDesk" :is="data.name" :customIndex="data.id" :customData="data.customData" />
+                <component
+                  :desk="currentDesk"
+                  :is="data.name"
+                  :customIndex="data.id"
+                  :customData="data.customData"
+                />
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
         </FreeLayoutScrollbar>
       </FreeLayoutMask>
-      <vue-custom-scrollbar v-else class="no-drag" key="scrollbar" id="scrollerBar" :settings="{
-        ...scrollbarSettings,
-        suppressScrollY: settings.vDirection ? false : true,
-        suppressScrollX: settings.vDirection ? true : false,
-      }" style="
+      <vue-custom-scrollbar
+        v-else
+        class="no-drag"
+        key="scrollbar"
+        id="scrollerBar"
+        :settings="{
+          ...scrollbarSettings,
+          suppressScrollY: settings.vDirection ? false : true,
+          suppressScrollX: settings.vDirection ? true : false,
+        }"
+        style="
           position: relative;
           width: 100%;
           height: 100%;
@@ -56,37 +73,68 @@
           padding-right: 10px;
           display: flex;
           flex-direction: row;
-        ">
-        <div id="cardContent" ref="deskContainer" style="
+        "
+      >
+        <div
+          id="cardContent"
+          ref="deskContainer"
+          style="
             /*display: flex;*/
             /*align-items: center;*/
             /*align-content: center;*/
-          " :style="{
+          "
+          :style="{
             // 'flex-direction': settings.vDirection?'row':'column',
             'padding-top': this.usingSettings.marginTop + 'px',
             width: settings.vDirection ? '100%' : 'auto',
             height: settings.vDirection ? 'auto' : '100%',
-          }" :class="notTrigger ? 'trigger' : ''">
-          <vuuri v-show="showGrid" :key="key" v-if="currentDesk.cards.length > 0 && !hide" item-key="id" :get-item-margin="() => {
-              return usingSettings.cardMargin * this.adjustZoom + 'px';
-            }
-            " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :style="{
-    width: settings.vDirection ? '100%' : 'auto',
-    height: settings.vDirection ? 'auto' : '100%',
-  }" class="grid home-widgets" ref="grid" :options="muuriOptions">
+          }"
+          :class="notTrigger ? 'trigger' : ''"
+        >
+          <vuuri
+            v-show="showGrid"
+            :key="key"
+            v-if="currentDesk.cards.length > 0 && !hide"
+            item-key="id"
+            :get-item-margin="
+              () => {
+                return usingSettings.cardMargin * this.adjustZoom + 'px';
+              }
+            "
+            group-id="grid.id"
+            :drag-enabled="editing"
+            v-model="currentDesk.cards"
+            :style="{
+              width: settings.vDirection ? '100%' : 'auto',
+              height: settings.vDirection ? 'auto' : '100%',
+            }"
+            class="grid home-widgets"
+            ref="grid"
+            :options="muuriOptions"
+          >
             <template #item="{ item }">
-              <div :style="{
-                zoom: (
-                  (usingSettings.cardZoom * this.adjustZoom) /
-                  100
-                ).toFixed(2),
-              }">
-                <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData">
+              <div
+                :style="{
+                  zoom: (
+                    (usingSettings.cardZoom * this.adjustZoom) /
+                    100
+                  ).toFixed(2),
+                }"
+              >
+                <component
+                  :desk="currentDesk"
+                  :is="item.name"
+                  :customIndex="item.id"
+                  :customData="item.customData"
+                >
                 </component>
               </div>
             </template>
           </vuuri>
-          <div class="xt-text" v-show="!showGrid" style="
+          <div
+            class="xt-text"
+            v-show="!showGrid"
+            style="
               text-align: center;
               font-size: 32px;
               margin: auto;
@@ -94,7 +142,8 @@
               top: 50%;
               transform: translateY(-50%) translateX(-50%);
               left: 50%;
-            ">
+            "
+          >
             <loading-outlined />
           </div>
         </div>
@@ -102,24 +151,16 @@
     </RightMenu>
   </div>
 
-  <transition name="fade">
-    <div class="home-blur" style="
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 999;
-      " v-if="addCardVisible">
-      <NewAddCard @close="hideAddCard" @addSuccess="hideAddCard" :desk="currentDesk" @onBack="() => {
-          this.addCardVisible = false;
-        }
-        "></NewAddCard>
-    </div>
-  </transition>
-
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }" :width="120" :height="350" class="drawer"
-    style="z-index: 99999999999" placement="bottom" :visible="menuVisible" @close="onClose">
+  <a-drawer
+    :contentWrapperStyle="{ backgroundColor: '#1F1F1F' }"
+    :width="120"
+    :height="350"
+    class="drawer"
+    style="z-index: 99999999999"
+    placement="bottom"
+    :visible="menuVisible"
+    @close="onClose"
+  >
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <div style="height: 200px" class="hidden mb-3"></div>
       <xt-task id="M0101" no="2" to="" @cb="newAddCard()">
@@ -140,10 +181,15 @@
       </xt-task>
       <a-col>
         <div @click="toggleEditing" class="btn">
-          <xt-new-icon v-if="!this.editing" icon="fluent:window-new-16-regular" size="42" />
+          <xt-new-icon
+            v-if="!this.editing"
+            icon="fluent:window-new-16-regular"
+            size="42"
+          />
           <xt-new-icon v-else icon="fluent:record-stop-16-regular" size="42" />
           <div>
-            <span v-if="!this.editing">调整布局</span><span v-else style="color: red">停止调整</span>
+            <span v-if="!this.editing">调整布局</span
+            ><span v-else style="color: red">停止调整</span>
           </div>
         </div>
       </a-col>
@@ -192,10 +238,21 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxPadding="p-4 pb-0" :mask="0">
+  <xt-modal
+    v-model="settingVisible"
+    :footer="0"
+    title="桌面设置"
+    boxPadding="p-4 pb-0"
+    :mask="0"
+  >
     <template #header-center>
-      <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2" v-model="currentSettingTab"
-        :list="settingsTab"></XtTab>
+      <XtTab
+        v-if="settingVisible"
+        style="height: 34px; width: 300px"
+        boxClass="p-1 xt-bg-2"
+        v-model="currentSettingTab"
+        :list="settingsTab"
+      ></XtTab>
     </template>
     <div style="height: calc(80vh); width: 500px">
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
@@ -210,7 +267,9 @@
             <div>垂直布局</div>
             <a-switch v-model:checked="currentDesk.settings.vDirection" />
           </div>
-          <div class="my-34 text-sm xt-text-2">使桌面滚动方式改为垂直滚动。</div>
+          <div class="my-34 text-sm xt-text-2">
+            使桌面滚动方式改为垂直滚动。
+          </div>
 
           <hr class="my-4" />
           <div class="flex justify-between mb-4">
@@ -222,19 +281,36 @@
           </div>
           <template v-if="settings.enableZoom">
             <div class="mb-4">卡片缩放</div>
-            <a-slider @afterChange="update" :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
+            <a-slider
+              @afterChange="update"
+              :min="20"
+              :max="500"
+              v-model:value="settings.cardZoom"
+            ></a-slider>
             <hr class="my-4" />
 
             <div class="my-4">卡片空隙</div>
-            <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
+            <a-slider
+              :min="5"
+              :max="30"
+              v-model:value="settings.cardMargin"
+            ></a-slider>
             <hr class="my-4" />
 
             <div class="my-4">距离顶部</div>
-            <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
+            <a-slider
+              :min="0"
+              :max="200"
+              v-model:value="settings.marginTop"
+            ></a-slider>
           </template>
         </div>
-        <FreeLayoutState v-if="$route.path == '/main' && freeLayout" @scrollbarRedirect="freeLayoutScrollbarRedirect"
-          @scrollbarUpdate="freeLayoutScrollbarUpdate" :id="currentDesk.id"></FreeLayoutState>
+        <FreeLayoutState
+          v-if="$route.path == '/main' && freeLayout"
+          @scrollbarRedirect="freeLayoutScrollbarRedirect"
+          @scrollbarUpdate="freeLayoutScrollbarUpdate"
+          :id="currentDesk.id"
+        ></FreeLayoutState>
       </template>
       <template v-else>
         <template v-if="settings.enableZoom">
@@ -248,41 +324,89 @@
           <div class="my-4 text-sm xt-text-2">
             调节小组件的缩放比例，默认为100%。
           </div>
-          <a-slider @afterChange="update" :min="20" :max="500" v-model:value="globalSettings.cardZoom"></a-slider>
+          <a-slider
+            @afterChange="update"
+            :min="20"
+            :max="500"
+            v-model:value="globalSettings.cardZoom"
+          ></a-slider>
           <hr class="my-4" />
           <div class="mb-4">小组件间隙</div>
           <div class="my-4 text-sm xt-text-2">
             调节小组件之间的间距，默认为 12。
           </div>
-          <a-slider :min="5" :max="30" v-model:value="globalSettings.cardMargin"></a-slider>
+          <a-slider
+            :min="5"
+            :max="30"
+            v-model:value="globalSettings.cardMargin"
+          ></a-slider>
           <hr class="my-4" />
 
           <div class="mb-4">距离顶部</div>
           <div class="my-4 text-sm xt-text-2">
             调节小组件和「顶部状态栏」的间距。
           </div>
-          <a-slider :min="0" :max="200" v-model:value="globalSettings.marginTop"></a-slider>
+          <a-slider
+            :min="0"
+            :max="200"
+            v-model:value="globalSettings.marginTop"
+          ></a-slider>
         </div>
         <slot name="settingsAllAfter"> </slot>
       </template>
     </div>
   </xt-modal>
+
   <transition name="fade">
-    <div class="" style="
+    <div
+      class="home-blur"
+      style="
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         bottom: 0;
         z-index: 999;
-      " v-if="iconVisible">
-      <AddIcon @setCustoms="setCustoms" @close="iconHide" :desk="currentDesk"></AddIcon>
+      "
+      v-if="addCardVisible"
+    >
+      <NewAddCard
+        @close="hideAddCard"
+        @addSuccess="hideAddCard"
+        :desk="currentDesk"
+        @onBack="
+          () => {
+            this.addCardVisible = false;
+          }
+        "
+      ></NewAddCard>
     </div>
   </transition>
+  <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
+  <!-- <transition name="fade">
+    <div
+      class=""
+      style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      "
+      v-if="iconVisible"
+    >
+      <AddIcon
+        @setCustoms="setCustoms"
+        @close="iconHide"
+        :desk="currentDesk"
+      ></AddIcon>
+    </div>
+  </transition> -->
 </template>
 
 <script>
-import { navStore } from '../../store/nav'
+import { navStore } from "../../store/nav";
 import Muuri from "muuri";
 import { message, Modal } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
@@ -440,7 +564,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(navStore, ['navigationToggle']),
+    ...mapWritableState(navStore, ["navigationToggle"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
     ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
@@ -449,24 +573,24 @@ export default {
         // let arr = _.cloneDeep(this.deskGroupMenu[1].children);
         let arr = [...this.deskGroupMenu[1].children];
         let exists = arr.findIndex((item) => item.id === 4);
-        if (exists===-1) {
+        if (exists === -1) {
           arr.push({
             id: 4,
             newIcon: "fluent:circle-off-16-regular",
             name: "清空桌面",
-            fn: ()=>{
-              this.clear(this.currentDesk)
+            fn: () => {
+              this.clear(this.currentDesk);
             },
           });
-        }else{
-          arr.splice(exists,1,{
+        } else {
+          arr.splice(exists, 1, {
             id: 4,
             newIcon: "fluent:circle-off-16-regular",
             name: "清空桌面",
-            fn: ()=>{
-              this.clear(this.currentDesk)
+            fn: () => {
+              this.clear(this.currentDesk);
             },
-          })
+          });
         }
         arr.sort((a, b) => a.id - b.id);
         let deskGroupMenu = [...this.deskGroupMenu];
@@ -476,17 +600,23 @@ export default {
       return [];
     },
     navMenu() {
-      if (!this.navigationToggle[0] && !this.navigationToggle[1] && !this.navigationToggle[2]) {
+      if (
+        !this.navigationToggle[0] &&
+        !this.navigationToggle[1] &&
+        !this.navigationToggle[2]
+      ) {
         return [
           {
             id: 10,
-            newIcon: 'fluent:eye-16-regular',
-            name: '显示底部导航',
-            fn: () => { this.navigationToggle[2] = true }
-          }
-        ]
+            newIcon: "fluent:eye-16-regular",
+            name: "显示底部导航",
+            fn: () => {
+              this.navigationToggle[2] = true;
+            },
+          },
+        ];
       }
-      return []
+      return [];
     },
     deskMenus() {
       return [
@@ -594,8 +724,8 @@ export default {
     this.resetLayout();
   },
   unmounted() {
-    if(this.fullScreen){
-      this.fullScreen=false
+    if (this.fullScreen) {
+      this.fullScreen = false;
     }
     window.removeEventListener("resize", this.resizeHandler);
   },
@@ -660,23 +790,25 @@ export default {
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
           onOk: () => {
-            desk.cards.forEach(item=>{
+            desk.cards.forEach((item) => {
               //移除桌面相关的便签卡片
-              if (item.name === 'notes') {
-                tsbApi.db.find({
-                  selector: {
-                    _id: 'note:' + item.id,
-                  },
-                }).then(res=>{
-                   if (res?.docs.length) {
-                    tsbApi.db.put({
-                      ...res.docs[0],
-                      // isDelete:true,
-                      deskId:'',
-                      deskName:'',
-                    })
-                  }
-                })
+              if (item.name === "notes") {
+                tsbApi.db
+                  .find({
+                    selector: {
+                      _id: "note:" + item.id,
+                    },
+                  })
+                  .then((res) => {
+                    if (res?.docs.length) {
+                      tsbApi.db.put({
+                        ...res.docs[0],
+                        // isDelete:true,
+                        deskId: "",
+                        deskName: "",
+                      });
+                    }
+                  });
               }
             });
             desk.cards = [];
@@ -689,8 +821,8 @@ export default {
       }
     },
     newAddCard() {
+      console.log(111111111111);
       this.addCardVisible = true;
-      // addCardVisible
       this.menuVisible = false;
     },
     hideAddCard() {
@@ -783,7 +915,7 @@ export default {
       }
       return this.currentDesk.layoutSize;
     },
-    setFullScreen(flag, cb=null) {
+    setFullScreen(flag, cb = null) {
       this.stashLayout();
       this.fullScreen = flag;
       this.$nextTick(() => {

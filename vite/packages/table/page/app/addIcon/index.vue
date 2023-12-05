@@ -1,5 +1,5 @@
 <template>
-  <xt-old-modal @close="close()" title="批量添加图标"  :isFooter="false">
+  <xt-modal @no="close()" title="批量添加图标" :modelValue="1"  :footer="false">
     <main class="flex h-full p-1" style="min-width: 200px !important">
       <div style="" class="h-full">
         <div
@@ -65,7 +65,7 @@
         </XtButton>
       </xt-task>
     </footer>
-  </xt-old-modal>
+  </xt-modal>
 </template>
 
 <script>
@@ -195,6 +195,7 @@ export default {
     },
   },
   mounted() {
+    console.log('初始化');
     this.screenHeight =
       window.innerHeight || document.documentElement.clientHeight;
     this.screenWidth =
