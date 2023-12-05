@@ -101,6 +101,12 @@
 }
 // 按钮结束
 // 进度条开始
+.ant-slider-handle {
+  background: var(--active-bg) !important;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff !important;
+}
 .ant-slider-rail {
   background: var(--active-secondary-bg) !important;
 }
