@@ -771,21 +771,21 @@ export default {
     },
     delCurrentIcon(currentIndex, currentItem) {
       if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
-        this.delNavList(currentIndex)
+        this.removeFootNavigationList(currentIndex)
         return
       }
       let arr = []
-      if (this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList1.concat(this.otherNavList2)
-      } else if (this.otherSwitch1 && !this.otherSwitch2) {
-        arr = this.otherNavList1
-      } else if (!this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList2
+      if (this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.sideNavigationList.concat(this.rightNavigationList)
+      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
+        arr = this.sideNavigationList
+      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.rightNavigationList
       } else {
         message.info(`导航栏中至少保留一个「${currentItem.name}」`)
         return
       }
-      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
+      this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
     },
     // closeEdit(){
     //   this.editBar=false
