@@ -2,7 +2,6 @@ import {message, Modal, notification} from "ant-design-vue";
 import {RocketFilled} from "@ant-design/icons-vue";
 import {h} from 'vue'
 import {appStore} from "../../store";
-import {sendKeyboard} from "hmc-win32";
 
 const win32 = $models.win32
 
@@ -21,9 +20,6 @@ function doKey(item) {
     })
     return
   }
-  console.log('按下快捷键', item.keys)
-
-  console.log('sendkeys', Number(0xB3))
   let keys = [...item.keys]
   let mainKey = ''
   const map={
@@ -41,7 +37,6 @@ function doKey(item) {
     const lowerCase = key.toLowerCase()
     if (!['ctrl', 'shift', 'alt', 'win'].includes(lowerCase)) {
       mainKey = lowerCase
-      console.log('住建盘找到', mainKey)
     }
     if (mainKey.startsWith('f')) {
       //F1-n
@@ -71,7 +66,8 @@ function doKey(item) {
         return
       } else {
         notification.info({
-          message:'无效键位，请阅读说明。'
+          message:'无效键位，请阅读说明。',
+          key:'pressTip'
         })
         return false
       }
@@ -83,7 +79,8 @@ function doKey(item) {
   } catch (e) {
     notification.error({
       message: '执行键位失败，失败原因是：' + e,
-      duration: 10
+      duration: 10,
+      key:'pressTip'
     })
   }
   notification.info({
