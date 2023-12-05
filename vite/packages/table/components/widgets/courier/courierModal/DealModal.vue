@@ -1,19 +1,16 @@
 <template>
  <teleport to='body' >
-   <Modal v-model:visible="dealVisible" v-if="dealVisible" :blurFlag="true" style="z-index: 515;">
-    <div class="xt-text" style="width: 500px;height: 537px;">
-     <div class="w-full flex items-center justify-center py-4" style="position: relative;">
-      <span class="xt-text xt-font font-16 font-400">协议说明</span>
-      <div class="flex right-button">
-        <xt-button w="32" h="32" style="border-radius: 8px !important;" @click="dealVisible = false">
-          <div class="flex items-center justify-center">
-            <DealIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
-          </div>
-        </xt-button>
-      </div>
-     </div>
+   <xt-modal :footer="false" v-model="dealVisible" v-if="dealVisible" title="协议说明" :blurFlag="true" :index="1002">
+     <template #footer>
+       <div class="flex justify-end items-center p-4" style="height: 72px;">
+         <xt-button w="64" h="40" class="mr-3" @click="dealVisible = false">取消</xt-button>
+         <xt-button w="64" h="40" type="theme" @click="agreeRelevance">同意</xt-button>
+       </div>
+     </template>
+    <div class="xt-text h-full" style="width: 500px;height: 537px;">
 
-     <div class="px-6 flex flex-col">
+
+     <div class="px-6 flex flex-col  h-full">
       <div class="flex xt-bg-2 px-4 py-3 flex-col rounded-lg mb-3">
         <span class="xt-text-2 font-400 font-14 ">
           请阅读以下协议说明内容，同意后将打开对应的登录网页，完成登录操作即可。
@@ -28,17 +25,14 @@
       </div>
 
 
-      <div class="flex xt-bg-2 items-center justify-center rounded-lg p-4" style="height: 264px;">
+      <div class="flex xt-bg-2 items-center justify-center rounded-lg p-4" style="height:100%">
        <Article style="line-height: 1.2" contentStyle="content-style" :showTitle="false" art-name="courier_bind_protocol"></Article>
       </div>
      </div>
 
-     <div class="flex justify-end items-center p-4" style="height: 72px;">
-      <xt-button w="64" h="40" class="mr-3" @click="dealVisible = false">取消</xt-button>
-      <xt-button w="64" h="40" type="theme" @click="agreeRelevance">同意</xt-button>
-     </div>
+
     </div>
-   </Modal>
+   </xt-modal>
  </teleport>
 </template>
 
