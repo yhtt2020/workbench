@@ -192,7 +192,7 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置">
+  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxPadding="p-4 pb-0" :mask="0">
     <template #header-center>
       <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2" v-model="currentSettingTab"
         :list="settingsTab"></XtTab>
@@ -513,7 +513,7 @@ export default {
         },
         {
           id: 6,
-          newIcon: "lets-icons:full",
+          newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏桌面",
           fn: this.setFullScreen,
         },
