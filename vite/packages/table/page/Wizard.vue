@@ -74,7 +74,7 @@
                 <div class="font-title">异常情况：触摸副屏，反馈在主屏的情况。</div>
               </a-col>
               <a-col :span="5" class="font-button">
-                矫正屏幕 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
+                设置触摸 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
                 <!-- <a-button v-if="screenSettingTab!=='touch'" type="primary"> 矫正屏幕
                 </a-button> -->
               </a-col>
@@ -107,7 +107,7 @@
             <div class="screen-section xt-text" style="line-height: 2;margin-top: 3em;padding: 32px;" v-if="screenSettingTab==='touch'">
               <p>
                 如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
-              <p class="xt-text-2">矫正方法：</p>
+              <p class="xt-text-2">设置方法：</p>
               <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
               <p class="flex justify-center">
                 <a class="mr-10 flex items-center"  @click="startAdjust">
@@ -463,7 +463,7 @@ export default {
       }, 300)
     },
     openVideo () {
-      browser.openInUserSelect('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
+      browser.openInSystem('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
     },
     setTableKeys (args) {
       let rs = ipc.sendSync('setTableShortcut', { shortcut: args.keys })
