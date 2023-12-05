@@ -12,17 +12,17 @@
   <vue-custom-scrollbar id="containerWrapper " class="  gap-4 item-content" :settings="settingsScroller" style="height:0;flex:1">
    <div class="w-full">
      <div class="card  s-bg p-4  " style="width: 200px;height:180px">
-       <div class="line-title ">壁纸源选择</div>
+       <div class="line-title xt-text">壁纸源选择</div>
        <div class="flex gap-2 item-content">
-         <div @click="selectSource('my')" class="select-item" :class="{active:settings.wallSource==='my'}">
+         <div @click="selectSource('my')" class="select-item xt-text" :class="{active:settings.wallSource==='my'}">
            <iconify style="font-size: 50px" icon="akar-icons:star"></iconify>
            <br>我的收藏
          </div>
-         <div  @click="selectSource('bing')" class="select-item" :class="{active:settings.wallSource==='bing'}">
+         <div  @click="selectSource('bing')" class="select-item xt-text" :class="{active:settings.wallSource==='bing'}">
            <iconify style="font-size: 50px"  icon="logos:bing"></iconify>
            <br>必应壁纸
          </div>
-         <div  @click="selectSource('picking')" class="select-item" :class="{active:settings.wallSource==='picking'}">
+         <div  @click="selectSource('picking')" class="select-item xt-text" :class="{active:settings.wallSource==='picking'}">
            <iconify  style="font-size: 50px"  icon="material-symbols:wallpaper-rounded"></iconify>
            <br>拾光壁纸
          </div>

@@ -29,7 +29,7 @@ body{
   background: var(--suspensionSelectBackGround, rgba(255,255,255,0.1));
 }
 .s-item{
-    background:var(--suspensionItemBackGround, rgba(0,0,0,0.30));
+    background:var(--secondary-bg);
   }//suspension-item
 .bottom-panel{
   .item{

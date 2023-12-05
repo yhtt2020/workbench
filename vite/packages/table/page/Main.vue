@@ -13,7 +13,7 @@
            style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
         <SidePanel sortId="left"
-                   :sideNavigationList="sideNavigationList"
+                   :navigationList="sideNavigationList"
                    :sortNavigationList="sortSideNavigationList"
                    :delNavList="removeSideNavigationList"
                    :otherSwitch1="navigationToggle[1]"
@@ -44,7 +44,7 @@
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
         <SidePanel sortId="right"
-                   :sideNavigationList="rightNavigationList"
+                   :navigationList="rightNavigationList"
                    :sortNavigationList="sortRightNavigationList"
                    :delNavList="removeRightNavigationList"
                    :otherSwitch1="navigationToggle[0]"

@@ -324,7 +324,6 @@ import AggregateSearch from "../components/widgets/aggregate/AggregateSearch.vue
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ShareDesk from "../components/desk/ShareDesk.vue";
 import DeskMarket from "./app/card/DeskMarket.vue";
-import { deskStore } from "../store/desk";
 import DeskPreview from "../components/desk/DeskPreview.vue";
 import ExportDesk from "../components/desk/ExportDesk.vue";
 import DeskGroup from "../components/desk/DeskGroup.vue";
@@ -533,7 +532,6 @@ export default {
       "settings",
       "desks",
       "moved",
-
       "lastHeight",
     ]),
     ...mapWritableState(appStore, [
@@ -550,7 +548,6 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
-    ...mapWritableState(deskStore, ["deskList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex"]),
 
@@ -933,6 +930,15 @@ export default {
     },
     changeDesk(p) {
       this.currentDeskId = p.id;
+      let found = this.desks.find(desk=>{
+        return desk.id===p.id
+      })
+      if(found){
+        this.currentDeskIndex= {
+          id:found.id,
+          title:found.name
+        }
+      }
     },
     doAddDesk() {
       if (this.deskTitle.trim() === "") {

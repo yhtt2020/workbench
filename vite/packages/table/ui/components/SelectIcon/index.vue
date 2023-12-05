@@ -84,9 +84,8 @@
     </div>
     <!-- 遮罩层 -->
     <div
-    v-show="modelValue"
-      @click.stop.self="colseClick()"
-      class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
+      @click.stop.self="closeClick()"
+      class="xt-mask h-full w-full top-0 left-0 ring-0 bottom-0"
       style="z-index:900"
     ></div>
       <!-- :style="{
@@ -199,7 +198,7 @@
       }else{
         emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
       }
-      colseClick()
+      closeClick()
     }
 
 
@@ -266,14 +265,14 @@
     // 确认上传
     const changeAvatar = () => {
         emits('getAvatar',avatarUrl.value)
-        colseClick();
+        closeClick();
     }
 
 
     const emits = defineEmits(["close", "ok", "modelValue",'getAvatar']);
     
     // 关闭
-    const colseClick = () => {
+    const closeClick = () => {
       emits("update:modelValue", false);
       emits("close");
     };
@@ -287,7 +286,7 @@
     // esc关闭
     const handleEscKeyPressed = (event) => {
       if (props.esc && event.keyCode === 27) {
-        colseClick();
+        closeClick();
       }
     };
     onMounted(() => {

@@ -17,7 +17,7 @@
               <Icon icon="sousuo" style="margin-right: 5px;"></Icon>
             </template>
           </a-input>
-          <a-select style=" z-index: 99999999; position: relative;" v-model:value="searchValue" class=" no-drag select"
+          <a-select style=" z-index: 99999999; position: relative;" v-model:value="orderType" class=" no-drag select"
             size="large" @change="handleChange"
             :dropdownStyle="{ 'z-index': 999999999999, backgroundColor: 'var(--secondary-bg)' }">
             <a-select-option class="no-drag" v-for=" item  in  searchOptions " :value="item.value">{{
@@ -66,8 +66,8 @@
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
           <!-- 进行数据筛选 将离线模式屏蔽的隐藏 -->
-          <NewCardPreViews @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
-              :navList="baseNavList[navIndex].children" :search="searchValue" :desk="desk">
+          <NewCardPreViews :allList="baseNavList[1].children" :keywords="keyword" @addSuccess="onBack" v-if="baseNavList[navIndex].children !== null"
+                           :cardList="baseNavList[navIndex].children" :search="orderType" :desk="desk">
           </NewCardPreViews>
           <template v-else>
 
@@ -80,7 +80,7 @@
       <div v-else-if="selectNav.name === 'desktop'" class="no-drag flex" style="height: 90%;">
         <NavMenu :list="categories" :currenIndex="categoryIndex" @changeNav="changeCategory"/>
         <div class="ml-5 no-drag w-full">
-          <DeskMarket :selected="searchValue" :items="desks"
+          <DeskMarket :selected="orderType" :items="desks"
                       @openPreview="openPreview"></DeskMarket>
           <!-- 预览 -->
           <DeskPreview @afterAdded="onBack" :deskList="deskList" :scheme="scheme" :showModal="showModal"
@@ -129,7 +129,7 @@ export default {
     return {
       navIndex: 0,
       selectContent: '',
-      searchValue: '默认排序',
+      orderType: '默认排序',
       baseNavList: NavList,
       searchOptions: [
         { value: 'default', name: '默认排序' },
@@ -270,6 +270,10 @@ export default {
     ...mapActions(cardStore, ['setDeskSize']),
     ...mapActions(offlineStore, ['getIsOffline']),
     doSearch(){
+      if(this.selectNav.name==='small'){
+        this.keyword=this.search.keywords
+        return
+      }
       if(this.search.keywords===''){
         this.cancelSearch()
         return
@@ -370,7 +374,7 @@ export default {
     },
     changeSelect (event) {
       // console.log('选择下拉',event)
-      this.searchValue = event
+      this.orderType = event
     },
     share () {
       this.openDrawer = true

@@ -35,7 +35,7 @@
           v-if="data.guide"
         />
 
-        <StatrTask :task="data" :isFirst="false" />
+        <StartTask :task="data" :isFirst="false" />
       </div>
     </xt-collapse>
   </template>
@@ -46,7 +46,7 @@
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../../store.ts";
-import StatrTask from "./StatrTask.vue";
+import StartTask from "./StartTask.vue";
 
 const sotre = taskStore();
 const { list } = storeToRefs(sotre);
@@ -70,7 +70,6 @@ const getCompletedTasks = computed(() => {
 
 const emits = defineEmits(["back"]);
 const back = () => {
-  console.log("111 :>> ", 111);
   emits("back");
 };
 </script>

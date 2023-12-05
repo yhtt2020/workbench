@@ -149,7 +149,7 @@ export const cardStore = defineStore(
       },
       getCurrentDesk() {
         let desk = this.desks.find(item => {
-          return item.nanoid === homeStore().currentDeskIndex.name
+          return item.id === homeStore().currentDeskId
         })
         return desk
       },
@@ -302,18 +302,17 @@ export const cardStore = defineStore(
 
 
       },
-      async addCard(value, desk, flag) {
+      async addCard(card, desk, flag) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
         //   return item.nanoid === this.currentDeskIndex.name
         // })
-
         // 便签卡片需要进行db存储
-        if (value.name == 'notes' && noteStore().initFlag && !flag) {
+        if (card.name == 'notes' && noteStore().initFlag && !flag) {
           let obj: any = {
-            ...value,
+            ...card,
             customData: {
-              ...value.customData,
+              ...card.customData,
               title: '桌面便签',
               background: "#57BF60",
               cardSize: 'card',
@@ -324,24 +323,22 @@ export const cardStore = defineStore(
               dragCardSize: 'card',
               content: '',
             },
-            _id: 'note:' + value.id,
-            updateTime: value.id,
-            createTime: value.id,
+            _id: 'note:' + card.id,
+            updateTime: card.id,
+            createTime: card.id,
+            content:'',
             name: 'notes',
             notes: 'notes',
             isDelete: false,
             deskName: desk.name,
             deskId: desk.id,
-
           }
           desk.cards.push(obj)
 
           await tsbApi.db.put(obj)
         } else {
-          desk.cards.push(value)
+          desk.cards.push(card)
         }
-
-        // desk.cards.push(value)
       },
       /**
        * 更新组件的customData，多个值的变更请一次性提交，newData为对象
@@ -363,8 +360,6 @@ export const cardStore = defineStore(
         findCard.customData = {...findCard.customData, ...newData}
       },
       async removeCard(customIndex, desk, flag) {
-  
-
         let currentDesk = this.getCurrentDesk()
         desk = desk || currentDesk
         desk.cards.splice(desk.cards.findIndex(item => {
