@@ -68,7 +68,6 @@ import CoolWidget from "../card/CoolWidget.vue";
 import AIaides from "../widgets/AIaides.vue";
 import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/YuanCommunity.vue";
-import RightMenu from "./RightMenu.vue";
 import Courier from "../widgets/courier/Courier.vue";
 
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
@@ -90,7 +89,6 @@ export default {
     FreeLayoutCanvas,
     FreeLayoutMask,
     FreeLayoutState,
-    RightMenu,
     GameInformation,
     HistoryInfo,
     ShortcutKey,

@@ -27,7 +27,7 @@
             :icon="item[`${icon}`]"
           ></XtBaseIcon>
           <div v-if="item[`${name}`]" :class="[item[`${icon}`] ? 'ml-1' : '']">
-            {{ item[`${name}`] }}
+           <a-radio> {{ item[`${name}`] }}</a-radio>
           </div>
         </div>
       </a-tooltip>

@@ -89,7 +89,7 @@
           <a-tooltip title="菜单" placement="bottom">
             <div class="pl-3">
               <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
-                <RightMenu
+                <xt-mix-menu
                   :menus="$refs.currentDeskRef?.dropdownMenu"
                   model="all"
                   :stopPropagation="false"
@@ -103,7 +103,7 @@
                       icon="fluent:more-horizontal-16-filled"
                     />
                   </div>
-                </RightMenu>
+                </xt-mix-menu>
               </xt-task>
             </div>
           </a-tooltip>
@@ -361,13 +361,11 @@ import { marketStore } from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
-import RightMenu from "./RightMenu.vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 export default {
   name: "DeskGroup",
   components: {
-    RightMenu,
     Emoji,
     VueCustomScrollbar,
     Icon,

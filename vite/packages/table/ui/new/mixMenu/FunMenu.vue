@@ -61,7 +61,7 @@ const defaultList = computed(() => {
   let list = [];
   h.value = 200 + height.value;
 
-  menus.value?.forEach((item) => {
+  menus?.value?.forEach((item) => {
     if (item?.children) {
       item.children.forEach((it) => {
         list.push(it);

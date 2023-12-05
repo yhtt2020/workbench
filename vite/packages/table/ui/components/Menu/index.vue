@@ -20,7 +20,7 @@
           @mouseover="handleStartLock()"
         >
           <slot name="menu">
-            <div class="list w-full h-full p-2">
+            <div class="list w-full h-full px-2">
               <Menus
                 @handleClick="handleItemCallBack"
                 :menus="menus"
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
   .list {
     border-radius: 12px;
     box-sizing: border-box;
-    padding-bottom: 10px;
+    padding-bottom: 2px;
     overflow: hidden;
   }
 }

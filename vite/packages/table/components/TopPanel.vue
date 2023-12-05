@@ -1,5 +1,5 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow pt-2.5 mb-2.5 drag">
+  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow  mb-2.5 drag">
     <div id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5 drag  items-center">
      <div class="no-drag flex">
       <a-tooltip>

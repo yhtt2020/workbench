@@ -5,7 +5,7 @@ export const useFloatMenuStore = defineStore("useFloatMenuStore", {
   state: () => ({
     x: 40,
     y: 40,
-    menus: {},
+    menus: [],
   }),
   getters: {},
   actions: {},
