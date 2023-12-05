@@ -68,7 +68,7 @@ export default {
           centered:true,
           onOk: async ()=>{
             const res = await community.removeCategory(data.revID.id,props.no);
-            message.success('res.info');
+            message.success(`${res.info}`);
           }
         })
       }
@@ -88,7 +88,7 @@ export default {
             centered:true,
             onOk: async ()=>{
               const res = await community.removeCategory(data.revID.id,props.no);
-              message.success('res.info');
+              message.success(`${res.info}`);
             }
           })
         }

@@ -105,14 +105,9 @@ export default {
 
   computed:{
     ...mapWritableState(chatStore,['settings','contactsSet']),
-    ...mapWritableState(communityStore,[]),
-    // 'getCommunityDetail'
     isFloat(){
       return this.settings.enableHide
     },
-    detailData(){
-      // return this.getCommunityDetail(this.routeData)
-    }
   },
 
   async mounted(){
@@ -121,17 +116,15 @@ export default {
     // 监听当前事件触发
     this.$mit.on('clickItem',(item)=>{
       this.currentItem(item);
-      // this.updateMsgStatus();
     })
     this.$mit.on('currentSet',(args)=>{
-      console.log('查看args',args);
       this.currentChannel = args
     })
   },
 
   methods:{
     updateColumn(){},
-    ...mapActions(communityStore,['updateMsgStatus']),
+    ...mapActions(communityStore,['updateMsgStatus','getCommunityTree']),
     // 当前点击
     async currentItem(item){
       // 链接
@@ -210,6 +203,7 @@ export default {
     '$route':{
       handler(to,from){
        this.routeData = to.params.no
+      //  this.getCommunityTree(to.params.no)
       },
       immediate:true,
       deep:true,

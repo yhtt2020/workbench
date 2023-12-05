@@ -106,8 +106,8 @@
   </div>
 
   <AddNewCategory ref="addCategoryRef" :no="no"/>
- <AddNewGroup ref="addNewRef" :no="no"/>
- <!-- <AddInvite ref="addInviteRef" :no="no"/> -->
+  <AddNewGroup ref="addNewRef" :no="no"/>
+  <!-- <AddInvite ref="addInviteRef" :no="no"/> -->
 </template>
 
 <script setup>
@@ -235,24 +235,21 @@ const data = reactive({
 const floatData = computed(()=>{
   // 通过定义临时缓存来获取社群频道树状数据和基本信息以及社群ID号no
   const infoArr = community.value.communityList;
-  const treeArr = community.value.communityTree; 
-  // 定义临时变量来判断数据列表是否为空列表，以及做容错处理
-  const arrNull = infoArr.length !== 0 && treeArr.length !== 0;
+  const treeArr  = community.value.communityTree;
+  const arrNull = infoArr.length !== 0;
   if(arrNull){
     const no = props.no;
     const findInfo = _.find(infoArr,function(find){ return String(find.no) === String(no) });
-    const findTree = _.find(treeArr,function(find){ return String(find.no) === String(no) });
-    console.log('执行......查看数据是否更新',findTree?.tree);
-    // 定义临时变量来判断通过find方法取出社群基础信息和频道列表数据是否为空，以及做容错处理
+    const findTree = _.find(treeArr,function(find){ return String(find.no) === String(no) })
     const findNull = findInfo !== undefined && findTree !== undefined;
     if(findNull){
       // 定义一个空对象来解构findInfo数据，因为通过 ... 不能直接解构，会产生报错
       const data = { info:findInfo };
-      return {...data.info,tree:findTree.tree};
+      return {
+        ...data.info,
+        tree:findTree.tree,
+      }
     }
-  }
-  else{
-    return {};
   }
 })
 // 通过计算属性来判断社群中间部分是单列还是双列
@@ -267,7 +264,7 @@ const suspension = computed(()=>{
 const dropMenuList = computed(()=>{
   const findInfo = _.find(community.value.communityList,function (find) { return String(find.no) === String(props.no); });
   // 社群是否为创建者
-  const isAdmin = findInfo.role !== 'member';
+  const isAdmin = findInfo?.role !== 'member';
   // 判断有没有开启悬浮模式
   const isSuspension = suspension.value;
   if(isAdmin){
@@ -281,12 +278,10 @@ const dropMenuList = computed(()=>{
 })
 // 获取父级列表
 const channelArr = computed(()=>{
-  const arrNull = floatData.value.tree.length !== 0;
-  if(arrNull){
-    const tree = floatData.value.tree;
-    const filterTree = tree.filter((item)=>{
-      return item.role === 'channel';
-    })
+  const list = floatData.value.tree;
+  const listNull = list.length !== 0;
+  if(listNull){
+    const filterTree = _.filter(list,function(item){ return item.role === 'channel'; })
     return filterTree
   }else{
     return []

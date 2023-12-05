@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia';
 import { communityStore } from '../store/communityStore';
+import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
@@ -14,49 +15,59 @@ function getUnReadCount(groupID:any){
 
 // 将社群频道目录进行更换
 export function updateTree(list:any){
- const listNull = list.length !== 0;
- if(listNull){
-  const mapList = list.map((item:any)=>{
-    // 判断是否存在子列表
-    const hasChildren = item.hasOwnProperty('children'); 
-    if(hasChildren){
-      const childrenList = item.children.map((children:any)=>{
-        const childrenType  = children.type === 'group';
-        const jsonChildren = JSON.parse(children.props);
-        if(childrenType){
-          const result = getUnReadCount(jsonChildren.groupID);
-          return {...item,props:{...jsonChildren,unread:result.unreadCount}};
-        }
+  const listNull = list.length !== 0;
+  if(listNull){
+    const mapList = list.map((mapItem:any)=>{
+      const hasChildren = mapItem.hasOwnProperty('children');
+      if(hasChildren){
+        const children = mapItem.children.map((item:any)=>{
+          const type = item.type === 'group';
+          const jsonItem = JSON.parse(item.props);
+          if(type){
+            const result = getUnReadCount(jsonItem.groupID);
+            return {...item,props:{...jsonItem,unread:result.unreadCount}}
+          }
 
-        else{
-          return {...children,props:{...jsonChildren}};
+          else{
+            return {...item,props:{...jsonItem}}
+          }
+        })
+        return {...mapItem,children:[...children]}
+      }
+      else{
+        const isGroup = mapItem.type === 'group';
+        if(isGroup){
+          const jsonItem = JSON.parse(mapItem.props);
+          const result = getUnReadCount(jsonItem.groupID);
+          const option = {...mapItem,props:{...jsonItem,unread:result.unreadCount}};
+          return option;
         }
-      })  
-      return {...item,children:childrenList};
-    }
-
-    else {
-      const type = item.type === 'group';
-      const jsonProps = JSON.parse(item.props);
-      if(type){
-        const result = getUnReadCount(jsonProps.groupID);
-        return {...item,props:{...jsonProps,unread:result.unreadCount}};
+        else {
+          const jsonItem = JSON.parse(mapItem.props);
+          if(jsonItem !== null){
+            const option = {...mapItem,props:{...jsonItem}};
+            return option;
+          }
+          else {
+            const option =  {...mapItem,props:null}
+            return option;
+          }
+        }
       }
-      else {
-        return {...item,props:{...jsonProps}};
-      }
-    }
-  })
-  return mapList;
- }
+    })
+    return mapList
+  }
+  else {
+   return []
+  }
 }
 
 // 计算消息状态提示总数
 export function communityTotal(no:any){
-  const com:any = communityStore();
-  const { community } = storeToRefs(com); 
-  const list = community.value.communityTree;
-  console.log('执行.....1-1',list,no);
+  // const com:any = communityStore();
+  // const { community } = storeToRefs(com); 
+  // const list = community.value.communityTree;
+  // console.log('执行.....1-1',list,no);
   
   // if(no !== undefined){
       //   const totalUnread = {

@@ -234,7 +234,13 @@ export default {
       nextTick(()=>{
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
-          com.getCommunityTree();
+          const list = community.value.communityList;
+          if(list.length !== 0){
+            for(const item of list){
+             const no = item.no;
+             com.updateCommunityTree(no)
+            }
+          }
         });
       })
     })

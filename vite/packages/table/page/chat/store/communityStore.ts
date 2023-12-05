@@ -21,9 +21,9 @@ export const communityStore = defineStore('communityStore',{
   state:()=>({
     community:{
       communityList:[], // 获取社群左侧列表
-      communityTree:[], // 获取社群树状列表
       communityRecommend:[], // 获取社群推荐数据
       categoryClass:[], // 用于存储新分组
+      communityTree:[], // 获取社群树状列表
     }
   }),
 
@@ -101,19 +101,13 @@ export const communityStore = defineStore('communityStore',{
     // 获取社群树状频道列表
     getCommunityTree(){
       const list = this.community.communityList;
-      const listNull = list.length !== 0;
-      if(listNull){
+      if(list.length !== 0){
         const newList = [];
         for(const item of list){
-          // 去重
-          const index = _.findIndex(newList,function(find:any){ return String(find.no) === String(item.no) });
-          // 获取no
-          const communityNo = item.communityInfo.no;
           // 请求数据配置项
-          const option = { communityNo:parseInt(communityNo), cache:1 };
+          const option = { communityNo:parseInt(item.no), cache:1 };
           const channel = post(getChannelList,option).then((res:any)=>{ return res });
           const tree = post(getChannelTree,option).then((res:any)=>{ return res });
-          // channel和tree同时进行
           Promise.all([channel,tree]).then((res:any)=>{
             const status = res[0].status === 1 && res[1].status === 1;
             if(status){
@@ -121,11 +115,37 @@ export const communityStore = defineStore('communityStore',{
               const channelList = res[0].data.list;
               const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
               const option = { no:item.no, tree: newArr, category:channelList};
-              if(index === -1){ newList.push(option as never); };
-            }
+              const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.no) });
+              if(index === -1){
+                newList.push(option as never);
+              }
+             }
           }); 
-        };
-        this.community.communityTree = newList
+        }
+        this.community.communityTree = newList;
+      }
+    },
+
+    // 更新社群树状对应数据
+    updateCommunityTree(no:any){
+      const list = this.community.communityTree;
+      const listNull = list.length !== 0;
+      if(listNull){
+        // 请求数据配置项
+        const option = { communityNo:parseInt(no), cache:1 };
+        const channel = post(getChannelList,option).then((res:any)=>{ return res });
+        const tree = post(getChannelTree,option).then((res:any)=>{ return res });
+        Promise.all([channel,tree]).then((res:any)=>{
+          const status = res[0].status === 1 && res[1].status === 1;
+          if(status){
+            const treeList = res[1].data.treeList;
+            const channelList = res[0].data.list;
+            const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
+            const option = { no:no, tree: newArr, category:channelList};
+            const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
+            this.community.communityTree.splice(index,1,option)
+           }
+        }); 
       }
     },
 
@@ -133,19 +153,16 @@ export const communityStore = defineStore('communityStore',{
     async createChannel(option:any,no:any){
       const res  = await post(createChannels,option);
       if(res.status === 1){
-        this.getCommunityTree();
+        this.updateCommunityTree(no);
         return res;
       }
     },
 
     // 删除社群频道
     async removeCategory(id:any,no:any){
-      // console.log('执行.......查看',this.community.communityTree);
-      console.log('执行...删除',id,no);
       const res = await  post(deleteCategory,{id:id});
-      console.log('执行.....删除结果',res);
       if(res.status === 1){
-        this.getCommunityTree();
+        this.updateCommunityTree(no);
         return res;
       }
     },
