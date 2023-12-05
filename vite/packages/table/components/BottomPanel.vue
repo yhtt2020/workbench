@@ -1,5 +1,5 @@
 <template>
-  <RightMenu :menus="rightMenus">
+  <xt-menu :menus="rightMenus" :name="name" :beforeCreate="menuState">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -13,8 +13,8 @@
         /* width: 160px; */
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
-        <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div>
-        <div v-show="settings.enableChat && !simple" class="ml-5 pointer">
+        <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
+        <div v-show="settings.enableChat && !simple" class="ml-3 pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -30,12 +30,13 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
-        max-width: 60%;
+        max-width: 80%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
         z-index: 99;
+        min-width: 70px;
       ">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
         <div style="
@@ -58,7 +59,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <RightMenu :menus="iconMenus">
+                    <xtMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
@@ -74,7 +75,7 @@
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
-                    </RightMenu>
+                    </xtMenu>
                   </a-tooltip>
                 </div>
 
@@ -165,39 +166,40 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
-    <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
-      placement="bottom" :visible="menuVisible" @close="onClose">
-      <a-row>
-        <a-col>
-          <div class="flex flex-wrap items-center">
-            <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-              <template v-if="item.icon == 'fluent:compose-16-regular'">
-                <xt-task id='M0104' no="2" @cb="editNavigation(item)">
-                  <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-                  <div><span>{{ item.title }}</span></div>
-                </xt-task>
-              </template>
-              <template v-else>
+  </xt-menu>
+  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+    placement="bottom" :visible="menuVisible" @close="onClose">
+    <a-row>
+      <a-col>
+        <div class="flex flex-wrap items-center">
+          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
+            <template v-if="item.icon == 'fluent:compose-16-regular'">
+              <xt-task id='M0104' no="2" @cb="editNavigation(item)">
                 <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
                 <div><span>{{ item.title }}</span></div>
-              </template>
+              </xt-task>
+            </template>
+            <template v-else>
+              <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
+              <div><span>{{ item.title }}</span></div>
+            </template>
 
-            </div>
-            <div @click="clickNavigation(item)" class=" btn extra-btn" v-for="item in builtInFeatures" :key="item.name">
-              <navIcon style="font-size: 3em;" :icon="item.icon"></navIcon>
-              <div>
-                <span>{{ item.name }}</span>
-              </div>
+          </div>
+          <div @click="clickNavigation(item)" class=" btn extra-btn" v-for="item in builtInFeatures" :key="item.name">
+            <navIcon style="font-size: 3em;" :icon="item.icon"></navIcon>
+            <div>
+              <span>{{ item.name }}</span>
             </div>
           </div>
+        </div>
 
-        </a-col>
-      </a-row>
-    </a-drawer>
+      </a-col>
+    </a-row>
+  </a-drawer>
 
 
 
-    <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
+  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
     class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row style="margin-top: 1em" :gutter="[20, 20]">
       <a-col>
@@ -210,24 +212,23 @@
     </a-row>
   </a-drawer> -->
 
-    <transition name="fade">
-      <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-        <!-- 老版 -->
-        <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-        <!-- 新版 -->
-        <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
-        </EditNewNavigation>
-        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
-        <!-- <component :is='componentId'></component> -->
-      </div>
-    </transition>
-
-    <div class="fixed inset-0 home-blur" style="z-index: 999; background: var(--mask-background-color)" v-if="changeFlag"
-      @click="closeChangeApp">
-      <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  <transition name="fade">
+    <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
+      <!-- 老版 -->
+      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
+      <!-- 新版 -->
+      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      </EditNewNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+      <!-- <component :is='componentId'></component> -->
     </div>
-    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
-  </RightMenu>
+  </transition>
+
+  <div class="fixed inset-0 home-blur" style="z-index: 999; background: var(--mask-background-color)" v-if="changeFlag"
+    @click="closeChangeApp">
+    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  </div>
+  <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
 
 <script>
@@ -270,8 +271,8 @@ import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/inde
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
-import RightMenu from "../components/desk/Rightmenu.vue";
 import { Notifications } from '../js/common/sessionNotice'
+import xtMenu from '../ui/components/Menu/index.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -295,7 +296,7 @@ export default {
     navigationSetting,
     AddIcon,
     EditNewNavigation,
-    RightMenu
+    xtMenu
   },
   data() {
     return {
@@ -338,21 +339,21 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:open-16-regular',
-          name: "打开",
-          fn: () => { this.clickNavigation(this.currentItem) },
+          label: "打开",
+          callBack: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
-          name: '编辑',
+          label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '删除',
+          label: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
+          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -360,39 +361,40 @@ export default {
         },
         {
           id: 5,
-          name: '添加导航图标',
+          label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       mainMenus: [
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
-          name: "添加导航图标",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          label: "添加导航图标",
+          label: "添加导航图标",
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 2,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '隐藏当前导航',
+          label: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2] = false },
+          callBack: () => { this.navigationToggle[2] = false },
         },
         {
           id: 4,
-          name: '更多',
+          label: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
 
@@ -404,30 +406,30 @@ export default {
         {
           type: "systemApp",
           newIcon: "fluent:lock-closed-16-regular",
-          name: "锁定屏幕",
+          label: "锁定屏幕",
           event: "lock",
-          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[0]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
-          name: "基础设置",
+          label: "基础设置",
           event: "setting",
-          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[1]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
-          name: "全屏显示",
+          label: "全屏显示",
           event: "fullscreen",
-          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[2]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
-          name: "设备设置",
+          label: "设备设置",
           event: "status",
-          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
       shakeElement: false,
@@ -541,27 +543,27 @@ export default {
       return [
         {
           id: 1,
-          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          label: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
           newIcon: "fluent:person-16-regular",
-          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+          callBack: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
         },
         {
           id: 2,
-          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          label: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
           newIcon: "fluent:people-community-16-regular",
-          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+          callBack: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
         },
         {
           id: 3,
-          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          label: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          callBack: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
         {
           id: 4,
-          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          label: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
-          fn: () => { this.settings.enableChat = !this.settings.enableChat }
+          callBack: () => { this.settings.enableChat = !this.settings.enableChat }
         },
       ]
 
@@ -611,6 +613,27 @@ export default {
         this.disableDrag()
       }
     },
+    simple(){
+      if(this.simple){
+        this.bottomToggle[0]=false
+        this.bottomToggle[1]=false
+        this.bottomToggle[2]=false
+      }else{
+        this.bottomToggle[0]=true
+        this.bottomToggle[1]=true
+        this.bottomToggle[2]=true
+      }
+    },
+    bottomToggle:{
+      deep:true,
+      handler(newV,oldV){
+        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
+          this.simple=false
+        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
+          this.simple=true
+        }
+      }
+    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -753,7 +776,6 @@ export default {
       this.editToggle = false
     },
     delCurrentIcon(currentIndex, currentItem) {
-      console.log(currentIndex, currentItem, '====>>>>11111');
       if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
         this.delNavList(currentIndex)
         return
@@ -825,7 +847,9 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-
+    menuState(){
+      return this.rightModel === 'follow'
+    },
     clickNavigation(item) {
       if (this.editToggle) {
         // this.enableDrag()

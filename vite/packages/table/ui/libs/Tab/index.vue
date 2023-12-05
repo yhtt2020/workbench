@@ -2,7 +2,7 @@
   <!-- 23/8/21扩展tooltip适配 -->
   <!-- 外层容器 -->
   <div
-    class="flex rounded-xl xt-container "
+    class="flex rounded-xl xt-container"
     :class="[mode == 'row' ? 'flex-row ' : 'flex-col', boxClass]"
     :style="[boxStyle]"
   >
@@ -27,7 +27,7 @@
             :icon="item[`${icon}`]"
           ></XtBaseIcon>
           <div v-if="item[`${name}`]" :class="[item[`${icon}`] ? 'ml-1' : '']">
-           <a-radio> {{ item[`${name}`] }}</a-radio>
+            {{ item[`${name}`] }}
           </div>
         </div>
       </a-tooltip>

@@ -130,8 +130,8 @@
       <template v-else>
         <slot name="empty">
           <div
-            class="w-full h-full xt-b"
-            style="border: 1px solid red; height: 100% !important"
+            class="w-full h-full"
+            style=" height: 100% !important"
           >
             <div class="s-bg rounded-3xl p-4" style="width: 80%; margin: auto">
               <div class="text-center">
