@@ -29,7 +29,7 @@
     <!-- 搜索按钮和设置按钮结束 -->
   </div>
 
-  <div v-if="this.searchWords" class="xt-bg pointer rounded-full p-2 text-center mx-10" @click="drawerVisible=true">
+  <div v-if="this.searchWords" class="xt-bg pointer rounded-full p-2 text-center xt-text mx-10" @click="drawerVisible=true">
     关键词：{{this.searchWords}} <close-circle-filled class="ml-3" @click.stop="this.searchWords='';this.doSearch()" />
   </div>
   <!-- 剪切板列表展示区域开始 -->

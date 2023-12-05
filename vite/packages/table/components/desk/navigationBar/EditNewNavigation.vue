@@ -22,7 +22,7 @@
                     <div class="ml-4 text-base xt-text">图标</div>
                 </div>
                 <div class="w-full h-[1px]  mt-3" style="background: var(--divider);"></div>
-                <div v-for="(item, index) in sideBar" style="border-radius: 10px;" :style="{
+                <div v-for="(item, index) in navList" style="border-radius: 10px;" :style="{
                     'background': currentIndex === index ? 'var(--active-secondary-bg)' : 'transparent'
                 }" @click="onSelect(index)"
                     class="flex flex-col justify-center mt-2 text-base xt-text hover-style w-[160px] h-[48px] pointer">
@@ -30,7 +30,7 @@
                 </div>
                 <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
                     <a-tooltip title="推荐">
-                        <xt-button :w="40" :h="40" @click="this.currentIndex = 0"><xt-new-icon
+                        <xt-button :w="40" :h="40" @click="backIntroduce" ><xt-new-icon
                                 icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
                     </a-tooltip>
 
@@ -70,23 +70,14 @@
                     </div>
                 </xt-button>
             </a-dropdown>
-            <!-- <xt-button class="ml-3" w="40" h="40" radius="8" @click="setQuick">
-                <xt-new-icon
-                  icon="fluent:dismiss-16-filled"
-                  size="16"
-                  class="xt-text-2"
-                />
-              </xt-button> -->
         </template>
         <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
             style="box-sizing: border-box;">
-            <Custom v-if="currentTag === 'custom'" />
-            <Introduce v-else ref="introduce" :recommendation="sideBar[currentIndex]" :selectList="this.otherList"
+            <Introduce  ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk">
-    </Msg>
+    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
 
     <!-- </div> -->
 </template>
@@ -231,15 +222,16 @@ export default {
             navHeight: 512,
             contentHeight: 420,
             contentWidth: 800,
-            modalVisible: false
+            modalVisible: false,
+            currentTitle:null
         }
     },
-    props: ['parentElement'],
     methods: {
         ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
         onSelect(index) {
             this.currentIndex = index
             this.inputValue = ''
+            this.currentTitle=null
         },
         setQuick() {
             this.$emit('setQuick')
@@ -277,6 +269,9 @@ export default {
                 this.navigationToggle[1] = true
                 this.modalVisible = false
             }
+        },
+        backIntroduce(){
+            this.currentTitle='recommendation'
         },
         // 拖拽
         mainDrop() {
@@ -390,7 +385,7 @@ export default {
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
             return this.ClassifyData.filter(i => {
-                const sideBarTag = this.sideBar[this.currentIndex].tag
+                const sideBarTag = this.navList[this.currentIndex].tag
                 // console.log(i)
                 // 离线模式下隐藏 创意市场
                 if (window.$isOffline) {
@@ -402,8 +397,8 @@ export default {
             })
         },
         otherList() {
-            const sideBarTag = this.sideBar[this.currentIndex].tag;
-            if (sideBarTag === 'recommendation') {
+            const sideBarTag = this.navList[this.currentIndex].tag;
+            if (sideBarTag === 'recommendation' || this.currentTitle==='recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {
                 return this.webList
@@ -412,7 +407,17 @@ export default {
             }
         },
         currentTag() {
-            return this.sideBar[this.currentIndex].tag
+            if(this.currentTitle==='recommendation'){
+                return 'recommendation'
+            }
+            return this.navList[this.currentIndex].tag
+        },
+        currentNavBar(){
+            if(this.currentTitle==='recommendation'){
+                return this.sideBar[0]
+            }else{
+                return this.navList[this.currentIndex]
+            }
         },
         // 当前添加图标的导航栏
         currentNav() {

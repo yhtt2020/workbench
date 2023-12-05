@@ -1,5 +1,5 @@
 <template>
-  <xt-old-modal @close="close()" title="批量添加图标"  :isFooter="false">
+  <xt-modal @no="close()" title="批量添加图标" :modelValue="1"  :footer="false">
     <main class="flex h-full p-1" style="min-width: 200px !important">
       <div style="" class="h-full">
         <div
@@ -59,13 +59,13 @@
         v-model:data="type"
         :list="linkList"
       ></XtTab>
-      <xt-task :modelValue="m02015" @cb="commitIcons">
+      <xt-task id="M0201" no="5" @cb="commitIcons">
         <XtButton type="theme" class="ml-2" @click="commitIcons()">
           确认
         </XtButton>
       </xt-task>
     </footer>
-  </xt-old-modal>
+  </xt-modal>
 </template>
 
 <script>
@@ -157,12 +157,10 @@ export default {
     m02013() {
       if (this.taskID == "M0201" && this.step == 3) {
         this.name = "Desktop";
-        return this.taskID == "M0201" && this.step == 3;
+        return this.taskID == "M0201"
       }
     },
-    m02015() {
-      return this.taskID == "M0201" && this.step == 5;
-    },
+
     height() {
       let h = this.screenHeight;
       if (h > 901) return 415;
@@ -197,6 +195,7 @@ export default {
     },
   },
   mounted() {
+    console.log('初始化');
     this.screenHeight =
       window.innerHeight || document.documentElement.clientHeight;
     this.screenWidth =

@@ -1,34 +1,16 @@
 <template>
   <div class="w-full h-full">
-    <!-- windows应用 -->
-    <!-- <div v-if="selectTag === 'tableApp'" class="mb-2  xt-bg-2 h-[54px] rounded-xl flex items-center p-2  justify-between">
-      <div class="text-base xt-text-2">选择windows桌面图标，支持多选批量添加。</div>
-      <div class="flex items-center ">
-        <div style="color:var(--active-bg)" class="mr-3 pointer" @click="addAllIcon">全选</div>
-        <xt-button w="107" h="32" radius="8" style="background: var(--active-bg);" @click="this.clickRightListItem(this.$refs.selectIcon.selectList)">
-          <div class="flex items-center justify-center" style="color: rgba(255, 255, 255, 0.85) !important;">
-            批量添加({{ this.$refs.selectIcon.selectList.length }})</div>
-        </xt-button>
-      </div>
-
-    </div> -->
     <div v-if="selectTag === 'recommendation'">
-      <div class="flex items-center p-2 mt-5 rounded-lg xt-bg-2 ">
+      <div class="flex items-center p-2 mt-3 rounded-lg xt-bg-2 ">
         <div class=" xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
-        <!-- <div class="pointer" style="color:var(--active-bg)" @click="addAllIcon">全部添加</div> -->
       </div>
     </div>
-    <!-- <div class="xt-text-2 w-[790px] h-[52px] xt-bg-2 rounded-xl flex items-center p-4" v-if="tagText">
-      {{ tagText }}</div> -->
-    <!-- {{ sideBar[currentIndex].tag == 'webNavigation' }} -->
-    <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
+    <div class="flex mt-3" v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
       <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent', 'color': clickIndex === index ? 'rgba(255, 255, 255, 0.85) !important' : 'var(--primary-text)' }"
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
-    <!-- <div class="flex " > -->
     <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
-      <!-- <div class="flex flex-wrap"> -->
       <template v-if="this.filterList.length > 0">
         <selectIcon :filterList="filterList" :recommendation="recommendation" ref="selectIcon"
           @clickRightListItem="clickListItem" />
@@ -39,11 +21,7 @@
         </div>
         <div class="mt-4 text-base xt-text">暂无数据</div>
       </div>
-      <!-- </div> -->
-
     </div>
-    <!-- </div> -->
-
   </div>
 </template>
 <script>
@@ -147,15 +125,6 @@ export default {
           break;
       }
     },
-    // 批量添加
-    // addIcon(item, index) {
-    //   // console.log(item,index,'item,index-->>>')
-    //   this.clickRightListItem(item, index)
-    // },
-    // 全部添加
-    // addAllIcon() {
-    //   this.clickRightListItem(this.filterList)
-    // },
     // 搜索目标图标
     filterIcon(list) {
       const inputValueLowerCase = this.inputValue.toLowerCase();

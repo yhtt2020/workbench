@@ -88,14 +88,6 @@ const menuState = computed(() => {
   return rightModel.value == "follow" ? true : false;
 });
 
-function beforeCreateMenu(e) {
-  return menuState.value;
-}
-const clickMenu = () => {
-  if (!menuState.value) {
-    menuVisible.value = true;
-  }
-};
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
   let array = [...menus.value];
@@ -159,12 +151,7 @@ const updateCardSize = (item) => {
 
   emits("update:sizeType", item);
 };
-const rightMenuState = () => {
-  if (!menuState.value) menuVisible.value = true;
-};
-const defaultMenuClick = () => {
-  if (!menuState.value && model.value == "all") menuVisible.value = true;
-};
+
 function indexAdd() {
   getFreeLayoutData.value[props.customIndex].index++;
 }

@@ -25,7 +25,6 @@ import {
   nextTick,
   computed,
 } from "vue";
-import { message } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -144,14 +143,8 @@ function handleKeyDown(event) {
     event.stopPropagation();
   }
   if ((event.ctrlKey && event.key === "A") || event.key === "a") {
+    console.log('1111 :>> ', 1111);
     isSelectAll.value = !isSelectAll.value;
-    if (isSelectAll.value) {
-      // message.success("Ctrl + A was pressed!");
-      
-
-    } else {
-    }
-
   }
 }
 // 键盘抬起

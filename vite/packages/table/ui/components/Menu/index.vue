@@ -1,8 +1,8 @@
 <template>
   <div
     ref="containerRef"
-    @click.prevent.stop="handleOpenMenu($event, 'click')"
-    @contextmenu.prevent.stop="handleOpenMenu($event, 'contextmenu')"
+    @click="handleOpenMenu($event, 'click')"
+    @contextmenu="handleOpenMenu($event, 'contextmenu')"
   >
     <slot></slot>
     <teleport to="body">
@@ -20,7 +20,7 @@
           @mouseover="handleStartLock()"
         >
           <slot name="menu">
-            <div class="list w-full h-full p-2">
+            <div class="list w-full h-full px-2">
               <Menus
                 @handleClick="handleItemCallBack"
                 :menus="menus"
@@ -44,7 +44,6 @@ import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
-// import type { MenuProps } from "./types";
 interface Menus {
   name: string;
   fn?: () => void;
@@ -56,9 +55,9 @@ export interface MenuProps {
   menus: Menus[];
   name?: string;
   fn?: string;
-  type?: string;
   lock?: boolean;
   model?: string;
+  stopPropagation?: boolean;
   beforeCreate?: () => boolean;
   beforeUnmount?: () => boolean;
 }
@@ -86,21 +85,22 @@ const props = withDefaults(defineProps<MenuProps>(), {
   ],
   name: "label",
   fn: "callBack",
-  type: "menu",
   lock: true,
   model: "contextmenu",
+  stopPropagation: true,
   beforeCreate: () => true,
   beforeUnmount: () => true,
 });
 
-const { type, model, lock, beforeCreate, beforeUnmount } = toRefs(props);
+const {  model, lock, stopPropagation, beforeCreate, beforeUnmount } =
+  toRefs(props);
 /**
  * 菜单回调
  * @mounted 菜单打开后
  * @selected 菜单项中时
- * @destroyed 菜单关闭后
+ * @unmounted  菜单关闭后
  */
-const emits = defineEmits(["mounted", "selected", "destroyed"]);
+const emits = defineEmits(["mounted", "selected", "unmounted"]);
 
 /**
  * 打开菜单
@@ -110,6 +110,10 @@ const menuX = ref(0);
 const menuY = ref(0);
 
 function handleOpenMenu(e: any, currentModel: string) {
+  if (stopPropagation.value) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
   if (!beforeCreate.value()) return;
 
   if (model.value != currentModel && model.value != "all") return;
@@ -141,7 +145,7 @@ function handleCloseMenu() {
   if (lockState.value) return;
   if (!beforeUnmount.value()) return;
   show.value = false;
-  emits("destroyed");
+  emits("unmounted");
 }
 
 // 获取 视图大小
@@ -218,7 +222,7 @@ onBeforeUnmount(() => {
   .list {
     border-radius: 12px;
     box-sizing: border-box;
-    padding-bottom: 10px;
+    padding-bottom: 2px;
     overflow: hidden;
   }
 }
