@@ -193,22 +193,12 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  window.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  window.removeEventListener("keyup", handleKeyUp, {
-    capture: true,
-  });
-  window.removeEventListener("mousedown", handleMouseDown, {
-    capture: true,
-  });
-  window.removeEventListener("mousemove", handleMouseMove, {
-    capture: true,
-  });
-  window.removeEventListener("mouseup", handleMouseUp, {
-    capture: true,
-  });
-  window.document.body.removeEventListener("keydown", ignoreSpace);
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+  window.removeEventListener("mousedown", handleMouseDown);
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("mouseup", handleMouseUp);
+  document.body.removeEventListener("keydown", ignoreSpace);
 });
 defineExpose({
   redirect,
