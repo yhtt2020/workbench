@@ -29,7 +29,6 @@ import config from './config'
 import { appStore } from '../../store'
 import { chatStore } from '../../store/chat';
 import _ from 'lodash-es';
-import { communityTotal } from './libs/utils'
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -99,11 +98,13 @@ export default {
 
     const unreadTotal = computed(()=>{
       const list = window.$TUIKit.store.store.TUIConversation.conversationList;
-      const total = { unread:0 };
-      for(const item of list){
-       total.unread += item.unreadCount;
+      if(list.length !== undefined &&  list.length !== 0){
+        const total = { unread:0 };
+        for(const item of list){
+         total.unread += item.unreadCount;
+        }
+        return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
       }
-      return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
     })
 
     /**初始ref定义数组**/
@@ -192,7 +193,6 @@ export default {
             type:`community${item.cno}`,
             route:{ name:'myCommunity',params:{no: item.no}},
             callBack:(item)=>{ selectTab(item) },
-            unread:communityTotal(item.no)?.unread,
           }
         });
         const mergeArray = bodyList.value.concat(mapCommunityData.concat(createCommunityList.value));
@@ -239,6 +239,7 @@ export default {
             for(const item of list){
              const no = item.no;
              com.updateCommunityTree(no)
+             com.updateCommunityUnRead()
             }
           }
         });

@@ -64,59 +64,48 @@ export function updateTree(list:any){
 
 // 计算消息状态提示总数
 export function communityTotal(no:any){
-  // const com:any = communityStore();
-  // const { community } = storeToRefs(com); 
-  // const list = community.value.communityTree;
-  // console.log('执行.....1-1',list,no);
-  
-  // if(no !== undefined){
-      //   const totalUnread = {
-      //     unread:0
-      //   };
-      //   const list = [];
-      //   const find = communityList.value.find((find)=>{
-      //     return String(find.no) === String(no);
-      //   })
-      //   if(find !== undefined){
-      //     for(const item of find.tree){
-      //       if(item.hasOwnProperty('children') && item.children.length !== 0){
-      //         for(const childrenItem of item.children){
-      //           if(childrenItem.type === 'group'){
-      //             const jsonChildren = JSON.parse(childrenItem.props);
-      //             const index = _.findIndex(list,(find)=>{
-      //              return String(find.groupID) === String(jsonChildren.groupID);
-      //             })
-      //             if(index === -1){
-      //               list.push(childrenItem);
-      //             }
-      //           }
-      //          }
-      //       }else{
-              
-      //         if(item.type === 'group'){
-      //           const jsonItem = JSON.parse(item.props);
-      //           const index = _.findIndex(list,(find)=>{
-      //           return String(find.groupID) === String(jsonItem.groupID);
-      //           })
-      //           if(index === -1){
-      //             list.push(item);
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      //   for(const item of list){
-      //     const jsonPropItem = JSON.parse(item.props);
-      //     if(jsonPropItem.hasOwnProperty('unread')){
-      //       totalUnread.unread += jsonPropItem.unread
-      //     }else{
-      //       totalUnread.unread = 0
-      //     }
-      //   }
-      //   // console.log('执行...排查',totalUnread.unread);
-      //   return totalUnread.unread;
-  // }
-
+  const com:any = communityStore();
+  const { community } = storeToRefs(com); 
+  const list = community.value.communityTree;
+  const find = _.find(list,function(find:any){ return String(find.no) === String(no) });
+  if(find !== undefined){
+    // 获取树状数据结构列表
+    const arr = find.tree;
+    const arrList:any = [];
+    const unreadTotal = {
+      unread:0,
+    };
+    for(const item of arr){
+      const type = item.type === 'group';
+      const hasChildren = item.hasOwnProperty('children');
+      if(type){ 
+        const jsonProp = item.props;
+        const index = _.findIndex(arrList,function(find:any){ return String(find.props.groupID) === String(jsonProp.groupID) });
+        if(index === -1){
+          arrList.push(item as never);
+        }
+      }
+      if(hasChildren){
+        for(const childrenItem of item.children){
+          const childrenType = childrenItem.type === 'group';
+          if(childrenType){
+            const jsonItem = childrenItem.props;
+            const childrenIndex = _.find(arrList,function(find:any){ return String(find.props.groupID) === String(jsonItem.groupID); });
+            if(childrenIndex === -1){
+              arrList.push(childrenItem as never);
+            }
+          }
+        }
+      }
+      
+    }
+    if(arrList.length !== 0){
+      for(const item of arrList){
+        unreadTotal.unread += item.unread;
+      }
+    }
+    return { unread:unreadTotal.unread === 0 ? 0 : unreadTotal.unread > 99 ? 99 : unreadTotal.unread };
+  }
   return {unread:0};
 }
 

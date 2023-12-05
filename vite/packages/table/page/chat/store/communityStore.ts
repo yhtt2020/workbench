@@ -4,7 +4,7 @@ import {sUrl} from "../../../consts";
 import {post} from "../../../js/axios/request";
 import { chatList } from '../../../js/data/chatList';
 import _ from 'lodash-es';
-import { updateTree } from '../libs/utils';
+import { updateTree ,communityTotal} from '../libs/utils';
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -74,6 +74,7 @@ export const communityStore = defineStore('communityStore',{
                 summary:null,
                 uid:mapItem.uid,
                 ...mapItem,
+                // unread:communityTotal(mapItem.no)?.unread,
               }
               return returnOption;
             }
@@ -147,6 +148,33 @@ export const communityStore = defineStore('communityStore',{
            }
         }); 
       }
+    },
+
+    // 更新社群左侧列表未读数据的总和
+    updateCommunityUnRead(){
+      const list = this.community.communityList;
+      const mapList = list.map((mapItem:any)=>{
+        const isCommunityInfo = mapItem.hasOwnProperty('communityInfo');
+        if(isCommunityInfo){
+          // 取出data下的数据进行操作,预防报错处理
+          const data = mapItem?.communityInfo;
+          // 将数据进行解构返回出去
+          const returnOption = {
+            ...data,
+            summary:null,
+            uid:mapItem.uid,
+            ...mapItem,
+            unread:communityTotal(mapItem.no)?.unread,
+          }
+          return returnOption;
+        }
+      })
+      const filterUndefined = _.filter(mapList,function(filterItem:any){
+        if(filterItem !== undefined){
+          return filterItem;
+        }
+      })
+      this.community.communityList = filterUndefined;
     },
 
     // 创建社群频道
