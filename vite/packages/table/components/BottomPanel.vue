@@ -30,7 +30,7 @@
         align-items: center;
         border-radius: 18px;
         height: 73px;
-        max-width: 60%;
+        max-width: 80%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
