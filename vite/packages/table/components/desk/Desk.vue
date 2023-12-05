@@ -192,7 +192,6 @@
     </a-row>
     <slot name="outMenu"></slot>
   </a-drawer>
-  <!-- <xt-modal v-model="settingVisible"> 1233</xt-modal> -->
   <xt-modal v-model="settingVisible" :footer="0" title="桌面设置">
     <template #header-center>
       <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2" v-model="currentSettingTab"
@@ -200,34 +199,34 @@
     </template>
     <div style="height: calc(80vh); width: 400px">
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
-        <div class="p-3 mb-3 text-base xt-bg-2 rounded-xl">
-          <div class="mb-3">桌面图标和名称</div>
+        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
+          <div class="mb-4">桌面图标和名称</div>
           <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
         </div>
-        <div class="p-3 mb-3 text-base xt-bg-2 rounded-xl">
-          <div class="flex justify-between mb-3">
+        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
+          <div class="flex justify-between mb-4">
             <div>垂直布局</div>
             <a-switch v-model:checked="currentDesk.settings.vDirection" />
           </div>
-          <div class="my-3 text-sm xt-text-2">使桌面滚动方式改为垂直滚动。</div>
-          <hr class="my-3" />
-          <div class="flex justify-between mb-3">
+          <div class="my-34 text-sm xt-text-2">使桌面滚动方式改为垂直滚动。</div>
+          <hr class="my-4" />
+          <div class="flex justify-between mb-4">
             <div>独立缩放</div>
             <a-switch v-model:checked="settings.enableZoom" @change="update" />
           </div>
-          <div class="my-3 text-sm xt-text-2">
+          <div class="my-4 text-sm xt-text-2">
             开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
           </div>
           <template v-if="settings.enableZoom">
-            <div class="mb-3">卡片缩放</div>
+            <div class="mb-4">卡片缩放</div>
             <a-slider @afterChange="update" :min="20" :max="500" v-model:value="settings.cardZoom"></a-slider>
-            <hr class="my-3" />
+            <hr class="my-4" />
 
-            <div class="my-3">卡片空隙</div>
+            <div class="my-4">卡片空隙</div>
             <a-slider :min="5" :max="30" v-model:value="settings.cardMargin"></a-slider>
-            <hr class="my-3" />
+            <hr class="my-4" />
 
-            <div class="my-3">距离顶部</div>
+            <div class="my-4">距离顶部</div>
             <a-slider :min="0" :max="200" v-model:value="settings.marginTop"></a-slider>
           </template>
         </div>
@@ -241,22 +240,22 @@
             当前桌面正在使用独立设置，此处设置对当前桌面不起作用。
           </div>
         </template>
-        <div class="p-3 mb-3 text-base xt-bg-2 rounded-xl">
-          <div class="mb-3">小组件缩放</div>
-          <div class="my-3 text-sm xt-text-2">
+        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
+          <div class="mb-4">小组件缩放</div>
+          <div class="my-4 text-sm xt-text-2">
             调节小组件的缩放比例，默认为100%。
           </div>
           <a-slider @afterChange="update" :min="20" :max="500" v-model:value="globalSettings.cardZoom"></a-slider>
-          <hr class="my-3" />
-          <div class="mb-3">小组件间隙</div>
-          <div class="my-3 text-sm xt-text-2">
+          <hr class="my-4" />
+          <div class="mb-4">小组件间隙</div>
+          <div class="my-4 text-sm xt-text-2">
             调节小组件之间的间距，默认为 12。
           </div>
           <a-slider :min="5" :max="30" v-model:value="globalSettings.cardMargin"></a-slider>
-          <hr class="my-3" />
+          <hr class="my-4" />
 
-          <div class="mb-3">距离顶部</div>
-          <div class="my-3 text-sm xt-text-2">
+          <div class="mb-4">距离顶部</div>
+          <div class="my-4 text-sm xt-text-2">
             调节小组件和「顶部状态栏」的间距。
           </div>
           <a-slider :min="0" :max="200" v-model:value="globalSettings.marginTop"></a-slider>

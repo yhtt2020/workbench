@@ -94,15 +94,15 @@
       v-model:currentDeskId="this.currentDeskId"
     >
       <template #settingsAll>
-        <div class="xt-bg-2 rounded-xl p-3 mb-4 text-base">
-          <div class="flex justify-between mb-3">
+        <div class="xt-bg-2 rounded-xl p-4 mb-4 text-base">
+          <div class="flex justify-between mb-4">
             <div>桌面背景</div>
           </div>
-          <div class="xt-text-2 text-sm my-3">
+          <div class="xt-text-2 text-sm my-4">
             选择喜欢的图片作为工作台桌面背景。
           </div>
           <div
-            class="xt-text-2 flex text-sm my-3"
+            class="xt-text-2 flex text-sm my-4"
             v-if="!appSettings.transparent"
           >
             <xt-task id="M0103" no="3" to=""> </xt-task>
@@ -126,62 +126,62 @@
               >清除背景</xt-button
             >
           </div>
-          <hr class="my-3" />
+          <hr class="my-4" />
 
           <template v-if="!appSettings.transparent">
-            <div class="flex justify-between mb-3">
+            <div class="flex justify-between mb-4">
               <div>背景模糊度</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">开启后增加背景模糊度</div>
-            <div class="xt-text-2 text-sm my-3">
+            <div class="xt-text-2 text-sm my-4">开启后增加背景模糊度</div>
+            <div class="xt-text-2 text-sm my-4">
               <a-slider
                 v-model:value="backgroundSettings.backGroundImgBlur"
                 :max="100"
                 :step="1"
               />
             </div>
-            <hr class="my-3" />
+            <hr class="my-4" />
           </template>
-          <div class="flex justify-between mb-3">
+          <div class="flex justify-between mb-4">
             <div>透明背景</div>
             <a-switch v-model:checked="appSettings.transparent" />
           </div>
-          <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
+          <div class="xt-text-2 text-sm mt-4">开启后透明背景</div>
         </div>
-        <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
-          <div class="p-3 xt-modal rounded-xl xt-text-2">
+        <div class="xt-bg-2 rounded-xl p-4 mb-1 text-base">
+          <div class="p-4 xt-modal rounded-xl xt-text-2">
             此类功能性能消耗较高，请酌情开启
           </div>
-          <div class="flex justify-between my-3">
+          <div class="flex justify-between my-4">
             <div>边框RGB灯</div>
             <a-switch v-model:checked="appSettings.houserun" />
           </div>
-          <div class="xt-text-2 text-sm my-3">
+          <div class="xt-text-2 text-sm my-4">
             在工作台窗口四周显示RGB效果。
           </div>
-          <hr class="my-3" />
-          <div class="flex justify-between mb-3">
+          <hr class="my-4" />
+          <div class="flex justify-between mb-4">
             <div>飘落效果</div>
             <a-switch v-model:checked="appSettings.down.enable" />
           </div>
-          <div class="xt-text-2 text-sm my-3">开启后页面会有炫酷的飘落效果</div>
-          <hr class="my-3" />
+          <div class="xt-text-2 text-sm my-4">开启后页面会有炫酷的飘落效果</div>
+          <hr class="my-4" />
           <template v-if="appSettings.down.enable">
-            <div class="flex justify-between my-3">
+            <div class="flex justify-between my-4">
               <div>飘落物</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">
+            <div class="xt-text-2 text-sm my-4">
               <xt-tab
                 class="h-10"
                 v-model="appSettings.down.type"
                 :list="fallingList"
               ></xt-tab>
             </div>
-            <hr class="my-3" />
-            <div class="flex justify-between my-3">
+            <hr class="my-4" />
+            <div class="flex justify-between my-4">
               <div>飘落物数量</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">
+            <div class="xt-text-2 text-sm my-4">
               <xt-input
                 v-model="appSettings.down.count"
                 class="xt-modal xt-b"

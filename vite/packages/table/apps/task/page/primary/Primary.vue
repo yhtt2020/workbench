@@ -33,7 +33,7 @@
       </div>
     </div>
   </template>
-  <div v-else>已完成所有任务</div>·
+  <div v-else>已完成所有任务</div>
 </template>
 
 <script setup>
