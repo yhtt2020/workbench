@@ -95,11 +95,14 @@ export default {
   },
 
   computed: {
-    // ...mapWritableState(communityStore, ["categoryClass"]),
+    ...mapWritableState(communityStore, ["community"]),
+    categoryClass(){
+      return this.community.categoryClass;
+    }
   },
 
   mounted(){
-    // this.getChannelList(this.no);
+    this.getChannelList(this.no);
     const el = this.$refs.classSortTab;
     new Sortable(el, {
       group: "sortableGroup",
@@ -109,7 +112,7 @@ export default {
 
   methods: {
     ...mapActions(communityStore,[
-      // 'removeCategory','createChannel','getChannelList',
+      'removeCategory','createChannel','getChannelList',
       // 'updateCategoryClass',
     ]),
     // 拖拽排序
@@ -140,7 +143,7 @@ export default {
     },
     // 添加新分组
     addClassItem(){
-      this.categoryClass.unshift({ name: "分类名称" });
+      this.community.categoryClass.unshift({ name: "分类名称" });
       this.edit(0);
     },
     // 编辑中
@@ -180,7 +183,7 @@ export default {
           }
         })
       }else{
-        const index = this.categoryClass.findIndex((findItem) => {
+        const index = this.community.categoryClass.findIndex((findItem) => {
           return findItem.name === item.name;
         });
         this.categoryClass.splice(index, 1);

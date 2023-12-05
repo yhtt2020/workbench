@@ -29,6 +29,7 @@ import config from './config'
 import { appStore } from '../../store'
 import { chatStore } from '../../store/chat';
 import _ from 'lodash-es';
+import { communityTotal } from './libs/utils'
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -49,11 +50,11 @@ export default {
 
   setup(props, ctx) {
     const com = communityStore();
+    const chat = chatStore();  
+    const appS = appStore();
     
     const { community } = storeToRefs(com);
-    const chat = chatStore();
     const { settings,contactsSet } = storeToRefs(chat)
-    const appS = appStore();
     const { userInfo } = appS;
     const router = useRouter()
     const route = useRoute()
@@ -75,10 +76,6 @@ export default {
       communityNo:1,
     })
 
-    // 聊天入口消息提示状态
-    const unReadNum = ref(0)  
-
-    /**事件开始**/ 
     //触发社群创建入口
     const createCommunity = () =>{  
       data.chatVisible = true
@@ -99,8 +96,6 @@ export default {
       data.addIndex = item.index
       data.chatVisible = true
     }
-    /**事件结束**/
-
 
     const unreadTotal = computed(()=>{
       const list = window.$TUIKit.store.store.TUIConversation.conversationList;
@@ -108,18 +103,16 @@ export default {
       for(const item of list){
        total.unread += item.unreadCount;
       }
-      console.log('执行.....测试11',total);
       return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
     })
 
-    /**初始ref定义数组开始**/
+    /**初始ref定义数组**/
     const headList = ref([
       {
         newIcon: "fluent:chat-16-regular",  tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
         unread: unreadTotal.value,
-        // getUnreadTotal().unread
       },
       {
         tab: "contact", newIcon: "fluent:people-16-regular",
@@ -145,7 +138,7 @@ export default {
         img: '/icons/logo128.png',   icon: '',float: "", id:0,
         noBg: true,tab:'community',type: 'community',
         route:{ name: 'defaultCommunity',params:{no:1} },
-        callBack: (item) => { selectTab(item) }
+        callBack: (item) => { selectTab(item) },
       },
     ])
     const footList = ref([
@@ -185,61 +178,8 @@ export default {
         callBack: () => { createCommunity() }
       },
     ])
-    /**初始ref定义数组结束**/
-
-    /**计算社群消息未读数的总和开始**/
-    // const mergeChildren = (no) =>{
-    //   if(no !== undefined){
-    //     const totalUnread = {
-    //       unread:0
-    //     };
-    //     const list = [];
-    //     const find = communityList.value.find((find)=>{
-    //       return String(find.no) === String(no);
-    //     })
-    //     if(find !== undefined){
-    //       for(const item of find.tree){
-    //         if(item.hasOwnProperty('children') && item.children.length !== 0){
-    //           for(const childrenItem of item.children){
-    //             if(childrenItem.type === 'group'){
-    //               const jsonChildren = JSON.parse(childrenItem.props);
-    //               const index = _.findIndex(list,(find)=>{
-    //                return String(find.groupID) === String(jsonChildren.groupID);
-    //               })
-    //               if(index === -1){
-    //                 list.push(childrenItem);
-    //               }
-    //             }
-    //            }
-    //         }else{
-              
-    //           if(item.type === 'group'){
-    //             const jsonItem = JSON.parse(item.props);
-    //             const index = _.findIndex(list,(find)=>{
-    //             return String(find.groupID) === String(jsonItem.groupID);
-    //             })
-    //             if(index === -1){
-    //               list.push(item);
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //     for(const item of list){
-    //       const jsonPropItem = JSON.parse(item.props);
-    //       if(jsonPropItem.hasOwnProperty('unread')){
-    //         totalUnread.unread += jsonPropItem.unread
-    //       }else{
-    //         totalUnread.unread = 0
-    //       }
-    //     }
-    //     // console.log('执行...排查',totalUnread.unread);
-    //     return totalUnread.unread;
-    //   }
-    // }
-    /**计算社群消息未读数的总和结束**/
-
-    /**监听communityList开始**/
+  
+    /**监听communityList**/
     watch(()=>community.value.communityList,(newVal)=>{
       const isNull = newVal.length !== undefined && newVal.length !== 0;
       if(isNull){
@@ -252,14 +192,15 @@ export default {
             type:`community${item.cno}`,
             route:{ name:'myCommunity',params:{no: item.no}},
             callBack:(item)=>{ selectTab(item) },
+            unread:communityTotal(item.no)?.unread,
           }
         });
         const mergeArray = bodyList.value.concat(mapCommunityData.concat(createCommunityList.value));
         bodyList.value = mergeArray;
       }
     })
-    /**监听communityList结束**/
-
+  
+    // 合并群聊左侧列表数据
     const filterList  = computed(()=>{
       const uniqueList = [];
       for(const item of bodyList.value){
@@ -269,7 +210,6 @@ export default {
         if(index === -1){
           const itemOption = {
             ...item,
-            // unread:mergeChildren(item.no) !== undefined && mergeChildren(item.no) !== 0  ? mergeChildren(item.no) : 0,
           }
           uniqueList.push(itemOption)
         }
@@ -289,25 +229,21 @@ export default {
       }
     })
     
-    /**初始化挂载开始**/
+    /**初始化挂载**/
     onMounted(()=>{
       nextTick(()=>{
-        // com.getMyCommunity();
-        // com.getCommunityTree();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
-          // com.getCommunityTree();
+          com.getCommunityTree();
         });
       })
     })
-    /**初始化挂载结束**/
 
     return{
       headList,bodyList,footList,
-      filterList, createCommunityList,unReadNum,
+      filterList, createCommunityList,
       ...toRefs(data),createCommunity,
       selectTab,triggerAddModal,
-      // mergeChildren,
     }
   }
  

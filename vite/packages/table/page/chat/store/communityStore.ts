@@ -20,9 +20,10 @@ const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频�
 export const communityStore = defineStore('communityStore',{
   state:()=>({
     community:{
-      communityList:[],
-      communityTree:[],
+      communityList:[], // 获取社群左侧列表
+      communityTree:[], // 获取社群树状列表
       communityRecommend:[], // 获取社群推荐数据
+      categoryClass:[], // 用于存储新分组
     }
   }),
 
@@ -132,35 +133,34 @@ export const communityStore = defineStore('communityStore',{
     async createChannel(option:any,no:any){
       const res  = await post(createChannels,option);
       if(res.status === 1){
-        //  this.getCommunityTree();
-        const option = { communityNo:parseInt(no), cache:1 };
-        post(getChannelTree,option).then((res)=>{
-          console.log('执行......测试',res);
-          console.log('执行.......查看',this.community.communityTree);
-        //  const option = {
-        //   no:no,
-        //   tree:res.data,
-        //  }
-       })
-       return res;
+        this.getCommunityTree();
+        return res;
       }
     },
 
     // 删除社群频道
     async removeCategory(id:any,no:any){
-      console.log('执行.......查看',this.community.communityTree);
-
-      // console.log('执行...删除',id,no);
-      // const res = await  post(deleteCategory,{id:id});
-      // console.log('执行.....删除结果',res);
-      // if(res.status === 1){
-      //   this.getCommunityTree();
-      //   return res;
-      // }
+      // console.log('执行.......查看',this.community.communityTree);
+      console.log('执行...删除',id,no);
+      const res = await  post(deleteCategory,{id:id});
+      console.log('执行.....删除结果',res);
+      if(res.status === 1){
+        this.getCommunityTree();
+        return res;
+      }
     },
 
+    // 获取社群分组
+    getChannelList(no:any){
+      const isNum = isNaN(parseInt(no));
+      if(!isNum){
+        const option = { communityNo:parseInt(no), cache:1 };
+        post(getChannelList,option).then((res:any)=>{
+          console.log('执行......查看',res);
+        })
+      }
+    }
     
-
   },
 
   persist:{

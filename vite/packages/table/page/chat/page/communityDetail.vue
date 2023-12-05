@@ -136,7 +136,7 @@ export default {
     async currentItem(item){
       // 链接
       if(item.type === 'link' && item.name !== 'Roadmap'){
-        const data = JSON.parse(item.props)
+        const data = item.props
         // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
         switch (data.openMethod){
           case 'userSelect':
@@ -149,7 +149,7 @@ export default {
       }
       // 群聊
       if(item.type === 'group'){
-        const changeData = JSON.parse(item.props)[0] !== undefined ? JSON.parse(item.props)[0] : JSON.parse(item.props)
+        const changeData = item.props[0] !== undefined ? item.props[0] : item.props;
         const groups = window.$TUIKit.store.store.TUIGroup.groupList
         const index = groups.findIndex((findItem)=>{ return findItem.groupID === changeData.groupID })
         const enableGroup = await checkGroupShip([`${changeData.groupID}`]) // 有没有添加群聊
@@ -192,7 +192,7 @@ export default {
         }
       }
       // 其他
-      this.currentChannel = {...item,props:JSON.parse(item.props)}
+      this.currentChannel = {...item,props:{ ...item.props }};
     },
 
     clickEmptyButton(item){
