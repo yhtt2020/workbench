@@ -10,11 +10,11 @@
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
-        width: 160px;
+        /* width: 160px; */
       ">
         <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
-        <div class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 84px;"></div>
-        <div v-show="settings.enableChat && !simple" class="pointer">
+        <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div>
+        <div v-show="settings.enableChat && !simple" class="ml-5 pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -211,7 +211,7 @@
   </a-drawer> -->
 
     <transition name="fade">
-      <div  :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
+      <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
         <!-- 老版 -->
         <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
         <!-- 新版 -->
@@ -352,7 +352,7 @@ export default {
           name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.removeFootNavigationList(this.currentIndex) }
+          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -371,7 +371,7 @@ export default {
           fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
-      rightMenus: [
+      mainMenus: [
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
@@ -394,32 +394,7 @@ export default {
           id: 4,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
-          children: [
-            {
-              id: 1,
-              name: '显示用户中心',
-              newIcon: "fluent:person-16-regular",
-              fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
-            },
-            {
-              id: 2,
-              name: '显示社区助手',
-              newIcon: "fluent:people-community-16-regular",
-              fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
-            },
-            {
-              id: 3,
-              name: '显示任务中心',
-              newIcon: "fluent:task-list-square-16-regular",
-              fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
-            },
-            {
-              id: 4,
-              name: '显示社群沟通',
-              newIcon: "fluent:chat-16-regular",
-              fn: () => { this.settings.enableChat = !this.settings.enableChat }
-            },
-          ]
+          children: []
 
         },
         {
@@ -547,7 +522,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible','currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -562,6 +537,41 @@ export default {
       })
       return count
     },
+    childrenMenu() {
+      return [
+        {
+          id: 1,
+          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          newIcon: "fluent:person-16-regular",
+          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+        },
+        {
+          id: 2,
+          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          newIcon: "fluent:people-community-16-regular",
+          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+        },
+        {
+          id: 3,
+          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          newIcon: "fluent:task-list-square-16-regular",
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+        },
+        {
+          id: 4,
+          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          newIcon: "fluent:chat-16-regular",
+          fn: () => { this.settings.enableChat = !this.settings.enableChat }
+        },
+      ]
+
+    },
+    rightMenus() {
+      // const arr=[...this.mainMenus[3].children]
+      this.mainMenus[3].children = [...this.childrenMenu]
+      // this.mainMenus[3].children=arr
+      return this.mainMenus
+    }
   },
   watch: {
     footNavigationList: {
@@ -605,7 +615,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(appStore,['toggleFullScreen']),
+    ...mapActions(appStore, ['toggleFullScreen']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',
@@ -741,6 +751,25 @@ export default {
     setQuick() {
       this.quick = false
       this.editToggle = false
+    },
+    delCurrentIcon(currentIndex, currentItem) {
+      console.log(currentIndex, currentItem, '====>>>>11111');
+      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
+        this.delNavList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList1.concat(this.otherNavList2)
+      } else if (this.otherSwitch1 && !this.otherSwitch2) {
+        arr = this.otherNavList1
+      } else if (!this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList2
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
     },
     // closeEdit(){
     //   this.editBar=false

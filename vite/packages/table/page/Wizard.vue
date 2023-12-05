@@ -132,7 +132,7 @@
             </div>
             <!-- <div v-if="canTouch">
             </div> -->
-            <div class="h-full flex items-center justify-center " style="width: 488px;height: 240px;">
+            <div class="h-full flex items-center" style="width: 100px;height: 100px;">
               <ChooseScreen></ChooseScreen>
             </div>
           </div>
