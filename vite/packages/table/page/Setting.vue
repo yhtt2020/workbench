@@ -290,27 +290,27 @@ export default {
     wallpaperColor(newV) {
       setWallpaperColor(newV);
     },
-    simple(){
-      if(this.simple){
-        this.bottomToggle[0]=false
-        this.bottomToggle[1]=false
-        this.bottomToggle[2]=false
-      }else{
-        this.bottomToggle[0]=true
-        this.bottomToggle[1]=true
-        this.bottomToggle[2]=true
-      }
-    },
-    bottomToggle:{
-      deep:true,
-      handler(newV,oldV){
-        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
-          this.simple=false
-        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
-          this.simple=true
-        }
-      }
-    }
+    // simple(){
+    //   if(this.simple){
+    //     this.bottomToggle[0]=false
+    //     this.bottomToggle[1]=false
+    //     this.bottomToggle[2]=false
+    //   }else{
+    //     this.bottomToggle[0]=true
+    //     this.bottomToggle[1]=true
+    //     this.bottomToggle[2]=true
+    //   }
+    // },
+    // bottomToggle:{
+    //   deep:true,
+    //   handler(newV,oldV){
+    //     if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
+    //       this.simple=false
+    //     }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
+    //       this.simple=true
+    //     }
+    //   }
+    // }
   },
   mounted() {
     this.bgColor = getBgColor();

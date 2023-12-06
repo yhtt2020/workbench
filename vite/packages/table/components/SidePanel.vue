@@ -1,5 +1,5 @@
 <template>
-  <xtMenu :menus="rightMenus" :name="name"  class="flex max-h-full" :beforeCreate="menuState">
+  <xtMenu :menus="rightMenus" :name="name" class="flex max-h-full" :beforeCreate="menuState">
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
@@ -28,8 +28,11 @@
             </xt-menu>
           </a-tooltip>
         </div>
-      </div>
 
+      </div>
+      <div class="flex items-center justify-center -ml-14" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
+          <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
+      </div>
 
     </div>
   </xtMenu>
@@ -265,6 +268,7 @@ export default {
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
     ...mapWritableState(appStore, ['settings']),
+    // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
       if (this.currentNav === 'left') {
         return 'left-bar'
@@ -315,6 +319,8 @@ export default {
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'
     }
+    // 防止意外退出后，导致无法点击触发
+    this.editToggle = false
   },
   watch: {
     delZone(val) {
@@ -331,6 +337,16 @@ export default {
         this.disableDrag()
       }
     },
+    // navigationList: {
+    //   deep: true,
+    //   handler(newVal, oldVal) {
+    //     if (oldVal.length > newVal.length && newVal.length === 0) {
+    //       console.log('触发操作');
+    //     }
+    //     console.log('哈哈哈，没触发吧');
+    //   }
+    // }
+
   },
   methods: {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
@@ -346,7 +362,8 @@ export default {
       return
       // }
     },
-    menuState(){
+    // 防止抽屉桌面右键菜单触发
+    menuState() {
       return this.rightModel === 'follow'
     },
     enableDrag() {
@@ -477,6 +494,7 @@ export default {
     //   //   content[scrollDirection] += event.deltaY
     //   // });
     // },
+    // 拖拽桌面图标
     async drop(e) {
       // this.modelValue=false
       const width = window.innerWidth
@@ -614,12 +632,7 @@ export default {
           this.editToggle = true
           this.selectNav = this.currentNav
           message.success('进入编辑模式')
-        } else if (item.component === 'editNavigation') {
-          this.componentId = ''
-          this.editToggle = true
-          this.selectNav = this.currentNav
-        }
-        // console.log(this.componentId,'===>>2');
+        } 
         this.quick = true
       } else if (item.visible) {
         switch (item.tag) {
@@ -655,10 +668,6 @@ export default {
       // this.editToggle=true
       // }
 
-    },
-    completeEdit() {
-      this.toggleEdit()
-      this.setQuick()
     },
     setQuick() {
       this.quick = false
