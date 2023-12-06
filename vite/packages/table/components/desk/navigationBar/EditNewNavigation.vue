@@ -30,7 +30,7 @@
                 </div>
                 <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
                     <a-tooltip title="推荐">
-                        <xt-button :w="40" :h="40" @click="backIntroduce" ><xt-new-icon
+                        <xt-button :w="40" :h="40" @click="backIntroduce"><xt-new-icon
                                 icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
                     </a-tooltip>
 
@@ -73,11 +73,12 @@
         </template>
         <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
             style="box-sizing: border-box;">
-            <Introduce  ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
+            <Introduce ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk">
+    </Msg>
 
     <!-- </div> -->
 </template>
@@ -158,11 +159,10 @@ export default {
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:document-bullet-list-multiple-24-regular',
-                    name: '办公',
+                    icon: 'fluent:text-bullet-list-square-sparkle-16-regular',
+                    name: '效率助手',
                     tab: 'work',
                     event: 'work',
-                    tag: 'recommendation'
                 },
                 {
                     type: 'systemApp',
@@ -223,7 +223,7 @@ export default {
             contentHeight: 420,
             contentWidth: 800,
             modalVisible: false,
-            currentTitle:null
+            currentTitle: null
         }
     },
     methods: {
@@ -231,7 +231,7 @@ export default {
         onSelect(index) {
             this.currentIndex = index
             this.inputValue = ''
-            this.currentTitle=null
+            this.currentTitle = null
         },
         setQuick() {
             this.$emit('setQuick')
@@ -270,8 +270,8 @@ export default {
                 this.modalVisible = false
             }
         },
-        backIntroduce(){
-            this.currentTitle='recommendation'
+        backIntroduce() {
+            this.currentTitle = 'recommendation'
         },
         // 拖拽
         mainDrop() {
@@ -349,7 +349,7 @@ export default {
             this.dropList = []
             // this.modelValue=true
         },
-        
+
         handleResize() {
             this.windowHeight = window.innerHeight
             if (this.windowHeight > 1000) {
@@ -374,7 +374,7 @@ export default {
                 } else if (item.type) {
                     const found = this.sideBar.find((i) => i.tag === item.type)
                     item.className = found.name;
-                } 
+                }
 
             });
         }
@@ -398,7 +398,7 @@ export default {
         },
         otherList() {
             const sideBarTag = this.navList[this.currentIndex].tag;
-            if (sideBarTag === 'recommendation' || this.currentTitle==='recommendation') {
+            if (sideBarTag === 'recommendation' || this.currentTitle === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {
                 return this.webList
@@ -407,15 +407,15 @@ export default {
             }
         },
         currentTag() {
-            if(this.currentTitle==='recommendation'){
+            if (this.currentTitle === 'recommendation') {
                 return 'recommendation'
             }
             return this.navList[this.currentIndex].tag
         },
-        currentNavBar(){
-            if(this.currentTitle==='recommendation'){
+        currentNavBar() {
+            if (this.currentTitle === 'recommendation') {
                 return this.sideBar[0]
-            }else{
+            } else {
                 return this.navList[this.currentIndex]
             }
         },
