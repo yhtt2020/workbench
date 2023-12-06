@@ -87,6 +87,7 @@ export const communityStore = defineStore('communityStore',{
           this.community.communityList = filterUndefined;
         }
       });
+      this.getCommunityTree();
     },
 
     // 创建社群
@@ -114,7 +115,9 @@ export const communityStore = defineStore('communityStore',{
             if(status){
               const treeList = res[1].data.treeList;
               const channelList = res[0].data.list;
+              console.log('执行......查看-1',treeList,);
               const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
+              console.log('执行......查看-2',newArr,);
               const option = { no:item.no, tree: newArr, category:channelList};
               const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.no) });
               if(index === -1){

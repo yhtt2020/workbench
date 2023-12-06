@@ -195,7 +195,7 @@ export default {
             callBack:(item)=>{ selectTab(item) },
           }
         });
-        const mergeArray = bodyList.value.concat(mapCommunityData.concat(createCommunityList.value));
+        const mergeArray = bodyList.value.concat(mapCommunityData);
         bodyList.value = mergeArray;
       }
     })
@@ -214,9 +214,10 @@ export default {
           uniqueList.push(itemOption)
         }
       }
+      const updateList = uniqueList.concat(createCommunityList.value);
       const lastList = [
         ...headList.value,
-        ...uniqueList,
+        ...updateList,
         ...footList.value
       ]
       if(settings.value.enableHide){
@@ -232,6 +233,7 @@ export default {
     /**初始化挂载**/
     onMounted(()=>{
       nextTick(()=>{
+        com.getCommunityTree();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
           const list = community.value.communityList;

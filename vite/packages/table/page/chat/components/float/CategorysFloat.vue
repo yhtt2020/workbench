@@ -118,6 +118,7 @@ import { communityStore } from '../../store/communityStore';
 import { Icon as CommunityIcon } from '@iconify/vue';
 import { Modal,message } from 'ant-design-vue';
 import _ from 'lodash-es';
+import { useRoute } from 'vue-router';
 
 import ChatDropDown from './Dropdown.vue';
 import ChatFold from './ChatFolds.vue';
@@ -129,6 +130,7 @@ import AddInvite from '../add/AddInvite.vue';
 
 const com = communityStore();
 const chat = chatStore();
+const route = useRoute();
 const { community } = storeToRefs(com);
 const { settings } = storeToRefs(chat);
 
@@ -238,16 +240,17 @@ const floatData = computed(()=>{
   const treeArr  = community.value.communityTree;
   const arrNull = infoArr.length !== 0;
   if(arrNull){
-    const no = props.no;
+    const no = route.params.no;
     const findInfo = _.find(infoArr,function(find){ return String(find.no) === String(no) });
-    const findTree = _.find(treeArr,function(find){ return String(find.no) === String(no) })
-    const findNull = findInfo !== undefined && findTree !== undefined;
+    const findTree = _.find(treeArr,function(find){ return String(find.no) === String(no) }); 
+    const findNull = findInfo !== undefined ;
+    const findTreeNull = findTree !== undefined 
     if(findNull){
       // 定义一个空对象来解构findInfo数据，因为通过 ... 不能直接解构，会产生报错
       const data = { info:findInfo };
       return {
         ...data.info,
-        tree:findTree.tree,
+        tree:findTreeNull ? findTree?.tree : [],
       }
     }
   }
