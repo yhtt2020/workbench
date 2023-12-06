@@ -117,7 +117,7 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-
+console.log('dx,dy :>> ', dx,dy);
     try {
       scrollbar.value.scrollTop -= dy;
       scrollbar.value.scrollLeft -= dx;
