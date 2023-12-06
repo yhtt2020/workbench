@@ -47,7 +47,7 @@ import "shepherd.js/dist/css/shepherd.css";
 import "../../public/css/index.scss";
 //
 // import { confirm } from "../../../ui/new/confirm/index";
-import { confirm as $confirm } from "./ui/new/confirm";
+import { confirm } from "./ui/new/confirm";
 
 // 导入codemirror主题色样式表和语言包
 import "codemirror/lib/codemirror.css";
@@ -112,7 +112,7 @@ app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$mit = Mit;
-app.config.globalProperties.$confirm = $confirm;
+app.config.globalProperties.$xtconfirm = confirm;
 
 const pinia = createPinia();
 pinia.use(piniaPersist);
