@@ -55,7 +55,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <xtMixMenu :menus="iconMenus">
+                    <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
@@ -71,7 +71,7 @@
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
-                    </xtMixMenu>
+                    </xt-menu>
                   </a-tooltip>
                 </div>
               </xt-task>
@@ -335,21 +335,21 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:open-16-regular',
-          name: "打开",
-          fn: () => { this.clickNavigation(this.currentItem) },
+          label: "打开",
+          callBack: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
-          name: '编辑',
+          label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '删除',
+          label: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
+          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -357,15 +357,15 @@ export default {
         },
         {
           id: 5,
-          name: '添加导航图标',
+          label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       mainMenus: [
@@ -841,9 +841,6 @@ export default {
         this.full = true
         tsbApi.window.setFullScreen(true)
       }
-    },
-    menuState() {
-      return this.rightModel === 'follow'
     },
     clickNavigation(item) {
       if (this.editToggle) {

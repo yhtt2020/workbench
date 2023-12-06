@@ -1,5 +1,5 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="menuState">
+  <xtMixMenu :menus="rightMenus" name="name" class="flex max-h-full">
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
@@ -11,7 +11,7 @@
           <a-tooltip :title="item.name" v-for="(item, index) in navigationList" placement="right"
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
-            <xtMixMenu :menus="iconMenus">
+            <xt-menu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
@@ -25,7 +25,7 @@
 
                 </div>
               </div>
-            </xtMixMenu>
+            </xt-menu>
           </a-tooltip>
         </div>
 
@@ -116,21 +116,21 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:open-16-regular',
-          name: "打开",
-          fn: () => { this.clickNavigation(this.currentItem) },
+          label: "打开",
+          callBack: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
-          name: '编辑',
+          label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '删除',
+          label: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
+          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -138,15 +138,15 @@ export default {
         },
         {
           id: 5,
-          name: '添加导航图标',
+          label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       mainMenus: [
@@ -362,10 +362,6 @@ export default {
       // message.info('已中止侧栏调整')
       return
       // }
-    },
-    // 防止抽屉桌面右键菜单触发
-    menuState() {
-      return this.rightModel === 'follow'
     },
     enableDrag() {
       // if (this.sortable) {
