@@ -301,7 +301,8 @@ export const NavList = [
             size: '2x4',
             zoom: '16'
           }
-        ]
+        ],
+        time: '2023/8/31'
       },
       {
         name: 'HotSearch',

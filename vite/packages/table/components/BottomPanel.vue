@@ -57,7 +57,7 @@
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name" 
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
@@ -298,7 +298,7 @@ export default {
     AddIcon,
     EditNewNavigation,
     xtMenu,
-    xtMixMenu
+    xtMixMenu,
   },
   data() {
     return {
@@ -437,7 +437,9 @@ export default {
       currentIndex: null,
       currentItem: null,
       delItemIcon: false,
-      notifications: new Notifications()
+      notifications: new Notifications(),
+      tooltipVisible:true,
+
     }
   },
   props: {
@@ -1001,6 +1003,7 @@ export default {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
+          that.tooltipVisible=false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           this.delNav = true
@@ -1057,6 +1060,7 @@ export default {
           that.sortFootNavigationList(event)
         },
         onEnd: function (event) {
+          that.tooltipVisible=true
           that.$emit('getDelIcon', false)
         },
       })
