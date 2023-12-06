@@ -1,9 +1,7 @@
 <template>
-  <!-- <div class="side-panel common-panel s-bg " style=" z-index: 999;
-  width: 6em;max-height: 446px;overflow: hidden;" ref="sideContent"> -->
-  <RightMenu :menus="rightMenus" class="flex max-h-full">
+  <xtMenu :menus="rightMenus" :name="name"  class="flex max-h-full" :beforeCreate="menuState">
     <!-- style="z-index: 99" -->
-    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId"
+    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
       ref="sideContent" @contextmenu="showMenu">
       <div style="width: 56px;" class="w-full">
@@ -13,8 +11,7 @@
           <a-tooltip :title="item.name" v-for="(item, index) in navigationList" placement="right"
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
-            <!-- {{ index }} -->
-            <RightMenu :menus="iconMenus">
+            <xt-menu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
@@ -28,18 +25,15 @@
 
                 </div>
               </div>
-            </RightMenu>
+            </xt-menu>
           </a-tooltip>
         </div>
-        <!-- <div class="mt-3">
-          <AddIcon v-if="this.editToggle" :position="'left'" @addIcon="editNavigation(this.drawerMenus[0])" @completeEdit="completeEdit" />
-        </div> -->
       </div>
 
 
     </div>
-  </RightMenu>
-
+  </xtMenu>
+  <Common ref="common"></Common>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
@@ -86,19 +80,21 @@ import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
-import RightMenu from "../components/desk/Rightmenu.vue";
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
+import Common from './desk/navigationBar/components/Common.vue'
+import xtMenu from '../ui/components/Menu/index.vue'
 export default {
   name: 'SidePanel',
   components: {
     EditNavigation,
     navIcon,
     navigationSetting,
-    RightMenu,
     AddIcon,
-    EditNewNavigation
+    EditNewNavigation,
+    Common,
+    xtMenu
   },
   data() {
     return {
@@ -114,21 +110,21 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:open-16-regular',
-          name: "打开",
-          fn: () => { this.clickNavigation(this.currentItem) },
+          label: "打开",
+          callBack: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
-          name: '编辑',
+          label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '删除',
+          label: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          fn: () => { this.currentNav === 'right' ? this.removeRightNavigationList(this.currentIndex) : this.removeSideNavigationList(this.currentIndex) }
+          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -136,42 +132,43 @@ export default {
         },
         {
           id: 5,
-          name: '添加导航图标',
+          label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       mainMenus: [
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
-          name: "添加导航图标",
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
+          label: "添加导航图标",
+          label: "添加导航图标",
+          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 2,
-          name: '导航栏设置',
+          label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          name: '隐藏当前导航',
+          label: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navVisible() },
+          callBack: () => { this.navigationToggle[2] = false },
         },
-
         {
           id: 4,
-          name: '更多',
+          label: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
+
         },
         {
           divider: true,
@@ -180,30 +177,30 @@ export default {
         {
           type: "systemApp",
           newIcon: "fluent:lock-closed-16-regular",
-          name: "锁定屏幕",
+          label: "锁定屏幕",
           event: "lock",
-          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[0]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
-          name: "基础设置",
+          label: "基础设置",
           event: "setting",
-          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[1]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
-          name: "全屏显示",
+          label: "全屏显示",
           event: "fullscreen",
-          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[2]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
-          name: "设备设置",
+          label: "设备设置",
           event: "status",
-          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          callBack: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
       shakeElement: false,
@@ -278,34 +275,34 @@ export default {
       return [
         {
           id: 1,
-          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          label: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
           newIcon: "fluent:person-16-regular",
-          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+          callBack: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
         },
         {
           id: 2,
-          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          label: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
           newIcon: "fluent:people-community-16-regular",
-          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+          callBack: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
         },
         {
           id: 3,
-          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          label: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          callBack: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
         {
           id: 4,
-          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          label: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
-          fn: () => { this.settings.enableChat = !this.settings.enableChat }
+          callBack: () => { this.settings.enableChat = !this.settings.enableChat }
         },
       ]
 
     },
-    rightMenus(){
+    rightMenus() {
       // const arr=[...this.mainMenus[3].children]
-      this.mainMenus[3].children=[...this.childrenMenu]
+      this.mainMenus[3].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
     }
@@ -332,7 +329,7 @@ export default {
       } else {
         this.disableDrag()
       }
-    }
+    },
   },
   methods: {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
@@ -347,6 +344,9 @@ export default {
       // message.info('已中止侧栏调整')
       return
       // }
+    },
+    menuState(){
+      return this.rightModel === 'follow'
     },
     enableDrag() {
       // if (this.sortable) {
@@ -576,6 +576,24 @@ export default {
           this.mainNavList[i].addNav = stateNav
         }
       }
+    },
+    delCurrentIcon(currentIndex, currentItem) {
+      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
+        this.delNavList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList1.concat(this.otherNavList2)
+      } else if (this.otherSwitch1 && !this.otherSwitch2) {
+        arr = this.otherNavList1
+      } else if (!this.otherSwitch1 && this.otherSwitch2) {
+        arr = this.otherNavList2
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
     },
     navVisible() {
       if (this.currentNav === 'left') {

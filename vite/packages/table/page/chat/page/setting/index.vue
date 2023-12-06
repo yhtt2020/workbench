@@ -1,10 +1,10 @@
 <template>
  <div class="w-full p-4 h-full xt-text-2">
-  <xt-selectNav :navList="classNav" lw="128" v-model:selectItem="classItem" :enableRoute="true">
+  <xt-select-nav :navList="classNav" lw="128" v-model:selectItem="classItem" :enableRoute="true">
     <div class="w-full px-4">
       <router-view />
     </div>
-  </xt-selectNav>
+  </xt-select-nav>
  </div>
 </template>
 

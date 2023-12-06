@@ -3,7 +3,7 @@
        style="justify-items: center;align-content: start;flex-direction: column;
     justify-content: center;align-items: center;">
 
-    <div v-if="clipList.length>0" v-for="item in clipList" class="m-2 flex flex-col s-bg rounded-lg">
+    <div v-if="clipList.length>0" v-for="item in clipList" class="m-2 flex flex-col xt-bg rounded-lg xt-text">
       <ClipItem :key="item.updateTime" :clipItem="item" @previewItem="getItem"></ClipItem>
     </div>
     <div v-if="loading">

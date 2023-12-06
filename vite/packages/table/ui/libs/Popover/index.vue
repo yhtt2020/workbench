@@ -31,7 +31,6 @@
   .ant-popover-inner-content {
     border-radius: 12px !important;
     background: var(--modal-bg) !important;
-    padding: 3px;
 
   }
 
@@ -39,5 +38,11 @@
     width: 200px;
     border-radius: 12px !important;
   }
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+  :deep(.ant-popover-content) {
+  border: 2px solid red !important;
+}
 }
 </style>

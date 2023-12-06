@@ -3,55 +3,35 @@
   <div class="flex w-full h-10 items-center justify-center" style="position: relative;margin-bottom: 46px;">
    <!-- 左侧返回按钮 -->
    <div v-if="id === 'chat'" class="flex items-center pointer active-button rounded-lg justify-center back h-10 w-10" @click="backCreate">
-    <!-- <LeftOutlined  /> -->
     <communityIcon icon="fluent:chevron-left-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
-
    <span class="font-16-400" style="color: var(--primary-text);">创建社群</span>
-
    <div class="flex items-center pointer active-button rounded-lg justify-center close h-10 w-10" @click="closeCreateCom">
     <communityIcon icon="fluent:dismiss-16-filled" style="font-size: 1.5rem;color: var(--secondary-text);"/>
    </div>
   </div>
-
   <div class="flex items-center flex-col">
-
    <div class="flex items-center flex-col justify-center" style="margin-bottom: 24px;">
-     <!-- 替换成图标选择器 -->
-    <div class="rounded-lg flex pointer items-center justify-center"
-    style="width: 64px;height: 64px; position:relative"  @click="modelValue = true"
-    >
-    <!--头像 -->
-     <!-- <a-avatar shape="square" :size="64" :src="avatarUrl"></a-avatar> -->
+    <!-- 替换成图标选择器 -->
+    <div class="rounded-lg flex pointer items-center justify-center" style="width: 64px;height: 64px; position:relative"  @click="modelValue = true">
      <div class="overflow-hidden">
        <a-avatar :src="avatarUrl" style="height:64px;width: 64px;border-radius: 0;" :style="{'filter': bgColor?`drop-shadow(#${bgColor} 80px 0)`:'',transform:bgColor?'translateX(-80px)':''}"></a-avatar>
      </div>
      <communityIcon icon="fluent:camera-16-regular" width="20" height="20"
      style="font-size: 1.5rem;width:24px;height:24px;background:var(--active-bg);position: absolute;bottom:-3px;right:-3px;border: 2px solid var(--primary-text);border-radius: 50%;"
      color="var(--secondary-text)"/>
-   </div>
-
-   <!-- <SelectIcon @isIconShow="iconVisible = false" :windowHeight="this.innerHeight" @getAvatar="getAvatar" v-show="iconVisible" :goodVisible="true" :isCustom="isCustom" :customTitle="customTitle"></SelectIcon> -->
-
-   <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
-
-
-
+    </div>
+    <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
     <div class="flex items-center justify-center font-16"  style="color:var(--secondary-text);margin-top: 12px;"> 推荐图片尺寸：256*256，不能超过4MB </div>
-    <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
-   </div>
-
-   <a-input v-model:value="communityName" spellcheck="false" placeholder="输入社群名称" class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
-
-   <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
-
+     <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+    </div>
+    <a-input v-model:value="communityName" spellcheck="false" placeholder="输入社群名称"  class="h-12 search"  style="width: 340px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
+    <a-input hidden="" :disabled="true" placeholder="ID:UH7631" class="h-12 search"  style="width: 340px;margin-top: 12px; margin-bottom:46px; border-radius: 12px;text-align: center;"></a-input>
   </div>
-
   <div class="flex items-center justify-end ">
-    <XtButton style="width:64px;color:var(--secondary-text);" class="h-10 font-16-400" @click="closeCreateCom">取消</XtButton>
-    <XtButton class="h-10 ml-3" style="width:64px;background: var(--active-bg);color:var(--active-text);" @click="finshCreateCommunity">确定</XtButton>
+    <xt-button h="40" w="64" class="xt-font font-16 font-400 mr-3"  @click="closeCreateCom">取消</xt-button>
+    <xt-button h="40" w="64" class="xt-font font-16 font-400" type="theme" @click="finshCreateCommunity($event)">确定</xt-button>
   </div>
-
  </div>
 </template>
 
@@ -100,7 +80,7 @@ export default {
  },
 
  methods:{
-   ...mapActions(communityStore,['createCommunity','getMyCommunity']),
+   ...mapActions(communityStore,['communityCreate']),
 
 
    closeCreateCom(){
@@ -132,44 +112,37 @@ export default {
      this.avatarUrl = avatar
    },
 
-
-
    // 创建社群
    async finshCreateCommunity(evt){
      const chineseCharReg = /[\u4e00-\u9fa5]/g; // 匹配2-16个汉字
-     // // const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
      const chineseCharCount = (this.communityName.match(chineseCharReg) || []).length;
+     
+     // // const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
      // // const nonCharCount = (this.communityName.match(nonChineseCharReg) || []).length;
-
      // console.log('排查问题',chineseCharCount);
      // console.log('查看条件',chineseCharCount >= 2 && chineseCharCount <= 16);
-
      // // const totalCount = chineseCharCount + nonCharCount
 
      if(chineseCharCount >= 2 && chineseCharCount <= 16){
        const option = {
         name:this.communityName,
         icon:this.avatarUrl
-       }
-
+       };
        // console.log('查看参数',option);
-
-       const res = await this.createCommunity(option)
-       console.log('排查结果',res)
-
+       const res = await this.communityCreate(option);
+       console.log('排查结果',res);
        if(res.status === 1){
-        message.success(`${res.info}`)
-        await this.getMyCommunity()
-        this.$emit('close')
+        message.success(`${res.info}`);
+        await this.getMyCommunity();
        }else{
-        evt.preventDefault();
-        message.error(`${res.info}`)
+        message.error(`${res.info}`);
        }
 
      }else{
-       evt.preventDefault();
-       message.error('社群名称长度的范围需要在2-16个字符之间')
+       message.error('社群名称长度的范围需要在2-16个字符之间');
      }
+
+     this.$emit('close');
 
    }
 

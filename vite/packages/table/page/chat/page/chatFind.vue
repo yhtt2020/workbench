@@ -50,21 +50,20 @@ export default {
   mounted(){
     this.$nextTick(()=>{
       if(this.communityDefault.name === 'community'){
-        this.$refs.findSearchRef.focus()
+        this.$refs.findSearchRef.focus();
       }
-    })
+    });
   },
 
   methods:{
-    ...mapActions(communityStore,['searchCommendCommunity']),
+    ...mapActions(communityStore,['searchRecommendCommunity']),
     // 社群发现页搜索
     async findSearch(){
       if(this.searchKeyWord !== ''){
-        const searchResult = await this.searchCommendCommunity(this.searchKeyWord)
-        // console.log('获取搜索结果',searchResult);
-        this.searchList = searchResult?.data?.list
+        const searchResult = await this.searchRecommendCommunity(this.searchKeyWord);
+        this.searchList = searchResult;
       }else{
-        this.searchList = []
+        this.searchList = [];
       }
     }
   },

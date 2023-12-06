@@ -33,15 +33,15 @@ export default defineComponent({
   data(){
     return {
       tabs:[
-        {
-          title:'桌面',
-          name:'desk',
-          icon:'desktop',
-          tab:'workDesk',
-          route:{
-            name:'workDesk'
-          }
-        },
+        // {
+        //   title:'桌面',
+        //   name:'desk',
+        //   icon:'desktop',
+        //   tab:'workDesk',
+        //   route:{
+        //     name:'workDesk'
+        //   }
+        // },
         {
           title:'AI助手',
           name:'ai',

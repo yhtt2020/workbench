@@ -14,8 +14,8 @@
       </div>
       <span class="font-16 font-500 ml-2 truncate" style="color: var(--primary-text);max-width: 110px;">{{ item.name || item.title }}</span>
       <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
-       v-if="item.type === 'link' && item.name !== 'Roadmap' && JSON.parse(item.props)?.openMethod !== 'currentPage'"/>
-       <div style="width:12px;height: 12px;background: red; font-size: 10px;" 
+       v-if="item.type === 'link' && item.name !== 'Roadmap' && item.props?.openMethod !== 'currentPage'"/>
+       <div style="width:12px;height: 12px;background: red; font-size: 10px;text-align: center;" 
         class="rounded-full flex items-center justify-center ml-2"   v-if="unread !== null && unread !== 0"
        >
         {{ unread }}
@@ -23,7 +23,7 @@
     </div>
   </xt-menu>
 
-  <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/>
+  <!-- <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/> -->
 </template>
 
 <script>
@@ -48,12 +48,10 @@ export default {
 
     const community = communityStore()
     const chat = chatStore()
-    const { contactsSet } = storeToRefs(chat)
-    const getUnreadNum = ref(null)
 
     const data = reactive({
       revID:'',
-      prop:JSON.parse(props.item.props),
+      prop:props.item.props,
     })
     const linkMenus = ref([
      {
@@ -67,8 +65,8 @@ export default {
           content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
           centered:true,
           onOk: async ()=>{
-            community.removeCategory(data.revID.id,props.no)
-            message.success('删除成功')
+            const res = await community.removeCategory(data.revID.id,props.no);
+            message.success(`${res.info}`);
           }
         })
       }
@@ -87,8 +85,8 @@ export default {
             content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
             centered:true,
             onOk: async ()=>{
-              community.removeCategory(data.revID.id,props.no)
-              message.success('删除成功')
+              const res = await community.removeCategory(data.revID.id,props.no);
+              message.success(`${res.info}`);
             }
           })
         }
@@ -108,7 +106,7 @@ export default {
     }
 
     const unread = computed(()=>{
-      const jsonProp = JSON.parse(props.item.props);
+      const jsonProp = props.item.props;
       if(jsonProp.hasOwnProperty('unread')){
         return jsonProp.unread > 99 ? 99 : jsonProp.unread;
       }else{
@@ -117,10 +115,8 @@ export default {
     })
 
     return{
-      linkRef,menus,linkMenus,menuList,
-      // getUnreadNum,
-      unread,
-     ...toRefs(data),currentItem,
+      linkRef,menus,linkMenus,menuList,unread,
+      ...toRefs(data),currentItem,
     }
   }
 };

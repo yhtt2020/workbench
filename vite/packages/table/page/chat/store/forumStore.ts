@@ -10,14 +10,14 @@ export const forumStore = defineStore('forum',{
   }),
 
   actions:{
-
     // 获取版块数据
-    async getForumData(){
-      const result = await post(sUrl('/app/com/forum/my'),{})
-      // console.log('获取版块数据',result)
-      if(result.code === 200){
-        this.forumList = result?.data?.create
-      }
+    getForumData(){
+      post(sUrl('/app/com/forum/my'),{}).then((result:any)=>{
+        // console.log('获取版块数据',result)
+        if(result.code === 200){
+          this.forumList = result?.data?.create
+        }
+      })
     }
 
   },

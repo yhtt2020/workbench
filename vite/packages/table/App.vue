@@ -53,7 +53,7 @@
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
     <div v-else>
-      <div class="fixed inset-0  none-bg" >
+      <div class="fixed inset-0  none-bg" style="z-index: -1">
       </div>
     </div>
   </template>

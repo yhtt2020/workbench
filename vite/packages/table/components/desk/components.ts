@@ -68,7 +68,6 @@ import CoolWidget from "../card/CoolWidget.vue";
 import AIaides from "../widgets/AIaides.vue";
 import OilPrices from "../widgets/OilPrices.vue";
 import yuanCommunity from "../widgets/yuanCommunity/YuanCommunity.vue";
-import RightMenu from "./RightMenu.vue";
 import Courier from "../widgets/courier/Courier.vue";
 
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
@@ -79,8 +78,10 @@ import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
 // import FreeLayoutFloatMenu from "./freeLayout/FloatMenu/Container.vue";
 import FloatMenu from './floatMenu/FloatMenu.vue'
 import RadioTab from '../../components/RadioTab.vue'
+import Menu from "../../ui/new/mixMenu/FunMenu.vue";
 export default {
   components: {
+    Menu,
     RadioTab,
     FreeLayoutScrollbar,
     FloatMenu,
@@ -88,7 +89,6 @@ export default {
     FreeLayoutCanvas,
     FreeLayoutMask,
     FreeLayoutState,
-    RightMenu,
     GameInformation,
     HistoryInfo,
     ShortcutKey,

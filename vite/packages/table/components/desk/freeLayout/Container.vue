@@ -121,7 +121,6 @@ const drag = (obj) => {
     const offsetY = y - initY;
     freeLayoutStore.updatePositionX(offsetX);
     freeLayoutStore.updatePositionY(offsetY);
-    console.log("test.value :>> ", test.value[0].data);
   }
 };
 

@@ -25,7 +25,6 @@ import {
   nextTick,
   computed,
 } from "vue";
-import { message } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -144,14 +143,8 @@ function handleKeyDown(event) {
     event.stopPropagation();
   }
   if ((event.ctrlKey && event.key === "A") || event.key === "a") {
+    console.log('1111 :>> ', 1111);
     isSelectAll.value = !isSelectAll.value;
-    if (isSelectAll.value) {
-      // message.success("Ctrl + A was pressed!");
-      
-
-    } else {
-    }
-
   }
 }
 // 键盘抬起
@@ -200,22 +193,12 @@ onBeforeUnmount(() => {
   scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
     capture: true,
   });
-  window.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  window.removeEventListener("keyup", handleKeyUp, {
-    capture: true,
-  });
-  window.removeEventListener("mousedown", handleMouseDown, {
-    capture: true,
-  });
-  window.removeEventListener("mousemove", handleMouseMove, {
-    capture: true,
-  });
-  window.removeEventListener("mouseup", handleMouseUp, {
-    capture: true,
-  });
-  window.document.body.removeEventListener("keydown", ignoreSpace);
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+  window.removeEventListener("mousedown", handleMouseDown);
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("mouseup", handleMouseUp);
+  document.body.removeEventListener("keydown", ignoreSpace);
 });
 defineExpose({
   redirect,

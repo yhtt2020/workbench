@@ -82,7 +82,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       const {  desks } = storeToRefs(card);
       const {currentDeskId}=storeToRefs(home);
       const desk = desks.value?.filter(
-        (item) => item.id === currentDeskId.value
+        (item) => item.id === this.getCurrentDeskId
       );
       return desk[0];
     },
@@ -162,6 +162,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       if (this.getFreeLayoutData) {
         this.freeLayoutData[this.getCurrentDeskId] = {};
       }
+      console.log("    this.getCurrentDesk :>> ", this.getCurrentDesk);
+      this.getCurrentDesk.cards = [];
     },
     // 删除自由布局组件数据
     clearFreeLayoutState() {

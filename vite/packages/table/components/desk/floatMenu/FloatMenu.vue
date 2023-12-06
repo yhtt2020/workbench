@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
     disabledHandle=".floatMenu"
   >
     <div
-      class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow"
+      class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
       style="touch-action: none; width: 208px"
     >
       <xt-text type="2" class="mb-3">
@@ -271,17 +271,25 @@ onBeforeUnmount(() => {
         </template>
       </xt-text>
       <xt-tab
+        :boxStyle="{ 'border-radius': '10px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentMode"
         :list="deskList"
         class="h-10 p-1 xt-bg-2 mb-3"
         style="font-size: 14px !important"
       />
+      <!-- <xt-modal :modelValue="1"> <test></test></xt-modal> -->
+
       <div class="flex my-3">
-        <Item v-for="item in defaultMenu" :item="item" class="mr-3" />
+        <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
       </div>
       <template v-if="isFreeLayout && currentMode === 'free'">
         <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
-        <Items :menus="freeLayoutMenu"></Items>
+        <!-- <Items :menus="freeLayoutMenu"></Items> -->
+        <div class="flex my-3">
+          <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
+      </div>
+
         <div class="mb-3 mt-2 flex items-center">
           画布缩放
           <xt-new-icon

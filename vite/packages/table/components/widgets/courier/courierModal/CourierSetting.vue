@@ -1,23 +1,12 @@
 <template>
  <teleport to='body'>
-  <Modal v-if="settingVisible" v-model:visible="settingVisible" :blurFlag="true" style="z-index: 510;">
-    <div class="xt-text mb-4" style="width: 500px;height: 537px;">
-      <div class="w-full flex items-center justify-center py-4" style="position: relative;">
-        <span class="xt-text xt-font font-16 font-400">「我的快递」设置</span>
-        <div class="flex right-button">
-          <xt-button w="32" h="32" style="border-radius: 8px !important;" @click="settingVisible = false">
-            <div class="flex items-center justify-center">
-              <CourierIcon icon="fluent:dismiss-16-filled" class="xt-text-2" style="font-size: 1.2rem;" />
-            </div>
-          </xt-button>
-        </div>
-      </div>
-
+  <xt-modal v-if="settingVisible" v-model="settingVisible" :index="1001" title="「我的快递」设置"  :blurFlag="true" :footer="false" >
+    <div class="xt-text mb-4" style="width: 500px;height:100%;">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:480px;">
         <SettingDetail />
       </vue-custom-scrollbar>
     </div>
-  </Modal>
+  </xt-modal>
  </teleport>
 </template>
 
