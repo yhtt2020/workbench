@@ -261,17 +261,18 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fluent:document-bullet-list-multiple-24-regular',
-      name: '办公',
+      icon: 'fluent:text-bullet-list-square-sparkle-16-regular',
+      name: '效率助手',
       tab:'work',
       event: 'work',
     },
-    {
-      type: 'systemApp',
-      icon: 'fluent:building-shop-16-regular',
-      name: '创意市场',
-      event: 'market',
-    },
+    // 由于功能未闭合，暂时隐藏
+    // {
+    //   type: 'systemApp',
+    //   icon: 'fluent:building-shop-16-regular',
+    //   name: '创意市场',
+    //   event: 'market',
+    // },
     {
       "type": "systemApp",
       "icon": "fluent:bot-24-regular",

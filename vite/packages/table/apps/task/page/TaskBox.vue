@@ -1,6 +1,6 @@
 <template>
   <xt-task id="firstTask" no="1" @cb="resetting">
-    <xt-menu :menus="menus" style="" v-if="store.isTask">
+    <!-- <xt-menu :menus="menus" style="" v-if="store.isTask"> -->
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
       <div
         @click="store.isTaskDrawer = true"
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-    </xt-menu>
+    <!-- </xt-menu> -->
   </xt-task>
   <Task></Task>
 </template>

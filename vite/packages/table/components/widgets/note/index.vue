@@ -344,7 +344,7 @@ export default {
     },
     async ok(){
       this.removeValue = false
-      // 删除桌面便签时需要清除db数据
+      // 删除便签时需要清除db数据
       let getDb = await tsbApi.db.find({
         selector: {
           _id: 'note:' + this.customIndex,

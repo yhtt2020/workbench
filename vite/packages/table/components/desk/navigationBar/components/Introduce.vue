@@ -1,16 +1,16 @@
 <template>
   <div class="w-full h-full">
     <div v-if="selectTag === 'recommendation'">
-      <div class="flex items-center p-2 mt-3 rounded-lg xt-bg-2 ">
+      <div class="flex items-center p-2 rounded-lg xt-bg-2 ">
         <div class=" xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
       </div>
     </div>
-    <div class="flex mt-3" v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
+    <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
       <xt-button w="80" h="32" radius="16" class="p-1 mr-3 text-sm shaking-element" @click="onClick(index)"
         :style="{ 'background': clickIndex === index ? 'var(--active-bg)' : 'transparent', 'color': clickIndex === index ? 'rgba(255, 255, 255, 0.85) !important' : 'var(--primary-text)' }"
         v-for="(item, index) in filterMenus" :key="index">{{ item.name }}</xt-button>
     </div>
-    <div class="flex flex-wrap mt-3 mainList" ref="targetDiv">
+    <div class="flex flex-wrap mainList" ref="targetDiv" :class="{ 'mt-3': selectTag === 'webNavigation' || selectTag === 'tableApp' || selectTag === 'recommendation' }">
       <template v-if="this.filterList.length > 0">
         <selectIcon :filterList="filterList" :recommendation="recommendation" ref="selectIcon"
           @clickRightListItem="clickListItem" />
@@ -101,10 +101,10 @@ export default {
         this.updateMainNav(item, 'add')
         item.addNav = true
         setNavigationList(item)
-        this.$nextTick(() => {
-          let scrollElem = this.$refs.content
-          scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-        })
+        // this.$nextTick(() => {
+        //   let scrollElem = this.$refs.content
+        //   scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+        // })
       }
       // } 
     },
@@ -187,7 +187,7 @@ export default {
       } else {
         return this.localFiles
       }
-    }
+    },
 
   },
   watch: {
