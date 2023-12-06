@@ -362,7 +362,15 @@ onMounted(() => {
       immediate: true,
     }
   );
+
+  // 首次定位
+  // if (afterDraggingAdsorbGrid)
+
+  nextTick(() => {
+    console.log("   parentSize.value.height :>> ", parentSize.value.height);
+  });
 });
+console.log("   parentSize.value.height :>> ", parentSize.value.height);
 
 // 拖拽开始
 function yDragStartFn(event: MouseEvent) {

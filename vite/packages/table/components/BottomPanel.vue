@@ -167,7 +167,7 @@
       </iframe>
     </div>
   </xtMixMenu>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
@@ -195,7 +195,7 @@
 
       </a-col>
     </a-row>
-  </a-drawer>
+  </a-drawer> -->
 
 
 
@@ -617,7 +617,7 @@ export default {
       }
     },
     simple() {
-      if (this.simple) {
+      if (this.simple ) {
         this.bottomToggle[0] = false
         this.bottomToggle[1] = false
         this.bottomToggle[2] = false

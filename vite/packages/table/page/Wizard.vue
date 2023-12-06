@@ -520,6 +520,7 @@ export default {
     finish () {
       this.finishWizard()
       this.$router.replace({ name: 'home' })
+      //
     },
     getKeys (e) {
       let key = ''

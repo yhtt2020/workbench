@@ -37,13 +37,12 @@
     </div>
   </xtMixMenu>
   <Common ref="common"></Common>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
         <div class="flex flex-wrap items-center">
           <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-            <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
             <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
             <div><span>{{ item.title }}</span></div>
             <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
@@ -56,7 +55,7 @@
 
       </a-col>
     </a-row>
-  </a-drawer>
+  </a-drawer> -->
 
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
