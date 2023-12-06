@@ -29,6 +29,7 @@ import config from './config'
 import { appStore } from '../../store'
 import { chatStore } from '../../store/chat';
 import _ from 'lodash-es';
+import { communityTotal } from './libs/utils';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -208,8 +209,11 @@ export default {
           return find.id === item.id
         })
         if(index === -1){
+          const total = communityTotal(item.no,community.value.communityTree);
+          console.log('执行.....总数',total);
           const itemOption = {
             ...item,
+            unread:total,
           }
           uniqueList.push(itemOption)
         }
@@ -242,7 +246,6 @@ export default {
             for(const item of list){
              const no = item.no;
              com.updateCommunityTree(no)
-             com.updateCommunityUnRead()
             }
           }
         });

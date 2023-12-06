@@ -74,7 +74,7 @@ export const communityStore = defineStore('communityStore',{
                 summary:null,
                 uid:mapItem.uid,
                 ...mapItem,
-                // unread:communityTotal(mapItem.no)?.unread,
+                unread:0,
               }
               return returnOption;
             }
@@ -137,49 +137,17 @@ export const communityStore = defineStore('communityStore',{
         const channel = post(getChannelList,option).then((res:any)=>{ return res });
         const tree = post(getChannelTree,option).then((res:any)=>{ return res });
         Promise.all([channel,tree]).then((res:any)=>{
-          const status = res[0].status === 1 && res[1].status === 1;
-          console.log('执行.......1',status);          
+          const status = res[0].status === 1 && res[1].status === 1;     
           if(status){
             const treeList = res[1].data.treeList;
             const channelList = res[0].data.list;
-            console.log('执行.......2',treeList,channelList);
             const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
             const option = { no:no, tree: newArr, category:channelList};
-            console.log('执行.......3',option);
             const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
-            console.log('执行.......4',this.community.communityTree[index]);
-            
             this.community.communityTree.splice(index,1,option)
            }
         }); 
       }
-    },
-
-    // 更新社群左侧列表未读数据的总和
-    updateCommunityUnRead(){
-      const list = this.community.communityList;
-      const mapList = list.map((mapItem:any)=>{
-        const isCommunityInfo = mapItem.hasOwnProperty('communityInfo');
-        if(isCommunityInfo){
-          // 取出data下的数据进行操作,预防报错处理
-          const data = mapItem?.communityInfo;
-          // 将数据进行解构返回出去
-          const returnOption = {
-            ...data,
-            summary:null,
-            uid:mapItem.uid,
-            ...mapItem,
-            unread:communityTotal(mapItem.no)?.unread,
-          }
-          return returnOption;
-        }
-      })
-      const filterUndefined = _.filter(mapList,function(filterItem:any){
-        if(filterItem !== undefined){
-          return filterItem;
-        }
-      })
-      this.community.communityList = filterUndefined;
     },
 
     // 创建社群频道

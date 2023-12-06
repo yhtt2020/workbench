@@ -1,5 +1,3 @@
-import { storeToRefs } from 'pinia';
-import { communityStore } from '../store/communityStore';
 import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
@@ -67,49 +65,40 @@ export function updateTree(list:any){
 }
 
 // 计算消息状态提示总数
-export function communityTotal(no:any){
-  const com:any = communityStore();
-  const { community } = storeToRefs(com);
-  const list = community.value.communityTree;
+export function communityTotal(no:any,list:any){
+  // 通过no进行列表匹配
   const find = _.find(list,function(find:any){ return String(find.no) === String(no) });
   if(find !== undefined){
-    // 获取树状数据结构列表
     const arr = find.tree;
-    const arrList:any = [];
-    const unreadTotal = {
+    const mergedList:any = [];
+    const totalUnread = {
       unread:0,
-    };
+    }
+    // 去重push到mergedList
+    const index = _.findIndex(mergedList,function(find:any){ return String(find.no) === String(no) });
     for(const item of arr){
-      const type = item.type === 'group';
-      const hasChildren = item.hasOwnProperty('children');
-      if(type){
-        const jsonProp = item.props;
-        const index = _.findIndex(arrList,function(find:any){ return String(find.props.groupID) === String(jsonProp.groupID) });
-        if(index === -1){
-          arrList.push(item as never);
-        }
-      }
+      const hasChildren =  item.hasOwnProperty('children');
+      const itemType = item.type === 'group';
       if(hasChildren){
-        for(const childrenItem of item.children){
-          const childrenType = childrenItem.type === 'group';
-          if(childrenType){
-            const jsonItem = childrenItem.props;
-            const childrenIndex = _.find(arrList,function(find:any){ return String(find.props.groupID) === String(jsonItem.groupID); });
-            if(childrenIndex === -1){
-              arrList.push(childrenItem as never);
-            }
+        for(const children of item.children){
+          const type = children.type === 'group';
+          if(type && index === -1){
+            mergedList.push(children as never);
           }
         }
       }
-
-    }
-    if(arrList.length !== 0){
-      for(const item of arrList){
-        unreadTotal.unread += item.unread;
+      if(itemType && index === -1){
+        mergedList.push(item as never);
       }
     }
-    return { unread:unreadTotal.unread === 0 ? 0 : unreadTotal.unread > 99 ? 99 : unreadTotal.unread };
+    if(mergedList.length !== 0){
+      for(const item of mergedList){
+        totalUnread.unread += item.props.unread;
+      }
+    }
+    else { totalUnread.unread = 0; }
+    return totalUnread.unread === 0  ? 0 : totalUnread.unread > 99 ? 99 : totalUnread.unread;
   }
-  return {unread:0};
+  else { return 0 }
 }
 
