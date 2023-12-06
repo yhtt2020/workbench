@@ -1,5 +1,5 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full h-12 top-shadow  mb-2.5 drag">
+  <div id="topBar" class="flex items-center justify-between w-full top-shadow  mb-2.5 drag">
     <div id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5 drag  items-center">
      <div class="no-drag flex">
       <a-tooltip>
@@ -65,8 +65,10 @@
           </div>
         </div>
       </div>
+      <div class="h-12" v-if="showWindowController">&nbsp;</div>
       <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
         <WindowController></WindowController>
+
       </div>
     </div>
   </div>

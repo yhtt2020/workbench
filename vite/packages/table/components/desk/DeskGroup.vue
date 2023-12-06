@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <!--  工具栏-->
-    <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
+    <div class=" flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div
         class="tabs flex flex-row mb-3 ml-3"
@@ -51,7 +51,7 @@
         </a-tooltip>
       </div>
 
-      <div v-if="showTools">
+      <div v-if="false">
         <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
           <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
