@@ -198,7 +198,7 @@
         </div>
       </div>
     </vue-custom-scrollbar>
-  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" @no="this.simpleVisible=false" @ok="this.simpleVisible=false"></xt-msg>
+  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false" @ok="this.simpleVisible=false"></xt-msg>
   <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="editNavigationVisible">
     <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name" class="flex max-h-full">
+  <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full'">
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
