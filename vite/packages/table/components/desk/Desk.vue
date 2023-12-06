@@ -30,7 +30,7 @@
     />
     <!-- 自由布局滚动 -->
     <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
-      <FreeLayoutScrollbar ref="freeLayoutScrollbar">
+      <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
         <FreeLayoutCanvas class="home-widgets">
           <FreeLayoutContainer
             :currentDesk="currentDesk"
@@ -457,7 +457,11 @@ export default {
     ...mapWritableState(navStore, ["navigationToggle"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    ...mapWritableState(useFreeLayoutStore, ["isFreeLayout"]),
+    // getFreeLayoutState.value.system.hide
+    ...mapWritableState(useFreeLayoutStore, [
+      "isFreeLayout",
+      "getFreeLayoutState",
+    ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
@@ -510,6 +514,12 @@ export default {
       return [];
     },
     deskMenus() {
+      let currentHide = null;
+      if (this.isFreeLayout) {
+        currentHide = this.getFreeLayoutState?.system?.hide;
+      } else {
+        currentHide = this.hide;
+      }
       return [
         {
           id: 1,
@@ -543,8 +553,19 @@ export default {
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
-          name: this.hide ? "显示小组件" : "隐藏小组件",
-          fn: this.hide ? this.showDesk : this.hideDesk,
+          name: currentHide ? "显示小组件" : "隐藏小组件",
+          fn: () => {
+            if (this.isFreeLayout) {
+              this.getFreeLayoutState.system.hide =
+                !this.getFreeLayoutState?.system?.hide;
+            } else {
+              if (this.hide) {
+                this.showDesk();
+              } else {
+                this.hideDesk();
+              }
+            }
+          },
         },
         { id: 8, divider: true },
         {

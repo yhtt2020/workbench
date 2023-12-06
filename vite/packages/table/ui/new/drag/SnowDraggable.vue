@@ -29,7 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRefs, computed, watch, onBeforeUnmount } from "vue";
+import {
+  ref,
+  onMounted,
+  toRefs,
+  computed,
+  watch,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import { useWindowSize } from "./useWindowSize";
 import { useElementSize, vElementSize } from "./useElementSize";
 import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
@@ -88,6 +96,8 @@ export interface DragProps {
   resetPosition?: boolean;
   // 用户数据
   data?: any;
+  // 首次定位
+  firstPosition: boolean;
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
@@ -309,7 +319,15 @@ onMounted(() => {
       immediate: true,
     }
   );
+
+  // 首次定位
+  // if (afterDraggingAdsorbGrid)
+
+  nextTick(() => {
+    console.log("   parentSize.value.height :>> ", parentSize.value.height);
+  });
 });
+console.log("   parentSize.value.height :>> ", parentSize.value.height);
 
 // 拖拽开始
 function yDragStartFn(event: MouseEvent) {

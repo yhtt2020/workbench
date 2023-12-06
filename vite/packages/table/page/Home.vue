@@ -748,7 +748,8 @@ export default {
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
-        name: this.desks[0].nanoid,
+        // name: this.desks[0].nanoid,
+        name: this.desks[0].id,
         title: this.desks[0].name,
       };
     }

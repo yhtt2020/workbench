@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onBeforeUnmount } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  toRefs,
+  onBeforeUnmount,
+  getCurrentInstance,
+} from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../freeLayout/store";
 import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
-// 初始化操作
+import { message } from "ant-design-vue";
+
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
@@ -34,7 +42,7 @@ const emits = defineEmits([
 // 基础
 const baseHide = computed(() => {
   if (currentMode.value == "free") {
-    if (getFreeLayoutState.value.system.hide) {
+    if (getFreeLayoutState.value?.system?.hide) {
       return true;
     } else {
       return false;
@@ -86,7 +94,17 @@ const freeLayoutMenu = computed(() => {
       icon: "fluent:compose-16-regular",
       title: "修改中心点",
       fn: () => {
-        freeLayoutEnv.value.updatePosition = true;
+        console.log(" freeLayoutEnv.value :>> ", freeLayoutEnv.value);
+
+        console.log("object :>> ", freeLayoutEnv.value.scrollData.width);
+        getFreeLayoutState.value.line.centerLine = {
+          y: freeLayoutEnv.value.scrollTop,
+          x:
+            freeLayoutEnv.value.scrollLeft +
+            freeLayoutEnv.value.scrollData.width / 2,
+        };
+
+        message.success("修改中心点成功");
       },
     },
     {
@@ -288,7 +306,7 @@ onBeforeUnmount(() => {
         <!-- <Items :menus="freeLayoutMenu"></Items> -->
         <div class="flex my-3">
           <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
-      </div>
+        </div>
 
         <div class="mb-3 mt-2 flex items-center">
           画布缩放

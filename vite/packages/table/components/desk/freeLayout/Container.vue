@@ -73,8 +73,9 @@ function updateCard(data) {
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   let dataObj = {};
-  currentData.value = dataObj;
+
   data.forEach((item) => (dataObj[item.id] = item));
+  currentData.value = dataObj;
   for (const key in getFreeLayoutData.value) {
     if (!(key in dataObj)) {
       delete getFreeLayoutData.value[key];
@@ -192,7 +193,7 @@ const dragStop = () => {};
           }"
           ref="test"
         >
-          <slot name="box" :data="currentData[item.id]"></slot>
+          <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </template>
     </xt-drag>
