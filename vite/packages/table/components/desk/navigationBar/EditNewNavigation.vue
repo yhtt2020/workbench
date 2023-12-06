@@ -354,13 +354,13 @@ export default {
             this.windowHeight = window.innerHeight
             if (this.windowHeight > 1000) {
                 this.navHeight = 720
-                this.contentHeight = 632
+                this.contentHeight = 644
             } else if (this.windowHeight < 1000 && this.windowHeight > 800) {
                 this.navHeight = 620
-                this.contentHeight = 532
+                this.contentHeight = 544
             } else {
-                this.navHeight = 526
-                this.contentHeight = 436
+                this.navHeight = 528
+                this.contentHeight = 448
                 this.contentWidth = 600
             }
         },
