@@ -4,10 +4,11 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
+    :class="[menuHeight]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
-    class="w-full h-full"
+    class="w-full"
   >
     <slot> </slot>
     <template #cardSize>
@@ -41,6 +42,9 @@ const props = defineProps({
   height: {
     default: 0,
   },
+  menuHeight:{
+    default: 'h-full'
+  }
 });
 const { menus, model, height } = toRefs(props);
 

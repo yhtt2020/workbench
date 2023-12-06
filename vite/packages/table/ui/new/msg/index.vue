@@ -2,7 +2,7 @@
   <!-- 弹窗 -->
   <div
     v-if="modelValue"
-    class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
+    class="fixed p-4 text-base -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
     style="
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -23,14 +23,14 @@
 
       <span>{{ title }}</span>
     </div>
-    <div class="xt-text-2 my-4" style="margin-left: 40px; max-width: 316px">
+    <div class="my-4 xt-text-2" style="margin-left: 40px; max-width: 316px">
       {{ text }}
     </div>
     <slot name="handle">
-      <div class="flex justify-end items-center">
+      <div class="flex items-center justify-end">
         <!-- 勾选框 -->
         <slot name="checkbox"></slot>
-        <xt-button w="64" h="40" @click="onNo()">
+        <xt-button w="64" h="40" @click="onNo()" v-if="noVisible">
           <span class="xt-text-2">{{ noName }}</span>
         </xt-button>
         <xt-button w="64" h="40" class="ml-3" type="theme" @click="onOk()">{{
@@ -60,6 +60,9 @@ const props = defineProps({
   },
   okName: {
     default: "确认",
+  },
+  noVisible: {
+    default: true,
   },
 });
 
