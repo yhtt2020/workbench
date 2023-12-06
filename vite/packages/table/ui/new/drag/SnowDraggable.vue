@@ -182,8 +182,8 @@ const initialMouseY = ref<number>(0);
 const initialTop = ref<number>(0);
 const initialLeft = ref<number>(0);
 
-const top = ref<number>(y.value);
-const left = ref<number>(x.value);
+const top = ref<number>(0);
+const left = ref<number>(0);
 
 const zIndex = ref(index.value);
 
@@ -278,10 +278,18 @@ function setPosition() {
     !firstPosition.value ||
     !firstPosition.value.length ||
     !isFirstPosition.value
-  )
+  ) {
     return;
+  } else {
+    top.value = y.value;
+    left.value = x.value;
+  }
 
-  if (typeof firstPosition.value[0] == "string") {
+  if (
+    typeof firstPosition.value[0] == "string" &&
+    x.value == null &&
+    y.value == null
+  ) {
     switch (firstPosition.value[0]) {
       case "left":
         left.value = 0;
@@ -362,15 +370,7 @@ onMounted(() => {
       immediate: true,
     }
   );
-
-  // 首次定位
-  // if (afterDraggingAdsorbGrid)
-
-  nextTick(() => {
-    console.log("   parentSize.value.height :>> ", parentSize.value.height);
-  });
 });
-console.log("   parentSize.value.height :>> ", parentSize.value.height);
 
 // 拖拽开始
 function yDragStartFn(event: MouseEvent) {
