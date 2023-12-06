@@ -1,3 +1,5 @@
+// import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
+
 // 注册想天客户端状态
 import currentEnv, { isWeb, isClient ,isMac, isOffline} from "./ui/hooks/env";
 window.$currentEnv = currentEnv;
@@ -77,6 +79,7 @@ loadChat()
 //socket部分
 import {initSocket} from './js/socket/socket'
 initSocket()
+import initStores from './initStores'
 
 import {Notifications} from './js/common/sessionNotice'
 
@@ -142,7 +145,8 @@ app.component('vueCustomScrollbar', vueCustomScrollbar)
 window.USER_DATA_PATH = window.globalArgs['user-data-dir']//挂载一个用户数据目录的常量，方便后续开发
 
 window.$app = $app
-
+initStores()
+// devtools.connect()
 export {
   router
 };

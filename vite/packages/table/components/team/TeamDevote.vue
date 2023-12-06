@@ -15,11 +15,11 @@
                     <UserAvatar :avatar="user.userInfo.avatar" :tag="user.userInfo.uid===teamLeader.uid?'队长':'队员'"></UserAvatar>
                   </a-col>
                   <a-col :span="9" class="text-center">
-                    <div class=" pt-3 " style=" font-size: 14px; color: rgba(255,255,255,0.85);font-weight: 500;">
+                    <div class=" pt-3 xt-text" style=" font-size: 14px;  ;font-weight: 500;">
                       {{ user.devote.toFixed(2) }} 分钟</div>
                   </a-col>
                   <a-col :span="7" v-if="user.devote">
-                    <div @click="doExchangeDevote(user.uid)" style="font-size: 16px; color: rgba(255,255,255,0.85);font-weight: 500;"  class=" rounded-lg pointer receive-active flex justify-center items-center bg-black bg-opacity-30 pl-3 pr-3 pt-2 pb-2">领取</div>
+                    <xt-button :w="80" :h="40" @click="doExchangeDevote(user.uid)">领取</xt-button>
                   </a-col>
                 </a-row>
               </div>

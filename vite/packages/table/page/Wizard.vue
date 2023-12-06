@@ -59,13 +59,13 @@
               </div>
             </a-col>
           </a-row>
-  
-  
+
+
         </div>
         <div v-if="step===1 && mod==='second-screen'" class="flex justify-center">
-  
+
           <div v-if="screenSettingTab==='none'" class="mt-6">
-  
+
             <a-row class="screen-section" @click="screenSettingTab='touch'">
               <a-col :span="19">
                 <div>
@@ -74,7 +74,7 @@
                 <div class="font-title">异常情况：触摸副屏，反馈在主屏的情况。</div>
               </a-col>
               <a-col :span="5" class="font-button">
-                矫正屏幕 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
+                设置触摸 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
                 <!-- <a-button v-if="screenSettingTab!=='touch'" type="primary"> 矫正屏幕
                 </a-button> -->
               </a-col>
@@ -102,12 +102,12 @@
               </a-col>
             </a-row>
           </div>
-  
+
           <div v-if="screenSettingTab==='touch'">
             <div class="screen-section xt-text" style="line-height: 2;margin-top: 3em;padding: 32px;" v-if="screenSettingTab==='touch'">
               <p>
                 如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
-              <p class="xt-text-2">矫正方法：</p>
+              <p class="xt-text-2">设置方法：</p>
               <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
               <p class="flex justify-center">
                 <a class="mr-10 flex items-center"  @click="startAdjust">
@@ -116,10 +116,10 @@
                   <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
               </p>
             </div>
-  
+
           </div>
-  
-  
+
+
           <div class="screen-section mt-6" style="height: 320px;padding: 16px 24px;" v-if="screenSettingTab==='choose'">
             <div class="flex justify-between">
               <div>
@@ -132,11 +132,11 @@
             </div>
             <!-- <div v-if="canTouch">
             </div> -->
-            <div class="h-full flex items-center justify-center " style="width: 488px;height: 240px;">
+            <div class="h-full flex items-center" style="width: 100px;height: 100px;">
               <ChooseScreen></ChooseScreen>
             </div>
           </div>
-  
+
           <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
             <div style="color: #999">
               如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
@@ -145,8 +145,8 @@
               <ZoomUI></ZoomUI>
             </div>
           </div>
-  
-  
+
+
         </div>
         <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')" class="px-6">
           <div class="mt-3 mb-3 flex justify-center xt-bg-2" style="padding: 1em;border-radius: 8px 8px;color: white">
@@ -205,10 +205,10 @@
             </a-col>
           </a-row>
         </div>
-  
 
-        
-        
+
+
+
       </div>
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex">
@@ -228,7 +228,7 @@
         </xt-button>
         <xt-button  v-else-if="step == 4" class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
         </div>
-        
+
       </div>
     </div>
 
@@ -463,7 +463,7 @@ export default {
       }, 300)
     },
     openVideo () {
-      browser.openInUserSelect('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
+      browser.openInSystem('https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click')
     },
     setTableKeys (args) {
       let rs = ipc.sendSync('setTableShortcut', { shortcut: args.keys })
@@ -563,7 +563,7 @@ export default {
   font-size: 18px;
   text-align: center;
   color: var(--primary-text);
-  
+
 }
 
 .content{
@@ -623,7 +623,7 @@ export default {
 }
 
 .bg-image{
-  background-image: url('../../../public/img/defaultBg.jpg') !important;
+  background-image: url('https://a.apps.vip/icons/defaultBg.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;

@@ -5,7 +5,11 @@
   <div class="flex flex-col px-6">
    <span class="font-16 font-400 mb-4 xt-text" >我创建的版块({{ forumList.length }})</span>
 
-   <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;">
+   <template v-if="forumList.length === 0">
+    <EmptyStatus />
+   </template>
+
+   <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;" v-else>
     <div v-for="(item,index) in forumList" class="flex items-center mb-3 pointer p-5 rounded-lg xt-bg-2" 
      :class="{'select-bg':selectIndex === index}" @click="selectForum(index,item)"
     >
@@ -29,14 +33,15 @@ import { mapActions,mapWritableState } from 'pinia'
 import { forumStore } from '../../store/forumStore'
 import { Icon as ClassIcon} from '@iconify/vue'
 
-import ChannelClassification from './ChannelClassification.vue'
-import ModalTop from '../ModalTop.vue'
+import ChannelClassification from './ChannelClassification.vue';
+import ModalTop from '../ModalTop.vue';
+import EmptyStatus from '../empty/EmptyStatus.vue';
 
 export default {
  components:{
   ClassIcon,
   ChannelClassification,
-  ModalTop
+  ModalTop,EmptyStatus
  },
 
  props:['no'],
@@ -60,8 +65,10 @@ export default {
   ...mapWritableState(forumStore,['forumList'])
  },
 
- async mounted(){
-  await this.getForumData()
+ mounted(){
+  this.$nextTick(()=>{
+   this.getForumData()
+  })
  },
 
 

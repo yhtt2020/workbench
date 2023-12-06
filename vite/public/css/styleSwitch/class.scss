@@ -109,8 +109,10 @@ body {
 }
 
 hr {
-  height: 1px;
-  border: 1px solid var(--divider-solid) !important;
+  border-bottom:1px solid  var(--divider)!important;
+}
+.xt-divider {
+  border-bottom:1px solid  var(--divider)!important;
 }
 /**
 * 功能性颜色

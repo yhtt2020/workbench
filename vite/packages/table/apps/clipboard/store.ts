@@ -3,8 +3,9 @@ import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
 let clipboardChanged = null
 //todo 此处要兼容web版
+let win32
 if(process.platform==='win32'){
-  const {win32} = window.$models
+  win32 = window.$models.win32
   win32.watchClipboard(() => {
     if (clipboardChanged) {
       clipboardChanged()

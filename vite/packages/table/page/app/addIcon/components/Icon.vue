@@ -58,6 +58,7 @@ export default {
       if (newV == 4 && this.taskID == "M0201") {
         this.selectApp(this.data[0], 0);
         this.selectApp(this.data[1], 1);
+        this.step++
       }
     },
   },

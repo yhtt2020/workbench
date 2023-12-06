@@ -54,7 +54,7 @@ export default {
   },
 
   // 创建
-  createCategory(){
+  async createCategory(){
    if(this.categoryName !== '' && this.no !== '1'){
     const option = {
       name:this.categoryName,
@@ -62,10 +62,12 @@ export default {
       type:'category',
       role:'category',
     }
-    this.createChannel(option,this.no)
-    message.success('分组添加成功')
-    this.addVisible = false
-    this.categoryName = ''
+    const res = await this.createChannel(option,this.no)
+    if(res.status === 1){
+      message.success(`${res.info}`) ;
+      this.addVisible = false   
+      this.categoryName = ''
+    }
    }else{
     message.success('添加分组的参数不能缺少')
    }

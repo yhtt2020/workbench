@@ -1,5 +1,5 @@
 <template>
-<div class="fixed inset-0" :class="blurFlag?'home-blur':''" :style="{'z-index':zIndex}" style="z-index: 99" @click="closeModal">
+<div class="fixed inset-0 modal" :class="blurFlag?'home-blur':''" :style="{'z-index':zIndex}"  @click="closeModal">
   <div @click.stop class="s-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg " style="transform-origin: 0 0;background: var(--modal-bg);" :class="className">
     <slot></slot>
   </div>
@@ -47,7 +47,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.modal{
+  z-index: 99;
+}
 .t-b{
   animation:t-b .5s;
 }

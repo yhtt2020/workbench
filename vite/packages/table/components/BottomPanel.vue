@@ -38,6 +38,7 @@
         z-index: 99;
         min-width: 70px;
       ">
+        <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
         <div style="
           display: flex;
           flex-direction: row;
@@ -47,10 +48,13 @@
           flex-wrap: nowrap;
           justify-content: center;
         ">
+
+
           <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
             <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
               ref="content">
-              <xt-task id='M0104' no='1' @cb="showMenu">
+              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
+
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
@@ -74,7 +78,7 @@
                     </xt-menu>
                   </a-tooltip>
                 </div>
-              </xt-task>
+
             </div>
           </div>
           <!-- <div class="mr-3"> -->
@@ -139,6 +143,8 @@
           </div>
         </a-tooltip> -->
         </div>
+      </xt-task>
+
       </div>
 
       <template v-if="!simple && isMain && this.bottomToggle[1]">

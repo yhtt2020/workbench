@@ -6,7 +6,7 @@
     ref="customAssembly"
     :custom-data="customData"
     :desk="desk">
-    <div class="absolute inset-0" style="border-radius: 8px; z-index: -1">
+    <div v-if="Object.keys(myData.img).length > 0" class="absolute inset-0" style="border-radius: 8px; z-index: -1">
       <div
         class="h-full w-full pointer"
         @click="openApp"
@@ -46,21 +46,7 @@
           v-else
         />
       </div>
-      <div v-else class="flex justify-center items-center flex-col h-full">
-        <!-- <a-empty description="" /> -->
-        <XtState  class="mt-5"  zoom="30" :state="'null'" :text="{'null':' '}" style="width: 100%;height: 30%;" bg=""></XtState>
-        <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-40 pointer mt-3 text-base"
-          style="background: var(--secondary-bg);color: var(--primary-text);"
-          @click="
-            () => {
-              this.panelVisible = true;
-            }
-          "
-        >
-          选择图片
-        </div>
-      </div>
+
       <div
         class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3"
         v-if="showName"
@@ -68,6 +54,15 @@
       >
         {{ myData.title }}
       </div>
+    </div>
+    <div v-else class="flex justify-center items-center flex-col h-full">
+      <!-- <a-empty description="" /> -->
+
+      <xt-button type="theme"
+                 @click="importFile"
+      >
+        选择图片
+      </xt-button>
     </div>
   </Widget>
   <a-drawer
@@ -101,7 +96,7 @@
         class="mt-6"
         bg-color="drawer-item-select-bg"
       ></HorizontalPanel> -->
-      <div class="flex flex-row justify-between items-center mt-2">
+      <div class="flex mb-2 flex-row justify-between items-center mt-2">
         <div class="text-base">显示名称</div>
         <div><a-switch v-model:checked="showName" /></div>
       </div>
@@ -115,21 +110,20 @@
       <div class="mt-6 text-base">小组件封面</div>
       <!--    <div class=" mt-2 text-base" style="color: rgba(255, 255, 255, 0.4);">支持直接复制粘贴图片到此处</div>-->
       <div
-        class="flex flex-row justify-between items-center mt-6"
+        class="flex flex-row justify-between items-center mt-6 gap-3"
         v-if="!Object.keys(myData.img).length > 0"
       >
-        <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base xt-bg-2"
-          @click="importFile" style="color: var(--primary-text);"
+        <xt-button type="theme"
+          class="  w-full  " style="width:50%"
+          @click="importFile"
         >
           选择图片
-        </div>
-        <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer text-base xt-bg-2"
-          @click="openMy" style="color: var(--primary-text);"
+        </xt-button>
+        <xt-button
+          @click="openMy" style="width:50%"
         >
           选自壁纸收藏
-        </div>
+        </xt-button>
       </div>
       <div v-else>
         <div class="h-16 w-16 mt-6 relative">
@@ -481,8 +475,8 @@ export default {
     },
     async customClick() {
       let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择导入的代码",
-        filters: [{ name: "全部", extensions: ["*"] }],
+        title: "选择图片",
+        filters: [{ name: "图片", extensions: ["png",'jpeg','jpg','svg','bmp','gif','webp'] },{ name: "全部", extensions: ["*"] }],
         properties: ["multiSelections"],
       });
       if (!openPath) {

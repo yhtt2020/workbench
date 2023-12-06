@@ -1,12 +1,12 @@
 <template>
-  <a-input-group compact>
-    <a-input style="width:calc(100% - 70px);" @keyup.enter="postBarrage" v-model:value="postContent"
+  <a-input-group class="barrage-sender" compact>
+    <a-input  style="width:calc(100% - 70px);border:none" @keyup.enter="postBarrage" v-model:value="postContent"
              :placeholder="'发送至'+currentChannel.title+'频道'">
       <template #addonBefore>
         <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
       </template>
     </a-input>
-    <a-button @click="postBarrage" type="primary">发送</a-button>
+    <xt-button  style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-radius:6px" type="theme" :w="70" :h="32" class="xt-text" @click="postBarrage" >发送</xt-button>
   </a-input-group>
 </template>
 
@@ -84,6 +84,23 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.barrage-sender{
+  .ant-input-group{
+    border: none;
+  }
+  .ant-input-group-addon{
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .ant-input,.ant-input-group-addon{
+    &::-webkit-input-placeholder{
+      color:var(--secondary-text) !important;
+    }
+    border-color:var(--secondary-bg);
+    background: var(--secondary-bg);
+    color:var(--primary-text) !important;
+  }
+}
 </style>

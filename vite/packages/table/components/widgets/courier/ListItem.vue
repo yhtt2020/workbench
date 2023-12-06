@@ -178,7 +178,7 @@ export default {
 
             </div>
             <div class="flex">
-              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:68px;">
+              <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg " style="width:auto;">
                 {{ item.company }}
               </div>
               <div class="flex items-center pl-1 pr-1 mr-2 rounded-md xt-bg xt-text-2"

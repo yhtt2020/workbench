@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="previewShow" class="preview-container">
+    <div v-if="previewShow" class="preview-container xt-text">
       <div class="flex justify-between p-3 w-full h-full">
         <!-- 文本预览模块 -->
         <template v-if="previewContent.type === 'text'">
@@ -12,9 +12,9 @@
                 <Icon icon="guanbi" style="font-size: 1.75em;"></Icon>
               </div>
             </div>
-            <div class="flex items-center justify-center grow pr-5 pl-2 mb-3">
+            <div class="flex items-center justify-center flex-1 h-0 pr-5 pl-2 mb-3">
               <template v-if="defaultText.name === 'plainText'">
-                <textCodeMirror :editorContent="previewContent.content" class="w-full"></textCodeMirror>
+                <textCodeMirror :editorContent="previewContent.content" class="w-full h-full"></textCodeMirror>
               </template>
               <template v-else>
                 <ClipCodemirror ref="myClipCodeMirror" class="w-full"
@@ -369,7 +369,7 @@ export default {
 .type-text {
 
   font-size: 16px;
-  color: var(--secondary-text);
+  color: var(--primary-text);
   font-weight: 400;
 }
 
@@ -377,8 +377,7 @@ export default {
   &:hover{
     opacity: 0.7;
   }
-  background: var(--secondary-bg);
-  color: var(--primary-text);
+
   cursor: pointer;
 }
 
