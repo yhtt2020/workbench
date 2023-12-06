@@ -6,7 +6,7 @@
       </xt-button>
     </div>
   </div>
-  <div style="height: 100%; width: calc(100% - 00px) ;margin:-8px" v-if="currentDesk.cards">
+  <div style="height: 100%; width: calc(100% + 8px) ;margin:-8px" v-if="currentDesk.cards">
     <div
       style="width: 100%; height: 100%"
       :class="notTrigger ? 'trigger' : ''"
