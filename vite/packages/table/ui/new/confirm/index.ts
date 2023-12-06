@@ -1,5 +1,8 @@
 import { h, render } from "vue";
-import ConfirmComponent from "./confirm.vue";
+import ConfirmComponent from "./Confirm.vue";
+
+export default ConfirmComponent
+
 interface ConfirmOptions {
   noText?: string | boolean | undefined;
   okText?: string;
