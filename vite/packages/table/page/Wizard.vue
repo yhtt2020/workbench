@@ -193,7 +193,8 @@
               </div>
             </a-col>
             <a-col >
-              <div :class="{'active':desktopSetting==='custom'}" @click="this.desktopSetting='custom'" class="setting-panel pointer px-4 pt-5">
+              <!-- @click="this.desktopSetting='custom'"  -->
+              <div :class="{'active':desktopSetting==='custom'}" class="setting-panel pointer px-4 pt-5">
                 <div class="title">
                   <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
                   <div class="mt-2">定制桌面（未开放）</div>
