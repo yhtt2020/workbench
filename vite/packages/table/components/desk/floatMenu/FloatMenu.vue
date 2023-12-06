@@ -253,6 +253,7 @@ onBeforeUnmount(() => {
     v-model:x="floatMenuStore.x"
     :index="100"
     disabledHandle=".floatMenu"
+    :firstPosition="['right', 'right']"
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
@@ -288,7 +289,7 @@ onBeforeUnmount(() => {
         <!-- <Items :menus="freeLayoutMenu"></Items> -->
         <div class="flex my-3">
           <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
-      </div>
+        </div>
 
         <div class="mb-3 mt-2 flex items-center">
           画布缩放

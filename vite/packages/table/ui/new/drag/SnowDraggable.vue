@@ -13,10 +13,6 @@
       }"
     >
       <slot>
-        <!-- <div class="draggable">
-          <div>长按开始</div>
-          <div>拖拽!👋</div>
-        </div> -->
         <!-- <img src="./snow.svg" alt="" style="display: block" /> -->
       </slot>
     </div>
@@ -29,7 +25,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, toRefs, computed, watch, onBeforeUnmount } from "vue";
+import {
+  ref,
+  onMounted,
+  toRefs,
+  computed,
+  watch,
+  onBeforeUnmount,
+  nextTick,
+} from "vue";
 import { useWindowSize } from "./useWindowSize";
 import { useElementSize, vElementSize } from "./useElementSize";
 import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
@@ -88,6 +92,8 @@ export interface DragProps {
   resetPosition?: boolean;
   // 用户数据
   data?: any;
+  // 首次定位
+  firstPosition?: any;
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
@@ -121,6 +127,8 @@ const props = withDefaults(defineProps<DragProps>(), {
   gridStyle: null,
   resetPosition: true,
   data: {},
+  firstPosition: null,
+  // firstPosition: ["center", "center"],
 });
 const {
   disabled,
@@ -149,6 +157,7 @@ const {
   disabledDefaultEvent,
   resetPosition,
   data,
+  firstPosition,
 } = toRefs(props);
 
 onBeforeUnmount(() => {});
@@ -172,8 +181,10 @@ const initialMouseX = ref<number>(0);
 const initialMouseY = ref<number>(0);
 const initialTop = ref<number>(0);
 const initialLeft = ref<number>(0);
+
 const top = ref<number>(y.value);
 const left = ref<number>(x.value);
+
 const zIndex = ref(index.value);
 
 const prevX = ref<number>(0);
@@ -257,6 +268,48 @@ function getElementSize(size: any) {
     height: newHeight,
   };
 }
+
+watch(parentSize, (val: any) => {
+  setPosition();
+});
+const isFirstPosition = ref(true);
+function setPosition() {
+  if (
+    !firstPosition.value ||
+    !firstPosition.value.length ||
+    !isFirstPosition.value
+  )
+    return;
+
+  if (typeof firstPosition.value[0] == "string") {
+    switch (firstPosition.value[0]) {
+      case "left":
+        left.value = 0;
+        break;
+      case "right":
+        left.value = parentSize.value.width - draggableSize.value.width;
+        break;
+      case "center":
+        left.value = parentSize.value.width / 2 - draggableSize.value.width / 2;
+        break;
+    }
+
+    switch (firstPosition.value[1]) {
+      case "top":
+        top.value = 0;
+        break;
+      case "bottom":
+        top.value = parentSize.value.height - draggableSize.value.height;
+        break;
+      case "center":
+        top.value =
+          parentSize.value.height / 2 - draggableSize.value.height / 2;
+        break;
+    }
+    isFirstPosition.value = false;
+  }
+}
+
 onMounted(() => {
   // 父级窗口变化
   watch(
