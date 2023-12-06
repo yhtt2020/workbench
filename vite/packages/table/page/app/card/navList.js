@@ -345,25 +345,25 @@ export const NavList = [
         ],
         time: "2023/5/31",
       },
-      {
-        name: "singleDoubanFilm",
-        cname: "正在热映",
-        detail: "电影荒了？来看看近期正在上映的热门电影。",
-        sizes: ["2x4", "2x4"],
-        option: [
-          {
-            name: "SingleFilm",
-            size: "2x4",
-            zoom: "11",
-          },
-          {
-            name: "ManyFilm",
-            size: "2x4",
-            zoom: "11",
-          },
-        ],
-        time: "2023/5/31",
-      },
+      // {
+      //   name: "singleDoubanFilm",
+      //   cname: "正在热映",
+      //   detail: "电影荒了？来看看近期正在上映的热门电影。",
+      //   sizes: ["2x4", "2x4"],
+      //   option: [
+      //     {
+      //       name: "SingleFilm",
+      //       size: "2x4",
+      //       zoom: "11",
+      //     },
+      //     {
+      //       name: "ManyFilm",
+      //       size: "2x4",
+      //       zoom: "11",
+      //     },
+      //   ],
+      //   time: "2023/5/31",
+      // },
       {
         name: 'historyInfo',
         cname: '历史上的今天',
