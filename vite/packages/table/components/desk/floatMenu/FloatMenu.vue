@@ -6,7 +6,17 @@ import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
-// 初始化操作
+
+import { confirm } from "../../../ui/new/confirm/index";
+
+confirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳")
+  .then(() => {
+    console.log("111 :>> ", 111);
+  })
+  .catch(() => {
+    console.log("222 :>> ", 222);
+  });
+
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
@@ -34,7 +44,7 @@ const emits = defineEmits([
 // 基础
 const baseHide = computed(() => {
   if (currentMode.value == "free") {
-    if (getFreeLayoutState.value.system.hide) {
+    if (getFreeLayoutState.value?.system?.hide) {
       return true;
     } else {
       return false;
@@ -288,7 +298,7 @@ onBeforeUnmount(() => {
         <!-- <Items :menus="freeLayoutMenu"></Items> -->
         <div class="flex my-3">
           <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
-      </div>
+        </div>
 
         <div class="mb-3 mt-2 flex items-center">
           画布缩放
