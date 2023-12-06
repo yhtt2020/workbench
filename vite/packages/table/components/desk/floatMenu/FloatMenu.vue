@@ -271,7 +271,7 @@ onBeforeUnmount(() => {
     v-model:x="floatMenuStore.x"
     :index="100"
     disabledHandle=".floatMenu"
-    :firstPosition="['right', 'right']"
+    :firstPosition="['right', 'bottom']"
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
