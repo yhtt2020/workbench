@@ -1,8 +1,14 @@
 <template>
   <!-- @click="handleOpenMenu($event, 'click')"
     @contextmenu="handleOpenMenu($event, 'contextmenu')"
-    @mousedown="handleMouseDown" -->
-  <div ref="containerRef" @mouseup="handleMouseUp($event)">
+    @mousedown="handleMouseDown"
+
+  @mouseup="handleMouseUp($event)"-->
+  <div
+    ref="containerRef"
+    @click="handleOpenMenu($event, 'click')"
+    @contextmenu="handleOpenMenu($event, 'contextmenu')"
+  >
     <slot></slot>
     <teleport to="body">
       <Transition
