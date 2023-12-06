@@ -165,7 +165,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2] = false },
+          fn: () => {this.sortId==='left'? this.navigationToggle[0] = false:this.navigationToggle[1] = false},
         },
         {
           id: 4,
