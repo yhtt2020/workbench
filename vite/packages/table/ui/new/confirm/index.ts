@@ -1,11 +1,16 @@
 import { h, render } from "vue";
 import ConfirmComponent from "./confirm.vue";
+
 /**
  * 确认框
  * @param title 标题
  * @param content 内容
  * @param noText 取消按钮文字
  * @param okText 确认按钮文字
+ * @param duration 动画持续时间
+ * @param index 动画索引
+ * @param mask 是否显示遮罩层
+ * @param maskIndex 遮罩层索引
  */
 export const confirm = (
   title: string,
@@ -13,7 +18,7 @@ export const confirm = (
   {
     noText = "取消",
     okText = "确认",
-    duration = "0.5s",
+    duration = "0.3s",
     index = 99999,
     mask = false,
     maskIndex = 99999,
@@ -54,8 +59,8 @@ export const confirm = (
       noText,
       okText,
       duration,
-      mask,
       index,
+      mask,
       maskIndex,
       ok,
       no,

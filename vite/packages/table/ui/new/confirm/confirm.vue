@@ -86,23 +86,10 @@ const props = defineProps({
     type: String,
     default: "确定",
   },
-  // 取消按钮事件
-  no: {
-    type: Function,
-  },
-  // 确定按钮事件
-  ok: {
-    type: Function,
-  },
-  // 关闭 confirm 的回调
-  close: {
-    type: Function,
-    default: () => {},
-  },
   // 动画时长
   duration: {
     type: String,
-    default: "0.5s",
+    default: "0.3s",
   },
   // 确认框层级
   index: {
@@ -118,6 +105,19 @@ const props = defineProps({
   maskIndex: {
     type: String || Number,
     default: 99999,
+  },
+  // 取消按钮事件
+  no: {
+    type: Function,
+  },
+  // 确定按钮事件
+  ok: {
+    type: Function,
+  },
+  // 关闭 confirm 的回调
+  close: {
+    type: Function,
+    default: () => {},
   },
 });
 const { close, duration, no, ok }: any = toRefs(props);
