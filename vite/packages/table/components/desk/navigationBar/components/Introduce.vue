@@ -101,10 +101,10 @@ export default {
         this.updateMainNav(item, 'add')
         item.addNav = true
         setNavigationList(item)
-        this.$nextTick(() => {
-          let scrollElem = this.$refs.content
-          scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-        })
+        // this.$nextTick(() => {
+        //   let scrollElem = this.$refs.content
+        //   scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+        // })
       }
       // } 
     },

@@ -1,5 +1,5 @@
 <template>
-  <xt-menu :menus="rightMenus" :name="name" :beforeCreate="menuState">
+  <xtMixMenu :menus="rightMenus" name="name">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -55,7 +55,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <xtMenu :menus="iconMenus">
+                    <xtMixMenu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
@@ -71,7 +71,7 @@
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
-                    </xtMenu>
+                    </xtMixMenu>
                   </a-tooltip>
                 </div>
               </xt-task>
@@ -160,7 +160,7 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
-  </xt-menu>
+  </xtMixMenu>
   <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
@@ -267,6 +267,7 @@ import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 import xtMenu from '../ui/components/Menu/index.vue'
+import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -290,7 +291,8 @@ export default {
     navigationSetting,
     AddIcon,
     EditNewNavigation,
-    xtMenu
+    xtMenu,
+    xtMixMenu
   },
   data() {
     return {
@@ -333,21 +335,21 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:open-16-regular',
-          label: "打开",
-          callBack: () => { this.clickNavigation(this.currentItem) },
+          name: "打开",
+          fn: () => { this.clickNavigation(this.currentItem) },
         },
         {
           id: 2,
-          label: '编辑',
+          name: '编辑',
           newIcon: "fluent:compose-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          label: '删除',
+          name: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: "#FF4D4F",
-          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
+          fn: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
           id: 4,
@@ -355,40 +357,39 @@ export default {
         },
         {
           id: 5,
-          label: '添加导航图标',
+          name: '添加导航图标',
           newIcon: "fluent:add-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 6,
-          label: '导航栏设置',
+          name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
+          fn: () => { this.editNavigation(this.drawerMenus[1]) }
         }
       ],
       mainMenus: [
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
-          label: "添加导航图标",
-          label: "添加导航图标",
-          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
+          name: "添加导航图标",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 2,
-          label: '导航栏设置',
+          name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          label: '隐藏当前导航',
+          name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          callBack: () => { this.navigationToggle[2] = false },
+          fn: () => { this.navigationToggle[2] = false },
         },
         {
           id: 4,
-          label: '更多',
+          name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
 
@@ -400,30 +401,30 @@ export default {
         {
           type: "systemApp",
           newIcon: "fluent:lock-closed-16-regular",
-          label: "锁定屏幕",
+          name: "锁定屏幕",
           event: "lock",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
-          label: "基础设置",
+          name: "基础设置",
           event: "setting",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
-          label: "全屏显示",
+          name: "全屏显示",
           event: "fullscreen",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
-          label: "设备设置",
+          name: "设备设置",
           event: "status",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
       shakeElement: false,
@@ -537,27 +538,27 @@ export default {
       return [
         {
           id: 1,
-          label: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
           newIcon: "fluent:person-16-regular",
-          callBack: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
         },
         {
           id: 2,
-          label: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
           newIcon: "fluent:people-community-16-regular",
-          callBack: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
         },
         {
           id: 3,
-          label: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          callBack: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
         {
           id: 4,
-          label: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
-          callBack: () => { this.settings.enableChat = !this.settings.enableChat }
+          fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
       ]
 
@@ -607,24 +608,24 @@ export default {
         this.disableDrag()
       }
     },
-    simple(){
-      if(this.simple){
-        this.bottomToggle[0]=false
-        this.bottomToggle[1]=false
-        this.bottomToggle[2]=false
-      }else{
-        this.bottomToggle[0]=true
-        this.bottomToggle[1]=true
-        this.bottomToggle[2]=true
+    simple() {
+      if (this.simple) {
+        this.bottomToggle[0] = false
+        this.bottomToggle[1] = false
+        this.bottomToggle[2] = false
+      } else {
+        this.bottomToggle[0] = true
+        this.bottomToggle[1] = true
+        this.bottomToggle[2] = true
       }
     },
-    bottomToggle:{
-      deep:true,
-      handler(newV,oldV){
-        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
-          this.simple=false
-        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
-          this.simple=true
+    bottomToggle: {
+      deep: true,
+      handler(newV, oldV) {
+        if (this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]) {
+          this.simple = false
+        } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
+          this.simple = true
         }
       }
     }
@@ -841,7 +842,7 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-    menuState(){
+    menuState() {
       return this.rightModel === 'follow'
     },
     clickNavigation(item) {
