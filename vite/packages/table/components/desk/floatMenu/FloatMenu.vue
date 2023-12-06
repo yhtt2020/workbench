@@ -12,14 +12,15 @@ widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
 
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutState, freeLayoutEnv, isFreeLayout ,isSelectAll}: any =
+const { getFreeLayoutState, freeLayoutEnv, isFreeLayout, isSelectAll }: any =
   storeToRefs(freeLayoutStore);
 const props = defineProps({
   zoom: {},
   aloneZoom: {},
   alone: {},
+  hide: {},
 });
-const { zoom, alone, aloneZoom }: any = toRefs(props);
+const { zoom, alone, aloneZoom, hide }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
@@ -31,6 +32,21 @@ const emits = defineEmits([
   "resetLayout",
 ]);
 // 基础
+const baseHide = computed(() => {
+  if (currentMode.value == "free") {
+    if (getFreeLayoutState.value.system.hide) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    if (hide.value) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
 const defaultMenu = computed(() => {
   return [
     {
@@ -42,9 +58,15 @@ const defaultMenu = computed(() => {
     },
     {
       icon: "fluent:eye-off-16-regular",
-      title: "隐藏小组件",
+      title: baseHide.value ? "隐藏小组件" : "显示小组件",
+      type: baseHide.value ? "theme" : "default",
       fn: () => {
-        emits("hide");
+        if (currentMode.value == "free") {
+          getFreeLayoutState.value.system.hide =
+            !getFreeLayoutState.value.system.hide;
+        } else {
+          emits("hide");
+        }
       },
     },
     {
@@ -107,7 +129,6 @@ const canvasMenu = computed(() => {
         if (currentMode.value === "free") {
           freeLayoutZoom.value += 5;
         } else {
-          console.log('123 :>> ', 123);
           if (alone.value) {
             defaultAloneZoom.value += 5;
           } else {
@@ -234,7 +255,7 @@ onBeforeUnmount(() => {
     disabledHandle=".floatMenu"
   >
     <div
-      class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow"
+      class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
       style="touch-action: none; width: 208px"
     >
       <xt-text type="2" class="mb-3">
@@ -250,17 +271,25 @@ onBeforeUnmount(() => {
         </template>
       </xt-text>
       <xt-tab
+        :boxStyle="{ 'border-radius': '10px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentMode"
         :list="deskList"
         class="h-10 p-1 xt-bg-2 mb-3"
         style="font-size: 14px !important"
       />
+      <!-- <xt-modal :modelValue="1"> <test></test></xt-modal> -->
+
       <div class="flex my-3">
-        <Item v-for="item in defaultMenu" :item="item" class="mr-3" />
+        <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
       </div>
       <template v-if="isFreeLayout && currentMode === 'free'">
         <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
-        <Items :menus="freeLayoutMenu"></Items>
+        <!-- <Items :menus="freeLayoutMenu"></Items> -->
+        <div class="flex my-3">
+          <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
+      </div>
+
         <div class="mb-3 mt-2 flex items-center">
           画布缩放
           <xt-new-icon

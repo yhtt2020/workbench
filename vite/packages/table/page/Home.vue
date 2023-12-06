@@ -94,15 +94,19 @@
       v-model:currentDeskId="this.currentDeskId"
     >
       <template #settingsAll>
-        <div class="xt-bg-2 rounded-xl p-3 mb-4 text-base">
-          <div class="flex justify-between mb-3">
+        <div class="xt-bg-2 rounded-xl p-4 mb-4 text-base">
+          <div class="flex justify-between mb-4">
             <div>桌面背景</div>
           </div>
-          <div class="xt-text-2 text-sm my-3">
+          <div class="xt-text-2 text-sm my-4">
             选择喜欢的图片作为工作台桌面背景。
           </div>
-          <div class="xt-text-2 flex text-sm my-3" v-if="!appSettings.transparent">
-            <xt-task :modelValue="m01034" to="" @cb="goPaper">
+          <div
+            class="xt-text-2 flex text-sm my-4"
+            v-if="!appSettings.transparent"
+          >
+            <xt-task id="M0103" no="3" to=""> </xt-task>
+            <xt-task id="M0103" no="4" to="" @cb="goPaper">
               <xt-button
                 size="mini"
                 :w="80"
@@ -122,59 +126,62 @@
               >清除背景</xt-button
             >
           </div>
-          <hr class="my-3" />
+          <hr class="my-4" />
 
           <template v-if="!appSettings.transparent">
-            <div class="flex justify-between mb-3">
+            <div class="flex justify-between mb-4">
               <div>背景模糊度</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">开启后增加背景模糊度</div>
-            <div class="xt-text-2 text-sm my-3">
+            <div class="xt-text-2 text-sm my-4">开启后增加背景模糊度</div>
+            <div class="xt-text-2 text-sm my-4">
               <a-slider
                 v-model:value="backgroundSettings.backGroundImgBlur"
                 :max="100"
                 :step="1"
               />
             </div>
-            <hr class="my-3" />
+            <hr class="my-4" />
           </template>
-          <div class="flex justify-between mb-3">
+          <div class="flex justify-between mb-4">
             <div>透明背景</div>
             <a-switch v-model:checked="appSettings.transparent" />
           </div>
-          <div class="xt-text-2 text-sm my-3">开启后透明背景</div>
+          <div class="xt-text-2 text-sm mt-4">开启后透明背景</div>
         </div>
-        <xt-task :modelValue="m01033" to=""> </xt-task>
-        <div class="xt-bg-2 rounded-xl p-3 mb-1 text-base">
-          <div class="p-3 xt-modal rounded-xl xt-text-2">
+        <div class="xt-bg-2 rounded-xl p-4 mb-1 text-base">
+          <div class="p-4 xt-modal rounded-xl xt-text-2">
             此类功能性能消耗较高，请酌情开启
           </div>
-          <div class="flex justify-between my-3">
+          <div class="flex justify-between my-4">
             <div>边框RGB灯</div>
             <a-switch v-model:checked="appSettings.houserun" />
           </div>
-          <div class="xt-text-2 text-sm my-3">
+          <div class="xt-text-2 text-sm my-4">
             在工作台窗口四周显示RGB效果。
           </div>
-          <hr class="my-3" />
-          <div class="flex justify-between mb-3">
+          <hr class="my-4" />
+          <div class="flex justify-between mb-4">
             <div>飘落效果</div>
             <a-switch v-model:checked="appSettings.down.enable" />
           </div>
-          <div class="xt-text-2 text-sm my-3">开启后页面会有炫酷的飘落效果</div>
-          <hr class="my-3" />
+          <div class="xt-text-2 text-sm my-4">开启后页面会有炫酷的飘落效果</div>
+          <hr class="my-4" style="height: 0.5px" />
           <template v-if="appSettings.down.enable">
-            <div class="flex justify-between my-3">
+            <div class="flex justify-between my-4">
               <div>飘落物</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">
-              <xt-tab class=" h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
+            <div class="xt-text-2 text-sm my-4">
+              <xt-tab
+                class="h-10"
+                v-model="appSettings.down.type"
+                :list="fallingList"
+              ></xt-tab>
             </div>
-            <hr class="my-3" />
-            <div class="flex justify-between my-3">
+            <hr class="my-4" />
+            <div class="flex justify-between my-4">
               <div>飘落物数量</div>
             </div>
-            <div class="xt-text-2 text-sm my-3">
+            <div class="xt-text-2 text-sm mt-4">
               <xt-input
                 v-model="appSettings.down.count"
                 class="xt-modal xt-b"
@@ -237,7 +244,11 @@
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div class="fixed inset-0 flex justify-center items-center" style="z-index: 999" v-if="false">
+  <div
+    class="fixed inset-0 flex justify-center items-center"
+    style="z-index: 999"
+    v-if="false"
+  >
     <GuidePage></GuidePage>
   </div>
 
@@ -313,7 +324,6 @@ import AggregateSearch from "../components/widgets/aggregate/AggregateSearch.vue
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ShareDesk from "../components/desk/ShareDesk.vue";
 import DeskMarket from "./app/card/DeskMarket.vue";
-import { deskStore } from "../store/desk";
 import DeskPreview from "../components/desk/DeskPreview.vue";
 import ExportDesk from "../components/desk/ExportDesk.vue";
 import DeskGroup from "../components/desk/DeskGroup.vue";
@@ -322,7 +332,7 @@ import Icon from "../components/Icon.vue";
 import Todo from "../components/widgets/todo/Todo.vue";
 import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
-import RadioTab from '../components/RadioTab.vue'
+import RadioTab from "../components/RadioTab.vue";
 // import News from "../components/widgets/news/NewsCard.vue";
 import {
   setTransparent,
@@ -331,7 +341,7 @@ import {
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
-import { homeStore } from '../store/home'
+import { homeStore } from "../store/home";
 import _ from "lodash-es";
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
@@ -357,20 +367,19 @@ export default {
         name: "",
         template: "daily",
       },
-      fallingList:[
-      {
-        value: "rain",
-        name: "雨",
-      },
-      {
-        value: "snow",
-        name: "雪",
-      },
-      {
-        value: "leaf",
-        name: "叶",
-      }
-
+      fallingList: [
+        {
+          value: "rain",
+          name: "雨",
+        },
+        {
+          value: "snow",
+          name: "雪",
+        },
+        {
+          value: "leaf",
+          name: "叶",
+        },
       ],
       hide: false,
       menuVisible: false,
@@ -512,7 +521,7 @@ export default {
     Todo,
     EatToday,
     HotSearch,
-    RadioTab
+    RadioTab,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -526,7 +535,6 @@ export default {
       "settings",
       "desks",
       "moved",
-
       "lastHeight",
     ]),
     ...mapWritableState(appStore, [
@@ -543,17 +551,11 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
-    ...mapWritableState(deskStore, ["deskList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore,['currentDeskId', "currentDeskIndex", 'currentInit']),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
     ...mapWritableState(defaultFreeLayoutStore, ['desk','freeLayoutDataTmp','freeLayoutStateTmp']),
-    m01033() {
-      return this.taskID == "M0103" && this.step == 3;
-    },
-    m01034() {
-      return this.taskID == "M0103" && this.step == 4;
-    },
+
     desksList() {
       return this.desks.map((desk) => {
         return {
@@ -935,6 +937,15 @@ export default {
     },
     changeDesk(p) {
       this.currentDeskId = p.id;
+      let found = this.desks.find((desk) => {
+        return desk.id === p.id;
+      });
+      if (found) {
+        this.currentDeskIndex = {
+          id: found.id,
+          title: found.name,
+        };
+      }
     },
     doAddDesk() {
       if (this.deskTitle.trim() === "") {

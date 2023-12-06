@@ -135,14 +135,15 @@ export default {
  },
 
  mounted(){
-  this.getMyCommunity()
-  this.getRecommendCommunityList()
+  this.$nextTick(()=>{
+    this.getRecommendCommunityList();
+  })
  },
 
  computed:{
-  ...mapWritableState(communityStore,['communityList','recommendCommunityList']),
+  ...mapWritableState(communityStore,['community']),
   findList(){
-    const list = Object.values(this.recommendCommunityList.reduce((acc, curr) => {
+    const list = Object.values(this.community.communityRecommend.reduce((acc, curr) => {
      if (!acc[curr.id]) {
      acc[curr.id] = curr;
      }
@@ -159,7 +160,7 @@ export default {
  },
 
  methods:{
-  ...mapActions(communityStore,['getMyCommunity','getRecommendCommunityList']),
+  ...mapActions(communityStore,[,'getRecommendCommunityList']),
  },
 
  watch:{

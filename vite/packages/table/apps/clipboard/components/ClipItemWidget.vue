@@ -103,7 +103,7 @@ export default {
   <div style="width: 338px;height:420px;flex-shrink: 0; " v-if="tab === 'item'"
        class="flex flex-col rounded-lg justify-between " @contextmenu="switchTab('menu')">
     <!-- 文本卡片顶部标题开始 -->
-    <div class="flex s-item h-item flex-col h-16 rounded-t-lg w-full px-4 py-2">
+    <div class="flex h-item flex-col h-16 rounded-t-lg w-full px-4 py-2">
       <div class="flex items-center mb-1">
         <Icon :icon="itemType.icon" style="font-size: 1.45em;"></Icon>
         <span class="ml-2">{{ itemType.title }}</span>
@@ -123,16 +123,16 @@ export default {
     </div>
 
     <!-- 文本底部切换 -->
-    <div class="flex s-item h-item py-1 px-1 h-12 rounded-b-lg items-center justify-between">
+    <div class="flex  h-item py-1 px-1 h-12 rounded-b-lg items-center justify-between">
       <slot name="footer">
       </slot>
     </div>
   </div>
   <!-- 操作界面 -->
   <div v-else-if="tab==='menu'" style="width: 338px;height:420px;">
-    <div class="flex s-item flex-col rounded-lg px-4 py-3 h-full default-content">
+    <div class="flex  flex-col rounded-lg px-4 py-3 h-full default-content">
       <div class="flex mb-3">
-        <div class="w-12 s-item button-active bt-default h-12 rounded-lg pointer flex items-center justify-center"
+        <div class="w-12  button-active bt-default h-12 rounded-lg pointer flex items-center justify-center"
              @click="backClip">
           <Icon icon="xiangzuo" style="font-size: 1.45em;"></Icon>
         </div>

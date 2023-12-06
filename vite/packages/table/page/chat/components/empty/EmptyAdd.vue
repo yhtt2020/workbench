@@ -5,10 +5,10 @@
     <span class="font-16 ml-3" style="color:var(--primary-text);">{{ item.name }}</span>
    </div>
  </xt-button>
-
  <AddNewGroup ref="addNewRef" :no="no"/>
  <AddNewCategory ref="addCategoryRef" :no="no"/>
- <AddInvite ref="addInviteRef" :no="no"/>
+
+<!--   <AddNewCategory ref="addCategoryRef" :no="no"/>-->
 </template>
 
 <script>
@@ -28,12 +28,12 @@ export default {
  data(){
   return{
    emptyList: [
-    { 
-     icon:'fluent:people-add-16-regular', name: '邀请其他人',
-     callBack:()=>{
-      this.$refs.addInviteRef.openAddInvite()
-     }
-    },
+    // { 
+    //  icon:'fluent:people-add-16-regular', name: '邀请其他人',
+    //  callBack:()=>{
+    //   this.$refs.addInviteRef.openAddInvite()
+    //  }
+    // },
     { 
      icon:'fluent:apps-add-in-20-filled', name: '添加新应用', 
      callBack:()=>{

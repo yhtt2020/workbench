@@ -38,6 +38,7 @@
 import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from "../../../../store/card";
 import { useFreeLayoutStore } from "../../../desk/freeLayout/store";
+import { homeStore } from '../../../../store/home'
 export default {
   emits: ["drag-start", "drag-end", "click"],
   data() {
@@ -56,7 +57,7 @@ export default {
     length: { type: Number },
   },
   computed: {
-    ...mapWritableState(cardStore, ["currentDeskId"]),
+    ...mapWritableState(homeStore, ["currentDeskId"]),
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["isFreeLayout"]),

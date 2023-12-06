@@ -20,7 +20,7 @@
                 <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
               </div>
             </a-col>
-            
+
             <a-col :span="12">
               <div style="cursor: help" @click="tipSaving" class="relative btn">
                 节能模式<br />
@@ -125,7 +125,7 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <xt-task :modelValue="m04011" @cb="basic">
+                <xt-task  id="M0401" no="1" @cb="basic">
                   <div @click="basic" class="btn">
                     <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
                     <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
@@ -157,7 +157,7 @@
 
 
               <a-col :span="6">
-                <xt-task :modelValue="m03011" @cb="styleVisible = true">
+                <xt-task id="M0301" no="1" @cb="styleVisible = true">
                   <div @click="styleVisible = true" class="btn">
                     <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
                     <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
@@ -198,12 +198,12 @@
         </div>
       </div>
     </vue-custom-scrollbar>
-
+  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" @no="this.simpleVisible=false" @ok="this.simpleVisible=false"></xt-msg>
   <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="editNavigationVisible">
     <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
   </div>
   <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
-    <xt-task :modelValue="m03012"></xt-task>
+    <xt-task id="M0301" no="2"></xt-task>
     <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
     <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
     <XtColor v-model:color="wallpaperColor" title="背景" @onBtnClick="clearWallpaperColor" btnText="恢复默认壁纸颜色"></XtColor>
@@ -274,6 +274,7 @@ export default {
         wheelPropagation: true,
       },
       editNavigationVisible: false,
+      simpleVisible:false
     };
   },
   watch: {
@@ -303,8 +304,6 @@ export default {
     bottomToggle:{
       deep:true,
       handler(newV,oldV){
-        this.oldToggle=[...oldV]
-        console.log(this.oldToggle);
         if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
           this.simple=false
         }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
@@ -332,15 +331,7 @@ export default {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle']),
-    m03011() {
-      return this.taskID == "M0301" && this.step == 1;
-    },
-    m03012() {
-      return this.taskID == "M0301" && this.step == 2;
-    },
-    m04011() {
-      return this.taskID == "M0401" && this.step == 1;
-    },
+
   },
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
@@ -372,7 +363,7 @@ export default {
     tipSaving() {
       Modal.info({
         content:
-          "使用性能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。",
+          "使用节能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。",
         centered: true,
       });
     },
@@ -389,11 +380,12 @@ export default {
 
     },
     tipSimple() {
-      Modal.info({
-        content:
-          "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能。",
-        centered: true,
-      });
+      // Modal.info({
+      //   content:
+      //     "使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能。",
+      //   centered: true,
+      // });
+      this.simpleVisible=true
     },
     tipOffline() {
       Modal.info({

@@ -3,7 +3,8 @@
     <!-- 弹窗 -->
     <div
       v-if="modelValue"
-      class="flex flex-col fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
+      :class="[boxPadding]"
+      class="fixed flex flex-col text-base -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -12,15 +13,15 @@
         'z-index': index,
       }"
     >
-      <div class="flex w-full flex-1">
+      <div class="flex flex-1 w-full">
         <!-- 左侧 -->
         <nav v-if="nav">
           <slot name="nav"> </slot>
         </nav>
-        <main class="h-full flex flex-1 flex-col">
-          <header class="flex items-center mb-4 relative" v-if="header">
+        <main class="flex flex-col flex-1 h-full">
+          <header class="relative flex items-center mb-4" v-if="header">
             <!-- 标题左侧 -->
-            <div class="flex items-center z-20 flex-1">
+            <div class="z-20 flex items-center flex-1">
               <slot name="header-left">
                 <template v-if="back">
                   <xt-button
@@ -41,14 +42,14 @@
             </div>
             <!-- 标题中间 -->
             <div
-              class="flex flex-1 text-center items-center absolute left-1/2 -translate-x-1/2 z-10"
+              class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
             >
               <slot name="header-center">
                 {{ title }}
               </slot>
             </div>
             <!-- 标题右侧 -->
-            <div class="flex items-center z-20 right-0">
+            <div class="right-0 z-20 flex items-center">
               <slot name="header-right"> </slot>
               <xt-button class="ml-3" w="32" h="32" radius="8" @click="onNo()">
                 <xt-new-icon
@@ -67,14 +68,7 @@
               suppressScrollX: true,
               wheelPropagation: false,
             }"
-            style="
-              position: relative;
-              margin-right: -15px;
-              margin-left: -10px;
-              padding-left: 10px;
-              padding-top: 5px;
-              padding-right: 15px;
-            "
+            style="position: relative; margin-left: 8px; margin-right: 8px;padding-right: 8px; padding-left: 8px;"
             class="flex-1"
           >
             <slot>
@@ -85,7 +79,7 @@
       </div>
 
       <slot name="footer">
-        <footer class="flex justify-end mt-4 items-center" v-if="footer">
+        <footer class="flex items-center justify-end mt-4" v-if="footer">
           <xt-button w="64" h="40" @click="onNo()">
             <span class="xt-text-2">{{ noName }}</span>
           </xt-button>
@@ -99,7 +93,7 @@
     <div
       v-if="modelValue && mask"
       @click.stop.self="onNo()"
-      class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
+      class="fixed top-0 bottom-0 left-0 w-full h-full xt-mask ring-0"
       :style="{
         'z-index': maskIndex,
       }"
@@ -123,10 +117,11 @@ export interface ModalProps {
   header?: boolean;
   footer?: boolean;
   esc?: boolean;
+  boxPadding?: string;
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
-  title: "麦当劳之歌",
+  title: "",
   noName: "取消",
   okName: "确认",
   index: 1000,
@@ -137,11 +132,13 @@ const props = withDefaults(defineProps<ModalProps>(), {
   header: true,
   footer: true,
   esc: false,
+  boxPadding: "p-4",
 });
 const { esc } = toRefs(props);
 const emits = defineEmits(["ok", "no", "back", "update:modelValue"]);
 
 const onNo = () => {
+  console.log('111111 :>> ', 111111);
   emits("update:modelValue", false);
   emits("no");
 };

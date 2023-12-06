@@ -4,6 +4,7 @@ import {sUrl} from "../../../consts";
 import {post} from "../../../js/axios/request";
 import { chatList } from '../../../js/data/chatList';
 import _ from 'lodash-es';
+import { updateTree ,communityTotal} from '../libs/utils';
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
@@ -17,221 +18,203 @@ const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频�
 
 // @ts-ignore
 export const communityStore = defineStore('communityStore',{
-  state: () => ({
-    communityList:[], // 接收社群
-    recommendCommunityList:[], // 存储推荐社群
-    categoryList:{}, // 频道目录列表
-    categoryClass:[],
-    channelList:[],
+  state:()=>({
+    community:{
+      communityList:[], // 获取社群左侧列表
+      communityRecommend:[], // 获取社群推荐数据
+      categoryClass:[], // 用于存储新分组
+      communityTree:[], // 获取社群树状列表
+    }
   }),
 
-  getters:{
-    getCommunityDetail:(state)=>(no:any)=>{
-      const isNull = state.communityList.length !== undefined && state.communityList.length !== 0;
-      if(isNull){
-        const list = state.communityList;
-        const find = _.find(list,function(find:any){ return String(find.no) === String(no) });
-        return find !== undefined ? find : {};
-      }
-    }
-  },
-
-  actions: {
-   // 创建社群
-   async createCommunity(option: any) {
-    return await post(createCommunity, option);
-   },
-
-   // 获取我的社群
-   async getMyCommunity(){
-    post(getMyCommunity,{}).then(async (res)=>{ //  请求左侧列表
-      const list = res?.data?.list; // 将list进行去重预防报错
-      const mapList = list.map(async (item:any)=>{
-        if(item.hasOwnProperty('communityInfo')){
-          const data = item?.communityInfo; // 取出data下的数据进行操作,预防报错处理
-          const communityNo = data.no;  // 取出communityNo预防报错
-          const itemRes = await this.getCategoryData(communityNo)  // 通过communityNo请求频道列表详情
-          const itemOption ={  // 将数据进行解构返回出去
-            ...data,
-            ...item,
-            tree:itemRes.tree,
-            summary:'',
-            uid:item.uid,
-            category:itemRes.category,
-          };
-          return itemOption;
-        }
-      });
-      const results = await Promise.all(mapList); // 获取数据
-      const filterUndefinedList = results.filter((item:any)=>{  // 过滤去重
-        if(item !== undefined){
-          return item;
-        }
-      });
-      this.communityList = filterUndefinedList;  
-    });
-   },
-
-   // 申请加入社群
-   async joinCommunity(option:any){
-    return await post(applyJoin,option);
-   },
-
-   // 获取推荐社群
-   async getRecommendCommunityList(){
-    const res = await post(getRecommendCommunity,{})
-    if(res?.data){
-      this.recommendCommunityList = res.data
-    }
-   },
-
-   // 搜索社群
-   async searchCommendCommunity(val:any){
-    return await post(searchRecommendCommunity,{keywords:val})
-   },
-
-   //  创建社群频道
-   async createChannel(data:any,no:any){
-    const res = await post(createChannels,data)
-    if(res.status === 1 && no !== 1){
-      this.getMyCommunity()
-      this.getCategoryData(no)
-      this.getChannelList(no)
-    }
-   },
-
-   // 获取社群频道目录
-   async getCategoryData(id:any){
-    if(!isNaN(parseInt(id))){
-      const option = { communityNo:parseInt(id), cache:1 };  // 请求数据配置项
-      const result = await Promise.all(  // 将社群子级频道和父级频道同时请求返回,提升性能消耗
-        [
-          post(getChannelList,option).then((res:any)=>{ return res }),
-          post(getChannelTree,option).then((res:any)=>{ return res })
-        ]
-      );
-      const tree = result[1]?.data?.treeList; // 社群子级频道
-      const category = result[0]?.data?.list; // 社群父级频道
-      return {tree:tree,category:category}; 
-    }
-   },
-
-
-   // 获取频道数据
-   async getChannelList(id:any){
-    if(!isNaN(parseInt(id))){
-      const option = { communityNo:parseInt(id), cache:1 }
-      const res =  await post(getChannelList,option)
-      if(res?.data?.list){
-        const filterCategoryRes = res?.data?.list.filter((item:any)=>{
-         return item.role === 'category'
-        })
-        const filterTypeChannel = res?.data?.list.filter((item:any)=>{
-         return item.role === 'channel'
-        })
-        this.categoryClass  = filterCategoryRes
-        this.channelList = filterTypeChannel
-      }
-    }
-   },
-
-   // 更新社群频道
-   async updateChannel(data:any,no:any){
-    const res  =  await  post(sUrl("/app/community/channel/updateProfile"),data)
-    if(res.status === 1){
-      this.getMyCommunity()
-      this.getChannelList(no)
-      this. getCategoryData(no)
-    }
-   },
-
-   // 替换数组
-   updateCategoryClass(val:any){
-    this.categoryClass = val
-   },
-
-   // 删除社群频道
-   async removeCategory(id:any,no:any){
-    const res = await post(deleteCategory,{id:id})
-    console.log('查看结果',res);
-    if(res.status === 1 && no !== 1){
-      this.getMyCommunity()
-      this.getCategoryData(no)
-      this.getChannelList(no)
-    }
-   },
-
-   // 更新社群消息提示状态
-   updateMsgStatus(){
-    const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList; // 群聊会话列表
-    const mapList = list.map((item:any)=>{  // 取群聊中unreadCount字段
-      const fileInfo = item.groupProfile;
-      return {
-        groupID:fileInfo.groupID,
-        unread:item.unreadCount
-      }
-    })
-    const updateList = this.communityList.map((mapItem:any)=>{ // 将unreadCount字段更新进去
-      const isTreeNull = mapItem.tree.length !== 0; // 容错处理
-      if(isTreeNull){
-        const list = mapItem.tree;  // 获取社群右侧列表进行操作处理
-        const updateTree = list.map((item:any)=>{
-         const isChildren = item.hasOwnProperty('children'); // 判断是否存在children属性
-         if(isChildren){
-           const childrenList = item.children.map((childrenItem:any)=>{
-            if(childrenItem.type === 'group'){
-              const jsonItem = JSON.parse(childrenItem.props);
-              const findList =  _.find(mapList,function(find:any){ return String(jsonItem.groupID) === String(find.groupID) })
-              const option = {
-                ...jsonItem,
-                unread:findList !== undefined ? findList.unread : 0,
-              };
-              const restJSON = JSON.stringify(option);
-              return {...childrenItem,props:restJSON};
-            }else{
-              return childrenItem;
-            }
-           })
-           return {
-             ...item,
-             children:childrenList
-           };
-         }else{
-          if(item.type === 'group'){  
-            const jsonData = JSON.parse(item.props);  // JSON反序列化
-            const findLists =  _.find(mapList,function(find:any){ return String(jsonData.groupID) === String(find.groupID) })
-            const option = {
-              ...jsonData,
-              unread: findLists !== undefined ? findLists.unread : 0,
-            };
-            const restJSON = JSON.stringify(option);
-            return {...item,props:restJSON};
-          }else{
-            return item;
+  actions:{
+    // 获取推荐社群
+    getRecommendCommunityList(){
+      post(getRecommendCommunity,{}).then((res:any)=>{
+        const status = res.status; // 判断是否请求成功
+        if(status === 1){
+          const resNull = res.data !== undefined; // 预防报错
+          if(resNull){
+            this.community.communityRecommend = res.data;
           }
-         }
-        })
-        return {
-          ...mapItem,
-          tree:updateTree,
         }
-      }else{
-        return mapItem;
-      }
-    })
-    this.communityList = updateList
-   }
+      });
+    },
 
+    // 搜索推荐社群
+    async searchRecommendCommunity(data:any){
+      const res = await post(searchRecommendCommunity,{keywords:data});
+      if(res.status === 1){
+        const list = res?.data?.list;
+        return list;
+      } 
+    },
+
+    // 加入推荐群聊
+    async joinRecommendCommunity(option:any){
+      const res = await post(applyJoin,option);
+      if(res.status === 1){
+        return res.data;
+      }
+    },
+
+    // 获取社群左侧初始数据
+    getMyCommunity(){
+      post(getMyCommunity,{}).then((res)=>{
+        if(res.status === 1){
+          const list = res?.data?.list
+          const mapList = list.map((mapItem:any)=>{
+            const isCommunityInfo = mapItem.hasOwnProperty('communityInfo');
+            if(isCommunityInfo){
+              // 取出data下的数据进行操作,预防报错处理
+              const data = mapItem?.communityInfo;
+              // 将数据进行解构返回出去
+              const returnOption = {
+                ...data,
+                summary:null,
+                uid:mapItem.uid,
+                ...mapItem,
+                // unread:communityTotal(mapItem.no)?.unread,
+              }
+              return returnOption;
+            }
+          })
+          const filterUndefined = _.filter(mapList,function(filterItem:any){
+            if(filterItem !== undefined){
+              return filterItem;
+            }
+          })
+          this.community.communityList = filterUndefined;
+        }
+      });
+    },
+
+    // 创建社群
+    async communityCreate(option:any){
+      const res  =  await post(createCommunity, option);
+      if(res.status === 1){
+        this.getMyCommunity();
+        return res;
+      }
+      else { return res };
+    },
+
+    // 获取社群树状频道列表
+    getCommunityTree(){
+      const list = this.community.communityList;
+      if(list.length !== 0){
+        const newList = [];
+        for(const item of list){
+          // 请求数据配置项
+          const option = { communityNo:parseInt(item.no), cache:1 };
+          const channel = post(getChannelList,option).then((res:any)=>{ return res });
+          const tree = post(getChannelTree,option).then((res:any)=>{ return res });
+          Promise.all([channel,tree]).then((res:any)=>{
+            const status = res[0].status === 1 && res[1].status === 1;
+            if(status){
+              const treeList = res[1].data.treeList;
+              const channelList = res[0].data.list;
+              const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
+              const option = { no:item.no, tree: newArr, category:channelList};
+              const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.no) });
+              if(index === -1){
+                newList.push(option as never);
+              }
+             }
+          }); 
+        }
+        this.community.communityTree = newList;
+      }
+    },
+
+    // 更新社群树状对应数据
+    updateCommunityTree(no:any){
+      const list = this.community.communityTree;
+      const listNull = list.length !== 0;
+      if(listNull){
+        // 请求数据配置项
+        const option = { communityNo:parseInt(no), cache:1 };
+        const channel = post(getChannelList,option).then((res:any)=>{ return res });
+        const tree = post(getChannelTree,option).then((res:any)=>{ return res });
+        Promise.all([channel,tree]).then((res:any)=>{
+          const status = res[0].status === 1 && res[1].status === 1;
+          if(status){
+            const treeList = res[1].data.treeList;
+            const channelList = res[0].data.list;
+            const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
+            const option = { no:no, tree: newArr, category:channelList};
+            const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
+            this.community.communityTree.splice(index,1,option)
+           }
+        }); 
+      }
+    },
+
+    // 更新社群左侧列表未读数据的总和
+    updateCommunityUnRead(){
+      const list = this.community.communityList;
+      const mapList = list.map((mapItem:any)=>{
+        const isCommunityInfo = mapItem.hasOwnProperty('communityInfo');
+        if(isCommunityInfo){
+          // 取出data下的数据进行操作,预防报错处理
+          const data = mapItem?.communityInfo;
+          // 将数据进行解构返回出去
+          const returnOption = {
+            ...data,
+            summary:null,
+            uid:mapItem.uid,
+            ...mapItem,
+            unread:communityTotal(mapItem.no)?.unread,
+          }
+          return returnOption;
+        }
+      })
+      const filterUndefined = _.filter(mapList,function(filterItem:any){
+        if(filterItem !== undefined){
+          return filterItem;
+        }
+      })
+      this.community.communityList = filterUndefined;
+    },
+
+    // 创建社群频道
+    async createChannel(option:any,no:any){
+      const res  = await post(createChannels,option);
+      if(res.status === 1){
+        this.updateCommunityTree(no);
+        return res;
+      }
+    },
+
+    // 删除社群频道
+    async removeCategory(id:any,no:any){
+      const res = await  post(deleteCategory,{id:id});
+      if(res.status === 1){
+        this.updateCommunityTree(no);
+        return res;
+      }
+    },
+
+    // 获取社群分组
+    getChannelList(no:any){
+      const isNum = isNaN(parseInt(no));
+      if(!isNum){
+        const option = { communityNo:parseInt(no), cache:1 };
+        post(getChannelList,option).then((res:any)=>{
+          console.log('执行......查看',res);
+        })
+      }
+    }
+    
   },
 
   persist:{
     enabled: true,
-    strategies: [{
-      // 自定义存储的 key，默认是 store.$id
-      // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      storage: localStorage,
-      paths: ['myCommunityList','recommendCommunityList','categoryList','categoryClass']
-      // state 中的字段名，按组打包储存
-    }]
+    strategies:[
+      {
+        storage:localStorage,
+        paths:[],
+      }
+    ]
   }
-});
+})

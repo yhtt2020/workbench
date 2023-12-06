@@ -67,9 +67,9 @@
     </div>
   </div>
   <xt-button  h="28" v-if="this.settings.courierStatus.statusBar" class="xt-bg-t-2"
-    style="margin-right:10px;position: relative;color: var(--primary-text); border-radius: 6px !important; padding: 0 4px !important;" 
+    style="margin-right:10px;position: relative;color: var(--primary-text); border-radius: 6px !important; padding: 0 4px !important;"
     @click="showTopCourier" :style=" list.length !== 0 ? { width:'auto !important' } : { width:'28px !important' }"
-  >  
+  >
    <div class="flex items-center justify-center">
     <newIcon icon="fluent:box-16-regular" style="font-size: 1.25rem;vertical-align: sub" :style=" list.length !== 0 ? { 'margin-right': '4px' } : { 'margin-right': '0px;' }"/>
     <span v-if=" list.length !== 0" class="xt-text xt-font font-14">
@@ -81,10 +81,10 @@
     <AddCourierModal ref="addCourierRef"/>
   </teleport>
   <teleport to='body'>
-    <xt--modal v-if="showCourierDetail" v-model="showCourierDetail" title="" :footer="false" index="100"  :header="false">
+    <xt-modal v-if="showCourierDetail" v-model="showCourierDetail" title="" :footer="false" index="1000"  :header="false">
       <LargeCourierDetail v-if="largeDetailVisible" @close="showCourierDetail = false"/>
       <LogisticsDetail v-else :orderNum="orderNum" @close="closeCourierDetail" @back="backAllCoutiers"/>
-    </xt--modal>
+    </xt-modal>
   </teleport>
   <SmallCourierModal :show="showSmallDetail" @close-modal="smallDetailsVisible"/>
   <teleport to='body'>
