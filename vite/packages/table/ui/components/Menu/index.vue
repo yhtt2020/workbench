@@ -1,14 +1,15 @@
 <template>
-  <!-- @click="handleOpenMenu($event, 'click')"
-    @contextmenu="handleOpenMenu($event, 'contextmenu')"
+  <!--
+
     @mousedown="handleMouseDown"
 
-  @mouseup="handleMouseUp($event)"-->
+"-->
   <div
     ref="containerRef"
     @click="handleOpenMenu($event, 'click')"
     @contextmenu="handleOpenMenu($event, 'contextmenu')"
   >
+  <!-- <div ref="containerRef" @mouseup="handleMouseUp($event)"> -->
     <slot></slot>
     <teleport to="body">
       <Transition
@@ -223,12 +224,12 @@ const pos = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("click", handleCloseMenu, { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+  window.addEventListener("click", handleCloseMenu , { capture: true } );
+  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
 });
 onBeforeUnmount(() => {
-  window.addEventListener("click", handleCloseMenu, { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+  window.addEventListener("click", handleCloseMenu  , { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
 });
 </script>
 

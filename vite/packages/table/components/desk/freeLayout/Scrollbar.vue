@@ -2,12 +2,12 @@
 <template>
   <div
     ref="scrollbar"
-    class="no-drag relative w-full"
+    class="no-drag relative w-full h-full"
     style="
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
-      height: 98%;
+
     "
     :style="{
       cursor: dragStyle,
