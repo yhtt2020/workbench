@@ -2,7 +2,7 @@
   "name": "tsbworkbench",
   "productName": "想天工作台",
   "author": "Thisky",
-  "version": "8.6.4",
+  "version": "8.6.7",
   "description": "一款针对工作场景的优化的效率工具，帮助你提升效率，保持专注",
   "electronVersion": "26.4.0",
   "main": "main.build.js",
