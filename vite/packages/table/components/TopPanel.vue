@@ -1,5 +1,5 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full top-shadow  mb-2.5 drag">
+  <div id="topBar" class="flex items-center justify-between w-full top-shadow drag">
     <div id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5 drag  items-center">
      <div class="no-drag flex">
       <a-tooltip>
@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div id="topRightPart" class="flex items-center drag justify-end relative ">
+    <div id="topRightPart" class="flex items-center drag justify-end relative pt-2">
       <TopPanelButton/>
       <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
        class="no-drag btn-hover category-button p-1 rounded-md pointer"
@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-      <div class="h-12" v-if="showWindowController">&nbsp;</div>
+      <div class="h-5" v-if="showWindowController">&nbsp;</div>
       <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
         <WindowController></WindowController>
 
