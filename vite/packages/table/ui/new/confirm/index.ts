@@ -22,7 +22,7 @@ export const confirm = (
     index = 99999,
     mask = false,
     maskIndex = 99999,
-  } = {}
+  }: any = {}
 ) => {
   return new Promise<void>((resolve, reject) => {
     // 如果没传递内容 那么标题作为内容值

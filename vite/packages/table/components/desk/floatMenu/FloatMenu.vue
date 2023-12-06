@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onBeforeUnmount } from "vue";
+import { ref, computed, watch, toRefs, onBeforeUnmount ,getCurrentInstance} from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../freeLayout/store";
 import { useWidgetStore } from "../../card/store";
 import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
+// const { proxy }: any = getCurrentInstance()
 
 import { confirm } from "../../../ui/new/confirm/index";
-
-confirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳")
-  .then(() => {
-    console.log("111 :>> ", 111);
-  })
-  .catch(() => {
-    console.log("222 :>> ", 222);
-  });
+// proxy.$xtconfirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳")
+//   .then(() => {
+//     console.log("111 :>> ", 111);
+//   })
+//   .catch(() => {
+//     console.log("222 :>> ", 222);
+//   });
 
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;

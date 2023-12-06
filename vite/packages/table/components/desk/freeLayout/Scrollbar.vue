@@ -143,7 +143,6 @@ function handleKeyDown(event) {
     event.stopPropagation();
   }
   if ((event.ctrlKey && event.key === "A") || event.key === "a") {
-    console.log('1111 :>> ', 1111);
     isSelectAll.value = !isSelectAll.value;
   }
 }
