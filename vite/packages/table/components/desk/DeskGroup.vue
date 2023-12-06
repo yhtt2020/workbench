@@ -715,6 +715,27 @@ export default {
         });
         return;
       } else {
+        this.currentDesk?.cards?.forEach((item) => {
+          //移除桌面相关的便签卡片
+          if (item.name === "notes") {
+            tsbApi.db
+            .find({
+              selector: {
+                _id: "note:" + item.id,
+              },
+            })
+            .then((res) => {
+              if (res?.docs.length) {
+                tsbApi.db.put({
+                  ...res.docs[0],
+                  // isDelete:true,
+                  deskId: "",
+                  deskName: "",
+                });
+              }
+            });
+          }
+        });
         this.$refs.currentDeskRef.hideMenu();
         Modal.confirm({
           centered: true,
