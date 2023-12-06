@@ -112,7 +112,7 @@ app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$mit = Mit;
-app.config.globalProperties.$xtconfirm = confirm;
+app.config.globalProperties.$xtConfirm = confirm;
 
 const pinia = createPinia();
 pinia.use(piniaPersist);

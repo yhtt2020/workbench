@@ -14,16 +14,18 @@ import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
-// const { proxy }: any = getCurrentInstance()
+const { proxy }: any = getCurrentInstance();
 
 import { confirm } from "../../../ui/new/confirm/index";
-// proxy.$xtconfirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳")
-//   .then(() => {
-//     console.log("111 :>> ", 111);
-//   })
-//   .catch(() => {
-//     console.log("222 :>> ", 222);
-//   });
+proxy.$xtConfirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳", {
+  ok: () => {
+    console.log("111 :>> ", 111);
+  },
+  no: () => {
+    console.log("222 :>> ", 222);
+  },
+  noText: null,
+});
 
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;

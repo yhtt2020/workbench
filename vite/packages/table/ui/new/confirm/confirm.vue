@@ -24,35 +24,34 @@
           'z-index': index,
         }"
       >
+        <!-- 标题 -->
         <div class="flex items-center">
           <div class="mr-4">
-            <slot name="icon">
-              <xt-new-icon
-                icon="fluent:info-12-filled"
-                style="color: var(--warning) !important"
-              />
-            </slot>
+            <xt-new-icon
+              icon="fluent:info-12-filled"
+              style="color: var(--link) !important"
+            />
           </div>
-
           <span>{{ title }}</span>
         </div>
+        <!-- 内容 -->
         <div class="xt-text-2 my-4" style="margin-left: 40px; max-width: 316px">
           {{ content }}
         </div>
         <!-- 按钮 -->
-
         <div class="flex justify-end items-center">
-          <xt-button w="64" h="40" @click="onCancelClick()">
+          <xt-button v-if="noText" w="64" h="40" @click="onCancelClick()">
             <span class="xt-text-2">{{ noText }}</span>
           </xt-button>
           <xt-button
+            v-if="okText"
             w="64"
             h="40"
             class="ml-3"
             type="theme"
             @click="onConfirmClick()"
-            >{{ okText }}</xt-button
-          >
+            >{{ okText }}
+          </xt-button>
         </div>
       </div>
     </Transition>
@@ -60,65 +59,46 @@
 </template>
 
 <script setup lang="ts">
-// confirm 是通过方法调用来展示的 需要手动导入组件
+// confirm 是可以通过方法调用来展示的 需要手动导入组件
 import { ref, toRefs, onMounted } from "vue";
 import XtButton from "../../libs/Button/index.vue";
 import XtNewIcon from "../../libs/NewIcon/index.vue";
-const props = defineProps({
+export interface ConfirmProps {
   // 标题
-  title: {
-    type: String,
-    default: "",
-  },
+  title?: string | undefined;
   // 描述
-  content: {
-    type: String,
-    default: "",
-    required: true,
-  },
+  content?: string | undefined;
   // 取消按钮文本
-  noText: {
-    type: String,
-    default: "取消",
-  },
+  noText?: string | boolean | undefined;
   // 确定按钮文本
-  okText: {
-    type: String,
-    default: "确定",
-  },
+  okText: string | undefined;
   // 动画时长
-  duration: {
-    type: String,
-    default: "0.3s",
-  },
+  duration: string;
   // 确认框层级
-  index: {
-    type: String || Number,
-    default: 99999,
-  },
+  index: string | number;
   // 是否使用遮罩层
-  mask: {
-    type: Boolean,
-    default: false,
-  },
+  mask?: boolean;
   // 遮罩层层级
-  maskIndex: {
-    type: String || Number,
-    default: 99999,
-  },
+  maskIndex?: string | number;
   // 取消按钮事件
-  no: {
-    type: Function,
-  },
+  no?: Function;
   // 确定按钮事件
-  ok: {
-    type: Function,
-  },
+  ok?: Function;
   // 关闭 confirm 的回调
-  close: {
-    type: Function,
-    default: () => {},
-  },
+  close?: Function;
+}
+const props = withDefaults(defineProps<ConfirmProps>(), {
+  title: "",
+  content: "",
+  noText: "取消",
+  okText: "确定",
+  duration: "0.3s",
+  index: 1001,
+  mask: false,
+  maskIndex: 1000,
+  no: () => {},
+  ok: () => {},
+  close: () => {},
 });
 const { close, duration, no, ok }: any = toRefs(props);
 // 控制显示
