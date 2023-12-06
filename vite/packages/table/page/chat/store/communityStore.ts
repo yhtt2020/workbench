@@ -87,7 +87,6 @@ export const communityStore = defineStore('communityStore',{
           this.community.communityList = filterUndefined;
         }
       });
-      this.getCommunityTree();
     },
 
     // 创建社群
@@ -115,9 +114,7 @@ export const communityStore = defineStore('communityStore',{
             if(status){
               const treeList = res[1].data.treeList;
               const channelList = res[0].data.list;
-              console.log('执行......查看-1',treeList,);
               const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
-              console.log('执行......查看-2',newArr,);
               const option = { no:item.no, tree: newArr, category:channelList};
               const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.no) });
               if(index === -1){
@@ -141,12 +138,17 @@ export const communityStore = defineStore('communityStore',{
         const tree = post(getChannelTree,option).then((res:any)=>{ return res });
         Promise.all([channel,tree]).then((res:any)=>{
           const status = res[0].status === 1 && res[1].status === 1;
+          console.log('执行.......1',status);          
           if(status){
             const treeList = res[1].data.treeList;
             const channelList = res[0].data.list;
+            console.log('执行.......2',treeList,channelList);
             const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
             const option = { no:no, tree: newArr, category:channelList};
+            console.log('执行.......3',option);
             const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
+            console.log('执行.......4',this.community.communityTree[index]);
+            
             this.community.communityTree.splice(index,1,option)
            }
         }); 
@@ -216,7 +218,7 @@ export const communityStore = defineStore('communityStore',{
     strategies:[
       {
         storage:localStorage,
-        paths:[],
+        paths:['community'],
       }
     ]
   }

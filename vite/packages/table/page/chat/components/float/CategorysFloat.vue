@@ -241,10 +241,10 @@ const floatData = computed(()=>{
   const arrNull = infoArr.length !== 0;
   if(arrNull){
     const no = route.params.no;
-    const findInfo = _.find(infoArr,function(find){ return String(find.no) === String(no) });
-    const findTree = _.find(treeArr,function(find){ return String(find.no) === String(no) }); 
+    const findInfo = _.find(infoArr,function(find){ return String(find.no) === String(no); });
+    const findTree = _.find(treeArr,function(find){  return String(find.no) === String(no); }); 
     const findNull = findInfo !== undefined ;
-    const findTreeNull = findTree !== undefined 
+    const findTreeNull = findTree !== undefined ;
     if(findNull){
       // 定义一个空对象来解构findInfo数据，因为通过 ... 不能直接解构，会产生报错
       const data = { info:findInfo };
@@ -255,6 +255,7 @@ const floatData = computed(()=>{
     }
   }
 })
+
 // 通过计算属性来判断社群中间部分是单列还是双列
 const singDoubleCol = computed(()=>{
   return settings.value.showDouble;
@@ -279,6 +280,7 @@ const dropMenuList = computed(()=>{
   }
   else{ return adminMenus.value; };
 })
+
 // 获取父级列表
 const channelArr = computed(()=>{
   const list = floatData.value.tree;
@@ -301,6 +303,17 @@ const currentItem = (item) =>{
 const openHideContent = () =>{
  data.collapsed = !data.collapsed
 }
+
+// 监听数据
+// watch(()=>[props.no,community.value.communityTree],(newVal)=>{
+//   const no = newVal[0];
+//   // 通过定义临时缓存来获取社群频道树状数据和基本信息以及社群ID号no
+//   const infoArr = community.value.communityList;
+//   const treeArr  = newVal[1];
+//   console.log('执行........查看社群频道列表数据',treeArr[0],newVal);
+
+
+// },{deep:true,immediate:true});
 
 const { emptyImage,textUrl,collapsed,settingsScroller,categoryItem } = toRefs(data);
 </script>

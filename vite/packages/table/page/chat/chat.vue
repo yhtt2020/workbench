@@ -232,8 +232,9 @@ export default {
     
     /**初始化挂载**/
     onMounted(()=>{
+      com.getMyCommunity();
+      com.getCommunityTree();
       nextTick(()=>{
-        com.getCommunityTree();
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
           const list = community.value.communityList;

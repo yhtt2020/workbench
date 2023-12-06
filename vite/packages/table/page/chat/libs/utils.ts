@@ -15,7 +15,6 @@ function getUnReadCount(groupID:any){
   }else{
     return 0
   }
-
 }
 
 // 将社群频道目录进行更换
@@ -29,7 +28,7 @@ export function updateTree(list:any){
           const type = item.type === 'group';
           const jsonItem = JSON.parse(item.props);
           if(type){
-            const result = getUnReadCount(jsonItem.groupID);
+            const result:any = getUnReadCount(jsonItem.groupID);
             return {...item,props:{...jsonItem,unread:result.unreadCount}}
           }
 
@@ -43,7 +42,7 @@ export function updateTree(list:any){
         const isGroup = mapItem.type === 'group';
         if(isGroup){
           const jsonItem = JSON.parse(mapItem.props);
-          const result = getUnReadCount(jsonItem.groupID);
+          const result:any = getUnReadCount(jsonItem.groupID);
           const option = {...mapItem,props:{...jsonItem,unread:result.unreadCount}};
           return option;
         }

@@ -70,8 +70,6 @@ export const chatStore = defineStore('chatStore',{
     },
     async login() {
       const app:any = appStore();
-      const com:any = communityStore();
-      com.getMyCommunity();
       const {userInfo} = storeToRefs(app);
       const info:any = userInfo.value;
       await this.getUserSig()
