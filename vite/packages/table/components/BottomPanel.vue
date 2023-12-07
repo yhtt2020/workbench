@@ -12,9 +12,9 @@
         border-radius: 18px;
         /* width: 160px; */
       ">
-        <MyAvatar v-if="!simple" :chat="true" :level="false"></MyAvatar>
+        <MyAvatar  :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat && !simple" class="ml-3 pointer">
+        <div v-show="settings.enableChat " class="ml-3 pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -39,7 +39,7 @@
         min-width: 70px;
       ">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
-        <div style="
+          <div style="
           display: flex;
           flex-direction: row;
           width: 100%;
@@ -50,28 +50,27 @@
         ">
 
 
-          <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-            <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
-              ref="content">
-              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
+            <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
+              <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
+                ref="content">
+                <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name" 
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
-                          class="relative flex items-center justify-center rounded-lg s-item icon-bg">
-                          <navIcon :icon="item.icon" class="test "
-                            style="width:28px;height:28px;fill:var(--primary-text);"
-                            :class="{ 'shaking-element': shakeElement }"></navIcon>
+                        <div style="width: 52px; height: 52px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                          class="relative flex items-center justify-center rounded-lg ">
+                          <a-avatar :size="52" shape="square" :src="item.icon"
+                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 56px; height: 56px;"
-                          class="relative flex items-center justify-center icon-bg rounded-xl">
-                          <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
+                        <div v-else style="width: 52px; height: 52px;"
+                          class="relative flex items-center justify-center rounded-xl">
+                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
@@ -79,14 +78,14 @@
                   </a-tooltip>
                 </div>
 
+              </div>
             </div>
-          </div>
-          <!-- <div class="mr-3"> -->
-          <!-- <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
+            <!-- <div class="mr-3"> -->
+            <!-- <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
             @completeEdit="completeEdit" /> -->
-          <!-- </div> -->
+            <!-- </div> -->
 
-          <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
+            <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
           <div
             @click="appChange"
             v-if="isMain"
@@ -142,15 +141,15 @@
             </template>
           </div>
         </a-tooltip> -->
-        </div>
-      </xt-task>
+          </div>
+        </xt-task>
 
       </div>
 
-      <template v-if="!simple && isMain && this.bottomToggle[1]">
+      <template v-if="(!simple && isMain) || this.bottomToggle[1]">
         <Team></Team>
       </template>
-      <TaskBox v-if="!simple && this.bottomToggle[2]"></TaskBox>
+      <TaskBox v-if="!simple || this.bottomToggle[2]"></TaskBox>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -272,7 +271,7 @@ import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
-import xtMenu from '../ui/components/Menu/index.vue'
+// import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 export default {
   name: 'BottomPanel',
@@ -297,7 +296,6 @@ export default {
     navigationSetting,
     AddIcon,
     EditNewNavigation,
-    xtMenu,
     xtMixMenu,
   },
   data() {
@@ -438,7 +436,7 @@ export default {
       currentItem: null,
       delItemIcon: false,
       notifications: new Notifications(),
-      tooltipVisible:true,
+      tooltipVisible: true,
 
     }
   },
@@ -580,7 +578,7 @@ export default {
   },
   watch: {
     footNavigationList: {
-      handler() {
+      handler(newVal,oldVal) {
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -616,21 +614,24 @@ export default {
         this.disableDrag()
       }
     },
-    simple() {
-      if (this.simple ) {
-        this.bottomToggle[0] = false
-        this.bottomToggle[1] = false
-        this.bottomToggle[2] = false
-      } else {
-        this.bottomToggle[0] = true
-        this.bottomToggle[1] = true
-        this.bottomToggle[2] = true
+    simple(newVal, oldVal) {
+      console.log(newVal, oldVal);
+      if (newVal && !oldVal) {
+        // 当 simple 从关闭变为开启时，关闭所有 bottomToggle
+        this.bottomToggle[0] = false;
+        this.bottomToggle[1] = false;
+        this.bottomToggle[2] = false;
+      } else if (!newVal && oldVal) {
+        // 当 simple 从开启变为关闭时，开启所有 bottomToggle
+        this.bottomToggle[0] = true;
+        this.bottomToggle[1] = true;
+        this.bottomToggle[2] = true;
       }
     },
     bottomToggle: {
       deep: true,
       handler(newV, oldV) {
-        if (this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]) {
+        if (this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) {
           this.simple = false
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
@@ -1003,7 +1004,7 @@ export default {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
-          that.tooltipVisible=false
+          that.tooltipVisible = false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           this.delNav = true
@@ -1060,7 +1061,7 @@ export default {
           that.sortFootNavigationList(event)
         },
         onEnd: function (event) {
-          that.tooltipVisible=true
+          that.tooltipVisible = true
           that.$emit('getDelIcon', false)
         },
       })

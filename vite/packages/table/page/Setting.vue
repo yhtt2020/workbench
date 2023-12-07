@@ -118,7 +118,7 @@
             <h3 style="color: var(--primary-text)">其他</h3>
             <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
               <a-col v-if="isMain()" :span="6">
-                <div @click="editNavigationVisible = true" class="btn">
+                <div @click="editNavigation" class="btn">
                   <!-- <Icon icon="Pushpin" style="font-size: 2em"></Icon> -->
                   <Iconify icon="fluent:tablet-16-regular" style="font-size: 2em" />
                   <div>导航栏编辑</div>
@@ -199,8 +199,8 @@
       </div>
     </vue-custom-scrollbar>
   <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false" @ok="this.simpleVisible=false"></xt-msg>
-  <div class="fixed inset-0 home-blur" style="z-index: 999" v-if="editNavigationVisible">
-    <EditNavigation @setQuick="editNavigationVisible = false"></EditNavigation>
+  <div  style="z-index: 90" v-if="editNavigationVisible">
+    <EditNewNavigation @setQuick="editNavigationVisible = false,this.editToggle=false"></EditNewNavigation>
   </div>
   <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
     <xt-task id="M0301" no="2"></xt-task>
@@ -252,13 +252,14 @@ import SecondPanel from "../components/SecondPanel.vue";
 import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
-import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
+// import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
+import EditNewNavigation from "../components/desk/navigationBar/EditNewNavigation.vue";
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
-  components: { EditNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify },
+  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify },
   data() {
     return {
       bgColor: "",
@@ -330,7 +331,7 @@ export default {
     ...mapWritableState(appStore, ["userInfo"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
-    ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle']),
+    ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
 
   },
   methods: {
@@ -345,6 +346,7 @@ export default {
     },
     editNavigation() {
       this.editNavigationVisible = true
+      this.editToggle = true
     },
     clearBgColor() {
       delBgColor();
