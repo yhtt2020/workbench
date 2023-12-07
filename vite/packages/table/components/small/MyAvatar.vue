@@ -182,7 +182,7 @@ export default {
     <div  class="btn" v-if="isMain()"   @click="social" >
       <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
                    :frameUrl="userInfo.frame"></FrameAvatar>
-      <div>我的</div>
+      <!-- <div>我的</div> -->
     </div>
   </template>
 </template>
