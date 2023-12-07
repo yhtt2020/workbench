@@ -272,7 +272,7 @@ import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
-import xtMenu from '../ui/components/Menu/index.vue'
+// import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 export default {
   name: 'BottomPanel',
@@ -297,7 +297,6 @@ export default {
     navigationSetting,
     AddIcon,
     EditNewNavigation,
-    xtMenu,
     xtMixMenu,
   },
   data() {
