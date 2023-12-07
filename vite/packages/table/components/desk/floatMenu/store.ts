@@ -6,6 +6,7 @@ export const useFloatMenuStore = defineStore("useFloatMenuStore", {
     x: null,
     y: null,
     menus: [],
+    firstPosition: ['right', 'bottom', -40, -35],
   }),
   getters: {},
   actions: {},

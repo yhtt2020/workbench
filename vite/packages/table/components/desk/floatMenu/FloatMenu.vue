@@ -16,8 +16,9 @@ import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
 
 const widgetStore = useWidgetStore();
-widgetStore.edit = true;
+
 const floatMenuStore = useFloatMenuStore();
+const {firstPosition} = storeToRefs(floatMenuStore);
 
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState, freeLayoutEnv, isFreeLayout, isSelectAll }: any =
@@ -260,6 +261,7 @@ const resetZoom = () => {
 onBeforeUnmount(() => {
   isSelectAll.value = false;
   widgetStore.edit = false;
+  // floatMenuStore.firstPosition = null;
 });
 </script>
 
@@ -271,8 +273,10 @@ onBeforeUnmount(() => {
     v-model:x="floatMenuStore.x"
     :index="100"
     disabledHandle=".floatMenu"
-    :firstPosition="['right', 'bottom']"
+    :firstPosition="firstPosition"
   >
+
+
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
       style="touch-action: none; width: 208px"
