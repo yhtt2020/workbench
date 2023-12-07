@@ -738,6 +738,10 @@ function magnetDetection(x: number, y: number) {
   emits("auxLine", objX);
   return;
 }
+
+defineExpose({
+  snowDragEnd,
+});
 </script>
 <style scoped>
 @import "./assets/style.css";

@@ -15,6 +15,7 @@ const getChannelList = sUrl("/app/community/channel/getList") // 获取频道列
 const getChannelTree = sUrl("/app/community/channel/getTreeList") // 获取树状频道
 const createChannels = sUrl("/app/community/channel/create") // 创建社群频道
 const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频道
+const updateChannel = sUrl("/app/community/channel/updateProfile") // 更新社群频道
 
 // @ts-ignore
 export const communityStore = defineStore('communityStore',{
@@ -128,7 +129,28 @@ export const communityStore = defineStore('communityStore',{
     },
 
     // 更新社群树状对应数据
-    updateCommunityTree(no:any){
+    async updateCommunityTree(no:any){
+      const list = this.community.communityTree;
+      const listNull = list.length !== 0;
+      if(listNull){
+        // 请求数据配置项
+        const option = { communityNo:parseInt(no), cache:1 };
+        const channel = post(getChannelList,option).then((res:any)=>{ return res });
+        const tree = post(getChannelTree,option).then((res:any)=>{ return res });
+        const result = await Promise.all([channel,tree]);
+        const status = result[1].status === 1;
+        const treeList = result[1].data.treeList;
+        if(status){
+          const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
+          const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
+          const option = { no:parseInt(no), tree: newArr, category:result[0].data.list};
+          this.community.communityTree.splice(index,1);
+          this.community.communityTree.push(option)
+        }
+      }
+    },
+    // 更新社群消息状态提示
+    updateCommunityMsg(no:any){
       const list = this.community.communityTree;
       const listNull = list.length !== 0;
       if(listNull){
@@ -142,7 +164,7 @@ export const communityStore = defineStore('communityStore',{
             const treeList = res[1].data.treeList;
             const channelList = res[0].data.list;
             const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
-            const option = { no:no, tree: newArr, category:channelList};
+            const option = { no:parseInt(no), tree: newArr, category:channelList};
             const index = _.findIndex(this.community.communityTree,function(find:any){ return String(find.no) === String(no) });
             this.community.communityTree.splice(index,1,option)
            }
@@ -152,7 +174,7 @@ export const communityStore = defineStore('communityStore',{
 
     // 创建社群频道
     async createChannel(option:any,no:any){
-      const res  = await post(createChannels,option);
+      const res  = await post(createChannels,option);      
       if(res.status === 1){
         this.updateCommunityTree(no);
         return res;
@@ -177,6 +199,12 @@ export const communityStore = defineStore('communityStore',{
           console.log('执行......查看',res);
         })
       }
+    },
+
+    // 更新社群父级目录
+    async updateCategoryData(data:any,no:any){
+      const res = await post(updateChannel,data);
+      console.log('执行......更新',res);
     }
     
   },

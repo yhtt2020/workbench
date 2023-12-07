@@ -38,7 +38,7 @@ export default {
   },
 
   methods:{
-    ...mapActions(communityStore,['updateChannel']),
+    ...mapActions(communityStore,['updateCategoryData']),
     openSetModal(){
       this.setVisible = true
       this.$nextTick(()=>{
@@ -55,7 +55,7 @@ export default {
           name:this.categoryName
         }
         console.log('查看option',option);
-        this.updateChannel(option,this.no)
+        this.updateCategoryData(option,this.no)
         message.success('数据更新成功')
         this.setVisible = false
       }else{

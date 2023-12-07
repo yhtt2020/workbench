@@ -113,7 +113,7 @@ export default {
   methods: {
     ...mapActions(communityStore,[
       'removeCategory','createChannel','getChannelList',
-      // 'updateCategoryClass',
+      'updateCommunityTree',
     ]),
     // 拖拽排序
     onSortEnd(evt){
@@ -251,7 +251,6 @@ export default {
         } 
         this.closeButton()
       }
-
       else{
         const channelOption = {
           ...option,
