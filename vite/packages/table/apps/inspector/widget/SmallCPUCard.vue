@@ -9,9 +9,9 @@
         </div>
       </template>
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-            <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{CPUData.useCPU.value?.toFixed(1)}}%</div>
+            <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{CPUData.useCPU.toFixed(1)}}%</div>
             <div style="color:var(--primary-text);font-size: 14px;margin-top: 6px;">负载</div>
         </template>
       </a-progress>
@@ -20,9 +20,9 @@
         <div class="cpu right-content">
         <div class="cpu-number">
           <span>温度</span>
-          <span style="font-weight: 700;">{{CPUData.warmCPU?.value}}℃</span></div>
+          <span style="font-weight: 700;">{{CPUData.warmCPU}}℃</span></div>
       </div>
-        <a-progress :showInfo="false" :status="CPUData.warmCPU?.value==0|| saving?'':'active'"  :percent="CPUData.warmCPU?.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.warmCPU==0|| saving?'':'active'"  :percent="CPUData.warmCPU" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -30,9 +30,9 @@
         <div class="cpu" style="margin-top: 3px">
           <div class="cpu-number">
             <span>内存</span>
-            <span style="font-weight: 700;">{{CPUData.useMemory.value}}%</span></div>
+            <span style="font-weight: 700;">{{CPUData.useMemory.toFixed(1)}}%</span></div>
         </div>
-        <a-progress :showInfo="false" :status="CPUData.useMemory.value==0|| saving?'':'active'" :percent="CPUData.useMemory.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.useMemory==0|| saving?'':'active'" :percent="CPUData.useMemory" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -48,7 +48,7 @@
 <script>
 import { mapActions, mapWritableState } from 'pinia'
 import {filterObjKeys,initCanvas} from "../../../util";
-import Widget from "../../card/Widget.vue";
+import Widget from "../../../components/card/Widget.vue";
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
@@ -64,9 +64,9 @@ export default {
         type:'smallCPUCard'
       },
       CPUData:{
-        useCPU:{value:0},
-        warmCPU:{value:0},
-        useMemory:{value:0},
+        useCPU:0,
+        warmCPU:0,
+        useMemory:0,
       },
       CPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
       menuList:[
@@ -108,7 +108,7 @@ export default {
           useMemory:useMemory,
           warmCPU:warmCPU
         }
-        this.CPUData.useCPU.value&&  this.CPUList.push(this.CPUData.useCPU.value)
+        this.CPUData.useCPU&&  this.CPUList.push(this.CPUData.useCPU)
         this.CPUList.shift();
         if(!document.getElementById('myCPUCanvas')){
           return

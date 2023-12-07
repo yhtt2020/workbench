@@ -9,9 +9,9 @@
         </div>
       </template>
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU.value" :strokeWidth="10" :width="105" style="margin-top: 28px">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-          <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{GPUData.useGPU.value.toFixed(1)}}%</div>
+          <div style="color:var(--primary-text);font-size: 24px;font-weight: 700;">{{GPUData.useGPU.toFixed(1)}}%</div>
           <div style="color:var(--primary-text);font-size: 14px;margin-top: 6px">负载</div>
         </template>
       </a-progress>
@@ -20,9 +20,9 @@
         <div class="cpu">
           <div class="cpu-number">
             <span>温度</span>
-            <span style="font-weight: 700;">{{GPUData.warmGPU.value.toFixed(1)}}℃</span></div>
+            <span style="font-weight: 700;">{{GPUData.warmGPU.toFixed(1)}}℃</span></div>
         </div>
-        <a-progress :showInfo="false" :status="GPUData.warmGPU.value===0?'':'active'" :percent="GPUData.warmGPU.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="GPUData.warmGPU===0?'':'active'" :percent="GPUData.warmGPU" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -45,7 +45,7 @@
 import { mapActions, mapWritableState } from 'pinia'
 import {cardStore} from "../../../store/card";
 import {filterObjKeys,initCanvas} from "../../../util";
-import Widget from "../../card/Widget.vue";
+import Widget from "../../../components/card/Widget.vue";
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
 import { Icon as newIcon } from '@iconify/vue';
@@ -61,9 +61,9 @@ export default {
         type:'smallGPUCard'
       },
       GPUData:{
-        useGPU:{value:0},
-        warmGPU:{value:0},
-        videoStorage:{value:0}
+        useGPU:0,
+        warmGPU:0,
+        videoStorage:0
       },
       GPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
       menuList:[
@@ -85,7 +85,7 @@ export default {
   computed:{
     ...mapWritableState(inspectorStore,['displayData','aidaData']),
     GPUStorage() {
-      return this.GPUData.videoStorage.value>0?(this.GPUData.videoStorage.value / 1000).toFixed(2):this.GPUData.videoStorage.value
+      return this.GPUData.videoStorage>0?(this.GPUData.videoStorage / 1000).toFixed(2):this.GPUData.videoStorage
     }
   }, mounted () {
     this.startInspect()
@@ -102,7 +102,7 @@ export default {
           warmGPU:warmGPU,
           videoStorage:videoStorage
         }
-        this.GPUData.useGPU.value&& this.GPUList.push(this.GPUData.useGPU.value)
+        this.GPUData.useGPU&& this.GPUList.push(this.GPUData.useGPU)
         this.GPUList.shift();
         if(!document.getElementById('myGPUCanvas')){
           return

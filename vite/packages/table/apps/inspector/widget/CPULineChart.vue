@@ -15,7 +15,7 @@
             <Icon icon="cpu" class="icon"></Icon>
             <span>CPU</span>
           </div>
-          <span style="font-weight:700">{{ CPUData.useCPU.value?.toFixed(1) }}%</span></div>
+          <span style="font-weight:700">{{ CPUData.useCPU.toFixed(1) }}%</span></div>
       </div>
       <div id="cpu" ref="cpuChart" class="echarts"></div>
 
@@ -25,7 +25,7 @@
             <Icon icon="xianka" class="icon"></Icon>
             <span>GPU</span>
           </div>
-          <span style="font-weight:700">{{ CPUData.useGPU.value?.toFixed(1) }}%</span></div>
+          <span style="font-weight:700">{{ CPUData.useGPU.toFixed(1) }}%</span></div>
       </div>
       <div id="gpu" ref="gpuChart" class="echarts"></div>
 
@@ -35,10 +35,10 @@
             <Icon icon="neicun" class="icon"></Icon>
             <span>内存</span>
           </div>
-          <span style="font-weight:700">{{ CPUData.useMemory.value?.toFixed(1) }}%</span></div>
+          <span style="font-weight:700">{{ CPUData.useMemory.toFixed(1) }}%</span></div>
       </div>
-      <a-progress :showInfo="false" :status="CPUData.useMemory.value==0 || saving?'':'active'"
-                  :percent="CPUData.useMemory.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.useMemory==0 || saving?'':'active'"
+                  :percent="CPUData.useMemory" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -49,9 +49,9 @@
       <!--          <Icon icon="cipanio" class="icon"></Icon>-->
       <!--          <span>磁盘</span>-->
       <!--        </div>-->
-      <!--        <span style="font-weight:700">{{ CPUData.SDSK1ACT.value }}%</span></div>-->
+      <!--        <span style="font-weight:700">{{ CPUData.SDSK1ACT }}%</span></div>-->
       <!--    </div>-->
-      <!--      <a-progress :showInfo="false" :status="CPUData.SDSK1ACT.value=='-'?'':'active'" :percent="CPUData.SDSK1ACT.value" :stroke-color="{-->
+      <!--      <a-progress :showInfo="false" :status="CPUData.SDSK1ACT=='-'?'':'active'" :percent="CPUData.SDSK1ACT" :stroke-color="{-->
       <!--        '0%': '#FFD061',-->
       <!--        '100%': '#FF9035',-->
       <!--      }"/>-->
@@ -99,11 +99,12 @@ import * as echarts from 'echarts'
 import { mapWritableState, mapActions } from 'pinia'
 import { cardStore } from '../../../store/card'
 import { filterObjKeys, netWorkDownUp } from '../../../util'
-import Widget from '../../card/Widget.vue'
+import Widget from '../../../components/card/Widget.vue'
 import { appStore } from '../../../store'
 import { inspectorStore } from '../../../store/inspector'
 import { message } from 'ant-design-vue'
 import { Icon as newIcon } from '@iconify/vue'
+import { prettyDisplayBytes } from '../../../js/action/supervisory'
 
 export default {
   props: ['desk'],
@@ -118,9 +119,9 @@ export default {
       CPUOption,
       GPUOption,
       CPUData: {
-        useGPU: { value: 0 },
-        useCPU: { value: 0 },
-        useMemory: { value: 0 },
+        useGPU:  0 ,
+        useCPU: 0,
+        useMemory:  0,
         down: 0,
         up: 0
       },
@@ -150,10 +151,10 @@ export default {
     ...mapWritableState(appStore, ['saving']),
     ...mapWritableState(inspectorStore, ['displayData', 'aidaData']),
     lastDown () {
-      return this.CPUData.down < 1000 ? this.CPUData.down + 'KB/S' : this.CPUData.down < 1024000 ? (this.CPUData.down / 1024).toFixed(2) + 'MB/S' : (this.CPUData.down / 1024 / 1024).toFixed(2) + 'GB/S'
+      return prettyDisplayBytes(this.CPUData.down)
     },
     lastUp () {
-      return this.CPUData.up < 1000 ? this.CPUData.up + 'KB/S' : this.CPUData.up < 1024000 ? (this.CPUData.up / 1024).toFixed(2) + 'MB/S' : (this.CPUData.up / 1024 / 1024).toFixed(2) + 'GB/S'
+      return prettyDisplayBytes(this.CPUData.up)
     }
   },
   mounted () {
@@ -174,12 +175,12 @@ export default {
           down: down,
           up: up
         }
-        if (this.CPUData.useCPU.value !== 0) {
-          this.CPUList.push(this.CPUData.useCPU.value)
+        if (this.CPUData.useCPU !== 0) {
+          this.CPUList.push(this.CPUData.useCPU)
           this.CPUList.shift()
         }
-        if (this.CPUData.useGPU.value !== 0) {
-          this.GPUList.push(this.CPUData.useGPU.value)
+        if (this.CPUData.useGPU !== 0) {
+          this.GPUList.push(this.CPUData.useGPU)
           this.GPUList.shift()
         }
         //this.CPUEcharts()

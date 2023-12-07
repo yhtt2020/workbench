@@ -280,11 +280,11 @@ import { cardStore } from "../store/card";
 import vuuri from "../components/vuuriHome/Vuuri.vue";
 import Widget from "../components/muuri/Widget.vue";
 import { message, Modal } from "ant-design-vue";
-import CPULineChart from "../components/widgets/supervisory/CPULineChart.vue";
-import CPUFourCard from "../components/widgets/supervisory/CPUFourCard.vue";
-import InternalList from "../components/widgets/supervisory/InternalList.vue";
-import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
-import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
+import CPULineChart from "../apps/inspector/widget/CPULineChart.vue";
+import CPUFourCard from "../apps/inspector/widget/CPUFourCard.vue";
+import InternalList from "../apps/inspector/widget/InternalList.vue";
+import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
+import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
@@ -1034,9 +1034,9 @@ export default {
     //   }
     // },
 
-    // 第一次登录默认数据  
+    // 第一次登录默认数据
     addFreeLayoutDesk() {
-      if(this.currentInit){ 
+      if(this.currentInit){
         setTimeout(()=>{
           let deskTmp = _.cloneDeep(this.desk[0]);
           let oldId= deskTmp.id
@@ -1052,7 +1052,7 @@ export default {
           }
           this.currentDeskId = deskTmp.id
           this.currentInit = false
-        },2000)                         
+        },2000)
       }
     },
 
