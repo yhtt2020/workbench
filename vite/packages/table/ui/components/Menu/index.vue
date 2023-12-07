@@ -1,9 +1,15 @@
 <template>
+  <!--
+
+    @mousedown="handleMouseDown"
+
+"-->
   <div
     ref="containerRef"
     @click="handleOpenMenu($event, 'click')"
     @contextmenu="handleOpenMenu($event, 'contextmenu')"
   >
+  <!-- <div ref="containerRef" @mouseup="handleMouseUp($event)"> -->
     <slot></slot>
     <teleport to="body">
       <Transition
@@ -92,7 +98,7 @@ const props = withDefaults(defineProps<MenuProps>(), {
   beforeUnmount: () => true,
 });
 
-const {  model, lock, stopPropagation, beforeCreate, beforeUnmount } =
+const { model, lock, stopPropagation, beforeCreate, beforeUnmount } =
   toRefs(props);
 /**
  * 菜单回调
@@ -103,6 +109,18 @@ const {  model, lock, stopPropagation, beforeCreate, beforeUnmount } =
 const emits = defineEmits(["mounted", "selected", "unmounted"]);
 
 /**
+ * 2023年12月06新增
+ * 菜单改为鼠标弹起时触发
+ */
+const handleMouseUp = (event) => {
+  if (event.button === 2) {
+    handleOpenMenu(event, "contextmenu");
+  } else if (event.button === 0) {
+    handleOpenMenu(event, "click");
+  }
+};
+
+/**
  * 打开菜单
  */
 const show = ref(false);
@@ -110,11 +128,12 @@ const menuX = ref(0);
 const menuY = ref(0);
 
 function handleOpenMenu(e: any, currentModel: string) {
+  if (!beforeCreate.value()) return;
+
   if (stopPropagation.value) {
     e.stopPropagation();
     e.preventDefault();
   }
-  if (!beforeCreate.value()) return;
 
   if (model.value != currentModel && model.value != "all") return;
   menuX.value = e.clientX;
@@ -205,12 +224,12 @@ const pos = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("click", handleCloseMenu, { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+  window.addEventListener("click", handleCloseMenu , { capture: true } );
+  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
 });
 onBeforeUnmount(() => {
-  window.addEventListener("click", handleCloseMenu, { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+  window.addEventListener("click", handleCloseMenu  , { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
 });
 </script>
 

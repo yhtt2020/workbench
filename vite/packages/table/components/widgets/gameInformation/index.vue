@@ -16,8 +16,8 @@
             </div>
             <div class="card-body"   v-for="(value,index) in gameData.slice(0, 3)" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
-                    <div class="title-article">{{value.title}}</div>
-                    <div class="message-article">{{value.description}}</div>
+                    <div class="title-article xt-text">{{value.title}}</div>
+                    <div class="message-article xt-text-2">{{value.description}}</div>
                     <div class="bottom-article" style="margin-top: 9px;">
                         <div class="time-article">{{value.ctime}}</div>
                         <div class="source-article">{{value.source}}</div>

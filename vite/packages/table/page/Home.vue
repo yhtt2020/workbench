@@ -342,7 +342,10 @@ import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
-
+import _ from "lodash-es";
+// 桌面默认数据
+import { defaultFreeLayoutStore } from './defaultFreeLayout'
+import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession;
@@ -549,7 +552,9 @@ export default {
       appSettings: "settings",
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex"]),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
+    ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
+    ...mapWritableState(defaultFreeLayoutStore, ['desk','freeLayoutDataTmp','freeLayoutStateTmp']),
 
     desksList() {
       return this.desks.map((desk) => {
@@ -587,7 +592,7 @@ export default {
       this.hasTriggered++;
     }
   },
-  async mounted() {
+  mounted() {
     this.replaceIcon();
     // setTimeout(() => {
     //   this.replaceIcon()
@@ -612,6 +617,8 @@ export default {
         n++;
       }, 1000);
     }
+    // 新用户第一次进入加载一个默认桌面
+    this.addFreeLayoutDesk()
 
     // let counte=0
     // const counter=setInterval(()=>{
@@ -741,7 +748,8 @@ export default {
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
-        name: this.desks[0].nanoid,
+        // name: this.desks[0].nanoid,
+        name: this.desks[0].id,
         title: this.desks[0].name,
       };
     }
@@ -1025,6 +1033,29 @@ export default {
     //     this.cardDesk = 'all'
     //   }
     // },
+
+    // 第一次登录默认数据  
+    addFreeLayoutDesk() {
+      if(this.currentInit){ 
+        setTimeout(()=>{
+          let deskTmp = _.cloneDeep(this.desk[0]);
+          let oldId= deskTmp.id
+          let cardZoom = ((deskTmp.settings.zoom * 10) / deskTmp.deskHeight).toFixed();
+          deskTmp.settings.zoom = parseInt(cardZoom);
+          deskTmp.id = window.$models.nanoid.nanoid(8);
+          if (this.freeLayoutStateTmp[oldId] ) {
+            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId]
+            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId]
+          }
+          if( deskTmp.cards.length){
+            this.desks[0] = deskTmp
+          }
+          this.currentDeskId = deskTmp.id
+          this.currentInit = false
+        },2000)                         
+      }
+    },
+
     showSetting() {
       // this.setInitCard()
       this.settingVisible = true;

@@ -89,13 +89,17 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
-function defaultListClick() {
+function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }
-function defaultListContextmenu() {
+function defaultListContextmenu(event) {
   if (rightModel.value == "default") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }

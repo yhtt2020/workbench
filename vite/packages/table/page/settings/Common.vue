@@ -12,8 +12,9 @@
       顶部栏显示天气（需先设置城市）：
       <a-switch v-model:checked="settings.showTopbarWeather"></a-switch>
     </div>
-  <template v-if="isMain">
     <div class="line-title" >使用习惯</div>
+  <template v-if="isMain">
+
     <div class="line">
       <AutoRun />
     </div>
@@ -29,10 +30,11 @@
       在任务栏显示工作台：
       <a-switch v-model:checked="showInTaskBar"></a-switch>
     </div>
-    <div class='line flex w-full'>
- <div style='width:120px'>  右键菜单模式：</div>   <xt-radio  v-model:data='rightModel' :list='rightMenuList'/>
-    </div>
+
   </template>
+    <div class='line flex w-full'>
+      <div style='width:120px'>  右键菜单模式：</div>   <xt-radio  v-model:data='rightModel' :list='rightMenuList'/>
+    </div>
   </div>
 
 </template>
