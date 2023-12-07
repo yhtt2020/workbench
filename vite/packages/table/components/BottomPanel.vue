@@ -1152,15 +1152,15 @@ export default {
   }
 
   25% {
-    transform: rotate3d(0, 0, 1, -30deg);
+    transform: rotate3d(0, 0, 1, -15deg);
   }
 
   50% {
-    transform: rotate3d(0, 0, 1, 30deg);
+    transform: rotate3d(0, 0, 1, 15deg);
   }
 
   75% {
-    transform: rotate3d(0, 0, 1, -30deg);
+    transform: rotate3d(0, 0, 1, -15deg);
   }
 
   100% {
