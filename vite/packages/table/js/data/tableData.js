@@ -138,15 +138,15 @@ export default {
   systemAppList: [
     {
       type: 'systemApp',
-      icon: 'fluent:home-16-regular',
-      name: '主页',
+      icon: 'vite/public/logo/home.svg',
+      name: '桌面主页',
       event: 'home',
       tab:'home'
     },
     {
       'type': 'systemApp',
       'icon': 'fluent:games-16-regular',
-      'name': '游戏',
+      'name': '游戏助手',
       'event': 'gameIndex',
       tab:'game'
     },
@@ -159,7 +159,7 @@ export default {
     {
       'type': 'systemApp',
       'icon': 'fluent:music-note-2-16-regular',
-      'name': '音乐',
+      'name': '网易云音乐',
       'event': 'music'
     },
     {
@@ -172,7 +172,7 @@ export default {
     {
       type: 'systemApp',
       icon: 'fluent:lock-closed-16-regular',
-      name: '锁定屏幕',
+      name: '锁屏',
       event: 'lock',
       fn () {
         vm.$router.push({ path: '/lock' })
@@ -193,7 +193,7 @@ export default {
     {
       type: 'systemApp',
       icon: 'fluent:full-screen-maximize-16-filled',
-      name: '全屏显示',
+      name: '全屏',
       event: 'fullscreen',
       fn: () => {
         if (vm.full) {
@@ -208,13 +208,13 @@ export default {
     {
       type: 'systemApp',
       icon: 'fluent:settings-16-regular',
-      name: '基础设置',
+      name: '设置中心',
       event: 'setting',
       fn: () => { vm.$router.push({ name: 'setting' })}
     }, {
       type: 'systemApp',
       icon: 'fluent:power-20-filled',
-      name: '电源',
+      name: '电源控制',
       event: 'power',
       fn: () => {vm.$router.push({ path: '/power' })}
     },
@@ -226,7 +226,7 @@ export default {
     }, {
       type: 'systemApp',
       icon: 'fluent:cloud-sync-16-regular',
-      name: '文件传输',
+      name: '文件传输助手',
       event: 'fileHelper',
       data: {
         theme: '#2c2c2c',
@@ -239,13 +239,13 @@ export default {
     {
       type: 'systemApp',
       icon: 'fluent:grid-16-regular',
-      name: '应用管理',
+      name: '应用中心',
       event: 'apps',
     },
     {
       type: 'systemApp',
       icon: 'akar-icons:check-box',
-      name: '待办',
+      name: '待办事项',
       event: 'todo',
       fn: () => { vm.$router.push({ name: 'todo' })}
       // data:
@@ -280,150 +280,150 @@ export default {
       "event": "ai"
   },
   ],
-  systemFillAppList: [
-    {
-      type: 'systemApp',
-      icon: 'fluent:home-16-filled',
-      name: '主页',
-      event: 'home',
-      tab:'home'
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:document-bullet-list-multiple-24-regular',
-      name: '办公',
-      tab:'work',
-      event: 'work',
-    },
-    {
-      'type': 'systemApp',
-      'icon': 'fluent:games-16-filled',
-      'name': '游戏',
-      'event': 'gameIndex',
-      tab:'game'
-    },
-    {
-      'type': 'systemApp',
-      'icon': 'fluent:globe-16-filled',
-      'name': '浏览器',
-      'event': 'browser',
-    },
-    {
-      'type': 'systemApp',
-      'icon': 'fluent:music-note-2-16-filled',
-      'name': '音乐',
-      'event': 'music'
-    },
-    {
-      type:'systemApp',
-      icon:'fluent:image-multiple-16-filled',
-      name:'壁纸',
-      tab:'paper',
-      event:'my',
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:lock-closed-16-filled',
-      name: '锁定屏幕',
-      event: 'lock',
-      fn () {
-        vm.$router.push({ path: '/lock' })
-      }
-    }, {
-      type: 'systemApp',
-      icon: 'fluent:slide-settings-24-filled',
-      name: '设备设置',
-      event: 'status',
-      fn: () => {
-        if (vm.$route.path === '/status') {
-          vm.$router.go(-1)
-        } else {
-          vm.$router.push({ path: '/status' })
-        }
-      }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:full-screen-maximize-16-filled',
-      name: '全屏显示',
-      event: 'fullscreen',
-      fn: () => {
-        if (vm.full) {
-          vm.$emit('setFull', false)
-          tsbApi.window.setFullScreen(false)
-        } else {
-          vm.$emit('setFull', true)
-          tsbApi.window.setFullScreen(true)
-        }
-      }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:settings-16-filled',
-      name: '基础设置',
-      event: 'setting',
-      fn: () => { vm.$router.push({ name: 'setting' })}
-    }, {
-      type: 'systemApp',
-      icon: 'fluent:power-20-filled',
-      name: '电源',
-      event: 'power',
-      fn: () => {vm.$router.push({ path: '/power' })}
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:flash-16-filled',
-      name: '快捷指令',
-      event: 'deck',
-    }, {
-      type: 'systemApp',
-      icon: 'fluent:cloud-sync-16-filled',
-      name: '文件传输',
-      event: 'fileHelper',
-      data: {
-        theme: '#2c2c2c',
-        name: 'fileHelper',
-        url: 'https://szfilehelper.weixin.qq.com/',
-        preload: 'fileHelper',
-        background: false,
-      }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:grid-16-filled',
-      name: '应用管理',
-      event: 'apps',
-    },
-    {
-      type: 'systemApp',
-      icon: 'akar-icons:check-box-fill',
-      name: '待办',
-      event: 'todo',
-      fn: () => { vm.$router.push({ name: 'todo' })}
-      // data:
-      //   {
-      //     fullScreen: false,
-      //     theme: 'transparent',
-      //     name: 'todo',
-      //     url: 'https://a.apps.vip/todo',
-      //     background: true,
-      //     node: true,
-      //     security: true
-      //   }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:building-shop-16-filled',
-      name: '创意市场',
-      event: 'market',
-    },
-    {
-      "type": "systemApp",
-      "icon": "fluent:bot-24-filled",
-      "name": "AI助手",
-      "event": "ai"
-  },
-  ],
+  // systemFillAppList: [
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:home-16-filled',
+  //     name: '主页',
+  //     event: 'home',
+  //     tab:'home'
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:document-bullet-list-multiple-24-regular',
+  //     name: '办公',
+  //     tab:'work',
+  //     event: 'work',
+  //   },
+  //   {
+  //     'type': 'systemApp',
+  //     'icon': 'fluent:games-16-filled',
+  //     'name': '游戏',
+  //     'event': 'gameIndex',
+  //     tab:'game'
+  //   },
+  //   {
+  //     'type': 'systemApp',
+  //     'icon': 'fluent:globe-16-filled',
+  //     'name': '浏览器',
+  //     'event': 'browser',
+  //   },
+  //   {
+  //     'type': 'systemApp',
+  //     'icon': 'fluent:music-note-2-16-filled',
+  //     'name': '音乐',
+  //     'event': 'music'
+  //   },
+  //   {
+  //     type:'systemApp',
+  //     icon:'fluent:image-multiple-16-filled',
+  //     name:'壁纸',
+  //     tab:'paper',
+  //     event:'my',
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:lock-closed-16-filled',
+  //     name: '锁定屏幕',
+  //     event: 'lock',
+  //     fn () {
+  //       vm.$router.push({ path: '/lock' })
+  //     }
+  //   }, {
+  //     type: 'systemApp',
+  //     icon: 'fluent:slide-settings-24-filled',
+  //     name: '设备设置',
+  //     event: 'status',
+  //     fn: () => {
+  //       if (vm.$route.path === '/status') {
+  //         vm.$router.go(-1)
+  //       } else {
+  //         vm.$router.push({ path: '/status' })
+  //       }
+  //     }
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:full-screen-maximize-16-filled',
+  //     name: '全屏显示',
+  //     event: 'fullscreen',
+  //     fn: () => {
+  //       if (vm.full) {
+  //         vm.$emit('setFull', false)
+  //         tsbApi.window.setFullScreen(false)
+  //       } else {
+  //         vm.$emit('setFull', true)
+  //         tsbApi.window.setFullScreen(true)
+  //       }
+  //     }
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:settings-16-filled',
+  //     name: '基础设置',
+  //     event: 'setting',
+  //     fn: () => { vm.$router.push({ name: 'setting' })}
+  //   }, {
+  //     type: 'systemApp',
+  //     icon: 'fluent:power-20-filled',
+  //     name: '电源',
+  //     event: 'power',
+  //     fn: () => {vm.$router.push({ path: '/power' })}
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:flash-16-filled',
+  //     name: '快捷指令',
+  //     event: 'deck',
+  //   }, {
+  //     type: 'systemApp',
+  //     icon: 'fluent:cloud-sync-16-filled',
+  //     name: '文件传输',
+  //     event: 'fileHelper',
+  //     data: {
+  //       theme: '#2c2c2c',
+  //       name: 'fileHelper',
+  //       url: 'https://szfilehelper.weixin.qq.com/',
+  //       preload: 'fileHelper',
+  //       background: false,
+  //     }
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:grid-16-filled',
+  //     name: '应用管理',
+  //     event: 'apps',
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'akar-icons:check-box-fill',
+  //     name: '待办',
+  //     event: 'todo',
+  //     fn: () => { vm.$router.push({ name: 'todo' })}
+  //     // data:
+  //     //   {
+  //     //     fullScreen: false,
+  //     //     theme: 'transparent',
+  //     //     name: 'todo',
+  //     //     url: 'https://a.apps.vip/todo',
+  //     //     background: true,
+  //     //     node: true,
+  //     //     security: true
+  //     //   }
+  //   },
+  //   {
+  //     type: 'systemApp',
+  //     icon: 'fluent:building-shop-16-filled',
+  //     name: '创意市场',
+  //     event: 'market',
+  //   },
+  //   {
+  //     "type": "systemApp",
+  //     "icon": "fluent:bot-24-filled",
+  //     "name": "AI助手",
+  //     "event": "ai"
+  // },
+  // ],
 }
 
 export const testData = [
