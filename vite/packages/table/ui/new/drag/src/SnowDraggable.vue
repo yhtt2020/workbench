@@ -3,7 +3,8 @@
     ref="draggable"
     style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
-    @mousedown.stop="yDragStartFn"
+    @mousedown.stop="snowDragStart"
+    @touchstart.stop="snowDragStart"
   >
     <div
       v-element-size="getElementSize"
@@ -34,9 +35,14 @@ import {
   onBeforeUnmount,
   nextTick,
 } from "vue";
-import { useWindowSize } from "./useWindowSize";
-import { useElementSize, vElementSize } from "./useElementSize";
-import { snapGrid, isValidHandle, rotatedDimensions } from "./utils";
+import { useWindowSize } from "./hooks/useWindowSize";
+import { useElementSize, vElementSize } from "./hooks/useElementSize";
+import {
+  getSnapGrid,
+  getHandle,
+  getRotatedDimensions,
+  getClientCoordinates,
+} from "./hooks/utils";
 export interface DragProps {
   // 禁用组件拖拽
   disabled?: boolean;
@@ -128,7 +134,6 @@ const props = withDefaults(defineProps<DragProps>(), {
   resetPosition: true,
   data: {},
   firstPosition: null,
-  // firstPosition: ["center", "center"],
 });
 const {
   disabled,
@@ -258,7 +263,7 @@ watch(rotate, () => {
 });
 function getElementSize(size: any) {
   elementSize.value = size;
-  const [newWidth, newHeight] = rotatedDimensions(
+  const [newWidth, newHeight] = getRotatedDimensions(
     size.width,
     size.height,
     rotate.value
@@ -269,27 +274,24 @@ function getElementSize(size: any) {
   };
 }
 
-watch(parentSize, (val: any) => {
-  setPosition();
+watch([() => parentSize.value, () => draggableSize.value], () => {
+  if (
+    parentSize.value?.width !== undefined &&
+    draggableSize.value?.width !== undefined
+  ) {
+    setPosition();
+  }
 });
 const isFirstPosition = ref(true);
 function setPosition() {
-  if (
-    !firstPosition.value ||
-    !firstPosition.value.length ||
-    !isFirstPosition.value
-  ) {
-    return;
-  } else {
+  if (!isFirstPosition.value) return;
+  isFirstPosition.value = false;
+  if (!firstPosition.value || !firstPosition.value.length) {
     top.value = y.value;
     left.value = x.value;
+    return;
   }
-
-  if (
-    typeof firstPosition.value[0] == "string" &&
-    x.value == null &&
-    y.value == null
-  ) {
+  if (typeof firstPosition.value[0] === "string") {
     switch (firstPosition.value[0]) {
       case "left":
         left.value = 0;
@@ -300,8 +302,17 @@ function setPosition() {
       case "center":
         left.value = parentSize.value.width / 2 - draggableSize.value.width / 2;
         break;
+      default:
+        console.warn(
+          "firstPosition参数错误！第一个值必须为字符串时只接受left、right、center"
+        );
     }
-
+  } else if (typeof firstPosition.value[0] == "number") {
+    left.value = firstPosition.value[0];
+  } else {
+    console.warn("firstPosition参数错误！第一个值必须为字符串或数字");
+  }
+  if (typeof firstPosition.value[1] === "string") {
     switch (firstPosition.value[1]) {
       case "top":
         top.value = 0;
@@ -313,9 +324,35 @@ function setPosition() {
         top.value =
           parentSize.value.height / 2 - draggableSize.value.height / 2;
         break;
+      case "left":
+      default:
+        console.warn(
+          "firstPosition参数错误！第二个值必须为字符串时只接受top、bottom、center"
+        );
     }
-    isFirstPosition.value = false;
+  } else if (typeof firstPosition.value[1] === "number") {
+    top.value = firstPosition.value[1];
+  } else {
+    console.warn("firstPosition参数错误！第二个值必须为字符串或数字");
   }
+
+  if (
+    firstPosition.value.length == 3 &&
+    typeof firstPosition.value[2] === "number"
+  ) {
+    left.value += firstPosition.value[2];
+    top.value += firstPosition.value[2];
+  } else if (
+    firstPosition.value.length == 4 &&
+    typeof firstPosition.value[2] === "number" &&
+    typeof firstPosition.value[3] === "number"
+  ) {
+    left.value += firstPosition.value[2];
+    top.value += firstPosition.value[3];
+  } else {
+    console.warn("firstPosition参数错误！第三、第四个值必须为数字");
+  }
+  snowDragEnd();
 }
 
 onMounted(() => {
@@ -324,7 +361,12 @@ onMounted(() => {
     parent,
     () => {
       if (parent.value) {
-        parentSize.value = useElementSize(draggable.value.parentNode);
+        useElementSize(draggable.value.parentNode, (size: any) => {
+          parentSize.value = size;
+          setTimeout(() => {
+            ResetElementPosition();
+          }, 200);
+        });
       } else {
         useWindowSize((size: any) => {
           parentSize.value = size;
@@ -373,23 +415,24 @@ onMounted(() => {
 });
 
 // 拖拽开始
-function yDragStartFn(event: MouseEvent) {
+function snowDragStart(event: MouseEvent | TouchEvent) {
   if (disabled.value) return;
   if (event instanceof MouseEvent && event.button !== 0) {
     return;
   }
   // 手柄区域
   if (handle.value) {
-    const handleElement = isValidHandle(event, handle.value);
+    const handleElement = getHandle(event, handle.value);
     if (!handleElement) return;
   } else if (disabledHandle.value) {
-    const isHandleDisabled = isValidHandle(event, disabledHandle.value);
+    const isHandleDisabled = getHandle(event, disabledHandle.value);
     if (isHandleDisabled) return;
   }
 
   isDragging.value = true;
-  initialMouseX.value = event.clientX;
-  initialMouseY.value = event.clientY;
+  const { clientX, clientY } = getClientCoordinates(event);
+  initialMouseX.value = clientX;
+  initialMouseY.value = clientY;
   initialTop.value = top.value;
   initialLeft.value = left.value;
 
@@ -397,86 +440,90 @@ function yDragStartFn(event: MouseEvent) {
   prevY.value = top.value;
   prevX.value = left.value;
   emits("onDragStart", dragData.value);
-  window.addEventListener("mousemove", yDragFn, { capture: true });
-  window.addEventListener("mouseup", yDragStopFn, { capture: true });
+  window.addEventListener("mousemove", snowDrag, { capture: true });
+  window.addEventListener("mouseup", snowDragEnd, { capture: true });
+
+  window.addEventListener("touchmove", snowDrag, {
+    capture: true,
+    passive: false,
+  });
+  window.addEventListener("touchend", snowDragEnd, {
+    capture: true,
+    passive: false,
+  });
 }
 // 拖拽过程
-function yDragFn(event: MouseEvent) {
-  if (isDragging.value) {
-    // 阻止默认事件
-    if (disabledDefaultEvent.value) {
-      event.preventDefault();
-    }
-    if (gridLocation.value) {
-      showGridPos.value = true;
-    }
-
-    const { clientX, clientY } = event;
-
-    // 计算鼠标在x轴上的移动距离
-    const deltaX =
-      (clientX - initialMouseX.value) / parentScale.value / scale.value;
-    // 计算鼠标在y轴上的移动距离
-    const deltaY =
-      (clientY - initialMouseY.value) / parentScale.value / scale.value;
-
-    let newTop = initialTop.value + deltaY;
-    let newLeft = initialLeft.value + deltaX;
-
-    const [snappedX, snappedY] = snapGrid(
-      grid.value,
-      newLeft,
-      newTop,
-      parentSize.value.width / scale.value,
-      parentSize.value.height / scale.value,
-      gridMargin.value
-    );
-    // 拖拽时吸附网格
-    if (whileDraggingAdsorbGrid.value) {
-      newLeft = snappedX;
-      newTop = snappedY;
-    }
-
-    // 边缘检测
-    if (boundary.value) {
-      const [boundaryX, boundaryY] = boundaryDetection(newLeft, newTop);
-      newLeft = boundaryX;
-      newTop = boundaryY;
-    }
-
-    // 冲突检测
-    if (collision.value) {
-      requestAnimationFrame(() => {
-        const collisionRes = collisionDetection();
-        if (!collisionRes) {
-          if (afterDraggingAdsorbGrid.value || whileDraggingAdsorbGrid.value) {
-            prevX.value = snappedX;
-            prevY.value = snappedY;
-            gridPosLeft.value = snappedX;
-            gridPosTop.value = snappedY;
-          } else {
-            prevY.value = top.value;
-            prevX.value = left.value;
-          }
-        }
-      });
-    } else {
-      gridPosLeft.value = snappedX;
-      gridPosTop.value = snappedY;
-    }
-
-    top.value = newTop;
-    left.value = newLeft;
-    // 磁吸检测
-    if (magnet.value) {
-      magnetDetection(newLeft, newTop);
-    }
-    emits("onDrag", dragData.value);
+function snowDrag(event: MouseEvent | TouchEvent) {
+  if (!isDragging.value) return;
+  // 阻止默认事件
+  if (disabledDefaultEvent.value) {
+    event.preventDefault();
   }
+  if (gridLocation.value) {
+    showGridPos.value = true;
+  }
+  const { clientX, clientY } = getClientCoordinates(event);
+
+  // 计算鼠标在x轴上的移动距离
+  const deltaX =
+    (clientX - initialMouseX.value) / parentScale.value / scale.value;
+  // 计算鼠标在y轴上的移动距离
+  const deltaY =
+    (clientY - initialMouseY.value) / parentScale.value / scale.value;
+  let newTop = initialTop.value + deltaY;
+  let newLeft = initialLeft.value + deltaX;
+  const [snappedX, snappedY] = getSnapGrid(
+    grid.value,
+    newLeft,
+    newTop,
+    parentSize.value.width / scale.value,
+    parentSize.value.height / scale.value,
+    gridMargin.value
+  );
+  // 拖拽时吸附网格
+  if (whileDraggingAdsorbGrid.value) {
+    newLeft = snappedX;
+    newTop = snappedY;
+  }
+
+  // 边缘检测
+  if (boundary.value) {
+    const [boundaryX, boundaryY] = boundaryDetection(newLeft, newTop);
+    newLeft = boundaryX;
+    newTop = boundaryY;
+  }
+
+  // 冲突检测
+  if (collision.value) {
+    requestAnimationFrame(() => {
+      const collisionRes = collisionDetection();
+      if (!collisionRes) {
+        if (afterDraggingAdsorbGrid.value || whileDraggingAdsorbGrid.value) {
+          prevX.value = snappedX;
+          prevY.value = snappedY;
+          gridPosLeft.value = snappedX;
+          gridPosTop.value = snappedY;
+        } else {
+          prevY.value = top.value;
+          prevX.value = left.value;
+        }
+      }
+    });
+  } else {
+    gridPosLeft.value = snappedX;
+    gridPosTop.value = snappedY;
+  }
+  top.value = newTop;
+  left.value = newLeft;
+  // 磁吸检测
+  if (magnet.value) {
+    magnetDetection(newLeft, newTop);
+  }
+  emits("onDrag", dragData.value);
 }
 
 // 拖拽结束
-function yDragStopFn(event: MouseEvent) {
+function snowDragEnd(event?: MouseEvent | TouchEvent) {
   isDragging.value = false;
 
   // 隐藏网格位置
@@ -485,7 +532,7 @@ function yDragStopFn(event: MouseEvent) {
   }
   // 拖拽结束吸附网格
   if (afterDraggingAdsorbGrid.value) {
-    const [snappedX, snappedY] = snapGrid(
+    const [snappedX, snappedY] = getSnapGrid(
       grid.value,
       left.value,
       top.value,
@@ -515,36 +562,38 @@ function yDragStopFn(event: MouseEvent) {
   }
 
   emits("onDragStop", dragData.value);
-  window.removeEventListener("mousemove", yDragFn, { capture: true });
-  window.removeEventListener("mouseup", yDragStopFn, { capture: true });
+  window.removeEventListener("mousemove", snowDrag, { capture: true });
+  window.removeEventListener("mouseup", snowDragEnd, { capture: true });
+
+  window.removeEventListener("touchmove", snowDrag, { capture: true });
+  window.removeEventListener("touchend", snowDragEnd, { capture: true });
 }
 
 // 重置元素位置
 function ResetElementPosition() {
-  if (resetPosition.value) {
-    if (left.value < 0 || top.value < 0) {
-      left.value = 0;
-      top.value = 0;
-    } else if (
-      left.value + draggableSize.value.width > parentSize.value.width ||
-      top.value + draggableSize.value.height > parentSize.value.height
-    ) {
-      // 视图大小
-      let vW = parentSize.value.width;
-      let vH = parentSize.value.height;
-      // 元素坐标
-      let posX = left.value;
-      let posY = top.value;
-      // 元素大小
-      let menuW = draggableSize.value.width;
-      let menuH = draggableSize.value.height;
+  if (!resetPosition.value) return;
+  if (left.value < 0 || top.value < 0) {
+    left.value = 0;
+    top.value = 0;
+  } else if (
+    left.value + draggableSize.value.width > parentSize.value.width ||
+    top.value + draggableSize.value.height > parentSize.value.height
+  ) {
+    // 视图大小
+    let vW = parentSize.value.width;
+    let vH = parentSize.value.height;
+    // 元素坐标
+    let posX = left.value;
+    let posY = top.value;
+    // 元素大小
+    let menuW = draggableSize.value.width;
+    let menuH = draggableSize.value.height;
 
-      posX = posX > vW - menuW ? vW - menuW : posX;
-      posY = posY > vH - menuH ? vH - menuH : posY;
+    posX = posX > vW - menuW ? vW - menuW : posX;
+    posY = posY > vH - menuH ? vH - menuH : posY;
 
-      left.value = posX;
-      top.value = posY;
-    }
+    left.value = posX;
+    top.value = posY;
   }
 }
 
@@ -583,9 +632,7 @@ function collisionDetection() {
       rect1.bottom * scale1 < rect2.top * scale2 ||
       rect1.top * scale1 > rect2.bottom * scale2
     );
-    if (overlap) {
-      return true;
-    }
+    if (overlap) return true;
   }
   return false;
 }
@@ -691,7 +738,11 @@ function magnetDetection(x: number, y: number) {
   emits("auxLine", objX);
   return;
 }
+
+defineExpose({
+  snowDragEnd,
+});
 </script>
 <style scoped>
-@import "./style.css";
+@import "./assets/style.css";
 </style>

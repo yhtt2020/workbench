@@ -521,6 +521,7 @@ export default {
       this.deskInit = true
       this.finishWizard()
       this.$router.replace({ name: 'home' })
+      //
     },
     getKeys (e) {
       let key = ''

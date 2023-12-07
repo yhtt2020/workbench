@@ -443,8 +443,9 @@ export const useCommunityStore = defineStore('forumStore',{
                 console.error(error)
             }
         },
-        async getPublishPost(fid,image='',content,title,cover='',classId=67,is_close_comment=1,from='PC',type=1):Promise<IThread>{
-            console.log(fid,image,content,title,classId=67,is_close_comment=1,from='PC',type=1,cover,'getCommunityPublishPost');
+        async getPublishPost(fid,image='',content,title,cover='',classId=0,is_close_comment=1,from='PC',type=1,
+        column_id=0,id=0,is_attention_at=0):Promise<IThread>{
+            console.log(fid,image,content,title,classId,is_close_comment=1,from='PC',type=1,cover,'getCommunityPublishPost');
 
             try {
                 let res=await post(threadPost,{
@@ -457,6 +458,9 @@ export const useCommunityStore = defineStore('forumStore',{
                     title:title,
                     type:type,
                     cover:cover,
+                    column_id:column_id,
+                    id:id,
+                    is_attention_at:is_attention_at
                 })
                 // console.log(res,'threadPost');
 

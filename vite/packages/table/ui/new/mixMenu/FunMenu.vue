@@ -4,10 +4,11 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
+    :class="[menuHeight]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
-    class="w-full h-full"
+    class="w-full"
   >
     <slot> </slot>
     <template #cardSize>
@@ -41,6 +42,9 @@ const props = defineProps({
   height: {
     default: 0,
   },
+  menuHeight:{
+    default: 'h-full'
+  }
 });
 const { menus, model, height } = toRefs(props);
 
@@ -85,13 +89,17 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
-function defaultListClick() {
+function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }
-function defaultListContextmenu() {
+function defaultListContextmenu(event) {
   if (rightModel.value == "default") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }

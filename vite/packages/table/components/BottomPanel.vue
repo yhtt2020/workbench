@@ -1,5 +1,5 @@
 <template>
-  <xt-menu :menus="rightMenus" :name="name" :beforeCreate="menuState">
+  <xtMixMenu :menus="rightMenus" name="name">
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -57,9 +57,9 @@
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name" 
                     @mouseenter="showElement(item, index)">
-                    <xtMenu :menus="iconMenus">
+                    <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
@@ -75,7 +75,7 @@
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
-                    </xtMenu>
+                    </xt-menu>
                   </a-tooltip>
                 </div>
 
@@ -166,8 +166,8 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
-  </xt-menu>
-  <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
+  </xtMixMenu>
+  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
     <a-row>
       <a-col>
@@ -195,7 +195,7 @@
 
       </a-col>
     </a-row>
-  </a-drawer>
+  </a-drawer> -->
 
 
 
@@ -273,6 +273,7 @@ import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 import xtMenu from '../ui/components/Menu/index.vue'
+import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -296,7 +297,8 @@ export default {
     navigationSetting,
     AddIcon,
     EditNewNavigation,
-    xtMenu
+    xtMenu,
+    xtMixMenu,
   },
   data() {
     return {
@@ -376,25 +378,24 @@ export default {
         {
           id: 1,
           newIcon: 'fluent:add-16-regular',
-          label: "添加导航图标",
-          label: "添加导航图标",
-          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
+          name: "添加导航图标",
+          fn: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
           id: 2,
-          label: '导航栏设置',
+          name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.editNavigation(this.drawerMenus[1]) },
         },
         {
           id: 3,
-          label: '隐藏当前导航',
+          name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          callBack: () => { this.navigationToggle[2] = false },
+          fn: () => { this.navigationToggle[2] = false },
         },
         {
           id: 4,
-          label: '更多',
+          name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
 
@@ -406,37 +407,39 @@ export default {
         {
           type: "systemApp",
           newIcon: "fluent:lock-closed-16-regular",
-          label: "锁定屏幕",
+          name: "锁定屏幕",
           event: "lock",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
-          label: "基础设置",
+          name: "基础设置",
           event: "setting",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
-          label: "全屏显示",
+          name: "全屏显示",
           event: "fullscreen",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
-          label: "设备设置",
+          name: "设备设置",
           event: "status",
-          callBack: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
         }
       ],
       shakeElement: false,
       currentIndex: null,
       currentItem: null,
       delItemIcon: false,
-      notifications: new Notifications()
+      notifications: new Notifications(),
+      tooltipVisible:true,
+
     }
   },
   props: {
@@ -543,27 +546,27 @@ export default {
       return [
         {
           id: 1,
-          label: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
+          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
           newIcon: "fluent:person-16-regular",
-          callBack: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
+          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
         },
         {
           id: 2,
-          label: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
+          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
           newIcon: "fluent:people-community-16-regular",
-          callBack: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
+          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
         },
         {
           id: 3,
-          label: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
+          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          callBack: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
         {
           id: 4,
-          label: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
-          callBack: () => { this.settings.enableChat = !this.settings.enableChat }
+          fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
       ]
 
@@ -613,24 +616,24 @@ export default {
         this.disableDrag()
       }
     },
-    simple(){
-      if(this.simple){
-        this.bottomToggle[0]=false
-        this.bottomToggle[1]=false
-        this.bottomToggle[2]=false
-      }else{
-        this.bottomToggle[0]=true
-        this.bottomToggle[1]=true
-        this.bottomToggle[2]=true
+    simple() {
+      if (this.simple ) {
+        this.bottomToggle[0] = false
+        this.bottomToggle[1] = false
+        this.bottomToggle[2] = false
+      } else {
+        this.bottomToggle[0] = true
+        this.bottomToggle[1] = true
+        this.bottomToggle[2] = true
       }
     },
-    bottomToggle:{
-      deep:true,
-      handler(newV,oldV){
-        if(this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]){
-          this.simple=false
-        }else if(!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]){
-          this.simple=true
+    bottomToggle: {
+      deep: true,
+      handler(newV, oldV) {
+        if (this.bottomToggle[0] || this.bottomToggle[1] || this.bottomToggle[2]) {
+          this.simple = false
+        } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
+          this.simple = true
         }
       }
     }
@@ -777,21 +780,21 @@ export default {
     },
     delCurrentIcon(currentIndex, currentItem) {
       if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
-        this.delNavList(currentIndex)
+        this.removeFootNavigationList(currentIndex)
         return
       }
       let arr = []
-      if (this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList1.concat(this.otherNavList2)
-      } else if (this.otherSwitch1 && !this.otherSwitch2) {
-        arr = this.otherNavList1
-      } else if (!this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList2
+      if (this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.sideNavigationList.concat(this.rightNavigationList)
+      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
+        arr = this.sideNavigationList
+      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.rightNavigationList
       } else {
         message.info(`导航栏中至少保留一个「${currentItem.name}」`)
         return
       }
-      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
+      this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
     },
     // closeEdit(){
     //   this.editBar=false
@@ -846,9 +849,6 @@ export default {
         this.full = true
         tsbApi.window.setFullScreen(true)
       }
-    },
-    menuState(){
-      return this.rightModel === 'follow'
     },
     clickNavigation(item) {
       if (this.editToggle) {
@@ -1003,6 +1003,7 @@ export default {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
+          that.tooltipVisible=false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           this.delNav = true
@@ -1059,6 +1060,7 @@ export default {
           that.sortFootNavigationList(event)
         },
         onEnd: function (event) {
+          that.tooltipVisible=true
           that.$emit('getDelIcon', false)
         },
       })

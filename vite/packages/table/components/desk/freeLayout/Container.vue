@@ -20,7 +20,16 @@ const {
   getFreeLayoutState,
   isSelectAll,
 } = storeToRefs(freeLayoutStore);
-onMounted(() => {});
+const snowDrag = ref();
+onMounted(() => {
+  console.log("snowDrag :>> ", snowDrag.value);
+
+  // setTimeout(() => {
+  //   snowDrag.value.forEach((item) => {
+  //   console.log("item :>> ", item);
+  // });
+  // }, 10);
+});
 freeLayoutStore.initFreeLayoutState();
 // 滚动清除cards数据
 watch(
@@ -73,8 +82,9 @@ function updateCard(data) {
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   let dataObj = {};
-  currentData.value = dataObj;
+
   data.forEach((item) => (dataObj[item.id] = item));
+  currentData.value = dataObj;
   for (const key in getFreeLayoutData.value) {
     if (!(key in dataObj)) {
       delete getFreeLayoutData.value[key];
@@ -125,9 +135,19 @@ const drag = (obj) => {
 };
 
 const dragStart = () => {
+  isDragging = false;
   freeLayoutStore.copyData();
 };
-const dragStop = () => {};
+let isDragging = false; // 添加一个标志位来表示当前是否正在拖动
+
+const dragStop = () => {
+  if (isDragging) return;
+  isDragging = true; // 开始拖动时设置标志位为true
+  if (!isSelectAll.value) return;
+  snowDrag.value.forEach((item) => {
+    item.snowDragEnd();
+  });
+};
 </script>
 
 <template>
@@ -157,6 +177,7 @@ const dragStop = () => {};
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
+      ref="snowDrag"
       resetPosition
       parent
       boundary
@@ -192,7 +213,7 @@ const dragStop = () => {};
           }"
           ref="test"
         >
-          <slot name="box" :data="currentData[item.id]"></slot>
+          <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </template>
     </xt-drag>

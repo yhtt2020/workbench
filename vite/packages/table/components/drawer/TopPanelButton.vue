@@ -1,5 +1,5 @@
 <template>
- <div class="flex items-center justify-center h-12 relative mr-3 no-drag">
+ <div class="flex items-center justify-center relative mr-3 no-drag">
   <xt-menu :menus="menus" model="click" name="name"  v-if="assistStatus">
    <div style="max-width: 88px;"  class="p-1 btn-hover  rounded-md pointer category-button" >
     <div class="flex items-center justify-center">

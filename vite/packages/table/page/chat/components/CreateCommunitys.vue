@@ -80,8 +80,7 @@ export default {
  },
 
  methods:{
-   ...mapActions(communityStore,['communityCreate']),
-
+   ...mapActions(communityStore,['communityCreate','getMyCommunity']),
 
    closeCreateCom(){
      this.$emit('close')
@@ -89,7 +88,6 @@ export default {
    backCreate(){
      this.$emit('back')
    },
-
    // 更换头像
    async updateGroupAvatar(){
      document.querySelector('#groupFileID').click()
@@ -116,13 +114,11 @@ export default {
    async finshCreateCommunity(evt){
      const chineseCharReg = /[\u4e00-\u9fa5]/g; // 匹配2-16个汉字
      const chineseCharCount = (this.communityName.match(chineseCharReg) || []).length;
-     
      // // const nonChineseCharReg = /[^\u4e00-\u9fa5]/g; // 匹配4-32个字符
      // // const nonCharCount = (this.communityName.match(nonChineseCharReg) || []).length;
      // console.log('排查问题',chineseCharCount);
      // console.log('查看条件',chineseCharCount >= 2 && chineseCharCount <= 16);
      // // const totalCount = chineseCharCount + nonCharCount
-
      if(chineseCharCount >= 2 && chineseCharCount <= 16){
        const option = {
         name:this.communityName,
@@ -137,13 +133,10 @@ export default {
        }else{
         message.error(`${res.info}`);
        }
-
      }else{
        message.error('社群名称长度的范围需要在2-16个字符之间');
      }
-
      this.$emit('close');
-
    }
 
 

@@ -2,12 +2,12 @@
 <template>
   <div
     ref="scrollbar"
-    class="no-drag relative w-full"
+    class="no-drag relative w-full h-full"
     style="
       padding-right: 10px;
       padding-bottom: 10px;
       margin-bottom: 12px;
-      height: 100%;
+
     "
     :style="{
       cursor: dragStyle,
@@ -117,7 +117,7 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-
+console.log('dx,dy :>> ', dx,dy);
     try {
       scrollbar.value.scrollTop -= dy;
       scrollbar.value.scrollLeft -= dx;
@@ -143,7 +143,6 @@ function handleKeyDown(event) {
     event.stopPropagation();
   }
   if ((event.ctrlKey && event.key === "A") || event.key === "a") {
-    console.log('1111 :>> ', 1111);
     isSelectAll.value = !isSelectAll.value;
   }
 }
