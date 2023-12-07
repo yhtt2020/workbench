@@ -51,11 +51,14 @@
     </div>
 
     <div id="topRightPart" class="flex items-center drag justify-end relative pt-2">
+      <PaperLock></PaperLock>
       <TopPanelButton/>
+
       <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
        class="no-drag btn-hover category-button p-1 rounded-md pointer"
       >
         <div class="flex items-center" style="max-width:270px;">
+
           <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
           <div class="xt-text font-14  xt-font">
            <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
@@ -141,11 +144,13 @@ import QueueWidget from '../apps/queue/topWidget/index.vue'
 import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 import TopPanelButton from './drawer/TopPanelButton.vue'
+import PaperLock from './topPanel/PaperLock.vue'
 
 export default {
   name: 'TopPanel',
 
   components: {
+    PaperLock,
     WindowController,
     MessagePopup,
     TopTomato,
@@ -159,8 +164,6 @@ export default {
       loading: true,
       dateTime: {},
       timer: null,
-      lockTimer: null,
-      showLockTip: false,
       messageDrawer: false,
       appStats: false,
       topClockTimerVisible: false,
@@ -173,38 +176,11 @@ export default {
     ...mapWritableState(appStore,['status','showWindowController']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
-    ...mapWritableState(timerStore, ['lockTimeout']),
     ...mapWritableState(steamUserStore, ['runningGame']),
     ...mapState(clipboardStore, ['settings']),
     ...mapWritableState(topClockSettingStore, ['checkTopClock']),
     ...mapWritableState(appStore,{appSettings: 'settings'}),
     isMain,
-
-    lockTimeoutDisplay(){
-      // if(this.lockTimeout>=60){
-      //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒';
-      // }else{
-      //   return this.lockTimeout+'秒';
-      // }
-      function secToTime(s){
-        var t = '';
-        if (s > -1){
-          var hour = Math.floor(s / 3600);
-          var min = Math.floor(s / 60) % 60;
-          var sec = s % 60;
-          if (hour === 0){ t = ''; }
-          else if (hour < 10){  t = '0' + hour + '小时'; }
-          else{   t = hour + '小时'; }
-
-          if (min < 10) {  t += '0'; }
-          t += min + '分';
-          if (sec < 10){    t += '0'; }
-          t += sec.toFixed(0) + '秒';
-        }
-        return t;
-      }
-      return secToTime(this.lockTimeout);
-    },
     city(){
       if (this.cities[0]) { return this.cities[0]; }
       else{ return {}; }
@@ -216,8 +192,6 @@ export default {
   },
 
   mounted(){
-    window.onblur = () => { this.setLockTimer(); };
-    window.onfocus = () => { this.clearLockTimer(); };
     this.loading = false;
     if (!this.timer){  setInterval(this.getTime, 1000); };
     this.filterClock(this.clockTag);
@@ -232,14 +206,7 @@ export default {
     ...mapActions(cardStore, ['setAppDate','filterClock']),
     ...mapActions(appStore,['hideNoticeEntry']),
 
-    clearLockTimer(){
-      if (this.lockTimer){
-        clearInterval(this.lockTimer);
-        this.lockTimer = null;
-        this.lockTimeout = this.settings.lockTimeout;
-        this.showLockTip = false;
-      }
-    },
+
     // 顶部左侧状态鼠标右键触发左侧抽屉菜单
     toggleAppStats(){
       this.$refs.leftDrawerRef.openLeftDrawer();
@@ -248,23 +215,7 @@ export default {
     enterClipboard(){
       this.$router.push({  name: 'clipboard'});
     },
-    setLockTimer(){
-      if (this.settings.enable){
-        //只有启用了锁屏才会触发这个效果
-        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
-      }
-      else{
-        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
-        this.showLockTip = true;
-        this.lockTimer = setInterval(() => {
-          this.lockTimeout--;
-          if (this.lockTimeout === 0) {
-            this.clearLockTimer();
-            this.$router.push('/lock');
-          }
-        }, 1000);
-      }
-    },
+
     // 顶部栏搜索
     openGlobalSearch(){
       ipc.send('openGlobalSearch');
