@@ -663,6 +663,23 @@ export default {
         const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         desk.forEach((g) => {
+          // 将导入的便签重新修改时间
+          g?.cards?.forEach((item) => {
+            //移除桌面相关的便签卡片
+            if (item.name === "notes") {
+              const now = new Date().getTime()
+              tsbApi.db.put({
+                ...item,
+                id:now,
+                _id:'note:' + now,
+                createTime:now,
+                updateTime:now,
+                isDelete:false,
+                deskId:g.id,
+                deskName:g.name,
+              })
+            }
+          });
           let oldId = g.id;
 
           //修正一下老版本导出的数据
