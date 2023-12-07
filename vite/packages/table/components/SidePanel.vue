@@ -20,7 +20,7 @@
                     <a-avatar :size="52" shape="square" :src="item.icon"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
-                  <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"
+                  <a-avatar v-else :size="52" shape="square" :src="renderIcon(item.icon)"
                     :class="{ 'shaking-element': shakeElement }"></a-avatar>
 
                 </div>
