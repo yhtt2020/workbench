@@ -215,24 +215,44 @@ export default {
         id: this.classItem.id === undefined ? 0 : this.classItem.id,
         no: this.no,
       };
-      if(Array.isArray(this.data)){
-        for(const item of this.data){
-          const chatOption = {
-            ...option,
-            content:{
+      const isList = Array.isArray(this.data);
+      if(isList){
+        const isListLength = this.data.length > 1;
+        if(isListLength){
+          for(const item of this.data){
+            const chatOption = {
+             ...option,
+             content:{
               name:item.name,
               props:{
                 groupID:item.groupID,
                 avatar:item.avatar,
                 type:item.type,
               }
+             }
+            }
+            channelClass.secondaryChannel(chatOption)
+          }
+        }
+        else {
+          const data = this.data[0];
+          const dataOption = {
+            ...option,
+            content:{
+              name:data.name,
+              props:{
+                groupID:data.groupID,
+                avatar:data.avatar,
+                type:data.type,
+              }
             }
           }
-          console.log('执行....查看',item,chatOption);
-          channelClass.secondaryChannel(chatOption)
-        }
+          channelClass.secondaryChannel(dataOption);
+        } 
         this.closeButton()
-      }else{
+      }
+
+      else{
         const channelOption = {
           ...option,
           content:{
