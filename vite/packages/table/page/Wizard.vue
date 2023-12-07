@@ -270,7 +270,7 @@ export default {
   },
   computed: {
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo']),
+    ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo','deskInit']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
 
     // 标题名称
@@ -518,6 +518,7 @@ export default {
       this.step++
     },
     finish () {
+      this.deskInit = true
       this.finishWizard()
       this.$router.replace({ name: 'home' })
     },

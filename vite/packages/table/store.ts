@@ -186,7 +186,6 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
-      this.deskInit = true
       this.agreeTest = true
 
     },

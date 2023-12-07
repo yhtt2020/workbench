@@ -550,8 +550,9 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
+      deskInit:'deskInit',
       
-    },'deskInit'),
+    }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, [    'freeLayoutData','freeLayoutState']),
