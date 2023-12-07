@@ -11,6 +11,8 @@
         color: var(--primary-text);
         border-radius: 18px;
         /* width: 160px; */
+        border: 1px solid var(--divider);
+        height: 80px;
       ">
         <MyAvatar  :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
@@ -29,7 +31,7 @@
         align-content: center;
         align-items: center;
         border-radius: 18px;
-        height: 73px;
+        height: 80px;
         max-width: 80%;
         overflow: hidden;
         margin-right: 10px;
@@ -37,30 +39,31 @@
         color: var(--primary-text);
         z-index: 99;
         min-width: 70px;
+        border: 1px solid var(--divider);
       ">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
           <div style="
           display: flex;
           flex-direction: row;
           width: 100%;
-          height: 56px;
+          height: 52px;
           align-items: start;
           flex-wrap: nowrap;
           justify-content: center;
         ">
 
 
-            <div @contextmenu="showMenu" style="height: 56px; width: 100%; overflow: hidden">
-              <div class="pr-3 scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex"
+            <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
+              <div class=" scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;"
                 ref="content">
                 <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"                                                                                                                                                                                 
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer" :style="{marginLeft:index === 0 ? '14px' : '20px'}"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
                         <div style="width: 52px; height: 52px;border-radius: 12px;" v-if="item.type === 'systemApp'"
