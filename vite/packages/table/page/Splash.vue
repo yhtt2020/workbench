@@ -35,11 +35,12 @@
           <div class="mb-10 xt-text-2">如遇网络问题，请检查系统代理或耐心等待。</div>
           <a-row :gutter="10" class="w-full">
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button>
+              <!-- <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button> -->
+              <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
-            <a-col flex="1">
+            <!-- <a-col flex="1">
               <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
-            </a-col>
+            </a-col> -->
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
@@ -125,12 +126,6 @@ export default {
     // }, 2000)
     if(this.userInfo.uid){
       this.timeout()
-    }
-    console.log('init',this.init)
-    if(!this.init){
-      this.$router.replace({ name: 'wizard' })
-    }else{
-      this.$router.replace({ name: 'home' })
     }
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
@@ -282,6 +277,14 @@ export default {
     },
 
     async afterLaunch () {
+      console.log('this.init',this.init)
+      if(!this.init){
+        console.log('没登录过')
+        this.$router.replace({ name: 'wizard' })
+      }else{
+        console.log('登录过了')
+
+      }
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()

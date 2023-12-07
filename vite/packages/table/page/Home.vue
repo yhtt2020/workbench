@@ -594,7 +594,7 @@ export default {
       this.hasTriggered++;
     }
   },
-  mounted() {
+  async mounted() {
     this.replaceIcon();
     // setTimeout(() => {
     //   this.replaceIcon()
@@ -625,6 +625,17 @@ export default {
       this.addFreeLayoutDesk()
       this.deskInit = false
     }
+    const desktopApps = await ipc.sendSync('getDeskApps')
+    
+    let appList = []
+    desktopApps.forEach(i=>{
+      if(i.ext == '.exe'){
+        appList.push(i)
+
+      }
+    })
+    console.log('appList', appList)
+    console.log('desks', this.desks)
 
     // let counte=0
     // const counter=setInterval(()=>{
