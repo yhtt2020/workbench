@@ -108,23 +108,21 @@ export default {
     }
   },
   async mounted () {
-    // 暂时直接跳转到新登录
-
+    // 暂时直接跳转到新登录(可能修复了，代码之后再删)
     // this.$router.replace({ name: 'wizard' })
-    setTimeout(() => {
-      if(this.init){
-        this.$router.replace({ name: 'home' })
-      }else{
-        this.$router.replace({ name: 'wizard' })
-      }
+    // setTimeout(() => {
+    //   if(this.init){
+    //     this.$router.replace({ name: 'home' })
+    //   }else{
+    //     this.$router.replace({ name: 'wizard' })
+    //   }
 
-      // if (window.$isOffline && this.init) {
-      //   this.$router.replace({ name: 'home' })
-      //   this.launching = false
-      //   // 暂时还没有排查到卡顿原因
-      // }
-    }, 2000)
-    console.log('userinfo',this.userInfo.uid);
+    //   // if (window.$isOffline && this.init) {
+    //   //   this.$router.replace({ name: 'home' })
+    //   //   this.launching = false
+    //   //   // 暂时还没有排查到卡顿原因
+    //   // }
+    // }, 2000)
     if(this.userInfo.uid){
       this.timeout()
     }
