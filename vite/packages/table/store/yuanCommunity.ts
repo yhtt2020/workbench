@@ -19,8 +19,8 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
     postContent: {
       title: '',
       content: '',
-      imagesList: [],
-      coverList: []
+      imagesList: '',
+      coverList: ''
     },
     // 保存动态相关内容
     dynamicContent: {

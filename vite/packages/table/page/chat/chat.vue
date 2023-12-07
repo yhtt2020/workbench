@@ -29,6 +29,7 @@ import config from './config'
 import { appStore } from '../../store'
 import { chatStore } from '../../store/chat';
 import _ from 'lodash-es';
+import { communityTotal } from './libs/utils';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -195,7 +196,7 @@ export default {
             callBack:(item)=>{ selectTab(item) },
           }
         });
-        const mergeArray = bodyList.value.concat(mapCommunityData.concat(createCommunityList.value));
+        const mergeArray = bodyList.value.concat(mapCommunityData);
         bodyList.value = mergeArray;
       }
     })
@@ -208,15 +209,19 @@ export default {
           return find.id === item.id
         })
         if(index === -1){
+          const total = communityTotal(item.no,community.value.communityTree);
+          console.log('执行.....总数',total);
           const itemOption = {
             ...item,
+            unread:total,
           }
           uniqueList.push(itemOption)
         }
       }
+      const updateList = uniqueList.concat(createCommunityList.value);
       const lastList = [
         ...headList.value,
-        ...uniqueList,
+        ...updateList,
         ...footList.value
       ]
       if(settings.value.enableHide){
@@ -231,6 +236,8 @@ export default {
     
     /**初始化挂载**/
     onMounted(()=>{
+      com.getMyCommunity();
+      com.getCommunityTree();
       nextTick(()=>{
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
@@ -239,7 +246,6 @@ export default {
             for(const item of list){
              const no = item.no;
              com.updateCommunityTree(no)
-             com.updateCommunityUnRead()
             }
           }
         });
