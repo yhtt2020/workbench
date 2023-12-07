@@ -16,7 +16,7 @@ import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
 
 const widgetStore = useWidgetStore();
-
+widgetStore.edit = true
 const floatMenuStore = useFloatMenuStore();
 const {firstPosition} = storeToRefs(floatMenuStore);
 
