@@ -138,94 +138,45 @@ export default {
   systemAppList: [
     {
       type: 'systemApp',
-      icon: 'vite/public/logo/home.svg',
+      icon: '/logo/home.svg',
       name: '桌面主页',
       event: 'home',
       tab:'home'
     },
     {
       'type': 'systemApp',
-      'icon': 'fluent:games-16-regular',
+      'icon': '/logo/game.svg',
       'name': '游戏助手',
       'event': 'gameIndex',
       tab:'game'
     },
     {
       'type': 'systemApp',
-      'icon': 'fluent:globe-16-regular',
+      'icon': '/logo/browser.svg',
       'name': '浏览器',
       'event': 'browser',
     },
     {
       'type': 'systemApp',
-      'icon': 'fluent:music-note-2-16-regular',
+      'icon': '/logo/music.svg',
       'name': '网易云音乐',
       'event': 'music'
     },
     {
       type:'systemApp',
-      icon:'fluent:image-multiple-16-regular',
+      icon:'/logo/wallpaper.svg',
       name:'壁纸',
       tab:'paper',
       event:'my',
     },
     {
       type: 'systemApp',
-      icon: 'fluent:lock-closed-16-regular',
-      name: '锁屏',
-      event: 'lock',
-      fn () {
-        vm.$router.push({ path: '/lock' })
-      }
-    }, {
-      type: 'systemApp',
-      icon: 'fluent:slide-settings-24-regular',
-      name: '设备设置',
-      event: 'status',
-      fn: () => {
-        if (vm.$route.path === '/status') {
-          vm.$router.go(-1)
-        } else {
-          vm.$router.push({ path: '/status' })
-        }
-      }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:full-screen-maximize-16-filled',
-      name: '全屏',
-      event: 'fullscreen',
-      fn: () => {
-        if (vm.full) {
-          vm.$emit('setFull', false)
-          tsbApi.window.setFullScreen(false)
-        } else {
-          vm.$emit('setFull', true)
-          tsbApi.window.setFullScreen(true)
-        }
-      }
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:settings-16-regular',
-      name: '设置中心',
-      event: 'setting',
-      fn: () => { vm.$router.push({ name: 'setting' })}
-    }, {
-      type: 'systemApp',
-      icon: 'fluent:power-20-filled',
-      name: '电源控制',
-      event: 'power',
-      fn: () => {vm.$router.push({ path: '/power' })}
-    },
-    {
-      type: 'systemApp',
-      icon: 'fluent:flash-16-regular',
+      icon: '/logo/directive.svg',
       name: '快捷指令',
       event: 'deck',
     }, {
       type: 'systemApp',
-      icon: 'fluent:cloud-sync-16-regular',
+      icon: '/logo/fileTransfers.svg',
       name: '文件传输助手',
       event: 'fileHelper',
       data: {
@@ -238,13 +189,13 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fluent:grid-16-regular',
+      icon: '/logo/todo.svg',
       name: '应用中心',
       event: 'apps',
     },
     {
       type: 'systemApp',
-      icon: 'akar-icons:check-box',
+      icon: '/logo/todo.svg',
       name: '待办事项',
       event: 'todo',
       fn: () => { vm.$router.push({ name: 'todo' })}
@@ -261,7 +212,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: 'fluent:text-bullet-list-square-sparkle-16-regular',
+      icon: '/logo/efficiency.svg',
       name: '效率助手',
       tab:'work',
       event: 'work',
@@ -275,10 +226,97 @@ export default {
     // },
     {
       "type": "systemApp",
-      "icon": "fluent:bot-24-regular",
+      "icon": "/logo/ai.svg",
       "name": "AI助手",
       "event": "ai"
   },
+  {
+    "type": "systemApp",
+    "icon": "/logo/shortCut.svg",
+    "name": "快捷键",
+    "event": "shortcutIndex",
+  },
+  {
+    "type": "systemApp",
+    "icon": "/logo/tomato.svg",
+    "name": "番茄时间",
+    "event": "tomato"
+  },
+  {
+    "type": "systemApp",
+    "icon": "/logo/memorandum.svg",
+    "name": "备忘录",
+    "event": "note"
+  },
+  {
+    "type": "systemApp",
+    "icon": "/logo/community.svg",
+    "name": "社群",
+    "event": "chat"
+  },
+  {
+    "type": "systemApp",
+    "icon": "/logo/weather.svg",
+    "name": "天气",
+    "event": "weather"
+  },
+  {
+    "type": "systemApp",
+    "icon": "/logo/clipboard.svg",
+    "name": "剪切板",
+    "event": "clipboard",
+  },
+  {
+    type: 'systemApp',
+    icon: '/logo/lock.svg',
+    name: '锁屏',
+    event: 'lock',
+    fn () {
+      vm.$router.push({ path: '/lock' })
+    }
+  }, 
+  {
+    type: 'systemApp',
+    icon: '/logo/deviceSettings.svg',
+    name: '设备设置',
+    event: 'status',
+    fn: () => {
+      if (vm.$route.path === '/status') {
+        vm.$router.go(-1)
+      } else {
+        vm.$router.push({ path: '/status' })
+      }
+    }
+  },
+  {
+    type: 'systemApp',
+    icon: '/logo/fullScreen.svg',
+    name: '全屏',
+    event: 'fullscreen',
+    fn: () => {
+      if (vm.full) {
+        vm.$emit('setFull', false)
+        tsbApi.window.setFullScreen(false)
+      } else {
+        vm.$emit('setFull', true)
+        tsbApi.window.setFullScreen(true)
+      }
+    }
+  },
+  {
+    type: 'systemApp',
+    icon: '/logo/settings.svg',
+    name: '设置中心',
+    event: 'setting',
+    fn: () => { vm.$router.push({ name: 'setting' })}
+  }, {
+    type: 'systemApp',
+    icon: '/logo/power.svg',
+    name: '电源控制',
+    event: 'power',
+    fn: () => {vm.$router.push({ path: '/power' })}
+  }
+
   ],
   // systemFillAppList: [
   //   {
