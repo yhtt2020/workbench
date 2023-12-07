@@ -201,44 +201,65 @@ let arrData = [
       "icon": "https://up.apps.vip/logo/favicon.svg"
     },
     {
-      "type": "systemApp",
-      "icon": "fluent:lock-closed-16-regular",
-      "name": "锁定屏幕",
-      "event": "lock"
+      type: 'systemApp',
+      icon: '/logo/lock.svg',
+      name: '锁屏',
+      event: 'lock',
+      fn () {
+        vm.$router.push({ path: '/lock' })
+      }
+    }, 
+    {
+      type: 'systemApp',
+      icon: '/logo/deviceSettings.svg',
+      name: '设备设置',
+      event: 'status',
+      fn: () => {
+        if (vm.$route.path === '/status') {
+          vm.$router.go(-1)
+        } else {
+          vm.$router.push({ path: '/status' })
+        }
+      }
     },
     {
-      "type": "systemApp",
-      "icon": "fluent:settings-16-regular",
-      "name": "基础设置",
-      "event": "setting"
+      type: 'systemApp',
+      icon: '/logo/fullScreen.svg',
+      name: '全屏',
+      event: 'fullscreen',
+      fn: () => {
+        if (vm.full) {
+          vm.$emit('setFull', false)
+          tsbApi.window.setFullScreen(false)
+        } else {
+          vm.$emit('setFull', true)
+          tsbApi.window.setFullScreen(true)
+        }
+      }
     },
     {
-      "type": "systemApp",
-      "icon": "fluent:full-screen-maximize-16-filled",
-      "name": "全屏显示",
-      "event": "fullscreen"
-    },
-    {
-      "type": "systemApp",
-      "icon": "fluent:slide-settings-24-regular",
-      "name": "设备设置",
-      "event": "status"
-    },
-    {
-      "type": "systemApp",
-      "icon": "fluent:power-20-filled",
-      "name": "电源",
-      "event": "power"
+      type: 'systemApp',
+      icon: '/logo/settings.svg',
+      name: '设置中心',
+      event: 'setting',
+      fn: () => { vm.$router.push({ name: 'setting' })}
+    }, {
+      type: 'systemApp',
+      icon: '/logo/power.svg',
+      name: '电源控制',
+      event: 'power',
+      fn: () => {vm.$router.push({ path: '/power' })}
     }
 ]
 export const navStore = defineStore("nav", {
   state: () => ({
     mainNavigationList: [
       {
-        type:'systemApp',
-        icon:'fluent:home-16-regular',
-        name:'主页',
-        event:'home',
+        type: 'systemApp',
+        icon: '/logo/home.svg',
+        name: '桌面主页',
+        event: 'home',
+        tab:'home'
       },
       // {
       //   type:'systemApp',
@@ -250,33 +271,38 @@ export const navStore = defineStore("nav", {
     ],
     footNavigationList: [...arrData],
     sideNavigationList: [
-        {
-            "type": "systemApp",
-            "icon": "fluent:home-16-regular",
-            "name": "主页",
-            "event": "home"
-        },
-        {
-            "type": "systemApp",
-            "icon": "fluent:grid-16-regular",
-            "name": "应用管理",
-            "event": "apps"
-        },{
-            "type": "systemApp",
-            "icon": "fluent:games-16-regular",
-            "name": "游戏",
-            "event": "gameIndex"
-        },{
-            "type": "systemApp",
-            "icon": "fluent:music-note-2-16-regular",
-            "name": "音乐",
-            "event": "music"
-        },{
-            "type": "systemApp",
-            "icon": "fluent:flash-16-regular",
-            "name": "快捷指令",
-            "event": "deck"
-        },
+      {
+        type: 'systemApp',
+        icon: '/logo/home.svg',
+        name: '桌面主页',
+        event: 'home',
+        tab:'home'
+      },
+      {
+        type: 'systemApp',
+        icon: '/logo/app.svg',
+        name: '应用中心',
+        event: 'apps',
+      },
+      {
+        'type': 'systemApp',
+        'icon': '/logo/game.svg',
+        'name': '游戏助手',
+        'event': 'gameIndex',
+        tab:'game'
+      },
+      {
+        'type': 'systemApp',
+        'icon': '/logo/music.svg',
+        'name': '网易云音乐',
+        'event': 'music'
+      },
+      {
+        type: 'systemApp',
+        icon: '/logo/directive.svg',
+        name: '快捷指令',
+        event: 'deck',
+      },
     ],
     rightNavigationList: [],
     builtInFeatures: [

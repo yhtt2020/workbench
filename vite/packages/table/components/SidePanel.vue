@@ -17,8 +17,8 @@
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
-                    <navIcon class="icon-color xt-text" :icon="item.icon" style="width:28px;height:28px;"
-                      :class="{ 'active-color': current(item), 'shaking-element': shakeElement }"></navIcon>
+                    <a-avatar :size="52" shape="square" :src="item.icon"
+                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
                   <a-avatar v-else :size="40" shape="square" :src="renderIcon(item.icon)"
                     :class="{ 'shaking-element': shakeElement }"></a-avatar>
@@ -751,15 +751,15 @@ export default {
 }
 
 .item-nav {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   // margin: 6px auto;
   margin-top: 12px;
   display: flex;
   align-items: center;
   cursor: pointer;
   border-radius: 12px;
-  background-color: var(--secondary-transp-bg);
+  // background-color: var(--secondary-transp-bg);
 
 }
 
@@ -776,8 +776,8 @@ export default {
 //   }
 // }
 .icon-color {
-  height: 34px;
-  width: 34px;
+  height: 52px;
+  width: 52px;
 }
 
 .icon-color:hover {

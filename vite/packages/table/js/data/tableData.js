@@ -189,7 +189,7 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: '/logo/todo.svg',
+      icon: '/logo/app.svg',
       name: '应用中心',
       event: 'apps',
     },

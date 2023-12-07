@@ -63,15 +63,14 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="ml-3 pointer "
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 56px; height: 56px;border-radius: 12px;" v-if="item.type === 'systemApp'"
-                          class="relative flex items-center justify-center rounded-lg s-item icon-bg">
-                          <navIcon :icon="item.icon" class="test "
-                            style="width:28px;height:28px;fill:var(--primary-text);"
-                            :class="{ 'shaking-element': shakeElement }"></navIcon>
+                        <div style="width: 52px; height: 52px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                          class="relative flex items-center justify-center rounded-lg ">
+                          <a-avatar :size="52" shape="square" :src="item.icon"
+                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 56px; height: 56px;"
-                          class="relative flex items-center justify-center icon-bg rounded-xl">
-                          <a-avatar :size="40" shape="square" :src="renderIcon(item.icon)"
+                        <div v-else style="width: 52px; height: 52px;"
+                          class="relative flex items-center justify-center rounded-xl">
+                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>

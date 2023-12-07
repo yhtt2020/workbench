@@ -148,8 +148,8 @@ export default {
 
                 {
                     type: 'systemApp',
-                    icon: 'fluent:chat-16-regular',
-                    name: '社群(开发中)',
+                    icon: '/logo/community.svg',
+                    name: '社群',
                     event: 'chat',
                     tab: 'community',
                     fn: () => {
@@ -159,50 +159,50 @@ export default {
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:text-bullet-list-square-sparkle-16-regular',
+                    icon: '/logo/efficiency.svg',
                     name: '效率助手',
                     tab: 'work',
                     event: 'work',
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:home-16-regular',
-                    name: '主页',
+                    icon: '/logo/home.svg',
+                    name: '桌面主页',
                     event: 'home',
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:settings-16-regular',
-                    name: '基础设置',
+                    icon: '/logo/settings.svg',
+                    name: '设置中心',
                     event: 'setting',
                     fn: () => { vm.$router.push({ name: 'setting' }) }
                 },
 
                 {
                     type: 'systemApp',
-                    icon: 'fluent:music-note-2-16-regular',
-                    name: '音乐',
+                    icon: '/logo/music.svg',
+                    name: '网易云音乐',
                     event: 'music',
                     tag: 'recommendation'
                 },
 
                 {
                     type: 'systemApp',
-                    icon: 'akar-icons:check-box',
+                    icon: '/logo/todo.svg',
                     name: '待办',
                     event: 'todo',
                     fn: () => { vm.$router.push({ name: 'todo' }) }
                 },
                 {
                     "type": "systemApp",
-                    "icon": "fluent:bot-24-regular",
+                    "icon": "/logo/ai.svg",
                     "name": "AI助手",
                     "event": "ai"
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:grid-16-regular',
-                    name: '应用管理',
+                    icon: '/logo/app.svg',
+                    name: '应用中心',
                     event: 'apps',
                 },
 
