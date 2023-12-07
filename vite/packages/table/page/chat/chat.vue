@@ -210,7 +210,6 @@ export default {
         })
         if(index === -1){
           const total = communityTotal(item.no,community.value.communityTree);
-          console.log('执行.....总数',total);
           const itemOption = {
             ...item,
             unread:total,
@@ -245,7 +244,7 @@ export default {
           if(list.length !== 0){
             for(const item of list){
              const no = item.no;
-             com.updateCommunityTree(no)
+             com.updateCommunityMsg(no);
             }
           }
         });
