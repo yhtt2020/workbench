@@ -126,6 +126,11 @@ export default {
     if(this.userInfo.uid){
       this.timeout()
     }
+    if(this.init){
+      this.$router.replace({ name: 'wizard' })
+    }else{
+      this.$router.replace({ name: 'home' })
+    }
 
     //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
     //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
