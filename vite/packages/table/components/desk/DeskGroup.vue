@@ -668,7 +668,7 @@ export default {
             //移除桌面相关的便签卡片
             if (item.name === "notes") {
               const now = new Date().getTime()
-              tsbApi.db.put({
+              const obj = {
                 ...item,
                 id:now,
                 _id:'note:' + now,
@@ -677,7 +677,8 @@ export default {
                 isDelete:false,
                 deskId:g.id,
                 deskName:g.name,
-              })
+              }
+              tsbApi.db.put(obj)
             }
           });
           let oldId = g.id;

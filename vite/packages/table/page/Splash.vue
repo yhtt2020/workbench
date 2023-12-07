@@ -126,7 +126,8 @@ export default {
     if(this.userInfo.uid){
       this.timeout()
     }
-    if(this.init){
+    console.log('init',this.init)
+    if(!this.init){
       this.$router.replace({ name: 'wizard' })
     }else{
       this.$router.replace({ name: 'home' })

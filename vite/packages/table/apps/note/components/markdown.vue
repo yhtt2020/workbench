@@ -114,6 +114,7 @@ export default {
             }
           })
           if (n >= 0) {
+            // console.log(this.noteList[this.selNote].id, value,  this.deskList[n])
             this.updateCustomData(
               this.noteList[this.selNote].id,
               {
