@@ -144,54 +144,23 @@ export default {
       tab:'home'
     },
     {
-      'type': 'systemApp',
-      'icon': '/logo/game.svg',
-      'name': '游戏助手',
-      'event': 'gameIndex',
-      tab:'game'
-    },
-    {
-      'type': 'systemApp',
-      'icon': '/logo/browser.svg',
-      'name': '浏览器',
-      'event': 'browser',
-    },
-    {
-      'type': 'systemApp',
-      'icon': '/logo/music.svg',
-      'name': '网易云音乐',
-      'event': 'music'
-    },
-    {
-      type:'systemApp',
-      icon:'/logo/wallpaper.svg',
-      name:'壁纸',
-      tab:'paper',
-      event:'my',
-    },
-    {
-      type: 'systemApp',
-      icon: '/logo/directive.svg',
-      name: '快捷指令',
-      event: 'deck',
-    }, {
-      type: 'systemApp',
-      icon: '/logo/fileTransfers.svg',
-      name: '文件传输助手',
-      event: 'fileHelper',
-      data: {
-        theme: '#2c2c2c',
-        name: 'fileHelper',
-        url: 'https://szfilehelper.weixin.qq.com/',
-        preload: 'fileHelper',
-        background: false,
-      }
-    },
-    {
       type: 'systemApp',
       icon: '/logo/app.svg',
       name: '应用中心',
       event: 'apps',
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/community.svg",
+      "name": "社群",
+      "event": "chat"
+    },
+    {
+      type: 'systemApp',
+      icon: '/logo/efficiency.svg',
+      name: '效率助手',
+      tab:'work',
+      event: 'work',
     },
     {
       type: 'systemApp',
@@ -212,10 +181,85 @@ export default {
     },
     {
       type: 'systemApp',
-      icon: '/logo/efficiency.svg',
-      name: '效率助手',
-      tab:'work',
-      event: 'work',
+      icon: '/logo/directive.svg',
+      name: '快捷指令',
+      event: 'deck',
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/shortCut.svg",
+      "name": "快捷键",
+      "event": "shortcutIndex",
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/ai.svg",
+      "name": "AI助手",
+      "event": "ai"
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/memorandum.svg",
+      "name": "备忘录",
+      "event": "note"
+    },
+    // 番茄钟主应用暂时隐藏
+    // {
+    //   "type": "systemApp",
+    //   "icon": "/logo/tomato.svg",
+    //   "name": "番茄时间",
+    //   "event": "tomato"
+    // },
+    {
+      "type": "systemApp",
+      "icon": "/logo/clipboard.svg",
+      "name": "剪切板",
+      "event": "clipboard",
+    },
+    {
+      'type': 'systemApp',
+      'icon': '/logo/game.svg',
+      'name': '游戏助手',
+      'event': 'gameIndex',
+      tab:'game'
+    },
+    {
+      type:'systemApp',
+      icon:'/logo/wallpaper.svg',
+      name:'壁纸',
+      tab:'paper',
+      event:'my',
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/weather.svg",
+      "name": "天气",
+      "event": "weather"
+    },
+    {
+      type: 'systemApp',
+      icon: '/logo/fileTransfers.svg',
+      name: '文件传输助手',
+      event: 'fileHelper',
+      data: {
+        theme: '#2c2c2c',
+        name: 'fileHelper',
+        url: 'https://szfilehelper.weixin.qq.com/',
+        preload: 'fileHelper',
+        background: false,
+      }
+    },
+    {
+      'type': 'systemApp',
+      'icon': '/logo/browser.svg',
+      'name': '浏览器',
+      'event': 'browser',
+    },
+    {
+      'type': 'systemApp',
+      'icon': '/logo/music.svg',
+      'name': '网易云音乐',
+      'event': 'music'
     },
     // 由于功能未闭合，暂时隐藏
     // {
@@ -225,47 +269,18 @@ export default {
     //   event: 'market',
     // },
     {
-      "type": "systemApp",
-      "icon": "/logo/ai.svg",
-      "name": "AI助手",
-      "event": "ai"
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/shortCut.svg",
-    "name": "快捷键",
-    "event": "shortcutIndex",
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/tomato.svg",
-    "name": "番茄时间",
-    "event": "tomato"
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/memorandum.svg",
-    "name": "备忘录",
-    "event": "note"
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/community.svg",
-    "name": "社群",
-    "event": "chat"
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/weather.svg",
-    "name": "天气",
-    "event": "weather"
-  },
-  {
-    "type": "systemApp",
-    "icon": "/logo/clipboard.svg",
-    "name": "剪切板",
-    "event": "clipboard",
-  },
+      type: 'systemApp',
+      icon: '/logo/deviceSettings.svg',
+      name: '设备设置',
+      event: 'status',
+      fn: () => {
+        if (vm.$route.path === '/status') {
+          vm.$router.go(-1)
+        } else {
+          vm.$router.push({ path: '/status' })
+        }
+      }
+    },
   {
     type: 'systemApp',
     icon: '/logo/lock.svg',
@@ -275,19 +290,7 @@ export default {
       vm.$router.push({ path: '/lock' })
     }
   }, 
-  {
-    type: 'systemApp',
-    icon: '/logo/deviceSettings.svg',
-    name: '设备设置',
-    event: 'status',
-    fn: () => {
-      if (vm.$route.path === '/status') {
-        vm.$router.go(-1)
-      } else {
-        vm.$router.push({ path: '/status' })
-      }
-    }
-  },
+  
   {
     type: 'systemApp',
     icon: '/logo/fullScreen.svg',
@@ -303,19 +306,20 @@ export default {
       }
     }
   },
+   {
+    type: 'systemApp',
+    icon: '/logo/power.svg',
+    name: '电源控制',
+    event: 'power',
+    fn: () => {vm.$router.push({ path: '/power' })}
+  },
   {
     type: 'systemApp',
     icon: '/logo/settings.svg',
     name: '设置中心',
     event: 'setting',
     fn: () => { vm.$router.push({ name: 'setting' })}
-  }, {
-    type: 'systemApp',
-    icon: '/logo/power.svg',
-    name: '电源控制',
-    event: 'power',
-    fn: () => {vm.$router.push({ path: '/power' })}
-  }
+  },
 
   ],
   // systemFillAppList: [
