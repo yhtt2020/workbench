@@ -5,7 +5,7 @@
       <div
         @click="store.isTaskDrawer = true"
         class="relative h-full xt-bg s-bg xt-base-btn"
-        style="width: 70px; height: 70px; border-radius: 18px"
+        style="width: 80px; height: 80px; border-radius: 18px;border: 1px solid var(--divider);"
       >
         <img
           src="/img/task/star.png"

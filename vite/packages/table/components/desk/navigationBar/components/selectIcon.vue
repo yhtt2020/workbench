@@ -20,7 +20,7 @@
                 recommendation.name }}</div>
             <div class="absolute top-3 right-3">
                 <xt-button :w="24" :h="24" :style="{ background: item.addNav ? '#52C41A' : 'var(--active-bg)' }"
-                    @click="clickRightListItem(item, index)">
+                    @click="clickRightListItem.stop(item, index)">
                     <div class="flex items-center justify-center" v-if="item.addNav">
                         <xt-new-icon icon="fluent:checkmark-16-regular" size="20"
                             style="padding:2px;color: rgba(255, 255, 255, 0.85) !important;"></xt-new-icon>
