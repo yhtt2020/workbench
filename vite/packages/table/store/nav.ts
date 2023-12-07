@@ -234,12 +234,13 @@ let arrData = [
     // 新版默认底部数据
     { 'type': 'systemApp', 'icon': 'shouye1', 'name': '主页', 'event': 'home' },
     { 'type': 'systemApp', 'icon': 'yingyongzhongxin', 'name': '应用管理', 'event': 'apps' },
-    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
-    { 'type': 'systemApp', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公', 'event': 'work' },
-    { 'type': 'systemApp', 'icon': 'yinle1', 'name': '音乐', 'event': 'music' },
-    { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏', 'event': 'gameIndex' },
     { 'type': 'systemApp', 'icon': 'fluent:chat-16-regular', 'name': '社群(开发中)', 'event': 'chat' },
-    { 'type': 'systemApp', 'icon': 'lock', 'name': '锁定屏幕', 'event': 'lock' },
+    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
+    { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏', 'event': 'gameIndex' },
+    { 'type': 'systemApp', 'icon': 'yinle1', 'name': '音乐', 'event': 'music' },
+    { 'type': 'systemApp', 'icon': 'banner', 'name': '壁纸', 'event': 'my', },
+    // { 'type': 'systemApp', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公', 'event': 'work' },
+    // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁定屏幕', 'event': 'lock' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏显示', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'setting', 'name': '基础设置', 'event': 'setting' },
 ]
@@ -318,7 +319,7 @@ export const navStore = defineStore("nav", {
       }
     ],
     // navigationToggle: [true,false,true]
-    navigationToggle: [true,false,true]
+    navigationToggle: [false,false,true]
   }),
   actions: {
     removeFootNavigationList(index) {
