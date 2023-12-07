@@ -624,7 +624,7 @@ export default {
 }
 
 .bg-image{
-  background-image: url('https://a.apps.vip/icons/defaultBg.jpg') !important;
+  background-image: url('https://a.apps.vip/icons/defaultBackground.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
