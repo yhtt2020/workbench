@@ -869,6 +869,7 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      message.success('已为您恢复默认背景')
       // const value = cache.get("style")
       // document.documentElement.classList.remove(value);
       // cache.set("background","-no")
