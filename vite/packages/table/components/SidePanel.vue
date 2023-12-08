@@ -372,6 +372,7 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
+        delay:100,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -425,6 +426,7 @@ export default {
         },
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
+          that.popVisible=false
         }
       })
       // message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
