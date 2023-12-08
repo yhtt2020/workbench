@@ -331,7 +331,7 @@ export default {
             // if (this.customData && this.customData.forumPost) {
             //     return this.customData.forumPost?.slice(0, 10)
             // }
-            return this.communityPost.slice(0, 10)
+            return this.communityPost?.slice(0, 10)
         },
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
