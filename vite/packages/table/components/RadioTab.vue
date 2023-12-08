@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row rounded-lg p-1"
+    class="flex flex-row p-1 rounded-lg"
     :class="bgColor"
     :style="{ height: itemHeight }"
     style="background: var(--secondary-bg)"
@@ -8,17 +8,16 @@
     <div
       v-for="(item, index) in navList"
       :style="btnStyle"
-      class="nav-box h-full panel-icon flex btn-active items-center relative rounded-lg pointer"
+      class="relative flex items-center h-full rounded-lg nav-box panel-icon btn-active pointer"
       @click.stop="clickNav(item, index)"
       :class="activeIndex === index ? 'xt-active-btn' : ''"
     >
       <div :class="activeIndex === index ? 'round-dot' : 'circle'"></div>
       <span
-        class="flex justify-center panel-title"
-        style="flex: 1; color: var(--primary-text)"
-        >{{ item.title }}</span
-      >
-      <div v-if="item.state === true" class="state-dot ml-2"></div>
+        class="flex justify-center panel-title "
+        style="flex: 1; " :style="{ color: activeIndex === index ? 'rgba(255,255,255,0.85)' : 'var(--primary-text)' }"
+        >{{ item.title }}</span>
+      <div v-if="item.state === true" class="ml-2 state-dot"></div>
     </div>
   </div>
 </template>
