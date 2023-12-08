@@ -613,8 +613,8 @@ export default {
         currentItemId: -1,
       },
       settingsTab: [
-        { name: "通用桌面设置", value: "all" },
-        { name: "当前桌面设置", value: "current" },
+        { name: "通用桌面", value: "all" },
+        { name: "当前桌面", value: "current" },
       ],
       currentSettingTab: "all",
       resizeHandler: null,
