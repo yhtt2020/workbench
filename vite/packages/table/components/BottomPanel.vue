@@ -505,8 +505,9 @@ export default {
     })
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
-        if (item.name === i.name) {
+        if ( item.event === i.event) {
           i.icon = item.icon
+          i.name = item.name
         }
       })
     })
