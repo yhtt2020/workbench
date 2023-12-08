@@ -2,7 +2,7 @@
 export const sizeValues = {
   icons1: {
     w: 93,
-    h: 91,
+    h: 86,
     square: {
       w: 38,
       h: 38,
@@ -14,7 +14,7 @@ export const sizeValues = {
   },
   icons2: {
     w: 93,
-    h: 99,
+    h: 92,
     square: {
       w: 38,
       h: 38,
@@ -26,7 +26,7 @@ export const sizeValues = {
   },
   mini: {
     w: 134,
-    h: 96,
+    h: 86,
     square: {
       w: 66,
       h: 66,
