@@ -6,9 +6,8 @@ function getUnReadCount(groupID:any){
   const list =server.store.conversationList;
   if(list){
     const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); });
-    if(find){
-      return { unreadCount:find.unreadCount };
-    }
+    if(find){ return { unreadCount:find?.unreadCount }; }
+    else { return { unreadCount:0 }; }
   }
 }
 
