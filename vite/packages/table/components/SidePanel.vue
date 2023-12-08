@@ -372,7 +372,8 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
-        delay:100,
+        delay:50,
+        delayOnTouchOnly: true,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -629,7 +630,7 @@ export default {
           this.editToggle = true
           this.selectNav = this.currentNav
           message.success('进入编辑模式')
-        } 
+        }
         this.quick = true
       } else if (item.visible) {
         switch (item.tag) {
