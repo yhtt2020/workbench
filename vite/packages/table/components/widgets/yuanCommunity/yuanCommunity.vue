@@ -51,8 +51,8 @@
                 <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                     @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
             </div>
-            <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
-                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
+            <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
+                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu> -->
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
                 style="flex-shrink: 0;position: absolute;right: 24px;bottom: 24px">
                 <div class="flex items-center justify-center">
@@ -201,7 +201,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: {index:0,name:'版本更新',id:100304},
+            defaultForum: {index:0,value:{name:'版本更新',id:100304}},
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -315,7 +315,7 @@ export default {
             if (this.customData && this.customData.forumList) {
                 return this.customData.forumList
             }
-            return this.myForumList.joined
+            return this.myForumList
         },
         showForumList() {
             if (this.customData && this.customData.selectList) {
@@ -323,15 +323,15 @@ export default {
             }
             return this.selectList.slice(0, 5)
         },
-        async forumPost() {
-            this.customData.forumPost = await this.communityPost.list
-            return this.customData.forumPost
-        },
+        // async forumPost() {
+        //     this.customData.forumPost = await this.communityPost.list
+        //     return this.customData.forumPost
+        // },
         showForumPost() {
-            if (this.customData && this.customData.forumPost) {
-                return this.customData.forumPost?.slice(0, 10)
-            }
-            return this.communityPost.list?.slice(0, 10)
+            // if (this.customData && this.customData.forumPost) {
+            //     return this.customData.forumPost?.slice(0, 10)
+            // }
+            return this.communityPost.slice(0, 10)
         },
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
@@ -343,16 +343,19 @@ export default {
     },
     async beforeMount() {
         await this.getMyForumList()
-        this.customData.forumList = this.myForumList.joined
+        this.customData.forumList = this.myForumList
+        // console.log(this.myForumList,'this.myForumList');
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
             this.defaultForum = this.customData.defaultForum
-            // console.log(this.defaultForum);
+            // console.log(this.defaultForum,'1');
         } else if (this.customData && this.customData.selectList) {
-            // console.log(this.customData.selectList)
+            // console.log(this.customData.selectList,'2')
             this.defaultForum = this.customData.selectList[0]
         }else{
-            return this.defaultForum
+            // return this.defaultForum
+            this.selectList.push(this.defaultForum)
+            this.customData.selectList = this.selectList
         }
     },
     async mounted() {
