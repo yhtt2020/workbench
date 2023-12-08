@@ -234,12 +234,12 @@ let arrData = [
     // 新版默认底部数据
     { 'type': 'systemApp', 'icon': 'shouye1', 'name': '桌面主页', 'event': 'home' },
     { 'type': 'systemApp', 'icon': 'yingyongzhongxin', 'name': '应用中心', 'event': 'apps' },
-    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
-    { 'type': 'systemApp', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公', 'event': 'work' },
-    { 'type': 'systemApp', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
-    { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
     { 'type': 'systemApp', 'icon': 'fluent:chat-16-regular', 'name': '社群', 'event': 'chat' },
-    { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
+    { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
+    // { 'type': 'systemApp', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公', 'event': 'work' },
+    { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
+    { 'type': 'systemApp', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
+    // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
 ]
