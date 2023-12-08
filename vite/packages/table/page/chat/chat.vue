@@ -97,14 +97,26 @@ export default {
       data.chatVisible = true
     }
 
+    // 获取总的消息未读数据
     const unreadTotal = computed(()=>{
-      const list = window.$TUIKit.store.store.TUIConversation.conversationList;
-      if(list?.length !== undefined &&  list?.length !== 0){
-        const total = { unread:0 };
-        for(const item of list){
-         total.unread += item.unreadCount;
+      const server = window.$TUIKit;
+      const conversation = server?.TUIServer?.TUIConversation;
+      const store  = conversation.store;
+      const storeNull = Object.keys(store).length !== 0;
+      if(storeNull){
+        const list = store.conversationList;
+        if(Array.isArray(list)){
+          const listNull = list.length !== 0;
+          if(listNull){
+            const total = { unread:0 };
+            for(const item of list){
+             total.unread += item.unreadCount;
+            }
+            return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
+          }
+          else {return 0}
         }
-        return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
+        else { return 0; }
       }
     })
 

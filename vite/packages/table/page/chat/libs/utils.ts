@@ -2,17 +2,28 @@ import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
-  // 群聊会话列表
-  const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList;
-  const find = list.find((item:any)=>{
-    const itemInfo = item.groupProfile;
-    return String(itemInfo?.groupID) === String(groupID);
-  });
-  if(find){
-    return { unreadCount:find.unreadCount };
-  }else{
-    return 0
+  const server = (window as any).$TUIKit;
+  const conversation = server?.TUIServer?.TUIConversation;
+  const store  = conversation.store;
+  const storeNull = Object.keys(store).length !== 0;
+  if(storeNull){
+    const list = store.conversationList;
+    if(Array.isArray(list)){
+      const listNull = list.length !== 0;
+      if(listNull){
+        const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); })
+        if(find){
+          return { unreadCount:find.unreadCount };
+        }
+        else{
+          return 0;
+        }
+      }
+      else { return 0; }
+    }
+    else { return 0; }
   }
+  else {return 0;}
 }
 
 // 将社群频道目录进行更换
