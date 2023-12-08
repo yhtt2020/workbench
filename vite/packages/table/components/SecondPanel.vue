@@ -12,8 +12,11 @@
     </div>
     <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'xt-active-btn': current(menu) }"
       v-for="(menu) in menus" style="color:var(--primary-text)">
-      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
-      <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="s-text">{{ menu.title }}</span>
+      <div class="flex items-center justify-start">
+        <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
+        <SecondPanelIcon :icon="menu.newIcon" class="xt-text" v-else-if="menu.newIcon" style="font-size:1.25rem;"/>
+        <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="xt-text">{{ menu.title }}</span>
+      </div>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
     </div>
     <xt-task :modelValue="M01035"></xt-task>
@@ -26,6 +29,8 @@ import { taskStore } from "../apps/task/store";
 import routerTab from '../js/common/routerTab'
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { offlineStore } from "../js/common/offline";
+
+import { Icon as SecondPanelIcon } from '@iconify/vue';
 
 export default {
   name: 'SecondPanel',
@@ -42,7 +47,7 @@ export default {
   emits: [
     'changeTab'
   ],
-  components: { GradeSmallTip },
+  components: { GradeSmallTip,SecondPanelIcon },
   data() {
     return {
       panel: {},

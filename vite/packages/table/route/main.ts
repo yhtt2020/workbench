@@ -27,6 +27,7 @@ import CPUIndex from "../page/app/CPUIndex.vue";
 import Gallery from "../page/Gallery.vue";
 import Bing from "../page/gallery/Bing.vue";
 import Wallheaven from "../page/gallery/Wallheaven.vue";
+import SiftPaper from "../page/gallery/SiftPaper.vue";
 import PickingPaper from "../page/gallery/Picking.vue";
 import Lively from "../page/gallery/Lively.vue";
 import PapersSetting from "../page/gallery/Setting.vue";
@@ -664,6 +665,11 @@ export default [
             path: "",
             name: "my",
             component: My,
+          },
+          {
+            path:'',
+            name:'sift',
+            component:SiftPaper,
           },
           {
             path: "",

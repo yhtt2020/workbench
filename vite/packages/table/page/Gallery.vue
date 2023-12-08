@@ -1,7 +1,7 @@
 <template>
   <div id="galleryContainer"  style="text-align: center;display: flex;height: 100%">
     <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; text-align: left; "  @changeTab="changeTab"></SecondPanel>
-    <div id="parentScroller" style="flex-grow: 1;flex-shrink: 1;margin-left: 1em;display: flex;flex-direction: column;height: 100%">
+    <div id="parentScroller" class="xt-bg p-3 rounded-xl" style="flex-grow: 1;flex-shrink: 1;margin-left: 1em;display: flex;flex-direction: column;height: 100%">
       <router-view></router-view>
     </div>
   </div>
@@ -29,16 +29,27 @@ export default {
       {
         index: 'm',
         title: '我的收藏',
-        icon:'xihuan',
+        // icon:'xihuan',
+        newIcon:'fluent:star-16-regular',
         route:
           {
             name: 'my'
           }
       },
       {
+        title:'精选壁纸',
+        index:'w',
+        // icon:'',
+        newIcon:'fluent:emoji-smile-slight-24-regular',
+        route:{
+          name:'sift',
+        }
+      },
+      {
         title: '必应壁纸',
         index: 'b',
-        icon:'bing',
+        // icon:'bing',
+        newIcon:'uim:bing',
         route:
           {
             name: 'bing',
@@ -57,7 +68,8 @@ export default {
       {
         index:'p',
         title:'拾光壁纸',
-        icon:'wallpaper',
+        // icon:'wallpaper',
+        newIcon:'fluent:image-multiple-16-filled',
         route:{
           name:'pickingPaper'
         }
@@ -65,7 +77,8 @@ export default {
       {
         index: 'l',
         title: '动态壁纸',
-        icon:'a-zujiantianchong_huaban1fuben7',
+        // icon:'a-zujiantianchong_huaban1fuben7',
+        newIcon:'fluent:image-sparkle-16-regular',
         route:
           {
             name: 'lively'
@@ -74,7 +87,8 @@ export default {
       {
         index: 's',
         title: '设置',
-        icon:'shezhi',
+        // icon:'shezhi',
+        newIcon:'fluent:settings-16-regular',
         route:
           {
             name: 'papersSetting'

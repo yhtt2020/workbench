@@ -1,64 +1,77 @@
 <template>
-  <div class="rotate-center" style="margin-bottom: 1em;margin-top: 2em;color: var(--primary-text);">
-    <span style="font-size: 2em;" class="s-text">我的收藏 {{ myPapers.length }}</span>
-    <div class="pointer" style="float: right;font-size: 1em;">
-      <div @click="playAll" class=" rounded-lg list-hover s-icon"
-        style="display: inline-block;margin-right: 1em;padding: 10px;">
-        <span>
-          <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
-        </span>
-        <span style="font-size:1.2em" class="s-text">轮播全部</span>
+  <div class="w-full h-full flex  flex-col">
+    <div class="h-10 flex items-center justify-between mb-5">
+      <div class="flex items-center justify-center">
+        <MyIcon icon="fluent:star-16-regular" style="font-size: 1.25rem;" class="mr-2 xt-text"/>
+        <span  class="s-text xt-text xt-font font-16 font-600">我的收藏 （{{ myPapers.length }}）</span>
       </div>
-      <div @click="playActive" class="rounded-lg list-hover s-icon"
-        style="display: inline-block; margin-right: 1em;padding: 10px;">
-        <span>
-          <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
-        </span>
-        <span style="font-size:1.2em" class="s-text">激活壁纸（ {{ activePapers.length }} ）</span>
-      </div>
-      <div @click="this.visibleImport = true" class=" rounded-lg list-hover s-icon"
-        style="display: inline-block;margin-right: 1em;padding: 10px;">
-        <span>
-          <Icon style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
-        </span>
-        <span style="font-size:1.2em;" class="s-text">导入</span>
+      <div class="flex items-center justify-center">
+        <xt-button @click="playAll" h="40" class="mr-3 xt-bg-t-2">
+          <div class="flex items-center justify-center">
+            <MyIcon icon="fluent:play-16-filled" style="font-size: 1.25rem;" class="xt-text mr-2"/>
+            <span  class="s-text xt-text xt-font font-16 font-400">轮播全部</span> 
+          </div>
+        </xt-button>
+        <xt-button w="154" h="40" @click="playActive" class="mr-3 xt-bg-t-2">
+          <div class="flex items-center justify-center">
+            <MyIcon icon="fluent:play-16-filled" style="font-size: 1.25rem;" class="xt-text mr-2"/>
+            <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
+          </div>
+        </xt-button>
+        <xt-button w="154" h="40"  @click="this.visibleImport = true" class="xt-bg-t-2">
+          <div class="flex items-center justify-center">
+            <MyIcon icon="fluent:arrow-download-16-regular" style="font-size: 1.25rem;" class="xt-text mr-2"/>
+            <span  class="s-text xt-text xt-font font-16 font-400">导入本地图片</span> 
+          </div>
+        </xt-button>
       </div>
     </div>
-  </div>
 
-
-  <div style="flex-grow: 1;flex-shrink: 1;height: 0">
-    <div v-if="myPapers.length === 0">
-      <a-empty style="margin-top: 3em" description=""></a-empty>
-      <a-button type="primary" @click="go">去挑选心仪的壁纸</a-button>
-    </div>
-
-    <vue-custom-scrollbar id="containerWrapper" v-else :settings="settingsScroller"
-      style="flex-shrink: 1;flex-grow: 1;height: 100%">
-      <viewer :images="myPapers" :options="options">
-        <a-row :gutter="[20, 20]" id="bingImages" style="margin-right: 1em">
-          <a-col class="image-wrapper" v-for="img in myPapers" :span="6" style="">
-            <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution"
-              class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src"
-              style="position: relative">
-            <div @click="previewVideo(img)" v-if="fileImageExtension(img) === true" class="play-icon pointer" style="">
-              <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
+    <div style="flex-grow: 1;flex-shrink: 1;height: 0">
+      <!-- <div v-if="myPapers.length === 0">
+        <a-empty style="margin-top: 3em" description=""></a-empty>
+        <a-button type="primary" @click="go">去挑选心仪的壁纸</a-button>
+      </div> -->
+      <div class="w-full h-full flex flex-1 flex-col items-center justify-center"   v-if="myPapers.length === 0">
+        <MyIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;"/>
+        <span class="xt-font xt-text font-14 my-6 font-400">我们提供了以下几种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。</span>
+        <div class="w-full flex items-center justify-center" >
+          <xt-button  h="40"  v-for="item in emptyList" class="xt-bg-t-2 mr-3" style="border-radius: 10px;" @click="goDetail(item)">
+            <div class="flex items-center justify-center">
+              <MyIcon :icon="item.newIcon" style="font-size:1.25rem ;" class="mr-2"/>
+              <span class="xt-font xt-text font-16 font-400">{{item.name}}</span>
             </div>
-            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-              <div @click.stop="addToActive(img)" class="bottom-actions pointer"
-                :style="{ background: isInActive(img) ? 'rgba(255,0,0,0.66)' : '' }">
-                <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
-                <Icon v-else style="" icon="yiwancheng"></Icon>
+          </xt-button>
+        </div>
+      </div>
+  
+      <vue-custom-scrollbar id="containerWrapper" v-else :settings="settingsScroller"
+        style="flex-shrink: 1;flex-grow: 1;height: 100%">
+        <viewer :images="myPapers" :options="options">
+          <a-row :gutter="[20, 20]" id="bingImages">
+            <a-col class="image-wrapper" v-for="img in myPapers" :span="6" style="">
+              <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution"
+                class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src"
+                style="position: relative">
+              <div @click="previewVideo(img)" v-if="fileImageExtension(img) === true" class="play-icon pointer" style="">
+                <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
               </div>
-            </div>
-            <div id="mse" v-if="fileImageExtension(img) === true"></div>
-          </a-col>
-        </a-row>
-      </viewer>
-    </vue-custom-scrollbar>
+              <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+                <div @click.stop="addToActive(img)" class="bottom-actions pointer"
+                  :style="{ background: isInActive(img) ? 'rgba(255,0,0,0.66)' : '' }">
+                  <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+                  <Icon v-else style="" icon="yiwancheng"></Icon>
+                </div>
+              </div>
+              <div id="mse" v-if="fileImageExtension(img) === true"></div>
+            </a-col>
+          </a-row>
+        </viewer>
+      </vue-custom-scrollbar>
+    </div>
   </div>
 
-
+ 
   <a-drawer v-model:visible="visibleMenu" placement="bottom" :height="200">
     <a-row :gutter="20" style="text-align: center">
       <a-col :span="3">
@@ -91,19 +104,18 @@
     </a-row>
   </a-drawer>
 
-  <a-drawer v-model:visible="visibleImport" placement="right" class="no-drag">
+  <a-drawer v-model:visible="visibleImport" title="导入本地图片" placement="right" class="no-drag" width="500">
     <Import :loadStaticPaper="loadStaticPaper" :getLoadLively="getLoadLively"></Import>
   </a-drawer>
 
-  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999"
-    id="previwer">
-    <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
-      <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
-        <Icon icon="guanbi1" style="font-size: 2em"></Icon>
-      </div>
-    </div>
-    <div id="my-mse"></div>
+ <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
+  <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+   <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
+     <Icon icon="guanbi1" style="font-size: 2em"></Icon>
+   </div>
   </div>
+  <div id="my-mse"></div>
+ </div>  
 </template>
 
 <script>
@@ -111,8 +123,10 @@ import { mapWritableState, mapActions } from 'pinia'
 import { appStore } from '../../store'
 import Import from './Import.vue'
 import { message, Modal } from 'ant-design-vue'
+import { Icon as MyIcon } from '@iconify/vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
-import Spotlight from 'spotlight.js'
+import Spotlight from 'spotlight.js';
+import { galleryList } from './data/gallery';
 
 const fs = window.$models.fs
 const path = require('path')
@@ -122,7 +136,7 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'My',
-  components: { Import, GradeSmallTip },
+  components: { Import, GradeSmallTip,MyIcon },
   computed: {
     ...mapWritableState(paperStore, ['settings', 'activePapers', 'myPapers']),
     ...mapWritableState(appStore, ['backgroundImage', 'styles']),
@@ -146,6 +160,7 @@ export default defineComponent({
       options: {
         url: 'data-source',
       },
+      emptyList:galleryList.list,
     }
   },
   mounted() {
@@ -486,6 +501,12 @@ export default defineComponent({
       }
     },
 
+    // 进入详情
+    goDetail(item){
+      const hasRoute = item.hasOwnProperty('route');
+      if(hasRoute){ this.$router.push(item.route)  }
+      else { this.visibleImport = true }
+    },
 
   },
 })
