@@ -13,7 +13,7 @@
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)"
-                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' }">
+                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' ,marginTop: index === 0 ? '12px' : '20px'}" >
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
@@ -30,7 +30,7 @@
         </div>
 
       </div>
-      <div class="flex items-center justify-center -ml-14" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
+      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
           <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
       </div>
 
@@ -754,7 +754,7 @@ export default {
   width: 52px;
   height: 52px;
   // margin: 6px auto;
-  margin-top: 12px;
+  // margin-top: 20px;
   display: flex;
   align-items: center;
   cursor: pointer;
