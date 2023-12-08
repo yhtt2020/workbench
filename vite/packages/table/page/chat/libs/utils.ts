@@ -2,28 +2,14 @@ import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
-  const server = (window as any).$TUIKit;
-  const conversation = server?.TUIServer?.TUIConversation;
-  const store  = conversation.store;
-  const storeNull = Object.keys(store).length !== 0;
-  if(storeNull){
-    const list = store.conversationList;
-    if(Array.isArray(list)){
-      const listNull = list.length !== 0;
-      if(listNull){
-        const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); })
-        if(find){
-          return { unreadCount:find.unreadCount };
-        }
-        else{
-          return 0;
-        }
-      }
-      else { return 0; }
+  const server = (window as any).$TUIKit.TUIServer.TUIConversation;
+  const list =server.store.conversationList;
+  if(list){
+    const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); });
+    if(find){
+      return { unreadCount:find.unreadCount };
     }
-    else { return 0; }
   }
-  else {return 0;}
 }
 
 // 将社群频道目录进行更换
@@ -38,7 +24,7 @@ export function updateTree(list:any){
           const jsonItem = JSON.parse(item.props);
           if(type){
             const result:any = getUnReadCount(jsonItem.groupID);
-            return {...item,props:{...jsonItem,unread:result.unreadCount}}
+            return {...item,props:{...jsonItem,unread:result?.unreadCount}}
           }
 
           else{
