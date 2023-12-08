@@ -61,54 +61,68 @@ export const noteStore = defineStore("noteStore", {
           isDelete: this.isTrash,
         },
       })
-      // 回收站不需要进行检测
-      if (!this.isTrash) {
-        if (getDb.docs.length) {
-          // 走检测机制
-          let tmpArr = [] as any[]
-          let deskArr = [] as any[]
-          let dbArr = [] as any[]
-          tmpList = getDb.docs
-          tmpArr = tmpList.filter(i => {
-            return i.deskName != ''
-          })
-          dbArr = tmpList.filter(i => {
-            return i.deskName == ''
-          })
-          deskArr = this.searchCardForDesk()
-          // 这边添加一个自检测机制 防止桌面卡片遗漏
-          if (tmpArr.length != deskArr.length) {
-            let tt = await tsbApi.db.allDocs('note:')
-            for (let i = 0; i < tt.rows.length; i++) {
-              await tsbApi.db.remove(tt.rows[i].doc)
-            }
-            deskArr.push(...dbArr)
-            this.sortByTimestamp(deskArr)
-            this.noteList = deskArr
-            await tsbApi.db.bulkDocs(deskArr)
-          } else {
-            this.sortByTimestamp(tmpList)
-            this.noteList = getDb.docs
+      tmpList = getDb.docs
+      if(!this.initFlag){
+        let deskNoteList = this.searchCardForDesk();
+        deskNoteList?.forEach( async (item)=>{
+          // 判断没有的id就存进去
+          if (JSON.stringify(tmpList).indexOf(item.id)) {
+            tmpList.push(item);
+            await tsbApi.db.put(item)
           }
-        } else {
-          // 判断是否是回收站
-          if (!this.isTrash) {
-            tmpList = this.searchCardForDesk()
-          }
-          // 从桌面拿的初始化的数据需要进行排序
-          this.sortByTimestamp(tmpList)
-          this.noteList = tmpList
-          tmpList.forEach(i => {
-            delete i._rev
-          });
-          await tsbApi.db.bulkDocs(tmpList)
-        }
-      } else {
-        this.sortByTimestamp(tmpList)
-        this.noteList = getDb.docs
+        })
+        // 证明用户初始化过
+        this.initFlag = true
       }
-      // 证明用户初始化过
-      this.initFlag = true
+
+      this.sortByTimestamp(tmpList)
+      this.noteList = getDb.docs
+
+
+      // 回收站不需要进行检测
+      // if (!this.isTrash) {
+      //   if (getDb.docs.length) {
+      //     // 走检测机制
+      //     let tmpArr = [] as any[]
+      //     let deskArr = [] as any[]
+      //     let dbArr = [] as any[]
+      //     tmpList = getDb.docs
+      //     tmpArr = tmpList.filter(i => {
+      //       return i.deskName != ''
+      //     })
+      //     dbArr = tmpList.filter(i => {
+      //       return i.deskName == ''
+      //     })
+      //     deskArr = this.searchCardForDesk()
+      //     // 这边添加一个自检测机制 防止桌面卡片遗漏
+      //     if (tmpArr.length != deskArr.length) {
+      //       let tt = await tsbApi.db.allDocs('note:')
+      //       for (let i = 0; i < tt.rows.length; i++) {
+      //         await tsbApi.db.remove(tt.rows[i].doc)
+      //       }
+      //       deskArr.push(...dbArr)
+      //       this.sortByTimestamp(deskArr)
+      //       this.noteList = deskArr
+      //       await tsbApi.db.bulkDocs(deskArr)
+      //     } else {
+      //       this.sortByTimestamp(tmpList)
+      //       this.noteList = getDb.docs
+      //     }
+      //   } else {
+      //     // 判断是否是回收站
+      //     if (!this.isTrash) {
+      //       tmpList = this.searchCardForDesk()
+      //     }
+      //     // 从桌面拿的初始化的数据需要进行排序
+      //     this.sortByTimestamp(tmpList)
+      //     this.noteList = tmpList
+      //     tmpList.forEach(i => {
+      //       delete i._rev
+      //     });
+      //     await tsbApi.db.bulkDocs(tmpList)
+      //   }
+      // } else {
+      // }
     },
 
     // 从桌面找出所以便签卡片

@@ -250,5 +250,10 @@ export default {
     }
 
   }
+  // 修改桌面图标分组样式
+  .item-box>div{
+    width: 123px !important;
+    margin-bottom: 8px;
+  }
 }
 </style>

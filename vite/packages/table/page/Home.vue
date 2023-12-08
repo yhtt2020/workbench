@@ -495,6 +495,8 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
+      deskInit:'deskInit',
+      
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -537,7 +539,7 @@ export default {
       this.hasTriggered++;
     }
   },
-  mounted() {
+  async mounted() {
     this.replaceIcon();
     // setTimeout(() => {
     //   this.replaceIcon()
@@ -562,8 +564,23 @@ export default {
         n++;
       }, 1000);
     }
-    // 新用户第一次进入加载一个默认桌面
-    this.addFreeLayoutDesk()
+    // 判断是否是第一次加载
+    if(this.deskInit){
+      // 新用户第一次进入加载一个默认桌面
+      this.addFreeLayoutDesk()
+      this.deskInit = false
+    }
+    const desktopApps = await ipc.sendSync('getDeskApps')
+    
+    let appList = []
+    desktopApps.forEach(i=>{
+      if(i.ext == '.exe'){
+        appList.push(i)
+
+      }
+    })
+    console.log('appList', appList)
+    console.log('desks', this.desks)
 
     // let counte=0
     // const counter=setInterval(()=>{
