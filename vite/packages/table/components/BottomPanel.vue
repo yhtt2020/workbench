@@ -1004,7 +1004,7 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
-        delay:300,
+        delay:100,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -1069,6 +1069,7 @@ export default {
         onEnd: function (event) {
           that.tooltipVisible = true
           that.$emit('getDelIcon', false)
+          that.popVisible=false
         },
       })
       // message.success('开始调整底部栏，点击导航外部即可终止调整。')
