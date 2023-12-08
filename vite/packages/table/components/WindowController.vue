@@ -115,10 +115,10 @@ export default {
 
 .btn-top-active {
   text-align: center;
-  width: 55px;
+  width: 40px;
   display: inline-block;
   padding: 8px;
-  line-height: 20px;
+  line-height: 18px;
   // background: var(--active-bg) ;
 
   &:hover {
