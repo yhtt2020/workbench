@@ -99,7 +99,7 @@ export default {
 
     const unreadTotal = computed(()=>{
       const list = window.$TUIKit.store.store.TUIConversation.conversationList;
-      if(list.length !== undefined &&  list.length !== 0){
+      if(list?.length !== undefined &&  list?.length !== 0){
         const total = { unread:0 };
         for(const item of list){
          total.unread += item.unreadCount;
@@ -244,7 +244,7 @@ export default {
           if(list.length !== 0){
             for(const item of list){
              const no = item.no;
-             com.updateCommunityMsg(no);
+             com.updateCommunityTree(no);
             }
           }
         });
