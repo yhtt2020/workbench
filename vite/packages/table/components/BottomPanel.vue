@@ -458,6 +458,7 @@ export default {
     }
   },
   mounted() {
+    this.popVisible=true
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -1003,6 +1004,7 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
+        delay:300,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
