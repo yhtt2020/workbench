@@ -222,6 +222,7 @@
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
       <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
@@ -276,6 +277,7 @@ import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon'],
@@ -300,6 +302,7 @@ export default {
     AddIcon,
     EditNewNavigation,
     xtMixMenu,
+    EditIcon
   },
   data() {
     return {
@@ -349,7 +352,7 @@ export default {
           id: 2,
           label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editIcon(this.currentItem) },
         },
         {
           id: 3,
@@ -669,6 +672,10 @@ export default {
     //     }))
     //   console.log(this.dropList)
     // },
+    editIcon(item){
+      this.quick = true
+      this.componentId = 'EditIcon'
+    },
     async toggleTeam() {
       await this.updateMy(0)
       if (this.team.status === false) {
