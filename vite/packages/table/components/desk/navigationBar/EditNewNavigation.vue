@@ -77,8 +77,10 @@
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk">
-    </Msg>
+    <teleport to="body" :disabled="false">
+        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+    </teleport>
+    
 
     <!-- </div> -->
 </template>

@@ -11,9 +11,9 @@
         style="right: 8px; top: 4px"
       ></XtBaseIcon>
       <div
-        class="text-center cursor-pointer mx-auto truncate flex  justify-center items-center"
+        class="text-center cursor-pointer mx-auto truncate flex justify-center items-center"
         :style="[titleSize]"
-        style="height: 30px;"
+        style="height: 30px"
         @click="titleVisible = true"
       >
         {{ groupTitle }}
@@ -210,9 +210,5 @@ export default {
 }
 .controller:hover .icon {
   display: block !important;
-}
-
-:deep(.box) {
-  height: 86px !important;
 }
 </style>

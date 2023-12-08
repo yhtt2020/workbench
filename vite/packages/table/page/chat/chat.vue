@@ -50,9 +50,9 @@ export default {
 
   setup(props, ctx) {
     const com = communityStore();
-    const chat = chatStore();  
+    const chat = chatStore();
     const appS = appStore();
-    
+
     const { community } = storeToRefs(com);
     const { settings,contactsSet } = storeToRefs(chat)
     const { userInfo } = appS;
@@ -77,7 +77,7 @@ export default {
     })
 
     //触发社群创建入口
-    const createCommunity = () =>{  
+    const createCommunity = () =>{
       data.chatVisible = true
       data.addIndex = 'createCom'
     }
@@ -99,24 +99,16 @@ export default {
 
     // 获取总的消息未读数据
     const unreadTotal = computed(()=>{
-      const server = window.$TUIKit;
-      const conversation = server?.TUIServer?.TUIConversation;
-      const store  = conversation.store;
-      const storeNull = Object.keys(store).length !== 0;
-      if(storeNull){
-        const list = store.conversationList;
-        if(Array.isArray(list)){
-          const listNull = list.length !== 0;
-          if(listNull){
-            const total = { unread:0 };
-            for(const item of list){
-             total.unread += item.unreadCount;
-            }
-            return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
-          }
-          else {return 0}
+      const list = window.$TUIKit.store.store.TUIConversation.conversationList;
+      if(!list){
+        return 0
+      }
+      if(list.length !== undefined &&  list.length !== 0){
+        const total = { unread:0 };
+        for(const item of list){
+         total.unread += item.unreadCount;
         }
-        else { return 0; }
+        return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread ;
       }
     })
 
@@ -170,7 +162,7 @@ export default {
             icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
             callBack: (item) => { triggerAddModal(item) }
           },
-          { 
+          {
             icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
             callBack: (item) => { triggerAddModal(item) }
           },
@@ -192,7 +184,7 @@ export default {
         callBack: () => { createCommunity() }
       },
     ])
-  
+
     /**监听communityList**/
     watch(()=>community.value.communityList,(newVal)=>{
       const isNull = newVal.length !== undefined && newVal.length !== 0;
@@ -212,7 +204,7 @@ export default {
         bodyList.value = mergeArray;
       }
     })
-  
+
     // 合并群聊左侧列表数据
     const filterList  = computed(()=>{
       const uniqueList = [];
@@ -244,7 +236,7 @@ export default {
         return lastList
       }
     })
-    
+
     /**初始化挂载**/
     onMounted(()=>{
       com.getMyCommunity();
@@ -270,7 +262,7 @@ export default {
       selectTab,triggerAddModal,
     }
   }
- 
+
 };
 </script>
 

@@ -82,7 +82,7 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
+   <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
@@ -496,7 +496,7 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
       deskInit:'deskInit',
-      
+
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -526,9 +526,8 @@ export default {
         });
         return find;
       } else {
-        return {
-          cards: [],
-        };
+        this.currentDeskId=this.desks[0].id
+        return this.desks[0];
       }
     },
   },
@@ -571,7 +570,7 @@ export default {
       this.deskInit = false
     }
     const desktopApps = await ipc.sendSync('getDeskApps')
-    
+
     let appList = []
     desktopApps.forEach(i=>{
       if(i.ext == '.exe'){

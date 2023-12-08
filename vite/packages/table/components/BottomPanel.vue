@@ -60,7 +60,7 @@
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"                                                                                                                                                                                 
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer" :style="{marginLeft:index === 0 ? '14px' : '20px'}"
@@ -458,6 +458,7 @@ export default {
     }
   },
   mounted() {
+    // this.popVisible=true
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -1003,6 +1004,8 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
+        delay:50,
+        delayOnTouchOnly: true,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -1067,6 +1070,7 @@ export default {
         onEnd: function (event) {
           that.tooltipVisible = true
           that.$emit('getDelIcon', false)
+          that.popVisible=false
         },
       })
       // message.success('开始调整底部栏，点击导航外部即可终止调整。')
