@@ -30,7 +30,7 @@
         </div>
 
       </div>
-      <div class="flex items-center justify-center -ml-14" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
+      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
           <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
       </div>
 
