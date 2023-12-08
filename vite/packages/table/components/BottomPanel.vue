@@ -458,7 +458,7 @@ export default {
     }
   },
   mounted() {
-    this.popVisible=true
+    // this.popVisible=true
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
