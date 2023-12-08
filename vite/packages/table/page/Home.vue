@@ -97,7 +97,7 @@
             <xt-task id="M0103" no="4" to="" @cb="goPaper">
               <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
             </xt-task>
-            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">清除背景</xt-button>
+            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">还原背景</xt-button>
           </div>
           <hr class="my-4" />
 
