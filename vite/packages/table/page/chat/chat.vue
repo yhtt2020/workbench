@@ -97,6 +97,7 @@ export default {
       data.chatVisible = true
     }
 
+    // 获取总的消息未读数据
     const unreadTotal = computed(()=>{
       const list = window.$TUIKit.store.store.TUIConversation.conversationList;
       if(!list){
@@ -247,7 +248,7 @@ export default {
           if(list.length !== 0){
             for(const item of list){
              const no = item.no;
-             com.updateCommunityMsg(no);
+             com.updateCommunityTree(no);
             }
           }
         });
