@@ -6,8 +6,8 @@
           <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
         </div>
         <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-          <NodeContent :menus="menus" :selDesk="selDesk"
-                       v-if="this.selNote>=0 && this.noteList.length >0"></NodeContent>
+          <NoteContent :menus="menus" :selDesk="selDesk"
+                       v-if="this.selNote>=0 && this.noteList.length >0"></NoteContent>
         </div>
       </div>
     </LeftTab>
@@ -55,7 +55,7 @@
     <teleport to="body">
 
       <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
-        <div class="p-6 flex" style="width: 600px">
+        <div class="flex" style="width: 800px;height: 600px;">
           <history-list :noteId="noteList[selNote]._id"></history-list>
         </div>
 
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import NodeContent from './components/nodeContent.vue'
+import NoteContent from './components/NoteContent.vue'
 import LeftTab from './components/leftTab.vue'
 import LeftSearch from './components/leftSearch.vue'
 import { mapActions, mapState, mapWritableState } from 'pinia'
@@ -86,7 +86,7 @@ export default {
     HistoryList,
     LeftTab,
     LeftSearch,
-    NodeContent,
+    NoteContent,
     Modal,
     Icon,
   },
