@@ -13,6 +13,8 @@
         'z-index': index,
       }"
     >
+    <slot v-if="custom"></slot>
+     <template v-else>
       <div class="flex flex-1 w-full">
         <!-- 左侧 -->
         <nav v-if="nav">
@@ -88,6 +90,7 @@
           }}</xt-button>
         </footer>
       </slot>
+     </template>
     </div>
     <!-- 遮罩 -->
     <div
@@ -112,12 +115,15 @@ export interface ModalProps {
   index?: number;
   maskIndex?: number;
   mask?: boolean;
+  // 左侧
   nav?: boolean;
   back?: boolean;
   header?: boolean;
   footer?: boolean;
   esc?: boolean;
   boxPadding?: string;
+  // 自定义插槽
+  custom?:boolean
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -133,6 +139,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   footer: true,
   esc: false,
   boxPadding: "p-4",
+  custom:false
 });
 const { esc } = toRefs(props);
 const emits = defineEmits(["ok", "no", "back", "update:modelValue"]);
