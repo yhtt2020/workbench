@@ -246,12 +246,20 @@ export function  initCanvas(refName,list,size,width,color,activeColor) {
 
 }
 
-export function formatTimestamp (timestamp) {
+export function formatTimestamp (timestamp, type) {
+  // type 为true时额外多一个时分
   var date = new Date(timestamp);
   var year = date.getFullYear();
   var month = ("0" + (date.getMonth() + 1)).slice(-2);
   var day = ("0" + date.getDate()).slice(-2);
-  return year + "-" + month + "-" + day;
+  var hour = ("0" + date.getHours()).slice(-2);
+  var minutes = ("0" + date.getMinutes()).slice(-2);
+  if (type) {
+    return year + "-" + month + "-" + day + ' ' + hour + ':' + minutes
+  }else{
+    return year + "-" + month + "-" + day;
+  }
+  
 }
 
 export function formatTime(dateTimeStamp){

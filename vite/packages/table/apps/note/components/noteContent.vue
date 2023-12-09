@@ -182,8 +182,8 @@ export default {
         this.saveNoteDb()
       }
     },
-    async save () {
-      let saveRs = await this.$refs.editor.save()
+    async save (type) {
+      let saveRs = await this.$refs.editor.save(null, type)
 
       if (saveRs) {
         message.success({

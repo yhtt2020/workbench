@@ -97,12 +97,13 @@ export default {
     getMarkdown () {
       return this.contentEditor.getValue()
     },
-    async save(value) {
+    async save(value, isAutoSave) {
       if (this.tmpData != value && this.noteList.length > 0) {
         // 存在桌面就去修改
         // 定义一个虚拟元素提取文本
         // let tmpDiv = document.createElement('div')
         // tmpDiv.innerHTML = this.contentEditor.getHTML()
+        isAutoSave = !!isAutoSave
         if(!value){
           value = this.contentEditor.getValue()
         }
@@ -114,7 +115,6 @@ export default {
             }
           })
           if (n >= 0) {
-            // console.log(this.noteList[this.selNote].id, value,  this.deskList[n])
             this.updateCustomData(
               this.noteList[this.selNote].id,
               {
@@ -125,7 +125,7 @@ export default {
           }
         }
         this.noteList[this.selNote].customData.text = value
-        return this.saveAppNote(this.noteList[this.selNote].id, value)//, content)
+        return this.saveAppNote(this.noteList[this.selNote].id, value, isAutoSave)//, content)
       }else{
         return false
       }

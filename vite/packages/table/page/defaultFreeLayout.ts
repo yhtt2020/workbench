@@ -540,7 +540,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                               "backgroundIndex": 0
                           }
                       ],
-                      "groupTitle": "分组",
+                      "groupTitle": "网址导航",
                       "zoom": {
                           "state": true,
                           "value": ""
@@ -640,7 +640,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                               "backgroundIndex": 0
                           }
                       ],
-                      "groupTitle": "分组",
+                      "groupTitle": "桌面软件",
                       "zoom": {
                           "state": true,
                           "value": ""
