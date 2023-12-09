@@ -501,7 +501,7 @@ export default {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
-    ...mapWritableState(defaultFreeLayoutStore, ['desk', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
+    ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
 
     desksList() {
       return this.desks.map((desk) => {
@@ -565,21 +565,10 @@ export default {
     }
     // 判断是否是第一次加载
     if(this.deskInit){
-      // 新用户第一次进入加载一个默认桌面
       this.addFreeLayoutDesk()
+      // 新用户第一次进入加载一个默认桌面
       this.deskInit = false
     }
-    const desktopApps = await ipc.sendSync('getDeskApps')
-
-    let appList = []
-    desktopApps.forEach(i=>{
-      if(i.ext == '.exe'){
-        appList.push(i)
-
-      }
-    })
-    console.log('appList', appList)
-    console.log('desks', this.desks)
 
     // let counte=0
     // const counter=setInterval(()=>{
@@ -1002,8 +991,9 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
+        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
-          let deskTmp = _.cloneDeep(this.desk[0]);
+          let deskTmp = _.cloneDeep(this.deskDefault[0]);
           let oldId = deskTmp.id
           let cardZoom = ((deskTmp.settings.zoom * 10) / deskTmp.deskHeight).toFixed();
           deskTmp.settings.zoom = parseInt(cardZoom);
@@ -1012,13 +1002,55 @@ export default {
             this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId]
             this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId]
           }
-          if (deskTmp.cards.length) {
-            this.desks[0] = deskTmp
-          }
+          this.desks[0] = deskTmp
           this.currentDeskId = deskTmp.id
+          this.addApptoDesk()
           this.currentInit = false
         }, 2000)
       }
+    },
+
+    // 第一次登录加载桌面应用
+    async addApptoDesk(){
+      const desktopApps = await ipc.sendSync('getDeskApps')
+      let appList = []
+      desktopApps.forEach(i=>{
+        if(i.ext == '.exe'){
+          appList.push(i)
+        }
+      })
+      let appListHandle = []
+      appList.forEach(item=>{
+        let obj = {
+          backgroundColor: '',
+          backgroundIndex: 0,
+          imgShape: "square",
+          imgState: "cover",
+          isBackground: false,
+          isRadius: true,
+          isTitle: true,
+          link: "fast",
+          linkValue: "",
+          radius: 5,
+          size: "mini",
+          // 图标
+          src: item.icon,
+          // 标题
+          titleValue: item.name,
+          open:{
+            type:"default",
+            // 网址
+            value:item.path
+          }
+        }
+        appListHandle.push(obj)
+      })
+      this.desks[0].cards.forEach((item,index)=>{
+        // 直接修改默认数据
+        if(item.id == '1702026795921'){
+          this.desks[0].cards[index].customData.iconList = appListHandle
+        }
+      })
     },
 
     showSetting() {
