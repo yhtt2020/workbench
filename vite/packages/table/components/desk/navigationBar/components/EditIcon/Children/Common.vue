@@ -1,11 +1,16 @@
 <template>
-    <div>
-        <div class="h-[155] xt-bg-2 rounded-xl w-[452px]">当前图标为「轻应用」类型，暂无可编辑属性。</div>
+    <div class="w-[452px] h-[155px] ">
+        <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
-
+export interface titleProps{
+    title:string
+}
+const props=withDefaults(defineProps<titleProps>(),{
+    title:''
+})
 </script>
 <style lang='scss' scoped></style>

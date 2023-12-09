@@ -2,10 +2,11 @@
     <div class="w-full p-4 rounded-xl xt-bg-2">
         <div class="flex justify-between">
             <div class="text-base xt-text">自定义图标背景色</div>
-            <a-switch v-model:check="customColor"></a-switch>
+            <a-switch v-model:checked="props.colorSwitch"></a-switch>
+            <!-- {{ props.colorSwitch ? '开启' : '关闭' }} -->
         </div>
         <div class="mt-2 mb-4 text-sm xt-text-2">默认使用通用设置，不支持已经上传自定义图片的图标。</div>
-        <div>
+        <div v-if="props.colorSwitch">
             <!-- @click="updateBackground(colorList[`${'color' + item}`],item)" -->
             <div class="item-box">
                 <div class="flex items-center justify-center mr-4 item" :key="item"
@@ -17,12 +18,13 @@
         </div>
         <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
         <div class="mb-4 text-base xt-text">更多颜色</div>
-        <!-- <colorPicker v-model:hex="colorPicker" /> -->
+        <ColorPicker v-model:color="colorPicker" :w="40" :h="40"/>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
+import ColorPicker from '../../../../../../ui/components/ColorPicker/ColorPicker.vue'
 const colorPicker=ref('#ffffff')
 const colorList=ref({
     color1:'#508BFE',
@@ -41,12 +43,21 @@ const colorList=ref({
     color14:'#FFFFFF',
 })
 const chooseBg=(item)=>{
-    colorIndex.value = item
     console.log(item);
+    colorIndex.value = item
+    console.log(colorIndex.value);
     
 }
 const colorIndex=ref(0)
 const customColor=ref(false)
+const props=withDefaults(defineProps<colorProps>(),{
+    colorSwitch:true,
+    colorList:Array
+})
+export interface colorProps{
+    colorSwitch: boolean,
+}
+
 </script>
 <style lang='scss' scoped>
 .item{

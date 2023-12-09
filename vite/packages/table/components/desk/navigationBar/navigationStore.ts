@@ -31,7 +31,11 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             // 存储改变前的数据
             oldToggle:[],
             // 弹窗次数
-            popVisible:true
+            popVisible:true,
+            // 编辑图标颜色自定义
+            colorSwitch:true,
+            // 导航栏颜色自定义
+            navColorSwitch:true,
         }
     },
     actions:{
