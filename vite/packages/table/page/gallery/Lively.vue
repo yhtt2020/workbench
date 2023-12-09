@@ -3,7 +3,7 @@
     动态壁纸 {{ list.length }}
   </div>
   <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1;margin-top:2em;">
-    <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+    <a-row :gutter="[20,20]" id="bingImages">
 
       <a-col class="image-wrapper " v-for="item in displayList" :span="6" style="position: relative">
         <!--        <div style="position: absolute;left: 20px;top: 10px;display: inline-block;z-index: 999">-->

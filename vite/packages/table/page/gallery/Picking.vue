@@ -29,7 +29,7 @@
         <div style="display: flex; align-items: center; justify-content: center;">
           <a-spin v-if="isLoading" />
         </div>
-        <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
+        <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef">
           <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" style="">
             <!-- 拾光壁纸循环位置 -->
         <xt-task v-if="index==0" :modelValue="m01036" @cb="pickShow(img)">

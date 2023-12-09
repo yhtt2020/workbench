@@ -1,6 +1,6 @@
 <template>
   <viewer :images="list" :options="options">
-    <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+    <a-row :gutter="[20,20]" id="bingImages">
       <a-col class="image-wrapper " v-for="(img,index) in list" :span="6" style="">
         <img @contextmenu.stop="paperShowMenu(img)"  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
