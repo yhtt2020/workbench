@@ -3,8 +3,8 @@
     ref="draggable"
     style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
-    @mousedown.stop="snowDragStart"
-    @touchstart.stop="snowDragStart"
+    @mousedown.stop.prevent="snowDragStart"
+    @touchstart.stop.prevent="snowDragStart"
   >
     <div
       v-element-size="getElementSize"
@@ -44,6 +44,8 @@ import {
   getClientCoordinates,
 } from "./hooks/utils";
 export interface DragProps {
+  // 拖拽模式
+  mode?: "all" | "mouse" | "touch";
   // 禁用组件拖拽
   disabled?: boolean;
   // 基于父级视图
@@ -54,7 +56,7 @@ export interface DragProps {
   collision?: boolean;
   collisionName?: string | number;
   // 碰撞还原
-  collisionRestore?: string;
+  collisionRestore?: "before" | "init";
   // 磁吸检测
   magnet?: boolean;
   // 磁吸名称
@@ -100,9 +102,12 @@ export interface DragProps {
   data?: any;
   // 首次定位
   firstPosition?: any;
+  // 测试模式
+  test: boolean;
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
+  mode: "all",
   disabled: false,
   parent: false,
   boundary: true,
@@ -134,8 +139,10 @@ const props = withDefaults(defineProps<DragProps>(), {
   resetPosition: true,
   data: {},
   firstPosition: null,
+  test: true,
 });
 const {
+  mode,
   disabled,
   parent,
   boundary,
@@ -163,6 +170,7 @@ const {
   resetPosition,
   data,
   firstPosition,
+  test,
 } = toRefs(props);
 
 onBeforeUnmount(() => {});
@@ -170,6 +178,7 @@ const emits = defineEmits([
   "update:x",
   "update:y",
   "click",
+  "onDisabled",
   "onDragStart",
   "onDrag",
   "onDragStop",
@@ -291,6 +300,7 @@ function setPosition() {
     left.value = x.value;
     return;
   }
+
   if (typeof firstPosition.value[0] === "string") {
     switch (firstPosition.value[0]) {
       case "left":
@@ -303,14 +313,18 @@ function setPosition() {
         left.value = parentSize.value.width / 2 - draggableSize.value.width / 2;
         break;
       default:
-        console.warn(
-          "firstPosition参数错误！第一个值必须为字符串时只接受left、right、center"
-        );
+        if (test.value) {
+          console.error(
+            "firstPosition参数错误！第一个值必须为字符串时只接受left、right、center"
+          );
+        }
     }
   } else if (typeof firstPosition.value[0] == "number") {
     left.value = firstPosition.value[0];
   } else {
-    console.warn("firstPosition参数错误！第一个值必须为字符串或数字");
+    if (test.value) {
+      console.error("firstPosition参数错误！第一个值必须为字符串或数字");
+    }
   }
   if (typeof firstPosition.value[1] === "string") {
     switch (firstPosition.value[1]) {
@@ -326,14 +340,18 @@ function setPosition() {
         break;
       case "left":
       default:
-        console.warn(
-          "firstPosition参数错误！第二个值必须为字符串时只接受top、bottom、center"
-        );
+        if (test.value) {
+          console.error(
+            "firstPosition参数错误！第二个值必须为字符串时只接受top、bottom、center"
+          );
+        }
     }
   } else if (typeof firstPosition.value[1] === "number") {
     top.value = firstPosition.value[1];
   } else {
-    console.warn("firstPosition参数错误！第二个值必须为字符串或数字");
+    if (test.value) {
+      console.error("firstPosition参数错误！第二个值必须为字符串或数字");
+    }
   }
 
   if (
@@ -350,7 +368,9 @@ function setPosition() {
     left.value += firstPosition.value[2];
     top.value += firstPosition.value[3];
   } else {
-    console.warn("firstPosition参数错误！第三、第四个值必须为数字");
+    if (test.value) {
+      console.error("firstPosition参数错误！第三、第四个值必须为数字");
+    }
   }
   snowDragEnd();
 }
@@ -416,17 +436,70 @@ onMounted(() => {
 
 // 拖拽开始
 function snowDragStart(event: MouseEvent | TouchEvent) {
-  if (disabled.value) return;
+  if (disabled.value) {
+    emits("onDisabled", {
+      code: 0,
+      info: "当前处于禁用模式",
+    });
+    if (test.value) {
+      console.error("onDisabled :>> 当前处于禁用模式");
+    }
+    return;
+  }
+
   if (event instanceof MouseEvent && event.button !== 0) {
     return;
+  } else if (event instanceof TouchEvent && event.touches.length < 1) {
+    return;
+  }
+
+  if (mode.value !== "all") {
+    if (mode.value == "mouse" && event instanceof TouchEvent) {
+      emits("onDisabled", {
+        code: 1,
+        info: "非鼠标模式下禁止拖拽",
+      });
+      if (test.value) {
+        console.error("onDisabled :>> 非鼠标模式下禁止拖拽");
+      }
+      return;
+    }
+    if (mode.value == "touch" && event instanceof MouseEvent) {
+      emits("onDisabled", {
+        code: 2,
+        info: "非手柄模式下禁止拖拽",
+      });
+      if (test.value) {
+        console.error("onDisabled :>> 非手柄模式下禁止拖拽");
+      }
+      return;
+    }
   }
   // 手柄区域
   if (handle.value) {
     const handleElement = getHandle(event, handle.value);
-    if (!handleElement) return;
+    if (!handleElement) {
+      emits("onDisabled", {
+        code: 3,
+        info: "非正确手柄下禁止拖拽",
+      });
+      if (test.value) {
+        console.error("onDisabled :>> 非正确手柄下禁止拖拽");
+      }
+      return;
+    }
   } else if (disabledHandle.value) {
     const isHandleDisabled = getHandle(event, disabledHandle.value);
-    if (isHandleDisabled) return;
+    if (isHandleDisabled) {
+      emits("onDisabled", {
+        code: 4,
+        info: "禁用手柄下禁止拖拽",
+      });
+      if (test.value) {
+        console.error("onDisabled :>> 禁用手柄下禁止拖拽");
+      }
+      return;
+    }
   }
 
   isDragging.value = true;

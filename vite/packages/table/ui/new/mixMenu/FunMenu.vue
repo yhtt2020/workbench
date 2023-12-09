@@ -1,5 +1,6 @@
 <template>
   <xt-menu
+    ref="menu"
     :name="name"
     :fn="fn"
     :menus="menuList"
@@ -42,10 +43,11 @@ const props = defineProps({
   height: {
     default: 0,
   },
-  menuHeight:{
-    default: 'h-full'
-  }
+  menuHeight: {
+    default: "h-full",
+  },
 });
+const menu = ref(null);
 const { menus, model, height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
@@ -103,6 +105,20 @@ function defaultListContextmenu(event) {
     drawerVisible.value = true;
   }
 }
+
+function custom() {
+  console.log("menu.value :>> ", menu.value.handleOpenMenu);
+  menu.value.handleOpenMenu({
+    stopPropagation: () => {},
+    preventDefault: () => {},
+
+    clientX: 200,
+    clientY: 200,
+  },model.value);
+}
+defineExpose({
+  custom,
+});
 </script>
 
 <style lang="scss" scoped></style>
