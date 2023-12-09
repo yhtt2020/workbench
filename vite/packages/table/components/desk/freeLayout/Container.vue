@@ -23,8 +23,6 @@ const {
 } = storeToRefs(freeLayoutStore);
 const snowDrag = ref();
 onMounted(() => {
-  console.log("snowDrag :>> ", snowDrag.value);
-
   // setTimeout(() => {
   //   snowDrag.value.forEach((item) => {
   //   console.log("item :>> ", item);
@@ -187,7 +185,7 @@ const disabledInfo = (data) => {
     <xt-drag
       :test="0"
       @onDisabled="disabledInfo"
-      mode="mouse"
+      mode="all"
       ref="snowDrag"
       resetPosition
       parent
