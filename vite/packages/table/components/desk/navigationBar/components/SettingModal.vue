@@ -8,7 +8,9 @@
             <xt-button :w="32" :h="32"><xt-new-icon icon="fluent:full-screen-maximize-16-regular" size="16"
                     class="xt-text-2" /></xt-button>
         </template>
+        <!-- 属性插槽 -->
         <slot v-if="defaultType.value==='custom'" name="custom"></slot>
+        <!-- 外观插槽 -->
         <slot v-else name="exterior"></slot>
     </xt-modal>
 </template>

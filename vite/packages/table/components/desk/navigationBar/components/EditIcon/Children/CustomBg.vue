@@ -12,7 +12,7 @@
             </div>
         </div>
         <!-- {{ navigationStore.colorSwitch }} -->
-        <CustomIconBg :colorSwitch="navigationStore.colorSwitch"/>
+        <CustomIconBg :colorSwitch="navigationStore.colorSwitch" @update:colorSwitch="navigationStore.colorSwitch=!navigationStore.colorSwitch"/>
     </div>
 </template>
 

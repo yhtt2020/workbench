@@ -532,7 +532,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','editItem']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -675,6 +675,7 @@ export default {
     editIcon(item){
       this.quick = true
       this.componentId = 'EditIcon'
+      this.editItem = item
     },
     async toggleTeam() {
       await this.updateMy(0)

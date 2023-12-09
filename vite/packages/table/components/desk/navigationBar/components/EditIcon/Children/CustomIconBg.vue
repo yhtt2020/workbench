@@ -2,7 +2,7 @@
     <div class="w-full p-4 rounded-xl xt-bg-2">
         <div class="flex justify-between">
             <div class="text-base xt-text">自定义图标背景色</div>
-            <a-switch v-model:checked="props.colorSwitch"></a-switch>
+            <a-switch v-model:checked="props.colorSwitch" @change="changeColorSwitch"></a-switch>
             <!-- {{ props.colorSwitch ? '开启' : '关闭' }} -->
         </div>
         <div class="mt-2 mb-4 text-sm xt-text-2">默认使用通用设置，不支持已经上传自定义图片的图标。</div>
@@ -25,6 +25,11 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
 import ColorPicker from '../../../../../../ui/components/ColorPicker/ColorPicker.vue'
+// 按钮回调
+const emit=defineEmits(['update:colorSwitch'])
+const changeColorSwitch=()=>{
+    emit('update:colorSwitch',props.colorSwitch)
+}
 const colorPicker=ref('#ffffff')
 const colorList=ref({
     color1:'#508BFE',
@@ -43,10 +48,7 @@ const colorList=ref({
     color14:'#FFFFFF',
 })
 const chooseBg=(item)=>{
-    console.log(item);
     colorIndex.value = item
-    console.log(colorIndex.value);
-    
 }
 const colorIndex=ref(0)
 const customColor=ref(false)

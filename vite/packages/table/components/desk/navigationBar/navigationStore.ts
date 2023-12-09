@@ -36,6 +36,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             colorSwitch:true,
             // 导航栏颜色自定义
             navColorSwitch:true,
+            // 图标编辑元素
+            editItem:''
         }
     },
     actions:{

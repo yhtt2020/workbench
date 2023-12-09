@@ -1,17 +1,6 @@
 <template>
     <xt-modal :zIndex="99" title="导航栏设置" :modelValue="modelValue" :mask="false" @no="close" :footer="false">
         <div class=" rounded-xl" :style="{height:`${windowHeight}px`,width:`${windowWidth}px`}">
-            <!-- <div class="flex justify-between w-full h-[32px] items-center ">
-                <div class="flex justify-center w-full">
-                    <div class="ml-8 text-base xt-text">导航栏设置</div>
-                </div>
-                <xt-button class="border-0 rounded-md xt-bg-2 pointer" :w="40" :h="40" @click="close"
-                    style="flex-shrink: 0;">
-                    <div class="flex items-center justify-center">
-                        <newIcon class="text-base xt-text pointer" icon="akar-icons:cross" />
-                    </div>
-                </xt-button>
-            </div> -->
             <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4">
                 <div v-for="(item, index) in navigationPosition">
                     <div class="flex justify-between w-full">
