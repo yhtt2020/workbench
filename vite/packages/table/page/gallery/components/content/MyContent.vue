@@ -1,6 +1,6 @@
 <template>
  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" class="grow shrink" style="height: 100%;">
-  <viewer :images="myPaperList" :options="options">
+  <viewer :images="myPaperList" :options="options" class="px-2.5">
    <a-row :gutter="[20, 20]" id="bingImages">
     <a-col class="image-wrapper" v-for="img in myPaperList" :span="6">
      <img @contextmenu.stop="openSetting(img)" :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative"/>

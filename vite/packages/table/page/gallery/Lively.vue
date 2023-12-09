@@ -1,37 +1,19 @@
 <template>
-  <div class="rotate-center s-text" style="font-size: 2em;margin-bottom: 1em;display: none;">
-    动态壁纸 {{ list.length }}
-  </div>
-  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="flex-grow: 1;flex-shrink: 1;margin-top:2em;">
-    <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-
+  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" class="grow shrink mt-2">
+    <a-row :gutter="[20,20]" id="bingImages" class="px-2.5">
       <a-col class="image-wrapper " v-for="item in displayList" :span="6" style="position: relative">
-        <!--        <div style="position: absolute;left: 20px;top: 10px;display: inline-block;z-index: 999">-->
-        <!--          <a-progress type="circle" :width="30" :percent="100" :strokeWidth="12"  >-->
-        <!--            <template #format>-->
-
-        <!--            </template>-->
-        <!--          </a-progress>-->
-        <!--        </div>-->
         <div @click="previewVideo(item)" class="play-icon pointer">
           <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
         </div>
         <div @click="previewVideo(item)" style="border-radius: 6px;overflow: hidden;position: relative">
-          <div :style="{width:getWidth(item)+'%'}"
-               style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;">
-
+          <div :style="{width:getWidth(item)+'%'}" style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;">
           </div>
-          <img @contextmenu.stop="visibleMenu=true" class="image-item pointer"
-               :src="getCover(item)" style="position: relative">
+          <img @contextmenu.stop="visibleMenu=true" class="image-item pointer"  :src="getCover(item)" style="position: relative">
         </div>
-
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 50">
           <div @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
-          <!-- <div v-if="getWidth(item)!==100 && item.percent === undefined ">
-            <Icon  icon="tianjia1"></Icon>
-          </div> -->
           <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
             <a-spin style="color: white"/>
           </div>
@@ -40,8 +22,7 @@
     </a-row>
   </vue-custom-scrollbar>
 
-  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999"
-       id="previwer">
+  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
     <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
       <div @click="startDownload()" class="btn pointer"
            style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
@@ -51,15 +32,8 @@
         <Icon icon="guanbi1" style="font-size: 2em"></Icon>
       </div>
     </div>
-
     <div id="mse"></div>
   </div>
-
-  <!--  <a-modal wrap-class-name="full-modal" :footer="null" @onCancel="closePreview" v-model:visible="previewVideoVisible"-->
-  <!--           style="overflow: hidden;margin: -24px" width="100%">-->
-
-
-  <!--  </a-modal>-->
 </template>
 
 <script>
