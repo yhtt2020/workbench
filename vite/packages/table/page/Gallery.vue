@@ -1,7 +1,7 @@
 <template>
   <div id="galleryContainer"  style="text-align: center;display: flex;height: 100%">
     <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; text-align: left; "  @changeTab="changeTab"></SecondPanel>
-    <div id="parentScroller" class="xt-bg p-3 rounded-xl" style="flex-grow: 1;flex-shrink: 1;margin-left: 1em;display: flex;flex-direction: column;height: 100%">
+    <div id="parentScroller" class="grow shrink mx-4 flex flex-col w-full h-full xt-bg p-3 rounded-xl">
       <router-view></router-view>
     </div>
   </div>
