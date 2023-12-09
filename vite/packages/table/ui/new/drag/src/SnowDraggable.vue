@@ -44,6 +44,8 @@ import {
   getClientCoordinates,
 } from "./hooks/utils";
 export interface DragProps {
+  // 拖拽模式
+  mode?: "all" | "mouse" | "touch";
   // 禁用组件拖拽
   disabled?: boolean;
   // 基于父级视图
@@ -54,7 +56,7 @@ export interface DragProps {
   collision?: boolean;
   collisionName?: string | number;
   // 碰撞还原
-  collisionRestore?: string;
+  collisionRestore?: "before" | "init";
   // 磁吸检测
   magnet?: boolean;
   // 磁吸名称
@@ -103,6 +105,7 @@ export interface DragProps {
 }
 
 const props = withDefaults(defineProps<DragProps>(), {
+  mode: "all",
   disabled: false,
   parent: false,
   boundary: true,
@@ -136,6 +139,7 @@ const props = withDefaults(defineProps<DragProps>(), {
   firstPosition: null,
 });
 const {
+  mode,
   disabled,
   parent,
   boundary,
@@ -419,6 +423,17 @@ function snowDragStart(event: MouseEvent | TouchEvent) {
   if (disabled.value) return;
   if (event instanceof MouseEvent && event.button !== 0) {
     return;
+  }
+
+  if (mode.value !== "all") {
+    if (mode.value == "mouse" && event instanceof TouchEvent) {
+
+      return;
+    }
+    if (mode.value == "touch" && event instanceof MouseEvent) {
+
+      return;
+    }
   }
   // 手柄区域
   if (handle.value) {

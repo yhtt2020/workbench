@@ -177,6 +177,7 @@ const dragStop = () => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
+      mode="mouse"
       ref="snowDrag"
       resetPosition
       parent
@@ -200,7 +201,7 @@ const dragStop = () => {
       :gridStyle="{
         border: '2px solid var(--active-bg)',
       }"
-      :handle="isDrag ? '' : '.#123'"
+      :disabled="isDrag ? false : true"
       @onDragStart="dragStart"
       @onDrag="drag"
       @onDragStop="dragStop"
