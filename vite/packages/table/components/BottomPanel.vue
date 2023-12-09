@@ -14,9 +14,9 @@
         border: 1px solid var(--divider);
         height: 80px;
       ">
-        <MyAvatar  :chat="true" :level="false"></MyAvatar>
+        <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat " class="ml-3 pointer">
+        <div v-show="settings.enableChat" class="ml-3 pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -54,16 +54,17 @@
 
 
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
-              <div class=" scroll-content" style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;"
-                ref="content">
+              <div class=" scroll-content"
+                style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"                                                                                                                                                                                 
+                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer" :style="{marginLeft:index === 0 ? '14px' : '20px'}"
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer"
+                        :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
                         <div style="width: 52px; height: 52px;border-radius: 12px;" v-if="item.type === 'systemApp'"
@@ -149,10 +150,10 @@
 
       </div>
 
-      <template v-if="(!simple && isMain) || this.bottomToggle[1]">
+      <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team></Team>
       </template>
-      <TaskBox v-if="!simple || this.bottomToggle[2]"></TaskBox>
+      <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -506,7 +507,7 @@ export default {
     })
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
-        if ( item.event === i.event) {
+        if (item.event === i.event) {
           i.icon = item.icon
           i.name = item.name
         }
@@ -530,7 +531,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','editItem']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'editItem']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -583,7 +584,7 @@ export default {
   },
   watch: {
     footNavigationList: {
-      handler(newVal,oldVal) {
+      handler(newVal, oldVal) {
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -670,7 +671,7 @@ export default {
     //     }))
     //   console.log(this.dropList)
     // },
-    editIcon(item){
+    editIcon(item) {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
