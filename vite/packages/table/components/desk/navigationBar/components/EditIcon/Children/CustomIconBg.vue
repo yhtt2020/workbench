@@ -3,30 +3,28 @@
         <div class="flex justify-between">
             <div class="text-base xt-text">自定义图标背景色</div>
             <a-switch v-model:checked="props.colorSwitch" @change="changeColorSwitch"></a-switch>
-            <!-- {{ props.colorSwitch ? '开启' : '关闭' }} -->
         </div>
         <div class="mt-2 mb-4 text-sm xt-text-2">默认使用通用设置，不支持已经上传自定义图片的图标。</div>
         <div v-if="props.colorSwitch">
-            <!-- @click="updateBackground(colorList[`${'color' + item}`],item)" -->
             <div class="item-box">
                 <div class="flex items-center justify-center mr-4 item" :key="item"
                     :style="{ background: colorList[`${'color' + item}`] }" v-for="item, index in 14"
                     @click="chooseBg(item)">
-                    <Icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" width="20" height="20" />
+                    <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                 </div>
             </div>
         </div>
         <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
         <div class="mb-4 text-base xt-text">更多颜色</div>
-        <ColorPicker v-model:color="colorPicker" :w="40" :h="40"/>
+        <ColorPicker v-model:color="colorPicker" :w="40" :h="40" @update:color="updateBackground" />
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, watch } from 'vue'
 import ColorPicker from '../../../../../../ui/components/ColorPicker/ColorPicker.vue'
 // 按钮回调
-const emit=defineEmits(['update:colorSwitch'])
+const emit=defineEmits(['update:colorSwitch','changeBg'])
 const changeColorSwitch=()=>{
     emit('update:colorSwitch',props.colorSwitch)
 }
@@ -49,6 +47,10 @@ const colorList=ref({
 })
 const chooseBg=(item)=>{
     colorIndex.value = item
+    emit('changeBg',colorList.value[`${'color' + item}`])
+}
+const updateBackground=(item)=>{
+    emit('changeBg',item)
 }
 const colorIndex=ref(0)
 const customColor=ref(false)
@@ -59,7 +61,9 @@ const props=withDefaults(defineProps<colorProps>(),{
 export interface colorProps{
     colorSwitch: boolean,
 }
-
+// watch(colorPicker,()=>{
+//     emit('changeBg',colorPicker.value)
+// })
 </script>
 <style lang='scss' scoped>
 .item{
