@@ -272,7 +272,6 @@ import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
-import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
@@ -299,7 +298,6 @@ export default {
     TaskBox,
     navIcon,
     navigationSetting,
-    AddIcon,
     EditNewNavigation,
     xtMixMenu,
     EditIcon

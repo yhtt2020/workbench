@@ -3,7 +3,7 @@
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
             <div  class="flex items-center justify-center w-[56px] h-[56px] rounded-xl flex-shrink-0" @click="modelValue=!modelValue" :style="{background:bgColor || 'var(--primary-bg)'}">
                 <xt-new-icon v-if="isIcon" :icon="defaultIcon" size="36"  ></xt-new-icon>
-                <a-avatar v-else :src="defaultIcon" shape="square" :size="40" class="flex-shrink-0 xt-bg" style="border-radius: 14px;" ></a-avatar>
+                <a-avatar v-else :src="defaultIcon" shape="square" :size="40" class="flex-shrink-0 xt-bg" style="border-radius: 10px;" ></a-avatar>
             </div>
             <div class="flex flex-col justify-start ml-5">
                 <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
