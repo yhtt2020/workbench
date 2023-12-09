@@ -9,24 +9,24 @@
         </div>
       </template>
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
-    <div><span>{{CPUGPUData.useCPU.value}}%</span>
+    <div><span>{{CPUGPUData.useCPU.toFixed(1)}}%</span>
       <span>
       <Icon icon="cpu" class="icon" ></Icon>CPU</span>
     </div>
 
     <div>
-      <span>{{CPUGPUData.useGPU.value}}%</span>
+      <span>{{CPUGPUData.useGPU.toFixed(1)}}%</span>
       <span>
       <Icon icon="xianka" class="icon"></Icon>GPU</span></div>
 
     <div>
-      <span>{{CPUGPUData.useMemory.value}}%</span>
+      <span>{{CPUGPUData.useMemory.toFixed(1)}}%</span>
       <span>
       <Icon icon="neicun" class="icon"></Icon>内存</span></div>
 
     <div style="position: relative">
-      <span>{{CPUGPUData.FPS.value}}</span>
-      <a-tooltip v-if="CPUGPUData.FPS.value==0" :arrowPointAtCenter="true">
+      <span>{{CPUGPUData.FPS}}</span>
+      <a-tooltip v-if="CPUGPUData.FPS==0" :arrowPointAtCenter="true">
       <template #title>需要游戏运行在前台且打开RTSS方可读取到</template>
       <Icon v-zoom icon="tishi-xianxing" style="height: 24px;width: 24px;position: absolute;top: 12px;right: 12px;color: orange;margin: 0"></Icon>
     </a-tooltip>
@@ -58,10 +58,11 @@
 <script>
 import {mapWritableState,mapActions} from "pinia";
 import {filterObjKeys, netWorkDownUp} from "../../../util";
-import Widget from "../../card/Widget.vue";
+import Widget from "../../../components/card/Widget.vue";
 import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
+import { prettyDisplayBytes } from '../../../js/action/supervisory'
 const {rpc}=window.$models
 
 export default {
@@ -80,10 +81,10 @@ export default {
         type:'CPUFourCard'
       },
       CPUGPUData:{
-        useCPU:{value:0},
-        useGPU:{value:0},
-        useMemory:{value:0},
-        FPS:{value:0},
+        useCPU:0,
+        useGPU:0,
+        useMemory:0,
+        FPS:0,
         down:0,
         up:0
       },
@@ -132,14 +133,16 @@ export default {
   computed:{
     ...mapWritableState(inspectorStore, ["displayData",'aidaData']),
     lastDown(){
-      return this.CPUGPUData.down < 1000 ? this.CPUGPUData.down +'KB/S' : this.CPUGPUData.down<1024000?(this.CPUGPUData.down/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.down/1024/1024).toFixed(2) + 'GB/S'
+      return prettyDisplayBytes(this.CPUGPUData.down) +'/s'
     },
     lastUp(){
-      return this.CPUGPUData.up < 1000 ? this.CPUGPUData.up +'KB/S' : this.CPUGPUData.up<1024000?(this.CPUGPUData.up/1024).toFixed(2) + 'MB/S':(this.CPUGPUData.up/1024/1024).toFixed(2) + 'GB/S'
+      return prettyDisplayBytes(this.CPUGPUData.up)+'/s'
     }
+
   },
   methods:{
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
+
     go(){
       this.$router.push({name:'inspector'})
     }

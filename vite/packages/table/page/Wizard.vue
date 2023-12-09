@@ -193,7 +193,8 @@
               </div>
             </a-col>
             <a-col >
-              <div :class="{'active':desktopSetting==='custom'}" @click="this.desktopSetting='custom'" class="setting-panel pointer px-4 pt-5">
+              <!-- @click="this.desktopSetting='custom'"  -->
+              <div :class="{'active':desktopSetting==='custom'}" class="setting-panel pointer px-4 pt-5">
                 <div class="title">
                   <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
                   <div class="mt-2">定制桌面（未开放）</div>
@@ -269,7 +270,7 @@ export default {
   },
   computed: {
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo']),
+    ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo','deskInit']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
 
     // 标题名称
@@ -517,8 +518,10 @@ export default {
       this.step++
     },
     finish () {
+      this.deskInit = true
       this.finishWizard()
       this.$router.replace({ name: 'home' })
+      //
     },
     getKeys (e) {
       let key = ''
@@ -623,7 +626,7 @@ export default {
 }
 
 .bg-image{
-  background-image: url('https://a.apps.vip/icons/defaultBg.jpg') !important;
+  background-image: url('https://a.apps.vip/icons/defaultBackground.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;

@@ -1,11 +1,11 @@
 import { defineAsyncComponent } from "vue";
 
 import Vuuri from "../vuuriHome/Vuuri.vue";
-import CPULineChart from "../widgets/supervisory/CPULineChart.vue";
-import CPUFourCard from "../widgets/supervisory/CPUFourCard.vue";
-import InternalList from "../widgets/supervisory/InternalList.vue";
-import SmallCPUCard from "../widgets/supervisory/SmallCPUCard.vue";
-import SmallGPUCard from "../widgets/supervisory/SmallGPUCard.vue";
+import CPULineChart from "../../apps/inspector/widget/CPULineChart.vue";
+import CPUFourCard from "../../apps/inspector/widget/CPUFourCard.vue";
+import InternalList from "../../apps/inspector/widget/InternalList.vue";
+import SmallCPUCard from "../../apps/inspector/widget/SmallCPUCard.vue";
+import SmallGPUCard from "../../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../widgets/games/GamesDiscount.vue";
 import DiscountPercentage from "../widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../widgets/MiddleWallpaper.vue";

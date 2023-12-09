@@ -2,13 +2,8 @@
 <template>
   <div
     ref="scrollbar"
-    class="no-drag relative w-full"
-    style="
-      padding-right: 10px;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-      height: 100%;
-    "
+    class="no-drag relative w-full h-full"
+    style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
     :style="{
       cursor: dragStyle,
     }"
@@ -47,7 +42,7 @@ const {
   freeLayoutEnv,
   getFreeLayoutData,
   getCurrentDesk,
-  isSelectAll
+  isSelectAll,
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
@@ -117,7 +112,6 @@ function handleMouseMove(event) {
   if (isDragging.value && isKey.value) {
     const dx = event.clientX - initialMousePosition.value.x;
     const dy = event.clientY - initialMousePosition.value.y;
-
     try {
       scrollbar.value.scrollTop -= dy;
       scrollbar.value.scrollLeft -= dx;
@@ -142,8 +136,7 @@ function handleKeyDown(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  if ((event.ctrlKey && event.key === "A") || event.key === "a") {
-    console.log('1111 :>> ', 1111);
+  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
     isSelectAll.value = !isSelectAll.value;
   }
 }

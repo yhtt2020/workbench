@@ -1,16 +1,9 @@
 import {defineStore} from "pinia";
-import {setSupervisoryData} from '../js/action/supervisory'
+import {setSupervisoryData,getSysStats,IDisplayData} from '../js/action/supervisory'
 import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
 import { completeTask } from "../apps/task/page/branch/task"
-declare interface IDisplayData {
-  useGPU: number,
-  useCPU: number,
-  useMemory: number,
-  FPS: number,
-  down: number,
-  up: number
-}
+
 
 const readAida64 = window.readAida64
 const {rpc}=window.$models
@@ -31,6 +24,8 @@ export const inspectorStore = defineStore(
         displayData: {
           useGPU: 0,
           useCPU: 0,
+          warmGPU:0,
+          warmCPU:0,
           useMemory: 0,
           FPS: 0,
           down: 0,
@@ -40,8 +35,14 @@ export const inspectorStore = defineStore(
       }
     },
     actions: {
-      setDisplayData(value: IDisplayData) {
-        this.displayData = value;
+      setDisplayData(data: IDisplayData) {
+        console.log(data)
+        let filteredData={}
+          Object.keys(data).map(key=>{
+          return filteredData[key]=Number(data[key]?.value?data[key]?.value:data[key])
+        })
+        console.log(filteredData)
+        this.displayData = filteredData;
       },
       setDisplayValue(key, value) {
         this.displayData[key] = value
@@ -62,16 +63,22 @@ export const inspectorStore = defineStore(
         console.log('启动python数据源')
         this.inspectorTimer = setInterval(async () => {
           try{
-            let fps = await rpc.inspector.getFPS()
-            this.setDisplayValue('FPS', {value: fps})
+            try{
+              //let fps = await rpc.inspector.getFPS()
+             // this.setDisplayValue('FPS', {value: fps})
+            }catch (e) {
+
+            }
+
+
           }catch (e) {
             console.warn('FPS服务未启动')
           }
 
-          let osu=window.$models.osUtils
-          osu.cpu.usage().then(cpuPercentage=>{
-            this.setDisplayValue('useCPU',{value:cpuPercentage})
+          getSysStats().then(data=>{
+            this.setDisplayData(data)
           })
+
         }, this.frequent*1000)
       },
       setupAida() {

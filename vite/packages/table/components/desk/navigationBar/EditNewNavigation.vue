@@ -30,7 +30,7 @@
                 </div>
                 <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
                     <a-tooltip title="推荐">
-                        <xt-button :w="40" :h="40" @click="backIntroduce" ><xt-new-icon
+                        <xt-button :w="40" :h="40" @click="backIntroduce"><xt-new-icon
                                 icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
                     </a-tooltip>
 
@@ -73,11 +73,14 @@
         </template>
         <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
             style="box-sizing: border-box;">
-            <Introduce  ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
+            <Introduce ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
                 :inputValue="inputValue" />
         </div>
     </NewModel>
-    <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+    <teleport to="body" :disabled="false">
+        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+    </teleport>
+    
 
     <!-- </div> -->
 </template>
@@ -147,8 +150,8 @@ export default {
 
                 {
                     type: 'systemApp',
-                    icon: 'fluent:chat-16-regular',
-                    name: '社群(开发中)',
+                    icon: '/logo/community.svg',
+                    name: '社群',
                     event: 'chat',
                     tab: 'community',
                     fn: () => {
@@ -158,51 +161,50 @@ export default {
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:document-bullet-list-multiple-24-regular',
-                    name: '办公',
+                    icon: '/logo/efficiency.svg',
+                    name: '效率助手',
                     tab: 'work',
                     event: 'work',
-                    tag: 'recommendation'
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:home-16-regular',
-                    name: '主页',
+                    icon: '/logo/home.svg',
+                    name: '桌面主页',
                     event: 'home',
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:settings-16-regular',
-                    name: '基础设置',
+                    icon: '/logo/settings.svg',
+                    name: '设置中心',
                     event: 'setting',
                     fn: () => { vm.$router.push({ name: 'setting' }) }
                 },
 
                 {
                     type: 'systemApp',
-                    icon: 'fluent:music-note-2-16-regular',
-                    name: '音乐',
+                    icon: '/logo/music.svg',
+                    name: '网易云音乐',
                     event: 'music',
                     tag: 'recommendation'
                 },
 
                 {
                     type: 'systemApp',
-                    icon: 'akar-icons:check-box',
+                    icon: '/logo/todo.svg',
                     name: '待办',
                     event: 'todo',
                     fn: () => { vm.$router.push({ name: 'todo' }) }
                 },
                 {
                     "type": "systemApp",
-                    "icon": "fluent:bot-24-regular",
+                    "icon": "/logo/ai.svg",
                     "name": "AI助手",
                     "event": "ai"
                 },
                 {
                     type: 'systemApp',
-                    icon: 'fluent:grid-16-regular',
-                    name: '应用管理',
+                    icon: '/logo/app.svg',
+                    name: '应用中心',
                     event: 'apps',
                 },
 
@@ -223,7 +225,7 @@ export default {
             contentHeight: 420,
             contentWidth: 800,
             modalVisible: false,
-            currentTitle:null
+            currentTitle: null
         }
     },
     methods: {
@@ -231,7 +233,7 @@ export default {
         onSelect(index) {
             this.currentIndex = index
             this.inputValue = ''
-            this.currentTitle=null
+            this.currentTitle = null
         },
         setQuick() {
             this.$emit('setQuick')
@@ -270,8 +272,8 @@ export default {
                 this.modalVisible = false
             }
         },
-        backIntroduce(){
-            this.currentTitle='recommendation'
+        backIntroduce() {
+            this.currentTitle = 'recommendation'
         },
         // 拖拽
         mainDrop() {
@@ -349,18 +351,18 @@ export default {
             this.dropList = []
             // this.modelValue=true
         },
-        
+
         handleResize() {
             this.windowHeight = window.innerHeight
             if (this.windowHeight > 1000) {
                 this.navHeight = 720
-                this.contentHeight = 632
+                this.contentHeight = 644
             } else if (this.windowHeight < 1000 && this.windowHeight > 800) {
                 this.navHeight = 620
-                this.contentHeight = 532
+                this.contentHeight = 544
             } else {
-                this.navHeight = 526
-                this.contentHeight = 436
+                this.navHeight = 528
+                this.contentHeight = 448
                 this.contentWidth = 600
             }
         },
@@ -374,7 +376,7 @@ export default {
                 } else if (item.type) {
                     const found = this.sideBar.find((i) => i.tag === item.type)
                     item.className = found.name;
-                } 
+                }
 
             });
         }
@@ -398,7 +400,9 @@ export default {
         },
         otherList() {
             const sideBarTag = this.navList[this.currentIndex].tag;
-            if (sideBarTag === 'recommendation' || this.currentTitle==='recommendation') {
+            console.log('this.webList',this.webList)
+            console.log('this.filterList',this.filterList)
+            if (sideBarTag === 'recommendation' || this.currentTitle === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {
                 return this.webList
@@ -407,15 +411,15 @@ export default {
             }
         },
         currentTag() {
-            if(this.currentTitle==='recommendation'){
+            if (this.currentTitle === 'recommendation') {
                 return 'recommendation'
             }
             return this.navList[this.currentIndex].tag
         },
-        currentNavBar(){
-            if(this.currentTitle==='recommendation'){
+        currentNavBar() {
+            if (this.currentTitle === 'recommendation') {
                 return this.sideBar[0]
-            }else{
+            } else {
                 return this.navList[this.currentIndex]
             }
         },

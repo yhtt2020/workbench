@@ -91,7 +91,7 @@ export default {
   },
 
   methods:{
-    ...mapActions(communityStore,['updateChannel']),
+    ...mapActions(communityStore,['updateCategoryData']),
     openLinkModal(){
       this.linkVisible = true
       this.$nextTick(()=>{
@@ -113,9 +113,9 @@ export default {
        name:this.linkName,
        props:propsData
       }
-      this.updateChannel(option)
-      message.success('链接设置成功')
-      this.linkVisible = false
+      this.updateCategoryData(option,this.no);
+      message.success('链接设置成功');
+      this.linkVisible = false;
     }
   },
 

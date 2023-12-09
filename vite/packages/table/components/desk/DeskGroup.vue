@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <!--  工具栏-->
-    <div class="mb-2 flex flex-row" v-if="showTopBar && !fullScreen">
+    <div class="flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div
         class="tabs flex flex-row mb-3 ml-3"
@@ -51,7 +51,7 @@
         </a-tooltip>
       </div>
 
-      <div v-if="showTools">
+      <div v-if="false">
         <div class="ml-1 flex flex-row">
           <slot name="toolsBefore"></slot>
           <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
@@ -88,7 +88,7 @@
           <!--          </a-tooltip>-->
           <a-tooltip title="菜单" placement="bottom">
             <div class="pl-3">
-              <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
+              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
                 <xt-mix-menu
                   :menus="$refs.currentDeskRef?.dropdownMenu"
                   model="all"
@@ -104,13 +104,16 @@
                     />
                   </div>
                 </xt-mix-menu>
-              </xt-task>
+              </xt-task> -->
             </div>
           </a-tooltip>
         </div>
       </div>
     </div>
-    <xt-mix-menu :menus="menus" class="w-full h-full">
+
+
+    <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
+      <xt-task :modelValue="getStep" :mask="false" />
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
         :deskGroupMenu="deskGroupMenu"
@@ -122,6 +125,7 @@
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
       >
+
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
@@ -129,10 +133,7 @@
       </Desk>
       <template v-else>
         <slot name="empty">
-          <div
-            class="w-full h-full"
-            style=" height: 100% !important"
-          >
+          <div class="w-full h-full" style="height: 100% !important">
             <div class="s-bg rounded-3xl p-4" style="width: 80%; margin: auto">
               <div class="text-center">
                 <div
@@ -205,6 +206,7 @@
           </Desk>
         </span>
       </template>
+
     </xt-mix-menu>
   </div>
 
@@ -335,6 +337,19 @@
       :showModal="showModal"
       @closePreview="closePreview"
     ></DeskPreview>
+  </div>
+  <div
+    class=""
+    style="position: fixed; top: 0; right: 0; left: 0; bottom: 0; z-index: 999"
+    v-if="deskMarketVisible"
+  >
+    <NewAddCard
+      v-if="deskMarketVisible"
+      :deskList="deskList"
+      @onClose="hideMarket"
+      :desk="currentDesk"
+      :panelIndex="panelIndex"
+    ></NewAddCard>
   </div>
 </template>
 
@@ -582,9 +597,19 @@ export default {
         });
     },
   },
+  watch: {
+    getStep(val) {
+      if (!val) return;
+      // this.startTask();
+    },
+  },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
     ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
+    startTask(e) {
+      let ref = this.$refs.mixMenu;
+      ref.custom(e);
+    },
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
@@ -663,6 +688,24 @@ export default {
         const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         desk.forEach((g) => {
+          // 将导入的便签重新修改时间
+          g?.cards?.forEach((item) => {
+            //移除桌面相关的便签卡片
+            if (item.name === "notes") {
+              const now = new Date().getTime();
+              const obj = {
+                ...item,
+                id: now,
+                _id: "note:" + now,
+                createTime: now,
+                updateTime: now,
+                isDelete: false,
+                deskId: g.id,
+                deskName: g.name,
+              };
+              tsbApi.db.put(obj);
+            }
+          });
           let oldId = g.id;
 
           //修正一下老版本导出的数据
@@ -715,6 +758,27 @@ export default {
         });
         return;
       } else {
+        this.currentDesk?.cards?.forEach((item) => {
+          //移除桌面相关的便签卡片
+          if (item.name === "notes") {
+            tsbApi.db
+              .find({
+                selector: {
+                  _id: "note:" + item.id,
+                },
+              })
+              .then((res) => {
+                if (res?.docs.length) {
+                  tsbApi.db.put({
+                    ...res.docs[0],
+                    // isDelete:true,
+                    deskId: "",
+                    deskName: "",
+                  });
+                }
+              });
+          }
+        });
         this.$refs.currentDeskRef.hideMenu();
         Modal.confirm({
           centered: true,

@@ -1,7 +1,7 @@
 <template>
   <div class="team-module">
-    <div v-if='!isOffline' @click="toggleTeam" class="pb-0 m-0 mr-3 common-panel s-bg pointer"
-    style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);border-radius: 18px;">
+    <div v-if='!isOffline' @click="toggleTeam" class="pb-0 m-0 mr-3 common-panel s-bg pointer w-[80px] h-[80px] flex justify-center items-center"
+    style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);border-radius: 18px;border: 1px solid var(--divider);">
     <emoji style="width: 52px;height:52px" icon="glassface"></emoji>
     </div>
     <div class="team-box" v-if="openTeam">

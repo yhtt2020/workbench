@@ -1,10 +1,6 @@
 <template>
-  <div
-    v-if="hide"
-    style="position: fixed; top: 0; bottom: 0; right: 0; left: 0"
-    @click="hideDesk"
-    @contextmenu="hideDesk"
-  ></div>
+  <div v-if="hide" style="position: fixed; top: 0; bottom: 0; right: 0; left: 0" @click="hideDesk"
+    @contextmenu="hideDesk"></div>
   <!--  <div v-if="!hide" @contextmenu="showMenu" style="-->
   <!--      display: flex;-->
   <!--      align-items: flex-start;-->
@@ -86,45 +82,22 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-    <desk-group
-      @changeDesk="changeDesk"
-      ref="deskGroupRef"
-      :settings="settings"
-      :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId"
-    >
+   <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
-        <div class="xt-bg-2 rounded-xl p-4 mb-4 text-base">
+        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-4">
             <div>桌面背景</div>
           </div>
-          <div class="xt-text-2 text-sm my-4">
+          <div class="my-4 text-sm xt-text-2">
             选择喜欢的图片作为工作台桌面背景。
           </div>
-          <div
-            class="xt-text-2 flex text-sm my-4"
-            v-if="!appSettings.transparent"
-          >
+          <div class="flex my-4 text-sm xt-text-2" v-if="!appSettings.transparent">
             <xt-task id="M0103" no="3" to=""> </xt-task>
             <xt-task id="M0103" no="4" to="" @cb="goPaper">
-              <xt-button
-                size="mini"
-                :w="80"
-                :h="40"
-                type="theme"
-                class="mr-3"
-                @click="goPaper"
-                >背景设置</xt-button
-              >
+              <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
             </xt-task>
-            <xt-button
-              size="mini"
-              class="xt-modal"
-              :w="80"
-              :h="40"
-              @click="clearWallpaper"
-              >清除背景</xt-button
-            >
+            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">还原背景</xt-button>
           </div>
           <hr class="my-4" />
 
@@ -132,13 +105,9 @@
             <div class="flex justify-between mb-4">
               <div>背景模糊度</div>
             </div>
-            <div class="xt-text-2 text-sm my-4">开启后增加背景模糊度</div>
-            <div class="xt-text-2 text-sm my-4">
-              <a-slider
-                v-model:value="backgroundSettings.backGroundImgBlur"
-                :max="100"
-                :step="1"
-              />
+            <div class="my-4 text-sm xt-text-2">开启后增加背景模糊度</div>
+            <div class="my-4 text-sm xt-text-2">
+              <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
             </div>
             <hr class="my-4" />
           </template>
@@ -146,9 +115,9 @@
             <div>透明背景</div>
             <a-switch v-model:checked="appSettings.transparent" />
           </div>
-          <div class="xt-text-2 text-sm mt-4">开启后透明背景</div>
+          <div class="mt-4 text-sm xt-text-2">开启后透明背景</div>
         </div>
-        <div class="xt-bg-2 rounded-xl p-4 mb-1 text-base">
+        <div class="p-4 mb-1 text-base xt-bg-2 rounded-xl">
           <div class="p-4 xt-modal rounded-xl xt-text-2">
             此类功能性能消耗较高，请酌情开启
           </div>
@@ -156,7 +125,7 @@
             <div>边框RGB灯</div>
             <a-switch v-model:checked="appSettings.houserun" />
           </div>
-          <div class="xt-text-2 text-sm my-4">
+          <div class="my-4 text-sm xt-text-2">
             在工作台窗口四周显示RGB效果。
           </div>
           <hr class="my-4" />
@@ -164,29 +133,21 @@
             <div>飘落效果</div>
             <a-switch v-model:checked="appSettings.down.enable" />
           </div>
-          <div class="xt-text-2 text-sm my-4">开启后页面会有炫酷的飘落效果</div>
+          <div class="my-4 text-sm xt-text-2">开启后页面会有炫酷的飘落效果</div>
           <hr class="my-4" style="height: 0.5px" />
           <template v-if="appSettings.down.enable">
             <div class="flex justify-between my-4">
               <div>飘落物</div>
             </div>
-            <div class="xt-text-2 text-sm my-4">
-              <xt-tab
-                class="h-10"
-                v-model="appSettings.down.type"
-                :list="fallingList"
-              ></xt-tab>
+            <div class="my-4 text-sm xt-text-2">
+              <xt-tab class="h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
             </div>
             <hr class="my-4" />
             <div class="flex justify-between my-4">
               <div>飘落物数量</div>
             </div>
-            <div class="xt-text-2 text-sm mt-4">
-              <xt-input
-                v-model="appSettings.down.count"
-                class="xt-modal xt-b"
-                style="height: 40px"
-              ></xt-input>
+            <div class="mt-4 text-sm xt-text-2">
+              <xt-input v-model="appSettings.down.count" class="xt-modal xt-b" style="height: 40px"></xt-input>
             </div>
           </template>
         </div>
@@ -221,43 +182,27 @@
   </div>
 
   <transition name="fade">
-    <div
-      class=""
-      style="
+    <div class="" style="
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         bottom: 0;
         z-index: 999;
-      "
-      v-if="iconVisible"
-    >
-      <AddIcon
-        @setCustoms="setCustoms"
-        @close="iconHide"
-        :desk="currentDesk"
-      ></AddIcon>
+      " v-if="iconVisible">
+      <AddIcon @setCustoms="setCustoms" @close="iconHide" :desk="currentDesk"></AddIcon>
     </div>
   </transition>
   <!-- <div class="fixed inset-0 p-12 home-blur" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div
-    class="fixed inset-0 flex justify-center items-center"
-    style="z-index: 999"
-    v-if="false"
-  >
+  <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
   </div>
 
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
-  <div
-    class="fixed inset-0 home-guide"
-    style="z-index: 999"
-    v-if="infoVisible === true"
-  >
+  <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
 </template>
@@ -280,11 +225,11 @@ import { cardStore } from "../store/card";
 import vuuri from "../components/vuuriHome/Vuuri.vue";
 import Widget from "../components/muuri/Widget.vue";
 import { message, Modal } from "ant-design-vue";
-import CPULineChart from "../components/widgets/supervisory/CPULineChart.vue";
-import CPUFourCard from "../components/widgets/supervisory/CPUFourCard.vue";
-import InternalList from "../components/widgets/supervisory/InternalList.vue";
-import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
-import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
+import CPULineChart from "../apps/inspector/widget/CPULineChart.vue";
+import CPUFourCard from "../apps/inspector/widget/CPUFourCard.vue";
+import InternalList from "../apps/inspector/widget/InternalList.vue";
+import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
+import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
@@ -342,7 +287,10 @@ import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
-
+import _ from "lodash-es";
+// 桌面默认数据
+import { defaultFreeLayoutStore } from './defaultFreeLayout'
+import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession;
@@ -547,9 +495,13 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
+      deskInit:'deskInit',
+
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex"]),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
+    ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
+    ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
 
     desksList() {
       return this.desks.map((desk) => {
@@ -574,9 +526,8 @@ export default {
         });
         return find;
       } else {
-        return {
-          cards: [],
-        };
+        this.currentDeskId=this.desks[0].id
+        return this.desks[0];
       }
     },
   },
@@ -611,6 +562,12 @@ export default {
         this.replaceIcon();
         n++;
       }, 1000);
+    }
+    // 判断是否是第一次加载
+    if(this.deskInit){
+      this.addFreeLayoutDesk()
+      // 新用户第一次进入加载一个默认桌面
+      this.deskInit = false
     }
 
     // let counte=0
@@ -741,7 +698,8 @@ export default {
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
-        name: this.desks[0].nanoid,
+        // name: this.desks[0].nanoid,
+        name: this.desks[0].id,
         title: this.desks[0].name,
       };
     }
@@ -832,25 +790,28 @@ export default {
     replaceIcon() {
       navigationData.systemAppList.forEach((item) => {
         this.sideNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon;
+          if (item.event === i.event) {
+            i.icon = item.icon
+            i.name = item.name
           }
         });
       });
       navigationData.systemAppList.forEach((item) => {
         this.rightNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon;
+          if (item.event === i.event) {
+            i.icon = item.icon
+            i.name = item.name
           }
         });
       });
       navigationData.systemAppList.forEach((item) => {
         this.footNavigationList.forEach((i) => {
-          if (item.name === i.name) {
-            i.icon = item.icon;
+          if (item.event === i.event) {
+            i.icon = item.icon
+            i.name = item.name
           }
-        });
-      });
+        })
+      })
       this.replaceFlag = false;
     },
     setTransparent() {
@@ -897,6 +858,7 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      message.success('已为您恢复默认背景')
       // const value = cache.get("style")
       // document.documentElement.classList.remove(value);
       // cache.set("background","-no")
@@ -1025,6 +987,72 @@ export default {
     //     this.cardDesk = 'all'
     //   }
     // },
+
+    // 第一次登录默认数据
+    addFreeLayoutDesk() {
+      if (this.currentInit) {
+        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
+        setTimeout(() => {
+          let deskTmp = _.cloneDeep(this.deskDefault[0]);
+          let oldId = deskTmp.id
+          let cardZoom = ((deskTmp.settings.zoom * 10) / deskTmp.deskHeight).toFixed();
+          deskTmp.settings.zoom = parseInt(cardZoom);
+          deskTmp.id = window.$models.nanoid.nanoid(8);
+          if (this.freeLayoutStateTmp[oldId]) {
+            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId]
+            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId]
+          }
+          this.desks[0] = deskTmp
+          this.currentDeskId = deskTmp.id
+          this.addApptoDesk()
+          this.currentInit = false
+        }, 2000)
+      }
+    },
+
+    // 第一次登录加载桌面应用
+    async addApptoDesk(){
+      const desktopApps = await ipc.sendSync('getDeskApps')
+      let appList = []
+      desktopApps.forEach(i=>{
+        if(i.ext == '.exe'){
+          appList.push(i)
+        }
+      })
+      let appListHandle = []
+      appList.forEach(item=>{
+        let obj = {
+          backgroundColor: '',
+          backgroundIndex: 0,
+          imgShape: "square",
+          imgState: "cover",
+          isBackground: false,
+          isRadius: true,
+          isTitle: true,
+          link: "fast",
+          linkValue: "",
+          radius: 5,
+          size: "mini",
+          // 图标
+          src: item.icon,
+          // 标题
+          titleValue: item.name,
+          open:{
+            type:"default",
+            // 网址
+            value:item.path
+          }
+        }
+        appListHandle.push(obj)
+      })
+      this.desks[0].cards.forEach((item,index)=>{
+        // 直接修改默认数据
+        if(item.id == '1702026795921'){
+          this.desks[0].cards[index].customData.iconList = appListHandle
+        }
+      })
+    },
+
     showSetting() {
       // this.setInitCard()
       this.settingVisible = true;
