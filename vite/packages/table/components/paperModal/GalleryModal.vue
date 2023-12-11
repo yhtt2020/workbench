@@ -1,9 +1,9 @@
 <template>
-  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="py-3 pl-0 pr-3">
+  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="py-3 pl-0 pr-3" maskIndex="1010" index="1010">
     <xt-left-menu style="height: 600px;width: 976px;" :list="galleryList" :index="galleryIndex" last="5" end="1">
       <div class="w-full">
         <template v-if="galleryIndex === 'm'">
-          <My />
+          <My isModal="true"/>
         </template>
         <template v-if="galleryIndex === 'w'">
           <SiftPaper />
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { ref,reactive,computed, toRefs } from 'vue';
+import { ref,reactive,computed, toRefs,getCurrentInstance,onMounted,nextTick } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 
 import My from '../../page/gallery/My.vue';
@@ -44,7 +44,8 @@ export default {
   props:[],
 
   setup(props,ctx){
-    const router = useRouter()
+    const router = useRouter();
+    const { proxy } = getCurrentInstance();
 
     const galleryVisible = ref(false);
     const data = reactive({
@@ -92,6 +93,13 @@ export default {
       }
     ])
 
+    onMounted(()=>{
+      nextTick(()=>{
+        proxy.$mit.on('closePaper',()=>{
+          galleryVisible.value = false
+        })
+      })
+    })
     
     return{
       galleryVisible,galleryList,
@@ -103,7 +111,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#containerWrapper{
+:deep(#containerWrapper){
   margin: 0 !important;
   height: 580px !important;
 }

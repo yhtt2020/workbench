@@ -69,7 +69,7 @@ export default {
         index:'p',
         title:'拾光壁纸',
         // icon:'wallpaper',
-        newIcon:'fluent:image-multiple-16-filled',
+        newIcon:'fluent:image-multiple-16-regular',
         route:{
           name:'pickingPaper'
         }

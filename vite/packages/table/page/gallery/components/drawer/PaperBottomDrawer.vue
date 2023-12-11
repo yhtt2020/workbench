@@ -1,5 +1,5 @@
 <template>
- <a-drawer v-model:visible="bottomVisible" placement="bottom" :height="200">
+ <a-drawer v-model:visible="bottomVisible" placement="bottom" :height="200" style="z-index:1010;">
   <a-row :gutter="20" style="text-align: center">
    <a-col :span="3">
     <xt-button h="93" class="btn" @click="setDesktopPaper">

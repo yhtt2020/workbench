@@ -1,5 +1,5 @@
 <template>
- <a-drawer v-model:visible="rightVisible" placement="right" :width="500"  title="导入本地图片"  class="no-drag">
+ <a-drawer v-model:visible="rightVisible" placement="right" :width="500"  title="导入本地图片"  class="no-drag" style="z-index:1010;">
   <Import :loadStaticPaper="loadStaticPaper" :getLoadLively="getLoadLively"/>
  </a-drawer>
 </template>

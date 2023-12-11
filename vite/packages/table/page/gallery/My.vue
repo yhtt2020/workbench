@@ -7,24 +7,25 @@
       </div>
 
       <div class="flex items-center justify-center">
-        <xt-button @click="playAll" h="40" class="mr-3 xt-bg-t-2">
+        <xt-button @click="playAll" class="mr-3" :class="isModal ? '':'xt-bg-t-2'" :h="isModal ? 32 : 40 " :w="isModal ? 32 : 113" style="border-radius: 8px;">
           <div class="flex items-center justify-center">
-            <MyIcon icon="fluent:play-16-filled" style="font-size: 1.25rem;" class="xt-text mr-2"/>
-            <span  class="s-text xt-text xt-font font-16 font-400">轮播全部</span> 
+            <MyIcon icon="fluent:play-16-filled" style="font-size: 1.25rem;" class="xt-text " :class="isModal ? '' : 'mr-2'"/>
+            <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
           </div>
         </xt-button>
-        <xt-button w="154" h="40" @click="playActive" class="mr-3 xt-bg-t-2">
+        <xt-button w="154" h="40" @click="playActive" class="mr-3 xt-bg-t-2" v-if="!isModal">
           <div class="flex items-center justify-center">
             <MyIcon icon="fluent:play-16-filled" style="font-size: 1.25rem;" class="xt-text mr-2"/>
             <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
           </div>
         </xt-button>
-        <xt-button w="154" h="40" @click="openRight"  class="xt-bg-t-2">
+        <xt-button :h="isModal ? 32 : 40 " :w="isModal ? 32 : 154" style="border-radius: 8px;" @click="openRight"  :class="isModal ? 'mr-2 ':'xt-bg-t-2'">
           <div class="flex items-center justify-center">
-            <MyIcon icon="fluent:arrow-download-16-regular" style="font-size: 1.25rem;" class="xt-text mr-2"/>
-            <span  class="s-text xt-text xt-font font-16 font-400">导入本地图片</span> 
+            <MyIcon icon="fluent:arrow-download-16-regular" style="font-size: 1.25rem;" class="xt-text" :class="isModal ? '' : 'mr-2'"/>
+            <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
           </div>
         </xt-button>
+        <ClosePaperButton v-if="isModal"/>
       </div>
     </div>
 
@@ -58,18 +59,22 @@ import { Icon as MyIcon } from '@iconify/vue';
 import { fileImageExtension,changeTime } from './libs/utils';
 import Spotlight from 'spotlight.js';
 import Player from 'xgplayer/dist/simple_player';
+import {} from '../../components/card/store';
 
 import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
 import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
 import PaperBottomDrawer from './components/drawer/PaperBottomDrawer.vue';
+import ClosePaperButton from './components/close/ClosePaperButton.vue';
 
 const fs = window.$models.fs;
 const path = require('path');
 
 export default {
   
-  components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,PaperBottomDrawer},
+  components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,PaperBottomDrawer,ClosePaperButton},
+
+  props:['isModal'],
 
   data(){
     return{

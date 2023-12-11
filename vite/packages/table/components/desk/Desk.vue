@@ -292,6 +292,8 @@
     </div>
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
+
+  <GalleryModal ref="galleryRef"/>
 </template>
 
 <script>
@@ -308,11 +310,13 @@ import { useFloatMenuStore } from './floatMenu/store'
 import componentsMinis from './components.ts'
 import _ from 'lodash-es'
 
+import GalleryModal from '../paperModal/GalleryModal.vue'
+
 export default {
   name: 'Desk',
   emits: ['changeEditing'],
   mixins: [componentsMinis],
-  components: { LoadingOutlined },
+  components: { LoadingOutlined,GalleryModal },
   props: {
     freeLayout: {
       default: true,
@@ -551,7 +555,15 @@ export default {
           fn: this.setFullScreen,
         },
         {
-          id: 7,
+          id:7,
+          newIcon:'fluent:image-multiple-16-regular',
+          name:'更换壁纸',
+          fn:()=>{
+            this.$refs.galleryRef.openGalleryModal();
+          }
+        },
+        {
+          id: 8,
           newIcon: this.hide
             ? 'fluent:eye-16-regular'
             : 'fluent:eye-off-16-regular',
@@ -569,9 +581,9 @@ export default {
             }
           },
         },
-        { id: 8, divider: true },
+        { id: 9, divider: true },
         {
-          id: 9,
+          id: 10,
           newIcon: 'fluent:settings-16-regular',
           name: '桌面设置',
           fn: this.showSetting,
