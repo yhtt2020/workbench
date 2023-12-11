@@ -61,7 +61,7 @@
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
-        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav"></navigationSetting>
       </div>
     </transition>
 </template>
@@ -100,6 +100,7 @@ export default {
     xtMenu,
     xtMixMenu
   },
+  emits: ['getDelIcon','hiedNavBar'],
   data() {
     return {
       menuVisible: false,
@@ -164,7 +165,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => {this.sortId==='left'? this.navigationToggle[0] = false:this.navigationToggle[1] = false},
+          fn: () => { this.$emit('hiedNavBar',this.currentNav)},
         },
         {
           id: 4,
@@ -360,6 +361,13 @@ export default {
       // message.info('已中止侧栏调整')
       return
       // }
+    },
+    /**
+     * 
+     * @param {*} value 导航栏设置中关闭的导航
+     */
+    hiedNav(value){
+      this.$emit('hiedNavBar',value)
     },
     enableDrag() {
       // if (this.sortable) {
