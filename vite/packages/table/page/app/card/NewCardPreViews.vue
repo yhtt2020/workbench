@@ -16,13 +16,13 @@
               <div class="left no-drag" @click="fullScreen(item)">
                 <template v-if="item.option.length > 1">
                   <div class="top">
-                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
+                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
                   </div>
                   <div class="bottom">
-                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
+                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
                   </div>
                 </template>
-                <img v-else:src="getImg(item.option[0].name)" alt="" :style="[
+                <img v-else :src="getImg(item.option[0].imgName)" alt="" :style="[
                   {
                     zoom: item.option[0].zoom
                       ? item.option[0].zoom + '%'
@@ -69,13 +69,13 @@
           <div class="left no-drag" @click="fullScreen(item)">
             <template v-if="item.option.length > 1">
               <div class="top">
-                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
+                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
               </div>
               <div class="bottom">
-                <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
+                <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
               </div>
             </template>
-            <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
+            <img v-else style="" :src="getImg(item.option[0].imgName)" alt="" :style="[
               { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
             ]"/>
           </div>
@@ -219,7 +219,7 @@ export default {
       message.success('添加成功！')
     },
     getImg (url) {
-      return '/img/addCard/' + url + '.png'
+      return `https://a.apps.vip/cards/${url}.png`;
     },
     mySort (data, property, asc) {
       let datas = [...data]
@@ -273,9 +273,11 @@ export default {
         this.settingVisible = true
         return
       }
+      console.log('执行......排查-1',item,i);
       this.add(item, i)
     },
     add (item, index) {
+      console.log('执行......排查-2',item,index);
       index = index ?? this.carouselIndex
 
       this.addCard(

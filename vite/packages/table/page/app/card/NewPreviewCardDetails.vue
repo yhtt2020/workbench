@@ -5,7 +5,7 @@
             <div class="main">
                 <div class="card-box" v-for="(item, index) in cardDetails.option">
                     <img v-if="item.img" class="mb-6"  :src="item.img" alt="" :style="setImg(item.img)"/>
-                    <div v-else class="img"> <img  ref="imgRef" :src="getImg(item.name)" alt=""
+                    <div v-else class="img"> <img  ref="imgRef" :src="getImg(item.imgName)" alt=""
                             :style="[{ zoom: item.zoom * 1.8 + '%' }]">
                     </div>
                     <div class="size xt-active-bg-2 xt-text-2">{{ item.size }}</div>
@@ -34,9 +34,10 @@ export default {
     },
     methods: {
         getImg(url) {
-            return '/img/addCard/' + url + '.png'
+            return 'https://a.apps.vip/cards/' + url + '.png'
         },
         addCard(item, index) {
+            console.log('执行......排查-3',this.cardDetails,index);
             this.onBack()
             this.$emit("addCardAchieve", this.cardDetails, index)
         },
