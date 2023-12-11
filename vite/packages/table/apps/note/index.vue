@@ -3,7 +3,7 @@
     <LeftTab>
       <div class="h-full w-full flex">
         <div class="flex h-full">
-          <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
+          <LeftSearch :changeEditorValue="changeEditorValue" :selDesk="selDesk" :menus="menus"></LeftSearch>
         </div>
         <div class="flex h-full flex-col w-full" style="min-width: 400px;">
           <NoteContent :menus="menus" :selDesk="selDesk" ref="content"

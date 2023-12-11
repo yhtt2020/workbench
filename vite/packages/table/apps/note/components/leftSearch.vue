@@ -13,7 +13,7 @@
                 v-model:value="this.searchValue"
                 @change="this.searchNote(this.searchValue)"
             ><Icon :icon="icons.search20Filled" /></a-input>
-            <xt-button class="flex justify-center items-center ml-3" v-if="!isTrash" :w="40" :h="40"  style="background:var(--mask-bg);border-radius: 10px;" @click="addNote">
+            <xt-button class="flex justify-center items-center ml-3" v-if="!isTrash" :w="40" :h="40"  style="background:var(--mask-bg);border-radius: 10px;" @click="addHandle">
                 <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
             </xt-button>
         </div>
@@ -72,7 +72,7 @@ import { message } from 'ant-design-vue';
     components: {
         Icon,
     },
-    props:['selDesk', 'menus'],
+    props:['selDesk', 'menus','changeEditorValue'],
     data() {
       return {
 			icons: {
@@ -106,6 +106,10 @@ import { message } from 'ant-design-vue';
         changeMenu(index){
             this.selNote = index
         },
+        addHandle(){
+            this.addNote()
+            this.changeEditorValue('');
+        }
     },
   };
   </script>
