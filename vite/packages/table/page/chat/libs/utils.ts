@@ -2,16 +2,12 @@ import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
-  // 群聊会话列表
-  const list = (window as any).$TUIKit.store.store.TUIConversation.conversationList;
-  const find = list.find((item:any)=>{
-    const itemInfo = item.groupProfile;
-    return String(itemInfo?.groupID) === String(groupID);
-  });
-  if(find){
-    return { unreadCount:find.unreadCount };
-  }else{
-    return 0
+  const server = (window as any).$TUIKit.TUIServer.TUIConversation;
+  const list =server.store.conversationList;
+  if(list){
+    const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); });
+    if(find){ return { unreadCount:find?.unreadCount }; }
+    else { return { unreadCount:0 }; }
   }
 }
 
@@ -27,7 +23,7 @@ export function updateTree(list:any){
           const jsonItem = JSON.parse(item.props);
           if(type){
             const result:any = getUnReadCount(jsonItem.groupID);
-            return {...item,props:{...jsonItem,unread:result.unreadCount}}
+            return {...item,props:{...jsonItem,unread:result?.unreadCount}}
           }
 
           else{

@@ -223,10 +223,25 @@ export default {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
-            this.$router.replace(currentRoute)
+            // 处理分屏情况下默认跳转到wizard的问题
+            if(currentRoute.name == 'wizard' && !isMain()){
+              this.$router.replace({ name: 'home' })
+            }else{
+              this.$router.replace(currentRoute)
+            }
           }
         } else {
           this.$router.replace({ name: 'home' })
+        }
+      }else{
+        // 处理分屏情况下默认读取不到存储的问题
+        if(!isMain()){
+        const currentRoute = appStore().currentRoute
+          if(currentRoute.name == 'wizard' || currentRoute.name == 'splash'){
+            this.$router.replace({ name: 'home' })
+          }else{
+            this.$router.replace(currentRoute)
+          }       
         }
       }
 
@@ -277,13 +292,8 @@ export default {
     },
 
     async afterLaunch () {
-      console.log('this.init',this.init)
-      if(!this.init){
-        console.log('没登录过')
+      if(!this.init && isMain()){
         this.$router.replace({ name: 'wizard' })
-      }else{
-        console.log('登录过了')
-
       }
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')

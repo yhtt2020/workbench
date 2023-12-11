@@ -234,8 +234,9 @@ export const noteStore = defineStore("noteStore", {
      * 保存版本历史
      * @param noteId
      * @param content
+     * @param type
      */
-    async saveHistory(noteId, content) {
+    async saveHistory(noteId, content, isAutoSave) {
       tsbApi.db.createIndex({
         index: {
           fields: ['noteId']
@@ -246,7 +247,8 @@ export const noteStore = defineStore("noteStore", {
         _id: 'note:history:' + Date.now(),
         noteId: noteId,
         createTime: Date.now(),
-        content: content
+        content: content,
+        isAutoSave: isAutoSave,
       })
     },
     /**
@@ -266,7 +268,7 @@ export const noteStore = defineStore("noteStore", {
       }
     },
     // 修改主应用卡片内容
-    async saveAppNote(id, value) {
+    async saveAppNote(id, value, isAutoSave) {
       let now = new Date().getTime()
       let rs
       let tmp = await this.findId('note:' + id, false)
@@ -283,12 +285,8 @@ export const noteStore = defineStore("noteStore", {
         }
         rs = await tsbApi.db.put(note)
         //记录版本
-        await this.saveHistory(note._id, value)
+        await this.saveHistory(note._id, value, isAutoSave)
       }
-      // 遍历桌面卡片的时候会导致桌面卡片定位失效
-      // 暂时解决办法 通过区分桌面便签和主应用便签
-      // 分别设置方法进行存储
-      // 期待后续优化
       this.getNotes()
       return rs.ok
     },
