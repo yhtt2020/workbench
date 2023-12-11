@@ -4,9 +4,10 @@ import { formatTime, formatTimestamp } from '../../../util'
 import { Icon } from '@iconify/vue'
 import { noteStore } from '../store'
 import { mapActions, mapState, mapWritableState } from 'pinia'
+import { message } from 'ant-design-vue'
 export default defineComponent({
   name: "HistoryList",
-  props:['noteId'],
+  props:['noteId', 'changeShowVersion', 'changeEditorValue'],
   components:{Icon,},
   data(){
     return{
@@ -22,9 +23,13 @@ export default defineComponent({
   },
   computed:{
     timeType(){
-      const time = this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)
-      const type = this.versions[this.selIndex]?.isAutoSave?'自动保存':'手动保存'
-      return ' ' + time + '·' + type
+      if(this.versions.length){
+        const time = this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)
+        const type = this.versions[this.selIndex]?.isAutoSave?'自动保存':'手动保存'
+        return ' ' + time + '·' + type
+      }else{
+        return ''
+      }
     },
     selList(){
       if(this.currentSettingTab == 'all'){
@@ -67,26 +72,30 @@ export default defineComponent({
       return history.reverse()
     },
     restore(){
-      console.log(111)
-      this.$xtConfirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)} 为保存的版本。` , {
-        ok: () => {
-          const tmp = this.versions[this.selIndex]
-          this.saveAppNote(tmp?.noteId.slice(5), tmp.content, true)
-        },
-        type:'warning'
-      });
+      if (this.versions.length) {
+        this.$xtConfirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)} 为保存的版本。` , {
+          ok: () => {
+            const tmp = this.versions[this.selIndex]
+            this.saveAppNote(tmp?.noteId.slice(5), tmp.content, true).then(res=>{
+              this.changeEditorValue(tmp.content)
+              this.changeShowVersion(false)
+              message.warning('版本恢复成功。')
+            })
+            
+          },
+          type:'warning'
+        });
+      }else{
+        message.warning('暂无历史版本恢复！')
+      }
     },
-    changeTab(){
-      console.log(123);
-      
-    }
   }
 })
 </script>
 
 <template>
   <div class="h-full flex flex-wrap " style="background:var(--main-bg);width:200px;" >
-    <div class=" p-3 mb-0" @click="test">
+    <div class=" p-3 mb-0">
       <XtTab
         style="height: 32px; width: 176px"
         boxClass="p-1 xt-bg-2"
@@ -124,7 +133,7 @@ export default defineComponent({
         <div class="flex items-center pointer justify-center mr-3 button-top" style="width: 97px;" @click="restore">
           恢复此版本
         </div>
-        <div class="flex items-center pointer justify-center mr-3 button-top" style="width: 32px;" @click="save(true)">
+        <div class="flex items-center pointer justify-center mr-3 button-top" style="width: 32px;" @click="changeShowVersion(false)">
           <Icon icon="fluent:dismiss-16-regular" width="16" height="16"/>
         </div>
       </div>
