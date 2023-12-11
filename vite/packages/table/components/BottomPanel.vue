@@ -153,7 +153,9 @@
       <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team></Team>
       </template>
-      <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      <keep-alive>
+        <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      </keep-alive>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -236,6 +238,7 @@
 
 <script>
 import PanelButton from './PanelButton.vue'
+import {taskStore} from '../apps/task/store'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
@@ -532,6 +535,7 @@ export default {
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(taskStore,['isTask']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -564,7 +568,7 @@ export default {
           id: 3,
           name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2],this.isTask=!this.isTask }
         },
         {
           id: 4,
