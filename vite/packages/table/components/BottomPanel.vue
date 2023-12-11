@@ -647,6 +647,13 @@ export default {
           this.simple = true
         }
       }
+    },
+    isTask(){
+      if(this.isTask){
+        this.bottomToggle[2]=true
+      }else{
+        this.bottomToggle[2]=false
+      }
     }
   },
   methods: {
