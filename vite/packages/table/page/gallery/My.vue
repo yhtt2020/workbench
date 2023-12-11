@@ -210,10 +210,11 @@ export default {
         fitVideoSize: 'fixWidth',
         // width:300,
         // height:300,
+        videoFillMode:'auto',
         loop: true,
         fluid: true,
         videoInit: true,
-        autoplay: true
+        autoplay: true,
       })
     },
     // 关闭动态壁纸播放
@@ -231,4 +232,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>
