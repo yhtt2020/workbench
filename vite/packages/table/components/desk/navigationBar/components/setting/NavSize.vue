@@ -41,6 +41,10 @@ const navSize = ref([
         step: 10
     }
 ])
+/**
+ * 
+ * @param value 背景颜色
+ */
 const changeBg = (value) => {
     console.log(value, '====>>>>');
 }
@@ -51,6 +55,7 @@ const resetNav = (item, index) => {
 const changeNav = (value) => {
     navigationStore.navSize = value.value
 }
+// 修改导航栏和图标圆角
 const changeSlider = (value) => {
     if(value.flag==='nav'){
         navigationStore.navRadius = value.value
@@ -59,6 +64,7 @@ const changeSlider = (value) => {
     }
 
 }
+// 重置导航栏和图标圆角
 const resetSlider = (item, index) => {
     if(index===0){
         navigationStore.navRadius = 18

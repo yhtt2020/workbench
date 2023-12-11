@@ -2,8 +2,8 @@
   <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full'">
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
-      class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
-      ref="sideContent" @contextmenu="showMenu">
+      class="relative flex flex-row justify-center max-h-full pt-0 pb-0 box common-panel s-bg xt-bg side-bar"
+      ref="sideContent" @contextmenu="showMenu" :style="{width:80*(this.navSize/100)+'px',borderRadius:this.navRadius+'px'}">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -15,7 +15,7 @@
               <div :key="item.name" @click="clickNavigation(item)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' ,marginTop: index === 0 ? '12px' : '20px'}" >
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  :class="{ 'active-back': current(item) }">
+                  :class="{ 'active-back': current(item) }" :style="{borderRadius:this.iconRadius+'px'}">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <a-avatar :size="52" shape="square" :src="item.icon"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
@@ -263,7 +263,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navSize','navRadius','iconRadius']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -756,7 +756,7 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-radius: 12px;
+  // border-radius: 12px;
   // background-color: var(--secondary-transp-bg);
 
 }

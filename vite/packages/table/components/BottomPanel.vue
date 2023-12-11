@@ -9,11 +9,10 @@
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
-        border-radius: 18px;
+        /* border-radius: 18px; */
         /* width: 160px; */
         border: 1px solid var(--divider);
-        height: 80px;
-      ">
+      " :style="{height:80*(this.navSize/100)+'px',borderRadius:this.navRadius+'px'}">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
@@ -30,8 +29,8 @@
         justify-items: center;
         align-content: center;
         align-items: center;
-        border-radius: 18px;
-        height: 80px;
+        /* border-radius: 18px; */
+        /* height: 80px; */
         max-width: 80%;
         overflow: hidden;
         margin-right: 10px;
@@ -40,7 +39,7 @@
         z-index: 99;
         min-width: 70px;
         border: 1px solid var(--divider);
-      ">
+      " :style="{height:80*(this.navSize/100)+'px',borderRadius:this.navRadius+'px'}">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
           <div style="
           display: flex;
@@ -67,7 +66,7 @@
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 52px; height: 52px;border-radius: 12px;" v-if="item.type === 'systemApp'"
+                        <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'" :style="{borderRadius:iconRadius+'px'}"
                           class="relative flex items-center justify-center rounded-lg ">
                           <a-avatar :size="52" shape="square" :src="item.icon"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
@@ -531,7 +530,13 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'editItem']),
+    ...mapWritableState(useNavigationStore, [
+      'editToggle', 'taskBoxVisible', 
+      'selectNav', 'bottomToggle', 
+      'popVisible', 'currentList',
+       'editItem','navSize',
+       'navRadius','iconRadius'
+    ]),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {

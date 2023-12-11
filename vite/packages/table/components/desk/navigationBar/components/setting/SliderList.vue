@@ -7,7 +7,7 @@
             </div>
             <a-row align="middle">
                 <a-col :span="18">
-                    <a-slider v-model:value="item.value" :min="item.min" :max="item.max" :step="item.step"/>
+                    <a-slider v-model:value="item.value" :min="item.min" :max="item.max" :step="item.step" style="height: 8px;"/>
                 </a-col>
                 <a-col :span="4">
                     <a-input-number v-model:value="item.value" :min="1" :max="20" class="input"
