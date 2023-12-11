@@ -82,7 +82,6 @@ import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
-import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
@@ -94,7 +93,6 @@ export default {
     EditNavigation,
     navIcon,
     navigationSetting,
-    AddIcon,
     EditNewNavigation,
     Common,
     xtMenu,
