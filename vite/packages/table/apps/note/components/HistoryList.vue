@@ -5,10 +5,11 @@ import { Icon } from '@iconify/vue'
 import { noteStore } from '../store'
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
+import Markdown from './markdown.vue'
 export default defineComponent({
   name: "HistoryList",
   props:['noteId', 'changeShowVersion', 'changeEditorValue'],
-  components:{Icon,},
+  components:{Icon, Markdown},
   data(){
     return{
       versions: [],
@@ -19,13 +20,14 @@ export default defineComponent({
         { name: "手动保存", value: "handleSave" },
       ],
       currentSettingTab: 'all',
+      contentValue:'',
     }
   },
   computed:{
     timeType(){
       if(this.versions.length){
         const time = this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)
-        const type = this.versions[this.selIndex]?.isAutoSave?'自动保存':'手动保存'
+        const type = this.versions[this.selIndex]?.isAutoSave?'手动保存':'自动保存'
         return ' ' + time + '·' + type
       }else{
         return ''
@@ -36,7 +38,7 @@ export default defineComponent({
         return this.versions
       }else{
         return this.versions.filter(item=>{
-          return !item.isAutoSave
+          return item.isAutoSave
         })
       }
     }
@@ -51,11 +53,32 @@ export default defineComponent({
         }
       },
       immediate:true
-    }
+    },
+    selIndex:{
+      handler(newVal, oldVal) {
+        this.getHistoryContent()
+      },
+      immediate:true
+    },
+  },
+  mounted(){
+    
+    this.getHistoryContent()
   },
   methods:{
     ...mapActions(noteStore,['saveAppNote']),
     // formatTime,
+    getHistoryContent(){
+      if(this.$refs.historyEditor){
+        this.$refs.historyEditor?.setEditorValue(this.selectVersion?.content);
+        this.contentValue = this.$refs.historyEditor?.getContent();
+      }else{
+        setTimeout(()=>{
+          this.$refs.historyEditor?.setEditorValue(this.selectVersion?.content);
+          this.contentValue = this.$refs.historyEditor?.getContent();
+        },500)
+      }
+    },
     formatTimestamp,
     async getHistory (id) {
       console.log(id, '要查询的id')
@@ -114,7 +137,7 @@ export default defineComponent({
               #{{ versions.length - index }}
             </div>
             <div class="xt-text-2">{{ formatTimestamp(version.createTime, true) }}</div>
-            <div class="xt-text-2">{{ version.isAutoSave?'自动保存':'手动保存' }}</div>
+            <div class="xt-text-2">{{ version.isAutoSave?'手动保存':'自动保存' }}</div>
           </div>
         </div>
       <!-- </xt-scrollbar> -->
@@ -139,7 +162,12 @@ export default defineComponent({
       </div>
     </div>
     
-    <div class="p-4 w-full h-full" style="background:var(--main-bg);height: 520px;" v-if="selectVersion" v-html="selectVersion.content"></div>
+    <div class="p-4 w-full h-full" style="background:var(--main-bg);height: 520px;"     v-if="selectVersion">
+      <!-- v-html="selectVersion.content" -->
+      <div v-html="contentValue"></div>
+      <Markdown ref="historyEditor" class="overflow-hidden" style="width:0;height:0;"></Markdown>
+      <!-- setEditorValue -->
+    </div>
   </div>
 </template>
 

@@ -189,7 +189,7 @@ export default {
           }
         },
         {
-          label: this.isTrash?'还原':'添加到桌面',
+          label: this.isTrash?'还原':this.noteList[this.selNote]?.deskName?'切换桌面':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
             if (this.isTrash) {

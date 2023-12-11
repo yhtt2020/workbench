@@ -11,7 +11,7 @@
                 placeholder="搜索"
                 maxlength="10"
                 v-model:value="this.searchValue"
-                @change="this.searchNote(this.searchValue)"
+                @change="changeSearchValue"
             ><Icon :icon="icons.search20Filled" /></a-input>
             <xt-button class="flex justify-center items-center ml-3" v-if="!isTrash" :w="40" :h="40"  style="background:var(--mask-bg);border-radius: 10px;" @click="addHandle">
                 <Icon :icon="icons.add16Filled" class="flex items-center" width="20" height="20"/>
@@ -83,7 +83,7 @@ import { message } from 'ant-design-vue';
     },
     computed: {
         ...mapWritableState(noteStore, ['noteList','selNote','selNoteTitle','selNoteText','isTrash','searchValue','deskList']),
-      ...mapWritableState(homeStore, ['currentDeskIndex','currentDeskId']),
+        ...mapWritableState(homeStore, ['currentDeskIndex','currentDeskId']),
     },
     mounted() {
     },
@@ -109,6 +109,10 @@ import { message } from 'ant-design-vue';
         addHandle(){
             this.addNote()
             this.changeEditorValue('');
+        },
+        changeSearchValue(){
+            this.selNote = -1
+            this.searchNote(this.searchValue);
         }
     },
   };
