@@ -42,7 +42,7 @@ export interface DragProps {
   // 禁用拖拽元素的选择器
   disabledHandle?: string | string[] | null
   // 禁用默认事件
-  disabledDefaultEvent: boolean
+  disabledDefaultEvent?: boolean
   // 拖拽样式
   draggableClass?: string
   draggableStyle?: object | null
@@ -50,5 +50,9 @@ export interface DragProps {
   gridClass?: string
   gridStyle?: object | null
   // 重置位置
-  resetPosition: boolean
+  resetPosition?: boolean
+  // 用户数据
+  data?: any
+  // 首次定位
+  firstPosition?: string[] | number[] | null
 }

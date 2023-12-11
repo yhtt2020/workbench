@@ -275,6 +275,6 @@ export default class TUIConversationServer extends IComponentServer {
 
     // 切换会话将社群消息数进行清除
     // const community:any = communityStore();
-    // community.updateMsgStatus();
+    // community.getCommunityTree();
   }
 }

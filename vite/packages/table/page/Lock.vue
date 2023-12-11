@@ -4,7 +4,7 @@
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
-  <div id="displayMiddle" class="pointer item-content" @click="enter"
+  <div id="displayMiddle" @mouseenter="showActions" @mouseleave="hideActions" class="pointer item-content" @click="enter"
        style="">
     <div v-if="settings.showTime && loaded" class="time" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
@@ -127,6 +127,7 @@ export default {
   },
   data () {
     return {
+      fadeOutTimer: null,
       playing: [],
       singleLively: false,
       loaded: false,
@@ -190,9 +191,6 @@ export default {
     //   $('#displayMiddle').css('top', 'calc(50vh - ' + $('#displayMiddle').height() / 2 + 'px)')
     // })
     $('#displayMiddle').fadeIn(1000)
-    setTimeout(() => {
-      $('#tip').fadeOut(1000)
-    }, 3000)
     if (this.settings.playType === 'my') {
       this.playAll()
     } else {
@@ -204,6 +202,7 @@ export default {
         this.tick()
       }, 1000)
     }
+
   },
   beforeUnmount () {
     clearInterval(this.timer)
@@ -228,11 +227,25 @@ export default {
   methods: {
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
     ...mapActions(cardStore, ['removeClock', 'changeClock']),
+    showActions (e) {
+      if (this.fadeOutTimer) {
+        clearTimeout(this.fadeOutTimer)
+        this.fadeOutTimer=null
+      }
+      $('#tip').fadeIn(1000)
+    },
+    hideActions (e) {
+      if (!this.fadeOutTimer) {
+        this.fadeOutTimer = setTimeout(() => {
+          $('#tip').fadeOut(1000)
+          this.fadeOutTimer = null
+        }, 3000)
+      }
+    },
     enter (closeSpot = true) {
       if (closeSpot && !this.singleLively) {
         window.Spotlight.close()
       }
-      console.log('处罚顶层返回')
       this.$router.go(-1)
     },
     enterSetting () {
@@ -497,6 +510,8 @@ export default {
       opacity: 0.7;
     }
 
+    text-align: center;
+
     cursor: pointer;
 
     .tip-icon {
@@ -505,12 +520,13 @@ export default {
 
     .tip-text {
       font-size: 16px;
+      text-align: center;
     }
   }
 }
 </style>
 <style>
-.spl-prev{
-  z-index:99999999999999
+.spl-prev {
+  z-index: 99999999999999
 }
 </style>

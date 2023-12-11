@@ -4,10 +4,12 @@
         <div @click="clickRightListItem(item, index)" 
             class="w-[188px] h-[188px] xt-bg-2 rounded-xl flex justify-center items-center flex-col relative mr-3 mb-3 pointer">
             <div class="w-[64px] h-[64px] rounded-xl xt-bg flex items-center justify-center">
-                <div style="width: 32px; height: 32px;border-radius: 8px;" v-if="item.type === 'systemApp'"
+                <div style="width: 64px; height:64px;border-radius: 8px;" v-if="item.type === 'systemApp'"
                     class="flex items-center justify-center rounded-lg ">
-                    <navIcon :icon="item.icon" class="test" style="width:28px;height:28px;fill:var(--primary-text);">
-                    </navIcon>
+                    <!-- <navIcon :icon="item.icon" class="test" style="width:28px;height:28px;fill:var(--primary-text);">
+                    </navIcon> -->
+                    <!-- <svg :innerHtml="item.icon"></svg> -->
+                    <a-avatar :size="64" shape="square" :src="item.icon"></a-avatar>
                 </div>
                 <div v-else style="width: 45px; height: 45px" class="flex items-center justify-center">
                     <a-avatar :size="32" shape="square" :src="renderIcon(item.icon)"></a-avatar>
@@ -18,7 +20,7 @@
                 recommendation.name }}</div>
             <div class="absolute top-3 right-3">
                 <xt-button :w="24" :h="24" :style="{ background: item.addNav ? '#52C41A' : 'var(--active-bg)' }"
-                    @click="clickRightListItem(item, index)">
+                    @click="clickRightListItem.stop(item, index)">
                     <div class="flex items-center justify-center" v-if="item.addNav">
                         <xt-new-icon icon="fluent:checkmark-16-regular" size="20"
                             style="padding:2px;color: rgba(255, 255, 255, 0.85) !important;"></xt-new-icon>

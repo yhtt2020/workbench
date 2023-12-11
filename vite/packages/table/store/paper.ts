@@ -12,7 +12,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   lockTimeout: 1800,
   interval: 30,
   savePath: '',
-  tipLock: true,//在状态栏提示多久锁屏
+  tipLock: false,//在状态栏提示多久锁屏
   wallSource:'picking',
 }
 // @ts-ignore

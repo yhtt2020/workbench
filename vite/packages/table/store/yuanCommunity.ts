@@ -19,8 +19,8 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
     postContent: {
       title: '',
       content: '',
-      imagesList: [],
-      coverList: []
+      imagesList: '',
+      coverList: ''
     },
     // 保存动态相关内容
     dynamicContent: {
@@ -29,7 +29,8 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
     },
     // 列表
     forumsList: [],
-    defaultSection: '版本更新'
+    defaultSection: '版本更新',
+    defaultForum:{index:0,value:{id:100304,name:'版本更新'}}
   }),
   actions: {
     // 获取我的圈子
@@ -40,11 +41,25 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       }
       const res = await post(myForum)
       if (res.code === 200) {
-        this.myForumList = res.data
+        // this.myForumList = this.getData(res.data.joined)
+        // const create=res.data.create.map((item)=>{
+        //   return {
+        //     id:item.id,
+        //     name:item.name
+        //   }
+        // })
+        // const joined=res.data.joined.map((item)=>{
+        //   return {
+        //     id:item.id,
+        //     name:item.name
+        //   }
+        // })
+        // [...joined,...create]
+        this.myForumList = [...this.getData(res.data.joined),...this.getData(res.data.create)]
       }
 
       localCache.set('myForumList', this.cleanData(this.myForumList), 60 * 60 * 12)
-      // console.log(res.data,'myForum');
+      // console.log(this.myForumList ,'myForum');
 
     },
     /**
@@ -69,6 +84,15 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       }
       return data
     },
+    getData(data){
+      const list=data.map((item)=>{
+        return {
+          id:item.id,
+          name:item.name
+        }
+      })
+      return list
+    },
     // 获取查询板块下的所有帖子
     async getCommunityPost(id, page = 1, type = 'all', order = '') {
       let communityPostCache = localCache.get(`communityPost_${id}-${page}-${type}`)
@@ -85,7 +109,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       })
       if (res.code === 200) {
         // console.log(res.data,'返回数据')
-        this.communityPost = res.data
+        this.communityPost = res.data.list
         // console.log(this.communityPost,'this.communityPost');
         localCache.set(`communityPost_${id}-${page}-${type}`, this.communityPost, 60 * 60 * 12)
       }

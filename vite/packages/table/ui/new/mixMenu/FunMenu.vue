@@ -1,13 +1,15 @@
 <template>
   <xt-menu
+    ref="menu"
     :name="name"
     :fn="fn"
     :menus="menuList"
     :model="model"
+    :class="[menuHeight]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
-    class="w-full h-full"
+    class="w-full"
   >
     <slot> </slot>
     <template #cardSize>
@@ -41,7 +43,11 @@ const props = defineProps({
   height: {
     default: 0,
   },
+  menuHeight: {
+    default: "h-full",
+  },
 });
+const menu = ref(null);
 const { menus, model, height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
@@ -85,16 +91,34 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
-function defaultListClick() {
+function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }
-function defaultListContextmenu() {
+function defaultListContextmenu(event) {
   if (rightModel.value == "default") {
+    event.preventDefault();
+    event.stopPropagation();
     drawerVisible.value = true;
   }
 }
+
+function custom() {
+  console.log("menu.value :>> ", menu.value.handleOpenMenu);
+  menu.value.handleOpenMenu({
+    stopPropagation: () => {},
+    preventDefault: () => {},
+
+    clientX: 200,
+    clientY: 200,
+  },model.value);
+}
+defineExpose({
+  custom,
+});
 </script>
 
 <style lang="scss" scoped></style>

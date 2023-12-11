@@ -3,9 +3,10 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const useFloatMenuStore = defineStore("useFloatMenuStore", {
   state: () => ({
-    x: 40,
-    y: 40,
+    x: null,
+    y: null,
     menus: [],
+    firstPosition: ['right', 'bottom', -40, -35],
   }),
   getters: {},
   actions: {},
@@ -13,7 +14,7 @@ export const useFloatMenuStore = defineStore("useFloatMenuStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["x", "y"],
+        // paths: ["x", "y"],
         storage: localStorage,
       },
     ],
