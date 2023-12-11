@@ -39,11 +39,11 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             // 图标编辑元素
             editItem:'',
             // 导航栏尺寸
-            navSize:'100%',
+            navSize:100,
             // 导航栏圆角
-            navRadius:'18',
+            navRadius:18,
             // 图标圆角
-            iconRadius:'12',
+            iconRadius:12,
         }
     },
     actions:{
