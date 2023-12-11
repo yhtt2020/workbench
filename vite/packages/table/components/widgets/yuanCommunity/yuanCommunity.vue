@@ -64,7 +64,7 @@
 
             <!-- {{ customData.defaultForum.value }} -->
         </Widget>
-
+        <!-- {{ showForumPost }} -->
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" @refresh-default-forum="refreshPost"></YuanPublishModal>
             <div v-if="showDetailModal">
@@ -221,6 +221,7 @@ export default {
                 client: false,
                 offline: true,
             },
+            showForumPost:[],
         }
     },
     methods: {
@@ -231,8 +232,8 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
+            this.showForumPost = this.communityPost
             this.isLoading = false
         },
         // 查看内容详情
@@ -327,12 +328,12 @@ export default {
         //     this.customData.forumPost = await this.communityPost.list
         //     return this.customData.forumPost
         // },
-        showForumPost() {
-            // if (this.customData && this.customData.forumPost) {
-            //     return this.customData.forumPost?.slice(0, 10)
-            // }
-            return this.communityPost?.slice(0, 10)
-        },
+        // showForumPost() {
+        //     if (this.customData && this.customData.forumPost) {
+        //         return this.customData.forumPost?.slice(0, 10)
+        //     }
+        //     return this.communityPost?.slice(0, 10)
+        // },
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
                 return 'calc(100% - 65px)'
@@ -367,6 +368,7 @@ export default {
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
         window.addEventListener("resize", this.handleResize)
+        this.showForumPost = this.communityPost
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize)
@@ -387,6 +389,7 @@ export default {
             this.defaultForum = this.customData.defaultForum
             this.defaultSection=this.customData.defaultForum
             this.getCommunityPost(this.customData.defaultForum.value?.id)
+            this.showForumPost = this.communityPost
         },
         immediate: true,
         // 切换频道和圈子时触发获取
