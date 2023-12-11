@@ -57,8 +57,8 @@
       </template>
 
       <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
-
-      <template v-if="floatData?.tree?.length === 0 ">
+      
+      <template v-if="floatData?.isEmptyList">
         <div class="flex items-center justify-center flex-col" v-if="floatData?.role !== 'member'" style="height:450px;">
           <EmptyAdd :no="no"/>
         </div>
@@ -66,11 +66,24 @@
           <a-empty :image="emptyImage" description="这里还没有内容"></a-empty>
         </div>
       </template>
-
+  
       <vue-custom-scrollbar :settings="settingsScroller" style="height:60vh;" v-else>
-         <div v-for="item in floatData?.tree">
-          <template v-if="item.hasOwnProperty('children') || item.role === 'category'">
-            <ChatFold :title="item.name" :content="item" :show="true" :no="no">
+        <template  v-if="singDoubleCol === false && floatData?.channelList.length !== 0">
+          <div class="flex flex-col" :class="floatData?.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+            <div v-for="channel in floatData?.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+              <MenuDropdown :type="channel.type" :no="no" :item="channel"  @currentItem="currentItem"/>
+            </div>
+          </div>
+        </template>
+        <template v-else-if="floatData?.channelList.length !== 0">
+          <div class="flex grid grid-cols-2 gap-1 " :class="floatData?.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+            <div v-for="channel in floatData?.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+              <MenuDropdown :type="channel.type" :no="no" :item="channel" @currentItem="currentItem"/>
+            </div>
+          </div>
+        </template>
+        <div v-for="item in floatData?.categoryList">
+          <ChatFold :title="item.name" :content="item" :show="true" :no="no">
               <div class="flex flex-col" v-if="singDoubleCol === false">
                 <div v-for="children in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
                   <MenuDropdown :type="children.type" :no="no" :item="children" @currentItem="currentItem"/>
@@ -81,26 +94,8 @@
                   <MenuDropdown :type="children.type" :no="no" :item="children" @currentItem="currentItem"/>
                 </div>
               </div>
-            </ChatFold>
-          </template>
-
-          <template v-else>
-            <template  v-if="singDoubleCol === false">
-              <div class="flex flex-col" :class="channelArr.length !== 0 ? 'mb-3' : 'm-0'">
-                <div v-for="channel in channelArr" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-                  <MenuDropdown :type="channel.type" :no="no" :item="channel"  @currentItem="currentItem"/>
-                </div>
-              </div>
-            </template>
-            <template v-else>
-              <div class="flex grid grid-cols-2 gap-1 " :class="channelArr.length !== 0 ? 'mb-3' : 'm-0'">
-                <div v-for="channel in channelArr" :class="{'active-bg': currentID ===item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-                  <MenuDropdown :type="channel.type" :no="no" :item="channel" @currentItem="currentItem"/>
-                </div>
-              </div>
-            </template>
-          </template>
-         </div>
+          </ChatFold>
+        </div>
       </vue-custom-scrollbar>      
     </div>
   </div>
@@ -245,12 +240,17 @@ const floatData = computed(()=>{
     const findTree = _.find(treeArr,function(find){  return String(find.no) === String(no); }); 
     const findNull = findInfo !== undefined ;
     const findTreeNull = findTree !== undefined ;
-    if(findNull){
+    if(findNull && findTreeNull){
       // 定义一个空对象来解构findInfo数据，因为通过 ... 不能直接解构，会产生报错
       const data = { info:findInfo };
+      const list = findTree?.tree;
+      const channelList = _.filter(list,function(find){ return find.role === 'channel' });
+      const categoryList = _.filter(list,function(find){ return find.role === 'category' });
       return {
         ...data.info,
-        tree:findTreeNull ? findTree?.tree : [],
+        isEmptyList:list.length === 0 ? true : false,
+        categoryList:categoryList.length !== 0 ? categoryList : [],
+        channelList:channelList.length !== 0 ? channelList : [],
       }
     }
   }
@@ -281,17 +281,6 @@ const dropMenuList = computed(()=>{
   else{ return adminMenus.value; };
 })
 
-// 获取父级列表
-const channelArr = computed(()=>{
-  const list = floatData.value.tree;
-  const listNull = list.length !== 0;
-  if(listNull){
-    const filterTree = _.filter(list,function(item){ return item.role === 'channel'; })
-    return filterTree
-  }else{
-    return []
-  }
-})
 
 // 当前点击
 const currentItem = (item) =>{

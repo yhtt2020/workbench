@@ -12,6 +12,7 @@ interface ConfirmOptions {
   index?: number;
   mask?: boolean;
   maskIndex?: number;
+  type?: 'error' | 'link' |"success" |"warning"
 }
 
 /**
@@ -29,6 +30,7 @@ interface ConfirmOptions {
  * @param options.index - 动画索引（默认：1001）
  * @param options.mask - 是否显示遮罩层（默认：false）
  * @param options.maskIndex - 遮罩层索引（默认：1000）
+ * @param options.type - icon 的样式类型 （默认：link）
  */
 export const confirm = (
   title: string,
@@ -42,9 +44,10 @@ export const confirm = (
     index: 1001,
     mask: false,
     maskIndex: 1000,
+    type:'link'
   }
 ) => {
-  const { noText, okText, duration, index, mask, maskIndex, ok, no } = options;
+  const { noText, okText, duration, index, mask, maskIndex, ok, no, type} = options;
 
   // 3 把渲染的 vNode 移除
   const close = () => {
@@ -64,6 +67,7 @@ export const confirm = (
     ok,
     no,
     close,
+    type
   });
 
   // 2 render 渲染

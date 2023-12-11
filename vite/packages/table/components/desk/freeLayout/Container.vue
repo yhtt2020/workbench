@@ -3,6 +3,7 @@
 import { ref, watch, toRefs, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
+import { message } from "ant-design-vue";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
@@ -22,8 +23,6 @@ const {
 } = storeToRefs(freeLayoutStore);
 const snowDrag = ref();
 onMounted(() => {
-  console.log("snowDrag :>> ", snowDrag.value);
-
   // setTimeout(() => {
   //   snowDrag.value.forEach((item) => {
   //   console.log("item :>> ", item);
@@ -148,6 +147,13 @@ const dragStop = () => {
     item.snowDragEnd();
   });
 };
+
+const disabledInfo = (data) => {
+  console.log("data :>> ", data);
+  if (data.code == 1) {
+    message.info(data.info);
+  }
+};
 </script>
 
 <template>
@@ -177,6 +183,9 @@ const dragStop = () => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
+      :test="0"
+      @onDisabled="disabledInfo"
+      mode="all"
       ref="snowDrag"
       resetPosition
       parent
@@ -200,7 +209,7 @@ const dragStop = () => {
       :gridStyle="{
         border: '2px solid var(--active-bg)',
       }"
-      :handle="isDrag ? '' : '.#123'"
+      :disabled="isDrag ? false : true"
       @onDragStart="dragStart"
       @onDrag="drag"
       @onDragStop="dragStop"

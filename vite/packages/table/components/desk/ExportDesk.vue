@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="px-8">
-        <span class="title">选择导出桌面：</span>
+        <span class="title">选择导出桌面1：</span>
         <!-- -->
         <a-select
           :bordered="false"
@@ -162,12 +162,12 @@ export default {
     },
     dataInit() {
       this.selectedDesk.forEach(item => {
+        if (this.freeLayoutState[item.id]) {
+          this.selectFreeLayoutData[item.id] = this.freeLayoutData[item.id]
+          this.selectFreeLayoutState[item.id] = this.freeLayoutState[item.id]
+        }
         if(this.defaultType.name === 'notData'){
           this.setData(item)
-          if (this.freeLayoutState[item.id]) {
-            this.selectFreeLayoutData[item.id] = this.freeLayoutData[item.id]
-            this.selectFreeLayoutState[item.id] = this.freeLayoutState[item.id]
-          }
         }
       })
     },
@@ -203,11 +203,12 @@ export default {
       })
     },
     getShareJson() {
-      return JSON.stringify({
+      let obj = {
         desk: this.selectedDesk,
         freeLayoutData: this.selectFreeLayoutData,
         freeLayoutState: this.selectFreeLayoutState
-      })
+      }
+      return JSON.stringify(obj)
     },
   },
   mounted(){

@@ -3,19 +3,19 @@
     name="title"
     :menus="menus"
   >
-    <div style="overflow: hidden">
+    <div id="windowController" style="overflow: hidden">
       <div @click="fixed" :class="{active:alwaysTop}"
-           class="flex pointer rounded-bl-xl  btn-top-active  items-center no-drag">
+           class="flex pointer   btn-top btn-top-active  items-center no-drag" style="border-bottom-left-radius: 8px">
         <Icon icon="Pushpin" style="font-size: 1.2em;zoom:1.1"></Icon>
       </div>
-      <div @click="minimize" class="flex  items-center btn-top-active pointer no-drag">
+      <div @click="minimize" class="flex  items-center btn-top btn-top-active pointer no-drag">
         <MinusOutlined style="font-size: 1.2em;"></MinusOutlined>
       </div>
 
-      <div @click="maximize" class="flex pointer   btn-top-active  items-center no-drag">
+      <div @click="maximize" class="flex pointer btn-top  btn-top-active  items-center no-drag">
         <BorderOutlined style="font-size: 1.2em;zoom:0.9"></BorderOutlined>
       </div>
-      <div @click="close" class="flex btn-top-active  pointer items-center no-drag">
+      <div @click="close" class="flex btn-top-active btn-top  pointer items-center no-drag">
         <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
       </div>
     </div>
@@ -112,13 +112,14 @@ export default {
 .anticon {
   color: var(--primary-text) !important;
 }
-
+.btn-top{
+  line-height: 22px;
+}
 .btn-top-active {
   text-align: center;
-  width: 55px;
+  width: 40px;
   display: inline-block;
   padding: 8px;
-  line-height: 20px;
   // background: var(--active-bg) ;
 
   &:hover {

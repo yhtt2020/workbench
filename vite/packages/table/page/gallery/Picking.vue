@@ -153,7 +153,6 @@
           <div>设为工作台背景</div>
           <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
         </div>
-
       </xt-task>
       </a-col>
 
