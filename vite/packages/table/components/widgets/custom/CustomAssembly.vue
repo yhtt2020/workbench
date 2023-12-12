@@ -40,7 +40,7 @@
           v-else-if="myData.img.src && imgState"
         />
         <img
-          src="/img/addCard/smallWallpaper.png"
+          src="https://a.apps.vip/cards/smallWallpaper.png"
           class="h-full w-full"
           style="border-radius: 8px; object-fit: cover"
           v-else
