@@ -1,24 +1,12 @@
 <template>
     <xt-modal :zIndex="99" title="导航栏设置" :modelValue="modelValue" :mask="false" @no="close" :footer="false">
         <div class=" rounded-xl" :style="{height:`${windowHeight}px`,width:`${windowWidth}px`}">
-            <!-- <div class="flex justify-between w-full h-[32px] items-center ">
-                <div class="flex justify-center w-full">
-                    <div class="ml-8 text-base xt-text">导航栏设置</div>
-                </div>
-                <xt-button class="border-0 rounded-md xt-bg-2 pointer" :w="40" :h="40" @click="close"
-                    style="flex-shrink: 0;">
-                    <div class="flex items-center justify-center">
-                        <newIcon class="text-base xt-text pointer" icon="akar-icons:cross" />
-                    </div>
-                </xt-button>
-            </div> -->
             <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4">
                 <div v-for="(item, index) in navigationPosition">
                     <div class="flex justify-between w-full">
                         <div class="text-base xt-text">{{ item.title }}</div>
-                        <a-switch  v-model:checked="useNavStore.navigationToggle[index]" />
+                        <a-switch  v-model:checked="useNavStore.navigationToggle[index]" @change="hiedNav(index)"/>
                     </div>
-                    <!-- {{ navigationStore.bottomToggle[0] }} -->
                     <div class="mt-3 text-sm xt-text-2">
                         {{ item.description }}
                     </div>
@@ -70,7 +58,7 @@ const navigationStore=useNavigationStore()
 const modelValue = ref(true)
 const windowHeight=ref(480)
 const windowWidth=ref(400)
-const emit = defineEmits(['setQuick'])
+const emit = defineEmits(['setQuick','hiedNav'])
 const close = () => {
     emit('setQuick')
 }
@@ -91,5 +79,14 @@ onMounted(()=>{
 onBeforeUnmount(()=>{
     window.removeEventListener('resize', handleResize)
 })
+const hiedNav=(index)=>{
+    if(index===0 && !useNavStore.navigationToggle[0]){
+        emit('hiedNav','left')
+    }else if(index===1 && !useNavStore.navigationToggle[1]){
+        emit('hiedNav','right')
+    }else if(index===2 && !useNavStore.navigationToggle[2]){
+        emit('hiedNav','foot')
+    }
+}
 </script>
 <style lang='scss' scoped></style>

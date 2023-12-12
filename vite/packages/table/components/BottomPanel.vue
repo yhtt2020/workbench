@@ -153,7 +153,9 @@
       <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team></Team>
       </template>
-      <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      <keep-alive>
+        <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      </keep-alive>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -222,7 +224,7 @@
       <!-- 新版 -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav"></navigationSetting>
       <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
@@ -236,6 +238,7 @@
 
 <script>
 import PanelButton from './PanelButton.vue'
+import { taskStore } from '../apps/task/store'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
@@ -279,7 +282,7 @@ import { Notifications } from '../js/common/sessionNotice'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 export default {
   name: 'BottomPanel',
-  emits: ['getDelIcon'],
+  emits: ['getDelIcon','hiedNavBar'],
   components: {
     ChatButton,
     Emoji,
@@ -393,7 +396,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2] = false },
+          fn: () => { this.$emit('hiedNavBar','foot') },
         },
         {
           id: 4,
@@ -532,6 +535,7 @@ export default {
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(taskStore, ['isTask']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -564,7 +568,7 @@ export default {
           id: 3,
           name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2], this.isTask = !this.isTask }
         },
         {
           id: 4,
@@ -621,7 +625,6 @@ export default {
       }
     },
     simple(newVal, oldVal) {
-      console.log(newVal, oldVal);
       if (newVal && !oldVal) {
         // 当 simple 从关闭变为开启时，关闭所有 bottomToggle
         this.bottomToggle[0] = false;
@@ -642,6 +645,13 @@ export default {
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
         }
+      }
+    },
+    isTask() {
+      if (this.isTask) {
+        this.bottomToggle[2] = true
+      } else {
+        this.bottomToggle[2] = false
       }
     }
   },
@@ -679,6 +689,9 @@ export default {
       } else {
         this.teamVisible = !this.teamVisible
       }
+    },
+    hiedNav(value){
+      this.$emit('hiedNavBar',value)
     },
     showElement(item, index) {
       // console.log(item,index,'====>>>1111');

@@ -280,7 +280,7 @@ onMounted(async () => {
 })
 
 // 选择发帖板块
-const communCate = computed(() => useYuanCommunityStore.myForumList.joined)
+const communCate = computed(() => useYuanCommunityStore.myForumList)
 const selectOptions = ref([]);
 let cascaderValue = ref([])
 // 修改发帖板块
