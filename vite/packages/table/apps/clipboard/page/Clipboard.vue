@@ -290,7 +290,7 @@ export default {
   border: 1px solid var(--divider);
 }
 
-@media screen and (max-width: 1064px) {
+@media screen and (max-width: 1160px) {
   :deep(.tab-item) {
     display: none !important;
   }
