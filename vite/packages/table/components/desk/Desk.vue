@@ -53,7 +53,7 @@
       </FreeLayoutScrollbar>
     </FreeLayoutMask>
     <vue-custom-scrollbar
-      v-else
+    v-show="!isFreeLayout"
       class="no-drag"
       key="scrollbar"
       id="scrollerBar"
@@ -92,7 +92,7 @@
         <vuuri
           v-show="showGrid"
           :key="key"
-          v-if="currentDesk.cards.length > 0 && !hide"
+          v-if="currentDesk.cards.length > 0 && !hide && !isFreeLayout"
           item-key="id"
           :get-item-margin="
             () => {
@@ -553,7 +553,6 @@ export default {
           name: "全屏桌面",
           fn: () => {
             let a = !this.fullScreen;
-            console.log('a :>> ', a);
             this.setFullScreen(a);
           },
         },
