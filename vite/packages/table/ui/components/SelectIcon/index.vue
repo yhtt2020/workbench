@@ -4,8 +4,11 @@
        v-show="modelValue"
        style='width:400px;height:400px;background:var(--modal-bg);
        border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-       border-radius: 10px;z-index: 1000;
-       ' class="float-icon fixed top-1/2 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" id="selectIcon">
+       border-radius: 10px;' 
+       :style="{
+          'z-index': maskIndex + 10,
+        }"
+       class="float-icon fixed top-1/2 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" id="selectIcon">
         <!-- 选择列表 -->
         <div class="top-icon flex">
           <div class="type-select flex" style="color:var(--primary-text)">
