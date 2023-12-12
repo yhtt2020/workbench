@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
   state: () => ({
-    "desk": [
+    "deskDefault": [
       {
           "name": "默认布局",
           "id": "kFe3OXrk",
@@ -540,7 +540,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                               "backgroundIndex": 0
                           }
                       ],
-                      "groupTitle": "分组",
+                      "groupTitle": "网址导航",
                       "zoom": {
                           "state": true,
                           "value": ""
@@ -597,9 +597,59 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                   "data": {}
               },
               {
-                  "name": "weather",
-                  "id": 1701941531127,
-                  "customData": {},
+                  "name": "myIcons",
+                  "id": 1702026795921,
+                  "customData": {
+                      "iconList": [
+                          {
+                              "size": "mini",
+                              "link": "fast",
+                              "linkValue": "",
+                              "open": {
+                                  "type": "default",
+                                  "value": "https://www.yuque.com/dashboard"
+                              },
+                              "isTitle": true,
+                              "titleValue": "语雀",
+                              "src": "https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png",
+                              "isRadius": true,
+                              "radius": 5,
+                              "imgState": "cover",
+                              "imgShape": "square",
+                              "isBackground": false,
+                              "backgroundColor": "",
+                              "backgroundIndex": 0
+                          },
+                          {
+                              "size": "mini",
+                              "link": "fast",
+                              "linkValue": "",
+                              "open": {
+                                  "type": "default",
+                                  "value": "https://shimo.im/desktop"
+                              },
+                              "isTitle": true,
+                              "titleValue": "石墨文档",
+                              "src": "https://as.smvm.cn/from_qbox/favicon.ico",
+                              "isRadius": true,
+                              "radius": 5,
+                              "imgState": "cover",
+                              "imgShape": "square",
+                              "isBackground": false,
+                              "backgroundColor": "",
+                              "backgroundIndex": 0
+                          }
+                      ],
+                      "groupTitle": "桌面软件",
+                      "zoom": {
+                          "state": true,
+                          "value": ""
+                      },
+                      "size": {
+                          "w": "280px",
+                          "h": "204px"
+                      }
+                  },
                   "data": {}
               }
           ],
@@ -675,12 +725,12 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
               "id": 1701927774475,
               "name": "yuanCommunity"
           },
-          "1701941531127": {
+          "1702026795921": {
               "left": 2780,
               "top": 2922,
               "index": 1,
-              "id": 1701941531127,
-              "name": "weather"
+              "id": 1702026795921,
+              "name": "myIcons"
           }
       }
   },
