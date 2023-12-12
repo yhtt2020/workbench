@@ -87,7 +87,7 @@ export default {
   methods: {
     ...mapActions(cardStore, ['updateCustomData']),
     ...mapActions(noteStore, ['saveAppNote', 'noteList', 'selNote']),
-    childEvent (value) {
+    setEditorValue (value) {
       // 子组件中的事件逻辑
       this.contentEditor.setValue(value)
     },
