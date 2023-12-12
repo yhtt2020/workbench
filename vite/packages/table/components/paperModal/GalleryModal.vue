@@ -1,24 +1,24 @@
 <template>
-  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="py-3 pl-0 pr-3" maskIndex="1010" index="1010">
-    <xt-left-menu style="height: 600px;width: 976px;" :list="galleryList" :index="galleryIndex" last="5" end="1">
-      <div class="w-full">
+  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="p-0" maskIndex="1010" index="1010">
+    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 pt-2" w="64" style="height: 600px;width: 976px; margin: 0 !important;border-radius: 12px !important;" :list="galleryList" :index="galleryIndex" last="5" end="1">
+      <div class="w-full xt-bg-2 rounded-r-xl p-2">
         <template v-if="galleryIndex === 'm'">
           <My isModal="true"/>
         </template>
         <template v-if="galleryIndex === 'w'">
-          <SiftPaper />
+          <SiftPaper isModal="true"/>
         </template>
         <template v-if="galleryIndex === 'b'">
-          <Bing/>
+          <Bing isModal="true"/>
         </template>
         <template v-if="galleryIndex === 's'">
-          <Setting />
+          <Setting  isModal="true"/>
         </template>
         <template v-if="galleryIndex === 'p'">
-          <Picking/>
+          <Picking isModal="true"/>
         </template>
         <template v-if="galleryIndex === 'l'">
-          <Lively/>
+          <Lively isModal="true"/>
         </template>
       </div>
     </xt-left-menu>

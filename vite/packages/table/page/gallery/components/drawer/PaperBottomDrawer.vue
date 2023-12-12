@@ -4,7 +4,8 @@
    <a-col :span="3">
     <xt-button h="93" class="btn" @click="setDesktopPaper">
       <div class="flex items-center justify-center flex-col ">
-       <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+       <!-- <Icon style="font-size: 3em" icon="tianjia1"></Icon> -->
+       <xt-new-icon icon="mingcute:windows-line"></xt-new-icon>
        <span class="font-14 font-400 xt-font xt-text">设置桌面壁纸</span>
       </div>
     </xt-button>
@@ -13,7 +14,8 @@
    <a-col :span="3">
     <xt-button h="93" class="btn" @click="download">
      <div class="flex items-center justify-center flex-col ">
-      <Icon style="font-size: 3em" icon="xiazai"></Icon>
+      <!-- <Icon style="font-size: 3em" icon="xiazai"></Icon> -->
+      <xt-new-icon icon="fluent:arrow-download-16-regular"></xt-new-icon>
       <span  class="font-14 font-400 xt-font xt-text">下载壁纸</span>
      </div>
     </xt-button>
@@ -22,7 +24,8 @@
    <a-col :span="3" v-if="!isDel">
     <xt-button h="93" class="btn" @click="deletePaper">
      <div class="flex items-center justify-center flex-col ">
-      <Icon icon="guanbi2" style="font-size: 3em"></Icon>
+      <!-- <Icon icon="guanbi2" style="font-size: 3em"></Icon> -->
+      <xt-new-icon icon="fluent:delete-16-regular"></xt-new-icon>
       <span  class="font-14 font-400 xt-font xt-text">删除该壁纸</span>
      </div>
     </xt-button>
@@ -31,7 +34,8 @@
    <a-col :span="4">
     <xt-button h="93" class="btn relative" @click="setAppPaper">
      <div class="flex items-center justify-center flex-col">
-      <Icon icon="tianjia1" style="font-size: 3em"></Icon>
+      <!-- <Icon icon="tianjia1" style="font-size: 3em"></Icon> -->
+      <xt-new-icon icon="fluent:desktop-16-regular"></xt-new-icon>
       <span  class="font-14 font-400 xt-font xt-text">设为工作台背景</span>
      </div>
      <GradeSmallTip powerType="mainWallpaper"></GradeSmallTip>
@@ -43,7 +47,6 @@
 
 <script>
 import { mapActions,mapWritableState } from 'pinia';
-import { Icon as BottomIcon } from '@iconify/vue';
 import { paperStore } from '../../../../store/paper';
 import { appStore } from '../../../../store';
 import { fileImageExtension } from '../../libs/utils';
@@ -58,7 +61,7 @@ const path = require('path')
 export default {
  props:['isDel','currentPaper'],
 
- components:{ BottomIcon,GradeSmallTip },
+ components:{ GradeSmallTip },
 
  data(){
   return{

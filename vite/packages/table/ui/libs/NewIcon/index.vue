@@ -19,6 +19,7 @@ const props = defineProps({
   w: {
     default: "48",
   },
+  // 图标大小
   size: {
     default: "26",
   },

@@ -1,10 +1,32 @@
 <template>
-  <div class="xt-text flex h-full xt-bg" style="box-sizing: border-box" :class="[typeClass]">
+  <div
+    class="xt-text flex h-full xt-bg"
+    style="box-sizing: border-box"
+    :class="[typeClass]"
+  >
     <!-- 左侧区域开始 -->
-    <div class="flex flex-col items-center h-full xt-br mr-3" style="width: 72px; min-width: 72px;position: relative;">
+    <div
+      class="flex flex-col items-center h-full xt-br"
+      style="position: relative;"
+      :style="{
+        width: w + 'px',
+        'min-width': w + 'px',
+      }"
+      :class="[leftClass,leftMargin]"
+    >
       <div v-for="list in listOption" :class="list?.class">
-        <Float @itemClick="itemClick" :list="item.children" v-for="item in list.array" :data="item">
-          <Box :item="item" :id="currentIndex" :boxClass="list?.boxClass" :model="model">
+        <Float
+          @itemClick="itemClick"
+          :list="item.children"
+          v-for="item in list.array"
+          :data="item"
+        >
+          <Box
+            :item="item"
+            :id="currentIndex"
+            :boxClass="list?.boxClass"
+            :model="model"
+          >
             <Item @fullState="fullState" :item="item" v-bind="list?.itemOption">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
@@ -69,8 +91,18 @@ const props = defineProps({
       ];
     },
   },
+  // 默认选中高亮是路由模式 自定义填写为ID
   model: {
     default: "router",
+  },
+  w: {
+    default: 72,
+  },
+  leftClass:{
+    default:''
+  },
+  leftMargin:{
+    default:'mr-3'
   },
 });
 // 全屏控制
@@ -149,7 +181,8 @@ const fullState = (state) => {
 const itemClick = (item) => {
   if (item.full) {
     return;
-  } if (item?.children) {
+  }
+  if (item?.children) {
     return;
   }
   selectClick(item.id, item.flag);

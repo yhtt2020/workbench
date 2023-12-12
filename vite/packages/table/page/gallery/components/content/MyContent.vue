@@ -27,7 +27,7 @@
            <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>
          </div>
          
-         <div class="absolute right-0 p-2.5" style="top: -10px;">
+         <div class="absolute" style="top: 4px;left: 16px;">
           <xt-button w="32" h="32" class="xt-bg-t-2" style="border-radius: 8px;" @click="addToActive(img)" >
             <a-checkbox :checked="isInActive(img)"></a-checkbox>
           </xt-button>
@@ -77,7 +77,7 @@
  
       myMenus:[
        { 
-         newIcon:'',name:'设置桌面壁纸',
+         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
          callBack:()=>{} 
        },
        {
@@ -91,7 +91,7 @@
          } 
        },
        { 
-         newIcon:'',name:'设为工作台背景',
+         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
          callBack:()=>{} 
        },
       ]
