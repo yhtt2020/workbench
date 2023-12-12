@@ -1,11 +1,11 @@
 <template>
-    <div class="primary-text flex flex-col items-center justify-center w-full h-full">
+    <div class="flex flex-col items-center justify-center w-full h-full primary-text">
         <div>
             <Icon :icon="icons.sleepingFace" width="56" height="56" />
         </div>
         <div class="mt-4">{{ title }}</div>
-        <!-- <div class="btn xt-active-btn mt-4" @click="test">{{ buttonTitle }}</div> -->
-        <div class="btn xt-active-btn mt-4" @click="back">{{ buttonTitle }}</div>
+        <!-- <div class="mt-4 btn xt-active-btn" @click="test">{{ buttonTitle }}</div> -->
+        <div class="mt-4 btn xt-active-btn" @click="back">{{ buttonTitle }}</div>
     </div>
 </template>
   <script>
@@ -20,7 +20,8 @@ import sleepingFace from '@iconify-icons/fluent-emoji/sleeping-face';
     computed: {
 
     },
-    props:['title','buttonTitle','num','back'],
+    props:['title','buttonTitle','num'],
+    emits: ['back'],
     data () {
       return {
         icons: {
@@ -34,7 +35,9 @@ import sleepingFace from '@iconify-icons/fluent-emoji/sleeping-face';
     },
     watch: {},
     methods: {
-
+        back(){
+            this.$emit('back')
+        }
     },
   }
   </script>

@@ -68,6 +68,9 @@ const { fn } = toRefs(props);
 const emits = defineEmits(["close"]);
 const close = (item) => {
   emits("close");
+  console.log(" item :>> ", item);
+  console.log(" item :>> ", item.fn);
+  console.log("props.fn,fn.value :>> ", props.fn, fn.value);
   item && item[fn.value]();
 };
 </script>

@@ -48,9 +48,10 @@
                     </vue-custom-scrollbar>
 
                 </div>
-                <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
-                    @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu>
+                <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" ></DataStatu> -->
+                <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
             </div>
+            <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
             <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
                 @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu> -->
             <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
@@ -64,9 +65,10 @@
 
             <!-- {{ customData.defaultForum.value }} -->
         </Widget>
-
+        <!-- {{ showForumPost }} -->
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible" @refresh-default-forum="refreshPost"></YuanPublishModal>
+            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
+                @refreshDefaultForum="refreshPost"></YuanPublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -93,7 +95,7 @@
                 最多支持选择在卡片上的展示5个圈子
             </div>
             <!-- {{ selectForumList }}  @change="handleChange(selectValue)" -->
-            <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass"
+            <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass" 
                 style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" :bordered="false"
                 @deselect="handleDeselect(selectValue)" @select="handleChange(selectValue)">
                 <a-select-option :value="index" v-for="(item, index) in forumList"
@@ -130,6 +132,7 @@ import { mapWritableState, mapActions } from 'pinia';
 import { useCommunityStore } from '../../../page/chat/commun'
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import DataStatu from "../DataStatu.vue"
+import Unusual from '../Unusual.vue'
 import YuanPublishModal from './YuanPublishModal.vue';
 import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
 import detailModal from './DetailModal.vue'
@@ -145,7 +148,8 @@ export default {
         YuanPublishModal,
         YuanHorizontalPanel,
         detailModal,
-        MinDetailModal
+        MinDetailModal,
+        Unusual
     },
     props: {
         customIndex: {
@@ -201,7 +205,7 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: {index:0,value:{name:'版本更新',id:100304}},
+            defaultForum: { index: 0, value: { name: '版本更新', id: 100304 } },
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -221,6 +225,7 @@ export default {
                 client: false,
                 offline: true,
             },
+            showForumPost: [],
         }
     },
     methods: {
@@ -231,8 +236,8 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.defaultForum);
             await this.getCommunityPost(this.defaultForum.value?.id)
+            this.showForumPost = this.communityPost
             this.isLoading = false
         },
         // 查看内容详情
@@ -243,8 +248,8 @@ export default {
             // console.log(this.cardData);
         },
         closeDetail(value) {
-            this.communityPostDetail=[]
-            this.communityReply=[]
+            this.communityPostDetail = []
+            this.communityReply = []
             this.showDetailModal = value
         },
         // 选择板块
@@ -256,14 +261,13 @@ export default {
                     value: this.forumList[item]
                 };
 
-                if (!this.selectList.some((el) => el.value === newItem.value)) {
+                if (!this.selectList.some((el) => el.value.id === newItem.value.id)) {
                     this.selectList.push(newItem);
                 }
             });
-            // console.log(this.selectList);
             let temp = this.selectList;
             this.customData.selectList = temp;
-            this.forumsList=this.customData.selectList
+            this.forumsList = this.customData.selectList
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -294,10 +298,14 @@ export default {
                 this.toggleDetail = false
             }
         },
+        backSetting(){
+            this.settingVisible = true
+            this.$refs.cardSlot.visible = false
+        }
     },
     computed: {
-        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList','forumsList','defaultSection']),
-        ...mapWritableState(useCommunityStore,['communityReply','communityPostDetail']),
+        ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList', 'forumsList', 'defaultSection']),
+        ...mapWritableState(useCommunityStore, ['communityReply', 'communityPostDetail']),
         // 判断尺寸大小
         showSize() {
             if (this.customData && this.customData.width && this.customData.height) {
@@ -327,12 +335,12 @@ export default {
         //     this.customData.forumPost = await this.communityPost.list
         //     return this.customData.forumPost
         // },
-        showForumPost() {
-            // if (this.customData && this.customData.forumPost) {
-            //     return this.customData.forumPost?.slice(0, 10)
-            // }
-            return this.communityPost?.slice(0, 10)
-        },
+        // showForumPost() {
+        //     if (this.customData && this.customData.forumPost) {
+        //         return this.customData.forumPost?.slice(0, 10)
+        //     }
+        //     return this.communityPost?.slice(0, 10)
+        // },
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
                 return 'calc(100% - 65px)'
@@ -352,7 +360,7 @@ export default {
         } else if (this.customData && this.customData.selectList) {
             // console.log(this.customData.selectList,'2')
             this.defaultForum = this.customData.selectList[0]
-        }else{
+        } else {
             // return this.defaultForum
             this.selectList.push(this.defaultForum)
             this.customData.selectList = this.selectList
@@ -367,6 +375,7 @@ export default {
         // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
         this.isLoading = false
         window.addEventListener("resize", this.handleResize)
+        this.showForumPost = this.communityPost
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize)
@@ -385,8 +394,13 @@ export default {
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
             this.defaultForum = this.customData.defaultForum
-            this.defaultSection=this.customData.defaultForum
-            this.getCommunityPost(this.customData.defaultForum.value?.id)
+            this.defaultSection = this.customData.defaultForum
+            this.isLoading=true
+            this.getCommunityPost(this.customData.defaultForum.value?.id).then(() => {
+                this.showForumPost = this.communityPost;
+                this.isLoading=false
+            })
+            // this.showForumPost = this.communityPost
         },
         immediate: true,
         // 切换频道和圈子时触发获取
@@ -407,13 +421,13 @@ export default {
                 }
             }
         },
-        settingVisible(){
+        settingVisible() {
             // 加载已选择的模块
-        if (this.customData && this.customData.selectList && this.settingVisible==true) {
-            this.selectValue = this.customData.selectList.map((item) => {
-                return item.index
-            })
-        }
+            if (this.customData && this.customData.selectList && this.settingVisible == true) {
+                this.selectValue = this.customData.selectList.map((item) => {
+                    return item.index
+                })
+            }
         }
     }
 }
@@ -443,6 +457,4 @@ export default {
         height: 28px;
     }
 }
-
-
 </style>

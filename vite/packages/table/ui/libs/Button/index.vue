@@ -8,7 +8,8 @@
       width: block ? '100%' : w + 'px',
       height: h + 'px',
       'border-radius': radius + 'px',
-    }">
+    }"
+  >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
       <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
     </slot>
@@ -70,7 +71,6 @@ const emits = defineEmits(["click"]);
 const handleClick = useThrottleFn(() => {
   copyToClipboard();
   emits("click");
-
 }, throttleTime.value);
 
 const buttonStyle = computed(() => {
@@ -81,21 +81,8 @@ const buttonStyle = computed(() => {
 
 function copyToClipboard() {
   if (!copy.value) return;
-
-  if (navigator.clipboard) {
-    try {
-      navigator.clipboard.writeText(copy.value);
-      message.success("已成功复制到剪切板");
-    } catch (error) {
-      message.error("无法复制文本到剪切板:", error);
-    }
-  } else {
-    if (copyStr(copy.value)) {
-      message.success("已成功复制到剪切板");
-    } else {
-      message.error("复制到剪切板失败");
-    }
-  }
+  require("electron").clipboard.writeText(copy.value);
+  message.success("已成功复制到剪切板");
 }
 
 function copyStr(text) {

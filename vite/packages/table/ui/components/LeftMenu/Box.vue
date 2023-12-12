@@ -5,7 +5,7 @@
     class="xt-base-btn menu-item relative "
     style=""
   >
-    <div class="rounded-full flex items-center justify-center font-400" v-if="item.unread !== 0 && item.hasOwnProperty('unread')"
+    <div class="rounded-full flex items-center justify-center font-400 xt-active-text" v-if="item.unread !== 0 && item.hasOwnProperty('unread')"
      style="width:18px;height: 18px; position: absolute; background:red;font-size: 10px;z-index: 50;top: -4px;right: -4px;">
      {{ item.unread }}
     </div>

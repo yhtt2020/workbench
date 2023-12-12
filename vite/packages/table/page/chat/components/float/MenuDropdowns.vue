@@ -16,7 +16,7 @@
       <CommunityIcon  icon="fluent:open-20-filled" class="ml-1 xt-text-2 flip " style="font-size: 1.2rem;"
        v-if="item.type === 'link' && item.name !== 'Roadmap' && item.props?.openMethod !== 'currentPage'"/>
        <div style="width:12px;height: 12px;background: red; font-size: 10px;text-align: center;" 
-        class="rounded-full flex items-center justify-center ml-2"   v-if="unread !== null && unread !== 0"
+        class="rounded-full flex items-center justify-center ml-2 xt-active-text"   v-if="unread !== null && unread !== 0"
        >
         {{ unread }}
        </div>

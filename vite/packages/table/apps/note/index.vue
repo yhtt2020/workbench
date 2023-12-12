@@ -3,10 +3,10 @@
     <LeftTab>
       <div class="h-full w-full flex">
         <div class="flex h-full">
-          <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
+          <LeftSearch :changeEditorValue="changeEditorValue" :selDesk="selDesk" :menus="menus"></LeftSearch>
         </div>
         <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-          <NoteContent :menus="menus" :selDesk="selDesk"
+          <NoteContent :menus="menus" :selDesk="selDesk" ref="content"
                        v-if="this.selNote>=0 && this.noteList.length >0"></NoteContent>
         </div>
       </div>
@@ -56,7 +56,7 @@
 
       <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
         <div class="flex" style="width: 800px;height: 600px;">
-          <history-list :noteId="noteList[selNote]._id"></history-list>
+          <history-list :changeEditorValue="changeEditorValue" :showVersion="showVersion" :changeShowVersion="changeShowVersion" :noteId="noteList[selNote]._id"></history-list>
         </div>
 
       </Modal>
@@ -189,7 +189,7 @@ export default {
           }
         },
         {
-          label: this.isTrash?'还原':'添加到桌面',
+          label: this.isTrash?'还原':this.noteList[this.selNote]?.deskName?'切换桌面':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
             if (this.isTrash) {
@@ -250,6 +250,14 @@ export default {
   },
   methods: {
     ...mapActions(noteStore, ['getNotes', 'switchDesk', 'selDesk', 'restore', 'moveToTrash', 'deleteNote']),
+    // 修改编辑器的值
+    changeEditorValue(value){
+      this.$refs.content.changeValue(value)
+    },
+    // 隐藏版本历史
+    changeShowVersion(flag){
+      this.showVersion = flag
+    },
     // 选择便签
     changeSelIndex (n) {
       this.selIndex = n

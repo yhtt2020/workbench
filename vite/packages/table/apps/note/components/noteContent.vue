@@ -143,6 +143,10 @@ export default {
     ...mapActions(cardStore, ['updateCustomData']),
     ...mapActions(noteStore, ['saveNoteDb', 'getNotes', 'addNoteToDesk', 'changeBg', 'moveToTrash', 'restore', 'deleteNote']),
     formatTime,
+    // 修改编辑器的值
+    changeValue(value){
+      this.$refs.editor?.setEditorValue(value)
+    },
     changeIsFull () {
       this.isFull = !this.isFull
     },
@@ -203,7 +207,7 @@ export default {
       }
     },
     watchEditorValue (value) {
-      this.$refs.editor?.childEvent(value)
+      this.$refs.editor?.setEditorValue(value)
     },
 
   },
