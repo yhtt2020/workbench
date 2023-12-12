@@ -9,11 +9,18 @@
                             :style="[{ zoom: item.zoom * 1.8 + '%' }]">
                     </div>
                     <div class="size xt-active-bg-2 xt-text-2">{{ item.size }}</div>
-                    <div class="add-btn no-drag xt-active-btn" @click="addCard(item, index)">
+
+                    <xt-button h="48" w="142" type="theme" @click="addCard(item, index)">
+                        <div class="flex item-center justify-center">
+                            <xt-new-icon icon="fluent:add-circle-12-filled" class="mr-2" style="color: var(--active-text) !important;"></xt-new-icon>
+                            <span class="xt-active-text xt-font font-16 font-400">立即添加</span>
+                        </div>
+                    </xt-button>
+                    <!-- <div class="add-btn no-drag xt-active-btn" @click="addCard(item, index)">
                         <div class="icons">
                             <Icon icon="tianjia2" style="color: #000;font-size: 12px;"></Icon>
                         </div>立即添加
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="btn no-drag xt-bg xt-text" @click="onBack">
@@ -33,11 +40,8 @@ export default {
         },
     },
     methods: {
-        getImg(url) {
-            return 'https://a.apps.vip/cards/' + url + '.png'
-        },
+        getImg(url) { return 'https://a.apps.vip/cards/' + url + '.png';},
         addCard(item, index) {
-            console.log('执行......排查-3',this.cardDetails,index);
             this.onBack()
             this.$emit("addCardAchieve", this.cardDetails, index)
         },
@@ -57,7 +61,6 @@ export default {
                 return {height: '320px'}
             }
         }
-
     }
 }
 </script>
