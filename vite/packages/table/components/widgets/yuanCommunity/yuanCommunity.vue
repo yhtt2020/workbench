@@ -261,11 +261,10 @@ export default {
                     value: this.forumList[item]
                 };
 
-                if (!this.selectList.some((el) => el.value === newItem.value)) {
+                if (!this.selectList.some((el) => el.value.id === newItem.value.id)) {
                     this.selectList.push(newItem);
                 }
             });
-            // console.log(this.selectList);
             let temp = this.selectList;
             this.customData.selectList = temp;
             this.forumsList = this.customData.selectList
