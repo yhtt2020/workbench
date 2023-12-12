@@ -35,11 +35,12 @@
           <div class="mb-10 xt-text-2">如遇网络问题，请检查系统代理或耐心等待。</div>
           <a-row :gutter="10" class="w-full">
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button>
+              <!-- <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button> -->
+              <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
-            <a-col flex="1">
+            <!-- <a-col flex="1">
               <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
-            </a-col>
+            </a-col> -->
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
@@ -108,23 +109,21 @@ export default {
     }
   },
   async mounted () {
-    // 暂时直接跳转到新登录
-
+    // 暂时直接跳转到新登录(可能修复了，代码之后再删)
     // this.$router.replace({ name: 'wizard' })
-    setTimeout(() => {
-      if(this.init){
-        this.$router.replace({ name: 'home' })
-      }else{
-        this.$router.replace({ name: 'wizard' })
-      }
+    // setTimeout(() => {
+    //   if(this.init){
+    //     this.$router.replace({ name: 'home' })
+    //   }else{
+    //     this.$router.replace({ name: 'wizard' })
+    //   }
 
-      // if (window.$isOffline && this.init) {
-      //   this.$router.replace({ name: 'home' })
-      //   this.launching = false
-      //   // 暂时还没有排查到卡顿原因
-      // }
-    }, 2000)
-    console.log('userinfo',this.userInfo.uid);
+    //   // if (window.$isOffline && this.init) {
+    //   //   this.$router.replace({ name: 'home' })
+    //   //   this.launching = false
+    //   //   // 暂时还没有排查到卡顿原因
+    //   // }
+    // }, 2000)
     if(this.userInfo.uid){
       this.timeout()
     }
@@ -224,10 +223,25 @@ export default {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
-            this.$router.replace(currentRoute)
+            // 处理分屏情况下默认跳转到wizard的问题
+            if(currentRoute.name == 'wizard' && !isMain()){
+              this.$router.replace({ name: 'home' })
+            }else{
+              this.$router.replace(currentRoute)
+            }
           }
         } else {
           this.$router.replace({ name: 'home' })
+        }
+      }else{
+        // 处理分屏情况下默认读取不到存储的问题
+        if(!isMain()){
+        const currentRoute = appStore().currentRoute
+          if(currentRoute.name == 'wizard' || currentRoute.name == 'splash'){
+            this.$router.replace({ name: 'home' })
+          }else{
+            this.$router.replace(currentRoute)
+          }       
         }
       }
 
@@ -278,6 +292,9 @@ export default {
     },
 
     async afterLaunch () {
+      if(!this.init && isMain()){
+        this.$router.replace({ name: 'wizard' })
+      }
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()

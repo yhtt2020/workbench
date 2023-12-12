@@ -9,7 +9,7 @@
     @click="handleOpenMenu($event, 'click')"
     @contextmenu="handleOpenMenu($event, 'contextmenu')"
   >
-  <!-- <div ref="containerRef" @mouseup="handleMouseUp($event)"> -->
+    <!-- <div ref="containerRef" @mouseup="handleMouseUp($event)"> -->
     <slot></slot>
     <teleport to="body">
       <Transition
@@ -128,6 +128,7 @@ const menuX = ref(0);
 const menuY = ref(0);
 
 function handleOpenMenu(e: any, currentModel: string) {
+
   if (!beforeCreate.value()) return;
 
   if (stopPropagation.value) {
@@ -136,9 +137,11 @@ function handleOpenMenu(e: any, currentModel: string) {
   }
 
   if (model.value != currentModel && model.value != "all") return;
+
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
+
   emits("mounted");
 }
 
@@ -224,12 +227,16 @@ const pos = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("click", handleCloseMenu , { capture: true } );
-  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
+  window.addEventListener("click", handleCloseMenu, { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
 onBeforeUnmount(() => {
-  window.addEventListener("click", handleCloseMenu  , { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu  , { capture: true });
+  window.addEventListener("click", handleCloseMenu, { capture: true });
+  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+});
+
+defineExpose({
+  handleOpenMenu,
 });
 </script>
 

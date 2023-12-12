@@ -53,7 +53,8 @@
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
     <div v-else>
-      <div class="fixed inset-0  none-bg" style="z-index: -1">
+      <!-- 修改默认壁纸 -->
+      <div class="fixed inset-0  none-bg default-bg" style="z-index: -1">
       </div>
     </div>
   </template>
@@ -375,6 +376,14 @@ export default {
 
 .a-container {
   width: 100%;
+}
+
+.default-bg{
+    background-image:url('https://a.apps.vip/icons/defaultBackground.jpg') !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+
 }
 </style>
 

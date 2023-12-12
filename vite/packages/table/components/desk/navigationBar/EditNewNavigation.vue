@@ -400,6 +400,8 @@ export default {
         },
         otherList() {
             const sideBarTag = this.navList[this.currentIndex].tag;
+            console.log('this.webList',this.webList)
+            console.log('this.filterList',this.filterList)
             if (sideBarTag === 'recommendation' || this.currentTitle === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {

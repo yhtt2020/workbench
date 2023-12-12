@@ -82,7 +82,7 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
+   <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
@@ -97,7 +97,7 @@
             <xt-task id="M0103" no="4" to="" @cb="goPaper">
               <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
             </xt-task>
-            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">清除背景</xt-button>
+            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">还原背景</xt-button>
           </div>
           <hr class="my-4" />
 
@@ -225,11 +225,11 @@ import { cardStore } from "../store/card";
 import vuuri from "../components/vuuriHome/Vuuri.vue";
 import Widget from "../components/muuri/Widget.vue";
 import { message, Modal } from "ant-design-vue";
-import CPULineChart from "../components/widgets/supervisory/CPULineChart.vue";
-import CPUFourCard from "../components/widgets/supervisory/CPUFourCard.vue";
-import InternalList from "../components/widgets/supervisory/InternalList.vue";
-import SmallCPUCard from "../components/widgets/supervisory/SmallCPUCard.vue";
-import SmallGPUCard from "../components/widgets/supervisory/SmallGPUCard.vue";
+import CPULineChart from "../apps/inspector/widget/CPULineChart.vue";
+import CPUFourCard from "../apps/inspector/widget/CPUFourCard.vue";
+import InternalList from "../apps/inspector/widget/InternalList.vue";
+import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
+import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
@@ -495,11 +495,13 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
+      deskInit:'deskInit',
+
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
-    ...mapWritableState(defaultFreeLayoutStore, ['desk', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
+    ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
 
     desksList() {
       return this.desks.map((desk) => {
@@ -524,9 +526,8 @@ export default {
         });
         return find;
       } else {
-        return {
-          cards: [],
-        };
+        this.currentDeskId=this.desks[0].id
+        return this.desks[0];
       }
     },
   },
@@ -537,7 +538,7 @@ export default {
       this.hasTriggered++;
     }
   },
-  mounted() {
+  async mounted() {
     this.replaceIcon();
     // setTimeout(() => {
     //   this.replaceIcon()
@@ -562,8 +563,12 @@ export default {
         n++;
       }, 1000);
     }
-    // 新用户第一次进入加载一个默认桌面
-    this.addFreeLayoutDesk()
+    // 判断是否是第一次加载
+    if(this.deskInit){
+      this.addFreeLayoutDesk()
+      // 新用户第一次进入加载一个默认桌面
+      this.deskInit = false
+    }
 
     // let counte=0
     // const counter=setInterval(()=>{
@@ -853,6 +858,7 @@ export default {
 
     clearWallpaper() {
       this.setBackgroundImage({ path: "" });
+      message.success('已为您恢复默认背景')
       // const value = cache.get("style")
       // document.documentElement.classList.remove(value);
       // cache.set("background","-no")
@@ -982,11 +988,12 @@ export default {
     //   }
     // },
 
-    // 第一次登录默认数据  
+    // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
+        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
-          let deskTmp = _.cloneDeep(this.desk[0]);
+          let deskTmp = _.cloneDeep(this.deskDefault[0]);
           let oldId = deskTmp.id
           let cardZoom = ((deskTmp.settings.zoom * 10) / deskTmp.deskHeight).toFixed();
           deskTmp.settings.zoom = parseInt(cardZoom);
@@ -995,13 +1002,55 @@ export default {
             this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId]
             this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId]
           }
-          if (deskTmp.cards.length) {
-            this.desks[0] = deskTmp
-          }
+          this.desks[0] = deskTmp
           this.currentDeskId = deskTmp.id
+          this.addApptoDesk()
           this.currentInit = false
         }, 2000)
       }
+    },
+
+    // 第一次登录加载桌面应用
+    async addApptoDesk(){
+      const desktopApps = await ipc.sendSync('getDeskApps')
+      let appList = []
+      desktopApps.forEach(i=>{
+        if(i.ext == '.exe'){
+          appList.push(i)
+        }
+      })
+      let appListHandle = []
+      appList.forEach(item=>{
+        let obj = {
+          backgroundColor: '',
+          backgroundIndex: 0,
+          imgShape: "square",
+          imgState: "cover",
+          isBackground: false,
+          isRadius: true,
+          isTitle: true,
+          link: "fast",
+          linkValue: "",
+          radius: 5,
+          size: "mini",
+          // 图标
+          src: item.icon,
+          // 标题
+          titleValue: item.name,
+          open:{
+            type:"default",
+            // 网址
+            value:item.path
+          }
+        }
+        appListHandle.push(obj)
+      })
+      this.desks[0].cards.forEach((item,index)=>{
+        // 直接修改默认数据
+        if(item.id == '1702026795921'){
+          this.desks[0].cards[index].customData.iconList = appListHandle
+        }
+      })
     },
 
     showSetting() {

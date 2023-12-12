@@ -1,78 +1,79 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full top-shadow drag">
-    <div id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex flex-1 pl-2.5 drag  items-center">
-     <div class="no-drag flex">
-      <a-tooltip>
-       <QueueWidget></QueueWidget>
-     </a-tooltip>
-      <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
-        <xt-button w="28" h="28" class="xt-bg-t-2 mr-2.5" style="border-radius:6px !important;"  @click="enterClipboard">
-          <div class="flex items-center justify-center">
-            <TopIcon style="font-size:20px;" class="xt-text" icon="fluent:clipboard-bullet-list-16-regular"/>
-          </div>
-        </xt-button>
-      </a-tooltip>
+  <div id="topBar" class="flex items-center justify-between w-full top-shadow drag pt-1">
 
-      <a-tooltip title="音乐播放中，点击进入应用，右键查看全部">
-        <xt-button h="28"  class="xt-bg-t-2 mr-2.5"  v-if="status.music.playing && status.music.title && status.music" style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
-        @click="enterMusic"
-       >
-         <div class="flex items-center justify-center">
-           <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
-           <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">
+      <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex min-h flex-1 pl-2.5 drag  items-center">
+        <div class="no-drag flex">
+          <a-tooltip>
+            <QueueWidget></QueueWidget>
+          </a-tooltip>
+          <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
+            <xt-button w="28" h="28" class="xt-bg-t-2 mr-2.5" style="border-radius:6px !important;"  @click="enterClipboard">
+              <div class="flex items-center justify-center">
+                <TopIcon style="font-size:20px;" class="xt-text" icon="fluent:clipboard-bullet-list-16-regular"/>
+              </div>
+            </xt-button>
+          </a-tooltip>
+
+          <a-tooltip title="音乐播放中，点击进入应用，右键查看全部">
+            <xt-button h="28"  class="xt-bg-t-2 mr-2.5"  v-if="status.music.playing && status.music.title && status.music" style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+                       @click="enterMusic"
+            >
+              <div class="flex items-center justify-center">
+                <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
+                <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">
              {{ status.music.title }} {{ status.music.singer }}
            </span>
-         </div>
-       </xt-button>
-      </a-tooltip>
+              </div>
+            </xt-button>
+          </a-tooltip>
 
-      <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)"
-       style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
-      >
-       <div class="flex items-center justify-center">
-         <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
-         <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
-       </div>
-      </xt-button>
+          <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)"
+                     style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
+          >
+            <div class="flex items-center justify-center">
+              <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
+              <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
+            </div>
+          </xt-button>
 
-      <TopCourier />
+          <TopCourier />
 
-      <TopClockTimer/>
+          <TopClockTimer/>
 
-      <TopTomato />
-    </div>
-    </div>
-
-    <div id="topCenterPart" class="flex max-search drag" hidden="">
-      <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
-        style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
-        <Icon icon="sousuo"></Icon>
+          <TopTomato />
+        </div>
       </div>
-    </div>
 
-    <div id="topRightPart" class="flex items-center drag justify-end relative pt-2">
-      <PaperLock></PaperLock>
-      <TopPanelButton/>
+      <div v-if="isMain || (appSettings.showTopPanel)" id="topCenterPart" class="flex max-search drag min-h" hidden="">
+        <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
+             style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
+          <Icon icon="sousuo"></Icon>
+        </div>
+      </div>
 
-      <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 236px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
-       class="no-drag btn-hover category-button p-1 rounded-md pointer"
-      >
-        <div class="flex items-center" style="max-width:270px;">
+      <div v-if="isMain || (appSettings.showTopPanel)" id="topRightPart" class="flex min-h items-center drag justify-end relative ">
+        <PaperLock></PaperLock>
+        <TopPanelButton/>
 
-          <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
-          <div class="xt-text font-14  xt-font">
-           <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
-           <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
-            <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
+        <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
+              class="no-drag btn-hover category-button p-1 rounded-md pointer"
+        >
+          <div class="flex items-center" style="max-width:270px;">
+
+            <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
+            <div class="xt-text font-14  xt-font">
+              <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+              <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
+                <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
            </span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="h-5" v-if="showWindowController">&nbsp;</div>
-      <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" v-if="showWindowController" id="windowController" >
-        <WindowController></WindowController>
 
-      </div>
+    <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag z-10" v-if="showWindowController" id="windowController" >
+      <WindowController></WindowController>
+
     </div>
   </div>
 
@@ -294,7 +295,6 @@ export default {
 }
 
 .primary-title {
-
   font-size: 14px;
   font-weight: 500;
 }
@@ -376,5 +376,8 @@ export default {
   &:hover{
    background: var(--secondary-transp-bg) !important;
   }
+}
+.min-h{
+  min-height: 28px;
 }
 </style>

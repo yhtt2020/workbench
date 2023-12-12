@@ -1018,7 +1018,8 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
-        delay: 100,
+        delay: 50,
+        delayOnTouchOnly: true,
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()

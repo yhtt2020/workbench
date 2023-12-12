@@ -29,7 +29,7 @@
           <div class="mr-4">
             <xt-new-icon
               icon="fluent:info-12-filled"
-              style="color: var(--link) !important"
+              :style="[typeStyle]"
             />
           </div>
           <span>{{ title }}</span>
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 // confirm 是可以通过方法调用来展示的 需要手动导入组件
-import { ref, toRefs, onMounted } from "vue";
+import { ref, toRefs, onMounted ,computed} from "vue";
 import XtButton from "../../libs/Button/index.vue";
 import XtNewIcon from "../../libs/NewIcon/index.vue";
 export interface ConfirmProps {
@@ -86,7 +86,11 @@ export interface ConfirmProps {
   ok?: Function;
   // 关闭 confirm 的回调
   close?: Function;
+  // icon 的样式类型 （默认：link）
+  type?: 'error' | 'link' |"success" |"warning"
 }
+
+
 const props = withDefaults(defineProps<ConfirmProps>(), {
   title: "",
   content: "",
@@ -99,14 +103,18 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   no: () => {},
   ok: () => {},
   close: () => {},
+  type:"success"
 });
-const { close, duration, no, ok }: any = toRefs(props);
+const { close, duration, no, ok,type }: any = toRefs(props);
 // 控制显示
 const isVisible = ref(false);
 const show = () => {
   isVisible.value = true;
 };
+const typeStyle = computed(()=>{
 
+  return { color: `var(--${type.value})  !important`}
+})
 /**
  * 组件挂载时执行
  * 处理动画（render 渲染函数会直接执行）

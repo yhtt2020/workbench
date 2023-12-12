@@ -308,7 +308,7 @@ export const cardStore = defineStore(
         //   return item.nanoid === this.currentDeskIndex.name
         // })
         // 便签卡片需要进行db存储
-        if (card.name == 'notes' && noteStore().initFlag && !flag) {
+        if (card.name == 'notes' && !flag) {
           let obj: any = {
             ...card,
             customData: {
