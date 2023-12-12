@@ -1,10 +1,10 @@
 <template>
     <SettingModal @setQuick="setQuick">
         <template #custom>
-            <component :is="componentId" :title="title"></component>
+            <component :is="componentId" :title="title" :editItem="editItem"></component>
         </template>
         <template #exterior>
-            <CustomBg></CustomBg>
+            <CustomBg :editItem="editItem"></CustomBg>
         </template>
     </SettingModal>
 </template>

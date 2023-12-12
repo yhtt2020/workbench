@@ -5,7 +5,7 @@
             <div class="text-base xt-text">图标链接</div>
             <div class="mt-2 mb-2 text-sm xt-text-2">自定义图标打开链接，支持网站地址或本地文件快捷方式类型。</div>
             <RadioTab :navList="iconLink" v-model:selectType="defaultLink" :bgColor="'xt-bg'" :height="40"/>
-            <a-input allow-clear v-model:value="linkValue" placeholder="https://www.baidu.com" class="h-[40px]  w-full mt-3 input"></a-input>
+            <a-input allow-clear v-model:value="linkValue" placeholder="请输入网址" class="h-[40px]  w-full mt-3 input"></a-input>
             <!-- <hr class="mt-4 h-[1px] mb-4" style="background-color: var(--divider);"> -->
             <div class="w-full h-[1px] mt-4 mb-4" style="background: var(--divider);"></div>
             <div class="text-base xt-text">打开方式</div>
@@ -16,13 +16,19 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,onMounted } from 'vue'
 import RadioTab from '../../../../../RadioTab.vue';
 const iconLink=ref([{title:'网站链接'},{title:'系统程序或文件'}])
 const openWay = ref([{title:'内置浏览器'},{title:"默认浏览器"},{title:'想天浏览器'}])
 const defaultLink=ref({title:'网站链接'})
-const defaultWay=ref({title:'内置浏览器'})
+const defaultWay=ref({title:'默认浏览器'})
 const linkValue=ref('')
+const props=defineProps({
+    editItem:Object
+})
+onMounted(()=>{
+    linkValue.value=props.editItem.url
+})
 </script>
 <style lang='scss' scoped>
 .input{

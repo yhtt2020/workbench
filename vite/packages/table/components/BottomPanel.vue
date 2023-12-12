@@ -67,13 +67,14 @@
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
                         <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'" :style="{borderRadius:iconRadius+'px'}"
-                          class="relative flex items-center justify-center rounded-lg ">
-                          <a-avatar :size="52" shape="square" :src="item.icon"
+                          class="relative flex items-center justify-center ">
+                          <a-avatar :size="52" shape="square" :src="item.icon" :style="{borderRadius:iconRadius+'px'}"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                         <div v-else style="width: 52px; height: 52px;"
-                          class="relative flex items-center justify-center rounded-xl">
-                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
+                          class="relative flex items-center justify-center rounded-xl" :style="{background:item.bgColor || ''}">
+                          <!-- {{ item.bgColor ? '' : item.name }} -->
+                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)" :style="{borderRadius:iconRadius+'px'}"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
