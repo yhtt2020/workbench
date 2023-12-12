@@ -111,7 +111,6 @@
       </div>
     </div>
 
-
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
       <xt-task :modelValue="getStep" :mask="false" />
       <Desk

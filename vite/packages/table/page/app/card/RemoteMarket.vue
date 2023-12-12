@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="left no-drag" @click="fullScreen(custom)">
-            <img :src="getImg(custom.option[0].name)" alt="" :style="{ zoom: '6%' }"/>
+            <img :src="getImg(custom.option[0].imgName)" alt="" :style="{ zoom: '6%' }"/>
             <span class="size-bg">{{ custom.option[0].size }}</span>
           </div>
           <div class="right" style="">
@@ -85,7 +85,7 @@
         this.$emit('closeMarket',false)
       },
       getImg(url) {
-        return "/img/addCard/" + url + ".png";
+        return "https://a.apps.vip/cards/" + url + ".png";
       },
       addNewCard(item) {
         if (item.option[1] != undefined) {

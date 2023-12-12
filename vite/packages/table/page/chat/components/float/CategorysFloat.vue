@@ -235,7 +235,7 @@ const floatData = computed(()=>{
   const treeArr  = community.value.communityTree;
   const arrNull = infoArr.length !== 0;
   if(arrNull){
-    const no = route.params.no;
+    const no = settings.value.enableHide ? props.no : route.params.no;
     const findInfo = _.find(infoArr,function(find){ return String(find.no) === String(no); });
     const findTree = _.find(treeArr,function(find){  return String(find.no) === String(no); }); 
     const findNull = findInfo !== undefined ;

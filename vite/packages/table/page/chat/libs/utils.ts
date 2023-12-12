@@ -37,7 +37,7 @@ export function updateTree(list:any){
         if(isGroup){
           const jsonItem = JSON.parse(mapItem.props);
           const result:any = getUnReadCount(jsonItem.groupID);
-          const option = {...mapItem,props:{...jsonItem,unread:result.unreadCount}};
+          const option = {...mapItem,props:{...jsonItem,unread:result?.unreadCount}};
           return option;
         }
         else {
