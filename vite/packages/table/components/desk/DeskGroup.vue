@@ -688,26 +688,7 @@ export default {
         const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         desk.forEach((g) => {
-          // 将导入的便签重新修改时间
-          g?.cards?.forEach((item) => {
-            //移除桌面相关的便签卡片
-            if (item.name === "notes") {
-              const now = new Date().getTime();
-              const obj = {
-                ...item,
-                id: now,
-                _id: "note:" + now,
-                createTime: now,
-                updateTime: now,
-                isDelete: false,
-                deskId: g.id,
-                deskName: g.name,
-              };
-              tsbApi.db.put(obj);
-            }
-          });
           let oldId = g.id;
-
           //修正一下老版本导出的数据
           if (g.cardsHeight) {
             g.deskHeight = g.cardsHeight;
@@ -723,6 +704,26 @@ export default {
           g.icon = "desktop";
           g.settings.zoom = parseInt(cardZoom);
           g.id = window.$models.nanoid.nanoid(8);
+          // 将导入的便签重新修改时间
+          g?.cards?.forEach((item, index) => {
+            //移除桌面相关的便签卡片
+            if (item.name === "notes") {
+              const now = new Date().getTime();
+              const obj = {
+                ...item,
+                id: now,
+                _id: "note:" + now,
+                createTime: now,
+                updateTime: now,
+                isDelete: false,
+                deskId: g.id,
+                deskName: g.name,
+              };
+              tsbApi.db.put(obj);
+              g.cards[index] = obj
+            }
+          });
+
           if (freeLayoutState[oldId]) {
             this.freeLayoutData[g.id] = freeLayoutData[oldId];
             this.freeLayoutState[g.id] = freeLayoutState[oldId];
