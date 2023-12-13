@@ -577,6 +577,12 @@ export default {
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
+        {
+          id: 5,
+          name: this.levelVisible ? '隐藏等级' : '显示等级',
+          newIcon: "fluent:star-16-regular",
+          fn: () => { this.levelVisible = !this.levelVisible }
+        },
       ]
 
     },

@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full h-[340px] xt-bg-2 rounded-xl mt-3 p-4">
+            <div class="w-full p-4 mt-3 xt-bg-2 rounded-xl">
                 <div v-for="(item, index) in navigationFunction">
                     <div v-if="item.tag !== 'chat' && item.tag !== 'level'" class="w-full">
                         <div class="flex justify-between w-full">
