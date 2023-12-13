@@ -76,7 +76,7 @@
         </div>
         <!-- 自定义上传 -->
         <div v-if="selIndex == menus.length" class="flex items-center flex-wrap flex-col px-6" style="height:330px;">
-          <input type="file" id="groupFileID" style="display:none;" @change="getFileInfo($event)">
+          <input type="file" style="display:none;" ref="groupFileID"  @change="getFileInfo($event)" />
           <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
             <Icon icon="fluent:add-16-filled" width="20" height="20"/>
           </div>
@@ -132,6 +132,7 @@
   //进度条
   const percent = ref(0)
 
+  const groupFileID = ref({})
 
     const props = defineProps({
       // 按esc关闭窗口
@@ -258,8 +259,9 @@
     }
 
       // 更换头像
-    const updateGroupAvatar = () => { 
-        document.querySelector('#groupFileID').click()
+    const updateGroupAvatar = () => {
+      groupFileID.value.click()
+        
     }
 
       // 清除已上传信息
