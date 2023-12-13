@@ -283,4 +283,18 @@ export default {
 
 <style scoped>
 
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滚动条颜色 */
+    border-radius: 6px; /* 滚动条圆角 */
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #999; /* 悬停时滚动条颜色 */
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 6px; /* 轨道圆角 */
+  }
+
 </style>
