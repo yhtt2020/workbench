@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <xt-new-icon icon='fluent:full-screen-maximize-16-filled'/> -->
     <!-- antd插槽 -->
     <div
       v-if="item.slot"
@@ -33,7 +32,6 @@
     />
     <xt-new-icon
       v-else
-      @click="itemClick()"
       size="20"
       w="40"
       :icon="item.full ? full : item.newIcon"
@@ -45,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { appStore } from "../../../store";
@@ -69,9 +67,7 @@ const props = defineProps({
   bg: {
     default: "var(--mask-bg)",
   },
-  full: {},
 });
-
 // 图片大小
 const imgSize = computed(() => {
   return {
@@ -82,20 +78,18 @@ const imgSize = computed(() => {
 
 // 全屏控制
 const data = ref(false);
-const emits = defineEmits("fullState")
 const full = computed(() => {
   fullScreen.value = data.value ? true : false;
   return data.value
     ? "fluent:full-screen-minimize-16-filled"
     : "fluent:full-screen-maximize-16-filled";
 });
-const itemClick = () => {
+
+watch(fullScreen, (val) => {
   if (props.item.full) {
     data.value = !data.value;
-    emits("fullState", data.value);
   }
-};
-
+});
 // const route = useRoute();
 // const currentPage = ref(route.path);
 // watch(route, (newRoute) => {
