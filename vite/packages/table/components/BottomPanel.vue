@@ -280,6 +280,7 @@ import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import _ from 'lodash-es'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon','hiedNavBar'],
@@ -589,6 +590,8 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
+        // this.footNavigationList = this.footNavigationList.filter((item)=>item!==undefined)
+        // console.log(this.footNavigationList,'======>>>>>>footNavigation')
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -1065,7 +1068,7 @@ export default {
             )
           }
         },
-        onUpdate: function (event) {
+        onUpdate: _.debounce(function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
@@ -1080,7 +1083,9 @@ export default {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
           that.sortFootNavigationList(event)
-        },
+          that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
+          that.updateMainNav();
+        }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true
           that.$emit('getDelIcon', false)

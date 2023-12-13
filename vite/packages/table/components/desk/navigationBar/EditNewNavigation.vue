@@ -443,7 +443,15 @@ export default {
         this.loadDeskIconApps()
     },
     mounted() {
-        this.defaultTitle = this.currentNav
+        if(this.currentNav){
+           this.defaultTitle = this.currentNav 
+        }else{
+            this.defaultTitle = {
+                title: '底部导航栏',
+                value: 'foot'
+            }
+            this.selectNav = 'foot'
+        }
         this.targetDivName = this.$refs.introduce.$refs.targetDiv
         this.updateIntroduce()
         this.$nextTick(() => {

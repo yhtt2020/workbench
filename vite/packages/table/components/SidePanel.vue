@@ -88,6 +88,7 @@ import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import _ from 'lodash-es'
 export default {
   name: 'SidePanel',
   components: {
@@ -417,12 +418,12 @@ export default {
             that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
           }
         },
-        onUpdate: function (event) {
+        onUpdate: _.debounce(function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-
+          // console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -431,8 +432,10 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          that.sortNavigationList(event)
-        },
+          that.sortFootNavigationList(event)
+          that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
+          that.updateMainNav();
+        }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
           that.popVisible=false
