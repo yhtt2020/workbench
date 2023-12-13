@@ -44,8 +44,113 @@ export default {
       },
       // 编辑器工具参数
       // emoji , headings , bold , italic , strike , | , line , quote , list , ordered-list , check ,outdent ,indent , code , inline-code , insert-after , insert-before ,undo , redo , upload , link , table , record , edit-mode , both , preview , fullscreen , outline , code-theme , content-theme , export, devtools , info , help , br
-      toolbar: ['emoji', 'headings', 'bold', 'italic', 'strike', 'line', 'quote', 'ordered-list', 'check',  'code', 'inline-code', 'link', 'table', 'upload',
-      {
+      toolbar: [
+        {
+            hotkey: "⌘E",
+            icon: '<svg><use xlink:href="#vditor-icon-emoji"></use></svg>',
+            name: "emoji",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘H",
+            icon:
+                '<svg><use xlink:href="#vditor-icon-headings"></use></svg>',
+            name: "headings",
+            tipPosition: "s",
+        }, 
+        {
+            hotkey: "⌘B",
+            icon: '<svg><use xlink:href="#vditor-icon-bold"></use></svg>',
+            name: "bold",
+            prefix: "**",
+            suffix: "**",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘I",
+            icon: '<svg><use xlink:href="#vditor-icon-italic"></use></svg>',
+            name: "italic",
+            prefix: "*",
+            suffix: "*",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘D",
+            icon: '<svg><use xlink:href="#vditor-icon-strike"></use></svg>',
+            name: "strike",
+            prefix: "~~",
+            suffix: "~~",
+            tipPosition: "s",
+        }, 
+        {
+            hotkey: "⇧⌘H",
+            icon: '<svg><use xlink:href="#vditor-icon-line"></use></svg>',
+            name: "line",
+            prefix: "---",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘;",
+            icon: '<svg><use xlink:href="#vditor-icon-quote"></use></svg>',
+            name: "quote",
+            prefix: "> ",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘O",
+            icon:
+                '<svg><use xlink:href="#vditor-icon-ordered-list"></use></svg>',
+            name: "ordered-list",
+            prefix: "1. ",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘J",
+            icon: '<svg><use xlink:href="#vditor-icon-check"></use></svg>',
+            name: "check",
+            prefix: "* [ ] ",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘U",
+            icon: '<svg><use xlink:href="#vditor-icon-code"></use></svg>',
+            name: "code",
+            prefix: "```",
+            suffix: "\n```",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘G",
+            icon:
+                '<svg><use xlink:href="#vditor-icon-inline-code"></use></svg>',
+            name: "inline-code",
+            prefix: "`",
+            suffix: "`",
+            tipPosition: "s",
+        }, 
+        {
+            hotkey: "⌘K",
+            icon: '<svg><use xlink:href="#vditor-icon-link"></use></svg>',
+            name: "link",
+            prefix: "[",
+            suffix: "](https://)",
+            tipPosition: "s",
+        },
+        {
+            hotkey: "⌘M",
+            icon: '<svg><use xlink:href="#vditor-icon-table"></use></svg>',
+            name: "table",
+            prefix: "| col1",
+            suffix:
+                " | col2 | col3 |\n| --- | --- | --- |\n|  |  |  |\n|  |  |  |",
+            tipPosition: "n",
+        },
+        {
+            icon: '<svg><use xlink:href="#vditor-icon-upload"></use></svg>',
+            name: "upload",
+            tipPosition: "s",
+        },
+        {
           name: "more",
           toolbar: [
               // "both",
@@ -58,7 +163,8 @@ export default {
               // "info",
               "help",
           ],
-      },
+          tipPosition: 's',
+        },
       ],
       after: () => {
         if (this.selNote >= 0 && this.noteList.length) {
@@ -258,6 +364,16 @@ export default {
     color: var(--primary-text) !important;
     // padding: 0 !important;
   }
+
+  // vditor-tooltipped vditor-tooltipped__s
+  // 修改更多选项的弹窗
+  .pop-box .vditor-hint{
+    position: absolute;
+    top: 53px;
+    left: 6px;
+  }
+
+
   // 大纲
   .vditor-outline{
     width: 25%;
