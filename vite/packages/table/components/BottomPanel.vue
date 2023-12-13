@@ -14,7 +14,7 @@
         border: 1px solid var(--divider);
         height: 80px;
       ">
-        <MyAvatar :chat="true" :level="false"></MyAvatar>
+        <MyAvatar :chat="true" :level="this.levelVisible"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
           <ChatButton></ChatButton>
@@ -535,7 +535,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','levelVisible']),
     ...mapWritableState(taskStore, ['isTask']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
