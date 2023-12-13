@@ -92,7 +92,7 @@
         <vuuri
           v-show="showGrid"
           :key="key"
-          v-if="currentDesk.cards.length > 0 && !hide && !isFreeLayout"
+          v-if="currentDesk.cards.length > 0 && !hide "
           item-key="id"
           :get-item-margin="
             () => {
