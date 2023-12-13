@@ -144,7 +144,7 @@ export default defineComponent({
     </div>
 
   </div>
-  <div class="px-4 w-full">
+  <div class="px-4" style="width:568px;">
     <div class="w-full flex items-center justify-between" style="height:64px" >
       <div class="flex items-center">
         <div class="xt-text" style="font-size: 18px">
@@ -164,7 +164,7 @@ export default defineComponent({
     
     <div class="p-4 w-full h-full" style="background:var(--main-bg);height: 520px;"     v-if="selectVersion">
       <!-- v-html="selectVersion.content" -->
-      <div v-html="contentValue"></div>
+      <div v-html="contentValue" class="word-wrap"></div>
       <Markdown ref="historyEditor" class="overflow-hidden" style="width:0;height:0;"></Markdown>
       <!-- setEditorValue -->
     </div>
@@ -172,6 +172,9 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
+  .word-wrap{
+    word-wrap: break-word;
+  }
   .button-top{
     height: 32px;
     border-radius: 8px !important;
