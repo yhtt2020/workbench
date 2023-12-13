@@ -28,7 +28,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       option: {
         afterDragging: false,
         whileDragging: false,
-        collision: false,
+        collision: true,
         margin: 6, // 没用目前 可能会直接删
         magnet: false,
       },
