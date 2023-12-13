@@ -144,7 +144,7 @@ export default defineComponent({
     </div>
 
   </div>
-  <div class="px-4" style="width:568px;">
+  <div class="px-4 w-full"  style="max-width: 600px;">
     <div class="w-full flex items-center justify-between" style="height:64px" >
       <div class="flex items-center">
         <div class="xt-text" style="font-size: 18px">
