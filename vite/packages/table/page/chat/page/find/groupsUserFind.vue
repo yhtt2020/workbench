@@ -135,37 +135,33 @@ export default {
 
    // 加入推荐群聊
    async addGroup (id) {
-     this.$router.push({name:'chatMain'})
-     const option = {
-       groupID: id,
-     }
-     await window.$chat.joinGroup(option)
-     this.loadGroupRelationship()
+    this.$router.push({name:'chatMain'})
+    const option = {  groupID: id }
+    await window.$chat.joinGroup(option)
+    this.loadGroupRelationship()
    },
 
   // 进入群聊
   async enterGroup (item){
-    // console.log('排查数据',item);
     if(item.uid){
-      this.updateConversation(`C2C${item.uid}`)
-      const name = `C2C${item.uid}`
-      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-      })
-      this.$router.push({name:'chatMain'})
-    }else{
-      const conversationID = `GROUP${item.groupID}`
-      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-      })
-      this.$router.push({name:'chatMain'})
+      const name = `C2C${item.uid}`;
+      this.handlerConversationList(name);
     }
-  }
+    else {
+      const conversationID = `GROUP${item.groupID}`
+      this.handlerConversationList(conversationID);
+    }
+  },
 
+
+  handlerConversationList(conversationID){
+    this.updateConversation(conversationID);
+    this.$router.push({name:'chatMain'});
+    window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+      // 通知 TUIConversation 添加当前会话   Notify TUIConversation to toggle the current conversation
+      window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+    })
+  },
  }
 }
 </script>
