@@ -253,7 +253,6 @@ const dropMenuList = computed(()=>{
 })
 // 当前点击
 const currentItem = (item) =>{
-  console.log('触发',item);
   data.currentID  = item.id;
   data.categoryItem = item;
   proxy.$bus.emit('clickItem',item);
