@@ -190,6 +190,17 @@ export default {
     window.updateMusicStatusHandler = this.updateMusic;
 
     this.bindTouchEvents();
+
+    const keyCombinationPressed = async (event) => {
+        if (event.ctrlKey && event.altKey && event.shiftKey && (event.key === 'r' || event.key === 'R')) {
+
+          this.$bus.emit('resetWindow')
+        await  tsbApi.window.setZoomFactor(1)
+          console.log('11111111 :>> ', 11111111);
+        }
+      };
+
+      window.addEventListener('keydown', keyCombinationPressed);
     //this.$router.push({name:'sensor'})
   },
 
