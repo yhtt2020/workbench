@@ -255,7 +255,7 @@ const dropMenuList = computed(()=>{
 const currentItem = (item) =>{
   data.currentID  = item.id;
   data.categoryItem = item;
-  proxy.$mit.emit('clickItem',item);
+  proxy.$bus.emit('clickItem',item);
 }
 // 展示单列时所有内容
 const openHideContent = () =>{
