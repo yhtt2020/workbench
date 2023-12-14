@@ -565,8 +565,8 @@ export default {
     }
     // 判断是否是第一次加载
     if(this.deskInit){
-      this.addFreeLayoutDesk()
       // 新用户第一次进入加载一个默认桌面
+      this.addFreeLayoutDesk()
       this.deskInit = false
     }
 
@@ -1048,7 +1048,17 @@ export default {
       this.desks[0].cards.forEach((item,index)=>{
         // 直接修改默认数据
         if(item.id == '1702026795921'){
-          this.desks[0].cards[index].customData.iconList = appListHandle
+          // 如果一个图标都读取不出来 则将组件换成历史上的今天
+          if(appListHandle.length <= 1){
+            this.desks[0].cards[index].customData.iconList = appListHandle
+          }else{
+            this.desks[0].cards[index] = {
+              "name": "historyInfo",
+              "id": 1702026795921,
+              "customData": {},
+              "data": {}
+            }
+          }
         }
       })
     },

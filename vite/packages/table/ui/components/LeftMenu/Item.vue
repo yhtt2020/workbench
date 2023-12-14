@@ -15,11 +15,13 @@
       style="width: 40px; height: 40px"
       class="xt-base-btn"
     >
+      <!-- 解析改变图片背景 -->
       <img
         :src="item.img"
-        :style="[imgSize]"
+        :style="[imgSize, imgBg]"
         style="border-radius: 10px; object-fit: cover"
       />
+
     </div>
     <!-- icon -->
     <xt-icon
@@ -68,12 +70,26 @@ const props = defineProps({
     default: "var(--mask-bg)",
   },
 });
+
 // 图片大小
 const imgSize = computed(() => {
   return {
     width: props.w + "px",
     height: props.w + "px",
   };
+});
+// 图片颜色解析
+const imgBg = computed(() => {
+  const img = props?.item?.img
+  if(img.includes('color=#')){
+    const bg = img.slice(-7)
+    return {
+      filter: `drop-shadow(${bg} 80px 0)`,
+      transform: 'translateX(-80px)',
+    };
+  }else{
+    return 
+  }
 });
 
 // 全屏控制
