@@ -1,28 +1,18 @@
 <template>
-  <div class="flex relative">
+  <div class="relative flex">
     <div class="w-32">
       <div class="overflow-y-auto xt-container" :style="heightStyle">
-        <div
-          v-for="(item, index) in webBtn"
-          @click="handleChange(index)"
-          class="h-12 justify-center items-center cursor-pointer flex rounded-xl mr-2"
-          style="flex: 0 0 auto ;width: 120px;"
-          :class="{
+        <div v-for="(item, index) in webBtn" @click="handleChange(index)"
+          class="flex items-center justify-center h-12 mr-2 cursor-pointer rounded-xl"
+          style="flex: 0 0 auto ;width: 120px;" :class="{
             'xt-bg-2': index === selectIndex,
-          }"
-        >
+          }">
           {{ item.label }}
         </div>
       </div>
     </div>
-    <Icon
-      ref="iconRef"
-      @updateSelectApps="updateSelectApps"
-      :isSelect="true"
-      :name="selectName"
-      style="height: calc(100% - 48px)"
-      :data="appList[selectName]"
-    >
+    <Icon ref="iconRef" @updateSelectApps="updateSelectApps" :isSelect="true" :name="selectName"
+      style="height: calc(100% - 48px)" :data="appList[selectName]">
     </Icon>
   </div>
 </template>
@@ -139,18 +129,22 @@ export default {
     async getData(index) {
       index = this.webBtn[index].name;
       let appList = cache.get(`link-${index}`);
+
       if (!appList) {
-        appList = [];
-        let res =getNavList();
-        console.log('查回的导航',res)
-        cache.set(`link-${index}`, res[index], 2 * 24 * 60 * 60 * 1000);
-      } else {
-        appList.forEach((item) => {
-          item.open={
-            type: this.type,
-            value:item.url
-          };
-        });
+        let res = await getNavList();
+        console.log('查回的导航', res);
+        if (res && res[index]) {
+          appList = res[index];
+          appList.forEach((item) => {
+            item.open = {
+              type: this.type,
+              value: item.url
+            };
+          });
+          cache.set(`link-${index}`, appList, 2 * 24 * 60 * 60 * 1000);
+        } else {
+          appList = [];
+        }
       }
 
       this.appList[index] = appList;

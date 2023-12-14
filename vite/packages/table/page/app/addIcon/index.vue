@@ -15,7 +15,7 @@
             v-for="item in navList"
           >
             <div
-              class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+              class="flex items-center justify-center h-12 mr-2 cursor-pointer rounded-xl w-120"
               :key="item.name"
               @click="name = item.component"
               :class="{ 'xt-bg-2': item.component == name }"
@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div class="pl-2 w-full h-full">
+      <div class="w-full h-full pl-2">
         <xt-task :modelValue="m02013"></xt-task>
         <component
           ref="apps"
@@ -46,7 +46,7 @@
       >
         <template v-for="(v, k) of selectApps">
           <div v-for="item in selectApps[k]">
-            <img :src="renderIcon(item.icon)" class="w-12 h-12 rounded-xl mr-3" alt="" />
+            <img :src="renderIcon(item.icon)" class="w-12 h-12 mr-3 rounded-xl" alt="" />
           </div>
         </template>
       </div>
@@ -56,7 +56,7 @@
         v-if="name == 'Links'"
         style="width: 380px; height: 48px"
         boxClass="my-2 p-1 xt-bg-2"
-        v-model:data="type"
+        v-model:modelValue="type"
         :list="linkList"
       ></XtTab>
       <xt-task id="M0201" no="5" @cb="commitIcons">
