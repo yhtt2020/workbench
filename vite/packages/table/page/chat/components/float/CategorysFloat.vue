@@ -70,7 +70,7 @@
       
       <vue-custom-scrollbar :settings="settingsScroller" style="height:60vh;" v-else>
         <template  v-if="singDoubleCol === false && floatData.channelList.length !== 0">
-          <div class="flex flex-col" :class="floatData?.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+          <div class="flex flex-col" :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
             <div v-for="channel in floatData.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
               <MenuDropdown :type="channel.type" :no="no" :item="channel"  @currentItem="currentItem"/>
             </div>
@@ -78,7 +78,7 @@
         </template>
         <template v-else-if="floatData.channelList?.length !== 0">
           <div class="flex grid grid-cols-2 gap-1 " :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
-            <div v-for="channel in floatData?.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
+            <div v-for="channel in floatData.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
               <MenuDropdown :type="channel.type" :no="no" :item="channel" @currentItem="currentItem"/>
             </div>
           </div>
@@ -255,53 +255,13 @@ const dropMenuList = computed(()=>{
 const currentItem = (item) =>{
   data.currentID  = item.id;
   data.categoryItem = item;
-  proxy.$mit.emit('clickItem',item);
+  proxy.$bus.emit('clickItem',item);
 }
 // 展示单列时所有内容
 const openHideContent = () =>{
  data.collapsed = !data.collapsed
 }
 
-// const floatData = ref({});
-
-// watch(()=>props.no,(newVal)=>{
-//   // 通过定义临时缓存来获取社群频道树状数据和基本信息以及社群ID号no
-//   const no = newVal;
-//   const infoArr = community.value.communityList;
-//   if(!isEmptyList(infoArr)) return floatData.value = {};
-//   // 通过no获取社群基本信息
-//   const findInfo = _.filter(infoArr,function(find){ return String(find.no) === String(no) });
-//   console.log('更新......数据-1',findInfo);
-//   if(!isEmptyList(findInfo)) return floatData.value = {};
-//   const data = {tree:[],categoryList:[],channelList:[],};
-//   // 获取子级频道
-//   const treeArr = community.value.communityTree;
-//   if(isEmptyList(treeArr) !== true) return data.tree = [];
-//   const findTree = _.filter(treeArr,function(find){   return String(find.no) === String(no) });
-//   if(isEmptyList(findTree) !== true) return data.tree = [];
-//   data.tree = findTree[0].tree;
-
-//   // 获取category和channel数据
-//   const filterCategory = _.filter(data.tree,function(item){ return item.role !== 'channel' });
-//   const filterChannel = _.filter(data.tree,function(item){ return item.role !== 'category' });
-//   console.log('更新.....数据--3',filterCategory);
-//   console.log('更新.....数据--4',filterChannel);
-//   if(isEmptyList(filterCategory) !== true) return data.categoryList = [];
-//   if(isEmptyList(filterChannel) !== true) return data.channelList = [];
-//   data.categoryList = filterCategory;
-//   data.channelList = filterChannel;
-
-//   console.log('更新......数据-2',data);
-
-//   floatData.value = {
-//     ...findInfo[0],
-//     isEmptyData:!isEmptyList(data.tree),
-//     categoryList:data.categoryList,
-//     channelList:data.channelList,
-//   }
-
-//   console.log('执行....更新变化',floatData.value);
-// },{deep:true,immediate:true});
 
 // 通过计算属性获取数据
 const floatData = computed(()=>{
@@ -322,10 +282,10 @@ const floatData = computed(()=>{
     if(isEmptyList(findTree)){
       communityData.list = findTree[0].tree 
       // 获取category和channel数据
-      const filterCategory = _.filter(findTree[0].tree,function(item){ return item.role !== 'channel' });
+      const filterCategory = _.filter(findTree[0].tree,function(item){ return item.role === "category" });
       if(isEmptyList(filterCategory)){ communityData.categoryList = filterCategory }
-      const filterChannel = _.filter(findTree[0].tree,function(item){ return item.role !== 'category' });
-      if(isEmptyList(filterChannel)){ communityData.categoryList = filterChannel }
+      const filterChannel = _.filter(findTree[0].tree,function(item){  return item.role === "channel" });
+      if(isEmptyList(filterChannel)){ communityData.channelList = filterChannel }
     }
   }
   return {
