@@ -14,7 +14,7 @@
         border: 1px solid var(--divider);
         height: 80px;
       ">
-        <MyAvatar :chat="true" :level="this.levelVisible"></MyAvatar>
+        <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
           <ChatButton></ChatButton>
@@ -578,12 +578,12 @@ export default {
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
-        {
-          id: 5,
-          name: this.levelVisible ? '隐藏等级' : '显示等级',
-          newIcon: "fluent:star-16-regular",
-          fn: () => { this.levelVisible = !this.levelVisible }
-        },
+        // {
+        //   id: 5,
+        //   name: this.levelVisible ? '隐藏等级' : '显示等级',
+        //   newIcon: "fluent:star-16-regular",
+        //   fn: () => { this.levelVisible = !this.levelVisible }
+        // },
       ]
 
     },
