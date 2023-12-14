@@ -9,19 +9,19 @@
       <div class="flex items-center px-4 mb-0 line-title">
         <div class="flex items-center justify-center">
           <template v-if="currentChannel.type === 'group'">
-            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 2em;" />
+            <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25rem;" />
           </template>
           <template v-if="currentChannel.type === 'link'">
-            <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 2em;" />
+            <communityIcon icon="fluent-emoji-flat:globe-with-meridians" style="font-size: 1.25rem;" />
           </template>
           <template v-if="currentChannel.type === 'forum'">
-            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 2em;"/>
+            <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 1.25rem;"/>
           </template>
         </div>
         <span class="ml-2"> {{ currentChannel.name }}</span>
       </div>
 
-      <div v-if="isChat === 'not'" class="flex items-center justify-center h-full">
+      <div v-if="isChat === 'not' && currentChannel.type === 'group' " class="flex items-center justify-center h-full">
         <ValidateModal :data="group"></ValidateModal>
       </div>
 
@@ -48,17 +48,11 @@
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
-
             当前频道需要浏览器打开。
           </div>
-          <iframe v-else :src="currentChannel.props.url" class="m-2"
-                  style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
-
+          <iframe v-else :src="currentChannel.props.url" class="m-2" style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
         </template>
-
       </div>
-
-
     </a-col>
   </a-row>
 </template>
@@ -73,10 +67,10 @@ import browser from '../../../js/common/browser'
 import Emoji from '../../../components/comp/Emoji.vue'
 import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
-import ValidateModal from '../components/ValidationPrompts.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
 import DefaultFloat from '../components/float/DefaultsFloat.vue'
+import ValidateModal from '../components/empty/ValidationPrompt.vue';
 
 
 export default defineComponent({
@@ -85,21 +79,13 @@ export default defineComponent({
     DefaultFloat,communityIcon
   },
 
-  // data(){
-  //   return{
-  //     routeData:this.$route.params
-  //   }
-  // },
-
   setup () {
 
     const chat = chatStore()
-    // const community = chatAdminStore()
     const { appContext } = getCurrentInstance()
     const globalProperties = appContext.config.globalProperties;
 
     const doubleCol = ref(chat.$state.settings.showDouble)
-
     const data = reactive({
       list: chatList,
       groupName: chatList[0].name,
@@ -132,7 +118,6 @@ export default defineComponent({
           browser.openInUserSelect(item.props.url)
         }
       }
-
       if (item.type === 'group') {
         const res = await window.$chat.searchGroupByID(item.props.id)
         const enableGroup = await checkGroupShip([`${item.props.id}`])
@@ -156,7 +141,6 @@ export default defineComponent({
           }
         }
       }
-
       data.currentChannel = item
     }
 
@@ -167,9 +151,7 @@ export default defineComponent({
 
     onMounted(()=>{
       const mit = globalProperties.$mit
-      // console.log('查看mit',mit);
       mit.on('clickItem',(item)=>{
-        // console.log('监听item',item);
         currentItem(item)
       })
     })

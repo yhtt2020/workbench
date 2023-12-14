@@ -98,3 +98,30 @@ export function communityTotal(no:any,list:any){
   else { return 0 }
 }
 
+
+/**
+ * 验证列表是否为空列表,如果是返回[],如果不是执行下一步
+ * @param list // 判断列表
+ * **/
+export function isEmptyList(list:any){
+  if(list.length !== 0){
+    return true
+  }
+  else {
+    return false
+  }
+}
+
+/**
+ * 验证数据是否为undefined
+ * @param data // 判断数据
+ * **/
+export function isUndefined(data:any){
+  if(data !== undefined){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
