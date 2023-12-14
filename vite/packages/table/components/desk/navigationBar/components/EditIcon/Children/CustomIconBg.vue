@@ -62,6 +62,9 @@ const props = withDefaults(defineProps<colorProps>(), {
 export interface colorProps {
     colorSwitch: boolean,
 }
+watch(colorIndex, (newVal,oldVal) => {
+    console.log(newVal,oldVal)
+})
 // watch(colorPicker,()=>{
 //     emit('changeBg',colorPicker.value)
 // })

@@ -19,7 +19,7 @@ const sliderList = ref([
         title: '导航栏圆角',
         min: 0,
         max: 80,
-        value: navigationStore.navRadius,
+        value: navigationStore.navAttribute.navRadius,
         step: 2,
         flag:'nav'
     },
@@ -37,7 +37,7 @@ const navSize = ref([
         title: '导航栏尺寸',
         min: 100,
         max: 300,
-        value: navigationStore.navSize,
+        value: navigationStore.navAttribute.navSize,
         step: 10
     }
 ])
@@ -47,18 +47,19 @@ const navSize = ref([
  */
 const changeBg = (value) => {
     console.log(value, '====>>>>');
+    navigationStore.navAttribute.navBgColor = value
 }
 const resetNav = (item, index) => {
     item.value = 100
-    navigationStore.navSize = 100
+    navigationStore.navAttribute.navSize = 100
 }
 const changeNav = (value) => {
-    navigationStore.navSize = value.value
+    navigationStore.navAttribute.navSize = value.value
 }
 // 修改导航栏和图标圆角
 const changeSlider = (value) => {
     if(value.flag==='nav'){
-        navigationStore.navRadius = value.value
+        navigationStore.navAttribute.navRadius = value.value
     }else if(value.flag==='icon'){
         navigationStore.iconRadius = value.value
     }
@@ -67,7 +68,7 @@ const changeSlider = (value) => {
 // 重置导航栏和图标圆角
 const resetSlider = (item, index) => {
     if(index===0){
-        navigationStore.navRadius = 18
+        navigationStore.navAttribute.navRadius = 18
         item.value = 18
     }else if(index===1){
         navigationStore.iconRadius = 12

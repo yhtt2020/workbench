@@ -38,10 +38,14 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             navColorSwitch:true,
             // 图标编辑元素
             editItem:'',
-            // 导航栏尺寸
-            navSize:100,
-            // 导航栏圆角
-            navRadius:18,
+            navAttribute:{
+                // 导航栏尺寸
+                navSize:100,
+                // 导航栏圆角
+                navRadius:18,
+                // 导航栏背景颜色
+                navBgColor:'var(--primary-bg)',
+            },
             // 图标圆角
             iconRadius:12,
         }
@@ -55,7 +59,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','iconSetting','selectNav','introduceVisible','popVisible','navSize','navRadius','iconRadius'],
+            paths: ['editToggle','iconSetting','selectNav','introduceVisible','popVisible','navAttribute','iconRadius'],
             // storage: dbStorage,
             storage: localStorage,
           },

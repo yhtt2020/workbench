@@ -18,10 +18,10 @@
 <script setup lang='ts'>
 import { ref, reactive,onMounted } from 'vue'
 import RadioTab from '../../../../../RadioTab.vue';
-const iconLink=ref([{title:'网站链接'},{title:'系统程序或文件'}])
-const openWay = ref([{title:'内置浏览器'},{title:"默认浏览器"},{title:'想天浏览器'}])
-const defaultLink=ref({title:'网站链接'})
-const defaultWay=ref({title:'默认浏览器'})
+const iconLink=ref([{title:'网站链接',value:'link'},{title:'系统程序或文件',value:'system'}])
+const openWay = ref([{title:'内置浏览器',value:"inner"},{title:"默认浏览器",value:"default"},{title:'想天浏览器',value:"xt"}])
+const defaultLink=ref({title:'网站链接',value:"link"})
+const defaultWay=ref({title:'默认浏览器',value:"default"})
 const linkValue=ref('')
 const props=defineProps({
     editItem:Object

@@ -2,8 +2,8 @@
   <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full'">
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
-      class="relative flex flex-row justify-center max-h-full pt-0 pb-0 box common-panel s-bg xt-bg side-bar"
-      ref="sideContent" @contextmenu="showMenu" :style="{width:80*(this.navSize/100)+'px',borderRadius:this.navRadius+'px'}">
+      class="relative flex flex-row justify-center max-h-full pt-0 pb-0 box common-panel s-bg side-bar"
+      ref="sideContent" @contextmenu="showMenu" :style="{width:80*(this.navAttribute.navSize/100)+'px',borderRadius:this.navAttribute.navRadius+'px',background:this.navAttribute.navBgColor}">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -263,7 +263,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navSize','navRadius','iconRadius']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navAttribute','iconRadius']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
