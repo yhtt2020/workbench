@@ -620,7 +620,7 @@ export default {
         currentItemId: -1,
       },
       settingsTab: [
-        { name: "通用桌面", value: "all" },
+        { name: "通用设置", value: "all" },
         { name: "当前桌面", value: "current" },
       ],
       currentSettingTab: "all",
