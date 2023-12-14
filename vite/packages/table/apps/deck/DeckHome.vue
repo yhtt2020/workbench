@@ -60,9 +60,9 @@
       </a-col>
     </a-row>
   </div>
-  <div :class="{ sharing: sharing }">
-    <vue-custom-scrollbar @contextmenu.stop="showMenu(-1, undefined, 'wrapper')" :settings="scrollbarSettings"
-      style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+  <div class="flex h-full w-full" :class="{ sharing: sharing }">
+    <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1, undefined, 'wrapper')" :settings="scrollbarSettings" class="flex-1 w-full h-full"
+      style=" border-radius: 8px; ">
 
       <div style="width: auto;white-space: nowrap">
         <div @contextmenu.stop="showMenu(grid.id)" :style="{ width: getWidth(grid.cols) }" style="display: inline-block"
