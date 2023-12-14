@@ -240,11 +240,13 @@ export default {
         },
         async loadDeskIconApps() {
             const lightApps = await appModel.getAllApps()
+            console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {
                 lightApps[i].icon = lightApps[i].logo
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
+            console.log(desktopApps,lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }

@@ -29,12 +29,12 @@ const editItem = computed(()=>{
 const componentId=computed(()=>{
     switch (editItem.value.type) {
         case 'systemApp':
-            title.value = '当前图标为「系统功能」类型，暂无可编辑属性。'
+            title.value = '当前图标为「系统功能」类型。'
             return Common
         case 'coolApp':
             return CoolApp
         case 'lightApp':
-            title.value = '当前图标为「轻应用」类型，暂无可编辑属性。'
+            title.value = '当前图标为「轻应用」类型。'
             return Common
         default:
             return Custom

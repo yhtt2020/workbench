@@ -748,6 +748,7 @@ export default {
       }
     },
     clickNavigation(item) {
+      console.log(item);
       if (this.editToggle) {
         // this.enableDrag()
         return
