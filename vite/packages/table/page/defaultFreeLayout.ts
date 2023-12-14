@@ -34,7 +34,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                       "colors": "#ffffff",
                       "height": 1,
                       "width": 1,
-                      "text": "“你可以创建多个不同的便签”\n· 整理下周需要演示的产品材料\n· 昨天产品发布会后客户反馈xx功能的使用手册不是很清楚，需要和xx沟通一下\n\n# 445\n",
+                      "text": "“你可以创建多个不同的便签”\n· 整理下周需要演示的产品材料\n· 昨天产品发布会后客户反馈xx功能的使用手册不是很清楚，需要和xx沟通一下\n\n",
                       "dragCardSize": "card small",
                       "content": "",
                       "colorIndex": 5,
@@ -741,9 +741,9 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
               "hide": false
           },
           "option": {
-              "afterDragging": false,
+              "afterDragging": true,
               "whileDragging": false,
-              "collision": false,
+              "collision": true,
               "margin": 6,
               "magnet": false
           },
