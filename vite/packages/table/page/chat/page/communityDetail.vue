@@ -114,10 +114,10 @@ export default {
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
     // 监听当前事件触发
-    this.$mit.on('clickItem',(item)=>{
+    this.$bus.on('clickItem',(item)=>{
       this.currentItem(item);
     })
-    this.$mit.on('currentSet',(args)=>{
+    this.$bus.on('currentSet',(args)=>{
       this.currentChannel = args
     })
   },
