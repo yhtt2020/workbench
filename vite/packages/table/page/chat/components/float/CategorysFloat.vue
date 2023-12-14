@@ -59,7 +59,7 @@
       <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
       
       <template v-if="floatData.isEmptyData.length === 0">
-        <div class="flex items-center justify-center flex-col" v-if="floatData?.role !== 'member'" style="height:450px;">
+        <div class="flex items-center justify-center flex-col" v-if="floatData.role !== 'member'" style="height:450px;">
           <EmptyAdd :no="no"/>
         </div>
         <div v-else  class="flex items-center h-full justify-center" style="height:450px;">
@@ -76,8 +76,8 @@
             </div>
           </div>
         </template>
-        <template v-else-if="floatData.channelList.length !== 0">
-          <div class="flex grid grid-cols-2 gap-1 " :class="floatData?.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+        <template v-else-if="floatData.channelList?.length !== 0">
+          <div class="flex grid grid-cols-2 gap-1 " :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
             <div v-for="channel in floatData?.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
               <MenuDropdown :type="channel.type" :no="no" :item="channel" @currentItem="currentItem"/>
             </div>
@@ -331,8 +331,8 @@ const floatData = computed(()=>{
   return {
     isEmptyData:communityData.list.length !== 0 ? communityData.list : [],
     ...communityData.info,
-    channelList:communityData.channelList,
-    categoryList:communityData.categoryList,
+    channelList:isEmptyList(communityData.channelList) ? communityData.channelList : [],
+    categoryList:isEmptyList(communityData.categoryList) ? communityData.categoryList :[],
   }
 })
 
