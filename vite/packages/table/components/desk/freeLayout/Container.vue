@@ -59,11 +59,13 @@ async function getPosition(item) {
     const scrollLeft = freeLayoutEnv.value.scrollLeft;
     getFreeLayoutData.value[id] = {
       left:
-        (left - waterfallFlowLeft + scrollLeft) /
-        getFreeLayoutState.value.canvas.zoom,
+        scrollLeft / getFreeLayoutState.value.canvas.zoom +
+        left -
+        waterfallFlowLeft,
       top:
-        (top - waterfallFlowTop + scrollTop) /
-        getFreeLayoutState.value.canvas.zoom,
+        scrollTop / getFreeLayoutState.value.canvas.zoom +
+        top -
+        waterfallFlowTop,
       index: 1,
       id,
       name,
