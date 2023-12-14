@@ -42,7 +42,7 @@
           style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)">
 
           </iframe>
-          <div  style="position: absolute;top: -35px;right: 0px">
+          <div  style="position: absolute;top: -62px;right: 0px">
             <xt-button @click="openLink(currentChannel.props.url)" :w="120" :h="40">浏览器打开</xt-button>
           </div>
         </template>

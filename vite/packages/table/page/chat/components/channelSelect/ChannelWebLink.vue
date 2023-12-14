@@ -8,6 +8,7 @@
         <span class="font-14 font-400 xt-text-2 xt-font">
           输入带有“https://”或“http://”前缀的，完整的网页地址。支持选择点击链接后的打开方式，默认使用工作台设置。
         </span>
+        <span class="font-14 font-400 xt-text-2 xt-font">添加网址后,如遇到网页打开无法显示,是该网页路径的安全策略问题导致无法正常显示,则需要通过系统浏览器进行打开。</span>
       </div>
 
       <a-input class="h-10" v-model:value="linkName" ref="linkNameRef" spellcheck="false" style="border-radius: 8px; margin-bottom: 12px;" placeholder="链接名称" />
