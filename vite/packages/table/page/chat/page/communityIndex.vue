@@ -151,7 +151,7 @@ export default defineComponent({
 
     onMounted(()=>{
       const mit = globalProperties.$bus
-      mit.on('clickItem',(item)=>{
+      mit.on('defaultClickItem',(item)=>{
         currentItem(item)
       })
     })
