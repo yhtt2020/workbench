@@ -445,6 +445,7 @@ export default {
       delItemIcon: false,
       notifications: new Notifications(),
       tooltipVisible: true,
+      isDelete:true
 
     }
   },
@@ -1044,6 +1045,8 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
+            if(!that.isDelete) return
+            console.log(111111);
             that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
@@ -1075,11 +1078,12 @@ export default {
           }
         },
         onUpdate: _.debounce(function (event) {
+          that.isDelete=false
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-          // console.log('newIndex', oldItem)
+          // console.log('newIndex', event)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -1091,11 +1095,13 @@ export default {
           that.sortFootNavigationList(event)
           that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
           that.updateMainNav();
+          console.log(that.isDelete,'isDelete',that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true
           that.$emit('getDelIcon', false)
           that.popVisible = false
+          that.isDelete=true
         },
       })
       // message.success('开始调整底部栏，点击导航外部即可终止调整。')
