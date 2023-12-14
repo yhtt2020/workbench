@@ -1049,7 +1049,7 @@ export default {
         // 直接修改默认数据
         if(item.id == '1702026795921'){
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if(appListHandle.length){
+          if(appListHandle.length <= 1){
             this.desks[0].cards[index].customData.iconList = appListHandle
           }else{
             this.desks[0].cards[index] = {
