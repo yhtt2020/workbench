@@ -203,25 +203,24 @@ export default {
     }
   },
   methods: {
-    setCurrentIndex(index) {
+    async setCurrentIndex(index) {
       this.currentIndex = index
       this.customData.index=this.currentIndex
-      this.getNewsData()
+      await this.getNewsData()
       this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newsList,'newsList')
-      console.log(this.customData,'customData');
+      // console.log(this.customData,'customData');
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
     ...mapActions(newsStore, ['getNewsMsg']),
-    getNewsData() {
+    async getNewsData() {
       let tag = this.showList[this.currentIndex].tag
       this.customData.tag=tag
-      console.log(this.showList[this.currentIndex])
-      this.getNewsMsg(this.customData.tag)
-
+      // console.log(this.customData.tag)
+      await this.getNewsMsg(this.customData.tag)
       // this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newList);
     }
@@ -263,10 +262,11 @@ export default {
     newsItemList() {
       if(this.customData && this.customData.newsList?.length){
         // console.log(this.customData.newsList,'newsList');
-        if(this.customData.newsList.tag){
-          this.customData.newsList=this.customData.newsList.tag
-          return []
-        }
+        // if(this.customData.newsList[0].tag){
+        //   this.customData.newsList=this.customData.newsList.tag
+        //   console.log(this.customData.newsList,'newsList-after');
+        //   return []
+        // }
         return this.customData.newsList.slice(0, this.copyNum)
       }
       return this.newsMsgList.slice(0,this.copyNum)
@@ -285,7 +285,7 @@ export default {
       this.isLoading = false
     })
     // await this.getNewsData()
-  }
+  },
 }
 </script>
 <style lang='scss' scoped>
