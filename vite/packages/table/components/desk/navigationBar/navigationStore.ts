@@ -11,6 +11,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 iconRounded:true,
                 iconBackground:false
             },
+            // 等级显示
+            levelVisible:true,
             selectNav:'',
             currentList:{},
             // 第一次进入，显示推荐
@@ -43,7 +45,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','iconSetting','selectNav','introduceVisible','popVisible'],
+            paths: ['levelVisible','iconSetting','selectNav','introduceVisible','popVisible'],
             // storage: dbStorage,
             storage: localStorage,
           },

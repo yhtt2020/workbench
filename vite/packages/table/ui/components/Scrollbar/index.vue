@@ -34,7 +34,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <vue-custom-scrollbar :settings="settings" :class="{'w-full':x,'h-full':y}">
+  <vue-custom-scrollbar style="position:relative;" :settings="settings"  >
     <slot></slot>
   </vue-custom-scrollbar>
 </template>

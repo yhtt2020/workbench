@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import { storeToRefs } from 'pinia';
 import { defineComponent, reactive, toRefs, computed, watch,defineExpose,onMounted,nextTick } from 'vue';
 import TUIConversationList from './components/list';
 import { caculateTimeago, isArrayEqual } from '../utils';
@@ -42,6 +43,7 @@ const TUIConversation = defineComponent({
     const router = useRouter()
 
     const chat = chatStore()
+    const { conversations } = storeToRefs(chat);
 
     const data = reactive({
       currentConversationID: '',
@@ -127,42 +129,38 @@ const TUIConversation = defineComponent({
     const handleCurrentConversation = (value) => {
       TUIServer.handleCurrentConversation(value);
     };
-  
-    onMounted(()=>{
-      // 检测会话列表是不是为空列表
-      nextTick(()=>{
-        const isEmptySting = chat.conversations.conversationID
-        const isEmptyList = window.$TUIKit.TUIServer?.TUIConversation.currentStore?.conversationData?.list
-        if(isEmptyList.length !== 0){
-          if(isEmptySting !== ''){
-            data.currentConversationID = isEmptySting;
-            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(isEmptySting).then((imResponse) => {
-             // 通知 TUIConversation 添加当前会话
-             // Notify TUIConversation to toggle the current conversation
-             window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-            })
-          }else{
-            // console.log('缓存为空数据',status);
-            const name = isEmptyList[0].conversationID
-            data.currentConversationID = name;
-            window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-             // 通知 TUIConversation 添加当前会话
-             // Notify TUIConversation to toggle the current conversation
-             window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
-            })
-          }
-        }else{
-          message.warn('温馨提示,当前聊天页没有对话,进入发现页创建聊天会话或者点击左侧栏底部添加按钮创建')
+
+    // 显示右侧聊天详情方法
+    const handelConversation = (conversationID) =>{
+      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+        // 通知 TUIConversation 添加当前会话   Notify TUIConversation to toggle the current conversation
+        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
+      })
+    }
+   
+    // 监听会话列表是否为空
+    watch(()=>window.$TUIKit.TUIServer.TUIConversation.store.allConversationList,(newVal)=>{
+      if(newVal){
+        if(newVal.length === 0){
+          message.warn('当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者点击左侧栏底部添加按钮创建');
           router.push({name:'chatFind'})
         }
-      })
-    })
-    
+        else {
+         const conversationID = conversations.value.conversationID;
+         if(conversationID !== ''){
+          handelConversation(conversationID);
+         }
+         else {
+          conversations.value.conversationID = newVal[0].conversationID;
+         }
+        }
+      }
+    },{deep:true,immediate:true});
 
     return {
       ...toRefs(data),
       handleCurrentConversation,
-      updateList,
+      updateList,handelConversation,
       isNetwork,
     };
   },

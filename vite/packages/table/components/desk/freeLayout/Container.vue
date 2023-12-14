@@ -58,11 +58,16 @@ async function getPosition(item) {
     const scrollTop = freeLayoutEnv.value.scrollTop;
     const scrollLeft = freeLayoutEnv.value.scrollLeft;
     getFreeLayoutData.value[id] = {
-      left: left - waterfallFlowLeft + scrollLeft,
-      top: top - waterfallFlowTop + scrollTop,
+      left:
+        scrollLeft / getFreeLayoutState.value.canvas.zoom +
+        left -
+        waterfallFlowLeft,
+      top:
+        scrollTop / getFreeLayoutState.value.canvas.zoom +
+        top -
+        waterfallFlowTop,
       index: 1,
       id,
-      name,
     };
     if (getFreeLayoutData.value[id]) {
       console.log("新数据赋值成功 :>> ", getFreeLayoutData.value[id]);
@@ -91,7 +96,7 @@ function updateCard(data) {
   }
 
   data.forEach((item) => {
-    const { id, name, customData } = item;
+    const { id,  customData } = item;
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
       console.log("旧数据处理 :>> ");
@@ -100,7 +105,6 @@ function updateCard(data) {
         top: getFreeLayoutData.value[id].top || 0,
         index: getFreeLayoutData.value[id].index || 1,
         id,
-        name,
       };
     } else {
       getPosition(item);

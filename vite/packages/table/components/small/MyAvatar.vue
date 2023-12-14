@@ -125,11 +125,11 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="!simple" :style="{ width: '4em'}" class="relative">
+  <div v-else-if="!simple"  class="relative">
     <div class="pointer" @click="social">
       <div v-if="!simple" class="user-info text-center item-content" :span="24" style=" position:relative;overflow: visible">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
-        <a-row style="text-align: left" :gutter="10">
+        <a-row style="text-align: left" :gutter="10" align="middle">
           <a-col class="text-center" :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
             <FrameAvatar  v-if="userInfo.frame" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"

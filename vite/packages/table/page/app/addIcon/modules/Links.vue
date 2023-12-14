@@ -1,5 +1,5 @@
 <template>
-  <div class="flex relative">
+  <div class="flex relative h-full">
     <div class="w-32">
       <div class="overflow-y-auto xt-container" :style="heightStyle">
         <div
