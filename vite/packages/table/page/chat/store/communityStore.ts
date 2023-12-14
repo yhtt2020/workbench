@@ -86,15 +86,7 @@ export const communityStore = defineStore('communityStore',{
         }
       });
     },
-    // 创建社群
-    async communityCreate(option:any){
-      const res  =  await post(createCommunity, option);
-      if(res.status === 1){
-        this.getMyCommunity();
-        return res;
-      }
-      else { return res };
-    },
+
     // 获取社群树状频道列表
     getCommunityTree(){
       const list = this.community.communityList;
@@ -122,6 +114,18 @@ export const communityStore = defineStore('communityStore',{
         this.community.communityTree = newList;
       }
     },
+
+    // 创建社群
+    async communityCreate(option:any){
+      const res  =  await post(createCommunity, option);
+      if(res.status === 1){
+        this.getMyCommunity();
+        this.getCommunityTree();
+        return res;
+      }
+      else { return res };
+    },
+   
 
     // 更新社群树状对应数据
     async updateCommunityTree(no:any){
