@@ -36,7 +36,7 @@
         }}）
       </template>
     </span>
-
+<div>还原分辨率快捷键（ctrl + alt + shift + r）</div>
     <a-slider @afterChange="setZoomFactor" :min="30" :max="500" v-model:value="newZoom"></a-slider>
   </div>
 </template>
@@ -65,6 +65,11 @@ export default {
     this.inputZoom = +(this.newZoom).toFixed(0)
 
     this.getSize()
+
+    this.$bus.on('resetWindow',()=>{
+console.log('启动 :>> ', );
+this.inputZoom =100
+    })
   },
   methods: {
     inputEnter() {
