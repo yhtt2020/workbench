@@ -40,7 +40,6 @@
   </div>
 
   <PaperRightDrawer ref="rightDrawerRef" :loadStaticPaper="loadStaticPaper" :getLoadLively="getLoadLively"/>
-  <PaperBottomDrawer ref="bottomDrawerRef" :isDel="false"  :currentPaper="currentPaper"/>
 
   <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
     <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
@@ -64,7 +63,6 @@ import {} from '../../components/card/store';
 import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
 import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
-import PaperBottomDrawer from './components/drawer/PaperBottomDrawer.vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
 
 const fs = window.$models.fs;
@@ -72,7 +70,7 @@ const path = require('path');
 
 export default {
   
-  components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,PaperBottomDrawer,ClosePaperButton},
+  components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,ClosePaperButton},
 
   props:['isModal'],
 
