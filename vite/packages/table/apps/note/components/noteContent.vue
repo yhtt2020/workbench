@@ -173,7 +173,7 @@ export default {
       if (this.noteList[this.selNote].customData.title != e.target.value) {
         let n = -1
         this.deskList.forEach((item, index) => {
-          if (item.name == this.noteList[this.selNote].deskName) {
+          if (item.id == this.noteList[this.selNote].deskId) {
             n = index
           }
         })

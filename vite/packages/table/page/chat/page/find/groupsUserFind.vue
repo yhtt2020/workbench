@@ -46,20 +46,18 @@
                <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
              </div>
              </div>
-
-             <XtButton v-show="item.relationShip ==='yes'" style="width: 96px;background: var(--active-secondary-bg);"
-                       @click="enterGroup(item)">
-               <icon icon="message"></icon>
-               进入群聊
-             </XtButton>
-             <XtButton v-show="item.relationShip ==='not'" style="width: 96px;background: var(--active-bg);" @click="addGroup(item.groupID)">
+             <xt-button w="96" h="48" v-show="item.relationShip ==='yes'" class="xt-theme-bg-2" @click="enterGroup(item)">
+              <div class="flex items-center justify-center" >
+                <FindIcon icon="fluent:chat-16-regular" class="mr-2" style="font-size: 1.25rem;"/>
+                <span class="xt-text xt-font font-16 font-400">进入群聊</span>
+              </div>
+             </xt-button>
+             <xt-button w="96" h="48" v-show="item.relationShip ==='not'" type="theme" @click="addGroup(item.groupID)">
                加入
-             </XtButton>
+             </xt-button>
            </div>
          </div>
        </div>
-
-
      </template>
    </vue-custom-scrollbar>
  </div>
@@ -80,6 +78,7 @@ import AddFindButton from '../../../../components/sns/AddFindButton.vue'
 import SendMessageButton from '../../../../components/sns/SendMessageButton.vue'
 import Modal from '../../../../components/Modal.vue'
 import UserCard from '../../../../components/small/UserCard.vue'
+import { Icon as FindIcon } from '@iconify/vue';
 // import * as sns from '../../../js/common/sns'
 
 // const router = useRouter()
@@ -87,7 +86,7 @@ export default {
  components: {
    AddFindButton,
    SendMessageButton,
-   Modal,
+   Modal,FindIcon,
    UserCard
  },
 
@@ -135,57 +134,38 @@ export default {
 
    // 加入推荐群聊
    async addGroup (id) {
-     this.$router.push({name:'chatMain'})
-     const option = {
-       groupID: id,
-     }
-     await window.$chat.joinGroup(option)
-     this.loadGroupRelationship()
+    this.$router.push({name:'chatMain'})
+    const option = {  groupID: id }
+    await window.$chat.joinGroup(option)
+    this.loadGroupRelationship()
    },
 
   // 进入群聊
   async enterGroup (item){
-    // console.log('排查数据',item);
     if(item.uid){
-      this.updateConversation(`C2C${item.uid}`)
-      const name = `C2C${item.uid}`
-      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(name).then((imResponse) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-      })
-      this.$router.push({name:'chatMain'})
-    }else{
-      const conversationID = `GROUP${item.groupID}`
-      window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
-        // 通知 TUIConversation 添加当前会话
-        // Notify TUIConversation to toggle the current conversation
-        window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-      })
-      this.$router.push({name:'chatMain'})
+      const name = `C2C${item.uid}`;
+      this.handlerConversationList(name);
     }
-  }
+    else {
+      const conversationID = `GROUP${item.groupID}`
+      this.handlerConversationList(conversationID);
+    }
+  },
 
+
+  handlerConversationList(conversationID){
+    this.updateConversation(conversationID);
+    this.$router.push({name:'chatMain'});
+    window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+      // 通知 TUIConversation 添加当前会话   Notify TUIConversation to toggle the current conversation
+      window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+    })
+  },
  }
 }
 </script>
 
 <style lang="scss" scoped>
-.font-16 {
- font-size: 16px;
- font-weight: 500;
-}
-
-.button-active {
- &:active {
-   filter: brightness(0.8);
-   opacity: 0.8;
- }
-
- &:hover {
-   opacity: 0.8;
- }
-}
 
 :deep(.xt-active) {
  width: 115px !important;

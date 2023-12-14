@@ -326,9 +326,10 @@ import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-desi
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import { powerState } from '../../js/watch/grade'
 import _ from 'lodash-es'
-import {} from "../task/page/branch/task.ts"
+import {completeTask} from "../task/page/branch/task.ts"
 import { isWin } from '../../js/common/screenUtils'
 import { Icon as Iconify} from '@iconify/vue';
+
 export default {
   name: 'Deck',
   components: {

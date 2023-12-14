@@ -63,6 +63,8 @@
 
       <xt-print  v-if="modelValue" v-model="modelValue"  :content="content"></xt-print>
     </teleport>
+    <!-- 专门处理复制功能 -->
+    <Markdown ref="copyEditor" class="overflow-hidden" style="width:0;height:0;"></Markdown>
   </div>
 
 </template>
@@ -80,6 +82,7 @@ import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
 import {Modal as AntModal} from 'ant-design-vue'
+import Markdown from './components/markdown.vue'
 export default {
   name: 'note',
   components: {
@@ -89,6 +92,7 @@ export default {
     NoteContent,
     Modal,
     Icon,
+    Markdown,
   },
   props: {
     customIndex: String
@@ -158,20 +162,22 @@ export default {
           newIcon: 'fluent:copy-20-regular',
           label: '复制内容',
           callBack: () => {
-            // let content = this.$refs.mdEditor.getContent()
-
-            let content = this.noteList[this.selNote]?.customData.text
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getContent();
             require('electron').clipboard.writeHTML(content)
             message.success('复制内容成功')
-            console.log(content, 'md内容')
+            console.log(content, '内容')
           }
         },
         {
           newIcon: 'fluent:markdown-20-regular',
           label: '复制MD文本',
           callBack: () => {
-            let content = this.noteList[this.selNote]?.customData.text
-            // let content = this.$refs.mdEditor.getMarkdown()
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getMarkdown();
+
             require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
             console.log(content, 'md内容')
@@ -181,11 +187,13 @@ export default {
           newIcon: 'fluent:clipboard-code-24-regular',
           label: '复制HTML代码',
           callBack: () => {
-            let content = this.noteList[this.selNote]?.customData.text
-            // let content = this.$refs.mdEditor.getContent()
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getContent();
+            
             require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
-            console.log(content, 'md内容')
+            console.log(content, 'HTML内容')
           }
         },
         {
@@ -282,5 +290,19 @@ export default {
 </script>
 
 <style scoped>
+
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滚动条颜色 */
+    border-radius: 6px; /* 滚动条圆角 */
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #999; /* 悬停时滚动条颜色 */
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 6px; /* 轨道圆角 */
+  }
 
 </style>
