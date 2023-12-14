@@ -1,6 +1,6 @@
 <template>
   <teleport to='body'>
-   <Modal v-if="modalVisible" v-model:visible="modalVisible" :blurFlag="true" style="z-index: 1002;">
+   <Modal v-if="modalVisible" v-model:visible="modalVisible" :blurFlag="true" style="z-index: 1010;">
      <div class="flex px-5 my-3.5" style="width: 400px;">
       <CourierIcon icon="ant-design:info-circle-filled" style="font-size: 1.5rem;color: var(--warning);"/>
       <div class="flex flex-col ml-4 justify-between" style="width: 316px;">

@@ -92,7 +92,7 @@
         <vuuri
           v-show="showGrid"
           :key="key"
-          v-if="currentDesk.cards.length > 0 && !hide && !isFreeLayout"
+          v-if="currentDesk.cards.length > 0 && !hide && !isFreeLayout  || !freeLayout"
           item-key="id"
           :get-item-margin="
             () => {
@@ -169,8 +169,7 @@
     <div style="height: calc(80vh); width: 500px">
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
-          <div class="mb-4">桌面图标和名称</div>
-
+          <div class="mb-4">桌面名称</div>
           <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
         </div>
 

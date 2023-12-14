@@ -219,7 +219,7 @@ export default {
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          if (['lock', 'power' ].includes(currentRoute.name)) {
+          if (['lock', 'power' ].includes(currentRoute.name) || true) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
@@ -241,7 +241,7 @@ export default {
             this.$router.replace({ name: 'home' })
           }else{
             this.$router.replace(currentRoute)
-          }       
+          }
         }
       }
 
