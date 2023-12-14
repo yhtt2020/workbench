@@ -275,11 +275,11 @@ import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
-import AddIcon from './desk/navigationBar/components/AddIcon.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import _ from 'lodash-es'
 export default {
   name: 'BottomPanel',
@@ -302,9 +302,9 @@ export default {
     TaskBox,
     navIcon,
     navigationSetting,
-    AddIcon,
     EditNewNavigation,
     xtMixMenu,
+    EditIcon
   },
   data() {
     return {
@@ -354,7 +354,7 @@ export default {
           id: 2,
           label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editIcon(this.currentItem) },
         },
         {
           id: 3,
@@ -691,6 +691,11 @@ export default {
     //     }))
     //   console.log(this.dropList)
     // },
+    editIcon(item) {
+      this.quick = true
+      this.componentId = 'EditIcon'
+      this.editItem = item
+    },
     async toggleTeam() {
       await this.updateMy(0)
       if (this.team.status === false) {

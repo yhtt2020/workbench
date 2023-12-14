@@ -33,7 +33,19 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             // 存储改变前的数据
             oldToggle:[],
             // 弹窗次数
-            popVisible:true
+            popVisible:true,
+            // 编辑图标颜色自定义
+            colorSwitch:true,
+            // 导航栏颜色自定义
+            navColorSwitch:true,
+            // 图标编辑元素
+            editItem:'',
+            // 导航栏尺寸
+            navSize:'100%',
+            // 导航栏圆角
+            navRadius:'18',
+            // 图标圆角
+            iconRadius:'12',
         }
     },
     actions:{
