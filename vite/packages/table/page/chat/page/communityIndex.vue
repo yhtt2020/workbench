@@ -150,7 +150,7 @@ export default defineComponent({
     })
 
     onMounted(()=>{
-      const mit = globalProperties.$mit
+      const mit = globalProperties.$bus
       mit.on('clickItem',(item)=>{
         currentItem(item)
       })
