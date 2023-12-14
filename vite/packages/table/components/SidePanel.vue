@@ -88,6 +88,7 @@ import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import _ from 'lodash-es'
 export default {
   name: 'SidePanel',
   components: {
@@ -266,7 +267,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','levelVisible']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -301,6 +302,12 @@ export default {
           name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
+        },
+        {
+          id: 5,
+          name: this.levelVisible ? '隐藏等级' : '显示等级',
+          newIcon: "fluent:star-16-regular",
+          fn: () => { this.levelVisible = !this.levelVisible }
         },
       ]
 
@@ -417,12 +424,12 @@ export default {
             that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
           }
         },
-        onUpdate: function (event) {
+        onUpdate: _.debounce(function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-
+          // console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -431,8 +438,10 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          that.sortNavigationList(event)
-        },
+          that.sortFootNavigationList(event)
+          that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
+          that.updateMainNav();
+        }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
           that.popVisible=false
