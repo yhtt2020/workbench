@@ -71,28 +71,28 @@
       <vue-custom-scrollbar :settings="settingsScroller" style="height:60vh;" v-else>
         <template  v-if="singDoubleCol === false && floatData.channelList.length !== 0">
           <div class="flex flex-col" :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
-            <div v-for="channel in floatData.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-              <MenuDropdown :type="channel.type" :no="no" :item="channel"  @currentItem="currentItem"/>
+            <div v-for="channel in floatData.channelList" :class="{'xt-theme-bg-2': currentID === channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item" @click="currentItem(channel)">
+              <MenuDropdown :type="channel.type" :no="no" :item="channel"  @click="currentItem(channel)"/>
             </div>
           </div>
         </template>
         <template v-else-if="floatData.channelList?.length !== 0">
-          <div class="flex grid grid-cols-2 gap-1 " :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
-            <div v-for="channel in floatData.channelList" :class="{'active-bg': currentID ===channel.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-              <MenuDropdown :type="channel.type" :no="no" :item="channel" @currentItem="currentItem"/>
+          <div class="flex grid grid-cols-2 gap-1 "  :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+            <div v-for="channel in floatData.channelList" :class="{'xt-theme-bg-2': currentID ===channel.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item"  @click="currentItem(channel)">
+              <MenuDropdown :type="channel.type" :no="no" :item="channel"  @click="currentItem(channel)"/>
             </div>
           </div>
         </template>
         <div v-for="item in floatData.categoryList">
           <ChatFold :title="item.name" :content="item" :show="true" :no="no">
               <div class="flex flex-col" v-if="singDoubleCol === false">
-                <div v-for="children in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-                  <MenuDropdown :type="children.type" :no="no" :item="children" @currentItem="currentItem"/>
+                <div v-for="children in item.children" :class="{'xt-theme-bg-2':currentID === children.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item" @click="currentItem(children)">
+                  <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>
               </div>
               <div class="flex grid grid-cols-2 gap-1" v-else>
-                <div v-for="children in item.children" :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item">
-                  <MenuDropdown :type="children.type" :no="no" :item="children" @currentItem="currentItem"/>
+                <div v-for="children in item.children" :class="{'xt-theme-bg-2':currentID === children.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item" @click="currentItem(children)">
+                  <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>
               </div>
           </ChatFold>
@@ -253,6 +253,7 @@ const dropMenuList = computed(()=>{
 })
 // 当前点击
 const currentItem = (item) =>{
+  console.log('触发',item);
   data.currentID  = item.id;
   data.categoryItem = item;
   proxy.$bus.emit('clickItem',item);
@@ -298,13 +299,10 @@ const floatData = computed(()=>{
 
 
 
-const { emptyImage,textUrl,collapsed,settingsScroller,categoryItem, } = toRefs(data);
+const { emptyImage,textUrl,collapsed,settingsScroller,categoryItem,currentID } = toRefs(data);
 </script>
 
 <style lang="scss" scoped>
-.active-bg {
-  background: var(--active-secondary-bg);
- }
  .summary-2{
    display: -webkit-box;
    -webkit-box-orient: vertical;
@@ -345,5 +343,11 @@ const { emptyImage,textUrl,collapsed,settingsScroller,categoryItem, } = toRefs(d
    &:hover{
      background: var(--primary-bg);
    }
+ }
+
+ .group-item{
+  &:hover{
+    background: var(--active-secondary-bg) !important;
+  }
  }
 </style>
