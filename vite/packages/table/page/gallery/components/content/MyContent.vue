@@ -1,37 +1,22 @@
 <template>
-  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" class="grow shrink" style="height: 100%;">
-   <viewer :images="myPaperList" :options="options" class="px-2.5">
-    <a-row :gutter="[20, 20]" id="bingImages">
-     <a-col class="image-wrapper" v-for="img in myPaperList" :span="6" >
-      <xt-mix-menu :menus="myMenus" fn="callBack" @mounted="this.myCurrentID = img" >
-        <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" 
-        @mouseenter="show(img)" @mouseleave="hide(img)"
-        />
-        <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="">
-          <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>
-        </div>
-        <div class="absolute" style="left:16px;" :style="isModal ? {top: '4px'}:{top: '8px'}">
-          <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2" style="border-radius: 8px;" @click="addToActive(img)" >
-            <a-checkbox :checked="isInActive(img)"></a-checkbox>
-          </xt-button>
-        </div>
-        <div class="absolute flex " style="right:20px;" :style="isModal ? {top: '4px'}:{top: '8px'}">
-          <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-3" style="border-radius: 8px;" @click="download(img)">
-            <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20"></xt-new-icon>
-            </div>
-          </xt-button>
-          <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2" style="border-radius: 8px;" @click="removeToMyPaper(img)">
-            <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
-              <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20"></xt-new-icon>
-            </div>
-          </xt-button>
-        </div>
-      </xt-mix-menu>
-     </a-col>
-    </a-row>
-   </viewer>
+  <vue-custom-scrollbar :settings="settingsScroller" class="grow shrink" style="height: 100%;">
+    <viewer :images="myPaperList" :options="options" class="px-2.5">
+      <a-row :gutter="[20, 20]" id="bingImages">
+       <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6" 
+        style="padding-left: 0 !important;padding-right: 12px !important;"
+       >
+         <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
+         <!-- <div class="absolute top-0 pointer left-0 w-full h-full" @click="clickImg(index)">
+          <xt-mix-menu :menus="myMenus" fn="callBack" @mounted="this.myCurrentID = img">
+            122
+          </xt-mix-menu>
+         </div> -->
+         <!-- <xt-mix-menu :menus="myMenus" fn="callBack" @mounted="this.myCurrentID = img" >
+          <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
+         </xt-mix-menu> -->
+       </a-col>
+      </a-row>
+    </viewer>
   </vue-custom-scrollbar>
  </template>
  
@@ -223,14 +208,10 @@
       }
     },
 
-    // 鼠标移入事件
-    show(item){
-      // console.log(item,this.myCurrentID);
-      // this.hoverVisible = true;
-    },
-    // 鼠标移出事件
-    hide(){
-      // this.hoverVisible = false;
+    // 预览图事件被元素遮挡是触发
+    clickImg(index){
+      console.log('执行....111');
+      // console.log('执行....',index,document.querySelector('.image-item'));
     },
    },
  };
@@ -253,4 +234,5 @@
  :deep(.ant-checkbox-inner){
     border: 1px solid var(--active-text);
  }
+
  </style>

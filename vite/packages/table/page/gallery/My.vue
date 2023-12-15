@@ -1,12 +1,12 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <div class="h-10 flex items-center justify-between mb-5 ">
+    <div class="h-10 flex items-center justify-between mb-4 ">
       <div class="flex items-center justify-center">
         <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'1.25rem'}" class="mr-2 xt-text"/>
         <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center  pr-3">
         <template v-if="!isModal">
           <xt-button @click="playAll" class="mr-3 xt-bg-t-2"  h="40" w="113" style="border-radius: 8px;">
             <div class="flex items-center justify-center">
@@ -20,7 +20,7 @@
               <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
             </div>
           </xt-button>
-          <xt-button h="40" w="154" style="border-radius: 8px;" @click="openRight"  class="mr-2 xt-bg-t-2">
+          <xt-button h="40" w="154" style="border-radius: 8px;" @click="openRight"  class="xt-bg-t-2">
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-text mr-2" />
               <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 

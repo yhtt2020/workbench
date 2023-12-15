@@ -1,7 +1,7 @@
 <template>
   <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="p-0" maskIndex="1010" index="1010">
-    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 pt-2" w="64" style="height: 600px;width: 976px; margin: 0 !important;border-radius: 12px !important;" :list="galleryList" :index="galleryIndex" last="5" end="1">
-      <div class="w-full xt-bg-2 rounded-r-xl p-2">
+    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" style="height: 600px;width: 976px; margin: 0 !important;border-radius: 12px !important;" :list="galleryList" :index="galleryIndex" last="5" end="1">
+      <div class="w-full xt-bg-2 rounded-r-xl pl-4 pr-1 py-4">
         <template v-if="galleryIndex === 'm'">
           <My isModal="true"/>
         </template>
@@ -77,7 +77,7 @@ export default {
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        newIcon:'fluent:image-multiple-16-filled', index:'p',
+        newIcon:'fluent:image-multiple-16-regular', index:'p',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
