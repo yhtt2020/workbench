@@ -1,6 +1,7 @@
 <template>
     <div class="w-[452px]">
-        <div class="w-full p-4 text-sm rounded-xl xt-text-2 xt-bg-2 h-[52px]" style="text-align: left;">当前图标为「自定义」类型</div>
+        <div class="w-full p-4 text-sm rounded-xl xt-text-2 xt-bg-2 h-[52px] mb-4" style="text-align: left;">当前图标为「自定义」类型</div>
+        <EditName :editItem="props.editItem"></EditName>
         <div class="w-full h-[323px] rounded-xl xt-bg-2 mt-4 p-4">
             <div class="text-base xt-text">图标链接</div>
             <div class="mt-2 mb-2 text-sm xt-text-2">自定义图标打开链接，支持网站地址或本地文件快捷方式类型。</div>
@@ -18,6 +19,7 @@
 <script setup lang='ts'>
 import { ref, reactive,onMounted } from 'vue'
 import RadioTab from '../../../../../RadioTab.vue';
+import EditName from './EditName.vue';
 const iconLink=ref([{title:'网站链接',value:'link'},{title:'系统程序或文件',value:'system'}])
 const openWay = ref([{title:'内置浏览器',value:"inner"},{title:"默认浏览器",value:"default"},{title:'想天浏览器',value:"xt"}])
 const defaultLink=ref({title:'网站链接',value:"link"})
