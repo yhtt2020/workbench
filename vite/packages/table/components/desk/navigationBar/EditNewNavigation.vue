@@ -152,7 +152,7 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/community.svg',
                     name: '社群',
-                    event: 'chat',
+                    value: 'chat',
                     tab: 'community',
                     fn: () => {
                         vm.$router.push({ name: 'chat' })
@@ -164,19 +164,19 @@ export default {
                     icon: '/logo/efficiency.svg',
                     name: '效率助手',
                     tab: 'work',
-                    event: 'work',
+                    value: 'work',
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/home.svg',
                     name: '桌面主页',
-                    event: 'home',
+                    value: 'home',
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/settings.svg',
                     name: '设置中心',
-                    event: 'setting',
+                    value: 'setting',
                     fn: () => { vm.$router.push({ name: 'setting' }) }
                 },
 
@@ -184,7 +184,7 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/music.svg',
                     name: '网易云音乐',
-                    event: 'music',
+                    value: 'music',
                     tag: 'recommendation'
                 },
 
@@ -192,20 +192,20 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/todo.svg',
                     name: '待办',
-                    event: 'todo',
+                    value: 'todo',
                     fn: () => { vm.$router.push({ name: 'todo' }) }
                 },
                 {
-                    "type": "systemApp",
-                    "icon": "/logo/ai.svg",
-                    "name": "AI助手",
-                    "event": "ai"
+                    type: "systemApp",
+                    icon: "/logo/ai.svg",
+                    name: "AI助手",
+                    value: "ai"
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/app.svg',
                     name: '应用中心',
-                    event: 'apps',
+                    value: 'apps',
                 },
 
             ],
@@ -225,7 +225,15 @@ export default {
             contentHeight: 420,
             contentWidth: 800,
             modalVisible: false,
-            currentTitle: null
+            currentTitle: null,
+            defaultType:{
+                type:'systemApp',
+                name:'',
+                value:"",
+                icon:"",
+                bg:"",
+                isBg:'false',
+            },
         }
     },
     methods: {
@@ -253,6 +261,21 @@ export default {
             const web = await getNavList()
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
+            this.ClassifyData = this.replace(this.ClassifyData)
+            console.log(this.ClassifyData,'ClassifyData');
+        },
+        // 更换图标格式
+        replace(list){
+            return list.map((item)=>{
+                return {
+                    name:item.name,
+                    icon:item.icon,
+                    type:item.type,
+                    value:item.path || item.url || item.event || item.data,
+                    bg:'',
+                    isBg:false
+                }
+            })
         },
         onClick(index) {
             this.clickIndex = index

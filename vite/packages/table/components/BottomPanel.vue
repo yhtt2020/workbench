@@ -12,7 +12,8 @@
         /* border-radius: 18px; */
         /* width: 160px; */
         border: 1px solid var(--divider);
-      " :style="{height:80*(this.navAttribute.navSize/100)+'px',borderRadius:this.navAttribute.navRadius+'px',background:this.navAttribute.navBgColor}">
+      "
+        :style="{ height: 80 * (this.navAttribute.navSize / 100) + 'px', borderRadius: this.navAttribute.navRadius + 'px', background: this.navAttribute.navBgColor }">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
@@ -39,7 +40,8 @@
         z-index: 99;
         min-width: 70px;
         border: 1px solid var(--divider);
-      " :style="{height:80*(this.navAttribute.navSize/100)+'px',borderRadius:this.navAttribute.navRadius+'px',background:this.navAttribute.navBgColor}">
+      "
+        :style="{ height: 80 * (this.navAttribute.navSize / 100) + 'px', borderRadius: this.navAttribute.navRadius + 'px', background: this.navAttribute.navBgColor }">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
           <div style="
           display: flex;
@@ -66,15 +68,18 @@
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="clickNavigation(item)">
-                        <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'" :style="{borderRadius:iconRadius+'px',background:item.bgColor || ''}"
+                        <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'"
+                          :style="{ borderRadius: iconRadius + 'px', background: item.bgColor || '' }"
                           class="relative flex items-center justify-center ">
-                          <a-avatar :size="52" shape="square" :src="item.icon" :style="{borderRadius:iconRadius+'px'}"
+                          <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                         <div v-else style="width: 52px; height: 52px;"
-                          class="relative flex items-center justify-center rounded-xl" :style="{background:item.bgColor || ''}">
+                          class="relative flex items-center justify-center rounded-xl"
+                          :style="{ background: item.bgColor || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
-                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)" :style="{borderRadius:iconRadius+'px'}"
+                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
+                            :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>
@@ -428,10 +433,10 @@ export default {
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, [
-      'editToggle', 'taskBoxVisible', 
-      'selectNav', 'bottomToggle', 
+      'editToggle', 'taskBoxVisible',
+      'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-       'editItem','navAttribute','iconRadius'
+      'editItem', 'navAttribute', 'iconRadius'
     ]),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
@@ -791,199 +796,235 @@ export default {
       }
 
     },
+    newOpenApp(type, value) {
+      switch (this.type) {
+        // 默认浏览器
+        case "default":
+          browser.openInSystem(this.value);
+          break;
+        // 嵌入浏览器
+        case "internal":
+          browser.openInTable(this.value);
+          break;
+        // 想天浏览器
+        case "thinksky":
+          browser.openInInner(this.value);
+          break;
+        // 轻应用
+        case "lightApp":
+          ipc.send("executeAppByPackage", {
+            package: this.value,
+          });
+          break;
+        // 酷应用
+        case "coolApp":
+          this.$router.push({ name: "app", params: this.value });
+          break;
+        // 本地应用
+        case "tableApp":
+          require("electron").shell.openPath(
+            require("path").normalize(this.value)
+          );
+          break;
+        case "localApp":
+          require("electron").shell.openPath(this.value);
+        case "systemApp":
+          this.$router.push({ name: this.value });
+      }
+    },
     // 拖拽桌面图标
     async drop(e) {
-      // this.modelValue=false
-      const width = window.innerWidth
-      let files = e.dataTransfer.files
-      if (e.x <= 300) {
-        this.selectNav = 'left'
-      } else if (e.x > 300 && e.x < width - 300) {
-        this.selectNav = 'foot'
-      } else if (e.x >= width - 300) {
-        this.selectNav = 'right'
-      }
-      let filesArr = []
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path)
+        // this.modelValue=false
+        const width = window.innerWidth
+        let files = e.dataTransfer.files
+        if (e.x <= 300) {
+          this.selectNav = 'left'
+        } else if (e.x > 300 && e.x < width - 300) {
+          this.selectNav = 'foot'
+        } else if (e.x >= width - 300) {
+          this.selectNav = 'right'
         }
-      }
-      this.dropList = await Promise.all(filesArr.map(async (item) => {
-        const fileName = item.substring(item.lastIndexOf("\\") + 1);
-        let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
-      }))
-      this.clickRightListItem(this.dropList)
-      // this.dropList.forEach((item)=>{
-      //   this.setFootNavigationList(item)
-      // })
+        let filesArr = []
+        if (files && files.length > 0) {
+          for (let i = 0; i < files.length; i++) {
+            filesArr.push(files[i].path)
+          }
+        }
+        this.dropList = await Promise.all(filesArr.map(async (item) => {
+          const fileName = item.substring(item.lastIndexOf("\\") + 1);
+          let dropFiles = await tsbApi.system.extractFileIcon(item)
+          return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+        }))
+        this.clickRightListItem(this.dropList)
+        // this.dropList.forEach((item)=>{
+        //   this.setFootNavigationList(item)
+        // })
 
-      // 添加完后清空
-      this.dropList = []
-      // this.modelValue=true
-    },
-    // 添加图标的主要函数
-    clickRightListItem(item, index) {
-      this.activeRightItem = index
-      //   this.editFlag = false
-      if (this.selectNav === 'foot') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setFootNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
+        // 添加完后清空
+        this.dropList = []
+        // this.modelValue=true
+      },
+      // 添加图标的主要函数
+      clickRightListItem(item, index) {
+        this.activeRightItem = index
+        //   this.editFlag = false
+        if (this.selectNav === 'foot') {
+          if (item instanceof Array) {
+            for (let i = 0; i < item.length; i++) {
+              if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+                this.updateMainNav(item[i], 'add')
+                item[i].addNav = true
+                this.setFootNavigationList(item[i])
+              } else {
+                message.info('已添加', 1)
+              }
             }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setFootNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.content
-            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-          })
-        }
-      }
-    },
-    updateMainNav(addItem, type) {
-      this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-      // console.log(this.mainNavList, 'this.mainNavList')
-      let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-      if (type) {
-        this.mainNavList.forEach(item => {
-          if (item?.name === addItem.name) {
-            if (type === 'add') {
-              item.addNav = true
-            } else if (type === 'del') {
-              item.addNav = false
-            }
-          }
-        })
-      } else {
-        for (const i in this.mainNavList) {
-          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-          this.mainNavList[i].addNav = stateNav
-        }
-      }
-    },
-    completeEdit() {
-      this.toggleEdit()
-      this.setQuick()
-    },
-    disableDrag() {
-      // if (this.sortable) {
-      document.removeEventListener('click', this.disableDrag)
-      // this.sortable.destroy()
-      this.sortable = null
-      // message.info('已中止导航栏调整')
-      // }
-    },
-    enableDrag() {
-      // if (this.sortable || !this.editToggle) {
-      //   return
-      // }
-      // document.addEventListener('click', this.disableDrag)
-      let that = this
-      let drop = document.getElementById('bottomContent')
-      this.sortable = Sortable.create(drop, {
-        sort: true,
-        animation: 150,
-        delay: 50,
-        delayOnTouchOnly: true,
-        onStart: function (event) {
-          if (that.popVisible) {
-            that.notifications.NoticeToast()
-          }
-          let delIcon = document.getElementById('delIcon2')
-          that.tooltipVisible = false
-          that.delItemIcon = true
-          that.$emit('getDelIcon', true)
-          this.delNav = true
-          if (this.delNav) {
-            delIcon.ondragover = function (ev) {
-              ev.preventDefault()
-            }
-          }
-          delIcon.ondrop = function (ev) {
-            that.delItemIcon = false
-            let oneNav = that.footNavigationList[event.oldIndex]
-            //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
-              that.removeFootNavigationList(event.oldIndex)
-              return
-            }
-            let sumList = []
-            // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.leftNav && that.rightNav) {
-              sumList = that.sideNavigationList.concat(
-                that.rightNavigationList
-              )
-            } else if (that.leftNav && !that.rightNav) {
-              sumList = that.sideNavigationList
-            } else if (!that.leftNav && that.rightNav) {
-              sumList = that.rightNavigationList
-            } else {
-              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-              // console.log('不可删除')
-              return
-            }
-            that.delNavigation(
-              sumList,
-              oneNav,
-              event.oldIndex,
-              that.removeFootNavigationList
-            )
-          }
-        },
-        onUpdate: function (event) {
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let newItem = drop.children[newIndex]
-          let oldItem = drop.children[oldIndex]
-          // console.log('newIndex', oldItem)
-          // 先删除移动的节点
-          drop.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if (newIndex > oldIndex) {
-            drop.insertBefore(newItem, oldItem)
+            this.dropList = []
           } else {
-            drop.insertBefore(newItem, oldItem.nextSibling)
+            for (let i = 0; i < this.footNavigationList.length; i++) {
+              if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+            }
+            this.updateMainNav(item, 'add')
+            item.addNav = true
+            this.setFootNavigationList(item)
+            this.$nextTick(() => {
+              let scrollElem = this.$refs.content
+              scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+            })
           }
-          that.sortFootNavigationList(event)
-        },
-        onEnd: function (event) {
-          that.tooltipVisible = true
-          that.$emit('getDelIcon', false)
-          that.popVisible = false
-        },
-      })
-      // message.success('开始调整底部栏，点击导航外部即可终止调整。')
-    },
-    renderIcon,
-    delNavigation(sumList, oneNav, index, delMethod) {
-      if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
-        //如果不是必须的
-        delMethod(index)
-      } else {
-        if (sumList.find((item) => item.name === oneNav.name)) {
-          //正常移除
+        }
+      },
+      updateMainNav(addItem, type) {
+        this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
+        // console.log(this.mainNavList, 'this.mainNavList')
+        let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+        if (type) {
+          this.mainNavList.forEach(item => {
+            if (item?.name === addItem.name) {
+              if (type === 'add') {
+                item.addNav = true
+              } else if (type === 'del') {
+                item.addNav = false
+              }
+            }
+          })
+        } else {
+          for (const i in this.mainNavList) {
+            let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+            this.mainNavList[i].addNav = stateNav
+          }
+        }
+      },
+      completeEdit() {
+        this.toggleEdit()
+        this.setQuick()
+      },
+      disableDrag() {
+        // if (this.sortable) {
+        document.removeEventListener('click', this.disableDrag)
+        // this.sortable.destroy()
+        this.sortable = null
+        // message.info('已中止导航栏调整')
+        // }
+      },
+      enableDrag() {
+        // if (this.sortable || !this.editToggle) {
+        //   return
+        // }
+        // document.addEventListener('click', this.disableDrag)
+        let that = this
+        let drop = document.getElementById('bottomContent')
+        this.sortable = Sortable.create(drop, {
+          sort: true,
+          animation: 150,
+          delay: 50,
+          delayOnTouchOnly: true,
+          onStart: function (event) {
+            if (that.popVisible) {
+              that.notifications.NoticeToast()
+            }
+            let delIcon = document.getElementById('delIcon2')
+            that.tooltipVisible = false
+            that.delItemIcon = true
+            that.$emit('getDelIcon', true)
+            this.delNav = true
+            if (this.delNav) {
+              delIcon.ondragover = function (ev) {
+                ev.preventDefault()
+              }
+            }
+            delIcon.ondrop = function (ev) {
+              that.delItemIcon = false
+              let oneNav = that.footNavigationList[event.oldIndex]
+              //将要删除的是否是主要功能
+              if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
+                that.removeFootNavigationList(event.oldIndex)
+                return
+              }
+              let sumList = []
+              // 判断其他导航栏是否是打开状态，是则获取功能列表
+              if (that.leftNav && that.rightNav) {
+                sumList = that.sideNavigationList.concat(
+                  that.rightNavigationList
+                )
+              } else if (that.leftNav && !that.rightNav) {
+                sumList = that.sideNavigationList
+              } else if (!that.leftNav && that.rightNav) {
+                sumList = that.rightNavigationList
+              } else {
+                message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+                // console.log('不可删除')
+                return
+              }
+              that.delNavigation(
+                sumList,
+                oneNav,
+                event.oldIndex,
+                that.removeFootNavigationList
+              )
+            }
+          },
+          onUpdate: function (event) {
+            let newIndex = event.newIndex,
+              oldIndex = event.oldIndex
+            let newItem = drop.children[newIndex]
+            let oldItem = drop.children[oldIndex]
+            // console.log('newIndex', oldItem)
+            // 先删除移动的节点
+            drop.removeChild(newItem)
+            // 再插入移动的节点到原有节点，还原了移动的操作
+            if (newIndex > oldIndex) {
+              drop.insertBefore(newItem, oldItem)
+            } else {
+              drop.insertBefore(newItem, oldItem.nextSibling)
+            }
+            that.sortFootNavigationList(event)
+          },
+          onEnd: function (event) {
+            that.tooltipVisible = true
+            that.$emit('getDelIcon', false)
+            that.popVisible = false
+          },
+        })
+        // message.success('开始调整底部栏，点击导航外部即可终止调整。')
+      },
+      renderIcon,
+        delNavigation(sumList, oneNav, index, delMethod) {
+        if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
+          //如果不是必须的
           delMethod(index)
         } else {
-          //不可移除
-          message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+          if (sumList.find((item) => item.name === oneNav.name)) {
+            //正常移除
+            delMethod(index)
+          } else {
+            //不可移除
+            message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+          }
         }
-      }
+      },
     },
-  },
-}
+  }
 </script>
 <style></style>
 <style lang="scss" scoped>
@@ -1115,5 +1156,4 @@ export default {
   :last-child {
     margin-right: 0;
   }
-}
-</style>
+}</style>
