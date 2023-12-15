@@ -67,7 +67,7 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                        @click.stop="clickNavigation(item)">
+                        @click.stop="newOpenApp(item.type,item.value)">
                         <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bgColor || '' }"
                           class="relative flex items-center justify-center ">
@@ -797,39 +797,40 @@ export default {
 
     },
     newOpenApp(type, value) {
-      switch (this.type) {
+      console.log(type,value,'===>>>type--value');
+      switch (type) {
         // 默认浏览器
         case "default":
-          browser.openInSystem(this.value);
+          browser.openInSystem(value);
           break;
         // 嵌入浏览器
         case "internal":
-          browser.openInTable(this.value);
+          browser.openInTable(value);
           break;
         // 想天浏览器
         case "thinksky":
-          browser.openInInner(this.value);
+          browser.openInInner(value);
           break;
         // 轻应用
         case "lightApp":
           ipc.send("executeAppByPackage", {
-            package: this.value,
+            package: value,
           });
           break;
         // 酷应用
         case "coolApp":
-          this.$router.push({ name: "app", params: this.value });
+          this.$router.push({ name: "app", params: value });
           break;
         // 本地应用
         case "tableApp":
           require("electron").shell.openPath(
-            require("path").normalize(this.value)
+            require("path").normalize(value)
           );
           break;
         case "localApp":
-          require("electron").shell.openPath(this.value);
+          require("electron").shell.openPath(value);
         case "systemApp":
-          this.$router.push({ name: this.value });
+          this.$router.push({ name: value });
       }
     },
     // 拖拽桌面图标

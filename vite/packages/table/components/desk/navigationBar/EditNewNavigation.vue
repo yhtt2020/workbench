@@ -1,17 +1,4 @@
 <template>
-    <!-- <div class="flex flex-col"> -->
-    <!-- <div class="flex justify-between">
-        <div id="left-drop" class="border-index " style=" width: 300px;height: 100vh;" @drop.prevent="drop"
-            @dragover.prevent=""></div>
-        <div class="flex flex-col justify-end">
-            <div id="foot-drop" class="border-index " @drop.prevent="drop" style="width:calc(100vw - 600px);height: 300px;"
-                @dragover.prevent=""></div>
-        </div>
-        <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );"
-            @dragover.prevent=""></div>
-
-
-    </div> -->
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
         :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
         <template #nav>
@@ -74,13 +61,14 @@
         <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
             style="box-sizing: border-box;">
             <Introduce ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
-                :inputValue="inputValue" />
+                :inputValue="inputValue" @clickListItem="sendMsg"/>
         </div>
     </NewModel>
     <teleport to="body" :disabled="false">
-        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
+            @ok="onOk"></Msg>
     </teleport>
-    
+
 
     <!-- </div> -->
 </template>
@@ -107,6 +95,7 @@ export default {
         Custom,
         Msg,
     },
+    emits: ['addIcon'],
     data() {
         return {
             ClassifyData: [...navigationData.coolAppList, ...navigationData.systemAppList],
@@ -226,14 +215,6 @@ export default {
             contentWidth: 800,
             modalVisible: false,
             currentTitle: null,
-            defaultType:{
-                type:'systemApp',
-                name:'',
-                value:"",
-                icon:"",
-                bg:"",
-                isBg:'false',
-            },
         }
     },
     methods: {
@@ -254,7 +235,7 @@ export default {
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
-            console.log(desktopApps,lightApps, 'desktopApps');
+            console.log(desktopApps, lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
@@ -262,20 +243,26 @@ export default {
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            console.log(this.ClassifyData,'ClassifyData');
+            console.log(this.ClassifyData, 'ClassifyData');
         },
         // 更换图标格式
-        replace(list){
-            return list.map((item)=>{
+        replace(list) {
+            return list.map((item) => {
                 return {
-                    name:item.name,
-                    icon:item.icon,
-                    type:item.type,
-                    value:item.path || item.url || item.event || item.data,
-                    bg:'',
-                    isBg:false
+                    name: item.name,
+                    icon: item.icon,
+                    type: item.type,
+                    value: item.path || item.package || item.url || item.event || item.data,
+                    bg: '',
+                    isBg: false,
+                    summary: item.summary,
+                    mode: item.type === 'lightApp' ? 'link' : 'app',
+                    ext: item.ext || '',
                 }
             })
+        },
+        sendMsg(item,index){
+            this.$emit('addIcon',item,index)
         },
         onClick(index) {
             this.clickIndex = index
@@ -425,8 +412,8 @@ export default {
         },
         otherList() {
             const sideBarTag = this.navList[this.currentIndex].tag;
-            console.log('this.webList',this.webList)
-            console.log('this.filterList',this.filterList)
+            console.log('this.webList', this.webList)
+            console.log('this.filterList', this.filterList)
             if (sideBarTag === 'recommendation' || this.currentTitle === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {

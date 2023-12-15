@@ -1,6 +1,6 @@
 <template>
-  <!-- <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'"> -->
-  <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate">
+  <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'">
+  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
       class="relative flex flex-row justify-center max-h-full pt-0 pb-0 box common-panel s-bg side-bar"
@@ -36,8 +36,8 @@
       </div>
 
     </div>
-  </xt-menu>
-  <!-- </xtMixMenu> -->
+  <!-- </xt-menu> -->
+  </xtMixMenu>
   <Common ref="common"></Common>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
