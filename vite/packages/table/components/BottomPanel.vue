@@ -663,7 +663,7 @@ export default {
       } else {
         this.bottomToggle[2] = false
       }
-    }
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -1038,8 +1038,8 @@ export default {
           that.tooltipVisible = false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
-          this.delNav = true
-          if (this.delNav) {
+          that.delNav = true
+          if (that.delNav) {
             delIcon.ondragover = function (ev) {
               ev.preventDefault()
             }
@@ -1095,7 +1095,7 @@ export default {
           that.sortFootNavigationList(event)
           that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
           that.updateMainNav();
-          console.log(that.isDelete,'isDelete',that.footNavigationList);
+          console.log('isDelete',that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true
@@ -1103,6 +1103,13 @@ export default {
           that.popVisible = false
           that.isDelete=true
         },
+        onMove:function(event){
+          // console.log(event);
+          that.isDelete=false
+        },
+        // onRemove: function (event) {
+        //   console.log(111111111,'=====onRemove');
+        // }
       })
       // message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
