@@ -53,7 +53,7 @@
       </FreeLayoutScrollbar>
     </FreeLayoutMask>
     <vue-custom-scrollbar
-    v-show="!isFreeLayout"
+      v-show="!isFreeLayout"
       class="no-drag"
       key="scrollbar"
       id="scrollerBar"
@@ -92,7 +92,10 @@
         <vuuri
           v-show="showGrid"
           :key="key"
-          v-if="currentDesk.cards.length > 0 && !hide && !isFreeLayout  || !freeLayout"
+          v-if="
+            (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
+            !freeLayout
+          "
           item-key="id"
           :get-item-margin="
             () => {
@@ -130,7 +133,7 @@
           </template>
         </vuuri>
         <div
-          class="xt-text"
+          class="xt-text "
           v-show="!showGrid"
           style="
             text-align: center;
@@ -172,50 +175,54 @@
           <div class="mb-4">桌面名称</div>
           <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
         </div>
+        <template v-if="!isFreeLayout">
+          <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
+            <div class="flex justify-between mb-4">
+              <div>垂直布局</div>
+              <a-switch v-model:checked="currentDesk.settings.vDirection" />
+            </div>
+            <div class="my-34 text-sm xt-text-2">
+              使桌面滚动方式改为垂直滚动。
+            </div>
 
-        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
-          <div class="flex justify-between mb-4">
-            <div>垂直布局</div>
-            <a-switch v-model:checked="currentDesk.settings.vDirection" />
-          </div>
-          <div class="my-34 text-sm xt-text-2">
-            使桌面滚动方式改为垂直滚动。
-          </div>
-
-          <hr class="my-4" />
-          <div class="flex justify-between mb-4">
-            <div>独立缩放</div>
-            <a-switch v-model:checked="settings.enableZoom" @change="update" />
-          </div>
-          <div class="my-4 text-sm xt-text-2">
-            开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
-          </div>
-          <template v-if="settings.enableZoom">
-            <div class="mb-4">卡片缩放</div>
-            <a-slider
-              @afterChange="update"
-              :min="20"
-              :max="500"
-              v-model:value="settings.cardZoom"
-            ></a-slider>
             <hr class="my-4" />
+            <div class="flex justify-between mb-4">
+              <div>独立缩放</div>
+              <a-switch
+                v-model:checked="settings.enableZoom"
+                @change="update"
+              />
+            </div>
+            <div class="my-4 text-sm xt-text-2">
+              开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。
+            </div>
+            <template v-if="settings.enableZoom">
+              <div class="mb-4">卡片缩放</div>
+              <a-slider
+                @afterChange="update"
+                :min="20"
+                :max="500"
+                v-model:value="settings.cardZoom"
+              ></a-slider>
+              <hr class="my-4" />
 
-            <div class="my-4">卡片空隙</div>
-            <a-slider
-              :min="5"
-              :max="30"
-              v-model:value="settings.cardMargin"
-            ></a-slider>
-            <hr class="my-4" />
+              <div class="my-4">卡片空隙</div>
+              <a-slider
+                :min="5"
+                :max="30"
+                v-model:value="settings.cardMargin"
+              ></a-slider>
+              <hr class="my-4" />
 
-            <div class="my-4">距离顶部</div>
-            <a-slider
-              :min="0"
-              :max="200"
-              v-model:value="settings.marginTop"
-            ></a-slider>
-          </template>
-        </div>
+              <div class="my-4">距离顶部</div>
+              <a-slider
+                :min="0"
+                :max="200"
+                v-model:value="settings.marginTop"
+              ></a-slider>
+            </template>
+          </div>
+        </template>
         <FreeLayoutState
           v-if="$route.path == '/main' && freeLayout"
           @scrollbarRedirect="freeLayoutScrollbarRedirect"
