@@ -16,11 +16,6 @@
       <div
       class="mt-4 w-full"
         style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
-        <!-- <div style="padding: 0.5em">
-          <a-steps :current="step" size="large">
-            <a-step v-for="item in steps" :title="item.title"/>
-          </a-steps>
-        </div> -->
         <div v-if="step===0">
           <div class="font-16" style="margin-bottom: 2em;text-align: center;color: var(--secondary-text);" v-if="true">
             如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
@@ -62,93 +57,42 @@
 
 
         </div>
-        <div v-if="step===1 && mod==='second-screen'" class="flex justify-center">
 
-          <div v-if="screenSettingTab==='none'" class="mt-6">
-
-            <a-row class="screen-section" @click="screenSettingTab='touch'">
-              <a-col :span="19">
-                <div>
-                  副屏是否已经可正确识别触摸？
-                </div>
-                <div class="font-title">异常情况：触摸副屏，反馈在主屏的情况。</div>
-              </a-col>
-              <a-col :span="5" class="font-button">
-                设置触摸 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
-                <!-- <a-button v-if="screenSettingTab!=='touch'" type="primary"> 矫正屏幕
-                </a-button> -->
-              </a-col>
-            </a-row>
-            <a-row class="screen-section" @click="screenSettingTab='choose'">
-              <a-col :span="19">
-                <div>
-                  工作台是否显示在了您期望的屏幕上？
-                </div>
-              </a-col>
-              <a-col :span="5" class="font-button">
-                选择屏幕 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
-              </a-col>
-            </a-row>
-            <a-row class="screen-section" @click="screenSettingTab='scale'">
-              <a-col :span="19">
-                <div>
-                  工作台界面显示不自然？
-                </div>
-                <div class="font-title">字体过小、难以触摸、边缘留白过大、显示不全。</div>
-              </a-col>
-              <a-col :span="5" class="font-button">
-                设置缩放 <MyIcon icon="fluent:chevron-right-16-regular" color='var(--secondary-text)'/>
-                <!-- <a-button type="primary">设置缩放</a-button> -->
-              </a-col>
-            </a-row>
-          </div>
-
-          <div v-if="screenSettingTab==='touch'">
-            <div class="screen-section xt-text" style="line-height: 2;margin-top: 3em;padding: 32px;" v-if="screenSettingTab==='touch'">
-              <p>
-                如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
-              <p class="xt-text-2">设置方法：</p>
-              <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
-              <p class="flex justify-center">
-                <a class="mr-10 flex items-center"  @click="startAdjust">
-                  <MyIcon icon="fluent:hand-draw-16-regular" width="20" height="20" />&nbsp;触摸矫正</a>
-                <a class="flex items-center"  @click="adjustPen">
-                  <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
-              </p>
-            </div>
-
-          </div>
-
-
-          <div class="screen-section mt-6" style="height: 320px;padding: 16px 24px;" v-if="screenSettingTab==='choose'">
+        <div v-if="step===1" class="flex justify-center">
+          <div class="screen-section mt-6" style="height: 320px;padding: 16px 24px;">
             <div class="flex justify-between">
               <div>
                 选择您要显示工作台的屏幕，点击即可。
               </div>
-              <div >
-                <Icon icon="touping"/>
-                  矫正屏幕
+              <div>
+                <a class="mr-10 flex items-center"  @click="step++">
+                  <Icon icon="touping"/>矫正屏幕
+                </a>
               </div>
             </div>
-            <!-- <div v-if="canTouch">
-            </div> -->
             <div class="h-full flex items-center" style="width: 100px;height: 100px;">
               <ChooseScreen></ChooseScreen>
             </div>
           </div>
+        </div>
 
-          <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
-            <div style="color: #999">
-              如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
-            </div>
-            <div class="mt-3">
-              <ZoomUI></ZoomUI>
-            </div>
+        <div v-if="step===2" class="flex justify-center">
+          <div class="screen-section xt-text  mt-6" style="line-height: 2;padding: 32px;">
+            <p>
+              如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
+            <p class="xt-text-2">设置方法：</p>
+            <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
+            <p class="flex justify-center">
+              <a class="mr-10 flex items-center"  @click="startAdjust">
+                <MyIcon icon="fluent:hand-draw-16-regular" width="20" height="20" />&nbsp;触摸矫正</a>
+              <a class="flex items-center"  @click="adjustPen">
+                <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
+            </p>
           </div>
 
-
         </div>
-        <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')" class="px-6">
+
+        <div v-if="step===3" class="px-6">
           <div class="mt-3 mb-3 flex justify-center xt-bg-2" style="padding: 1em;border-radius: 8px 8px;color: white">
             <AutoRun/>
           </div>
@@ -164,7 +108,8 @@
             </p>
           </div>
         </div>
-        <div v-if="step==3">
+
+        <div v-if="step==4">
           <div class="text-center xt-text-2 font-16">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
           <div class="flex flex-wrap justify-center">
             <a-row class="bg-tab" v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.background}">
@@ -178,9 +123,23 @@
             </a-row>
           </div>
         </div>
-        <div v-if="step==4">
+
+        <div v-if="step==5">
           <div class="text-center xt-text-2 font-16">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
           <a-row :gutter="20" class="flex justify-center mt-6">
+            <a-col >
+              <!-- @click="this.desktopSetting='custom'"  -->
+              <img src="../../../public/img/tag.png" class="img-tag" />
+              <div :class="{'active':desktopSetting==='custom'}" class="setting-panel pointer px-4 pt-5">
+                <div class="title">
+                  <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
+                  <div class="mt-2">定制桌面（未开放）</div>
+                </div>
+                <div class="content mt-4">
+                  通过一系列设置，帮你搭建最合适的桌面。
+                </div>
+              </div>
+            </a-col>
             <a-col >
               <div :class="{'active':desktopSetting==='default'}" @click="this.desktopSetting='default'" class="setting-panel pointer px-4 pt-5">
                 <div class="title">
@@ -192,45 +151,28 @@
                 </div>
               </div>
             </a-col>
-            <a-col >
-              <!-- @click="this.desktopSetting='custom'"  -->
-              <div :class="{'active':desktopSetting==='custom'}" class="setting-panel pointer px-4 pt-5">
-                <div class="title">
-                  <MyIcon icon="fluent-emoji:face-savoring-food" width="50px" height="50px" color="var(--primary-text)" />
-                  <div class="mt-2">定制桌面（未开放）</div>
-                </div>
-                <div class="content mt-4">
-                  通过一系列设置，帮你搭建最合适的桌面。
-                </div>
-              </div>
-            </a-col>
           </a-row>
         </div>
-
-
-
-
       </div>
+      <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
-        <div class="flex">
-          <div v-if="step == 1 && (screenSettingTab == 'choose' || screenSettingTab == 'scale' || screenSettingTab == 'touch')" class="pl-20">
-            <xt-button  @click="screenSettingTab='none'" type="theme" size="large" class="button-bottom">
-              已解决
-            </xt-button>
-        </div>
-        <div v-else-if="step == 3" class="flex">
+        <div class="flex" v-if="step == 4">
           <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
           <xt-button type="theme" v-if="this.userInfo.uid" @click="nextStep" size="large"  class="button-bottom ml-3">已登录</xt-button>
         </div>
-        <xt-button  v-else-if="(mod==='second-screen' && step!==3 && step!==4) || (mod==='bootstrap' && step!==4) " class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">{{ step!==1?'下一步':'没有问题'}}
-        </xt-button>
-        <xt-button  v-else-if="step == 4" class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
+        <div class="flex" v-else-if="step == 5">
+          <xt-button class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
         </div>
-
-      </div>
+        <div class="flex" v-else-if="step == 2">
+          <xt-button class="button-bottom ml-3" @click="prevStep"   size="large" type="theme">已解决</xt-button>
+        </div>
+        <div class="flex" v-else>
+          <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">下一步</xt-button>
+        </div>
+    </div>
     </div>
 
   </div>
@@ -276,20 +218,16 @@ export default {
     // 标题名称
     title(){
       if(this.step == 0){
-        return '想天工作台使用向导'
-      }else if((this.step===1 && this.mod==='bootstrap') || (this.step===2 && this.mod==='second-screen')){
-        return '更多设置'
-      }else if(this.step == 1 && this.screenSettingTab == 'none'){
-        return '是否遇到以下问题？'
-      }else if(this.step == 1 && this.screenSettingTab == 'touch'){
-        return '矫正屏幕'
-      }else if(this.step == 1 && this.screenSettingTab == 'choose'){
+        return '天天工作台使用向导'
+      }else if(this.step == 1){
         return '选择屏幕'
-      }else if(this.step == 1 && this.screenSettingTab == 'scale'){
-        return '设置缩放'
+      }else if(this.step == 2){
+        return '矫正屏幕'
       }else if(this.step == 3){
-        return '登录工作台'
+        return '更多设置'
       }else if(this.step == 4){
+        return '登录工作台'
+      }else if(this.step == 5){
         return '选择配置'
       }else{
         return
@@ -494,28 +432,22 @@ export default {
       })
     },
     prevStep () {
-      if (this.mod === 'second-screen') {
-        this.steps = this.stepsSecond
-      } else {
-        this.steps = this.stepsBoot
-      }
-      if (this.step===3 && this.mod==='bootstrap') {
+      if (this.mod === 'bootstrap' && this.step == 3) {
+        this.step = this.step - 3
+      } else if(this.step == 3){
+        this.step-=2
+      }  else {
         this.step--
       }
-      this.step--
     },
     nextStep () {
-      if (this.mod === 'second-screen') {
-        this.rightModel = 'default'
-        this.steps = this.stepsSecond
+      if (this.mod === 'bootstrap' && this.step == 0) {
+        this.step = this.step + 3
+      } else if(this.step == 1){
+        this.step+=2
       } else {
-        this.rightModel =  'follow'
-        this.steps = this.stepsBoot
-      }
-      if (this.step===1 && this.mod==='bootstrap') {
         this.step++
       }
-      this.step++
     },
     finish () {
       this.deskInit = true
@@ -653,5 +585,12 @@ export default {
   margin-top: 16px;
   margin-left: 16px;
   cursor: pointer;
+}
+
+.img-tag{
+  width: 56px;
+  position: absolute;
+  top: 0;
+  right: 9px;
 }
 </style>
