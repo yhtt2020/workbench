@@ -51,3 +51,30 @@ export function changeTime(msec:any){
 
  return lastTime;
 }
+
+// 匹配路径是否存在&进行文件名称获取
+export function getFileName(path:any){
+ const regex = /&/;
+ const fileRegex = /^file:/;
+ const exist = regex.test(path);
+ const existFile = fileRegex.test(path);
+ if(exist){
+  return path.split('&')[1].split('=')[1]
+ }
+ else {
+  if(existFile){
+   return path.split('file://')[1].split('/')[2];
+  }
+  else {
+   return path.split('https://')[1].split('/')[2];
+  }  
+ }
+}
+
+// 判断是否收藏壁纸
+export function isInMyPapers(image:any){
+ const paper = paperStore();
+ const { myPapers } = storeToRefs(paper);
+ const index  = _.findIndex(myPapers.value,function(img:any){ return String(image.src) === String(img.src) });
+ return index > -1;
+}

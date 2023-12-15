@@ -2,30 +2,45 @@
   <div class="w-full h-full flex flex-col">
     <div class="h-10 flex items-center justify-between mb-5 ">
       <div class="flex items-center justify-center">
-        <MyIcon icon="fluent:star-16-regular" style="font-size: 1.25rem;" class="mr-2 xt-text"/>
-        <span  class="s-text xt-text xt-font font-16 font-600">我的收藏 （{{ myPapers.length }}）</span>
+        <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'1.25rem'}" class="mr-2 xt-text"/>
+        <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
       <div class="flex items-center justify-center">
-        <xt-button @click="playAll" class="mr-3" :class="isModal ? 'xt-bg':'xt-bg-t-2'" :h="isModal ? 32 : 40 " :w="isModal ? 32 : 113" style="border-radius: 8px;">
-          <div class="flex items-center justify-center">
-            <MyIcon icon="fluent:play-16-filled" :style="isModal ? { 'font-size':'1rem' }:{ 'font-size':'1.25rem' }" class="xt-text " :class="isModal ? '' : 'mr-2'"/>
-            <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
-          </div>
-        </xt-button>
-        <xt-button w="154" h="40" @click="playActive" class="mr-3" v-if="!isModal" :class="isModal ? 'xt-bg':'xt-bg-t-2'">
-          <div class="flex items-center justify-center">
-            <MyIcon icon="fluent:play-16-filled" :style="isModal ? { 'font-size':'1rem' }:{ 'font-size':'1.25rem' }" class="xt-text mr-2"/>
-            <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
-          </div>
-        </xt-button>
-        <xt-button :h="isModal ? 32 : 40 " :w="isModal ? 32 : 154" style="border-radius: 8px;" @click="openRight"  :class="isModal ? 'mr-2 xt-bg':'xt-bg-t-2'">
-          <div class="flex items-center justify-center">
-            <MyIcon icon="fluent:arrow-download-16-regular" :style="isModal ? { 'font-size':'1rem' }:{ 'font-size':'1.25rem' }" class="xt-text" :class="isModal ? '' : 'mr-2'"/>
-            <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
-          </div>
-        </xt-button>
-        <ClosePaperButton v-if="isModal"/>
+        <template v-if="!isModal">
+          <xt-button @click="playAll" class="mr-3 xt-bg-t-2"  h="40" w="113" style="border-radius: 8px;">
+            <div class="flex items-center justify-center">
+              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-text mr-2" />
+              <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
+            </div>
+          </xt-button>
+          <xt-button w="154" h="40" @click="playActive" class="mr-3 xt-bg-t-2">
+            <div class="flex items-center justify-center">
+              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-text mr-2"/>
+              <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
+            </div>
+          </xt-button>
+          <xt-button h="40" w="154" style="border-radius: 8px;" @click="openRight"  class="mr-2 xt-bg-t-2">
+            <div class="flex items-center justify-center">
+              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-text mr-2" />
+              <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
+            </div>
+          </xt-button>
+        </template>
+
+        <template v-else>
+          <xt-button w="32" h="32" class="xt-bg mr-3" style="border-radius: 8px;" >
+            <div class="flex items-center justify-center">
+              <MyIcon icon="fluent:play-16-filled" style="font-size:1rem"></MyIcon>
+            </div>
+          </xt-button>
+          <xt-button w="32" h="32" class="xt-bg mr-3" style="border-radius: 8px;" @click="openRight"  >
+            <div class="flex items-center justify-center">
+              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1rem" />
+            </div>
+          </xt-button>
+          <ClosePaperButton />
+        </template>
       </div>
     </div>
 
@@ -34,7 +49,7 @@
         <MyEmptyStatus @importLocal="openRight"/>
       </template>
       <template v-else>
-        <MyContent :myPaperList="myPapers" @paperSetting="openBottom" @playPaperVideo="playPaperVideo"/>
+        <MyContent :myPaperList="myPapers" :isModal="isModal" @paperSetting="openBottom" @playPaperVideo="playPaperVideo"/>
       </template>
     </div>
   </div>

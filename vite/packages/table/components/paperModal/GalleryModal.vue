@@ -65,30 +65,30 @@ export default {
     
     const galleryList = ref([
       { 
-        newIcon:'fluent:star-16-regular', index:'m',  title: '我的收藏', 
+        newIcon:'fluent:star-16-regular', index:'m', 
         callBack:(item)=>{ galleryTab(item) }, 
       },
       { 
-        newIcon:'fluent:emoji-smile-slight-24-regular',index:'w', title:'精选壁纸',
+        newIcon:'fluent:emoji-smile-slight-24-regular',index:'w',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        newIcon:'uim:bing', title: '必应壁纸',index:'b',
+        newIcon:'uim:bing',index:'b',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        newIcon:'fluent:image-multiple-16-filled',   title:'拾光壁纸',index:'p',
+        newIcon:'fluent:image-multiple-16-filled', index:'p',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        title: '动态壁纸',index:'l',newIcon:'fluent:image-sparkle-16-regular',
+        index:'l',newIcon:'fluent:image-sparkle-16-regular',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       // {
       //   full:true,
       // },
       {
-        index: 's',  title: '设置',newIcon:'fluent:settings-16-regular',
+        index: 's', newIcon:'fluent:settings-16-regular',
         route: {  name: 'papersSetting' },callBack:(item)=>{ galleryTab(item) }
       }
     ])
