@@ -2,7 +2,7 @@
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
-      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
+      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]" :style="{transform: `scale(${(this.navAttribute.navSize / 100)})`}">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
@@ -14,7 +14,7 @@
         /* width: 160px; */
         border: 1px solid var(--divider);
       "
-        :style="{ height: 80 * (this.navAttribute.navSize / 100) + 'px', borderRadius: this.navAttribute.navRadius + 'px', background: this.navAttribute.navBgColor }">
+        :style="{  borderRadius: this.navAttribute.navRadius + 'px' }">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
@@ -32,17 +32,17 @@
         align-content: center;
         align-items: center;
         /* border-radius: 18px; */
-        /* height: 80px; */
+        height: 80px;
         max-width: 80%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
         color: var(--primary-text);
         z-index: 99;
-        min-width: 70px;
+        min-width: 80px;
         border: 1px solid var(--divider);
       "
-        :style="{ height: 80 * (this.navAttribute.navSize / 100) + 'px', borderRadius: this.navAttribute.navRadius + 'px', background: this.navAttribute.navBgColor }">
+        :style="{  borderRadius: this.navAttribute.navRadius + 'px' }">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
           <div style="
           display: flex;

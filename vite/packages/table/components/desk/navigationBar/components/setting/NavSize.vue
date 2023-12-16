@@ -2,7 +2,7 @@
     <div :style="{height:windowHeight+'px',width:windowWidth+'px'}">
         <SliderList :sliderList="navSize" @change="changeNav" @reset="resetNav"></SliderList>
         <SliderList :sliderList="sliderList" @change="changeSlider" @reset="resetSlider"></SliderList>
-        <CustomIconBg :colorSwitch="navigationStore.navColorSwitch"
+        <CustomIconBg :colorSwitch="navigationStore.navColorSwitch" :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"
             @update:colorSwitch="navigationStore.navColorSwitch = !navigationStore.navColorSwitch" @changeBg="changeBg">
         </CustomIconBg>
     </div>
@@ -35,7 +35,7 @@ const sliderList = ref([
 const navSize = ref([
     {
         title: '导航栏尺寸',
-        min: 100,
+        min: 0,
         max: 300,
         value: navigationStore.navAttribute.navSize,
         step: 10
