@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs, provide, onMounted } from "vue";
+import { ref, watch, computed, toRefs, provide, onMounted } from "vue";
 import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
@@ -180,9 +180,17 @@ const deleteFile = (data) => {
   delete customData.value.list[data.id];
 };
 /**
- * 文件夹设置
+ * 文件排序
  */
-// 文件排序、
+watch(
+  () => customData.value.list,
+  () => {
+    console.log("customIndex :>> ", customData.value.list);
+  },
+  {
+    deep: true,
+  }
+);
 const updateSort = (val) => {
   // 赋值
   customData.value.sort = val;

@@ -122,11 +122,7 @@ const handleMenuMounted = (item) => {
 const fileClick = (data) => {
   data.useCount++;
   // 这里应该调用updateFile 但是点击直接生效了？？
-
-  console.log("fileClick :>> ", data);
   startApp(data.type, data.value);
-
-  // require("electron").shell.openPath(require("path").normalize(data.path));
 };
 
 /**
@@ -140,7 +136,6 @@ const typeRules = computed(() => {
   data.value.rules.forEach((rule) => {
     rules.push(...fileTypes[rule]);
   });
-
   return rules;
 });
 
@@ -151,9 +146,10 @@ const getExtension = (filePath) => {
 };
 // 实现是否需要隐藏
 const fileDisabled = (item) => {
-  const extension = getExtension(item.value);
+  // 如果没有规则，则默认显示
+  if (typeof typeRules.value == "boolean") return true;
 
-  if (typeRules.value == undefined) return 1;
+  const extension = getExtension(item.value);
   return typeRules.value.includes(extension);
 };
 </script>
