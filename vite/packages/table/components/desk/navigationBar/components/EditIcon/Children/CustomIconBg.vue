@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted,computed } from 'vue'
 import ColorPicker from '../../../../../../ui/components/ColorPicker/ColorPicker.vue'
 // 按钮回调
 const emit = defineEmits(['update:colorSwitch', 'changeBg'])
@@ -90,6 +90,9 @@ const chooseBg = (item) => {
 const updateBackground = (item) => {
     emit('changeBg', item)
 }
+const body = computed(()=>{
+    return document.body
+})
 const colorIndex = ref(0)
 const customColor = ref(false)
 const props = withDefaults(defineProps<colorProps>(), {
