@@ -27,6 +27,7 @@ import {
   onMounted,
   getCurrentInstance,
   toRefs,
+  onUnmounted,
 } from "vue";
 
 import { nameOptions, filesOptions } from "./options";
@@ -87,7 +88,6 @@ watch(
     if (oldVal == "observe" || oldVal == "arrange") return;
     proxy.$xtConfirm("是否切换模式", "切换模式将会清空当前分组，是否继续？", {
       okText: "切换",
-
       ok: () => {
         data.value.list = {};
         emits("updateWindowApp");
@@ -99,6 +99,13 @@ watch(
     });
   }
 );
+
+/**
+ * 销毁阶段
+ */
+onUnmounted(() => {
+  emits("updateSort");
+});
 </script>
 
 <style lang="scss" scoped></style>

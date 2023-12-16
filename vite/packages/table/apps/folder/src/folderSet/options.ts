@@ -45,53 +45,52 @@ export const filesOptions = [
       },
     ],
   },
+  // {
+  //   type: "children",
+  //   flag: ["observe", "arrange"],
+  //   flagKey: "model",
+  //   children: [],
+  // },
   {
-    type: "children",
-    flag: ["observe", "arrange"],
-    flagKey: "model",
-    children: [
+    type: "info",
+    title: "图标整理规则",
+    info: "选择需要整理到分组的图标类型。",
+  },
+  {
+    type: "multiple",
+    multipleKey: "rules",
+    border: true,
+    list: [
       {
-        type: "info",
-        title: "图标整理规则",
-        info: "选择需要整理到分组的图标类型。",
+        name: "应用程序",
+        value: "app",
       },
       {
-        type: "multiple",
-        multipleKey: "rules",
-        border: true,
-        list: [
-          {
-            name: "应用程序",
-            value: "app",
-          },
-          {
-            name: "文档",
-            value: "docx",
-          },
-          {
-            name: "文件夹",
-            value: "folder",
-          },
-        ],
+        name: "文档",
+        value: "docx",
       },
       {
-        type: "info",
-        title: "图标排序规则",
-        info: "选择图标排序方式",
+        name: "文件夹",
+        value: "folder",
+      },
+    ],
+  },
+  {
+    type: "info",
+    title: "图标排序规则",
+    info: "选择图标排序方式",
+  },
+  {
+    type: "select",
+    selectKey: "sort",
+    list: [
+      {
+        name: "最近使用",
+        value: "lastUseTime",
       },
       {
-        type: "select",
-        selectKey: "sort",
-        list: [
-          {
-            name: "最近使用",
-            value: "customize",
-          },
-          {
-            name: "使用最多",
-            value: "max",
-          },
-        ],
+        name: "使用最多",
+        value: "useCount",
       },
     ],
   },

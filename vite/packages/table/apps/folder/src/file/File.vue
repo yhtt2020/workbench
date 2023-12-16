@@ -41,7 +41,7 @@ const model = inject("model", "");
 const data = inject("data", "");
 
 const { proxy } = getCurrentInstance();
-const emits = defineEmits(["deleteFile"]);
+const emits = defineEmits(["deleteFile", "updateSort"]);
 // 父组件数据
 const props = defineProps({
   layout: {},
@@ -118,11 +118,17 @@ const currentItem = ref();
 const handleMenuMounted = (item) => {
   currentItem.value = item;
 };
-// 文件点击
+/**
+ * 文件点击
+ */
 const fileClick = (data) => {
+  // 更新使用次数
   data.useCount++;
+  // 更新使用时间
+  data.lastUseTime = new Date().getTime();
   // 这里应该调用updateFile 但是点击直接生效了？？
   startApp(data.type, data.value);
+  emits("updateSort");
 };
 
 /**

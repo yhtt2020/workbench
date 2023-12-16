@@ -2,7 +2,6 @@
  * 注册文件夹
  */
 export const registerFolder = (desk) => {
-  console.log('registerFolder :>> ', 123);
   desk.cards.push({
     id: Date.now(),
     name: "folder",
@@ -11,7 +10,7 @@ export const registerFolder = (desk) => {
       icon: "",
       list: {},
       layout: "rows", // columns
-      sort: "max",
+      sort: "useCount",
       bg: "#508BFE",
       switch: false,
       name: "icon",

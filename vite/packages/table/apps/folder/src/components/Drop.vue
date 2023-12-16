@@ -9,7 +9,6 @@
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
   >
-    {{ model }}
     <slot></slot>
   </div>
 </template>

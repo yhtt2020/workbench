@@ -1,5 +1,6 @@
 export const defaultData = {
-  useCount: 0,
+  useCount: 0, // 使用次数
+  lastUseTime: "",
   model: "app",
   type: "",
   value: "",

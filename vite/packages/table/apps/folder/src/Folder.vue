@@ -1,6 +1,5 @@
 <template>
   <Drop @updateFile="updateFile" @deleteFile="deleteFile">
-    <!-- :options="customData.options" -->
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -51,6 +50,7 @@
           :layout="customData.layout"
           :model="customData.model"
           @deleteFile="deleteFile"
+          @updateSort="updateSort"
         />
       </vue-custom-scrollbar>
       <!-- </Resize> -->
@@ -182,43 +182,31 @@ const deleteFile = (data) => {
 /**
  * 文件排序
  */
-watch(
-  () => customData.value.list,
-  () => {
-    console.log("customIndex :>> ", customData.value.list);
-  },
-  {
-    deep: true,
-  }
-);
-const updateSort = (val) => {
-  // 赋值
-  customData.value.sort = val;
-  // if (customData.value.list <= 1) return;
-
+// 排序
+const sortMode = (key) => {
   // 将对象的属性转换为数组
   const itemsArray = Object.entries(customData.value.list).map(
     ([key, item]) => item
   );
-
   // 对数组进行排序
-  itemsArray.sort((a, b) => b.useCount - a.useCount);
-
-  // 遍历排序后的数组并打印
+  console.log("key :>> ", key);
+  itemsArray.sort((a, b) => b[key] - a[key]);
+  let obj = {};
   itemsArray.forEach((item) => {
-    customData.value.list[item.id] = item;
+    obj[item.id] = item;
   });
-  // if (val == "max") {
-  //   console.log("max");
-  // } else {
-  //   console.log("type");
-  // }
+  customData.value.list = obj;
+};
+
+// 触发排序
+const updateSort = (val) => {
+  const mode = customData.value.sort;
+  sortMode(mode);
 };
 
 /**
  * 更新模式
  */
-
 const updateModel = (data) => {
   customData.value.model = data;
 };
