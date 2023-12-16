@@ -9,6 +9,7 @@ import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
 import {isMain} from '../../js/common/screenUtils'
+import {useNavigationStore} from '../desk/navigationBar/navigationStore'
 
 export default {
   components: {
@@ -27,6 +28,7 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(useNavigationStore, ['bottomToggle']),
   },
   mounted () {
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
@@ -125,9 +127,9 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="!simple"  class="relative">
+  <div v-else-if="!simple || this.bottomToggle[0]"  class="relative">
     <div class="pointer" @click="social">
-      <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
+      <div v-if="!simple || this.bottomToggle[0]" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10" align="middle">
           <a-col :span="12" :style="{paddingLeft:simple?'20px':'5px'}">
@@ -182,7 +184,7 @@ export default {
     <div  class="btn" v-if="isMain()"   @click="social" >
       <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
                    :frameUrl="userInfo.frame"></FrameAvatar>
-      <!-- <div>我的</div> -->
+      <div>我的</div>
     </div>
   </template>
 </template>
