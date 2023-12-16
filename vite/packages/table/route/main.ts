@@ -1,5 +1,5 @@
 import BarrageSetting from "../page/settings/BarrageSetting.vue";
-import DeckHome from "../apps/deck/DeckHome.vue";
+
 import Setting from "../page/Setting.vue";
 import Weather from "../page/app/Weather.vue";
 import Watch from "../page/app/watch/Index.vue";
@@ -47,8 +47,7 @@ import Hall from "../page/team/Hall.vue";
 import Inspector from "../page/app/Inspector.vue";
 import GameCapture from "../page/gameAssistant/GameCapture.vue"
 import GameMedia from "../page/gameAssistant/GameMedia.vue";
-import DeckAdd from "../apps/deck/DeckAdd.vue";
-import DeckIndex from "../apps/deck/DeckIndex.vue";
+import DeckRoute from '../apps/deck/deckRoute'
 import BrowserIndex from '../page/app/browser/Index.vue';
 import BrowserTabs from '../page/app/browser/Tabs.vue';
 import BrowserMain from '../page/app/browser/Browser.vue';
@@ -521,27 +520,7 @@ export default [
               tab2:'note'
             }
           },
-          {
-            path: "/deck",
-            name: "deckIndex",
-            component: DeckIndex,
-            children: [
-              {
-                path: '',
-                name: 'deck',
-                component: DeckHome,
-                meta:{
-                  tab1:'work',
-                  tab2:'deck'
-                }
-              },
-              {
-                path: "/add",
-                name: 'deckAdd',
-                component: DeckAdd
-              }
-            ]
-          },
+          ...DeckRoute,
           {
             path: '/TomatoStart',
             name: 'tomatoStart',

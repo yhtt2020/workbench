@@ -7,15 +7,23 @@
         <div class="icon"
           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
           <!-- <FileSearchOutlined style="font-size: 20px;" /> -->
-          <newIcon icon="fluent:news-16-regular" style="font-size: 24px;"/>
+          <newIcon icon="fluent:news-16-regular" style="font-size: 24px;" />
         </div>
 
+      </template>
+      <template #left-title>
+        <div @click="refreshData">
+          <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
+          <newIcon class="xt-text refresh pointer" style=" font-size: 18px;vertical-align: sub;"
+            icon="akar-icons:arrow-clockwise" />
+          <!-- </xt-button> -->
+        </div>
       </template>
       <div class="top-bar">
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
-            @click="setCurrentIndex(index)" :style="{width:this.showSize.width==1?'81px':'67px'}">
-            <span >{{ title.title }}</span>
+            @click="setCurrentIndex(index)" :style="{ width: this.showSize.width == 1 ? '81px' : '67px' }">
+            <span>{{ title.title }}</span>
           </div>
         </div>
       </div>
@@ -23,15 +31,15 @@
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
         </div>
-        <div class="content" v-else >
+        <div class="content" v-else>
           <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type">
-            <span class="sort">{{ index+1 }}</span>
+            <span class="sort">{{ index + 1 }}</span>
             <div class="item">
-              <NewsItem  :key="index" :newsMsgList="item" :copyNum="copyNum"/>
+              <NewsItem :key="index" :newsMsgList="item" :copyNum="copyNum" />
             </div>
             <!-- 添加分割线 -->
-            <div class="divider" v-show="this.copyNum>=8">
-              <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;"/>
+            <div class="divider" v-show="this.copyNum >= 8">
+              <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;" />
             </div>
 
           </div>
@@ -61,7 +69,7 @@ import DataStatu from "../DataStatu.vue"
 import { newsStore } from '../../../store/news.ts'
 import NewsCardDrawer from "./NewsCardDrawer.vue";
 import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
-import {Icon as newIcon } from '@iconify/vue'
+import { Icon as newIcon } from '@iconify/vue'
 export default {
   name: "News",
   props: {
@@ -194,36 +202,38 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        offline: true
       }
     }
   },
   methods: {
-    setCurrentIndex(index) {
+    async setCurrentIndex(index) {
       this.currentIndex = index
-      this.customData.index=this.currentIndex
-      this.getNewsData()
-      this.customData.newsList=this.newsMsgList
+      this.customData.index = this.currentIndex
+      await this.getNewsData()
+      this.customData.newsList = this.newsMsgList
       // console.log(this.customData.newsList,'newsList')
-      console.log(this.customData,'customData');
+      // console.log(this.customData,'customData');
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
       this.customData.sortList = arrList
     },
     ...mapActions(newsStore, ['getNewsMsg']),
-    getNewsData() {
+    async getNewsData() {
       let tag = this.showList[this.currentIndex].tag
-      this.customData.tag=tag
-      console.log(this.showList[this.currentIndex])
-      this.getNewsMsg(this.customData.tag)
-
+      this.customData.tag = tag
+      // console.log(this.customData.tag)
+      await this.getNewsMsg(this.customData.tag)
       // this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newList);
+    },
+    async refreshData() {
+      await this.getNewsData()
     }
   },
   computed: {
@@ -249,31 +259,32 @@ export default {
     // 判断不同高度返回不同个数
     copyNum() {
       // return this.showSize.height == 2 ? 6 : 10
-      if(this.showSize.width==1){
+      if (this.showSize.width == 1) {
         return 4
       }
-      return this.showSize.height==2?8:12
+      return this.showSize.height == 2 ? 8 : 12
 
     },
     // 判断top-bar需要几个标签
     copyItem() {
-      return this.showSize.width==1?3:8
+      return this.showSize.width == 1 ? 3 : 8
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
-      if(this.customData && this.customData.newsList?.length){
+      if (this.customData && this.customData.newsList?.length) {
         // console.log(this.customData.newsList,'newsList');
-        if(this.customData.newsList.tag){
-          this.customData.newsList=this.customData.newsList.tag
-          return []
-        }
+        // if(this.customData.newsList[0].tag){
+        //   this.customData.newsList=this.customData.newsList.tag
+        //   console.log(this.customData.newsList,'newsList-after');
+        //   return []
+        // }
         return this.customData.newsList.slice(0, this.copyNum)
       }
-      return this.newsMsgList.slice(0,this.copyNum)
+      return this.newsMsgList.slice(0, this.copyNum)
 
     },
-    currentTag(){
-      if(this.customData && this.customData.index){
+    currentTag() {
+      if (this.customData && this.customData.index) {
         return this.showList[this.customData.index].title
       }
       return this.showList[this.currentIndex].title
@@ -281,11 +292,11 @@ export default {
   },
   async mounted() {
     this.isLoading = true
-    this.getNewsMsg(this.showList[this.currentIndex].tag).then(()=>{
+    this.getNewsMsg(this.showList[this.currentIndex].tag).then(() => {
       this.isLoading = false
     })
     // await this.getNewsData()
-  }
+  },
 }
 </script>
 <style lang='scss' scoped>
@@ -376,7 +387,7 @@ export default {
   overflow: hidden;
   position: relative;
 
-  .divider{
+  .divider {
     width: 1px;
     height: 100%;
     position: absolute;
@@ -387,35 +398,38 @@ export default {
   }
 
   .sort {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--mask-bg);
-  border-radius: 4px;
-  font-size: 16px;
-  color: var(--primary-text);
-  font-weight: 600;
-  margin-right: 8px;
-  margin-top: 8px;
-}
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mask-bg);
+    border-radius: 4px;
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 600;
+    margin-right: 8px;
+    margin-top: 8px;
+  }
 
-.set-type:nth-of-type(1) > span {
-  background: #FE2C46;
-}
+  .set-type:nth-of-type(1)>span {
+    background: #FE2C46;
+    color: rgba(255, 255, 255, 0.85);
+  }
 
-.set-type:nth-of-type(2) > span {
-  background: #FF6600;
-}
+  .set-type:nth-of-type(2)>span {
+    background: #FF6600;
+    color: rgba(255, 255, 255, 0.85);
+  }
 
-.set-type:nth-of-type(3) > span {
-  background: #FAAA10;
-}
+  .set-type:nth-of-type(3)>span {
+    background: #FAAA10;
+    color: rgba(255, 255, 255, 0.85);
+  }
 
-.active-index{
-  background: var(--active-bg) !important;
-}
+  .active-index {
+    background: var(--active-bg) !important;
+  }
 }
 </style>
 

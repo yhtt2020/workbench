@@ -334,7 +334,7 @@ export const noteStore = defineStore("noteStore", {
             deskName: '',
           }
           // 新建一个custom数据 存储到tsb 或者 本文件的存储中
-          this.noteList.push(obj)
+          this.noteList.unshift(obj)
           await tsbApi.db.put(obj)
           this.getNotes()
           this.selNote = 0

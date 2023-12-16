@@ -132,7 +132,7 @@ export default {
 
 <template>
   <div :class="{'rounded-lg':!fullScreen}"
-       class="flex h-full w-full   py-2" style="">
+       class="flex h-full w-full   py-2 pr-2" style="">
     <div class="w-full">
       <xt-left-menu v-model:index="currentIndex" :list="leftMenu" last="2" end="2" class="w-full">
         <!--  -->
@@ -166,7 +166,7 @@ export default {
             </keep-alive>
 
           </div>
-          <div class="h-full" style="flex:1;height:0" v-else>
+          <div class=" flex-1 h-0" v-else>
             <RouterView :key="key"></RouterView>
           </div>
 

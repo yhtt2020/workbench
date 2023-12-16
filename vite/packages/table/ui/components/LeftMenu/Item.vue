@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <xt-new-icon icon='fluent:full-screen-maximize-16-filled'/> -->
     <!-- antd插槽 -->
     <div
       v-if="item.slot"
@@ -16,11 +15,13 @@
       style="width: 40px; height: 40px"
       class="xt-base-btn"
     >
+      <!-- 解析改变图片背景 -->
       <img
         :src="item.img"
-        :style="[imgSize]"
+        :style="[imgSize, imgBg]"
         style="border-radius: 10px; object-fit: cover"
       />
+
     </div>
     <!-- icon -->
     <xt-icon
@@ -33,7 +34,6 @@
     />
     <xt-new-icon
       v-else
-      @click="itemClick()"
       size="20"
       w="40"
       :icon="item.full ? full : item.newIcon"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { appStore } from "../../../store";
@@ -69,7 +69,6 @@ const props = defineProps({
   bg: {
     default: "var(--mask-bg)",
   },
-  full: {},
 });
 
 // 图片大小
@@ -79,23 +78,34 @@ const imgSize = computed(() => {
     height: props.w + "px",
   };
 });
+// 图片颜色解析
+const imgBg = computed(() => {
+  const img = props?.item?.img
+  if(img.includes('color=#')){
+    const bg = img.slice(-7)
+    return {
+      filter: `drop-shadow(${bg} 80px 0)`,
+      transform: 'translateX(-80px)',
+    };
+  }else{
+    return 
+  }
+});
 
 // 全屏控制
 const data = ref(false);
-const emits = defineEmits("fullState")
 const full = computed(() => {
   fullScreen.value = data.value ? true : false;
   return data.value
     ? "fluent:full-screen-minimize-16-filled"
     : "fluent:full-screen-maximize-16-filled";
 });
-const itemClick = () => {
+
+watch(fullScreen, (val) => {
   if (props.item.full) {
     data.value = !data.value;
-    emits("fullState", data.value);
   }
-};
-
+});
 // const route = useRoute();
 // const currentPage = ref(route.path);
 // watch(route, (newRoute) => {

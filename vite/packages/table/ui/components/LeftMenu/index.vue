@@ -1,13 +1,20 @@
 <template>
   <div
+   
     class="xt-text flex h-full xt-bg"
+   
     style="box-sizing: border-box"
+   
     :class="[typeClass]"
+  
   >
     <!-- 左侧区域开始 -->
     <div
+     
       class="flex flex-col items-center h-full xt-br"
-      style="position: relative;"
+     
+      style=" position: relative"
+    
       :style="{
         width: w + 'px',
         'min-width': w + 'px',
@@ -16,18 +23,28 @@
     >
       <div v-for="list in listOption" :class="list?.class">
         <Float
+         
           @itemClick="itemClick"
+         
           :list="item.children"
+         
           v-for="item in list.array"
+         
           :data="item"
+        
         >
           <Box
+           
             :item="item"
+           
             :id="currentIndex"
+           
             :boxClass="list?.boxClass"
+           
             :model="model"
+          
           >
-            <Item @fullState="fullState" :item="item" v-bind="list?.itemOption">
+            <Item :item="item" v-bind="list?.itemOption">
               <template #[item.slot]>
                 <slot :name="item.slot"></slot>
               </template>
@@ -110,7 +127,7 @@ const full = ref(false);
 const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
-    return isFull.value && fullScreen.value
+    return isFull.value
       ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3"
       : "xt-bg pr-3 py-3 rounded-xl";
   }
@@ -174,12 +191,14 @@ const selectClick = (id, flag) => {
   if (flag) return;
   currentIndex.value = id;
 };
-const fullState = (state) => {
+const fullState = () => {
   isFull.value = !isFull.value;
+  fullScreen.value = isFull.value;
 };
 // 点击事件
 const itemClick = (item) => {
   if (item.full) {
+    fullState();
     return;
   }
   if (item?.children) {

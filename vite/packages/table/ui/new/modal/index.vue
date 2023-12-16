@@ -70,7 +70,7 @@
               suppressScrollX: true,
               wheelPropagation: false,
             }"
-            style="position: relative; margin-left: 8px; margin-right: 8px;padding-right: 8px; padding-left: 8px;"
+            style="position: relative; padding-right: 8px; padding-left: 8px;"
             class="flex-1"
           >
             <slot>

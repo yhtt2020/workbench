@@ -37,7 +37,7 @@ export function updateTree(list:any){
         if(isGroup){
           const jsonItem = JSON.parse(mapItem.props);
           const result:any = getUnReadCount(jsonItem.groupID);
-          const option = {...mapItem,props:{...jsonItem,unread:result.unreadCount}};
+          const option = {...mapItem,props:{...jsonItem,unread:result?.unreadCount}};
           return option;
         }
         else {
@@ -96,5 +96,32 @@ export function communityTotal(no:any,list:any){
     return totalUnread.unread === 0  ? 0 : totalUnread.unread > 99 ? 99 : totalUnread.unread;
   }
   else { return 0 }
+}
+
+
+/**
+ * 验证列表是否为空列表,如果是返回[],如果不是执行下一步
+ * @param list // 判断列表
+ * **/
+export function isEmptyList(list:any){
+  if(list.length !== 0){
+    return true
+  }
+  else {
+    return false
+  }
+}
+
+/**
+ * 验证数据是否为undefined
+ * @param data // 判断数据
+ * **/
+export function isUndefined(data:any){
+  if(data !== undefined){
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 

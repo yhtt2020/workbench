@@ -16,9 +16,9 @@ import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
 
 const widgetStore = useWidgetStore();
-widgetStore.edit = true
+widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
-const {firstPosition} = storeToRefs(floatMenuStore);
+const { firstPosition } = storeToRefs(floatMenuStore);
 
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState, freeLayoutEnv, isFreeLayout, isSelectAll }: any =
@@ -275,8 +275,6 @@ onBeforeUnmount(() => {
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
   >
-
-
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
       style="touch-action: none; width: 208px"
@@ -310,7 +308,12 @@ onBeforeUnmount(() => {
         <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
         <!-- <Items :menus="freeLayoutMenu"></Items> -->
         <div class="flex my-3">
-          <Item v-for="item in freeLayoutMenu" :item="item" class="mr-2" />
+          <Item
+            v-for="(item, index) in freeLayoutMenu"
+            :key="index"
+            :item="item"
+            :class="{ 'mr-2': index !== freeLayoutMenu.length - 1 }"
+          />
         </div>
 
         <div class="mb-3 mt-2 flex items-center">

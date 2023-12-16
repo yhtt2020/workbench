@@ -3,10 +3,10 @@
     <LeftTab>
       <div class="h-full w-full flex">
         <div class="flex h-full">
-          <LeftSearch :selDesk="selDesk" :menus="menus"></LeftSearch>
+          <LeftSearch :changeEditorValue="changeEditorValue" :selDesk="selDesk" :menus="menus"></LeftSearch>
         </div>
         <div class="flex h-full flex-col w-full" style="min-width: 400px;">
-          <NoteContent :menus="menus" :selDesk="selDesk"
+          <NoteContent :menus="menus" :selDesk="selDesk" ref="content"
                        v-if="this.selNote>=0 && this.noteList.length >0"></NoteContent>
         </div>
       </div>
@@ -55,14 +55,16 @@
     <teleport to="body">
 
       <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
-        <div class="flex" style="width: 800px;height: 600px;">
-          <history-list :noteId="noteList[selNote]._id"></history-list>
+        <div class="flex rounded-lg overflow-hidden" style="width: 800px;height: 600px;">
+          <history-list :changeEditorValue="changeEditorValue" :showVersion="showVersion" :changeShowVersion="changeShowVersion" :noteId="noteList[selNote]._id"></history-list>
         </div>
 
       </Modal>
 
       <xt-print  v-if="modelValue" v-model="modelValue"  :content="content"></xt-print>
     </teleport>
+    <!-- 专门处理复制功能 -->
+    <Markdown ref="copyEditor" class="overflow-hidden" style="width:0;height:0;"></Markdown>
   </div>
 
 </template>
@@ -80,6 +82,7 @@ import { cardStore } from '../../store/card'
 import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
 import {Modal as AntModal} from 'ant-design-vue'
+import Markdown from './components/markdown.vue'
 export default {
   name: 'note',
   components: {
@@ -89,6 +92,7 @@ export default {
     NoteContent,
     Modal,
     Icon,
+    Markdown,
   },
   props: {
     customIndex: String
@@ -127,8 +131,8 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
-    ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex']),
+    ...mapWritableState(cardStore, ['desks']),
     content(){
       return this.noteList[this.selNote].customData?.text
     },
@@ -158,20 +162,22 @@ export default {
           newIcon: 'fluent:copy-20-regular',
           label: '复制内容',
           callBack: () => {
-            // let content = this.$refs.mdEditor.getContent()
-
-            let content = this.noteList[this.selNote]?.customData.text
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getContent();
             require('electron').clipboard.writeHTML(content)
             message.success('复制内容成功')
-            console.log(content, 'md内容')
+            console.log(content, '内容')
           }
         },
         {
           newIcon: 'fluent:markdown-20-regular',
           label: '复制MD文本',
           callBack: () => {
-            let content = this.noteList[this.selNote]?.customData.text
-            // let content = this.$refs.mdEditor.getMarkdown()
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getMarkdown();
+
             require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
             console.log(content, 'md内容')
@@ -181,15 +187,17 @@ export default {
           newIcon: 'fluent:clipboard-code-24-regular',
           label: '复制HTML代码',
           callBack: () => {
-            let content = this.noteList[this.selNote]?.customData.text
-            // let content = this.$refs.mdEditor.getContent()
+            const text = this.noteList[this.selNote]?.customData.text
+            this.$refs.copyEditor?.setEditorValue(text);
+            let content = this.$refs.copyEditor?.getContent();
+            
             require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
-            console.log(content, 'md内容')
+            console.log(content, 'HTML内容')
           }
         },
         {
-          label: this.isTrash?'还原':'添加到桌面',
+          label: this.isTrash?'还原':this.noteList[this.selNote]?.deskName?'切换桌面':'添加到桌面',
           callBack: () => {
             // 修改当前选中桌面
             if (this.isTrash) {
@@ -205,6 +213,7 @@ export default {
         {
           label: '跳转到桌面',
           newIcon: 'majesticons:monitor-line',
+          disabled: !(!this.isTrash && this.noteList[this.selNote]?.deskId != ''),
           callBack: () => {
             if (this.noteList[this.selNote].deskName) {
               this.deskList?.forEach((item, index) => {
@@ -250,6 +259,14 @@ export default {
   },
   methods: {
     ...mapActions(noteStore, ['getNotes', 'switchDesk', 'selDesk', 'restore', 'moveToTrash', 'deleteNote']),
+    // 修改编辑器的值
+    changeEditorValue(value){
+      this.$refs.content.changeValue(value)
+    },
+    // 隐藏版本历史
+    changeShowVersion(flag){
+      this.showVersion = flag
+    },
     // 选择便签
     changeSelIndex (n) {
       this.selIndex = n
@@ -274,5 +291,19 @@ export default {
 </script>
 
 <style scoped>
+
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滚动条颜色 */
+    border-radius: 6px; /* 滚动条圆角 */
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #999; /* 悬停时滚动条颜色 */
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 6px; /* 轨道圆角 */
+  }
 
 </style>
