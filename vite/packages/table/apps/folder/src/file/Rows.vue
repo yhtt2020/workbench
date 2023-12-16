@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center justify-center mx-1.5 xt-theme-b"
+    class="flex flex-col items-center justify-center mx-1.5"
     style="width: 72px; height: 72px; margin-bottom: 7.5px"
   >
     <div class="" style="min-width: 40px; height: 40px">
