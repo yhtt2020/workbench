@@ -1,0 +1,15 @@
+export const defaultData = {
+  useCount: 0,
+  model: "app",
+  type: "",
+  value: "",
+  icon: "",
+  iconState: "cover",
+  iconShape: "square",
+  name: "",
+  isName: "",
+  bg: "",
+  isBg: "",
+  radius: 5,
+  isRadius: true,
+};
