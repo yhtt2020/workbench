@@ -10,6 +10,7 @@
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
     @mounted="onMounted"
+    :stopPropagation="stopPropagation"
   >
     <slot> </slot>
     <template #cardSize>
@@ -49,6 +50,7 @@ const props = defineProps({
   menuWidth: {
     default: "w-full",
   },
+  stopPropagation:{default:true},
 });
 const menu = ref(null);
 const { menus, model, height } = toRefs(props);

@@ -54,21 +54,19 @@ export function changeTime(msec:any){
 
 // 匹配路径是否存在&进行文件名称获取
 export function getFileName(path:any){
+ // 匹配表达式
  const regex = /&/;
  const fileRegex = /^file:/;
+ const selectRegex = /^https:\/\/a\.apps\.vip\/papers\/origin\//;
+ // 匹配返回值
  const exist = regex.test(path);
  const existFile = fileRegex.test(path);
- if(exist){
-  return path.split('&')[1].split('=')[1]
- }
- else {
-  if(existFile){
-   return path.split('file://')[1].split('/')[2];
-  }
-  else {
-   return path.split('https://')[1].split('/')[2];
-  }  
- }
+ const selectFile = selectRegex.test(path);
+ // 判断匹配成功就返回文件名称
+ if(selectFile) { return path.split('/')[path.split('/').length - 1]; }
+ else if(exist){ return path.split('&')[1].split('=')[1]; }
+ else if(existFile){ return path.split('file://')[1].split('/')[2] }
+ else { return path.split('https://')[1].split('/')[2]; }
 }
 
 // 判断是否收藏壁纸

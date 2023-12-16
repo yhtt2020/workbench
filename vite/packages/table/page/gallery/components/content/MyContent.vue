@@ -5,15 +5,40 @@
        <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6" 
         style="padding-left: 0 !important;padding-right: 12px !important;"
        >
-         <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
-         <!-- <div class="absolute top-0 pointer left-0 w-full h-full" @click="clickImg(index)">
-          <xt-mix-menu :menus="myMenus" fn="callBack" @mounted="this.myCurrentID = img">
-            122
+         <div class="pointer w-full h-full my-paper">
+          <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false">
+            <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.src" :alt="img.resolution"   class="image-item pointer relative" />
+            <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
+              <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
+                <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>
+              </div> 
+              <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1"></xt-new-icon>
+                  <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-text xt-font">设为壁纸</span>
+                </div>
+              </xt-button>
+            </div>
+            <div class="absolute left-1 img-checkbox" :class="isModal ? 'top-1' : 'top-2'" :style="isInActive(img) ? { opacity:'1' } : { opacity:'0' }" >
+              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 " style="border-radius: 8px;" @click="addToActive(img)" >
+                <a-checkbox :checked="isInActive(img)" @change="getShowImg($event,index)"></a-checkbox>
+              </xt-button>
+            </div>
+            <div class="absolute flex " style="right:20px;" :style="isModal ? {top: '4px'}:{top: '8px'}">
+              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-1 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="removeToMyPaper(img)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20"></xt-new-icon>
+                </div>
+              </xt-button>
+            </div>
           </xt-mix-menu>
-         </div> -->
-         <!-- <xt-mix-menu :menus="myMenus" fn="callBack" @mounted="this.myCurrentID = img" >
-          <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
-         </xt-mix-menu> -->
+         </div>
        </a-col>
       </a-row>
     </viewer>
@@ -73,7 +98,7 @@
        },
        { 
          newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-         callBack:()=>{ this.setAppPaper() } 
+         callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
        },
       ]
      }
@@ -137,7 +162,7 @@
     // 下载
     download(img){
      if(this.settings.savePath === ''){
-      this.$xtConfirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。',{
+      this.$xtConfirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。','',{
         index:1020,
         ok: async() => {
           await this.queryStart();
@@ -195,23 +220,27 @@
      } 
     },
     // 设置工作台背景和桌面壁纸
-    setAppPaper(){
-      if(this.myCurrentID !== null){
+    setAppPaper(img){
+      if(img !== null){
         message.info('正在为您设置背景');
       }
-      if (this.myCurrentID.srcProtocol){
-        this.setBackgroundImage({path: '',  runpath: `file://${this.myCurrentID.src}`});
+      if (img.srcProtocol){
+        this.setBackgroundImage({path: '',  runpath: `file://${img.src}`});
       }
       else {
-        if (!this.myCurrentID.path) { this.myCurrentID.path = this.myCurrentID.src }
-        else { this.setBackgroundImage(this.myCurrentID) }
+        if (!img.path) { img.path = img.src }
+        else { this.setBackgroundImage(img) }
       }
     },
-
-    // 预览图事件被元素遮挡是触发
-    clickImg(index){
-      console.log('执行....111');
-      // console.log('执行....',index,document.querySelector('.image-item'));
+    // 选择轮播图片时显示勾选按钮
+    getShowImg(evt,index){
+      console.log('执行.....',evt.target.checked,index,document.querySelectorAll('.img-checkbox')[index]);
+      if(evt.target.checked){
+        document.querySelectorAll('.img-checkbox')[index].style = 'opacity:1 !important;';
+      }
+      else {
+        document.querySelectorAll('.img-checkbox')[index].style = 'opacity: 0 ;';
+      }
     },
    },
  };
@@ -233,6 +262,14 @@
 
  :deep(.ant-checkbox-inner){
     border: 1px solid var(--active-text);
+ }
+
+ .my-paper{
+  &:hover{
+    .play-icon,.img-button,.img-checkbox,.set-paper{
+      opacity: 1 !important;
+    }
+  }
  }
 
  </style>
