@@ -16,9 +16,12 @@
       </div>
 
     </div>
-    <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" @click="goNews">
+    <!-- {{ img }} -->
+    <!-- {{ newsMsgList.newsMsgList.thumbnail_pic_s }} -->
+    <!-- <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" @click="goNews"> -->
       <!-- <img :src="img" alt="" class="image"> -->
-    </div>
+    <a-avatar class="right" :src="newsMsgList.newsMsgList.thumbnail_pic_s" v-if="newsMsgList.newsMsgList.thumbnail_pic_s"></a-avatar>
+    <!-- </div> -->
 
   </div>
 </template>
@@ -140,6 +143,7 @@ const img = computed(() => {
     margin: 8px 0px;
     margin-right: 0.8%;
     background-size: cover;
+    flex-shrink: 0;
     cursor: pointer;
   }
 }
