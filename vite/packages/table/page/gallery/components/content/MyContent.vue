@@ -7,7 +7,7 @@
        >
          <div class="pointer w-full h-full my-paper">
           <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false">
-            <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.src" :alt="img.resolution"   class="image-item pointer relative" />
+            <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
                 <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>

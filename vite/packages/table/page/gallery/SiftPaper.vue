@@ -33,7 +33,7 @@ export default {
 
   methods:{
     closeSiftPaper(){
-      this.$mit.emit('closePaper');
+      this.$bus.emit('closePaper');
     },
   }
 }

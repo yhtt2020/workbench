@@ -13,7 +13,7 @@ import { Icon as CloseIcon } from '@iconify/vue';
 const { proxy } = getCurrentInstance();
 
 const close = ()=>{
- proxy.$mit.emit('closePaper');
+ proxy.$bus.emit('closePaper');
 }
 
 </script>

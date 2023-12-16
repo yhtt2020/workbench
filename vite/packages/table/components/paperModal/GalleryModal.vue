@@ -95,7 +95,7 @@ export default {
 
     onMounted(()=>{
       nextTick(()=>{
-        proxy.$mit.on('closePaper',()=>{
+        proxy.$bus.on('closePaper',()=>{
           galleryVisible.value = false
         })
       })
