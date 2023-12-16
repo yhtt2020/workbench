@@ -1,7 +1,7 @@
 export const defaultData = {
   useCount: 0, // 使用次数
   lastUseTime: "",
-  model: "app",
+  mode: "app",
   type: "",
   value: "",
   icon: "",

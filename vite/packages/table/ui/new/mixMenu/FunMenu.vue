@@ -9,6 +9,7 @@
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
+    @mounted="onMounted"
   >
     <slot> </slot>
     <template #cardSize>
@@ -39,15 +40,14 @@ const props = defineProps({
   },
   name: { default: "name" },
   fn: { default: "fn" },
-
+  height: {
+    default: 0,
+  },
   menuHeight: {
     default: "h-full",
   },
   menuWidth: {
     default: "w-full",
-  },
-  height: {
-    default: 0,
   },
 });
 const menu = ref(null);
@@ -94,11 +94,16 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
+const emits = defineEmits(["mounted"]);
+const onMounted = ()=>{
+  emits("mounted");
+}
 function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
+    onMounted()
   }
 }
 function defaultListContextmenu(event) {
@@ -106,21 +111,19 @@ function defaultListContextmenu(event) {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
+    onMounted()
   }
 }
 
 function custom() {
   console.log("menu.value :>> ", menu.value.handleOpenMenu);
-  menu.value.handleOpenMenu(
-    {
-      stopPropagation: () => {},
-      preventDefault: () => {},
+  menu.value.handleOpenMenu({
+    stopPropagation: () => {},
+    preventDefault: () => {},
 
-      clientX: 200,
-      clientY: 200,
-    },
-    model.value
-  );
+    clientX: 200,
+    clientY: 200,
+  },model.value);
 }
 defineExpose({
   custom,

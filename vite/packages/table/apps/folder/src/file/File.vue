@@ -19,7 +19,6 @@
       </xt-mix-menu>
     </template>
   </div>
-
   <FileSet
     v-if="fileSetVisible"
     v-model="fileSetVisible"
@@ -117,6 +116,7 @@ const dragDeleteFile = (data) => {
 const currentItem = ref();
 const handleMenuMounted = (item) => {
   currentItem.value = item;
+  console.log('item :>> ', item);
 };
 /**
  * 文件点击
