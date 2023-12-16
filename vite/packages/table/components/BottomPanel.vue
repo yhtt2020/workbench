@@ -1,6 +1,6 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
-  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
+    <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -68,11 +68,12 @@
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                        @click.stop="newOpenApp(item.type,item.value)">
+                        @click.stop="newOpenApp(item.type, item.value)">
                         <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bgColor || '' }"
                           class="relative flex items-center justify-center ">
-                          <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: iconRadius + 'px' }"
+                          <a-avatar :size="52" shape="square" :src="item.icon"
+                            :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                         <div v-else style="width: 52px; height: 52px;"
@@ -116,7 +117,7 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
-  <!-- </xt-menu> -->
+    <!-- </xt-menu> -->
   </xtMixMenu>
 
   <transition name="fade">
@@ -415,13 +416,21 @@ export default {
       content.scrollLeft += event.deltaY
     })
     navigationData.systemAppList.forEach((item) => {
+      console.log(navigationData.systemAppList,'navigationData.systemAppList');
       this.footNavigationList.forEach((i) => {
+        i.bg = ''
+        i.isBg = false
         if (item.event === i.event) {
+          console.log(i,'i is systemAppList')
+          i.type = item.type
           i.icon = item.icon
           i.name = item.name
+          i.value = item.event
+          i.mode = 'app'
         }
       })
     })
+    console.log(this.footNavigationList, 'foot');
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -823,7 +832,7 @@ export default {
 
     },
     newOpenApp(type, value) {
-      console.log(type,value,'===>>>type--value');
+      console.log(type, value, '===>>>type--value');
       switch (type) {
         // 默认浏览器
         case "default":
@@ -861,31 +870,31 @@ export default {
     },
     // 拖拽桌面图标
     async drop(e) {
-        // this.modelValue=false
-        const width = window.innerWidth
-        let files = e.dataTransfer.files
-        if (e.x <= 300) {
-          this.selectNav = 'left'
-        } else if (e.x > 300 && e.x < width - 300) {
-          this.selectNav = 'foot'
-        } else if (e.x >= width - 300) {
-          this.selectNav = 'right'
+      // this.modelValue=false
+      const width = window.innerWidth
+      let files = e.dataTransfer.files
+      if (e.x <= 300) {
+        this.selectNav = 'left'
+      } else if (e.x > 300 && e.x < width - 300) {
+        this.selectNav = 'foot'
+      } else if (e.x >= width - 300) {
+        this.selectNav = 'right'
+      }
+      let filesArr = []
+      if (files && files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          filesArr.push(files[i].path)
         }
-        let filesArr = []
-        if (files && files.length > 0) {
-          for (let i = 0; i < files.length; i++) {
-            filesArr.push(files[i].path)
-          }
-        }
-        this.dropList = await Promise.all(filesArr.map(async (item) => {
-          const fileName = item.substring(item.lastIndexOf("\\") + 1);
-          let dropFiles = await tsbApi.system.extractFileIcon(item)
-          return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
-        }))
-        this.clickRightListItem(this.dropList)
-        // this.dropList.forEach((item)=>{
-        //   this.setFootNavigationList(item)
-        // })
+      }
+      this.dropList = await Promise.all(filesArr.map(async (item) => {
+        const fileName = item.substring(item.lastIndexOf("\\") + 1);
+        let dropFiles = await tsbApi.system.extractFileIcon(item)
+        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+      }))
+      this.clickRightListItem(this.dropList)
+      // this.dropList.forEach((item)=>{
+      //   this.setFootNavigationList(item)
+      // })
 
       // 添加完后清空
       this.dropList = []
@@ -1197,4 +1206,5 @@ export default {
   :last-child {
     margin-right: 0;
   }
-}</style>
+}
+</style>
