@@ -131,8 +131,8 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
-    ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex']),
+    ...mapWritableState(cardStore, ['desks']),
     content(){
       return this.noteList[this.selNote].customData?.text
     },
@@ -213,6 +213,7 @@ export default {
         {
           label: '跳转到桌面',
           newIcon: 'majesticons:monitor-line',
+          disabled: !(!this.isTrash && this.noteList[this.selNote]?.deskId != ''),
           callBack: () => {
             if (this.noteList[this.selNote].deskName) {
               this.deskList?.forEach((item, index) => {
