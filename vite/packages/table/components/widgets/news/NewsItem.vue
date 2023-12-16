@@ -16,11 +16,11 @@
       </div>
 
     </div>
-    <!-- {{ img }} -->
+    <!-- {{showImg}} -->
     <!-- {{ newsMsgList.newsMsgList.thumbnail_pic_s }} -->
-    <!-- <div class="right" :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg" @click="goNews"> -->
+    <div class="right" :style="{ backgroundImage: `url(${newsMsgList.newsMsgList.thumbnail_pic_s})` }" v-if="showImg" @click="goNews"></div>
       <!-- <img :src="img" alt="" class="image"> -->
-    <a-avatar class="right" :src="newsMsgList.newsMsgList.thumbnail_pic_s" v-if="newsMsgList.newsMsgList.thumbnail_pic_s"></a-avatar>
+    <!-- <a-avatar class="right" :src="newsMsgList.newsMsgList.thumbnail_pic_s" v-if="newsMsgList.newsMsgList.thumbnail_pic_s !== ''"></a-avatar> -->
     <!-- </div> -->
 
   </div>
@@ -30,7 +30,7 @@
 import { ref, reactive, computed } from 'vue'
 // vite\packages\table\js\common\browser.ts
 import browser from '../../../js/common/browser'
-let showImg = ref(true)
+// let showImg = ref(true)
 const newsMsgList = defineProps({
   newsMsgList: {
     type: Object,
@@ -42,7 +42,7 @@ const newsMsgList = defineProps({
 })
 const goNews = () => {
 
-  browser.openInUserSelect(newsMsgList.newsMsgList.url)
+  browser.openInSystem(newsMsgList.newsMsgList.url)
 }
 const timer = computed(() => {
   let [updateDate, updateTime] = newsMsgList.newsMsgList.date.split(' ')
@@ -60,7 +60,12 @@ const img = computed(() => {
     return showImg.value = false
   }
 })
-
+const showImg = computed(() => {
+  if (newsMsgList.newsMsgList.thumbnail_pic_s && newsMsgList.newsMsgList.thumbnail_pic_s !== '') {
+    return true
+  }
+  return false
+})
 </script>
 <style lang='scss' scoped>
 .card-item {
