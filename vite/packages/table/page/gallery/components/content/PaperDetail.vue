@@ -157,12 +157,12 @@ export default {
 
   // 设置工作台背景和桌面壁纸
   setAppPaper(img){
-    // if(img !== null){  message.info('正在为您设置背景'); }
-    // if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
-    // else {
-    //   if (!img.path) { img.path = img.src }
-    //   else { this.setBackgroundImage(img.src) }
-    // }
+    if(img !== null){  message.info('正在为您设置背景'); }
+    if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
+    else {
+      if (!img.path) { img.path = img.src }
+      else { this.setBackgroundImage(img) }
+    }
   },
 
    // 设置桌面壁纸
