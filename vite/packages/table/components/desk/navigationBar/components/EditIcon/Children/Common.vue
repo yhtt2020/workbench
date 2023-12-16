@@ -1,5 +1,5 @@
 <template>
-    <div class="w-[452px] h-[155px] mb-4">
+    <div class="w-[452px] h-[40px] mb-4">
         <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
     </div>
     <EditName :editItem="props.editItem"></EditName>

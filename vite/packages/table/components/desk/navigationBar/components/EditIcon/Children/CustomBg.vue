@@ -1,8 +1,8 @@
 <template>
     <div class="w-[452px]">
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
-            <div style="width: 56px; height: 56px;" v-if="true" :style="{background:props.editItem.bgColor || 'var(--primary-bg)'}" class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
-                <a-avatar :size="52" shape="square" :src="props.editItem.icon" ></a-avatar>
+            <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="true" :style="{background:props.editItem.bgColor || 'var(--primary-bg)'}" class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
+                <a-avatar :size="36" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
             <!-- <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center rounded-xl">
                 <a-avatar :size="52" shape="square" :src="renderIcon(props.editItem.icon)" @click="modelValue=!modelValue"></a-avatar>

@@ -14,7 +14,7 @@
                         style="
                         width: 80px;height: 40px;border: 1px solid var(--divider);
                         border-radius: 12px;margin-left: 16px;line-height: 38px;
-                        color: var(--primary-text);" />
+                        color: var(--primary-text);" @change="changeValue"/>
                 </a-col>
             </a-row>
             <div class="h-[1px] bg-[var(--divider)] mt-3 mb-3" v-if="index !==props.sliderList.length-1"></div>
@@ -62,6 +62,8 @@ watch(() => props.sliderList.map(item => item.value), (newVal, oldVal) => {
         }
     }
 }, { deep: true })
-
+const changeValue=(value)=>{
+    
+}
 </script>
 <style lang='scss' scoped></style>
