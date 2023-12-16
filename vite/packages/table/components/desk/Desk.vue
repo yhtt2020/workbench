@@ -133,7 +133,7 @@
           </template>
         </vuuri>
         <div
-          class="xt-text "
+          class="xt-text"
           v-show="!showGrid"
           style="
             text-align: center;
@@ -316,6 +316,8 @@ import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 import componentsMinis from "./components.ts";
 import _ from "lodash-es";
+
+import { registerFolder } from "../../apps/folder/src/hooks/register";
 
 export default {
   name: "Desk",
@@ -544,9 +546,17 @@ export default {
           name: "添加小组件",
           fn: this.newAddCard,
         },
-        { id: 4, divider: true },
         {
-          id: 5,
+          id: 4,
+          newIcon: "fluent:app-folder-16-regular",
+          name: "添加文件夹",
+          fn: () => {
+            registerFolder(this.currentDesk);
+          },
+        },
+        { id: 5, divider: true },
+        {
+          id: 6,
           newIcon: this.editing
             ? "fluent:record-stop-16-regular"
             : "fluent:window-new-16-regular",
@@ -554,7 +564,7 @@ export default {
           fn: this.toggleEditing,
         },
         {
-          id: 6,
+          id: 7,
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏桌面",
           fn: () => {
@@ -563,7 +573,7 @@ export default {
           },
         },
         {
-          id: 7,
+          id: 8,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
@@ -581,9 +591,9 @@ export default {
             }
           },
         },
-        { id: 8, divider: true },
+        { id: 9, divider: true },
         {
-          id: 9,
+          id: 10,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,

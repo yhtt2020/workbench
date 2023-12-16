@@ -79,8 +79,12 @@ import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
 import FloatMenu from './floatMenu/FloatMenu.vue'
 import RadioTab from '../../components/RadioTab.vue'
 import Menu from "../../ui/new/mixMenu/FunMenu.vue";
+
+import Folder from "../../apps/folder";
+
 export default {
   components: {
+    Folder,
     Menu,
     RadioTab,
     FreeLayoutScrollbar,
