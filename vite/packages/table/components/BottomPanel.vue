@@ -1,5 +1,6 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name">
+  <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
+  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -42,7 +43,7 @@
         border: 1px solid var(--divider);
       "
         :style="{ height: 80 * (this.navAttribute.navSize / 100) + 'px', borderRadius: this.navAttribute.navRadius + 'px', background: this.navAttribute.navBgColor }">
-        <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
+        <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
           <div style="
           display: flex;
           flex-direction: row;
@@ -97,7 +98,9 @@
       <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team></Team>
       </template>
-      <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      <keep-alive>
+        <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+      </keep-alive>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -113,6 +116,7 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
+  <!-- </xt-menu> -->
   </xtMixMenu>
 
   <transition name="fade">
@@ -122,7 +126,8 @@
       <!-- 新版 -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
+      </navigationSetting>
       <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
       <!-- <component :is='componentId'></component> -->
     </div>
@@ -137,6 +142,7 @@
 
 <script>
 import PanelButton from './PanelButton.vue'
+import { taskStore } from '../apps/task/store'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
@@ -178,9 +184,10 @@ import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
+import _ from 'lodash-es'
 export default {
   name: 'BottomPanel',
-  emits: ['getDelIcon'],
+  emits: ['getDelIcon', 'hiedNavBar'],
   components: {
     ChatButton,
     Emoji,
@@ -294,7 +301,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.navigationToggle[2] = false },
+          fn: () => { this.$emit('hiedNavBar', 'foot') },
         },
         {
           id: 4,
@@ -342,6 +349,7 @@ export default {
       delItemIcon: false,
       notifications: new Notifications(),
       tooltipVisible: true,
+      isDelete: true
 
     }
   },
@@ -438,6 +446,7 @@ export default {
       'popVisible', 'currentList',
       'editItem', 'navAttribute', 'iconRadius'
     ]),
+    ...mapWritableState(taskStore, ['isTask']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -470,7 +479,7 @@ export default {
           id: 3,
           name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
           newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
+          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2], this.isTask = !this.isTask }
         },
         {
           id: 4,
@@ -478,6 +487,12 @@ export default {
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
+        // {
+        //   id: 5,
+        //   name: this.levelVisible ? '隐藏等级' : '显示等级',
+        //   newIcon: "fluent:star-16-regular",
+        //   fn: () => { this.levelVisible = !this.levelVisible }
+        // },
       ]
 
     },
@@ -491,6 +506,8 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
+        // this.footNavigationList = this.footNavigationList.filter((item)=>item!==undefined)
+        // console.log(this.footNavigationList,'======>>>>>>footNavigation')
         this.checkScroll()
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
@@ -527,7 +544,6 @@ export default {
       }
     },
     simple(newVal, oldVal) {
-      console.log(newVal, oldVal);
       if (newVal && !oldVal) {
         // 当 simple 从关闭变为开启时，关闭所有 bottomToggle
         this.bottomToggle[0] = false;
@@ -549,7 +565,14 @@ export default {
           this.simple = true
         }
       }
-    }
+    },
+    isTask() {
+      if (this.isTask) {
+        this.bottomToggle[2] = true
+      } else {
+        this.bottomToggle[2] = false
+      }
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -574,6 +597,9 @@ export default {
       } else {
         this.teamVisible = !this.teamVisible
       }
+    },
+    hiedNav(value) {
+      this.$emit('hiedNavBar', value)
     },
     showElement(item, index) {
       // console.log(item,index,'====>>>1111');
@@ -861,171 +887,185 @@ export default {
         //   this.setFootNavigationList(item)
         // })
 
-        // 添加完后清空
-        this.dropList = []
-        // this.modelValue=true
-      },
-      // 添加图标的主要函数
-      clickRightListItem(item, index) {
-        this.activeRightItem = index
-        //   this.editFlag = false
-        if (this.selectNav === 'foot') {
-          if (item instanceof Array) {
-            for (let i = 0; i < item.length; i++) {
-              if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-                this.updateMainNav(item[i], 'add')
-                item[i].addNav = true
-                this.setFootNavigationList(item[i])
-              } else {
-                message.info('已添加', 1)
-              }
-            }
-            this.dropList = []
-          } else {
-            for (let i = 0; i < this.footNavigationList.length; i++) {
-              if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-            }
-            this.updateMainNav(item, 'add')
-            item.addNav = true
-            this.setFootNavigationList(item)
-            this.$nextTick(() => {
-              let scrollElem = this.$refs.content
-              scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-            })
-          }
-        }
-      },
-      updateMainNav(addItem, type) {
-        this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-        // console.log(this.mainNavList, 'this.mainNavList')
-        let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-        if (type) {
-          this.mainNavList.forEach(item => {
-            if (item?.name === addItem.name) {
-              if (type === 'add') {
-                item.addNav = true
-              } else if (type === 'del') {
-                item.addNav = false
-              }
-            }
-          })
-        } else {
-          for (const i in this.mainNavList) {
-            let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-            this.mainNavList[i].addNav = stateNav
-          }
-        }
-      },
-      completeEdit() {
-        this.toggleEdit()
-        this.setQuick()
-      },
-      disableDrag() {
-        // if (this.sortable) {
-        document.removeEventListener('click', this.disableDrag)
-        // this.sortable.destroy()
-        this.sortable = null
-        // message.info('已中止导航栏调整')
-        // }
-      },
-      enableDrag() {
-        // if (this.sortable || !this.editToggle) {
-        //   return
-        // }
-        // document.addEventListener('click', this.disableDrag)
-        let that = this
-        let drop = document.getElementById('bottomContent')
-        this.sortable = Sortable.create(drop, {
-          sort: true,
-          animation: 150,
-          delay: 50,
-          delayOnTouchOnly: true,
-          onStart: function (event) {
-            if (that.popVisible) {
-              that.notifications.NoticeToast()
-            }
-            let delIcon = document.getElementById('delIcon2')
-            that.tooltipVisible = false
-            that.delItemIcon = true
-            that.$emit('getDelIcon', true)
-            this.delNav = true
-            if (this.delNav) {
-              delIcon.ondragover = function (ev) {
-                ev.preventDefault()
-              }
-            }
-            delIcon.ondrop = function (ev) {
-              that.delItemIcon = false
-              let oneNav = that.footNavigationList[event.oldIndex]
-              //将要删除的是否是主要功能
-              if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
-                that.removeFootNavigationList(event.oldIndex)
-                return
-              }
-              let sumList = []
-              // 判断其他导航栏是否是打开状态，是则获取功能列表
-              if (that.leftNav && that.rightNav) {
-                sumList = that.sideNavigationList.concat(
-                  that.rightNavigationList
-                )
-              } else if (that.leftNav && !that.rightNav) {
-                sumList = that.sideNavigationList
-              } else if (!that.leftNav && that.rightNav) {
-                sumList = that.rightNavigationList
-              } else {
-                message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-                // console.log('不可删除')
-                return
-              }
-              that.delNavigation(
-                sumList,
-                oneNav,
-                event.oldIndex,
-                that.removeFootNavigationList
-              )
-            }
-          },
-          onUpdate: function (event) {
-            let newIndex = event.newIndex,
-              oldIndex = event.oldIndex
-            let newItem = drop.children[newIndex]
-            let oldItem = drop.children[oldIndex]
-            // console.log('newIndex', oldItem)
-            // 先删除移动的节点
-            drop.removeChild(newItem)
-            // 再插入移动的节点到原有节点，还原了移动的操作
-            if (newIndex > oldIndex) {
-              drop.insertBefore(newItem, oldItem)
+      // 添加完后清空
+      this.dropList = []
+      // this.modelValue=true
+    },
+    // 添加图标的主要函数
+    clickRightListItem(item, index) {
+      this.activeRightItem = index
+      //   this.editFlag = false
+      if (this.selectNav === 'foot') {
+        if (item instanceof Array) {
+          for (let i = 0; i < item.length; i++) {
+            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+              this.updateMainNav(item[i], 'add')
+              item[i].addNav = true
+              this.setFootNavigationList(item[i])
             } else {
-              drop.insertBefore(newItem, oldItem.nextSibling)
+              message.info('已添加', 1)
             }
-            that.sortFootNavigationList(event)
-          },
-          onEnd: function (event) {
-            that.tooltipVisible = true
-            that.$emit('getDelIcon', false)
-            that.popVisible = false
-          },
+          }
+          this.dropList = []
+        } else {
+          for (let i = 0; i < this.footNavigationList.length; i++) {
+            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+          }
+          this.updateMainNav(item, 'add')
+          item.addNav = true
+          this.setFootNavigationList(item)
+          this.$nextTick(() => {
+            let scrollElem = this.$refs.content
+            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+          })
+        }
+      }
+    },
+    updateMainNav(addItem, type) {
+      this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
+      // console.log(this.mainNavList, 'this.mainNavList')
+      let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+      if (type) {
+        this.mainNavList.forEach(item => {
+          if (item?.name === addItem.name) {
+            if (type === 'add') {
+              item.addNav = true
+            } else if (type === 'del') {
+              item.addNav = false
+            }
+          }
         })
-        // message.success('开始调整底部栏，点击导航外部即可终止调整。')
-      },
-      renderIcon,
-        delNavigation(sumList, oneNav, index, delMethod) {
-        if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
-          //如果不是必须的
+      } else {
+        for (const i in this.mainNavList) {
+          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+          this.mainNavList[i].addNav = stateNav
+        }
+      }
+    },
+    completeEdit() {
+      this.toggleEdit()
+      this.setQuick()
+    },
+    disableDrag() {
+      // if (this.sortable) {
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+      // message.info('已中止导航栏调整')
+      // }
+    },
+    enableDrag() {
+      // if (this.sortable || !this.editToggle) {
+      //   return
+      // }
+      // document.addEventListener('click', this.disableDrag)
+      let that = this
+      let drop = document.getElementById('bottomContent')
+      this.sortable = Sortable.create(drop, {
+        sort: true,
+        animation: 150,
+        delay: 50,
+        delayOnTouchOnly: true,
+        onStart: function (event) {
+          if (that.popVisible) {
+            that.notifications.NoticeToast()
+          }
+          let delIcon = document.getElementById('delIcon2')
+          that.tooltipVisible = false
+          that.delItemIcon = true
+          that.$emit('getDelIcon', true)
+          that.delNav = true
+          if (that.delNav) {
+            delIcon.ondragover = function (ev) {
+              ev.preventDefault()
+            }
+          }
+          delIcon.ondrop = function (ev) {
+            if (!that.isDelete) return
+            console.log(111111);
+            that.delItemIcon = false
+            let oneNav = that.footNavigationList[event.oldIndex]
+            //将要删除的是否是主要功能
+            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
+              that.removeFootNavigationList(event.oldIndex)
+              return
+            }
+            let sumList = []
+            // 判断其他导航栏是否是打开状态，是则获取功能列表
+            if (that.leftNav && that.rightNav) {
+              sumList = that.sideNavigationList.concat(
+                that.rightNavigationList
+              )
+            } else if (that.leftNav && !that.rightNav) {
+              sumList = that.sideNavigationList
+            } else if (!that.leftNav && that.rightNav) {
+              sumList = that.rightNavigationList
+            } else {
+              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+              // console.log('不可删除')
+              return
+            }
+            that.delNavigation(
+              sumList,
+              oneNav,
+              event.oldIndex,
+              that.removeFootNavigationList
+            )
+          }
+        },
+        onUpdate: _.debounce(function (event) {
+          that.isDelete = false
+          let newIndex = event.newIndex,
+            oldIndex = event.oldIndex
+          let newItem = drop.children[newIndex]
+          let oldItem = drop.children[oldIndex]
+          // console.log('newIndex', event)
+          // 先删除移动的节点
+          drop.removeChild(newItem)
+          // 再插入移动的节点到原有节点，还原了移动的操作
+          if (newIndex > oldIndex) {
+            drop.insertBefore(newItem, oldItem)
+          } else {
+            drop.insertBefore(newItem, oldItem.nextSibling)
+          }
+          that.sortFootNavigationList(event)
+          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
+          that.updateMainNav();
+          console.log('isDelete', that.footNavigationList);
+        }, 100),
+        onEnd: function (event) {
+          that.tooltipVisible = true
+          that.$emit('getDelIcon', false)
+          that.popVisible = false
+          that.isDelete = true
+        },
+        onMove: function (event) {
+          // console.log(event);
+          that.isDelete = false
+        },
+        // onRemove: function (event) {
+        //   console.log(111111111,'=====onRemove');
+        // }
+      })
+      // message.success('开始调整底部栏，点击导航外部即可终止调整。')
+    },
+    renderIcon,
+    delNavigation(sumList, oneNav, index, delMethod) {
+      if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
+        //如果不是必须的
+        delMethod(index)
+      } else {
+        if (sumList.find((item) => item.name === oneNav.name)) {
+          //正常移除
           delMethod(index)
         } else {
-          if (sumList.find((item) => item.name === oneNav.name)) {
-            //正常移除
-            delMethod(index)
-          } else {
-            //不可移除
-            message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-          }
+          //不可移除
+          message.info(`导航栏中至少保留一个「${oneNav.name}」`)
         }
-      },
+      }
     },
-  }
+  },
+}
 </script>
 <style></style>
 <style lang="scss" scoped>

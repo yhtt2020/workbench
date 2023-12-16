@@ -3,7 +3,7 @@
     <img :src="textUrl" class="w-full h-full object-cover" :class="settings.enableHide ? 'rounded-t-xl':''"/>
     <div class="community-name h-11 w-full com-line-bg">
       <div class="m-1.5 px-3 items-center rounded-lg drop-hover flex justify-between h-8">
-        <ChatDropDown :id="null" class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :enableButton="false" :title="defaultCategory.name" :list="floatList" /> 
+        <ChatDropDown :id="null" class="w-full" newIcon="fluent:line-horizontal-3-20-filled" :enableButton="false" :title="defaultCategory.name" :list="floatList" />
       </div>
     </div>
   </div>
@@ -58,8 +58,8 @@
         <div v-for="item in defaultCategory?.tree">
          <ChatFold :title="item.name" :show="false" :content="undefined" :no="defaultCategory?.no">
           <div class="flex flex-col" v-if="isDoubleColumn === false">
-            <div v-for="item in item.children" @click="currentItem(item)"  :class="{'active-bg': currentID ===item.id}" 
-             class="flex items-center rounded-lg px-3.5 py-2.5 pointer" 
+            <div v-for="item in item.children" @click="currentItem(item)"  :class="{'active-bg': currentID ===item.id}"
+             class="flex items-center rounded-lg px-3.5 py-2.5 pointer"
             >
              <div class="flex items-center">
                <template v-if="item.type === 'group'">
@@ -71,13 +71,13 @@
                <template v-if="item.type === 'forum'">
                 <communityIcon icon="fluent-emoji-flat:placard" style="font-size: 1.25em;"/>
                </template>
-             </div> 
+             </div>
              <span class="font-16 ml-2 truncate" style="color: var(--primary-text);">{{ item.name || item.title }}</span>
               <SelectOutlined class="ml-1 xt-text-2 flip " style="font-size: 14px" v-if="item.type === 'link' && item.name !== 'Roadmap'"/>
             </div>
           </div>
           <div class="flex grid grid-cols-2 gap-1" v-else>
-           <div v-for="item in item.children" @click="currentItem(item)"  :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2.5 rounded-lg pointer group-item">
+           <div v-for="item in item.children" @click="currentItem(item)"  :class="{'xt-bg-t-2':currentID === item.id}" class="flex items-center px-3.5 py-2.5 rounded-lg pointer group-item">
             <div class="flex items-center">
              <template v-if="item.type === 'group'">
               <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25em;"/>
@@ -147,7 +147,7 @@ export default {
         this.setFloatVisible(true)
       }
     },
-    { 
+    {
       newIcon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
       callBack:()=>{
         this.setDouble()
@@ -177,7 +177,7 @@ export default {
   ...mapActions(chatStore,['setFloatVisible','setDouble']),
   currentItem(item){
    this.currentID = item.id
-   this.$mit.emit('clickItem',item)
+   this.$bus.emit('defaultClickItem',item)
   },
   // 展示单列时所有内容
   openHideContent(){

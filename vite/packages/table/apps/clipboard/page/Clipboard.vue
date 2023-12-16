@@ -48,9 +48,9 @@
                         class="mx-4 my-2 py-4 h-full ">
     <ClipList :clipList="clipContents" ></ClipList>
   </vue-custom-scrollbar>
-  <div class="text-center">
-    {{clipContents.length}} 条记录
-  </div>
+<!--  <div class="text-center">-->
+<!--    {{clipContents.length}} 条记录-->
+<!--  </div>-->
   <!-- 剪切板列表展示区域结束 -->
 
   <!-- 导航切换在宽度不够的情况下显示 -->
@@ -290,7 +290,7 @@ export default {
   border: 1px solid var(--divider);
 }
 
-@media screen and (max-width: 1064px) {
+@media screen and (max-width: 1160px) {
   :deep(.tab-item) {
     display: none !important;
   }

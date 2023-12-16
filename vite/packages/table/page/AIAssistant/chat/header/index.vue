@@ -48,11 +48,11 @@
         <template #right>
           <XtButton
             @click="saveEdit()"
-            text="保 存"
+
             type="theme"
             h="40"
             w="80"
-          ></XtButton>
+          >保存</XtButton>
         </template>
       </XtTitle>
     </template>

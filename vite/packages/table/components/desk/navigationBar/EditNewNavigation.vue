@@ -27,7 +27,7 @@
         <template #header-left>
             <!-- 输入框 -->
             <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
-                style="width: 244px;height: 40px;border-radius: 10px;margin-left: 12px" v-model:value="inputValue"
+                style="width: 244px;height: 32px;border-radius: 10px;margin-left: 12px;background: var(--main-bg);" v-model:value="inputValue"
                 @keydown.enter="onSearch" class="">
                 <template #suffix>
                     <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
@@ -39,10 +39,10 @@
             </div>
         </template>
         <template #header-right>
-            <div class="ml-3 text-base xt-text">添加到：</div>
+            <div class="ml-3 text-base xt-text-2">添加到：</div>
             <a-dropdown trigger="['click']">
                 <template #overlay>
-                    <a-menu class="rounded-xl xt-bg" style="border-radius: 12px !important;">
+                    <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
                             class="flex items-center justify-center hover-style ">
                             <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
@@ -412,8 +412,8 @@ export default {
         },
         otherList() {
             const sideBarTag = this.navList[this.currentIndex].tag;
-            console.log('this.webList', this.webList)
-            console.log('this.filterList', this.filterList)
+            // console.log('this.webList',this.webList)
+            // console.log('this.filterList',this.filterList)
             if (sideBarTag === 'recommendation' || this.currentTitle === 'recommendation') {
                 return this.suggestNavigationList;
             } else if (sideBarTag === 'webNavigation') {
@@ -455,7 +455,15 @@ export default {
         this.loadDeskIconApps()
     },
     mounted() {
-        this.defaultTitle = this.currentNav
+        if(this.currentNav){
+           this.defaultTitle = this.currentNav 
+        }else{
+            this.defaultTitle = {
+                title: '底部导航栏',
+                value: 'foot'
+            }
+            this.selectNav = 'foot'
+        }
         this.targetDivName = this.$refs.introduce.$refs.targetDiv
         this.updateIntroduce()
         this.$nextTick(() => {

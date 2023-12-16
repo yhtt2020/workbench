@@ -113,7 +113,7 @@ export default {
   <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
-      <img  @click="previewItem"   :src="clipItem.path" alt="" class=" w-full h-full pointer  object-cover">
+      <img  @click="previewItem"   :src="clipItem.path" alt="" class=" w-full h-full pointer  object-scale-down">
     </template>
     <template #footer>
       <div class="p-1 w-full">

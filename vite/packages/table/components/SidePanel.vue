@@ -3,8 +3,8 @@
   <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
-      class="relative flex flex-row justify-center max-h-full pt-0 pb-0 box common-panel s-bg side-bar"
-      ref="sideContent" @contextmenu="showMenu" :style="{width:80*(this.navAttribute.navSize/100)+'px',borderRadius:this.navAttribute.navRadius+'px',background:this.navAttribute.navBgColor}">
+      class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
+      ref="sideContent" @contextmenu="showMenu">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -14,12 +14,12 @@
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)"
-                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' ,marginTop: index === 0 ? '12px' : '20px'}" >
+                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }" :style="{borderRadius:this.iconRadius+'px'}">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <a-avatar :size="52" shape="square" :src="item.icon"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                      :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
                   <a-avatar v-else :size="52" shape="square" :src="renderIcon(item.icon)"
                     :class="{ 'shaking-element': shakeElement }"></a-avatar>
@@ -31,8 +31,9 @@
         </div>
 
       </div>
-      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
-          <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
+      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0"
+        @click="this.editNavigation(this.drawerMenus[0])">
+        <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
       </div>
 
     </div>
@@ -62,10 +63,12 @@
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
-        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'"></navigationSetting>
-      </div>
-    </transition>
+      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      </EditNewNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
+      </navigationSetting>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -89,6 +92,7 @@ import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
+import _ from 'lodash-es'
 export default {
   name: 'SidePanel',
   components: {
@@ -100,6 +104,7 @@ export default {
     xtMenu,
     xtMixMenu
   },
+  emits: ['getDelIcon', 'hiedNavBar'],
   data() {
     return {
       menuVisible: false,
@@ -164,7 +169,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => {this.sortId==='left'? this.navigationToggle[0] = false:this.navigationToggle[1] = false},
+          fn: () => { this.$emit('hiedNavBar', this.currentNav) },
         },
         {
           id: 4,
@@ -361,6 +366,16 @@ export default {
       return
       // }
     },
+    /**
+     * 
+     * @param {*} value 导航栏设置中关闭的导航
+     */
+    hiedNav(value) {
+      this.$emit('hiedNavBar', value)
+    },
+    // beforeCreate(){
+    //   return this.rightModel == 'follow' 
+    // },
     enableDrag() {
       // if (this.sortable) {
       //   return
@@ -372,7 +387,7 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
-        delay:50,
+        delay: 50,
         delayOnTouchOnly: true,
         onStart: function (event) {
           if (that.popVisible) {
@@ -409,12 +424,12 @@ export default {
             that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
           }
         },
-        onUpdate: function (event) {
+        onUpdate: _.debounce(function (event) {
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
           let oldItem = drop.children[oldIndex]
-
+          // console.log('newIndex', oldItem)
           // 先删除移动的节点
           drop.removeChild(newItem)
           // 再插入移动的节点到原有节点，还原了移动的操作
@@ -423,11 +438,13 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          that.sortNavigationList(event)
-        },
+          that.sortFootNavigationList(event)
+          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
+          that.updateMainNav();
+        }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
-          that.popVisible=false
+          that.popVisible = false
         }
       })
       // message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
@@ -845,5 +862,4 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}
-</style>
+}</style>

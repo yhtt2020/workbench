@@ -111,7 +111,7 @@ app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
-app.config.globalProperties.$mit = Mit;
+app.config.globalProperties.$bus = Mit;
 app.config.globalProperties.$xtConfirm = confirm;
 
 const pinia = createPinia();

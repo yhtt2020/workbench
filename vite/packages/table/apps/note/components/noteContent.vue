@@ -143,6 +143,10 @@ export default {
     ...mapActions(cardStore, ['updateCustomData']),
     ...mapActions(noteStore, ['saveNoteDb', 'getNotes', 'addNoteToDesk', 'changeBg', 'moveToTrash', 'restore', 'deleteNote']),
     formatTime,
+    // 修改编辑器的值
+    changeValue(value){
+      this.$refs.editor?.setEditorValue(value)
+    },
     changeIsFull () {
       this.isFull = !this.isFull
     },
@@ -169,7 +173,7 @@ export default {
       if (this.noteList[this.selNote].customData.title != e.target.value) {
         let n = -1
         this.deskList.forEach((item, index) => {
-          if (item.name == this.noteList[this.selNote].deskName) {
+          if (item.id == this.noteList[this.selNote].deskId) {
             n = index
           }
         })
@@ -203,7 +207,7 @@ export default {
       }
     },
     watchEditorValue (value) {
-      this.$refs.editor?.childEvent(value)
+      this.$refs.editor?.setEditorValue(value)
     },
 
   },

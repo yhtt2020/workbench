@@ -11,6 +11,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 iconRounded:true,
                 iconBackground:false
             },
+            // 等级显示
+            levelVisible:false,
             selectNav:'',
             currentList:{},
             // 第一次进入，显示推荐

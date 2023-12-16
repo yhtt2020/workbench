@@ -39,7 +39,7 @@
 import { message, Modal } from 'ant-design-vue'
 import { teamStore } from '../store/team'
 import { mapActions,mapWritableState } from 'pinia'
-
+import {completeTask} from "../apps/task/page/branch/task.ts"
 const names = '发际线跟我作对,汤臣一品业组,我们做的都队,卷死其他组,精神小伙成双队,清华在校生组,素质教育漏网之鱼队,裸考过线组,下岗工人再就业队,光宗耀组,铁道游击队,没有这组,好好好你说的都队,花开富贵组,蒙的全队,所以爱会消失对不队,治安大队,校外施工队,斗地组,六神五组,重案六组,基因重组'
 
 export default {
