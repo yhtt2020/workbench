@@ -5,11 +5,10 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
-    :class="[menuHeight]"
+    :class="[menuHeight, menuWidth]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
-    class="w-full"
   >
     <slot> </slot>
     <template #cardSize>
@@ -40,11 +39,15 @@ const props = defineProps({
   },
   name: { default: "name" },
   fn: { default: "fn" },
-  height: {
-    default: 0,
-  },
+
   menuHeight: {
     default: "h-full",
+  },
+  menuWidth: {
+    default: "w-full",
+  },
+  height: {
+    default: 0,
   },
 });
 const menu = ref(null);
@@ -108,13 +111,16 @@ function defaultListContextmenu(event) {
 
 function custom() {
   console.log("menu.value :>> ", menu.value.handleOpenMenu);
-  menu.value.handleOpenMenu({
-    stopPropagation: () => {},
-    preventDefault: () => {},
+  menu.value.handleOpenMenu(
+    {
+      stopPropagation: () => {},
+      preventDefault: () => {},
 
-    clientX: 200,
-    clientY: 200,
-  },model.value);
+      clientX: 200,
+      clientY: 200,
+    },
+    model.value
+  );
 }
 defineExpose({
   custom,

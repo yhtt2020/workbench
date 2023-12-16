@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-wrap">
-    <!-- v-if="fileDisabled(item)" -->
     <template v-for="item in list">
       <xt-mix-menu
         v-if="fileDisabled(item)"
@@ -37,7 +36,7 @@ import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../hooks/useStartApp";
 import { inject } from "vue";
-
+import { fileTypes } from "./options";
 const model = inject("model", "");
 const data = inject("data", "");
 
@@ -131,57 +130,32 @@ const fileClick = (data) => {
 };
 
 /**
- * 判断文件类型是否需要禁用
+ * 判断文件类型是否需要隐藏
  */
 
-const fileDisabled = (item) => {
-  console.log('111111111 :>> ', 111111111);
-  return computed(() => {
-    console.log("222222 :>> ", 222222);
-    if (data.rules.length == 0) return;
-
-    data.rules.forEach((rule) => {
-      console.log("rule :>> ", rule);
-    });
-    return false;
+// 获取可用类型
+const typeRules = computed(() => {
+  if (data.value.rules.length == 0) return true;
+  let rules = [];
+  data.value.rules.forEach((rule) => {
+    rules.push(...fileTypes[rule]);
   });
-};
 
-const localFiles = [
-  {
-    name: "全部",
-    tag: "all",
-  },
-  {
-    name: "软件",
-    tag: "software",
-  },
-  {
-    name: "文档",
-    tag: "docx",
-  },
-  {
-    name: "其他",
-    tag: "other",
-  },
-];
-const doc = [
-  ".docx",
-  ".pptx",
-  ".txt",
-  ".pdf",
-  ".xlsx",
-  ".doc",
-  ".ppt",
-  ".xls",
-  ".md",
-  ".xml",
-  ".docm",
-  ".odt",
-  ".csv",
-  ".pptm",
-  ".ppsm",
-];
+  return rules;
+});
+
+// 获取文件后缀
+const getExtension = (filePath) => {
+  const match = filePath.match(/\.([^.]+)$/);
+  return match ? match[1] : "null";
+};
+// 实现是否需要隐藏
+const fileDisabled = (item) => {
+  const extension = getExtension(item.value);
+
+  if (typeRules.value == undefined) return 1;
+  return typeRules.value.includes(extension);
+};
 </script>
 
 <style lang="scss" scoped></style>

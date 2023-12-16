@@ -64,6 +64,14 @@ export const filesOptions = [
             name: "应用程序",
             value: "app",
           },
+          {
+            name: "文档",
+            value: "docx",
+          },
+          {
+            name: "文件夹",
+            value: "folder",
+          },
         ],
       },
       {
