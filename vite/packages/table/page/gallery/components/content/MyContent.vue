@@ -1,13 +1,13 @@
 <template>
   <vue-custom-scrollbar :settings="settingsScroller" class="grow shrink" style="height: 100%;">
     <viewer :images="myPaperList" :options="options" class="px-2.5">
-      <a-row :gutter="[20, 20]" id="bingImages">
+      <a-row :gutter="[16, 16]" id="bingImages">
        <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6" 
         style="padding-left: 0 !important;padding-right: 12px !important;"
        >
          <div class="pointer w-full h-full my-paper">
           <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false">
-            <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.src" :alt="img.resolution"   class="image-item pointer relative" />
+            <img :src="img.path" :data-source="img.src" :alt="img.resolution"   class="image-item pointer relative" />
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
                 <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>
@@ -42,6 +42,7 @@
        </a-col>
       </a-row>
     </viewer>
+    <div style="height: 16px;"></div>
   </vue-custom-scrollbar>
  </template>
  

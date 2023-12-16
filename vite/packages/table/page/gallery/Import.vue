@@ -71,8 +71,16 @@ export default {
   },
   methods: {
     clearFix(){
-      this.myPapers=[]
-      this.activePapers=[]
+      this.myPapers=[];
+      this.activePapers=[];
+      const videoList = fs.readdirSync(path.join(this.settings.savePath, 'lively'));
+      const localPaper =  fs.readdirSync(path.join(path.join(this.settings.savePath), 'static'));
+      for(const item of videoList){ 
+        fs.removeSync(path.join(path.join(this.settings.savePath, 'lively'),`${item}`));
+      };
+      for(const item of localPaper){ 
+        fs.removeSync(path.join(path.join(path.join(this.settings.savePath), 'static'),`${item}`));
+      }
     },
     //选择本地按钮的导入方式
     async importFile() {

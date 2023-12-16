@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <div class="h-10 flex items-center justify-between mb-4 ">
+    <div class=" flex items-center justify-between mb-4 " :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
         <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'1.25rem'}" class="mr-2 xt-text"/>
         <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
@@ -29,12 +29,12 @@
         </template>
 
         <template v-else>
-          <xt-button w="32" h="32" class="xt-bg mr-3" style="border-radius: 8px;" >
+          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" >
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:play-16-filled" style="font-size:1rem"></MyIcon>
             </div>
           </xt-button>
-          <xt-button w="32" h="32" class="xt-bg mr-3" style="border-radius: 8px;" @click="openRight"  >
+          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  >
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1rem" />
             </div>

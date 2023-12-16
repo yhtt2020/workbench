@@ -5,7 +5,7 @@
   <div class="w-full flex items-center justify-center" >
     <xt-button  h="40"  v-for="item in emptyList" class="xt-bg-t-2 mr-3" style="border-radius: 10px;" @click="goDetail(item)">
       <div class="flex items-center justify-center">
-        <MyIcon :icon="item.newIcon" style="font-size:1.25rem ;" class="mr-2"/>
+        <xt-new-icon :icon="item.newIcon" :size="isModal ? 16 : 20" class="mr-2"></xt-new-icon>
         <span class="xt-font xt-text font-16 font-400">{{item.name}}</span>
       </div>
     </xt-button>

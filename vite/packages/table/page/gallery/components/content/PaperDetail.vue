@@ -1,5 +1,5 @@
 <template>
- <div class="flex items-center justify-start w-full" style="height: calc(100% - 60px);">
+ <div class="flex items-center justify-start w-full" style="height: calc(100% - 50px);">
   <vue-custom-scrollbar  :settings="settingsScroller" class="h-full w-full">
    <viewer :images="paperList" :options="options" class="px-2.5">
     <a-row :gutter="[20, 20]" id="bingImages">
