@@ -49,7 +49,7 @@ export const appStore = defineStore('appStore', {
     windowFullScreen: false,//窗口是否是全屏
 
     settings: {
-      showTopPanel:false,
+      showTopPanel:true,
       enableDev: false,//开发者模式
       transparent: false,//透明背景
       duck: false,//音量控制的时候，鸭子叫

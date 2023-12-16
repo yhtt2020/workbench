@@ -143,7 +143,11 @@
         message.error('暂无打印机连接')
       } else {
         print.value.printers =  api.value.getPrinters({ onlyLocal: true })
-        selectedPrinter.value = "请选择打印机"
+        if (print.value.printers[0]?.name) {
+          selectedPrinter.value = print.value.printers[0]?.name
+        }else{
+          selectedPrinter.value = "请选择打印机"
+        }
         nextTick(()=>{
           // 去生成预览图
           doPreview()

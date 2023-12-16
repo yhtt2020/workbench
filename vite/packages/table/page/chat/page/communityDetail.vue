@@ -27,7 +27,9 @@
             </div>
           </div>
         </template>
-        <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.props.id "/>
+        <template v-else-if="currentChannel.type === 'forum'">
+          <Commun  :forum-id="currentChannel.props.id "/>
+        </template>
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
           <div v-if="currentChannel.name !== 'Roadmap' && currentChannel.props.openMethod !== 'currentPage'" class="flex items-center justify-center" style="text-align: center;margin-top: 30%">
@@ -40,7 +42,7 @@
           style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)">
 
           </iframe>
-          <div  style="position: absolute;top: -35px;right: 0px">
+          <div  style="position: absolute;top: -62px;right: 0px">
             <xt-button @click="openLink(currentChannel.props.url)" :w="120" :h="40">浏览器打开</xt-button>
           </div>
         </template>
@@ -114,10 +116,10 @@ export default {
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
     // 监听当前事件触发
-    this.$mit.on('clickItem',(item)=>{
+    this.$bus.on('clickItem',(item)=>{
       this.currentItem(item);
     })
-    this.$mit.on('currentSet',(args)=>{
+    this.$bus.on('currentSet',(args)=>{
       this.currentChannel = args
     })
   },

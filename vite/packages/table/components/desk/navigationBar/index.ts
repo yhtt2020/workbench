@@ -31,6 +31,11 @@ export const navigationFunction=[
         description:'在工作台底部显示任务中心',
         tag:'task',
     },
+    // {
+    //     title:'等级',
+    //     description:'在工作台底部显示等级',
+    //     tag:'level',
+    // },
     {
         title:'社群沟通',
         description:'在工作台底部显示社群沟通',
