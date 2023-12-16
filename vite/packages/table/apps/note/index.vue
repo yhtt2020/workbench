@@ -55,7 +55,7 @@
     <teleport to="body">
 
       <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
-        <div class="flex" style="width: 800px;height: 600px;">
+        <div class="flex rounded-lg overflow-hidden" style="width: 800px;height: 600px;">
           <history-list :changeEditorValue="changeEditorValue" :showVersion="showVersion" :changeShowVersion="changeShowVersion" :noteId="noteList[selNote]._id"></history-list>
         </div>
 
