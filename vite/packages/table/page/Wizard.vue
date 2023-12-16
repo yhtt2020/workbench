@@ -13,9 +13,7 @@
         </div>
         <div>{{ title }}</div>
       </div>
-      <div
-      class="mt-4 w-full"
-        style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
+      <div class="mt-4 w-full flex justify-center" style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
         <div v-if="step===0">
           <div class="font-16" style="margin-bottom: 2em;text-align: center;color: var(--secondary-text);" v-if="true">
             如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
@@ -65,8 +63,8 @@
                 选择您要显示工作台的屏幕，点击即可。
               </div>
               <div>
-                <a class="mr-10 flex items-center"  @click="step++">
-                  <Icon icon="touping"/>矫正屏幕
+                <a class="flex items-center"  @click="step++">
+                  <Icon class="mr-1" icon="touping"/>矫正屏幕
                 </a>
               </div>
             </div>
@@ -92,12 +90,12 @@
 
         </div>
 
-        <div v-if="step===3" class="px-6">
-          <div class="mt-3 mb-3 flex justify-center xt-bg-2" style="padding: 1em;border-radius: 8px 8px;color: white">
-            <AutoRun/>
+        <div v-if="step===3" class="flex justify-center flex-wrap" style="width: 452px;">
+          <div class="mt-3 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
+            <AutoRun isGuide="true"/>
           </div>
-          <div style="text-align: center">
-            <KeySetting></KeySetting>
+          <div class="w-full">
+            <KeySetting isGuide="true"></KeySetting>
           </div>
           <div class="panel" style="line-height: 1" v-if="!canTouch">
             <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
@@ -108,7 +106,6 @@
             </p>
           </div>
         </div>
-
         <div v-if="step==4">
           <div class="text-center xt-text-2 font-16">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
           <div class="flex flex-wrap justify-center">

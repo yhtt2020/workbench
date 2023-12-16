@@ -17,7 +17,7 @@
                    :style="{backgroundColor:item.color}"
                    :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
                    @click="onKeyDown(item, index, 'modifierKeyOne')"
-                   class="key-item">
+                   class="key-item pointer">
                 {{ item.key }}
               </div>
             </div>
@@ -46,7 +46,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[0]')"
-                 class="key-item w-11">
+                 class="key-item w-11 pointer">
               {{ item.key }}
             </div>
           </div>
@@ -56,7 +56,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[1]')"
-                 class="key-item w-11">
+                 class="key-item w-11 pointer">
               {{ item.key }}
             </div>
           </div>
@@ -77,7 +77,7 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import XtButton from '../../../ui/libs/Button/index.vue'
+import XtButton from '../../ui/libs/Button/index.vue'
 
 export default {
   name: 'KeyBoard',
@@ -99,7 +99,7 @@ export default {
         {
           key: 'Ctrl',
           color:'rgb(255, 108, 97)',
-          checked: false,
+          checked: false,  
           isGray: false,
         },
         {
@@ -524,6 +524,9 @@ export default {
   },
   mounted () {
     this.keyContent = this.deepClone(this.selectKey, this.keyContent)
+    // 初始加载已有的按键
+  
+
     this.keyContent.keyArr.forEach(item => {
       this.isKeyChecked(item.field, item.index, true)
     })
@@ -575,7 +578,7 @@ export default {
       this.$emit('closeKeyBoard')
 
     },
-    // 按键
+    // 按键选中
     onKeyDown (item, index, field) {
       let flag = false // 阻止触发改变数据操作
       let isChecked = true
@@ -584,13 +587,12 @@ export default {
       if (item.isGray) {
         return
       }
-
-      const hasKeyIndex = this.keyContent.keyArr.findIndex(data => {
+      const hasKeyIndex = this.keyContent.keyArr?.findIndex(data => {
         return item.key == data.key
       })
 
       //选择数不能大于三
-      flag = this.keyContent.keyArr.length >= 4
+      flag = this.keyContent.keyArr?.length >= 4
       // 再次点击选择的【取消选择】
       if (hasKeyIndex != -1) {
         flag = false
