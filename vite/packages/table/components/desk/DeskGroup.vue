@@ -124,7 +124,6 @@
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
       >
-
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
           <slot name="settingsAll"></slot>
@@ -205,7 +204,6 @@
           </Desk>
         </span>
       </template>
-
     </xt-mix-menu>
   </div>
 
@@ -752,9 +750,9 @@ export default {
     },
     delDesk() {
       if (this.deskList.length === 1) {
-        Modal.info({
-          content: "至少保留一个桌面",
-          centered: true,
+        this.$xtConfirm("至少保留一个桌面。", "", {
+          noText:null,
+          type: "warning",
         });
         return;
       } else {
@@ -780,10 +778,11 @@ export default {
           }
         });
         this.$refs.currentDeskRef.hideMenu();
-        Modal.confirm({
-          centered: true,
-          content: "删除当前桌面？此操作不可还原。",
-          onOk: () => {
+        this.$xtConfirm("删除当前桌面？此操作不可还原。", "", {
+          type: "warning",
+          okText: "删除桌面",
+          okButtonWidth:'100',
+          ok:() => {
             this.deskList.splice(
               this.deskList.findIndex((desk) => {
                 return desk === this.currentDesk;
@@ -802,7 +801,6 @@ export default {
               });
             }
           },
-          okText: "删除桌面",
         });
       }
     },

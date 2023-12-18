@@ -29,6 +29,7 @@
 
 <script setup>
 import { ref, computed, getCurrentInstance, toRefs } from "vue";
+import { useRouter, useRoute } from 'vue-router'
 import Columns from "./Columns.vue";
 import Rows from "./Rows.vue";
 import Drag from "../components/Drag.vue";
@@ -36,10 +37,14 @@ import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../hooks/useStartApp";
 import { inject } from "vue";
 import { fileTypes } from "./options";
+
 const model = inject("model", "");
 const data = inject("data", "");
 
 const { proxy } = getCurrentInstance();
+
+const router = useRouter();
+
 const emits = defineEmits(["deleteFile", "updateSort"]);
 // 父组件数据
 const props = defineProps({
@@ -116,7 +121,7 @@ const dragDeleteFile = (data) => {
 const currentItem = ref();
 const handleMenuMounted = (item) => {
   currentItem.value = item;
-  console.log('item :>> ', item);
+  console.log("item :>> ", item);
 };
 /**
  * 文件点击
@@ -127,7 +132,7 @@ const fileClick = (data) => {
   // 更新使用时间
   data.lastUseTime = new Date().getTime();
   // 这里应该调用updateFile 但是点击直接生效了？？
-  startApp(data.type, data.value);
+  startApp(data.type, data.value, router);
   emits("updateSort");
 };
 

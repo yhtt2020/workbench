@@ -19,6 +19,7 @@
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+          width: 400px;
         "
         :style="{
           'z-index': index,
