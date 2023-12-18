@@ -34,7 +34,7 @@ import Columns from "./Columns.vue";
 import Rows from "./Rows.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
-import { startApp } from "../hooks/useStartApp";
+import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
 import { fileTypes } from "./options";
 

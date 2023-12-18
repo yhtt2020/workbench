@@ -1,4 +1,5 @@
-import browser from "../../../../js/common/browser";
+import browser from "../../js/common/browser";
+
 export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器
