@@ -63,10 +63,10 @@ export function getFileName(path:any){
  const existFile = fileRegex.test(path);
  const selectFile = selectRegex.test(path);
  // 判断匹配成功就返回文件名称
- if(selectFile) { return path.split('/')[path.split('/').length - 1]; }
- else if(exist){ return path.split('&')[1].split('=')[1]; }
+ if(selectFile) {  return path.split('/')[path.split('/').length - 1]; }
+ else if(exist){  return path.split('id')[1].split('&')[0].split('=')[1]; }
  else if(existFile){ return path.split('file://')[1].split('/')[2] }
- else { return path.split('https://')[1].split('/')[2]; }
+ else {  return path.split('https://')[1].split('/')[2]; }
 }
 
 // 判断是否收藏壁纸
