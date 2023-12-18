@@ -57,7 +57,7 @@
           v-if="name == 'Links'"
           style="width: 380px; height: 48px"
           boxClass="my-2 p-1 xt-bg-2"
-          v-model:data="type"
+          v-model:modelValue="type"
           :list="linkList"
         ></XtTab>
         <xt-task id="M0201" no="5" @cb="commitIcons">

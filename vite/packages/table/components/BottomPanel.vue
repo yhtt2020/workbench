@@ -1,5 +1,6 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name">
+  <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
+  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
@@ -14,7 +15,7 @@
         border: 1px solid var(--divider);
         height: 80px;
       ">
-        <MyAvatar :chat="true" :level="this.levelVisible"></MyAvatar>
+        <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
           <ChatButton></ChatButton>
@@ -41,7 +42,7 @@
         min-width: 70px;
         border: 1px solid var(--divider);
       ">
-        <xt-task id='M0104' no='1' :mask="false" @cb="showMenu">
+        <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
           <div style="
           display: flex;
           flex-direction: row;
@@ -171,6 +172,7 @@
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
     </div>
+  <!-- </xt-menu> -->
   </xtMixMenu>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
     placement="bottom" :visible="menuVisible" @close="onClose">
@@ -224,7 +226,9 @@
       <!-- 新版 -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav"></navigationSetting>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
+      </navigationSetting>
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
       <!-- <component :is='componentId'></component> -->
     </div>
   </transition>
@@ -283,7 +287,7 @@ import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import _ from 'lodash-es'
 export default {
   name: 'BottomPanel',
-  emits: ['getDelIcon','hiedNavBar'],
+  emits: ['getDelIcon', 'hiedNavBar'],
   components: {
     ChatButton,
     Emoji,
@@ -397,7 +401,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.$emit('hiedNavBar','foot') },
+          fn: () => { this.$emit('hiedNavBar', 'foot') },
         },
         {
           id: 4,
@@ -445,7 +449,7 @@ export default {
       delItemIcon: false,
       notifications: new Notifications(),
       tooltipVisible: true,
-      isDelete:true
+      isDelete: true
 
     }
   },
@@ -536,7 +540,7 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','levelVisible']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'taskBoxVisible', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'editItem']),
     ...mapWritableState(taskStore, ['isTask']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
@@ -578,12 +582,12 @@ export default {
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
-        {
-          id: 5,
-          name: this.levelVisible ? '隐藏等级' : '显示等级',
-          newIcon: "fluent:star-16-regular",
-          fn: () => { this.levelVisible = !this.levelVisible }
-        },
+        // {
+        //   id: 5,
+        //   name: this.levelVisible ? '隐藏等级' : '显示等级',
+        //   newIcon: "fluent:star-16-regular",
+        //   fn: () => { this.levelVisible = !this.levelVisible }
+        // },
       ]
 
     },
@@ -663,7 +667,7 @@ export default {
       } else {
         this.bottomToggle[2] = false
       }
-    }
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -705,8 +709,8 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
-    hiedNav(value){
-      this.$emit('hiedNavBar',value)
+    hiedNav(value) {
+      this.$emit('hiedNavBar', value)
     },
     showElement(item, index) {
       // console.log(item,index,'====>>>1111');
@@ -1043,14 +1047,14 @@ export default {
           that.tooltipVisible = false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
-          this.delNav = true
-          if (this.delNav) {
+          that.delNav = true
+          if (that.delNav) {
             delIcon.ondragover = function (ev) {
               ev.preventDefault()
             }
           }
           delIcon.ondrop = function (ev) {
-            if(!that.isDelete) return
+            if (!that.isDelete) return
             console.log(111111);
             that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
@@ -1083,7 +1087,7 @@ export default {
           }
         },
         onUpdate: _.debounce(function (event) {
-          that.isDelete=false
+          that.isDelete = false
           let newIndex = event.newIndex,
             oldIndex = event.oldIndex
           let newItem = drop.children[newIndex]
@@ -1098,16 +1102,23 @@ export default {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
           that.sortFootNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
+          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
           that.updateMainNav();
-          console.log(that.isDelete,'isDelete',that.footNavigationList);
+          console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true
           that.$emit('getDelIcon', false)
           that.popVisible = false
-          that.isDelete=true
+          that.isDelete = true
         },
+        onMove: function (event) {
+          // console.log(event);
+          that.isDelete = false
+        },
+        // onRemove: function (event) {
+        //   console.log(111111111,'=====onRemove');
+        // }
       })
       // message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },

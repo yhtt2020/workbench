@@ -126,7 +126,6 @@ export const communityStore = defineStore('communityStore',{
       else { return res };
     },
    
-
     // 更新社群树状对应数据
     async updateCommunityTree(no:any){
       const list = this.community.communityTree;
@@ -164,6 +163,7 @@ export const communityStore = defineStore('communityStore',{
       const res = await  post(deleteCategory,{id:id});
       if(res.status === 1){
         this.updateCommunityTree(no);
+        this.getChannelList(no);
         return res;
       }
     },
@@ -174,7 +174,11 @@ export const communityStore = defineStore('communityStore',{
       if(!isNum){
         const option = { communityNo:parseInt(no), cache:1 };
         post(getChannelList,option).then((res:any)=>{
-          console.log('执行......查看',res);
+          if(res.status === 1){
+            const list = res.data.list;
+            const filterList = _.filter(list,function(item:any){ return item.role === 'category' });
+            this.community.categoryClass = filterList;
+          }          
         })
       }
     },

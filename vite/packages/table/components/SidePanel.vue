@@ -1,7 +1,9 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full'">
+  <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'">
+  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
-    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId"
+      style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
       ref="sideContent" @contextmenu="showMenu">
       <div style="width: 52px;" class="w-full">
@@ -13,12 +15,12 @@
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
               <div :key="item.name" @click="clickNavigation(item)"
-                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px' ,marginTop: index === 0 ? '12px' : '20px'}" >
+                :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }">
                   <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
                     <a-avatar :size="52" shape="square" :src="item.icon"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                      :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
                   <a-avatar v-else :size="52" shape="square" :src="renderIcon(item.icon)"
                     :class="{ 'shaking-element': shakeElement }"></a-avatar>
@@ -30,11 +32,13 @@
         </div>
 
       </div>
-      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0" @click="this.editNavigation(this.drawerMenus[0])">
-          <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
+      <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0"
+        @click="this.editNavigation(this.drawerMenus[0])">
+        <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
       </div>
 
     </div>
+  <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
   <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
@@ -60,10 +64,12 @@
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'"></EditNewNavigation>
-        <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav"></navigationSetting>
-      </div>
-    </transition>
+      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      </EditNewNavigation>
+      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
+      </navigationSetting>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -99,7 +105,7 @@ export default {
     xtMenu,
     xtMixMenu
   },
-  emits: ['getDelIcon','hiedNavBar'],
+  emits: ['getDelIcon', 'hiedNavBar'],
   data() {
     return {
       menuVisible: false,
@@ -164,7 +170,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: "fluent:eye-off-16-regular",
-          fn: () => { this.$emit('hiedNavBar',this.currentNav)},
+          fn: () => { this.$emit('hiedNavBar', this.currentNav) },
         },
         {
           id: 4,
@@ -265,7 +271,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','levelVisible']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'levelVisible']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -300,12 +306,6 @@ export default {
           name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
-        },
-        {
-          id: 5,
-          name: this.levelVisible ? '隐藏等级' : '显示等级',
-          newIcon: "fluent:star-16-regular",
-          fn: () => { this.levelVisible = !this.levelVisible }
         },
       ]
 
@@ -371,9 +371,12 @@ export default {
      * 
      * @param {*} value 导航栏设置中关闭的导航
      */
-    hiedNav(value){
-      this.$emit('hiedNavBar',value)
+    hiedNav(value) {
+      this.$emit('hiedNavBar', value)
     },
+    // beforeCreate(){
+    //   return this.rightModel == 'follow' 
+    // },
     enableDrag() {
       // if (this.sortable) {
       //   return
@@ -385,7 +388,7 @@ export default {
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
-        delay:50,
+        delay: 50,
         delayOnTouchOnly: true,
         onStart: function (event) {
           if (that.popVisible) {
@@ -437,12 +440,12 @@ export default {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
           that.sortFootNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item)=>item!==undefined)
+          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
           that.updateMainNav();
         }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
-          that.popVisible=false
+          that.popVisible = false
         }
       })
       // message.success('开始拖拽调整侧边栏。调整完毕后点击外部即可终止。')
@@ -860,5 +863,4 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}
-</style>
+}</style>

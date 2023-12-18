@@ -55,7 +55,7 @@
     <teleport to="body">
 
       <Modal @close="selectVersion=null" v-if="showVersion" :blur-flag="true" v-model:visible="showVersion">
-        <div class="flex" style="width: 800px;height: 600px;">
+        <div class="flex rounded-lg overflow-hidden" style="width: 800px;height: 600px;">
           <history-list :changeEditorValue="changeEditorValue" :showVersion="showVersion" :changeShowVersion="changeShowVersion" :noteId="noteList[selNote]._id"></history-list>
         </div>
 
@@ -131,8 +131,8 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle']),
-    ...mapWritableState(cardStore, ['desks', 'selIndex']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex']),
+    ...mapWritableState(cardStore, ['desks']),
     content(){
       return this.noteList[this.selNote].customData?.text
     },
@@ -213,6 +213,7 @@ export default {
         {
           label: '跳转到桌面',
           newIcon: 'majesticons:monitor-line',
+          disabled: !(!this.isTrash && this.noteList[this.selNote]?.deskId != ''),
           callBack: () => {
             if (this.noteList[this.selNote].deskName) {
               this.deskList?.forEach((item, index) => {
