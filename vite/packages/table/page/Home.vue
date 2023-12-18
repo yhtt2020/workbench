@@ -808,7 +808,7 @@ export default {
           case 'lightApp':
             return {
               ...item,
-              mode: 'app',
+              mode: 'link',
               value: item.package
             };
           case 'tableApp':

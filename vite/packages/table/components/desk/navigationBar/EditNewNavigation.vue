@@ -255,7 +255,7 @@ export default {
                     value: item.path || item.package || item.url || item.event || item.data,
                     bg: '',
                     isBg: false,
-                    summary: item.summary,
+                    summary: item.summary || '',
                     mode: item.type === 'lightApp' ? 'link' : 'app',
                     ext: item.ext || '',
                 }
