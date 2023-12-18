@@ -1,12 +1,12 @@
 <template>
-    <tippy trigger="click" placement="right" :interactive="true" :appendTo="body">
+    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body">
         <xt-button :w="40" :h="40" class="xt-bg"><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
             <div class="w-[320px] rounded-xl shadow p-4 ">
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <xt-button :w="24" :h="24">
-                        <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" class="ml-1"></xt-new-icon>
+                        <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" class="ml-1" @click="tippyRef.hide()"></xt-new-icon>
                     </xt-button>
                 </div>
                 <div class="item-box">
@@ -43,6 +43,7 @@ const colorIndex = ref(0)
 const linearIndex = ref(0)
 const defaultColor = ref('#508BFE')
 const emit = defineEmits(['change'])
+const tippyRef = ref(null)
 export interface colorPicker {
     defaultList: {
         [key: string]: string
