@@ -153,7 +153,7 @@ import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
 import SidePanel from './SidePanel.vue'
-import SecondPanel from './SecondPanel.vue'
+// import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
@@ -193,7 +193,7 @@ export default {
     Emoji,
     MyAvatar,
     TeamTip,
-    SecondPanel,
+    // SecondPanel,
     SidePanel,
     Template,
     PanelButton,
@@ -428,6 +428,7 @@ export default {
       })
     })
     this.footNavigationList = this.footNavigationList.map((item) => {
+      console.log(item,'item');
       switch (item.type) {
         case 'systemApp':
           return { ...item }; 
@@ -435,26 +436,26 @@ export default {
           return {
             ...item,
             mode: 'app',
-            value: item.data
+            value: item.data || item.value
           };
         case 'lightApp':
           return {
             ...item,
             mode: 'link',
-            value: item.package
+            value: item.package || item.value
           };
         case 'tableApp':
           return {
             ...item,
             mode: 'app',
-            value: item.path
+            value: item.path || item.value
           };
         default:
           return {
             ...item,
             mode: 'link',
             type: 'default',
-            value: item.url
+            value: item.url || item.value
           };
       }
     }).map((item) => ({

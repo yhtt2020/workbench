@@ -803,26 +803,26 @@ export default {
             return {
               ...item,
               mode: 'app',
-              value: item.data
+              value: item.data || item.value
             };
           case 'lightApp':
             return {
               ...item,
               mode: 'link',
-              value: item.package
+              value: item.package || item.value
             };
           case 'tableApp':
             return {
               ...item,
               mode: 'app',
-              value: item.path
+              value: item.path || item.value
             };
           default:
             return {
               ...item,
               mode: 'link',
               type: 'default',
-              value: item.url
+              value: item.url || item.value
             };
         }
       }).map((item) => ({
