@@ -19,7 +19,7 @@
                         class="pointer rounded-xl" />
                 </div>
                 <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
-                <XtBaseColor v-model:data="defaultColor" @update:data="updateBackground">11111111111</XtBaseColor>
+                <XtBaseColor v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
                 <div class="mb-4 text-base xt-text-2">渐变色</div>
                 <div class="item-box">
                     <div class="flex items-center justify-center mr-4 item" :key="item"
@@ -102,7 +102,9 @@ const chooseLinear = (item) => {
         emit('change', props.linearList[`color${item}`]);
     }
 }
-
+const updateBackground = () => {
+    emit('change', defaultColor.value)
+}
 </script>
 <style lang='scss' scoped>
 .item {

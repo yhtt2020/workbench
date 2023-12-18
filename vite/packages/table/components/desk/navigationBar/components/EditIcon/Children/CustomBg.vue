@@ -10,7 +10,7 @@
                 <a-avatar :size="36" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
             <div class="flex flex-col justify-start ml-5">
-                <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
+                <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>{{ isIcon }}
                 <div class="flex justify-start mt-1" @click="reset">
                     <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="reset"></xt-new-icon>
                     <div class="ml-2 text-base reset pointer">重置图标</div>
@@ -39,12 +39,11 @@ const props=defineProps({
 })
 // 回调改变背景颜色
 const changeBg = (value) => {
-    if(isIcon){
+    if(isIcon.value){
         props.editItem.isBg = true
         bgColor.value = value
         props.editItem.bg = value
     }
-    console.log(props.editItem,'====>>>>editItem');
     
 }
 const getAvatar = (value) => {
@@ -54,7 +53,6 @@ const getAvatar = (value) => {
 const reset = () => {
     
     const target = navigationList.value.find(item => item.value === props.editItem.value)
-    console.log(target,'====>>>>navigationList');
     props.editItem.icon = target?.icon
     bgColor.value = ''
     props.editItem.bg = ''
@@ -62,10 +60,10 @@ const reset = () => {
 }
 // 判断图标类型
 const isIcon = computed(() => {
-    if (defaultIcon.value.includes('https')) {
-        return false
-    } else {
+    if (props.editItem.icon.includes('https')) {
         return true
+    } else {
+        return false
     }
 })
 const navigationList = computed(() => {

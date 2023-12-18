@@ -14,8 +14,8 @@
 import { ref, reactive } from 'vue'
 import EditName from './EditName.vue'
 import RadioTab from '../../../../../RadioTab.vue';
-const appModel=ref([{title:"主应用模式",value:'main'},{title:'窗口模式',value:'window'}])
-const defaultModel=ref({title:'主应用模式',value:'main'})
+const appModel=ref([{title:"主应用模式",name:'main'},{title:'窗口模式',name:'window'}])
+const defaultModel=ref({title:'主应用模式',name:'main'})
 const props = defineProps({
     editItem: Object
 })

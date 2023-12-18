@@ -20,10 +20,10 @@
 import { ref, reactive,onMounted } from 'vue'
 import RadioTab from '../../../../../RadioTab.vue';
 import EditName from './EditName.vue';
-const iconLink=ref([{title:'网站链接',value:'link'},{title:'系统程序或文件',value:'system'}])
-const openWay = ref([{title:'内置浏览器',value:"inner"},{title:"默认浏览器",value:"default"},{title:'想天浏览器',value:"xt"}])
-const defaultLink=ref({title:'网站链接',value:"link"})
-const defaultWay=ref({title:'默认浏览器',value:"default"})
+const iconLink=ref([{title:'网站链接',name:'link'},{title:'系统程序或文件',name:'system'}])
+const openWay = ref([{title:'内置浏览器',name:"inner"},{title:"默认浏览器",name:"default"},{title:'想天浏览器',name:"xt"}])
+const defaultLink=ref({title:'网站链接',name:"link"})
+const defaultWay=ref({title:'默认浏览器',name:"default"})
 const linkValue=ref('')
 const props=defineProps({
     editItem:Object
