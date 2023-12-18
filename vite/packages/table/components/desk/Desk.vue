@@ -722,11 +722,11 @@ export default {
     clear(desk) {
       this.menuVisible = false;
       if (desk) {
-        
-        Modal.confirm({
-          centered: true,
-          content: "清空当前桌面的全部卡片？此操作不可还原。",
-          onOk: () => {
+        this.$xtConfirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
+          okText: "清空卡片",
+          okButtonWidth: 100,
+          type: "warning",
+          ok: () => {
             desk?.cards?.forEach((item) => {
               //移除桌面相关的便签卡片
               if (item.name === "notes") {
@@ -753,8 +753,39 @@ export default {
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },
-          okText: "清空卡片",
         });
+        // Modal.confirm({
+        //   centered: true,
+        //   content: "清空当前桌面的全部卡片？此操作不可还原。",
+        //   onOk: () => {
+        //     desk?.cards?.forEach((item) => {
+        //       //移除桌面相关的便签卡片
+        //       if (item.name === "notes") {
+        //         tsbApi.db
+        //           .find({
+        //             selector: {
+        //               _id: "note:" + item.id,
+        //             },
+        //           })
+        //           .then((res) => {
+        //             if (res?.docs.length) {
+        //               tsbApi.db.put({
+        //                 ...res.docs[0],
+        //                 // isDelete:true,
+        //                 deskId: "",
+        //                 deskName: "",
+        //               });
+        //             }
+        //           });
+        //       }
+        //     });
+        //     desk.cards = [];
+        //     console.log(desk);
+        //     this.menuVisible = false;
+        //     this.clearFreeLayoutData();
+        //   },
+        //   okText: "清空卡片",
+        // });
       }
     },
     newAddCard() {

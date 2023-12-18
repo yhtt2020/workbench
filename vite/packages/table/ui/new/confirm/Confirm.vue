@@ -27,10 +27,7 @@
         <!-- 标题 -->
         <div class="flex items-center">
           <div class="mr-4">
-            <xt-new-icon
-              icon="fluent:info-12-filled"
-              :style="[typeStyle]"
-            />
+            <xt-new-icon icon="fluent:info-12-filled" :style="[typeStyle]" />
           </div>
           <span>{{ title }}</span>
         </div>
@@ -40,12 +37,17 @@
         </div>
         <!-- 按钮 -->
         <div class="flex justify-end items-center">
-          <xt-button v-if="noText" w="64" h="40" @click="onCancelClick()">
+          <xt-button
+            v-if="noText"
+            :w="noButtonWidth"
+            h="40"
+            @click="onCancelClick()"
+          >
             <span class="xt-text-2">{{ noText }}</span>
           </xt-button>
           <xt-button
             v-if="okText"
-            w="64"
+            :w="okButtonWidth"
             h="40"
             class="ml-3"
             type="theme"
@@ -60,7 +62,7 @@
 
 <script setup lang="ts">
 // confirm 是可以通过方法调用来展示的 需要手动导入组件
-import { ref, toRefs, onMounted ,computed} from "vue";
+import { ref, toRefs, onMounted, computed } from "vue";
 import XtButton from "../../libs/Button/index.vue";
 import XtNewIcon from "../../libs/NewIcon/index.vue";
 export interface ConfirmProps {
@@ -87,9 +89,11 @@ export interface ConfirmProps {
   // 关闭 confirm 的回调
   close?: Function;
   // icon 的样式类型 （默认：link）
-  type?: 'error' | 'link' |"success" |"warning"
+  type?: "error" | "link" | "success" | "warning";
+  // 按钮宽
+  okButtonWidth?: string;
+  noButtonWidth?: string;
 }
-
 
 const props = withDefaults(defineProps<ConfirmProps>(), {
   title: "",
@@ -103,18 +107,19 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   no: () => {},
   ok: () => {},
   close: () => {},
-  type:"success"
+  type: "success",
+  okButtonWidth: "64",
+  noButtonWidth: "64",
 });
-const { close, duration, no, ok,type }: any = toRefs(props);
+const { close, duration, no, ok, type }: any = toRefs(props);
 // 控制显示
 const isVisible = ref(false);
 const show = () => {
   isVisible.value = true;
 };
-const typeStyle = computed(()=>{
-
-  return { color: `var(--${type.value})  !important`}
-})
+const typeStyle = computed(() => {
+  return { color: `var(--${type.value})  !important` };
+});
 /**
  * 组件挂载时执行
  * 处理动画（render 渲染函数会直接执行）
