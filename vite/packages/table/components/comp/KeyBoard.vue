@@ -91,6 +91,10 @@ export default {
     parentKeyList: {
       type: Array,
       defalut: () => []
+    },
+    type:{
+      type: String,
+      defalut: () => {}
     }
   },
   data () {
@@ -552,7 +556,18 @@ export default {
     },
     // 确定
     confirm () {
-      // if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      console.log('this.keyContent.keyArr',this.keyContent.keyArr,this, this.$props?.type)
+      console.log('触发了？');
+
+      let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: 'alt+V+N'})
+    
+      if (rs) {
+        // this.refreshKeys()
+        message.success('快捷键设置成功')
+      } else {
+        message.error('注册快捷键失败，可能是快捷键冲突，请更换快捷键重试。')
+      }
       if (!this.keyContent.keyArr.length) {
         this.keyContent.keyStr = '?'
         this.keyContent.keys.splice(0, this.keyContent.keys.length, '?')

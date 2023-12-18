@@ -78,6 +78,7 @@ export default {
       }, 
       //选中的快捷键
       keyList:[],
+      type:''
 
     }
   },
@@ -113,10 +114,9 @@ export default {
       //   }
       // })
     },
-    setKey(key){
-
+    setKey(key, type){
       this.selectKey = key
-      
+      this.type = type
       this.keyBoard = true
     },
     getKeyMap(key) {
@@ -134,7 +134,6 @@ export default {
     },
 
     setKeyMap(event) {
-
       let rs = ipc.sendSync('setKeyMap', {key: event.key, shortcut: event.shortcut})
       
       if (rs) {
@@ -151,7 +150,7 @@ export default {
 <template>
   <xt-task :modelValue="m04012"></xt-task>
   <div v-if="isGuide" class="w-full">
-    <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key])" class="xt-bg-2 rounded-lg mt-3 pointer" style="padding:12px 16px;">
+    <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key], key)" class="xt-bg-2 rounded-lg mt-3 pointer" style="padding:12px 16px;">
       <!-- {{ key }}{{ keys }} -->
       <div class="flex justify-between">
         <div class="flex xt-text">
@@ -187,6 +186,7 @@ export default {
     v-if="keyBoard"
     :selectKey="selectKey"
     :parentKeyList="keyList"
+    :type="type"
     @closeKeyBoard="closeKeyBoard"
     @saveKey="saveKey"
     >
