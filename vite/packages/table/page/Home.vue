@@ -577,20 +577,6 @@ export default {
       this.addFreeLayoutDesk()
       this.deskInit = false
     }
-
-    // let counte=0
-    // const counter=setInterval(()=>{
-    //     if(this.replaceFlag==false){
-    //       clearInterval(counter)
-    //     }
-    //     this.replaceIcon()
-    //     console.log(this.replaceFlag,this.footNavigationList,'footNavigationList')
-    //     counte++
-    //     if(counte>=3){
-    //       clearInterval(counter)
-    //     }
-    // },1200)
-    // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
@@ -798,17 +784,54 @@ export default {
     replaceIcon(navigationList) {
       navigationData.systemAppList.forEach((item) => {
         navigationList.forEach((i) => {
-        i.bg = ''
-        i.isBg = false
-        if (item.event === i.event) {
-          i.type = item.type
-          i.icon = item.icon
-          i.name = item.name
-          i.value = item.event
-          i.mode = 'app'
-        }
-      })
+          i.bg = ''
+          i.isBg = false
+          if (item.event === i.event) {
+            i.type = item.type
+            i.icon = item.icon
+            i.name = item.name
+            i.value = item.event
+            i.mode = 'app'
+          }
+        })
       });
+      const updatedList = navigationList.map((item) => {
+        switch (item.type) {
+          case 'systemApp':
+            return { ...item };
+          case 'coolApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.data
+            };
+          case 'lightApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.package
+            };
+          case 'tableApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.path
+            };
+          default:
+            return {
+              ...item,
+              mode: 'link',
+              type: 'default',
+              value: item.url
+            };
+        }
+      }).map((item) => ({
+        ...item,
+        bg: '',
+        isBg: false
+      }));
+
+      return updatedList;
       this.replaceFlag = false;
     },
     setTransparent() {

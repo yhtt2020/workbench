@@ -15,11 +15,11 @@
                         @click="chooseDf(item)">
                         <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
-                    <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px"
+                    <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px;border: 1px solid var(--divider);border-radius: 12px;"
                         class="pointer rounded-xl" />
                 </div>
                 <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
-                <XtBaseColor v-model:data="colorPicker" @update:data="updateBackground"></XtBaseColor>
+                <XtBaseColor v-model:data="defaultColor" @update:data="updateBackground">11111111111</XtBaseColor>
                 <div class="mb-4 text-base xt-text-2">渐变色</div>
                 <div class="item-box">
                     <div class="flex items-center justify-center mr-4 item" :key="item"
@@ -38,9 +38,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive,computed,watch } from 'vue'
 const colorIndex = ref(0)
 const linearIndex = ref(0)
+const defaultColor = ref('#508BFE')
 const emit = defineEmits(['change'])
 export interface colorPicker {
     defaultList: {
@@ -81,13 +82,27 @@ const body = computed(()=>{
     return document.body
 })
 const chooseDf = (item) => {
-    if(linearIndex.value) linearIndex.value = 0
-    emit('change',props.defaultList.value[`${'color' + item}`])
+    if (colorIndex.value === item) {
+        colorIndex.value = 0;
+        emit('change', '');
+    } else {
+        colorIndex.value = item;
+        linearIndex.value = 0;
+        emit('change', props.defaultList[`color${item}`]);
+    }
 }
+
 const chooseLinear = (item) => {
-    if(colorIndex.value) colorIndex.value = 0
-    emit('change',props.linearList.value[`${'color' + item}`])
+    if (linearIndex.value === item) {
+        linearIndex.value = 0; 
+        emit('change', '');
+    } else {
+        linearIndex.value = item;
+        colorIndex.value = 0;
+        emit('change', props.linearList[`color${item}`]);
+    }
 }
+
 </script>
 <style lang='scss' scoped>
 .item {

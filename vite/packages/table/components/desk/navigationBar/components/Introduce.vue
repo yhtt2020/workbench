@@ -122,7 +122,7 @@ export default {
           this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
           break;
       
-        default:
+          case 'desktop':
           this.$emit('clickListItem', item, index)
           break;
       }

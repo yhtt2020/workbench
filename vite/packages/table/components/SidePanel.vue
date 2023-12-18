@@ -13,7 +13,7 @@
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
-              <div :key="item.name" @click="clickNavigation(item)"
+              <div :key="item.name" @click="newOpenApp(item.type,item.value)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }" :style="{borderRadius:this.iconRadius+'px'}">
@@ -120,7 +120,7 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           label: "打开",
-          callBack: () => { this.clickNavigation(this.currentItem) },
+          callBack: () => { this.newOpenApp(this.currentItem.type, this.currentItem.value) },
         },
         {
           id: 2,
@@ -499,6 +499,46 @@ export default {
           break
         default:
           require('electron').shell.openPath(item.path ? item.path : item.url)
+      }
+    },
+    newOpenApp(type, value) {
+      console.log(type, value, '===>>>type--value');
+      if(value === 'fullscreen'){
+        this.toggleFullScreen()
+      }
+      switch (type) {
+        // 默认浏览器
+        case "default":
+          browser.openInSystem(value);
+          break;
+        // 嵌入浏览器
+        case "internal":
+          browser.openInTable(value);
+          break;
+        // 想天浏览器
+        case "thinksky":
+          browser.openInInner(value);
+          break;
+        // 轻应用
+        case "lightApp":
+          ipc.send("executeAppByPackage", {
+            package: value,
+          });
+          break;
+        // 酷应用
+        case "coolApp":
+          this.$router.push({ name: "app", params: value });
+          break;
+        // 本地应用
+        case "tableApp":
+          require("electron").shell.openPath(
+            require("path").normalize(value)
+          );
+          break;
+        case "localApp":
+          require("electron").shell.openPath(value);
+        case "systemApp":
+          this.$router.push({ name: value });
       }
     },
     // scrollNav(refVal, scrollDirection) {

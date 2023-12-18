@@ -2,7 +2,8 @@
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
-      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]" :style="{transform: `scale(${(this.navAttribute.navSize / 100)})`}">
+      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]"
+      :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})` }">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
@@ -13,8 +14,7 @@
         /* border-radius: 18px; */
         /* width: 160px; */
         border: 1px solid var(--divider);
-      "
-        :style="{  borderRadius: this.navAttribute.navRadius + 'px' }">
+      " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
         <div v-show="settings.enableChat" class="ml-3 pointer">
@@ -41,8 +41,7 @@
         z-index: 99;
         min-width: 80px;
         border: 1px solid var(--divider);
-      "
-        :style="{  borderRadius: this.navAttribute.navRadius + 'px' }">
+      " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
         <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
           <div style="
           display: flex;
@@ -253,7 +252,7 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           label: "打开",
-          callBack: () => { this.clickNavigation(this.currentItem) },
+          callBack: () => { this.newOpenApp(this.currentItem.type, this.currentItem.value) },
         },
         {
           id: 2,
@@ -416,12 +415,8 @@ export default {
       content.scrollLeft += event.deltaY
     })
     navigationData.systemAppList.forEach((item) => {
-      console.log(navigationData.systemAppList,'navigationData.systemAppList');
       this.footNavigationList.forEach((i) => {
-        i.bg = ''
-        i.isBg = false
         if (item.event === i.event) {
-          console.log(i,'i is systemAppList')
           i.type = item.type
           i.icon = item.icon
           i.name = item.name
@@ -430,6 +425,43 @@ export default {
         }
       })
     })
+    this.footNavigationList = this.footNavigationList.map((item) => {
+      switch (item.type) {
+        case 'systemApp':
+          return { ...item }; 
+        case 'coolApp':
+          return {
+            ...item,
+            mode: 'app',
+            value: item.data
+          };
+        case 'lightApp':
+          return {
+            ...item,
+            mode: 'app',
+            value: item.package
+          };
+        case 'tableApp':
+          return {
+            ...item,
+            mode: 'app',
+            value: item.path
+          };
+        default:
+          return {
+            ...item,
+            mode: 'link',
+            type: 'default',
+            value: item.url
+          };
+      }
+    }).map((item) => ({
+      ...item,
+      bg: '',
+      isBg: false
+    }));
+
+
     console.log(this.footNavigationList, 'foot');
   },
   computed: {
@@ -833,6 +865,9 @@ export default {
     },
     newOpenApp(type, value) {
       console.log(type, value, '===>>>type--value');
+      if(value === 'fullscreen'){
+        this.toggleFullScreen()
+      }
       switch (type) {
         // 默认浏览器
         case "default":
