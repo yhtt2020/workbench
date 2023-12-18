@@ -46,13 +46,13 @@ const changeBg = (value) => {
     }
     
 }
+// 获取图标
 const getAvatar = (value) => {
     props.editItem.icon = value
     props.editItem.isBg = true
 }
 // 重置
 const reset = () => {
-    
     const target = navigationList.value.find(item => item.value === props.editItem.value)
     props.editItem.icon = target?.icon
     bgColor.value = ''

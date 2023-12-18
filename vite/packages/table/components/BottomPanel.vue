@@ -564,20 +564,6 @@ export default {
       immediate: true,
       deep: true,
     },
-    sideNavigationList: {
-      handler(newVal, oldVal) {
-        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
-      },
-      immediate: true,
-      deep: true,
-    },
-    rightNavigationList: {
-      handler(newVal, oldVal) {
-        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
-      },
-      immediate: true,
-      deep: true,
-    },
     delZone(val) {
       this.delNav = val
     },

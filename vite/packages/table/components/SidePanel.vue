@@ -276,7 +276,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle','copySideNav','copyRightNav']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -329,6 +329,8 @@ export default {
   mounted() {
     this.enableDrag()
     this.colDrop()
+    this.copyNav()
+    console.log(this.copySideNav, 'copySideNav');
     // this.scrollNav('sideContent', 'scrollTop')
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'
@@ -351,19 +353,26 @@ export default {
         this.disableDrag()
       }
     },
-    // navigationList: {
-    //   deep: true,
-    //   handler(newVal, oldVal) {
-    //     if (oldVal.length > newVal.length && newVal.length === 0) {
-    //       console.log('触发操作');
-    //     }
-    //     console.log('哈哈哈，没触发吧');
-    //   }
-    // }
+    sideNavigationList: {
+      handler(newVal, oldVal) {
+        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        console.log(this.copySideNav, 'copySideNav');
+        console.log(this.sideNavigationList, 'sideNavigationList');
+      },
+      immediate: true,
+      deep: true,
+    },
+    rightNavigationList: {
+      handler(newVal, oldVal) {
+        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+      },
+      immediate: true,
+      deep: true,
+    },
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList','copyNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
     renderIcon,
