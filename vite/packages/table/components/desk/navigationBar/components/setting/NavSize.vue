@@ -9,11 +9,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,onMounted,onBeforeUnmount } from 'vue'
+import { ref, reactive,onMounted,onBeforeUnmount,computed } from 'vue'
 import { useNavigationStore } from '../../navigationStore'
+import { navStore } from '../../../../../store/nav';
 import CustomIconBg from '../EditIcon/Children/CustomIconBg.vue';
 import SliderList from './SliderList.vue';
 const navigationStore = useNavigationStore()
+const useNavStore = navStore()
 const sliderList = ref([
     {
         title: '导航栏圆角',
@@ -41,14 +43,27 @@ const navSize = ref([
         step: 10
     }
 ])
-/**
- * 
- * @param value 背景颜色
- */
 const changeBg = (value) => {
     console.log(value, '====>>>>');
-    navigationStore.navAttribute.navBgColor = value
-}
+    navList.value.forEach((item) => {
+        if (item.isBg) {
+            item.bg = value;
+        }
+        console.log(item,'item==>>');
+        
+    });
+};
+// 获取当前存在的导航中的图标
+const navList = computed(() => {
+    const list = [useNavStore.copySideNav, useNavStore.copyRightNav, useNavStore.copyFootNav];
+    const arr = useNavStore.navigationToggle.reduce((accumulator, item, index) => {
+        if (item) {
+            accumulator.push(...list[index])
+        }
+        return accumulator;
+    }, []);
+    return arr
+});
 const resetNav = (item, index) => {
     item.value = 100
     navigationStore.navAttribute.navSize = 100

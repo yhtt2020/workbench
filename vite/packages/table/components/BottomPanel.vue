@@ -75,7 +75,7 @@
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 52px; height: 52px;"
+                        <div v-else style="width: 52px; height: 52px;flex-shrink: 0;"
                           class="relative flex items-center justify-center rounded-xl"
                           :style="{ background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
