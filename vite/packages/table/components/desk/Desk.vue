@@ -722,6 +722,7 @@ export default {
     clear(desk) {
       this.menuVisible = false;
       if (desk) {
+        
         Modal.confirm({
           centered: true,
           content: "清空当前桌面的全部卡片？此操作不可还原。",
