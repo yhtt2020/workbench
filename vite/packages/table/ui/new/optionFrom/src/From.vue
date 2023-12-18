@@ -27,17 +27,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, toRefs } from "vue";
 import Box from "./Box.vue";
 import Option from "./Option.vue";
-// export type InputEmits = {
-//   "update:colorSwitch": [value: any];
-// };
-// export interface fromProps {
-//   options?: any;
-//   data?: any;
-// }
-// const props = withDefaults(defineProps<fromProps>(), {});
+
+const props = defineProps({
+  options: {},
+  data: {},
+});
+
+const { data, options } = toRefs(props);
 
 const check = (flag, flagKey) => {
   if (typeof flag === "string") {
@@ -48,10 +47,6 @@ const check = (flag, flagKey) => {
     return flag.includes(flagKey);
   }
 };
-const props = defineProps({
-  options: {},
-  data: {},
-});
 
 const emits = defineEmits([]);
 </script>

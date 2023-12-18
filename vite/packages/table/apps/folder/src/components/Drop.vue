@@ -29,14 +29,15 @@ const folderStore = useFolderStore();
 const { dragId, isDrag, isEnter, isOver, currentId, currentData } =
   storeToRefs(folderStore);
 const index = inject("index", "");
-const model = inject("model", "");
+const v = inject("data", "");
 const emits = defineEmits(["updateFile", "deleteFile"]);
 
 /**
  * 处理拖拽内容放置
  */
 const handleDrop = async (dragEvent) => {
-  if (model !== "custom") return;
+  console.log('data.value.model :>> ', data.value.model);
+  if (data.value.model !== "custom") return;
   dragEvent.preventDefault();
   if (dragId.value == index.value) return;
   /**
@@ -67,7 +68,6 @@ const handleDrop = async (dragEvent) => {
  */
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
-  console.log("2222 :>> ", 2222);
   currentId.value = index.value;
 };
 
@@ -81,6 +81,7 @@ const handleDragleave = () => {
  * 处理图标组件放置
  */
 const handleMouseup = () => {
+
   if (model !== "custom") return;
   if (!myIconDrag.value) return;
   if (iconList.value.length < 1) return;
@@ -91,8 +92,6 @@ const handleMouseup = () => {
       ...defaultData,
       id: Date.now() + Math.random() * 50,
     };
-
-    console.log('item :>> ', item);
     file.type = item.open.type;
     file.value = item.open.value;
     file.icon = item.src;

@@ -1,5 +1,6 @@
 <template>
   <Drop @updateFile="updateFile" @deleteFile="deleteFile">
+    {{  customData.model }}
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -98,7 +99,6 @@ const props = defineProps({
 const { customData, customIndex } = toRefs(props);
 
 provide("index", customIndex);
-provide("model", customData.value.model);
 provide("data", customData);
 
 /**
