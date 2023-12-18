@@ -76,3 +76,11 @@ export function isInMyPapers(image:any){
  const index  = _.findIndex(myPapers.value,function(img:any){ return String(image.src) === String(img.src) });
  return index > -1;
 }
+
+// 判断是否为本地下载
+export function isLocalDownload(image:any){
+ const fileRegex = /^[A-Z]:\\|file:\/\//;
+ const isLocalFile = fileRegex.test(image.src);
+ if(!isLocalFile){ return true; }
+ else { return false; }
+}

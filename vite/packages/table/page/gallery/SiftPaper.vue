@@ -8,7 +8,9 @@
       <ClosePaperButton v-if="isModal"/>
     </div>
 
-    <PaperDetail :paperList="selectWallPaper" :isModal="isModal"/>
+    <div class="flex-1 h-4/5">
+      <PaperDetail :paperList="selectWallPaper" :isModal="isModal"/>
+    </div>
   </div>
 </template>
 

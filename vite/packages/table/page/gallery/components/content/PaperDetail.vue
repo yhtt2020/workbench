@@ -1,8 +1,8 @@
 <template>
- <div class="flex items-center justify-start w-full" style="height: calc(100% - 50px);">
+ <div class="flex items-center justify-start w-full" style="height:100%;">
   <vue-custom-scrollbar  :settings="settingsScroller" class="h-full w-full">
    <viewer :images="paperList" :options="options" class="px-2.5">
-    <a-row :gutter="[20, 20]" id="bingImages">
+    <a-row :gutter="[16,16]" id="bingImages">
      <a-col class="image-wrapper" v-for="img in paperList" :span="6"  style="padding-left: 0 !important;padding-right: 12px !important;">
       <div class="pointer w-full h-full img-hide">
        <xt-mix-menu :menus="paperMenus" fn="callBack" @mounted="currentPaperImg = img" :stopPropagation="false">
@@ -33,6 +33,7 @@
      </a-col>
     </a-row>
    </viewer>
+   <div style="height: 16px;"></div>
   </vue-custom-scrollbar>
  </div>
 </template>
@@ -160,7 +161,7 @@ export default {
     if(img !== null){  message.info('正在为您设置背景'); }
     if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
     else {
-      if (!img.path) { img.path = img.src }
+      if (!img.path) { img.path = img.path }
       else { this.setBackgroundImage(img) }
     }
   },
@@ -171,8 +172,8 @@ export default {
       this.$xtConfirm('确定将此壁纸设置为系统桌面壁纸','确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',{
         index:1020,
         ok: () => {
-          message.info('正在为您下载并设桌面壁纸')
-          tsbApi.system.setPaper(this.currentPaperImg.src)
+          message.info('正在为您下载并设桌面壁纸');
+          tsbApi.system.setPaper(this.currentPaperImg.path);
         },
         no: () => {},
         noText: '取消',
