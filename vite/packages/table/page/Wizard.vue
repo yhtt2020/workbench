@@ -1,4 +1,7 @@
 <template>
+  <div class="fixed w-full">
+    <TopPanel></TopPanel>
+  </div>
   <div style="height: 100vh;width: 100vw" class="flex items-center justify-center bg-image">
     <div class="p-4 relative body-shadow">
       <div class="font-16" style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);height: 140px;">
@@ -232,11 +235,9 @@
 
       </div>
     </div>
-
   </div>
 
 </template>
-
 <script>
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
@@ -256,6 +257,8 @@ import { Icon as MyIcon } from '@iconify/vue';
 // 修改浅色模式
 import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
 import { chatStore } from '../store/chat'
+// 顶部状态
+import TopPanel from '../components/TopPanel.vue'
 
 const { settings } = window.$models
 export default {
@@ -267,6 +270,7 @@ export default {
     KeyInput,
     ChooseScreen, BulbFilled, PlayCircleFilled,
     MyIcon,
+    TopPanel,
   },
   computed: {
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
