@@ -1,10 +1,9 @@
 <template>
   <vue-custom-scrollbar :settings="settingsScroller" class="grow shrink" style="height: 100%;">
-    <viewer :images="myPaperList" :options="options" class="px-2.5">
+    <div style="height: 8px;"></div>
+    <viewer :images="myPaperList" :options="options" >
       <a-row :gutter="[16, 16]" id="bingImages">
-       <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6" 
-        style="padding-left: 0 !important;padding-right: 12px !important;"
-       >
+       <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6"  >
          <div class="pointer w-full h-full my-paper" >
           <xt-mix-menu :menus="getMenuList(img)" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
             <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
@@ -19,13 +18,13 @@
                 </div>
               </xt-button>
             </div>
-            <div class="absolute left-1 img-checkbox" :class="isModal ? 'top-1' : 'top-2'"  :style="isInActive(img) ? { opacity:'1' } : { opacity:'0' }" style="transition: 0.1s ease-in-out;">
+            <div class="absolute left-4 img-checkbox" :class="isModal ? 'top-1' : 'top-2'"  :style="isInActive(img) ? { opacity:'1' } : { opacity:'0' }" style="transition: 0.1s ease-in-out;">
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 " style="border-radius: 8px;" @click="addToActive(img)" >
                 <a-checkbox :checked="isInActive(img)" @change="getShowImg($event,index)"></a-checkbox>
               </xt-button>
             </div>
-            <div class="absolute flex " style="right:20px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
-              <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-1 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+            <div class="absolute flex " style="right:16px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
+              <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
                 </div>

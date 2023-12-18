@@ -1,9 +1,10 @@
 <template>
  <div class="flex items-center justify-start w-full" style="height:100%;">
   <vue-custom-scrollbar  :settings="settingsScroller" class="h-full w-full">
-   <viewer :images="paperList" :options="options" class="px-2.5">
+   <div style="height: 8px;"></div>
+   <viewer :images="paperList" :options="options">
     <a-row :gutter="[16,16]" id="bingImages">
-     <a-col class="image-wrapper" v-for="img in paperList" :span="6"  style="padding-left: 0 !important;padding-right: 12px !important;">
+     <a-col class="image-wrapper" v-for="img in paperList" :span="6">
       <div class="pointer w-full h-full img-hide">
        <xt-mix-menu :menus="paperMenus" fn="callBack" @mounted="currentPaperImg = img" :stopPropagation="false">
         <img :src="img.thumbPath" :data-source="img.fullPath"  class="image-item pointer relative " />
@@ -15,7 +16,7 @@
             </div>
           </xt-button>
         </div>
-        <div class="absolute right-3 top-1  flex">
+        <div class="absolute right-2 top-1  flex">
          <xt-button :w="modalWidth" :h="modalWidth" class="xt-bg-t-2 img-button mr-1" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
           <div class="flex items-center justify-center">
            <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>

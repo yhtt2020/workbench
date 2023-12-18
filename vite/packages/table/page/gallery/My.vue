@@ -1,12 +1,12 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <div class=" flex items-center justify-between mb-4 " :class="isModal ? 'h-8' : 'h-10'">
+    <div class=" flex items-center justify-between mb-2" :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
         <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'1.25rem'}" class="mr-2 xt-text"/>
         <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
-      <div class="flex items-center justify-center  pr-3">
+      <div class="flex items-center justify-center ">
         <template v-if="!isModal">
           <xt-button @click="playAll" class="mr-3 xt-bg-t-2"  h="40" w="113" style="border-radius: 8px;">
             <div class="flex items-center justify-center">
