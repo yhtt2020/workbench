@@ -68,7 +68,7 @@
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
-                        <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'"
+                        <div style="width: 52px; height: 52px;" v-if="!item.isBg"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
                           class="relative flex items-center justify-center ">
                           <a-avatar :size="52" shape="square" :src="item.icon"
@@ -79,7 +79,7 @@
                           class="relative flex items-center justify-center rounded-xl"
                           :style="{ background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
-                          <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
+                          <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
@@ -480,7 +480,7 @@ export default {
       'rightNavigationList',
       'mainNavigationList',
       'navigationToggle',
-      'copyFootNav'
+      'copyFootNav','copySideNav','copyRightNav'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -552,8 +552,6 @@ export default {
       handler(newVal, oldVal) {
         // this.checkScroll()
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.footNavigationList,'======>>>>>>footNavigation');
-        console.log(this.copyFootNav,'======>>>>>>copyFootNav');
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
         //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
@@ -562,6 +560,20 @@ export default {
         //     this.$refs.content.style.marginTop='0px'
         //   }
         // })
+      },
+      immediate: true,
+      deep: true,
+    },
+    sideNavigationList: {
+      handler(newVal, oldVal) {
+        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+      },
+      immediate: true,
+      deep: true,
+    },
+    rightNavigationList: {
+      handler(newVal, oldVal) {
+        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
       },
       immediate: true,
       deep: true,

@@ -17,12 +17,18 @@
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }" :style="{borderRadius:this.iconRadius+'px'}">
-                  <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
+                  <div class="flex items-center justify-center icon-color" v-if="!item.isBg">
                     <a-avatar :size="52" shape="square" :src="item.icon"
                       :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
-                  <a-avatar v-else :size="52" shape="square" :src="renderIcon(item.icon)"
-                    :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                  <div v-else style="width: 52px; height: 52px;"
+                          class="relative flex items-center justify-center rounded-xl"
+                          :style="{ background: item.bg || '' }">
+                          <!-- {{ item.bgColor ? '' : item.name }} -->
+                          <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
+                            :style="{ borderRadius: iconRadius + 'px' }"
+                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                        </div>
 
                 </div>
               </div>
@@ -67,6 +73,8 @@
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
       </navigationSetting>
+      <!-- 图标编辑 -->
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
     </div>
   </transition>
 </template>
@@ -93,6 +101,7 @@ import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
+import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -102,7 +111,8 @@ export default {
     EditNewNavigation,
     Common,
     xtMenu,
-    xtMixMenu
+    xtMixMenu,
+    EditIcon
   },
   emits: ['getDelIcon', 'hiedNavBar'],
   data() {
@@ -126,7 +136,7 @@ export default {
           id: 2,
           label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editIcon(this.currentItem) },
         },
         {
           id: 3,
@@ -270,7 +280,7 @@ export default {
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navAttribute','iconRadius']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navAttribute','iconRadius','editItem']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -365,6 +375,11 @@ export default {
       // message.info('已中止侧栏调整')
       return
       // }
+    },
+    editIcon(item) {
+      this.quick = true
+      this.componentId = 'EditIcon'
+      this.editItem = item
     },
     /**
      * 
