@@ -3,14 +3,16 @@
     <!-- 弹窗 -->
     <div
       v-if="modelValue"
-      :class="[boxPadding]"
-      class="fixed flex flex-col text-base -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+      :class="[boxClass]"
+      ref="modal"
+      class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
       "
       :style="{
         'z-index': index,
+        top: top + 'px',
       }"
     >
       <div class="flex flex-1 w-full">
@@ -22,23 +24,7 @@
           <header class="relative flex items-center mb-4" v-if="header">
             <!-- 标题左侧 -->
             <div class="z-20 flex items-center flex-1">
-              <slot name="header-left">
-                <template v-if="back">
-                  <xt-button
-                    w="32"
-                    h="32"
-                    radius="8"
-                    class="mr-4"
-                    @click="onBack()"
-                  >
-                    <xt-new-icon
-                      icon="fluent:chevron-left-16-filled"
-                      size="16"
-                      class="xt-text-2"
-                    />
-                  </xt-button>
-                </template>
-              </slot>
+              <slot name="header-left"> </slot>
             </div>
             <!-- 标题中间 -->
             <div
@@ -68,7 +54,7 @@
               suppressScrollX: true,
               wheelPropagation: false,
             }"
-            style="position: relative; padding-right: 8px; padding-left: 8px;"
+            style="position: relative; padding-right: 8px; padding-left: 8px"
             class="flex-1"
           >
             <slot>
@@ -103,21 +89,31 @@
 
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
-import { toRefs, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, toRefs, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { useWindowSize } from "@vueuse/core";
 export interface ModalProps {
+  // 控制弹窗是否显示
   modelValue?: boolean;
+  // 弹窗标题
   title?: string;
   noName?: string;
   okName?: string;
+  // 弹窗层级
   index?: number;
+  // 遮罩层级
   maskIndex?: number;
+  // 是否使用遮罩
   mask?: boolean;
   nav?: boolean;
-  back?: boolean;
+  // 头部插槽是否开启
   header?: boolean;
+  // 底部插槽是否开启
   footer?: boolean;
+  // esc 关闭弹窗
   esc?: boolean;
-  boxPadding?: string;
+  // 弹窗样式
+  boxClass?: string;
+  //
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -128,27 +124,67 @@ const props = withDefaults(defineProps<ModalProps>(), {
   maskIndex: 100,
   mask: true,
   nav: true,
-  back: false,
   header: true,
-  footer: true,
+  footer: false,
   esc: false,
-  boxPadding: "p-4",
+  boxClass: "p-4",
 });
-const { esc } = toRefs(props);
-const emits = defineEmits(["ok", "no", "back", "update:modelValue"]);
+const { esc, modelValue } = toRefs(props);
+const emits = defineEmits(["ok", "no", "update:modelValue"]);
+
+const modal: any = ref(null);
+let topBarHeight = 0;
+let topUtilBarHeight = 0;
+let bottomBarHeight = 0;
+onMounted(() => {
+  if (esc.value) {
+    window.addEventListener("keydown", handleEscKeyPressed, {
+      capture: true,
+    });
+  }
+
+  // 处理定位问题
+  const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
+  const topUtilBar = document.getElementsByClassName("xt-main-top-util-bar")[0];
+  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
+
+  if (topBar) topBarHeight = topBar.clientHeight;
+
+  if (topUtilBar) topUtilBarHeight = topUtilBar.clientHeight;
+
+  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
+});
+const top = ref(-999);
+watch(
+  () => modelValue.value,
+  () => {
+    nextTick(() => {
+      const modelHeight = modal.value.clientHeight;
+      const windowSize = useWindowSize();
+      const windowHeight = windowSize.height.value;
+
+      const x =
+        (windowHeight +
+          topBarHeight +
+          topUtilBarHeight -
+          bottomBarHeight -
+          modelHeight) /
+        2;
+
+      top.value = x;
+    });
+  },
+  { immediate: true }
+);
 
 const onNo = () => {
-  console.log('111111 :>> ', 111111);
+  console.log("111111 :>> ", 111111);
   emits("update:modelValue", false);
   emits("no");
 };
 const onOk = () => {
   emits("update:modelValue", false);
   emits("ok");
-};
-const onBack = () => {
-  emits("update:modelValue", false);
-  emits("back");
 };
 // esc关闭
 const handleEscKeyPressed = (event) => {
@@ -157,13 +193,6 @@ const handleEscKeyPressed = (event) => {
   }
 };
 
-onMounted(() => {
-  if (esc.value) {
-    window.addEventListener("keydown", handleEscKeyPressed, {
-      capture: true,
-    });
-  }
-});
 onBeforeUnmount(() => {
   if (esc.value) {
     window.removeEventListener("keydown", handleEscKeyPressed, {
