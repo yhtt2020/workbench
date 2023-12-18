@@ -6,16 +6,16 @@
         style="padding-left: 0 !important;padding-right: 12px !important;"
        >
          <div class="pointer w-full h-full my-paper" >
-          <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
+          <xt-mix-menu :menus="getMenuList(img)" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
             <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
-                <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;"/>
+                <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;color: var(--active-text) !important;"/>
               </div> 
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1"></xt-new-icon>
-                  <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-text xt-font">设为壁纸</span>
+                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
                 </div>
               </xt-button>
             </div>
@@ -24,16 +24,16 @@
                 <a-checkbox :checked="isInActive(img)" @change="getShowImg($event,index)"></a-checkbox>
               </xt-button>
             </div>
-            <div class="absolute flex " style="right:20px;" :style="isModal ? {top: '4px'}:{top: '8px'}">
-              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-1 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+            <div class="absolute flex " style="right:20px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
+              <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-1 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20"></xt-new-icon>
+                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
                 </div>
               </xt-button>
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="removeToMyPaper(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
-                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
                 </div>
               </xt-button>
             </div>
@@ -48,7 +48,7 @@
  
  <script>
  import { mapActions,mapWritableState } from 'pinia';
- import { fileImageExtension,isInActive,getFileName,isInMyPapers } from '../../libs/utils';
+ import { fileImageExtension,isInActive,getFileName,isInMyPapers,isLocalDownload } from '../../libs/utils';
  import { paperStore } from '../../../../store/paper';
  import { Icon as MyContentIcon } from '@iconify/vue';
  import { message } from 'ant-design-vue';
@@ -84,22 +84,46 @@
       },
       myMenus:[
        { 
-         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
-         callBack:()=>{ this.setDesktopPaper(); } 
+        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+       },
+       { 
+        newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
+        callBack:()=>{ this.setDesktopPaper(); } 
        },
        {
-         newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
-         callBack:()=>{ this.download(this.myCurrentID); } 
+        newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
+        callBack:()=>{ this.download(this.myCurrentID); } 
        },
        { 
-         newIcon:'fluent:delete-16-regular',name:'删除该壁纸',
-         callBack:()=>{
-          this.delCurrentPaper();
-         } 
+        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        callBack:()=>{ this.delCurrentPaper(); } 
+       },
+      ],
+      // 动态壁纸的菜单
+      liveMenu:[
+       { 
+        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
        },
        { 
-         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-         callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        callBack:()=>{ this.delCurrentPaper(); } 
+       },
+      ],
+      // 没有下载按钮的菜单
+      downloadMenu:[
+       { 
+        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+       },
+       { 
+        newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
+        callBack:()=>{ this.setDesktopPaper(); } 
+       },
+       { 
+        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        callBack:()=>{ this.delCurrentPaper(); } 
        },
       ]
      }
@@ -111,7 +135,7 @@
    },
  
    methods:{
-    fileImageExtension,isInActive,isInMyPapers,
+    fileImageExtension,isInActive,isInMyPapers,isLocalDownload,
     ...mapActions(paperStore,['addToActive','removeToMyPaper']),
     ...mapActions(appStore,['setBackgroundImage']),
 
@@ -243,6 +267,13 @@
         document.querySelectorAll('.img-checkbox')[index].style = 'opacity: 0 ;';
       }
     },
+
+    //根据条件判断进行菜单列表的获取
+    getMenuList(img){
+      if(this.fileImageExtension(img)) { return this.liveMenu;}
+      else if(this.isLocalDownload(img)) { return this.myMenus;  } 
+      else { return this.downloadMenu; }
+    }
    },
  };
  </script>

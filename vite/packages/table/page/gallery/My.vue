@@ -29,11 +29,7 @@
         </template>
 
         <template v-else>
-          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" >
-            <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:play-16-filled" style="font-size:1rem"></MyIcon>
-            </div>
-          </xt-button>
+          <xt-dropdown :list="updateList" :w="32" :h="32" :iconSize="16" :newIcon="'fluent:play-16-filled'" :placement="'bottomRight'" class="mr-3"></xt-dropdown>
           <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  >
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1rem" />
@@ -94,11 +90,28 @@ export default {
       currentPaper: null,//当前壁纸，显示菜单用
       paperTime:'',
       previewVideoVisible: false,
+      list:[
+        { name:'轮播全部',callBack:()=>{ this.playAll() },icon:'fluent:play-16-filled',id:0, },
+        { name:'轮播选中',callBack:()=>{ this.playActive()  },icon:'fluent:play-16-filled',id:1, }
+      ]
     }
   },
 
   computed:{
     ...mapWritableState(paperStore,['settings','myPapers','activePapers']),
+    updateList(){
+      if(this.activePapers){
+        const mapList = this.list.map((item)=>{
+          if(item.id === 1 && this.activePapers.length !== 0){
+            return {name:`${item.name} (${this.activePapers.length})`,callBack:item.callBack,icon:item.icon,id:item.id}
+          }
+          else {
+            return item
+          }
+        })
+        return mapList
+      }
+    },
   },
 
   mounted(){

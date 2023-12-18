@@ -10,21 +10,21 @@
         <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
           <xt-button w="100" :h="isModal ? 32 : 40"  style="opacity: 0; border-radius: 8px;" class="img-button xt-bg-t-2" @click="setAppPaper(img)">
             <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1"></xt-new-icon>
-              <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-text xt-font">设为壁纸</span>
+              <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " style="color: var(--active-text) !important;"></xt-new-icon>
+              <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
             </div>
           </xt-button>
         </div>
         <div class="absolute right-3 top-1  flex">
          <xt-button :w="modalWidth" :h="modalWidth" class="xt-bg-t-2 img-button mr-1" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
           <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20"></xt-new-icon>
+           <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
           </div>
          </xt-button>
          <xt-button :w="modalWidth" :h="modalWidth" class="xt-bg-t-2 img-button mr-1" style="border-radius: 8px;" @click="addToMy(img)" :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }">
           <div class="flex items-center justify-center">
            <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
-           <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20"></xt-new-icon>
+           <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
           </div>
          </xt-button>
         </div>
@@ -62,6 +62,10 @@ export default {
    },
    paperMenus:[
     { 
+     newIcon:'fluent:desktop-16-regular',name:'设为工作台背景', 
+     callBack:()=>{ this.setAppPaper(this.currentPaperImg) },
+    },
+    { 
      newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
      callBack:()=>{ this.setDesktopPaper() },
     },
@@ -69,10 +73,6 @@ export default {
      newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸', 
      callBack:()=>{ this.doStartDownload(this.currentPaperImg) },
     },
-    { 
-     newIcon:'fluent:desktop-16-regular',name:'设为工作台背景', 
-     callBack:()=>{ this.setAppPaper(this.currentPaperImg) },
-    }
    ],
   }
  },
