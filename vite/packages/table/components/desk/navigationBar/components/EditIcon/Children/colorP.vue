@@ -1,5 +1,5 @@
 <template>
-    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body">
+    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false">
         <xt-button :w="40" :h="40" class="xt-bg"><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
             <div class="w-[320px] rounded-xl shadow p-4 ">
@@ -15,11 +15,12 @@
                         @click="chooseDf(item)">
                         <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
-                    <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px;border: 1px solid var(--divider);border-radius: 12px;"
-                        class="pointer rounded-xl" />
+                    <!-- <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px;border: 1px solid var(--divider);border-radius: 12px;"
+                        class="pointer rounded-xl" /> -->
+                    <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
                 </div>
                 <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
-                <XtBaseColor v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
+                
                 <div class="mb-4 text-base xt-text-2">渐变色</div>
                 <div class="item-box">
                     <div class="flex items-center justify-center mr-4 item" :key="item"
@@ -38,11 +39,12 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed,watch } from 'vue'
+import { ref, reactive,computed,onMounted } from 'vue'
 const colorIndex = ref(0)
 const linearIndex = ref(0)
 const defaultColor = ref('#508BFE')
 const emit = defineEmits(['change'])
+// tippy弹窗
 const tippyRef = ref(null)
 export interface colorPicker {
     defaultList: {
@@ -132,5 +134,14 @@ const updateBackground = () => {
         background: var(--modal-bg) !important;
         padding: 0px;
     }
+}
+
+:deep(.zs-color-picker-btn) {
+  width: 40px;
+  height: 40px;
+  background-image: url('/img/bg.png') !important;
+}
+:deep(.zs-color-picker-btn-color) {
+  border-radius: 12px;
 }
 </style>

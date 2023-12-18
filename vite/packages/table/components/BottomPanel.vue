@@ -552,7 +552,7 @@ export default {
       handler(newVal, oldVal) {
         // this.checkScroll()
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        // console.log(this.copyFootNav, 'footNav');
+        console.log(this.copyFootNav, 'footNav');
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
         //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){

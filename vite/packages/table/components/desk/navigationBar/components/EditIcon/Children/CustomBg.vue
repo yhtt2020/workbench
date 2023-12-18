@@ -2,11 +2,11 @@
     <div class="w-[452px]">
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
             <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}" 
-            class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
+            class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
                 <a-avatar :size="52" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
             <div v-else style="width: 56px; height: 56px;flex-shrink: 0;" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"  
-            class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
+            class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
                 <a-avatar :size="36" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
             <div class="flex flex-col justify-start ml-5">
