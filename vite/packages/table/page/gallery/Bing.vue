@@ -107,11 +107,9 @@ export default {
     //   }
     // })
     
-    this.$nextTick(()=>{
-      this.getBingWallPaper(this.page)
-      this.page += 8
-      this.getBingWallPaper(this.page)
-    })
+    this.getBingWallPaper(this.page)
+    this.page += 8
+    this.getBingWallPaper(this.page)
 
     // this.getBingWallPaper(this.page , () => {
     //   // console.log('执行222',this.page);

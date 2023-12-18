@@ -5,6 +5,14 @@
         <div class="pointer w-full h-full bing-paper" >
           <xt-mix-menu :menus="bingMenu" fn="callBack" @mounted="paperCurrent = img" :stopPropagation="false">
             <img class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
+            <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
+              <xt-button w="100" :h="isModal ? 32 : 40"  style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
+                </div>
+              </xt-button>
+            </div>
             <div class="absolute right-2 top-1  flex">
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 img-button mr-1" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
                 <div class="flex items-center justify-center">
@@ -243,7 +251,7 @@ zoom: 1.6;
 
 .bing-paper{
   &:hover{
-    .img-button{
+    .img-button,.set-paper{
       opacity: 1 !important;
     }
   }
