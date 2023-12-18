@@ -557,10 +557,18 @@ export default {
     // 确定
     confirm () {
       if(!this.keyContent.keyArr.length) return message.info('不能为空')
-      console.log('this.keyContent.keyArr',this.keyContent.keyArr,this, this.$props?.type)
-      console.log('触发了？');
+      const keyTmp = this.keyContent.keyArr;
+      let keyCut = ''
+      keyTmp.forEach((item,index)=>{
+        if(index){
+          keyCut = keyCut + '+' + item.key
+        }else{
+          keyCut = item.key
+        }
+      })
 
-      let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: 'alt+V+N'})
+
+      let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
     
       if (rs) {
         // this.refreshKeys()
