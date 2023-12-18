@@ -91,6 +91,8 @@ const handleMouseup = () => {
       ...defaultData,
       id: Date.now() + Math.random() * 50,
     };
+
+    console.log('item :>> ', item);
     file.type = item.open.type;
     file.value = item.open.value;
     file.icon = item.src;
