@@ -92,6 +92,7 @@ const props = withDefaults(defineProps<MenuProps>(), {
   name: "label",
   fn: "callBack",
   lock: true,
+  // 点击模式  contextmenu 右键 click 左键 all 同时触发
   model: "contextmenu",
   stopPropagation: true,
   beforeCreate: () => true,

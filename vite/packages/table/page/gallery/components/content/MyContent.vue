@@ -5,8 +5,8 @@
        <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6" 
         style="padding-left: 0 !important;padding-right: 12px !important;"
        >
-         <div class="pointer w-full h-full my-paper">
-          <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false">
+         <div class="pointer w-full h-full my-paper" >
+          <xt-mix-menu :menus="myMenus" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
             <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
@@ -19,7 +19,7 @@
                 </div>
               </xt-button>
             </div>
-            <div class="absolute left-1 img-checkbox" :class="isModal ? 'top-1' : 'top-2'" :style="isInActive(img) ? { opacity:'1' } : { opacity:'0' }" >
+            <div class="absolute left-1 img-checkbox" :class="isModal ? 'top-1' : 'top-2'"  :style="isInActive(img) ? { opacity:'1' } : { opacity:'0' }" style="transition: 0.1s ease-in-out;">
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 " style="border-radius: 8px;" @click="addToActive(img)" >
                 <a-checkbox :checked="isInActive(img)" @change="getShowImg($event,index)"></a-checkbox>
               </xt-button>
