@@ -67,11 +67,11 @@
       <!-- 卡片核心 -->
     </div>
   </Widget>
-
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
-  </Edit>
+  <Set v-if="settingVisible" v-model="settingVisible"></Set>
+  <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
+  </Edit> -->
   <!-- 多图标组件设置 -->
   <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="xt-bg-2 p-4 rounded-xl">
@@ -92,6 +92,8 @@
       :merge="customData.merge"
     ></BottomEdit>
   </XtDrawer>
+
+
 </template>
 <script>
 // components
@@ -102,6 +104,7 @@ import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 import BottomEdit from "./components/bottomEdit.vue";
+import Set from './set/index.vue'
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -126,6 +129,7 @@ export default {
     },
   },
   components: {
+    Set,
     Widget,
     Edit,
     icons,

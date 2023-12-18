@@ -1,7 +1,8 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
   <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
-    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
+  <!-- xt-main-bottom-bar 定位类不可删 -->
+    <div @click.stop class="xt-main-bottom-bar flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
@@ -24,7 +25,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+      <div id="xt-bottom-bar" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;

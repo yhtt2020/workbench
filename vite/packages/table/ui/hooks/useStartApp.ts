@@ -1,5 +1,11 @@
 import browser from "../../js/common/browser";
 
+/**
+ *
+ * @param type
+ * @param value
+ * @param router 这个是路由 ts无法调用 得手动传入
+ */
 export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器

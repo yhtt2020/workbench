@@ -13,7 +13,7 @@
 
     </div> -->
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
         <template #nav>
             <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
                 :style="{ height: `${navHeight}px` }">
@@ -80,7 +80,7 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
     </teleport>
-    
+
 
     <!-- </div> -->
 </template>
@@ -444,7 +444,7 @@ export default {
     },
     mounted() {
         if(this.currentNav){
-           this.defaultTitle = this.currentNav 
+           this.defaultTitle = this.currentNav
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',

@@ -155,7 +155,7 @@
     v-model="settingVisible"
     :footer="0"
     title="桌面设置"
-    boxPadding="p-4 pb-0"
+    boxClass="p-4 pb-0"
     :mask="0"
   >
     <template #header-center>
