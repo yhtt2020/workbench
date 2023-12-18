@@ -61,7 +61,7 @@
 
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in footNavigationList" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer"
@@ -69,7 +69,7 @@
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
                         <div style="width: 52px; height: 52px;" v-if="item.type === 'systemApp'"
-                          :style="{ borderRadius: iconRadius + 'px', background: item.bgColor || '' }"
+                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
                           class="relative flex items-center justify-center ">
                           <a-avatar :size="52" shape="square" :src="item.icon"
                             :style="{ borderRadius: iconRadius + 'px' }"
@@ -77,7 +77,7 @@
                         </div>
                         <div v-else style="width: 52px; height: 52px;"
                           class="relative flex items-center justify-center rounded-xl"
-                          :style="{ background: item.bgColor || '' }">
+                          :style="{ background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
                           <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"
                             :style="{ borderRadius: iconRadius + 'px' }"
@@ -369,6 +369,8 @@ export default {
   },
   mounted() {
     // this.popVisible=true
+    this.copyNav()
+    console.log(this.copyFootNav,'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -477,7 +479,8 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle'
+      'navigationToggle',
+      'copyFootNav'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -547,9 +550,10 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        // this.footNavigationList = this.footNavigationList.filter((item)=>item!==undefined)
-        // console.log(this.footNavigationList,'======>>>>>>footNavigation')
-        this.checkScroll()
+        // this.checkScroll()
+        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        console.log(this.footNavigationList,'======>>>>>>footNavigation');
+        console.log(this.copyFootNav,'======>>>>>>copyFootNav');
         // this.$nextTick(()=>{
         //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
         //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
@@ -623,6 +627,7 @@ export default {
       'setFootNavigationList',
       'sortFootNavigationList',
       'removeFootNavigationList',
+      'copyNav'
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
     editIcon(item) {
@@ -819,52 +824,51 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-    clickNavigation(item) {
-      console.log(item);
-      if (this.editToggle) {
-        // this.enableDrag()
-        return
-      } else {
-        this.hideMenu()
-        switch (item.type) {
-          case 'systemApp':
-            if (item.event === 'fullscreen') {
-              this.toggleFullScreen()
-            } else if (item.event === '/status') {
-              if (this.$route.path === '/status') {
-                this.$router.go(-1)
-              } else {
-                this.$router.push({ path: '/status' })
-              }
-            } else if (item.data) {
-              this.$router.push({
-                name: 'app',
-                params: item.data,
-              })
-            } else {
-              this.$router.push({ name: item.event })
-            }
-            break
-          case 'coolApp':
-            this.$router.push({
-              name: 'app',
-              params: item.data,
-            })
-            break
-          case 'localApp':
-            require('electron').shell.openPath(item.path)
-            break
-          case 'lightApp':
-            ipc.send('executeAppByPackage', { package: item.package })
-            break
-          default:
-            require('electron').shell.openPath(item.path ? item.path : item.url)
-        }
-      }
+    // clickNavigation(item) {
+    //   console.log(item);
+    //   if (this.editToggle) {
+    //     // this.enableDrag()
+    //     return
+    //   } else {
+    //     this.hideMenu()
+    //     switch (item.type) {
+    //       case 'systemApp':
+    //         if (item.event === 'fullscreen') {
+    //           this.toggleFullScreen()
+    //         } else if (item.event === '/status') {
+    //           if (this.$route.path === '/status') {
+    //             this.$router.go(-1)
+    //           } else {
+    //             this.$router.push({ path: '/status' })
+    //           }
+    //         } else if (item.data) {
+    //           this.$router.push({
+    //             name: 'app',
+    //             params: item.data,
+    //           })
+    //         } else {
+    //           this.$router.push({ name: item.event })
+    //         }
+    //         break
+    //       case 'coolApp':
+    //         this.$router.push({
+    //           name: 'app',
+    //           params: item.data,
+    //         })
+    //         break
+    //       case 'localApp':
+    //         require('electron').shell.openPath(item.path)
+    //         break
+    //       case 'lightApp':
+    //         ipc.send('executeAppByPackage', { package: item.package })
+    //         break
+    //       default:
+    //         require('electron').shell.openPath(item.path ? item.path : item.url)
+    //     }
+    //   }
 
-    },
+    // },
     newOpenApp(type, value) {
-      console.log(type, value, '===>>>type--value');
       if(value === 'fullscreen'){
         this.toggleFullScreen()
       }

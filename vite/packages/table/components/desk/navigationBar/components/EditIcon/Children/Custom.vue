@@ -29,7 +29,7 @@ const props=defineProps({
     editItem:Object
 })
 onMounted(()=>{
-    linkValue.value=props.editItem.url
+    linkValue.value=props.editItem.value
 })
 </script>
 <style lang='scss' scoped>

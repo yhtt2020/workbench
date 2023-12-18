@@ -1,12 +1,14 @@
 <template>
     <div class="w-[452px]">
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
-            <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="true" :style="{background:props.editItem.bgColor || 'var(--primary-bg)'}" class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
+            <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}" 
+            class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
+                <a-avatar :size="52" shape="square" :src="props.editItem.icon" ></a-avatar>
+            </div>
+            <div v-else style="width: 56px; height: 56px;flex-shrink: 0;" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"  
+            class="relative flex items-center justify-center rounded-xl" @click="modelValue=!modelValue">
                 <a-avatar :size="36" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
-            <!-- <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center rounded-xl">
-                <a-avatar :size="52" shape="square" :src="renderIcon(props.editItem.icon)" @click="modelValue=!modelValue"></a-avatar>
-            </div> -->
             <div class="flex flex-col justify-start ml-5">
                 <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
                 <div class="flex justify-start mt-1" @click="reset">
@@ -26,7 +28,8 @@
 import { ref, reactive, computed,onMounted } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
 import CustomIconBg from './CustomIconBg.vue'
-import { renderIcon } from '../../../../../../js/common/common'
+import { navStore } from '../../../../../../store/nav';
+const useNavStore = navStore()
 const navigationStore = useNavigationStore()
 const modelValue = ref(false)
 const defaultIcon = ref('')
@@ -36,8 +39,11 @@ const props=defineProps({
 })
 // 回调改变背景颜色
 const changeBg = (value) => {
-    bgColor.value = value
-    props.editItem.bgColor = value
+    if(isIcon){
+        props.editItem.isBg = true
+        bgColor.value = value
+        props.editItem.bg = value
+    }
     console.log(props.editItem,'====>>>>editItem');
     
 }
@@ -46,21 +52,24 @@ const getAvatar = (value) => {
 }
 // 重置
 const reset = () => {
-    props.editItem.icon = defaultIcon.value
+    
+    const target = navigationList.value.find(item => item.value === props.editItem.value)
+    console.log(target,'====>>>>navigationList');
+    props.editItem.icon = target?.icon
     bgColor.value = ''
-    props.editItem.bgColor = ''
+    props.editItem.bg = ''
+    props.editItem.isBg = false
 }
 // 判断图标类型
-// const isIcon = computed(() => {
-//     if (defaultIcon.value.includes('https')) {
-//         return false
-//     } else {
-//         return true
-//     }
-// })
-onMounted(()=>{
-    console.log(props.editItem,'====>>>>editItem');
-    defaultIcon.value=props.editItem.icon
+const isIcon = computed(() => {
+    if (defaultIcon.value.includes('https')) {
+        return false
+    } else {
+        return true
+    }
+})
+const navigationList = computed(() => {
+    return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
 })
 </script>
 <style lang='scss' scoped>

@@ -264,6 +264,9 @@ export const navStore = defineStore("nav", {
     footNavigationList: [...arrData],
     sideNavigationList: [],
     rightNavigationList: [],
+    copyFootNav:[],
+    copySideNav:[],
+    copyRightNav:[],
     builtInFeatures: [
       {
         "type": "systemApp",
@@ -291,9 +294,14 @@ export const navStore = defineStore("nav", {
       }
     ],
     // navigationToggle: [true,false,true]
-    navigationToggle: [false,false,true]
+    navigationToggle: [false,false,true],
   }),
   actions: {
+    copyNav(){
+      this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+      this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+      this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+    },
     removeFootNavigationList(index) {
         this.footNavigationList.splice(index, 1)
     },
@@ -362,6 +370,11 @@ export const navStore = defineStore("nav", {
       this.footNavigationList = val
     }
   },
+  // getters: {
+  //   copyFootNav: state => [...state.footNavigationList],
+  //   copySideNav: state => [...state.sideNavigationList],
+  //   copyRightNav: state => [...state.rightNavigationList],
+  // },
   persist: {
     enabled: true,
     strategies: [

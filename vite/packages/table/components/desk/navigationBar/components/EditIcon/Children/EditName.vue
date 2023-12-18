@@ -2,7 +2,7 @@
     <div class="w-[452px] xt-bg-2 rounded-xl p-4 ">
         <div class="flex justify-start">
             <div class="text-base xt-text">图标名称</div>
-            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" class="ml-1"></xt-new-icon>
+            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" class="ml-1" @click="reset"></xt-new-icon>
         </div>
         <div class="mt-2 text-base xt-text-2">
             修改当前引用图标名称
@@ -13,9 +13,18 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed } from 'vue'
+import { navStore } from '../../../../../../store/nav';
+const useNavStore = navStore()
 const props = defineProps({
     editItem: Object
+})
+const reset = () => {
+    const target = navigationList.value.find(item => item.value === props.editItem.value)
+    props.editItem.name = target?.name
+}
+const navigationList = computed(() => {
+    return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
 })
 </script>
 <style lang='scss' scoped>
