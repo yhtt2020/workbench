@@ -11,6 +11,7 @@
             </div>
             <div class="flex flex-col justify-start ml-5">
                 <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
+                {{ props.editItem.isBg }}
                 <div class="flex justify-start mt-1" @click="reset">
                     <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="reset"></xt-new-icon>
                     <div class="ml-2 text-base reset pointer">重置图标</div>

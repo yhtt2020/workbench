@@ -28,7 +28,19 @@ const navigationList = computed(() => {
 })
 </script>
 <style lang='scss' scoped>
-:deep(.ant-input) {
-    color: var(--secondary-text);
+.input{
+    border-radius: 10px;
+    border: 1px solid var(--divider);
+    // background: var(--secondary-bg);
+    font-size: 14px;
+}
+:deep(.ant-input){
+    color: var(--primary-text) !important;
+    & ::placeholder{
+        color: var(--secondary-text);
+    }
+}
+:deep(.ant-input-suffix){
+    color: var(--primary-text) !important;
 }
 </style>
