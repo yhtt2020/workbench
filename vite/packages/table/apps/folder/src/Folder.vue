@@ -1,6 +1,6 @@
 <template>
   <Drop @updateFile="updateFile" @deleteFile="deleteFile">
-    <!-- :options="customData.options" -->
+    {{  customData.model }}
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -51,6 +51,7 @@
           :layout="customData.layout"
           :model="customData.model"
           @deleteFile="deleteFile"
+          @updateSort="updateSort"
         />
       </vue-custom-scrollbar>
       <!-- </Resize> -->
@@ -78,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, toRefs, provide, onMounted } from "vue";
+import { ref, watch, computed, toRefs, provide, onMounted } from "vue";
 import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
@@ -98,7 +99,6 @@ const props = defineProps({
 const { customData, customIndex } = toRefs(props);
 
 provide("index", customIndex);
-provide("model", customData.value.model);
 provide("data", customData);
 
 /**
@@ -180,37 +180,33 @@ const deleteFile = (data) => {
   delete customData.value.list[data.id];
 };
 /**
- * 文件夹设置
+ * 文件排序
  */
-// 文件排序、
-const updateSort = (val) => {
-  // 赋值
-  customData.value.sort = val;
-  // if (customData.value.list <= 1) return;
-
+// 排序
+const sortMode = (key) => {
   // 将对象的属性转换为数组
   const itemsArray = Object.entries(customData.value.list).map(
     ([key, item]) => item
   );
-
   // 对数组进行排序
-  itemsArray.sort((a, b) => b.useCount - a.useCount);
-
-  // 遍历排序后的数组并打印
+  console.log("key :>> ", key);
+  itemsArray.sort((a, b) => b[key] - a[key]);
+  let obj = {};
   itemsArray.forEach((item) => {
-    customData.value.list[item.id] = item;
+    obj[item.id] = item;
   });
-  // if (val == "max") {
-  //   console.log("max");
-  // } else {
-  //   console.log("type");
-  // }
+  customData.value.list = obj;
+};
+
+// 触发排序
+const updateSort = (val) => {
+  const mode = customData.value.sort;
+  sortMode(mode);
 };
 
 /**
  * 更新模式
  */
-
 const updateModel = (data) => {
   customData.value.model = data;
 };

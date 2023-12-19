@@ -1,5 +1,6 @@
-import browser from "../../../../js/common/browser";
-export const startApp = (type, value) => {
+import browser from "../../js/common/browser";
+
+export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器
     case "default":
@@ -21,7 +22,7 @@ export const startApp = (type, value) => {
       break;
     // 酷应用
     case "coolApp":
-      this.$router.push({ name: "app", params: value });
+      router.push({ name: "app", params: value });
       break;
     // 本地应用
     case "tableApp":
@@ -29,7 +30,7 @@ export const startApp = (type, value) => {
       break;
     // 系统应用
     case "systemApp":
-      this.$router.push({ name: value });
+      router.push({ name: value });
       break;
     // 不知道是什么场景
     case "localApp":

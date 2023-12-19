@@ -5,7 +5,7 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
-    :class="[menuHeight, menuWidth]"
+    :class="[menuHeight, menuWidth, menuWidth]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
@@ -51,6 +51,9 @@ const props = defineProps({
     default: "w-full",
   },
   stopPropagation:{default:true},
+  menuWidth: {
+    default: "w-full",
+  },
 });
 const menu = ref(null);
 const { menus, model, height } = toRefs(props);

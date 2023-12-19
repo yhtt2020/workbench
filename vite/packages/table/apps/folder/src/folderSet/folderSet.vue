@@ -27,11 +27,17 @@ import {
   onMounted,
   getCurrentInstance,
   toRefs,
+  onUnmounted,
 } from "vue";
 
 import { nameOptions, filesOptions } from "./options";
 const { proxy } = getCurrentInstance();
-const emits = defineEmits(["close", "updateSort", "updateModel",'updateWindowApp']);
+const emits = defineEmits([
+  "close",
+  "updateSort",
+  "updateModel",
+  "updateWindowApp",
+]);
 const props = defineProps({
   data: {},
 });
@@ -49,49 +55,57 @@ const modelInfo = computed(() => {
   }
 });
 
-/**
- * 图标排序
- */
-const currentSelect = ref("max");
-const selectList = [
-  {
-    name: "最多使用",
-    value: "max",
-  },
-  {
-    name: "图标类型",
-    value: "type",
-  },
-];
-
-watch(currentSelect, (val) => {
-  emits("updateSort", val);
-});
-
 const setVisible = ref(true);
 watch(setVisible, (val) => {
   emits("close", val);
 });
 
-//
+/**
+ * 分组模式切换
+ */
 watch(
   () => props.data.model,
-  (newVal) => {
-    const arr = ["observe", "arrange"];
-    if (!arr.includes(newVal)) return;
+  (newVal, oldVal) => {
+    if (newVal === "custom") {
+      proxy.$xtConfirm(
+        "是否切换模式",
+        "切换自定义模式将会清空当前分组，是否继续？",
+        {
+          okText: "切换",
+
+          ok: () => {
+            data.value.list = {};
+          },
+          no: () => {
+            data.value.model = oldVal;
+          },
+          type: "warning",
+        }
+      );
+      return;
+    }
+
+    if (oldVal == "observe" || oldVal == "arrange") return;
     proxy.$xtConfirm("是否切换模式", "切换模式将会清空当前分组，是否继续？", {
+      okText: "切换",
       ok: () => {
         data.value.list = {};
-        emits('updateWindowApp')
+        emits("updateWindowApp");
       },
       no: () => {
-        data.value["model"] = "custom";
-        // emits("updateModel", "custom");
+        data.value.model = "custom";
       },
       type: "warning",
     });
   }
 );
+
+/**
+ * 销毁阶段
+ */
+onUnmounted(() => {
+  emits("updateSort");
+});
 </script>
 
 <style lang="scss" scoped></style>

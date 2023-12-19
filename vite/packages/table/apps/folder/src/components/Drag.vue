@@ -13,7 +13,7 @@ import { useAddCard } from "../hooks/useAddCard";
 const emits = defineEmits(["updateFile", "deleteFile"]);
 
 const index = inject("index", "");
-const model = inject("model", "");
+const data = inject("data", "");
 const folderStore = useFolderStore();
 const { dragId, isDrag, isOver, currentId, currentData } =
   storeToRefs(folderStore);
@@ -32,7 +32,7 @@ const handleDragStart = (event) => {
 
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
-  if (model !== "custom") return;
+  if (data.value.model !== "custom") return;
   if (!currentId.value) {
     const file = {
       model: "file",
