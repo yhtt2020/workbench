@@ -5,11 +5,11 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
-    :class="[menuHeight]"
+    :class="[menuHeight, menuWidth]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
-    class="w-full"
+    @mounted="onMounted"
   >
     <slot> </slot>
     <template #cardSize>
@@ -45,6 +45,9 @@ const props = defineProps({
   },
   menuHeight: {
     default: "h-full",
+  },
+  menuWidth: {
+    default: "w-full",
   },
 });
 const menu = ref(null);
@@ -91,11 +94,16 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
+const emits = defineEmits(["mounted"]);
+const onMounted = ()=>{
+  emits("mounted");
+}
 function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
+    onMounted()
   }
 }
 function defaultListContextmenu(event) {
@@ -103,6 +111,7 @@ function defaultListContextmenu(event) {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
+    onMounted()
   }
 }
 
