@@ -1,5 +1,5 @@
 <template>
-    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false">
+    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false" :theme="'smdx'">
         <xt-button :w="40" :h="40" class="xt-bg"><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
             <div class="w-[320px] rounded-xl shadow p-4 ">
@@ -15,8 +15,6 @@
                         @click="chooseDf(item)">
                         <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
-                    <!-- <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px;border: 1px solid var(--divider);border-radius: 12px;"
-                        class="pointer rounded-xl" /> -->
                     <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
                 </div>
                 <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
@@ -28,7 +26,6 @@
                         @click="chooseLinear(item)">
                         <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
-                    <!-- <a-avatar shape="square" src="/img/bg.png" style="width: 40px; height: 40px" class="pointer rounded-xl"/> -->
                 </div>
 
             </div>
@@ -40,6 +37,7 @@
 
 <script setup lang='ts'>
 import { ref, reactive,computed,onMounted } from 'vue'
+import 'tippy.js/dist/tippy.css';
 const colorIndex = ref(0)
 const linearIndex = ref(0)
 const defaultColor = ref('#508BFE')
@@ -108,6 +106,9 @@ const chooseLinear = (item) => {
 const updateBackground = () => {
     emit('change', defaultColor.value)
 }
+onMounted(() => {
+    
+})
 </script>
 <style lang='scss' scoped>
 .item {
@@ -135,13 +136,18 @@ const updateBackground = () => {
         padding: 0px;
     }
 }
-
 :deep(.zs-color-picker-btn) {
   width: 40px;
   height: 40px;
-  background-image: url('/img/bg.png') !important;
 }
 :deep(.zs-color-picker-btn-color) {
   border-radius: 12px;
+  background-image: url('/img/bg.png') !important;
+  background-size: cover;
+}
+.tippy-tooltip.smdx-theme {
+  border-radius: 12px !important;
+  background-color: red !important;
+  
 }
 </style>
