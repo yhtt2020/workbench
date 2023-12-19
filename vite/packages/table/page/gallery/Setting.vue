@@ -6,9 +6,9 @@
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">设置</span>
       </div>
       <div class="flex items-center justify-center">
-        <xt-button w="145" :h="isModal ? 32 : 40" style="border-radius: 8px;" :class="isModal ? 'mr-2':''"  @click="resetPapersSettings">
+        <xt-button w="145" :h="isModal ? 32 : 40" style="border-radius: 8px;" :class="isModal ? 'mr-2':'xt-bg'"  @click="resetPapersSettings">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :size="isModal ? 16 : 20"></xt-new-icon>
+            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :size="isModal ? 16 : 20" class="mr-2"></xt-new-icon>
             <span  class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">恢复默认设置</span>
           </div>
         </xt-button>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="flex-1 h-4/5">
-      <PaperSettingDetail :isModal="isModal"/>
+      <PaperSettingDetail :isModal="isModal" @updatePaper="selectSource"/>
     </div>
   </div>
 </template>
