@@ -24,7 +24,7 @@
 
 
       <!-- 快速搜索 底部栏区域 -->
-      <div @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+      <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -672,7 +672,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(appStore, ['toggleFullScreen']),
+    ...mapActions(appStore, ['toggleFullScreen','settings']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',

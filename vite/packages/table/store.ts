@@ -70,6 +70,14 @@ export const appStore = defineStore('appStore', {
       messagePlay: false, // 消息接收提示语播放
       noticePlay: false, // 通知接收提示语播放
 
+      shake:{//摇一摇
+        enable:false,
+        //5低，4中，3高
+        sensitive:4,
+        pos1:{x:0,y:0},
+        sound:true,//播放音频提示
+      },
+
       enableBarrage: false, //启用弹幕
       barrage: {
         height: 100, //单个轨道的高度
@@ -187,7 +195,7 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
-      localStorage.setItem('wizarded',true)
+      localStorage.setItem('wizarded',String(true))
       this.agreeTest = true
 
     },

@@ -72,6 +72,12 @@
                 <a-switch @click="this.toggleAided"  v-model:checked="aided"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div  class="relative btn">
+                摇一摇<br />
+                <a-switch @click="this.enableShake"  v-model:checked="settings.shake.enable"></a-switch>
+              </div>
+            </a-col>
           </a-row>
 
           <div></div>
@@ -275,10 +281,38 @@ export default {
         wheelPropagation: true,
       },
       editNavigationVisible: false,
-      simpleVisible:false
+      simpleVisible:false,
+      listenEnter:(event)=>{
+        if (event.code === "Enter") {
+          let win32=$models.win32
+          let lastPoints=win32.getMouseMovePoints()
+          if(lastPoints?.length>0){
+            this.settings.shake.pos1={...lastPoints[0]}
+            message.success('设置摇一摇定位成功。')
+            window.shake={}
+            window.shake.pos=this.settings.shake.pos1
+            window.shake.enable=true
+            window.shake.sensitive=this.settings.shake.sensitive || 4
+            window.shake.sound=this.settings.shake.sound
+            this.shakeConfirm.close()
+            window.removeEventListener('keydown',this.listenEnter)
+            this.$router.push({
+              name:'key'
+            })
+          }
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      },
+      shakeConfirm:null
     };
   },
   watch: {
+    'settings.shake.enable':{
+      handler(newVal){
+        window.shake.enable=newVal
+      }
+    },
     bgColor(newV) {
       if (!newV) return;
       setBgColor(newV);
@@ -334,11 +368,55 @@ export default {
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
 
   },
+
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
-    ...mapActions(appStore,['enterAided','leaveAided']),
-    isMain: isMain,isWin,
+    ...mapActions(appStore, ['enterAided', 'leaveAided']),
+    isMain: isMain, isWin,
+    enableShake () {
+      if (this.settings.shake.enable) {
+        if (this.settings.shake.pos1.x === 0 && this.settings.shake.pos1.y === 0) {
+          this.$xtConfirm("摇一摇功能向导", "您似乎从未使用过摇一摇穿梭的功能，是否根据提示设置摇一摇功能？", {
+            ok: () => {
+              setTimeout(()=>{
+                this.$xtConfirm('功能说明',"您可以在工作台所在位置设置一个通过摇一摇快速到达的位置，后续通过摇一摇鼠标快速到达此位置，再次摇一摇即可回到首次摇动的位置。点击开始向导。",{
+                  okText:'开始',
+                  ok:()=>{
+                    window.addEventListener('keydown',this.listenEnter)
+                    setTimeout(()=>{
+                     this.shakeConfirm= this.$xtConfirm('提示', "请将鼠标移动到您希望在摇一摇后自动定位到的位置，并按下回车键（Enter），期间请勿关闭此窗口", {
+                        mask: true,
+                        okText:'取消',
+                        no:false,
+                        noText:false,
+                        ok:()=>{
+                          window.removeEventListener('keydown',this.listenEnter)
+                          message.info('已取消设置')
+                          this.settings.shake.enable=false
+                        }
+
+                      })
+                    },500)
+                  },
+                  noText:'取消',
+                  no:()=>{
+                    message.info('已取消设置')
+                    this.settings.shake.enable=false
+                  }
+                })
+              },500)
+
+            },
+            type: 'info',
+            no:()=>{
+              message.info('已取消设置')
+              this.settings.shake.enable=false
+            }
+          });
+        }
+      }
+    } ,
     goApps(){
       this.$router.push({
         name:'apps'

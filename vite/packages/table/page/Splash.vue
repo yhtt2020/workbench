@@ -311,6 +311,16 @@ export default {
       if (!this.settings.zoomFactor) {
         this.settings.zoomFactor = 100
       }
+
+      if(this.settings.shake.enable){
+        //初始化摇一摇功能
+        window.shake={}
+        window.shake.pos=this.settings.shake
+      }else{
+        window.shake={
+          enable:false,
+        }
+      }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
         // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
