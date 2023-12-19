@@ -64,7 +64,7 @@
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class=" pointer"
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="flex items-center justify-center  pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
@@ -75,9 +75,9 @@
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 52px; height: 52px;flex-shrink: 0;"
-                          class="relative flex items-center justify-center rounded-xl"
-                          :style="{ background: item.bg || '' }">
+                        <div v-else style="width: 52px; height: 52px;"
+                          class="relative flex items-center justify-center"
+                          :style="{borderRadius: iconRadius + 'px', background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
                           <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
                             :style="{ borderRadius: iconRadius + 'px' }"

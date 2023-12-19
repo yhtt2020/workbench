@@ -1,5 +1,6 @@
 <template>
     <div class="w-[452px]">
+        <!-- {{ props.editItem.icon }} -->
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
             <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}" 
             class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
@@ -11,7 +12,7 @@
             </div>
             <div class="flex flex-col justify-start ml-5">
                 <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
-                {{ props.editItem.isBg }}
+                <!-- {{ props.editItem.isBg }} -->
                 <div class="flex justify-start mt-1" @click="reset">
                     <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="reset"></xt-new-icon>
                     <div class="ml-2 text-base reset pointer">重置图标</div>
@@ -28,6 +29,7 @@
 <script setup lang='ts'>
 import { ref, reactive, computed,onMounted } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
+import {renderIcon} from '../../../../../../js/common/common'
 import CustomIconBg from './CustomIconBg.vue'
 import { navStore } from '../../../../../../store/nav';
 const useNavStore = navStore()
@@ -40,8 +42,7 @@ const props=defineProps({
 })
 // 回调改变背景颜色
 const changeBg = (value) => {
-    if(isIcon.value){
-        props.editItem.isBg = true
+    if(props.editItem.isBg){
         bgColor.value = value
         props.editItem.bg = value
     }
@@ -54,20 +55,26 @@ const getAvatar = (value) => {
 }
 // 重置
 const reset = () => {
-    const target = navigationList.value.find(item => item.value === props.editItem.value)
+    const target = navigationList.value.find(item =>{
+        if(item.type === 'coolApp'){
+            return item.value.url === props.editItem.value.url
+        }else{
+            return item.value === props.editItem.value
+        }
+    } )
     props.editItem.icon = target?.icon
     bgColor.value = ''
     props.editItem.bg = ''
     props.editItem.isBg = false
 }
 // 判断图标类型
-const isIcon = computed(() => {
-    if (props.editItem.icon.includes('https')) {
-        return true
-    } else {
-        return false
-    }
-})
+// const isIcon = computed(() => {
+//     if (props.editItem.icon.includes('https')) {
+//         return true
+//     } else {
+//         return false
+//     }
+// })
 const navigationList = computed(() => {
     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
 })
