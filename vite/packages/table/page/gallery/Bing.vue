@@ -58,6 +58,7 @@ import axios from 'axios'
 import Spotlight from 'spotlight.js'
 import justifiedGallery from 'justifiedGallery'
 import { mapActions } from 'pinia'
+import _ from 'lodash-es';
 
 import { paperStore } from '../../store/paper'
 
@@ -136,17 +137,32 @@ export default {
           //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
           let animations = ['ani-gray', 'bowen', 'ani-rotate']
           if (images) {
-            images.forEach(img => {
+            for(const img of images){
               let random = Math.random()
-              let randomIndex = Math.floor((Math.random() * animations.length))
+              let randomIndex = Math.floor((Math.random() * animations.length));
               let image = {
                 title: false,// img.title,
                 src: 'https://cn.bing.com' + img.url,
                 path: 'https://cn.bing.com' + img.url,
                 animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
               }
-              this.bingImages.push(image)
-            })
+              const index  = _.findIndex(this.bingImages,function(find){ return String(find.src) === String(image.src) });
+              if(index === -1){
+                this.bingImages.push(image)
+              }
+            }
+            
+            // images.forEach(img => {
+            //   let random = Math.random()
+            //   let randomIndex = Math.floor((Math.random() * animations.length))
+              // let image = {
+              //   title: false,// img.title,
+              //   src: 'https://cn.bing.com' + img.url,
+              //   path: 'https://cn.bing.com' + img.url,
+              //   animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
+              // }
+            //   this.bingImages.push(image)
+            // })
             // this.bingImages.push({...dayImages})
             this.$nextTick(() => {
 
