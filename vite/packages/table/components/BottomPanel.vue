@@ -64,7 +64,8 @@
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="iconMenus">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)" class="flex items-center justify-center  pointer"
+                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
+                        class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
@@ -75,9 +76,8 @@
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 52px; height: 52px;"
-                          class="relative flex items-center justify-center"
-                          :style="{borderRadius: iconRadius + 'px', background: item.bg || '' }">
+                        <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center"
+                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
                           <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
                             :style="{ borderRadius: iconRadius + 'px' }"
@@ -370,7 +370,7 @@ export default {
   mounted() {
     // this.popVisible=true
     this.copyNav()
-    console.log(this.copyFootNav,'copyFootNav');
+    console.log(this.copyFootNav, 'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -428,10 +428,10 @@ export default {
       })
     })
     this.footNavigationList = this.footNavigationList.map((item) => {
-      console.log(item,'item');
+      console.log(item, 'item');
       switch (item.type) {
         case 'systemApp':
-          return { ...item }; 
+          return { ...item };
         case 'coolApp':
           return {
             ...item,
@@ -481,7 +481,7 @@ export default {
       'rightNavigationList',
       'mainNavigationList',
       'navigationToggle',
-      'copyFootNav','copySideNav','copyRightNav'
+      'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
@@ -869,7 +869,7 @@ export default {
 
     // },
     newOpenApp(type, value) {
-      if(value === 'fullscreen'){
+      if (value === 'fullscreen') {
         this.toggleFullScreen()
       }
       switch (type) {
@@ -928,7 +928,15 @@ export default {
       this.dropList = await Promise.all(filesArr.map(async (item) => {
         const fileName = item.substring(item.lastIndexOf("\\") + 1);
         let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+        return {
+          icon: `${dropFiles}`,
+          name: `${fileName}`,
+          value: item,
+          type : 'tableApp',
+          bg:'',
+          isBg:false,
+          mode:"app"
+        }
       }))
       this.clickRightListItem(this.dropList)
       // this.dropList.forEach((item)=>{

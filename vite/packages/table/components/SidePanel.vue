@@ -594,7 +594,15 @@ export default {
       this.dropList = await Promise.all(filesArr.map(async (item) => {
         const fileName = item.substring(item.lastIndexOf("\\") + 1);
         let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+        return {
+          icon: `${dropFiles}`,
+          name: `${fileName}`,
+          value: item,
+          type : 'tableApp',
+          bg:'',
+          isBg:false,
+          mode:"app"
+        }
       }))
       this.clickRightListItem(this.dropList)
       // this.dropList.forEach((item)=>{
