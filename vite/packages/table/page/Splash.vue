@@ -314,8 +314,7 @@ export default {
 
       if(this.settings.shake.enable){
         //初始化摇一摇功能
-        window.shake={}
-        window.shake.pos=this.settings.shake
+        window.shake=this.settings.shake
       }else{
         window.shake={
           enable:false,

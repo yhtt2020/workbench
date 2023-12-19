@@ -287,10 +287,10 @@ export default {
           let win32=$models.win32
           let lastPoints=win32.getMouseMovePoints()
           if(lastPoints?.length>0){
-            this.settings.shake.pos1={...lastPoints[0]}
+            this.settings.shake.pos={...lastPoints[0]}
             message.success('设置摇一摇定位成功。')
             window.shake={}
-            window.shake.pos=this.settings.shake.pos1
+            window.shake.pos=this.settings.shake.pos
             window.shake.enable=true
             window.shake.sensitive=this.settings.shake.sensitive || 4
             window.shake.sound=this.settings.shake.sound
@@ -376,7 +376,7 @@ export default {
     isMain: isMain, isWin,
     enableShake () {
       if (this.settings.shake.enable) {
-        if (this.settings.shake.pos1.x === 0 && this.settings.shake.pos1.y === 0) {
+        if (this.settings.shake.pos.x === 0 && this.settings.shake.pos.y === 0) {
           this.$xtConfirm("摇一摇功能向导", "您似乎从未使用过摇一摇穿梭的功能，是否根据提示设置摇一摇功能？", {
             ok: () => {
               setTimeout(()=>{

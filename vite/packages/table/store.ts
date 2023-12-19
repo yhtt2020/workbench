@@ -74,7 +74,7 @@ export const appStore = defineStore('appStore', {
         enable:false,
         //5低，4中，3高
         sensitive:4,
-        pos1:{x:0,y:0},
+        pos:{x:0,y:0},
         sound:true,//播放音频提示
       },
 

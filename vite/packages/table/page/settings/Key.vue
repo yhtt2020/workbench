@@ -11,8 +11,8 @@
   <div v-if="settings.shake.enable">
 
     <div class="line">
-      <div class="mb-1">穿梭位置：  x:{{ settings.shake.pos1.x }}
-        y:{{ settings.shake.pos1.y }}</div>
+      <div class="mb-1">穿梭位置：  x:{{ settings.shake.pos.x }}
+        y:{{ settings.shake.pos.y }}</div>
 
       <xt-button type="theme" :x="80" :h="40" size="mini" @click="setPos">重新设置</xt-button>
     </div>
@@ -51,9 +51,9 @@ export default {
 
           let lastPoints = win32.getMouseMovePoints()
           if (lastPoints?.length > 0) {
-            this.settings.shake.pos1 = { ...lastPoints[0] }
+            this.settings.shake.pos = { ...lastPoints[0] }
             message.success('设置摇一摇定位成功。')
-            window.shake.pos = this.settings.shake.pos1
+            window.shake.pos = this.settings.shake.pos
             this.shakeConfirm.close()
             this.$router.push({
               name: 'key'
@@ -98,7 +98,7 @@ export default {
         console.log('修改',newVal)
         window.shake={
           enable:newVal,
-          pos:this.settings.shake.pos1,
+          pos:this.settings.shake.pos,
           sensitive:this.settings.shake.sensitive
         }
       },
