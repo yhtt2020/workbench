@@ -256,5 +256,7 @@ zoom: 1.6;
     }
   }
 }
-
+.xt-bg-t-2{
+  background: rgba(0,0,0,0.4) !important;
+}
 </style>
