@@ -58,6 +58,7 @@ export const appStore = defineStore('appStore', {
         count: 100,
         type: 'rain'
       },
+      showInTaskBar:false,
       showTopbarTime: true,
       showTopbarWeather: true,
       houserun: false,//rgb跑马灯
