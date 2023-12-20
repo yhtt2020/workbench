@@ -84,12 +84,6 @@ window.getSerialNum = async () => {
 
 }
 
-// setInterval(()=>{
-//   console.log('新的？')
-//   console.log(win32.getMouseMovePoints (),'前64个位置')
-// },3000)
-let findMax = []
-let findMin = []
 let currentRoundEdge = 0
 let currentDirection = 'left'
 let times = 0
@@ -110,7 +104,6 @@ const options = {
   debounce: 10
 }
 win32.mouseHook.on('move', (x, y, mousePoint) => {
-  console.log(window.shake,'window.shake')
   if(!window.shake?.enable){
     return
   }
@@ -138,11 +131,9 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
       setTimeout(() => {
         sleep = false
       }, options.sleep)
-      console.log('符合条件，触发，并屏蔽5秒钟')
       times = 0
       cb(mousePoint)
     } else {
-      console.log(times)
     }
   }
 
@@ -154,21 +145,19 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
   }
 
   function shakeMouseEvent (mousePoint) {
+    document.getElementById('shakeAudio').play()
     if (!go) {
       go = true
       pinPos = { ...lastPos }
       if (window.shake?.pos) {
         setCursorPos(window.shake.pos.x, window.shake.pos.y)
       }
-      console.log('这次是移动到副屏导航栏', pinPos)
     } else {
       go = false
       if (window.shake?.pos) {
         setCursorPos(pinPos.x, pinPos.y)
       }
-      console.log('这次是回去', pinPos)
     }
-    console.warn('触发晃动事件')
     times = 0
   }
 
@@ -178,7 +167,6 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
       setClearTimeout()
       currentDirection = 'right'
       times++
-      console.log('从左到右了，左侧最大距离', currentRoundEdge, x, y, times)
       judeTimes(window.shake?.sensitive, shakeMouseEvent)
       return
     } else {
@@ -191,7 +179,6 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
       //左移的时候，x突然大于当前位置，代表反向了
       currentDirection = 'left'
       times++
-      console.log('从右到左了，右侧最大距离', currentRoundEdge, x, y, times)
       judeTimes(window.shake?.sensitive, shakeMouseEvent)
       return
     } else {
