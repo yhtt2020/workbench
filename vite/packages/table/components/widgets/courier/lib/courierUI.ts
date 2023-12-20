@@ -36,6 +36,7 @@ const ui = {
         } else {
           notification.info({
             message: '京东账号已过期，点击重新绑定后再刷新。',
+            key: 'loadingTip',
             onClick: () => {
               grab.jd.login((args) => {
                 store.storeInfo.jd.nickname = args.data.nickname

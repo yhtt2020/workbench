@@ -219,7 +219,7 @@ export default {
       if (localStorage.getItem('wizarded')) {
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          if (['lock', 'power' ].includes(currentRoute.name)) {
+          if (['lock', 'power', 'splash' ].includes(currentRoute.name) || true) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
           } else {
@@ -241,7 +241,7 @@ export default {
             this.$router.replace({ name: 'home' })
           }else{
             this.$router.replace(currentRoute)
-          }       
+          }
         }
       }
 
@@ -312,6 +312,7 @@ export default {
         this.settings.zoomFactor = 100
       }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
+      tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
       if (this.settings.darkMod) {
         // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
         //   document.body.style.background = '#191919'

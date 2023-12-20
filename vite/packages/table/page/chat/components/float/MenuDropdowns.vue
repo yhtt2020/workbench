@@ -1,6 +1,6 @@
 <template>
-  <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item">
-    <div class="flex items-center relative" @click="currentItem(item)">
+  <xt-menu name="name" :menus="menus" @contextmenu.stop="revID = item" class="w-full">
+    <div class="flex items-center relative" >
       <div class="flex items-center">
         <template v-if="item.type === 'group'">
           <CommunityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25rem;"/>
@@ -101,10 +101,6 @@ export default {
       }
     })
 
-    const currentItem = (item) =>{
-      ctx.emit('currentItem',item)
-    }
-
     const unread = computed(()=>{
       const jsonProp = props.item.props;
       if(jsonProp.hasOwnProperty('unread')){
@@ -116,7 +112,7 @@ export default {
 
     return{
       linkRef,menus,linkMenus,menuList,unread,
-      ...toRefs(data),currentItem,
+      ...toRefs(data),
     }
   }
 };

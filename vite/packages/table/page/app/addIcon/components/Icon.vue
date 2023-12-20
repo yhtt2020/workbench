@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full h-full flex flex-col">
     <!-- 应用数量 和 全选按钮 -->
     <div v-if="isSelect" class="flex justify-between items-center mb-3">
       <div>总共 {{ appsLenght }} 个文件</div>
@@ -7,11 +7,11 @@
         {{ selectAll }}
       </XtButton>
     </div>
-    <div
-      class="flex h-full flex-wrap overflow-y-auto xt-container mt-3"
-      :style="[heightStyle, widthStyle]"
-      style="align-content: flex-start"
-    >
+    <XtScrollbar class="h-0 flex-1 w-full" :y="true">
+      <div
+        class="flex   flex-wrap w-full     mt-3"
+        style="align-content: flex-start"
+      >
       <div
         v-for="(item, index) in data"
         class="mx-2 mb-4 rounded-xl flex flex-col items-center justify-center cursor-pointer text-xs"
@@ -22,7 +22,8 @@
         <a-avatar :size="52" shape="square" :src="renderIcon(item.icon)"></a-avatar>
         <div class="w-full text-center truncate mt-3">{{ item.name }}</div>
       </div>
-    </div>
+      </div>
+    </XtScrollbar>
   </div>
 </template>
 

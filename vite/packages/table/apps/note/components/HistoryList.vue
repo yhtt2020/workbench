@@ -81,7 +81,7 @@ export default defineComponent({
     },
     formatTimestamp,
     async getHistory (id) {
-      console.log(id, '要查询的id')
+      // console.log(id, '要查询的id')
       const result = await tsbApi.db.find({
         selector: {
           noteId: {
@@ -89,20 +89,20 @@ export default defineComponent({
           }
         }
       })
-      console.log(result, '查找到的版本历史')
+      // console.log(result, '查找到的版本历史')
       const history = result.docs.map(doc => doc)
-      console.log(history, '查找到的历史')
+      // console.log(history, '查找到的历史')
       return history.reverse()
     },
     restore(){
       if (this.versions.length) {
-        this.$xtConfirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.versions[this.selIndex]?.createTime, true)} 为保存的版本。` , {
+        this.$xtConfirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.selList[this.selIndex]?.createTime, true)} 为保存的版本。` , {
           ok: () => {
-            const tmp = this.versions[this.selIndex]
+            const tmp = this.selList[this.selIndex]
             this.saveAppNote(tmp?.noteId.slice(5), tmp.content, true).then(res=>{
               this.changeEditorValue(tmp.content)
               this.changeShowVersion(false)
-              message.warning('版本恢复成功。')
+              message.success('版本恢复成功。')
             })
             
           },
@@ -133,7 +133,7 @@ export default defineComponent({
         <div @click="selectVersion=version;selIndex = index;" :class="{'xt-bg-2':version===selectVersion}" class="pointer pb-2 flex p-2 rounded-md" v-for="(version,index) in selList"
              style="gap:15px;">
           <div>
-            <div class="xt-text" style="font-size: 18px">
+            <div class="xt-text" style="font-size: 18px;font-family: '优设标题黑';">
               #{{ versions.length - index }}
             </div>
             <div class="xt-text-2">{{ formatTimestamp(version.createTime, true) }}</div>
@@ -144,10 +144,10 @@ export default defineComponent({
     </div>
 
   </div>
-  <div class="px-4 w-full">
+  <div class="px-4 w-full"  style="max-width: 600px;">
     <div class="w-full flex items-center justify-between" style="height:64px" >
       <div class="flex items-center">
-        <div class="xt-text" style="font-size: 18px">
+        <div class="xt-text" style="font-size: 18px;font-family: '优设标题黑';">
         #{{ versions.length - selIndex }}
         </div>
         <div class="font-14 xt-text-2 ml-2">{{timeType}}</div>
@@ -162,9 +162,9 @@ export default defineComponent({
       </div>
     </div>
     
-    <div class="p-4 w-full h-full" style="background:var(--main-bg);height: 520px;"     v-if="selectVersion">
+    <div class="p-4 w-full overflow-auto rounded-lg xt-scrollbar" style="background:var(--main-bg);height: 520px;"     v-if="selectVersion">
       <!-- v-html="selectVersion.content" -->
-      <div v-html="contentValue"></div>
+      <div v-html="contentValue" class="word-wrap"></div>
       <Markdown ref="historyEditor" class="overflow-hidden" style="width:0;height:0;"></Markdown>
       <!-- setEditorValue -->
     </div>
@@ -172,6 +172,9 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
+  .word-wrap{
+    word-wrap: break-word;
+  }
   .button-top{
     height: 32px;
     border-radius: 8px !important;
@@ -192,6 +195,19 @@ export default defineComponent({
 
     .tab-mb:not(:nth-last-of-type()){
       margin-bottom: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 6px; /* 轨道圆角 */
     }
 
 </style>

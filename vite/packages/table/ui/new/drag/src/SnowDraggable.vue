@@ -3,14 +3,15 @@
     ref="draggable"
     style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
-    @mousedown.stop.prevent="snowDragStart"
-    @touchstart.stop.prevent="snowDragStart"
+    @mousedown.stop="snowDragStart"
+    @touchstart.stop="snowDragStart"
   >
     <div
       v-element-size="getElementSize"
       style="position: absolute; left: 50%; top: 50%; transform-origin: center"
       :style="{
         transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+        'z-index': zIndex + 1,
       }"
     >
       <slot>

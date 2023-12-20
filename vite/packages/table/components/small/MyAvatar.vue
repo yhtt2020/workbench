@@ -132,10 +132,11 @@ export default {
       <div v-if="!simple || this.bottomToggle[0]" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10" align="middle">
-          <a-col :span="12" :style="{paddingLeft:simple?'20px':'5px'}">
+          <a-col class="text-center" :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
-            <FrameAvatar  class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
+            <FrameAvatar  v-if="userInfo.frame" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
                          :frameUrl="userInfo.frame"></FrameAvatar>
+            <a-avatar v-else :src="userInfo.avatar" :size="size || 50"></a-avatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->
@@ -173,12 +174,12 @@ export default {
             <!--                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">-->
             <!--                </span>-->
           </a-col>
-          
+
         </a-row>
       </div>
-      
+
     </div>
-    
+
   </div>
   <template v-else>
     <div  class="btn" v-if="isMain()"   @click="social" >

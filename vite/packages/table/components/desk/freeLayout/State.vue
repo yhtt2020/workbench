@@ -22,7 +22,7 @@
         <a-switch v-model:checked="stack" />
       </div>
       <div class="xt-text-2 text-sm my-4">
-        开启后组件不可以叠加摆放，通过右键菜单层叠位置来设置层级
+        开启后后支持在小组件右键菜单中调整叠放层级。
       </div>
       <hr class="my-4" />
       <div class="flex justify-between mb-4">

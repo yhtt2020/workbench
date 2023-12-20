@@ -1,70 +1,73 @@
 <template>
   <xt-modal @no="close()" title="批量添加图标" :modelValue="1"  :footer="false">
-    <main class="flex h-full p-1" style="min-width: 200px !important">
-      <div style="" class="h-full">
-        <div
-          class="overflow-y-auto xt-container"
-          style="border-right: 1px solid var(--divider)"
-          :style="leftTabHeight"
-        >
+    <div class="h-full flex flex-col" style="width: 730px;height:70vh">
+      <main class="flex-1 h-0  p-1 flex flex-row" >
+        <div class="">
           <div
-            :style="{
+            class="overflow-y-auto xt-container"
+            style="border-right: 1px solid var(--divider)"
+            :style="leftTabHeight"
+          >
+            <div
+              :style="{
               'border-right':
                 item.component == name ? '1px solid var(--active-bg)' : '',
             }"
-            v-for="item in navList"
-          >
-            <div
-              class="flex items-center justify-center h-12 mr-2 cursor-pointer rounded-xl w-120"
-              :key="item.name"
-              @click="name = item.component"
-              :class="{ 'xt-bg-2': item.component == name }"
+              v-for="item in navList"
             >
-              {{ item.name }}
+              <div
+                class="flex justify-center items-center rounded-xl cursor-pointer h-12 w-120 mr-2"
+                :key="item.name"
+                @click="name = item.component"
+                :class="{ 'xt-bg-2': item.component == name }"
+              >
+                {{ item.name }}
+              </div>
             </div>
           </div>
         </div>
+        <div class="pl-2 w-0 flex-1 flex flex-col">
+          <xt-task :modelValue="m02013"></xt-task>
+          <component
+            ref="apps"
+            :is="name"
+            :type="type"
+            @updateData="updateData"
+          ></component>
+        </div>
+      </main>
+      <div class="flex items-center my-3" v-if="selectAppsLenght">
+        <div style="width: 130px" class="flex justify-end">
+          已选 {{ selectAppsLenght }} ：
+        </div>
+        <div
+          class="flex overflow-x-auto xt-container"
+          v-scrollable
+          :style="selectedWidth"
+        >
+          <template v-for="(v, k) of selectApps">
+            <div v-for="item in selectApps[k]">
+              <img :src="renderIcon(item.icon)" class="w-12 h-12 rounded-xl mr-3" alt="" />
+            </div>
+          </template>
+        </div>
       </div>
-      <div class="w-full h-full pl-2">
-        <xt-task :modelValue="m02013"></xt-task>
-        <component
-          ref="apps"
-          :is="name"
-          :type="type"
-          @updateData="updateData"
-        ></component>
-      </div>
-    </main>
-    <div class="flex items-center my-3" v-if="selectAppsLenght">
-      <div style="width: 130px" class="flex justify-end">
-        已选 {{ selectAppsLenght }} ：
-      </div>
-      <div
-        class="flex overflow-x-auto xt-container"
-        v-scrollable
-        :style="selectedWidth"
-      >
-        <template v-for="(v, k) of selectApps">
-          <div v-for="item in selectApps[k]">
-            <img :src="renderIcon(item.icon)" class="w-12 h-12 mr-3 rounded-xl" alt="" />
-          </div>
-        </template>
-      </div>
+      <footer class="flex items-center justify-center mt-2">
+        <XtTab
+          v-if="name == 'Links'"
+          style="width: 380px; height: 48px"
+          boxClass="my-2 p-1 xt-bg-2"
+          v-model:modelValue="type"
+          :list="linkList"
+        ></XtTab>
+        <xt-task id="M0201" no="5" @cb="commitIcons">
+          <XtButton type="theme" class="ml-2" @click="commitIcons()">
+            确认
+          </XtButton>
+        </xt-task>
+      </footer>
     </div>
-    <footer class="flex items-center justify-center mt-2">
-      <XtTab
-        v-if="name == 'Links'"
-        style="width: 380px; height: 48px"
-        boxClass="my-2 p-1 xt-bg-2"
-        v-model:modelValue="type"
-        :list="linkList"
-      ></XtTab>
-      <xt-task id="M0201" no="5" @cb="commitIcons">
-        <XtButton type="theme" class="ml-2" @click="commitIcons()">
-          确认
-        </XtButton>
-      </xt-task>
-    </footer>
+
   </xt-modal>
 </template>
 

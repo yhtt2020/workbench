@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex">
+  <div class="relative flex h-full">
     <div class="w-32">
       <div class="overflow-y-auto xt-container" :style="heightStyle">
         <div v-for="(item, index) in webBtn" @click="handleChange(index)"
