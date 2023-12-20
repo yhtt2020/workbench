@@ -127,9 +127,9 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="!simple || this.bottomToggle[0]"  class="relative">
+  <div v-else-if="!simple"  class="relative">
     <div class="pointer" @click="social">
-      <div v-if="!simple || this.bottomToggle[0]" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
+      <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
         <a-row style="text-align: left" :gutter="10" align="middle">
           <a-col class="text-center" :span="12">

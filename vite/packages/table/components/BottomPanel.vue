@@ -14,10 +14,12 @@
         /* width: 160px; */
         border: 1px solid var(--divider);
         height: 80px;
-      ">
+        /* padding-left: 16px !important; */
+        /* padding-right: 16px !important; */
+      " :style="{width:this.settings.enableChat?'160px':'80px',paddingLeft:this.settings.enableChat?'16px !important':'0px',paddingRight:this.settings.enableChat?'16px !important':'0px'}">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat" class="ml-3 pointer">
+        <div v-show="settings.enableChat" class=" pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
