@@ -185,6 +185,7 @@ import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
+import {startApp} from '../ui/hooks/useStartApp'
 import _ from 'lodash-es'
 export default {
   name: 'BottomPanel',
@@ -320,28 +321,28 @@ export default {
           newIcon: "fluent:lock-closed-16-regular",
           name: "锁定屏幕",
           event: "lock",
-          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[0].type, this.builtInFeatures[0].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
           name: "基础设置",
           event: "setting",
-          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[1].type, this.builtInFeatures[1].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏显示",
           event: "fullscreen",
-          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[2].type, this.builtInFeatures[2].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
           name: "设备设置",
           event: "status",
-          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[3].type, this.builtInFeatures[3].value) }
         }
       ],
       shakeElement: false,
@@ -351,7 +352,6 @@ export default {
       notifications: new Notifications(),
       tooltipVisible: true,
       isDelete: true
-
     }
   },
   props: {
@@ -912,44 +912,47 @@ export default {
     //   }
 
     // },
+    // newOpenApp(type, value) {
+    //   if (value === 'fullscreen') {
+    //     this.toggleFullScreen()
+    //   }
+    //   switch (type) {
+    //     // 默认浏览器
+    //     case "default":
+    //       browser.openInSystem(value);
+    //       break;
+    //     // 嵌入浏览器
+    //     case "internal":
+    //       browser.openInTable(value);
+    //       break;
+    //     // 想天浏览器
+    //     case "thinksky":
+    //       browser.openInInner(value);
+    //       break;
+    //     // 轻应用
+    //     case "lightApp":
+    //       ipc.send("executeAppByPackage", {
+    //         package: value,
+    //       });
+    //       break;
+    //     // 酷应用
+    //     case "coolApp":
+    //       this.$router.push({ name: "app", params: value });
+    //       break;
+    //     // 本地应用
+    //     case "tableApp":
+    //       require("electron").shell.openPath(
+    //         require("path").normalize(value)
+    //       );
+    //       break;
+    //     case "localApp":
+    //       require("electron").shell.openPath(value);
+    //     case "systemApp":
+    //       this.$router.push({ name: value });
+    //   }
+    // },
     newOpenApp(type, value) {
-      if (value === 'fullscreen') {
-        this.toggleFullScreen()
-      }
-      switch (type) {
-        // 默认浏览器
-        case "default":
-          browser.openInSystem(value);
-          break;
-        // 嵌入浏览器
-        case "internal":
-          browser.openInTable(value);
-          break;
-        // 想天浏览器
-        case "thinksky":
-          browser.openInInner(value);
-          break;
-        // 轻应用
-        case "lightApp":
-          ipc.send("executeAppByPackage", {
-            package: value,
-          });
-          break;
-        // 酷应用
-        case "coolApp":
-          this.$router.push({ name: "app", params: value });
-          break;
-        // 本地应用
-        case "tableApp":
-          require("electron").shell.openPath(
-            require("path").normalize(value)
-          );
-          break;
-        case "localApp":
-          require("electron").shell.openPath(value);
-        case "systemApp":
-          this.$router.push({ name: value });
-      }
+      startApp(type, value, this.$router)
     },
     // 拖拽桌面图标
     async drop(e) {

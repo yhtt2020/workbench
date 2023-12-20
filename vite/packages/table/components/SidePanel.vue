@@ -102,6 +102,7 @@ import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
+import {startApp} from '../ui/hooks/useStartApp'
 export default {
   name: 'SidePanel',
   components: {
@@ -197,28 +198,28 @@ export default {
           newIcon: "fluent:lock-closed-16-regular",
           name: "锁定屏幕",
           event: "lock",
-          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[0].type, this.builtInFeatures[0].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
           name: "基础设置",
           event: "setting",
-          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[1].type, this.builtInFeatures[1].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏显示",
           event: "fullscreen",
-          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[2].type, this.builtInFeatures[2].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
           name: "设备设置",
           event: "status",
-          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[3].type, this.builtInFeatures[3].value) }
         }
       ],
       shakeElement: false,
@@ -485,94 +486,9 @@ export default {
         return false
       }
     },
-    clickNavigation(item) {
-      if (this.editToggle) {
-        this.enableDrag()
-        return
-      }
-      switch (item.type) {
-        case 'systemApp':
-          if (item.event === 'fullscreen') {
-            this.toggleFullScreen()
-          } else if (item.event === '/status') {
-            if (this.$route.path === '/status') {
-              this.$router.go(-1)
-            } else {
-              this.$router.push({ path: '/status' })
-            }
-          } else if (item.data) {
-            this.$router.push({
-              name: 'app',
-              params: item.data
-            })
-          } else {
-            this.$router.push({ name: item.event })
-          }
-          break
-        case 'coolApp':
-          this.$router.push({
-            name: 'app',
-            params: item.data
-          })
-          break
-        case 'localApp':
-          require('electron').shell.openPath(item.path)
-          break
-        case 'lightApp':
-          ipc.send('executeAppByPackage', { package: item.package })
-          break
-        default:
-          require('electron').shell.openPath(item.path ? item.path : item.url)
-      }
-    },
     newOpenApp(type, value) {
-      console.log(type, value, '===>>>type--value');
-      if(value === 'fullscreen'){
-        this.toggleFullScreen()
-      }
-      switch (type) {
-        // 默认浏览器
-        case "default":
-          browser.openInSystem(value);
-          break;
-        // 嵌入浏览器
-        case "internal":
-          browser.openInTable(value);
-          break;
-        // 想天浏览器
-        case "thinksky":
-          browser.openInInner(value);
-          break;
-        // 轻应用
-        case "lightApp":
-          ipc.send("executeAppByPackage", {
-            package: value,
-          });
-          break;
-        // 酷应用
-        case "coolApp":
-          this.$router.push({ name: "app", params: value });
-          break;
-        // 本地应用
-        case "tableApp":
-          require("electron").shell.openPath(
-            require("path").normalize(value)
-          );
-          break;
-        case "localApp":
-          require("electron").shell.openPath(value);
-        case "systemApp":
-          this.$router.push({ name: value });
-      }
+      startApp(type, value, this.$router)
     },
-    // scrollNav(refVal, scrollDirection) {
-    //   // let content = this.$refs[refVal]
-    //   // content.addEventListener('wheel', (event) => {
-    //   //   event.preventDefault();
-    //   //   // console.log(event)
-    //   //   content[scrollDirection] += event.deltaY
-    //   // });
-    // },
     // 拖拽桌面图标
     async drop(e) {
       // this.modelValue=false

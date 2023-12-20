@@ -272,25 +272,25 @@ export const navStore = defineStore("nav", {
         "type": "systemApp",
         "icon": "fluent:lock-closed-16-regular",
         "name": "锁定屏幕",
-        "event": "lock"
+        "value": "lock"
       },
       {
         "type": "systemApp",
         "icon": "fluent:settings-16-regular",
         "name": "基础设置",
-        "event": "setting"
+        "value": "setting"
       },
       {
         "type": "systemApp",
         "icon": "fluent:full-screen-maximize-16-filled",
         "name": "全屏显示",
-        "event": "fullscreen"
+        "value": "fullscreen"
       },
       {
         "type": "systemApp",
         "icon": "fluent:slide-settings-24-regular",
         "name": "设备设置",
-        "event": "status"
+        "value": "status"
       }
     ],
     // navigationToggle: [true,false,true]
