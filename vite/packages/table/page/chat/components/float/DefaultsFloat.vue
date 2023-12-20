@@ -77,7 +77,7 @@
             </div>
           </div>
           <div class="flex grid grid-cols-2 gap-1" v-else>
-           <div v-for="item in item.children" @click="currentItem(item)"  :class="{'active-bg':currentID === item.id}" class="flex items-center px-3.5 py-2.5 rounded-lg pointer group-item">
+           <div v-for="item in item.children" @click="currentItem(item)"  :class="{'xt-bg-t-2':currentID === item.id}" class="flex items-center px-3.5 py-2.5 rounded-lg pointer group-item">
             <div class="flex items-center">
              <template v-if="item.type === 'group'">
               <communityIcon icon="fluent-emoji-flat:thought-balloon" style="font-size: 1.25em;"/>
@@ -177,7 +177,7 @@ export default {
   ...mapActions(chatStore,['setFloatVisible','setDouble']),
   currentItem(item){
    this.currentID = item.id
-   this.$bus.emit('clickItem',item)
+   this.$bus.emit('defaultClickItem',item)
   },
   // 展示单列时所有内容
   openHideContent(){

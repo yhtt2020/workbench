@@ -1,24 +1,12 @@
 <template>
     <xt-modal :zIndex="99" title="导航栏设置" :modelValue="modelValue" :mask="false" @no="close" :footer="false">
-        <div class=" rounded-xl" :style="{height:`${windowHeight}px`,width:`${windowWidth}px`}">
-            <!-- <div class="flex justify-between w-full h-[32px] items-center ">
-                <div class="flex justify-center w-full">
-                    <div class="ml-8 text-base xt-text">导航栏设置</div>
-                </div>
-                <xt-button class="border-0 rounded-md xt-bg-2 pointer" :w="40" :h="40" @click="close"
-                    style="flex-shrink: 0;">
-                    <div class="flex items-center justify-center">
-                        <newIcon class="text-base xt-text pointer" icon="akar-icons:cross" />
-                    </div>
-                </xt-button>
-            </div> -->
+        <div class=" rounded-xl" :style="{ height: `${windowHeight}px`, width: `${windowWidth}px` }">
             <div class="w-full h-[255px] xt-bg-2 rounded-xl p-4">
                 <div v-for="(item, index) in navigationPosition">
                     <div class="flex justify-between w-full">
                         <div class="text-base xt-text">{{ item.title }}</div>
-                        <a-switch  v-model:checked="useNavStore.navigationToggle[index]" />
+                        <a-switch v-model:checked="useNavStore.navigationToggle[index]" @change="hiedNav(index)" />
                     </div>
-                    <!-- {{ navigationStore.bottomToggle[0] }} -->
                     <div class="mt-3 text-sm xt-text-2">
                         {{ item.description }}
                     </div>
@@ -26,27 +14,37 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full h-[340px] xt-bg-2 rounded-xl mt-3 p-4">
+            <div class="w-full p-4 mt-3 xt-bg-2 rounded-xl">
                 <div v-for="(item, index) in navigationFunction">
-                    <div v-if="item.tag!=='chat'" class="w-full">
-                        <div class="flex justify-between w-full" >
-                        <div class="text-base xt-text">{{ item.title }}</div>
-                        <a-switch  v-model:checked="navigationStore.bottomToggle[index]" />
+                    <div v-if="item.tag !== 'chat' && item.tag !== 'level'" class="w-full">
+                        <div class="flex justify-between w-full">
+                            <div class="text-base xt-text">{{ item.title }}</div>
+                            <a-switch v-model:checked="navigationStore.bottomToggle[index]" />
+                        </div>
+                        <div class="mt-3 text-sm xt-text-2">
+                            {{ item.description }}
+                        </div>
                     </div>
-                    <div class="mt-3 text-sm xt-text-2">
-                        {{ item.description }}
+                    <div v-else-if="item.tag === 'chat'" class="w-full">
+                        <div class="flex justify-between w-full">
+                            <div class="text-base xt-text">{{ item.title }}</div>
+                            <a-switch v-model:checked="useAppStore.settings.enableChat" />
+                        </div>
+                        <div class="mt-3 text-sm xt-text-2">
+                            {{ item.description }}
+                        </div>
                     </div>
+                    <div class="w-full" v-else-if="item.tag === 'level'">
+                        <div class="flex justify-between w-full">
+                            <div class="text-base xt-text">{{ item.title }}</div>
+                            <a-switch v-model:checked="navigationStore.levelVisible" />
+                        </div>
+                        <div class="mt-3 text-sm xt-text-2">
+                            {{ item.description }}
+                        </div>
                     </div>
-                    <div v-else class="w-full">
-                        <div class="flex justify-between w-full" >
-                        <div class="text-base xt-text">{{ item.title }}</div>
-                        <a-switch  v-model:checked="useAppStore.settings.enableChat" />
-                    </div>
-                    <div class="mt-3 text-sm xt-text-2">
-                        {{ item.description }}
-                    </div>
-                    </div>
-                    
+
+
                     <div class="w-full h-[1px] bg-[var(--divider)] mt-3 mb-4" v-if="index != navigationFunction.length - 1">
                     </div>
                 </div>
@@ -58,38 +56,47 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,onBeforeUnmount,onMounted } from 'vue'
+import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { navigationPosition, navigationFunction } from './index'
 import { useNavigationStore } from './navigationStore';
 import settingItem from './settingItem.vue';
 import { appStore } from '../../../store';
 import { navStore } from '../../../store/nav'
 const useNavStore = navStore()
-const useAppStore=appStore()
-const navigationStore=useNavigationStore()
+const useAppStore = appStore()
+const navigationStore = useNavigationStore()
 const modelValue = ref(true)
-const windowHeight=ref(480)
-const windowWidth=ref(400)
-const emit = defineEmits(['setQuick'])
+const windowHeight = ref(480)
+const windowWidth = ref(400)
+const emit = defineEmits(['setQuick', 'hiedNav'])
 const close = () => {
     emit('setQuick')
 }
 const handleResize = () => {
     const currentHeight = window.innerHeight
-    if(currentHeight>900){
-        windowHeight.value=610
-        windowWidth.value=460
-    }else{
-        windowHeight.value=480
-        windowWidth.value=400
+    if (currentHeight > 900) {
+        windowHeight.value = 610
+        windowWidth.value = 460
+    } else {
+        windowHeight.value = 480
+        windowWidth.value = 400
     }
 }
-onMounted(()=>{
+onMounted(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
 })
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
     window.removeEventListener('resize', handleResize)
 })
+const hiedNav = (index) => {
+    if (index === 0 && !useNavStore.navigationToggle[0]) {
+        emit('hiedNav', 'left')
+    } else if (index === 1 && !useNavStore.navigationToggle[1]) {
+        emit('hiedNav', 'right')
+    } else if (index === 2 && !useNavStore.navigationToggle[2]) {
+        emit('hiedNav', 'foot')
+    }
+}
 </script>
 <style lang='scss' scoped></style>

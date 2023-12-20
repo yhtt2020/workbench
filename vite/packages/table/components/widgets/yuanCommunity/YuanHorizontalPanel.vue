@@ -11,7 +11,7 @@
           class="relative flex items-center justify-center flex-1 h-full rounded-lg nav-item btn-active pointer "
           @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
           :data-item="JSON.stringify(item)">
-          <span>{{ item.value.name }}</span>
+          <span class="omit">{{ item.value.name }}</span>
           <div v-if="item.state === true" class="ml-2 state-dot"></div>
         </div>
     </template>

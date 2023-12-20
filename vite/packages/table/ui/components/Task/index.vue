@@ -1,6 +1,6 @@
 <template>
-  <div ref="el" @click="next($event)" @contextmenu="next($event)" class="box">
-    <div :class="{ 'xt-task-container': zIndexValue }">
+  <div :class="outClass" ref="el" @click="next($event)" @contextmenu="next($event)" class="box">
+    <div :class="{...inClass, ...{'xt-task-container': zIndexValue} }">
       <slot></slot>
       <div :class="{ 'xt-task-overlay': zIndexValue }"></div>
     </div>
@@ -24,6 +24,11 @@ export default defineComponent({
   props: {
     modelValue: {
       default: false,
+    },
+    outClass:{},
+    inClass:{
+      type:Object,
+      default:{}
     },
     fn: {},
     id: {},

@@ -11,6 +11,7 @@ export const NavList = [
         option: [
           {
             name: "myIcons",
+            imgName:'myIcons',
             size: "自定义大小",
             zoom: "20",
           },
@@ -25,6 +26,7 @@ export const NavList = [
         option: [
           {
             name: 'AIaides',
+            imgName:'aides',
             size: '2x2',
             zoom: '18'
           },
@@ -39,6 +41,7 @@ export const NavList = [
         option: [
           {
             name: "clocks",
+            imgName:'clocks',
             size: "自定义大小",
             zoom: "20",
           },
@@ -53,11 +56,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
+            imgName:'audio',
             size: "2x4",
             zoom: "12",
           },
           {
             name: "voice",
+            imgName:'voice',
             size: "2x2",
             zoom: "12",
           },
@@ -72,6 +77,7 @@ export const NavList = [
         option: [
           {
             name: "countdownDay",
+            imgName:'countdownDay',
             size: "2x2",
             zoom: "18",
           },
@@ -86,6 +92,7 @@ export const NavList = [
         option: [
           {
             name: "weather",
+            imgName:'weather',
             size: "2x2",
             zoom: "18",
           },
@@ -100,18 +107,19 @@ export const NavList = [
         option: [
           {
             name: "middleWallpaper",
+            imgName:'middleWallpaper',
             size: "4x4",
             zoom: "24",
           },
           {
             name: "smallWallpaper",
+            imgName:'smallWallpaper',
             size: "2x2",
             zoom: "12",
           },
         ],
         time: "2023/5/31",
       },
-
       {
         name: "fish",
         cname: "木鱼",
@@ -120,6 +128,7 @@ export const NavList = [
         option: [
           {
             name: "fish",
+            imgName: "fish",
             size: "2x2",
             zoom: "20",
           },
@@ -139,11 +148,13 @@ export const NavList = [
         option: [
           {
             name: "capture",
+            imgName: "capture",
             size: "2x2",
             zoom: "24",
           },
           {
             name: "CaptureNewCard",
+            imgName: 'captureNewCard',
             size: "4x4",
             zoom: "18",
           },
@@ -159,21 +170,25 @@ export const NavList = [
         option: [
           {
             name: "CPULineChart",
+            imgName: 'cpuLineChart',
             size: "2*4",
             zoom: "14",
           },
           {
             name: "CPUFourCard",
+            imgName:'cpuFourCard',
             size: "2*4",
             zoom: "14",
           },
           {
             name: "SmallCPUCard",
+            imgName:'smallCPUCard',
             size: "2*2",
             zoom: "18",
           },
           {
             name: "SmallGPUCard",
+            imgName: 'smallGPUCard',
             size: "2*2",
             zoom: "18",
           },
@@ -188,11 +203,13 @@ export const NavList = [
         option: [
           {
             name: "middleWallpaper",
+            imgName:'middleWallpaper',
             size: "4x4",
             zoom: "24",
           },
           {
             name: "smallWallpaper",
+            imgName: "smallWallpaper",
             size: "2x2",
             zoom: "18",
           },
@@ -208,6 +225,7 @@ export const NavList = [
         option: [
           {
             name: "notes",
+            imgName: "notes",
             size: "自定义大小",
             zoom: "18",
           },
@@ -234,6 +252,7 @@ export const NavList = [
         option: [
           {
             name: "weather",
+            imgName: "weather",
             size: "2x2",
             zoom: "20",
           },
@@ -265,10 +284,12 @@ export const NavList = [
         option: [
           {
             name: 'SingleFilm',
+            imgName:'singleFilm',
             size: '2x4',
             zoom: '11'
           }, {
             name: 'ManyFilm',
+            imgName:'manyFilm',
             size: '2x4',
             zoom: '8'
           },
@@ -284,6 +305,7 @@ export const NavList = [
         option: [
           {
             name: "news",
+            imgName:'news',
             size: "4x4",
             zoom: "18",
           },
@@ -298,6 +320,7 @@ export const NavList = [
         option: [
           {
             name: 'OilPrices',
+            imgName: 'oilPrices',
             size: '2x4',
             zoom: '16'
           }
@@ -312,6 +335,7 @@ export const NavList = [
         option: [
           {
             name: 'HotSearch',
+            imgName: 'hotSearch',
             size: '2x4',
             zoom: '18'
           },
@@ -326,6 +350,7 @@ export const NavList = [
         option: [
           {
             name: "music",
+            imgName: "music",
             size: "2x2",
             zoom: "20",
           },
@@ -340,6 +365,7 @@ export const NavList = [
         option: [
           {
             name: "fish",
+            imgName: "fish",
             size: "2x2",
             zoom: "20",
           },
@@ -373,6 +399,7 @@ export const NavList = [
         option: [
           {
             name: 'historyInfo',
+            imgName: 'historyInfo',
             size: '2x2',
             zoom: '24'
           },
@@ -393,6 +420,7 @@ export const NavList = [
         option: [
           {
             name: 'AIaides',
+            imgName:'aides',
             size: '2x2',
             zoom: '18'
           },
@@ -407,6 +435,7 @@ export const NavList = [
         option: [
           {
             name: "clocks",
+            imgName:'clocks',
             size: "自定义大小",
             zoom: "20",
           },
@@ -421,11 +450,13 @@ export const NavList = [
         option: [
           {
             name: 'TimerClock',
+            imgName:'timerClock',
             size: '2x2',
             zoom: '24'
           },
           {
             name: 'TimerChart',
+            imgName:'timerChart',
             size: '2x2',
             zoom: '24'
           },
@@ -445,6 +476,7 @@ export const NavList = [
         option: [
           {
             name: 'shortcutKey',
+            imgName:'shortcutKey',
             size: '4x4',
             zoom: '12'
           },
@@ -471,6 +503,7 @@ export const NavList = [
         option: [
           {
             name: "countdownDay",
+            imgName:'countdownDay',
             size: "2x2",
             zoom: "18",
           },
@@ -485,6 +518,7 @@ export const NavList = [
         option: [
           {
             name: "customTimer",
+            imgName:'customTimer',
             size: "2x4",
             zoom: "18",
           },
@@ -500,6 +534,7 @@ export const NavList = [
         option: [
           {
             name: "clock",
+            imgName:'clock',
             size: "2x2",
             zoom: "20",
           },
@@ -514,6 +549,7 @@ export const NavList = [
         option: [
           {
             name: "AggregateSearch",
+            imgName:'aggregateSearch',
             size: "2x4",
             zoom: "20",
           },
@@ -528,6 +564,7 @@ export const NavList = [
         option: [
           {
             name: "Todo",
+            imgName:'todo',
             size: "2x2",
             zoom: "18",
           },
@@ -542,6 +579,7 @@ export const NavList = [
         option: [
           {
             name: "notes",
+            imgName:'notes',
             size: "自定义大小",
             zoom: "18",
           },
@@ -556,6 +594,7 @@ export const NavList = [
         option: [
           {
             name: "eatToday",
+            imgName:'eatToday',
             size: "2x4",
             zoom: "18",
           },
@@ -575,6 +614,7 @@ export const NavList = [
         option: [
           {
             name: "myIcons",
+            imgName:'myIcons',
             size: "自定义大小",
             zoom: "11",
           },
@@ -589,11 +629,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
+            imgName:'audio',
             size: "2x4",
             zoom: "14",
           },
           {
             name: "voice",
+            imgName:'voice',
             size: "2x2",
             zoom: "14",
           },
@@ -608,11 +650,13 @@ export const NavList = [
         option: [
           {
             name: "capture",
+            imgName:'capture',
             size: "2x2",
             zoom: "24",
           },
           {
             name: "CaptureNewCard",
+            imgName:'captureNewCard',
             size: "4x4",
             zoom: "18",
           },
@@ -627,21 +671,25 @@ export const NavList = [
         option: [
           {
             name: "CPULineChart",
+            imgName:'cpuLineChart',
             size: "2*4",
             zoom: "8",
           },
           {
             name: "CPUFourCard",
+            imgName:'cpuFourCard',
             size: "2*4",
             zoom: "11",
           },
           {
             name: "SmallCPUCard",
+            imgName:'smallCPUCard',
             size: "2*2",
             zoom: "11",
           },
           {
             name: "SmallGPUCard",
+            imgName:'smallGPUCard',
             size: "2*2",
             zoom: "11",
           },
@@ -662,11 +710,13 @@ export const NavList = [
         option: [
           {
             name: "capture",
+            imgName:'capture',
             size: "2x2",
             zoom: "24",
           },
           {
             name: "CaptureNewCard",
+            imgName:'captureNewCard',
             size: "4x4",
             zoom: "18",
           },
@@ -681,11 +731,13 @@ export const NavList = [
         option: [
           {
             name: "GamesDiscount",
+            imgName:'gamesDiscount',
             size: "2x4",
             zoom: "13",
           },
           {
             name: "DiscountPercentage",
+            imgName: 'discountPercentage',
             size: "2x4",
             zoom: "13",
           },
@@ -700,6 +752,7 @@ export const NavList = [
         option: [
           {
             name: "MyGameSmall",
+            imgName:'myGameSmall',
             size: "2x2",
             zoom: "11",
           },
@@ -714,6 +767,7 @@ export const NavList = [
         option: [
           {
             name: "SteamFriends",
+            imgName:'steamFriends',
             size: "2x2",
             zoom: "20",
           },
@@ -728,6 +782,7 @@ export const NavList = [
         option: [
           {
             name: "GameEpic",
+            imgName:'gameEpic',
             size: "2x4",
             zoom: "16",
           },
@@ -742,10 +797,12 @@ export const NavList = [
         option: [
           {
             name: "audio",
+            imgName:'audio',
             size: "2x4",
           },
           {
             name: "voice",
+            imgName:'voice',
             size: "2x2",
           },
         ],
@@ -759,6 +816,7 @@ export const NavList = [
         option: [
           {
             name: "GameStrategy",
+            imgName:'gameStrategy',
             size: "4x4",
             zoom: "11",
           },
@@ -778,6 +836,7 @@ export const NavList = [
         option: [
           {
             name: "signIn",
+            imgName:'signIn',
             size: "2x4",
             zoom: "16",
           },
@@ -792,6 +851,7 @@ export const NavList = [
         option:[
           {
             name:'yuanCommunity',
+            imgName:'yuanCommunity',
             size:'4x4',
             zoom:'12'
           }
@@ -811,6 +871,7 @@ export const NavList = [
         option: [
           {
             name: "myIcons",
+            imgName:'myIcons',
             size: "自定义大小",
             zoom: "20",
           },
@@ -825,6 +886,7 @@ export const NavList = [
         option: [
           {
             name: "customAssembly",
+            imgName:'customAssembly',
             size: "自定义大小",
             zoom: "18",
           },
@@ -839,6 +901,7 @@ export const NavList = [
         option: [
           {
             name: "Remote",
+            imgName:'remote',
             size: "自定义大小",
             zoom: "18",
           },
@@ -858,6 +921,7 @@ export const NavList = [
         option: [
           {
             name: "smallRank",
+            imgName:'smallRank',
             size: "2x2",
             zoom: "18",
           },
@@ -872,6 +936,7 @@ export const NavList = [
         option: [
           {
             name: 'gameInformation',
+            imgName:'gameInformation',
             size: '2x2',
             zoom: '11'
           },
@@ -887,6 +952,7 @@ export const NavList = [
         option: [
           {
             name: 'clipBoard',
+            imgName:'clipBoard',
             size: '4x4',
             zoom: '11'
           },
@@ -901,6 +967,7 @@ export const NavList = [
         option: [
           {
             name: 'Dashboard',
+            imgName:'dashboard',
             size: '2x4',
             zoom: '11'
           },
@@ -915,6 +982,7 @@ export const NavList = [
         option: [
           {
             name: 'ShortTodo',
+            imgName:'shortTodo',
             size: '2x4',
             zoom: '20'
           },
@@ -929,6 +997,7 @@ export const NavList = [
         option: [
           {
             name: 'Guider',
+            imgName:'Guider',
             size: '2x4',
             zoom: '20'
           },
@@ -943,6 +1012,7 @@ export const NavList = [
         option: [
           {
             name: 'ShortChart',
+            imgName: 'shortChart',
             size: '4x4',
             zoom: '11'
           },
@@ -958,6 +1028,7 @@ export const NavList = [
         option:[
           {
             name:'Courier',
+            imgName:'courier',
             size:'4x6',
             zoom:'14'
           }

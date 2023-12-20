@@ -4,8 +4,8 @@
     :class="[ activeState ?  'active' : ' active-unread', boxClass]"
     class="xt-base-btn menu-item relative "
     style=""
-  >
-    <div class="rounded-full flex items-center justify-center font-400" v-if="item.unread !== 0 && item.hasOwnProperty('unread')"
+  > 
+    <div class="rounded-full flex items-center justify-center font-400 xt-active-text" v-if="unreadStatus" 
      style="width:18px;height: 18px; position: absolute; background:red;font-size: 10px;z-index: 50;top: -4px;right: -4px;">
      {{ item.unread }}
     </div>
@@ -45,10 +45,17 @@ const activeState = computed(() => {
     return props.item.id == props.id;
   }
 });
-const showUnread = computed(() => {
-  console.log("执行...排查问题", props.item.unread);
-  return props.item.unread !== 0 ? props.item.unread : 0;
-});
+
+
+// 通过计算属性判断消息提示状态
+const unreadStatus = computed (()=>{
+  if(props.item.unread && props.item.unread !== 0){
+    return true;
+  }
+  else {
+    return false;
+  }
+})
 </script>
 
 <style lang="scss" scoped>

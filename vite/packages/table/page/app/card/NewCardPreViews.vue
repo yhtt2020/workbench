@@ -5,24 +5,37 @@
         <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
           <div>
             <div class="box xt-bg-2" style="z-index: 99999999999">
-              <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
+              <xt-button w="48" h="48" class="no-drag add" @click="addNewCard(item)" v-if="item.option.length <= 1">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:add-circle-12-filled" style="color: var(--active-text) !important;"></xt-new-icon>
+                </div>
+              </xt-button>
+    
+              <xt-button w="48" h="48" class="no-drag add" v-else @click="addNewCard(item)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:more-horizontal-16-regular" style="color: var(--active-text) !important;"></xt-new-icon>
+                </div>
+              </xt-button>
+              
+              <!-- <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                   <Icon icon="tianjia2" style="color: #000"></Icon>
                 </div>
               </div>
               <div class="add no-drag" @click="addNewCard(item)" v-else>
                 <div class="text" style="color: #fff">· · ·</div>
-              </div>
+              </div> -->
+
               <div class="left no-drag" @click="fullScreen(item)">
                 <template v-if="item.option.length > 1">
                   <div class="top">
-                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
+                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
                   </div>
                   <div class="bottom">
-                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
+                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
                   </div>
                 </template>
-                <img v-else:src="getImg(item.option[0].name)" alt="" :style="[
+                <img v-else :src="getImg(item.option[0].imgName)" alt="" :style="[
                   {
                     zoom: item.option[0].zoom
                       ? item.option[0].zoom + '%'
@@ -30,6 +43,7 @@
                   },
                 ]"/>
               </div>
+              
               <div class="right" style="">
                 <div class="title" style="color: var(--primary-text)">
                   {{ item.cname }}
@@ -58,24 +72,38 @@
       </template>
       <div v-else>
         <div class="box xt-bg-2">
-          <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
+          <xt-button w="48" h="48" class="no-drag add" @click="addNewCard(item)" v-if="item.option.length <= 1">
+            <div class="flex items-center justify-center">
+              <xt-new-icon icon="fluent:add-circle-12-filled" style="color: var(--active-text) !important;"></xt-new-icon>
+            </div>
+          </xt-button>
+
+          <xt-button w="48" h="48" class="no-drag add" v-else @click="addNewCard(item)">
+            <div class="flex items-center justify-center">
+              <xt-new-icon icon="fluent:more-horizontal-16-regular" style="color: var(--active-text) !important;"></xt-new-icon>
+            </div>
+          </xt-button>
+
+          <!-- <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
             <div class="icons">
               <Icon icon="tianjia2" style="color: #000"></Icon>
             </div>
           </div>
           <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="text" style="color: #fff">· · ·</div>
-          </div>
+            
+          </div> -->
+
           <div class="left no-drag" @click="fullScreen(item)">
             <template v-if="item.option.length > 1">
               <div class="top">
-                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].name)" alt=""/>
+                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
               </div>
               <div class="bottom">
-                <img class="small-cover" v-for="i in item.option" :src="getImg(i.name)" alt=""/>
+                <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
               </div>
             </template>
-            <img v-else style="" :src="getImg(item.option[0].name)" alt="" :style="[
+            <img v-else style="" :src="getImg(item.option[0].imgName)" alt="" :style="[
               { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
             ]"/>
           </div>
@@ -219,7 +247,7 @@ export default {
       message.success('添加成功！')
     },
     getImg (url) {
-      return '/img/addCard/' + url + '.png'
+      return `https://a.apps.vip/cards/${url}.png`;
     },
     mySort (data, property, asc) {
       let datas = [...data]
@@ -273,9 +301,11 @@ export default {
         this.settingVisible = true
         return
       }
+      console.log('执行......排查-1',item,i);
       this.add(item, i)
     },
     add (item, index) {
+      console.log('执行......排查-2',item,index);
       index = index ?? this.carouselIndex
 
       this.addCard(

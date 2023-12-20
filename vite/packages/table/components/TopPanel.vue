@@ -36,7 +36,7 @@
             </div>
           </xt-button>
 
-          <TopCourier />
+          <TopCourier v-if="!isHidden" />
 
           <TopClockTimer/>
 
@@ -58,16 +58,28 @@
         <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
               class="no-drag btn-hover category-button p-1 rounded-md pointer"
         >
-          <div class="flex items-center" style="max-width:270px;">
+        <div class="flex items-center">
+          <template v-if="hasChat">
+            <span class="pl-1 primary-title pointer xt-text font-14  xt-font">新消息</span>
+            <span class="xt-text font-14  xt-font px-1">·</span>
+          </template>
+          <template v-if="appSettings.showTopbarTime">
+            <span class="xt-text font-14  xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
+            <span class="xt-text font-14  xt-font mx-1">{{ dateTime.week }}</span>
+            <span class="xt-text font-14  xt-font pr-1">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+          </template>
+          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather" class=" xt-text font-14  xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
+        </div>
+          <!-- <div class="flex items-center" style="max-width:270px;">
 
             <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
             <div class="xt-text font-14  xt-font">
               <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
               <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
-                <!-- <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>  -->
+                <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> 
            </span>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -170,7 +182,7 @@ export default {
       topClockTimerVisible: false,
     }
   },
-
+  props:['isHidden'],
   computed:{
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
