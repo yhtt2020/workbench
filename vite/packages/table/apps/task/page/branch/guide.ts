@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export const guide = {
   Z0101: {
     type: "router",
@@ -65,3 +67,4 @@ export const guide = {
     value: "chat",
   },
 };
+

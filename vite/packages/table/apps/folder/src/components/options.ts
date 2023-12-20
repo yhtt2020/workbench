@@ -8,9 +8,9 @@ export const defaultData = {
   iconState: "cover",
   iconShape: "square",
   name: "",
-  isName: "",
+  isName: true,
   bg: "",
-  isBg: "",
+  isBg: false,
   radius: 5,
   isRadius: true,
 };

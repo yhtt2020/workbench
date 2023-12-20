@@ -8,7 +8,8 @@
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../store";
 import { inject } from "vue";
-import { useAddCard } from "../hooks/useAddCard";
+// import { useAddCard } from "../hooks/useAddCard";
+import { useAddCard } from "../../../../ui/hooks/useAddCard";
 
 const emits = defineEmits(["updateFile", "deleteFile"]);
 
@@ -25,7 +26,7 @@ const props = defineProps({
  */
 const handleDragStart = (event) => {
   // if (data.value.sort === "free") return;
-  console.log('1111 :>> ', 1111);
+  console.log("1111 :>> ", 1111);
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;
@@ -34,7 +35,7 @@ const handleDragStart = (event) => {
 
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
-  console.log('2222 :>> ', 2222);
+  console.log("2222 :>> ", 2222);
   // if (data.value.sort === "free") return;
   if (data.value.model !== "custom") return;
   // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
@@ -59,7 +60,11 @@ const handleDragEnd = (event) => {
       backgroundColor: currentData.value.bg,
       backgroundIndex: 0,
     };
-    useAddCard(file);
+    // iconList: [{ ...data }]
+    // useAddCard(file);
+    useAddCard("myIcons", {
+      iconList: [{ ...file }],
+    });
     emits("deleteFile", props.data);
     return;
   }

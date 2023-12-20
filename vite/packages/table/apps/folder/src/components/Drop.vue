@@ -5,6 +5,7 @@
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     @dragleave="handleDragleave"
+
     @mouseup="handleMouseup"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
@@ -84,7 +85,7 @@ const handleDragover = (dragEvent) => {
  */
 const handleDragleave = () => {
   console.log('拖拽元素离开 :>> ', );
-  // currentId.value = "";
+  currentId.value = "";
 };
 // -------------------------------------------
 /**
@@ -112,7 +113,6 @@ const handleMouseup = () => {
     file.isRadius = item.isRadius;
     file.iconState = item.imgState;
     file.iconShape = item.imgShape;
-
     emits("updateFile", file);
   });
 

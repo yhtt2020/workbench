@@ -21,9 +21,6 @@
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
         <xt-option-from :options="attributeOptions" :data="edit">
-          <template #title>
-            <xt-option-input v-model:input="name" />
-          </template>
           <template #custom>
             <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
           </template>
@@ -87,22 +84,6 @@ onMounted(() => {
   //   imgShape: edit.value.imgShape,
   // };
 });
-const data = ref({
-  type: edit.value.open.type,
-  value: edit.value.open.value,
-  src: edit.value.src,
-  titleValue: edit.value.titleValue,
-  isTitle: edit.value.isTitle,
-  backgroundColor: edit.value.backgroundColor,
-  isBackground: edit.value.isBackground,
-  radius: edit.value.radius,
-  isRadius: edit.value.isRadius,
-  imgState: edit.value.imgState,
-  imgShape: edit.value.imgShape,
-});
-const currentData = computed(() => {});
-
-console.log("22222222222 :>> ", 22222222222);
 /**
  * 控制弹窗显示
  */
@@ -111,7 +92,6 @@ watch(visible, (val) => {
   emits("update:modelValue", val);
 });
 const close = () => {
-  console.log("3333 :>> ", edit.value);
   emits("close");
 };
 /**

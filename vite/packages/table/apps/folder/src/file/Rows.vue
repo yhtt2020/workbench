@@ -3,7 +3,6 @@
     class="flex flex-col items-center justify-center mx-1.5"
     style="width: 72px; height: 72px; margin-bottom: 7.5px"
   >
-    11
     <div class="" style="min-width: 40px; height: 40px">
       <img :src="item.icon" class="w-full h-full" />
     </div>

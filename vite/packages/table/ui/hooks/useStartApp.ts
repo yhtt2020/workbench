@@ -7,6 +7,9 @@ import browser from "../../js/common/browser";
  * @param router 这个是路由 ts无法调用 得手动传入
  */
 export const startApp = (type, value, router?) => {
+  if (type === "" || value === "") {
+    console.warn("startApp :>> type or value 不能为空");
+  }
   switch (type) {
     // 默认浏览器
     case "default":
