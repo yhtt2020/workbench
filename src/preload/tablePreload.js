@@ -107,6 +107,9 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
   if(!window.shake?.enable){
     return
   }
+  const point=tsbApi.mouse.getPos()
+  x=point.x
+  y=point.y
   if (times === 0) {
     lastPos = {
       x, y
