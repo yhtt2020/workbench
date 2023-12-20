@@ -63,7 +63,6 @@ export default {
       ],
       sound:{},
       sensitiveValue: {
-        title: '', value: ''
       },
       listenEnter: (event) => {
         if (event.code === 'Enter') {
@@ -88,6 +87,11 @@ export default {
       },
       shakeConfirm: null
     }
+  },
+  mounted () {
+    this.sound.name=this.settings.shake.audio
+    this.sensitiveValue.name=String(this.settings.shake.sensitive)
+    console.log(this.sound,this.sensitiveValue)
   },
   methods:{
     setPos(){
@@ -133,7 +137,8 @@ export default {
           document.getElementById('shakeAudio').play()
         })
       }
-    }
+    },
+
   }
 }
 </script>
