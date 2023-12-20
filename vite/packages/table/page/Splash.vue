@@ -241,7 +241,7 @@ export default {
             this.$router.replace({ name: 'home' })
           }else{
             this.$router.replace(currentRoute)
-          }       
+          }
         }
       }
 

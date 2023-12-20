@@ -35,7 +35,6 @@
 </template>
 
 <script setup>
-import { clear } from "console";
 import { ref, watch } from "vue";
 
 const emits = defineEmits(["onSearch"]);
