@@ -295,12 +295,18 @@ export const navStore = defineStore("nav", {
     ],
     // navigationToggle: [true,false,true]
     navigationToggle: [false,false,true],
+    copyFlag:true
   }),
   actions: {
     copyNav(){
-      this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-      this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
-      this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+      if(this.copyFlag){
+        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.copyFlag = false
+      }
+      return
+      
     },
     removeFootNavigationList(index) {
         this.footNavigationList.splice(index, 1)
@@ -381,7 +387,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

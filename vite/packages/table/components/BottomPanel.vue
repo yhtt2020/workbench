@@ -552,46 +552,48 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        // if (this.footNavigationList.length > this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-        //   this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
-        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-        //   console.log(target, 'target[0]')
-        //   target.forEach(element => {
-        //     const index = this.copyFootNav.findIndex(item => {
-        //       // 找到被删除元素在备份数据中的索引
-        //       if (element.type === 'coolApp') {
-        //         return item.value.url === element.value.url;
-        //       }
-        //       return item.value === element.value;
-        //     });
-        //     if (index !== -1) {
-        //       this.copyFootNav.splice(index, 1);
-        //     }
-        //   })
-        // } 
-        // else {
-        //   let changedIndexes = [];
-        //   this.footNavigationList.forEach((item, index) => {
-        //     if (item.type === 'coolApp') {
-        //       if (item.value.url !== this.copyFootNav[index].value.url) {
-        //         changedIndexes.push(index);
-        //       }
-        //     } else {
-        //       if (item.value !== this.copyFootNav[index].value) {
-        //         changedIndexes.push(index);
-        //       }
-        //     }
-        //   });
-        //   console.log(changedIndexes, 'list')
-        //   const tempCopy = this.copyFootNav[changedIndexes[0]];
-        //   this.copyFootNav[changedIndexes[0]] = this.copyFootNav[changedIndexes[changedIndexes.length - 1]];
-        //   this.copyFootNav[changedIndexes[changedIndexes.length - 1]] = tempCopy;
-        // }
+        if (this.footNavigationList.length > this.copyFootNav.length) {
+          const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+          this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
+        } else if (this.footNavigationList.length < this.copyFootNav.length) {
+          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+          console.log(target, 'target[0]')
+          target.forEach(element => {
+            const index = this.copyFootNav.findIndex(item => {
+              // 找到被删除元素在备份数据中的索引
+              if (element.type === 'coolApp') {
+                return item.value.url === element.value.url;
+              }
+              return item.value === element.value;
+            });
+            if (index !== -1) {
+              this.copyFootNav.splice(index, 1);
+            }
+          })
+        }
+        else {
+          const rearrangedCopyFootNav = [];
+          // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
+          this.footNavigationList.forEach((item) => {
+            // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+            const correspondingElement = this.copyFootNav.find((copyItem) => {
+              if (item.type === 'coolApp') {
+                return copyItem.value.url === item.value.url;
+              }
+              return copyItem.value === item.value;
+            });
 
-        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+            // 如果找到对应元素，则将其放入新数组中
+            if (correspondingElement) {
+              rearrangedCopyFootNav.push(correspondingElement);
+            }
+          });
 
+          // 更新 copyFootNav 为重新排列后的数组
+          this.copyFootNav = rearrangedCopyFootNav;
+
+        }
+        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
         console.log(this.copyFootNav, 'footNav')
       },
       immediate: true,
