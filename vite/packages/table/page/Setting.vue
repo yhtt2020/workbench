@@ -73,9 +73,12 @@
               </div>
             </a-col>
             <a-col :span="12">
-              <div  class="relative btn">
+              <div  class="relative btn" @click="goShake">
                 摇一摇<br />
-                <a-switch @click="this.enableShake"  v-model:checked="settings.shake.enable"></a-switch>
+                <div @click.stop>
+                  <a-switch @click.stop.prevent="this.enableShake"  v-model:checked="settings.shake.enable"></a-switch>
+                </div>
+
               </div>
             </a-col>
           </a-row>
@@ -374,6 +377,11 @@ export default {
     ...mapActions(offlineStore, ["changeOffline"]),
     ...mapActions(appStore, ['enterAided', 'leaveAided']),
     isMain: isMain, isWin,
+    goShake(){
+      this.$router.push({
+        name:'key'
+      })
+    },
     enableShake () {
       if (this.settings.shake.enable) {
         if (this.settings.shake.pos.x === 0 && this.settings.shake.pos.y === 0) {
