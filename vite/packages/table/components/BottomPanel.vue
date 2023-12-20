@@ -77,11 +77,11 @@
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center"
+                        <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
-                          <!-- {{ item.bgColor ? '' : item.name }} -->
+                          <!-- {{ item.color }} -->
                           <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="{ borderRadius: iconRadius + 'px' }"
+                            :style="[{ borderRadius: iconRadius + 'px' },item.color]"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
                       </div>

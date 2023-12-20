@@ -22,11 +22,11 @@
                       :class="{ 'shaking-element': shakeElement }"></a-avatar>
                   </div>
                   <div v-else style="width: 52px; height: 52px;"
-                          class="relative flex items-center justify-center rounded-xl"
+                          class="relative flex items-center justify-center overflow-hidden rounded-xl"
                           :style="{ background: item.bg || '' }">
                           <!-- {{ item.bgColor ? '' : item.name }} -->
                           <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="{ borderRadius: iconRadius + 'px' }"
+                            :style="[{ borderRadius: iconRadius + 'px' },item.color]"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
 

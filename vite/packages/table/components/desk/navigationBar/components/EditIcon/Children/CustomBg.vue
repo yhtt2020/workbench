@@ -7,15 +7,16 @@
                 <a-avatar :size="52" shape="square" :src="props.editItem.icon" ></a-avatar>
             </div>
             <div v-else style="width: 56px; height: 56px;flex-shrink: 0;" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"  
-            class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
-                <a-avatar :size="36" shape="square" :src="props.editItem.icon" ></a-avatar>
+            class="relative flex items-center justify-center overflow-hidden rounded-xl pointer" @click="modelValue=!modelValue">
+                <a-avatar :size="36" shape="square" :src="props.editItem.icon" :style="[props.editItem.color]" ></a-avatar>
             </div>
+            <!-- {{ imgBg  }} -->
             <div class="flex flex-col justify-start ml-5">
-                <div>点击图标选择合适的icon、emoji，或上传自定义图片。</div>
-                <!-- {{ props.editItem.isBg }} -->
+                <div class="text-sm xt-text">点击图标选择合适的icon、emoji，或上传自定义图片。</div>
+                <!-- {{ props.editItem.color }} -->
                 <div class="flex justify-start mt-1" @click="reset">
-                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="reset"></xt-new-icon>
-                    <div class="ml-2 text-base reset pointer">重置图标</div>
+                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" class="reset"></xt-new-icon>
+                    <div class="ml-2 text-sm reset pointer">重置图标</div>
                 </div>
             </div>
         </div>
@@ -52,6 +53,7 @@ const changeBg = (value) => {
 const getAvatar = (value) => {
     props.editItem.icon = value
     props.editItem.isBg = true
+    getImgColor(props.editItem)
 }
 // 重置
 const reset = () => {
@@ -66,6 +68,7 @@ const reset = () => {
     bgColor.value = ''
     props.editItem.bg = ''
     props.editItem.isBg = false
+    props.editItem.color = ''
 }
 // 判断图标类型
 // const isIcon = computed(() => {
@@ -75,6 +78,28 @@ const reset = () => {
 //         return false
 //     }
 // })
+const getImgColor = (item) => {
+    if(item.icon.includes('color=#')){
+        const bg = item.icon.slice(-7)
+        props.editItem.color = {
+            filter: `drop-shadow(${bg} 80px 0)`,
+            transform: 'translateX(-80px)',
+        }
+    }
+}
+// 图片颜色解析
+const imgBg = computed(() => {
+  const img = props.editItem.icon
+  if(img.includes('color=#')){
+    const bg = img.slice(-7)
+    return {
+      filter: `drop-shadow(${bg} 80px 0)`,
+      transform: 'translateX(-80px)',
+    };
+  }else{
+    return 
+  }
+});
 const navigationList = computed(() => {
     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
 })
