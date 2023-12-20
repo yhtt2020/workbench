@@ -2,7 +2,7 @@
   <div class="w-full h-full flex flex-col">
     <div class="flex justify-between mb-2">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:settings-16-regular" :size="isModal ? 16 : 20 "  class="mr-2"></xt-new-icon>
+        <xt-new-icon icon="fluent:settings-16-regular" :size="isModal ? 20 : 32 "  class="mr-2"></xt-new-icon>
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">设置</span>
       </div>
       <div class="flex items-center justify-center">

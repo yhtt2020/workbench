@@ -9,7 +9,7 @@
             <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
-                <MyContentIcon icon="fluent:play-16-filled" style="font-size: 1.8rem;color: var(--active-text) !important;"/>
+                <MyContentIcon icon="fluent:play-16-filled" style="font-size: 2rem;color: var(--active-text) !important;"/>
               </div> 
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">

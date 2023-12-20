@@ -2,7 +2,7 @@
   <div class="w-full h-full flex flex-col">
     <div class=" flex items-center justify-between mb-2" :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
-        <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'1.25rem'}" class="mr-2 xt-text"/>
+        <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'2rem'}" class="mr-2 xt-text"/>
         <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
@@ -29,7 +29,16 @@
         </template>
 
         <template v-else>
-          <xt-dropdown :list="updateList" :w="32" :h="32" :iconSize="16" :newIcon="'fluent:play-16-filled'" :placement="'bottomRight'" class="mr-3"></xt-dropdown>
+          <xt-dropdown :w="32" :h="32" :iconSize="16" :trigger="'hover'" :newIcon="'fluent:play-16-filled'" :placement="'bottomRight'" class="mr-3">
+            <div class="xt-modal rounded-xl p-1 xt-b">
+              <template v-for="item in list">
+                <div class="flex items-center pl-3 cursor-pointer box text-base xt-text" style="width: 184px; height: 44px; border-radius: 8px" @click="item.callBack">
+                  <xt-new-icon :icon="item.icon" size="16" class="mr-3"></xt-new-icon>
+                  {{ item.name }}
+                </div>
+              </template>
+            </div>
+          </xt-dropdown>
           <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  >
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1rem" />
@@ -258,5 +267,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.box{
+  &:hover{
+    background: var(--active-secondary-bg);
+  }
+}
 </style>

@@ -1,6 +1,8 @@
 import { storeToRefs  } from 'pinia';
 import { paperStore } from '../../../store/paper';
 import _ from 'lodash-es';
+let fs = require('fs')
+let path = require('path')
 
 // 判断文件是否为图片
 export function fileImageExtension(filePath:any){
@@ -71,7 +73,7 @@ export function getFileName(path:any){
 
 // 判断是否收藏壁纸
 export function isInMyPapers(image:any){
- const paper = paperStore();
+ const paper:any = paperStore();
  const { myPapers } = storeToRefs(paper);
  const index  = _.findIndex(myPapers.value,function(img:any){ return String(image.src) === String(img.src) });
  return index > -1;
@@ -83,4 +85,13 @@ export function isLocalDownload(image:any){
  const isLocalFile = fileRegex.test(image.src);
  if(!isLocalFile){ return true; }
  else { return false; }
+}
+
+// 判断本地文件中是否存在数据
+export function isDownLoad(data:any){
+ const paper:any = paperStore();
+ const { settings } = storeToRefs(paper);
+ const fileData = fs.readdirSync(path.join(settings.value.savePath, 'lively'));
+ const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
+ return index > -1
 }
