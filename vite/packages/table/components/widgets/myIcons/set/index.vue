@@ -1,5 +1,11 @@
 <template>
-  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :maskIndex="maskIndex">
+  <xt-modal
+    v-model="visible"
+    :footer="0"
+    @close="close"
+    :index="index"
+    :maskIndex="maskIndex"
+  >
     <template #header-center>
       <xt-tab
         v-model="currentTab"
@@ -15,7 +21,12 @@
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
         <xt-option-from :options="attributeOptions" :data="edit">
-          <template #custom> 123 </template>
+          <template #title>
+            <xt-option-input v-model:input="name" />
+          </template>
+          <template #custom>
+            <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+          </template>
         </xt-option-from>
         <div></div>
       </div>
@@ -30,9 +41,10 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
+import LocalApp from "./LocalApp.vue";
 import {
   attributeOptions,
   appearanceNameOptions,
@@ -45,12 +57,12 @@ const { edit } = storeToRefs(iconStore);
 const emits = defineEmits(["close", "update:modelValue"]);
 const props = defineProps({
   modelValue: {},
-  index:{
-    default:"1000"
+  index: {
+    default: "1000",
   },
-  maskIndex:{
-    default:"999"
-  }
+  maskIndex: {
+    default: "999",
+  },
 });
 const arr = ["internal", "default", "thinksky"];
 const res = arr.includes(edit.value.open.type);
@@ -58,6 +70,7 @@ if (res) edit.value["type"] = edit.value.open.type;
 edit.value["mode"] = res ? "link" : "app";
 edit.value["value"] = edit.value.open.value;
 console.log(edit.value["mode"]);
+
 onMounted(() => {
   // 判断open.type
   // edit.value = {
@@ -89,7 +102,7 @@ const data = ref({
 });
 const currentData = computed(() => {});
 
-console.log('22222222222 :>> ', 22222222222);
+console.log("22222222222 :>> ", 22222222222);
 /**
  * 控制弹窗显示
  */
@@ -98,7 +111,7 @@ watch(visible, (val) => {
   emits("update:modelValue", val);
 });
 const close = () => {
-  console.log('3333 :>> ', 3333);
+  console.log("3333 :>> ", 3333);
   emits("close");
 };
 /**
@@ -115,6 +128,20 @@ const TabList = [
     value: "appearance",
   },
 ];
+
+/**
+ * 更新本地返回的应用数据
+ */
+const updateApp = (data) => {
+  edit.value = {
+    ...edit.value,
+    titleValue: data.name,
+    value: data.value,
+    type: data.type,
+    src: data.icon,
+  };
+};
+onBeforeUnmount(() => {});
 </script>
 
 <style lang="scss" scoped></style>

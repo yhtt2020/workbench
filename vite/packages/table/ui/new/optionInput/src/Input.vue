@@ -9,11 +9,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 interface inputProps {
   input: any;
 }
+
 const props = withDefaults(defineProps<inputProps>(), {});
+
+watch(
+  () => props.input,
+  (value) => {
+    console.log("1111 :>> ", 1111);
+    currentInput.value = value;
+  }
+);
 
 const currentInput = ref(props.input);
 const emits = defineEmits(["update:input"]);

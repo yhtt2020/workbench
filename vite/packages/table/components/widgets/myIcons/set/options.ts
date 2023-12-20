@@ -9,6 +9,11 @@ export const attributeOptions = [
     inputKey: "titleValue",
     border: true,
   },
+  // {
+  //   type: "slot",
+  //   slot: "title",
+  //   border: true,
+  // },
   {
     type: "info",
     title: "图标链接",
