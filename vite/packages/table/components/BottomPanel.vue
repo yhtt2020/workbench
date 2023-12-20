@@ -13,6 +13,7 @@
         color: var(--primary-text);
         /* border-radius: 18px; */
         /* width: 160px; */
+        height: 80px;
         border: 1px solid var(--divider);
       " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
@@ -551,17 +552,47 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        // this.checkScroll()
+        // if (this.footNavigationList.length > this.copyFootNav.length) {
+        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+        //   this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
+        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
+        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+        //   console.log(target, 'target[0]')
+        //   target.forEach(element => {
+        //     const index = this.copyFootNav.findIndex(item => {
+        //       // 找到被删除元素在备份数据中的索引
+        //       if (element.type === 'coolApp') {
+        //         return item.value.url === element.value.url;
+        //       }
+        //       return item.value === element.value;
+        //     });
+        //     if (index !== -1) {
+        //       this.copyFootNav.splice(index, 1);
+        //     }
+        //   })
+        // } 
+        // else {
+        //   let changedIndexes = [];
+        //   this.footNavigationList.forEach((item, index) => {
+        //     if (item.type === 'coolApp') {
+        //       if (item.value.url !== this.copyFootNav[index].value.url) {
+        //         changedIndexes.push(index);
+        //       }
+        //     } else {
+        //       if (item.value !== this.copyFootNav[index].value) {
+        //         changedIndexes.push(index);
+        //       }
+        //     }
+        //   });
+        //   console.log(changedIndexes, 'list')
+        //   const tempCopy = this.copyFootNav[changedIndexes[0]];
+        //   this.copyFootNav[changedIndexes[0]] = this.copyFootNav[changedIndexes[changedIndexes.length - 1]];
+        //   this.copyFootNav[changedIndexes[changedIndexes.length - 1]] = tempCopy;
+        // }
+
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'footNav');
-        // this.$nextTick(()=>{
-        //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
-        //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
-        //     this.$refs.content.style.marginTop='17px'
-        //   }else{
-        //     this.$refs.content.style.marginTop='0px'
-        //   }
-        // })
+
+        console.log(this.copyFootNav, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -630,6 +661,17 @@ export default {
       'copyNav'
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
+    updateNavList(navList, copyList) {
+      const filteredNavList = navList.filter((item) => {
+        return !copyList.some((i) => {
+          if (item.type === 'coolApp') {
+            return item.value.url === i.value.url;
+          }
+          return item.value === i.value;
+        });
+      });
+      return filteredNavList;
+    },
     editIcon(item) {
       this.quick = true
       this.componentId = 'EditIcon'
@@ -932,10 +974,10 @@ export default {
           icon: `${dropFiles}`,
           name: `${fileName}`,
           value: item,
-          type : 'tableApp',
-          bg:'',
-          isBg:false,
-          mode:"app"
+          type: 'tableApp',
+          bg: '',
+          isBg: false,
+          mode: "app"
         }
       }))
       this.clickRightListItem(this.dropList)

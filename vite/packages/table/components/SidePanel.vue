@@ -462,7 +462,7 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          that.sortFootNavigationList(event)
+          that.sortNavigationList(event)
           that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
           that.updateMainNav();
         }, 100),

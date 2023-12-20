@@ -181,7 +181,7 @@
               <div>垂直布局</div>
               <a-switch v-model:checked="currentDesk.settings.vDirection" />
             </div>
-            <div class="my-34 text-sm xt-text-2">
+            <div class="text-sm my-34 xt-text-2">
               使桌面滚动方式改为垂直滚动。
             </div>
 
@@ -301,9 +301,11 @@
     </div>
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
 </template>
 
 <script>
+import {useNavigationStore} from './navigationBar/navigationStore'
 import { navStore } from "../../store/nav";
 import Muuri from "muuri";
 import { message, Modal } from "ant-design-vue";
@@ -315,13 +317,14 @@ import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 import componentsMinis from "./components.ts";
+import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-  components: { LoadingOutlined },
+  components: { LoadingOutlined, EditNewNavigation },
   props: {
     freeLayout: {
       default: true,
@@ -474,6 +477,7 @@ export default {
       "getFreeLayoutState",
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
+    ...mapWritableState(useNavigationStore,['selectNav','isDesk']),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         // let arr = _.cloneDeep(this.deskGroupMenu[1].children);
@@ -632,6 +636,7 @@ export default {
       ],
       currentSettingTab: "all",
       resizeHandler: null,
+      editVisible:false,
     };
   },
   beforeMount() {
@@ -657,6 +662,7 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
+    ...mapActions(cardStore, ["addCard"]),
     resetLayout() {
       this.hide = true;
       setTimeout(() => {
@@ -762,8 +768,26 @@ export default {
     },
     // 添加图标
     newAddIcon() {
-      this.iconVisible = true;
+      // this.iconVisible = true;
+      // this.menuVisible = false;
+      this.editVisible = true;
       this.menuVisible = false;
+      this.selectNav = 'desktop'
+      this.isDesk = true
+    },
+    addIcon(item, index) {
+      console.log([{...item}],index,'addIcon')
+      let random =
+        Math.floor(Math.random() * 50) * Math.floor(Math.random() * 100);
+      this.addCard(
+        {
+          name: "myIcons",
+          id: Date.now() - random,
+          customData: { iconList: [{...item}] },
+        },
+        this.currentDesk
+      );
+      
     },
     /**
      * 暂存布局，与restore结对使用。

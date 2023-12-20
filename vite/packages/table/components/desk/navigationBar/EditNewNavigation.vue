@@ -39,8 +39,8 @@
             </div>
         </template>
         <template #header-right>
-            <div class="ml-3 text-base xt-text-2">添加到：</div>
-            <a-dropdown trigger="['click']">
+            <div class="ml-3 text-base xt-text-2" v-if="visible">添加到：</div>
+            <a-dropdown trigger="['click']" v-if="visible">
                 <template #overlay>
                     <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
@@ -395,7 +395,7 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible']),
+        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk']),
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
             return this.ClassifyData.filter(i => {
@@ -448,6 +448,16 @@ export default {
         },
         msgText() {
             return `当前${this.defaultTitle.title}没有开启，是否选择开启导航栏`
+        },
+        visible(){
+            if(this.selectNav !== 'desktop'){
+                return true
+            }else{
+                if(this.isDesk){
+                    return true
+                }
+                return false
+            }
         }
 
     },
