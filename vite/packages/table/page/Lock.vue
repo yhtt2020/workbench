@@ -473,7 +473,15 @@ export default {
         this.$router.replace({
           name: 'my'
         })
-        Modal.error({ content: '请激活壁纸后重新使用激活壁纸模式。' })
+        this.$xtConfirm('请先勾选需要在锁屏上展示的壁纸。','',{
+          index:1020,
+          ok: () => { },
+          no: () => {},
+          okText:'知道',
+          noText: null,
+          type:'link'
+        })
+        // Modal.error({ content: '请先勾选需要在锁屏上展示的壁纸。' })
         return
       }
       let lockActive = []

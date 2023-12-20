@@ -260,8 +260,8 @@
     },
  
     selectList:[
-     { value:'my',name:'我的收藏' },
-     { value:'myActive',name:'我的收藏(已选中)' },
+     { value:'my',name:'我的收藏(全部)' },
+     { value:'myActive',name:'我的收藏(仅选中)' },
      { value:'recommend',name:'精选壁纸' },
      { value:'bing',name:'必应壁纸' },
      { value:'picking',name:'拾光壁纸' },
@@ -286,7 +286,13 @@
    },
  
    getPaper(evt){
-     this.$emit('updatePaper',evt)
+    if(evt === 'my'){
+      this.settings.playType = 'my'
+    }
+    else if(evt === 'myActive'){
+      this.settings.playType = 'active'
+    }
+    this.$emit('updatePaper',evt)
    }
   },
  

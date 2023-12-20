@@ -258,7 +258,6 @@
     },
     // 选择轮播图片时显示勾选按钮
     getShowImg(evt,index){
-      console.log('执行.....',evt.target.checked,index,document.querySelectorAll('.img-checkbox')[index]);
       if(evt.target.checked){
         document.querySelectorAll('.img-checkbox')[index].style = 'opacity:1 !important;';
       }
