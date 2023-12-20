@@ -38,6 +38,7 @@
     </template>
   </a-modal> -->
   <audio ref="clock" src="/sound/clock.mp3"></audio>
+  <audio id="shakeAudio" ref="shake" :src="'/sound/'+settings.shake.audio"></audio>
   <template v-if="settings.transparent">
 <!--    <div class="fixed inset-0 video-container " style="background: #00000000">-->
 <!--    </div>-->
@@ -196,7 +197,6 @@ export default {
 
           this.$bus.emit('resetWindow')
         await  tsbApi.window.setZoomFactor(1)
-          console.log('11111111 :>> ', 11111111);
         }
       };
 

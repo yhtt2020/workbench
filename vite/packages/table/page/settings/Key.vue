@@ -20,6 +20,10 @@
       <div class="mb-1">灵敏度：</div>
       <RadioTab :navList="sensitive" v-model:selectType="sensitiveValue"></RadioTab>
     </div>
+    <div class="line" style="width: 700px">
+      <div class="mb-1">穿梭音效：</div>
+      <RadioTab :nav-list="sounds" v-model:select-type="sound"></RadioTab>
+    </div>
 
   </div>
 </template>
@@ -41,6 +45,23 @@ export default {
   data () {
     return {
       sensitive: [{ title: '低', name: '5' }, { title: '中', name: '4' }, { title: '高', name: '3' }],
+      sounds:[{
+        title:'木鱼',name:'fish.mp3',
+      },
+        {
+          title:'青蛙叫',name:'gua.mp3'
+        },
+        {
+          title:'逼兜',name:'bidou.wav'
+        },
+        {
+          title:'篮球',name:'lanqiu.wav'
+        },
+        {
+          title:'歘',name:'chua.wav'
+        }
+      ],
+      sound:{},
       sensitiveValue: {
         title: '', value: ''
       },
@@ -103,6 +124,15 @@ export default {
         }
       },
       deep:true
+    },
+    'sound':{
+      handler(newVal){
+        console.log(newVal)
+        this.settings.shake.audio=newVal.name
+        this.$nextTick(()=>{
+          document.getElementById('shakeAudio').play()
+        })
+      }
     }
   }
 }
