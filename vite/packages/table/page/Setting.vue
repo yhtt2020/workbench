@@ -76,7 +76,7 @@
               <div  class="relative btn" @click="goShake">
                 摇一摇<br />
                 <div @click.stop>
-                  <a-switch @click.stop.prevent="this.enableShake"  v-model:checked="settings.shake.enable"></a-switch>
+                  <a-switch  v-model:checked="settings.shake.enable"></a-switch>
                 </div>
 
               </div>
@@ -287,16 +287,18 @@ export default {
       simpleVisible:false,
       listenEnter:(event)=>{
         if (event.code === "Enter") {
-          let win32=$models.win32
-          let lastPoints=win32.getMouseMovePoints()
-          if(lastPoints?.length>0){
-            this.settings.shake.pos={...lastPoints[0]}
-            message.success('设置摇一摇定位成功。')
+            const point=tsbApi.mouse.getPos()
+            this.settings.shake.pos={
+              x:point.x,
+              y:point.y
+            }
+            message.success('设置摇一摇定位成功。','point')
             window.shake={}
             window.shake.pos=this.settings.shake.pos
             window.shake.enable=true
             window.shake.sensitive=this.settings.shake.sensitive || 4
             window.shake.sound=this.settings.shake.sound
+            this.settings.shake.init=true
             this.shakeConfirm.close()
             window.removeEventListener('keydown',this.listenEnter)
             this.$router.push({
@@ -305,7 +307,6 @@ export default {
           }
           event.preventDefault();
           event.stopPropagation();
-        }
       },
       shakeConfirm:null
     };
@@ -314,6 +315,7 @@ export default {
     'settings.shake.enable':{
       handler(newVal){
         window.shake.enable=newVal
+        this.enableShake()
       }
     },
     bgColor(newV) {
@@ -354,6 +356,7 @@ export default {
     this.bgColor = getBgColor();
     this.textColor = getTextColor();
     this.wallpaperColor = getWallpaperColor();
+    window.removeEventListener('keydown',this.listenEnter)
   },
   computed: {
     ...mapWritableState(appStore, [
@@ -384,7 +387,7 @@ export default {
     },
     enableShake () {
       if (this.settings.shake.enable) {
-        if (this.settings.shake.pos.x === 0 && this.settings.shake.pos.y === 0) {
+        if (!this.settings.shake.init) {
           this.$xtConfirm("摇一摇功能向导", "您似乎从未使用过摇一摇穿梭的功能，是否根据提示设置摇一摇功能？", {
             ok: () => {
               setTimeout(()=>{
