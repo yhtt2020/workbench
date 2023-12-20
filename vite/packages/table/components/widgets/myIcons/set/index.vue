@@ -111,7 +111,7 @@ watch(visible, (val) => {
   emits("update:modelValue", val);
 });
 const close = () => {
-  console.log("3333 :>> ", 3333);
+  console.log("3333 :>> ", edit.value);
   emits("close");
 };
 /**
@@ -141,7 +141,20 @@ const updateApp = (data) => {
     src: data.icon,
   };
 };
-onBeforeUnmount(() => {});
+
+/**
+ * watch 类型切换清空数据
+ */
+watch(
+  () => edit.value.mode,
+  (newVal) => {
+    edit.value.value = "";
+    if (newVal == "link") {
+      edit.value.type = "default";
+    }
+  }
+),
+  onBeforeUnmount(() => {});
 </script>
 
 <style lang="scss" scoped></style>

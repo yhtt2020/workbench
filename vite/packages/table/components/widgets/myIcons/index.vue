@@ -490,8 +490,13 @@ export default {
     },
     // 适配新版保存图标
     closeSet() {
-      console.log('1111111111 :>> ', 2222);
-      this.customData.iconList[this.index] = this.edit;
+      this.customData.iconList[this.index] = {
+        ...this.edit,
+        open: {
+          type: this.edit.type,
+          value: this.edit.value,
+        },
+      };
       message.success("保存成功");
     },
   },
