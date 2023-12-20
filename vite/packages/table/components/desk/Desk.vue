@@ -133,7 +133,7 @@
           </template>
         </vuuri>
         <div
-          class="xt-text "
+          class="xt-text"
           v-show="!showGrid"
           style="
             text-align: center;
@@ -319,6 +319,8 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import componentsMinis from "./components.ts";
 import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
+
+import { registerFolder } from "../../apps/folder/src/hooks/register";
 
 export default {
   name: "Desk",
@@ -548,9 +550,17 @@ export default {
           name: "添加小组件",
           fn: this.newAddCard,
         },
-        { id: 4, divider: true },
         {
-          id: 5,
+          id: 4,
+          newIcon: "fluent:app-folder-16-regular",
+          name: "添加文件夹",
+          fn: () => {
+            registerFolder(this.currentDesk);
+          },
+        },
+        { id: 5, divider: true },
+        {
+          id: 6,
           newIcon: this.editing
             ? "fluent:record-stop-16-regular"
             : "fluent:window-new-16-regular",
@@ -558,7 +568,7 @@ export default {
           fn: this.toggleEditing,
         },
         {
-          id: 6,
+          id: 7,
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏桌面",
           fn: () => {
@@ -567,7 +577,7 @@ export default {
           },
         },
         {
-          id: 7,
+          id: 8,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
@@ -585,9 +595,9 @@ export default {
             }
           },
         },
-        { id: 8, divider: true },
+        { id: 9, divider: true },
         {
-          id: 9,
+          id: 10,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,
@@ -718,10 +728,11 @@ export default {
     clear(desk) {
       this.menuVisible = false;
       if (desk) {
-        Modal.confirm({
-          centered: true,
-          content: "清空当前桌面的全部卡片？此操作不可还原。",
-          onOk: () => {
+        this.$xtConfirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
+          okText: "清空卡片",
+          okButtonWidth: 100,
+          type: "warning",
+          ok: () => {
             desk?.cards?.forEach((item) => {
               //移除桌面相关的便签卡片
               if (item.name === "notes") {
@@ -748,8 +759,39 @@ export default {
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },
-          okText: "清空卡片",
         });
+        // Modal.confirm({
+        //   centered: true,
+        //   content: "清空当前桌面的全部卡片？此操作不可还原。",
+        //   onOk: () => {
+        //     desk?.cards?.forEach((item) => {
+        //       //移除桌面相关的便签卡片
+        //       if (item.name === "notes") {
+        //         tsbApi.db
+        //           .find({
+        //             selector: {
+        //               _id: "note:" + item.id,
+        //             },
+        //           })
+        //           .then((res) => {
+        //             if (res?.docs.length) {
+        //               tsbApi.db.put({
+        //                 ...res.docs[0],
+        //                 // isDelete:true,
+        //                 deskId: "",
+        //                 deskName: "",
+        //               });
+        //             }
+        //           });
+        //       }
+        //     });
+        //     desk.cards = [];
+        //     console.log(desk);
+        //     this.menuVisible = false;
+        //     this.clearFreeLayoutData();
+        //   },
+        //   okText: "清空卡片",
+        // });
       }
     },
     newAddCard() {
