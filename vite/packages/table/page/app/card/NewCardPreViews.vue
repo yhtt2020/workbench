@@ -1,8 +1,9 @@
 <template>
   <div class="main-box">
+    {{ settingVisible }}
     <template v-for="(item, index) in displayList" :key="item.name">
       <template v-if="item.name == 'clocks' && M01013">
-        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
+        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)" >
           <div>
             <div class="box xt-bg-2" style="z-index: 99999999999">
               <xt-button w="48" h="48" class="no-drag add" @click="addNewCard(item)" v-if="item.option.length <= 1">
@@ -10,13 +11,13 @@
                   <xt-new-icon icon="fluent:add-circle-12-filled" style="color: var(--active-text) !important;"></xt-new-icon>
                 </div>
               </xt-button>
-    
+
               <xt-button w="48" h="48" class="no-drag add" v-else @click="addNewCard(item)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:more-horizontal-16-regular" style="color: var(--active-text) !important;"></xt-new-icon>
                 </div>
               </xt-button>
-              
+
               <!-- <div class="add no-drag" @click="addNewCard(item)" v-if="item.option.length <= 1">
                 <div class="icons">
                   <Icon icon="tianjia2" style="color: #000"></Icon>
@@ -43,7 +44,7 @@
                   },
                 ]"/>
               </div>
-              
+
               <div class="right" style="">
                 <div class="title" style="color: var(--primary-text)">
                   {{ item.cname }}
@@ -91,7 +92,7 @@
           </div>
           <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="text" style="color: #fff">· · ·</div>
-            
+
           </div> -->
 
           <div class="left no-drag" @click="fullScreen(item)">
@@ -138,8 +139,11 @@
   <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
                          :cardDetails="cardDetails">
   </NewPreviewCardDetails>
-  <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit>
+  <!-- <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit> -->
   <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
+
+  <!-- 新版图标编辑 -->
+  <IconSet  v-if="settingVisible" v-model="settingVisible" index="99999" maskIndex="10001"/>
 </template>
 
 <script>
@@ -152,6 +156,7 @@ import RemoteMarket from './RemoteMarket.vue'
 import { myIcons } from '../../../store/myIcons.ts'
 import _ from 'lodash-es'
 import { taskStore } from '../../../apps/task/store'
+import IconSet from '../../../components/widgets/myIcons/set/index.vue'
 
 export default {
   emits: ['close', 'addSuccess'],
@@ -209,6 +214,7 @@ export default {
     NewPreviewCardDetails,
     Edit,
     RemoteMarket,
+    IconSet
   },
   watch: {
     navList: {

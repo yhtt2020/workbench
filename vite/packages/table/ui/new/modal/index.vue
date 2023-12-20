@@ -5,14 +5,14 @@
       v-if="modelValue"
       :class="[boxClass]"
       ref="modal"
-      class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+      class="fixed flex flex-col text-base top-1/2 -translate-y-1/2 -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
       "
       :style="{
         'z-index': index,
-        top: top + 'px',
+        // top: top + 'px',
       }"
     >
       <div class="flex flex-1 w-full">
@@ -113,7 +113,10 @@ export interface ModalProps {
   esc?: boolean;
   // 弹窗样式
   boxClass?: string;
-  //
+  // 挂载前
+  beforeMount?: () => boolean;
+  // 卸载前
+  beforeUnmount?: () => boolean;
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -128,9 +131,11 @@ const props = withDefaults(defineProps<ModalProps>(), {
   footer: false,
   esc: false,
   boxClass: "p-4",
+  beforeMount: () => true,
+  beforeUnmount: () => true,
 });
-const { esc, modelValue } = toRefs(props);
-const emits = defineEmits(["ok", "no", "update:modelValue"]);
+const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
+const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
 
 const modal: any = ref(null);
 let topBarHeight = 0;
@@ -142,7 +147,7 @@ onMounted(() => {
       capture: true,
     });
   }
-
+return
   // 处理定位问题
   const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
   const topUtilBar = document.getElementsByClassName("xt-main-top-util-bar")[0];
@@ -159,6 +164,7 @@ watch(
   () => modelValue.value,
   () => {
     nextTick(() => {
+      if (!modal.value) return;
       const modelHeight = modal.value.clientHeight;
       const windowSize = useWindowSize();
       const windowHeight = windowSize.height.value;
@@ -176,15 +182,19 @@ watch(
   },
   { immediate: true }
 );
+const close = () => {
+  emits("update:modelValue", false);
+  emits("close");
+};
 
 const onNo = () => {
-  console.log("111111 :>> ", 111111);
-  emits("update:modelValue", false);
+  if (!beforeUnmount.value()) return;
   emits("no");
+  close();
 };
 const onOk = () => {
-  emits("update:modelValue", false);
   emits("ok");
+  close();
 };
 // esc关闭
 const handleEscKeyPressed = (event) => {

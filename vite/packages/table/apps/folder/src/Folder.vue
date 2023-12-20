@@ -1,6 +1,5 @@
 <template>
   <Drop @updateFile="updateFile" @deleteFile="deleteFile">
-    {{  customData.model }}
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -189,7 +188,6 @@ const sortMode = (key) => {
     ([key, item]) => item
   );
   // 对数组进行排序
-  console.log("key :>> ", key);
   itemsArray.sort((a, b) => b[key] - a[key]);
   let obj = {};
   itemsArray.forEach((item) => {
@@ -201,6 +199,7 @@ const sortMode = (key) => {
 // 触发排序
 const updateSort = (val) => {
   const mode = customData.value.sort;
+  if (mode === "free") return;
   sortMode(mode);
 };
 

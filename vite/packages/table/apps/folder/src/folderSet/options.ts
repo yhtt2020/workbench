@@ -85,6 +85,10 @@ export const filesOptions = [
     selectKey: "sort",
     list: [
       {
+        name: "自由拖拽",
+        value: "free",
+      },
+      {
         name: "最近使用",
         value: "lastUseTime",
       },

@@ -1,10 +1,10 @@
 <template>
   <div
-    class="w-full h-full"
+    class="w-full h-full xt-theme-b"
     @drop="handleDrop"
-    @dragover.prevent="handleDragover"
-    @dragenter.prevent
-    @dragleave.prevent="handleDragleave"
+    @dragover="handleDragover"
+    @dragenter="handleDragenter"
+    @dragleave="handleDragleave"
     @mouseup="handleMouseup"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
@@ -61,21 +61,32 @@ const handleDrop = async (dragEvent) => {
     emits("updateFile", fileInfo);
   }
 };
-
 /**
  * 处理拖拽内容进入
+ */
+const handleDragenter = (dragEvent) => {
+  dragEvent.preventDefault();
+  currentId.value = index.value;
+
+  console.log('拖拽元素进入 :>> ', );
+};
+/**
+ * 处理拖拽内容在放置区移动
  */
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
   currentId.value = index.value;
+  console.log('拖拽元素在上方移动 :>> ', );
 };
 
 /**
  * 处理拖拽内容离开
  */
 const handleDragleave = () => {
-  currentId.value = "";
+  console.log('拖拽元素离开 :>> ', );
+  // currentId.value = "";
 };
+// -------------------------------------------
 /**
  * 处理图标组件放置
  */

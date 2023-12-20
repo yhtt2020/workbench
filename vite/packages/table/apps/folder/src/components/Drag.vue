@@ -24,6 +24,8 @@ const props = defineProps({
  * 文件托起
  */
 const handleDragStart = (event) => {
+  // if (data.value.sort === "free") return;
+  console.log('1111 :>> ', 1111);
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;
@@ -32,7 +34,12 @@ const handleDragStart = (event) => {
 
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
+  console.log('2222 :>> ', 2222);
+  // if (data.value.sort === "free") return;
   if (data.value.model !== "custom") return;
+  // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
+  if (index.value == currentId.value) return;
+
   if (!currentId.value) {
     const file = {
       model: "file",
@@ -56,9 +63,7 @@ const handleDragEnd = (event) => {
     emits("deleteFile", props.data);
     return;
   }
-  /**
-   * 判断是否处在当前文件夹
-   */
+  // 判断是否处在当前文件夹
   if (index.value != currentId.value) {
     emits("deleteFile", props.data);
   }
