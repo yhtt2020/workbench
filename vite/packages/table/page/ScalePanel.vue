@@ -85,12 +85,13 @@ export default {
     this.oldZoom = this.newZoom
     this.inputZoom = +(this.newZoom).toFixed(0)
     this.getSize()
+    this.scaleInit = true
   },
   components: { 
     Icon,
   },
   computed:{
-    ...mapWritableState(appStore, ['settings', 'visibleScale']),
+    ...mapWritableState(appStore, ['settings', 'scaleInit']),
   },
   methods: {
     inputEnter() {

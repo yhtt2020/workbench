@@ -63,7 +63,7 @@
                   使用传统的鼠标右键菜单。
                 </div>
                 <div class="text-center">
-                  <a>预览</a>
+                  <a @click="imageShow(0)">预览</a>
                 </div>
               </div>
             </a-col>
@@ -76,7 +76,7 @@
                   更适合触控的大图标菜单。
                 </div>
                 <div class="text-center">
-                  <a>预览</a>
+                  <a @click="imageShow(1)">预览</a>
                 </div>
               </div>
             </a-col>
@@ -308,6 +308,16 @@ export default {
   },
   data () {
     return {
+      options: {
+        url: 'data-source'
+      },
+      list: [
+        '../../../public/img/flow.jpg',
+        '../../../public/img/default.jpg',
+        // 爱莉希雅
+        // 'https://p.ananas.chaoxing.com/star3/origin/7bd21a56206d9a720f8eaf1ab88b8fc9.png',
+
+      ],
       // 默认、定制桌面
       desktopSetting:'default',
       screenSettingTab: 'none',
@@ -410,9 +420,12 @@ export default {
       })
     },
 
-    // 修改菜单模式
-    changeMenu(type){
-      this.rightModel = type
+    // 预览图片
+    imageShow(index) {
+      const images = this.list[index]
+      this.$viewerApi({
+        images: [images],
+      })
     },
 
     async restore () {
