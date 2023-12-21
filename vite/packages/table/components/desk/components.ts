@@ -1,5 +1,8 @@
 import { defineAsyncComponent } from "vue";
-
+/**
+ * 挂载相关组件
+ */
+import { LoadingOutlined } from "@ant-design/icons-vue";
 import Vuuri from "../vuuriHome/Vuuri.vue";
 import CPULineChart from "../../apps/inspector/widget/CPULineChart.vue";
 import CPUFourCard from "../../apps/inspector/widget/CPUFourCard.vue";
@@ -75,15 +78,17 @@ import FreeLayoutContainer from "./freeLayout/Container.vue";
 import FreeLayoutState from "./freeLayout/State.vue";
 import FreeLayoutMask from "./freeLayout/Mask.vue";
 import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
-// import FreeLayoutFloatMenu from "./freeLayout/FloatMenu/Container.vue";
-import FloatMenu from './floatMenu/FloatMenu.vue'
-import RadioTab from '../../components/RadioTab.vue'
+import FloatMenu from "./floatMenu/FloatMenu.vue";
+import RadioTab from "../../components/RadioTab.vue";
 import Menu from "../../ui/new/mixMenu/FunMenu.vue";
+import DeskSet from "./set/Set.vue";
 
 import Folder from "../../apps/folder";
 
 export default {
   components: {
+    LoadingOutlined,
+    DeskSet,
     Folder,
     Menu,
     RadioTab,

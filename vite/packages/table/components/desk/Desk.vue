@@ -171,10 +171,13 @@
     </template>
     <div style="height: calc(80vh); width: 500px">
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
+
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
           <div class="mb-4">桌面名称</div>
           <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
         </div>
+        <DeskSet></DeskSet>
+
         <template v-if="!isFreeLayout">
           <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
             <div class="flex justify-between mb-4">
@@ -304,26 +307,24 @@
 </template>
 
 <script>
+// 挂载组件请到下面文件
+import componentsMinis from "./components";
+
 import { navStore } from "../../store/nav";
 import Muuri from "muuri";
 import { message, Modal } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
-import { LoadingOutlined } from "@ant-design/icons-vue";
 import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
-import componentsMinis from "./components.ts";
 import _ from "lodash-es";
-
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-  components: { LoadingOutlined },
   props: {
     freeLayout: {
       default: true,
@@ -754,38 +755,6 @@ export default {
             this.clearFreeLayoutData();
           },
         });
-        // Modal.confirm({
-        //   centered: true,
-        //   content: "清空当前桌面的全部卡片？此操作不可还原。",
-        //   onOk: () => {
-        //     desk?.cards?.forEach((item) => {
-        //       //移除桌面相关的便签卡片
-        //       if (item.name === "notes") {
-        //         tsbApi.db
-        //           .find({
-        //             selector: {
-        //               _id: "note:" + item.id,
-        //             },
-        //           })
-        //           .then((res) => {
-        //             if (res?.docs.length) {
-        //               tsbApi.db.put({
-        //                 ...res.docs[0],
-        //                 // isDelete:true,
-        //                 deskId: "",
-        //                 deskName: "",
-        //               });
-        //             }
-        //           });
-        //       }
-        //     });
-        //     desk.cards = [];
-        //     console.log(desk);
-        //     this.menuVisible = false;
-        //     this.clearFreeLayoutData();
-        //   },
-        //   okText: "清空卡片",
-        // });
       }
     },
     newAddCard() {
