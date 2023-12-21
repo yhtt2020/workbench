@@ -1,12 +1,14 @@
 <template>
-  <div class="box cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around" :data-index="index"
+  <div class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn" :data-index="index"
     @click.stop="iconClick($event)" :style="[iconSize]">
-    <div class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
+    <div class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]" :data-index="index">
-      <img v-if="src && src.length > 0" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+      <img v-if="src && src.length > 0 && open.type === 'systemApp'" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+        :data-index="index" />
+      <img v-if="src && src.length > 0 && open.type !== 'systemApp'" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index" />
     </div>
-    <div v-if="isTitle" class="text-center xt-text h-5 truncate mx-auto" :style="[textSize]" :data-index="index">
+    <div v-if="isTitle" class="h-5 mx-auto text-center truncate xt-text" :style="[textSize]" :data-index="index">
       {{ titleValue }}
     </div>
   </div>
