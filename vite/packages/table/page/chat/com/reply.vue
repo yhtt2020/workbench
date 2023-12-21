@@ -66,6 +66,7 @@ const useCommunStore = useCommunityStore()
 const userStore = appStore()
 const value = ref('')
 const commentList = ref([])
+const isReply = ref(false)
 // const emojiVis = ref(false)
 // const imageVis = ref(false)
 // 添加表情
@@ -79,6 +80,9 @@ const addEmoji = (item) => {
 
 const emit = defineEmits(['addComment'])
 const addComment = async () => {
+    if(isReply.value) return
+    isReply.value = true
+    message.info('评论正在后台发送中，请稍候……')
     try {
         if (value.value || fileList.value.length > 0) {
         const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
@@ -106,6 +110,7 @@ const addComment = async () => {
     } catch (error) {
         message.error('评论失败')
     } finally{
+        isReply.value = false
         emit('addComment', commentList);
     }
     

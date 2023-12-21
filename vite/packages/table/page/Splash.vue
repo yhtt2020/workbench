@@ -312,6 +312,7 @@ export default {
         this.settings.zoomFactor = 100
       }
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
+      tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
       if (this.settings.darkMod) {
         // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
         //   document.body.style.background = '#191919'
