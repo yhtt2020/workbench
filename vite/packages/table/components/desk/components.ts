@@ -81,14 +81,16 @@ import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
 import FloatMenu from "./floatMenu/FloatMenu.vue";
 import RadioTab from "../../components/RadioTab.vue";
 import Menu from "../../ui/new/mixMenu/FunMenu.vue";
-import DeskSet from "./set/Set.vue";
+import CurrentDesk from "./set/CurrentDesk.vue";
+import GlobalDesk from "./set/GlobalDesk.vue";
 
 import Folder from "../../apps/folder";
 
 export default {
   components: {
     LoadingOutlined,
-    DeskSet,
+     GlobalDesk,
+    CurrentDesk,
     Folder,
     Menu,
     RadioTab,

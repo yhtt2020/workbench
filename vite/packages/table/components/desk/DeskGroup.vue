@@ -126,8 +126,7 @@
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
-          1
-          <slot name="settingsAll"></slot>
+          <slot name="settingsAll"> </slot>
         </template>
       </Desk>
       <template v-else>
@@ -718,7 +717,7 @@ export default {
                 deskName: g.name,
               };
               tsbApi.db.put(obj);
-              g.cards[index] = obj
+              g.cards[index] = obj;
             }
           });
 
@@ -752,7 +751,7 @@ export default {
     delDesk() {
       if (this.deskList.length === 1) {
         this.$xtConfirm("至少保留一个桌面。", "", {
-          noText:null,
+          noText: null,
           type: "warning",
         });
         return;
@@ -782,8 +781,8 @@ export default {
         this.$xtConfirm("删除当前桌面？此操作不可还原。", "", {
           type: "warning",
           okText: "删除桌面",
-          okButtonWidth:'100',
-          ok:() => {
+          okButtonWidth: "100",
+          ok: () => {
             this.deskList.splice(
               this.deskList.findIndex((desk) => {
                 return desk === this.currentDesk;
