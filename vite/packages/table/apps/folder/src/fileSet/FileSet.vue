@@ -11,6 +11,7 @@
       ></xt-tab>
     </template>
     <div style="width: 452px" v-if="currentTab == 'attribute'">
+
       <xt-option-from :options="attributeOptions" :data="data">
         <template #custom> 123 </template>
       </xt-option-from>

@@ -13,8 +13,8 @@ const props = withDefaults(defineProps<selectProps>(), {});
 const currentSelect = ref(props.select);
 const emits = defineEmits(["update:select"]);
 
-watch(currentSelect, () => {
-  emits("update:select", currentSelect.value);
+watch(currentSelect, (val) => {
+  emits("update:select", val);
 });
 </script>
 

@@ -320,5 +320,9 @@ export const addIconPosition=[
     {
         title:'底部导航',
         value:'foot'
+    },
+    {
+        title:"桌面",
+        value:"desktop"
     }
 ]

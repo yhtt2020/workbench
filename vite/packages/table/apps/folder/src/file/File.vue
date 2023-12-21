@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-wrap">
-    <!-- v-if="fileDisabled(item)" -->
     <template v-for="item in list">
       <xt-mix-menu
         v-if="fileDisabled(item)"
@@ -20,7 +19,6 @@
       </xt-mix-menu>
     </template>
   </div>
-
   <FileSet
     v-if="fileSetVisible"
     v-model="fileSetVisible"
@@ -31,18 +29,23 @@
 
 <script setup>
 import { ref, computed, getCurrentInstance, toRefs } from "vue";
+import { useRouter, useRoute } from 'vue-router'
 import Columns from "./Columns.vue";
 import Rows from "./Rows.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
-import { startApp } from "../hooks/useStartApp";
+import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
+import { fileTypes } from "./options";
 
 const model = inject("model", "");
 const data = inject("data", "");
 
 const { proxy } = getCurrentInstance();
-const emits = defineEmits(["deleteFile"]);
+
+const router = useRouter();
+
+const emits = defineEmits(["deleteFile", "updateSort"]);
 // 父组件数据
 const props = defineProps({
   layout: {},
@@ -118,70 +121,48 @@ const dragDeleteFile = (data) => {
 const currentItem = ref();
 const handleMenuMounted = (item) => {
   currentItem.value = item;
+  console.log("item :>> ", item);
 };
-// 文件点击
+/**
+ * 文件点击
+ */
 const fileClick = (data) => {
+  // 更新使用次数
   data.useCount++;
+  // 更新使用时间
+  data.lastUseTime = new Date().getTime();
   // 这里应该调用updateFile 但是点击直接生效了？？
-
-  console.log("fileClick :>> ", data);
-  startApp(data.type, data.value);
-
-  // require("electron").shell.openPath(require("path").normalize(data.path));
+  startApp(data.type, data.value, router);
+  emits("updateSort");
 };
 
 /**
- * 判断文件类型是否需要禁用
+ * 判断文件类型是否需要隐藏
  */
 
-const fileDisabled = (item) => {
-  console.log('111111111 :>> ', 111111111);
-  return computed(() => {
-    console.log("222222 :>> ", 222222);
-    if (data.rules.length == 0) return;
-
-    data.rules.forEach((rule) => {
-      console.log("rule :>> ", rule);
-    });
-    return false;
+// 获取可用类型
+const typeRules = computed(() => {
+  if (data.value.rules.length == 0) return true;
+  let rules = [];
+  data.value.rules.forEach((rule) => {
+    rules.push(...fileTypes[rule]);
   });
-};
+  return rules;
+});
 
-const localFiles = [
-  {
-    name: "全部",
-    tag: "all",
-  },
-  {
-    name: "软件",
-    tag: "software",
-  },
-  {
-    name: "文档",
-    tag: "docx",
-  },
-  {
-    name: "其他",
-    tag: "other",
-  },
-];
-const doc = [
-  ".docx",
-  ".pptx",
-  ".txt",
-  ".pdf",
-  ".xlsx",
-  ".doc",
-  ".ppt",
-  ".xls",
-  ".md",
-  ".xml",
-  ".docm",
-  ".odt",
-  ".csv",
-  ".pptm",
-  ".ppsm",
-];
+// 获取文件后缀
+const getExtension = (filePath) => {
+  const match = filePath.match(/\.([^.]+)$/);
+  return match ? match[1] : "null";
+};
+// 实现是否需要隐藏
+const fileDisabled = (item) => {
+  // 如果没有规则，则默认显示
+  if (typeof typeRules.value == "boolean") return true;
+
+  const extension = getExtension(item.value);
+  return typeRules.value.includes(extension);
+};
 </script>
 
 <style lang="scss" scoped></style>
