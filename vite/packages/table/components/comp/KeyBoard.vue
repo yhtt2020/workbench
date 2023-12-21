@@ -16,16 +16,16 @@
                    :key="item"
                    :style="{backgroundColor:item.color}"
                    :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
-                   @click="onKeyDown(item, index, 'modifierKeyOne')"
-                   class="key-item">
+                   @click="onKeyDown(item, index, 'modifierKeyOne', true)"
+                   class="key-item pointer no-drag">
                 {{ item.key }}
               </div>
             </div>
           </div>
           <div class="mt-10">
-            <div class="box-foot action-panel"   >
+            <div class="box-foot action-panel" style="height:300px"  >
               <div class="line-title text-center ">按键确认</div>
-              <div class="active">
+              <div class="active flex flex-wrap" style="height:120px;">
 
                 <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
                   <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
@@ -39,14 +39,14 @@
             </div>
           </div>
         </div>
-        <div class="box-right">
+        <div class="box-right pl-4">
           <div class="title mb-1">快捷键</div>
           <div class="key-box ">
             <div v-for="(item, index) in keyList[0]"
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[0]')"
-                 class="key-item w-11">
+                 class="key-item w-11 pointer no-drag">
               {{ item.key }}
             </div>
           </div>
@@ -56,7 +56,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[1]')"
-                 class="key-item w-11">
+                 class="key-item w-11 pointer no-drag">
               {{ item.key }}
             </div>
           </div>
@@ -65,7 +65,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[2]')"
-                 class="key-item px-3">
+                 class="key-item px-3 pointer no-drag">
               {{ item.key }}
             </div>
           </div>
@@ -77,7 +77,9 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import XtButton from '../../../ui/libs/Button/index.vue'
+import XtButton from '../../ui/libs/Button/index.vue'
+import { mapActions, mapState, mapWritableState } from 'pinia'
+import {keyCutStore}from "./keyCut"
 
 export default {
   name: 'KeyBoard',
@@ -91,6 +93,14 @@ export default {
     parentKeyList: {
       type: Array,
       defalut: () => []
+    },
+    type:{
+      type: String,
+      defalut: () => {}
+    },
+    refreshKeys:{
+      type:Function,
+      defalut: () => {}
     }
   },
   data () {
@@ -98,29 +108,27 @@ export default {
       modifierKeyOne: [
         {
           key: 'Ctrl',
-          color:'rgb(255, 108, 97)',
-          checked: false,
+          // color:'rgb(255, 108, 97)',
+          checked: false,  
           isGray: false,
         },
         {
           key: 'Tab',
-          color:'rgb(80, 139, 254)',
+          // color:'rgb(80, 139, 254)',
           checked: false,
           isGray: false,
         },
         {
           key: 'Shift',
-          color:'rgb(251, 114, 153)',
+          // color:'rgb(251, 114, 153)',
           checked: false,
           isGray: false,
         },
-        {
-          key: 'Space',
-          checked: false,
-          isGray: false,
-        },
-
-
+        // {
+        //   key: 'Space',
+        //   checked: false,
+        //   isGray: false,
+        // },
         {
           key: 'Win',
           checked: false,
@@ -157,11 +165,11 @@ export default {
           isGray: false,
         },
 
-        {
-          key: 'Space',
-          checked: false,
-          isGray: false,
-        },
+        // {
+        //   key: 'Space',
+        //   checked: false,
+        //   isGray: false,
+        // },
 
         {
           key: 'Tab',
@@ -444,6 +452,10 @@ export default {
             key: 'Z',
             checked: false,
           },
+          {
+            key: 'Space',
+            checked: false,
+          },
         ],
         [
 
@@ -522,9 +534,13 @@ export default {
       keyContent: {}
     }
   },
+  computed:{
+    ...mapWritableState(keyCutStore, ["keys"]),
+  },
   mounted () {
     this.keyContent = this.deepClone(this.selectKey, this.keyContent)
-    this.keyContent.keyArr.forEach(item => {
+    // 初始加载已有的按键
+    this.keys[this.$props.type]?.keyArr.forEach(item => {
       this.isKeyChecked(item.field, item.index, true)
     })
   },
@@ -549,7 +565,59 @@ export default {
     },
     // 确定
     confirm () {
-      // if(!this.keyContent.keyArr.length) return message.info('不能为空')
+      const keyArrTmp = this.keyContent.keyArr
+      let keyNum = 0
+      // 选择按键 不能为空
+      if(!keyArrTmp.length) return message.info('不能为空')
+
+      // 单键情况下 只能选中F1-F12
+      if (keyArrTmp.length == 1 && !(keyArrTmp[0]?.field == "keyList[0]" && keyArrTmp[0]?.index >=1 && keyArrTmp[0]?.index <= 12)) {
+        return message.info('单键情况下只能使用F1-F12')
+      }
+
+      // 快捷键或字母选中数量
+      keyArrTmp.forEach(item=>{
+        if(item.field != "modifierKeyOne"){
+          keyNum++
+        }
+      })
+
+      // 多键情况下 修饰键可以多选 快捷键和字母只能选一个
+      if(keyArrTmp.length){
+        if (keyNum == 0) {
+          return message.info('请选择至少一个按键或字母')
+        }else if(!(keyArrTmp.length - keyNum)){
+          return message.info('请选择至少一个修饰键')
+        }else if(keyNum > 1){
+          return message.info('快捷键或字母只能选中一个')
+        }
+      }
+
+      // 处理快捷键格式 存入快捷键时需以 xx + XX 格式存入
+      const keyTmp = this.keyContent.keyArr;
+      let keyCut = ''
+      keyTmp.forEach((item,index)=>{
+        if(index){
+          keyCut = keyCut + '+' + item.key
+        }else{
+          keyCut = item.key
+        }
+      })
+
+      // 快捷键存入
+      let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
+    
+      // 成功后将数据存入store
+      if (rs) {
+        this.$props.refreshKeys()
+        // 将快捷键数据存回去
+        message.success('快捷键设置成功')
+        this.keys[this.$props.type].keys = this.keyContent.keyewf
+        this.keys[this.$props.type].keyArr = this.keyContent.keyArr
+
+      } else {
+        message.error('注册快捷键失败，可能是快捷键冲突，请更换快捷键重试。')
+      }
       if (!this.keyContent.keyArr.length) {
         this.keyContent.keyStr = '?'
         this.keyContent.keys.splice(0, this.keyContent.keys.length, '?')
@@ -573,10 +641,9 @@ export default {
       if (retArr && retArr.id !== this.keyContent.id && false) return message.info('组合键重复')//取消重复判断
       this.$emit('saveKey', this.keyContent)
       this.$emit('closeKeyBoard')
-
     },
-    // 按键
-    onKeyDown (item, index, field) {
+    // 按键选中
+    onKeyDown (item, index, field, flagType) {
       let flag = false // 阻止触发改变数据操作
       let isChecked = true
 
@@ -584,13 +651,12 @@ export default {
       if (item.isGray) {
         return
       }
-
-      const hasKeyIndex = this.keyContent.keyArr.findIndex(data => {
+      const hasKeyIndex = this.keyContent.keyArr?.findIndex(data => {
         return item.key == data.key
       })
 
-      //选择数不能大于三
-      flag = this.keyContent.keyArr.length >= 4
+      //选择数不能大于四
+      flag = this.keyContent.keyArr?.length >= 4
       // 再次点击选择的【取消选择】
       if (hasKeyIndex != -1) {
         flag = false
@@ -616,7 +682,12 @@ export default {
         )
         this.keyContent.keyArr.splice(hasKeyIndex, 1)
       } else {
-        this.keyContent.keyArr.push(keyItem)
+        // 分开存储  将修饰键放在前面
+        if(flagType){
+          this.keyContent.keyArr.unshift(keyItem)
+        }else{
+          this.keyContent.keyArr.push(keyItem)
+        }
         isChecked = true
         this.isKeyChecked(field, index, isChecked)
       }
@@ -687,7 +758,7 @@ export default {
       position: absolute;
       background: var(--secondary-bg);
       top: 12px;
-      right: 18px;
+      right: 3px;
     }
   }
 

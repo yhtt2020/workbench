@@ -123,6 +123,8 @@ export const appStore = defineStore('appStore', {
     },
     // 桌面初始化
     deskInit: false,
+    // 桌面缩放
+   visibleScale: false,
 
   }),
   getters: {},

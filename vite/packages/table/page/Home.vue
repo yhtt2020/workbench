@@ -205,6 +205,9 @@
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
+  <teleport to="body">
+    <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+  </teleport>
 
   <GalleryModal ref="galleryRef"/>
 </template>
@@ -280,6 +283,8 @@ import Todo from "../components/widgets/todo/Todo.vue";
 import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
+import ScalePanel from "./ScalePanel.vue";
+
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
 import {
@@ -469,7 +474,9 @@ export default {
     Todo,
     EatToday,
     HotSearch,
-    RadioTab,GalleryModal,
+    RadioTab,
+    GalleryModal,
+    ScalePanel,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -499,7 +506,7 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
       deskInit: 'deskInit',
-
+      visibleScale: 'visibleScale',
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -579,6 +586,7 @@ export default {
       // 新用户第一次进入加载一个默认桌面
       this.addFreeLayoutDesk()
       this.deskInit = false
+      this.visibleScale = true
     }
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
@@ -1084,6 +1092,11 @@ export default {
           }
         }
       })
+    },
+
+    // 关闭缩放弹窗
+    closeScale() {
+      this.visibleScale = false
     },
 
     showSetting() {

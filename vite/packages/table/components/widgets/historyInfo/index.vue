@@ -1,18 +1,17 @@
 <template>
-    <Widget @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk"
+    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk"
     :env="env">
         <template #left-title-icon>
             <div class="icon"
                 style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 3px;top: 13px;">
                 <Icon icon="fluent:clock-12-regular" width="20" height="20" />
-                <!-- <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon> -->
             </div>
         </template>
-        <!-- <div class="icon" @click="onHistoryMessage">
-            <CalendarOutlined style="width:20px;height:20px;" />
-        </div> -->
-
-
+        <template #left-title>
+            <Icon @click="onHistoryMessage" class="xt-text refresh pointer" style=" font-size: 18px;vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
+            <!-- <div @click="onHistoryMessage">2
+            </div> -->
+        </template>
         <div class="box-flex">
             <div>{{this.history.date}}</div>
             <div>{{ this.history.title }}</div>
@@ -54,6 +53,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             options: {
                 className: "card small",
                 title: "历史上的今天",
@@ -73,7 +73,7 @@ export default {
             }
         };
     },
-    async mounted() {
+    mounted() {
         this.onHistoryMessage()
         // 设置一次性定时器 当天12点过后自动触发事件
         let now = new Date;
@@ -91,8 +91,14 @@ export default {
     methods:{
         // 获取今天所发生的的事情
         async onHistoryMessage(){
-            let getData = await getHistoryInfo("/app/juhe/get");
-            this.history = getData;
+            if(!this.loading){
+                this.loading = true
+                await getHistoryInfo("/app/juhe/get").then(res=>{
+                    let random = Math.floor(Math.random() * (res.length + 1))
+                    this.history = res[random];
+                    this.loading = false
+                })
+            }
         },
     },
 };
@@ -130,5 +136,11 @@ export default {
     @font-face {
         font-family: "优设标题黑";
         src: url("../../../../../public/font/优设标题黑.ttf");
+    }
+
+    .refresh{
+        position: relative;
+        top: 4px;
+        
     }
 </style>
