@@ -67,8 +67,7 @@ export default {
     this.getSize()
 
     this.$bus.on('resetWindow',()=>{
-console.log('启动 :>> ', );
-this.inputZoom =100
+      this.reset()
     })
   },
   methods: {
