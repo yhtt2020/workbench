@@ -31,7 +31,7 @@ export default {
       height: '100%',
       mode: 'ir',
       theme: 'dark',
-      placeholder: "备忘录是一款想天工作台的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式",
+      placeholder: "备忘录是一款天天工作台的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式",
       // counter:{
       //     enable:true,
       //   },
@@ -57,7 +57,7 @@ export default {
                 '<svg><use xlink:href="#vditor-icon-headings"></use></svg>',
             name: "headings",
             tipPosition: "s",
-        }, 
+        },
         {
             hotkey: "⌘B",
             icon: '<svg><use xlink:href="#vditor-icon-bold"></use></svg>',
@@ -81,7 +81,7 @@ export default {
             prefix: "~~",
             suffix: "~~",
             tipPosition: "s",
-        }, 
+        },
         {
             hotkey: "⇧⌘H",
             icon: '<svg><use xlink:href="#vditor-icon-line"></use></svg>',
@@ -127,7 +127,7 @@ export default {
             prefix: "`",
             suffix: "`",
             tipPosition: "s",
-        }, 
+        },
         {
             hotkey: "⌘K",
             icon: '<svg><use xlink:href="#vditor-icon-link"></use></svg>',
@@ -386,14 +386,14 @@ export default {
     font-weight: 85;
     color:var(--primary-text);
   }
-  
+
   .vditor-ir h2 {
     margin: 16px 0 12px;
     font-size: 20px;
     font-weight: 85;
     color:var(--primary-text);
   }
-  
+
   .vditor-ir h3 {
     margin: 16px 0 12px;
     font-size: 18px;

@@ -23,7 +23,7 @@
 
         <h3 style="text-align: center;font-size: 1.5em">
           <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar>
-          想天工作台
+          天天工作台
         </h3>
         <div class="mb-10 ml-40 text-center text-md">—— 划时代的副屏效率神器</div>
         <p v-if="!userInfo">

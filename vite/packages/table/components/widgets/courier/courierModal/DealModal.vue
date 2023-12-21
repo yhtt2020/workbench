@@ -19,7 +19,7 @@
         <xt-button w="100%" h="22" style="justify-content: start !important;" @click="toDealLink">
           <div class="flex items-center w-full">
             <DealIcon icon="ri:bilibili-line" style="font-size: 1.2rem;color:rgba(0,174,236,1);"/>
-            <span style="color:rgba(0,174,236,1);" class="ml-2 font-16 font-400">想天工作台「我的快递」小组件技术解析</span>
+            <span style="color:rgba(0,174,236,1);" class="ml-2 font-16 font-400">天天工作台「我的快递」小组件技术解析</span>
           </div>
         </xt-button>
       </div>
