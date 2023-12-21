@@ -1,8 +1,8 @@
 <template>
   <div style="height: 100vh;width: 100vw" class="flex items-center justify-center bg-image">
     <div class="p-4 relative body-shadow">
-      <div class="font-16" style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);height: 140px;">
-        <div style="height:90px;">
+      <div class="font-16" style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);height: 100px;">
+        <div style="height:60px;">
           <div v-if="step!==0" @click="prevStep" class="left-icon top-icon no-drag float-left">
             <!-- <xt-button v-if="step!==0" @click="prevStep" style="" size="large" class="button-bottom">上一步</xt-button> -->
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
@@ -13,9 +13,9 @@
         </div>
         <div>{{ title }}</div>
       </div>
-      <div class="mt-4 w-full flex justify-center" style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
+      <div class="w-full flex justify-center" style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
         <div v-if="step===0">
-          <div class="font-16" style="margin-bottom: 2em;text-align: center;color: var(--secondary-text);" v-if="true">
+          <div class="font-16" style="text-align: center;color: var(--secondary-text);" v-if="true">
             如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
             <div class="flex justify-center">
               没有副屏？点击了解 &nbsp;
@@ -27,27 +27,56 @@
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
           </div>
-          <a-row :gutter="20" class="flex justify-center">
+          <a-row :gutter="20" class="flex justify-center mt-4">
             <a-col >
-              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
+              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-4" style="height:200px;">
                 <div class="title">
                   <MyIcon icon="fluent:tablet-16-regular" width="50px" height="50px" color="var(--primary-text)" />
                   <div class="mt-2">副屏全屏模式</div>
                 </div>
-                <div class="content mt-4">
+                <div class="content mt-1">
                   专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
                 </div>
               </div>
             </a-col>
             <a-col >
-              <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-6">
+              <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-4" style="height:200px;">
                 <div class="title">
                   <!-- <icon icon="kuaijie" style="font-size: 50px"></icon> -->
                   <MyIcon icon="fluent:window-multiple-16-filled" width="50px" height="50px" color="var(--primary-text)" />
                   <div class="mt-2">窗口模式</div>
                 </div>
-                <div class="content mt-4">
+                <div class="content mt-1">
                   以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
+                </div>
+              </div>
+            </a-col>
+          </a-row>
+          <div class="xt-text text-center font-16 mt-3">选择菜单模式</div>
+          <a-row :gutter="20" class="flex justify-center mt-3">
+            <a-col >
+              <div :class="{'active':rightModel==='follow'}" @click="this.rightModel='follow'" class="panel pointer px-5" style="height:110px;">
+                <div class="title mt-3">
+                  <div>右键下拉式菜单</div>
+                </div>
+                <div class="content mt-2">
+                  使用传统的鼠标右键菜单。
+                </div>
+                <div class="text-center">
+                  <a>预览</a>
+                </div>
+              </div>
+            </a-col>
+            <a-col >
+              <div :class="{'active':rightModel==='default'}" @click="this.rightModel='default'" class="panel pointer px-5" style="height:110px;">
+                <div class="title mt-3">
+                  <div>长按触控式菜单</div>
+                </div>
+                <div class="content mt-2">
+                  更适合触控的大图标菜单。
+                </div>
+                <div class="text-center">
+                  <a>预览</a>
                 </div>
               </div>
             </a-col>
@@ -91,7 +120,7 @@
         </div>
 
         <div v-if="step===3" class="flex justify-center flex-wrap" style="width: 452px;">
-          <div class="mt-3 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
+          <div class="mt-6 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
             <AutoRun isGuide="true"/>
           </div>
           <div class="w-full">
@@ -107,7 +136,7 @@
           </div>
         </div>
         <div v-if="step==4">
-          <div class="text-center xt-text-2 font-16">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
+          <div class="text-center xt-text-2 font-16 mt-3">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
           <div class="flex flex-wrap justify-center">
             <a-row class="bg-tab" v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.background}">
               <a-col :span="6" class="h-full w-full justify-center items-center" style="display:flex;">
@@ -122,7 +151,7 @@
         </div>
 
         <div v-if="step==5">
-          <div class="text-center xt-text-2 font-16">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
+          <div class="text-center xt-text-2 font-16 mt-3">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
           <a-row :gutter="20" class="flex justify-center mt-6">
             <a-col >
               <!-- @click="this.desktopSetting='custom'"  -->
@@ -381,6 +410,11 @@ export default {
       })
     },
 
+    // 修改菜单模式
+    changeMenu(type){
+      this.rightModel = type
+    },
+
     async restore () {
       await tsbApi.window.setZoomFactor(1)
       setTimeout(() => {
@@ -491,7 +525,7 @@ export default {
 }
 
 .title {
-  font-weight: bold;
+  // font-weight: bold;
   font-size: 18px;
   text-align: center;
   color: var(--primary-text);
