@@ -33,13 +33,16 @@
       </div>
       <span class="mt-2" style="font-size: 14px;font-weight: 400;">输入检测</span>
       <div class="flex">
-        <div style="width: 180px;" class="flex items-center justify-center mr-4">
-          <a-progress :percent="audioTest" :showInfo="false"/>
-        </div>
-        <div @click="closeMicrophone" style="" class="flex items-center justify-center px-3 py-3 rounded-full voice-hover btn-active pointer s-item xt-bg-2">
-          <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
-          <Icon icon="mic-off" style="font-size: 2.286em" v-else></Icon>
-        </div>
+        <div v-if="!testingAudio"><xt-button @click="startAudioTest" class="mt-2 mb-2 " :w="120" :h="40" >开始检测</xt-button></div>
+        <template v-else>
+          <div style="width: 180px;" class="flex items-center justify-center mr-4">
+            <a-progress :percent="audioTest" :showInfo="false"/>
+          </div>
+          <div @click="closeMicrophone" style="" class="flex items-center justify-center px-3 py-3 rounded-full voice-hover btn-active pointer s-item xt-bg-2">
+            <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
+            <Icon icon="mic-off" style="font-size: 2.286em" v-else></Icon>
+          </div>
+        </template>
       </div>
       <span style="font-size: 14px;font-weight: 400;">输入</span>
       <div @click.stop="selectInputVoice"  class="flex items-center justify-center mt-2 rounded-lg btn-active pointer s-item xt-bg-2" style="padding: 8px 10px;">
@@ -118,7 +121,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(inspectorStore,['audioTest']),
+    ...mapWritableState(inspectorStore,['audioTest','testingAudio']),
     ...mapWritableState(appStore,['settings'])
   },
   async mounted () {
@@ -136,13 +139,12 @@ export default {
     // console.log(new HID.HID())
   },
   methods:{
-    ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
+    ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
     async init(){
       this.defaultOutput = await getDefaultVolume()
       this.defaultMic=await getDefaultMic()
       this.muteShow=!this.defaultOutput.muted
       this.microphoneShow=!this.defaultMic.muted
-      this.startListenAudioTest()
     },
     selectOutputVoice(){
       this.outputShow = true
@@ -194,7 +196,7 @@ export default {
     }
   },
   unmounted () {
-    this.stopListenerAudioTest()
+    this.stopAudioTest()
   },
 
 
