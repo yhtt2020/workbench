@@ -1,5 +1,5 @@
 import browser from "../../js/common/browser";
-
+import { appStore } from "../../store";
 export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器
@@ -30,7 +30,8 @@ export const startApp = (type, value, router?) => {
       break;
     // 系统应用
     case "systemApp":
-      router.push({ name: value });
+      // router.push({ name: value });
+      openSysApp(value,router)
       break;
     // 不知道是什么场景
     case "localApp":
@@ -38,3 +39,12 @@ export const startApp = (type, value, router?) => {
       break;
   }
 };
+
+export const openSysApp = (value,router)=>{
+  const useAppStore = appStore();
+  if(value === 'fullscreen'){
+    useAppStore.toggleFullScreen()
+  }else{
+    router.push({name:value})
+  }
+}
