@@ -23,9 +23,9 @@
             </div>
           </div>
           <div class="mt-10">
-            <div class="box-foot action-panel"   >
+            <div class="box-foot action-panel" style="height:300px"  >
               <div class="line-title text-center ">按键确认</div>
-              <div class="active">
+              <div class="active flex flex-wrap" style="height:120px;">
 
                 <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
                   <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
@@ -39,7 +39,7 @@
             </div>
           </div>
         </div>
-        <div class="box-right">
+        <div class="box-right pl-4">
           <div class="title mb-1">快捷键</div>
           <div class="key-box ">
             <div v-for="(item, index) in keyList[0]"
@@ -108,27 +108,27 @@ export default {
       modifierKeyOne: [
         {
           key: 'Ctrl',
-          color:'rgb(255, 108, 97)',
+          // color:'rgb(255, 108, 97)',
           checked: false,  
           isGray: false,
         },
         {
           key: 'Tab',
-          color:'rgb(80, 139, 254)',
+          // color:'rgb(80, 139, 254)',
           checked: false,
           isGray: false,
         },
         {
           key: 'Shift',
-          color:'rgb(251, 114, 153)',
+          // color:'rgb(251, 114, 153)',
           checked: false,
           isGray: false,
         },
-        {
-          key: 'Space',
-          checked: false,
-          isGray: false,
-        },
+        // {
+        //   key: 'Space',
+        //   checked: false,
+        //   isGray: false,
+        // },
         {
           key: 'Win',
           checked: false,
@@ -165,11 +165,11 @@ export default {
           isGray: false,
         },
 
-        {
-          key: 'Space',
-          checked: false,
-          isGray: false,
-        },
+        // {
+        //   key: 'Space',
+        //   checked: false,
+        //   isGray: false,
+        // },
 
         {
           key: 'Tab',
@@ -450,6 +450,10 @@ export default {
           },
           {
             key: 'Z',
+            checked: false,
+          },
+          {
+            key: 'Space',
             checked: false,
           },
         ],
@@ -754,7 +758,7 @@ export default {
       position: absolute;
       background: var(--secondary-bg);
       top: 12px;
-      right: 18px;
+      right: 3px;
     }
   }
 

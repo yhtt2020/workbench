@@ -98,8 +98,8 @@ export default {
     <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key], key)" class="xt-bg-2 rounded-lg mt-3 pointer" style="padding:12px 16px;">
       <div class="flex justify-between">
         <div class="flex xt-text">
-          {{this.keys[key].title}}快捷键：
-          <div v-for="item in keys[key].key">
+          {{ this.keys[key].title }}快捷键：
+          <div v-for="item in keys[key].keys? keys[key].keys: keys[key].key">
             <span class="xt-bg rounded-lg ml-2" style="padding: 6px 12px;">{{ item }}</span>
           </div>
         </div>

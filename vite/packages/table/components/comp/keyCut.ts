@@ -11,7 +11,7 @@ export const keyCutStore = defineStore("keyCutStore", {
         keyArr:[
           {
             field:'modifierKeyOne',
-            index: 6,
+            index: 5,
             key: 'Alt',
           },
           {
@@ -27,7 +27,7 @@ export const keyCutStore = defineStore("keyCutStore", {
         keyArr:[
           {
             field:'modifierKeyOne',
-            index: 6,
+            index: 5,
             key: 'Alt',
           },
           {
@@ -43,7 +43,7 @@ export const keyCutStore = defineStore("keyCutStore", {
         keyArr:[
           {
             field:'modifierKeyOne',
-            index: 6,
+            index: 5,
             key: 'Alt',
           },
           {
