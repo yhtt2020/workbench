@@ -21,12 +21,14 @@ import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
 import {renderIcon} from '../../../../js/common/common'
+import {startApp} from '../../../../ui/hooks/useStartApp'
 export default {
   mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
     state: { type: Boolean, default: false },
     index: { type: Number },
+    newIcon: { type: Boolean },
   },
   data() {
     return {
@@ -166,6 +168,9 @@ export default {
       window.open("https://www.apps.vip/download/");
       this.visible = false;
     },
+    openApps(type,value,router){
+      startApp(type,value,router)
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
@@ -182,8 +187,11 @@ export default {
       //   }
       //   return;
       // }
-
-      if (this.open !== undefined && this.open.value !== "") {
+      
+      if(this.newIcon){
+        console.log(this.newIcon,'open');
+        this.openApps(this.open.type,this.open.value,this.$router)
+      } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
         this.newOpenApp();
