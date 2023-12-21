@@ -15,6 +15,23 @@ const DEFAULT_PAPERS_SETTINGS = {
   tipLock: false,//在状态栏提示多久锁屏
   wallSource:'picking',
 }
+
+const SETTING_TMP = {
+  enable: true,
+  playType: 'my',
+  showTime: true,
+  showWeather: true,
+  showProgress: false,
+  usePassword: false,
+  password: '',
+  showUnreadMessage: true,
+  lockTimeout: 1800,
+  interval: 30,
+  savePath: '',
+  tipLock: false,//在状态栏提示多久锁屏
+  wallSource:'picking',
+}
+
 // @ts-ignore
 export const paperStore = defineStore('paper', {
   state: () => ({
@@ -31,7 +48,7 @@ export const paperStore = defineStore('paper', {
      * 重置全部壁纸设置
      */
     resetPapersSettings() {
-      this.settings = DEFAULT_PAPERS_SETTINGS
+      this.settings = JSON.parse(JSON.stringify(SETTING_TMP))
     },
     /**
      * 添加到我的壁纸

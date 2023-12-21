@@ -25,11 +25,11 @@
   </div>
   <div style="flex-shrink: 1;flex-grow: 1;flex-basis: fit-content;height: 0">
     <vue-custom-scrollbar id="pick-wrapper" :settings="settingsScroller" style="height: 100%">
-      <viewer :images="pickImageData" :options="options">
+      <viewer :images="pickImageData" :options="options" class="px-2.5">
         <div style="display: flex; align-items: center; justify-content: center;">
           <a-spin v-if="isLoading" />
         </div>
-        <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
+        <a-row :gutter="[20, 20]" id="pick-images" ref="pickRef">
           <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" style="">
             <!-- 拾光壁纸循环位置 -->
         <xt-task v-if="index==0" :modelValue="m01036" @cb="pickShow(img)">

@@ -38,6 +38,7 @@ import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
 import XtScrollbar from "./components/Scrollbar/index.vue"
+import XtDropdown from "./components/Dropdown/Dropdown.vue"
 
 export default function (app: App): void {
   app.component('XtCanvas', XtCanvas)
@@ -74,4 +75,5 @@ export default function (app: App): void {
   app.component('XtLogin',XtLogin )
   app.component('XtSelectNav',XtSelectNav)
   app.component('XtScrollbar',XtScrollbar)
+  app.component('XtDropdown',XtDropdown)
 }

@@ -205,6 +205,8 @@
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
+
+  <GalleryModal ref="galleryRef"/>
 </template>
 
 <script>
@@ -279,6 +281,7 @@ import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
 // import News from "../components/widgets/news/NewsCard.vue";
+import GalleryModal from '../components/paperModal/GalleryModal.vue';
 import {
   setTransparent,
   detTransparent,
@@ -466,7 +469,7 @@ export default {
     Todo,
     EatToday,
     HotSearch,
-    RadioTab,
+    RadioTab,GalleryModal,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -1089,7 +1092,8 @@ export default {
       this.menuVisible = false;
     },
     goPaper() {
-      this.$router.push({ name: "my" });
+      // this.$router.push({ name: "my" });
+      this.$refs.galleryRef.openGalleryModal();
     },
     addCard() {
       this.custom = true;

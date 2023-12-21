@@ -106,6 +106,7 @@ import { appStore } from '../store'
 import { countDownStore } from '../store/countDown'
 import { cardStore } from '../store/card'
 import { mapActions, mapState, mapWritableState } from 'pinia'
+import { selectWallPaper } from './gallery/data/gallery';
 import { message, Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
 import axios from 'axios'
@@ -295,45 +296,38 @@ export default {
 
     playAll () {
       let LockArr = []
-      if (this.settings.wallSource == 'my') {
+      switch(this.settings.wallSource){
         // 我的收藏
-        if (this.myPapers.length === 0) {
-          this.$router.replace({
-            name: 'my'
+        case 'my':
+          if (this.myPapers.length === 0){
+            this.$router.replace({   name: 'my' });
+            Modal.error({ content: '请添加我的壁纸后重新锁屏。' });
+            return;
+          }
+          this.myPapers.map(el => {
+           if (this.fileImageExtension(el)) {
+            LockArr.push({'src-mp4': el.srcProtocol,media: 'video', poster: el.path, controls: false,});
+           } 
+           else {
+            LockArr.push({  src: el.path })
+           }
           })
-          Modal.error({ content: '请添加我的壁纸后重新锁屏。' })
-          return
-        }
-        this.myPapers.map(el => {
-          if (this.fileImageExtension(el)) {
-            LockArr.push({
-              'src-mp4': el.srcProtocol,
-              media: 'video',
-              poster: el.path,
-              controls: false,
-            })
-          } else {
-            LockArr.push({
-              src: el.path
-            })
-          }
-        })
-        // 处理视频播放
-        if (LockArr.length === 1) {
-          if (LockArr[0].media === 'video') {
-            this.singleLively = true
-            this.playing = LockArr
-            return
-          }
-        } else {
-          this.singleLively = false
-        }
-        window.Spotlight.show(LockArr, this.config)
-      } else if (this.settings.wallSource == 'bing') {
-        // 必应壁纸
-        let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
-        axios.get(url).then(imagesResult => {
-          if (imagesResult.status === 200) {
+          // 处理视频播放
+          if (LockArr.length === 1) {
+            if (LockArr[0].media === 'video') {  
+              this.singleLively = true  
+              this.playing = LockArr
+              return
+            }
+          } 
+          else {  this.singleLively = false }
+          window.Spotlight.show(LockArr, this.config)
+          break;
+        // 必应
+        case 'bing':
+          let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8';
+          axios.get(url).then(imagesResult => {
+           if (imagesResult.status === 200) {
             let arr = imagesResult.data.images
             arr.forEach(item => {
               LockArr.push({
@@ -342,22 +336,22 @@ export default {
               })
             })
             window.Spotlight.show(LockArr, this.config)
-          } else {
+           } else {
             Modal.error({ content: '网络加载错误，请检查设备后重试' })
             return
-          }
-        }, rej => {
-          Modal.error({ content: '网络加载错误，请检查设备后重试' })
-          return
-        }).catch((err) => {
-          console.log(err)
-        })
-
-      } else {
+           }
+          }, rej => {
+           Modal.error({ content: '网络加载错误，请检查设备后重试' })
+           return
+          }).catch((err) => {
+            console.log(err)
+          })
+          break;
         // 拾光壁纸
-        const url = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
-        axios.get(url).then(async res => {
-          if (res.data.data.length !== 1) {
+        case 'picking':
+           let pickingUrl = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
+           axios.get(pickingUrl).then(async res => {
+            if (res.data.data.length !== 1) {
             let arr = res.data.data
             arr.forEach(item => {
               LockArr.push({
@@ -366,16 +360,112 @@ export default {
               })
             })
             window.Spotlight.show(LockArr, this.config)
-          } else {
+            } else {
             return
-          }
-        }, rej => {
-          Modal.error({ content: '网络加载错误，请检查设备后重试' })
-          return
-        }).catch((err) => {
-          console.log(err)
-        })
+            }
+           }, rej => {
+            Modal.error({ content: '网络加载错误，请检查设备后重试' })
+            return
+           }).catch((err) => {
+            console.log(err)
+           })
+          break;
+        // 精选壁纸 
+        case 'recommend':
+          selectWallPaper.forEach((item)=>{
+            LockArr.push({src:item.fullPath,path:item.thumbPath})
+          })
+          window.Spotlight.show(LockArr, this.config)
+          break;
+        // 我的收藏选中激活
+        case 'myActive':
+           this.playActive()
+          break;
       }
+      
+      // if (this.settings.wallSource === 'my') {
+      //   // 我的收藏
+      //   if (this.myPapers.length === 0) {
+          // this.$router.replace({
+          //   name: 'my'
+          // })
+      //     Modal.error({ content: '请添加我的壁纸后重新锁屏。' })
+      //     return
+      //   }
+        // this.myPapers.map(el => {
+        //   if (this.fileImageExtension(el)) {
+        //     LockArr.push({
+        //       'src-mp4': el.srcProtocol,
+        //       media: 'video',
+        //       poster: el.path,
+        //       controls: false,
+        //     })
+        //   } else {
+        //     LockArr.push({
+        //       src: el.path
+        //     })
+        //   }
+        // })
+      //   // 处理视频播放
+        // if (LockArr.length === 1) {
+        //   if (LockArr[0].media === 'video') {
+        //     this.singleLively = true
+        //     this.playing = LockArr
+        //     return
+        //   }
+        // } else {
+        //   this.singleLively = false
+        // }
+        // window.Spotlight.show(LockArr, this.config)
+      // } else if (this.settings.wallSource === 'bing') {
+      //   // 必应壁纸
+      //   let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8'
+        // axios.get(url).then(imagesResult => {
+        //   if (imagesResult.status === 200) {
+        //     let arr = imagesResult.data.images
+        //     arr.forEach(item => {
+        //       LockArr.push({
+        //         src: 'https://cn.bing.com' + item.url,
+        //         path: 'https://cn.bing.com' + item.url,
+        //       })
+        //     })
+        //     window.Spotlight.show(LockArr, this.config)
+        //   } else {
+        //     Modal.error({ content: '网络加载错误，请检查设备后重试' })
+        //     return
+        //   }
+        // }, rej => {
+        //   Modal.error({ content: '网络加载错误，请检查设备后重试' })
+        //   return
+        // }).catch((err) => {
+        //   console.log(err)
+        // })
+
+      // } else if(this.settings.wallSource === 'picking') {
+      //   // 拾光壁纸
+        // const url = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
+        // axios.get(url).then(async res => {
+        //   if (res.data.data.length !== 1) {
+        //     let arr = res.data.data
+        //     arr.forEach(item => {
+        //       LockArr.push({
+        //         src: item.imgurl,
+        //         path: item.imgurl,
+        //       })
+        //     })
+        //     window.Spotlight.show(LockArr, this.config)
+        //   } else {
+        //     return
+        //   }
+        // }, rej => {
+        //   Modal.error({ content: '网络加载错误，请检查设备后重试' })
+        //   return
+        // }).catch((err) => {
+        //   console.log(err)
+        // })
+      // } else if(){
+
+      // }
     },
     playActive () {
       console.log('playActive')
@@ -383,7 +473,15 @@ export default {
         this.$router.replace({
           name: 'my'
         })
-        Modal.error({ content: '请激活壁纸后重新使用激活壁纸模式。' })
+        this.$xtConfirm('请先勾选需要在锁屏上展示的壁纸。','',{
+          index:1020,
+          ok: () => { },
+          no: () => {},
+          okText:'知道',
+          noText: null,
+          type:'link'
+        })
+        // Modal.error({ content: '请先勾选需要在锁屏上展示的壁纸。' })
         return
       }
       let lockActive = []

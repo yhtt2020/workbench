@@ -182,6 +182,7 @@
     </div>
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
+  <GalleryModal ref="galleryRef"/>
   <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
 </template>
 
@@ -202,12 +203,14 @@ import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 
 import { registerFolder } from "../../apps/folder/src/hooks/register";
+
+import GalleryModal from '../paperModal/GalleryModal.vue'
 import { useAddCard } from '../../ui/hooks/useAddCard';
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-  components: { LoadingOutlined, EditNewNavigation },
+  components: { LoadingOutlined, EditNewNavigation,GalleryModal  },
   props: {
     freeLayout: {
       default: true,
@@ -449,7 +452,15 @@ export default {
           fn: this.toggleEditing,
         },
         {
-          id: 7,
+          id:7,
+          newIcon:'fluent:image-multiple-16-regular',
+          name:'更换壁纸',
+          fn:()=>{
+            this.$refs.galleryRef.openGalleryModal();
+          }
+        },
+        {
+          id: 8,
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏桌面",
           fn: () => {
@@ -478,9 +489,9 @@ export default {
         },
         { id: 9, divider: true },
         {
-          id: 10,
-          newIcon: "fluent:settings-16-regular",
-          name: "桌面设置",
+          id: 9,
+          newIcon: 'fluent:settings-16-regular',
+          name: '桌面设置',
           fn: this.showSetting,
         },
       ];

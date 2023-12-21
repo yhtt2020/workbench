@@ -5,11 +5,12 @@
     :fn="fn"
     :menus="menuList"
     :model="model"
-    :class="[menuHeight, menuWidth]"
+    :class="[menuHeight, menuWidth, menuWidth]"
     :beforeCreate="beforeCreate"
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
     @mounted="onMounted"
+    :stopPropagation="stopPropagation"
   >
     <slot> </slot>
     <template #cardSize>
@@ -46,6 +47,10 @@ const props = defineProps({
   menuHeight: {
     default: "h-full",
   },
+  menuWidth: {
+    default: "w-full",
+  },
+  stopPropagation:{default:true},
   menuWidth: {
     default: "w-full",
   },
