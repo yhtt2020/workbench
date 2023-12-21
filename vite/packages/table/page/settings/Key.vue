@@ -32,7 +32,7 @@
 
 <script>
 import KeySetting from '../../components/comp/KeySetting.vue'
-import { mapWritableState } from 'pinia'
+import { mapWritableState,mapActions } from 'pinia'
 import { appStore } from '../../store'
 import XtRadio from '../../ui/libs/Radio/index.vue'
 import RadioTab from '../../components/RadioTab.vue'
@@ -96,6 +96,7 @@ export default {
     console.log(this.sound, this.sensitiveValue)
   },
   methods: {
+    ...mapActions(appStore,['disableShake','enableShake']),
     setPos () {
       window.addEventListener('keydown', this.listenEnter)
       this.shakeConfirm = this.$xtConfirm('提示', '请将鼠标移动到您希望在摇一摇后自动定位到的位置，并按下回车键（Enter），期间请勿关闭此窗口', {
@@ -122,10 +123,10 @@ export default {
     },
     'settings.shake.enable': {
       handler (newVal) {
-        window.shake = {
-          enable: newVal,
-          pos: this.settings.shake.pos,
-          sensitive: this.settings.shake.sensitive
+        if(newVal){
+          this.enableShake()
+        }else{
+          this.disableShake()
         }
       },
       deep: true

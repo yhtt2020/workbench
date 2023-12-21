@@ -190,7 +190,7 @@ export default {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
     timeout () {
@@ -312,14 +312,7 @@ export default {
         this.settings.zoomFactor = 100
       }
 
-      if(this.settings.shake.enable){
-        //初始化摇一摇功能
-        window.shake=this.settings.shake
-      }else{
-        window.shake={
-          enable:false,
-        }
-      }
+      this.ensureShake()//确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       if (this.settings.darkMod) {
         // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {

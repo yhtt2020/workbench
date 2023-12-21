@@ -285,37 +285,20 @@ export default {
       },
       editNavigationVisible: false,
       simpleVisible:false,
-      listenEnter:(event)=>{
-        if (event.code === "Enter") {
-            const point=tsbApi.mouse.getPos()
-            this.settings.shake.pos={
-              x:point.x,
-              y:point.y
-            }
-            message.success('设置摇一摇定位成功。','point')
-            window.shake={}
-            window.shake.pos=this.settings.shake.pos
-            window.shake.enable=true
-            window.shake.sensitive=this.settings.shake.sensitive || 4
-            window.shake.sound=this.settings.shake.sound
-            this.settings.shake.init=true
-            this.shakeConfirm.close()
-            window.removeEventListener('keydown',this.listenEnter)
-            this.$router.push({
-              name:'key'
-            })
-          }
-          event.preventDefault();
-          event.stopPropagation();
-      },
-      shakeConfirm:null
     };
   },
   watch: {
     'settings.shake.enable':{
       handler(newVal){
-        window.shake.enable=newVal
-        this.enableShake()
+        if(newVal){
+          this.enableShake(()=>{
+            this.$router.push({
+              name:'key'
+            })
+          })
+        }else{
+          this.disableShake()
+        }
       }
     },
     bgColor(newV) {
@@ -378,56 +361,13 @@ export default {
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
-    ...mapActions(appStore, ['enterAided', 'leaveAided']),
+    ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
     isMain: isMain, isWin,
     goShake(){
       this.$router.push({
         name:'key'
       })
     },
-    enableShake () {
-      if (this.settings.shake.enable) {
-        if (!this.settings.shake.init) {
-          this.$xtConfirm("摇一摇功能向导", "您似乎从未使用过摇一摇穿梭的功能，是否根据提示设置摇一摇功能？", {
-            ok: () => {
-              setTimeout(()=>{
-                this.$xtConfirm('功能说明',"您可以在工作台所在位置设置一个通过摇一摇快速到达的位置，后续通过摇一摇鼠标快速到达此位置，再次摇一摇即可回到首次摇动的位置。点击开始向导。",{
-                  okText:'开始',
-                  ok:()=>{
-                    window.addEventListener('keydown',this.listenEnter)
-                    setTimeout(()=>{
-                     this.shakeConfirm= this.$xtConfirm('提示', "请将鼠标移动到您希望在摇一摇后自动定位到的位置，并按下回车键（Enter），期间请勿关闭此窗口", {
-                        mask: true,
-                        okText:'取消',
-                        no:false,
-                        noText:false,
-                        ok:()=>{
-                          window.removeEventListener('keydown',this.listenEnter)
-                          message.info('已取消设置')
-                          this.settings.shake.enable=false
-                        }
-
-                      })
-                    },500)
-                  },
-                  noText:'取消',
-                  no:()=>{
-                    message.info('已取消设置')
-                    this.settings.shake.enable=false
-                  }
-                })
-              },500)
-
-            },
-            type: 'info',
-            no:()=>{
-              message.info('已取消设置')
-              this.settings.shake.enable=false
-            }
-          });
-        }
-      }
-    } ,
     goApps(){
       this.$router.push({
         name:'apps'
