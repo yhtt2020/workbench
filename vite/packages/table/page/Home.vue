@@ -205,6 +205,9 @@
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
+  <teleport to="body">
+    <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+  </teleport>
 </template>
 
 <script>
@@ -278,6 +281,8 @@ import Todo from "../components/widgets/todo/Todo.vue";
 import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
+import ScalePanel from "./ScalePanel.vue";
+
 // import News from "../components/widgets/news/NewsCard.vue";
 import {
   setTransparent,
@@ -467,6 +472,7 @@ export default {
     EatToday,
     HotSearch,
     RadioTab,
+    ScalePanel,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -496,7 +502,7 @@ export default {
     ...mapWritableState(appStore, {
       appSettings: "settings",
       deskInit:'deskInit',
-
+      visibleScale: 'visibleScale',
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -1061,6 +1067,11 @@ export default {
           }
         }
       })
+    },
+
+    // 关闭缩放弹窗
+    closeScale() {
+      this.visibleScale = false
     },
 
     showSetting() {
