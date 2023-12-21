@@ -7,7 +7,7 @@
             </div>
             <a-row align="middle">
                 <a-col :span="18">
-                    <a-slider v-model:value="item.value" :min="item.min" :max="item.max" :step="item.step" @change="changeValue"/>
+                    <a-slider v-model:value="item.value" :min="item.min" :max="item.max" :step="item.step" style="height: 8px;"/>
                 </a-col>
                 <a-col :span="4">
                     <a-input-number v-model:value="item.value" :min="1" :max="20" class="input"
@@ -45,10 +45,25 @@ const reset = (item,index) => {
 
 }
 // 修改数据
-const changeValue=(value)=>{
-    console.log(value,'====>>>>');
+// const changeValue=(value)=>{
+//     console.log(value,'====>>>>');
     
-    emit('change',value)
+//     emit('change',value)
+// }
+// 监视 sliderList 中每个元素的变化
+watch(() => props.sliderList.map(item => item.value), (newVal, oldVal) => {
+    // 找出数组中哪个元素的值发生了变化
+    for (let i = 0; i < newVal.length; i++) {
+        if (newVal[i] !== oldVal[i]) {
+            console.log(`Value changed in element at index ${i}:`, newVal[i]);
+            // 触发事件或执行其他操作
+            emit('change', props.sliderList.find((item)=>item.value===newVal[i]))
+            
+        }
+    }
+}, { deep: true })
+const changeValue=(value)=>{
+    
 }
 </script>
 <style lang='scss' scoped></style>

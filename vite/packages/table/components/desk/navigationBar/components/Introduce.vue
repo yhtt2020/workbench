@@ -47,6 +47,7 @@ export default {
       doc
     }
   },
+  emits: ['clickListItem'],
   props: {
     recommendation: String,
     selectList: Array,
@@ -121,9 +122,11 @@ export default {
           this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
           break;
       
-        default:
+          case 'desktop':
+          this.$emit('clickListItem', item, index)
           break;
       }
+      
     },
     // 搜索目标图标
     filterIcon(list) {
@@ -145,7 +148,7 @@ export default {
             return this.filterIcon(this.selectList);
             break;
           case 'software':
-            return this.filterIcon(this.selectList.filter((item) => item.path.endsWith('.exe')));
+            return this.filterIcon(this.selectList.filter((item) => item.value.endsWith('.exe')));
             break;
           case 'docx':
             return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));
@@ -168,12 +171,28 @@ export default {
     webList() {
       if (this.selectTag === 'webNavigation') {
         const clickTag = this.webMenus[this.clickIndex].tag;
-        const temp = [];
+        let temp = [];
 
         return this.selectList.map((item) => {
           if (item.hasOwnProperty(clickTag)) {
+            console.log(item[clickTag],'web');
             temp.push(...item[clickTag]);
+            temp =temp.map((item)=>{
+              return {
+                ...item,
+                // addNav:item.addNav,
+                // name:item.name,
+                // id:item.id,
+                // icon:item.icon,
+                value:item.url,
+                mode:'link',
+                type:'default',
+                bg:'',
+                isBg:false,
+              }
+            })
           }
+          console.log(temp,'temp');
           return temp;
         });
       } else {

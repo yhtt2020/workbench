@@ -82,7 +82,7 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-   <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
+    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
@@ -495,7 +495,7 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
-      deskInit:'deskInit',
+      deskInit: 'deskInit',
 
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
@@ -526,7 +526,7 @@ export default {
         });
         return find;
       } else {
-        this.currentDeskId=this.desks[0].id
+        this.currentDeskId = this.desks[0].id
         return this.desks[0];
       }
     },
@@ -534,12 +534,16 @@ export default {
   beforeUpdate() {
     if (this.hasTriggered <= 10) {
       console.log("chufa");
-      this.replaceIcon();
+      this.replaceIcon(this.sideNavigationList);
+      this.replaceIcon(this.rightNavigationList);
+      this.replaceIcon(this.footNavigationList);
       this.hasTriggered++;
     }
   },
   async mounted() {
-    this.replaceIcon();
+    this.replaceIcon(this.sideNavigationList);
+    this.replaceIcon(this.rightNavigationList);
+    this.replaceIcon(this.footNavigationList);
     // setTimeout(() => {
     //   this.replaceIcon()
     // },500)
@@ -550,7 +554,9 @@ export default {
           clearInterval(timer);
           return;
         }
-        this.replaceIcon();
+        this.replaceIcon(this.sideNavigationList);
+        this.replaceIcon(this.rightNavigationList);
+        this.replaceIcon(this.footNavigationList);
         n++;
       }, 3000);
     } else {
@@ -559,30 +565,18 @@ export default {
           clearInterval(timer);
           return;
         }
-        this.replaceIcon();
+        this.replaceIcon(this.sideNavigationList);
+        this.replaceIcon(this.rightNavigationList);
+        this.replaceIcon(this.footNavigationList);
         n++;
       }, 1000);
     }
     // 判断是否是第一次加载
-    if(this.deskInit){
+    if (this.deskInit) {
       // 新用户第一次进入加载一个默认桌面
       this.addFreeLayoutDesk()
       this.deskInit = false
     }
-
-    // let counte=0
-    // const counter=setInterval(()=>{
-    //     if(this.replaceFlag==false){
-    //       clearInterval(counter)
-    //     }
-    //     this.replaceIcon()
-    //     console.log(this.replaceFlag,this.footNavigationList,'footNavigationList')
-    //     counte++
-    //     if(counte>=3){
-    //       clearInterval(counter)
-    //     }
-    // },1200)
-    // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
@@ -787,31 +781,57 @@ export default {
       this.iconVisible = true;
       this.menuVisible = false;
     },
-    replaceIcon() {
+    replaceIcon(navigationList) {
       navigationData.systemAppList.forEach((item) => {
-        this.sideNavigationList.forEach((i) => {
+        navigationList.forEach((i) => {
+          i.bg = ''
+          i.isBg = false
           if (item.event === i.event) {
+            i.type = item.type
             i.icon = item.icon
             i.name = item.name
-          }
-        });
-      });
-      navigationData.systemAppList.forEach((item) => {
-        this.rightNavigationList.forEach((i) => {
-          if (item.event === i.event) {
-            i.icon = item.icon
-            i.name = item.name
-          }
-        });
-      });
-      navigationData.systemAppList.forEach((item) => {
-        this.footNavigationList.forEach((i) => {
-          if (item.event === i.event) {
-            i.icon = item.icon
-            i.name = item.name
+            i.value = item.event
+            i.mode = 'app'
           }
         })
-      })
+      });
+      const updatedList = navigationList.map((item) => {
+        switch (item.type) {
+          case 'systemApp':
+            return { ...item };
+          case 'coolApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.data || item.value
+            };
+          case 'lightApp':
+            return {
+              ...item,
+              mode: 'link',
+              value: item.package || item.value
+            };
+          case 'tableApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.path || item.value
+            };
+          default:
+            return {
+              ...item,
+              mode: 'link',
+              type: 'default',
+              value: item.url || item.value
+            };
+        }
+      }).map((item) => ({
+        ...item,
+        bg: '',
+        isBg: false
+      }));
+
+      return updatedList;
       this.replaceFlag = false;
     },
     setTransparent() {
@@ -1011,16 +1031,16 @@ export default {
     },
 
     // 第一次登录加载桌面应用
-    async addApptoDesk(){
+    async addApptoDesk() {
       const desktopApps = await ipc.sendSync('getDeskApps')
       let appList = []
-      desktopApps.forEach(i=>{
-        if(i.ext == '.exe'){
+      desktopApps.forEach(i => {
+        if (i.ext == '.exe') {
           appList.push(i)
         }
       })
       let appListHandle = []
-      appList.forEach(item=>{
+      appList.forEach(item => {
         let obj = {
           backgroundColor: '',
           backgroundIndex: 0,
@@ -1037,21 +1057,21 @@ export default {
           src: item.icon,
           // 标题
           titleValue: item.name,
-          open:{
-            type:"default",
+          open: {
+            type: "default",
             // 网址
-            value:item.path
+            value: item.path
           }
         }
         appListHandle.push(obj)
       })
-      this.desks[0].cards.forEach((item,index)=>{
+      this.desks[0].cards.forEach((item, index) => {
         // 直接修改默认数据
-        if(item.id == '1702026795921'){
+        if (item.id == '1702026795921') {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if(appListHandle.length <= 1){
+          if (appListHandle.length <= 1) {
             this.desks[0].cards[index].customData.iconList = appListHandle
-          }else{
+          } else {
             this.desks[0].cards[index] = {
               "name": "historyInfo",
               "id": 1702026795921,
