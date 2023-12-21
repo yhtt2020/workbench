@@ -14,10 +14,12 @@
         /* width: 160px; */
         border: 1px solid var(--divider);
         height: 80px;
-      ">
+        /* padding-left: 16px !important; */
+        /* padding-right: 16px !important; */
+      " :style="{width:this.settings.enableChat?'160px':'80px',paddingLeft:this.settings.enableChat?'16px !important':'0px',paddingRight:this.settings.enableChat?'16px !important':'0px'}">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat" class="ml-3 pointer">
+        <div v-show="settings.enableChat" class=" pointer">
           <ChatButton></ChatButton>
         </div>
       </div>
@@ -85,67 +87,6 @@
 
               </div>
             </div>
-            <!-- <div class="mr-3"> -->
-            <!-- <AddIcon v-if="this.editToggle" :position="'foot'" @addIcon="editNavigation(this.drawerMenus[0])"
-            @completeEdit="completeEdit" /> -->
-            <!-- </div> -->
-
-            <!-- <a-tooltip :title="showScreen ? '运行中的分屏' : '运行中的应用'">
-          <div
-            @click="appChange"
-            v-if="isMain"
-            style="
-              flex-shrink: 0;
-              border-left: 1px solid var(--divider);
-              width: 72px;
-              height: 58px;
-            "
-            class="flex items-center justify-center h-2/3 pointer"
-          >
-            <template v-if="!showScreen">
-              <navIcon
-                icon="fluent:window-multiple-16-filled"
-                style="
-                  width: 40px;
-                  height: 40px;
-                  margin-left: 5px;
-                  margin-top: 1px;
-                "
-              ></navIcon>
-              <span
-                style="
-                  position: absolute;
-                  width: 48px;
-                  height: 48px;
-                  text-align: center;
-                  line-height: 48px;
-                  font-weight: bold;
-                  font-size: 18px;
-                "
-              >{{ runningApps.length + runningTableApps.length }}</span
-              >
-            </template>
-            <template v-else>
-              <navIcon
-                icon="majesticons:monitor-line"
-                style="width: 40px; height: 40px; margin-left: 2px;margin-top: 1px;"
-              ></navIcon>
-              <span
-                style="
-                  position: absolute;
-                  width: 48px;
-                  height: 48px;
-                  text-align: center;
-                  line-height: 48px;
-                  font-weight: bold;
-                  font-size: 18px;
-                  margin-bottom: 6px;
-                "
-              >{{ runningScreen }}</span
-              >
-            </template>
-          </div>
-        </a-tooltip> -->
           </div>
         </xt-task>
 
@@ -200,21 +141,6 @@
           </div>
         </div>
 
-      </a-col>
-    </a-row>
-  </a-drawer> -->
-
-
-
-  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#1F1F1F', height: '11em' }" :width="120" :height="120"
-    class="drawer" :closable="false" placement="bottom" :visible="menuVisible" @close="onClose">
-    <a-row style="margin-top: 1em" :gutter="[20, 20]">
-      <a-col>
-        <div @click="editNavigation" class="relative btn">
-          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
-          <div><span>编辑</span></div>
-         <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
-        </div>
       </a-col>
     </a-row>
   </a-drawer> -->
