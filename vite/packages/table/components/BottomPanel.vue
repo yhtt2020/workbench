@@ -53,13 +53,9 @@
           flex-wrap: nowrap;
           justify-content: center;
         ">
-
-
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
               <div class=" scroll-content"
                 style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;" ref="content">
-                <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false"> -->
-
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
@@ -70,20 +66,25 @@
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
-                        <div style="width: 52px; height: 52px;" v-if="!item.isBg"
+                        <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                        <template v-else>
+                          <!-- <div style="width: 52px; height: 52px;" v-if="!item.isBg"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
                           class="relative flex items-center justify-center ">
                           <a-avatar :size="52" shape="square" :src="item.icon"
                             :style="{ borderRadius: iconRadius + 'px' }"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
                         </div>
-                        <div v-else style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
+                        <div v-else style="width: 52px; height: 52px;margin-top: -5px;"
+                          class="relative flex items-center justify-center overflow-hidden"
                           :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
-                          <!-- {{ item.color }} -->
                           <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="[{ borderRadius: iconRadius + 'px' },item.color]"
+                            :style="[{ borderRadius: iconRadius + 'px' }, item.color]"
                             :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div>
+                        </div> -->
+                        <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                        </template>
+                        
                       </div>
                     </xt-menu>
                   </a-tooltip>
@@ -96,11 +97,11 @@
 
       </div>
 
-      <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
-        <Team></Team>
-      </template>
+      <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
+        <Team ></Team>
+      </template> -->
       <keep-alive>
-        <TaskBox v-if="this.bottomToggle[2] && (simple || !simple)"></TaskBox>
+        <TaskBox v-if="true"></TaskBox>
       </keep-alive>
     </div>
 
@@ -153,7 +154,7 @@ import { useWidgetStore } from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
-import SidePanel from './SidePanel.vue'
+// import SidePanel from './SidePanel.vue'
 // import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
@@ -185,8 +186,9 @@ import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
-import {startApp} from '../ui/hooks/useStartApp'
+import { startApp } from '../ui/hooks/useStartApp'
 import _ from 'lodash-es'
+import Avatar from './desk/navigationBar/components/Avatar.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -196,7 +198,7 @@ export default {
     MyAvatar,
     TeamTip,
     // SecondPanel,
-    SidePanel,
+    // SidePanel,
     Template,
     PanelButton,
     ThunderboltFilled,
@@ -210,7 +212,8 @@ export default {
     navigationSetting,
     EditNewNavigation,
     xtMixMenu,
-    EditIcon
+    EditIcon,
+    Avatar
   },
   data() {
     return {
@@ -492,7 +495,7 @@ export default {
       'popVisible', 'currentList',
       'editItem', 'navAttribute', 'iconRadius'
     ]),
-    ...mapWritableState(taskStore, ['isTask']),
+    ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
 
     isMain() {
@@ -547,7 +550,7 @@ export default {
       this.mainMenus[3].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
-    }
+    },
   },
   watch: {
     footNavigationList: {
@@ -912,46 +915,17 @@ export default {
     //   }
 
     // },
-    // newOpenApp(type, value) {
-    //   if (value === 'fullscreen') {
-    //     this.toggleFullScreen()
-    //   }
-    //   switch (type) {
-    //     // 默认浏览器
-    //     case "default":
-    //       browser.openInSystem(value);
-    //       break;
-    //     // 嵌入浏览器
-    //     case "internal":
-    //       browser.openInTable(value);
-    //       break;
-    //     // 想天浏览器
-    //     case "thinksky":
-    //       browser.openInInner(value);
-    //       break;
-    //     // 轻应用
-    //     case "lightApp":
-    //       ipc.send("executeAppByPackage", {
-    //         package: value,
-    //       });
-    //       break;
-    //     // 酷应用
-    //     case "coolApp":
-    //       this.$router.push({ name: "app", params: value });
-    //       break;
-    //     // 本地应用
-    //     case "tableApp":
-    //       require("electron").shell.openPath(
-    //         require("path").normalize(value)
-    //       );
-    //       break;
-    //     case "localApp":
-    //       require("electron").shell.openPath(value);
-    //     case "systemApp":
-    //       this.$router.push({ name: value });
-    //   }
-    // },
     newOpenApp(type, value) {
+      if (type === 'nav') {
+        switch (value) {
+          case 'task':
+            this.isTaskDrawer = true
+            break;
+          case 'team':
+            console.log(111111)
+            break;
+        }
+      }
       startApp(type, value, this.$router)
     },
     // 拖拽桌面图标
@@ -1223,32 +1197,6 @@ export default {
   padding: 0.2em 0.8em 0.2em 0.8em !important;
 }
 
-.shaking-element {
-  // animation: shake 0.5s infinite;
-  animation: shake 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 2 alternate;
-}
-
-@keyframes shake {
-  0% {
-    transform: translateY(0);
-  }
-
-  25% {
-    transform: rotate3d(0, 0, 1, -15deg);
-  }
-
-  50% {
-    transform: rotate3d(0, 0, 1, 15deg);
-  }
-
-  75% {
-    transform: rotate3d(0, 0, 1, -15deg);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
 
 //
 //@media screen and (max-height: 510px) {

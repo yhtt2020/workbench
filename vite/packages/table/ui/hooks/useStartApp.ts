@@ -1,5 +1,6 @@
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
+import {taskStore} from "../../apps/task/store";
 export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器
@@ -42,9 +43,15 @@ export const startApp = (type, value, router?) => {
 
 export const openSysApp = (value,router)=>{
   const useAppStore = appStore();
+  const useTakeStore = taskStore()
   if(value === 'fullscreen'){
     useAppStore.toggleFullScreen()
-  }else{
+  } else if(value === 'task'){
+    useTakeStore.isTaskDrawer = true
+  } else if(value === 'commun'){
+    console.log(1111);
+    return
+  } else{
     router.push({name:value})
   }
 }

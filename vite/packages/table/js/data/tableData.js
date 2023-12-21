@@ -261,6 +261,18 @@ export default {
       'name': '网易云音乐',
       'event': 'music'
     },
+    {
+      "type": "systemApp",
+      "icon": "/logo/task.svg",
+      "name": "任务中心",
+      "event": "task"
+    },
+    {
+      "type":'systemApp',
+      "icon":'/logo/commun.svg',
+      "name":'社区中心',
+      "event":'commun',
+    },
     // 由于功能未闭合，暂时隐藏
     // {
     //   type: 'systemApp',
