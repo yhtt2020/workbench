@@ -85,6 +85,7 @@
    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
+        1   
         <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-4">
             <div>桌面背景</div>

@@ -1,8 +1,6 @@
 <template>
-  <div class="xt-bg-2 p-4 rounded-xl">
+  <div class="xt-bg-2 p-4 rounded-xl" v-if="isFreeLayout">
     <xt-option-info
-      isSwitch
-      v-model:switch="freeLayoutSwitch"
       title="自由布局"
       info="开放式桌面画布，支持自定义每个组件的位置、缩放，还可以实现层叠等操作。（当前功能为测试版，可能会有部分组件不兼容或影响使用的Bug，如有遇到请关闭自由布局）"
     >
@@ -18,83 +16,80 @@
         >
       </template>
     </xt-option-info>
-    <template v-if="freeLayoutSwitch">
-      <hr />
-      <xt-option-info
-        title="滚动模式"
-        info="可以根据你的习惯修改桌面画布的滚动模式。（「自由模式」下按住「空格键」和「鼠标左键」可以随意拖动桌面）"
+    <hr />
+    <xt-option-info
+      title="滚动模式"
+      info="可以根据你的习惯修改桌面画布的滚动模式。（「自由模式」下按住「空格键」和「鼠标左键」可以随意拖动桌面）"
+    />
+    <xt-option-tab
+      v-model="getFreeLayoutState.mode.scroll"
+      :list="scrollList"
+      @cb="updateScroll"
+      circle
+      style="height: 40px"
+    />
+    <hr />
+    <xt-option-info
+      title="排列模式"
+      info="选择图标和组件在拖动时的排列模式。"
+    />
+    <xt-option-tab
+      v-model="getFreeLayoutState.mode.arrange"
+      :list="arrangeList"
+      @cb="updateArrange"
+      circle
+      style="height: 40px"
+    />
+    <hr />
+    <xt-option-info
+      title="组件叠放"
+      info="开启后支持将组件或图标进行叠放，并支持调整叠放层级。"
+      isSwitch
+      v-model:switch="stack"
+    />
+    <hr />
+    <xt-option-info
+      title="桌面画布尺寸"
+      info="调整整体桌面画布尺寸，宽x高，以及缩放比例。"
+      icon="fluent:arrow-clockwise-16-regular"
+      @onIconClick="onIconClick"
+    />
+    <div class="mb-4 flex items-center relative" style="height: 40px">
+      <xt-input
+        v-model="deskWidth"
+        @blur="updateDeskSize"
+        class="xt-bg-t-2 xt-b"
+        style="width: 156px"
       />
-      <xt-option-tab
-        v-model="getFreeLayoutState.mode.scroll"
-        :list="scrollList"
-        circle
-        style="height: 40px"
+      <div class="flex justify-center items-center" style="width: 40px">x</div>
+      <xt-input
+        v-model="deskHeight"
+        @blur="updateDeskSize"
+        class="xt-bg-t-2 xt-b"
+        style="width: 156px"
       />
-      <hr />
-      <xt-option-info
-        title="排列模式"
-        info="选择图标和组件在拖动时的排列模式。"
-      />
-
-      <xt-option-tab
-        v-model="getFreeLayoutState.mode.arrange"
-        :list="arrangeList"
-        circle
-        style="height: 40px"
-      />
-      <hr />
-      <xt-option-info
-        title="组件叠放"
-        info="开启后支持将组件或图标进行叠放，并支持调整叠放层级。"
-        isSwitch
-        v-model:switch="stack"
-      />
-      <hr />
-      <xt-option-info
-        title="桌面画布尺寸"
-        info="调整整体桌面画布尺寸，宽x高，以及缩放比例。"
-        icon="fluent:arrow-clockwise-16-regular"
-        @onIconClick="onIconClick"
-      />
-      <div class="mb-4 flex items-center relative" style="height: 40px">
-        <xt-input
-          v-model="deskWidth"
-          @blur="updateDeskSize"
-          class="xt-bg-t-2 xt-b"
-          style="width: 156px"
-        />
-        <div class="flex justify-center items-center" style="width: 40px">
-          x
-        </div>
-        <xt-input
-          v-model="deskHeight"
-          @blur="updateDeskSize"
-          class="xt-bg-t-2 xt-b"
-          style="width: 156px"
-        />
-        <xt-input
-          v-model="deskZoom"
-          @blur="updateDeskSize"
-          class="xt-bg-t-2 xt-b absolute right-0"
-          style="width: 74px"
-        >
-          <template #suffix> % </template>
-        </xt-input>
-      </div>
-      <hr />
-      <xt-option-info
-        title="对齐方式"
-        info="选择桌面布局的对齐方式，可以通过桌面菜单中的「重置桌面位置」回到对齐中心。"
-      />
-      <xt-option-select v-model="align" :list="alignList" />
-      <xt-button class="xt-bg-t-2 mt-4 text-sm" h="40" block
-        >点击设置当前桌面位置为画布中心</xt-button
+      <xt-input
+        v-model="deskZoom"
+        @blur="updateDeskSize"
+        class="xt-bg-t-2 xt-b absolute right-0"
+        style="width: 74px"
       >
-      <div class="flex justify-between mb-4">
-        <div>中心线</div>
-        <a-switch v-model:checked="getFreeLayoutState.line.isCenterLine" />
-      </div>
-    </template>
+        <template #suffix> % </template>
+      </xt-input>
+    </div>
+    <hr />
+    <xt-option-info
+      title="对齐方式"
+      info="选择桌面布局的对齐方式，可以通过桌面菜单中的「重置桌面位置」回到对齐中心。"
+    />
+    <xt-option-select v-model="align" :list="alignList" @cb="updateAlign" />
+    <xt-button class="xt-bg-t-2 mt-4 text-sm" h="40" block
+      >点击设置当前桌面位置为画布中心</xt-button
+    >
+    <div class="flex justify-between mb-4">
+      <div>中心线</div>
+      <a-switch v-model:checked="getFreeLayoutState.line.isCenterLine" />
+    </div>
   </div>
 </template>
 
@@ -142,7 +137,6 @@ watch(stack, (newV) => {
 // 自由布局开关
 const freeLayoutSwitch = ref(isFreeLayout.value || false);
 watch(freeLayoutSwitch, (newV) => {
-  console.log("开始构建自由布局 :>> ");
   freeLayoutStore.renewFreeLayout();
 });
 // 滚动模式
@@ -164,20 +158,17 @@ const scrollList = ref([
     value: "lock",
   },
 ]);
-watch(
-  () => getFreeLayoutState.value.mode?.scroll,
-  (newV) => {
-    if (newV === "free") {
-      getFreeLayoutState.value.mode.scroll = "free";
-    } else if (newV === "vertical") {
-      getFreeLayoutState.value.mode.scroll = "vertical";
-    } else if (newV === "horizontal") {
-      getFreeLayoutState.value.mode.scroll = "horizontal";
-    } else if (newV === "lock") {
-      getFreeLayoutState.value.mode.scroll = "lock";
-    }
+const updateScroll = (newV) => {
+  if (newV === "free") {
+    getFreeLayoutState.value.mode.scroll = "free";
+  } else if (newV === "vertical") {
+    getFreeLayoutState.value.mode.scroll = "vertical";
+  } else if (newV === "horizontal") {
+    getFreeLayoutState.value.mode.scroll = "horizontal";
+  } else if (newV === "lock") {
+    getFreeLayoutState.value.mode.scroll = "lock";
   }
-);
+};
 
 // 排列模式 2023-12-20 已跑通
 const arrangeList = ref([
@@ -194,27 +185,22 @@ const arrangeList = ref([
     value: "free",
   },
 ]);
-watch(
-  () => getFreeLayoutState.value.mode?.arrange,
-  (newV) => {
-    if (newV === "grid") {
-      getFreeLayoutState.value.mode.arrange = "grid";
-      getFreeLayoutState.value.option.afterDragging = true;
-      getFreeLayoutState.value.option.magnet = false;
-    } else if (newV === "magnet") {
-      getFreeLayoutState.value.mode.arrange = "magnet";
-      getFreeLayoutState.value.option.afterDragging = false;
-      getFreeLayoutState.value.option.magnet = true;
-    } else if (newV === "free") {
-      getFreeLayoutState.value.option.arrange = "free";
-      getFreeLayoutState.value.option.afterDragging = false;
-      getFreeLayoutState.value.option.magnet = false;
-    }
-  },
-  {
-    immediate: true,
+const updateArrange = (newV) => {
+  if (newV === "grid") {
+    getFreeLayoutState.value.mode.arrange = "grid";
+    getFreeLayoutState.value.option.afterDragging = true;
+    getFreeLayoutState.value.option.magnet = false;
+  } else if (newV === "magnet") {
+    getFreeLayoutState.value.mode.arrange = "magnet";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = true;
+  } else if (newV === "free") {
+    getFreeLayoutState.value.option.arrange = "free";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = false;
   }
-);
+};
+
 // 桌面大小
 const deskWidth = ref(5000);
 const deskHeight = ref(5000);
@@ -261,29 +247,25 @@ const alignList = ref([
     value: "custom",
   },
 ]);
-
-watch(
-  () => getFreeLayoutState.value.mode.align,
-  (newV) => {
-    if (newV === "top") {
-      getFreeLayoutState.value.mode.align = "top";
-      getFreeLayoutState.value.line.centerLine.x = "center";
-      getFreeLayoutState.value.line.centerLine.y = "top";
-    } else if (newV === "left") {
-      getFreeLayoutState.value.mode.align = "left";
-      getFreeLayoutState.value.line.centerLine.x = "top";
-      getFreeLayoutState.value.line.centerLine.y = "top";
-    } else if (newV === "center") {
-      getFreeLayoutState.value.mode.align = "center";
-      getFreeLayoutState.value.line.centerLine.x = "center";
-      getFreeLayoutState.value.line.centerLine.y = "center";
-    } else if (newV === "custom") {
-      getFreeLayoutState.value.mode.align = "custom";
-      getFreeLayoutState.value.line.centerLine.x = 2500;
-      getFreeLayoutState.value.line.centerLine.y = 2500;
-    }
+const updateAlign = (newV) => {
+  if (newV === "top") {
+    getFreeLayoutState.value.mode.align = "top";
+    getFreeLayoutState.value.line.centerLine.x = "center";
+    getFreeLayoutState.value.line.centerLine.y = "top";
+  } else if (newV === "left") {
+    getFreeLayoutState.value.mode.align = "left";
+    getFreeLayoutState.value.line.centerLine.x = "top";
+    getFreeLayoutState.value.line.centerLine.y = "top";
+  } else if (newV === "center") {
+    getFreeLayoutState.value.mode.align = "center";
+    getFreeLayoutState.value.line.centerLine.x = "center";
+    getFreeLayoutState.value.line.centerLine.y = "center";
+  } else if (newV === "custom") {
+    getFreeLayoutState.value.mode.align = "custom";
+    getFreeLayoutState.value.line.centerLine.x = 2500;
+    getFreeLayoutState.value.line.centerLine.y = 2500;
   }
-);
+};
 </script>
 
 <style lang="scss" scoped></style>

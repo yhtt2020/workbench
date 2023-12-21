@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between text-base xt-text mb-4" v-if="title">
+  <div class="flex justify-between text-base xt-text mb-2.5" v-if="title">
     <!-- 左侧 -->
     <div class="flex items-center">
       <span> {{ title }}</span>
@@ -33,7 +33,7 @@
      </slot>
     </div>
   </div>
-  <div class="text-sm xt-text-2 pb-4" v-if="info">{{ info }}</div>
+  <div class="text-sm xt-text-2 mb-2.5" v-if="info">{{ info }}</div>
 </template>
 
 <script setup lang="ts">

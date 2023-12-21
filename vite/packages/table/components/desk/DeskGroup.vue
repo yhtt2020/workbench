@@ -126,6 +126,7 @@
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
+          1
           <slot name="settingsAll"></slot>
         </template>
       </Desk>
