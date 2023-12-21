@@ -95,3 +95,13 @@ export function isDownLoad(data:any){
  const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
  return index > -1
 }
+
+// 时间格式化转换
+export function formatDateTime(date:any){
+ var y = date.getFullYear();
+ var m = date.getMonth() + 1;
+ m = m < 10 ? ('0' + m) : m;
+ var d = date.getDate();
+ d = d < 10 ? ('0' + d) : d;
+ return y + m + d
+}

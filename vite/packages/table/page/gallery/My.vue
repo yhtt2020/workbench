@@ -2,8 +2,8 @@
   <div class="w-full h-full flex flex-col">
     <div class=" flex items-center justify-between mb-2" :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
-        <MyIcon icon="fluent:star-16-regular" :style="isModal ? { 'font-size':'1rem' } : {'font-size':'2rem'}" class="mr-2 xt-text"/>
-        <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">我的收藏 （{{ myPapers.length }}）</span>
+        <MyIcon icon="fluent:star-16-regular" style="font-size:20px;" class="mr-2 xt-text"/>
+        <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 ' : 'font-16 '">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
       <div class="flex items-center justify-center ">

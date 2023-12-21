@@ -1,8 +1,8 @@
 <template>
   <div class="w-full h-full flex flex-col">
     <div class=" flex items-center justify-between mb-2 " :class="isModal ? 'h-8' : 'h-10'">
-      <div class="flex ">
-        <xt-new-icon icon="uim:bing" :size="isModal ? 20 : 32" class="mr-2"></xt-new-icon>
+      <div class="flex items-center justify-center">
+        <xt-new-icon icon="uim:bing" size="20" class="mr-2"></xt-new-icon>
         <span  class="xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">必应壁纸</span>
       </div>
       <div v-if="isModal">

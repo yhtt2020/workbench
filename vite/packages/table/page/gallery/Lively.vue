@@ -2,7 +2,7 @@
   <div class="flex w-full flex-col h-full">
    <div class="flex w-full justify-between mb-2">
     <div class="flex items-center justify-center">
-      <xt-new-icon icon="fluent:settings-16-regular" :size="isModal ? 20 : 32 "  class="mr-2"></xt-new-icon>
+      <xt-new-icon icon="fluent:settings-16-regular" size="20"  class="mr-2"></xt-new-icon>
       <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">动态壁纸</span>
     </div>
 

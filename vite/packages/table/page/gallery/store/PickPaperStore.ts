@@ -25,15 +25,13 @@ export const pickPaperStore = defineStore('pickPaper',{
     wallhavenList:[],
 
     setting:{
-      tabValue:'date',
+      tabValue:{ index: "D", title: "最新", value: "date" },
       paperValue:'/timeline/v2',
       score: 99999999,
       no: 99999999,
       dateTime: 20500101,
+      cateValue:'landscape',
     },
-
-   
-
    },
  }),
 
@@ -47,7 +45,7 @@ export const pickPaperStore = defineStore('pickPaper',{
           const mapDataList = dataList.map((item:any)=>{
             return{ ...item,  value:item.id, };
           })
-          this.paperList = mapDataList;
+          this.pickParams.paperList = mapDataList;
         }
       })
       .catch((error:any)=>{ console.error(error) })
@@ -76,14 +74,12 @@ export const pickPaperStore = defineStore('pickPaper',{
               list.push(updateItem as never);
             } 
           }
-          this.wallhavenList = list;
+          this.pickParams.wallhavenList = list;
         }
       })
       .catch((error:any)=>{ console.error(error);})
       .finally(()=>{})
     },
-
-
  },
 
  persist: {
@@ -91,7 +87,7 @@ export const pickPaperStore = defineStore('pickPaper',{
   strategies: [
     {
       paths: ['pickParams'],
-      storage: localStorage,
+      storage: dbStorage,
     },
   ],
  },
