@@ -2,7 +2,7 @@
   <xt-task id="firstTask" no="1" @cb="resetting">
     <!-- <xt-menu :menus="menus" style="" v-if="store.isTask"> -->
       <!-- <xt-button @click="store.firstTask = false"></xt-button> -->
-      <div
+      <!-- <div
         @click="store.isTaskDrawer = true"
         class="relative h-full xt-bg s-bg xt-base-btn"
         style="width: 80px; height: 80px; border-radius: 18px;border: 1px solid var(--divider);"
@@ -25,7 +25,7 @@
             {{ width }}%
           </div>
         </div>
-      </div>
+      </div> -->
     <!-- </xt-menu> -->
   </xt-task>
   <Task></Task>
