@@ -18,7 +18,7 @@
       " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
         <MyAvatar :chat="true" :level="false"></MyAvatar>
         <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat" class="ml-3 pointer">
+        <div v-show="settings.enableChat" class=" pointer">
           <ChatButton></ChatButton>
         </div>
       </div>

@@ -56,13 +56,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice',
             size: "2x4",
             zoom: "12",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
             zoom: "12",
           },
@@ -629,13 +629,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice',
             size: "2x4",
             zoom: "14",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
             zoom: "14",
           },
@@ -797,12 +797,12 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice', 
             size: "2x4",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
           },
         ],

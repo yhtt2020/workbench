@@ -32,6 +32,7 @@ export default {
       mode: 'ir',
       theme: 'dark',
       placeholder: "备忘录是一款天天工作台的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式",
+      cdn: 'https://a.apps.vip/download/vditor',
       // counter:{
       //     enable:true,
       //   },

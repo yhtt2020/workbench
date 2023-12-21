@@ -20,8 +20,11 @@
     </template>
 
     <div class="line-title">使用习惯</div>
+    <div class="line">
+      在系统任务栏显示窗口：
+      <a-switch v-model:checked="settings.showInTaskBar"></a-switch>
+    </div>
     <template v-if="isMain">
-
       <div class="line">
         <AutoRun/>
       </div>
@@ -33,10 +36,7 @@
           <a-radio value="browser" style="color: var(--primary-text)">浏览器</a-radio>
         </a-radio-group>
       </div>
-      <div class="line">
-        在任务栏显示工作台：
-        <a-switch v-model:checked="showInTaskBar"></a-switch>
-      </div>
+
 
     </template>
     <div class='line flex w-full'>
@@ -82,12 +82,7 @@ export default {
   },
   async mounted () {
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
-    let showInTaskBar = await tsbApi.settings.get('showInTaskBar')
-    if (showInTaskBar === undefined) {
-      this.showInTaskBar = true
-    } else {
-      this.showInTaskBar = showInTaskBar
-    }
+
 
   },
   watch: {
@@ -96,9 +91,9 @@ export default {
         await tsbApi.settings.set('trayOpen', value)
       }
     },
-    'showInTaskBar': {
+    'settings.showInTaskBar': {
       handler: async (value) => {
-        await tsbApi.settings.set('showInTaskBar', value)
+         tsbApi.window.setSkipTaskbar(!value)
       }
     }
   }

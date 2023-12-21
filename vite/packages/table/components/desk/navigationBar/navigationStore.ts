@@ -63,7 +63,7 @@ export const useNavigationStore=defineStore('useNavigationStore',{
         enabled: true,
         strategies: [
           {
-            paths: ['editToggle','iconSetting','selectNav','introduceVisible','popVisible','navAttribute','iconRadius'],
+            paths: ['editToggle','levelVisible','iconSetting','selectNav','introduceVisible','popVisible','bottomToggle'],
             // storage: dbStorage,
             storage: localStorage,
           },

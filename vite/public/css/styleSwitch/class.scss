@@ -1,5 +1,5 @@
 body {
- // background: var(--main-bg) !important;
+  // background: var(--main-bg) !important;
   font-family: "puHuiTi400" !important;
 }
 
@@ -114,10 +114,15 @@ body {
 }
 
 hr {
-  border-bottom:1px solid  var(--divider)!important;
+  height: 1px !important;
+  width: 100% !important;
+  color: none !important;
+  border: none !important;
+  // margin-bottom: 12px;
+  background-color: var(--divider) !important;
 }
 .xt-divider {
-  border-bottom:1px solid  var(--divider)!important;
+  border-bottom: 1px solid var(--divider) !important;
 }
 /**
 * 功能性颜色
