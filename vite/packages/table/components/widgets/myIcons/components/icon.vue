@@ -168,9 +168,7 @@ export default {
       window.open("https://www.apps.vip/download/");
       this.visible = false;
     },
-    openApps(type,value,router){
-      startApp(type,value,router)
-    },
+    startApp,
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
@@ -190,7 +188,7 @@ export default {
       
       if(this.newIcon){
         console.log(this.newIcon,'open');
-        this.openApps(this.open.type,this.open.value,this.$router)
+        this.startApp(this.open.type,this.open.value,this.$router)
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");

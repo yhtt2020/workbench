@@ -202,7 +202,7 @@ import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import { useAddCard } from '../../ui/hooks/useAddCard';
+import { useAddCard,file } from '../../ui/hooks/useAddCard';
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -698,36 +698,15 @@ export default {
       this.selectNav = 'desktop'
       this.isDesk = true
     },
+    file,
+    useAddCard,
     addIcon(item, index) {
-      console.log([{ ...item }], index, 'addIcon')
-      const file = {
-        model: "file",
-        size: "mini",
-        open: {
-          type: item.type,
-          value: item.value,
-        },
-        titleValue: item.name,
-        isTitle: true,
-        src: item.icon,
-        isRadius: true,
-        radius: 5,
-        imgState: 'cover',
-        imgShape: 'square',
-        isBackground: item.isBg,
-        backgroundColor: item.bg,
-        backgroundIndex: 0,
-      };
-      // iconList: [{ ...data }]
-      // useAddCard(file);
-      this.addDeskCard('myIcons', {
+      const file = this.file(item)
+      this.useAddCard('myIcons', {
         iconList: [{ ...file }],
         newIcon: true
-      });
+      })
       this.editVisible = false;
-    },
-    addDeskCard(name,icon){
-      useAddCard(name,icon)
     },
     /**
      * 暂存布局，与restore结对使用。
