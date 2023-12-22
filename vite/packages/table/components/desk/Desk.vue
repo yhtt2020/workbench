@@ -183,7 +183,7 @@
       </template>
       <!-- 全局桌面设置 -->
       <template v-else>
-        <GlobalDesk :globalSettings="globalSettings" />
+        <GlobalDesk :globalSettings="globalSettings" :fixedFloat="settings.enableZoom" :freeFloat="isFreeLayout" />
         <!-- <template v-if="settings.enableZoom">
           <div class="mb-2" style="color: orangered">
             <icon icon="tishi-xianxing"></icon>
