@@ -15,7 +15,11 @@
       </div>
       <div class="flex items-center justify-start" style="padding-bottom: 18px;">
         <span class="xt-text-2 xt-font font-400 mr-4" :class="isModal ? 'font-14':'font-16'">官网</span>
-        <xt-button h="0" style="width: auto !important; color: var(--active-bg) !important;" @click="toOfficialWebsite">访问官网</xt-button>
+        <xt-button h="0" style="width: auto !important;" @click="toOfficialWebsite">
+          <div class="flex items-center justify-center">
+            <span class="xt-text xt-font font-400" :class="isModal ? 'font-14':'font-16'" style="color: var(--active-bg) !important;">访问官网</span>
+          </div>
+        </xt-button>
       </div>
       <div class="flex items-center justify-center xt-text-2 xt-font font-400" :class="isModal ? 'font-14':'font-16'">
         「拾光壁纸」提供技术支持
@@ -102,5 +106,9 @@ export default {
   box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
   box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.2);
+}
+
+:deep(.round-dot){
+ background: var(--active-text) !important;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="w-full h-full flex flex-col">
     <div class="flex items-center justify-between mb-2">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:image-multiple-16-regular" size="20" class="mr-2" style="color:var(--active-text) !important;"></xt-new-icon>
+        <xt-new-icon icon="fluent:image-multiple-16-regular" size="20" class="mr-2 xt-text" ></xt-new-icon>
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">拾光壁纸</span>
       </div>
       <div class="flex items-center justify-center">
@@ -34,12 +34,12 @@
                 <xt-mix-menu :menus="pickPaperMenu" fn="callBack"  @mounted="this.currentPaper = img" :stopPropagation="false" >
                   <img  class="image-item pointer" :src="img.src" :data-source="img.path" :alt="img.resolution" style="position: relative">
                   <div class="absolute top-1 flex right-3">
-                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                       <div class="flex items-center justify-center">
                         <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
                       </div>
                     </xt-button>
-                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
                     :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }"
                     >
                       <div class="flex items-center justify-center">
@@ -49,7 +49,7 @@
                     </xt-button>
                   </div> 
                   <div class="absolute" style="top:50%;left:50%;transform: translate(-50%,-50%);">
-                    <xt-button w="100" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
+                    <xt-button w="100" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
                       <div class="flex items-center justify-center">
                         <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " style="color: var(--active-text) !important;"></xt-new-icon>
                         <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
@@ -322,5 +322,8 @@ export default {
       opacity: 1 !important;
     }
   }
+}
+.xt-bg-t-3{
+  background: rgba(00,00,00, 0.4) !important;
 }
 </style>
