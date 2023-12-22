@@ -1,7 +1,7 @@
 <template>
   <div
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;">
-    <div style="height: auto;flex: 0">
+    <div v-if="!fullScreen" style="height: auto;flex: 0">
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" ></TopPanel>
     </div>
