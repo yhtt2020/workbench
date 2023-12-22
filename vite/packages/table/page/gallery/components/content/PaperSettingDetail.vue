@@ -15,10 +15,18 @@
       <div class="card p-4 flex flex-col xt-bg-2 mb-4">
        <span class="xt-text xt-font font-16 font-400">壁纸存储位置</span>
        <span class="xt-text-2 xt-font font-14 font-400 my-3">选择我的收藏壁纸存储的文件路径。</span>
-       <a-input placeholder="请选择壁纸保存地址" class="w-full h-10" @click="showSaveDialog" style="background: var(--secondary-transp-bg);border-radius: 8px;"  
-        spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
-       >
-       </a-input>
+       <div class="flex">
+        <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog" 
+         style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"  
+         spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
+        />
+        <xt-button w="40" h="40" class="xt-bg-t-2 ml-2" @click="openSavePath">
+         <div class="flex items-center justify-center">
+           <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+         </div>
+        </xt-button>
+       </div>
+
       </div>
 
 
@@ -114,10 +122,18 @@
           <div class="card p-4 flex flex-col   xt-bg mb-4">
             <span class="w-full xt-text xt-font text-start font-16 font-400">壁纸存储位置</span>
             <span class="w-full xt-text-2 text-start xt-font font-14 font-400 my-3">选择我的收藏壁纸存储的文件路径。</span>
-            <a-input placeholder="请选择壁纸保存地址" class="w-full h-10" @click="showSaveDialog" 
-             style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;"  
-             spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
-            />
+            <div class="flex">
+              <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog" 
+               style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"  
+               spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
+              />
+              <xt-button w="40" h="40" class=" ml-2" @click="openSavePath">
+               <div class="flex items-center justify-center">
+                 <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+               </div>
+              </xt-button>
+            </div>
+            
           </div>
 
           <!-- 锁屏设置开关 -->
@@ -239,6 +255,7 @@
  <script>
  import { mapActions,mapWritableState } from 'pinia';
  import { paperStore } from '../../../../store/paper';
+ import { startApp } from '../../../../ui/hooks/useStartApp';
  
  import RadioTab from '../../../../components/RadioTab.vue';
  
@@ -277,6 +294,7 @@
   },
  
   methods:{
+   startApp,
    async showSaveDialog() {
     let savePath = await tsbApi.dialog.showOpenDialog({
      title: '选择目录', message: '请选择下载壁纸的目录', 
@@ -293,7 +311,15 @@
       this.settings.playType = 'active'
     }
     this.$emit('updatePaper',evt)
-   }
+   },
+
+
+   // 打开指定文件夹
+   openSavePath(){
+      if(this.settings.savePath !== ''){
+        this.startApp('tableApp',this.settings.savePath);
+      }
+   },
   },
  
  };

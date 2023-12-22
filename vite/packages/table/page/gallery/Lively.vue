@@ -2,7 +2,7 @@
   <div class="flex w-full flex-col h-full">
    <div class="flex w-full justify-between mb-2">
     <div class="flex items-center justify-center">
-      <xt-new-icon icon="fluent:settings-16-regular" :size="isModal ? 20 : 32 "  class="mr-2"></xt-new-icon>
+      <xt-new-icon icon="fluent:settings-16-regular" size="20"  class="mr-2"></xt-new-icon>
       <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">动态壁纸</span>
     </div>
 
@@ -25,7 +25,7 @@
               </div>
                 
               <div class="absolute top-1 right-3" style="z-index: 50;">
-                <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 lively-download" style="border-radius: 8px; opacity: 0;" @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined ">
+                <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 lively-download" style="border-radius: 8px; opacity: 0;" @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined ">
                   <div class="flex items-center justify-center">
                     <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 20 : 24" style="color: var(--active-text) !important;"></xt-new-icon>
                   </div>
@@ -33,7 +33,7 @@
                 <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
                   <a-spin style="color: white"/>
                 </div>
-                <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 " style="border-radius: 8px;" v-else-if="isDownLoad(item)" :style="isDownLoad(item) ? { opacity:'1' } : { opacity:'0' }"  @click="delDownLoad(item,index)">
+                <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 " style="border-radius: 8px;" v-else-if="isDownLoad(item)" :style="isDownLoad(item) ? { opacity:'1' } : { opacity:'0' }"  @click="delDownLoad(item,index)">
                   <xt-new-icon icon="fluent:star-16-filled"  :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
                 </xt-button>
               </div>
@@ -79,18 +79,31 @@
   </div>
  
 
-  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
-    <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
-      <div @click="startDownload()" class="btn pointer"
-           style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
-        <Icon icon="xiazai" style="font-size: 2em"></Icon>
+  <teleport to='body' >
+    <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
+      <div id="actions" class="no-drag flex " style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+        <xt-button w="40" h="40" class="xt-bg mr-4"  @click="startDownload()" style="border-radius: 8px;">
+          <div class="flex items-center justify-center">
+            <xt-new-icon icon="fluent:arrow-download-16-regular" size="24"></xt-new-icon>
+          </div>
+        </xt-button>
+        <xt-button w="40" h="40" class="xt-bg"  @click="closePreview" style="border-radius: 8px;">
+          <div class="flex items-center justify-center">
+            <xt-new-icon icon="fluent:dismiss-16-regular" size="24"></xt-new-icon>
+          </div>
+        </xt-button>
+  
+        <!-- <div @click="startDownload()" class="btn pointer"
+             style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
+          <Icon icon="xiazai" style="font-size: 2em"></Icon>
+        </div>
+        <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
+          <Icon icon="guanbi1" style="font-size: 2em"></Icon>
+        </div> -->
       </div>
-      <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
-        <Icon icon="guanbi1" style="font-size: 2em"></Icon>
-      </div>
+      <div id="mse"></div>
     </div>
-    <div id="mse"></div>
-  </div>
+  </teleport>
 </template>
 
 <script>
@@ -397,6 +410,10 @@ export default {
       opacity: 1 !important;
     }
   }
+}
+
+.xt-bg-t-3 {
+  background: rgba(00,00,00, 0.4) !important;
 }
 </style>
 <style>

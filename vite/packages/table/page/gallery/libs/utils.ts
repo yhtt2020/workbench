@@ -95,3 +95,23 @@ export function isDownLoad(data:any){
  const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
  return index > -1
 }
+
+// 时间格式化转换
+export function formatDateTime(date:any){
+ var y = date.getFullYear();
+ var m = date.getMonth() + 1;
+ m = m < 10 ? ('0' + m) : m;
+ var d = date.getDate();
+ d = d < 10 ? ('0' + d) : d;
+ return parseInt(`${y}${m}${d}`);
+}
+
+// 判断拾光壁纸是否在本地以及下载
+export function paperDownload(img:any){
+ const paper:any = paperStore();
+ const { settings } = storeToRefs(paper);
+ const localList = fs.readdirSync(path.join(path.join(settings.value.savePath), 'static'));
+ const fileName = img.path.split('/')[img.path.split('/').length - 1];
+ const index = _.findIndex(localList,function(find:any){ return String(find) === String(fileName) });
+ return index > -1;  
+}
