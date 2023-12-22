@@ -5,7 +5,7 @@
         <div class="pointer w-full h-full bing-paper" >
           <xt-mix-menu :menus="bingMenu" fn="callBack" @mounted="paperCurrent = img" :stopPropagation="false">
             <img class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
-            <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
+            <div class="absolute " style="top:50%;left:50%;transform: translate(-50% ,-50%);">
               <xt-button w="100" :h="isModal ? 32 : 40"  style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" style="color: var(--active-text) !important;"></xt-new-icon>

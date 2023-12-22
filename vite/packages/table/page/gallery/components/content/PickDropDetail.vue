@@ -4,7 +4,7 @@
     <xt-select :list="paperCateList" v-model="pickParams.setting.cateValue"  style="margin-right: 12px;text-align:start;" @click.native="handleSelectClick"
      :h="isModal ? 32 : 40" :borderClass="'rounded-md w-full '" :border="false" @change="handleEmitData"/>
 
-     <div class="w-full flex flex-col mt-4">
+    <div class="w-full flex flex-col mt-4">
       <div class="flex items-center justify-start" style="padding-bottom: 18px;">
         <span class="xt-text-2 xt-font font-400 mr-4" :class="isModal ? 'font-14':'font-16'">壁纸</span>
         <span class="xt-text xt-font font-400" :class="isModal ? 'font-14':'font-16'">{{paperDescribe.name}}</span>
@@ -20,7 +20,7 @@
       <div class="flex items-center justify-center xt-text-2 xt-font font-400" :class="isModal ? 'font-14':'font-16'">
         「拾光壁纸」提供技术支持
       </div>
-     </div>
+    </div>
   </div>
 </template>
 

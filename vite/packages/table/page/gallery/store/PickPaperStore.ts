@@ -18,11 +18,23 @@ export const pickPaperStore = defineStore('pickPaper',{
     paperSelect:[
       { name: '拾光',  value: '/timeline/v2', synopsis: '时光如歌,岁月如诗' },
       { name: '贪食鬼', value: '/glutton/journal', synopsis: '饕餮盛宴' },
-      { name: '贪吃蛇', value: '/snake/v2', synopsis: '暂无简介' },
+      // { name: '贪吃蛇', value: '/snake/v2', synopsis: '暂无简介' },
       { name: 'wallhaven', value: '/wallhaven/v2', synopsis: 'The best wallpapers on the Net' }
     ],
-    paperList:[],
-    wallhavenList:[],
+    paperList:[
+      { name:'全部',value:'' },
+      { name:'风光摄影',value:'landscape' },
+      { name:'人像摄影',value:'portrait' },
+      { name:'人文摄影',value:'culture' },
+      { name: "静物摄影", value: 'still' },
+      { name:'节气摄影',value:'term' },
+    ],
+    wallhavenList:[
+      {name:'全部',value:'',},
+      {name:'动漫精选',value:'anime', },
+      {name:'热门精选',value:'general'},
+      {name:'人物精选',value:'people',}
+    ],
 
     setting:{
       tabValue:{ index: "D", title: "最新", value: "date" },
@@ -36,50 +48,7 @@ export const pickPaperStore = defineStore('pickPaper',{
  }),
 
  actions:{
-    // 获取拾光壁纸分类
-    getPickLightClass(){
-      axios.get(pickLightUrl)
-      .then((res:any)=>{
-        if(res.status === 200){
-          const dataList = res.data.data;
-          const mapDataList = dataList.map((item:any)=>{
-            return{ ...item,  value:item.id, };
-          })
-          this.pickParams.paperList = mapDataList;
-        }
-      })
-      .catch((error:any)=>{ console.error(error) })
-      .finally(()=>{})
-    },
-
-    // 获取wallheaven壁纸分类
-    getWallHeavenClass(){
-      axios.get(wallheavenUrl)
-      .then((res:any)=>{
-        if(res.status === 200){
-          const dataList = res.data.data;
-          const list = [];
-          const nameList = [{ name:'Anime',alias:'动漫精选' },{name:'General',alias:'热门精选'},{name:'People',alias:'人物精选'},];
-          for(const item of dataList){
-            const index = list.findIndex((find:any)=>{ return String(find.id) === String(item.id) });
-            const nameIndex = nameList.findIndex((find)=>{ return find.name === item.name });
-            if(index === -1){
-              const updateItem = {
-                version:item.version,
-                id:item.id,
-                value:item.id,
-                name:nameList[nameIndex].alias,
-                alias:nameList[nameIndex].name,
-              }
-              list.push(updateItem as never);
-            } 
-          }
-          this.pickParams.wallhavenList = list;
-        }
-      })
-      .catch((error:any)=>{ console.error(error);})
-      .finally(()=>{})
-    },
+    
  },
 
  persist: {

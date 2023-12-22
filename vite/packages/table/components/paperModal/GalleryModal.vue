@@ -111,17 +111,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(#containerWrapper){
-  margin: 0 !important;
-  height: 580px !important;
-}
-
-#pick-content{
-  height: 580px !important;
-}
-
-#bingImages{
-  height: 580px !important;
-}
-
 </style>
