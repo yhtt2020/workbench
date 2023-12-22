@@ -85,72 +85,6 @@
     <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
-        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
-          <div class="flex justify-between mb-4">
-            <div>桌面背景</div>
-          </div>
-          <div class="my-4 text-sm xt-text-2">
-            选择喜欢的图片作为工作台桌面背景。
-          </div>
-          <div class="flex my-4 text-sm xt-text-2" v-if="!appSettings.transparent">
-            <xt-task id="M0103" no="3" to=""> </xt-task>
-            <xt-task id="M0103" no="4" to="" @cb="goPaper">
-              <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
-            </xt-task>
-            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">还原背景</xt-button>
-          </div>
-          <hr class="my-4" />
-
-          <template v-if="!appSettings.transparent">
-            <div class="flex justify-between mb-4">
-              <div>背景模糊度</div>
-            </div>
-            <div class="my-4 text-sm xt-text-2">开启后增加背景模糊度</div>
-            <div class="my-4 text-sm xt-text-2">
-              <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
-            </div>
-            <hr class="my-4" />
-          </template>
-          <div class="flex justify-between mb-4">
-            <div>透明背景</div>
-            <a-switch v-model:checked="appSettings.transparent" />
-          </div>
-          <div class="mt-4 text-sm xt-text-2">开启后透明背景</div>
-        </div>
-        <div class="p-4 mb-1 text-base xt-bg-2 rounded-xl">
-          <div class="p-4 xt-modal rounded-xl xt-text-2">
-            此类功能性能消耗较高，请酌情开启
-          </div>
-          <div class="flex justify-between my-4">
-            <div>边框RGB灯</div>
-            <a-switch v-model:checked="appSettings.houserun" />
-          </div>
-          <div class="my-4 text-sm xt-text-2">
-            在工作台窗口四周显示RGB效果。
-          </div>
-          <hr class="my-4" />
-          <div class="flex justify-between mb-4">
-            <div>飘落效果</div>
-            <a-switch v-model:checked="appSettings.down.enable" />
-          </div>
-          <div class="my-4 text-sm xt-text-2">开启后页面会有炫酷的飘落效果</div>
-          <hr class="my-4" style="height: 0.5px" />
-          <template v-if="appSettings.down.enable">
-            <div class="flex justify-between my-4">
-              <div>飘落物</div>
-            </div>
-            <div class="my-4 text-sm xt-text-2">
-              <xt-tab class="h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
-            </div>
-            <hr class="my-4" />
-            <div class="flex justify-between my-4">
-              <div>飘落物数量</div>
-            </div>
-            <div class="mt-4 text-sm xt-text-2">
-              <xt-input v-model="appSettings.down.count" class="xt-modal xt-b" style="height: 40px"></xt-input>
-            </div>
-          </template>
-        </div>
       </template>
       <!--      <template #empty>-->
       <!--        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto">-->
@@ -320,20 +254,6 @@ export default {
         name: "",
         template: "daily",
       },
-      fallingList: [
-        {
-          value: "rain",
-          name: "雨",
-        },
-        {
-          value: "snow",
-          name: "雪",
-        },
-        {
-          value: "leaf",
-          name: "叶",
-        },
-      ],
       hide: false,
       menuVisible: false,
       settingVisible: false,
@@ -886,26 +806,6 @@ export default {
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
-
-    clearWallpaper() {
-      this.setBackgroundImage({ path: "" });
-      message.success('已为您恢复默认背景')
-      // const value = cache.get("style")
-      // document.documentElement.classList.remove(value);
-      // cache.set("background","-no")
-      // let background = cache.get("background")
-      // let model = this.styles ? "light" : "dark"
-      // let name = `${model}${background || ''}-model`
-      // document.documentElement.classList.add(name);
-      // cache.set("style",name)
-      // if (this.styles == true) {
-      //   document.documentElement.classList.add(`light${background || ''}-model`);
-      //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));
-      // } else {
-      //   document.documentElement.classList.add(`dark${background || ''}-model`);
-      //   window.localStorage.setItem("style", JSON.stringify(`dark${background || ''}-model`));
-      // }
-    },
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },

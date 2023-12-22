@@ -16,7 +16,10 @@
     v-else-if="option.type === 'tab'"
     :style="lineSpaceStyle"
     :option="option"
-    v-model:tab="data[option.tabKey]"
+    v-bind="option"
+    style="height: 40px"
+    circle
+    v-model="data[option.tabKey]"
   />
   <!-- 属于颜色选项 -->
   <xt-option-color
