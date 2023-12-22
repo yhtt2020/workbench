@@ -20,13 +20,17 @@
       v-model="search"
     >
     </textarea>
-
-    <Icon
+    <div
       class="absolute top-1/2 -translate-y-1/2 cursor-pointer"
-      @click="isSearch ? onSearch() : test()"
-      :icon="isSearch ? 'sousuo' : 'gengduo1'"
+      style="font-size: 26px; right: 20px"
+    >
+      <xt-new-icon icon="fluent:send-24-filled"  @click="onSearch" v-if="isSearch"/>
+      <Icon v-else
+      @click="clearText()"
+      icon="gengduo1"
       style="font-size: 26px; right: 20px"
     ></Icon>
+    </div>
   </div>
 </template>
 
@@ -49,7 +53,7 @@ watch(search, (newV) => {
     initHeight.value = true;
   }
 });
-const test = () => {};
+const clearText = () => {};
 // 输入框 动态高度 以及 滚动条状态 处理
 const onInput = (e) => {
   const textarea = e.target;

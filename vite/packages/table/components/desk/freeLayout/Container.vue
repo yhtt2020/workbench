@@ -153,7 +153,6 @@ const dragStop = () => {
 };
 
 const disabledInfo = (data) => {
-  console.log("data :>> ", data);
   if (data.code == 1) {
     message.info(data.info);
   }
@@ -187,7 +186,7 @@ const disabledInfo = (data) => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
-      :test="0"
+      :test="1"
       @onDisabled="disabledInfo"
       mode="all"
       ref="snowDrag"
