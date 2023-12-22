@@ -51,7 +51,9 @@ onMounted(async () => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
-  perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, options.value);
+
+  console.log("perfectScrollbar.value :>> ", perfectScrollbar.value);
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
@@ -148,25 +150,6 @@ function handleKeyUp(event) {
     event.stopPropagation();
   }
 }
-// 重置中心区域
-const { width, height } = useElementSize(scrollbar);
-function redirect() {
-  let w, h;
-  if (getFreeLayoutState.value.line.centerPosition.x == "top") {
-    w = getFreeLayoutState.value.line.centerLine.x;
-  } else {
-    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  }
-  scrollbar.value.scrollLeft = w;
-  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
-    h = getFreeLayoutState.value.line.centerLine.y;
-  } else {
-    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  }
-  scrollbar.value.scrollTop = h;
-  freeLayoutEnv.value.scrollLeft = w;
-  freeLayoutEnv.value.scrollTop = h;
-}
 // 页面缩放更新布局
 function update() {
   perfectScrollbar.value.update();
@@ -177,6 +160,78 @@ function update() {
 let isDragging = ref(false);
 let isKey = ref(false);
 let initialMousePosition = ref(null);
+
+/**
+ * 2023-12-21
+ */
+//滚动方式
+const options = ref({
+  suppressScrollX: false,
+  suppressScrollY: false,
+});
+watch(
+  () => getFreeLayoutState.value.mode.scroll,
+  (newV) => {
+    if (newV === "free") {
+    } else if (newV === "vertical") {
+    } else if (newV === "horizontal") {
+    } else if (newV === "lock") {
+    }
+    console.log("newV :>> ", newV);
+  }
+);
+// 对齐方式
+
+// 重置中心区域
+const { width, height } = useElementSize(scrollbar);
+// function redirect() {
+//   let w, h;
+//   if (getFreeLayoutState.value.line.centerPosition.x == "top") {
+//     w = getFreeLayoutState.value.line.centerLine.x;
+//   } else {
+//     w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+//   }
+//   scrollbar.value.scrollLeft = w;
+//   if (getFreeLayoutState.value.line.centerPosition.y == "top") {
+//     h = getFreeLayoutState.value.line.centerLine.y;
+//   } else {
+//     h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+//   }
+//   scrollbar.value.scrollTop = h;
+//   freeLayoutEnv.value.scrollLeft = w;
+//   freeLayoutEnv.value.scrollTop = h;
+// }
+
+function redirect() {
+  console.log(
+    "getFreeLayoutState.value.line.centerPosition :>> ",
+    getFreeLayoutState.value.line.centerPosition
+  );
+  let w, h;
+  // x轴
+  if (getFreeLayoutState.value.line.centerPosition.x == "left") {
+    w = 0;
+  } else if (getFreeLayoutState.value.line.centerPosition.x == "center") {
+    w = getFreeLayoutState.value.canvas.width / 2;
+  } else {
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  }
+  scrollbar.value.scrollLeft = w;
+  // y轴
+  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
+    h = 0;
+  } else if (getFreeLayoutState.value.line.centerPosition.y == "center") {
+    h = height.value / 2;
+  } else {
+    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  }
+  scrollbar.value.scrollTop = h;
+
+  freeLayoutEnv.value.scrollLeft = w;
+  freeLayoutEnv.value.scrollTop = h;
+}
+
+// 2023-12-21 结束
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();

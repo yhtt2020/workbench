@@ -11,10 +11,11 @@ interface selectProps {
 const props = withDefaults(defineProps<selectProps>(), {});
 
 const currentSelect = ref(props.select);
-const emits = defineEmits(["update:select"]);
+const emits = defineEmits(["update:select", "cb"]);
 
 watch(currentSelect, (val) => {
   emits("update:select", val);
+  emits("cb", val);
 });
 </script>
 

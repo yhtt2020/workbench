@@ -24,10 +24,11 @@ interface multipleProps {
 const props = withDefaults(defineProps<multipleProps>(), {});
 
 const currentMultiple = ref(props.multiple);
-const emits = defineEmits(["update:multiple"]);
+const emits = defineEmits(["update:multiple", "cb"]);
 
 watch(currentMultiple, () => {
   emits("update:multiple", currentMultiple.value);
+  emits("cb", currentMultiple.value);
 });
 </script>
 
