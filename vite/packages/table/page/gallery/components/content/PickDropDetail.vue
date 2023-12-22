@@ -1,5 +1,5 @@
 <template>
-  <div class="pickModal rounded-lg p-4" :class="isModal ? 'xt-bg-t-2' :' xt-modal'">
+  <div class="pickModal rounded-lg p-4 xt-modal">
     <RadioTab :navList="pickParams.tabList" v-model:selectType="pickParams.setting.tabValue" class="mb-4"/>
     <xt-select :list="paperCateList" v-model="pickParams.setting.cateValue"  style="margin-right: 12px;text-align:start;" @click.native="handleSelectClick"
      :h="isModal ? 32 : 40" :borderClass="'rounded-md w-full '" :border="false" @change="handleEmitData"/>
