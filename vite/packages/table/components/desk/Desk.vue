@@ -137,23 +137,21 @@
 
 <script>
 // 挂载组件请到下面文件
-import componentsMinis from "./components";
-
+import componentsMinis from "./components.ts";
 import { useNavigationStore } from './navigationBar/navigationStore'
 import { navStore } from "../../store/nav";
 import Muuri from "muuri";
-import { message, Modal } from "ant-design-vue";
+import { message } from "ant-design-vue";
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../../store";
 import { cardStore } from "../../store/card";
 import { useWidgetStore } from "../card/store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
-import componentsMinis from "./components.ts";
 import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-
+import {LoadingOutlined} from '@ant-design/icons-vue'
 import GalleryModal from '../paperModal/GalleryModal.vue'
 import { useAddCard } from '../../ui/hooks/useAddCard';
 export default {
