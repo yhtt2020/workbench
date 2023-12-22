@@ -240,6 +240,8 @@ let arrData = [
     { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
     { 'type': 'systemApp', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
     // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
+    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task' },
+    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
 ]
@@ -264,36 +266,50 @@ export const navStore = defineStore("nav", {
     footNavigationList: [...arrData],
     sideNavigationList: [],
     rightNavigationList: [],
+    copyFootNav:[],
+    copySideNav:[],
+    copyRightNav:[],
     builtInFeatures: [
       {
         "type": "systemApp",
         "icon": "fluent:lock-closed-16-regular",
         "name": "锁定屏幕",
-        "event": "lock"
+        "value": "lock"
       },
       {
         "type": "systemApp",
         "icon": "fluent:settings-16-regular",
         "name": "基础设置",
-        "event": "setting"
+        "value": "setting"
       },
       {
         "type": "systemApp",
         "icon": "fluent:full-screen-maximize-16-filled",
         "name": "全屏显示",
-        "event": "fullscreen"
+        "value": "fullscreen"
       },
       {
         "type": "systemApp",
         "icon": "fluent:slide-settings-24-regular",
         "name": "设备设置",
-        "event": "status"
+        "value": "status"
       }
     ],
     // navigationToggle: [true,false,true]
-    navigationToggle: [false,false,true]
+    navigationToggle: [false,false,true],
+    copyFlag:true
   }),
   actions: {
+    copyNav(){
+      if(this.copyFlag){
+        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.copyFlag = false
+      }
+      return
+      
+    },
     removeFootNavigationList(index) {
         this.footNavigationList.splice(index, 1)
     },
@@ -362,13 +378,18 @@ export const navStore = defineStore("nav", {
       this.footNavigationList = val
     }
   },
+  // getters: {
+  //   copyFootNav: state => [...state.footNavigationList],
+  //   copySideNav: state => [...state.sideNavigationList],
+  //   copyRightNav: state => [...state.rightNavigationList],
+  // },
   persist: {
     enabled: true,
     strategies: [
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

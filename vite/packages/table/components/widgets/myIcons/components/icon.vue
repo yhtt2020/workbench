@@ -1,12 +1,14 @@
 <template>
-  <div class="box cursor-pointer rounded-xl xt-hover black xt-base-btn flex-col justify-around" :data-index="index"
+  <div class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn" :data-index="index"
     @click.stop="iconClick($event)" :style="[iconSize]">
-    <div class="xt-text overflow-hidden no-drag flex items-center justify-center rounded-xl w-full"
+    <div class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]" :data-index="index">
-      <img v-if="src && src.length > 0" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+      <img v-if="src && src.length > 0 && open.type === 'systemApp'" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+        :data-index="index" />
+      <img v-if="src && src.length > 0 && open.type !== 'systemApp'" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index" />
     </div>
-    <div v-if="isTitle" class="text-center xt-text h-5 truncate mx-auto" :style="[textSize]" :data-index="index">
+    <div v-if="isTitle" class="h-5 mx-auto text-center truncate xt-text" :style="[textSize]" :data-index="index">
       {{ titleValue }}
     </div>
   </div>
@@ -19,12 +21,14 @@ import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
 import {renderIcon} from '../../../../js/common/common'
+import {startApp} from '../../../../ui/hooks/useStartApp'
 export default {
   mixins: [editProps],
   props: {
     isReSize: { type: Boolean, default: false },
     state: { type: Boolean, default: false },
     index: { type: Number },
+    newIcon: { type: Boolean },
   },
   data() {
     return {
@@ -164,6 +168,9 @@ export default {
       window.open("https://www.apps.vip/download/");
       this.visible = false;
     },
+    openApps(type,value,router){
+      startApp(type,value,router)
+    },
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
@@ -180,8 +187,11 @@ export default {
       //   }
       //   return;
       // }
-
-      if (this.open !== undefined && this.open.value !== "") {
+      
+      if(this.newIcon){
+        console.log(this.newIcon,'open');
+        this.openApps(this.open.type,this.open.value,this.$router)
+      } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
         this.newOpenApp();

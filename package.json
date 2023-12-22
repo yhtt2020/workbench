@@ -2,7 +2,7 @@
   "name": "ttworkbench",
   "productName": "天天工作台",
   "author": "Thisky",
-  "version": "9.0.0",
+  "version": "9.0.4",
   "description": "一款针对工作场景的优化的效率工具，帮助你提升效率，保持专注",
   "electronVersion": "22.3.27",
   "main": "main.build.js",
@@ -52,7 +52,7 @@
     "expr-eval": "^2.0.2",
     "fs-extra": "^10.0.1",
     "google-protobuf": "^3.21.2",
-    "hmc-win32": "^1.3.7",
+    "hmc-win32": "1.4.0",
     "iconv-lite": "^0.6.3",
     "image-size": "^1.0.1",
     "javascript-obfuscator": "^4.0.0",
@@ -109,10 +109,10 @@
     "webpack": "4.44.1"
   },
   "optionalDependencies": {
-    "systeminformation": "^5.21.20",
     "aida64-to-json": "^1.1.0",
     "electron-installer-debian": "^3.1.0",
-    "electron-installer-redhat": "^3.2.0"
+    "electron-installer-redhat": "^3.2.0",
+    "systeminformation": "^5.21.20"
   },
   "license": "Apache-2.0",
   "scripts": {

@@ -12,7 +12,7 @@
   >
     <div
       ref="iconRef"
-      class="icon-box box-border"
+      class="box-border icon-box"
       :style="dragStyle"
     >
     <!-- @contextmenu.stop="handleMenu()" -->
@@ -57,6 +57,7 @@
               "
             >
               <icon
+                :newIcon = customData.newIcon
                 v-bind="customData.iconList[0]"
                 @custom-event="handleCustomEvent"
               ></icon>
@@ -74,12 +75,12 @@
   </Edit>
   <!-- 多图标组件设置 -->
   <XtDrawer v-model="iconsSetVisible" placement="right">
-    <div class="xt-bg-2 p-4 rounded-xl">
+    <div class="p-4 xt-bg-2 rounded-xl">
       <div class="flex justify-between mb-2">
         <div>放大模式</div>
         <a-switch v-model:checked="customData.zoom.state" />
       </div>
-      <div class="xt-text-2 text-sm">
+      <div class="text-sm xt-text-2">
         该模式下可以自由拖动文件夹大小，直接点击打开文件夹内的应用或连接。
       </div>
     </div>
@@ -160,6 +161,14 @@ export default {
         state: true,
         value: "",
       };
+    }
+    // newIcon false
+    if (this.customData.newIcon == false) {
+      state = true;
+      setData.zoom = {
+        state: true,
+        value: "",
+      }
     }
     if (this.customData.size == undefined) {
       state = true;
@@ -320,6 +329,7 @@ export default {
     dragSelection() {},
     // ctrl + 点击
     handleCustomEvent(event) {
+      console.log(this.customData.iconList[0]);
       this.iconSelect = true;
       this.isSelect = !this.isSelect;
       if (this.isSelect) {

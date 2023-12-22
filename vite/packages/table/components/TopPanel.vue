@@ -36,7 +36,7 @@
             </div>
           </xt-button>
 
-          <TopCourier />
+          <TopCourier v-if="!isHidden" />
 
           <TopClockTimer/>
 
@@ -182,7 +182,7 @@ export default {
       topClockTimerVisible: false,
     }
   },
-
+  props:['isHidden'],
   computed:{
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),

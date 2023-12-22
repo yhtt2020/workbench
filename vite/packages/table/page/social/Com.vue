@@ -32,7 +32,7 @@
 <!--              <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">-->
 <!--                <a-avatar class="mr-2"-->
 <!--                          src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>-->
-<!--                想天工作台-->
+<!--                天天工作台-->
 <!--                <a-button size="small" @click="checkUpdate" style="float: right" type="primary">访问社区</a-button>-->
 <!--              </div>-->
 <!--            </div>-->

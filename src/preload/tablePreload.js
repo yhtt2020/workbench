@@ -1,7 +1,7 @@
 const api = require('../browserApi/baseApi')
 window.tsbApi = require('../browserApi/baseApi')
 window.tableApi = require('../tableApi/baseApi')
-const si = require('systeminformation')
+const shake= require('./table/_shake')
 const groupApi = require('../api/groupApi')
 //
 let ipc = require('electron').ipcRenderer
@@ -19,8 +19,7 @@ if (process.platform === 'win32') {
 
 window.fs = require('fs-extra')
 
-
-
+const win32 = require('hmc-win32')
 const StorageModel = require('../model/storageModel')
 window.$models = {
   appModel: require('../model/appModel'),
@@ -29,15 +28,17 @@ window.$models = {
   fs: require('fs-extra'),
   storageModel: new StorageModel(),
   sysInfo: require('systeminformation'),
-  inspector:require('./_inspector'),
+  inspector: require('./table/_inspector'),
   path: require('path'),
   https: require('https'),
   steamFs: require('fs'),
   rpc: require('../rpc/rpc'),
   electron: require('electron'),
   osUtils: require('node-os-utils'),
-  win32: require('hmc-win32')
+  shake:shake,
+  win32
 }
+window.win32=win32 //方便调试
 try {
   window.$models.steamUser = require('steam-user')
 
