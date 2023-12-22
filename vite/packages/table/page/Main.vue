@@ -1,13 +1,12 @@
 <template>
   <div
-    style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;">
+    style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
     <div v-if="!fullScreen" style="height: auto;flex: 0">
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" ></TopPanel>
     </div>
-    <div :class="{ 'mt-3': !fullScreen }" :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
+    <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
-
       <div v-if="!fullScreen && navigationToggle[0]"
         style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->

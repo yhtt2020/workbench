@@ -7,7 +7,7 @@
     </div>
   </div>
   <div
-    style="height: 100%; width: calc(100% + 8px); margin: -8px"
+    style=" width: calc(100% + 8px); margin: -8px;height:calc(100% + 8px)"
     v-if="currentDesk.cards"
   >
     <div
