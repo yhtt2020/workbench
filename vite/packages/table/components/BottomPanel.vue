@@ -34,7 +34,7 @@
         align-items: center;
         /* border-radius: 18px; */
         height: 80px;
-        max-width: 80%;
+        max-width: 90%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -55,7 +55,7 @@
         ">
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
               <div class=" scroll-content"
-                style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;" ref="content">
+                style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
@@ -68,23 +68,8 @@
                         @click.stop="newOpenApp(item.type, item.value)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
                         <template v-else>
-                          <!-- <div style="width: 52px; height: 52px;" v-if="!item.isBg"
-                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
-                          class="relative flex items-center justify-center ">
-                          <a-avatar :size="52" shape="square" :src="item.icon"
-                            :style="{ borderRadius: iconRadius + 'px' }"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div>
-                        <div v-else style="width: 52px; height: 52px;margin-top: -5px;"
-                          class="relative flex items-center justify-center overflow-hidden"
-                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
-                          <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="[{ borderRadius: iconRadius + 'px' }, item.color]"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div> -->
                         <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
-                        
                       </div>
                     </xt-menu>
                   </a-tooltip>
@@ -98,7 +83,7 @@
       </div>
 
       <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
-        <Team ></Team>
+        <Team  :item="this.copyFootNav[0]" :shakeElement="shakeElement"></Team>
       </template> -->
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
