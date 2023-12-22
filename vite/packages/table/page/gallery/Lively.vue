@@ -80,14 +80,25 @@
  
 
   <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
-    <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
-      <div @click="startDownload()" class="btn pointer"
+    <div id="actions" class="no-drag flex " style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+      <xt-button w="40" h="40" class="xt-bg-t-2 mr-4"  @click="startDownload()" style="border-radius: 8px;">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:arrow-download-16-regular" size="24"></xt-new-icon>
+        </div>
+      </xt-button>
+      <xt-button w="40" h="40" class="xt-bg-t-2"  @click="closePreview" style="border-radius: 8px;">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:dismiss-16-regular" size="24"></xt-new-icon>
+        </div>
+      </xt-button>
+
+      <!-- <div @click="startDownload()" class="btn pointer"
            style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
         <Icon icon="xiazai" style="font-size: 2em"></Icon>
       </div>
       <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
         <Icon icon="guanbi1" style="font-size: 2em"></Icon>
-      </div>
+      </div> -->
     </div>
     <div id="mse"></div>
   </div>

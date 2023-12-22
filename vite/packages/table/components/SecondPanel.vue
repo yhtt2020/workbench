@@ -17,9 +17,9 @@
         <SecondPanelIcon :icon="menu.newIcon" class="xt-text" v-else-if="menu.newIcon" style="font-size:1.25rem;"/>
         <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="xt-text">{{ menu.title }}</span>
       </div>
-      <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip>
+      <!-- <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip> -->
     </div>
-    <xt-task :modelValue="M01035"></xt-task>
+    <!-- <xt-task :modelValue="M01035"></xt-task> -->
   </div>
 </template>
 

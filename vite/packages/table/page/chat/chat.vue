@@ -119,6 +119,7 @@ export default {
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
         unread: unreadTotal.value,
+        info:['tr','red',`${unreadTotal.value}`]
       },
       {
         tab: "contact", newIcon: "fluent:people-16-regular",
@@ -217,6 +218,7 @@ export default {
           const itemOption = {
             ...item,
             unread:total,
+            info:['tr','red',`${total}`]
           }
           uniqueList.push(itemOption)
         }

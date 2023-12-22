@@ -6,7 +6,7 @@
       </div>
       <xt-button v-else :style="{width:`${w}px`,height:`${h}px`}" :class="buttonClass" style="border-radius: 8px;padding: 4px;">
         <div class="flex items-center justify-center">
-          <DropIcon :icon="newIcon" :style="{fontSize:`${iconSize}px`}"/>
+          <DropIcon :icon="newIcon" :style="{fontSize:`${iconSize}px`,color:`${iconBg}`}" />
         </div>
       </xt-button>
     </div>
@@ -45,6 +45,10 @@ const props = defineProps({
     type:String,
     default:'xt-bg-2'
   },
+  iconBg:{
+    type:String,
+    default:'var(--primary-text)'
+  }
   
 })
 

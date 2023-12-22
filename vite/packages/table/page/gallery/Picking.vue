@@ -6,11 +6,13 @@
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">拾光壁纸</span>
       </div>
       <div class="flex items-center justify-center">
-        <xt-select :list="pickParams.paperSelect" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;" 
-        :h="isModal ? 32 : 40" :borderClass="'rounded-md'" :border="false" @change="pickFilterChange($event)"/>
+        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;" 
+        :h="isModal ? 32 : 40" :borderClass="'rounded-md '" :border="false" @change="pickFilterChange($event)"/>
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
-        :newIcon="'fluent:filter-16-regular'" :class="isModal ? 'mr-3':''"  @visible-change="getPickPaperList">
-          <PickDropDetail :isModal="isModal" @emitPick="updateList" @emitPaper="updateImgData"/>
+        :newIcon="'fluent:filter-16-regular'" :iconBg="'var(--active-text)'" :class="isModal ? 'mr-3':''" >
+        <!--  @visible-change="getPickPaperList" -->
+          <PickDropDetail :isModal="isModal" @emitPick="updateList"/>
+          <!--  @emitPaper="updateImgData" -->
         </xt-dropdown>
         <ClosePaperButton v-if="isModal"/>
       </div>
@@ -155,8 +157,10 @@ export default {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false){
         // 获取最小值score
-        const pickArrScore = this.pickImageData.sort((a,b)=>{ return a.score - b.score });
-        this.pickParams.setting.score = pickArrScore[0].score;
+        // const pickArrScore = this.pickImageData.sort((a,b)=>{ return a.score - b.score });
+        const minScore = this.pickImageData.reduce((min, image) => Math.min(min, image.score), this.pickImageData[0].score);
+        console.log('执行....测试',minScore);
+        // this.pickParams.setting.score = pickArrScore[0].score;
         this.getPickPaperList();
       }
     })
@@ -238,9 +242,9 @@ export default {
     updateList(){
       this.getPickPaperList();
     },
-    updateImgData(){
-      this.getPickPaperList();
-    },
+    // updateImgData(){
+    //   this.getPickPaperList();
+    // },
 
     // 收藏
     addToMy(img) { 

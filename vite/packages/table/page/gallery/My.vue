@@ -8,22 +8,22 @@
 
       <div class="flex items-center justify-center ">
         <template v-if="!isModal">
-          <xt-button @click="playAll" class="mr-3 xt-bg-2"  h="40" w="113" style="border-radius: 8px;">
+          <xt-button @click="playAll" class="mr-3 "  h="40" w="113" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;">
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-text-2 mr-2" />
-              <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
+              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
+              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
             </div>
           </xt-button>
-          <xt-button w="154" h="40" @click="playActive" class="mr-3 xt-bg-2">
+          <xt-button w="154" h="40" @click="playActive" class="mr-3 " style="background: rgba(0,0,0,0.2) !important;border-radius: 8px;">
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-text-2 mr-2"/>
-              <span  class="s-text xt-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
+              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2"/>
+              <span  class="s-text xt-active-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
             </div>
           </xt-button>
-          <xt-button h="40" w="154" style="border-radius: 8px;" @click="openRight"  class="xt-bg-2">
+          <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight"  >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-text-2 mr-2" />
-              <span  class="s-text xt-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
+              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-active-text mr-2" />
+              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
             </div>
           </xt-button>
         </template>
