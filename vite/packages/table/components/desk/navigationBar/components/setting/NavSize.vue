@@ -94,7 +94,7 @@ const windowHeight=ref(480)
 const windowWidth=ref(460)
 const handleResize = () => {
     const currentHeight = window.innerHeight
-    if(currentHeight>900){
+    if(currentHeight>850){
         windowHeight.value=610
         windowWidth.value=460
     }else{
