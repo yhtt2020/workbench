@@ -58,13 +58,13 @@
   </div>
   <!-- 3 -->
   <div class="xt-bg-2 p-4 mb-4 rounded-xl">
-    <xt-option-info
-      isSwitch
-      v-model:switch="globalSettings.enableZoom"
-      title="独立缩放"
-      info="开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。"
-    />
-    <hr />
+    <div
+      v-if="fixedFloat || freeFloat"
+      class="rounded-xl text-sm p-3 xt-bg-t-2 mb-3"
+      style="color: var(--warning)"
+    >
+      当前桌面正在使用独立布局或自由布局，此处设置的布局和缩放无效。
+    </div>
     <xt-option-info
       title="桌面缩放"
       info="调节桌面的缩放比例，默认为100%。"
@@ -136,7 +136,7 @@
 <script setup>
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
 const router = useRouter();
@@ -145,8 +145,10 @@ const { settings, backgroundSettings } = storeToRefs(app);
 // props
 const props = defineProps({
   globalSettings: {},
+  fixedFloat: {},
+  freeFloat: {},
 });
-
+const { fixedFloat, freeFloat } = toRefs(props);
 const fallingList = ref([
   {
     value: "rain",
