@@ -312,7 +312,7 @@ export default {
         this.settings.zoomFactor = 100
       }
 
-      this.ensureShake()//确认摇一摇功能状态
+      this.ensureShake(false)//确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
       if (this.settings.darkMod) {
