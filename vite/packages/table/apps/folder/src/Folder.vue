@@ -16,6 +16,7 @@
       </template>
       <!-- 右侧布局切换 -->
       <template #right-menu>
+        <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
       <!-- <Resize> -->
@@ -24,6 +25,13 @@
         v-if="Object.keys(customData.list).length <= 0 || 0"
         class="flex flex-col items-center mt-3 tt"
       >
+        <!--  -->
+        <xt-new-icon
+          v-if="options.className !== 'card small'"
+          icon="fluent-emoji:inbox-tray"
+          w="56"
+          class="mb-3"
+        />
         <xt-new-icon
           v-if="options.className !== 'card small'"
           icon="fluent-emoji:inbox-tray"
@@ -38,10 +46,7 @@
       <vue-custom-scrollbar
         v-else
         :settings="{
-          swipeEasing: true,
           suppressScrollY: false,
-          suppressScrollX: true,
-          wheelPropagation: false,
         }"
         class="w-full relative h-full"
       >
@@ -54,15 +59,6 @@
         />
       </vue-custom-scrollbar>
       <!-- </Resize> -->
-
-      <!-- <xt-selectIcon
-      :menus="['icon']"
-      v-model="iconEditVisible"
-      @getAvatar="getAvatar"
-      isUpload="true"
-    /> -->
-      <!-- <xt-option-from :options="sss" /> -->
-      <!-- <xt-option-color v-bind="aa" /> -->
     </Widget>
   </Drop>
 
@@ -71,7 +67,6 @@
     :data="customData"
     @close="setVisible = false"
     @updateSort="updateSort"
-    @updateModel="updateModel"
     @updateWindowApp="updateWindowApp"
   >
   </folderSet>
@@ -86,7 +81,7 @@ import Drop from "./components/Drop.vue";
 import Resize from "./components/Resize.vue";
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
-
+import { message } from "ant-design-vue";
 import { defaultData } from "./components/options";
 /**
  * 初始化阶段
@@ -139,11 +134,8 @@ const menuList = computed(() => {
  * 文件夹布局图标状态
  */
 const layout = computed(() => {
-  if (customData.value.layout === "rows") {
-    return "fluent:grid-16-regular";
-  } else if (customData.value.layout == "columns") {
-    return "fluent:apps-list-detail-24-regular";
-  }
+  if (customData.value.layout === "rows") return "fluent:grid-16-regular";
+  else return "fluent:apps-list-detail-24-regular";
 });
 /**
  * 文件夹布局切换
@@ -152,21 +144,6 @@ const layoutClick = () => {
   customData.value.layout =
     customData.value.layout === "rows" ? "columns" : "rows";
 };
-
-/**
- * 图标编辑
- */
-const getAvatar = (avatar) => {
-  console.log("avatar :>> ", avatar);
-  // this.modelValue=false
-};
-
-const iconEditVisible = ref(false);
-const iconClick = () => {
-  console.log("iconClick");
-  iconEditVisible.value = true;
-};
-
 // 更新文件数据
 const updateFile = (data) => {
   customData.value.list[data.id] = data;
@@ -204,13 +181,6 @@ const updateSort = (val) => {
 };
 
 /**
- * 更新模式
- */
-const updateModel = (data) => {
-  customData.value.model = data;
-};
-
-/**
  * 更新窗口程序
  */
 const updateWindowApp = async () => {
@@ -227,6 +197,24 @@ const updateWindowApp = async () => {
     };
     customData.value.list[file.id] = file;
   });
+};
+/**
+ * 锁配置
+ */
+const lockIcon = computed(() => {
+  return customData.value.lock
+    ? "fluent:lock-closed-16-regular"
+    : "fluent:lock-open-28-regular";
+});
+const lockClick = () => {
+  // 自由排序 or 桌面文件 下紧张默认锁住
+  if (customData.value.sort === "free" || customData.value.model != "custom") {
+    customData.value.lock = true;
+    message.info("自由排序或桌面文件下无法解锁");
+
+    return;
+  }
+  customData.value.lock = !customData.value.lock;
 };
 </script>
 

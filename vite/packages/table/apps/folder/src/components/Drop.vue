@@ -84,7 +84,7 @@ const handleDragover = (dragEvent) => {
  * 处理拖拽内容离开
  */
 const handleDragleave = () => {
-  console.log('拖拽元素离开 :>> ', );
+  if (data.value.lock) return;
   currentId.value = "";
 };
 // -------------------------------------------

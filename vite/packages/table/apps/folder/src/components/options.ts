@@ -1,3 +1,4 @@
+// 单个文件数据
 export const defaultData = {
   useCount: 0, // 使用次数
   lastUseTime: "",

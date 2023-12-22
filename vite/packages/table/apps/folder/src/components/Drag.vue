@@ -25,7 +25,7 @@ const props = defineProps({
  * 文件托起
  */
 const handleDragStart = (event) => {
-  // if (data.value.sort === "free") return;
+
   console.log("1111 :>> ", 1111);
   isDrag.value = true;
   dragId.value = index.value;

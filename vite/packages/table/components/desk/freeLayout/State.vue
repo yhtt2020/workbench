@@ -59,14 +59,14 @@
         v-model="deskWidth"
         @blur="updateDeskSize"
         class="xt-bg-t-2 xt-b"
-        style="width: 156px"
+        style="width: 146px"
       />
-      <div class="flex justify-center items-center" style="width: 40px">x</div>
+      <div class="flex justify-center items-center" style="width: 36px">x</div>
       <xt-input
         v-model="deskHeight"
         @blur="updateDeskSize"
         class="xt-bg-t-2 xt-b"
-        style="width: 156px"
+        style="width: 146px"
       />
       <xt-input
         v-model="deskZoom"
@@ -82,8 +82,17 @@
       title="对齐方式"
       info="选择桌面布局的对齐方式，可以通过桌面菜单中的「重置桌面位置」回到对齐中心。"
     />
-    <xt-option-select v-model="align" :list="alignList" @cb="updateAlign" />
-    <xt-button class="xt-bg-t-2 mt-4 text-sm" h="40" block
+    <xt-option-select
+      v-model="getFreeLayoutState.mode.align"
+      :list="alignList"
+      @cb="updateAlign"
+    />
+    <xt-button
+      v-if="getFreeLayoutState.mode.align == 'custom'"
+      class="xt-bg-t-2 mt-4 text-sm"
+      h="40"
+      block
+      @click="updateCentre"
       >点击设置当前桌面位置为画布中心</xt-button
     >
     <div class="flex justify-between mb-4">
@@ -98,6 +107,7 @@ import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useDebounceFn } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
+import { message } from "ant-design-vue";
 // 初始化操作
 const emits = defineEmits(["scrollbarRedirect", "scrollbarUpdate"]);
 const freeLayoutStore = useFreeLayoutStore();
@@ -227,7 +237,6 @@ const onIconClick = () => {
 };
 
 // 对齐方式
-const align = ref("center");
 const alignList = ref([
   {
     name: "桌面正中心",
@@ -239,8 +248,16 @@ const alignList = ref([
     value: "top",
   },
   {
+    name: "桌面底部",
+    value: "bottom",
+  },
+  {
     name: "桌面左侧",
     value: "left",
+  },
+  {
+    name: "桌面右侧",
+    value: "right",
   },
   {
     name: "自定义",
@@ -250,21 +267,29 @@ const alignList = ref([
 const updateAlign = (newV) => {
   if (newV === "top") {
     getFreeLayoutState.value.mode.align = "top";
-    getFreeLayoutState.value.line.centerLine.x = "center";
-    getFreeLayoutState.value.line.centerLine.y = "top";
   } else if (newV === "left") {
     getFreeLayoutState.value.mode.align = "left";
-    getFreeLayoutState.value.line.centerLine.x = "top";
-    getFreeLayoutState.value.line.centerLine.y = "top";
   } else if (newV === "center") {
     getFreeLayoutState.value.mode.align = "center";
-    getFreeLayoutState.value.line.centerLine.x = "center";
-    getFreeLayoutState.value.line.centerLine.y = "center";
+  } else if (newV === "bottom") {
+    getFreeLayoutState.value.mode.align = "bottom";
+  } else if (newV === "right") {
+    getFreeLayoutState.value.mode.align = "right";
   } else if (newV === "custom") {
     getFreeLayoutState.value.mode.align = "custom";
-    getFreeLayoutState.value.line.centerLine.x = 2500;
-    getFreeLayoutState.value.line.centerLine.y = 2500;
+    updateCentre();
   }
+};
+
+// 重置中心点
+const updateCentre = () => {
+  getFreeLayoutState.value.line.centerLine = {
+    y: freeLayoutEnv.value.scrollTop,
+    x:
+      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
+  };
+
+  message.success("修改中心点成功");
 };
 </script>
 

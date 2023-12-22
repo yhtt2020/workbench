@@ -10,6 +10,7 @@ export const registerFolder = (desk) => {
       name: "folder",
       id: Date.now(),
       customData: {
+        lock: true,
         title: "文件夹",
         icon: "",
         list: {},

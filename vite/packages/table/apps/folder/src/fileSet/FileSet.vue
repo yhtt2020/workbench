@@ -13,7 +13,7 @@
     <div style="width: 452px" v-if="currentTab == 'attribute'">
 
       <xt-option-from :options="attributeOptions" :data="data">
-        <template #custom> 123 </template>
+        <template #custom> 2321 </template>
       </xt-option-from>
     </div>
     <div v-else style="width: 452px">
