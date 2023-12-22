@@ -196,6 +196,18 @@ export default {
                     name: '应用中心',
                     value: 'apps',
                 },
+                {
+                    type: 'systemApp',
+                    icon: '/logo/task.svg',
+                    name: '任务中心',
+                    value: 'task',
+                },
+                {
+                    type: 'systemApp',
+                    icon: '/logo/commun.svg',
+                    name: '社区中心',
+                    value: 'commun',
+                }
 
             ],
             nowClassify: 'systemApp',

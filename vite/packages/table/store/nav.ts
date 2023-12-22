@@ -240,6 +240,8 @@ let arrData = [
     { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
     { 'type': 'systemApp', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
     // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
+    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task' },
+    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun' },
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
 ]

@@ -1,5 +1,6 @@
 import browser from "../../js/common/browser";
-
+import { appStore } from "../../store";
+import {taskStore} from "../../apps/task/store";
 export const startApp = (type, value, router?) => {
   switch (type) {
     // 默认浏览器
@@ -30,7 +31,8 @@ export const startApp = (type, value, router?) => {
       break;
     // 系统应用
     case "systemApp":
-      router.push({ name: value });
+      // router.push({ name: value });
+      openSysApp(value,router)
       break;
     // 不知道是什么场景
     case "localApp":
@@ -38,3 +40,18 @@ export const startApp = (type, value, router?) => {
       break;
   }
 };
+
+export const openSysApp = (value,router)=>{
+  const useAppStore = appStore();
+  const useTakeStore = taskStore()
+  if(value === 'fullscreen'){
+    useAppStore.toggleFullScreen()
+  } else if(value === 'task'){
+    useTakeStore.isTaskDrawer = true
+  } else if(value === 'commun'){
+    console.log(1111);
+    return
+  } else{
+    router.push({name:value})
+  }
+}

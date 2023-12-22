@@ -718,7 +718,7 @@ export default {
           type: item.type,
           value: item.value,
         },
-        titleValue: '',
+        titleValue: item.name,
         isTitle: true,
         src: item.icon,
         isRadius: true,
@@ -731,9 +731,9 @@ export default {
       };
       // iconList: [{ ...data }]
       // useAddCard(file);
-      // const addCard = useAddCard()
       this.addDeskCard('myIcons', {
-        iconList: [{ ...file }]
+        iconList: [{ ...file }],
+        newIcon: true
       });
       this.editVisible = false;
     },
