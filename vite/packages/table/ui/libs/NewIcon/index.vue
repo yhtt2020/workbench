@@ -3,8 +3,8 @@
     class="xt-active xt-base-btn xt-text"
     :style="[boxStyle, boxBgStyle]"
     :class="[bgClass]"
-    >
-    <myIcon :icon="icon" :style="iconSize"></myIcon>
+  >
+    <myIcon :icon="icon" :style="[iconSize,iconColor]" :class="iconClass"></myIcon>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ const props = defineProps({
   color: {
     default: "var(--secondary-text)",
   },
+  iconClass: {},
 });
 
 const iconSize = computed(() => {
@@ -44,7 +45,11 @@ const iconSize = computed(() => {
     height: props.size + "px",
   };
 });
-
+const iconColor = computed(() => {
+  return {
+    color: props.color,
+  };
+});
 const boxStyle = computed(() => {
   if (props.bgStyle || props.bgClass) {
     return {
