@@ -11,7 +11,7 @@
       backgroundColor: 'red',
     }"
   >
-    <a-select-option class="no-drag" v-for="item in list" :value="item.value" :style="{height:`${h}px`}"
+    <a-select-option class="no-drag" v-for="item in list" :value="item.value"
       >{{ item.name }}
     </a-select-option>
   </a-select>
