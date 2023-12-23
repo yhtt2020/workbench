@@ -359,7 +359,7 @@ export default {
   mounted() {
     // this.popVisible=true
     this.copyNav()
-    console.log(this.copyFootNav, 'copyFootNav');
+    // console.log(this.copyFootNav, 'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -417,7 +417,7 @@ export default {
       })
     })
     this.footNavigationList = this.footNavigationList.map((item) => {
-      console.log(item, 'item');
+      // console.log(item, 'item');
       switch (item.type) {
         case 'systemApp':
           return { ...item };
@@ -454,7 +454,7 @@ export default {
     }));
 
 
-    console.log(this.footNavigationList, 'foot');
+    // console.log(this.footNavigationList, 'foot');
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -545,7 +545,7 @@ export default {
           this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          console.log(target, 'target[0]')
+          // console.log(target, 'target[0]')
           target.forEach(element => {
             const index = this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
@@ -582,7 +582,7 @@ export default {
 
         }
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'footNav')
+        // console.log(this.copyFootNav, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -1044,7 +1044,7 @@ export default {
           }
           delIcon.ondrop = function (ev) {
             if (!that.isDelete) return
-            console.log(111111);
+            // console.log(111111);
             that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
@@ -1093,7 +1093,7 @@ export default {
           that.sortFootNavigationList(event)
           that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
           that.updateMainNav();
-          console.log('isDelete', that.footNavigationList);
+          // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true

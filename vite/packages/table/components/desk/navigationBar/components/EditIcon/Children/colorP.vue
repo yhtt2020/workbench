@@ -2,7 +2,7 @@
     <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false" theme="tomato">
         <xt-button :w="40" :h="40" class="xt-bg" @click="change"><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
-            <div class="w-[320px] rounded-xl shadow p-4 ">
+            <div class="w-[320px] rounded-xl shadow p-4 -mt-1 -mr-2 -ml-2 -mb-1">
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <xt-button :w="24" :h="24">
@@ -116,8 +116,6 @@ const chooseLinear = (item) => {
  */
 const updateBackground = () => {
     emit('change', defaultColor.value)
-    tippyRef.value.hide()
-    
 }
 </script>
 <style lang='scss' scoped>

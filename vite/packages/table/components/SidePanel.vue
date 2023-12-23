@@ -46,29 +46,8 @@
   <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
-  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
-    placement="bottom" :visible="menuVisible" @close="onClose">
-    <a-row>
-      <a-col>
-        <div class="flex flex-wrap items-center">
-          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-            <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
-          </div>
-          <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
-            <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
-            <div><span>{{ item.name }}</span></div>
-          </div>
-        </div>
-
-      </a-col>
-    </a-row>
-  </a-drawer> -->
-
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
@@ -331,7 +310,7 @@ export default {
     this.enableDrag()
     this.colDrop()
     this.copyNav()
-    console.log(this.copySideNav, 'copySideNav');
+    // console.log(this.copySideNav, 'copySideNav');
     // this.scrollNav('sideContent', 'scrollTop')
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'

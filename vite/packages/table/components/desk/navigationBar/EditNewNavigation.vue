@@ -241,13 +241,13 @@ export default {
         },
         async loadDeskIconApps() {
             const lightApps = await appModel.getAllApps()
-            console.log(lightApps, 'lightApps');
+            // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {
                 lightApps[i].icon = lightApps[i].logo
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
-            console.log(desktopApps, lightApps, 'desktopApps');
+            // console.log(desktopApps, lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
@@ -255,7 +255,7 @@ export default {
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            console.log(this.ClassifyData, 'ClassifyData');
+            // console.log(this.ClassifyData, 'ClassifyData');
         },
         // 更换图标格式
         replace(list) {
