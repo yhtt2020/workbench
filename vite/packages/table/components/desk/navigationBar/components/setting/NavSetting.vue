@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,onBeforeUnmount,onMounted } from 'vue'
+import { ref,onBeforeUnmount,onMounted,watch } from 'vue'
 import settingItem from './settingItem.vue';
 import { useNavigationStore } from '../../navigationStore';
 import { appStore } from '../../../../../store';
@@ -21,6 +21,27 @@ const useAppStore=appStore()
 const navigationStore=useNavigationStore()
 const windowHeight=ref(480)
 const windowWidth=ref(460)
+const iconList = ref([
+    {
+        value: 'commun',
+        name: '社区中心',
+        icon: '/logo/commun.svg',
+        bg: '',
+        isBg: false,
+        mode: 'app',
+        type: 'systemApp'
+    },
+    {
+        value: 'task',
+        name: '任务中心',
+        icon: '/logo/task.svg',
+        bg: '',
+        isBg: false,
+        mode: 'app',
+        type: 'systemApp'
+        
+    }
+])
 const navigationPosition = ref([
   {
     title: '左侧导航',
@@ -82,16 +103,42 @@ onBeforeUnmount(()=>{
     window.removeEventListener('resize', handleResize)
 })
 const change=(item,index)=>{
-    console.log(item,index);
+    // console.log(item,index);
     useNavStore.navigationToggle[index]=item.switch
     
 }
 const changeFn=(item,index)=>{
-    console.log(item,index);
+    // console.log(item,index);
     if(index === 3){
         useAppStore.settings.enableChat = item.switch
     }
     navigationStore.bottomToggle[index]=item.switch
 }
+watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
+    if (newValue) {
+        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === 'commun');
+        if (hasTargetItem) {
+            console.log('Found target item');
+            return true;
+        }
+        useNavStore.setFootNavigationList(iconList.value[0]);
+    } else {
+        const index = useNavStore.footNavigationList.findIndex(item => item.value === 'commun');
+        useNavStore.removeFootNavigationList(index);
+    }
+}, { deep: true, immediate: true });
+
+watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
+    if (newValue) {
+        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === 'task');
+        if (hasTargetItem) {
+            return true;
+        }
+        useNavStore.setFootNavigationList(iconList.value[1]);
+    } else {
+        const index = useNavStore.footNavigationList.findIndex(item => item.value === 'task');
+        useNavStore.removeFootNavigationList(index);
+    }
+}, { deep: true, immediate: true });
 </script>
 <style lang='scss' scoped></style>

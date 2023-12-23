@@ -1,5 +1,6 @@
 <template>
-  <tippy placement="top" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999" ref="tippyRef">
+  <tippy placement="top" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
+    ref="tippyRef">
     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
     <template #content>
       <div class="flex flex-wrap w-[278px] h-[173px] rounded-xl">
@@ -14,8 +15,10 @@
       </div>
     </template>
   </tippy>
-  <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
-  <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
+  <teleport to='body'>
+    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
+    <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
+  </teleport>
 </template>
 
 <script>
@@ -143,6 +146,7 @@ export default {
   padding: 8px 0 6px;
   cursor: pointer;
   color: var(--primary-text);
+
   &:hover {
     background: rgba(80, 139, 254, 0.20);
   }

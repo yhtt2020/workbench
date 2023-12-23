@@ -82,6 +82,7 @@ import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import {startApp} from '../ui/hooks/useStartApp'
+import {updateIcon} from '../components/desk/navigationBar/index'
 export default {
   name: 'SidePanel',
   components: {
@@ -335,7 +336,8 @@ export default {
     },
     sideNavigationList: {
       handler(newVal, oldVal) {
-        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        this.copySideNav = this.updateIcon(this.sideNavigationList,this.copySideNav)
         console.log(this.copySideNav, 'copySideNav');
         console.log(this.sideNavigationList, 'sideNavigationList');
       },
@@ -344,7 +346,8 @@ export default {
     },
     rightNavigationList: {
       handler(newVal, oldVal) {
-        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        // this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.copyRightNav = this.updateIcon(this.rightNavigationList,this.copyRightNav)
       },
       immediate: true,
       deep: true,
@@ -355,6 +358,7 @@ export default {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList','copyNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
+    updateIcon,
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
@@ -443,8 +447,8 @@ export default {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
           that.sortNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
-          that.updateMainNav();
+          // that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
+          // that.updateMainNav();
         }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
@@ -612,7 +616,8 @@ export default {
         // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
-          this.selectNav = this.currentNav
+          // this.selectNav = this.currentNav
+          this.navigationList === this.copyRightNav ? this.selectNav = 'right' : this.selectNav = 'left'
           message.success('进入编辑模式')
         }
         this.quick = true
