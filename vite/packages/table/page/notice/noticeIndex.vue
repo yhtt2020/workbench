@@ -2,7 +2,7 @@
   <xt-left-menu :list="filterList" model="id" last="5" end="2" leftMargin="py-3">
     <template v-if="top.type !== 'setting'">
       <div class="flex flex-col w-full" >
-        <div class="flex w-full h-11 mb-4  px-3 pt-3 items-center justify-between">
+        <div class="flex w-full h-10 mb-4  px-3 pt-3 items-center justify-between">
           <div class="flex items-center">
             <xt-new-icon :icon="top.newIcon" size="20"></xt-new-icon>
             <span class="font-16 font-500 xt-text ml-3 xt-font">{{ top.newName }}</span>
