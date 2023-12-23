@@ -7,10 +7,10 @@
   >
     <template v-for="(item, index) in list">
       <div
-        v-if="fileDisabled(item)"
+        v-show="fileDisabled(item)"
         class="xt-sortable-fle-box"
         :class="[sortableBox]"
-        :data-id="index"
+        :data-id="item.id"
       >
         <xt-mix-menu
           @mounted="handleMenuMounted(item)"
@@ -61,13 +61,11 @@ import { fileTypes } from "./options";
 const index = inject("index", "");
 const data = inject("data", "");
 
-const model = inject("model", "");
-
 const { proxy } = getCurrentInstance();
 
 const router = useRouter();
 
-const emits = defineEmits(["deleteFile", "updateSort"]);
+const emits = defineEmits(["deleteFile", "updateSort", "updateList"]);
 // 父组件数据
 const props = defineProps({
   layout: {},
@@ -105,7 +103,7 @@ onMounted(() => {
     handle: "." + sortableBox.value,
     disabled: data.value.sort === "free" ? false : true,
     onEnd: function (evt) {
-
+      collisionDetection(evt.to.childNodes);
     },
   });
 });
@@ -181,7 +179,27 @@ const menuList = computed(() => {
   ];
 });
 
-// 删除文件
+const collisionDetection = (nodes) => {
+  // 循环新的排序ID
+  let obj = {};
+  for (let item of nodes) {
+    if (
+      !(item instanceof HTMLDivElement) ||
+      item.getAttribute("data-id") == null
+    ) {
+      continue;
+    }
+    let key = item.getAttribute("data-id");
+    // obj[key] = {
+    //   ...list.value[key],
+    //   name: list.value[key].name,
+    //   id: key,
+    // };
+    obj[key] = list.value[key];
+  }
+  emits("updateList", obj);
+};
+
 const deleteFile = () => {
   emits("deleteFile", currentItem.value);
 };
@@ -233,7 +251,5 @@ const fileDisabled = (item) => {
 .xt-sortable-fle-container {
   display: inline-grid;
   grid-template-columns: repeat(auto-fit, v-bind(fileLayout));
-}
-.xt-sortable-fle-box {
 }
 </style>

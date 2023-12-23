@@ -56,6 +56,7 @@
           :model="customData.model"
           @deleteFile="deleteFile"
           @updateSort="updateSort"
+          @updateList="updateList"
         />
       </vue-custom-scrollbar>
       <!-- </Resize> -->
@@ -176,7 +177,13 @@ const sortMode = (key) => {
 // 触发排序
 const updateSort = (val) => {
   const mode = customData.value.sort;
-  if (mode === "free") return;
+  console.log("mode :>> ", mode);
+  if (mode === "free") {
+    console.log("3333 :>> ", 3333);
+    customData.value.lock = true;
+    return;
+  }
+  console.log("111 :>> ", 111);
   sortMode(mode);
 };
 
@@ -215,6 +222,22 @@ const lockClick = () => {
     return;
   }
   customData.value.lock = !customData.value.lock;
+};
+
+/**
+ * 更新拖拽后的排序
+ */
+const updateList = (data) => {
+  console.log("data :>> ", data);
+  customData.value.list = {};
+
+  setTimeout(() => {
+    console.log("data :>> ", data);
+    customData.value.list = data;
+    // data.forEach((item) => {
+    //   customData.value.list[item.id] = item;
+    // });
+  }, 0);
 };
 </script>
 

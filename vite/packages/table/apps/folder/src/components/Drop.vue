@@ -5,7 +5,6 @@
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     @dragleave="handleDragleave"
-
     @mouseup="handleMouseup"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
@@ -69,7 +68,7 @@ const handleDragenter = (dragEvent) => {
   dragEvent.preventDefault();
   currentId.value = index.value;
 
-  console.log('拖拽元素进入 :>> ', );
+  console.log("拖拽元素进入 :>> ");
 };
 /**
  * 处理拖拽内容在放置区移动
@@ -77,7 +76,7 @@ const handleDragenter = (dragEvent) => {
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
   currentId.value = index.value;
-  console.log('拖拽元素在上方移动 :>> ', );
+  console.log("拖拽元素在上方移动 :>> ");
 };
 
 /**
@@ -98,22 +97,24 @@ const handleMouseup = () => {
 
   // 新数据处理
   iconList.value.forEach((item) => {
-    const file = {
-      ...defaultData,
-      id: Date.now() + Math.random() * 50,
-    };
-    file.type = item.open.type;
-    file.value = item.open.value;
-    file.icon = item.src;
-    file.name = item.titleValue;
-    file.isName = item.isTitle;
-    file.bg = item.backgroundColor;
-    file.isBg = item.isBackground;
-    file.radius = item.radius;
-    file.isRadius = item.isRadius;
-    file.iconState = item.imgState;
-    file.iconShape = item.imgShape;
-    emits("updateFile", file);
+    setTimeout(() => {
+      const file = {
+        ...defaultData,
+        id: Date.now(),
+      };
+      file.type = item.open.type;
+      file.value = item.open.value;
+      file.icon = item.src;
+      file.name = item.titleValue;
+      file.isName = item.isTitle;
+      file.bg = item.backgroundColor;
+      file.isBg = item.isBackground;
+      file.radius = item.radius;
+      file.isRadius = item.isRadius;
+      file.iconState = item.imgState;
+      file.iconShape = item.imgShape;
+      emits("updateFile", file);
+    }, 10);
   });
 
   // 旧数据删除
