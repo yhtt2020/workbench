@@ -102,11 +102,21 @@ onMounted(()=>{
 onBeforeUnmount(()=>{
     window.removeEventListener('resize', handleResize)
 })
+/**
+ * 导航栏隐藏
+ * @param item 
+ * @param index 
+ */
 const change=(item,index)=>{
     // console.log(item,index);
     useNavStore.navigationToggle[index]=item.switch
     
 }
+/**
+ * 用户中心，社区中心，任务中心，社群沟通
+ * @param item 
+ * @param index 
+ */
 const changeFn=(item,index)=>{
     // console.log(item,index);
     if(index === 3){
@@ -114,6 +124,9 @@ const changeFn=(item,index)=>{
     }
     navigationStore.bottomToggle[index]=item.switch
 }
+/**
+ * 社区中心和任务中心
+ */
 watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
     if (newValue) {
         const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === 'commun');
