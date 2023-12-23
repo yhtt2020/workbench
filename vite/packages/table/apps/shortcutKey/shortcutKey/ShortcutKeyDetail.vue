@@ -38,9 +38,10 @@
     </div>
     <div class="key-list">
       <!-- 侧边栏 -->
-      <div class="side-nav" v-if="currentScheme.showSide">
-        <XtScrollbar :x="false" :y="true">
-          <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
+      <div class="side-nav h-full flex flex-col" v-if="currentScheme.showSide">
+        <Search v-model:keywords="keywords" inputStyle="width:100%;" placeholder="搜索"></Search>
+        <XtScrollbar class="flex-1 h-full" :x="false" :y="true">
+
           <div class="nav-box">
             <a-tooltip v-for="(item,index) in sideNav" placement="left" :title="item.groupName">
               <div class="nav-item  truncate " :style="{backgroundColor:getColor(this.sideNav,index)}"

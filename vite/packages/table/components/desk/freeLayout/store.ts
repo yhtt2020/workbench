@@ -18,6 +18,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     isSelectAll: false,
     // 默认状态数据
     defaultState: {
+      // 新增配置项 用于存储新版数据
+      mode: {
+        arrange: "grid", // 排列方式
+        scroll: "scroll", // 滚动方式
+        align: "custom", // 居中方式
+      },
       // 系统数据
       system: {
         // 是否使用自由布局
@@ -26,13 +32,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         hide: false,
       },
       option: {
-        afterDragging: false,
-        whileDragging: false,
+        afterDragging: false, // 拖拽结束后吸附于网格
+        whileDragging: false, // 拖拽时以网格移动
         collision: true,
         margin: 6, // 没用目前 可能会直接删
-        magnet: false,
+        magnet: false, // 卡片吸附
       },
-
       // 辅助线数据
       line: {
         isAuxLine: false, // 是否显示辅助线
@@ -79,8 +84,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     getCurrentDesk() {
       const card: any = cardStore();
       const home: any = homeStore();
-      const {  desks } = storeToRefs(card);
-      const {currentDeskId}=storeToRefs(home);
+      const { desks } = storeToRefs(card);
+      const { currentDeskId } = storeToRefs(home);
       const desk = desks.value?.filter(
         (item) => item.id === this.getCurrentDeskId
       );

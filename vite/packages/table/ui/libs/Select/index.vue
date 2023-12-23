@@ -48,10 +48,11 @@ const props = defineProps({
 });
 
 let data = reactive(props.modelValue);
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:modelValue",'cb']);
 
 const handleChange = (value) => {
   emits("update:modelValue", value);
+  emits("cb", value);
 };
 
 watch(
