@@ -1,5 +1,5 @@
 <template>
-  <Drop @updateFile="updateFile" @deleteFile="deleteFile">
+  <Drop @createFile="createFile" @deleteFile="deleteFile">
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -12,7 +12,7 @@
       </template>
       <!-- 左侧标题 -->
       <template #title-text>
-        {{ customData.title }}
+        {{ customData.name }}
       </template>
       <!-- 右侧布局切换 -->
       <template #right-menu>
@@ -20,12 +20,11 @@
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
       <!-- <Resize> -->
-      <!-- 空状态 -->
+      <!-- 空状态显示状态 -->
       <div
-        v-if="Object.keys(customData.list).length <= 0 || 0"
+        v-if="customData.list.length <= 0 && !dragSortState"
         class="flex flex-col items-center mt-3 tt"
       >
-        <!--  -->
         <xt-new-icon
           v-if="options.className !== 'card small'"
           icon="fluent-emoji:inbox-tray"
@@ -38,11 +37,12 @@
           w="56"
           class="mb-3"
         />
-        <div class="xt-bg-t-2 rounded-xl text-sm mb-2 p-2">
+        <div class="xt-bg-t-2 rounded-xl text-sm mb-3 p-2">
           你可以拖动工作台桌面图标或windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
         </div>
         <xt-button type="theme" w="84" h="32" radius="8">添加图标</xt-button>
       </div>
+
       <vue-custom-scrollbar
         v-else
         :settings="{
@@ -55,8 +55,8 @@
           :layout="customData.layout"
           :model="customData.model"
           @deleteFile="deleteFile"
-          @updateSort="updateSort"
           @updateList="updateList"
+          @updateSort="updateSort"
         />
       </vue-custom-scrollbar>
       <!-- </Resize> -->
@@ -96,18 +96,6 @@ const { customData, customIndex } = toRefs(props);
 provide("index", customIndex);
 provide("data", customData);
 
-/**
- * 挂载阶段
- */
-
-onMounted(() => {
-  //
-  if (customData.value.model === "") return;
-});
-
-const customDataValue = computed(() => {
-  return customData.value;
-});
 // 卡片默认配置
 const options = computed(() => {
   return {
@@ -145,17 +133,26 @@ const layoutClick = () => {
   customData.value.layout =
     customData.value.layout === "rows" ? "columns" : "rows";
 };
-// 更新文件数据
-const updateFile = (data) => {
-  customData.value.list[data.id] = data;
+/**
+ * 文件增删改
+ */
 
-  console.log(" customData.value.list :>> ", customData.value.list);
+// 增
+const createFile = (data) => {
+  console.log("1233 :>> ", data);
+  customData.value.list.push(data);
 };
-// 删除文件数据
+// 删
 const deleteFile = (data) => {
-  // customData.value.list.splice(customData.value.list.indexOf(data), 1);
-  delete customData.value.list[data.id];
+  console.log("data :>> ", data);
+  customData.value.list.splice(customData.value.list.indexOf(data), 1);
 };
+// 改
+const updateFile = (data) => {
+  console.log("123 :>> ", 123);
+  // customData.value.list.push(data);
+};
+
 /**
  * 文件排序
  */
@@ -227,17 +224,14 @@ const lockClick = () => {
 /**
  * 更新拖拽后的排序
  */
+const dragSortState = ref(false);
 const updateList = (data) => {
-  console.log("data :>> ", data);
-  customData.value.list = {};
-
+  dragSortState.value == true;
+  customData.value.list = [];
   setTimeout(() => {
-    console.log("data :>> ", data);
     customData.value.list = data;
-    // data.forEach((item) => {
-    //   customData.value.list[item.id] = item;
-    // });
-  }, 0);
+    dragSortState.value = false;
+  }, 10);
 };
 </script>
 

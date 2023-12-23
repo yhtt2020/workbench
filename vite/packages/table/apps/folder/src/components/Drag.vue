@@ -11,7 +11,7 @@ import { inject } from "vue";
 // import { useAddCard } from "../hooks/useAddCard";
 import { useAddCard } from "../../../../ui/hooks/useAddCard";
 
-const emits = defineEmits(["updateFile", "deleteFile"]);
+const emits = defineEmits(["deleteFile"]);
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -25,8 +25,6 @@ const props = defineProps({
  * 文件托起
  */
 const handleDragStart = (event) => {
-
-  console.log("1111 :>> ", 1111);
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;

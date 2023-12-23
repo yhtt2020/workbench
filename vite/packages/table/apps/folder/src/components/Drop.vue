@@ -30,7 +30,7 @@ const { dragId, isDrag, isEnter, isOver, currentId, currentData } =
   storeToRefs(folderStore);
 const index = inject("index", "");
 const data = inject("data", "");
-const emits = defineEmits(["updateFile", "deleteFile"]);
+const emits = defineEmits(["createFile", "deleteFile"]);
 
 /**
  * 处理拖拽内容放置
@@ -43,7 +43,7 @@ const handleDrop = async (dragEvent) => {
    * 属于拖拽状态 说明来自其他文件夹
    */
   if (isDrag.value) {
-    emits("updateFile", { ...currentData.value, id: Date.now() });
+    emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
   let files = dragEvent.dataTransfer.files;
@@ -58,7 +58,7 @@ const handleDrop = async (dragEvent) => {
     fileInfo.name = file.name;
     fileInfo.value = file.path;
     fileInfo.icon = fileImage;
-    emits("updateFile", fileInfo);
+    emits("createFile", fileInfo);
   }
 };
 /**
@@ -70,6 +70,7 @@ const handleDragenter = (dragEvent) => {
 
   console.log("拖拽元素进入 :>> ");
 };
+
 /**
  * 处理拖拽内容在放置区移动
  */
@@ -86,7 +87,7 @@ const handleDragleave = () => {
   if (data.value.lock) return;
   currentId.value = "";
 };
-// -------------------------------------------
+
 /**
  * 处理图标组件放置
  */
@@ -113,7 +114,7 @@ const handleMouseup = () => {
       file.isRadius = item.isRadius;
       file.iconState = item.imgState;
       file.iconShape = item.imgShape;
-      emits("updateFile", file);
+      emits("createFile", file);
     }, 10);
   });
 

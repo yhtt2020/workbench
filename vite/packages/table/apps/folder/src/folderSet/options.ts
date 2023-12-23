@@ -8,7 +8,7 @@ export const nameOptions = [
   },
   {
     type: "input",
-    inputKey: "title",
+    inputKey: "name",
   },
 ];
 export const filesOptions = [

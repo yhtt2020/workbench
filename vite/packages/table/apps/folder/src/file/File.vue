@@ -181,7 +181,8 @@ const menuList = computed(() => {
 
 const collisionDetection = (nodes) => {
   // 循环新的排序ID
-  let obj = {};
+  let arr = [];
+  let arr1 = [];
   for (let item of nodes) {
     if (
       !(item instanceof HTMLDivElement) ||
@@ -189,15 +190,18 @@ const collisionDetection = (nodes) => {
     ) {
       continue;
     }
-    let key = item.getAttribute("data-id");
+    let id = item.getAttribute("data-id");
     // obj[key] = {
     //   ...list.value[key],
     //   name: list.value[key].name,
     //   id: key,
     // };
-    obj[key] = list.value[key];
+    let data = list.value.find((obj) => obj.id == parseInt(id));
+    arr.push({ ...data });
+    arr1.push(data.name);
   }
-  emits("updateList", obj);
+  console.log("arr1 :>> ", arr1);
+  emits("updateList", arr);
 };
 
 const deleteFile = () => {
