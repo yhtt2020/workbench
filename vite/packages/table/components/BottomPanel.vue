@@ -54,8 +54,7 @@
           justify-content: center;
         ">
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
-              <div class=" scroll-content"
-                style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
+              <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
@@ -68,7 +67,7 @@
                         @click.stop="newOpenApp(item.type, item.value)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
                         <template v-else>
-                        <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                          <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
                       </div>
                     </xt-menu>
@@ -408,7 +407,7 @@ export default {
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
         if (item.event === i.event) {
-          i.type = item.type
+          i.type = 'systemApp'
           i.icon = item.icon
           i.name = item.name
           i.value = item.event
@@ -915,6 +914,7 @@ export default {
     },
     // 拖拽桌面图标
     async drop(e) {
+      // console.log(e,'from drop');
       // this.modelValue=false
       const width = window.innerWidth
       let files = e.dataTransfer.files
@@ -1017,10 +1017,6 @@ export default {
       // }
     },
     enableDrag() {
-      // if (this.sortable || !this.editToggle) {
-      //   return
-      // }
-      // document.addEventListener('click', this.disableDrag)
       let that = this
       let drop = document.getElementById('bottomContent')
       this.sortable = Sortable.create(drop, {
@@ -1101,10 +1097,22 @@ export default {
           that.popVisible = false
           that.isDelete = true
         },
-        onMove: function (event) {
-          // console.log(event);
-          that.isDelete = false
-        },
+        // onMove: function (event) {
+        //   // 获取拖拽元素
+        //   let draggedElement = event.dragged;
+        //   // 获取鼠标位置
+        //   let mouseX = event.originalEvent.clientX;
+        //   let mouseY = event.originalEvent.clientY;
+        //   console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
+          
+        //   if(mouseX >=event.draggedRect.left && mouseX <= event.draggedRect.right && mouseY >= event.draggedRect.top && mouseY <= event.draggedRect.bottom){
+        //     console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
+        //   }
+        //   that.isDelete = false
+        // },
+        // onChoose: function (event) {
+        //   console.log(event, '=====onChoose');
+        // }
         // onRemove: function (event) {
         //   console.log(111111111,'=====onRemove');
         // }

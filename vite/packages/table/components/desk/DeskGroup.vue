@@ -4,7 +4,7 @@
     <div class="flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div
-        class="tabs flex flex-row mb-3 ml-3"
+        class="flex flex-row mb-3 ml-3 tabs"
         v-if="showTabs && displayDesks.length > 1"
       >
         <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
@@ -15,7 +15,7 @@
           :class="{ 'tab-active': currentDeskId === item.id }"
           @click="setCurrentDeskId(item.id)"
           style="width: 140px"
-          class="truncate pr-3 tab s-bg xt-text"
+          class="pr-3 truncate tab s-bg xt-text"
           v-for="(item, index) in displayDesks"
         >
           <a-avatar
@@ -40,7 +40,7 @@
         <a-tooltip title="全部桌面" placement="bottom">
           <div
             @click="showAll"
-            class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"
+            class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"
           >
             <icon
               class="icon"
@@ -52,12 +52,12 @@
       </div>
 
       <div v-if="false">
-        <div class="ml-1 flex flex-row">
+        <div class="flex flex-row ml-1">
           <slot name="toolsBefore"></slot>
           <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
           <!--            <div-->
           <!--              @click="startEdit"-->
-          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
           <!--            >-->
           <!--              <icon-->
           <!--                class="icon"-->
@@ -69,7 +69,7 @@
           <!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
           <!--            <div-->
           <!--              @click="stopEdit"-->
-          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
           <!--            >-->
           <!--              <icon-->
           <!--                class="icon"-->
@@ -81,7 +81,7 @@
           <!--          <a-tooltip title="全屏" placement="bottom">-->
           <!--            <div-->
           <!--              @click="setFullScreen"-->
-          <!--              class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center ml-3"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
           <!--            >-->
           <!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
           <!--            </div>-->
@@ -96,7 +96,7 @@
                 >
                   <div
                     @click="showMenu"
-                    class="btn-bg no-drag pointer h-10 w-10 rounded-md flex justify-center items-center"
+                    class="flex items-center justify-center w-10 h-10 rounded-md btn-bg no-drag pointer"
                   >
                     <xt-new-icon
                       size="18"
@@ -132,7 +132,7 @@
       <template v-else>
         <slot name="empty">
           <div class="w-full h-full" style="height: 100% !important">
-            <div class="s-bg rounded-3xl p-4" style="width: 80%; margin: auto">
+            <div class="p-4 s-bg rounded-3xl" style="width: 80%; margin: auto">
               <div class="text-center">
                 <div
                   class="line-title xt-text"
@@ -141,13 +141,13 @@
                   欢迎使用完全DIY的卡片桌面
                 </div>
                 <div
-                  class="w-full flex justify-items-center justify-center align-items-center"
+                  class="flex justify-center w-full justify-items-center align-items-center"
                 >
                   <xt-button
                     :w="160"
                     style="color: var(--active-text)"
                     @click="moreDesk"
-                    class="mr-10 xt-active-bg rounded-full border-none"
+                    class="mr-10 border-none rounded-full xt-active-bg"
                     key="console"
                     type="primary"
                   >
@@ -161,14 +161,14 @@
                   <xt-button
                     :w="140"
                     @click="newAddCard"
-                    class="mr-10 rounded-full xt-bg-2 border-none"
+                    class="mr-10 border-none rounded-full xt-bg-2"
                     key="console"
                   >
                     <icon class="mr-1" icon="tianjia2"></icon>&nbsp;DIY添加卡片
                   </xt-button>
                 </div>
               </div>
-              <div class="text-center mt-5 xt-text" style="font-size: 18px">
+              <div class="mt-5 text-center xt-text" style="font-size: 18px">
                 推荐桌面
               </div>
               <vue-custom-scrollbar
@@ -239,16 +239,16 @@
     </HorizontalPanel>
     <xt-task id="M0302" no="3"> </xt-task>
     <div v-if="currentAddTab.name === 'market'">
-      <!--      <div class="p-2 mt-2 text-lg pb-0">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
+      <!--      <div class="p-2 pb-0 mt-2 text-lg">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
       <!--        <a-input v-model:value="deskCode" spellcheck="false" class="input" placeholder="使用分享码添加"-->
       <!--                 aria-placeholder="font-size: 16px;"/>-->
-      <!--        <div class="btn-item xt-active-bg w-full" style=" margin:0;">使用分享码添加</div>-->
+      <!--        <div class="w-full btn-item xt-active-bg" style=" margin:0;">使用分享码添加</div>-->
 
       <!--      </div>-->
       <div class="flex justify-between">
         <span class="flex items-center">
-          <span class="desk-title mr-2">热门桌面</span>
+          <span class="mr-2 desk-title">热门桌面</span>
           <Icon style="font-size: 20px" icon="daohang_remen-xuanzhong"></Icon>
         </span>
         <xt-task id="M0302" no="4" @cb="moreDesk">
@@ -269,7 +269,7 @@
     </div>
     <div v-else>
       <xt-task id="M0102" no="3"> </xt-task>
-      <div class="desk-title mt-4">标题</div>
+      <div class="mt-4 desk-title">标题</div>
       <a-input
         v-model:value="deskTitle"
         spellcheck="false"
@@ -352,6 +352,7 @@
 
 <script lang="ts">
 import Desk from "./Desk.vue";
+import {useNavigationStore} from "../desk/navigationBar/navigationStore"
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { mapActions, mapWritableState, mapWritableState } from "pinia";
@@ -529,6 +530,7 @@ export default {
       "freeLayoutData",
       "freeLayoutState",
     ]),
+    ...mapWritableState(useNavigationStore,['targetDesk','selectNav']),
     getStep() {
       if (
         (this.taskID == "M0101" ||
@@ -599,6 +601,14 @@ export default {
       if (!val) return;
       // this.startTask();
     },
+    /**
+     * 添加图标中下拉框桌面切换
+     */
+    targetDesk(){
+      if(this.selectNav === 'desktop' && this.targetDesk !== ''){
+        this.setCurrentDeskId(this.targetDesk.id)
+      }
+    }
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),

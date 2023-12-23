@@ -51,7 +51,9 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             // 图标圆角
             iconRadius:12,
             // 选择可见
-            isDesk:false
+            isDesk:false,
+            // 目标桌面
+            targetDesk:'',
         }
     },
     actions:{

@@ -13,7 +13,11 @@ import { ref, reactive,onMounted,onBeforeUnmount,computed } from 'vue'
 import { useNavigationStore } from '../../navigationStore'
 import { navStore } from '../../../../../store/nav';
 import CustomIconBg from '../EditIcon/Children/CustomIconBg.vue';
+import { workStore } from '../../../../../store/work';
+import {cardStore} from '../../../../../store/card'
 import SliderList from './SliderList.vue';
+const useCardStore=cardStore()
+const useWorkStore = workStore()
 const navigationStore = useNavigationStore()
 const useNavStore = navStore()
 const sliderList = ref([
@@ -105,6 +109,9 @@ const handleResize = () => {
 onMounted(()=>{
     handleResize()
     window.addEventListener('resize', handleResize)
+    console.log(useWorkStore.deskList,useWorkStore.currentDeskId,'is deskList ? deskList : []');
+    console.log(useCardStore.desks,'is deskList ? deskList : []');
+    
 })
 onBeforeUnmount(()=>{
     window.removeEventListener('resize', handleResize)
