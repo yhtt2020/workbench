@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full h-full flex items-center justify-center" v-if="filterList.length === 0">
+  <div class="w-full h-full flex items-center justify-center" v-if="list.length === 0">
     <EmptyStatus text="暂时没有消息通知"/>
   </div>
-  <div class="w-full h-full py-2 xt-text" v-else>
+  <div class="w-full h-full px-3 xt-text" v-else>
     <vue-custom-scrollbar :settings="settingsScroller" style="height: 94%;">
-     <div  v-for="item in filterList" class="mb-3">
+     <div  v-for="item in list" class="mb-3">
       <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
         <div class="w-full h-full  flex flex-col p-4 xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-3">
@@ -84,16 +84,17 @@ export default {
 
   computed:{
     filterList(){
-      if(this.type === 'system'){
-        return this.list
-      }else{
-        const messageList = this.list.filter((item)=>{
-          if(item.content.type === 'message'){
-            return item
-          }
-        })
-        return messageList
-      }
+      // return this.list
+      // if(this.type === 'system'){
+      //   return this.list
+      // }else{
+      //   const messageList = this.list.filter((item)=>{
+      //     if(item.content.type === 'message'){
+      //       return item
+      //     }
+      //   })
+      //   return messageList
+      // }
     }
   },
 
