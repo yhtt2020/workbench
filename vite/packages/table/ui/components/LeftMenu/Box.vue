@@ -5,7 +5,7 @@
     class="flex justify-center items-center menu-item relative"
     style=""
   >
-    <div
+    <!-- <div
       class="rounded-full flex items-center justify-center font-400 xt-active-text"
       v-if="unreadStatus"
       style="
@@ -19,7 +19,7 @@
       "
     >
       {{ item.unread }}
-    </div>
+    </div> -->
     <div
       class="absolute flex items-center justify-center font-400 xt-active-text z-10"
       style="width: 20px; height: 20px; font-size: 10px"
@@ -127,13 +127,13 @@ const infoBg = computed(() => {
 
 // 下个版本删除
 // 通过计算属性判断消息提示状态
-const unreadStatus = computed(() => {
-  if (props.item.unread && props.item.unread !== 0) {
-    return true;
-  } else {
-    return false;
-  }
-});
+// const unreadStatus = computed(() => {
+//   if (props.item.unread && props.item.unread !== 0) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// });
 </script>
 
 <style lang="scss" scoped>

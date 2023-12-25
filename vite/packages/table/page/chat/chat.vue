@@ -119,8 +119,9 @@ export default {
         newIcon: "fluent:chat-16-regular",  tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
-        unread: unreadTotal.value,
-        info:['tr','red',`${unreadTotal.value}`]
+        info:unreadTotal.value === 0 ? [] : ['tr','red',`${unreadTotal.value}`]
+        // unread: unreadTotal.value,
+        // info:['tr','red',`${unreadTotal.value}`]
       },
       {
         tab: "contact", newIcon: "fluent:people-16-regular",
@@ -143,10 +144,11 @@ export default {
     const bodyList = ref([
       // 写社群相关静态内容时临时打开的路由
       {
-        img: '/icons/logo128.png',   icon: '',float: "", id:0,
+        img: '/icons/logo128.png', float: "", id:0,
         noBg: true,tab:'community',type: 'community',
         route:{ name: 'defaultCommunity',params:{no:1} },
         callBack: (item) => { selectTab(item) },
+        info:[],
       },
     ])
     const footList = ref([
@@ -193,12 +195,13 @@ export default {
       if(isNull){
         const communityData = newVal;
         const mapCommunityData = communityData.map((item)=>{
+          const newInfo = item?.communityInfo;
           return {
             ...item,
-            img:item.icon,float:'',
-            tab:`community_${item.no}`,  noBg:true,
+            img:newInfo.icon,float:'',
+            tab:`community_${newInfo.no}`,  noBg:true,
             type:`community${item.cno}`,
-            route:{ name:'myCommunity',params:{no: item.no}},
+            route:{ name:'myCommunity',params:{no: newInfo.no}},
             callBack:(item)=>{ selectTab(item) },
           }
         });
@@ -211,17 +214,17 @@ export default {
     const filterList  = computed(()=>{
       const uniqueList = [];
       for(const item of bodyList.value){
-        const index = uniqueList.findIndex((find)=>{
-          return find.id === item.id
-        })
-        if(index === -1){
-          const total = communityTotal(item.no,community.value.communityTree);
+        const itemInfo = item.communityInfo;
+        if(itemInfo !== undefined){
+          const index = uniqueList.findIndex((find)=>{  return find.communityInfo.id === itemInfo.id  });
+          if(index === -1){
+          const total = communityTotal(itemInfo.no,community.value.communityTree);
           const itemOption = {
             ...item,
-            unread:total,
-            info:['tr','red',`${total}`]
+            info:total === 0 ? [] : ['tr','red',`${total}`],
           }
           uniqueList.push(itemOption)
+          }
         }
       }
       const updateList = uniqueList.concat(createCommunityList.value);
@@ -246,11 +249,12 @@ export default {
       com.getCommunityTree();
       nextTick(()=>{
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
-          headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+          // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+          headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
           const list = community.value.communityList;
           if(list.length !== 0){
             for(const item of list){
-             const no = item.no;
+             const no = item.communityInfo.no;
              com.updateCommunityTree(no);
             }
           }
