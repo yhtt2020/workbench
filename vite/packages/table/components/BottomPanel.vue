@@ -34,7 +34,7 @@
         align-items: center;
         /* border-radius: 18px; */
         height: 80px;
-        max-width: 80%;
+        max-width: 90%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -54,8 +54,7 @@
           justify-content: center;
         ">
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
-              <div class=" scroll-content"
-                style="overflow-y: hidden;overflow-x: auto; flex: 1; display: flex;margin-right: 14px;" ref="content">
+              <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
@@ -68,23 +67,8 @@
                         @click.stop="newOpenApp(item.type, item.value)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
                         <template v-else>
-                          <!-- <div style="width: 52px; height: 52px;" v-if="!item.isBg"
-                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
-                          class="relative flex items-center justify-center ">
-                          <a-avatar :size="52" shape="square" :src="item.icon"
-                            :style="{ borderRadius: iconRadius + 'px' }"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div>
-                        <div v-else style="width: 52px; height: 52px;margin-top: -5px;"
-                          class="relative flex items-center justify-center overflow-hidden"
-                          :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
-                          <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="[{ borderRadius: iconRadius + 'px' }, item.color]"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div> -->
-                        <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                          <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
-                        
                       </div>
                     </xt-menu>
                   </a-tooltip>
@@ -98,7 +82,7 @@
       </div>
 
       <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
-        <Team ></Team>
+        <Team  :item="this.copyFootNav[0]" :shakeElement="shakeElement"></Team>
       </template> -->
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
@@ -374,7 +358,7 @@ export default {
   mounted() {
     // this.popVisible=true
     this.copyNav()
-    console.log(this.copyFootNav, 'copyFootNav');
+    // console.log(this.copyFootNav, 'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -423,7 +407,7 @@ export default {
     navigationData.systemAppList.forEach((item) => {
       this.footNavigationList.forEach((i) => {
         if (item.event === i.event) {
-          i.type = item.type
+          i.type = 'systemApp'
           i.icon = item.icon
           i.name = item.name
           i.value = item.event
@@ -432,7 +416,7 @@ export default {
       })
     })
     this.footNavigationList = this.footNavigationList.map((item) => {
-      console.log(item, 'item');
+      // console.log(item, 'item');
       switch (item.type) {
         case 'systemApp':
           return { ...item };
@@ -469,7 +453,7 @@ export default {
     }));
 
 
-    console.log(this.footNavigationList, 'foot');
+    // console.log(this.footNavigationList, 'foot');
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -536,12 +520,6 @@ export default {
           newIcon: "fluent:chat-16-regular",
           fn: () => { this.settings.enableChat = !this.settings.enableChat }
         },
-        // {
-        //   id: 5,
-        //   name: this.levelVisible ? '隐藏等级' : '显示等级',
-        //   newIcon: "fluent:star-16-regular",
-        //   fn: () => { this.levelVisible = !this.levelVisible }
-        // },
       ]
 
     },
@@ -560,7 +538,7 @@ export default {
           this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          console.log(target, 'target[0]')
+          // console.log(target, 'target[0]')
           target.forEach(element => {
             const index = this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
@@ -597,7 +575,7 @@ export default {
 
         }
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'footNav')
+        // console.log(this.copyFootNav, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -930,6 +908,7 @@ export default {
     },
     // 拖拽桌面图标
     async drop(e) {
+      // console.log(e,'from drop');
       // this.modelValue=false
       const width = window.innerWidth
       let files = e.dataTransfer.files
@@ -1032,10 +1011,6 @@ export default {
       // }
     },
     enableDrag() {
-      // if (this.sortable || !this.editToggle) {
-      //   return
-      // }
-      // document.addEventListener('click', this.disableDrag)
       let that = this
       let drop = document.getElementById('bottomContent')
       this.sortable = Sortable.create(drop, {
@@ -1059,7 +1034,7 @@ export default {
           }
           delIcon.ondrop = function (ev) {
             if (!that.isDelete) return
-            console.log(111111);
+            // console.log(111111);
             that.delItemIcon = false
             let oneNav = that.footNavigationList[event.oldIndex]
             //将要删除的是否是主要功能
@@ -1108,7 +1083,7 @@ export default {
           that.sortFootNavigationList(event)
           that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
           that.updateMainNav();
-          console.log('isDelete', that.footNavigationList);
+          // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           that.tooltipVisible = true
@@ -1116,10 +1091,22 @@ export default {
           that.popVisible = false
           that.isDelete = true
         },
-        onMove: function (event) {
-          // console.log(event);
-          that.isDelete = false
-        },
+        // onMove: function (event) {
+        //   // 获取拖拽元素
+        //   let draggedElement = event.dragged;
+        //   // 获取鼠标位置
+        //   let mouseX = event.originalEvent.clientX;
+        //   let mouseY = event.originalEvent.clientY;
+        //   console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
+          
+        //   if(mouseX >=event.draggedRect.left && mouseX <= event.draggedRect.right && mouseY >= event.draggedRect.top && mouseY <= event.draggedRect.bottom){
+        //     console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
+        //   }
+        //   that.isDelete = false
+        // },
+        // onChoose: function (event) {
+        //   console.log(event, '=====onChoose');
+        // }
         // onRemove: function (event) {
         //   console.log(111111111,'=====onRemove');
         // }

@@ -718,7 +718,7 @@ export default {
           i.bg = ''
           i.isBg = false
           if (item.event === i.event) {
-            i.type = item.type
+            i.type = 'systemApp'
             i.icon = item.icon
             i.name = item.name
             i.value = item.event

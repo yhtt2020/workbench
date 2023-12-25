@@ -307,8 +307,6 @@ export const navStore = defineStore("nav", {
         this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
         this.copyFlag = false
       }
-      return
-      
     },
     removeFootNavigationList(index) {
         this.footNavigationList.splice(index, 1)

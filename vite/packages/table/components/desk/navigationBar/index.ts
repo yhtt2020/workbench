@@ -326,3 +326,65 @@ export const addIconPosition=[
         value:"desktop"
     }
 ]
+
+export const updateIcon = (list,copy)=>{
+    if (list.length > copy.length) {
+        console.log('list 大于 copy')
+        const target = updateNavList(list, copy);
+        console.log(target, 'target[0]')
+        copy = JSON.parse(JSON.stringify(target)).concat(copy);
+        return copy
+      } else if (list.length < copy.length) {
+        console.log('list 小于 copy')
+        const target = updateNavList(copy, list);
+        console.log(target, 'target[0]')
+        target.forEach(element => {
+          const index = copy.findIndex(item => {
+            // 找到被删除元素在备份数据中的索引
+            if (element.type === 'coolApp') {
+              return item.value.url === element.value.url;
+            }
+            return item.value === element.value;
+          });
+          if (index !== -1) {
+            copy.splice(index, 1);
+          }
+        })
+        return copy
+      }
+      else {
+        console.log('list 等于 copy')
+        const rearrangedCopyFootNav = [];
+        // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
+        list.forEach((item) => {
+          // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+          const correspondingElement = copy.find((copyItem) => {
+            if (item.type === 'coolApp') {
+              return copyItem.value.url === item.value.url;
+            }
+            return copyItem.value === item.value;
+          });
+
+          // 如果找到对应元素，则将其放入新数组中
+          if (correspondingElement) {
+            rearrangedCopyFootNav.push(correspondingElement);
+          }
+        });
+
+        // 更新 copyFootNav 为重新排列后的数组
+        copy = rearrangedCopyFootNav;
+        return copy
+      }
+}
+
+export const updateNavList = (list,copy)=>{
+    const filteredNavList = list.filter((item) => {
+        return !copy.some((i) => {
+          if (item.type === 'coolApp') {
+            return item.value.url === i.value.url;
+          }
+          return item.value === i.value;
+        });
+      });
+      return filteredNavList;
+}
