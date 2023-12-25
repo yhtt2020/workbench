@@ -7,7 +7,16 @@
     />
     <template v-if="!settings.transparent">
       <div class="flex mb-4">
-        <xt-button
+        <xt-button w="200" h="112" class="xt-bg-m relative" style="border-radius: 6px;" @click="openPaperModal">
+          <div class="flex items-center justify-center" v-if="backImage.src === ''">
+            <xt-new-icon icon="fluent:add-16-regular" size="20"></xt-new-icon>
+          </div>
+          <div v-else class=" w-full h-full absolute top-0 left-0 rounded-md">
+            <img  :src="backImage.src" class="w-full h-full object-cover rounded-md"/>
+          </div>
+        </xt-button>
+
+        <!-- <xt-button
           size="mini"
           :w="80"
           :h="40"
@@ -24,7 +33,7 @@
           @click="clearWallpaper"
           >还原背景</xt-button
         >
-        <xt-button type="warn" :w="100" :h="40">等金龙实现</xt-button>
+        <xt-button type="warn" :w="100" :h="40">等金龙实现</xt-button> -->
       </div>
       <hr />
       <xt-option-info
@@ -132,16 +141,21 @@
       <xt-option-input v-model:input="settings.down.count" />
     </template>
   </div>
+
+  <GalleryModal  ref="paperModal"/>
 </template>
 <script setup>
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { ref, toRefs } from "vue";
+import { ref, toRefs,computed } from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
+
+import GalleryModal from "../../paperModal/GalleryModal.vue";
+
 const router = useRouter();
 const app = appStore();
-const { settings, backgroundSettings } = storeToRefs(app);
+const { settings, backgroundSettings,backgroundImage } = storeToRefs(app);
 // props
 const props = defineProps({
   globalSettings: {},
@@ -163,15 +177,28 @@ const fallingList = ref([
     name: "叶",
   },
 ]);
+const paperModal = ref(null);
 
-const updateWallpaper = () => {
-  router.push({ name: "my" });
-};
+// 计算属性获取当前壁纸数据
+const backImage = computed(()=>{
+  if(backgroundImage.value){
+   return {src:backgroundImage.value.src}
+  }
+})
+// 触发打开壁纸弹窗
+const openPaperModal = () =>{
+  paperModal.value.openGalleryModal()
+}
 
-const clearWallpaper = () => {
-  app.setBackgroundImage({ path: "" });
-  message.success("已为您恢复默认背景");
-};
+
+// const updateWallpaper = () => {
+//   router.push({ name: "my" });
+// };
+
+// const clearWallpaper = () => {
+//   app.setBackgroundImage({ path: "" });
+//   message.success("已为您恢复默认背景");
+// };
 </script>
 
 <style lang="scss" scoped></style>
