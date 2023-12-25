@@ -181,9 +181,13 @@ const paperModal = ref(null);
 
 // 计算属性获取当前壁纸数据
 const backImage = computed(()=>{
-  if(backgroundImage.value){
+  if(backgroundImage.value.path !== ''){
    return {src:backgroundImage.value.src}
   }
+  else {
+    return { src:'https://a.apps.vip/papers/neom-207NEuFvjlg-unsplash.jpg' }
+  }
+
 })
 // 触发打开壁纸弹窗
 const openPaperModal = () =>{
