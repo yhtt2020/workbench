@@ -23,7 +23,7 @@ export default {
         title: '',
         isEdit: false,
         // addInputIndex: item
-      }, 
+      },
       //选中的快捷键
       keyList:[],
       type:''
@@ -108,7 +108,7 @@ export default {
     </div>
   </div>
   <!-- 键盘 -->
-  
+
   <!-- v-if="keyBoard" -->
 
   <div v-else>
@@ -117,15 +117,15 @@ export default {
         {{this.keys[key].title}}快捷键
       </div>
       <div class="line">
-        <key-input  :title=" this.keys[key].title" :name="key" :value="keys[key].key.join(' + ')"
+        <key-input  :title=" this.keys[key].title" :name="key" :value="keys[key].key?.join(' + ')"
         @changeKeys="setKeyMap"></key-input>
       </div>
     </div>
   </div>
-  
+
   <!-- v-if="true" -->
-  
-  <KeyBoard 
+
+  <KeyBoard
     v-if="keyBoard"
     :selectKey="selectKey"
     :parentKeyList="keyList"
