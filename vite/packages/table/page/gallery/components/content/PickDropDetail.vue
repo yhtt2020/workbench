@@ -111,4 +111,7 @@ export default {
 :deep(.round-dot){
  background: var(--active-text) !important;
 }
+:deep(.ant-select-arrow){
+  color: var(--primary-text) !important;
+}
 </style>

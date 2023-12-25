@@ -104,7 +104,7 @@ const leftList = ref([
     },
   },
   { 
-    newIcon:'akar-icons:envelope', name:'推送',
+    newIcon:'fluent:mail-16-regular', name:'推送',
     newName:'推送消息 ',id:'push',
     callBack: (item)=>{ selectTab(item)},
   },
