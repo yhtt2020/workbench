@@ -6,7 +6,7 @@
     <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
      <div  v-for="item in list" class="mb-3">
       <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
-        <div class="w-full h-full  flex flex-col p-4 xt-bg-t-2 rounded-xl">
+        <div class="w-full h-full  flex flex-col p-4 xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-3">
             <div class="flex">
               <a-avatar :size="24" shape="circle"  :src="item.content.icon"></a-avatar>
@@ -24,7 +24,7 @@
             {{ item.content.body }}
           </div> 
           <div class="flex justify-between">
-            <div class="flex items-center justify-center ">{{formatTime(item.createTime)}}</div>
+            <div class="flex items-center justify-center  xt-font" style="color: var(--disable-text);">{{formatTime(item.createTime)}}</div>
             <xt-button class="category-button" style="width: 56px;height: 32px;background: var(--active-secondary-bg)!important;color:var(--active-bg);border-radius: 8px !important;" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
           </div>
         </div>

@@ -77,7 +77,7 @@
           </div>
         </template>
         <template v-else-if="floatData.channelList?.length !== 0">
-          <div class="flex grid grid-cols-2 gap-1 "  :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+          <div class="grid grid-cols-2 gap-1 "  :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
             <div v-for="channel in floatData.channelList" :class="{'xt-theme-bg-2': currentID ===channel.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item"  @click="currentItem(channel)">
               <MenuDropdown :type="channel.type" :no="no" :item="channel"  @click="currentItem(channel)"/>
             </div>
@@ -90,7 +90,7 @@
                   <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>
               </div>
-              <div class="flex grid grid-cols-2 gap-1" v-else>
+              <div class="grid grid-cols-2 gap-1" v-else>
                 <div v-for="children in item.children" :class="{'xt-theme-bg-2':currentID === children.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item" @click="currentItem(children)">
                   <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>

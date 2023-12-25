@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxPadding="p-0" maskIndex="1010" index="1010">
+  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" maskIndex="1010" index="1010">
     <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" style="height: 600px;width: 976px; margin: 0 !important;border-radius: 12px !important;" :list="galleryList" :index="galleryIndex" last="5" end="1">
       <div class="w-full xt-modal rounded-r-xl px-4  pt-4 pb-0">
         <template v-if="galleryIndex === 'm'">
@@ -65,23 +65,23 @@ export default {
     
     const galleryList = ref([
       { 
-        newIcon:'fluent:star-16-regular', index:'m', 
+        newIcon:'fluent:star-16-regular', index:'m', bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       { 
-        newIcon:'fluent:emoji-smile-slight-24-regular',index:'w',
+        newIcon:'fluent:emoji-smile-slight-24-regular',index:'w',bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        newIcon:'uim:bing',index:'b',
+        newIcon:'uim:bing',index:'b',bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        newIcon:'fluent:image-multiple-16-regular', index:'p',
+        newIcon:'fluent:image-multiple-16-regular', index:'p',bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       {
-        index:'l',newIcon:'fluent:image-sparkle-16-regular',
+        index:'l',newIcon:'fluent:image-sparkle-16-regular',bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
       // {
@@ -111,4 +111,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.xt-bt){
+  border-top: none !important;
+}
+:deep(.xt-br){
+  border-right: none !important;
+}
 </style>
