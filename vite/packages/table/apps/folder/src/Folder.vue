@@ -20,7 +20,7 @@
         <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
-      <Resize @reSizeInit="reSizeInit" :cardSize="customData.cardSize">
+      <Resize @reSizeInit="reSizeInit" :cardSize="customData.cardSize.name">
         <!-- 空状态显示状态 -->
         <div
           v-if="customData.list.length <= 0 && !dragSortState"
@@ -297,6 +297,8 @@ const init = () => {
     customData.value.cardSize.width = 1;
     customData.value.cardSize.height = 1;
   } else {
+    console.log('size :>> ', size);
+    return
     let str = size.split(",");
     customData.value.cardSize.width = Math.round(str[0] / 280);
     customData.value.cardSize.height = Math.round(str[1] / 205);
