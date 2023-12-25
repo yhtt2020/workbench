@@ -52,7 +52,7 @@
     "expr-eval": "^2.0.2",
     "fs-extra": "^10.0.1",
     "google-protobuf": "^3.21.2",
-    "hmc-win32": "1.4.0",
+    "hmc-win32": "1.4.3",
     "iconv-lite": "^0.6.3",
     "image-size": "^1.0.1",
     "javascript-obfuscator": "^4.0.0",

@@ -56,10 +56,7 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
   }
 
   function setCursorPos (x, y) {
-    for (let i = 0; i < 50; i++) {
-      win32.Auto.setCursorPos(x, y)//移动过去，但是这个过程中鼠标在移动则无法移动
-      win32.sleep(10)
-    }
+    win32.Auto.setCursorPos(x, y,true,100)
   }
 
   function shakeMouseEvent (mousePoint) {
