@@ -5,6 +5,7 @@
       :customData="customData"
       :options="options"
       :menuList="menuList"
+      :size="reSize"
     >
       <!-- 左侧图标 -->
       <template #left-title-icon>
@@ -19,47 +20,47 @@
         <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
-      <!-- <Resize> -->
-      <!-- 空状态显示状态 -->
-      <div
-        v-if="customData.list.length <= 0 && !dragSortState"
-        class="flex flex-col items-center mt-3 tt"
-      >
-        <xt-new-icon
-          v-if="options.className !== 'card small'"
-          icon="fluent-emoji:inbox-tray"
-          w="56"
-          class="mb-3"
-        />
-        <xt-new-icon
-          v-if="options.className !== 'card small'"
-          icon="fluent-emoji:inbox-tray"
-          w="56"
-          class="mb-3"
-        />
-        <div class="xt-bg-t-2 rounded-xl text-sm mb-3 p-2">
-          你可以拖动工作台桌面图标或windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
+      <Resize @reSizeInit="reSizeInit" :cardSize="customData.cardSize">
+        <!-- 空状态显示状态 -->
+        <div
+          v-if="customData.list.length <= 0 && !dragSortState"
+          class="flex flex-col items-center mt-3 tt"
+        >
+          <xt-new-icon
+            v-if="options.className !== 'card small'"
+            icon="fluent-emoji:inbox-tray"
+            w="56"
+            class="mb-3"
+          />
+          <xt-new-icon
+            v-if="options.className !== 'card small'"
+            icon="fluent-emoji:inbox-tray"
+            w="56"
+            class="mb-3"
+          />
+          <div class="xt-bg-t-2 rounded-xl text-sm mb-3 p-2">
+            你可以拖动工作台桌面图标或windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
+          </div>
+          <xt-button type="theme" w="84" h="32" radius="8">添加图标</xt-button>
         </div>
-        <xt-button type="theme" w="84" h="32" radius="8">添加图标</xt-button>
-      </div>
 
-      <vue-custom-scrollbar
-        v-else
-        :settings="{
-          suppressScrollY: false,
-        }"
-        class="w-full relative h-full"
-      >
-        <File
-          :list="customData.list"
-          :layout="customData.layout"
-          :model="customData.model"
-          @deleteFile="deleteFile"
-          @updateList="updateList"
-          @updateSort="updateSort"
-        />
-      </vue-custom-scrollbar>
-      <!-- </Resize> -->
+        <vue-custom-scrollbar
+          v-else
+          :settings="{
+            suppressScrollY: false,
+          }"
+          class="w-full relative h-full"
+        >
+          <File
+            :list="customData.list"
+            :layout="customData.layout"
+            :model="customData.model"
+            @deleteFile="deleteFile"
+            @updateList="updateList"
+            @updateSort="updateSort"
+          />
+        </vue-custom-scrollbar>
+      </Resize>
     </Widget>
   </Drop>
 
@@ -78,7 +79,16 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, toRefs, provide, onMounted } from "vue";
+import {
+  ref,
+  watch,
+  computed,
+  toRefs,
+  provide,
+  onMounted,
+  onBeforeUnmount,
+  onBeforeMount,
+} from "vue";
 import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
@@ -247,6 +257,57 @@ const expandVisible = ref(false);
 const iconClick = () => {
   expandVisible.value = true;
 };
+
+/**
+ *
+ */
+
+const reSizeInit = (data) => {
+  init(data)
+};
+
+const reSize = computed(() => {
+  const width = customData.value.cardSize.width;
+  const height = customData.value.cardSize.height;
+  return {
+    width: (width || 1) * width + (width - 1) * 10 + "px",
+    height: (height || 2) * height + (height - 1) * 10 + "px",
+  };
+});
+
+const init = () => {
+  // 初始化卡片大小
+  if (!customData.value.cardSize) {
+    customData.value.cardSize = {
+      name: "default",
+      width: 1,
+      height: 2,
+    };
+    return;
+  }
+  const size = customData.value.cardSize.name;
+  if (size == "big") {
+    customData.value.cardSize.width = 2;
+    customData.value.cardSize.height = 2;
+  } else if (size == "default") {
+    customData.value.cardSize.width = 1;
+    customData.value.cardSize.height = 2;
+  } else if (size == "small") {
+    // small
+    customData.value.cardSize.width = 1;
+    customData.value.cardSize.height = 1;
+  } else {
+    let str = size.split(",");
+    customData.value.cardSize.width = Math.round(str[0] / 280);
+    customData.value.cardSize.height = Math.round(str[1] / 205);
+  }
+};
+onBeforeMount(() => {
+  init();
+  console.log("mounted :>> ", 11111);
+});
+
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>

@@ -13,6 +13,11 @@ export const registerFolder = (desk) => {
         name: "文件夹",
         icon: "",
         list: [],
+        cardSize: {
+          name: "default",
+          width: 1,
+          height: 2,
+        },
         // 文件锁 开启后无法拖出
         lock: true,
         // 布局样式

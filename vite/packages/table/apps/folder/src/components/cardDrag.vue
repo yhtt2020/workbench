@@ -5,7 +5,7 @@
     style="margin-top: 8px"
     :style="{ width: w, height: h }"
   >
-    <slot :row="1123"></slot>
+    <slot></slot>
     <svg
       @mousedown.stop
       t="1684744355055"
@@ -43,10 +43,7 @@ export default {
   },
   methods: {
     dragCallBack(e) {
-      if (e == "card1") {
-        this.w = `${540}px`;
-        this.h = `${140}px`;
-      } else if (e == "card double") {
+      if (e == "card double") {
         this.w = `${542}px`;
         this.h = `${360}px`;
       } else if (e == "card") {
