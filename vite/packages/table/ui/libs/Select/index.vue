@@ -1,12 +1,12 @@
 <template>
   <a-select
-    style="z-index: 99999999; position: relative"
+    style="position: relative"
     v-model:value="data" :bordered="border"
     class="no-drag w-full" :class="borderClass"
     size="large" :style="{height:`${h}px`}"
     @change="handleChange"
     :dropdownStyle="{
-      'z-index': 999999999999,
+      'z-index': 99,
       backgroundColor: 'var(--secondary-bg)',
       backgroundColor: 'red',
     }"
