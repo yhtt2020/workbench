@@ -78,7 +78,10 @@ const { list, layout } = toRefs(props);
  */
 // 拖拽容器
 const sortable = ref();
-const sortableContainer = ref("xt-sortable-fle-container-" + index.value);
+console.log("+Math.random() :>> ", Math.random() * 1);
+const sortableContainer = ref(
+  "xt-sortable-fle-container-" + index.value + Math.ceil(Math.random() * 100)
+);
 const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {
@@ -191,11 +194,6 @@ const collisionDetection = (nodes) => {
       continue;
     }
     let id = item.getAttribute("data-id");
-    // obj[key] = {
-    //   ...list.value[key],
-    //   name: list.value[key].name,
-    //   id: key,
-    // };
     let data = list.value.find((obj) => obj.id == parseInt(id));
     arr.push({ ...data });
     arr1.push(data.name);

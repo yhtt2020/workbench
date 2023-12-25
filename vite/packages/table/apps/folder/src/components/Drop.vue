@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full xt-theme-b"
+    class="w-full h-full"
     @drop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"

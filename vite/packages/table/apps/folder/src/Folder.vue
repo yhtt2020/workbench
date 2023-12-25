@@ -71,6 +71,10 @@
     @updateWindowApp="updateWindowApp"
   >
   </folderSet>
+
+  <xt-modal custom v-model="expandVisible" boxClass="">
+    <Expand :props="props"></Expand>
+  </xt-modal>
 </template>
 
 <script setup>
@@ -80,6 +84,7 @@ import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
 import Resize from "./components/Resize.vue";
+import Expand from "./expand/Expand.vue";
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
@@ -228,10 +233,19 @@ const dragSortState = ref(false);
 const updateList = (data) => {
   dragSortState.value == true;
   customData.value.list = [];
+
   setTimeout(() => {
     customData.value.list = data;
     dragSortState.value = false;
   }, 10);
+};
+
+/**
+ * 左侧图标放大功能
+ */
+const expandVisible = ref(false);
+const iconClick = () => {
+  expandVisible.value = true;
 };
 </script>
 

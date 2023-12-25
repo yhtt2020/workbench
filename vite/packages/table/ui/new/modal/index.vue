@@ -15,65 +15,79 @@
         // top: top + 'px',
       }"
     >
-      <div class="flex flex-1 w-full">
-        <!-- 左侧 -->
-        <nav v-if="nav">
-          <slot name="nav"> </slot>
-        </nav>
-        <main class="flex flex-col flex-1 h-full">
-          <header class="relative flex items-center mb-4" v-if="header">
-            <!-- 标题左侧 -->
-            <div class="z-20 flex items-center flex-1">
-              <slot name="header-left"> </slot>
-            </div>
-            <!-- 标题中间 -->
-            <div
-              class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
+      <slot v-if="custom"></slot>
+      <template v-else>
+        <div class="flex flex-1 w-full">
+          <!-- 左侧 -->
+          <nav v-if="nav">
+            <slot name="nav"> </slot>
+          </nav>
+          <main class="flex flex-col flex-1 h-full">
+            <header class="relative flex items-center mb-4" v-if="header">
+              <!-- 标题左侧 -->
+              <div class="z-20 flex items-center flex-1">
+                <slot name="header-left"> </slot>
+              </div>
+              <!-- 标题中间 -->
+              <div
+                class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
+              >
+                <slot name="header-center">
+                  {{ title }}
+                </slot>
+              </div>
+              <!-- 标题右侧 -->
+              <div class="right-0 z-20 flex items-center">
+                <slot name="header-right"> </slot>
+                <xt-button
+                  class="ml-3"
+                  w="32"
+                  h="32"
+                  radius="8"
+                  @click="onNo()"
+                >
+                  <xt-new-icon
+                    icon="fluent:dismiss-16-filled"
+                    size="16"
+                    class="xt-text-2"
+                  />
+                </xt-button>
+              </div>
+            </header>
+            <!-- 内容区 -->
+            <vue-custom-scrollbar
+              :settings="{
+                swipeEasing: true,
+                suppressScrollY: false,
+                suppressScrollX: true,
+                wheelPropagation: false,
+              }"
+              style="position: relative; padding-right: 8px; padding-left: 8px"
+              class="flex-1"
             >
-              <slot name="header-center">
-                {{ title }}
+              <slot>
+                <McDonalds />
               </slot>
-            </div>
-            <!-- 标题右侧 -->
-            <div class="right-0 z-20 flex items-center">
-              <slot name="header-right"> </slot>
-              <xt-button class="ml-3" w="32" h="32" radius="8" @click="onNo()">
-                <xt-new-icon
-                  icon="fluent:dismiss-16-filled"
-                  size="16"
-                  class="xt-text-2"
-                />
-              </xt-button>
-            </div>
-          </header>
-          <!-- 内容区 -->
-          <vue-custom-scrollbar
-            :settings="{
-              swipeEasing: true,
-              suppressScrollY: false,
-              suppressScrollX: true,
-              wheelPropagation: false,
-            }"
-            style="position: relative; padding-right: 8px; padding-left: 8px"
-            class="flex-1"
-          >
-            <slot>
-              <McDonalds />
-            </slot>
-          </vue-custom-scrollbar>
-        </main>
-      </div>
+            </vue-custom-scrollbar>
+          </main>
+        </div>
 
-      <slot name="footer">
-        <footer class="flex items-center justify-end mt-4" v-if="footer">
-          <xt-button w="64" h="40" @click="onNo()">
-            <span class="xt-text-2">{{ noName }}</span>
-          </xt-button>
-          <xt-button w="64" h="40" class="ml-3" type="theme" @click="onOk()">{{
-            okName
-          }}</xt-button>
-        </footer>
-      </slot>
+        <slot name="footer">
+          <footer class="flex items-center justify-end mt-4" v-if="footer">
+            <xt-button w="64" h="40" @click="onNo()">
+              <span class="xt-text-2">{{ noName }}</span>
+            </xt-button>
+            <xt-button
+              w="64"
+              h="40"
+              class="ml-3"
+              type="theme"
+              @click="onOk()"
+              >{{ okName }}</xt-button
+            >
+          </footer>
+        </slot>
+      </template>
     </div>
     <!-- 遮罩 -->
     <div
@@ -117,6 +131,8 @@ export interface ModalProps {
   beforeMount?: () => boolean;
   // 卸载前
   beforeUnmount?: () => boolean;
+  // 自定义插槽
+  custom?: boolean;
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -133,6 +149,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   boxClass: "p-4",
   beforeMount: () => true,
   beforeUnmount: () => true,
+  custom: false,
 });
 const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
 const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
@@ -147,7 +164,7 @@ onMounted(() => {
       capture: true,
     });
   }
-return
+  return;
   // 处理定位问题
   const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
   const topUtilBar = document.getElementsByClassName("xt-main-top-util-bar")[0];
