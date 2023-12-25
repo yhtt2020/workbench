@@ -44,7 +44,7 @@
         <div class="flex flex-col ">
           <span class="xt-font xt-text font-16 text-start font-400">锁屏壁纸源</span>
           <span class="xt-font xt-text-2 font-14 font-400 text-start my-2.5">选择锁屏时展示的壁纸。</span>
-          <xt-select v-model="settings.wallSource" :list="selectList" class="text-center"></xt-select>
+          <xt-select v-model="settings.wallSource" :list="selectList" class="text-center" style="margin-bottom: 4px;" :bordered="false"></xt-select>
         </div>
         <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
 
@@ -178,8 +178,9 @@
             <div class="flex flex-col ">
               <span class="xt-font text-start xt-text font-16 font-400">锁屏壁纸源</span>
               <span class="xt-font text-start xt-text-2 font-14 font-400 my-2.5">选择锁屏时展示的壁纸。</span>
-              <xt-select v-model="settings.wallSource" :list="selectList" @change="getPaper($event)"></xt-select>
+              <xt-select v-model="settings.wallSource" style="height: 40px;" :list="selectList" @change="getPaper($event)" :bordered="false"></xt-select>
             </div>
+
             <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
 
             <div class="flex flex-col">
@@ -342,7 +343,7 @@
   height:40px !important;
   border-top-left-radius: 8px !important;
   border-bottom-left-radius: 8px !important;
-  background: var(--primary-bg) !important;
+  background: var(--secondary-transp-bg) !important;
  }
  :deep(.ant-select-selection-item){
   line-height: 40px !important;
@@ -356,6 +357,9 @@
    height: 40px !important;
  }
  
+ :deep(.ant-select-arrow){
+  color: var(--primary-text) !important;
+ }
  
  @media screen and(max-width: 1170px) {
    .min-card{

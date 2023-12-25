@@ -17,7 +17,7 @@
           <div class="w-full h-full pointer lively-hover">
             <xt-mix-menu :menus="menuList" fn="callBack" @mounted="currentItem = item,currentIndex = index">
               <div @click="previewVideo(item)" class="play-icon pointer flex items-center justify-center" style="opacity: 0;">
-                <xt-new-icon icon="fluent:play-16-filled" :size="isModal ? 20 : 32" style="color: var(--active-text) !important;"></xt-new-icon>
+                <xt-new-icon icon="fluent:play-16-filled" :size="isModal ? 20 : 32" :color="'var(--active-text)'"></xt-new-icon>
               </div>
               <div @click="previewVideo(item)" style="border-radius: 6px;overflow: hidden;position: relative">
                 <div :style="{width:getWidth(item)+'%'}" style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;"></div>
@@ -27,14 +27,14 @@
               <div class="absolute top-1 right-3" style="z-index: 50;">
                 <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 lively-download" style="border-radius: 8px; opacity: 0;" @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined ">
                   <div class="flex items-center justify-center">
-                    <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 20 : 24" style="color: var(--active-text) !important;"></xt-new-icon>
+                    <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 20 : 24" :color="'var(--active-text)'" ></xt-new-icon>
                   </div>
                 </xt-button>
                 <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
                   <a-spin style="color: white"/>
                 </div>
                 <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 " style="border-radius: 8px;" v-else-if="isDownLoad(item)" :style="isDownLoad(item) ? { opacity:'1' } : { opacity:'0' }"  @click="delDownLoad(item,index)">
-                  <xt-new-icon icon="fluent:star-16-filled"  :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-filled"  :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
                 </xt-button>
               </div>
 

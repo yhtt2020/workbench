@@ -156,10 +156,10 @@ export default {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false){
         // 获取最小值score
-        // const pickArrScore = this.pickImageData.sort((a,b)=>{ return a.score - b.score });
-        const minScore = this.pickImageData.reduce((min, image) => Math.min(min, image.score), this.pickImageData[0].score);
-        console.log('执行....测试',minScore);
-        // this.pickParams.setting.score = pickArrScore[0].score;
+        const pickArrScore = this.pickImageData.sort((a,b)=>{ return a.score - b.score });
+        // const minScore = this.pickImageData.reduce((min, image) => Math.min(min, image.score), this.pickImageData[0].score);
+        // console.log('执行....测试',minScore);
+        this.pickParams.setting.score = pickArrScore[14].score;
         this.getPickPaperList();
       }
     })
@@ -320,5 +320,8 @@ export default {
 }
 .xt-bg-t-3{
   background: rgba(00,00,00, 0.4) !important;
+}
+:deep(.ant-select-arrow){
+  color: var(--primary-text) !important;
 }
 </style>

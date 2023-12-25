@@ -3,7 +3,7 @@
     <img :src="textUrl" class="w-full h-full object-cover" :class="suspension ? 'rounded-t-xl':''"/>
     <div class="community-name h-11 w-full com-line-bg">
       <div class="m-1.5 px-3 items-center drop-hover rounded-lg flex justify-between h-8">
-        <ChatDropDown class="w-full" :enableButton="false"  newIcon="fluent:line-horizontal-3-20-filled" :list="dropMenuList" :title="floatData.name" /> 
+        <ChatDropDown class="w-full" :enableButton="false"  newIcon="fluent:line-horizontal-3-20-filled" :list="dropMenuList" :title="floatData.communityInfo.name" /> 
       </div>
     </div>
   </div>
@@ -14,16 +14,16 @@
         <div class="font-14 summary font-400 mb-3 xt-font xt-text-2 summary-2">{{ floatData.summary }}</div>
         <div class="w-full flex items-center justify-start">
           <div class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mb-2 " :class="suspension ? '' :'xt-bg'" style="width:120px;">
-           社群号：{{ floatData.no }}
+           社群号：{{ floatData.communityInfo.no }}
           </div>
         </div>
         <div>
          <a-row :gutter="10">
           <a-col flex="55px" class="mt-1 text-right">
-            <span class="px-2 rounded-full xt-active-bg xt-active-text"> {{ floatData.level }} 级</span>
+            <span class="px-2 rounded-full xt-active-bg xt-active-text"> {{ floatData.communityInfo.level }} 级</span>
           </a-col>
           <a-col flex="auto" style="padding-top: 3px">
-            <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="floatData.level"></a-progress>
+            <a-progress :show-info="false" strokeColor="var(--active-bg)" :percent="floatData.communityInfo.level"></a-progress>
           </a-col>
          </a-row>
         </div>
@@ -41,19 +41,19 @@
           </xt-button>
           <div class="flex items-center mt-2">
             <span class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3 " :class="suspension ? '' :'xt-bg'">
-              社群号：{{floatData?.no }}
+              社群号：{{floatData.communityInfo.no }}
             </span>
-            <span class="px-2 rounded-md xt-active-bg xt-active-text"> {{ floatData.level }} 级</span>
+            <span class="px-2 rounded-md xt-active-bg xt-active-text"> {{ floatData.communityInfo.level }} 级</span>
           </div>
-          <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="floatData.level"></a-progress>
+          <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="floatData.communityInfo.level"></a-progress>
         </div>
         <div class="flex items-center mt-2">
           <span class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3 " :class="suspension ? '' :'xt-bg'">
-            社群号：{{floatData.no }}
+            社群号：{{floatData.communityInfo.no }}
           </span>
-          <span class="px-2 rounded-md xt-active-bg xt-active-text"> {{ floatData.level }} 级</span>
+          <span class="px-2 rounded-md xt-active-bg xt-active-text"> {{ floatData.communityInfo.level }} 级</span>
         </div>
-        <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="floatData.level"></a-progress>
+        <a-progress :show-info="false" strokeColor="var(--active-bg)" v-if="collapsed" :percent="floatData.communityInfo.level"></a-progress>
       </template>
 
       <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
@@ -77,7 +77,7 @@
           </div>
         </template>
         <template v-else-if="floatData.channelList?.length !== 0">
-          <div class="flex grid grid-cols-2 gap-1 "  :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
+          <div class="grid grid-cols-2 gap-1 "  :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
             <div v-for="channel in floatData.channelList" :class="{'xt-theme-bg-2': currentID ===channel.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item"  @click="currentItem(channel)">
               <MenuDropdown :type="channel.type" :no="no" :item="channel"  @click="currentItem(channel)"/>
             </div>
@@ -90,7 +90,7 @@
                   <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>
               </div>
-              <div class="flex grid grid-cols-2 gap-1" v-else>
+              <div class="grid grid-cols-2 gap-1" v-else>
                 <div v-for="children in item.children" :class="{'xt-theme-bg-2':currentID === children.id}"  class="flex items-center px-3.5  py-2.5 rounded-lg pointer group-item" @click="currentItem(children)">
                   <MenuDropdown :type="children.type" :no="no" :item="children"  @click="currentItem(children)"/>
                 </div>
@@ -271,7 +271,7 @@ const floatData = computed(()=>{
   const infoArr = community.value.communityList;
   if(!isEmptyList(infoArr)) return communityData.info = {} ;
   // 通过no获取社群基本信息
-  const findInfo = _.filter(infoArr,function(find){ return String(find.no) === String(no) });
+  const findInfo = _.filter(infoArr,function(find){ return String(find.communityInfo.no) === String(no) });
   if(!isEmptyList(findInfo)) return communityData.info = {} ;
   communityData.info = {...findInfo[0]};
   // 获取子级频道

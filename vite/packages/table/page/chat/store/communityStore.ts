@@ -64,17 +64,7 @@ export const communityStore = defineStore('communityStore',{
           const mapList = list.map((mapItem:any)=>{
             const isCommunityInfo = mapItem.hasOwnProperty('communityInfo');
             if(isCommunityInfo){
-              // 取出data下的数据进行操作,预防报错处理
-              const data = mapItem?.communityInfo;
-              // 将数据进行解构返回出去
-              const returnOption = {
-                ...data,
-                summary:null,
-                uid:mapItem.uid,
-                ...mapItem,
-                unread:0,
-              }
-              return returnOption;
+              return {...mapItem,summary:null};
             }
           })
           const filterUndefined = _.filter(mapList,function(filterItem:any){
@@ -94,7 +84,7 @@ export const communityStore = defineStore('communityStore',{
         const newList = [];
         for(const item of list){
           // 请求数据配置项
-          const option = { communityNo:parseInt(item.no), cache:1 };
+          const option = { communityNo:parseInt(item.communityInfo.no), cache:1 };
           const channel = post(getChannelList,option).then((res:any)=>{ return res });
           const tree = post(getChannelTree,option).then((res:any)=>{ return res });
           Promise.all([channel,tree]).then((res:any)=>{
@@ -103,8 +93,8 @@ export const communityStore = defineStore('communityStore',{
               const treeList = res[1].data.treeList;
               const channelList = res[0].data.list;
               const newArr = updateTree(treeList) !== undefined ? updateTree(treeList) : [];
-              const option = { no:item.no, tree: newArr, category:channelList};
-              const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.no) });
+              const option = { no:item.communityInfo.no, tree: newArr, category:channelList};
+              const index = _.findIndex(newArr,function(find:any){ return String(find.no) === String(item.communityInfo.no) });
               if(index === -1){
                 newList.push(option as never);
               }
