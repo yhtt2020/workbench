@@ -95,14 +95,13 @@ const freeLayoutMenu = computed(() => {
       icon: "fluent:compose-16-regular",
       title: "修改中心点",
       fn: () => {
-        console.log(" freeLayoutEnv.value :>> ", freeLayoutEnv.value);
-
-        console.log("object :>> ", freeLayoutEnv.value.scrollData.width);
+        getFreeLayoutState.value.mode.align === "custom";
         getFreeLayoutState.value.line.centerLine = {
           y: freeLayoutEnv.value.scrollTop,
           x:
             freeLayoutEnv.value.scrollLeft +
             freeLayoutEnv.value.scrollData.width / 2,
+          // x: freeLayoutEnv.value.scrollLeft,
         };
 
         message.success("修改中心点成功");
