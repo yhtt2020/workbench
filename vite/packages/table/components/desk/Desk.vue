@@ -87,7 +87,7 @@
     </vue-custom-scrollbar>
   </div>
 
-  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxPadding="p-4 pb-0" :mask="0">
+  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxClass="p-4 pb-0" :mask="0">
     <template #header-center>
       <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2"
         :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" v-model="currentSettingTab"

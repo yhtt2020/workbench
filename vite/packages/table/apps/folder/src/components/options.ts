@@ -1,3 +1,4 @@
+// 单个文件数据
 export const defaultData = {
   useCount: 0, // 使用次数
   lastUseTime: "",
@@ -8,9 +9,9 @@ export const defaultData = {
   iconState: "cover",
   iconShape: "square",
   name: "",
-  isName: "",
+  isName: true,
   bg: "",
-  isBg: "",
+  isBg: false,
   radius: 5,
   isRadius: true,
 };

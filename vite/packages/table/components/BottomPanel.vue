@@ -1,7 +1,8 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
-    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
+  <!-- xt-main-bottom-bar 定位类不可删 -->
+    <div @click.stop class="xt-main-bottom-bar flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]"
       :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})` }">
       <!-- 快速搜索 底部 用户栏 -->
@@ -1098,7 +1099,7 @@ export default {
         //   let mouseX = event.originalEvent.clientX;
         //   let mouseY = event.originalEvent.clientY;
         //   console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
-          
+
         //   if(mouseX >=event.draggedRect.left && mouseX <= event.draggedRect.right && mouseY >= event.draggedRect.top && mouseY <= event.draggedRect.bottom){
         //     console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
         //   }

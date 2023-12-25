@@ -1,10 +1,10 @@
 <template>
   <div
-    class="w-full h-full"
+    class="w-full h-full xt-theme-b"
     @drop="handleDrop"
-    @dragover.prevent="handleDragover"
-    @dragenter.prevent
-    @dragleave.prevent="handleDragleave"
+    @dragover="handleDragover"
+    @dragenter="handleDragenter"
+    @dragleave="handleDragleave"
     @mouseup="handleMouseup"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
@@ -29,14 +29,13 @@ const folderStore = useFolderStore();
 const { dragId, isDrag, isEnter, isOver, currentId, currentData } =
   storeToRefs(folderStore);
 const index = inject("index", "");
-const v = inject("data", "");
-const emits = defineEmits(["updateFile", "deleteFile"]);
+const data = inject("data", "");
+const emits = defineEmits(["createFile", "deleteFile"]);
 
 /**
  * 处理拖拽内容放置
  */
 const handleDrop = async (dragEvent) => {
-  console.log('data.value.model :>> ', data.value.model);
   if (data.value.model !== "custom") return;
   dragEvent.preventDefault();
   if (dragId.value == index.value) return;
@@ -44,7 +43,7 @@ const handleDrop = async (dragEvent) => {
    * 属于拖拽状态 说明来自其他文件夹
    */
   if (isDrag.value) {
-    emits("updateFile", { ...currentData.value, id: Date.now() });
+    emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
   let files = dragEvent.dataTransfer.files;
@@ -59,52 +58,64 @@ const handleDrop = async (dragEvent) => {
     fileInfo.name = file.name;
     fileInfo.value = file.path;
     fileInfo.icon = fileImage;
-    emits("updateFile", fileInfo);
+    emits("createFile", fileInfo);
   }
+};
+/**
+ * 处理拖拽内容进入
+ */
+const handleDragenter = (dragEvent) => {
+  dragEvent.preventDefault();
+  currentId.value = index.value;
+
+  console.log("拖拽元素进入 :>> ");
 };
 
 /**
- * 处理拖拽内容进入
+ * 处理拖拽内容在放置区移动
  */
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
   currentId.value = index.value;
+  console.log("拖拽元素在上方移动 :>> ");
 };
 
 /**
  * 处理拖拽内容离开
  */
 const handleDragleave = () => {
+  if (data.value.lock) return;
   currentId.value = "";
 };
+
 /**
  * 处理图标组件放置
  */
 const handleMouseup = () => {
-
-  if (model !== "custom") return;
+  if (data.value.model !== "custom") return;
   if (!myIconDrag.value) return;
   if (iconList.value.length < 1) return;
 
   // 新数据处理
   iconList.value.forEach((item) => {
-    const file = {
-      ...defaultData,
-      id: Date.now() + Math.random() * 50,
-    };
-    file.type = item.open.type;
-    file.value = item.open.value;
-    file.icon = item.src;
-    file.name = item.titleValue;
-    file.isName = item.isTitle;
-    file.bg = item.backgroundColor;
-    file.isBg = item.isBackground;
-    file.radius = item.radius;
-    file.isRadius = item.isRadius;
-    file.iconState = item.imgState;
-    file.iconShape = item.imgShape;
-
-    emits("updateFile", file);
+    setTimeout(() => {
+      const file = {
+        ...defaultData,
+        id: Date.now(),
+      };
+      file.type = item.open.type;
+      file.value = item.open.value;
+      file.icon = item.src;
+      file.name = item.titleValue;
+      file.isName = item.isTitle;
+      file.bg = item.backgroundColor;
+      file.isBg = item.isBackground;
+      file.radius = item.radius;
+      file.isRadius = item.isRadius;
+      file.iconState = item.imgState;
+      file.iconShape = item.imgShape;
+      emits("createFile", file);
+    }, 10);
   });
 
   // 旧数据删除

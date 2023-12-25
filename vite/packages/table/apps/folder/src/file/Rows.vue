@@ -13,8 +13,13 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount } from "vue";
 const props = defineProps({
   item: {},
+});
+
+onBeforeUnmount(() => {
+  console.log("删除了 :>> ", 11111);
 });
 </script>
 

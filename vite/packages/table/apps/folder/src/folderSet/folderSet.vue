@@ -35,7 +35,6 @@ const { proxy } = getCurrentInstance();
 const emits = defineEmits([
   "close",
   "updateSort",
-  "updateModel",
   "updateWindowApp",
 ]);
 const props = defineProps({

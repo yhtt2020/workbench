@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
-    <!--  工具栏-->
-    <div class="flex flex-row" v-if="showTopBar && !fullScreen">
+    <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
+    <div class="xt-main-top-util-bar flex flex-row" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div
         class="flex flex-row mb-3 ml-3 tabs"

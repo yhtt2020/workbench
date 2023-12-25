@@ -10,15 +10,18 @@ export const registerFolder = (desk) => {
       name: "folder",
       id: Date.now(),
       customData: {
-        title: "文件夹",
+        name: "文件夹",
         icon: "",
-        list: {},
+        list: [],
+        // 文件锁 开启后无法拖出
+        lock: true,
+        // 布局样式
         layout: "rows", // columns
-        sort: "useCount",
-        bg: "#508BFE",
-        switch: false,
-        name: "icon",
+        // 排序规则
+        sort: "free",
+        // 文件夹模式
         model: "custom",
+        // 分类规则
         rules: [],
       },
     },

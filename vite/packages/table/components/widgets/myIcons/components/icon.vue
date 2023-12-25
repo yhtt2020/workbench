@@ -1,14 +1,31 @@
 <template>
-  <div class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn" :data-index="index"
-    @click.stop="iconClick($event)" :style="[iconSize]">
-    <div class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
-      :style="[bgSize, backgroundState]" :data-index="index">
-      <img v-if="src && src.length > 0 && open.type === 'systemApp'" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
+  <div
+    class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn"
+    :data-index="index"
+    @click.stop="iconClick($event)"
+    :style="[iconSize]"
+  >
+    <div
+      class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
+      :style="[bgSize, backgroundState]"
+      :data-index="index"
+    >
+      <img
+        v-if="src && src.length > 0 && open.type === 'systemApp'" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index" />
-      <img v-if="src && src.length > 0 && open.type !== 'systemApp'" :src="renderIcon(src)" alt="" :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index" />
+      <img v-if="src && src.length > 0 && open.type !== 'systemApp'"
+        :src="renderIcon(src)"
+        alt=""
+        :style="[imgSize, radiusState, imgStateStyle]"
+        :data-index="index"
+      />
     </div>
-    <div v-if="isTitle" class="h-5 mx-auto text-center truncate xt-text" :style="[textSize]" :data-index="index">
+    <div
+      v-if="isTitle"
+      class="h-5 mx-auto text-center truncate xt-text"
+      :style="[textSize]"
+      :data-index="index"
+    >
       {{ titleValue }}
     </div>
   </div>
@@ -20,7 +37,7 @@
 import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
-import {renderIcon} from '../../../../js/common/common'
+import { renderIcon } from "../../../../js/common/common";
 import {startApp} from '../../../../ui/hooks/useStartApp'
 export default {
   mixins: [editProps],
@@ -29,6 +46,9 @@ export default {
     state: { type: Boolean, default: false },
     index: { type: Number },
     newIcon: { type: Boolean },
+    edit: {
+      default: false,
+    },
   },
   data() {
     return {
@@ -77,7 +97,7 @@ export default {
     },
   },
   watch: {
-    imgShape(newV) { },
+    imgShape(newV) {},
   },
   methods: {
     renderIcon,
@@ -98,8 +118,8 @@ export default {
         this.size == "icons1" || this.size == "icons2"
           ? imgH
           : this.isTitle
-            ? h - 20
-            : h;
+          ? h - 20
+          : h;
       return {
         bgSize: {
           width: `${w}px`,
@@ -119,7 +139,7 @@ export default {
         },
       };
     },
-    newOpenApp() {
+    newOpenApp(TYPE, VALUE) {
       switch (this.open.type) {
         // 默认浏览器
         case "default":
@@ -145,6 +165,7 @@ export default {
           break;
         // 本地应用
         case "tableApp":
+          console.log("object :>> ", this.open.value);
           require("electron").shell.openPath(
             require("path").normalize(this.open.value)
           );
@@ -171,10 +192,13 @@ export default {
     startApp,
     // 单图标点击
     iconClick(event) {
+
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
         return;
       }
+
+      if (this.edit) return
       // 先检测是不是web端
       // if (!this.$isXT) {
       //   let arr = ["default", "internal", "thinksky"];
@@ -185,7 +209,7 @@ export default {
       //   }
       //   return;
       // }
-      
+
       if(this.newIcon){
         console.log(this.newIcon,'open');
         this.startApp(this.open.type,this.open.value,this.$router)
@@ -233,8 +257,8 @@ export default {
         this.linkValue.path
           ? require("electron").shell.openPath(this.linkValue.path)
           : require("electron").shell.openPath(
-            require("path").normalize(this.linkValue)
-          );
+              require("path").normalize(this.linkValue)
+            );
       }
     },
   },

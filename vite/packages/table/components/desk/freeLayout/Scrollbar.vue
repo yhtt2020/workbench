@@ -1,7 +1,6 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
-    v-if="resetting"
     ref="scrollbar"
     class="no-drag relative w-full h-full"
     style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
@@ -53,7 +52,7 @@ onMounted(async () => {
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  updateScroll()
+  updateScroll(getFreeLayoutState.value.mode.scroll)
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
@@ -165,8 +164,6 @@ let initialMousePosition = ref(null);
  * 2023-12-21
  */
 //滚动方式
-const resetting = ref(true);
-
 const updateScroll = (newV) => {
   if (newV === "free") {
     perfectScrollbar.value.settings.suppressScrollX = false;
