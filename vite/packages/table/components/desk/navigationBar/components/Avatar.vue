@@ -1,15 +1,15 @@
 <template>
     <div style="width: 52px; height: 52px;" v-if="!item.isBg"
-        :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }"
+        :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
         class="relative flex items-center justify-center ">
-        <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: iconRadius + 'px' }"
+        <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
             :class="{ 'shaking-element': shakeElement }"></a-avatar>
     </div>
     <div v-else style="width: 52px; height: 52px;margin-top: -5px;"
         class="relative flex items-center justify-center overflow-hidden"
-        :style="{ borderRadius: iconRadius + 'px', background: item.bg || '' }">
+        :style="{ borderRadius:navigationBar.iconRadius + 'px', background: item.bg || '' }">
         <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-            :style="[{ borderRadius: iconRadius + 'px' }, item.color]"
+            :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item.color]"
             :class="{ 'shaking-element': shakeElement }"></a-avatar>
     </div>
 </template>
@@ -18,7 +18,7 @@
 import { ref, reactive } from 'vue'
 import { renderIcon } from '../../../../js/common/common';
 import { useNavigationStore } from '../navigationStore';
-const { iconRadius } = useNavigationStore();
+const navigationBar = useNavigationStore();
 const props = defineProps({
     item: Object,
     shakeElement: Boolean

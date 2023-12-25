@@ -87,7 +87,7 @@
     </vue-custom-scrollbar>
   </div>
 
-  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxPadding="p-4 pb-0" :mask="0">
+  <xt-modal v-model="settingVisible" :footer="0" title="桌面设置" boxClass="p-4 pb-0" :mask="0">
     <template #header-center>
       <XtTab v-if="settingVisible" style="height: 34px; width: 300px" boxClass="p-1 xt-bg-2"
         :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" v-model="currentSettingTab"
@@ -153,7 +153,7 @@ import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
 import {LoadingOutlined} from '@ant-design/icons-vue'
 import GalleryModal from '../paperModal/GalleryModal.vue'
-import { useAddCard } from '../../ui/hooks/useAddCard';
+import { useAddCard,file } from '../../ui/hooks/useAddCard';
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -625,36 +625,15 @@ export default {
       this.selectNav = 'desktop'
       this.isDesk = true
     },
+    file,
+    useAddCard,
     addIcon(item, index) {
-      console.log([{ ...item }], index, 'addIcon')
-      const file = {
-        model: "file",
-        size: "mini",
-        open: {
-          type: item.type,
-          value: item.value,
-        },
-        titleValue: item.name,
-        isTitle: true,
-        src: item.icon,
-        isRadius: true,
-        radius: 5,
-        imgState: 'cover',
-        imgShape: 'square',
-        isBackground: item.isBg,
-        backgroundColor: item.bg,
-        backgroundIndex: 0,
-      };
-      // iconList: [{ ...data }]
-      // useAddCard(file);
-      this.addDeskCard('myIcons', {
+      const file = this.file(item)
+      this.useAddCard('myIcons', {
         iconList: [{ ...file }],
         newIcon: true
-      });
+      })
       this.editVisible = false;
-    },
-    addDeskCard(name,icon){
-      useAddCard(name,icon)
     },
     /**
      * 暂存布局，与restore结对使用。

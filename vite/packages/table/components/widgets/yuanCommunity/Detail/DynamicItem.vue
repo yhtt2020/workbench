@@ -64,11 +64,11 @@ watch(() => useYuanCommunityStore.dynamicContent.content, (val) => {
 </script>
 <style lang='scss' scoped>
 .reply-textarea {
-    border-radius: 10px;
+    border-radius: 4px;
     border: var(--divider) 1px solid;
 
     textarea {
-        border-radius: 10px;
+        border-radius: 12px;
 
         &:deep(.ant-input) {
             &::-webkit-scrollbar {

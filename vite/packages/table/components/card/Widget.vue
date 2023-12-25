@@ -103,7 +103,7 @@ import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { IOption, IMenuItem } from "./types";
 import { useWidgetStore } from "./store";
-import {useFreeLayoutStore} from '../desk/freeLayout/store'
+import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
 export default {
   components: {
@@ -190,7 +190,6 @@ export default {
           newIcon: "akar-icons:trash-can",
           fn: () => {
             if (this.isSelectAll) {
-
             }
             if (this.options?.type != "note") {
               this.doRemoveCard();
@@ -289,12 +288,13 @@ export default {
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
-      this.removeCard(
-        this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex,
-        this.desk
-      );
+      // this.removeCard(
+      //   this.$parent.customIndex ||
+      //     this.$parent.$parent.customIndex ||
+      //     this.$parent.$attrs.customIndex,
+      //   this.desk
+      // );
+      this.removeCard(this.customIndex, this.desk);
       this.menuVisible = false;
     },
     onSetup() {

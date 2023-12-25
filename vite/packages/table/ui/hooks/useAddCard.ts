@@ -15,3 +15,24 @@ export const useAddCard = (name, customData) => {
     getCurrentDesk.value
   );
 };
+
+export const file = (item) =>{
+  return {
+    model: "file",
+    size: "mini",
+    open: {
+      type: item.type,
+      value: item.value,
+    },
+    titleValue: item.name,
+    isTitle: true,
+    src: item.icon,
+    isRadius: true,
+    radius: 5,
+    imgState: 'cover',
+    imgShape: 'square',
+    isBackground: item.isBg,
+    backgroundColor: item.bg,
+    backgroundIndex: 0,
+  }
+}

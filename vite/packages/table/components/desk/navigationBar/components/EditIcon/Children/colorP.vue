@@ -1,8 +1,8 @@
 <template>
-    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false" :theme="'smdx'">
-        <xt-button :w="40" :h="40" class="xt-bg"><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
+    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false" theme="tomato">
+        <xt-button :w="40" :h="40" class="xt-bg" ><xt-new-icon icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
-            <div class="w-[320px] rounded-xl shadow p-4 ">
+            <div class="w-[315px] rounded-xl shadow p-4 -mt-1 -mr-2 -ml-2 -mb-1">
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <xt-button :w="24" :h="24">
@@ -82,6 +82,10 @@ const props = withDefaults(defineProps<colorPicker>(), {
 const body = computed(()=>{
     return document.body
 })
+/**
+ * 默认色
+ * @param item 
+ */
 const chooseDf = (item) => {
     if (colorIndex.value === item) {
         colorIndex.value = 0;
@@ -91,8 +95,11 @@ const chooseDf = (item) => {
         linearIndex.value = 0;
         emit('change', props.defaultList[`color${item}`]);
     }
+    tippyRef.value.hide()
 }
-
+/**
+ * 线性渐变
+ */
 const chooseLinear = (item) => {
     if (linearIndex.value === item) {
         linearIndex.value = 0; 
@@ -102,13 +109,14 @@ const chooseLinear = (item) => {
         colorIndex.value = 0;
         emit('change', props.linearList[`color${item}`]);
     }
+    tippyRef.value.hide()
 }
+/**
+ * 取色器
+ */
 const updateBackground = () => {
     emit('change', defaultColor.value)
 }
-onMounted(() => {
-    
-})
 </script>
 <style lang='scss' scoped>
 .item {
@@ -145,9 +153,12 @@ onMounted(() => {
   background-image: url('/img/bg.png') !important;
   background-size: cover;
 }
-.tippy-tooltip.smdx-theme {
-  border-radius: 12px !important;
-  background-color: red !important;
-  
+// :host-context([data-tippy-root]) :deep .tippy-box[data-theme~='tomato'] {
+//   background-color: tomato !important;
+//   color: yellow !important;
+// }
+.tippy-box[data-theme="tomato"]{
+    border-radius: 12px !important;
+    color: red !important;
 }
 </style>

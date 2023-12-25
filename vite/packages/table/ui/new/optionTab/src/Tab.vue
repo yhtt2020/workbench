@@ -43,13 +43,12 @@ const props = withDefaults(defineProps<tabProps>(), {
 const currentTab = ref(props.modelValue);
 const emits = defineEmits(["update:modelValue", "cb"]);
 
-// watch(
-//   () => props.modelValue,
-//   (newV) => {
-//     console.log('123 :>> ', 123);
-//     currentTab.value = newV;
-//   }
-// );
+watch(
+  () => props.modelValue,
+  (newV) => {
+    currentTab.value = newV;
+  }
+);
 watch(currentTab, () => {
   emits("update:modelValue", currentTab.value);
   emits("cb", currentTab.value);

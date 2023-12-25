@@ -13,8 +13,8 @@
             </div> -->
         </template>
         <div class="box-flex">
-            <div>{{this.history.date}}</div>
-            <div>{{ this.history.title }}</div>
+            <div>{{ this.history?.date }}</div>
+            <div>{{ this.history?.title }}</div>
         </div>
     </Widget>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <!-- 确认框 -->
   <div v-if="showRestore" class="no-drag"
-    style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76);">
+    style="z-index:9999;position:fixed;right: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76);">
     <div class="mb-3">当前窗口分辨率：{{ currentWidth }} * {{ currentHeight }}，将于{{ timeout }}秒后还原</div>
     <a-button @click="restore" class="ml-3">还原</a-button>
     <a-button @click="reset" class="ml-3">重置</a-button>
@@ -37,7 +37,7 @@
       <div class="xt-text mt-2">分辨率：宽 1920 x 高 1080</div>
       <a-slider class="mt-1" 
       @afterChange="setZoomFactor" 
-      :min="30" :max="200" 
+      :min="30" :max="500" 
       v-model:value="newZoom"></a-slider>
     </div>
 

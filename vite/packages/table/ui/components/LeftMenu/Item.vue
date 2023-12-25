@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col justify-center items-center">
     <!-- antd插槽 -->
     <div
       v-if="item.slot"
@@ -9,7 +9,6 @@
       <slot :name="item.slot"> </slot>
     </div>
     <!-- 图片 -->
-    <!-- :class="{ 'xt-bg-2': !item.noBg }" -->
     <div
       v-else-if="item.img"
       style="width: 40px; height: 40px"
@@ -21,7 +20,6 @@
         :style="[imgSize, imgBg]"
         style="border-radius: 10px; object-fit: cover"
       />
-
     </div>
     <!-- icon -->
     <xt-icon
@@ -37,8 +35,8 @@
       size="20"
       w="40"
       :icon="item.full ? full : item.newIcon"
-      :bgStyle="bg"
-      :type="newType"
+      :bgStyle="iconBg(item.bg)"
+
       radius="10"
     />
   </div>
@@ -80,17 +78,24 @@ const imgSize = computed(() => {
 });
 // 图片颜色解析
 const imgBg = computed(() => {
-  const img = props?.item?.img
-  if(img.includes('color=#')){
-    const bg = img.slice(-7)
+  const img = props?.item?.img;
+  if (img.includes("color=#")) {
+    const bg = img.slice(-7);
     return {
       filter: `drop-shadow(${bg} 80px 0)`,
-      transform: 'translateX(-80px)',
+      transform: "translateX(-80px)",
     };
-  }else{
-    return 
+  } else {
+    return;
   }
 });
+const iconBg = (bg) => {
+  if (bg) {
+    return bg;
+  }
+
+  return props.bg;
+};
 
 // 全屏控制
 const data = ref(false);

@@ -1,4 +1,5 @@
 <!-- 图标组件入口 -->
+<!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 -->
   <Widget
@@ -10,12 +11,8 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-    <div
-      ref="iconRef"
-      class="box-border icon-box"
-      :style="dragStyle"
-    >
-    <!-- @contextmenu.stop="handleMenu()" -->
+    <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
+      <!-- @contextmenu.stop="handleMenu()" -->
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
@@ -68,11 +65,11 @@
       <!-- 卡片核心 -->
     </div>
   </Widget>
-
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
-  </Edit>
+  <Set v-if="settingVisible" v-model="settingVisible" @close="closeSet"></Set>
+  <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
+  </Edit> -->
   <!-- 多图标组件设置 -->
   <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="p-4 xt-bg-2 rounded-xl">
@@ -103,6 +100,7 @@ import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 import BottomEdit from "./components/bottomEdit.vue";
+import Set from "./set/index.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -127,6 +125,7 @@ export default {
     },
   },
   components: {
+    Set,
     Widget,
     Edit,
     icons,
@@ -498,6 +497,17 @@ export default {
       );
       message.success("保存成功");
       this.settingVisible = false;
+    },
+    // 适配新版保存图标
+    closeSet() {
+      this.customData.iconList[this.index] = {
+        ...this.edit,
+        open: {
+          type: this.edit.type,
+          value: this.edit.value,
+        },
+      };
+      message.success("保存成功");
     },
   },
 };

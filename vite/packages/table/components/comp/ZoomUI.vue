@@ -37,6 +37,7 @@
       </template>
     </span>
 <div>还原分辨率快捷键（ctrl + alt + shift + r）</div>
+{{ newZoom }}
     <a-slider @afterChange="setZoomFactor" :min="30" :max="500" v-model:value="newZoom"></a-slider>
   </div>
 </template>

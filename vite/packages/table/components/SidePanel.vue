@@ -1,10 +1,11 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'">
-  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
+    <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
-    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+    <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId"
+      style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
-      ref="sideContent" @contextmenu="showMenu" :style="{transform: `scale(${(this.navAttribute.navSize / 100)})`,}">
+      ref="sideContent" @contextmenu="showMenu" :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})`, }">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -13,22 +14,14 @@
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
-              <div :key="item.name" @click="newOpenApp(item.type,item.value)"
+              <div :key="item.name" @click="newOpenApp(item.type, item.value)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  :class="{ 'active-back': current(item) }" :style="{borderRadius:this.iconRadius+'px'}">
-                  <div class="flex items-center justify-center icon-color" v-if="!item.isBg">
-                    <a-avatar :size="52" shape="square" :src="item.icon"
-                      :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                  </div>
-                  <div v-else style="width: 52px; height: 52px;"
-                          class="relative flex items-center justify-center overflow-hidden rounded-xl"
-                          :style="{ background: item.bg || '' }">
-                          <!-- {{ item.bgColor ? '' : item.name }} -->
-                          <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-                            :style="[{ borderRadius: iconRadius + 'px' },item.color]"
-                            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                        </div>
+                  :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                  <template v-else>
+                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                  </template>
 
                 </div>
               </div>
@@ -43,32 +36,11 @@
       </div>
 
     </div>
-  <!-- </xt-menu> -->
+    <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
-  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
-    placement="bottom" :visible="menuVisible" @close="onClose">
-    <a-row>
-      <a-col>
-        <div class="flex flex-wrap items-center">
-          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-            <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
-          </div>
-          <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
-            <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
-            <div><span>{{ item.name }}</span></div>
-          </div>
-        </div>
-
-      </a-col>
-    </a-row>
-  </a-drawer> -->
-
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
@@ -102,7 +74,10 @@ import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
-import {startApp} from '../ui/hooks/useStartApp'
+import { startApp } from '../ui/hooks/useStartApp'
+import { updateIcon } from '../components/desk/navigationBar/index'
+import Avatar from "./desk/navigationBar/components/Avatar.vue";
+import Team from './bottomPanel/Team.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -113,7 +88,9 @@ export default {
     Common,
     xtMenu,
     xtMixMenu,
-    EditIcon
+    EditIcon,
+    Avatar,
+    Team
   },
   emits: ['getDelIcon', 'hiedNavBar'],
   data() {
@@ -277,11 +254,11 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle','copySideNav','copyRightNav']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle', 'copySideNav', 'copyRightNav']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList','navAttribute','iconRadius','editItem']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'navAttribute', 'iconRadius', 'editItem']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -331,7 +308,7 @@ export default {
     this.enableDrag()
     this.colDrop()
     this.copyNav()
-    console.log(this.copySideNav, 'copySideNav');
+    // console.log(this.copySideNav, 'copySideNav');
     // this.scrollNav('sideContent', 'scrollTop')
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'
@@ -356,7 +333,8 @@ export default {
     },
     sideNavigationList: {
       handler(newVal, oldVal) {
-        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        this.copySideNav = this.updateIcon(this.sideNavigationList, this.copySideNav)
         console.log(this.copySideNav, 'copySideNav');
         console.log(this.sideNavigationList, 'sideNavigationList');
       },
@@ -365,7 +343,8 @@ export default {
     },
     rightNavigationList: {
       handler(newVal, oldVal) {
-        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        // this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.copyRightNav = this.updateIcon(this.rightNavigationList, this.copyRightNav)
       },
       immediate: true,
       deep: true,
@@ -373,9 +352,10 @@ export default {
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList','copyNav']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'copyNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
+    updateIcon,
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
@@ -464,8 +444,8 @@ export default {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
           that.sortNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
-          that.updateMainNav();
+          // that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
+          // that.updateMainNav();
         }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
@@ -514,10 +494,10 @@ export default {
           icon: `${dropFiles}`,
           name: `${fileName}`,
           value: item,
-          type : 'tableApp',
-          bg:'',
-          isBg:false,
-          mode:"app"
+          type: 'tableApp',
+          bg: '',
+          isBg: false,
+          mode: "app"
         }
       }))
       this.clickRightListItem(this.dropList)
@@ -633,7 +613,8 @@ export default {
         // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
-          this.selectNav = this.currentNav
+          // this.selectNav = this.currentNav
+          this.navigationList === this.copyRightNav ? this.selectNav = 'right' : this.selectNav = 'left'
           message.success('进入编辑模式')
         }
         this.quick = true
@@ -850,4 +831,5 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}</style>
+}
+</style>

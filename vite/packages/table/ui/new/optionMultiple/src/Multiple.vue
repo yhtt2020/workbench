@@ -4,7 +4,6 @@
     mode="multiple"
     class="rounded-xl"
     style="width: 100%; padding: 0 !important"
-    placeholder="Please select"
     @change="handleChange"
   >
     <a-select-option class="no-drag" v-for="item in list" :value="item.value"

@@ -1,6 +1,6 @@
 <template>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
         <template #nav>
             <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
                 :style="{ height: `${navHeight}px` }">
@@ -43,7 +43,7 @@
             <a-dropdown trigger="['click']" v-if="visible">
                 <template #overlay>
                     <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
-                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
+                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in dropArr"
                             class="flex items-center justify-center hover-style ">
                             <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
                         </a-menu-item>
@@ -51,7 +51,7 @@
                 </template>
                 <xt-button :w="120" :h="32" class="">
                     <div class="flex justify-between">
-                        <div class="text-base xt-text">{{ defaultTitle.title }}</div>
+                        <div class="text-base xt-text omit-1">{{ defaultTitle.title }}</div>
                         <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
                             class="-rotate-90 xt-text"></xt-new-icon>
                     </div>
@@ -73,6 +73,7 @@
     <!-- </div> -->
 </template>
 <script>
+import {cardStore} from '../../../store/card'
 import { useNavigationStore } from './navigationStore'
 import { navStore } from '../../../store/nav'
 import { mapActions, mapWritableState } from 'pinia'
@@ -241,13 +242,13 @@ export default {
         },
         async loadDeskIconApps() {
             const lightApps = await appModel.getAllApps()
-            console.log(lightApps, 'lightApps');
+            // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {
                 lightApps[i].icon = lightApps[i].logo
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
-            console.log(desktopApps, lightApps, 'desktopApps');
+            // console.log(desktopApps, lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
@@ -255,7 +256,7 @@ export default {
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            console.log(this.ClassifyData, 'ClassifyData');
+            // console.log(this.ClassifyData, 'ClassifyData');
         },
         // 更换图标格式
         replace(list) {
@@ -283,6 +284,7 @@ export default {
         handleMenuClick(item) {
             this.defaultTitle = item
             this.selectNav = item.value
+            this.selectNav === 'desktop' ? this.targetDesk = item : ''
         },
         onOk() {
             if (this.selectNav === 'foot') {
@@ -407,7 +409,8 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk']),
+        ...mapWritableState(cardStore,['desks']),
+        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk','targetDesk']),
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
             return this.ClassifyData.filter(i => {
@@ -470,7 +473,23 @@ export default {
                 }
                 return false
             }
+        },
+        dropArr(){
+            if(this.selectNav !== 'desktop'){
+                return this.addIconPosition
+            }else{
+                return this.desks.map((item)=>{
+                    return {
+                        title: item.name,
+                        id:item.id,
+                        nid:item.nanoid,
+                        mid:item.marketId,
+                        value:'desktop',
+                    }
+                })
+            }
         }
+        
 
     },
     created() {
@@ -478,7 +497,7 @@ export default {
     },
     mounted() {
         if(this.currentNav){
-           this.defaultTitle = this.currentNav 
+           this.defaultTitle = this.currentNav
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',
@@ -499,6 +518,10 @@ export default {
     },
     watch: {
         selectNav() {
+            // 非导航栏取消弹窗
+            if (this.selectNav === 'desktop') {
+                return true
+            }
             this.defaultTitle = this.currentNav
             if (this.selectNav === 'foot' && !this.navigationToggle[2]) {
                 this.modalVisible = true
@@ -544,5 +567,14 @@ export default {
     &:hover {
         background: var(--active-secondary-bg) !important;
     }
+}
+.omit-1{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 84px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 </style>
