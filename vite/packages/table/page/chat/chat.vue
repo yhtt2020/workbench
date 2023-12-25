@@ -30,6 +30,7 @@ import { appStore } from '../../store'
 import { chatStore } from '../../store/chat';
 import _ from 'lodash-es';
 import { communityTotal } from './libs/utils';
+import { completeTask } from '../../apps/task/page/branch/task';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
@@ -157,15 +158,15 @@ export default {
         children:[
           {
             icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
-            callBack: (item) => { triggerAddModal(item) }
+            callBack: (item) => { triggerAddModal(item); completeTask('Z0601');}
           },
           {
             icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
-            callBack: (item) => { triggerAddModal(item) }
+            callBack: (item) => { triggerAddModal(item);completeTask('Z0601'); }
           },
           {
             icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
-            callBack: (item) => { triggerAddModal(item) }
+            callBack: (item) => { triggerAddModal(item);completeTask('Z0602'); }
           },
           {
             icon: 'smile',  newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',

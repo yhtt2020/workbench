@@ -6,8 +6,7 @@
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">拾光壁纸</span>
       </div>
       <div class="flex items-center justify-center">
-        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;" 
-        :h="isModal ? 32 : 40" :borderClass="'rounded-md '" :border="false" @change="pickFilterChange($event)"/>
+        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" :h="isModal ? 32 : 40" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;"  :borderClass="'rounded-md '" :border="false" @change="pickFilterChange($event)"/>
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
         :newIcon="'fluent:filter-16-regular'" :iconBg="'var(--active-text)'" :class="isModal ? 'mr-3':''" >
         <!--  @visible-change="getPickPaperList" -->
@@ -164,10 +163,6 @@ export default {
         this.getPickPaperList();
       }
     })
-
-    if(this.isModal){
-      document.querySelector('.ant-select-selection-item').style = 'line-height:32px !important;height:30px !important;'
-    }
     this.getPickPaperList();
   },
 
