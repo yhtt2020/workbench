@@ -179,7 +179,7 @@ const updateScroll = (newV) => {
     perfectScrollbar.value.settings.suppressScrollY = true;
   }
 };
-watch(() => getFreeLayoutState.value.mode.scroll, updateScroll);
+watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {

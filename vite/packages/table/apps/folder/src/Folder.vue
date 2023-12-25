@@ -1,11 +1,12 @@
 <template>
   <Drop @createFile="createFile" @deleteFile="deleteFile">
+    {{ customData.cardSize.width }}
     <Widget
       :customIndex="customIndex"
       :customData="customData"
       :options="options"
       :menuList="menuList"
-      :size="reSize"
+      :size="reSizes"
     >
       <!-- 左侧图标 -->
       <template #left-title-icon>
@@ -154,17 +155,14 @@ const layoutClick = () => {
 
 // 增
 const createFile = (data) => {
-  console.log("1233 :>> ", data);
   customData.value.list.push(data);
 };
 // 删
 const deleteFile = (data) => {
-  console.log("data :>> ", data);
   customData.value.list.splice(customData.value.list.indexOf(data), 1);
 };
 // 改
 const updateFile = (data) => {
-  console.log("123 :>> ", 123);
   // customData.value.list.push(data);
 };
 
@@ -189,13 +187,10 @@ const sortMode = (key) => {
 // 触发排序
 const updateSort = (val) => {
   const mode = customData.value.sort;
-  console.log("mode :>> ", mode);
   if (mode === "free") {
-    console.log("3333 :>> ", 3333);
     customData.value.lock = true;
     return;
   }
-  console.log("111 :>> ", 111);
   sortMode(mode);
 };
 
@@ -241,7 +236,7 @@ const lockClick = () => {
  */
 const dragSortState = ref(false);
 const updateList = (data) => {
-  dragSortState.value == true;
+  dragSortState.value = true;
   customData.value.list = [];
 
   setTimeout(() => {
@@ -263,19 +258,20 @@ const iconClick = () => {
  */
 
 const reSizeInit = (data) => {
-  init(data)
+  init(data);
 };
 
-const reSize = computed(() => {
+const reSizes = computed(() => {
   const width = customData.value.cardSize.width;
   const height = customData.value.cardSize.height;
+
   return {
-    width: (width || 1) * width + (width - 1) * 10 + "px",
-    height: (height || 2) * height + (height - 1) * 10 + "px",
+    width: (width || 1) * 280 + (width - 1) * 10 + "px",
+    height: (height || 2) * 204 + (height - 1) * 10 + "px",
   };
 });
 
-const init = () => {
+const init = (size) => {
   // 初始化卡片大小
   if (!customData.value.cardSize) {
     customData.value.cardSize = {
@@ -285,7 +281,9 @@ const init = () => {
     };
     return;
   }
-  const size = customData.value.cardSize.name;
+
+  size = size ?? customData.value.cardSize.name;
+
   if (size == "big") {
     customData.value.cardSize.width = 2;
     customData.value.cardSize.height = 2;
@@ -297,12 +295,11 @@ const init = () => {
     customData.value.cardSize.width = 1;
     customData.value.cardSize.height = 1;
   } else {
-    console.log('size :>> ', size);
-    return
     let str = size.split(",");
     customData.value.cardSize.width = Math.round(str[0] / 280);
     customData.value.cardSize.height = Math.round(str[1] / 205);
   }
+  customData.value.cardSize.name = size;
 };
 onBeforeMount(() => {
   init();

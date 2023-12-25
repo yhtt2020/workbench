@@ -8,7 +8,7 @@
     <template v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
-        class="xt-sortable-fle-box"
+        class="xt-sortable-fle-box xt-theme-b flex justify-center"
         :class="[sortableBox]"
         :data-id="item.id"
       >
@@ -23,8 +23,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-            <Rows v-if="layout === 'rows'" :item="item" />
-            <Columns v-else-if="layout === 'columns'" :item="item" />
+            <F :item="item"></F>
           </Drag>
         </xt-mix-menu>
       </div>
@@ -49,14 +48,12 @@ import {
   toRefs,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
-import Columns from "./Columns.vue";
-import Rows from "./Rows.vue";
+import F from "./f.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
-import { fileTypes } from "./options";
+import { fileTypes, rowOption, columnOption } from "./options";
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -72,20 +69,31 @@ const props = defineProps({
   list: {},
 });
 const { list, layout } = toRefs(props);
-
+/**
+ * 监听组件大小变化
+ */
+const currentWidth = computed(() => {
+  const width = data.value.cardSize.width;
+  return width;
+});
 /**
  * 拖拽排序
  */
 // 拖拽容器
 const sortable = ref();
-console.log("+Math.random() :>> ", Math.random() * 1);
 const sortableContainer = ref(
   "xt-sortable-fle-container-" + index.value + Math.ceil(Math.random() * 100)
 );
 const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {
-  return layout.value === "rows" ? "33.3% 33.3% 33.3%" : "100%";
+  let rows = "33.3% 33.3% 33.3%";
+  if (currentWidth.value == 2) {
+    rows = "20% 20% 20%  20% 20%";
+  } else if (currentWidth.value == 3) {
+    rows = "12.5%  12.5% 12.5%  12.5% 12.5%  12.5% 12.5% 12.5%";
+  }
+  return layout.value === "rows" ? rows : "100%";
 });
 // 是否禁用拖拽
 watch(
