@@ -6,7 +6,7 @@
     size="large" :style="{height:`${h}px`}"
     @change="handleChange"
     :dropdownStyle="{
-      'z-index': 99,
+      'z-index':zIndex,
       backgroundColor: 'var(--secondary-bg)',
       backgroundColor: 'red',
     }"
@@ -44,6 +44,10 @@ const props = defineProps({
   h:{
     style:Number,
     default:32
+  },
+  zIndex:{
+    type:Number,
+    default:99,
   }
 });
 

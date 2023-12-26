@@ -45,7 +45,7 @@
                   h="32"
                   radius="8"
                   v-if="full"
-                  @click="isFull = !isFull"
+                  @click="updateFullState"
                 >
                   <xt-new-icon
                     :icon="
@@ -122,6 +122,7 @@
 import McDonalds from "./McDonalds.vue";
 import { ref, watch, toRefs, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
+import { update } from "lodash";
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -242,6 +243,12 @@ const handleEscKeyPressed = (event) => {
   }
 };
 
+/**
+ * 全屏状态切换
+ * */
+const updateFullState =()=>{
+  isFull.value = !isFull.value
+}
 onBeforeUnmount(() => {
   if (esc.value) {
     window.removeEventListener("keydown", handleEscKeyPressed, {
@@ -249,6 +256,9 @@ onBeforeUnmount(() => {
     });
   }
 });
+defineExpose({
+  updateFullState,isFull,
+})
 </script>
 
 <style lang="scss" scoped></style>
