@@ -8,7 +8,7 @@
     <template v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
-        class="xt-sortable-fle-box xt-theme-b flex justify-center"
+        class="xt-sortable-fle-box flex justify-center"
         :class="[sortableBox]"
         :data-id="item.id"
       >
@@ -23,7 +23,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-            <F :item="item"></F>
+            <Files :item="item"></Files>
           </Drag>
         </xt-mix-menu>
       </div>
@@ -48,12 +48,12 @@ import {
   toRefs,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import F from "./f.vue";
+import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
-import { fileTypes, rowOption, columnOption } from "./options";
+import { fileTypes } from "./options";
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -91,7 +91,7 @@ const fileLayout = computed(() => {
   if (currentWidth.value == 2) {
     rows = "20% 20% 20%  20% 20%";
   } else if (currentWidth.value == 3) {
-    rows = "12.5%  12.5% 12.5%  12.5% 12.5%  12.5% 12.5% 12.5%";
+    rows = "12.5%  12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%";
   }
   return layout.value === "rows" ? rows : "100%";
 });
@@ -193,7 +193,6 @@ const menuList = computed(() => {
 const collisionDetection = (nodes) => {
   // 循环新的排序ID
   let arr = [];
-  let arr1 = [];
   for (let item of nodes) {
     if (
       !(item instanceof HTMLDivElement) ||
@@ -202,11 +201,12 @@ const collisionDetection = (nodes) => {
       continue;
     }
     let id = item.getAttribute("data-id");
-    let data = list.value.find((obj) => obj.id == parseInt(id));
+    if (list.value.length == 0) return;
+    // 有报错
+    // let data = list.value.find((obj) => obj.id == parseInt(id));
+    let data = list.value.find((obj) => obj.id == id);
     arr.push({ ...data });
-    arr1.push(data.name);
   }
-  console.log("arr1 :>> ", arr1);
   emits("updateList", arr);
 };
 

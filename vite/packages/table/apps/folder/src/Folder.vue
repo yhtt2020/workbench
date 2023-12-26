@@ -1,6 +1,5 @@
 <template>
   <Drop @createFile="createFile" @deleteFile="deleteFile">
-    {{ customData.cardSize.width }}
     <Widget
       :customIndex="customIndex"
       :customData="customData"
@@ -21,30 +20,15 @@
         <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
-      <Resize @reSizeInit="reSizeInit" :cardSize="customData.cardSize.name">
+      <Resize
+        @reSizeInit="reSizeInit"
+        :disabled="expand.disabled"
+        :cardSize="customData.cardSize.name"
+      >
         <!-- 空状态显示状态 -->
-        <div
-          v-if="customData.list.length <= 0 && !dragSortState"
-          class="flex flex-col items-center mt-3 tt"
-        >
-          <xt-new-icon
-            v-if="options.className !== 'card small'"
-            icon="fluent-emoji:inbox-tray"
-            w="56"
-            class="mb-3"
-          />
-          <xt-new-icon
-            v-if="options.className !== 'card small'"
-            icon="fluent-emoji:inbox-tray"
-            w="56"
-            class="mb-3"
-          />
-          <div class="xt-bg-t-2 rounded-xl text-sm mb-3 p-2">
-            你可以拖动工作台桌面图标或windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
-          </div>
-          <xt-button type="theme" w="84" h="32" radius="8">添加图标</xt-button>
-        </div>
-
+        <template v-if="customData.list.length <= 0 && !dragSortState">
+          <Null :cardSize="customData.cardSize"></Null>
+        </template>
         <vue-custom-scrollbar
           v-else
           :settings="{
@@ -75,7 +59,7 @@
   </folderSet>
 
   <xt-modal custom v-model="expandVisible" boxClass="">
-    <Expand :props="props"></Expand>
+    <Expand :data="props"></Expand>
   </xt-modal>
 </template>
 
@@ -100,14 +84,22 @@ import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue"
 import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData } from "./components/options";
+import Null from "./components/Null.vue";
 /**
  * 初始化阶段
  */
 const props = defineProps({
   customData: {},
   customIndex: {},
+  expand: {
+    default: () => {
+      return {
+        disabled: false,
+      };
+    },
+  },
 });
-const { customData, customIndex } = toRefs(props);
+const { customData, customIndex, expand } = toRefs(props);
 
 provide("index", customIndex);
 provide("data", customData);
@@ -171,17 +163,8 @@ const updateFile = (data) => {
  */
 // 排序
 const sortMode = (key) => {
-  // 将对象的属性转换为数组
-  const itemsArray = Object.entries(customData.value.list).map(
-    ([key, item]) => item
-  );
   // 对数组进行排序
-  itemsArray.sort((a, b) => b[key] - a[key]);
-  let obj = {};
-  itemsArray.forEach((item) => {
-    obj[item.id] = item;
-  });
-  customData.value.list = obj;
+  customData.value.list.sort((a, b) => b[key] - a[key]);
 };
 
 // 触发排序
@@ -199,7 +182,7 @@ const updateSort = (val) => {
  */
 const updateWindowApp = async () => {
   const desktopApps = await ipc.sendSync("getDeskApps");
-
+  customData.value.list = [];
   desktopApps.forEach((item) => {
     const file = {
       ...defaultData,
@@ -207,9 +190,9 @@ const updateWindowApp = async () => {
       value: item.path,
       icon: item.icon,
       type: "tableApp",
-      id: nanoid(),
+      id: nanoid(6),
     };
-    customData.value.list[file.id] = file;
+    customData.value.list.push(file);
   });
 };
 /**
@@ -225,7 +208,6 @@ const lockClick = () => {
   if (customData.value.sort === "free" || customData.value.model != "custom") {
     customData.value.lock = true;
     message.info("自由排序或桌面文件下无法解锁");
-
     return;
   }
   customData.value.lock = !customData.value.lock;
@@ -250,6 +232,7 @@ const updateList = (data) => {
  */
 const expandVisible = ref(false);
 const iconClick = () => {
+  if (expand.value.disabled) return;
   expandVisible.value = true;
 };
 
@@ -283,7 +266,6 @@ const init = (size) => {
   }
 
   size = size ?? customData.value.cardSize.name;
-
   if (size == "big") {
     customData.value.cardSize.width = 2;
     customData.value.cardSize.height = 2;
@@ -300,6 +282,11 @@ const init = (size) => {
     customData.value.cardSize.height = Math.round(str[1] / 205);
   }
   customData.value.cardSize.name = size;
+
+  console.log(
+    "   customData.value.cardSize.height :>> ",
+    customData.value.cardSize.height
+  );
 };
 onBeforeMount(() => {
   init();

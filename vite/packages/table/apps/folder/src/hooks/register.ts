@@ -14,9 +14,9 @@ export const registerFolder = (desk) => {
         icon: "",
         list: [],
         cardSize: {
-          name: "default",
+          name: "small",
           width: 1,
-          height: 2,
+          height: 1,
         },
         // 文件锁 开启后无法拖出
         lock: true,

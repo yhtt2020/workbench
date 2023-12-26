@@ -69,20 +69,7 @@ edit.value["value"] = edit.value.open.value;
 console.log(edit.value["mode"]);
 
 onMounted(() => {
-  // 判断open.type
-  // edit.value = {
-  //   type: edit.value.open.type,
-  //   value: edit.value.open.value,
-  //   src: edit.value.src,
-  //   titleValue: edit.value.titleValue,
-  //   isTitle: edit.value.isTitle,
-  //   backgroundColor: edit.value.backgroundColor,
-  //   isBackground: edit.value.isBackground,
-  //   radius: edit.value.radius,
-  //   isRadius: edit.value.isRadius,
-  //   imgState: edit.value.imgState,
-  //   imgShape: edit.value.imgShape,
-  // };
+
 });
 /**
  * 控制弹窗显示
@@ -128,7 +115,7 @@ const updateApp = (data) => {
 watch(
   () => edit.value.mode,
   (newVal) => {
-    edit.value.value = "";
+    // edit.value.value = "";
     if (newVal == "link") {
       edit.value.type = "default";
     }

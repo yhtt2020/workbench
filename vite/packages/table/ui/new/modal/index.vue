@@ -3,7 +3,7 @@
     <!-- 弹窗 -->
     <div
       v-if="modelValue"
-      :class="[boxClass]"
+      :class="[boxClass, isFull ? ' rounded-none w-full h-full' : 'rounded-xl']"
       ref="modal"
       class="fixed flex flex-col text-base top-1/2 -translate-y-1/2 -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
@@ -39,6 +39,24 @@
               <!-- 标题右侧 -->
               <div class="right-0 z-20 flex items-center">
                 <slot name="header-right"> </slot>
+                <xt-button
+                  class="ml-3"
+                  w="32"
+                  h="32"
+                  radius="8"
+                  v-if="full"
+                  @click="isFull = !isFull"
+                >
+                  <xt-new-icon
+                    :icon="
+                      isFull
+                        ? 'fluent:full-screen-minimize-16-filled'
+                        : 'fluent:full-screen-maximize-16-regular'
+                    "
+                    size="16"
+                    class="xt-text-2"
+                  />
+                </xt-button>
                 <xt-button
                   class="ml-3"
                   w="32"
@@ -133,6 +151,8 @@ export interface ModalProps {
   beforeUnmount?: () => boolean;
   // 自定义插槽
   custom?: boolean;
+  // 开启全屏功能
+  full?: boolean;
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -150,8 +170,11 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
+  full: false,
 });
 const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
+const isFull = ref(false);
+
 const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
 
 const modal: any = ref(null);

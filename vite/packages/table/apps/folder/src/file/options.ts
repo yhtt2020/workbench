@@ -36,7 +36,7 @@ export const rowOption = {
   },
   big: {
     width: "86px",
-    height: "86px",
+    height: "88px",
     imgWidth: "52px",
     imgHeight: "52px",
   },
@@ -53,7 +53,7 @@ export const columnOption = {
   },
   big: {
     width: "100%",
-    height: "64px",
+    height: "58px",
     imgWidth: "32px",
     imgHeight: "32px",
   },

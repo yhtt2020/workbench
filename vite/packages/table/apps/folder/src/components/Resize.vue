@@ -1,6 +1,6 @@
 <template>
   <div
-    class="boxs no-drag"
+    class="boxs no-drag w-full h-full"
     ref="textRef"
     style="margin-top: 8px"
     :style="{ width: w, height: h }"
@@ -37,11 +37,11 @@ export default {
       type: String,
       default: "",
     },
+    disabled: {},
   },
   mounted() {
     this.drag();
     // 初始化
-    console.log("mounted :>> ", this.cardSize);
     this.dragCallBack(this.cardSize);
   },
   methods: {
@@ -52,18 +52,20 @@ export default {
       } else if (e == "default") {
         this.w = `${250}px`;
         this.h = `${360}px`;
-      } else if (e == "") {
+      } else if (e == "small") {
         this.w = `${250}px`;
         this.h = `${140}px`;
       } else if (e) {
         let str = e.split(",");
         let width = Math.round(str[0] / 280);
         let height = Math.round(str[1] / 205);
-        this.w = width * 280 + (width - 1) * 10 - 30 + "px";
+
+        this.w = width * 280 + (width - 1) * 10 - 24 + "px";
         this.h = height * 205 + (height - 1) * 10 - 60 + "px";
       }
     },
     drag() {
+      if (this.disabled) return;
       let that = this;
       let a = this.$refs.textRef;
       let dragRef = this.$refs.dragRef;
@@ -86,10 +88,19 @@ export default {
             height = h - oldY + y;
             if (width > 250) that.w = `${width}px`;
             if (height > 140) that.h = `${height}px`;
-            name = `${width},${height}`;
             height = height > 140 ? height : 140;
             width = width > 250 ? width : 250;
-            that.$emit("reSizeInit", `${width},${height}`);
+
+            if (width <= 250 && height <= 140) {
+              name = "small";
+            } else if (width <= 250 && height <= 360) {
+              name = "default";
+            } else if (width <= 542 && height <= 360) {
+              name = "big";
+            } else {
+              name = `${width},${height}`;
+            }
+            that.$emit("reSizeInit", name);
           };
           document.onmouseup = function (e) {
             e.stopPropagation();
