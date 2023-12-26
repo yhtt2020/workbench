@@ -899,11 +899,13 @@ export default {
 }
 
 .desk-group-switcher {
+
   min-width: 100px;
 
   min-height: 20px;
   z-index: 99;
   .tabs {
+    gap:10px;
     .tab {
       .icon {
         margin-top: -1px;
@@ -926,7 +928,7 @@ export default {
       font-size: 15px;
       width: 120px;
       border-radius: 8px;
-      margin-right: 10px;
+
       padding-left: 10px;
       padding-right: 10px;
       text-align: center;
