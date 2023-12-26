@@ -1,115 +1,6 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full relative">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
-    <div class="xt-main-top-util-bar flex flex-row" v-if="showTopBar && !fullScreen">
-      <!-- tabs   -->
-      <div
-        class="flex flex-row mb-3 ml-3 tabs"
-        v-if="showTabs && displayDesks.length > 1"
-      >
-        <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
-        <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
-        <!--        主桌面-->
-        <!--      </div>-->
-        <div
-          :class="{ 'tab-active': currentDeskId === item.id }"
-          @click="setCurrentDeskId(item.id)"
-          style="width: 140px"
-          class="pr-3 truncate tab s-bg xt-text"
-          v-for="(item, index) in displayDesks"
-        >
-          <a-avatar
-            v-if="item.iconUrl"
-            shape="square"
-            class="mr-2 icon"
-            :size="22"
-            :src="item.iconUrl"
-          ></a-avatar>
-          <icon
-            v-else
-            :icon="item.icon || 'desktop'"
-            style="font-size: 18px; vertical-align: middle"
-            class="mr-2"
-          ></icon>
-          <span class="">{{ item.name }}</span>
-          <div
-            v-if="currentDeskId === item.id"
-            style="border-bottom: 3px solid var(--active-bg)"
-          ></div>
-        </div>
-        <a-tooltip title="全部桌面" placement="bottom">
-          <div
-            @click="showAll"
-            class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"
-          >
-            <icon
-              class="icon"
-              style="font-size: 22px"
-              icon="paixu-zuoyou"
-            ></icon>
-          </div>
-        </a-tooltip>
-      </div>
-
-      <div v-if="false">
-        <div class="flex flex-row ml-1">
-          <slot name="toolsBefore"></slot>
-          <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
-          <!--            <div-->
-          <!--              @click="startEdit"-->
-          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
-          <!--            >-->
-          <!--              <icon-->
-          <!--                class="icon"-->
-          <!--                style="font-size: 22px"-->
-          <!--                icon="line-dragdroptuofang"-->
-          <!--              ></icon>-->
-          <!--            </div>-->
-          <!--          </a-tooltip>-->
-          <!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
-          <!--            <div-->
-          <!--              @click="stopEdit"-->
-          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
-          <!--            >-->
-          <!--              <icon-->
-          <!--                class="icon"-->
-          <!--                style="font-size: 22px; color: red"-->
-          <!--                icon="tingzhi"-->
-          <!--              ></icon>-->
-          <!--            </div>-->
-          <!--          </a-tooltip>-->
-          <!--          <a-tooltip title="全屏" placement="bottom">-->
-          <!--            <div-->
-          <!--              @click="setFullScreen"-->
-          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
-          <!--            >-->
-          <!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
-          <!--            </div>-->
-          <!--          </a-tooltip>-->
-          <a-tooltip title="菜单" placement="bottom">
-            <div class="pl-3">
-              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
-                <xt-mix-menu
-                  :menus="$refs.currentDeskRef?.dropdownMenu"
-                  model="all"
-                  :stopPropagation="false"
-                >
-                  <div
-                    @click="showMenu"
-                    class="flex items-center justify-center w-10 h-10 rounded-md btn-bg no-drag pointer"
-                  >
-                    <xt-new-icon
-                      size="18"
-                      icon="fluent:more-horizontal-16-filled"
-                    />
-                  </div>
-                </xt-mix-menu>
-              </xt-task> -->
-            </div>
-          </a-tooltip>
-        </div>
-      </div>
-    </div>
 
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
       <xt-task :modelValue="getStep" :mask="false" />
@@ -205,6 +96,108 @@
         </span>
       </template>
     </xt-mix-menu>
+    <div class="xt-main-top-util-bar  desk-group-switcher flex flex-row" v-if="showTopBar && !fullScreen">
+      <!-- tabs   -->
+      <div class="panel s-bg">
+        <div
+          class="flex flex-row   tabs"
+          v-if="showTabs && displayDesks.length > 1"
+        >
+          <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
+          <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
+          <!--        主桌面-->
+          <!--      </div>-->
+          <div
+            :class="{ 'tab-active': currentDeskId === item.id }"
+            @click="setCurrentDeskId(item.id)"
+            class="pr-3 truncate tab s-bg xt-text"
+            v-for="(item, index) in displayDesks"
+          >
+            <a-avatar
+              v-if="item.iconUrl"
+              shape="square"
+              class="mr-2 icon"
+              :size="22"
+              :src="item.iconUrl"
+            ></a-avatar>
+            <icon
+              v-else
+              :icon="item.icon || 'desktop'"
+              style="font-size: 18px; vertical-align: middle"
+              class="mr-2"
+            ></icon>
+            <span class="">{{ item.name }}</span>
+
+          </div>
+        </div>
+      </div>
+      <div class="dots flex item-content">
+        <div  :class="{ 'active': currentDeskId === item.id }"  class="dot" v-for="(item, index) in displayDesks">
+            &nbsp;
+        </div>
+
+      </div>
+
+      <div v-if="false">
+        <div class="flex flex-row ml-1">
+          <slot name="toolsBefore"></slot>
+          <!--          <a-tooltip v-if="!editing" title="开始调整桌面" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="startEdit"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
+          <!--            >-->
+          <!--              <icon-->
+          <!--                class="icon"-->
+          <!--                style="font-size: 22px"-->
+          <!--                icon="line-dragdroptuofang"-->
+          <!--              ></icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
+          <!--          <a-tooltip v-else title="停止调整桌面" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="stopEdit"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
+          <!--            >-->
+          <!--              <icon-->
+          <!--                class="icon"-->
+          <!--                style="font-size: 22px; color: red"-->
+          <!--                icon="tingzhi"-->
+          <!--              ></icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
+          <!--          <a-tooltip title="全屏" placement="bottom">-->
+          <!--            <div-->
+          <!--              @click="setFullScreen"-->
+          <!--              class="flex items-center justify-center w-10 h-10 ml-3 rounded-md btn-bg no-drag pointer"-->
+          <!--            >-->
+          <!--              <Icon style="font-size: 18px" icon="fullscreen"></Icon>-->
+          <!--            </div>-->
+          <!--          </a-tooltip>-->
+          <a-tooltip title="菜单" placement="bottom">
+            <div class="pl-3">
+              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
+                <xt-mix-menu
+                  :menus="$refs.currentDeskRef?.dropdownMenu"
+                  model="all"
+                  :stopPropagation="false"
+                >
+                  <div
+                    @click="showMenu"
+                    class="flex items-center justify-center w-10 h-10 rounded-md btn-bg no-drag pointer"
+                  >
+                    <xt-new-icon
+                      size="18"
+                      icon="fluent:more-horizontal-16-filled"
+                    />
+                  </div>
+                </xt-mix-menu>
+              </xt-task> -->
+            </div>
+          </a-tooltip>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <a-drawer
@@ -870,11 +863,14 @@ export default {
       opacity: 1;
       font-weight: bold;
     }
+    &.tab-active{
+     background: var(--active-bg);
+    }
 
     line-height: 38px;
     font-size: 15px;
-    min-width: 150px;
-    border-radius: 4px;
+    width: 120px;
+    border-radius: 8px;
     margin-right: 10px;
     padding-left: 10px;
     padding-right: 10px;
@@ -934,5 +930,53 @@ export default {
   font-size: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   margin: 21px 0 24px;
+}
+.desk-group-switcher{
+  min-width: 100px;
+  min-height: 20px;
+  z-index: 99;
+  .dots{
+    cursor: pointer;
+    padding: 20px;
+    gap:10px;
+    .dot{
+      background: var(--secondary-bg);
+      width: 15px;
+      height: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius:1000px;
+
+      &.active{
+        width: 40px;
+      }
+    }
+
+  }
+  &:hover{
+    .panel{
+      display: flex;
+    }
+    .dots{
+      display: none;
+    }
+  }
+  .panel{
+    display: none;
+  }
+  .dots{
+    display: flex;
+  }
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+ display: flex;
+  justify-items: center;
+  margin:auto;
+  .panel{
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--divider) !important;
+  }
 }
 </style>
