@@ -140,32 +140,32 @@ const menuList = computed(() => {
         fileClick(currentItem.value);
       },
     },
-    {
-      name: "打开存储路径",
-      newIcon: "fluent:folder-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "复制",
-      newIcon: "fluent:copy-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "重命名",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        fileSetVisible.value = true;
-        currentTab.value = "attribute";
-      },
-    },
-    {
-      name: "编辑图标",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        currentTab.value = "appearance";
-        fileSetVisible.value = true;
-      },
-    },
+    // {
+    //   name: "打开存储路径",
+    //   newIcon: "fluent:folder-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "复制",
+    //   newIcon: "fluent:copy-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "重命名",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     fileSetVisible.value = true;
+    //     currentTab.value = "attribute";
+    //   },
+    // },
+    // {
+    //   name: "编辑图标",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     currentTab.value = "appearance";
+    //     fileSetVisible.value = true;
+    //   },
+    // },
 
     {
       name: "删除",
@@ -181,12 +181,12 @@ const menuList = computed(() => {
         });
       },
     },
-    { divider: true },
-    {
-      name: "系统菜单",
-      newIcon: "fluent:settings-16-regular",
-      fn: () => {},
-    },
+    // { divider: true },
+    // {
+    //   name: "系统菜单",
+    //   newIcon: "fluent:settings-16-regular",
+    //   fn: () => {},
+    // },
   ];
 });
 

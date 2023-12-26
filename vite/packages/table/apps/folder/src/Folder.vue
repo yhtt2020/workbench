@@ -58,7 +58,7 @@
   >
   </folderSet>
 
-  <xt-modal custom v-model="expandVisible" boxClass="">
+  <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
     <Expand :data="props"></Expand>
   </xt-modal>
 </template>
@@ -231,9 +231,15 @@ const updateList = (data) => {
  * 左侧图标放大功能
  */
 const expandVisible = ref(false);
+const oldCardSize = ref();
 const iconClick = () => {
   if (expand.value.disabled) return;
   expandVisible.value = true;
+  oldCardSize.value = customData.value.cardSize;
+};
+
+const expandClose = () => {
+  customData.value.cardSize = oldCardSize.value;
 };
 
 /**
@@ -282,15 +288,9 @@ const init = (size) => {
     customData.value.cardSize.height = Math.round(str[1] / 205);
   }
   customData.value.cardSize.name = size;
-
-  console.log(
-    "   customData.value.cardSize.height :>> ",
-    customData.value.cardSize.height
-  );
 };
 onBeforeMount(() => {
   init();
-  console.log("mounted :>> ", 11111);
 });
 
 onMounted(() => {});
