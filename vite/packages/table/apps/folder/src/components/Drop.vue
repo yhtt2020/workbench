@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full xt-theme-b"
+    class="w-full h-full"
     @drop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"
@@ -19,6 +19,7 @@ import { useFolderStore } from "../store";
 import { myIcons } from "../../../../store/myIcons";
 import { inject } from "vue";
 import { defaultData } from "./options";
+import { nanoid } from "nanoid";
 
 // 获取图标数据
 const icon = myIcons();
@@ -52,7 +53,7 @@ const handleDrop = async (dragEvent) => {
   for (let file of files) {
     let fileInfo = {
       ...defaultData,
-      id: Date.now(),
+      id: nanoid(6),
     };
     let fileImage = await tsbApi.system.extractFileIcon(file.path);
     fileInfo.name = file.name;

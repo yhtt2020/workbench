@@ -32,11 +32,7 @@ import {
 
 import { nameOptions, filesOptions } from "./options";
 const { proxy } = getCurrentInstance();
-const emits = defineEmits([
-  "close",
-  "updateSort",
-  "updateWindowApp",
-]);
+const emits = defineEmits(["close", "updateSort", "updateWindowApp"]);
 const props = defineProps({
   data: {},
 });
@@ -73,7 +69,7 @@ watch(
           okText: "切换",
 
           ok: () => {
-            data.value.list = {};
+            data.value.list = [];
           },
           no: () => {
             data.value.model = oldVal;
@@ -88,7 +84,7 @@ watch(
     proxy.$xtConfirm("是否切换模式", "切换模式将会清空当前分组，是否继续？", {
       okText: "切换",
       ok: () => {
-        data.value.list = {};
+        data.value.list = [];
         emits("updateWindowApp");
       },
       no: () => {

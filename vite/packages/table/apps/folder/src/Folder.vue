@@ -5,6 +5,7 @@
       :customData="customData"
       :options="options"
       :menuList="menuList"
+      :size="reSizes"
     >
       <!-- 左侧图标 -->
       <template #left-title-icon>
@@ -19,47 +20,32 @@
         <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
         <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
       </template>
-      <!-- <Resize> -->
-      <!-- 空状态显示状态 -->
-      <div
-        v-if="customData.list.length <= 0 && !dragSortState"
-        class="flex flex-col items-center mt-3 tt"
+      <Resize
+        @reSizeInit="reSizeInit"
+        :disabled="expand.disabled"
+        :cardSize="customData.cardSize.name"
       >
-        <xt-new-icon
-          v-if="options.className !== 'card small'"
-          icon="fluent-emoji:inbox-tray"
-          w="56"
-          class="mb-3"
-        />
-        <xt-new-icon
-          v-if="options.className !== 'card small'"
-          icon="fluent-emoji:inbox-tray"
-          w="56"
-          class="mb-3"
-        />
-        <div class="xt-bg-t-2 rounded-xl text-sm mb-3 p-2">
-          你可以拖动工作台桌面图标或windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
-        </div>
-        <xt-button type="theme" w="84" h="32" radius="8">添加图标</xt-button>
-      </div>
-
-      <vue-custom-scrollbar
-        v-else
-        :settings="{
-          suppressScrollY: false,
-        }"
-        class="w-full relative h-full"
-      >
-        <File
-          :list="customData.list"
-          :layout="customData.layout"
-          :model="customData.model"
-          @deleteFile="deleteFile"
-          @updateList="updateList"
-          @updateSort="updateSort"
-        />
-      </vue-custom-scrollbar>
-      <!-- </Resize> -->
+        <!-- 空状态显示状态 -->
+        <template v-if="customData.list.length <= 0 && !dragSortState">
+          <Null :cardSize="customData.cardSize"></Null>
+        </template>
+        <vue-custom-scrollbar
+          v-else
+          :settings="{
+            suppressScrollY: false,
+          }"
+          class="w-full relative h-full"
+        >
+          <File
+            :list="customData.list"
+            :layout="customData.layout"
+            :model="customData.model"
+            @deleteFile="deleteFile"
+            @updateList="updateList"
+            @updateSort="updateSort"
+          />
+        </vue-custom-scrollbar>
+      </Resize>
     </Widget>
   </Drop>
 
@@ -71,27 +57,49 @@
     @updateWindowApp="updateWindowApp"
   >
   </folderSet>
+
+  <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
+    <Expand :data="props"></Expand>
+  </xt-modal>
 </template>
 
 <script setup>
-import { ref, watch, computed, toRefs, provide, onMounted } from "vue";
+import {
+  ref,
+  watch,
+  computed,
+  toRefs,
+  provide,
+  onMounted,
+  onBeforeUnmount,
+  onBeforeMount,
+} from "vue";
 import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
 import Resize from "./components/Resize.vue";
+import Expand from "./expand/Expand.vue";
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData } from "./components/options";
+import Null from "./components/Null.vue";
 /**
  * 初始化阶段
  */
 const props = defineProps({
   customData: {},
   customIndex: {},
+  expand: {
+    default: () => {
+      return {
+        disabled: false,
+      };
+    },
+  },
 });
-const { customData, customIndex } = toRefs(props);
+const { customData, customIndex, expand } = toRefs(props);
 
 provide("index", customIndex);
 provide("data", customData);
@@ -139,17 +147,14 @@ const layoutClick = () => {
 
 // 增
 const createFile = (data) => {
-  console.log("1233 :>> ", data);
   customData.value.list.push(data);
 };
 // 删
 const deleteFile = (data) => {
-  console.log("data :>> ", data);
   customData.value.list.splice(customData.value.list.indexOf(data), 1);
 };
 // 改
 const updateFile = (data) => {
-  console.log("123 :>> ", 123);
   // customData.value.list.push(data);
 };
 
@@ -158,29 +163,17 @@ const updateFile = (data) => {
  */
 // 排序
 const sortMode = (key) => {
-  // 将对象的属性转换为数组
-  const itemsArray = Object.entries(customData.value.list).map(
-    ([key, item]) => item
-  );
   // 对数组进行排序
-  itemsArray.sort((a, b) => b[key] - a[key]);
-  let obj = {};
-  itemsArray.forEach((item) => {
-    obj[item.id] = item;
-  });
-  customData.value.list = obj;
+  customData.value.list.sort((a, b) => b[key] - a[key]);
 };
 
 // 触发排序
 const updateSort = (val) => {
   const mode = customData.value.sort;
-  console.log("mode :>> ", mode);
   if (mode === "free") {
-    console.log("3333 :>> ", 3333);
     customData.value.lock = true;
     return;
   }
-  console.log("111 :>> ", 111);
   sortMode(mode);
 };
 
@@ -189,7 +182,7 @@ const updateSort = (val) => {
  */
 const updateWindowApp = async () => {
   const desktopApps = await ipc.sendSync("getDeskApps");
-
+  customData.value.list = [];
   desktopApps.forEach((item) => {
     const file = {
       ...defaultData,
@@ -197,9 +190,9 @@ const updateWindowApp = async () => {
       value: item.path,
       icon: item.icon,
       type: "tableApp",
-      id: nanoid(),
+      id: nanoid(6),
     };
-    customData.value.list[file.id] = file;
+    customData.value.list.push(file);
   });
 };
 /**
@@ -215,7 +208,6 @@ const lockClick = () => {
   if (customData.value.sort === "free" || customData.value.model != "custom") {
     customData.value.lock = true;
     message.info("自由排序或桌面文件下无法解锁");
-
     return;
   }
   customData.value.lock = !customData.value.lock;
@@ -226,13 +218,82 @@ const lockClick = () => {
  */
 const dragSortState = ref(false);
 const updateList = (data) => {
-  dragSortState.value == true;
+  dragSortState.value = true;
   customData.value.list = [];
+
   setTimeout(() => {
     customData.value.list = data;
     dragSortState.value = false;
   }, 10);
 };
+
+/**
+ * 左侧图标放大功能
+ */
+const expandVisible = ref(false);
+const oldCardSize = ref();
+const iconClick = () => {
+  if (expand.value.disabled) return;
+  expandVisible.value = true;
+  oldCardSize.value = customData.value.cardSize;
+};
+
+const expandClose = () => {
+  customData.value.cardSize = oldCardSize.value;
+};
+
+/**
+ *
+ */
+
+const reSizeInit = (data) => {
+  init(data);
+};
+
+const reSizes = computed(() => {
+  const width = customData.value.cardSize.width;
+  const height = customData.value.cardSize.height;
+
+  return {
+    width: (width || 1) * 280 + (width - 1) * 10 + "px",
+    height: (height || 2) * 204 + (height - 1) * 10 + "px",
+  };
+});
+
+const init = (size) => {
+  // 初始化卡片大小
+  if (!customData.value.cardSize) {
+    customData.value.cardSize = {
+      name: "default",
+      width: 1,
+      height: 2,
+    };
+    return;
+  }
+
+  size = size ?? customData.value.cardSize.name;
+  if (size == "big") {
+    customData.value.cardSize.width = 2;
+    customData.value.cardSize.height = 2;
+  } else if (size == "default") {
+    customData.value.cardSize.width = 1;
+    customData.value.cardSize.height = 2;
+  } else if (size == "small") {
+    // small
+    customData.value.cardSize.width = 1;
+    customData.value.cardSize.height = 1;
+  } else {
+    let str = size.split(",");
+    customData.value.cardSize.width = Math.round(str[0] / 280);
+    customData.value.cardSize.height = Math.round(str[1] / 205);
+  }
+  customData.value.cardSize.name = size;
+};
+onBeforeMount(() => {
+  init();
+});
+
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>

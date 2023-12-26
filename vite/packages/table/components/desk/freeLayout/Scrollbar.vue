@@ -52,7 +52,7 @@ onMounted(async () => {
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  updateScroll(getFreeLayoutState.value.mode.scroll)
+  updateScroll(getFreeLayoutState.value.mode.scroll);
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
@@ -179,15 +179,18 @@ const updateScroll = (newV) => {
     perfectScrollbar.value.settings.suppressScrollY = true;
   }
 };
-watch(() => getFreeLayoutState.value.mode?.scroll,updateScroll);
-//临时加了个问号处理一下
+watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
   let w, h;
+  console.log(
+    "getFreeLayoutState.value.mode.align :>> ",
+    getFreeLayoutState.value.mode.align
+  );
   if (getFreeLayoutState.value.mode.align === "top") {
     h = 0;
-    w = 0;
+    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
   } else if (getFreeLayoutState.value.mode.align === "center") {
     h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
     w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
@@ -203,8 +206,8 @@ function redirect() {
   } else {
     // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
     // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-    w = getFreeLayoutState.value.line.centerLine.x;
-    h = getFreeLayoutState.value.line.centerLine.y;
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+    h = getFreeLayoutState.value.line.centerLine.y
   }
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;

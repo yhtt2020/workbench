@@ -8,7 +8,7 @@
     <template v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
-        class="xt-sortable-fle-box"
+        class="xt-sortable-fle-box flex justify-center"
         :class="[sortableBox]"
         :data-id="item.id"
       >
@@ -23,8 +23,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-            <Rows v-if="layout === 'rows'" :item="item" />
-            <Columns v-else-if="layout === 'columns'" :item="item" />
+            <Files :item="item"></Files>
           </Drag>
         </xt-mix-menu>
       </div>
@@ -49,9 +48,7 @@ import {
   toRefs,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
-import Columns from "./Columns.vue";
-import Rows from "./Rows.vue";
+import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../../../../ui/hooks/useStartApp";
@@ -72,17 +69,31 @@ const props = defineProps({
   list: {},
 });
 const { list, layout } = toRefs(props);
-
+/**
+ * 监听组件大小变化
+ */
+const currentWidth = computed(() => {
+  const width = data.value.cardSize.width;
+  return width;
+});
 /**
  * 拖拽排序
  */
 // 拖拽容器
 const sortable = ref();
-const sortableContainer = ref("xt-sortable-fle-container-" + index.value);
+const sortableContainer = ref(
+  "xt-sortable-fle-container-" + index.value + Math.ceil(Math.random() * 100)
+);
 const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {
-  return layout.value === "rows" ? "33.3% 33.3% 33.3%" : "100%";
+  let rows = "33.3% 33.3% 33.3%";
+  if (currentWidth.value == 2) {
+    rows = "20% 20% 20%  20% 20%";
+  } else if (currentWidth.value == 3) {
+    rows = "12.5%  12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%";
+  }
+  return layout.value === "rows" ? rows : "100%";
 });
 // 是否禁用拖拽
 watch(
@@ -129,32 +140,32 @@ const menuList = computed(() => {
         fileClick(currentItem.value);
       },
     },
-    {
-      name: "打开存储路径",
-      newIcon: "fluent:folder-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "复制",
-      newIcon: "fluent:copy-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "重命名",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        fileSetVisible.value = true;
-        currentTab.value = "attribute";
-      },
-    },
-    {
-      name: "编辑图标",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        currentTab.value = "appearance";
-        fileSetVisible.value = true;
-      },
-    },
+    // {
+    //   name: "打开存储路径",
+    //   newIcon: "fluent:folder-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "复制",
+    //   newIcon: "fluent:copy-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "重命名",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     fileSetVisible.value = true;
+    //     currentTab.value = "attribute";
+    //   },
+    // },
+    // {
+    //   name: "编辑图标",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     currentTab.value = "appearance";
+    //     fileSetVisible.value = true;
+    //   },
+    // },
 
     {
       name: "删除",
@@ -170,19 +181,18 @@ const menuList = computed(() => {
         });
       },
     },
-    { divider: true },
-    {
-      name: "系统菜单",
-      newIcon: "fluent:settings-16-regular",
-      fn: () => {},
-    },
+    // { divider: true },
+    // {
+    //   name: "系统菜单",
+    //   newIcon: "fluent:settings-16-regular",
+    //   fn: () => {},
+    // },
   ];
 });
 
 const collisionDetection = (nodes) => {
   // 循环新的排序ID
   let arr = [];
-  let arr1 = [];
   for (let item of nodes) {
     if (
       !(item instanceof HTMLDivElement) ||
@@ -191,16 +201,12 @@ const collisionDetection = (nodes) => {
       continue;
     }
     let id = item.getAttribute("data-id");
-    // obj[key] = {
-    //   ...list.value[key],
-    //   name: list.value[key].name,
-    //   id: key,
-    // };
-    let data = list.value.find((obj) => obj.id == parseInt(id));
+    if (list.value.length == 0) return;
+    // 有报错
+    // let data = list.value.find((obj) => obj.id == parseInt(id));
+    let data = list.value.find((obj) => obj.id == id);
     arr.push({ ...data });
-    arr1.push(data.name);
   }
-  console.log("arr1 :>> ", arr1);
   emits("updateList", arr);
 };
 

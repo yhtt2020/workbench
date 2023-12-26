@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount,getCurrentInstance } from "vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
 import LocalApp from "./LocalApp.vue";
@@ -48,6 +48,7 @@ import {
   appearanceOptions,
   appearanceColorOptions,
 } from "./options";
+const { proxy } = getCurrentInstance();
 
 const iconStore = myIcons();
 const { edit } = storeToRefs(iconStore);
@@ -68,22 +69,7 @@ edit.value["mode"] = res ? "link" : "app";
 edit.value["value"] = edit.value.open.value;
 console.log(edit.value["mode"]);
 
-onMounted(() => {
-  // 判断open.type
-  // edit.value = {
-  //   type: edit.value.open.type,
-  //   value: edit.value.open.value,
-  //   src: edit.value.src,
-  //   titleValue: edit.value.titleValue,
-  //   isTitle: edit.value.isTitle,
-  //   backgroundColor: edit.value.backgroundColor,
-  //   isBackground: edit.value.isBackground,
-  //   radius: edit.value.radius,
-  //   isRadius: edit.value.isRadius,
-  //   imgState: edit.value.imgState,
-  //   imgShape: edit.value.imgShape,
-  // };
-});
+onMounted(() => {});
 /**
  * 控制弹窗显示
  */
@@ -127,13 +113,50 @@ const updateApp = (data) => {
  */
 watch(
   () => edit.value.mode,
-  (newVal) => {
-    edit.value.value = "";
-    if (newVal == "link") {
-      edit.value.type = "default";
-    }
+  (newVal,oldVal) => {
+    // edit.value.value = "";
+    // if (newVal == "link") {
+    //
+    // }
+    console.log('newVal,oldVal :>> ', newVal,oldVal);
+    proxy.$xtConfirm("是否切换模式", "切换模式将清空数据，是否继续？", {
+      okText: "切换",
+
+      ok: () => {
+        edit.value.value = "";
+        if (newVal == "link") {
+          edit.value.type = "default";
+        }
+
+      },
+      no: () => {
+        edit.value.mode = oldVal
+      },
+      type: "warning",
+    });
   }
 ),
+  // watch(
+  //   () => props.data.mode,
+  //   (newVal, oldVal) => {
+  //     proxy.$xtConfirm(
+  //       "是否切换模式",
+  //       "切换模式将清空数据，是否继续？",
+  //       {
+  //         okText: "切换",
+
+  //         ok: () => {
+  //           data.value.list = [];
+  //         },
+  //         no: () => {
+  //           data.value.model = oldVal;
+  //         },
+  //         type: "warning",
+  //       }
+  //     );
+  //     return;
+  //   }
+  // );
   onBeforeUnmount(() => {});
 </script>
 

@@ -18,7 +18,7 @@ const props = defineProps({
 });
 
 const iconSize = computed(() => {
-  let num = parseInt(props.size) + 5;
+  let num = parseInt(props.size);
   return {
     width: num + "px !important",
     height: num + "px !important",
