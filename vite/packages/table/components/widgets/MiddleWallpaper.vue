@@ -1,21 +1,18 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :desk="desk">
-      <div class="absolute   w-24 h-5 top-4 left-4 pointer" style="z-index:999" @click="openRight"></div>
+    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot" :desk="desk">
       <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:image-multiple-16-regular" style="font-size: 20px;"/>
-        </div>
+        <div class="absolute flex items-center top-2.5 left-0 justify-center" style="z-index:1000;">
+          <xt-new-icon icon="fluent:image-multiple-16-regular" size="29"></xt-new-icon>
+          <span class="xt-font xt-text font-14 font-400">{{ options.title }}</span>
+       </div>
       </template>
+      
       <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
-        <div class="w-full text-center" style="margin-top: 20%" v-if="imgList.length <= 0">
-          <a-empty :image="simpleImage"/>
-          <div class="item-content">
-            <xt-button size="mini" :w="100" :h="40" type="theme" @click="goGallery">去挑选壁纸</xt-button>
-          </div>
+        <div class="w-full h-full flex flex-col items-center justify-center" v-if="imgList.length <= 0">
+          <newIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;"/>
+          <span class="xt-font xt-text font-14 xt-bg-t-2 my-6 font-400">我们提供了以下几种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。</span>
+          <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goGallery">去挑选</xt-button>
         </div>
         <div class="w-full h-full pointer" v-else @click="goSource">
           <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
@@ -29,28 +26,54 @@
                style="border-radius: 8px; object-fit: cover" v-else/>
         </div>
       </div>
-      <div class="absolute flex flex-row justify-center bottom-4" style="width: 543px" v-if="imgList.length > 0">
-        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="lastImg">
-          <Icon class="icon" icon="caret-left"></Icon>
+
+      <template v-if="imgList.length > 0" >
+        <div class="absolute w-full bottom-0  left-1/2 hover-container  -translate-x-1/2   flex items-center justify-end" >
+          <div style=" opacity: 0;" class="flex hover-item flex-wrap items-center justify-center"  :style="customData.width !== 2 ? { width: '160px' } : {}">
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+              </div>
+            </xt-button>
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="nextImg">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:chevron-right-16-regular" size="20"></xt-new-icon>
+              </div>
+            </xt-button>
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="randomImg">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+              </div>
+            </xt-button>
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="collect">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:star-16-regular" v-if="!isInMyPapers" size="20"></xt-new-icon>
+                <xt-new-icon icon="fluent:star-16-filled" v-else size="20" :color="'var(--warning)'"></xt-new-icon>
+              </div>
+            </xt-button>
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:arrow-download-16-regular" size="20"></xt-new-icon>
+              </div>
+            </xt-button>
+            <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="settingImg">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:desktop-16-regular" size="20"></xt-new-icon>
+              </div>
+            </xt-button>
+          </div>
         </div>
-        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="nextImg">
-          <Icon class="icon" icon="caret-right"></Icon>
-        </div>
-        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="randomImg">
-          <Icon class="icon" :class="randomFlag ? 'replace-it' : ''" icon="reload"></Icon>
-        </div>
-        <div class="flex items-center justify-center mr-4 item-icon pointer" @click="collect"
-             v-if="addressType.value !== 'my'">
-          <Icon v-if="!isInMyPapers" icon="star"></Icon>
-          <Icon v-else style="fill: yellow" icon="star-fill"></Icon>
-        </div>
-        <div class="flex items-center justify-center item-icon pointer" @click="settingImg">
-          <Icon class="icon" icon="desktop"></Icon>
-        </div>
-      </div>
+      </template>
+
     </Widget>
   </a-spin>
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+
+
+  <teleport to='body'>
+     <WallpaperWidgetModal :modelValue="addressType.value" ref="paperWidgetRef" @updateCustomDatas="updateCustomDatas"/>
+  </teleport>
+
+  <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">「壁纸」设置</div>
     </template>
@@ -60,30 +83,29 @@
       " class="w-full h-10 mt-4 text-xs rounded-lg" size="large" :bordered="false" v-model:value="pickFilterValue"
               @change="pickFilterChange($event)" :options="wallpaperOptions">
     </a-select>
-  </a-drawer>
+  </a-drawer> -->
 </template>
 
 <script>
-import Widget from '../card/Widget.vue'
-import axios from 'axios'
-import { mapActions, mapWritableState } from 'pinia'
-import { Empty, message } from 'ant-design-vue'
-import { paperStore } from '../../store/paper'
-import { appStore } from '../../store'
-import { cardStore } from '../../store/card'
-import { lively, lively2 } from '../../js/data/livelyData'
-import XtButton from '../../ui/libs/Button/index.vue'
-import { Icon as newIcon } from '@iconify/vue'
+import { mapActions, mapWritableState } from 'pinia';
+import axios from 'axios';
+import { Empty, message } from 'ant-design-vue';
+import { paperStore } from '../../store/paper';
+import { appStore } from '../../store';
+import { cardStore } from '../../store/card';
+import { lively, lively2 } from '../../js/data/livelyData';
+import { Icon as newIcon } from '@iconify/vue';
 
-let fs = require('fs')
-let path = require('path')
+import Widget from '../card/Widget.vue';
+import WallpaperWidgetModal from '../paperModal/WallpaperWidgetModal.vue';
+
+let fs = require('fs');
+let path = require('path');
+
+
 export default {
   name: 'MiddleWallpaper',
-  components: {
-    XtButton,
-    Widget,
-    newIcon
-  },
+  components: {  Widget, newIcon,WallpaperWidgetModal },
   props: {
     desk: {
       type: Object,
@@ -106,16 +128,44 @@ export default {
         // icon: "image",
         type: 'MiddleWallpaper',
       },
-      menuList: [
+      // 右键菜单
+      menuList:[
+        { newIcon:'fluent:image-multiple-16-regular',title:'在应用中打开', fn:()=>{ this.goGallery() }, },
+        { newIcon:'fluent:chevron-up-16-regular',title:'上一张',fn:()=>{ this.lastImg() },  },
+        { newIcon:'fluent:chevron-down-16-regular',title:'下一张',fn:()=>{ this.nextImg() },  },
+        { newIcon:'fluent:arrow-clockwise-16-regular',title:'换一换',fn:()=>{ this.randomImg() },},
+        { newIcon:'fluent:star-16-regular',title:'添加到收藏',fn:()=>{ this.collect() } },
         {
-          icon: 'shezhi1',
-          title: '设置',
-          fn: () => {
-            this.settingVisible = true
-            this.$refs.cardSlot.visible = false
-          },
+          newIcon:'fluent:more-horizontal-16-regular',title:'更多',
+          lock: true,
+          children:[
+            {
+              newIcon:'fluent:desktop-16-regular',title:'设为工作台壁纸',
+              fn:()=>{},
+            },
+            {
+              newIcon:'fluent:desktop-16-regular',title:'设为系统桌面壁纸',
+              fn:()=>{},
+            },
+            {
+              newIcon:'fluent:arrow-download-16-regular',title:'下载',
+              fn:()=>{},
+            },
+          ]
+        },
+        {
+          newIcon:'fluent:settings-16-regular', title: '设置', 
+          fn:()=>{  this.$refs.paperWidgetRef.openWidgetModal()  }
         },
       ],
+      // 大小切换
+      sizeList: [
+        { title: '2x2', height: 1,width: 1, name: '2x2',},
+        { title: '4x4', height: 2, width: 2, name: '4x4', },
+      ],
+
+
+
       pickFilterValue: 'pickingPaper',
       wallpaperOptions: [
         {
@@ -145,13 +195,12 @@ export default {
           path: 'https://api.nguaduot.cn/wallhaven/v2?client=thisky',
           value: 'wallhaven',
         },
-        // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
       ],
       settingVisible: false,
       simpleImage: '/public/img/test/load-ail.png',
       addressType: {
         value: 'timeline',
-        path: '',
+        path: 'https://api.nguaduot.cn/timeline/v2?client=thisky',
         label: '拾光壁纸',
       },
       imgList: [{ src: '' }],
@@ -264,10 +313,6 @@ export default {
         this.imgList = this.myPapers
         this.initImg()
       }
-      // else if(this.addressType.name === 'lively'){
-      //   this.imgList = this.list
-      //   this.initImg()
-      // }
     },
     initImg () {
       this.imgIndex = 0
@@ -277,12 +322,6 @@ export default {
       this.imgSpin = false
       this.currentImg.src = '/img/defaultImg.jpg'
     },
-    // getVideo (item) {
-    //
-    //   let filename = item.name
-    //   filename = `https://up.apps.vip/lively/${filename}`
-    //   return filename
-    // },
     setImg () {
       this.imgSpin = true
       if (this.imgList.length > 0) {
@@ -311,45 +350,6 @@ export default {
       }
     },
     async nextImg () {
-      // if(this.imgIndex>=this.imgList.length-1){
-      //   if(this.addressType.name ==='picking') {
-      //
-      //       let res = await  axios.get(this.addressType.path, {
-      //         params: {
-      //           no: 5
-      //         }
-      //       })
-      //     if(res.data.data){
-      //       let pickImage = res.data.data
-      //       this.count = res.data.count
-      //       let animations = ["ani-gray", "bowen", "ani-rotate"];
-      //       if(pickImage){
-      //         pickImage.forEach(img=>{
-      //           if(img.thumburl !== null){
-      //             let randomIndex = Math.floor(Math.random() * animations.length);
-      //             const image = {
-      //               title:false,
-      //               src:img.thumburl,
-      //               path:img.imgurl,
-      //               resolution:img.size,
-      //               score:img.score,
-      //               no:img.no,
-      //               animations: animations[randomIndex],
-      //             }
-      //             this.imgList.push(image)
-      //           }
-      //         })
-      //       }
-      //
-      //     }else{
-      //       this.imgIndex = 0
-      //     }
-      //
-      //   }else {
-      //     this.imgIndex = 0
-      //   }
-      //
-      // }
       this.imgIndex += 1
       if (this.imgIndex >= this.imgList.length) {
         this.imgIndex = 0
@@ -386,7 +386,6 @@ export default {
           if (!this.imgList[this.imgIndex].path) {
             this.imgList[this.imgIndex].path = this.imgList[this.imgIndex].src
           }
-
           this.setBackgroundImage(this.imgList[this.imgIndex])
         }
       } else if (this.addressType.value === 'lively') {
@@ -395,26 +394,11 @@ export default {
         this.setBackgroundImage(this.imgList[this.imgIndex])
       }
     },
-    // doStartDownload (item) {
-    //   message.info('开始下载壁纸')
-    //   item.percent = 0
-    //   tsbApi.download.start({
-    //     url: this.getVideo(item),
-    //     savePath: this.savePath + '/lively/' + item.name,
-    //     updated: (args) => {
-    //       item.done = 1
-    //       item.percent = (args.downloadInfo.receivedBytes / args.downloadInfo.totalBytes * 100).toFixed(0)
-    //       //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
-    //     },
-    //     done: (args) => {
-    //       item.percent = 100
-    //       item.done = 1
-    //       message.success('动态壁纸下载完成')
-    //     },
-    //     willDownload: (args) => {
-    //     }
-    //   })
-    // },
+    updateCustomDatas(value){
+      const find = this.wallpaperOptions.find((find)=>{ return String(find.value) === String(value) });
+      this.customData.value = value;
+      this.pickFilterChange(find)
+    }
   },
   computed: {
     ...mapWritableState(paperStore, ['myPapers', 'settings']),
@@ -438,43 +422,8 @@ export default {
           break
       }
     },
-    // savePath(){
-    //   if(!this.settings.savePath){
-    //     return ''
-    //   }
-    //   return this.settings.savePath
-    // }
   },
   mounted () {
-    // this.list = [...lively]
-    // this.savePath = this.settings.savePath
-    // lively2.forEach((w) => {
-    //   this.list.push({
-    //     name: w
-    //   })
-    // })
-    // if (this.savePath) {
-    //   //如果已经设置过下载地址了
-    //   this.list.forEach(li => {
-    //     if (fs.existsSync(require('path').join(this.savePath, 'lively', li.name))) {
-    //       li.done = 1
-    //     } else {
-    //       li.done = 0
-    //     }
-    //   })
-    // }
-    // this.list.forEach(item =>{
-    //   let url = this.getVideo(item)
-    //   let local = ''
-    //   if (item.done) {
-    //     //如果是已经触发过下载的，则判断一下本地是否存在，存在则替换成本地播放链接
-    //     local = path.join(this.savePath, 'lively', item.name)
-    //   }
-    //   if (fs.existsSync(local)) {
-    //     url = 'file://' + local
-    //   }
-    //   item.srcProtocol = url
-    // })
     this.$nextTick(() => {
       if (!this.customData) {
         this.pickFilterChange('timeline')
@@ -485,6 +434,7 @@ export default {
       this.setImg()
     })
   },
+
   watch: {
     imgIndex: {
       handler () {
@@ -496,21 +446,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.item-icon {
-  width: 100px;
-  height: 56px;
-  border-radius: 12px;
-  background: var(--secondary-bg);
-  color: var(--primary-text);
-  backdrop-filter: blur(20px);
-
-  .icon {
-    height: 36px;
-    width: 36px;
+.hover-container{
+  &:hover{
+    .hover-item{
+      opacity: 1 !important;
+    }
   }
 }
-
-:deep(.ant-empty-image) {
-  height: 60px;
+.xt-bg-t-3{
+  background: rgba(0,0,0,0.5) !important;
 }
 </style>
