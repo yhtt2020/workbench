@@ -900,6 +900,7 @@ export default {
 
 .desk-group-switcher {
   min-width: 100px;
+
   min-height: 20px;
   z-index: 99;
   .tabs {
@@ -944,7 +945,7 @@ export default {
     cursor: pointer;
     padding: 20px;
     gap: 10px;
-
+    padding-bottom: 5px !important;
     .dot {
       background: var(--secondary-bg);
       width: 15px;
