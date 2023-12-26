@@ -327,6 +327,7 @@ export const addIconPosition=[
     }
 ]
 
+// 副本内容与原始内容同步
 export const updateIcon = (list,copy)=>{
     if (list.length > copy.length) {
         console.log('list 大于 copy')
@@ -377,6 +378,7 @@ export const updateIcon = (list,copy)=>{
       }
 }
 
+// 查找需要删除/添加的元素
 export const updateNavList = (list,copy)=>{
     const filteredNavList = list.filter((item) => {
         return !copy.some((i) => {
@@ -388,3 +390,56 @@ export const updateNavList = (list,copy)=>{
       });
       return filteredNavList;
 }
+
+
+// 图标文件夹模式
+// export const iconFolder= (list,index,tIndex)=>{
+//     const arr = [list[index],list[tIndex]]
+//     return {
+//         name:"文件夹",
+//         bg:'',
+//         isBg:"",
+//         icon:'',
+//         type:'folder',
+//         value:'',
+//         children: Array.flat(childrenFolder(arr),1),
+//         mode:'app',
+//     }
+// }
+
+// export const childrenFolder = (list)=>{
+//     let arr = []
+//     list.map((item)=>{
+//         if(item.children){
+//             childrenFolder(item.children)
+//         }else{
+//             arr.push(item)
+//         }
+//     })
+//     return arr
+// }
+export const iconFolder = (list, index, tIndex) => {
+    const arr = [list[index], list[tIndex]];
+    return {
+        name: "文件夹",
+        bg: '',
+        isBg: "",
+        icon: '',
+        type: 'systemApp',
+        value: 'folder',
+        children: childrenFolder(arr).flat(1),
+        mode: 'app',
+    };
+};
+
+export const childrenFolder = (list) => {
+    let arr = [];
+    list.forEach((item) => {
+        if ( item && item.children) {
+            arr.push(...childrenFolder(item.children));
+        } else {
+            arr.push(item);
+        }
+    });
+    return arr;
+};

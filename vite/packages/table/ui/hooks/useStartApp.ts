@@ -51,6 +51,9 @@ export const openSysApp = (value,router)=>{
   } else if(value === 'commun'){
     console.log(1111);
     return
+  } else if(value === 'folder'){
+    console.log(2222);
+    return
   } else{
     router.push({name:value})
   }

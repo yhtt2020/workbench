@@ -3,7 +3,7 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]"
-      :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})` }">
+      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
@@ -22,7 +22,6 @@
           <ChatButton></ChatButton>
         </div>
       </div>
-
 
       <!-- 快速搜索 底部栏区域 -->
       <div @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
@@ -66,6 +65,7 @@
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                        <Folder v-else-if="item.value === 'folder'" :iconList="item.children"></Folder>
                         <template v-else>
                           <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
@@ -163,7 +163,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
@@ -173,6 +173,8 @@ import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
 import _ from 'lodash-es'
 import Avatar from './desk/navigationBar/components/Avatar.vue'
+import Folder from './desk/navigationBar/components/folder/Folder.vue'
+import { getArea } from './desk/navigationBar/hook/sortable'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -197,7 +199,8 @@ export default {
     EditNewNavigation,
     xtMixMenu,
     EditIcon,
-    Avatar
+    Avatar,
+    Folder,
   },
   data() {
     return {
@@ -337,8 +340,11 @@ export default {
       currentItem: null,
       delItemIcon: false,
       notifications: new Notifications(),
-      tooltipVisible: true,
-      isDelete: true
+      isDelete: true,
+      // 当图标变为不可替换时
+      isBorder: false,
+      targetPosition: { x: 0, y: 0 },
+      defaultPosition: { x: 0, y: 0 }
     }
   },
   props: {
@@ -849,61 +855,7 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-    // clickNavigation(item) {
-    //   console.log(item);
-    //   if (this.editToggle) {
-    //     // this.enableDrag()
-    //     return
-    //   } else {
-    //     this.hideMenu()
-    //     switch (item.type) {
-    //       case 'systemApp':
-    //         if (item.event === 'fullscreen') {
-    //           this.toggleFullScreen()
-    //         } else if (item.event === '/status') {
-    //           if (this.$route.path === '/status') {
-    //             this.$router.go(-1)
-    //           } else {
-    //             this.$router.push({ path: '/status' })
-    //           }
-    //         } else if (item.data) {
-    //           this.$router.push({
-    //             name: 'app',
-    //             params: item.data,
-    //           })
-    //         } else {
-    //           this.$router.push({ name: item.event })
-    //         }
-    //         break
-    //       case 'coolApp':
-    //         this.$router.push({
-    //           name: 'app',
-    //           params: item.data,
-    //         })
-    //         break
-    //       case 'localApp':
-    //         require('electron').shell.openPath(item.path)
-    //         break
-    //       case 'lightApp':
-    //         ipc.send('executeAppByPackage', { package: item.package })
-    //         break
-    //       default:
-    //         require('electron').shell.openPath(item.path ? item.path : item.url)
-    //     }
-    //   }
-
-    // },
     newOpenApp(type, value) {
-      if (type === 'nav') {
-        switch (value) {
-          case 'task':
-            this.isTaskDrawer = true
-            break;
-          case 'team':
-            console.log(111111)
-            break;
-        }
-      }
       startApp(type, value, this.$router)
     },
     // 拖拽桌面图标
@@ -1010,20 +962,34 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
+
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
+      let index = null
+      // let isTimer = false
+      // 定时器
+      let timer = null
+      let isDrag = false
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
         delay: 50,
         delayOnTouchOnly: true,
+        // 拖拽中元素的样式
+        // dragClass: 'dragging',
+        // 禁止原生拖拽
+        // forceFallBack: true,
+        // 设置交换区域的阈值
+        swapThreshold: 0.4,
+        // 反向拖拽
+        invertSwap: true,
+        // 
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
-          that.tooltipVisible = false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
@@ -1086,33 +1052,63 @@ export default {
           // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
-          that.tooltipVisible = true
           that.$emit('getDelIcon', false)
+          // 
           that.popVisible = false
+          // 删除
           that.isDelete = true
+          if (!isDrag) {
+            // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
+            const oIndex = index
+            const nIndex = Math.round(((that.targetPosition.x - that.defaultPosition.x) / 72) + index)
+            if (oIndex === nIndex) {
+              return 0
+            }
+            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            console.log(that.copyFootNav, '====onEnd');
+            console.log(that.footNavigationList, '====onEnd');
+            // isDrag = true
+          }
+
+          index = null
+          that.isBorder = false
+          // document.addEventListener('mouseup', that.handleMouseUp)
+
         },
-        // onMove: function (event) {
-        //   // 获取拖拽元素
-        //   let draggedElement = event.dragged;
-        //   // 获取鼠标位置
-        //   let mouseX = event.originalEvent.clientX;
-        //   let mouseY = event.originalEvent.clientY;
-        //   console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
-          
-        //   if(mouseX >=event.draggedRect.left && mouseX <= event.draggedRect.right && mouseY >= event.draggedRect.top && mouseY <= event.draggedRect.bottom){
-        //     console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
-        //   }
-        //   that.isDelete = false
-        // },
-        // onChoose: function (event) {
-        //   console.log(event, '=====onChoose');
-        // }
-        // onRemove: function (event) {
-        //   console.log(111111111,'=====onRemove');
-        // }
+        onMove: function (event, originalEvent) {
+          isDrag = that.getArea(event.draggedRect, event.relatedRect, 0.4)
+          console.log(isDrag, 'from isDrag');
+          // 拖拽变为文件夹模式
+          if (!isDrag) {
+            // console.log(event.dragged,event.draggedRect,originalEvent.clientY,originalEvent.clientX,'from onMove');
+            that.targetPosition = {
+              x: originalEvent.clientX,
+              y: originalEvent.clientY,
+            }
+            that.isBorder = true
+            return false
+          }
+          that.isDelete = false
+          return true
+        },
+        onChoose: function (event) {
+          console.log(event, '=====onChoose----1');
+          // 清除定时器
+          timer ? clearTimeout(timer) : null
+          index = event.oldIndex
+          // timer = setTimeout(() => {
+          // isTimer = true
+          that.defaultPosition = {
+            x: event.originalEvent.clientX,
+            y: event.originalEvent.clientY,
+          }
+          // }, 2500)
+
+        }
       })
-      // message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
+    getArea,
+    iconFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
@@ -1133,6 +1129,11 @@ export default {
 </script>
 <style></style>
 <style lang="scss" scoped>
+.dragging {
+  // pointer-events: none !important;
+  background-color: red;
+}
+
 .bottom-panel {
   :deep(.icon) {
     fill: var(--primary-text);
