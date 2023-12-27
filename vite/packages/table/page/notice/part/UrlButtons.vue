@@ -16,7 +16,7 @@ export default defineComponent({
     goUrl(url){
       switch (url.type){
         case 'link':
-          Browser.openInUserSelect(url.href)
+          Browser.openInSystem(url.href)
           break
         case 'route':
           window.$app.$router.push(url.route)

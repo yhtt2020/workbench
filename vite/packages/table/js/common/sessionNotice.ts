@@ -15,6 +15,10 @@ import NoticeToast from '../../page/notice/toast/NoticeToast.vue'
 const toast = useToast()
 
 export class Notifications {
+  noticeModal=null
+  public showNoticeModal(message){
+    this.noticeModal.showModal(message)
+  }
   public NoticeToast() {
     toast.info({
       component: NoticeToast,
@@ -60,21 +64,34 @@ export class Notifications {
     }
   }
 
-  public noticeStrong(msg) {
-
+  public noticeStrong(notice) {
+    const msg=this._convertNoticeMsg(notice)
+    console.error('通知的消息体', msg)
+    noticeStore().putNoticeData(msg, 'strong');
+    if(this.noticeModal){
+      console.log('显示消息弹窗')
+      this.showNoticeModal(msg)
+    }
   }
 
-  public noticeWeak(message: Object) {
-    const {settings} = storeToRefs(appStore())
+  public _convertNoticeMsg(notice){
     const msg = {
+      id:notice.id,
       type: 'push',
-      title: message.title || '推送消息',
+      title: notice.title || '推送消息',
       icon: '/icons/newspaper.svg',
-      covers: message.covers,
-      body: message.content,
+      covers: notice.covers,
+      body: notice.summary,
+      content:notice.content,
       time: Date.now(),
-      urls: message.urls
+      urls: notice.urls
     }
+    return msg
+  }
+
+  public noticeWeak(notice: Object) {
+    const {settings} = storeToRefs(appStore())
+    const msg=this._convertNoticeMsg(notice)
     console.error('通知的消息体', msg)
     let content={
       component: MessageNoticeToast, props: {
@@ -82,12 +99,12 @@ export class Notifications {
       },
       listeners: {
         closeToast: () => {
-          console.log('关闭消息', 'notice_' + message.id)
-          toast.dismiss('notice_' + message.id)
+          console.log('关闭消息', 'notice_' + notice.id)
+          toast.dismiss('notice_' + notice.id)
         },
         pause: () => {
           console.log('停止lo')
-          toast.update('notice_' + message.id, {
+          toast.update('notice_' + notice.id, {
             content:content,
             options: {
               timeout: false
@@ -96,12 +113,12 @@ export class Notifications {
         }
       }
     }
+    noticeStore().putNoticeData(msg, 'weak');
     toast.info(content, {
-      id: 'notice_' + message.id,
+      id: 'notice_' + notice.id,
       icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
       pauseOnHover: true, timeout: 20000, toastClassName: 'notice-toast',
       onClose() {
-        noticeStore().putNoticeData(msg, 'weak');
       }
     })
   }

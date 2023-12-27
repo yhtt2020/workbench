@@ -6,10 +6,10 @@ export const noticeStore = defineStore('notice',{
  state:()=>({
     detailList:[]
  }),
- 
+
  actions:{
 
- 
+
   // 获取db数据库中的数据
   async getNoticeList(){
     // console.log('读取存储数据');
@@ -18,28 +18,29 @@ export const noticeStore = defineStore('notice',{
     // const strongRes = await tsbApi.db.allDocs('strongSystem:')
 
     // 将数据多次转换成一次性请求,并且把数组进行解构
-    
+
     const data = await Promise.all([
       ...(await tsbApi.db.allDocs('weakMessage:')).rows,
       ...(await tsbApi.db.allDocs('weakSystem:')).rows,
-      ...(await tsbApi.db.allDocs('strongSystem:')).rows
+      ...(await tsbApi.db.allDocs('strongNotice:')).rows
     ])
+    console.log(data)
     // console.log('返回数据',data);
-    
+
     const mapData = data?.map((item)=>{
       return item.doc
     })
     // console.log('将数据进行拷贝修改',mapData);
-    
+
     const sortData = mapData.sort((a:any,b:any)=>{
       return b.createTime - a.createTime
     })
 
     // console.log('查看排序后的消息列表',sortData);
-    
+
 
     this.detailList = sortData
-    
+
   },
 
   // 将忽略的消息通知进行数据库存储
@@ -47,7 +48,7 @@ export const noticeStore = defineStore('notice',{
     if(type === 'strong'){
     //  console.log('存储强通知数据',data);
     //  console.log('查看',data.type);
-     
+
      const strongNotice = {
       _id:`strongNotice:${Date.now()}`,
       category:`strong:${Date.now()}`,
@@ -61,7 +62,7 @@ export const noticeStore = defineStore('notice',{
     //  console.log('查看',data.type);
 
      if(data.type === 'message'){
-      
+
       const weakMessageOption = {
         _id:`weakMessage:${Date.now()}`,
         category:`weak${Date.now()}`,
@@ -71,7 +72,7 @@ export const noticeStore = defineStore('notice',{
       }
       await  tsbApi.db.put(weakMessageOption)
 
-     }else{ 
+     }else{
 
       const weakSystemOption = {
         _id:`weakSystem:${Date.now()}`,
@@ -81,7 +82,7 @@ export const noticeStore = defineStore('notice',{
         updateTime:Date.now()
       }
       await tsbApi.db.put(weakSystemOption)
-      
+
      }
 
     }
@@ -92,7 +93,7 @@ export const noticeStore = defineStore('notice',{
   async delAllHistoryNotice(type:any){
     // console.log('查看列表',this.detailList);
     // console.log('查看type',type);
-    
+
     for(const item of this.detailList){
       await tsbApi.db.remove(item)
       // console.log('查看item',item);
@@ -101,7 +102,7 @@ export const noticeStore = defineStore('notice',{
       // }
     }
     this.getNoticeList()
-    
+
   },
 
   // 将单个历史消息通知进行删除

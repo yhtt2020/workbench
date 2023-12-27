@@ -81,7 +81,7 @@
     </div>
     </slot>
   </Modal>
-
+  <ModalNotice ref="noticeModal" :message="null" v-model:visible="showNoticeModal"></ModalNotice>
 
 
 </template>
@@ -112,6 +112,7 @@ import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
 import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {notification} from "ant-design-vue";
+import ModalNotice from "./page/notice/ModalNotice.vue";
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -127,7 +128,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
+  components: {ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
   data() {
     return {
       HTML5Backend,
@@ -137,7 +138,8 @@ export default {
       visible: false,
       dialogVisible: false,
       videoPath: '',
-      frameStoreVisible:false
+      frameStoreVisible:false,
+      showNoticeModal:false,
     };
   },
 
@@ -202,6 +204,7 @@ export default {
 
       window.addEventListener('keydown', keyCombinationPressed);
     //this.$router.push({name:'sensor'})
+    window.$notice.noticeModal=this.$refs.noticeModal
   },
 
   computed: {
