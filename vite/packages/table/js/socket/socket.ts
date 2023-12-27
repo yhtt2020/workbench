@@ -47,10 +47,11 @@ export const initSocket = async () => {
       kdniaoHandler.on(data)
     })
 
-    socket.on('onNotice',(data)=>{
+    socket.on('onNotice',(data,fn)=>{
       console.error('notice')
       noticeHandler.on(data)
-    })
+      fn({status:1})
+    } )
     // socket.on('onCommunity',(data)=>{
     //   communityHandler.on(data)
     // })
