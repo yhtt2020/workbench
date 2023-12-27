@@ -212,7 +212,6 @@ export default {
         axios
           .get(this.addressType.path)
           .then((res) => {
-            console.log('调试',res);
             this.imgList = []
             if (res.data.data) {
               let pickImage = res.data.data
@@ -308,7 +307,6 @@ export default {
 
     // 设置当前组件壁纸
     setImg () {
-      console.log('执行....测试--11',this.customData);
       if(this.customData && this.customData.paper){
         this.imgSpin = false;
         this.currentImg = this.customData.paper;
@@ -476,7 +474,6 @@ export default {
   
   mounted () {
     this.$nextTick(() => {
-      console.log('执行....获取customData',this.customData);
       if (!this.customData) {
         this.pickFilterChange('timeline')
       } else {
