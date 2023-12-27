@@ -3,9 +3,11 @@
     <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot"  :desk="desk">
       <template #left-title-icon>
         <div class="absolute flex hover-container items-center top-2.5 left-0 justify-center" style="z-index:1000;">
-          <xt-new-icon icon="fluent:image-multiple-16-regular" size="29"></xt-new-icon>
-          <span class="xt-font xt-text font-14 font-400" v-if="imgList.length > 0">{{ options.title }}</span>
+          <xt-new-icon icon="fluent:image-multiple-16-regular" size="29" :color="'var(--active-text)'"></xt-new-icon>
        </div>
+      </template>
+      <template #title-text>
+        <span class="xt-font xt-active-text font-14 font-400" style="z-index:1000;">{{ options.title }}</span>
       </template>
       
       <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
@@ -17,6 +19,7 @@
           <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goPickOut">去挑选</xt-button>
         </div>
         <div class="w-full h-full pointer" v-else >
+          <div class="absolute top-shadow w-full top-0 left-0 h-12 "></div>
           <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
                  playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
             <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid"/>
@@ -305,30 +308,40 @@ export default {
 
     // 设置当前组件壁纸
     setImg () {
-      this.imgSpin = true
-      if (this.imgList.length > 0) {
-        this.currentImg = this.imgList[this.imgIndex]
-        this.$nextTick(() => {
-          if (this.currentImg.srcProtocol) {
-            this.$refs.wallpaperVideo.load()
-            this.$refs.wallpaperVideo.play().catch((err) => { })
+      console.log('执行....测试--11',this.customData);
+      if(this.customData && this.customData.paper){
+        this.imgSpin = false;
+        this.currentImg = this.customData.paper;
+      }
+      else {
+        this.imgSpin = true;
+        setTimeout(()=>{
+          if (this.imgList.length > 0) {
+            this.currentImg = this.imgList[this.imgIndex];
+            this.$nextTick(()=>{
+             if (this.currentImg.srcProtocol){
+              this.$refs.wallpaperVideo.load();
+              this.$refs.wallpaperVideo.play().catch((err) => { });
+              this.imgSpin = false; 
+             }
+            })
+          }
+          else {
+            this.currentImg = {
+              srcProtocol: null,
+              value: '我的收藏',
+              path: '',name: 'my',
+            }
             this.imgSpin = false
           }
-        })
-      } else {
-        this.currentImg = {
-          srcProtocol: null,
-          value: '我的收藏',
-          path: '',
-          name: 'my',
-        }
-        this.imgSpin = false
+        },1000)
       }
     },
 
     // 上一张壁纸
     lastImg () {
       this.imgIndex -= 1
+      this.customData.paper = this.imgList[this.imgIndex];
       if (this.imgIndex < 0) {
         this.imgIndex = this.imgList.length - 1
       }
@@ -337,6 +350,7 @@ export default {
     // 下一张壁纸
     async nextImg () {
       this.imgIndex += 1
+      this.customData.paper = this.imgList[this.imgIndex];
       if (this.imgIndex >= this.imgList.length) {
         this.imgIndex = 0
       }
@@ -462,6 +476,7 @@ export default {
   
   mounted () {
     this.$nextTick(() => {
+      console.log('执行....获取customData',this.customData);
       if (!this.customData) {
         this.pickFilterChange('timeline')
       } else {
@@ -492,5 +507,9 @@ export default {
 }
 .xt-bg-t-3{
   background: rgba(0,0,0,0.5) !important;
+}
+
+.top-shadow{
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.00) 100%);
 }
 </style>
