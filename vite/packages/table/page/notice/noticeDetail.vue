@@ -4,7 +4,7 @@
   </div>
   <div class="w-full flex-1 px-3 xt-text" v-else style="height: calc(100% - 63px);">
     <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-     <div  v-for="item in list" class="mb-3">
+     <div  v-for="item in displayList" class="mb-3">
       <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
         <div class="w-full h-full  flex flex-col p-4 xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-3">
@@ -22,17 +22,19 @@
           </div>
           <div class="font-16 font-400 xt-font xt-text mb-2">
             {{ item.content.body }}
-          </div> 
+          </div>
           <div class="flex justify-between">
             <div class="flex items-center justify-center  xt-font" style="color: var(--disable-text);">{{formatTime(item.createTime)}}</div>
-            <xt-button class="category-button" style="width: 56px;height: 32px;background: var(--active-secondary-bg)!important;color:var(--active-bg);border-radius: 8px !important;" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
+            <div class="flex flex-end gap-2">
+              <UrlButtons @viewNow="reviewMessage(item.content.conversationID)" :urls="item.urls"></UrlButtons>
+            </div>
           </div>
         </div>
       </xt-menu>
      </div>
      <div style="height: 12px;"></div>
     </vue-custom-scrollbar>
-  
+
   </div>
 </template>
 
@@ -44,12 +46,14 @@ import { chatStore } from '../../store/chat'
 import { noticeStore } from './store/noticeStore'
 
 import EmptyStatus from '../chat/components/empty/EmptyStatus.vue';
+import UrlButtons from './part/UrlButtons.vue'
 
 
 export default {
   props: ["list","type"],
 
   components:{
+    UrlButtons,
     DetailIcon,EmptyStatus
   },
 
@@ -60,7 +64,7 @@ export default {
         {
           name: "打开应用",
           callBack: () => {
-            
+
           },
           newIcon: "fluent:open-20-filled",
         },
@@ -96,6 +100,24 @@ export default {
       //   })
       //   return messageList
       // }
+    },
+    displayList(){
+      if(this.list){
+        return this.list.map(item=>{
+          if(item.content.urls){
+            var urls=JSON.parse(item.content.urls)
+          }else{
+            urls=[]
+          }
+          return {
+            ...item,
+            urls
+          }
+        })
+      }else{
+        return []
+      }
+
     }
   },
 

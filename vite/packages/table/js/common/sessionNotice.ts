@@ -45,14 +45,55 @@ export class Notifications{
       pauseOnHover:true,timeout:0,toastClassName:'notice-toast'
     })
   }
-  
+public notice(msg){
+    if(msg.noticeType===1){
+      this.noticeWeak(msg)
+    }else if(msg.noticeType===2){
+      this.noticeStrong(msg)
+    }
+}
+  public noticeStrong(msg){
+
+  }
+  public noticeWeak(message:Object){
+    const { settings } = storeToRefs(appStore())
+    const msg={
+      type:'push',
+      title:message.title||'推送消息',
+      icon:'/icons/logo128.png',
+      body:message.content,
+      time:Date.now(),
+      urls:message.urls
+    }
+    console.error('通知的消息体',msg)
+    toast.info({
+      component:MessageNoticeToast,props:{
+        msg,type:'push',play:settings.value.enablePlay,
+      },
+      listeners:{
+        closeToast:()=>{
+          console.log('关闭消息','notice_'+message.id)
+          toast.dismiss('notice_'+message.id)
+        }
+      }
+    }, {
+      id:'notice_'+message.id,
+      icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
+      pauseOnHover: true, timeout: 5000, toastClassName: 'notice-toast',
+      onClose() {
+        noticeStore().putNoticeData(msg,'weak');
+      }
+    })
+  }
+
   // 消息弱提醒
   public messageWeak(msg:any,conversationID:any){
     const { settings } = storeToRefs(appStore())
 
     toast.info(
       {
-        component:MessageNoticeToast,props:{msg,type:'message',play:settings.value.enablePlay},
+        component:MessageNoticeToast,
+        props:{msg,type:'message',play:settings.value.enablePlay},
         listeners:{
           'putNotice':function(){
             console.log('关闭并存储数据',msg);
@@ -84,7 +125,7 @@ export class Notifications{
        },
       }
     )
-    
+
   }
 
   // 消息强提醒
@@ -104,7 +145,7 @@ export class Notifications{
           // 'nowCheck':function(){
           //   appStore().hideNoticeEntry();
           // },
-          
+
           'systemExamine':function(){
             chatStore().updateConversation(conversationID)
             router.push({name:'chatMain'});
@@ -176,29 +217,29 @@ export class Notifications{
     if(message.payload.data === 'group_create'){
      const extension = message.payload.extension
      //console.log('排查',extension);
-    
+
      numArr = this.extractNumbersFromString(extension)
      // console.log('查看strArr',numArr);
     }
-    
+
 
     const option = {
       userIDList: message.payload.data === 'group_create' ? [`${numArr[0]}`] : message.payload.userIDList ? message.payload.userIDList :  [`${message.payload.operatorID}`]
     }
     // console.log('查看参数配置',option);
-    
-    
+
+
     const res = await (window as any ).$TUIKit.tim.getUserProfile(option)
     // console.log('获取用户名称',res.data);
 
     let userinfo = res.data[0]
     // console.log('排查::>>',userinfo);
-    
+
 
     const groupName = findGroup?.name === undefined ? message.payload.groupProfile.name : findGroup?.name ;
     const username = userinfo === undefined ? message.nick : userinfo?.nick;
     // console.log('查看用户昵称',username);
-    
+
     console.log('验证通知消息类型',message.payload.operationType);
 
     switch (message.payload.operationType){
@@ -254,10 +295,10 @@ export class Notifications{
     }
 
     app.showNoticeEntry()
-    
+
     // 消息内容为text是否存在
     const isText = data.payload.hasOwnProperty('text')
-  
+
     if(isText){
       // 好友消息
       if(data.conversationType === 'C2C'){
@@ -271,11 +312,11 @@ export class Notifications{
           type:'message',
         }
         // 全局
-        if(config.global && config.enable && config.cue && !config.currentDisturb){ 
+        if(config.global && config.enable && config.cue && !config.currentDisturb){
           this.messageWeak(friendContent,data.conversationID)
         }
         // 所属应用中(非当前会话)
-        else if(!config.global && config.enable && config.cue && !config.currentSession && !config.currentDisturb){  
+        else if(!config.global && config.enable && config.cue && !config.currentSession && !config.currentDisturb){
           const playElement: HTMLAudioElement = this.createSoundElement();
           playElement.play()
         }
@@ -294,7 +335,7 @@ export class Notifications{
           conversationID:data.conversationID,
           type:'message'
         }
-        
+
 
         // 群聊消息全局情况下
         if(config.global && config.enable && config.cue || !config.currentDisturb){
@@ -316,7 +357,7 @@ export class Notifications{
             const playElement: HTMLAudioElement = this.createSoundElement();
             playElement.play()
           }
-        } 
+        }
 
 
       }
@@ -325,11 +366,11 @@ export class Notifications{
     else{
       // console.log('查看情况',data);
       // console.log('查看判断条件',config.enable && config.cue || !config.currentDisturb);
-      
-      
+
+
       if(data.conversationType !== 'C2C'){
         // 将群聊通知的用户uid进行中文昵称显示
-        const systemText = await this.translateGroupSystemNotice(data)  
+        const systemText = await this.translateGroupSystemNotice(data)
         // 通知、提示音开关是否打开
         if(config.enable && config.cue || !config.currentDisturb){
           const systemContent = { title:'社群沟通', icon:'/icons/IM.png',  time:data.time, body:systemText,type:'system',conversationID:data.conversationID, }

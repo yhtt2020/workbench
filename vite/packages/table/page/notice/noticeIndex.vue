@@ -87,7 +87,7 @@ const leftList = ref([
       selectTab(item)
     },
   },
-  { 
+  {
     newIcon:'fluent:alert-16-regular',  name:'系统',
     newName:'系统消息',id:'system',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
@@ -103,12 +103,12 @@ const leftList = ref([
       selectTab(item)
     },
   },
-  { 
+  {
     newIcon:'fluent:mail-16-regular', name:'推送',
     newName:'推送消息 ',id:'push',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
-  { 
+  {
     newIcon:'fluent:emoji-smile-slight-24-regular',name:'助手', id:'IA',newName:'智能助手',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
@@ -155,11 +155,14 @@ const filetDetailList = computed(()=>{
       return detailList.value;
     case 'system':  // 系统消息通知
       const filterSystem = detailList.value.filter((item)=>{ return item.content.type === 'system' });
+      console.log(filterSystem)
       return filterSystem;
     case 'IM':  // 社群消息通知
       const filterMessage = detailList.value.filter((item)=>{ return item.content.type === 'message' });
       return filterMessage;
     case 'push': // 推送消息通知
+      const filterPush = detailList.value.filter((item)=>{ return item.content.type === 'push' });
+      return filterPush;
       return [];
     case 'IA': // 助手消息通知
       return [];
