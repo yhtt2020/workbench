@@ -60,7 +60,8 @@ public notice(msg){
     const msg={
       type:'push',
       title:message.title||'推送消息',
-      icon:'/icons/logo128.png',
+      icon:'/icons/newspaper.svg',
+      covers:message.covers,
       body:message.content,
       time:Date.now(),
       urls:message.urls

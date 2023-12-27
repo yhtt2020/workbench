@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between" style="margin-bottom: 13px;">
         <div class="flex items-center">
           <div class="flex items-center justify-center" style="width: 32px;height: 32px;">
-            <img :src="msg.icon" class="w-full rounded-full h-full object-cover" alt="">
+            <img :src="msg.icon" class="w-full rounded-lg h-full object-cover" alt="">
           </div>
           <div class="font-16 ml-3" style="color: var(--primary-text);">{{ msg.title }}</div>
         </div>
@@ -18,7 +18,9 @@
         </div>
       </div>
 
-      <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">{{ msg.body }}</div>
+      <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">
+        <NoticeBody :content="msg"></NoticeBody>
+      </div>
 
       <div class="flex items-center justify-end gap-2">
         <div class="font-16" style="color:var(--secondary-text);">{{ formatTime(parseInt(msg.time) * 1000) }}</div>
@@ -37,10 +39,11 @@ import { appStore } from '../../../store'
 import Button from '../../../ui/libs/Button/index.vue'
 import Browser from '../../../js/common/browser'
 import UrlButtons from '../part/UrlButtons.vue'
+import NoticeBody from '../part/NoticeBody.vue'
 
 export default defineComponent({
   props: ['msg', 'type', 'play'],
-  components: { UrlButtons, Button },
+  components: { NoticeBody, UrlButtons, Button },
   computed: {
     ...mapWritableState(appStore, ['styles', 'settings'])
   },
