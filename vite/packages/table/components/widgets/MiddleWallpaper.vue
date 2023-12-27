@@ -332,7 +332,7 @@ export default {
             }
             this.imgSpin = false
           }
-        },1000)
+        },500)
       }
     },
 
