@@ -34,7 +34,7 @@ export default defineComponent({
 <template>
 
   <template v-if="!urls.length>0">
-    <Button w="auto" type="theme" class="button"   @click="viewNow">立即查看
+    <Button w="auto" type="theme" class="button" :h="40"   @click="viewNow">立即查看
     </Button>
 
   </template>

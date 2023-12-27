@@ -19,12 +19,14 @@
       </div>
 
       <div class="font-16" style="color: var(--secondary-text);margin-bottom: 24px;">
-        <NoticeBody :content="msg"></NoticeBody>
+        <NoticeBody @pause="pause" :content="msg"></NoticeBody>
       </div>
 
-      <div class="flex items-center justify-end gap-2">
+      <div class="flex items-center justify-between gap-2">
         <div class="font-16" style="color:var(--secondary-text);">{{ formatTime(parseInt(msg.time) * 1000) }}</div>
-        <UrlButtons @close="close" :urls="urls" @viewNow="viewNow"></UrlButtons>
+       <div class="flex flex-end gap-2">
+         <UrlButtons @close="close" :urls="urls" @viewNow="viewNow"></UrlButtons>
+       </div>
       </div>
     </div>
   </div>
@@ -104,10 +106,14 @@ export default defineComponent({
     const close= ()=> {
       ctx.emit('closeToast')
     }
+
+    const pause=()=>{
+      ctx.emit('pause')
+    }
     return {
       formatTime, closeMessage,
       //  talkLater,
-      viewNow,close
+      viewNow,close,pause
     }
   }
 })

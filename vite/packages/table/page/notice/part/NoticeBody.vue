@@ -1,20 +1,28 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {Image} from 'ant-design-vue'
+import {Image,ImagePreviewGroup} from 'ant-design-vue'
 export default defineComponent({
   name: "NoticeBody",
   props:['content'],
-  components:{Image},
+  components:{Image,ImagePreviewGroup},
   data(){
     return {
-      covers:[]
+    }
+  },
+  computed:{
+    covers(){
+      if(this.content.covers){
+        return JSON.parse(this.content.covers)
+      }else{
+        return []
+      }
     }
   },
   mounted() {
-    if(this.content.covers){
-      this.covers=JSON.parse(this.content.covers)
-    }else{
-      this.covers=[]
+  },
+  methods:{
+    stop(){
+      this.$emit('pause')
     }
   }
 })
@@ -22,8 +30,10 @@ export default defineComponent({
 
 <template>
  <div class="flex flex-col gap-2">
-   <div class="flex gap-2 ">
-     <Image v-for="cover in covers" :src="cover.cover"></Image>
+   <div class="flex gap-2 previewer" style="display: flex">
+     <ImagePreviewGroup >
+      <Image style="aspect-ratio:16/9;object-fit:cover;"  @click="stop" v-for="cover in covers" :src="cover.cover"></Image>
+     </ImagePreviewGroup>
    </div>
    <div>
      {{ content.body }}
@@ -33,5 +43,9 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-
+.previewer :deep(.ant-image){
+  flex:1;
+  border-radius:10px;
+  overflow: hidden;
+}
 </style>
