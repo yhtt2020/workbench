@@ -443,3 +443,17 @@ export const childrenFolder = (list) => {
     });
     return arr;
 };
+
+
+
+export const searchItem = (list,arr) =>{
+    list.forEach(element => {
+        arr.forEach(item => {
+            if(element.type === 'coolApp'){
+                return item.value.url === element.value.url
+            }else{
+                return item.value === element.value
+            }
+        });
+    });
+}

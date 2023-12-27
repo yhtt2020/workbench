@@ -163,7 +163,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder, searchItem } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
@@ -550,9 +550,12 @@ export default {
               // 找到被删除元素在备份数据中的索引
               if (element.type === 'coolApp') {
                 return item.value.url === element.value.url;
+              } else if (element.type === 'folder') {
+                return this.searchItem(element, item)
               }
               return item.value === element.value;
             });
+            console.log(index,'lost index');
             if (index !== -1) {
               this.copyFootNav.splice(index, 1);
             }
@@ -566,6 +569,8 @@ export default {
             const correspondingElement = this.copyFootNav.find((copyItem) => {
               if (item.type === 'coolApp') {
                 return copyItem.value.url === item.value.url;
+              } else if (item.type === 'folder') {
+                return this.searchItem(item, copyItem)
               }
               return copyItem.value === item.value;
             });
@@ -581,7 +586,8 @@ export default {
 
         }
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        // console.log(this.copyFootNav, 'footNav')
+        console.log(this.copyFootNav, 'footNav')
+        console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -968,18 +974,12 @@ export default {
       let drop = document.getElementById('bottomContent')
       let index = null
       // let isTimer = false
-      // 定时器
-      let timer = null
       let isDrag = false
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
         delay: 50,
         delayOnTouchOnly: true,
-        // 拖拽中元素的样式
-        // dragClass: 'dragging',
-        // 禁止原生拖拽
-        // forceFallBack: true,
         // 设置交换区域的阈值
         swapThreshold: 0.4,
         // 反向拖拽
@@ -1052,6 +1052,7 @@ export default {
           // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
+          console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           // 
           that.popVisible = false
@@ -1060,53 +1061,40 @@ export default {
           if (!isDrag) {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
             const oIndex = index
-            const nIndex = Math.round(((that.targetPosition.x - that.defaultPosition.x) / 72) + index)
+            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
             if (oIndex === nIndex) {
               return 0
             }
-            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
-            console.log(that.copyFootNav, '====onEnd');
-            console.log(that.footNavigationList, '====onEnd');
-            // isDrag = true
-          }
 
+            that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            console.log(that.footNavigationList);
+            // that.footNavigationList.splice(oIndex, 1)
+            that.removeFootNavigationList(oIndex)
+          }
           index = null
           that.isBorder = false
-          // document.addEventListener('mouseup', that.handleMouseUp)
+          isDrag = false
 
         },
         onMove: function (event, originalEvent) {
-          isDrag = that.getArea(event.draggedRect, event.relatedRect, 0.4)
-          console.log(isDrag, 'from isDrag');
-          // 拖拽变为文件夹模式
-          if (!isDrag) {
-            // console.log(event.dragged,event.draggedRect,originalEvent.clientY,originalEvent.clientX,'from onMove');
-            that.targetPosition = {
-              x: originalEvent.clientX,
-              y: originalEvent.clientY,
-            }
-            that.isBorder = true
-            return false
-          }
+          isDrag = true
           that.isDelete = false
           return true
         },
         onChoose: function (event) {
-          console.log(event, '=====onChoose----1');
-          // 清除定时器
-          timer ? clearTimeout(timer) : null
           index = event.oldIndex
-          // timer = setTimeout(() => {
-          // isTimer = true
           that.defaultPosition = {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,
           }
-          // }, 2500)
-
+        },
+        onChange() {
+          isDrag = false
         }
       })
     },
+    searchItem,
     getArea,
     iconFolder,
     renderIcon,
