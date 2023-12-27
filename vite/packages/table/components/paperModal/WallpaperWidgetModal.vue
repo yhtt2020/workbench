@@ -3,11 +3,11 @@
     <template #header-center>
       <div class="xt-font xt-text font-16 font-400">壁纸小组件设置</div>
     </template>
-    <div :style="isFull ? {width:'100%',height:'100%'}:{width:'452px' , height:'200px'}" class="flex items-center justify-center">
-      <div style="width: 452px; height: 136px;" class="flex  flex-col p-4 xt-bg-2 rounded-lg">
-       <span class="xt-font font-16 font-400 xt-text">壁纸源</span>
-       <span class="my-2.5 xt-font xt-text-2 font-400 font-14">选择需要在小组件上展示的壁纸源</span>
-       <xt-select :list="wallpaperOptions" v-model="modelVal" zIndex="1001" @change="updateSelectValue($event)"></xt-select>
+    <div :style="isFull ? {width:'100%',height:'100%'}:{width:'452px'}" class="mb-6" :class="isFull ? 'flex items-center justify-center':'flex'">
+      <div  class="flex flex-col p-4 xt-bg-2 rounded-lg" style="width: 452px;">
+        <span class="xt-font font-16 font-400 xt-text">壁纸源</span>
+        <span class="my-2.5 xt-font xt-text-2 font-400 font-14">选择需要在小组件上展示的壁纸源</span>
+        <xt-select :list="wallpaperOptions" v-model="modelVal" zIndex="1001" :border="false" :h="40" :borderClass="'rounded-lg'" @change="updateSelectValue($event)" style="background: var(--main-bg);"></xt-select>
       </div>
     </div>
  </xt-modal>
