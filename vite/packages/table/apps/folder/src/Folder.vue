@@ -11,17 +11,15 @@
       @onOpen="iconClick"
     >
       <!-- 左侧图标 -->
-      <template #left-title-icon>
-        <div>icon</div>
-      </template>
+
       <!-- 左侧标题 -->
       <template #title-text>
         {{ customData.name }}
       </template>
       <!-- 右侧布局切换 -->
-      <template #right-menu>
-        <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
-        <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
+      <template #right-extend>
+        <xt-new-icon class="mr-2" :icon="lockIcon" size="20" @click="lockClick" />
+        <xt-new-icon class="mr-2" :icon="layout" size="20" @click="layoutClick" />
       </template>
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
         <!-- 空状态显示状态 -->
@@ -102,7 +100,8 @@ const { customData, customIndex, expand } = toRefs(props);
 
 const header = computed(() => {
   return {
-    icon: "message",
+    // icon: "message",
+    newIcon: "fluent:folder-16-regular",
     title: customData.value.name,
     openState: true,
   };
