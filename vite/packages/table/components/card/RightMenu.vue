@@ -6,6 +6,8 @@
     :model="model"
     :menus="menuList"
     :height="sizes && sizes.length > 0 ? 120 : 0"
+    menuWidth=""
+    menuHeight=""
   >
     <div>
       <slot></slot>

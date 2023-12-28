@@ -4,48 +4,12 @@
       :customIndex="customIndex"
       :customData="customData"
       :options="options"
+      :header="header"
       :menuList="menuList"
       :size="reSizes"
     >
-      <!-- 左侧图标 -->
-      <template #left-title-icon>
-        <div @click="iconClick">icon</div>
-      </template>
-      <!-- 左侧标题 -->
-      <template #title-text>
-        {{ customData.name }}
-      </template>
-      <!-- 右侧布局切换 -->
-      <template #right-menu>
-        <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
-        <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
-      </template>
-      <Resize
-        @reSizeInit="reSizeInit"
-        :disabled="expand.disabled"
-        :cardSize="customData.cardSize.name"
-      >
-        <!-- 空状态显示状态 -->
-        <template v-if="customData.list.length <= 0 && !dragSortState">
-          <Null :cardSize="customData.cardSize"></Null>
-        </template>
-        <vue-custom-scrollbar
-          v-else
-          :settings="{
-            suppressScrollY: false,
-          }"
-          class="w-full relative h-full"
-        >
-          <File
-            :list="customData.list"
-            :layout="customData.layout"
-            :model="customData.model"
-            @deleteFile="deleteFile"
-            @updateList="updateList"
-            @updateSort="updateSort"
-          />
-        </vue-custom-scrollbar>
-      </Resize>
+      123
+      {{ reSizes }}
     </Widget>
   </Drop>
 
@@ -100,6 +64,16 @@ const props = defineProps({
   },
 });
 const { customData, customIndex, expand } = toRefs(props);
+
+const header = {
+  icon: "message",
+  add: true,
+  refresh: true,
+  title: "测试标题",
+  // openState: true,
+  iconState: true,
+  titleState: true,
+};
 
 provide("index", customIndex);
 provide("data", customData);

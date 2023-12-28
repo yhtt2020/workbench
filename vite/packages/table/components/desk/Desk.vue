@@ -132,7 +132,8 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef"/>
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
+  <!-- 111 -->
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon" :isFolder="true"></EditNewNavigation>
 </template>
 
 <script>
@@ -633,7 +634,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true
       })
-      this.editVisible = false;
+      // this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

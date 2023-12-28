@@ -97,6 +97,12 @@ export default {
         Msg,
     },
     emits: ['addIcon'],
+    props:{
+      isFolder: {
+        type: Boolean,
+        default: false
+      }
+    },
     data() {
         return {
             ClassifyData: [...navigationData.coolAppList, ...navigationData.systemAppList],
@@ -276,6 +282,9 @@ export default {
         },
         sendMsg(item,index){
             this.$emit('addIcon',item,index)
+            if(this.isFolder){
+              this.modelValue = false
+            }
         },
         onClick(index) {
             this.clickIndex = index
@@ -489,7 +498,7 @@ export default {
                 })
             }
         }
-        
+
 
     },
     created() {
