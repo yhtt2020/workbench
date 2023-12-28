@@ -67,7 +67,7 @@
   </Widget>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Set v-if="settingVisible" v-model="settingVisible" @close="closeSet"></Set>
+  <Set v-if="settingVisible" v-model="settingVisible" @close="closeSet" :mask="0"></Set>
   <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit> -->
   <!-- 多图标组件设置 -->

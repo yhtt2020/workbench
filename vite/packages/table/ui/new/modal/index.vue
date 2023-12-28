@@ -40,7 +40,24 @@
               <div class="right-0 z-20 flex items-center">
                 <slot name="header-right"> </slot>
                 <xt-button
-                  class="ml-3"
+                 class="ml-3"
+                  w="32"
+                  h="32"
+                  radius="8"
+                  v-if="full"
+                  @click="isFull = !isFull"
+                >
+                  <xt-new-icon
+                    :icon="
+                      isFull
+                        ? 'fluent:full-screen-minimize-16-filled'
+                        : 'fluent:full-screen-maximize-16-regular'
+                    "
+                    size="16"
+                    class="xt-text-2"
+                  />
+                </xt-button>
+                <xt-button class="ml-3"
                   w="32"
                   h="32"
                   radius="8"

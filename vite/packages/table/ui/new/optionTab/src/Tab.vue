@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full flex box-border mb-4 p-1 xt-bg-t-2"
+    class="w-full h-full flex box-border p-1 xt-bg-t-2"
     :style="{
       'border-radius': boxRadius + 'px',
     }"

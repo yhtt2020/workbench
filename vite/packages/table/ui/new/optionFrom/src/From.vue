@@ -8,7 +8,7 @@
           option.type === 'children' && check(option.flag, data[option.flagKey])
         "
       >
-        <div class="tt-divider"></div>
+        <!-- <div class="tt-divider"></div> -->
         <Option v-for="item in option.children" :option="item" :data="data">
           <template v-if="item.type === 'slot'" #[item.slot]>
             <slot :name="item.slot"></slot>
@@ -22,7 +22,7 @@
         </template>
       </Option>
     </template>
-    <!-- <div style="padding-bottom: 12px"></div> -->
+    <div style="padding-bottom: 1px"></div>
   </Box>
 </template>
 

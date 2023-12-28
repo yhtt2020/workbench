@@ -10,7 +10,7 @@ import { useFolderStore } from "../store";
 import { inject } from "vue";
 // import { useAddCard } from "../hooks/useAddCard";
 import { useAddCard } from "../../../../ui/hooks/useAddCard";
-
+import { nanoid } from "nanoid";
 const emits = defineEmits(["deleteFile"]);
 
 const index = inject("index", "");
