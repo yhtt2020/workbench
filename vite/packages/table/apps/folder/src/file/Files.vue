@@ -31,7 +31,7 @@ onMounted(() => {
 });
 
 watch(
-  () => data.value.cardSize,
+  () => data.value.size,
   () => {
     resize();
   },
@@ -41,8 +41,7 @@ watch(
 );
 
 const resize = () => {
-  const width = data.value.cardSize.width;
-  const height = data.value.cardSize.height;
+  let [width, height] = data.value.size.split("x");
   if (width < 2 || height < 2) {
     mode.value = "default";
     return;
@@ -53,6 +52,7 @@ const resize = () => {
 /**
  * 获取当前布局数据
  */
+
 const boxClass = ref("");
 const textClass = ref("");
 const currentLayout = computed(() => {

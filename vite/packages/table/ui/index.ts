@@ -40,7 +40,10 @@ import XtTitle from "./libs/Title/index.vue"
 import XtScrollbar from "./components/Scrollbar/index.vue"
 import XtDropdown from "./components/Dropdown/Dropdown.vue"
 
+// 卡片控制器
+import XtContainer from "../components/card/Container.vue"
 export default function (app: App): void {
+  app.component('XtContainer', XtContainer)
   app.component('XtCanvas', XtCanvas)
   app.component('XtGuided',XtGuided )
   app.component('XtLeftMenu', XtLeftMenu)

@@ -625,6 +625,7 @@ export default {
       this.menuVisible = false;
       this.selectNav = 'desktop'
       this.isDesk = true
+      console.log(this.selectNav,'selectNav')
     },
     file,
     useAddCard,
@@ -634,7 +635,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true
       })
-      // this.editVisible = false;
+      this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

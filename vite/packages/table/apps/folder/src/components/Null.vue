@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center items-center flex-col h-full">
     <xt-ify-icon
-      v-if="cardSize.height !== 1"
+      v-if="currentSize != 2"
       icon="fluent-emoji:inbox-tray"
       size="56"
       class="mb-3"
@@ -25,18 +25,23 @@
 <script setup>
 import EditNewNavigation from "../../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
-import { watch, toRefs, ref } from "vue";
+import { watch, toRefs, ref, computed } from "vue";
 import { defaultData } from "./options";
 import { nanoid } from "nanoid";
 
 const props = defineProps({
-  cardSize: {},
+  size: {},
 });
 const navigationStore = useNavigationStore();
 const editVisible = ref(false);
 const emits = defineEmits([""]);
 
-const { cardSize } = toRefs(props);
+const { size } = toRefs(props);
+
+const currentSize = computed(() => {
+  let str = size.value.split("x");
+  return str[1];
+});
 
 const editClick = () => {
   navigationStore.selectNav = "desktop";

@@ -10,115 +10,58 @@
   >
     <div
       v-if="!options?.hide"
-      class="flex flex-col widget rounded-xl"
-      :class="[edit ? 'editing' : '']"
+      class="flex flex-col"
+      :class="[edit ? 'editing' : '', classes]"
       style="color: var(--primary-text); padding: 0"
-      :style="[
-        {
-          width: this.getWidth,
-          height: this.getHeight,
-          display: options.hide == true ? 'none' : '',
-          background: options.background || 'var( --primary-bg)',
-        },
-      ]"
+      :style="{
+        display: options.hide == true ? 'none' : '',
+        width: customSize.width,
+        height: customSize.height,
+        background: options.background || 'var( --primary-bg)',
+      }"
     >
-      <!-- 头部区域 -->
-      <div
-        v-if="!header.disabled"
-        class="w-full flex items-center justify-between"
-        style="height: 46px; border-radius: 12px 12px 0 0"
-        :style="{
-          background: header.bg || '',
-        }"
-      >
-        <!-- 头部左侧 -->
-        <div class="flex items-center flex-1" style="height: 28px">
-          <div
-            class="flex items-center h-full"
-            @mouseenter="openMouseEnter"
-            @mouseleave="openMouseLeave"
-            style=""
-            :class="[openState ? 'header-open' : 'header-default']"
-          >
-            <!-- 图标区域 -->
-            <div
-              class="flex items-center h-full"
-              @mouseenter="iconMouseEnter"
-              @mouseleave="iconMouseLeave"
-            >
-              <xt-ify-icon v-if="openState" icon="fluent:open-16-regular" />
-              <template v-else>
-                <xt-icon
-                  v-if="header.icon"
-                  :icon="header.icon"
-                  type=""
-                  size="19"
-                  w="20"
-                />
-                <xt-ify-icon
-                  v-else-if="header.newIcon"
-                  :icon="header.newIcon"
-                />
-              </template>
-            </div>
-            <!-- 标题区域 -->
-            <div
-              class="flex items-center px-1 h-full ml-1"
-              @mouseenter="titleMouseEnter"
-              @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleState }"
-            >
-              <slot name="title">
-                <template v-if="openState">
-                  {{ iconName ? iconName : "点击打开" }}
-                </template>
-                <template v-else-if="titleState">
-                  {{ titleName ? titleName : "点击打开" }}
-                </template>
-                <template v-else>
-                  {{ header.title }}
-                </template>
+      <!--标题栏start-->
+      <slot name="cardTitle">
+        <div
+          :class="options.noTitle === true ? 'no-title' : 'content-title'"
+          class="flex items-center justify-between pt-3 px-3"
+        >
+          <div class="left-title" v-if="options.noTitle !== true">
+            <!-- 标题左侧插槽 -->
+            <slot name="left-title-icon"></slot>
+            <!-- 标题旧版左侧图标 -->
+            <Icon :icon="options.icon" class="title-icon" />
+            <div class="flex w-2/3">
+              <!-- 卡片标题插槽 -->
+              <slot name="title-text">
+                {{ options.title }}
               </slot>
+              <!-- 标题右侧插槽 -->
+              <slot name="left-title"></slot>
             </div>
           </div>
-        </div>
-        <!-- 头部右侧 -->
-        <div class="flex items-center header-right" style="padding-right: 14px">
-          <slot name="header-right"></slot>
-
-          <div v-if="header.add" class="header-right-icon mr-0.5">
-            <xt-ify-icon
-              icon="fluent:add-16-regular"
-              @click="onAdd"
-              size="20"
-            />
+          <div class="z-10 right-title flex" v-if="showRightIcon">
+            <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
+            <slot name="right-menu"> </slot>
+            <RightMenu
+              :menus="menus"
+              :sizes="sizeList"
+              :customIndex="customIndex"
+              model="all"
+              @removeCard="doRemoveCard"
+              v-model:sizeType="sizeType"
+              v-model:oldMenuVisible="menuVisible"
+            >
+              <MenuOutlined class="pointer" />
+            </RightMenu>
           </div>
-          <div v-if="header.refresh" class="header-right-icon mr-1">
-            <xt-ify-icon
-              :class="isTitleRefresh ? 'refresh' : ''"
-              icon="fluent:arrow-clockwise-16-regular"
-              @click="onRefresh"
-              size="20"
-            />
-          </div>
-          <RightMenu
-            :menus="menus"
-            :sizes="sizeList"
-            :customIndex="customIndex"
-            model="all"
-            @removeCard="doRemoveCard"
-            v-model:sizeType="sizeType"
-            v-model:oldMenuVisible="menuVisible"
-          >
-            <xt-ify-icon icon="fluent:line-horizontal-3-20-filled" size="20" />
-          </RightMenu>
         </div>
-      </div>
+      </slot>
+      <!-- 标题栏end   -->
       <PageState :env="env" :options="options">
         <div class="flex-1 h-0">
           <div
-            class="h-full rounded-b-lg"
-            :class="[main.scroll ? 'px-3.5' : 'px-3.5 pb-3.5']"
+            class="px-3 pb-2 h-full rounded-b-lg"
             :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
           >
             <slot>
@@ -146,10 +89,11 @@
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
   <slot name="msg"></slot>
 </template>
-<!-- lang="ts" -->
-<script>
-// import { PropType } from "vue";
+
+<script lang="ts">
+import { PropType } from "vue";
 import { mapActions, mapWritableState } from "pinia";
+import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
@@ -157,56 +101,25 @@ import { offlineStore } from "../../js/common/offline";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
-// import { IOption, IMenuItem } from "./types";
+import { IOption, IMenuItem } from "./types";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
 export default {
   components: {
+    MenuOutlined,
     RightMenu,
     PageState,
   },
   name: "Widget",
   props: {
-    header: {
-      type: Object,
-      default: () => {
-        return {
-          // 禁用整个标题
-          disabled: false,
-          // 左侧图标 适配旧版icon 适配新版newIcon
-          icon: "",
-          newIcon: "",
-          // 右侧添加图标 true为打开 false为关闭
-          add: false,
-          // 右侧刷新图标 true为打开 false为关闭
-          refresh: false,
-          // 标题背景色 true为打开 false为关闭
-          bg: false,
-          // 鼠标经过显示 左侧图标 + 标题区域  true为打开 false为关闭
-          openState: false,
-          openName: "",
-          // 鼠标经过显示 左侧图标 true为打开 false为关闭
-          iconState: false,
-          iconName: "",
-          // 鼠标经过显示 标题区域  true为打开 false为关闭
-          titleState: false,
-          titleName: "",
-        };
-      },
-    },
-    main: {
-      default: () => {
-        return {
-          // 是否开启滚动条边距
-          scroll: false,
-        };
-      },
-    },
     //卡片尺寸，这个属性优先级高于下方的sizeList
     size: {
       type: Object,
-      default: () => ({}),
+      default: {
+        width: undefined,
+        height: undefined,
+      },
     },
     //可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
     sizeList: {
@@ -215,14 +128,12 @@ export default {
     },
     //选项
     options: {
-      //  as PropType<IOption>
-      type: Object,
+      type: Object as PropType<IOption>,
       default: () => ({}),
     },
     //右上角菜单项
     menuList: {
-      // as PropType<IMenuItem>
-      type: Array,
+      type: Array as PropType<IMenuItem>,
       default: () => [],
     },
     //组件索引
@@ -238,6 +149,11 @@ export default {
     desk: {
       type: Object,
       required: true,
+    },
+    //是否显示右上角的图标
+    showRightIcon: {
+      type: Boolean,
+      default: true,
     },
     env: {
       type: Object,
@@ -262,11 +178,6 @@ export default {
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
       sizeType: { title: "", height: undefined, width: undefined, name: "" },
-
-      isTitleRefresh: false,
-      showOpenState: false,
-      showIconState: false,
-      showTitleState: false,
     };
   },
   computed: {
@@ -293,81 +204,130 @@ export default {
       ];
     },
 
-    openState() {
-      return (
-        (this.showOpenState || this.showIconState) &&
-        (this.header.openState || this.header.iconState)
-      );
+    isCustomData() {
+      return Object.keys(this.customData).length !== 0;
     },
-    titleState() {
-      return this.showTitleState && this.header.titleState;
+    customSize() {
+      console.log('222 :>> ', 222);
+      return {
+        width:
+          this.size.width ||
+          this.sizeType.width * 280 + (this.sizeType.width - 1) * 10 + "px" ||
+          undefined,
+        height:
+          this.size.height ||
+          this.sizeType.height * 205 + (this.sizeType.height - 1) * 10 + "px" ||
+          undefined,
+      };
     },
-    getWidth() {
-      let n = this.size.width || 4;
-      return n * 134 + (n - 1) * 12 + "px";
-    },
-    getHeight() {
-      let n = this.size.height || 4;
-      return n * 96 + (n - 1) * 12 + "px";
+    classes() {
+      //默认的对象
+      let defaultClass: any = {
+        gradient: true,
+        "gradient--14": true,
+      };
+      //如果存在hideFrame的设置
+      if (this.customData && this.customData.hideFrame) {
+        defaultClass = {};
+      }
+      let classNameObject = {};
+      if (Object.keys(defaultClass).length > 0) {
+        //取出className，并分割出一个类的数组
+        if (this.options.className) {
+          this.options.className.split(" ").map((c) => {
+            classNameObject[c] = true;
+          });
+        }
+      }
+      let after = _.cloneDeep(Object.assign(classNameObject, defaultClass));
+      if (Object.keys(after).length === 0) {
+        after["no-frame"] = true;
+      }
+      return after;
     },
   },
-  mounted() {},
-  watch: {},
+  mounted() {
+    let customData =
+      this.$parent.customData ||
+      this.$parent.$attrs.customData ||
+      this.$parent.$parent.customData;
+    if (customData) {
+      if (customData.width && customData.height) {
+        this.sizeType = {
+          title: customData.width + "x" + customData.height,
+          height: customData.height,
+          width: customData.width,
+          name: customData.width + "x" + customData.height,
+        };
+        // this.$parent.$attrs.onCustomEvent()
+        // console.log(this.$parent.$attrs.onCustomEvent)
+      }
+    }
+  },
+
+  watch: {
+    // 旧版卡片大小更新
+    sizeType: {
+      handler() {
+        this.updateCustomData(
+          this.$parent.customIndex ||
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
+          {
+            width: this.sizeType.width,
+            height: this.sizeType.height,
+          },
+          this.desk
+        );
+      },
+    },
+  },
+
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
     ...mapActions(offlineStore, ["getIsOffline"]),
-    // openMouseEnter" @mouseleave="openMouseLeave">
-    openMouseEnter() {
-      if (!this.header.openState) return;
-      this.showOpenState = true;
-    },
-    openMouseLeave() {
-      if (!this.header.openState) return;
-      this.showOpenState = false;
-    },
-    iconMouseEnter() {
-      if (!this.header.iconState) return;
-      this.showIconState = true;
-    },
-    iconMouseLeave() {
-      if (!this.header.iconState) return;
-      this.showIconState = false;
-    },
-    titleMouseEnter() {
-      if (!this.header.titleState) return;
-      this.showTitleState = true;
-    },
-    titleMouseLeave() {
-      if (!this.header.titleState) return;
-      this.showTitleState = false;
-    },
-    onOpen() {
-      this.$emit("onOpen");
-    },
-    onSwitch() {},
-    onAdd() {
-      this.$emit("onAdd");
-    },
-    // refresh: useDebounceFn(this.onRefresh, 300),
-    onRefresh() {
-      this.isTitleRefresh = true;
-
-      this.$emit("onRefresh");
-      setTimeout(() => {
-        this.isTitleRefresh = false;
-      }, 1000);
-    },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
+      // this.removeCard(
+      //   this.$parent.customIndex ||
+      //     this.$parent.$parent.customIndex ||
+      //     this.$parent.$attrs.customIndex,
+      //   this.desk
+      // );
       this.removeCard(this.customIndex, this.desk);
       this.menuVisible = false;
+    },
+    onSetup() {
+      this.menuVisible = false;
+    },
+    onClose() {
+      this.menuVisible = false;
+    },
+    hideMenu() {
+      this.menuVisible = false;
+    },
+    goRoute() {
+      this.$router.push(this.options.titleRoute);
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.no-frame {
+  background: none !important;
+
+  .no-title {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    z-index: 99;
+  }
+
+  position: relative;
+}
+
 .editing {
   &::before {
     content: "";
@@ -381,52 +341,5 @@ export default {
     background: rgba(0, 0, 0, 0);
     z-index: 999;
   }
-}
-
-.refresh {
-  animation: rotate 0.5s infinite linear;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.header-right {
-  display: flex;
-}
-.widget:hover .header-right {
-  display: flex;
-}
-.header-right-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  &:hover {
-    background: var(--secondary-transp-bg);
-  }
-}
-.header-default {
-  margin-left: 14px;
-}
-.header-open {
-  height: 28px;
-  background: var(--modal-bg);
-  padding: 0 8px;
-  border-radius: 6px;
-  margin-left: 6px;
-}
-
-.header-title {
-  height: 28px;
-  background: var(--modal-bg);
-  border-radius: 6px;
 }
 </style>

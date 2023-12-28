@@ -282,9 +282,9 @@ export default {
         },
         sendMsg(item,index){
             this.$emit('addIcon',item,index)
-            if(this.isFolder){
-              this.modelValue = false
-            }
+            // if(this.isFolder){
+            //   this.modelValue = false
+            // }
         },
         onClick(index) {
             this.clickIndex = index

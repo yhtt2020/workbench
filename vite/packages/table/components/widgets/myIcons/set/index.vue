@@ -28,7 +28,7 @@
         <div></div>
       </div>
       <div v-else style="width: 452px">
-        <xt-option-icon />111
+        <xt-option-icon />1111
         <xt-option-from :options="appearanceNameOptions" :data="edit" />
         <xt-option-from :options="appearanceOptions" :data="edit" />
         <xt-option-from :options="appearanceColorOptions" :data="edit" />

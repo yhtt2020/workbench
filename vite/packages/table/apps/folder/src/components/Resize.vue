@@ -2,7 +2,6 @@
   <div
     class="boxs no-drag w-full h-full"
     ref="textRef"
-    style="margin-top: 8px"
     :style="{ width: w, height: h }"
   >
     <slot></slot>
@@ -30,39 +29,52 @@ export default {
     return {
       w: "100%",
       h: "360px",
+      currentSize: this.size,
     };
   },
   props: {
-    cardSize: {
+    size: {
       type: String,
       default: "",
     },
     disabled: {},
+    minW: {
+      type: Number,
+      default: 2,
+    },
+    minH: {
+      type: Number,
+      default: 2,
+    },
+    odd: {
+      default: false,
+    },
+  },
+  watch: {
+    size(newV) {
+      this.dragCallBack(newV);
+    },
+    currentSize(newV) {
+      this.$emit("update:size", newV);
+    },
   },
   mounted() {
     this.drag();
     // 初始化
-    this.dragCallBack(this.cardSize);
+    this.dragCallBack(this.size);
   },
   methods: {
     dragCallBack(e) {
-      if (e == "big") {
-        this.w = `${542}px`;
-        this.h = `${360}px`;
-      } else if (e == "default") {
-        this.w = `${250}px`;
-        this.h = `${360}px`;
-      } else if (e == "small") {
-        this.w = `${250}px`;
-        this.h = `${140}px`;
-      } else if (e) {
-        let str = e.split(",");
-        let width = Math.round(str[0] / 280);
-        let height = Math.round(str[1] / 205);
-
-        this.w = width * 280 + (width - 1) * 10 - 24 + "px";
-        this.h = height * 205 + (height - 1) * 10 - 60 + "px";
-      }
+      let str = e.split("x");
+      let width = str[0];
+      let height = str[1];
+      this.w = width * 134 + (width - 1) * 12 - 28 + "px";
+      this.h = height * 96 + (height - 1) * 12 - 46 - 14 + "px";
+    },
+    findN(value, num = 134) {
+      value = parseFloat(value);
+      let res = (value - (num + 12)) / (num + 12) + 1;
+      return Math.round(res);
     },
     drag() {
       if (this.disabled) return;
@@ -83,29 +95,40 @@ export default {
           document.onmousemove = function (e) {
             e.stopPropagation();
             let x = e.clientX;
-            let y = e.clientY;
             width = x - oldX + w;
-            height = h - oldY + y;
-            if (width > 250) that.w = `${width}px`;
-            if (height > 140) that.h = `${height}px`;
-            height = height > 140 ? height : 140;
-            width = width > 250 ? width : 250;
-
-            if (width <= 250 && height <= 140) {
-              name = "small";
-            } else if (width <= 250 && height <= 360) {
-              name = "default";
-            } else if (width <= 542 && height <= 360) {
-              name = "big";
-            } else {
-              name = `${width},${height}`;
+            height = h - oldY + e.clientY;
+            // 限制范围
+            let minW = that.findN(width, 136);
+            let minH = that.findN(height, 96);
+            if (that.minW > minW) {
+              minW = that.minW * 134 + (that.minW - 1) * 12 - 28;
             }
-            that.$emit("reSizeInit", name);
+            if (that.minH > minH) {
+              minH = that.minH * 96 + (that.minH - 1) * 12 - 28;
+            }
+
+            if (width >= minW) that.w = `${width}px`;
+            else width = minW;
+            if (height > minH) that.h = `${height}px`;
+            else height = minH;
+            let newW = that.findN(width, 136);
+            let newH = that.findN(height, 96);
+
+            if (!that.odd && newH % 2 == 1) {
+              newH -= 1;
+            }
+            if (!that.odd && newW % 2 == 1) {
+              newW -= 1;
+            }
+            name = `${newW}x${newH}`;
+            that.currentSize = name;
+            that.$emit("reSize", name);
           };
           document.onmouseup = function (e) {
             e.stopPropagation();
             document.onmousemove = null;
             document.onmouseup = null;
+            that.currentSize = name;
             that.dragCallBack(name);
           };
         },

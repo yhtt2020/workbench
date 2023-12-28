@@ -15,25 +15,6 @@
             <img  :src="backImage.src" class="w-full h-full object-cover rounded-md"/>
           </div>
         </xt-button>
-
-        <!-- <xt-button
-          size="mini"
-          :w="80"
-          :h="40"
-          type="theme"
-          class="mr-3"
-          @click="updateWallpaper"
-          >背景设置</xt-button
-        >
-        <xt-button
-          size="mini"
-          class="xt-modal mr-3"
-          :w="80"
-          :h="40"
-          @click="clearWallpaper"
-          >还原背景</xt-button
-        >
-        <xt-button type="warn" :w="100" :h="40">等金龙实现</xt-button> -->
       </div>
       <hr />
       <xt-option-info
