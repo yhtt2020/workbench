@@ -423,14 +423,14 @@ export const iconFolder = (list, index, tIndex) => {
     return {
         name: "文件夹",
         bg: '',
-        isBg: "",
+        isBg: false,
         icon: '',
-        type: 'systemApp',
+        type: 'folder',
         value: 'folder',
         children: childrenFolder(arr).flat(1),
         mode: 'app',
-    };
-};
+    }
+}
 
 export const childrenFolder = (list) => {
     let arr = [];
@@ -457,3 +457,40 @@ export const searchItem = (list,arr) =>{
         });
     });
 }
+
+
+export const findItem = (target,list)=>{
+    return target.map(element => {
+        return  list.find(item => {
+            if(element.type === 'coolApp'){
+                return item.value.url === element.value.url
+            } else if(element.value === 'folder'){
+                return findItem(element.children,list.children ? list.children : [list])
+            } else{
+                return item.value === element.value
+            }
+        })
+    })
+}
+
+export const forItem = (arr, list) => {
+    return arr.map(element => {
+      return list.map(item => {
+        if (element.type === 'coolApp') {
+          return item.value.url === element.value.url;
+        } else {
+          return item.value === element.value;
+        }
+      });
+    });
+  };
+// target.forEach(element => {
+//     const index =copyFootNav.findIndex(item => {
+//       // 找到被删除元素在备份数据中的索引
+//       if (element.type === 'coolApp') {
+//         return item.value.url === element.value.url;
+//       } else if(element.value === 'folder') {
+//         return 
+//       }
+//       return item.value === element.value;
+//     });

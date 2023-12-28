@@ -36,6 +36,9 @@ const componentId=computed(()=>{
         case 'lightApp':
             title.value = '当前图标为「轻应用」类型。'
             return Common
+        case 'folder':
+            title.value = '当前图标为「文件夹」类型。'
+            return Common
         default:
             return Custom
     }

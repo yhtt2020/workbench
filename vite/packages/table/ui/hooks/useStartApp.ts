@@ -38,6 +38,10 @@ export const startApp = (type, value, router?) => {
     case "localApp":
       require("electron").shell.openPath(value);
       break;
+    // 导航栏文件夹
+    case "folder":
+      // console.log(2222);
+      break;
   }
 };
 
@@ -51,10 +55,7 @@ export const openSysApp = (value,router)=>{
   } else if(value === 'commun'){
     console.log(1111);
     return
-  } else if(value === 'folder'){
-    console.log(2222);
-    return
-  } else{
+  }  else{
     router.push({name:value})
   }
 }
