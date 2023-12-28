@@ -1,33 +1,40 @@
 <template>
   <Drop @createFile="createFile" @deleteFile="deleteFile">
-    <Widget
+    <xt-container
       :customIndex="customIndex"
       :customData="customData"
       :options="options"
+      :header="header"
       :menuList="menuList"
-      :size="reSizes"
+      v-model:size="customData.size"
+      :sizeList="sizeList"
+      @onOpen="iconClick"
     >
       <!-- 左侧图标 -->
-      <template #left-title-icon>
-        <div @click="iconClick">icon</div>
-      </template>
+
       <!-- 左侧标题 -->
       <template #title-text>
         {{ customData.name }}
       </template>
       <!-- 右侧布局切换 -->
-      <template #right-menu>
-        <xt-new-icon :icon="lockIcon" size="20" @click="lockClick" />
-        <xt-new-icon :icon="layout" size="20" @click="layoutClick" />
+      <template #right-extend>
+        <xt-new-icon
+          class="mr-2"
+          :icon="lockIcon"
+          size="20"
+          @click="lockClick"
+        />
+        <xt-new-icon
+          class="mr-2"
+          :icon="layout"
+          size="20"
+          @click="layoutClick"
+        />
       </template>
-      <Resize
-        @reSizeInit="reSizeInit"
-        :disabled="expand.disabled"
-        :cardSize="customData.cardSize.name"
-      >
+      <Resize :disabled="expand.disabled" v-model:size="customData.size">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
-          <Null :cardSize="customData.cardSize"></Null>
+          <Null :size="customData.size" @createFile="createFile"></Null>
         </template>
         <vue-custom-scrollbar
           v-else
@@ -46,7 +53,7 @@
           />
         </vue-custom-scrollbar>
       </Resize>
-    </Widget>
+    </xt-container>
   </Drop>
 
   <folderSet
@@ -101,17 +108,37 @@ const props = defineProps({
 });
 const { customData, customIndex, expand } = toRefs(props);
 
+const header = computed(() => {
+  return {
+    // icon: "message",
+    newIcon: "fluent:folder-16-regular",
+    title: customData.value.name,
+    openState: true,
+  };
+});
+
+const sizeList = ref([
+  {
+    name: "2x2",
+    value: "2x2",
+  },
+  {
+    name: "2x4",
+    value: "2x4",
+  },
+  {
+    name: "4x4",
+    value: "4x4",
+  },
+  {
+    name: "6x4",
+    value: "6x4",
+  },
+]);
+
 provide("index", customIndex);
 provide("data", customData);
 
-// 卡片默认配置
-const options = computed(() => {
-  return {
-    className: "card small",
-    // className: "card double",
-    title: "文件夹",
-  };
-});
 /**
  * 菜单配置
  */
@@ -235,63 +262,14 @@ const oldCardSize = ref();
 const iconClick = () => {
   if (expand.value.disabled) return;
   expandVisible.value = true;
-  oldCardSize.value = customData.value.cardSize;
+  oldCardSize.value = customData.value.size;
 };
 
 const expandClose = () => {
-  customData.value.cardSize = oldCardSize.value;
+  customData.value.size = oldCardSize.value;
 };
 
-/**
- *
- */
-
-const reSizeInit = (data) => {
-  init(data);
-};
-
-const reSizes = computed(() => {
-  const width = customData.value.cardSize.width;
-  const height = customData.value.cardSize.height;
-
-  return {
-    width: (width || 1) * 280 + (width - 1) * 10 + "px",
-    height: (height || 2) * 204 + (height - 1) * 10 + "px",
-  };
-});
-
-const init = (size) => {
-  // 初始化卡片大小
-  if (!customData.value.cardSize) {
-    customData.value.cardSize = {
-      name: "default",
-      width: 1,
-      height: 2,
-    };
-    return;
-  }
-
-  size = size ?? customData.value.cardSize.name;
-  if (size == "big") {
-    customData.value.cardSize.width = 2;
-    customData.value.cardSize.height = 2;
-  } else if (size == "default") {
-    customData.value.cardSize.width = 1;
-    customData.value.cardSize.height = 2;
-  } else if (size == "small") {
-    // small
-    customData.value.cardSize.width = 1;
-    customData.value.cardSize.height = 1;
-  } else {
-    let str = size.split(",");
-    customData.value.cardSize.width = Math.round(str[0] / 280);
-    customData.value.cardSize.height = Math.round(str[1] / 205);
-  }
-  customData.value.cardSize.name = size;
-};
-onBeforeMount(() => {
-  init();
-});
+onBeforeMount(() => {});
 
 onMounted(() => {});
 </script>

@@ -82,7 +82,7 @@
                   @click="onNo()"
                 >
                   <xt-new-icon
-                    icon="fluent:dismiss-16-filled"
+                    icon="fluent:dismiss-16-regular"
                     size="16"
                     class="xt-text-2"
                   />

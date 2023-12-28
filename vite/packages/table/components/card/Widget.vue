@@ -208,6 +208,7 @@ export default {
       return Object.keys(this.customData).length !== 0;
     },
     customSize() {
+      console.log('222 :>> ', 222);
       return {
         width:
           this.size.width ||

@@ -132,7 +132,8 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef"/>
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
+  <!-- 111 -->
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon" :isFolder="true"></EditNewNavigation>
 </template>
 
 <script>
@@ -624,6 +625,7 @@ export default {
       this.menuVisible = false;
       this.selectNav = 'desktop'
       this.isDesk = true
+      console.log(this.selectNav,'selectNav')
     },
     file,
     useAddCard,

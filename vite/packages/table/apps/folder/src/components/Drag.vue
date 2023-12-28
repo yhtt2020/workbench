@@ -10,7 +10,6 @@ import { useFolderStore } from "../store";
 import { inject } from "vue";
 // import { useAddCard } from "../hooks/useAddCard";
 import { useAddCard } from "../../../../ui/hooks/useAddCard";
-import { nanoid } from "nanoid";
 const emits = defineEmits(["deleteFile"]);
 
 const index = inject("index", "");
@@ -33,7 +32,6 @@ const handleDragStart = (event) => {
 
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
-  console.log("2222 :>> ", 2222);
   // if (data.value.sort === "free") return;
   if (data.value.model !== "custom") return;
   // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
