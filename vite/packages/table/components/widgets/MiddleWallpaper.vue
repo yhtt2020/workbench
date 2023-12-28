@@ -9,8 +9,69 @@
       <template #title-text>
         <span class="xt-font xt-active-text font-14 font-400" style="z-index:1000;">{{ options.title }}</span>
       </template>
-      
+
       <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
+        <div class="w-full  flex flex-col items-center justify-center" :class="customData.width === 2 ? 'h-full':'h-60'" v-if="imgList.length <= 0">
+          <newIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;" v-if="customData.width === 2"/>
+          <div class="xt-font p-3 rounded-lg xt-text font-14 xt-bg-t-2  font-400" :class="customData.width === 2 ? 'my-6':'my-2'" :style="customData.width === 2 ? {width:'auto'} :{ width:'210px',}">
+            我们提供多种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。
+          </div>
+          <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goPickOut">去挑选</xt-button>
+        </div>
+        
+        <template v-else>
+          <div class="w-full h-full hover-container pointer">
+            <div class="absolute top-shadow w-full  left-0 h-12 " @click="setVisible"></div>
+            <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
+            playsinline="" autoplay="" muted="" loop="" v-if="getCustomDataPaper.srcProtocol">
+             <source :src="getCustomDataPaper.srcProtocol" type="video/mp4" id="bgVid"/>
+            </video>
+            <a-image :width="'100%'" :height="'100%'" class="relative" v-else-if="getCustomDataPaper.middleSrc"  :src="getCustomDataPaper.middleSrc" >
+            </a-image>
+            <a-image :width="'100%'" :height="'100%'" class="relative" v-else :src="getCustomDataPaper.path" :previewMask="true" :preview="{
+              visible,
+              onVisibleChange: setVisible,
+            }" >
+             
+            </a-image>
+            <div class="absolute bottom-0  flex right-0 hover-item" style="opacity: 0;">
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="nextImg">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:chevron-right-16-regular" size="20"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="collect">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:star-16-regular" v-if="!isInMyPapers" size="20"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-filled" v-else size="20" :color="'var(--warning)'"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="randomImg">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :class="randomFlag ? 'replace-it' : ''" size="20"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" v-if="customData.width === 2" @click="download(currentImg)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:arrow-download-16-regular" size="20"></xt-new-icon>
+                </div>
+              </xt-button>
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="setDeskPaper(currentImg)">
+                <div class="flex items-center justify-center">
+                  <xt-new-icon icon="fluent:desktop-16-regular" size="20"></xt-new-icon>
+                </div>
+              </xt-button>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <!-- <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
         <div class="w-full  flex flex-col items-center justify-center" :class="customData.width === 2 ? 'h-full':'h-60'" v-if="imgList.length <= 0">
           <newIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;" v-if="customData.width === 2"/>
           <div class="xt-font p-3 rounded-lg xt-text font-14 xt-bg-t-2  font-400" :class="customData.width === 2 ? 'my-6':'my-2'" :style="customData.width === 2 ? {width:'auto'} :{ width:'210px',}">
@@ -68,7 +129,7 @@
             </xt-button>
           </div>
         </div>
-      </template>
+      </template> -->
     </Widget>
   </a-spin>
 
@@ -492,6 +553,10 @@ export default {
     updateCustomDatas(value){
       this.customData.value = value;
       this.pickFilterChange(value);
+    },
+
+    setVisible(value){
+      console.log('执行',value);
     }
   },
   
@@ -530,6 +595,26 @@ export default {
 }
 
 .top-shadow{
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.00) 100%);
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.00) 100%);
+  z-index: 100;
+}
+
+
+:deep(.ant-image-img){
+  border-radius: 8px !important;
+}
+
+:deep(.ant-image-mask){
+  display: none !important;
+}
+
+:deep(.ant-image-preview-root){
+  background: red !important;
 }
 </style>
+
+<!--   border:1px solid red  !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+  width: 100% !important;
+  height: 100% !important; -->
