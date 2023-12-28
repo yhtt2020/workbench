@@ -1,5 +1,7 @@
 <template>
-  <xt-button @click="LocalAppClick">本地应用</xt-button>
+  <xt-button @click="LocalAppClick" class="xt-bg-t-2 mb-3 pb-3" block h="40"
+    >本地应用</xt-button
+  >
   <input style="display: none" ref="fileRef" type="file" multiple />
 </template>
 

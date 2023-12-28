@@ -3,8 +3,8 @@
     ref="draggable"
     style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
-    @mousedown.stop="snowDragStart"
-    @touchstart.stop="snowDragStart"
+    @mousedown="snowDragStart"
+    @touchstart="snowDragStart"
   >
     <div
       v-element-size="getElementSize"
