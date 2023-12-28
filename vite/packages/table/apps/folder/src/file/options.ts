@@ -36,9 +36,9 @@ export const rowOption = {
   },
   big: {
     width: "86px",
-    height: "88px",
-    imgWidth: "52px",
-    imgHeight: "52px",
+    height: "70px",
+    imgWidth: "46px",
+    imgHeight: "46px",
   },
 };
 /**
