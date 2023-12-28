@@ -80,7 +80,7 @@ class TableManager {
           ]
         }
       })
-
+      require("@electron/remote/main").enable(tableWin.window.webContents)
       tableWin.window.webContents.session.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (d, c) => {
         if (d.responseHeaders['X-Frame-Options']) {
           delete d.responseHeaders['X-Frame-Options']

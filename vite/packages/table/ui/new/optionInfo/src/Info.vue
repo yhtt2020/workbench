@@ -1,19 +1,24 @@
 <template>
-  <div class="flex justify-between text-base xt-text mb-3" v-if="title">
+  <div class="flex justify-between text-base xt-text mb-2.5" v-if="title">
     <!-- 左侧 -->
     <div class="flex items-center">
       <span> {{ title }}</span>
-      <xt-new-icon
-        class="ml-1 xt-text-2"
-        v-if="icon"
-        :icon="icon"
-        size="16"
-        @click="onIconClick"
-      />
+      <div class="">
+        <slot name="icon">
+          <xt-new-icon
+            class="xt-text-2 ml-1"
+            v-if="icon"
+            :icon="icon"
+            size="20"
+            @click="onIconClick"
+          />
+        </slot>
+      </div>
     </div>
 
     <!-- 右侧 -->
     <div class="flex items-center">
+     <slot name="right">
       <a-switch
         v-if="isSwitch"
         v-model:checked="currentSwitch"
@@ -25,9 +30,10 @@
       >
         {{ state }}
       </div>
+     </slot>
     </div>
   </div>
-  <div class="text-sm xt-text-2 pb-3" v-if="info">{{ info }}</div>
+  <div class="text-sm xt-text-2 mb-2.5" v-if="info">{{ info }}</div>
 </template>
 
 <script setup lang="ts">

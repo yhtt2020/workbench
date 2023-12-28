@@ -3,21 +3,21 @@ export const NavList = [
     cname: "推荐",
     children: [
 
-      {
-        name: "myIcons",
-        cname: "图标组件",
-        detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
-        sizes: ["自定义大小"],
-        option: [
-          {
-            name: "myIcons",
-            imgName:'myIcons',
-            size: "自定义大小",
-            zoom: "20",
-          },
-        ],
-        time: "2023/6/28",
-      },
+      // {
+      //   name: "myIcons",
+      //   cname: "图标组件",
+      //   detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
+      //   sizes: ["自定义大小"],
+      //   option: [
+      //     {
+      //       name: "myIcons",
+      //       imgName:'myIcons',
+      //       size: "自定义大小",
+      //       zoom: "20",
+      //     },
+      //   ],
+      //   time: "2023/6/28",
+      // },
       {
         name: 'AIaides',
         cname: 'AI助手',
@@ -56,13 +56,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice',
             size: "2x4",
             zoom: "12",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
             zoom: "12",
           },
@@ -629,13 +629,13 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice',
             size: "2x4",
             zoom: "14",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
             zoom: "14",
           },
@@ -797,12 +797,12 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'audio',
+            imgName:'voice', 
             size: "2x4",
           },
           {
             name: "voice",
-            imgName:'voice',
+            imgName:'audio',
             size: "2x2",
           },
         ],

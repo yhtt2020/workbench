@@ -8,12 +8,13 @@
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../store";
 import { inject } from "vue";
-import { useAddCard } from "../hooks/useAddCard";
-
-const emits = defineEmits(["updateFile", "deleteFile"]);
+// import { useAddCard } from "../hooks/useAddCard";
+import { useAddCard } from "../../../../ui/hooks/useAddCard";
+import { nanoid } from "nanoid";
+const emits = defineEmits(["deleteFile"]);
 
 const index = inject("index", "");
-const model = inject("model", "");
+const data = inject("data", "");
 const folderStore = useFolderStore();
 const { dragId, isDrag, isOver, currentId, currentData } =
   storeToRefs(folderStore);
@@ -32,7 +33,12 @@ const handleDragStart = (event) => {
 
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
-  if (model !== "custom") return;
+  console.log("2222 :>> ", 2222);
+  // if (data.value.sort === "free") return;
+  if (data.value.model !== "custom") return;
+  // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
+  if (index.value == currentId.value) return;
+
   if (!currentId.value) {
     const file = {
       model: "file",
@@ -52,13 +58,15 @@ const handleDragEnd = (event) => {
       backgroundColor: currentData.value.bg,
       backgroundIndex: 0,
     };
-    useAddCard(file);
+    // iconList: [{ ...data }]
+    // useAddCard(file);
+    useAddCard("myIcons", {
+      iconList: [{ ...file }],
+    });
     emits("deleteFile", props.data);
     return;
   }
-  /**
-   * 判断是否处在当前文件夹
-   */
+  // 判断是否处在当前文件夹
   if (index.value != currentId.value) {
     emits("deleteFile", props.data);
   }

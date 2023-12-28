@@ -1,15 +1,9 @@
 <template>
-  <!--
-
-    @mousedown="handleMouseDown"
-
-"-->
   <div
     ref="containerRef"
     @click="handleOpenMenu($event, 'click')"
     @contextmenu="handleOpenMenu($event, 'contextmenu')"
   >
-    <!-- <div ref="containerRef" @mouseup="handleMouseUp($event)"> -->
     <slot></slot>
     <teleport to="body">
       <Transition
@@ -92,6 +86,7 @@ const props = withDefaults(defineProps<MenuProps>(), {
   name: "label",
   fn: "callBack",
   lock: true,
+  // 点击模式  contextmenu 右键 click 左键 all 同时触发
   model: "contextmenu",
   stopPropagation: true,
   beforeCreate: () => true,

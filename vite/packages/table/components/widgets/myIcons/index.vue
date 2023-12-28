@@ -1,4 +1,5 @@
 <!-- 图标组件入口 -->
+<!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 -->
   <Widget
@@ -10,12 +11,8 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-    <div
-      ref="iconRef"
-      class="icon-box box-border"
-      :style="dragStyle"
-    >
-    <!-- @contextmenu.stop="handleMenu()" -->
+    <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
+      <!-- @contextmenu.stop="handleMenu()" -->
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
@@ -57,6 +54,7 @@
               "
             >
               <icon
+                :newIcon = customData.newIcon
                 v-bind="customData.iconList[0]"
                 @custom-event="handleCustomEvent"
               ></icon>
@@ -67,19 +65,19 @@
       <!-- 卡片核心 -->
     </div>
   </Widget>
-
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
-  </Edit>
+  <Set v-if="settingVisible" v-model="settingVisible" @close="closeSet" :mask="0"></Set>
+  <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
+  </Edit> -->
   <!-- 多图标组件设置 -->
   <XtDrawer v-model="iconsSetVisible" placement="right">
-    <div class="xt-bg-2 p-4 rounded-xl">
+    <div class="p-4 xt-bg-2 rounded-xl">
       <div class="flex justify-between mb-2">
         <div>放大模式</div>
         <a-switch v-model:checked="customData.zoom.state" />
       </div>
-      <div class="xt-text-2 text-sm">
+      <div class="text-sm xt-text-2">
         该模式下可以自由拖动文件夹大小，直接点击打开文件夹内的应用或连接。
       </div>
     </div>
@@ -102,6 +100,7 @@ import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 import BottomEdit from "./components/bottomEdit.vue";
+import Set from "./set/index.vue";
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -126,6 +125,7 @@ export default {
     },
   },
   components: {
+    Set,
     Widget,
     Edit,
     icons,
@@ -160,6 +160,14 @@ export default {
         state: true,
         value: "",
       };
+    }
+    // newIcon false
+    if (this.customData.newIcon == false) {
+      state = true;
+      setData.zoom = {
+        state: true,
+        value: "",
+      }
     }
     if (this.customData.size == undefined) {
       state = true;
@@ -320,6 +328,7 @@ export default {
     dragSelection() {},
     // ctrl + 点击
     handleCustomEvent(event) {
+      console.log(this.customData.iconList[0]);
       this.iconSelect = true;
       this.isSelect = !this.isSelect;
       if (this.isSelect) {
@@ -488,6 +497,17 @@ export default {
       );
       message.success("保存成功");
       this.settingVisible = false;
+    },
+    // 适配新版保存图标
+    closeSet() {
+      this.customData.iconList[this.index] = {
+        ...this.edit,
+        open: {
+          type: this.edit.type,
+          value: this.edit.value,
+        },
+      };
+      message.success("保存成功");
     },
   },
 };

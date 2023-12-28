@@ -35,6 +35,7 @@ import { message } from 'ant-design-vue'
     mounted(){
         this.contentEditor = new Vditor(this.$refs.vditor, {
             height: '100%',
+            cdn: 'https://a.apps.vip/download/vditor',
             toolbarConfig: {
                 pin: true,
             },

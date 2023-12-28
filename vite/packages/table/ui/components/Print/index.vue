@@ -70,7 +70,7 @@
               <Icon icon="tabler:brand-bilibili" width="20" height="20" />
             </div>
             <div class="flex ml-3" style="flex-direction:column;width:216px;">
-              <div>想天工作台「德佟 P1 标签打印机」使用教程</div>
+              <div>天天工作台「德佟 P1 标签打印机」使用教程</div>
             </div>
             <xt-button style="border-radius:8px;" type="theme" :w="84" :h="32">观看视频</xt-button>
           </div>
@@ -84,11 +84,11 @@
       class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
       style="z-index:1100"
     ></div>
-    
+
   </teleport>
 
   </template>
-  
+
   <script setup>
   import { ref, toRefs, onMounted, onBeforeUnmount, computed, nextTick, watch  } from "vue";
   import { Icon } from '@iconify/vue';
@@ -97,7 +97,7 @@
   import { validateDrive, startPrint,
     //  doPreview,
       doJob  } from '../../../components/card/hooks/print.ts'
-  
+
   let api = ref({})
   const showBuy = ref(false)
   const selectedPrinter = ref('')
@@ -219,7 +219,7 @@
       }
     };
     </script>
-  
+
   <style lang="scss" scoped>
 
 .box {
@@ -282,4 +282,3 @@
   outline: none;
 }
   </style>
-  

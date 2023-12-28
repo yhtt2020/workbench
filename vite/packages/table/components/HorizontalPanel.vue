@@ -1,18 +1,18 @@
 <template>
   <!-- 快速搜索 头部 菜单切换 -->
-  <div class="flex flex-row rounded-lg p-1 justify-items-center justify-center" :class="bgColor" :style="{ height: itemHeight }"
+  <div class="flex flex-row justify-center p-1 rounded-lg justify-items-center" :class="bgColor" :style="{ height: itemHeight }"
     style="background: var(--secondary-bg);color: var(--primary-text);min-width: 300px">
     <!-- <div v-for="(item, index) in navList"
-      class=" w-40 h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
+      class="relative flex items-center justify-center w-40 h-full rounded-lg nav-item btn-active pointer"
       @click.stop="clickNav(item, index)" :class="activeIndex === index ? 's-item' : ''"> -->
     <template v-for="(item, index) in navList">
 
         <div
-          class="flex-1  h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer "
+          class="relative flex items-center justify-center flex-1 h-full rounded-lg nav-item btn-active pointer "
           @click.stop="clickNav(item, index)" :class="activeIndex === index ? 'xt-active-btn' : ''" :data-index="index"
-          :data-item="JSON.stringify(item)">
+          :data-item="JSON.stringify(item)" :style="[itemStyle]">
           <span>{{ item.title }}</span>
-          <div v-if="item.state === true" class="state-dot ml-2"></div>
+          <div v-if="item.state === true" class="ml-2 state-dot"></div>
         </div>
     </template>
   </div>
@@ -39,6 +39,10 @@ export default {
     height: {
       type: Number,
       default: 48
+    },
+    itemStyle: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

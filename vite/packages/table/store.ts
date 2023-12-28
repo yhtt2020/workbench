@@ -5,7 +5,8 @@ import {sUrl} from './consts'
 const userCardUrl = sUrl('/app/com/userCard')
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
-import {notification} from "ant-design-vue";
+import {message, notification} from "ant-design-vue";
+import shake from "./js/common/shake";
 
 
 // @ts-ignore
@@ -49,7 +50,7 @@ export const appStore = defineStore('appStore', {
     windowFullScreen: false,//窗口是否是全屏
 
     settings: {
-      showTopPanel:true,
+      showTopPanel: true,
       enableDev: false,//开发者模式
       transparent: false,//透明背景
       duck: false,//音量控制的时候，鸭子叫
@@ -58,6 +59,7 @@ export const appStore = defineStore('appStore', {
         count: 100,
         type: 'rain'
       },
+      showInTaskBar:true,
       showTopbarTime: true,
       showTopbarWeather: true,
       houserun: false,//rgb跑马灯
@@ -69,6 +71,16 @@ export const appStore = defineStore('appStore', {
       enablePlay: true, // 开启消息提示语开关
       messagePlay: false, // 消息接收提示语播放
       noticePlay: false, // 通知接收提示语播放
+
+      shake: {//摇一摇
+        enable: false,
+        //5低，4中，3高
+        sensitive: 4,
+        pos: {x: 0, y: 0},
+        sound: true,//播放音频提示
+        audio: 'chua.mp3',
+        init: false
+      },
 
       enableBarrage: false, //启用弹幕
       barrage: {
@@ -107,11 +119,14 @@ export const appStore = defineStore('appStore', {
     backgroundImage: {
       path: ''
     },
+    backgroundColor:{
+      color:''
+    },
     aggList: {
       type: 'work'
     },
     // 桌面初始化
-    deskInit:false,
+    deskInit: false,
     // 桌面缩放
    visibleScale: false,
 
@@ -119,6 +134,34 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
+    //确认摇一摇功能状态
+    ensureShake(startWizard=true) {
+      if (this.settings.shake.enable) {
+        //初始化摇一摇功能
+        window.shake = this.settings.shake
+        this.enableShake(null,startWizard)
+      } else {
+        window.shake = {
+          enable: false,
+        }
+      }
+    },
+    //启用摇一摇
+    enableShake(cb,startWizard=true) {
+      console.log('启用摇一摇功能')
+      if (!this.settings.shake.init && startWizard) {
+        shake.startWizard(cb)
+      } else {
+        window.shake=this.settings.shake
+        shake.start()
+      }
+    },
+    //禁用摇一摇
+    disableShake() {
+      window.shake=this.settings.shake
+      console.log('禁用摇一摇功能')
+      shake.stop()
+    },
 
     enterAided() {
       if (!this.aided) {
@@ -168,6 +211,7 @@ export const appStore = defineStore('appStore', {
     },
 
     setBackgroundImage(value) {
+      this.backgroundColor.color = ''
       this.backgroundImage = value
     },
     setAgreeTest() {
@@ -189,7 +233,7 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
-      localStorage.setItem('wizarded', true)
+      localStorage.setItem('wizarded', String(true))
       this.agreeTest = true
 
     },
@@ -293,12 +337,12 @@ export const appStore = defineStore('appStore', {
      * @param tip 提示窗口全屏
      * @param updateOrigin 更新原始记录的位置
      */
-    async enterFullScreen(tip = true,updateOrigin=true) {
+    async enterFullScreen(tip = true, updateOrigin = true) {
       const topBar = document.getElementById('topBar')
-      if(topBar){
+      if (topBar) {
         topBar.classList.remove('drag')
         //移除子元素的拖拽属性
-        for(let i=0 ;i<topBar.children.length;i++){
+        for (let i = 0; i < topBar.children.length; i++) {
           topBar.children[i].classList.remove('drag')
         }
         topBar.classList.add('no-drag')
@@ -327,8 +371,8 @@ export const appStore = defineStore('appStore', {
     ensureFullScreen() {
       if (this.windowFullScreen) {
         console.log('确认了全屏，是')
-        this.enterFullScreen(false,false)
-      }else{
+        this.enterFullScreen(false, false)
+      } else {
         console.log('确认了全屏，否')
       }
 
@@ -338,9 +382,9 @@ export const appStore = defineStore('appStore', {
         document.body.classList.add('window')
       }, 200)
       const topBar = document.getElementById('topBar')
-      if(topBar){
+      if (topBar) {
         //移除子元素的拖拽属性
-        for(let i=0 ;i<topBar.children.length;i++){
+        for (let i = 0; i < topBar.children.length; i++) {
           topBar.children[i].classList.add('drag')
         }
         topBar.classList.remove('no-drag')

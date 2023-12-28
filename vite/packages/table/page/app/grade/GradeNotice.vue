@@ -4,7 +4,7 @@
     <div class="text-white"><Icon icon="sound" style="font-size: 1.2em" class="mr-2"></Icon>新用户须知</div>
     <div style="line-height: 2;font-size: 16px" class="mt-4 text-xs">在首次使用前，建议查看新手引导，以免无从下手。<br>强烈建议收藏此文档！！！</div>
     <div style="font-size: 16px" class=" text-xs	mt-4 pointer" @click="clickAgree"><a-checkbox v-model:checked="known" class="mr-2"></a-checkbox>
-      已阅读<span @click.stop="openAgree" class="pointer" style="color: rgba(80, 139, 254, 1);">《想天工作台新手引导》</span></div>
+      已阅读<span @click.stop="openAgree" class="pointer" style="color: rgba(80, 139, 254, 1);">《天天工作台新手引导》</span></div>
     <div class="h-1/5 w-2/5 rounded-lg flex justify-center items-center text-white mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="next">开始</div>
   </div>
   <div class="  h-5/12 rounded-lg flex flex-col items-center pt-6 px-4 pb-4" style="font-size:16px;background: rgba(33, 33, 33, 1);width:350px" v-else>

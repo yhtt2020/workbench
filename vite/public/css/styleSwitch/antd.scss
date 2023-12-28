@@ -129,10 +129,11 @@
   color: var(--primary-text) !important;
 }
 .ant-select-item {
-  color: var(--primary-text);
+  color: var(--primary-text) !important;
 }
 .ant-select-item-option-selected {
   background: var(--active-bg) !important;
+  color: var(--active-text) !important;
 }
 .ant-select-item-option:hover {
   background: var(--active-secondary-bg);

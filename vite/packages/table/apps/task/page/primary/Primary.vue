@@ -1,5 +1,5 @@
 <template>
-  <!-- <xt-button @click="test()">任务重置</xt-button> -->
+  <xt-button @click="test()">任务重置</xt-button>
   <template v-if="store.taskID">
     <div class="xt-bg-2 rounded-xl p-3">
       <xt-title m="">

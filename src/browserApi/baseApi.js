@@ -15,7 +15,8 @@ const baseApi={
   system:require('./system.js'),//系统接口
   settings:require('./settings'),//设置接口
   db:require('./db'),//数据库接口,
-  web:require('./web')//网页接口
+  web:require('./web'),//网页接口
+  mouse:require('./mouse')//鼠标
 }
 window.baseApi=baseApi
 module.exports=baseApi

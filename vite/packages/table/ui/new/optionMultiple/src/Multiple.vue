@@ -4,7 +4,6 @@
     mode="multiple"
     class="rounded-xl"
     style="width: 100%; padding: 0 !important"
-    placeholder="Please select"
     @change="handleChange"
   >
     <a-select-option class="no-drag" v-for="item in list" :value="item.value"
@@ -24,10 +23,11 @@ interface multipleProps {
 const props = withDefaults(defineProps<multipleProps>(), {});
 
 const currentMultiple = ref(props.multiple);
-const emits = defineEmits(["update:multiple"]);
+const emits = defineEmits(["update:multiple", "cb"]);
 
 watch(currentMultiple, () => {
   emits("update:multiple", currentMultiple.value);
+  emits("cb", currentMultiple.value);
 });
 </script>
 

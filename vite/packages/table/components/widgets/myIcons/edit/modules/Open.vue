@@ -97,7 +97,6 @@ export default {
       console.log('item :>> ', item);
       console.log('item.path :>> ', item.path);
       let img = await tsbApi.system.extractFileIcon(item.path )
-      console.log('img :>> ', img);
       this.edit.open.name = item.name;
       // 当图片状态为空时
       if (!this.edit.src) {
@@ -111,12 +110,12 @@ export default {
       if (this.edit.titleValue == "") {
         if (item.name) this.edit.titleValue = item.name;
       }
+      console.log('item.type  :>> ', item.type );
       if (item.type === "lightApp") {
         // 轻应用数据
         this.edit.open = {
           type: "lightApp",
           value: item.package,
-          name: item.name,
         };
         item = this.edit.open;
       } else if (item.type === "coolApp") {
@@ -124,7 +123,6 @@ export default {
         this.edit.open = {
           type: "coolApp",
           value: item.data,
-          name: item.name,
         };
         item = this.edit.open;
       } else if (item.type === "tableApp") {
@@ -133,11 +131,13 @@ export default {
         this.edit.open = {
           type: "tableApp",
           value: item.path,
-          name: item.name,
-          src:item.src
         };
         item = this.edit.open;
-
+      } else if (item.event) {
+        this.edit.open = {
+          type: "systemApp",
+          value: item.event,
+        };
       }
       //  else if (item.type === "systemApp") {
       //   // 本地应用数据

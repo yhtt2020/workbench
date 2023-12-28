@@ -10,18 +10,18 @@
       <a-row type="flex">
 
         <a-col style="display: flex">
-          <div   class="app-btn no-drag" style="width:60px">
-<!--            <div class="btn-wrapper">-->
-<!--              <Icon-->
-<!--                icon="xiangzuo"-->
-<!--                style="font-size: 1.5em; vertical-align: middle"-->
-<!--              ></Icon>-->
-<!--            </div>-->
+          <div class="app-btn no-drag" style="width:60px">
+            <!--            <div class="btn-wrapper">-->
+            <!--              <Icon-->
+            <!--                icon="xiangzuo"-->
+            <!--                style="font-size: 1.5em; vertical-align: middle"-->
+            <!--              ></Icon>-->
+            <!--            </div>-->
 
           </div>
 
           <div @click="goBack" class="app-btn">
-            <div  class="btn-wrapper no-drag">
+            <div class="btn-wrapper no-drag">
               <Icon
                 icon="youjiantou"
                 style="font-size: 1.5em; vertical-align: middle;transform: rotate(-180deg)"
@@ -105,7 +105,8 @@
           <div class="no-drag" v-else style="display: flex">
             <!--      网址输入框      -->
 
-            <a-input style="font-weight: bold" @blur="this.showEdit=false" spellcheck="false" v-if="showEdit" @keyup.enter="addTab"
+            <a-input style="font-weight: bold" @blur="this.showEdit=false" spellcheck="false" v-if="showEdit"
+                     @keyup.enter="addTab"
                      v-model:value="urlInput" class="address-input xt-bg"></a-input>
             <div @click="showEdit=true" class="xt-bg xt-text truncate"
                  style="font-weight:bold;text-align:left;border-radius: 100px;height: 32px;line-height:32px;color: white;padding-left: 20px;width: 100%;margin-top: 10px;margin-left: 10px;margin-right: 10px"
@@ -184,13 +185,35 @@
       id="frame"
 
       style="width: 100%; flex: 1"
-    ></div>
+    >
+      <div class="nav-list">
+        <div @click="openUrl(item.url)" class="nav-item" v-for="item in navList">
+          <div class="nav-logo">
+            <a-avatar :size="80" :src="item.logo" shape="square"></a-avatar>
+          </div>
+          <div class="nav-title">
+            {{item.title}}
+          </div>
+        </div>
+      </div>
+
+    </div>
     <div
       v-else
       id="frame"
       style="width: 100%; flex: 1;background: rgba(0,0,0,0.2)"
+      :style="{zoom:this.scale/100}"
     >
-      &nbsp;
+      <div class="nav-list">
+        <div @click="openUrl(item.url)" class="nav-item" v-for="item in navList">
+          <div class="nav-logo">
+            <a-avatar :size="80" :src="item.logo" shape="square"></a-avatar>
+          </div>
+          <div class="nav-title">
+            {{item.title}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -204,7 +227,8 @@ import { browserStore } from '../../../store/browser'
 import Template from '../../../../user/pages/Template.vue'
 import runningApps from '../../../components/bottomPanel/RunningApps.vue'
 import BackBtn from '../../../components/comp/BackBtn.vue'
-
+import Avatar from '../../../components/desk/navigationBar/components/Avatar.vue'
+import homeList from './browserHome'
 export default {
   name: 'BrowserIndex',
   data () {
@@ -217,9 +241,11 @@ export default {
       },
       urlInput: '',//用户输入的地址
       showEdit: false,
+      navList:homeList
     }
   },
   components: {
+    Avatar,
     BackBtn,
     Template,
     PlusOutlined,
@@ -233,7 +259,7 @@ export default {
     ...mapWritableState(browserStore, ['currentTab', 'runningTabs'])
   },
   mounted () {
-    this.setEvent('addedTab',this.addedTab)
+    this.setEvent('addedTab', this.addedTab)
     ipc.send('getRunningTableTabs')
     let params = this.$route.params
     if (typeof params.fullScreen === 'undefined') {
@@ -246,7 +272,7 @@ export default {
     }
     //非系统应用，则打开内嵌网页
     this.$nextTick(async () => {
-      if(params.id){
+      if (params.id) {
         //如果是直接切换到某个tab
         this.switchToTab(params.id)
         return
@@ -277,14 +303,14 @@ export default {
     this.handleLeave()
   },
   methods: {
-    ...mapActions(browserStore, ['updateTabCapture','setEvent']),
-    switchToTab(id){
-      let found=this.runningTabs.find(tab=>{
-        return tab.id===id
+    ...mapActions(browserStore, ['updateTabCapture', 'setEvent']),
+    switchToTab (id) {
+      let found = this.runningTabs.find(tab => {
+        return tab.id === id
       })
-      if(found){
-        this.currentTab=found
-        this.urlInput=this.currentTab.url
+      if (found) {
+        this.currentTab = found
+        this.urlInput = this.currentTab.url
         ipc.send('showTableTab', { id: id, position: this.getContentBounds() })
       }
 
@@ -292,8 +318,11 @@ export default {
     async addTab () {
       await this.invokeAddTab({ url: this.urlInput })
     },
-    async addNewTab(){
-      await this.invokeAddTab({url:'about:blank'})
+    async addNewTab () {
+      await this.invokeAddTab({ url: 'about:blank' })
+    },
+    async openUrl(url){
+      await this.invokeAddTab({ url: url })
     },
     fixZoom (num) {
       return Number(((num * this.settings.zoomFactor) / 100).toFixed(0))
@@ -321,9 +350,9 @@ export default {
       }
       await ipc.send('addTableTab', JSON.parse(JSON.stringify(args)))
     },
-    addedTab(args){
-      const {tab}=args
-      this.currentTab =tab
+    addedTab (args) {
+      const { tab } = args
+      this.currentTab = tab
       this.urlInput = this.currentTab.url
       this.runningTabs.push(JSON.parse(JSON.stringify(this.currentTab)))
     },
@@ -387,18 +416,18 @@ export default {
       })
     },
     handleLeave () {
-      if(this.currentTab){
+      if (this.currentTab) {
         this.hideTab(JSON.parse(JSON.stringify(this.currentTab)))
       }
       this.fullScreen = false
     },
     goBack () {
-      ipc.send('goBackTableTab',{
+      ipc.send('goBackTableTab', {
         tab: JSON.parse(JSON.stringify(this.currentTab)),
       })
     },
-    goForward(){
-      ipc.send('goForwardTableTab',{
+    goForward () {
+      ipc.send('goForwardTableTab', {
         tab: JSON.parse(JSON.stringify(this.currentTab)),
       })
     },
@@ -416,7 +445,7 @@ export default {
 .app-btn {
   display: inline-block;
   cursor: pointer;
-  color:var(--primary-text);
+  color: var(--primary-text);
 
   &:hover .btn-wrapper {
     color: var(--secondary-text);
@@ -448,5 +477,27 @@ export default {
   padding-left: 20px;
   flex: 1;
   background: var(--secondary-bg);
+}
+
+.nav-list{
+  justify-items: center;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap:30px;
+  display:flex;
+
+  height: 100%;
+  .nav-item{
+    cursor: pointer;
+    &:hover{
+      opacity: .8;
+    }
+  }
+  .nav-title{
+    padding-top: 10px;
+    font-size: 18px;
+    text-align: center;
+  }
 }
 </style>

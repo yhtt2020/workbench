@@ -1,22 +1,24 @@
 <template>
-  <div class="team-module">
-    <div v-if='!isOffline' @click="toggleTeam" class="pb-0 m-0 mr-3 common-panel s-bg pointer w-[80px] h-[80px] flex justify-center items-center"
-    style="margin-left: 0;padding:0.6em !important;color:var(--primary-text);background: var(--primary-bg);border-radius: 18px;border: 1px solid var(--divider);">
-    <emoji style="width: 52px;height:52px" icon="glassface"></emoji>
-    </div>
-    <div class="team-box" v-if="openTeam">
-      <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type,t)">
-        <a-avatar :src="t.img" :size="40"></a-avatar>
-        <span>{{ t.title }}</span>
-      </div>
+  <tippy placement="top" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
+    ref="tippyRef">
+    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+    <template #content>
+      <div class="flex flex-wrap w-[278px] h-[173px] rounded-xl">
+        <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type, t)">
+          <a-avatar :src="t.img" :size="40"></a-avatar>
+          <span>{{ t.title }}</span>
+        </div>
         <div class="team-item" @click="openTask()">
           <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
           <span>任务中心</span>
         </div>
-    </div>
-  </div>
-  <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
-  <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
+      </div>
+    </template>
+  </tippy>
+  <teleport to='body'>
+    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
+    <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
+  </teleport>
 </template>
 
 <script>
@@ -27,15 +29,19 @@ import MyProp from '../team/MyProp.vue'
 import Emoji from '../comp/Emoji.vue'
 import { taskStore } from '../../apps/task/store'
 import { offlineStore } from '../../js/common/offline'
+import { renderIcon } from '../../js/common/common'
+import Avatar from '../../components/desk/navigationBar/components/Avatar.vue'
 export default {
   name: "Team",
   components: {
     Emoji,
     TeamTip,
-    MyProp
+    MyProp,
+    Avatar
   },
   props: {
-
+    item: Object,
+    shakeElement: Boolean
   },
   data() {
     return {
@@ -85,14 +91,19 @@ export default {
     ...mapWritableState(teamStore, ['team', 'teamVisible']),
     ...mapWritableState(taskStore, ['isTaskDrawer']),
     ...mapWritableState(offlineStore, ['isOffline']),
+    body() {
+      return document.body
+    }
   },
   methods: {
+    renderIcon,
     ...mapActions(teamStore, ['updateMy']),
     openTask() {
       this.isTaskDrawer = true
+      this.$refs.tippyRef.hide()
     },
-    async jump(type,val){
-      switch(type){
+    async jump(type, val) {
+      switch (type) {
         case 'route':
           this.$router.push(val.route)
           break;
@@ -105,16 +116,17 @@ export default {
             this.teamVisible = !this.teamVisible
           }
           break;
-         case 'prop':
+        case 'prop':
           this.showMyProp = true
           break;
       }
       this.openTeam = false
+      this.$refs.tippyRef.hide()
     },
-    toggleTeam () {
+    toggleTeam() {
       this.openTeam = !this.openTeam
     },
-    closeMyProp(val){
+    closeMyProp(val) {
       this.showMyProp = val
     }
   },
@@ -122,41 +134,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.team-module{
-  position: relative;
-  .team-box{
-    position: absolute;
-    top: -200px;
-    right: 10px;
-    border-radius: 12px;
-    width: 288px;
-    height: 200px;
-    z-index: 999;
-    background: var(--main-mask-bg);
-    // background: rgba(26,26,26,0.65);
-    backdrop-filter: blur(8px);
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
-    border-radius: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 12px 6px;
-    .team-item{
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
-      margin: 0 6px 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0 6px;
-      cursor: pointer;
-      color: var(--primary-text);
-    }
-    .team-item:hover{
-      background: rgba(80,139,254,0.20);
-    }
+.team-item {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  margin: 0 6px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0 6px;
+  cursor: pointer;
+  color: var(--primary-text);
+
+  &:hover {
+    background: rgba(80, 139, 254, 0.20);
   }
 }
-
 </style>

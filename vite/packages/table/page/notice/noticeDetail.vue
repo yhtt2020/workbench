@@ -1,15 +1,15 @@
 <template>
-  <div class="w-full h-full flex items-center justify-center" v-if="filterList.length === 0">
+  <div class="w-full h-full flex items-center justify-center" v-if="list.length === 0">
     <EmptyStatus text="暂时没有消息通知"/>
   </div>
-  <div class="w-full h-full py-2 xt-text" v-else>
-    <vue-custom-scrollbar :settings="settingsScroller" style="height: 94%;">
-     <div  v-for="item in filterList" class="mb-3">
+  <div class="w-full flex-1 px-3 xt-text" v-else style="height: calc(100% - 63px);">
+    <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
+     <div  v-for="item in displayList" class="mb-3">
       <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
         <div class="w-full h-full  flex flex-col p-4 xt-bg-2 rounded-xl">
           <div class="flex justify-between mb-3">
             <div class="flex">
-              <a-avatar :size="24" shape="circle"  :src="item.content.icon"></a-avatar>
+              <a-avatar :size="24" shape="square"  :src="item.content.icon"></a-avatar>
               <div class="font-16 font-400 xt-font xt-text ml-3">
                 {{ item.content.title }}
               </div>
@@ -21,17 +21,20 @@
             </xt-button>
           </div>
           <div class="font-16 font-400 xt-font xt-text mb-2">
-            {{ item.content.body }}
-          </div> 
+            <NoticeBody :content="item.content"></NoticeBody>
+          </div>
           <div class="flex justify-between">
-            <div class="flex items-center justify-center ">{{formatTime(item.createTime)}}</div>
-            <xt-button class="category-button" style="width: 56px;height: 32px;background: var(--active-secondary-bg)!important;color:var(--active-bg);border-radius: 8px !important;" @click="reviewMessage(item.content.conversationID)">查看</xt-button>
+            <div class="flex items-center justify-center  xt-font" style="color: var(--disable-text);">{{formatTime(item.createTime)}}</div>
+            <div class="flex flex-end gap-2">
+              <UrlButtons @viewNow="reviewMessage(item.content.conversationID)" :urls="item.urls"></UrlButtons>
+            </div>
           </div>
         </div>
       </xt-menu>
      </div>
+     <div style="height: 12px;"></div>
     </vue-custom-scrollbar>
-  
+
   </div>
 </template>
 
@@ -43,12 +46,16 @@ import { chatStore } from '../../store/chat'
 import { noticeStore } from './store/noticeStore'
 
 import EmptyStatus from '../chat/components/empty/EmptyStatus.vue';
+import UrlButtons from './part/UrlButtons.vue'
+import NoticeBody from './part/NoticeBody.vue'
 
 
 export default {
   props: ["list","type"],
 
   components:{
+    NoticeBody,
+    UrlButtons,
     DetailIcon,EmptyStatus
   },
 
@@ -59,7 +66,7 @@ export default {
         {
           name: "打开应用",
           callBack: () => {
-            
+
           },
           newIcon: "fluent:open-20-filled",
         },
@@ -84,16 +91,35 @@ export default {
 
   computed:{
     filterList(){
-      if(this.type === 'system'){
-        return this.list
-      }else{
-        const messageList = this.list.filter((item)=>{
-          if(item.content.type === 'message'){
-            return item
+      // return this.list
+      // if(this.type === 'system'){
+      //   return this.list
+      // }else{
+      //   const messageList = this.list.filter((item)=>{
+      //     if(item.content.type === 'message'){
+      //       return item
+      //     }
+      //   })
+      //   return messageList
+      // }
+    },
+    displayList(){
+      if(this.list){
+        return this.list.map(item=>{
+          if(item.content.urls){
+            var urls=JSON.parse(item.content.urls)
+          }else{
+            urls=[]
+          }
+          return {
+            ...item,
+            urls
           }
         })
-        return messageList
+      }else{
+        return []
       }
+
     }
   },
 

@@ -1,5 +1,6 @@
 <template>
-  <div id="topBar" class="flex items-center justify-between w-full top-shadow drag pt-1">
+  <!-- xt-main-top-bar 元素定位类 不可删 -->
+  <div id="topBar" class="xt-main-top-bar flex items-center justify-between w-full top-shadow drag pt-1">
 
       <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex min-h flex-1 pl-2.5 drag  items-center">
         <div class="no-drag flex">
@@ -36,7 +37,7 @@
             </div>
           </xt-button>
 
-          <TopCourier />
+          <TopCourier v-if="!isHidden" />
 
           <TopClockTimer/>
 
@@ -76,7 +77,7 @@
             <div class="xt-text font-14  xt-font">
               <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
               <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
-                <i style="" :class="'qi-' + city.now.icon + '-fill'"></i> 
+                <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>
            </span>
             </div>
           </div> -->
@@ -182,7 +183,7 @@ export default {
       topClockTimerVisible: false,
     }
   },
-
+  props:['isHidden'],
   computed:{
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),

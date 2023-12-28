@@ -120,7 +120,7 @@ import { LeftOutlined, CloseOutlined } from '@ant-design/icons-vue';
           data:[
             {
               index:"1000345",
-              keyWord:"想天工作台",
+              keyWord:"天天工作台",
               type:"长期",
               state:"生效中",
             },

@@ -52,6 +52,7 @@ onMounted(async () => {
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  updateScroll(getFreeLayoutState.value.mode.scroll);
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
@@ -148,25 +149,6 @@ function handleKeyUp(event) {
     event.stopPropagation();
   }
 }
-// 重置中心区域
-const { width, height } = useElementSize(scrollbar);
-function redirect() {
-  let w, h;
-  if (getFreeLayoutState.value.line.centerPosition.x == "top") {
-    w = getFreeLayoutState.value.line.centerLine.x;
-  } else {
-    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-  }
-  scrollbar.value.scrollLeft = w;
-  if (getFreeLayoutState.value.line.centerPosition.y == "top") {
-    h = getFreeLayoutState.value.line.centerLine.y;
-  } else {
-    h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-  }
-  scrollbar.value.scrollTop = h;
-  freeLayoutEnv.value.scrollLeft = w;
-  freeLayoutEnv.value.scrollTop = h;
-}
 // 页面缩放更新布局
 function update() {
   perfectScrollbar.value.update();
@@ -177,6 +159,64 @@ function update() {
 let isDragging = ref(false);
 let isKey = ref(false);
 let initialMousePosition = ref(null);
+
+/**
+ * 2023-12-21
+ */
+//滚动方式
+const updateScroll = (newV) => {
+  if (newV === "free") {
+    perfectScrollbar.value.settings.suppressScrollX = false;
+    perfectScrollbar.value.settings.suppressScrollY = false;
+  } else if (newV === "vertical") {
+    perfectScrollbar.value.settings.suppressScrollX = true;
+    perfectScrollbar.value.settings.suppressScrollY = false;
+  } else if (newV === "horizontal") {
+    perfectScrollbar.value.settings.suppressScrollX = false;
+    perfectScrollbar.value.settings.suppressScrollY = true;
+  } else if (newV === "lock") {
+    perfectScrollbar.value.settings.suppressScrollX = true;
+    perfectScrollbar.value.settings.suppressScrollY = true;
+  }
+};
+watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
+//临时加了个问号处理一下
+// 重置中心区域
+const { width, height } = useElementSize(scrollbar);
+function redirect() {
+  let w, h;
+  console.log(
+    "getFreeLayoutState.value.mode.align :>> ",
+    getFreeLayoutState.value.mode.align
+  );
+  if (getFreeLayoutState.value.mode.align === "top") {
+    h = 0;
+    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
+  } else if (getFreeLayoutState.value.mode.align === "center") {
+    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
+    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
+  } else if (getFreeLayoutState.value.mode.align === "left") {
+    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
+    w = 0;
+  } else if (getFreeLayoutState.value.mode.align === "right") {
+    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
+    w = getFreeLayoutState.value.canvas.width;
+  } else if (getFreeLayoutState.value.mode.align === "bottom") {
+    h = getFreeLayoutState.value.canvas.height;
+    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
+  } else {
+    // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+    // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+    h = getFreeLayoutState.value.line.centerLine.y
+  }
+  scrollbar.value.scrollLeft = w;
+  scrollbar.value.scrollTop = h;
+  freeLayoutEnv.value.scrollLeft = w;
+  freeLayoutEnv.value.scrollTop = h;
+}
+
+// 2023-12-21 结束
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();

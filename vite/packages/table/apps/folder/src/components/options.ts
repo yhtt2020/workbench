@@ -1,15 +1,17 @@
+// 单个文件数据
 export const defaultData = {
-  useCount: 0,
-  model: "app",
+  useCount: 0, // 使用次数
+  lastUseTime: "",
+  mode: "app",
   type: "",
   value: "",
   icon: "",
   iconState: "cover",
   iconShape: "square",
   name: "",
-  isName: "",
+  isName: true,
   bg: "",
-  isBg: "",
+  isBg: false,
   radius: 5,
   isRadius: true,
 };

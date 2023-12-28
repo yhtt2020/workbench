@@ -1,7 +1,7 @@
 import { h, render } from "vue";
 import ConfirmComponent from "./Confirm.vue";
 
-export default ConfirmComponent
+export default ConfirmComponent;
 
 interface ConfirmOptions {
   noText?: string | boolean | undefined;
@@ -12,7 +12,9 @@ interface ConfirmOptions {
   index?: number;
   mask?: boolean;
   maskIndex?: number;
-  type?: 'error' | 'link' |"success" |"warning"
+  type?: "error" | "link" | "success" | "warning";
+  okButtonWidth?: string;
+  noButtonWidth?: string;
 }
 
 /**
@@ -31,6 +33,9 @@ interface ConfirmOptions {
  * @param options.mask - 是否显示遮罩层（默认：false）
  * @param options.maskIndex - 遮罩层索引（默认：1000）
  * @param options.type - icon 的样式类型 （默认：link）
+ * @param options.okButtonWidth - 确认按钮宽度（默认：64）
+ * @param options.noButtonWidth - 取消按钮宽度（默认：64）
+ *
  */
 export const confirm = (
   title: string,
@@ -44,10 +49,25 @@ export const confirm = (
     index: 1001,
     mask: false,
     maskIndex: 1000,
-    type:'link'
+    type: "link",
+    // 按钮宽
+    okButtonWidth: "64",
+    noButtonWidth: "64",
   }
 ) => {
-  const { noText, okText, duration, index, mask, maskIndex, ok, no, type} = options;
+  const {
+    noText,
+    okText,
+    duration,
+    index,
+    mask,
+    maskIndex,
+    ok,
+    no,
+    type,
+    okButtonWidth,
+    noButtonWidth,
+  } = options;
 
   // 3 把渲染的 vNode 移除
   const close = () => {
@@ -67,9 +87,16 @@ export const confirm = (
     ok,
     no,
     close,
-    type
+    type,
+    okButtonWidth,
+    noButtonWidth,
   });
 
   // 2 render 渲染
-  render(vNode, document.body);
+
+   let component=render(vNode, document.body)
+  return {
+    component,
+    close
+  }
 };

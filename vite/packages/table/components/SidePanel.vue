@@ -1,11 +1,11 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'">
-  <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
+    <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId"
       style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
       class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
-      ref="sideContent" @contextmenu="showMenu">
+      ref="sideContent" @contextmenu="showMenu" :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})`, }">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -14,16 +14,14 @@
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
-              <div :key="item.name" @click="clickNavigation(item)"
+              <div :key="item.name" @click="newOpenApp(item.type, item.value)"
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  :class="{ 'active-back': current(item) }">
-                  <div class="flex items-center justify-center icon-color" v-if="item.type === 'systemApp'">
-                    <a-avatar :size="52" shape="square" :src="item.icon"
-                      :class="{ 'shaking-element': shakeElement }"></a-avatar>
-                  </div>
-                  <a-avatar v-else :size="52" shape="square" :src="renderIcon(item.icon)"
-                    :class="{ 'shaking-element': shakeElement }"></a-avatar>
+                  :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                  <template v-else>
+                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                  </template>
 
                 </div>
               </div>
@@ -38,36 +36,17 @@
       </div>
 
     </div>
-  <!-- </xt-menu> -->
+    <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
-  <!-- <a-drawer :contentWrapperStyle="{ backgroundColor: '#212121', height: '216px' }" class="drawer" :closable="true"
-    placement="bottom" :visible="menuVisible" @close="onClose">
-    <a-row>
-      <a-col>
-        <div class="flex flex-wrap items-center">
-          <div @click="editNavigation(item)" class="relative btn" v-for="item in drawerMenus">
-            <navIcon :icon="item.icon" style="font-size: 3em"></navIcon>
-            <div><span>{{ item.title }}</span></div>
-            <GradeSmallTip powerType="bottomNavigation" @closeDrawer="closeDrawer"></GradeSmallTip>
-          </div>
-          <div @click="clickNavigation(item)" class="btn" v-for="item in builtInFeatures" :key="item.name">
-            <navIcon style="font-size: 3em" :icon="item.icon"></navIcon>
-            <div><span>{{ item.name }}</span></div>
-          </div>
-        </div>
-
-      </a-col>
-    </a-row>
-  </a-drawer> -->
-
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
       </navigationSetting>
+      <!-- 图标编辑 -->
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
     </div>
   </transition>
 </template>
@@ -94,6 +73,11 @@ import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
+import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
+import { startApp } from '../ui/hooks/useStartApp'
+import { updateIcon } from '../components/desk/navigationBar/index'
+import Avatar from "./desk/navigationBar/components/Avatar.vue";
+import Team from './bottomPanel/Team.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -103,7 +87,10 @@ export default {
     EditNewNavigation,
     Common,
     xtMenu,
-    xtMixMenu
+    xtMixMenu,
+    EditIcon,
+    Avatar,
+    Team
   },
   emits: ['getDelIcon', 'hiedNavBar'],
   data() {
@@ -121,13 +108,13 @@ export default {
           id: 1,
           newIcon: 'fluent:open-16-regular',
           label: "打开",
-          callBack: () => { this.clickNavigation(this.currentItem) },
+          callBack: () => { this.newOpenApp(this.currentItem.type, this.currentItem.value) },
         },
         {
           id: 2,
           label: '编辑',
           newIcon: "fluent:compose-16-regular",
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) },
+          callBack: () => { this.editIcon(this.currentItem) },
         },
         {
           id: 3,
@@ -188,28 +175,28 @@ export default {
           newIcon: "fluent:lock-closed-16-regular",
           name: "锁定屏幕",
           event: "lock",
-          fn: () => { this.clickNavigation(this.builtInFeatures[0]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[0].type, this.builtInFeatures[0].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:settings-16-regular",
           name: "基础设置",
           event: "setting",
-          fn: () => { this.clickNavigation(this.builtInFeatures[1]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[1].type, this.builtInFeatures[1].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏显示",
           event: "fullscreen",
-          fn: () => { this.clickNavigation(this.builtInFeatures[2]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[2].type, this.builtInFeatures[2].value) }
         },
         {
           type: "systemApp",
           newIcon: "fluent:slide-settings-24-regular",
           name: "设备设置",
           event: "status",
-          fn: () => { this.clickNavigation(this.builtInFeatures[3]) }
+          fn: () => { this.newOpenApp(this.builtInFeatures[3].type, this.builtInFeatures[3].value) }
         }
       ],
       shakeElement: false,
@@ -267,11 +254,11 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(navStore, ['builtInFeatures', 'mainNavigationList', 'sideNavigationList', 'rightNavigationList', 'navigationToggle', 'copySideNav', 'copyRightNav']),
     ...mapWritableState(cardStore, ['routeParams']),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'levelVisible']),
+    ...mapWritableState(useNavigationStore, ['editToggle', 'selectNav', 'bottomToggle', 'popVisible', 'currentList', 'navAttribute', 'iconRadius', 'editItem']),
     ...mapWritableState(appStore, ['settings']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
@@ -320,6 +307,8 @@ export default {
   mounted() {
     this.enableDrag()
     this.colDrop()
+    this.copyNav()
+    // console.log(this.copySideNav, 'copySideNav');
     // this.scrollNav('sideContent', 'scrollTop')
     if (this.navigationList === this.rightNavigationList) {
       this.currentNav = 'right'
@@ -342,21 +331,31 @@ export default {
         this.disableDrag()
       }
     },
-    // navigationList: {
-    //   deep: true,
-    //   handler(newVal, oldVal) {
-    //     if (oldVal.length > newVal.length && newVal.length === 0) {
-    //       console.log('触发操作');
-    //     }
-    //     console.log('哈哈哈，没触发吧');
-    //   }
-    // }
+    sideNavigationList: {
+      handler(newVal, oldVal) {
+        // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        this.copySideNav = this.updateIcon(this.sideNavigationList, this.copySideNav)
+        console.log(this.copySideNav, 'copySideNav');
+        console.log(this.sideNavigationList, 'sideNavigationList');
+      },
+      immediate: true,
+      deep: true,
+    },
+    rightNavigationList: {
+      handler(newVal, oldVal) {
+        // this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.copyRightNav = this.updateIcon(this.rightNavigationList, this.copyRightNav)
+      },
+      immediate: true,
+      deep: true,
+    },
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'copyNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
+    updateIcon,
     renderIcon,
     disableDrag() {
       // if (this.sortable) {
@@ -366,6 +365,11 @@ export default {
       // message.info('已中止侧栏调整')
       return
       // }
+    },
+    editIcon(item) {
+      this.quick = true
+      this.componentId = 'EditIcon'
+      this.editItem = item
     },
     /**
      * 
@@ -439,9 +443,9 @@ export default {
           } else {
             drop.insertBefore(newItem, oldItem.nextSibling)
           }
-          that.sortFootNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
-          that.updateMainNav();
+          that.sortNavigationList(event)
+          // that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
+          // that.updateMainNav();
         }, 100),
         onEnd: function (event) {
           that.$emit('getDelIcon', false)
@@ -462,54 +466,9 @@ export default {
         return false
       }
     },
-    clickNavigation(item) {
-      if (this.editToggle) {
-        this.enableDrag()
-        return
-      }
-      switch (item.type) {
-        case 'systemApp':
-          if (item.event === 'fullscreen') {
-            this.toggleFullScreen()
-          } else if (item.event === '/status') {
-            if (this.$route.path === '/status') {
-              this.$router.go(-1)
-            } else {
-              this.$router.push({ path: '/status' })
-            }
-          } else if (item.data) {
-            this.$router.push({
-              name: 'app',
-              params: item.data
-            })
-          } else {
-            this.$router.push({ name: item.event })
-          }
-          break
-        case 'coolApp':
-          this.$router.push({
-            name: 'app',
-            params: item.data
-          })
-          break
-        case 'localApp':
-          require('electron').shell.openPath(item.path)
-          break
-        case 'lightApp':
-          ipc.send('executeAppByPackage', { package: item.package })
-          break
-        default:
-          require('electron').shell.openPath(item.path ? item.path : item.url)
-      }
+    newOpenApp(type, value) {
+      startApp(type, value, this.$router)
     },
-    // scrollNav(refVal, scrollDirection) {
-    //   // let content = this.$refs[refVal]
-    //   // content.addEventListener('wheel', (event) => {
-    //   //   event.preventDefault();
-    //   //   // console.log(event)
-    //   //   content[scrollDirection] += event.deltaY
-    //   // });
-    // },
     // 拖拽桌面图标
     async drop(e) {
       // this.modelValue=false
@@ -531,7 +490,15 @@ export default {
       this.dropList = await Promise.all(filesArr.map(async (item) => {
         const fileName = item.substring(item.lastIndexOf("\\") + 1);
         let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return { icon: `${dropFiles}`, name: `${fileName}`, path: item }
+        return {
+          icon: `${dropFiles}`,
+          name: `${fileName}`,
+          value: item,
+          type: 'tableApp',
+          bg: '',
+          isBg: false,
+          mode: "app"
+        }
       }))
       this.clickRightListItem(this.dropList)
       // this.dropList.forEach((item)=>{
@@ -646,7 +613,8 @@ export default {
         // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
-          this.selectNav = this.currentNav
+          // this.selectNav = this.currentNav
+          this.navigationList === this.copyRightNav ? this.selectNav = 'right' : this.selectNav = 'left'
           message.success('进入编辑模式')
         }
         this.quick = true
@@ -779,7 +747,7 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-radius: 12px;
+  // border-radius: 12px;
   // background-color: var(--secondary-transp-bg);
 
 }
@@ -863,4 +831,5 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}</style>
+}
+</style>

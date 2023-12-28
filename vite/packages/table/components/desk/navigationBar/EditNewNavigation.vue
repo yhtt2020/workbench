@@ -1,19 +1,6 @@
 <template>
-    <!-- <div class="flex flex-col"> -->
-    <!-- <div class="flex justify-between">
-        <div id="left-drop" class="border-index " style=" width: 300px;height: 100vh;" @drop.prevent="drop"
-            @dragover.prevent=""></div>
-        <div class="flex flex-col justify-end">
-            <div id="foot-drop" class="border-index " @drop.prevent="drop" style="width:calc(100vw - 600px);height: 300px;"
-                @dragover.prevent=""></div>
-        </div>
-        <div id="right-drop" class="border-index" @drop.prevent="drop" style=" width: 300px;height:calc(100vh );"
-            @dragover.prevent=""></div>
-
-
-    </div> -->
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
         <template #nav>
             <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
                 :style="{ height: `${navHeight}px` }">
@@ -52,11 +39,11 @@
             </div>
         </template>
         <template #header-right>
-            <div class="ml-3 text-base xt-text-2">添加到：</div>
-            <a-dropdown trigger="['click']">
+            <div class="ml-3 text-base xt-text-2" v-if="visible">添加到：</div>
+            <a-dropdown trigger="['click']" v-if="visible">
                 <template #overlay>
                     <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
-                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in addIconPosition"
+                        <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in dropArr"
                             class="flex items-center justify-center hover-style ">
                             <div class="flex items-center justify-center rounded-md xt-text">{{ item.title }}</div>
                         </a-menu-item>
@@ -64,7 +51,7 @@
                 </template>
                 <xt-button :w="120" :h="32" class="">
                     <div class="flex justify-between">
-                        <div class="text-base xt-text">{{ defaultTitle.title }}</div>
+                        <div class="text-base xt-text omit-1">{{ defaultTitle.title }}</div>
                         <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"
                             class="-rotate-90 xt-text"></xt-new-icon>
                     </div>
@@ -74,17 +61,19 @@
         <div class="ml-3 mainList" :style="{ height: `${contentHeight}px`, width: `${contentWidth}px` }"
             style="box-sizing: border-box;">
             <Introduce ref="introduce" :recommendation="currentNavBar" :selectList="this.otherList"
-                :inputValue="inputValue" />
+                :inputValue="inputValue" @clickListItem="sendMsg"/>
         </div>
     </NewModel>
     <teleport to="body" :disabled="false">
-        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false" @ok="onOk"></Msg>
+        <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
+            @ok="onOk"></Msg>
     </teleport>
-    
+
 
     <!-- </div> -->
 </template>
 <script>
+import {cardStore} from '../../../store/card'
 import { useNavigationStore } from './navigationStore'
 import { navStore } from '../../../store/nav'
 import { mapActions, mapWritableState } from 'pinia'
@@ -107,6 +96,7 @@ export default {
         Custom,
         Msg,
     },
+    emits: ['addIcon'],
     data() {
         return {
             ClassifyData: [...navigationData.coolAppList, ...navigationData.systemAppList],
@@ -152,7 +142,7 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/community.svg',
                     name: '社群',
-                    event: 'chat',
+                    value: 'chat',
                     tab: 'community',
                     fn: () => {
                         vm.$router.push({ name: 'chat' })
@@ -164,19 +154,19 @@ export default {
                     icon: '/logo/efficiency.svg',
                     name: '效率助手',
                     tab: 'work',
-                    event: 'work',
+                    value: 'work',
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/home.svg',
                     name: '桌面主页',
-                    event: 'home',
+                    value: 'home',
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/settings.svg',
                     name: '设置中心',
-                    event: 'setting',
+                    value: 'setting',
                     fn: () => { vm.$router.push({ name: 'setting' }) }
                 },
 
@@ -184,7 +174,7 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/music.svg',
                     name: '网易云音乐',
-                    event: 'music',
+                    value: 'music',
                     tag: 'recommendation'
                 },
 
@@ -192,21 +182,33 @@ export default {
                     type: 'systemApp',
                     icon: '/logo/todo.svg',
                     name: '待办',
-                    event: 'todo',
+                    value: 'todo',
                     fn: () => { vm.$router.push({ name: 'todo' }) }
                 },
                 {
-                    "type": "systemApp",
-                    "icon": "/logo/ai.svg",
-                    "name": "AI助手",
-                    "event": "ai"
+                    type: "systemApp",
+                    icon: "/logo/ai.svg",
+                    name: "AI助手",
+                    value: "ai"
                 },
                 {
                     type: 'systemApp',
                     icon: '/logo/app.svg',
                     name: '应用中心',
-                    event: 'apps',
+                    value: 'apps',
                 },
+                {
+                    type: 'systemApp',
+                    icon: '/logo/task.svg',
+                    name: '任务中心',
+                    value: 'task',
+                },
+                {
+                    type: 'systemApp',
+                    icon: '/logo/commun.svg',
+                    name: '社区中心',
+                    value: 'commun',
+                }
 
             ],
             nowClassify: 'systemApp',
@@ -225,7 +227,7 @@ export default {
             contentHeight: 420,
             contentWidth: 800,
             modalVisible: false,
-            currentTitle: null
+            currentTitle: null,
         }
     },
     methods: {
@@ -240,17 +242,40 @@ export default {
         },
         async loadDeskIconApps() {
             const lightApps = await appModel.getAllApps()
+            // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {
                 lightApps[i].icon = lightApps[i].logo
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
+            // console.log(desktopApps, lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
             const web = await getNavList()
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
+            this.ClassifyData = this.replace(this.ClassifyData)
+            // console.log(this.ClassifyData, 'ClassifyData');
+        },
+        // 更换图标格式
+        replace(list) {
+            return list.map((item) => {
+                return {
+                    name: item.name,
+                    icon: item.icon,
+                    type: item.type,
+                    value: item.path || item.package || item.url || item.event || item.data,
+                    bg: '',
+                    isBg: false,
+                    summary: item.summary || '',
+                    mode: item.type === 'lightApp' ? 'link' : 'app',
+                    ext: item.ext || '',
+                }
+            })
+        },
+        sendMsg(item,index){
+            this.$emit('addIcon',item,index)
         },
         onClick(index) {
             this.clickIndex = index
@@ -259,6 +284,7 @@ export default {
         handleMenuClick(item) {
             this.defaultTitle = item
             this.selectNav = item.value
+            this.selectNav === 'desktop' ? this.targetDesk = item : ''
         },
         onOk() {
             if (this.selectNav === 'foot') {
@@ -383,7 +409,8 @@ export default {
 
     },
     computed: {
-        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible']),
+        ...mapWritableState(cardStore,['desks']),
+        ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk','targetDesk']),
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
             return this.ClassifyData.filter(i => {
@@ -436,7 +463,33 @@ export default {
         },
         msgText() {
             return `当前${this.defaultTitle.title}没有开启，是否选择开启导航栏`
+        },
+        visible(){
+            if(this.selectNav !== 'desktop'){
+                return true
+            }else{
+                if(this.isDesk){
+                    return true
+                }
+                return false
+            }
+        },
+        dropArr(){
+            if(this.selectNav !== 'desktop'){
+                return this.addIconPosition
+            }else{
+                return this.desks.map((item)=>{
+                    return {
+                        title: item.name,
+                        id:item.id,
+                        nid:item.nanoid,
+                        mid:item.marketId,
+                        value:'desktop',
+                    }
+                })
+            }
         }
+        
 
     },
     created() {
@@ -444,7 +497,7 @@ export default {
     },
     mounted() {
         if(this.currentNav){
-           this.defaultTitle = this.currentNav 
+           this.defaultTitle = this.currentNav
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',
@@ -465,6 +518,10 @@ export default {
     },
     watch: {
         selectNav() {
+            // 非导航栏取消弹窗
+            if (this.selectNav === 'desktop') {
+                return true
+            }
             this.defaultTitle = this.currentNav
             if (this.selectNav === 'foot' && !this.navigationToggle[2]) {
                 this.modalVisible = true
@@ -510,5 +567,14 @@ export default {
     &:hover {
         background: var(--active-secondary-bg) !important;
     }
+}
+.omit-1{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 84px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 </style>

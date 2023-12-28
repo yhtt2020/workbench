@@ -66,23 +66,20 @@ export default {
   watch: {
     selectType: {
       handler() {
-        this.posType();
+        if (this.selectType) {
+          if (this.selectType.name && this.navList.length > 0) {
+            this.activeIndex = this.navList.findIndex((item) => {
+              return item.name === this.selectType.name;
+            });
+          }
+        }
       },
+      deep:true
     },
   },
   mounted() {
-    this.posType();
   },
   methods: {
-    posType() {
-      if (this.selectType) {
-        if (this.selectType.name && this.navList.length > 0) {
-          this.activeIndex = this.navList.findIndex((item) => {
-            return item.name === this.selectType.name;
-          });
-        }
-      }
-    },
     clickNav(item, index) {
       this.activeIndex = index;
       item.state = false; // 将消息未读状态隐藏

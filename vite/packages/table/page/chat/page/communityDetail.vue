@@ -14,7 +14,7 @@
             <div style="width:64px;height:64px;" class="rounded-full mb-6">
               <img src="/icons/logo128.png" class="w-full h-full object-cover rounded-full"/>
             </div>
-            <span class="font-24-500" style="color:var(--primary-text);">欢迎加入，想天工作台官方社群</span>
+            <span class="font-24-500" style="color:var(--primary-text);">欢迎加入，天天工作台官方社群</span>
             <div class="mt-4 flex justify-center items-center" style="width:362px;">
               <div class="flex items-center">
                 <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--success);"></div>

@@ -9,7 +9,7 @@
         </button>
         <div class=" h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1 flex items-center" style="line-height: 40px;">
           <div class="xt-text">
-            想天工作台
+            天天工作台
           </div>
           <div class="ml-1 xt-bg" style="font-size: 14px; border-radius: 4px;" >
             <!-- {{ props.forumId }}

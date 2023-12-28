@@ -235,15 +235,15 @@ export default {
                     type:'video'
                 },
                 {
-                    title:'文件',icon:'file',time:'13秒前',capacity:'1.2MB',content:'想天工作台概念图.pdf',picIcon:'pdf',
+                    title:'文件',icon:'file',time:'13秒前',capacity:'1.2MB',content:'天天工作台概念图.pdf',picIcon:'pdf',
                     type:'file'
                 },
                 // {
-                //     title:'文本',icon:'file',time:'15秒前',capacity:'1.2MB',content:'想天工作台概念图.pdf',
+                //     title:'文本',icon:'file',time:'15秒前',capacity:'1.2MB',content:'天天工作台概念图.pdf',
                 //     type:'txt'
                 // },
                 {
-                    title:'图片',icon:'image',time:'17秒前',capacity:'1.2MB',content:'想天工作台概念图.pdf',imageUrl:"//n.sinaimg.cn/games/transform/639/w400h239/20220624/ba99-9f5b6cb9c1cd9eaabec96eaf44a5bf14.jpg",
+                    title:'图片',icon:'image',time:'17秒前',capacity:'1.2MB',content:'天天工作台概念图.pdf',imageUrl:"//n.sinaimg.cn/games/transform/639/w400h239/20220624/ba99-9f5b6cb9c1cd9eaabec96eaf44a5bf14.jpg",
                     type:'image'
                 }
 

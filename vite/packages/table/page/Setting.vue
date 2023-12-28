@@ -72,6 +72,15 @@
                 <a-switch @click="this.toggleAided"  v-model:checked="aided"></a-switch>
               </div>
             </a-col>
+            <a-col :span="12">
+              <div  class="relative btn" @click="goShake">
+                摇一摇<br />
+                <div @click.stop>
+                  <a-switch  v-model:checked="settings.shake.enable"></a-switch>
+                </div>
+
+              </div>
+            </a-col>
           </a-row>
 
           <div></div>
@@ -275,10 +284,23 @@ export default {
         wheelPropagation: true,
       },
       editNavigationVisible: false,
-      simpleVisible:false
+      simpleVisible:false,
     };
   },
   watch: {
+    'settings.shake.enable':{
+      handler(newVal){
+        if(newVal){
+          this.enableShake(()=>{
+            this.$router.push({
+              name:'key'
+            })
+          })
+        }else{
+          this.disableShake()
+        }
+      }
+    },
     bgColor(newV) {
       if (!newV) return;
       setBgColor(newV);
@@ -317,6 +339,7 @@ export default {
     this.bgColor = getBgColor();
     this.textColor = getTextColor();
     this.wallpaperColor = getWallpaperColor();
+    window.removeEventListener('keydown',this.listenEnter)
   },
   computed: {
     ...mapWritableState(appStore, [
@@ -334,11 +357,17 @@ export default {
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
 
   },
+
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
-    ...mapActions(appStore,['enterAided','leaveAided']),
-    isMain: isMain,isWin,
+    ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
+    isMain: isMain, isWin,
+    goShake(){
+      this.$router.push({
+        name:'key'
+      })
+    },
     goApps(){
       this.$router.push({
         name:'apps'

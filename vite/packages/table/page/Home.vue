@@ -82,75 +82,9 @@
   <!--    </vue-custom-scrollbar>-->
   <!--  </div>-->
   <div style="height: 100%">
-   <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
+    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId">
       <template #settingsAll>
-        <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
-          <div class="flex justify-between mb-4">
-            <div>桌面背景</div>
-          </div>
-          <div class="my-4 text-sm xt-text-2">
-            选择喜欢的图片作为工作台桌面背景。
-          </div>
-          <div class="flex my-4 text-sm xt-text-2" v-if="!appSettings.transparent">
-            <xt-task id="M0103" no="3" to=""> </xt-task>
-            <xt-task id="M0103" no="4" to="" @cb="goPaper">
-              <xt-button size="mini" :w="80" :h="40" type="theme" class="mr-3" @click="goPaper">背景设置</xt-button>
-            </xt-task>
-            <xt-button size="mini" class="xt-modal" :w="80" :h="40" @click="clearWallpaper">还原背景</xt-button>
-          </div>
-          <hr class="my-4" />
-
-          <template v-if="!appSettings.transparent">
-            <div class="flex justify-between mb-4">
-              <div>背景模糊度</div>
-            </div>
-            <div class="my-4 text-sm xt-text-2">开启后增加背景模糊度</div>
-            <div class="my-4 text-sm xt-text-2">
-              <a-slider v-model:value="backgroundSettings.backGroundImgBlur" :max="100" :step="1" />
-            </div>
-            <hr class="my-4" />
-          </template>
-          <div class="flex justify-between mb-4">
-            <div>透明背景</div>
-            <a-switch v-model:checked="appSettings.transparent" />
-          </div>
-          <div class="mt-4 text-sm xt-text-2">开启后透明背景</div>
-        </div>
-        <div class="p-4 mb-1 text-base xt-bg-2 rounded-xl">
-          <div class="p-4 xt-modal rounded-xl xt-text-2">
-            此类功能性能消耗较高，请酌情开启
-          </div>
-          <div class="flex justify-between my-4">
-            <div>边框RGB灯</div>
-            <a-switch v-model:checked="appSettings.houserun" />
-          </div>
-          <div class="my-4 text-sm xt-text-2">
-            在工作台窗口四周显示RGB效果。
-          </div>
-          <hr class="my-4" />
-          <div class="flex justify-between mb-4">
-            <div>飘落效果</div>
-            <a-switch v-model:checked="appSettings.down.enable" />
-          </div>
-          <div class="my-4 text-sm xt-text-2">开启后页面会有炫酷的飘落效果</div>
-          <hr class="my-4" style="height: 0.5px" />
-          <template v-if="appSettings.down.enable">
-            <div class="flex justify-between my-4">
-              <div>飘落物</div>
-            </div>
-            <div class="my-4 text-sm xt-text-2">
-              <xt-tab class="h-10" v-model="appSettings.down.type" :list="fallingList"></xt-tab>
-            </div>
-            <hr class="my-4" />
-            <div class="flex justify-between my-4">
-              <div>飘落物数量</div>
-            </div>
-            <div class="mt-4 text-sm xt-text-2">
-              <xt-input v-model="appSettings.down.count" class="xt-modal xt-b" style="height: 40px"></xt-input>
-            </div>
-          </template>
-        </div>
       </template>
       <!--      <template #empty>-->
       <!--        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto">-->
@@ -208,6 +142,8 @@
   <teleport to="body">
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
   </teleport>
+
+  <GalleryModal ref="galleryRef"/>
 </template>
 
 <script>
@@ -284,6 +220,7 @@ import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
 
 // import News from "../components/widgets/news/NewsCard.vue";
+import GalleryModal from '../components/paperModal/GalleryModal.vue';
 import {
   setTransparent,
   detTransparent,
@@ -317,20 +254,6 @@ export default {
         name: "",
         template: "daily",
       },
-      fallingList: [
-        {
-          value: "rain",
-          name: "雨",
-        },
-        {
-          value: "snow",
-          name: "雪",
-        },
-        {
-          value: "leaf",
-          name: "叶",
-        },
-      ],
       hide: false,
       menuVisible: false,
       settingVisible: false,
@@ -472,6 +395,7 @@ export default {
     EatToday,
     HotSearch,
     RadioTab,
+    GalleryModal,
     ScalePanel,
   },
   computed: {
@@ -501,7 +425,7 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
-      deskInit:'deskInit',
+      deskInit: 'deskInit',
       visibleScale: 'visibleScale',
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
@@ -532,7 +456,7 @@ export default {
         });
         return find;
       } else {
-        this.currentDeskId=this.desks[0].id
+        this.currentDeskId = this.desks[0].id
         return this.desks[0];
       }
     },
@@ -540,12 +464,16 @@ export default {
   beforeUpdate() {
     if (this.hasTriggered <= 10) {
       console.log("chufa");
-      this.replaceIcon();
+      this.replaceIcon(this.sideNavigationList);
+      this.replaceIcon(this.rightNavigationList);
+      this.replaceIcon(this.footNavigationList);
       this.hasTriggered++;
     }
   },
   async mounted() {
-    this.replaceIcon();
+    this.replaceIcon(this.sideNavigationList);
+    this.replaceIcon(this.rightNavigationList);
+    this.replaceIcon(this.footNavigationList);
     // setTimeout(() => {
     //   this.replaceIcon()
     // },500)
@@ -556,7 +484,9 @@ export default {
           clearInterval(timer);
           return;
         }
-        this.replaceIcon();
+        this.replaceIcon(this.sideNavigationList);
+        this.replaceIcon(this.rightNavigationList);
+        this.replaceIcon(this.footNavigationList);
         n++;
       }, 3000);
     } else {
@@ -565,31 +495,19 @@ export default {
           clearInterval(timer);
           return;
         }
-        this.replaceIcon();
+        this.replaceIcon(this.sideNavigationList);
+        this.replaceIcon(this.rightNavigationList);
+        this.replaceIcon(this.footNavigationList);
         n++;
       }, 1000);
     }
     // 判断是否是第一次加载
-    if(this.deskInit){
+    if (this.deskInit) {
       // 新用户第一次进入加载一个默认桌面
       this.addFreeLayoutDesk()
       this.deskInit = false
       this.visibleScale = true
     }
-
-    // let counte=0
-    // const counter=setInterval(()=>{
-    //     if(this.replaceFlag==false){
-    //       clearInterval(counter)
-    //     }
-    //     this.replaceIcon()
-    //     console.log(this.replaceFlag,this.footNavigationList,'footNavigationList')
-    //     counte++
-    //     if(counte>=3){
-    //       clearInterval(counter)
-    //     }
-    // },1200)
-    // this.replaceIcon()
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
@@ -794,31 +712,57 @@ export default {
       this.iconVisible = true;
       this.menuVisible = false;
     },
-    replaceIcon() {
+    replaceIcon(navigationList) {
       navigationData.systemAppList.forEach((item) => {
-        this.sideNavigationList.forEach((i) => {
+        navigationList.forEach((i) => {
+          i.bg = ''
+          i.isBg = false
           if (item.event === i.event) {
+            i.type = 'systemApp'
             i.icon = item.icon
             i.name = item.name
-          }
-        });
-      });
-      navigationData.systemAppList.forEach((item) => {
-        this.rightNavigationList.forEach((i) => {
-          if (item.event === i.event) {
-            i.icon = item.icon
-            i.name = item.name
-          }
-        });
-      });
-      navigationData.systemAppList.forEach((item) => {
-        this.footNavigationList.forEach((i) => {
-          if (item.event === i.event) {
-            i.icon = item.icon
-            i.name = item.name
+            i.value = item.event
+            i.mode = 'app'
           }
         })
-      })
+      });
+      const updatedList = navigationList.map((item) => {
+        switch (item.type) {
+          case 'systemApp':
+            return { ...item };
+          case 'coolApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.data || item.value
+            };
+          case 'lightApp':
+            return {
+              ...item,
+              mode: 'link',
+              value: item.package || item.value
+            };
+          case 'tableApp':
+            return {
+              ...item,
+              mode: 'app',
+              value: item.path || item.value
+            };
+          default:
+            return {
+              ...item,
+              mode: 'link',
+              type: 'default',
+              value: item.url || item.value
+            };
+        }
+      }).map((item) => ({
+        ...item,
+        bg: '',
+        isBg: false
+      }));
+
+      return updatedList;
       this.replaceFlag = false;
     },
     setTransparent() {
@@ -862,26 +806,6 @@ export default {
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
-
-    clearWallpaper() {
-      this.setBackgroundImage({ path: "" });
-      message.success('已为您恢复默认背景')
-      // const value = cache.get("style")
-      // document.documentElement.classList.remove(value);
-      // cache.set("background","-no")
-      // let background = cache.get("background")
-      // let model = this.styles ? "light" : "dark"
-      // let name = `${model}${background || ''}-model`
-      // document.documentElement.classList.add(name);
-      // cache.set("style",name)
-      // if (this.styles == true) {
-      //   document.documentElement.classList.add(`light${background || ''}-model`);
-      //   window.localStorage.setItem("style", JSON.stringify(`light${background || ''}-model`));
-      // } else {
-      //   document.documentElement.classList.add(`dark${background || ''}-model`);
-      //   window.localStorage.setItem("style", JSON.stringify(`dark${background || ''}-model`));
-      // }
-    },
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },
@@ -1018,16 +942,16 @@ export default {
     },
 
     // 第一次登录加载桌面应用
-    async addApptoDesk(){
+    async addApptoDesk() {
       const desktopApps = await ipc.sendSync('getDeskApps')
       let appList = []
-      desktopApps.forEach(i=>{
-        if(i.ext == '.exe'){
+      desktopApps.forEach(i => {
+        if (i.ext == '.exe') {
           appList.push(i)
         }
       })
       let appListHandle = []
-      appList.forEach(item=>{
+      appList.forEach(item => {
         let obj = {
           backgroundColor: '',
           backgroundIndex: 0,
@@ -1044,21 +968,21 @@ export default {
           src: item.icon,
           // 标题
           titleValue: item.name,
-          open:{
-            type:"default",
+          open: {
+            type: "default",
             // 网址
-            value:item.path
+            value: item.path
           }
         }
         appListHandle.push(obj)
       })
-      this.desks[0].cards.forEach((item,index)=>{
+      this.desks[0].cards.forEach((item, index) => {
         // 直接修改默认数据
-        if(item.id == '1702026795921'){
+        if (item.id == '1702026795921') {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if(appListHandle.length <= 1){
+          if (appListHandle.length <= 1) {
             this.desks[0].cards[index].customData.iconList = appListHandle
-          }else{
+          } else {
             this.desks[0].cards[index] = {
               "name": "historyInfo",
               "id": 1702026795921,
@@ -1081,7 +1005,8 @@ export default {
       this.menuVisible = false;
     },
     goPaper() {
-      this.$router.push({ name: "my" });
+      // this.$router.push({ name: "my" });
+      this.$refs.galleryRef.openGalleryModal();
     },
     addCard() {
       this.custom = true;
