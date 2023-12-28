@@ -18,7 +18,7 @@
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="sortId === 'left' ? 'right' : 'left'"></Team>
                   <template v-else>
                     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                   </template>

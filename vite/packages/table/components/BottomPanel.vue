@@ -64,7 +64,7 @@
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value)">
-                        <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                        <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'"></Team>
                         <Folder v-else-if="item.value === 'folder'" :iconList="item.children"></Folder>
                         <template v-else>
                           <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
@@ -163,7 +163,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder, searchItem } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder, searchItem, updateIcon } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
@@ -550,12 +550,12 @@ export default {
               // 找到被删除元素在备份数据中的索引
               if (element.type === 'coolApp') {
                 return item.value.url === element.value.url;
-              } else if (element.type === 'folder') {
-                return this.searchItem(element, item)
+              } else if (element.value === 'folder') {
+                return this.updateIcon(element.children ? element.children : [element], item.children ? item.children : [item])
               }
               return item.value === element.value;
             });
-            console.log(index,'lost index');
+            console.log(index, 'lost index');
             if (index !== -1) {
               this.copyFootNav.splice(index, 1);
             }
@@ -569,8 +569,8 @@ export default {
             const correspondingElement = this.copyFootNav.find((copyItem) => {
               if (item.type === 'coolApp') {
                 return copyItem.value.url === item.value.url;
-              } else if (item.type === 'folder') {
-                return this.searchItem(item, copyItem)
+              } else if (item.value === 'folder') {
+                return this.updateIcon(item.children ? item.children : [item], copyItem.children ? copyItem.children : [copyItem])
               }
               return copyItem.value === item.value;
             });
@@ -586,7 +586,7 @@ export default {
 
         }
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'footNav')
+        console.log(this.copyFootNav, 'copyFootNav')
         console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
@@ -981,7 +981,7 @@ export default {
         delay: 50,
         delayOnTouchOnly: true,
         // 设置交换区域的阈值
-        swapThreshold: 0.4,
+        swapThreshold: 0.6,
         // 反向拖拽
         invertSwap: true,
         // 
@@ -1052,32 +1052,21 @@ export default {
           // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
-          console.log(event.originalEvent.clientX, event, 'to end X Y ');
+          // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           // 
           that.popVisible = false
           // 删除
           that.isDelete = true
-          if (!isDrag) {
-            // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
-            const oIndex = index
-            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            if (oIndex === nIndex) {
-              return 0
-            }
-
-            that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
-            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
-            console.log(that.footNavigationList);
-            // that.footNavigationList.splice(oIndex, 1)
-            that.removeFootNavigationList(oIndex)
-          }
           index = null
           that.isBorder = false
           isDrag = false
+          // console.log('isDelete', that.footNavigationList);
+          // console.log(that.copyFootNav,'copyFootNav');
 
         },
         onMove: function (event, originalEvent) {
+          console.log(event, originalEvent, 'move');
           isDrag = true
           that.isDelete = false
           return true
@@ -1089,12 +1078,43 @@ export default {
             y: event.originalEvent.clientY,
           }
         },
-        onChange() {
-          isDrag = false
+        onChange(event) {
+          // console.log(event, 'change');
+          // const oldX = event.originalEvent.clientX
+          // let newX = 0
+          // setTimeout(() => {
+          //   newX = event.originalEvent.clientX
+          // }, 100);
+          // console.log(newX, oldX, 'change');
+          // if (newX - oldX < 40) {
+          //   isDrag = true
+          // } else {
+          //   isDrag = false
+          // }
+
+        },
+        onUnchoose: function (event) {
+          console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
+          if (!isDrag) {
+            // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
+            const oIndex = index
+            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
+            console.log(oIndex, nIndex, '==oIndex-nIndex');
+            if (oIndex === nIndex) {
+              return 0
+            }
+
+            that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            console.log(that.footNavigationList);
+            // that.footNavigationList.splice(oIndex, 1)
+            that.removeFootNavigationList(oIndex)
+            // that.copyFootNav.splice(oIndex, 1)
+          }
         }
       })
     },
-    searchItem,
+    updateIcon,
     getArea,
     iconFolder,
     renderIcon,
