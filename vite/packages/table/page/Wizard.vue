@@ -53,6 +53,18 @@
             </a-col>
           </a-row>
           <div class="xt-text text-center font-16 mt-3">选择菜单模式</div>
+          <!-- 预览图片 -->
+          <div style="position: absolute;">
+            <a-image
+            :width="200"
+            :style="{ display: 'none' }"
+            :preview="{
+              visible,
+              onVisibleChange: setVisible,
+            }"
+            :src="urlValue"
+            />
+          </div>
           <a-row :gutter="20" class="flex justify-center mt-3">
             <a-col >
               <div :class="{'active':rightModel==='follow'}" @click="this.rightModel='follow'" class="panel pointer px-5" style="height:110px;">
@@ -63,7 +75,7 @@
                   使用传统的鼠标右键菜单。
                 </div>
                 <div class="text-center">
-                  <a @click="imageShow(0)">预览</a>
+                  <a  @click="setVisible(true, '../../../public/img/default.jpg')">预览</a>
                 </div>
               </div>
             </a-col>
@@ -76,7 +88,7 @@
                   更适合触控的大图标菜单。
                 </div>
                 <div class="text-center">
-                  <a @click="imageShow(1)">预览</a>
+                  <a @click="setVisible(true, '../../../public/img/flow.jpg')">预览</a>
                 </div>
               </div>
             </a-col>
@@ -93,7 +105,7 @@
               </div>
               <div>
                 <a class="flex items-center"  @click="step++">
-                  <Icon class="mr-1" icon="touping"/>矫正屏幕
+                  <Icon class="mr-1" icon="touping"/>设置触摸
                 </a>
               </div>
             </div>
@@ -311,13 +323,6 @@ export default {
       options: {
         url: 'data-source'
       },
-      list: [
-        '../../../public/img/flow.jpg',
-        '../../../public/img/default.jpg',
-        // 爱莉希雅
-        // 'https://p.ananas.chaoxing.com/star3/origin/7bd21a56206d9a720f8eaf1ab88b8fc9.png',
-
-      ],
       // 默认、定制桌面
       desktopSetting:'default',
       screenSettingTab: 'none',
@@ -391,7 +396,8 @@ export default {
           icon:'fluent-emoji:star',
           background:' linear-gradient(107deg, #9E3E3E 0%, #6C367A 100%)',
         },
-      ]
+      ],
+      visible: false,
     }
   },
   async mounted () {
@@ -421,11 +427,9 @@ export default {
     },
 
     // 预览图片
-    imageShow(index) {
-      const images = this.list[index]
-      this.$viewerApi({
-        images: [images],
-      })
+    setVisible(value, url){
+      this.urlValue = url
+      this.visible = value;
     },
 
     async restore () {
@@ -628,7 +632,6 @@ export default {
   padding: 16px;
   margin-top: 16px;
   margin-left: 16px;
-  cursor: pointer;
 }
 
 .img-tag{
