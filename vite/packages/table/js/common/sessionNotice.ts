@@ -66,8 +66,7 @@ export class Notifications {
 
   public noticeStrong(notice) {
     const msg=this._convertNoticeMsg(notice)
-    console.error('通知的消息体', msg)
-    noticeStore().putNoticeData(msg, 'strong');
+    noticeStore().putMessageData(msg, 'strong');
     if(this.noticeModal){
       console.log('显示消息弹窗')
       this.showNoticeModal(msg)
@@ -113,7 +112,7 @@ export class Notifications {
         }
       }
     }
-    noticeStore().putNoticeData(msg, 'weak');
+    noticeStore().putMessageData(msg, 'weak');
     toast.info(content, {
       id: 'notice_' + notice.id,
       icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
@@ -126,7 +125,7 @@ export class Notifications {
   // 消息弱提醒
   public messageWeak(msg: any, conversationID: any) {
     const {settings} = storeToRefs(appStore())
-
+    noticeStore().putMessageData(msg);
     toast.info(
       {
         component: MessageNoticeToast,
@@ -134,12 +133,11 @@ export class Notifications {
         listeners: {
           'putNotice': function () {
             console.log('关闭并存储数据', msg);
-            noticeStore().putNoticeData(msg);
           },
 
           // 'nowCheck':function(){
           //   appStore().hideNoticeEntry();
-          //   noticeStore().putNoticeData(msg,'message');
+          //   noticeStore().putMessageData(msg,'message');
           // },
 
           'messageExamine': function () {
@@ -158,7 +156,6 @@ export class Notifications {
         icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
         pauseOnHover: true, timeout: 5000, toastClassName: 'notice-toast',
         onClose() {
-          noticeStore().putNoticeData(msg);
         },
       }
     )
@@ -168,7 +165,7 @@ export class Notifications {
   // 消息强提醒
   public messageStrong(msg: any, conversationID: any) {
     const {settings} = storeToRefs(appStore())
-
+    noticeStore().putMessageData(msg);
     toast.info(
       {
         component: SystemNoticeToast,
@@ -176,7 +173,6 @@ export class Notifications {
         listeners: {
           'putNotice': function () {
             console.log('关闭并存储数据', msg);
-            noticeStore().putNoticeData(msg);
           },
 
           // 'nowCheck':function(){

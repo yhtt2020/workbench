@@ -36,6 +36,7 @@ import { Icon as NoticeIcon } from '@iconify/vue'
 
 import NoticeDetail from "./noticeDetail.vue";
 import NoticeSetting from "./noticeSetting.vue";
+import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
@@ -67,7 +68,8 @@ const enableNotice = () =>{
 
 
 const clearAll = () =>{
-  notice.delAllHistoryNotice(top.value.type)
+  notice.clear(top.value.type)
+  message.success('已为您清空本地消息（不包含推送等网络消息）')
 }
 
 const close = () =>{
@@ -154,14 +156,14 @@ const filetDetailList = computed(()=>{
     case 'all': // 全部消息通知
       return detailList.value;
     case 'system':  // 系统消息通知
-      const filterSystem = detailList.value.filter((item)=>{ return item.content.type === 'system' });
+      const filterSystem = detailList.value.filter((item)=>{ return item.type === 'system' });
       console.log(filterSystem)
       return filterSystem;
     case 'IM':  // 社群消息通知
-      const filterMessage = detailList.value.filter((item)=>{ return item.content.type === 'message' });
+      const filterMessage = detailList.value.filter((item)=>{ return item.type === 'message' });
       return filterMessage;
     case 'push': // 推送消息通知
-      const filterPush = detailList.value.filter((item)=>{ return item.content.type === 'push' });
+      const filterPush = detailList.value.filter((item)=>{ return item.type === 'push' });
       return filterPush;
       return [];
     case 'IA': // 助手消息通知

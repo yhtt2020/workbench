@@ -126,7 +126,7 @@ export default {
   methods:{
     formatTime,
     ...mapActions(chatStore,['updateConversation']),
-    ...mapActions(noticeStore,['delSingleHistoryNotice']),
+    ...mapActions(noticeStore,['delSingleHistoryNotice','clear']),
     reviewMessage(conversationID){
       this.updateConversation(conversationID),
       this.$emit('close')
