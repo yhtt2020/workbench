@@ -115,10 +115,10 @@ export default {
             let newH = that.findN(height, 96);
 
             if (!that.odd && newH % 2 == 1) {
-              newH -= 1;
+              newH += 1;
             }
             if (!that.odd && newW % 2 == 1) {
-              newW -= 1;
+              newW += 1;
             }
             name = `${newW}x${newH}`;
             that.currentSize = name;
