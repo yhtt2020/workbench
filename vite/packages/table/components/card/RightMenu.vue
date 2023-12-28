@@ -5,11 +5,11 @@
     fn="fn"
     :model="model"
     :menus="menuList"
-    :height="sizes && sizes.length > 0 ? 120 : 0"
+    :height="(sizes && sizes.length > 0) || sizeList.length > 0 ? 120 : 0"
     menuWidth=""
     menuHeight=""
   >
-      <slot></slot>
+    <slot></slot>
     <template #follow>
       <div class="flex flex-wrap mb-2 ml-2 my-1">
         <template v-if="sizeList.length > 0">
@@ -37,7 +37,16 @@
     </template>
 
     <template #drawer>
-      <template v-if="sizeList.length > 0"> 222</template>
+      <template v-if="sizeList.length > 0">
+        <xt-option-tab
+          :list="sizeList"
+          :modelValue="size"
+          @cb="updateSize"
+          style="height: 40px; width: 500px"
+          class="mb-3"
+        />
+        <hr />
+      </template>
       <template v-else>
         <!-- 等待新版全部适配 应该删掉下面部分 -->
         <div
@@ -101,7 +110,7 @@ const props = defineProps({
     },
   },
 });
-const { menus, sizes, model, sizeList } = toRefs(props);
+const { menus, sizes, model, sizeList ,size} = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -181,6 +190,12 @@ const updateCardSize = (item) => {
 /**
  * 新版更新大小
  */
+// const currentSize = ref(props.size);
+
+// watch(size.value, (newV) => {
+//   currentSize.value = newV;
+// });
+
 const updateSize = (size) => {
   emits("update:size", size);
 };

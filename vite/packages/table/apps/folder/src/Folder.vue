@@ -18,8 +18,18 @@
       </template>
       <!-- 右侧布局切换 -->
       <template #right-extend>
-        <xt-new-icon class="mr-2" :icon="lockIcon" size="20" @click="lockClick" />
-        <xt-new-icon class="mr-2" :icon="layout" size="20" @click="layoutClick" />
+        <xt-new-icon
+          class="mr-2"
+          :icon="lockIcon"
+          size="20"
+          @click="lockClick"
+        />
+        <xt-new-icon
+          class="mr-2"
+          :icon="layout"
+          size="20"
+          @click="layoutClick"
+        />
       </template>
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
         <!-- 空状态显示状态 -->
@@ -113,8 +123,16 @@ const sizeList = ref([
     value: "2x2",
   },
   {
-    name: "4x2",
-    value: "4x2",
+    name: "2x4",
+    value: "2x4",
+  },
+  {
+    name: "4x4",
+    value: "4x4",
+  },
+  {
+    name: "6x4",
+    value: "6x4",
   },
 ]);
 
