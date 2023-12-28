@@ -1,12 +1,12 @@
 <template>
   <a-select
-    style="z-index: 99999999; position: relative"
+    style="position: relative"
     v-model:value="data" :bordered="border"
     class="no-drag w-full" :class="borderClass"
     size="large" :style="{height:`${h}px`}"
     @change="handleChange"
     :dropdownStyle="{
-      'z-index': 999999999999,
+      'z-index':zIndex,
       backgroundColor: 'var(--secondary-bg)',
       backgroundColor: 'red',
     }"
@@ -44,6 +44,10 @@ const props = defineProps({
   h:{
     style:Number,
     default:32
+  },
+  zIndex:{
+    type:Number,
+    default:99,
   }
 });
 

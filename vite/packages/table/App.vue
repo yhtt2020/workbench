@@ -53,6 +53,11 @@
     <div v-else-if="backgroundImage.path " class="fixed bg-image inset-0 video-container ">
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
+
+    <div v-else-if="backgroundColor.color" class="fixed bg-image inset-0 video-container ">
+      <div class="w-full h-full " :style="{backgroundColor:`${backgroundColor.color}`}"></div>
+    </div>
+
     <div v-else>
       <!-- 修改默认壁纸 -->
       <div class="fixed inset-0  none-bg default-bg" style="z-index: -1">
@@ -113,6 +118,7 @@ import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {notification} from "ant-design-vue";
 import ModalNotice from "./page/notice/ModalNotice.vue";
+import { backgroundClip } from "html2canvas/dist/types/css/property-descriptors/background-clip";
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -210,7 +216,7 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage','backgroundColor']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),

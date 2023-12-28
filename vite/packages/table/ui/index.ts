@@ -14,6 +14,9 @@ import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
 import XtPrint from "./components/Print/index.vue"
 import XtLogin from "./components/Login/index.vue"
+import XtScrollbar from "./components/Scrollbar/index.vue"
+import XtDropdown from "./components/Dropdown/Dropdown.vue"
+import XtUpdateDeskBg  from "./components/UpdateDeskBg/UpdateDeskBg.vue"
 
 import XtSelectNav from "./components/SelectNav/index.vue"
 // 基础组件
@@ -37,8 +40,7 @@ import XtState from "./libs/State/index.vue"
 import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
-import XtScrollbar from "./components/Scrollbar/index.vue"
-import XtDropdown from "./components/Dropdown/Dropdown.vue"
+
 
 export default function (app: App): void {
   app.component('XtCanvas', XtCanvas)
@@ -76,4 +78,5 @@ export default function (app: App): void {
   app.component('XtSelectNav',XtSelectNav)
   app.component('XtScrollbar',XtScrollbar)
   app.component('XtDropdown',XtDropdown)
+  app.component('XtUpdateDeskBg',XtUpdateDeskBg)
 }
