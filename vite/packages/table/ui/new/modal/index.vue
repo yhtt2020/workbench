@@ -40,12 +40,29 @@
               <div class="right-0 z-20 flex items-center">
                 <slot name="header-right"> </slot>
                 <xt-button
-                  class="ml-3"
+                 class="ml-3"
                   w="32"
                   h="32"
                   radius="8"
                   v-if="full"
                   @click="isFull = !isFull"
+                >
+                  <xt-new-icon
+                    :icon="
+                      isFull
+                        ? 'fluent:full-screen-minimize-16-filled'
+                        : 'fluent:full-screen-maximize-16-regular'
+                    "
+                    size="16"
+                    class="xt-text-2"
+                  />
+                </xt-button>
+                <xt-button class="ml-3"
+                  w="32"
+                  h="32"
+                  radius="8"
+                  v-if="full"
+                  @click="updateFullState"
                 >
                   <xt-new-icon
                     :icon="
@@ -89,7 +106,6 @@
             </vue-custom-scrollbar>
           </main>
         </div>
-
         <slot name="footer">
           <footer class="flex items-center justify-end mt-4" v-if="footer">
             <xt-button w="64" h="40" @click="onNo()">
@@ -123,6 +139,7 @@
 import McDonalds from "./McDonalds.vue";
 import { ref, watch, toRefs, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
+import { update } from "lodash";
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -136,7 +153,6 @@ export interface ModalProps {
   maskIndex?: number;
   // 是否使用遮罩
   mask?: boolean;
-  // 左侧
   nav?: boolean;
   // 头部插槽是否开启
   header?: boolean;
@@ -244,6 +260,12 @@ const handleEscKeyPressed = (event) => {
   }
 };
 
+/**
+ * 全屏状态切换
+ * */
+const updateFullState =()=>{
+  isFull.value = !isFull.value
+}
 onBeforeUnmount(() => {
   if (esc.value) {
     window.removeEventListener("keydown", handleEscKeyPressed, {
@@ -251,6 +273,9 @@ onBeforeUnmount(() => {
     });
   }
 });
+defineExpose({
+  updateFullState,isFull,
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,7 +1,10 @@
 <template>
-  <xt-modal v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" maskIndex="1010" index="1010">
-    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" style="height: 600px;width: 976px; margin: 0 !important;border-radius: 12px !important;" :list="galleryList" :index="galleryIndex" last="5" end="1">
-      <div class="w-full xt-modal rounded-r-xl px-4  pt-4 pb-0">
+  <xt-modal ref="modalRef" v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" maskIndex="1010" index="1010">
+    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" 
+    style=" margin: 0 !important;border-radius: 12px !important;" :style="!isFull ? {width:'976px',height:'600px'}:{ width:'100%',height:'100%' }"
+    :list="leftUpdateList" :index="galleryIndex" last="5" end="2"
+    >  
+      <div class="w-full  xt-modal rounded-r-xl px-4  pt-4 pb-0" >
         <template v-if="galleryIndex === 'm'">
           <My isModal="true"/>
         </template>
@@ -48,6 +51,8 @@ export default {
     const { proxy } = getCurrentInstance();
 
     const galleryVisible = ref(false);
+    const modalRef = ref(null);
+    
     const data = reactive({
       galleryIndex:'m',
     });
@@ -61,7 +66,6 @@ export default {
     const galleryTab = (item) =>{
       data.galleryIndex = item.index
     }
-
     
     const galleryList = ref([
       { 
@@ -84,14 +88,40 @@ export default {
         index:'l',newIcon:'fluent:image-sparkle-16-regular',bg:'var(--secondary-bg)',
         callBack:(item)=>{ galleryTab(item) }, 
       },
-      // {
-      //   full:true,
-      // },
+      {
+        index:'f',newIcon:'fluent:full-screen-maximize-16-filled',
+        callBack:()=>{  modalRef.value.updateFullState() },
+      },
       {
         index: 's', newIcon:'fluent:settings-16-regular',
         route: {  name: 'papersSetting' },callBack:(item)=>{ galleryTab(item) }
       }
     ])
+
+    const isFull = computed(()=>{
+      return modalRef.value.isFull;
+    })
+
+    const leftUpdateList = computed(()=>{
+       if(isFull.value){
+         const mapList = galleryList.value.map((item)=>{
+            if(item.index === 'f'){
+              return{
+                newIcon:'fluent:full-screen-minimize-16-filled',
+                callBack:item.callBack,
+                index:item.index
+              }
+            }
+            else{
+              return item
+            }
+         })
+         return mapList;
+       }
+       else {
+        return galleryList.value
+       }
+    })
 
     onMounted(()=>{
       nextTick(()=>{
@@ -102,7 +132,7 @@ export default {
     })
     
     return{
-      galleryVisible,galleryList,
+      galleryVisible,galleryList,modalRef,isFull,leftUpdateList,
       openGalleryModal,
       ...toRefs(data),
     }

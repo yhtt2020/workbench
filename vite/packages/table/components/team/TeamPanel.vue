@@ -118,7 +118,7 @@
       </div>
       <div v-if="showDetail" class="text-center">小队成员</div>
       <!-- <a-divider style="margin-top: 10px;margin-bottom: 10px;color: red;"></a-divider> -->
-      <div style="margin-top: 10px;margin-bottom: 10px;text-align: center;">—————</div>
+      <div style="margin-top: 0px;margin-bottom: 10px;text-align: center;border-bottom: 1px solid var(--secondary-bg)">&nbsp;</div>
       <vue-custom-scrollbar :settings="outerSettings"
                             style="position:relative;height:100%;padding-top: 5px  ">
         <div @click="showUserDetail(teamLeader.userInfo,teamLeader)"
