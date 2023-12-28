@@ -34,3 +34,15 @@ export interface IMenuItem {
   // 新图标
   newIcon?: string;
 }
+
+
+export interface TitleProps {
+ // 左侧图标 适配旧版icon 适配新版newIcon
+ icon: string,
+ newIcon: string,
+ // 右侧添加图标 true为打开 false为关闭
+ add: boolean,
+ // 右侧刷新图标 true为打开 false为关闭
+ refresh: boolean,
+ background: string,
+}

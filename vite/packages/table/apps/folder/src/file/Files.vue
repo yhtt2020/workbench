@@ -31,7 +31,7 @@ onMounted(() => {
 });
 
 watch(
-  () => data.value.cardSize,
+  () => data.value.size,
   () => {
     resize();
   },
@@ -41,18 +41,20 @@ watch(
 );
 
 const resize = () => {
-  const width = data.value.cardSize.width;
-  const height = data.value.cardSize.height;
-  if (width < 2 || height < 2) {
+  let [width, height] = data.value.size.split("x");
+  console.log("width < 2 || height < 2 :>> ", width, height);
+  if (width == "2" || height == "2") {
     mode.value = "default";
     return;
   }
   mode.value = "big";
+  console.log("mode.value :>> ", mode.value);
 };
 
 /**
  * 获取当前布局数据
  */
+
 const boxClass = ref("");
 const textClass = ref("");
 const currentLayout = computed(() => {

@@ -43,7 +43,10 @@ import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
 
 
+// 卡片控制器
+import XtContainer from "../components/card/Container.vue"
 export default function (app: App): void {
+  app.component('XtContainer', XtContainer)
   app.component('XtCanvas', XtCanvas)
   app.component('XtGuided',XtGuided )
   app.component('XtLeftMenu', XtLeftMenu)
