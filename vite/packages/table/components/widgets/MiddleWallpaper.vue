@@ -19,14 +19,15 @@
           <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goPickOut">去挑选</xt-button>
         </div>
         <div class="w-full h-full pointer" v-else >
+        
           <div class="absolute top-shadow w-full top-0 left-0 h-12 "></div>
           <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
-                 playsinline="" autoplay="" muted="" loop="" v-if="currentImg.srcProtocol">
-            <source :src="currentImg.srcProtocol" type="video/mp4" id="bgVid"/>
+                 playsinline="" autoplay="" muted="" loop="" v-if="getCustomDataPaper.srcProtocol">
+            <source :src="getCustomDataPaper.srcProtocol" type="video/mp4" id="bgVid"/>
           </video>
-          <img :src="currentImg.middleSrc" @load="imgLoad" @error="imgError" alt="" class="w-full h-full"
-               style="border-radius: 8px; object-fit: cover" v-else-if="currentImg.middleSrc"/>
-          <img :src="currentImg.src" @load="imgLoad" alt="" @error="imgError" class="w-full h-full"
+          <img :src="getCustomDataPaper.middleSrc" @load="imgLoad" @error="imgError" alt="" class="w-full h-full"
+               style="border-radius: 8px; object-fit: cover" v-else-if="getCustomDataPaper.middleSrc"/>
+          <img :src="getCustomDataPaper.src" @load="imgLoad" alt="" @error="imgError" class="w-full h-full"
                style="border-radius: 8px; object-fit: cover" v-else/>
         </div>
       </div>
@@ -46,7 +47,7 @@
             </xt-button>
             <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="randomImg">
               <div class="flex items-center justify-center">
-                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :class="randomFlag ? 'replace-it' : ''" size="20"></xt-new-icon>
               </div>
             </xt-button>
             <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" @click="collect">
@@ -180,6 +181,15 @@ export default {
       const index = this.myPapers.findIndex((img)=>{ return this.imgList[this.imgIndex].src === img.src });
       return index > -1;
     },
+    // 计算属性获取壁纸存储在卡片中的数据
+    getCustomDataPaper(){
+      if(this.customData.paper){
+        return this.customData.paper;
+      }
+      else {
+        return this.currentImg;
+      }
+    }
   },
 
   methods: {
@@ -201,14 +211,20 @@ export default {
     },
 
     // 图片加载
-    imgLoad () { this.imgSpin = false },
+    imgLoad () { 
+      this.imgSpin = true;
+      setTimeout(()=>{
+        this.imgSpin = false
+      },10);
+    },
 
     // 获取壁纸数据
     pickFilterChange (e) {
-      this.addressType = this.wallpaperOptions.find((i) => i.value === e) || this.wallpaperOptions[0]
-      this.updateCustomData(this.customIndex, this.addressType, this.desk)
-      this.options.title = this.addressType.label
+      this.addressType = this.wallpaperOptions.find((i) => i.value === e) || this.wallpaperOptions[0];
+      this.updateCustomData(this.customIndex, this.addressType, this.desk);
+      this.options.title = this.addressType.label;
       if (this.addressType.value !=='my') {
+        this.imgSpin = true;
         axios
           .get(this.addressType.path)
           .then((res) => {
@@ -286,6 +302,8 @@ export default {
             this.imgList = []
             this.imgIndex = 0
             this.imgSpin = false
+          }).finally(()=>{
+            this.imgSpin = false
           })
       } else if (this.addressType.value === 'my') {
         this.imgList = this.myPapers
@@ -307,9 +325,10 @@ export default {
 
     // 设置当前组件壁纸
     setImg () {
+      this.imgSpin = true;
       if(this.customData && this.customData.paper){
-        this.imgSpin = false;
         this.currentImg = this.customData.paper;
+        this.imgSpin = false;
       }
       else {
         this.imgSpin = true;
@@ -339,30 +358,34 @@ export default {
     // 上一张壁纸
     lastImg () {
       this.imgIndex -= 1
-      this.customData.paper = this.imgList[this.imgIndex];
       if (this.imgIndex < 0) {
         this.imgIndex = this.imgList.length - 1
       }
+      this.customData.paper = this.imgList[this.imgIndex];
     },
 
     // 下一张壁纸
     async nextImg () {
       this.imgIndex += 1
-      this.customData.paper = this.imgList[this.imgIndex];
       if (this.imgIndex >= this.imgList.length) {
         this.imgIndex = 0
       }
+      this.customData.paper = this.imgList[this.imgIndex];
     },
 
     // 随机一张壁纸
     randomImg () {
       if (this.randomFlag === true) return
+      this.imgSpin = true
       this.randomFlag = true
       setTimeout(() => {
         this.randomFlag = false
+        this.imgSpin = false
         let nmb = parseInt(Math.random() * this.imgList.length)
         this.imgIndex === nmb ? this.randomImg() : (this.imgIndex = nmb)
+        this.customData.paper = this.imgList[this.imgIndex];
       }, 500)
+      
     },
 
     // 收藏壁纸

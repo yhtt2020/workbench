@@ -119,6 +119,9 @@ export const appStore = defineStore('appStore', {
     backgroundImage: {
       path: ''
     },
+    backgroundColor:{
+      color:''
+    },
     aggList: {
       type: 'work'
     },
@@ -208,6 +211,7 @@ export const appStore = defineStore('appStore', {
     },
 
     setBackgroundImage(value) {
+      this.backgroundColor.color = ''
       this.backgroundImage = value
     },
     setAgreeTest() {
