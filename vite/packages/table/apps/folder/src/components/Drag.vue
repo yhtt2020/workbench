@@ -33,9 +33,15 @@ const handleDragStart = (event) => {
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
   // if (data.value.sort === "free") return;
-  if (data.value.model !== "custom") return;
+  if (data.value.model !== "custom") {
+    console.log('222222222 :>> ', 222222222);
+    return;
+  }
   // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
-  if (index.value == currentId.value) return;
+  if (index.value == currentId.value) {
+    console.log("11111111111 :>> ", 11111111111);
+    return;
+  }
 
   if (!currentId.value) {
     const file = {
