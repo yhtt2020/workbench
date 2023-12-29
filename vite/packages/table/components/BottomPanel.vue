@@ -11,16 +11,24 @@
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
-        /* border-radius: 18px; */
+        border-radius: 18px;
         /* width: 160px; */
-        height: 80px;
         border: 1px solid var(--divider);
-      " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
-        <MyAvatar :chat="true" :level="false"></MyAvatar>
-        <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat" class="ml-3 pointer">
-          <ChatButton></ChatButton>
+        height: 80px;
+        /* padding-left: 16px !important; */
+        /* padding-right: 16px !important; */
+        display: flex;
+        justify-content: center;
+      "
+        :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important' }">
+        <div class="flex items-center justify-between ">
+          <MyAvatar :chat="true" :level="false"></MyAvatar>
+          <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
+          <div v-show="settings.enableChat" class="pl-4 pointer">
+            <ChatButton></ChatButton>
+          </div>
         </div>
+
       </div>
 
       <!-- 快速搜索 底部栏区域 -->
@@ -164,9 +172,8 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder, searchItem, updateIcon, findItem, forItem } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder, searchItem, updateIcon, findItem } from '../components/desk/navigationBar/index'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
-import { diffItem } from '../components/desk/navigationBar/hook/updateNav'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
@@ -520,9 +527,6 @@ export default {
               if (element.type === 'coolApp') {
                 return item.value.url === element.value.url;
               }
-              else if (element.value === 'folder' && item.value === 'folder') {
-                return this.forItem(element.children, item.children)
-              }
               return item.value === element.value;
             });
             console.log(index, 'lost index');
@@ -629,9 +633,8 @@ export default {
         return !copyList.some((i) => {
           if (item.type === 'coolApp') {
             return item.value.url === i.value.url;
-          } else if (item.type === 'folder') {
-            return this.forItem(item.children, i.children);
           }
+
           return item.value === i.value;
         });
       });
@@ -1073,8 +1076,6 @@ export default {
         }
       })
     },
-    forItem,
-    diffItem,
     replaceType,
     findItem,
     updateIcon,
