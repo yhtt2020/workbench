@@ -1,44 +1,29 @@
 <template>
   <div
-
     class="xt-text flex h-full xt-bg"
-
     style="box-sizing: border-box"
-
     :class="[typeClass]"
-
   >
     <!-- 左侧区域开始 -->
     <div
-
       class="flex flex-col items-center h-full xt-br"
-
-      style=" position: relative"
-
+      style="position: relative"
       :style="{
         width: w + 'px',
         'min-width': w + 'px',
       }"
-      :class="[leftClass,leftMargin]"
+      :class="[leftClass, leftMargin]"
     >
       <div class="w-full" v-for="list in listOption" :class="list?.class">
         <Float
-
           @itemClick="itemClick"
-
           :list="item.children"
-
           v-for="item in list.array"
-
           :data="item"
-
         >
           <div
-
             class="flex flex-col justify-center items-center"
-
             :class="[list?.boxClass]"
-
           >
             <Box :item="item" :id="currentIndex" :model="model">
               <Item :item="item" v-bind="list?.itemOption">
@@ -46,14 +31,14 @@
                   <slot :name="item.slot"></slot>
                 </template>
               </Item>
+              <div
+                v-if="item.name"
+                style="height: 16px; margin-top: 2px"
+                class="text-xs w-full xt-text-2 truncate text-center"
+              >
+                {{ item.name }}
+              </div>
             </Box>
-            <div
-              v-if="item.name"
-              style="height: 16px; margin-top: 2px"
-              class="text-xs w-full xt-text-2 truncate text-center"
-            >
-              {{ item.name }}
-            </div>
           </div>
           <template #content>
             <slot :name="item.float"> </slot>
@@ -120,11 +105,11 @@ const props = defineProps({
   w: {
     default: 72,
   },
-  leftClass:{
-    default:''
+  leftClass: {
+    default: "",
   },
-  leftMargin:{
-    default:'mr-3'
+  leftMargin: {
+    default: "mr-3",
   },
 });
 // 全屏控制

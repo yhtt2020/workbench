@@ -33,8 +33,10 @@
   </div>
   <!-- 2 -->
   <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
+    {{ aaa }}
     <xt-option-info
       isSwitch
+      v-model:switch="aaa"
       title="自动进入编辑模式（仅自由布局）在实现中"
       info="开启后在非编辑模式下添加小组件自动进入编辑模式。"
     />
@@ -149,6 +151,7 @@ const fallingList = ref([
   },
 ]);
 
+const aaa =ref(false)
 </script>
 
 <style lang="scss" scoped></style>
