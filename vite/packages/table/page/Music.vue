@@ -19,7 +19,7 @@
               style="margin: 16px; border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
           </div>
           <div style="font-size: 1.8em">{{ status.music.title }}</div>
-          <div style="font-size: 1.1em; color: #7c7c7c" class="singer">
+          <div style="font-size: 1.1em;  " class="singer xt-text-2">
             {{ status.music.singer }}
           </div>
           <div style="max-width: 400px; margin: auto" class="player px-3">
