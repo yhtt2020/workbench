@@ -123,7 +123,7 @@ export const appStore = defineStore('appStore', {
       name:'img',
     },
     backgroundColor:{
-      color:'',
+      color:'#508BFE',
     },
 
     aggList: {

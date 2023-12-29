@@ -14,7 +14,7 @@
 
   <template v-else>
    <div class="flex">
-    <xt-option-color v-model:color="color" />
+    <xt-option-color v-model:color="backgroundColor.color" />
    </div>
   </template>
 
@@ -33,7 +33,6 @@ const tabList = ref([
   { name: "纯色", value: "color" },
 ]);
 
-const color = ref("#508BFE");
 const paperModal = ref(null);
 
 const app = appStore();
@@ -52,12 +51,6 @@ const backImage = computed(() => {
     return { src: "https://a.apps.vip/papers/neom-207NEuFvjlg-unsplash.jpg" };
   }
 });
-
-
-watch(()=>color.value,(newVal)=>{
-  backgroundColor.value.color = newVal;
-},{immediate:true})
-
 
 </script>
 
