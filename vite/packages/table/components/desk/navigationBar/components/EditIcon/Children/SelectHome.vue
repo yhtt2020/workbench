@@ -1,7 +1,7 @@
 <template>
     <div class="w-[452px] xt-bg-2 rounded-xl p-4 mt-4">
         <div class="flex justify-start">
-            <div class="text-base xt-text">选择打开桌面</div>
+            <div class="text-base xt-text">选择打开桌面(开发中)</div>
         </div>
         <div class="mt-2 mb-2 text-sm xt-text-2">
             当你有多个桌面时，你可以选择点击打开的默认桌面作为主页
