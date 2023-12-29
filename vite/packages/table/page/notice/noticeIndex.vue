@@ -1,32 +1,30 @@
 <template>
-  <div class="w-full h-full xt-bg py-2 pr-3">
-    <xt-left-menu :list="filterList" model="id" end="2">
-
-      <template v-if="top.type !== 'setting'">
-        <div class="flex flex-col w-full" >
-          <div class="flex w-full h-11 mb-4 items-center justify-between">
-            <div class="flex items-center">
-              <NoticeIcon v-if="top.type === 'system'" icon="fluent:alert-16-regular" style="font-size: 1.5rem;"/>
-              <div v-else class="w-8 h-8">
-                <img :src="top.img" class="w-full h-full object-cover">
-              </div>
-              <span class="font-16 font-500 xt-text ml-3 xt-font">{{ top.title }}</span>
-            </div>
-            <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" @click="clearAll"/>
+  <xt-left-menu :list="filterList" model="id" last="5" end="2" leftMargin="py-3" leftClass="xt-bg-m">
+    <template v-if="top.type !== 'setting'">
+      <div class="flex flex-col w-full" >
+        <div class="flex w-full h-10 mb-4  px-3 pt-3 items-center justify-between">
+          <div class="flex items-center">
+            <xt-new-icon :icon="top.newIcon" size="20"></xt-new-icon>
+            <span class="font-16 font-500 xt-text ml-3 xt-font">{{ top.newName }}</span>
           </div>
-          <NoticeDetail :type="top.type" :list="detailList"  @close="close"/>
+          <xt-button style="width: auto !important;" h="0" @click="clearAll">
+            <div class="flex items-center justify-center">
+              <xt-new-icon icon="fluent:delete-16-regular" size="20"></xt-new-icon>
+            </div>
+          </xt-button>
+          <!-- <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" /> -->
         </div>
-      </template>
+        <NoticeDetail :type="top.type" :list="filetDetailList"  @close="close"/>
+      </div>
+    </template>
 
-
-      <template v-else>
-        <div class="flex flex-col w-full">
-          <span class="font-16 font-500 mb-3 xt-text xt-font">设置</span>
-          <NoticeSetting />
-        </div>
-      </template>
-    </xt-left-menu>
-  </div>
+    <template v-else>
+      <div class="flex flex-col w-full p-3">
+        <span class="font-16 font-500 mb-3 xt-text xt-font">设置</span>
+        <NoticeSetting />
+      </div>
+    </template>
+  </xt-left-menu>
 </template>
 
 <script setup >
@@ -38,6 +36,7 @@ import { Icon as NoticeIcon } from '@iconify/vue'
 
 import NoticeDetail from "./noticeDetail.vue";
 import NoticeSetting from "./noticeSetting.vue";
+import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
@@ -48,8 +47,8 @@ const emits = defineEmits(["closeMessage"])
 
 const top = ref({
   newIcon:"fluent:alert-16-regular",
-  img:'',
-  title: "全部消息通知",
+  id: "all",
+  newName:'全部消息',
   type:'system'
 })
 
@@ -69,7 +68,8 @@ const enableNotice = () =>{
 
 
 const clearAll = () =>{
-  notice.delAllHistoryNotice(top.value.type)
+  notice.clear(top.value.type)
+  message.success('已为您清空本地消息（不包含推送等网络消息）')
 }
 
 const close = () =>{
@@ -82,24 +82,37 @@ const leftList = ref([
   {
     id: "all",
     newIcon:"fluent:grid-16-regular",
-    img: "",
     alias: "all",
-    title: "全部消息通知",
-    type:'system',
+    newName: "全部消息",
+    name:'全部',bg:'var(--secondary-bg)',
     callBack: (item)=>{
       selectTab(item)
     },
   },
   {
+    newIcon:'fluent:alert-16-regular',  name:'系统',
+    newName:'系统消息',id:'system',bg:'var(--secondary-bg)',
+    callBack: (item)=>{ selectTab(item)},
+  },
+  {
     id: "IM",
-    newIcon:"",
-    img: "/icons/IM.png",
+    newIcon:"fluent:chat-16-regular",
     alias: "teamChat",
-    title: "社群沟通",
+    newName: "社群沟通",
+    name:'社群',bg:'var(--secondary-bg)',
     type:'message',
     callBack: (item)=>{
       selectTab(item)
     },
+  },
+  {
+    newIcon:'fluent:mail-16-regular', name:'推送',
+    newName:'推送消息 ',id:'push',bg:'var(--secondary-bg)',
+    callBack: (item)=>{ selectTab(item)},
+  },
+  {
+    newIcon:'fluent:emoji-smile-slight-24-regular',name:'助手', id:'IA',newName:'智能助手',bg:'var(--secondary-bg)',
+    callBack: (item)=>{ selectTab(item)},
   },
   {
     id: "notice",
@@ -138,6 +151,26 @@ const filterList = computed(() => {
 
 })
 
+const filetDetailList = computed(()=>{
+  switch(top.value.id){
+    case 'all': // 全部消息通知
+      return detailList.value;
+    case 'system':  // 系统消息通知
+      const filterSystem = detailList.value.filter((item)=>{ return item.type === 'system' });
+      console.log(filterSystem)
+      return filterSystem;
+    case 'IM':  // 社群消息通知
+      const filterMessage = detailList.value.filter((item)=>{ return item.type === 'message' });
+      return filterMessage;
+    case 'push': // 推送消息通知
+      const filterPush = detailList.value.filter((item)=>{ return item.type === 'push' });
+      return filterPush;
+      return [];
+    case 'IA': // 助手消息通知
+      return [];
+  }
+})
+
 
 onMounted(()=>{
   notice.getNoticeList()
@@ -145,4 +178,10 @@ onMounted(()=>{
 </script>
 
 <style lang="scss" scoped>
+:deep(.xt-bt){
+  border-top: none !important;
+}
+:deep(.xt-br){
+  border-right: none !important;
+}
 </style>

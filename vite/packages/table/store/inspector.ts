@@ -3,6 +3,7 @@ import {setSupervisoryData,getSysStats,IDisplayData} from '../js/action/supervis
 import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
 import { completeTask } from "../apps/task/page/branch/task"
+import {message} from "ant-design-vue";
 
 
 const readAida64 = window.readAida64
@@ -14,6 +15,7 @@ export const inspectorStore = defineStore(
     state: () => {
 
       return {
+        testingAudio:false,//正在检测中
         audioTest:0,//音频测试
 
         aidaData:{},
@@ -35,6 +37,20 @@ export const inspectorStore = defineStore(
       }
     },
     actions: {
+      startAudioTest(){
+        if(!this.testingAudio){
+          message.info('开始麦克风检测，期间可能会提示工作台正在使用麦克风。')
+          this.startListenAudioTest()
+        }
+        this.testingAudio=true
+      },
+      stopAudioTest(){
+        if(this.testingAudio){
+          message.info('已停止麦克风检测')
+          this.stopListenerAudioTest()
+        }
+        this.testingAudio=false
+      },
       setDisplayData(data: IDisplayData) {
         console.log(data)
         let filteredData={}
@@ -123,6 +139,7 @@ export const inspectorStore = defineStore(
         }
       },
       startListenAudioTest(){
+        console.log('尝试开始监听')
         audio.startListen((vol)=>{
           console.info('更新数据')
           this.audioTest=vol
@@ -134,6 +151,7 @@ export const inspectorStore = defineStore(
           })
       },
       stopListenerAudioTest(){
+        console.log('断开调试链接')
         audio.disconnect()
       }
     },

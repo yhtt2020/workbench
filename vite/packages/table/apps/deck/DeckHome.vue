@@ -255,11 +255,7 @@
       <a-col>
         <div @click="addBoard" class="btn relative">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
-          <div v-if="superiorLimit <= grids.length">已达上限</div>
-          <div v-else>添加分组</div>
-          <div class="absolute inset-0" style="border-radius: 6px;background: rgba(42, 42, 42, 0.6)"
-               v-show="superiorLimit <= grids.length" @click.stop="limitTip"></div>
-          <GradeSmallTip powerType="quickInstructions" ref="smallTip"></GradeSmallTip>
+          <div>添加分组</div>
         </div>
       </a-col>
       <a-col v-if="menuType === 'grid'">

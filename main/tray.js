@@ -171,7 +171,7 @@ app.whenReady().then(() => {
   } else {
     tray = new Tray(path.join(__dirname, '/icons/logowin.ico'))
   }
-  tray.setToolTip('想天工作台')
+  tray.setToolTip('天天工作台')
   // 任务栏点击事件
   let timeCount = 0
   tray.on('click', async function (event, position) {

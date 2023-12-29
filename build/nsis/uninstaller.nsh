@@ -47,7 +47,7 @@ SectionEnd
           MessageBox MB_OKCANCEL "是否确认删除用户数据?" IDOK label_ok  IDCANCEL  label_cancel
           label_ok:
               # 删除固定文件夹
-              RMDir /r $APPDATA\想天工作台-development
+              RMDir /r $APPDATA\天天工作台-development
               Goto end
           label_cancel:
               Goto end

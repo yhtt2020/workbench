@@ -5,7 +5,7 @@
 const getCurrentEnv = () => {
   const userAgent = navigator.userAgent;
   if (
-    userAgent.indexOf("想天工作台") > -1 &&
+    userAgent.indexOf("天天工作台") > -1 &&
     userAgent.indexOf("Windows") > -1
   ) {
     return "client";

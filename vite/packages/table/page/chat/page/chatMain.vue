@@ -9,7 +9,7 @@
    <div class="chat" v-show="!env?.isH5 || currentModel === 'message'">
     <TUIChat></TUIChat>
      <!-- <TUIChat :isNeedEmojiReact="true">
-       <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用想天工作台</h1>
+       <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用天天工作台</h1>
      </TUIChat> -->
    </div>
 

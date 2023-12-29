@@ -1,22 +1,32 @@
+<!-- 负责单个文件渲染 -->
 <template>
-  <div class="flex flex-wrap">
-    <template v-for="item in list">
-      <xt-mix-menu
-        v-if="fileDisabled(item)"
-        @mounted="handleMenuMounted(item)"
-        :menus="menuList"
-        :menuWidth="layout === 'rows' ? '' : 'w-full'"
+  <div
+    class="xt-sortable-fle-container"
+    :class="[sortableContainer]"
+    style="width: 100%"
+  >
+    <template v-for="(item, index) in list">
+      <div
+        v-show="fileDisabled(item)"
+        class="xt-sortable-fle-box flex justify-center"
+        :class="[sortableBox]"
+        :data-id="item.id"
       >
-        <Drag
-          class="cursor-pointer"
-          @click="fileClick(item)"
-          @deleteFile="dragDeleteFile"
-          :data="item"
+        <xt-mix-menu
+          @mounted="handleMenuMounted(item)"
+          :menus="menuList"
+          :menuWidth="layout === 'rows' ? '' : 'w-full'"
         >
-          <Rows v-if="layout === 'rows'" :item="item" />
-          <Columns v-else-if="layout === 'columns'" :item="item" />
-        </Drag>
-      </xt-mix-menu>
+          <Drag
+            class="cursor-pointer"
+            @click="fileClick(item)"
+            @deleteFile="dragDeleteFile"
+            :data="item"
+          >
+            <Files :item="item"></Files>
+          </Drag>
+        </xt-mix-menu>
+      </div>
     </template>
   </div>
   <FileSet
@@ -28,32 +38,98 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance, toRefs } from "vue";
-import { useRouter, useRoute } from 'vue-router'
-import Columns from "./Columns.vue";
-import Rows from "./Rows.vue";
+import Sortable from "sortablejs";
+import {
+  ref,
+  onMounted,
+  watch,
+  computed,
+  getCurrentInstance,
+  toRefs,
+} from "vue";
+import { useRouter, useRoute } from "vue-router";
+import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
 import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
 import { fileTypes } from "./options";
 
-const model = inject("model", "");
+const index = inject("index", "");
 const data = inject("data", "");
 
 const { proxy } = getCurrentInstance();
 
 const router = useRouter();
 
-const emits = defineEmits(["deleteFile", "updateSort"]);
+const emits = defineEmits(["deleteFile", "updateSort", "updateList"]);
 // 父组件数据
 const props = defineProps({
   layout: {},
   list: {},
 });
-const { list } = toRefs(props);
-// 菜单数据
+const { list, layout } = toRefs(props);
+/**
+ * 监听组件大小变化
+ */
+const currentWidth = computed(() => {
+  let [width, height] = data.value.size.split("x");
+  return width;
+});
+/**
+ * 拖拽排序
+ */
+// 拖拽容器
+const sortable = ref();
+const sortableContainer = ref(
+  "xt-sortable-fle-container-" + index.value + Math.ceil(Math.random() * 100)
+);
+const sortableBox = ref("xt-sortable-fle-box-" + index.value);
+// 拖拽布局
+const fileLayout = computed(() => {
+  let rows = "33.3% 33.3% 33.3%";
+  if (currentWidth.value == 4) {
+    rows = "20% 20% 20%  20% 20%";
+  } else if (currentWidth.value == 6) {
+    rows = "12.5%  12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%";
+  }
+  return layout.value === "rows" ? rows : "100%";
+});
+// 是否禁用拖拽
+watch(
+  () => data.value.sort,
+  (newVal) => {
+    if (newVal === "free") {
+      sortable.value.options.disabled = false;
+    } else {
+      sortable.value.options.disabled = true;
+    }
+  }
+);
+// 挂载拖拽库
+onMounted(() => {
+  const grid = document.querySelector("." + sortableContainer.value);
+  sortable.value = new Sortable(grid, {
+    animation: 150,
+    handle: "." + sortableBox.value,
+    disabled: data.value.sort === "free" ? false : true,
+    onEnd: function (evt) {
+      collisionDetection(evt.to.childNodes);
+    },
+  });
+});
+
+/**
+ * 菜单功能
+ */
 const currentTab = ref("");
+const currentItem = ref();
+// 菜单展开回调
+const handleMenuMounted = (item) => {
+  currentItem.value = item;
+};
+
+// 菜单数据
 const fileSetVisible = ref(false);
 const menuList = computed(() => {
   return [
@@ -64,65 +140,80 @@ const menuList = computed(() => {
         fileClick(currentItem.value);
       },
     },
-    {
-      name: "打开存储路径",
-      newIcon: "fluent:folder-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "复制",
-      newIcon: "fluent:copy-16-regular",
-      fn: () => {},
-    },
-    {
-      name: "重命名",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        fileSetVisible.value = true;
-        currentTab.value = "attribute";
-      },
-    },
-    {
-      name: "编辑图标",
-      newIcon: "fluent:compose-16-regular",
-      fn: () => {
-        currentTab.value = "appearance";
-        fileSetVisible.value = true;
-      },
-    },
+    // {
+    //   name: "打开存储路径",
+    //   newIcon: "fluent:folder-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "复制",
+    //   newIcon: "fluent:copy-16-regular",
+    //   fn: () => {},
+    // },
+    // {
+    //   name: "重命名",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     fileSetVisible.value = true;
+    //     currentTab.value = "attribute";
+    //   },
+    // },
+    // {
+    //   name: "编辑图标",
+    //   newIcon: "fluent:compose-16-regular",
+    //   fn: () => {
+    //     currentTab.value = "appearance";
+    //     fileSetVisible.value = true;
+    //   },
+    // },
 
     {
       name: "删除",
       newIcon: "fluent:delete-16-regular",
-      disabled: ["observe", "arrange"].includes(model) ? true : false,
+      disabled: ["observe", "arrange"].includes(data.value.model)
+        ? true
+        : false,
       color: "#FF4D4F",
       fn: () => {
         proxy.$xtConfirm("确定删除吗？", "", {
+          type: "warning",
           ok: deleteFile,
         });
       },
     },
-    { divider: true },
-    {
-      name: "系统菜单",
-      newIcon: "fluent:settings-16-regular",
-      fn: () => {},
-    },
+    // { divider: true },
+    // {
+    //   name: "系统菜单",
+    //   newIcon: "fluent:settings-16-regular",
+    //   fn: () => {},
+    // },
   ];
 });
+
+const collisionDetection = (nodes) => {
+  // 循环新的排序ID
+  let arr = [];
+  for (let item of nodes) {
+    if (
+      !(item instanceof HTMLDivElement) ||
+      item.getAttribute("data-id") == null
+    ) {
+      continue;
+    }
+    let id = item.getAttribute("data-id");
+    if (list.value.length == 0) return;
+    // 有报错
+    // let data = list.value.find((obj) => obj.id == parseInt(id));
+    let data = list.value.find((obj) => obj.id == id);
+    arr.push({ ...data });
+  }
+  emits("updateList", arr);
+};
 
 const deleteFile = () => {
   emits("deleteFile", currentItem.value);
 };
-const dragDeleteFile = (data) => {
-  emits("deleteFile", data);
-};
-// 菜单展开回调
-const currentItem = ref();
-const handleMenuMounted = (item) => {
-  currentItem.value = item;
-  console.log("item :>> ", item);
-};
+
 /**
  * 文件点击
  */
@@ -131,11 +222,12 @@ const fileClick = (data) => {
   data.useCount++;
   // 更新使用时间
   data.lastUseTime = new Date().getTime();
-  // 这里应该调用updateFile 但是点击直接生效了？？
   startApp(data.type, data.value, router);
   emits("updateSort");
 };
-
+const dragDeleteFile = (data) => {
+  emits("deleteFile", data);
+};
 /**
  * 判断文件类型是否需要隐藏
  */
@@ -165,4 +257,9 @@ const fileDisabled = (item) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.xt-sortable-fle-container {
+  display: inline-grid;
+  grid-template-columns: repeat(auto-fit, v-bind(fileLayout));
+}
+</style>

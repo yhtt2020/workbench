@@ -1,28 +1,75 @@
 <template>
-  <xt-tab
-    class="p-1 xt-bg-t-2"
-    style="height: 40px"
-    v-bind="option"
-    name="name"
-    v-model="currentTab"
-  />
-  <div class="pb-3"></div>
+  <div
+    class="w-full h-full flex box-border p-1 xt-bg-t-2"
+    :style="{
+      'border-radius': boxRadius + 'px',
+    }"
+  >
+    <template v-for="(item, index) in list" :key="item.value">
+      <div
+        @click="tabClick(item.value)"
+        class="text-sm flex flex-1 items-center justify-center relative cursor-pointer"
+        :class="[currentTab === item.value ? 'active' : '']"
+        :style="{
+          'border-radius': tabRadius + 'px',
+        }"
+      >
+        <div
+          v-if="circle && currentTab === item.value"
+          class="circle absolute top-1/2 -translate-y-1/2"
+        ></div>
+        {{ item.name }}
+      </div>
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref ,watch} from "vue";
+import { ref, watch } from "vue";
 export interface tabProps {
   option?: any;
-  tab?: any;
+  list: any;
+  modelValue: any;
+  circle: boolean;
+  tabRadius: number;
+  boxRadius: number;
 }
-const props = withDefaults(defineProps<tabProps>(), {});
-
-const currentTab = ref(props.tab);
-const emits = defineEmits(["update:tab"]);
-
-watch(currentTab, () => {
-  emits("update:tab", currentTab.value);
+const props = withDefaults(defineProps<tabProps>(), {
+  circle: false,
+  boxRadius: 10,
+  tabRadius: 8,
 });
+
+const currentTab = ref(props.modelValue);
+const emits = defineEmits(["update:modelValue", "cb"]);
+
+watch(
+  () => props.modelValue,
+  (newV) => {
+    currentTab.value = newV;
+  }
+);
+watch(currentTab, () => {
+  emits("update:modelValue", currentTab.value);
+  emits("cb", currentTab.value);
+});
+
+const tabClick = (data: any) => {
+  currentTab.value = data;
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  left: 10px;
+}
+
+.active {
+  background: var(--active-bg);
+  color: var(--active-text);
+}
+</style>

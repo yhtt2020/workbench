@@ -2,9 +2,10 @@ import {io} from "socket.io-client";
 import {getConfig} from "../axios/serverApi";
 import {barrageHandler} from "./barrageHandler";
 import {kdniaoHandler} from "./kdniaoHandler";
+import {noticeHandler} from './noticeHandler'
 const socketDevUrl='ws://localhost:9001'
 const socketPrdUrl='wss://wad.apps.vip'
-const dev=false //是否是开发环境
+const dev=true //是否是开发环境
 
 export let  socket:any ={}
 
@@ -45,6 +46,12 @@ export const initSocket = async () => {
       console.error('收到快递鸟推送消息',data)
       kdniaoHandler.on(data)
     })
+
+    socket.on('onNotice',(data,fn)=>{
+      console.error('notice')
+      noticeHandler.on(data)
+      fn({status:1})
+    } )
     // socket.on('onCommunity',(data)=>{
     //   communityHandler.on(data)
     // })

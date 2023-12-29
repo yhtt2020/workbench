@@ -139,6 +139,7 @@ class TableScreenManager {
       })
       let savedBounds = this.getBounds(screen.key)
       let window = windowInstance.window
+      require("@electron/remote/main").enable(window.webContents)
       if (savedBounds) {
         window.setBounds(savedBounds.bounds)
         setTimeout(() => {

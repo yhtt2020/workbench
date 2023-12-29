@@ -36,7 +36,6 @@ export default {
       if (this.listening && (e.ctrlKey || e.altKey || e.shiftKey)) {
         this.shortKeys = this.getKeys(e)
         this.listening = false
-
         this.$emit('changeKeys', {key:this.name, shortcut: this.shortKeys })
         e.preventDefault()
       }

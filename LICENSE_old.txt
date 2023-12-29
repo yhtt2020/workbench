@@ -1,4 +1,4 @@
-注：此协议为[Min项目]（https://github.com/minbrowser/min）的协议，想天工作台在Min的基础上进行了修改，修改部分为AGPL3协议。请参看根目录LICENSE.txt文件
+注：此协议为[Min项目]（https://github.com/minbrowser/min）的协议，天天工作台在Min的基础上进行了修改，修改部分为AGPL3协议。请参看根目录LICENSE.txt文件
 
 
                                  Apache License

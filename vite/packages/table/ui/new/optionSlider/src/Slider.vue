@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center mb-4">
     <div class="w-full mr-4">
       <a-slider
         :min="min"
@@ -39,6 +39,13 @@ const emits = defineEmits(["update:slider"]);
 watch(currentSlider, (newV) => {
   emits("update:slider", currentSlider.value);
 });
+
+watch(
+  () => props.slider,
+  (newV) => {
+    currentSlider.value = newV;
+  }
+);
 </script>
 
 <style lang="scss" scoped>

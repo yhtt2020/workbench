@@ -8,7 +8,7 @@ export const nameOptions = [
   },
   {
     type: "input",
-    inputKey: "title",
+    inputKey: "name",
   },
 ];
 export const filesOptions = [
@@ -84,6 +84,10 @@ export const filesOptions = [
     type: "select",
     selectKey: "sort",
     list: [
+      {
+        name: "自由拖拽",
+        value: "free",
+      },
       {
         name: "最近使用",
         value: "lastUseTime",

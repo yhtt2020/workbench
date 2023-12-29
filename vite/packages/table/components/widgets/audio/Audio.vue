@@ -44,6 +44,8 @@
       <div class="flex flex-col">
         <span style="font-size: 14px;font-weight: 400;">输入检测</span>
         <div class="flex">
+          <div v-if="!testingAudio"><xt-button @click="startAudioTest" class="mt-2 mb-2 " :w="120" :h="40" >开始检测</xt-button></div>
+          <template v-else>
           <div style="width: 180px;" class="flex items-center justify-center mr-4">
             <a-progress :percent="audioTest" :showInfo="false"/>
           </div>
@@ -51,6 +53,7 @@
             <Icon icon="mic-on" style="font-size: 2.286em;" v-if="microphoneShow === true"></Icon>
             <Icon icon="mic-off" style="font-size: 2.286em;" v-else></Icon>
           </div>
+          </template>
         </div>
       </div>
       <span class="mt-2 " style="font-size: 14px;font-weight: 400;">输入</span>
@@ -108,15 +111,12 @@ export default {
 
   },
   computed:{
-    ...mapWritableState(inspectorStore,['audioTest']),
+    ...mapWritableState(inspectorStore,['audioTest','testingAudio']),
     ...mapWritableState(appStore,['settings'])
   },
   watch:{
     'audioType':{
       handler(newValue,oldValue){
-        if(newValue.name==='input'){
-         this.startListenAudioTest()
-        }
       }
     }
   },
@@ -164,8 +164,11 @@ export default {
       ]
     }
   },
+  unmount () {
+    this.stopAudioTest()
+  },
   methods:{
-    ...mapActions(inspectorStore,['startListenAudioTest','stopListenerAudioTest']),
+    ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
     // 选中输入设备
     async init(){
       this.outputList=await listOutputs()
@@ -223,9 +226,6 @@ export default {
       this.gua()
     }
   },
-  unmounted () {
-    this.stopListenerAudioTest()
-  }
 }
 </script>
 

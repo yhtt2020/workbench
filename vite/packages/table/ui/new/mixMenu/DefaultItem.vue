@@ -45,7 +45,7 @@
             },
           ]"
         >
-          <div class="w-24 h-24 mr-4 mb-4 option" @click="close(item)">
+          <div class="h-24 mr-4 mb-4 option" @click="close(item)" style="min-width: 96px;">
             <xt-new-icon size="40" v-if="item.newIcon" :icon="item.newIcon" />
             <Icon class="icon" v-else-if="item.icon" :icon="item.icon"></Icon>
             {{ item[name] }}

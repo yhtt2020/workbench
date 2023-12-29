@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="px-8">
-        <span class="title">选择导出桌面1：</span>
+        <span class="title">选择导出桌面：</span>
         <!-- -->
         <a-select
           :bordered="false"

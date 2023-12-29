@@ -1,5 +1,5 @@
 body {
- // background: var(--main-bg) !important;
+  // background: var(--main-bg) !important;
   font-family: "puHuiTi400" !important;
 }
 
@@ -91,6 +91,11 @@ body {
 .xt-bg-t-2 {
   background: var(--secondary-transp-bg) !important;
 }
+
+.xt-bg-m{
+  background: var(--main-bg) !important;
+}
+
 /**
 * 边框
 */
@@ -109,10 +114,17 @@ body {
 }
 
 hr {
-  border-bottom:1px solid  var(--divider)!important;
+  height: 1px !important;
+  width: 100% !important;
+  color: none !important;
+  border: none !important;
+  // margin-bottom: 12px;
+  background-color: var(--divider) !important;
+  margin: 0 !important;
+  margin-bottom: 16px !important;
 }
 .xt-divider {
-  border-bottom:1px solid  var(--divider)!important;
+  border-bottom: 1px solid var(--divider) !important;
 }
 /**
 * 功能性颜色

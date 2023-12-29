@@ -11,9 +11,8 @@
       ></xt-tab>
     </template>
     <div style="width: 452px" v-if="currentTab == 'attribute'">
-
       <xt-option-from :options="attributeOptions" :data="data">
-        <template #custom> 123 </template>
+        <template #custom>  </template>
       </xt-option-from>
     </div>
     <div v-else style="width: 452px">
@@ -63,6 +62,8 @@ watch(modelValue, (val) => {
 watch(visible, (val) => {
   emits("update:modelValue", val);
 });
+
+
 </script>
 
 <style lang="scss" scoped></style>

@@ -18,7 +18,7 @@ export async function getHistoryInfo(url){
     let getData = ""
     await get(sUrl("/app/juhe/get"),params).then(res=>{
         if (res.data.length) {
-            getData = res.data[0]
+            getData = res.data
         }
     })
     return getData;

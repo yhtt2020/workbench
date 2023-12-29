@@ -12,8 +12,12 @@ import XtText from "./components/Text/index.vue"
 import XtView from "./components/View/index.vue"
 import XtZoom from "./components/Zoom/index.vue"
 import XtSelectIcon from "./components/SelectIcon/index.vue"
+import XtIconShow from "./components/IconShow/index.vue"
 import XtPrint from "./components/Print/index.vue"
 import XtLogin from "./components/Login/index.vue"
+import XtScrollbar from "./components/Scrollbar/index.vue"
+import XtDropdown from "./components/Dropdown/Dropdown.vue"
+import XtUpdateDeskBg  from "./components/UpdateDeskBg/UpdateDeskBg.vue"
 
 import XtSelectNav from "./components/SelectNav/index.vue"
 // 基础组件
@@ -37,9 +41,12 @@ import XtState from "./libs/State/index.vue"
 import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
-import XtScrollbar from "./components/Scrollbar/index.vue"
 
+
+// 卡片控制器
+import XtContainer from "../components/card/Container.vue"
 export default function (app: App): void {
+  app.component('XtContainer', XtContainer)
   app.component('XtCanvas', XtCanvas)
   app.component('XtGuided',XtGuided )
   app.component('XtLeftMenu', XtLeftMenu)
@@ -70,8 +77,11 @@ export default function (app: App): void {
   app.component('XtTextarea', XtTextarea)
   app.component('XtTitle',XtTitle )
   app.component('XtSelectIcon',XtSelectIcon )
+  app.component('XtIconShow',XtIconShow )
   app.component('XtPrint',XtPrint )
   app.component('XtLogin',XtLogin )
   app.component('XtSelectNav',XtSelectNav)
   app.component('XtScrollbar',XtScrollbar)
+  app.component('XtDropdown',XtDropdown)
+  app.component('XtUpdateDeskBg',XtUpdateDeskBg)
 }

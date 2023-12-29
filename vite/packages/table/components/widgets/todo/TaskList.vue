@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center justify-center h-full" v-if="!data.length">
-    <a-empty description="点击进入待办应用" image="/emoji/sleep.png"></a-empty>
+    <a-empty @click="goTodo" style="zoom:0.6;cursor: pointer" description="点击进入待办应用" image="/emoji/sleep.png"></a-empty>
   </div>
-  <vue-custom-scrollbar :settings="scrollbarSettings" style="height: 100%">
+  <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 100%">
     <div v-for="(task,index) in data" :key="task.nanoid">
       <div class="task-item">
         <div class="todo-style" style="min-width: 32px">
@@ -93,6 +93,9 @@ export default {
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
+    goTodo(){
+      this.$router.push({name: 'todo'})
+    },
     getDistance(deadTime) {
       let now = dayjs().unix();
       let distance = deadTime - now;

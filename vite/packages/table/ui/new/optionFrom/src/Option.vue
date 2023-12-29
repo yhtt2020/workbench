@@ -12,12 +12,17 @@
     v-model:input="data[option.inputKey]"
   />
   <!-- tab组件 得优化 -->
-  <xt-option-tab
-    v-else-if="option.type === 'tab'"
-    :style="lineSpaceStyle"
-    :option="option"
-    v-model:tab="data[option.tabKey]"
-  />
+  <template v-else-if="option.type === 'tab'">
+    <xt-option-tab
+      :style="lineSpaceStyle"
+      :option="option"
+      v-bind="option"
+      style="height: 40px"
+      circle
+      v-model="data[option.tabKey]"
+    />
+  </template>
+
   <!-- 属于颜色选项 -->
   <xt-option-color
     v-bind="option"

@@ -38,6 +38,7 @@
     </template>
   </a-modal> -->
   <audio ref="clock" src="/sound/clock.mp3"></audio>
+  <audio id="shakeAudio" ref="shake" :src="'/sound/'+settings.shake.audio"></audio>
   <template v-if="settings.transparent">
 <!--    <div class="fixed inset-0 video-container " style="background: #00000000">-->
 <!--    </div>-->
@@ -47,11 +48,16 @@
       <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
         <source :src="videoPath" type="video/mp4" id="bgVid">
       </video>
-
     </div>
-    <div v-else-if="backgroundImage.path " class="fixed bg-image inset-0 video-container ">
+
+    <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path " class="fixed bg-image inset-0 video-container ">
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
+
+    <div v-else-if="backgroundName.name === 'color' && backgroundColor.color" class="fixed bg-image inset-0 video-container ">
+      <div class="w-full h-full " :style="{backgroundColor:`${backgroundColor.color}`}"></div>
+    </div>
+
     <div v-else>
       <!-- 修改默认壁纸 -->
       <div class="fixed inset-0  none-bg default-bg" style="z-index: -1">
@@ -80,12 +86,12 @@
     </div>
     </slot>
   </Modal>
-
+  <ModalNotice ref="noticeModal" :message="null" v-model:visible="showNoticeModal"></ModalNotice>
 
 
 </template>
 
-<script lang="ts">
+<script>
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
@@ -111,6 +117,8 @@ import FrameStoreWidget from "./components/team/FrameStoreWidget.vue";
 import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {notification} from "ant-design-vue";
+import ModalNotice from "./page/notice/ModalNotice.vue";
+
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -126,7 +134,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
+  components: {ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
   data() {
     return {
       HTML5Backend,
@@ -136,7 +144,8 @@ export default {
       visible: false,
       dialogVisible: false,
       videoPath: '',
-      frameStoreVisible:false
+      frameStoreVisible:false,
+      showNoticeModal:false,
     };
   },
 
@@ -196,18 +205,18 @@ export default {
 
           this.$bus.emit('resetWindow')
         await  tsbApi.window.setZoomFactor(1)
-          console.log('11111111 :>> ', 11111111);
         }
       };
 
       window.addEventListener('keydown', keyCombinationPressed);
     //this.$router.push({name:'sensor'})
+    window.$notice.noticeModal=this.$refs.noticeModal
   },
 
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage']),
+    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage','backgroundColor','backgroundName']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),

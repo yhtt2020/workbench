@@ -1,33 +1,60 @@
 <template>
   <div
+
     class="xt-text flex h-full xt-bg"
+
     style="box-sizing: border-box"
+
     :class="[typeClass]"
+
   >
     <!-- 左侧区域开始 -->
     <div
-      class="flex flex-col items-center h-full xt-br mr-3"
-      style="width: 72px; min-width: 72px; position: relative"
+
+      class="flex flex-col items-center h-full xt-br"
+
+      style=" position: relative"
+
+      :style="{
+        width: w + 'px',
+        'min-width': w + 'px',
+      }"
+      :class="[leftClass,leftMargin]"
     >
-      <div v-for="list in listOption" :class="list?.class">
+      <div class="w-full" v-for="list in listOption" :class="list?.class">
         <Float
+
           @itemClick="itemClick"
+
           :list="item.children"
+
           v-for="item in list.array"
+
           :data="item"
+
         >
-          <Box
-            :item="item"
-            :id="currentIndex"
-            :boxClass="list?.boxClass"
-            :model="model"
+          <div
+
+            class="flex flex-col justify-center items-center"
+
+            :class="[list?.boxClass]"
+
           >
-            <Item :item="item" v-bind="list?.itemOption">
-              <template #[item.slot]>
-                <slot :name="item.slot"></slot>
-              </template>
-            </Item>
-          </Box>
+            <Box :item="item" :id="currentIndex" :model="model">
+              <Item :item="item" v-bind="list?.itemOption">
+                <template #[item.slot]>
+                  <slot :name="item.slot"></slot>
+                </template>
+              </Item>
+            </Box>
+            <div
+              v-if="item.name"
+              style="height: 16px; margin-top: 2px"
+              class="text-xs w-full xt-text-2 truncate text-center"
+            >
+              {{ item.name }}
+            </div>
+          </div>
           <template #content>
             <slot :name="item.float"> </slot>
           </template>
@@ -86,8 +113,18 @@ const props = defineProps({
       ];
     },
   },
+  // 默认选中高亮是路由模式 自定义填写为ID
   model: {
     default: "router",
+  },
+  w: {
+    default: 72,
+  },
+  leftClass:{
+    default:''
+  },
+  leftMargin:{
+    default:'mr-3'
   },
 });
 // 全屏控制
@@ -137,7 +174,6 @@ const listOption = computed(() => {
       array: newList.value.slice(-1 * props.end),
       itemOption: {
         type: "",
-        newType: "",
         bg: "",
       },
     },

@@ -1,6 +1,6 @@
 <template>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :boxPadding="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
         <template #nav>
             <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
                 :style="{ height: `${navHeight}px` }">
@@ -98,10 +98,10 @@ export default {
     },
     emits: ['addIcon'],
     props:{
-        folder:{
-            type: Boolean,
-            default: false
-        }
+      isFolder: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
         return {
@@ -282,9 +282,9 @@ export default {
         },
         sendMsg(item,index){
             this.$emit('addIcon',item,index)
-            if(this.folder){
-                this.modelValue = false
-            }
+            // if(this.isFolder){
+            //   this.modelValue = false
+            // }
         },
         onClick(index) {
             this.clickIndex = index
@@ -498,7 +498,7 @@ export default {
                 })
             }
         }
-        
+
 
     },
     created() {
@@ -506,7 +506,7 @@ export default {
     },
     mounted() {
         if(this.currentNav){
-           this.defaultTitle = this.currentNav 
+           this.defaultTitle = this.currentNav
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',

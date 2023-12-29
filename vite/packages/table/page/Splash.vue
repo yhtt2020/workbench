@@ -23,7 +23,7 @@
 
         <h3 style="text-align: center;font-size: 1.5em">
           <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar>
-          想天工作台
+          天天工作台
         </h3>
         <div class="mb-10 ml-40 text-center text-md">—— 划时代的副屏效率神器</div>
         <p v-if="!userInfo">
@@ -190,7 +190,7 @@ export default {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
     timeout () {
@@ -311,7 +311,10 @@ export default {
       if (!this.settings.zoomFactor) {
         this.settings.zoomFactor = 100
       }
+
+      this.ensureShake(false)//确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
+      tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
       if (this.settings.darkMod) {
         // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
         //   document.body.style.background = '#191919'

@@ -67,7 +67,7 @@
             </div>
             <div class="flex items-center justify-between h-[56px] ">
                 <!-- <a-button type="text" class=" xt-text xt-bg-2 font-14"
-                    style="border-radius:10px ; color: var(--secondary-text) !important;">想天工作台/桌面分享 ></a-button> -->
+                    style="border-radius:10px ; color: var(--secondary-text) !important;">天天工作台/桌面分享 ></a-button> -->
                     <a-select v-model:value="cascaderValue" :options="options" :placeholder="holderName?.name" :loadData="loadData" :bordered="false" @change="handleChange"
                     style=" font-size: 16px; border-radius: 10px;width: 120px;height: 40px;" change-on-select>
                     <template #suffixIcon>

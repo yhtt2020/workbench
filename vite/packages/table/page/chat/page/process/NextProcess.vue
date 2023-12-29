@@ -8,7 +8,7 @@
 
     <div class="mt-6 my-3 xt-font xt-text-2 font-16 font-400">您已被邀请加入</div>
 
-    <div class="xt-font xt-text font-24 font-500">想天工作台官方社群</div>
+    <div class="xt-font xt-text font-24 font-500">天天工作台官方社群</div>
 
     <div class="flex items-center  mt-4 justify-center" hidden=""  style="width: 480px;">
      <div class="flex items-center justify-center mr-6">

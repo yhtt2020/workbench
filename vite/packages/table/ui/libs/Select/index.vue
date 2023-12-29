@@ -1,12 +1,12 @@
 <template>
   <a-select
-    style="z-index: 99999999; position: relative"
-    v-model:value="data"
-    class="no-drag w-full rounded-xl"
-    size="large"
+    style="position: relative"
+    v-model:value="data" :bordered="border"
+    class="no-drag w-full" :class="borderClass"
+    size="large" :style="{height:`${h}px`}"
     @change="handleChange"
     :dropdownStyle="{
-      'z-index': 999999999999,
+      'z-index':zIndex,
       backgroundColor: 'var(--secondary-bg)',
       backgroundColor: 'red',
     }"
@@ -19,6 +19,7 @@
 
 <script setup>
 import { ref, reactive, watch } from "vue";
+
 const props = defineProps({
   modelValue: {
     default: "默认排序",
@@ -32,13 +33,30 @@ const props = defineProps({
       ];
     },
   },
+  border:{
+    type:Boolean,
+    default:true,
+  },
+  borderClass:{
+    type:String,
+    default:'rounded-xl',
+  },
+  h:{
+    style:Number,
+    default:32
+  },
+  zIndex:{
+    type:Number,
+    default:99,
+  }
 });
 
 let data = reactive(props.modelValue);
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:modelValue",'cb']);
 
 const handleChange = (value) => {
   emits("update:modelValue", value);
+  emits("cb", value);
 };
 
 watch(

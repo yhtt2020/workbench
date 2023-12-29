@@ -5,42 +5,68 @@
     fn="fn"
     :model="model"
     :menus="menuList"
-    :height="sizes && sizes.length > 0 ? 120 : 0"
+    :height="(sizes && sizes.length > 0) || sizeList.length > 0 ? 120 : 0"
+    menuWidth=""
+    menuHeight=""
   >
-    <div>
-      <slot></slot>
-    </div>
-    <template #follow v-if="sizes.length > 0">
+    <slot></slot>
+    <template #follow>
       <div class="flex flex-wrap mb-2 ml-2 my-1">
-        <div
-          v-for="item in sizes"
-          class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
-          style="border-radius: 16px"
-          @click="updateCardSize(item)"
-        >
-          {{ item.title }}
-        </div>
+        <template v-if="sizeList.length > 0">
+          <div
+            v-for="item in sizeList"
+            :class="[size == item.value ? 'xt-theme-bg' : 'xt-bg-2']"
+            class="h-8 w-12 text-sm xt-base-btn mr-2"
+            style="border-radius: 16px"
+            @click="updateSize(item.value)"
+          >
+            {{ item.name }}
+          </div>
+        </template>
+        <template v-else-if="sizes.length > 0">
+          <div
+            v-for="item in sizes"
+            class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
+            style="border-radius: 16px"
+            @click="updateCardSize(item)"
+          >
+            {{ item.title }}
+          </div>
+        </template>
       </div>
     </template>
 
     <template #drawer>
-      <div
-        class="flex flex-row items-center mb-3 ml-4"
-        v-if="sizes && sizes.length > 0"
-      >
-        <div class="mr-4">小组件尺寸</div>
-        <HorizontalPanel
-          :navList="sizes"
-          v-model:selectType="cardSize"
-          bgColor="drawer-item-select-bg"
+      <template v-if="sizeList.length > 0">
+        <xt-option-tab
+          :list="sizeList"
+          :modelValue="size"
+          @cb="updateSize"
+          style="height: 40px; width: 500px"
+          class="mb-3"
         />
-        <slot name="old"></slot>
-      </div>
-      <hr
-        style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)"
-        class="my-8 ml-4 mr-4"
-        v-if="sizes && sizes.length > 0"
-      />
+        <hr />
+      </template>
+      <template v-else>
+        <!-- 等待新版全部适配 应该删掉下面部分 -->
+        <div
+          class="flex flex-row items-center mb-3 ml-4"
+          v-if="sizes && sizes.length > 0"
+        >
+          <div class="mr-4">小组件尺寸</div>
+          <HorizontalPanel
+            :navList="sizes"
+            v-model:selectType="cardSize"
+            bgColor="drawer-item-select-bg"
+          />
+          <slot name="old"></slot>
+        </div>
+        <hr
+          style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)"
+          class="my-8 ml-4 mr-4"
+          v-if="sizes && sizes.length > 0"
+        />
+      </template>
     </template>
   </xt-mix-menu>
 </template>
@@ -76,8 +102,15 @@ const props = defineProps({
   model: {
     default: "contextmenu",
   },
+  // 适配新版卡片大小
+  size: {},
+  sizeList: {
+    default: () => {
+      return [];
+    },
+  },
 });
-const { menus, sizes, model } = toRefs(props);
+const { menus, sizes, model, sizeList ,size} = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -91,7 +124,10 @@ const menuState = computed(() => {
 // 处理不同右键模式的菜单数据
 const menuList = computed(() => {
   let array = [...menus.value];
-  if (rightModel.value == "follow" && sizes.value.length > 0) {
+  if (
+    rightModel.value == "follow" &&
+    (sizes.value.length > 0 || sizeList.value.length > 0)
+  ) {
     array.unshift(
       {
         slot: "cardSize",
@@ -151,7 +187,18 @@ const updateCardSize = (item) => {
 
   emits("update:sizeType", item);
 };
+/**
+ * 新版更新大小
+ */
+// const currentSize = ref(props.size);
 
+// watch(size.value, (newV) => {
+//   currentSize.value = newV;
+// });
+
+const updateSize = (size) => {
+  emits("update:size", size);
+};
 function indexAdd() {
   getFreeLayoutData.value[props.customIndex].index++;
 }

@@ -1,7 +1,8 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
-    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
+  <!-- xt-main-bottom-bar 定位类不可删 -->
+    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel " id="bottom-bar"
       style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]"
       :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
       <!-- 快速搜索 底部 用户栏 -->
@@ -32,7 +33,7 @@
       </div>
 
       <!-- 快速搜索 底部栏区域 -->
-      <div @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+      <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -613,7 +614,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(appStore, ['toggleFullScreen']),
+    ...mapActions(appStore, ['toggleFullScreen','settings']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',

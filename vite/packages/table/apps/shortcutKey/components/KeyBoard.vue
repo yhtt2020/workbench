@@ -10,7 +10,7 @@
       <div class="box-body">
         <div class="box-left">
           <div>
-            <span class="title">修饰键1</span>
+            <span class="title">修饰键</span>
             <div class="key-box mt-6">
               <div v-for="(item, index) in modifierKeyOne"
                    :key="item"
