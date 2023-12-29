@@ -1,5 +1,5 @@
 <template>
-  <xt-left-menu :list="filterList" model="id" last="5" end="2" leftMargin="py-3" leftClass="xt-bg-m">
+  <xt-left-menu :list="filterList" model="id" last="5" end="3" leftMargin="py-3" leftClass="xt-bg-m">
     <template v-if="top.type !== 'setting'">
       <div class="flex flex-col w-full" >
         <div class="flex w-full h-10 mb-4  px-3 pt-3 items-center justify-between">
@@ -25,6 +25,11 @@
       </div>
     </template>
   </xt-left-menu>
+
+
+  <teleport to='body'>
+    <NoticeEditorModal ref="editorRef"/>
+  </teleport>
 </template>
 
 <script setup >
@@ -36,6 +41,9 @@ import { Icon as NoticeIcon } from '@iconify/vue'
 
 import NoticeDetail from "./noticeDetail.vue";
 import NoticeSetting from "./noticeSetting.vue";
+import NoticeEditorModal from "./components/NoticeEditorModal.vue";
+
+import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
@@ -50,6 +58,8 @@ const top = ref({
   newName:'全部消息',
   type:'system'
 })
+
+const editorRef = ref(null);
 
 const selectTab = (item) =>{
   // console.log('查看数据',item);
@@ -67,7 +77,8 @@ const enableNotice = () =>{
 
 
 const clearAll = () =>{
-  notice.delAllHistoryNotice(top.value.type)
+  notice.clear(top.value.type)
+  message.success('已为您清空本地消息（不包含推送等网络消息）')
 }
 
 const close = () =>{
@@ -112,6 +123,13 @@ const leftList = ref([
     newIcon:'fluent:emoji-smile-slight-24-regular',name:'助手', id:'IA',newName:'智能助手',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
+
+  {
+    newIcon:'fluent:send-32-regular', flag: true,
+    callBack:()=>{
+      editorRef.value.openEditorModal();
+    }
+  },
   {
     id: "notice",
     newIcon:"fluent:alert-16-regular",
@@ -154,16 +172,15 @@ const filetDetailList = computed(()=>{
     case 'all': // 全部消息通知
       return detailList.value;
     case 'system':  // 系统消息通知
-      const filterSystem = detailList.value.filter((item)=>{ return item.content.type === 'system' });
+      const filterSystem = detailList.value.filter((item)=>{ return item.type === 'system' });
       console.log(filterSystem)
       return filterSystem;
     case 'IM':  // 社群消息通知
-      const filterMessage = detailList.value.filter((item)=>{ return item.content.type === 'message' });
+      const filterMessage = detailList.value.filter((item)=>{ return item.type === 'message' });
       return filterMessage;
     case 'push': // 推送消息通知
-      const filterPush = detailList.value.filter((item)=>{ return item.content.type === 'push' });
+      const filterPush = detailList.value.filter((item)=>{ return item.type === 'push' });
       return filterPush;
-      return [];
     case 'IA': // 助手消息通知
       return [];
   }

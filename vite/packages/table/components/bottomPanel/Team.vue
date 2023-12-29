@@ -1,5 +1,5 @@
 <template>
-  <tippy placement="top" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
+  <tippy :placement="placement" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
     ref="tippyRef">
     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
     <template #content>
@@ -41,7 +41,11 @@ export default {
   },
   props: {
     item: Object,
-    shakeElement: Boolean
+    shakeElement: Boolean,
+    placement:{
+      type: String,
+      default: 'top'
+    }
   },
   data() {
     return {
