@@ -91,9 +91,7 @@
           </div>
           <div class="add no-drag" @click="addNewCard(item)" v-else>
             <div class="text" style="color: #fff">· · ·</div>
-
           </div> -->
-
           <div class="left no-drag" @click="fullScreen(item)">
             <template v-if="item.option.length > 1">
               <div class="top">

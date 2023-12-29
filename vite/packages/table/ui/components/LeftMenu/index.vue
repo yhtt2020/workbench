@@ -31,14 +31,14 @@
                   <slot :name="item.slot"></slot>
                 </template>
               </Item>
-              <div
-                v-if="item.name"
-                style="height: 16px; margin-top: 2px"
-                class="text-xs w-full xt-text-2 truncate text-center"
-              >
-                {{ item.name }}
-              </div>
             </Box>
+            <div
+              v-if="item.name"
+              style="height: 16px; margin-top: 2px"
+              class="text-xs w-full xt-text-2 truncate text-center"
+            >
+              {{ item.name }}
+            </div>
           </div>
           <template #content>
             <slot :name="item.float"> </slot>
