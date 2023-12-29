@@ -10,7 +10,6 @@
       :sizeList="sizeList"
       @onOpen="iconClick"
       @onRefresh="onRefresh"
-      :defaultData="defaultDatabbb"
     >
       <!-- 右侧布局切换 -->
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
@@ -78,8 +77,8 @@ import Null from "./components/Null.vue";
  * 初始化阶段
  */
 const defaultDatabbb = {
-  aaa:'aaa'
-}
+  aaa: "aaa",
+};
 const props = defineProps({
   customData: {},
   customIndex: {},
@@ -101,7 +100,7 @@ const header = computed(() => {
     openState: true,
     // add: true,
     refresh: true,
-    refreshState:refreshState.value,
+    refreshState: refreshState.value,
     rightIcon: [
       {
         newIcon: lockIcon.value,

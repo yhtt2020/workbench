@@ -6,15 +6,14 @@
     :sizeList="sizeList"
   >
     <div
-      v-if="!options?.hide"
+      v-if="!options?.custom"
       class="flex flex-col widget rounded-xl"
       :class="[edit ? 'editing' : '']"
-      style="color: var(--primary-text); padding: 0"
       :style="[
         getSize,
         {
-          display: options.hide == true ? 'none' : '',
-          background: options.background || 'var( --primary-bg)',
+          background: options.bg || 'var( --primary-bg)',
+          color: options.color || 'var(--primary-text)',
         },
       ]"
     >
@@ -27,6 +26,7 @@
         style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
         :style="{
           background: header.bg || '',
+          color: header.color || '',
         }"
       >
         <!-- 头部左侧 -->
@@ -123,20 +123,19 @@
         </div>
       </div>
       <PageState :env="env" :options="options">
-        <div class="flex-1 h-0">
-          <div
-            class="h-full rounded-b-lg"
-            :style="[
-              {
-                background: options.showColor ? 'var(--main-bg)' : '',
-                padding: main.scroll ? '0 14px' : '0 14px 14px 14px',
-              },
-            ]"
-          >
-            <slot>
-              <!--  主体内容插槽1  -->
-            </slot>
-          </div>
+        <div
+          class="flex-1 h-full rounded-b-lg"
+          :style="[
+            {
+              background: main.bg,
+              color: main.color,
+              padding: main.scroll ? '0 14px' : '0 14px 14px 14px',
+            },
+          ]"
+        >
+          <slot>
+            <!--  主体内容插槽1  -->
+          </slot>
         </div>
       </PageState>
     </div>
@@ -212,6 +211,8 @@ export default {
           refresh: false,
           // 标题背景色 true为打开 false为关闭
           bg: false,
+          // 标题颜色
+          color: "",
           // 鼠标经过显示 左侧图标 + 标题区域  true为打开 false为关闭
           openState: false,
           openName: "",
@@ -229,6 +230,10 @@ export default {
         return {
           // 是否开启滚动条边距
           scroll: false,
+          // 自定义背景色
+          bg: "",
+          // 自定义字体颜色
+          color: "",
         };
       },
     },
@@ -250,11 +255,19 @@ export default {
      * 传递后每次都会帮你校验数据
      */
     defaultData: {},
-    //选项
+    // 全局选项
     options: {
-      //  as PropType<IOption>
       type: Object,
-      default: () => ({}),
+      default: () => {
+        return {
+          // 自定义区域 开启后只保留全局右键功能
+          custom: false,
+          // 自定义全局背景色
+          bg: "",
+          // 自定义全局字体颜色
+          color: "",
+        };
+      },
     },
     //右上角菜单项
     menuList: {
@@ -501,7 +514,7 @@ export default {
 }
 
 .header-right {
-  // display: none;
+  display: none;
 }
 .widget:hover .header-right {
   display: flex;
