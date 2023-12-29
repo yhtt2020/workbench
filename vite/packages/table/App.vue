@@ -48,13 +48,13 @@
       <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
         <source :src="videoPath" type="video/mp4" id="bgVid">
       </video>
-
     </div>
-    <div v-else-if="backgroundImage.path " class="fixed bg-image inset-0 video-container ">
+
+    <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path " class="fixed bg-image inset-0 video-container ">
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
 
-    <div v-else-if="backgroundColor.color" class="fixed bg-image inset-0 video-container ">
+    <div v-else-if="backgroundName.name === 'color' && backgroundColor.color" class="fixed bg-image inset-0 video-container ">
       <div class="w-full h-full " :style="{backgroundColor:`${backgroundColor.color}`}"></div>
     </div>
 
@@ -91,7 +91,7 @@
 
 </template>
 
-<script lang="ts">
+<script>
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import {mapActions, mapWritableState} from "pinia";
 import {cardStore} from "./store/card"
@@ -118,7 +118,7 @@ import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {notification} from "ant-design-vue";
 import ModalNotice from "./page/notice/ModalNotice.vue";
-import { backgroundClip } from "html2canvas/dist/types/css/property-descriptors/background-clip";
+
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -216,7 +216,7 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["customComponents", "clockEvent", "clockFlag"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage','backgroundColor']),
+    ...mapWritableState(appStore, ['userCardVisible','fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage','backgroundColor','backgroundName']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
