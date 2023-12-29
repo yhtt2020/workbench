@@ -15,3 +15,19 @@ export const defaultData = {
   radius: 5,
   isRadius: true,
 };
+export const defaultFolderData = {
+  name: "文件夹",
+  icon: "",
+  list: [],
+  size: "2x2",
+  // 文件锁 开启后无法拖出
+  lock: true,
+  // 布局样式
+  layout: "rows", // columns
+  // 排序规则
+  sort: "free",
+  // 文件夹模式
+  model: "custom",
+  // 分类规则
+  rules: [],
+};
