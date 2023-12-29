@@ -1,5 +1,6 @@
 <template>
   <xt-select h="40" zIndex="99999" v-model="currentSelect" :list="list" class="xt-bg-t-2"></xt-select>
+
 </template>
 
 <script setup lang="ts">
