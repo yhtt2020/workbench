@@ -22,7 +22,7 @@
           :data="item"
         >
           <div
-            class="flex flex-col justify-center items-center"
+            class="flex flex-col justify-center items-center cursor-pointer"
             :class="[list?.boxClass]"
           >
             <Box :item="item" :id="currentIndex" :model="model">
