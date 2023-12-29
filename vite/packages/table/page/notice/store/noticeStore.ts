@@ -54,7 +54,7 @@ export const noticeStore = defineStore('notice', {
               type:convertedData.type,
               noticeType:notice.noticeType
             })
-            this.putNoticeData(window.$notice._convertNoticeMsg(notice),notice.noticeType)
+            this.putMessageData(window.$notice._convertNoticeMsg(notice),notice.noticeType)
           }
         }
         console.log(onlineNotices,'onlineNotices')
