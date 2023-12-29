@@ -2,29 +2,14 @@
  * 注册文件夹
  */
 import { cardStore } from "../../../../store/card";
-
+import { defaultFolderData } from "../components/options";
 export const registerFolder = (desk) => {
   const card: any = cardStore();
   card.addCard(
     {
       name: "folder",
       id: Date.now(),
-      customData: {
-        name: "文件夹",
-        icon: "",
-        list: [],
-        size: "4x2",
-        // 文件锁 开启后无法拖出
-        lock: true,
-        // 布局样式
-        layout: "rows", // columns
-        // 排序规则
-        sort: "free",
-        // 文件夹模式
-        model: "custom",
-        // 分类规则
-        rules: [],
-      },
+      customData: defaultFolderData,
     },
     desk
   );

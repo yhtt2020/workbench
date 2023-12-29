@@ -3,13 +3,14 @@
     <xt-container
       :customIndex="customIndex"
       :customData="customData"
-      :options="options"
+      :defaultData="defaultFolderData"
       :header="header"
       :menuList="menuList"
       v-model:size="customData.size"
       :sizeList="sizeList"
       @onOpen="iconClick"
       @onRefresh="onRefresh"
+
     >
       <!-- 右侧布局切换 -->
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
@@ -71,14 +72,11 @@ import Expand from "./expand/Expand.vue";
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
-import { defaultData } from "./components/options";
+import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
 /**
  * 初始化阶段
  */
-const defaultDatabbb = {
-  aaa: "aaa",
-};
 const props = defineProps({
   customData: {},
   customIndex: {},
