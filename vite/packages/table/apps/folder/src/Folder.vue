@@ -72,6 +72,8 @@ import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
+import Widget from "../../../components/card/Widget.vue";
+
 /**
  * 初始化阶段
  */
