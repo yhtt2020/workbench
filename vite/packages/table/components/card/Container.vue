@@ -7,7 +7,7 @@
   >
     <div
       v-if="!options?.custom"
-      class="flex flex-col widget rounded-xl"
+      class="flex flex-col xt-shadow widget rounded-xl"
       :class="[edit ? 'editing' : '']"
       :style="[
         getSize,
@@ -32,13 +32,13 @@
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
           <div
-            @click="onOpen"
+            @click="leftClick"
             class="flex items-center h-full"
-            @mouseenter="openMouseEnter"
-            @mouseleave="openMouseLeave"
+            @mouseenter="leftMouseEnter"
+            @mouseleave="leftMouseLeave"
             style=""
             :class="[
-              openState ? 'header-open cursor-pointer' : 'header-default',
+              leftHover ? 'header-open cursor-pointer' : 'header-default',
             ]"
           >
             <!-- 图标区域 -->
@@ -47,7 +47,7 @@
               @mouseenter="iconMouseEnter"
               @mouseleave="iconMouseLeave"
             >
-              <xt-ify-icon v-if="openState" icon="fluent:open-16-regular" />
+              <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
               <template v-else>
                 <xt-icon
                   v-if="header.icon"
@@ -64,21 +64,13 @@
             </div>
             <!-- 标题区域 -->
             <div
-              class="flex items-center px-1 h-full ml-1"
+              class="flex items-center px-2 h-full ml-1"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleState }"
+            :class="{ 'header-title': titleHover }"
             >
               <slot name="title">
-                <template v-if="openState">
-                  {{ iconName ? iconName : "点击打开" }}
-                </template>
-                <template v-else-if="titleState">
-                  {{ titleName ? titleName : "点击打开" }}
-                </template>
-                <template v-else>
-                  {{ header.title }}
-                </template>
+                {{ title }}
               </slot>
             </div>
             <slot name="left-extend"></slot>
@@ -213,15 +205,16 @@ export default {
           bg: false,
           // 标题颜色
           color: "",
-          // 鼠标经过显示 左侧图标 + 标题区域  true为打开 false为关闭
-          openState: false,
-          openName: "",
+          // 鼠标经过显示 整个左侧可操作区域 左侧图标 + 标题区域  true为打开 false为关闭
+          leftHover: false,
           // 鼠标经过显示 左侧图标 true为打开 false为关闭
-          iconState: false,
-          iconName: "",
+          iconHover: false,
+          // leftHover iconHover同用 leftHoverName leftHoverIcon 两个参数
+          leftHoverName: "",
+          leftHoverIcon: "",
           // 鼠标经过显示 标题区域  true为打开 false为关闭
-          titleState: false,
-          titleName: "",
+          titleHover: false,
+          titleHoverName: "",
         };
       },
     },
@@ -307,11 +300,11 @@ export default {
       // 刷新状态
       refreshState: false,
       // 左侧区域状态
-      showOpenState: false,
+      showLeftHover: false,
       // 左侧图标区域状态
-      showIconState: false,
+      showIconHover: false,
       // 标题区域状态
-      showTitleState: false,
+      showTitleHover: false,
       // 卡片尺寸
       currentSize: this.size,
     };
@@ -340,15 +333,15 @@ export default {
       ];
     },
     // 左侧区域状态
-    openState() {
+    leftHover() {
       return (
-        (this.showOpenState || this.showIconState) &&
-        (this.header.openState || this.header.iconState)
+        (this.showLeftHover || this.showIconHover) &&
+        (this.header.leftHover || this.header.iconHover)
       );
     },
     // 标题区域状态
-    titleState() {
-      return this.showTitleState && this.header.titleState;
+    titleHover() {
+      return this.showTitleHover && this.header.titleHover;
     },
     // 卡片尺寸
     getSize() {
@@ -386,6 +379,14 @@ export default {
       }
       return arr;
     },
+    title() {
+      if (this.leftHover) {
+        return this.header.leftHoverName;
+      } else if (this.titleHover) {
+        return this.header.titleHoverName;
+      }
+      return this.header.title;
+    },
   },
   created() {
     if (!this.defaultData) return;
@@ -422,39 +423,40 @@ export default {
       message.info("开启调整桌面布局可以拖拽小组件");
     },
     // 左侧区域鼠标进入
-    openMouseEnter() {
-      if (!this.header.openState) return;
-      this.showOpenState = true;
+    leftMouseEnter() {
+      if (!this.header.leftHover) return;
+      this.showLeftHover = true;
     },
     // 左侧区域鼠标离开
-    openMouseLeave() {
-      if (!this.header.openState) return;
-      this.showOpenState = false;
+    leftMouseLeave() {
+      if (!this.header.leftHover) return;
+      this.showLeftHover = false;
     },
     // 左侧图标鼠标进入
     iconMouseEnter() {
-      if (!this.header.iconState) return;
-      this.showIconState = true;
+      if (!this.header.iconHover) return;
+      this.showIconHover = true;
     },
     // 左侧图标鼠标离开
     iconMouseLeave() {
-      if (!this.header.iconState) return;
-      this.showIconState = false;
+      if (!this.header.iconHover) return;
+      this.showIconHover = false;
     },
     // 标题区域鼠标进入
     titleMouseEnter() {
-      if (!this.header.titleState) return;
-      this.showTitleState = true;
+      if (!this.header.titleHover) return;
+      this.showTitleHover= true;
     },
     // 标题区域鼠标离开
     titleMouseLeave() {
-      if (!this.header.titleState) return;
-      this.showTitleState = false;
+      if (!this.header.titleHover) return;
+      this.showTitleHover = false;
     },
     // 打开
-    onOpen() {
-      if (!this.header.openState) return;
-      this.$emit("onOpen");
+    leftClick() {
+      if (this.header.leftHover) {
+        this.$emit("leftClick");
+      }
     },
     // 新增
     onAdd() {
@@ -465,8 +467,8 @@ export default {
       this.refreshState = true;
       this.$emit("onRefresh");
       setTimeout(() => {
-        this.refreshState = false;
-      }, 6000);
+        this.refreshState= false;
+      }, 2000);
     },
     // 右键删除
     doRemoveCard() {
