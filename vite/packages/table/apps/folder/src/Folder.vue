@@ -103,10 +103,10 @@ const header = computed(() => {
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     rightIcon: [
-      {
-        newIcon: lockIcon.value,
-        fn: lockClick,
-      },
+      // {
+      //   newIcon: lockIcon.value,
+      //   fn: lockClick,
+      // },
       {
         newIcon: layout.value,
         fn: layoutClick,
@@ -198,6 +198,8 @@ const updateSort = (val) => {
   if (mode === "free") {
     customData.value.lock = true;
     return;
+  } else {
+    customData.value.lock = false;
   }
   sortMode(mode);
 };
@@ -235,6 +237,7 @@ const lockClick = () => {
     message.info("自由排序或桌面文件下无法解锁");
     return;
   }
+  // customData.value.lock = false;
   customData.value.lock = !customData.value.lock;
 };
 
@@ -276,6 +279,7 @@ const onRefresh = () => {
     refreshState.value = false;
   }, 1000);
 };
+
 
 onBeforeMount(() => {});
 
