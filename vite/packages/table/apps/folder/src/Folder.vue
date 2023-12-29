@@ -9,28 +9,10 @@
       v-model:size="customData.size"
       :sizeList="sizeList"
       @onOpen="iconClick"
+      @onRefresh="onRefresh"
+      :defaultData="defaultDatabbb"
     >
-      <!-- 左侧图标 -->
-
-      <!-- 左侧标题 -->
-      <template #title-text>
-        {{ customData.name }}
-      </template>
       <!-- 右侧布局切换 -->
-      <template #right-extend>
-        <xt-new-icon
-          class="mr-2"
-          :icon="lockIcon"
-          size="20"
-          @click="lockClick"
-        />
-        <xt-new-icon
-          class="mr-2"
-          :icon="layout"
-          size="20"
-          @click="layoutClick"
-        />
-      </template>
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
@@ -95,6 +77,9 @@ import Null from "./components/Null.vue";
 /**
  * 初始化阶段
  */
+const defaultDatabbb = {
+  aaa:'aaa'
+}
 const props = defineProps({
   customData: {},
   customIndex: {},
@@ -108,12 +93,25 @@ const props = defineProps({
 });
 const { customData, customIndex, expand } = toRefs(props);
 
+const refreshState = ref(false);
 const header = computed(() => {
   return {
-    // icon: "message",
     newIcon: "fluent:folder-16-regular",
     title: customData.value.name,
     openState: true,
+    // add: true,
+    refresh: true,
+    refreshState:refreshState.value,
+    rightIcon: [
+      {
+        newIcon: lockIcon.value,
+        fn: lockClick,
+      },
+      {
+        newIcon: layout.value,
+        fn: layoutClick,
+      },
+    ],
   };
 });
 
@@ -267,6 +265,13 @@ const iconClick = () => {
 
 const expandClose = () => {
   customData.value.size = oldCardSize.value;
+};
+
+const onRefresh = () => {
+  refreshState.value = true;
+  setTimeout(() => {
+    refreshState.value = false;
+  }, 1000);
 };
 
 onBeforeMount(() => {});

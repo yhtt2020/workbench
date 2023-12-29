@@ -42,13 +42,11 @@ watch(
 
 const resize = () => {
   let [width, height] = data.value.size.split("x");
-  console.log("width < 2 || height < 2 :>> ", width, height);
   if (width == "2" || height == "2") {
     mode.value = "default";
     return;
   }
   mode.value = "big";
-  console.log("mode.value :>> ", mode.value);
 };
 
 /**
