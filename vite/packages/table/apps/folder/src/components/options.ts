@@ -19,7 +19,7 @@ export const defaultFolderData = {
   name: "文件夹",
   icon: "",
   list: [],
-  size: "4x2",
+  size: "2x2",
   // 文件锁 开启后无法拖出
   lock: true,
   // 布局样式

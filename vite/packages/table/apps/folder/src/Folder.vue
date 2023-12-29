@@ -97,8 +97,8 @@ const header = computed(() => {
     title: customData.value.name,
     openState: true,
     // add: true,
-    refresh: true,
-    refreshState: refreshState.value,
+    // refresh: true,
+    // refreshState: refreshState.value,
     rightIcon: [
       {
         newIcon: lockIcon.value,
