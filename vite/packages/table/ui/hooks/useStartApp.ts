@@ -55,7 +55,7 @@ export const startApp = (type, value, router?) => {
 };
 
 export const openSysApp = (value,router)=>{
-  const useAppStore = appStore();
+  const useAppStore:any = appStore();
   const useTakeStore = taskStore()
   if(value === 'fullscreen'){
     useAppStore.toggleFullScreen()

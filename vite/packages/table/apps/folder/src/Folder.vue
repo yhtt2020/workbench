@@ -8,9 +8,8 @@
       :menuList="menuList"
       v-model:size="customData.size"
       :sizeList="sizeList"
-      @onOpen="iconClick"
+      @leftClick="leftClick"
       @onRefresh="onRefresh"
-
     >
       <!-- 右侧布局切换 -->
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
@@ -63,7 +62,6 @@ import {
   onBeforeUnmount,
   onBeforeMount,
 } from "vue";
-import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
@@ -87,18 +85,23 @@ const props = defineProps({
       };
     },
   },
+  secondary: {},
 });
-const { customData, customIndex, expand } = toRefs(props);
+const { customData, customIndex, expand, secondary } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
   return {
     newIcon: "fluent:folder-16-regular",
     title: customData.value.name,
-    openState: true,
     // add: true,
     // refresh: true,
     // refreshState: refreshState.value,
+    leftHover: true,
+    leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
+    leftHoverIcon: secondary.value
+      ? "fluent:settings-16-regular"
+      : "fluent:open-16-regular",
     rightIcon: [
       {
         newIcon: lockIcon.value,
@@ -141,7 +144,7 @@ const setVisible = ref(false);
 const menuList = computed(() => {
   return [
     {
-      title: "分组设置",
+      title: "设置",
       newIcon: "fluent:settings-16-regular",
       fn: () => {
         setVisible.value = true;
@@ -254,10 +257,13 @@ const updateList = (data) => {
  */
 const expandVisible = ref(false);
 const oldCardSize = ref();
-const iconClick = () => {
-  if (expand.value.disabled) return;
-  expandVisible.value = true;
-  oldCardSize.value = customData.value.size;
+const leftClick = () => {
+  if (secondary.value) {
+    setVisible.value = true;
+  } else {
+    expandVisible.value = true;
+    oldCardSize.value = customData.value.size;
+  }
 };
 
 const expandClose = () => {

@@ -78,7 +78,7 @@
                   使用传统的鼠标右键菜单。
                 </div>
                 <div class="text-center">
-                  <a  @click="setVisible(true, '../../../public/img/default.jpg')">预览</a>
+                  <a  @click="setVisible(true, imgList[0])">预览</a>
                 </div>
               </div>
             </a-col>
@@ -91,7 +91,7 @@
                   更适合触控的大图标菜单。
                 </div>
                 <div class="text-center">
-                  <a @click="setVisible(true, '../../../public/img/flow.jpg')">预览</a>
+                  <a @click="setVisible(true, imgList[1])">预览</a>
                 </div>
               </div>
             </a-col>
@@ -169,7 +169,6 @@
           <div class="text-center xt-text-2 font-16 mt-3">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
           <a-row :gutter="20" class="flex justify-center mt-6">
             <a-col >
-              <!-- @click="this.desktopSetting='custom'"  -->
               <img src="../../../public/img/tag.png" class="img-tag" />
               <div :class="{'active':desktopSetting==='custom'}" class="setting-panel pointer px-4 pt-5">
                 <div class="title">
@@ -402,6 +401,7 @@ export default {
         },
       ],
       visible: false,
+      imgList:['/img/default.jpg', '/img/flow.jpg']
     }
   },
   async mounted () {
@@ -432,8 +432,8 @@ export default {
 
     // 预览图片
     setVisible(value, url){
-      this.urlValue = url
       this.visible = value;
+      this.urlValue = url
     },
 
     async restore () {
@@ -626,7 +626,6 @@ export default {
   border-radius: 8px;
   color: var(--secondary-text);
   cursor: pointer;
-
 }
 
 .bg-tab{
