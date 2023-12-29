@@ -380,9 +380,9 @@ export default {
       return arr;
     },
     title() {
-      if (this.leftState) {
+      if (this.leftHover) {
         return this.header.leftHoverName;
-      } else if (this.titleState) {
+      } else if (this.titleHover) {
         return this.header.titleHoverName;
       }
       return this.header.title;

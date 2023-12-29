@@ -8,7 +8,7 @@
       :menuList="menuList"
       v-model:size="customData.size"
       :sizeList="sizeList"
-      @leftClick="iconClick"
+      @leftClick="leftClick"
       @onRefresh="onRefresh"
     >
       <!-- 右侧布局切换 -->
@@ -97,9 +97,7 @@ const header = computed(() => {
     // add: true,
     // refresh: true,
     // refreshState: refreshState.value,
-    leftHover: false,
-    titleHover: true,
-    iconHover: true,
+    leftHover: true,
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
@@ -259,10 +257,13 @@ const updateList = (data) => {
  */
 const expandVisible = ref(false);
 const oldCardSize = ref();
-const iconClick = () => {
-  if (expand.value.disabled) return;
-  expandVisible.value = true;
-  oldCardSize.value = customData.value.size;
+const leftClick = () => {
+  if (secondary.value) {
+    setVisible.value = true;
+  } else {
+    expandVisible.value = true;
+    oldCardSize.value = customData.value.size;
+  }
 };
 
 const expandClose = () => {
