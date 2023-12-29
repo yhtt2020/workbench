@@ -7,7 +7,7 @@
   >
     <div
       v-if="!options?.custom"
-      class="flex flex-col widget rounded-xl"
+      class="flex flex-col xt-shadow widget rounded-xl"
       :class="[edit ? 'editing' : '']"
       :style="[
         getSize,
@@ -466,7 +466,7 @@ export default {
       this.$emit("onRefresh");
       setTimeout(() => {
         this.refreshState = false;
-      }, 6000);
+      }, 2000);
     },
     // 右键删除
     doRemoveCard() {
