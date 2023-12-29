@@ -21,7 +21,7 @@
         display: flex;
         justify-content: center;
       "
-        :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important' }">
+        :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important',borderRadius: this.navAttribute.navRadius + 'px' }">
         <div class="flex items-center justify-between" :style="{marginLeft:this.settings.enableChat ? '10px' : '0px'}">
           <MyAvatar :chat="true" :level="false"></MyAvatar>
           <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
