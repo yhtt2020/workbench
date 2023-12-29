@@ -21,7 +21,7 @@
         justify-content: center;
       "
         :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important' }">
-        <div class="flex items-center justify-between ">
+        <div class="flex items-center justify-between" :style="{marginLeft:this.settings.enableChat ? '16px' : '0px'}">
           <MyAvatar :chat="true" :level="false"></MyAvatar>
           <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
           <div v-show="settings.enableChat" class="pl-4 pointer">
@@ -172,7 +172,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder, searchItem, updateIcon, findItem } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
@@ -184,7 +184,6 @@ import { startApp } from '../ui/hooks/useStartApp'
 import _ from 'lodash-es'
 import Avatar from './desk/navigationBar/components/Avatar.vue'
 import Folder from './desk/navigationBar/components/folder/Folder.vue'
-import { getArea } from './desk/navigationBar/hook/sortable'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -524,10 +523,7 @@ export default {
           target.forEach(element => {
             const index = this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
-              if (element.type === 'coolApp') {
-                return item.value.url === element.value.url;
-              }
-              return item.value === element.value;
+              return this.judge(element, item);
             });
             console.log(index, 'lost index');
             if (index !== -1) {
@@ -541,10 +537,7 @@ export default {
           this.footNavigationList.forEach((item) => {
             // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
             const correspondingElement = this.copyFootNav.find((copyItem) => {
-              if (item.type === 'coolApp') {
-                return copyItem.value.url === item.value.url;
-              }
-              return copyItem.value === item.value;
+              return this.judge(item, copyItem);
             });
 
             // 如果找到对应元素，则将其放入新数组中
@@ -631,14 +624,23 @@ export default {
     updateNavList(navList, copyList) {
       const filteredNavList = navList.filter((item) => {
         return !copyList.some((i) => {
-          if (item.type === 'coolApp') {
-            return item.value.url === i.value.url;
-          }
-
-          return item.value === i.value;
+          return this.judge(item, i)
         });
       });
       return filteredNavList;
+    },
+    judge(ele, item) {
+      if (ele.type === 'coolApp') {
+        return ele.value.url === item.value.url
+      } else if (ele.type === 'folder' && ele.children && item.children && item.children.length > 0 && ele.children.length > 0) {
+        return ele.children.every((j) => {
+          return item.children.every((k) => {
+            return (j.type === 'coolApp' && j.value.url === k.value.url) || (j.value === k.value)
+          })
+        })
+      } else {
+        return ele.value === item.value
+      }
     },
     editIcon(item) {
       this.quick = true
@@ -1077,9 +1079,6 @@ export default {
       })
     },
     replaceType,
-    findItem,
-    updateIcon,
-    getArea,
     iconFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
