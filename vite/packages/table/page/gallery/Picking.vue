@@ -6,11 +6,20 @@
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">拾光壁纸</span>
       </div>
       <div class="flex items-center justify-center">
-        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" :h="isModal ? 32 : 40" :zIndex="1250" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;"  :borderClass="'rounded-md '" :border="false" @change="pickFilterChange($event)"/>
+        <template v-if="isModal">
+          <MinSelect :list="pickParams.paperSelect" @update="pickFilterChange($event)"/>
+        </template>
+
+        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250" 
+         v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false" 
+         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: center;" 
+        />
+        
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
         :newIcon="'fluent:filter-16-regular'" :iconBg="'var(--active-text)'" :class="isModal ? 'mr-3':''" >
           <PickDropDetail :isModal="isModal" @emitPick="updateList"/>
         </xt-dropdown>
+
         <ClosePaperButton v-if="isModal"/>
       </div>
     </div>
@@ -99,6 +108,7 @@ import { message } from 'ant-design-vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
 import PickDropDetail from './components/content/PickDropDetail.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
+import MinSelect from './components/select/MinSelect.vue';
 
 let fs = require('fs')
 let path = require('path')
@@ -111,7 +121,7 @@ export default {
 
   components:{
     ClosePaperButton,PickDropDetail,
-    GradeSmallTip
+    GradeSmallTip,MinSelect
   },
 
   data(){
