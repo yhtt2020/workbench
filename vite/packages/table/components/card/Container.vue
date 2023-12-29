@@ -2,33 +2,31 @@
   <RightMenu
     :menus="menus"
     :customIndex="customIndex"
-    @removeCard="doRemoveCard"
-    class="relative"
     v-model:size="currentSize"
     :sizeList="sizeList"
   >
     <div
-      v-if="!options?.hide"
+      v-if="!options?.custom"
       class="flex flex-col widget rounded-xl"
       :class="[edit ? 'editing' : '']"
-      style="color: var(--primary-text); padding: 0"
       :style="[
         getSize,
         {
-          display: options.hide == true ? 'none' : '',
-          background: options.background || 'var( --primary-bg)',
+          background: options.bg || 'var( --primary-bg)',
+          color: options.color || 'var(--primary-text)',
         },
       ]"
     >
       <!-- 头部区域 -->
       <div
         v-if="!header.disabled"
-        @dragstart.stop="handleDragStart"
+        @dragstart.stop="titleDragStart"
         draggable="true"
         class="w-full flex items-center justify-between"
         style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
         :style="{
           background: header.bg || '',
+          color: header.color || '',
         }"
       >
         <!-- 头部左侧 -->
@@ -89,49 +87,55 @@
         <!-- 头部右侧 -->
         <div class="flex items-center header-right" style="padding-right: 14px">
           <slot name="right-extend"></slot>
-
-          <div v-if="header.add" class="header-right-icon mr-0.5">
-            <xt-ify-icon
-              icon="fluent:add-16-regular"
-              @click="onAdd"
-              size="20"
-            />
-          </div>
-          <div v-if="header.refresh" class="header-right-icon mr-1">
-            <xt-ify-icon
-              :class="isTitleRefresh ? 'refresh' : ''"
-              icon="fluent:arrow-clockwise-16-regular"
-              @click="onRefresh"
-              size="20"
-            />
-          </div>
+          <template v-if="rightIcons && rightIcons.length">
+            <div v-for="item in rightIcons" class="header-right-icon mr-1">
+              <xt-ify-icon
+                v-if="item.newIcon"
+                :icon="item.newIcon"
+                @click="item.fn"
+                :class="item.class"
+                size="20"
+              />
+              <xt-icon
+                v-else-if="item.icon"
+                :icon="item.icon"
+                @click="item.fn"
+                type=""
+                size="19"
+                w="20"
+              />
+            </div>
+          </template>
           <RightMenu
             :menus="menus"
             :customIndex="customIndex"
             model="all"
-            @removeCard="doRemoveCard"
             v-model:size="currentSize"
             :sizeList="sizeList"
           >
-            <xt-ify-icon icon="fluent:line-horizontal-3-20-filled" size="20" />
+            <div class="header-right-icon">
+              <xt-ify-icon
+                icon="fluent:line-horizontal-3-20-filled"
+                size="20"
+              />
+            </div>
           </RightMenu>
         </div>
       </div>
       <PageState :env="env" :options="options">
-        <div class="flex-1 h-0">
-          <div
-            class="h-full rounded-b-lg"
-            :style="[
-              {
-                background: options.showColor ? 'var(--main-bg)' : '',
-                padding: main.scroll ? '0 14px' : '0 14px 14px 14px',
-              },
-            ]"
-          >
-            <slot>
-              <!--  主体内容插槽1  -->
-            </slot>
-          </div>
+        <div
+          class="flex-1 h-full rounded-b-lg"
+          :style="[
+            {
+              background: main.bg,
+              color: main.color,
+              padding: main.scroll ? '0 14px' : '0 14px 14px 14px',
+            },
+          ]"
+        >
+          <slot>
+            <!--  主体内容插槽1  -->
+          </slot>
         </div>
       </PageState>
     </div>
@@ -158,16 +162,20 @@
 // import { PropType } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
+import { useDebounceFn } from "@vueuse/core";
+import { message } from "ant-design-vue";
 
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
+import { useWidgetStore } from "./store";
+import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 // import { IOption, IMenuItem } from "./types";
-import { useWidgetStore } from "./store";
-import { useFreeLayoutStore } from "../desk/freeLayout/store";
-import { message } from "ant-design-vue";
+
+import { deepMerge } from "./ContainerUtils";
+
 export default {
   components: {
     RightMenu,
@@ -175,6 +183,10 @@ export default {
   },
   name: "Container",
   props: {
+    /**
+     * header main size sizeList defaultData
+     * 均为重构后的数据结构 需要阅读源码
+     */
     header: {
       type: Object,
       default: () => {
@@ -184,12 +196,23 @@ export default {
           // 左侧图标 适配旧版icon 适配新版newIcon
           icon: "",
           newIcon: "",
+          /**
+           * 右侧图标
+           * {
+           *    icon: '旧版图标',
+           *    newIcon: '新版图标',
+           *    fn: lockClick,
+           * }
+           */
+          rightIcon: [],
           // 右侧添加图标 true为打开 false为关闭
           add: false,
           // 右侧刷新图标 true为打开 false为关闭
           refresh: false,
           // 标题背景色 true为打开 false为关闭
           bg: false,
+          // 标题颜色
+          color: "",
           // 鼠标经过显示 左侧图标 + 标题区域  true为打开 false为关闭
           openState: false,
           openName: "",
@@ -207,27 +230,44 @@ export default {
         return {
           // 是否开启滚动条边距
           scroll: false,
+          // 自定义背景色
+          bg: "",
+          // 自定义字体颜色
+          color: "",
         };
       },
     },
-    //
-    /**
-     * 卡片尺寸 默认4x2
-     */
+    // 卡片尺寸 默认 4x2
     size: {
       type: String,
       default: "4x2",
     },
-    //可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
+    /**
+     * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
+     * 格式为 { name: '4x2'value: '4x2' }
+     */
     sizeList: {
       type: Array,
       default: () => [],
     },
-    //选项
+    /**
+     * 卡片默认数据
+     * 传递后每次都会帮你校验数据
+     */
+    defaultData: {},
+    // 全局选项
     options: {
-      //  as PropType<IOption>
       type: Object,
-      default: () => ({}),
+      default: () => {
+        return {
+          // 自定义区域 开启后只保留全局右键功能
+          custom: false,
+          // 自定义全局背景色
+          bg: "",
+          // 自定义全局字体颜色
+          color: "",
+        };
+      },
     },
     //右上角菜单项
     menuList: {
@@ -245,6 +285,7 @@ export default {
       type: Object,
       default: () => {},
     },
+
     desk: {
       type: Object,
       required: true,
@@ -263,15 +304,15 @@ export default {
   },
   data() {
     return {
-      // 小组件
-      widgetSize: {
-        width: "",
-        height: "",
-      },
-      isTitleRefresh: false,
+      // 刷新状态
+      refreshState: false,
+      // 左侧区域状态
       showOpenState: false,
+      // 左侧图标区域状态
       showIconState: false,
+      // 标题区域状态
       showTitleState: false,
+      // 卡片尺寸
       currentSize: this.size,
     };
   },
@@ -298,16 +339,18 @@ export default {
         },
       ];
     },
-
+    // 左侧区域状态
     openState() {
       return (
         (this.showOpenState || this.showIconState) &&
         (this.header.openState || this.header.iconState)
       );
     },
+    // 标题区域状态
     titleState() {
       return this.showTitleState && this.header.titleState;
     },
+    // 卡片尺寸
     getSize() {
       let w = 1;
       let h = 1;
@@ -324,67 +367,118 @@ export default {
         height: h * 96 + (h - 1) * 12 + "px",
       };
     },
+    // 右侧图标
+    rightIcons() {
+      let arr = [...this.header.rightIcon];
+      if (this.header.add) {
+        arr.push({
+          newIcon: "fluent:add-16-regular",
+          fn: this.onAdd,
+        });
+      }
+
+      if (this.header.refresh) {
+        arr.push({
+          newIcon: "fluent:arrow-clockwise-16-regular",
+          class: this.refreshState ? "refresh" : "",
+          fn: this.onRefresh,
+        });
+      }
+      return arr;
+    },
+  },
+  created() {
+    if (!this.defaultData) return;
+    deepMerge(this.customData, this.defaultData);
   },
   mounted() {},
   watch: {
+    /**
+     * 监听size变化
+     */
     size(newV) {
       this.currentSize = newV;
     },
     currentSize(newV) {
       this.$emit("update:size", newV);
     },
+    /**
+     * 监听刷新状态变化
+     */
+    "header.refreshState": {
+      handler(newValue, oldValue) {
+        if (!newValue) {
+          this.refreshState = false;
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
     ...mapActions(offlineStore, ["getIsOffline"]),
-    // openMouseEnter" @mouseleave="openMouseLeave">
-    handleDragStart() {
+    // 头部拖拽开始
+    titleDragStart() {
       message.info("开启调整桌面布局可以拖拽小组件");
     },
+    // 左侧区域鼠标进入
     openMouseEnter() {
       if (!this.header.openState) return;
       this.showOpenState = true;
     },
+    // 左侧区域鼠标离开
     openMouseLeave() {
       if (!this.header.openState) return;
       this.showOpenState = false;
     },
+    // 左侧图标鼠标进入
     iconMouseEnter() {
       if (!this.header.iconState) return;
       this.showIconState = true;
     },
+    // 左侧图标鼠标离开
     iconMouseLeave() {
       if (!this.header.iconState) return;
       this.showIconState = false;
     },
+    // 标题区域鼠标进入
     titleMouseEnter() {
       if (!this.header.titleState) return;
       this.showTitleState = true;
     },
+    // 标题区域鼠标离开
     titleMouseLeave() {
       if (!this.header.titleState) return;
       this.showTitleState = false;
     },
+    // 打开
     onOpen() {
       if (!this.header.openState) return;
       this.$emit("onOpen");
     },
-    onSwitch() {},
+    // 新增
     onAdd() {
       this.$emit("onAdd");
     },
+    // 刷新
     onRefresh() {
-      this.isTitleRefresh = true;
-
+      this.refreshState = true;
       this.$emit("onRefresh");
       setTimeout(() => {
-        this.isTitleRefresh = false;
-      }, 1000);
+        this.refreshState = false;
+      }, 6000);
     },
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");
       this.removeCard(this.customIndex, this.desk);
+    },
+
+    // 设置自定义数据
+    setCustomData(key, data) {
+      let obj = {};
+      obj[key] = data;
+      this.updateCustomData(this.customIndex, obj, this.desk);
     },
   },
 };

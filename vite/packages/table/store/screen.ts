@@ -4,6 +4,7 @@ import {isMain} from '../js/common/screenUtils'
 import _ from "lodash-es";
 import {subIPC,mainIPC} from '../js/common/screenIPC'
 import {nanoid} from "nanoid";
+import {appStore} from "../store";
 const tips = {
   zoom: {
     status: true,
@@ -81,6 +82,25 @@ export const screenStore = defineStore('screen', {
       })
       subIPC.on('restore',()=>{
         window.restore()
+      })
+      subIPC.on('setScreen',(event,args)=>{
+        console.log(args)
+        appStore().exitFullScreen(false)
+        tsbApi.window.setBounds({
+          x:args.bounds.x,
+          y:args.bounds.y,
+          width:0,
+          height:0
+        })
+        setTimeout(()=> {
+          tsbApi.window.setBounds(args.bounds)
+          console.log(args.bounds)
+          tsbApi.window.focus()
+          if (args.fullscreen) {
+            appStore().enterFullScreen()
+          }
+        },500)
+
       })
     },
 

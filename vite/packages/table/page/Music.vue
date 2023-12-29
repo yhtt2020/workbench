@@ -19,7 +19,7 @@
               style="margin: 16px; border: 3px solid #6b6b6b">点击选歌播放</a-avatar>
           </div>
           <div style="font-size: 1.8em">{{ status.music.title }}</div>
-          <div style="font-size: 1.1em; color: #7c7c7c" class="singer">
+          <div style="font-size: 1.1em;  " class="singer xt-text-2">
             {{ status.music.singer }}
           </div>
           <div style="max-width: 400px; margin: auto" class="player px-3">
@@ -209,16 +209,17 @@ export default {
 }
 
 .z-sel {
-  color: #fff !important;
+  color: var(--active-bg) !important;
   font-size: 14px !important;
   -webkit-transition: color 0.7s linear;
   -moz-transition: color 0.7s linear;
   -o-transition: color 0.7s linear;
   transition: color 0.7s linear;
+  font-weight: bold;
 }
 
 .listlyric p {
-  color: #989898;
+  color:var(--secondary-text);
   word-wrap: break-word;
   text-align: center;
   line-height: 32px;
@@ -275,6 +276,7 @@ export default {
 }
 
 .listlyric {
+  padding: 10px;
   text-align: center;
   zoom: 1.3;
   top: 0;
