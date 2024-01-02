@@ -201,6 +201,7 @@ export default {
   mounted () {
     this.list = [...lively]
     this.savePath = this.settings.savePath
+    console.log('执行....测试',window.globalArgs);
 
     lively2.forEach((w) => {
       this.list.push({

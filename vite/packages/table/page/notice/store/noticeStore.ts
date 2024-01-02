@@ -5,7 +5,11 @@ import {post} from '../../../js/axios/request'
 //@ts-ignore
 export const noticeStore = defineStore('notice', {
   state: () => ({
-    detailList: []
+    detailList: [],
+    // 发送消息设置
+    msgSetting:{
+      
+    }
   }),
 
   actions: {
@@ -27,7 +31,7 @@ export const noticeStore = defineStore('notice', {
           },
         }
       })
-      let list = []
+      let list:any = []
       if (rs.docs) {
         list = rs.docs
       } else {
@@ -41,14 +45,14 @@ export const noticeStore = defineStore('notice', {
       })
 
       if (onlineNoticeRs.status) {
-        let onlineNotices = []
+        let onlineNotices:any = []
         console.log(onlineNoticeRs,'list')
         for (const notice of onlineNoticeRs.data.list) {
-          let has = list.some(li => {
+          let has = list.some((li:any) => {
             return li.content.id === notice.id
           })
           if (!has) {
-            const convertedData=window.$notice._convertNoticeMsg(notice)
+            const convertedData:any =window.$notice._convertNoticeMsg(notice)
             onlineNotices.push({
               ...convertedData,
               type:convertedData.type,
