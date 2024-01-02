@@ -169,7 +169,7 @@
         :list="settingsTab"
       ></XtTab>
     </template>
-    <div style="height: calc(66vh); width: 500px">
+    <div style="height: calc(66vh); width: 452px">
       <!-- 当前桌面设置 -->
       <template v-if="currentSettingTab === 'current' && currentDesk.settings">
         <CurrentDesk :fixedSettings="settings" :currentDesk="currentDesk" />
@@ -187,12 +187,6 @@
           :fixedFloat="settings.enableZoom"
           :freeFloat="isFreeLayout"
         />
-        <!-- <template v-if="settings.enableZoom">
-          <div class="mb-2" style="color: orangered">
-            <icon icon="tishi-xianxing"></icon>
-            当前桌面正在使用独立设置，此处设置对当前桌面不起作用。
-          </div>
-        </template> -->
         <slot name="settingsAllAfter"></slot>
       </template>
     </div>
