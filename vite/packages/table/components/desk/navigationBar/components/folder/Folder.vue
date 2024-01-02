@@ -19,6 +19,7 @@
                         :style="{ borderRadius: navigationStore.iconRadius + 'px' }"></a-avatar>
                 </div>
             </div>
+            <!-- <Folder :customData="customData" /> -->
         </template>
     </tippy>
 </template>
@@ -40,6 +41,9 @@ const props = defineProps({
 })
 const body = computed(() => {
     return document.body
+})
+const customData = ref({
+    list: props.iconList
 })
 </script>
 <style lang='scss' scoped></style>

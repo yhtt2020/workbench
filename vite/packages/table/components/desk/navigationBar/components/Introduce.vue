@@ -2,7 +2,7 @@
   <div class="w-full h-full">
     <div v-if="selectTag === 'recommendation'">
       <div class="flex items-center p-2 rounded-lg xt-bg-2 ">
-        <div class=" xt-text">你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择。</div>
+        <div class=" xt-text">{{ title }}</div>
       </div>
     </div>
     <div class="flex " v-if="selectTag == 'webNavigation' || selectTag == 'tableApp'">
@@ -207,6 +207,9 @@ export default {
         return this.localFiles
       }
     },
+    title(){
+      return this.selectNav === 'desktop' ? '你可以直接拖拽Windows系统文件或应用快捷方式到桌面；我们还为你推荐了以下应用图标供你添加选择' : '你可以直接拖拽Windows系统文件或应用快捷方式到导航栏；我们还为你推荐了以下应用图标供你添加选择';
+    }
 
   },
   watch: {

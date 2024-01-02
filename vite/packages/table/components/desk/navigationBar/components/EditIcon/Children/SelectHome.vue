@@ -11,19 +11,27 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted,watch } from 'vue'
 import { cardStore } from '../../../../../../store/card'
 const useCardStore = cardStore()
+const props = defineProps({
+    editItem: Object
+})
 const deskList = computed(() => {
     return useCardStore.desks.map((desk) => {
         return {
             name: desk.name,
-            id: desk.id
+            value: desk.id
         }
     })
 })
 
-const defaultDesk = ref(deskList.value[0].name)
-
+const defaultDesk = ref('')
+onMounted(()=>{
+    defaultDesk.value = '默认桌面'
+})
+watch(()=>defaultDesk.value,()=>{
+    props.editItem.home = defaultDesk.value
+})
 </script>
 <style lang='scss' scoped></style>
