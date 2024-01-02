@@ -10,7 +10,6 @@
     />
   </Widget> -->
   <Drop @createFile="createFile" @deleteFile="deleteFile">
-    {{ customData.icon }}
     <xt-container
       :customIndex="customIndex"
       :customData="customData"
