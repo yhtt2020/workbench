@@ -386,7 +386,11 @@ export const appStore = defineStore('appStore', {
       }
 
     },
-    exitFullScreen() {
+    /**
+     * 返回记录原点
+     * @param setOrigin
+     */
+    exitFullScreen(setOrigin=true) {
       setTimeout(() => {
         document.body.classList.add('window')
       }, 200)
@@ -403,7 +407,9 @@ export const appStore = defineStore('appStore', {
       tsbApi.window.setResizable(true)
       tsbApi.window.setFullScreen(false)
       //tsbApi.window.setResizeable(false)
-      tsbApi.window.setBounds({...this.windowOriginBounds})
+      if(setOrigin){
+        tsbApi.window.setBounds({...this.windowOriginBounds})
+      }
       this.windowFullScreen = false
       this.showWindowController = true
     }

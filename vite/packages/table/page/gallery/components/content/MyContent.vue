@@ -13,7 +13,7 @@
               </div> 
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" :color="'var(--active-text)'"></xt-new-icon>
                   <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
                 </div>
               </xt-button>
@@ -26,13 +26,13 @@
             <div class="absolute flex " style="right:16px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
               <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
               </xt-button>
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="removeToMyPaper(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
-                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
               </xt-button>
             </div>

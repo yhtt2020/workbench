@@ -403,6 +403,7 @@ export const courierStore = defineStore("courier", {
 
       if (orderInfo.orders) {
         orderInfo.orders = orderInfo.orders.reverse()
+        console.log('即将写入的订单')
         for (const order of orderInfo.orders) {
           let found = await tsbApi.db.find({
             selector: {

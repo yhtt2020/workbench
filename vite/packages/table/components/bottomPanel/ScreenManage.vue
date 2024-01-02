@@ -1,11 +1,13 @@
 <template>
   <!-- 快速搜索 分屏 -->
   <div style="height: 100%;display: flex;justify-content: center;align-content: center;flex-direction: column;">
-    <div @click.stop style="background: #111;border: 1px solid #333;background-color:var(--primary-bg) ; color: var(--primary-text);" class="p-3 rounded-md mt-3">
+    <div @click.stop
+         style="background: #111;border: 1px solid #333;background-color:var(--primary-bg) ; color: var(--primary-text);"
+         class="p-3 rounded-md mt-3">
 
       <div @click="click(screen)" @dblclick="dblclick(screen)"
            :class="{die:!screen.running && screen.key!=='main',active:screen.active}" v-for="screen in screens"
-                           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative;">
+           class="pointer screen rounded-md mb-2" style="display: inline-block;position: relative;">
         <a-image v-if="screen.key!=='main'" :preview="false"
                  fallback="/public/icons/main.png"
                  class="screen-preview" :width="120" :height="70" :src="'file://'+screen.capture"></a-image>
@@ -17,7 +19,7 @@
               style="left: 50%;top:50%;font-size: 24px;width: 100px;transform: translateY(-60%) translateX(-50%);text-align: center;line-height: 30px;border-radius: 4px;background: none;"
               class="p-2 screen-title">{{ screen.title }}</span>
       </div>
-      <div class="text-right " >
+      <div class="text-right ">
         <a-button @click="addScreen" class="mr-3 no-dark" style="color:var(--primary-text)">创建</a-button>
         <a-button @click="tagScreen" style="color:var(--primary-text)">辨别</a-button>
       </div>
@@ -35,7 +37,7 @@
       <template v-if="currentScreen.key!=='main'">
         <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center;">
           <a-col :span="5">
-            <div class="btn relative " >
+            <div class="btn relative ">
               <a-switch @change="toggleScreen" v-model:checked="currentScreen.running"></a-switch>
               <div class="mt-3">
                 启用分屏
@@ -58,12 +60,19 @@
               </div>
             </div>
           </a-col>
-
+          <a-col :span="5">
+            <div @click="chooseScreen" class="btn">
+              <Icon icon="touping" style="font-size: 2em"></Icon>
+              <div>
+                选择屏幕
+              </div>
+            </div>
+          </a-col>
           <a-col :span="4" v-if="false">
             <div @click="setTouch" class="btn">
               <Icon icon="Touch" style="font-size: 2em"></Icon>
               <div>
-                设置屏幕
+                设置目标屏幕
               </div>
             </div>
           </a-col>
@@ -79,7 +88,15 @@
       </template>
     </div>
   </div>
+  <xt-modal v-model="chooseScreenVisible">
+    <div style="width: 500px;height:400px">
+      <ChooseScreen :customCallback="true" @setScreen="setSubBounds"></ChooseScreen>
+      <a-checkbox style="position: absolute;left:50%;bottom:0;transform: translateX(-50%)"
+                  v-model:checked="setFullscreen">自动最大化
+      </a-checkbox>
+    </div>
 
+  </xt-modal>
 </template>
 
 <script>
@@ -89,6 +106,7 @@ import _ from 'lodash-es'
 import { EditOutlined } from '@ant-design/icons-vue'
 import { mainIPC } from '../../js/common/screenIPC'
 import { Modal } from 'ant-design-vue'
+import ChooseScreen from '../../page/ChooseScreen.vue'
 
 export default {
   name: 'ScreenManage',
@@ -96,10 +114,12 @@ export default {
     return {
       currentScreen: {},
       editing: false,
-      newTitle: ''
+      newTitle: '',
+      setFullscreen: false,
+      chooseScreenVisible: false,
     }
   },
-  components: { EditOutlined },
+  components: { ChooseScreen, EditOutlined },
   computed: {
     ...mapWritableState(screenStore, ['screens']),
   },
@@ -149,9 +169,30 @@ export default {
     restore () {
       mainIPC.sendToSub(this.currentScreen.key, 'restore')
     },
+    chooseScreen () {
+      this.chooseScreenVisible = true
+    },
+    setSubBounds (data) {
+      console.log('点击触发')
+      console.log(data)
+      let bounds = data.display.bounds
+      let width = bounds.width > 1200 ? 1200 : bounds.width
+      let height = bounds.height > 800 ? 800 : bounds.height
+      let setBounds={
+        x:+ (bounds.x + bounds.width/2  - width / 2).toFixed(0),
+        y: + (bounds.y + bounds.height/2 - height / 2).toFixed(0),
+        width: width,
+        height: height
+      }
+      console.log(setBounds,'setbounds')
+      mainIPC.sendToSub(this.currentScreen.key, 'setScreen', {
+        bounds: setBounds,
+        fullscreen: this.setFullscreen
+      })
+    },
     select (key) {
       this.screens.map(s => {
-        s.active=false
+        s.active = false
         if (s.key === key) {
           this.currentScreen = s
           s.active = true
@@ -184,8 +225,10 @@ export default {
 </script>
 <style lang="scss">
 .btn {
-background: var(--mask-item-background-color);color: var(--font-color);
+  background: var(--mask-item-background-color);
+  color: var(--font-color);
 }
+
 .screen.die {
   .ant-image-img {
     filter: grayscale(100%);

@@ -6,8 +6,8 @@
       </div>
       <div class="flex-item flex-item-V uni-bg-green">
         <div class="screen-wrapper">
-          <div v-for="display in displays" >
-            <div @click="setToScreen(display)" class="screen"  :class="{'primary':display.workArea.x===0}"
+          <div v-for="display in displays">
+            <div @click="setToScreen(display)" class="screen" :class="{'primary':display.workArea.x===0}"
                  @mouseenter="display.enter=true"
                  @mouseleave="display.enter=false"
                  :style="{
@@ -30,10 +30,12 @@
 
 <script>
 import { appStore } from '../store'
-import {mapWritableState} from 'pinia'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'ChooseScreen',
+  emits:['setScreen'],
+  props:['customCallback'],
   data () {
     return {
       displays: [],
@@ -52,15 +54,23 @@ export default {
       let bounds = {
         x: display.bounds.x,
         y: display.bounds.y,
-        width: 0,
-        height: 0
+        width: 600,
+        height: 400
       }
       tsbApi.window.setFullScreen(false)
+      console.log(this)
+      if(this.customCallback ){
+        console.log('向上传递事件')
+        this.$emit('setScreen',{display})
+        return //this.$emit('callback',{display})
+      }
       setTimeout(() => {
         tsbApi.window.setBounds(bounds)
-        tsbApi.window.setFullScreen(true)
-        this.settings.attachScreen.id=display.id
-        this.settings.attachScreen.bounds=bounds
+        setTimeout(() => {
+          tsbApi.window.setFullScreen(true)
+        }, 1000)
+        this.settings.attachScreen.id = display.id
+        this.settings.attachScreen.bounds = bounds
       }, 1000)
 
     },
@@ -93,7 +103,7 @@ export default {
       if (display.enter) {
         return '使用'
       } else {
-        if(display.workArea.x===0){
+        if (display.workArea.x === 0) {
           return '主屏'
         }
         return '副屏'
@@ -101,23 +111,25 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore, ['settings'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.primary{
-  .num{
+.primary {
+  .num {
     color: #383838 !important;
     font-weight: bold;
   }
 
   background: #c4c4c4 !important;
 }
-.s-screen{
-  background: #333 ;
+
+.s-screen {
+  background: #333;
 }
+
 .screen-wrapper {
   position: relative;
   width: 100px;
