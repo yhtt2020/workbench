@@ -54,7 +54,7 @@
               "
             >
               <icon
-                :newIcon = customData.newIcon
+                :newIcon="customData.newIcon"
                 v-bind="customData.iconList[0]"
                 @custom-event="handleCustomEvent"
               ></icon>
@@ -67,7 +67,12 @@
   </Widget>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Set v-if="settingVisible" v-model="settingVisible" @close="closeSet" :mask="0"></Set>
+  <Set
+    v-if="settingVisible"
+    v-model="settingVisible"
+    @save="closeSet"
+    :mask="0"
+  ></Set>
   <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit> -->
   <!-- 多图标组件设置 -->
@@ -167,7 +172,7 @@ export default {
       setData.zoom = {
         state: true,
         value: "",
-      }
+      };
     }
     if (this.customData.size == undefined) {
       state = true;
@@ -317,6 +322,10 @@ export default {
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
+      console.log(
+        "this.customData.iconList[this.index] :>> ",
+        this.customData.iconList[this.index]
+      );
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
         this.edit[k] = icon[k] || this.iconOption[k];
@@ -495,6 +504,7 @@ export default {
       Object.keys(this.edit).forEach(
         (k) => (this.customData.iconList[this.index][k] = this.edit[k])
       );
+
       message.success("保存成功");
       this.settingVisible = false;
     },
@@ -507,7 +517,13 @@ export default {
           value: this.edit.value,
         },
       };
+
+      console.log(
+        "      this.customData.iconList[this.index] :>> ",
+        this.customData.iconList[this.index]
+      );
       message.success("保存成功");
+      this.settingVisible = false;
     },
   },
 };

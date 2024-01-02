@@ -16,7 +16,7 @@
       </xt-option-from>
     </div>
     <div v-else style="width: 452px">
-      等待小胡实现111
+<!-- 123 -->
       <xt-option-from :options="appearanceNameOptions" :data="data" />
       <xt-option-from :options="appearanceOptions" :data="data" />
       <xt-option-from :options="appearanceColorOptions" :data="data" />
