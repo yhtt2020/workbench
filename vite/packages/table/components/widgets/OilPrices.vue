@@ -3,9 +3,7 @@
     <Widget :options="options" :customIndex="customIndex" :customData="customData" :menuList="menuList" ref="cardSlot"
       :desk="desk" :size="size" :env="env">
       <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+        <div class="icon" style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
           <newIcon icon="fluent:gas-pump-24-regular" style="font-size: 22px;" />
         </div>
@@ -25,8 +23,8 @@
         </a-result>
 
       </template>
-      <div v-else >
-        <div class="city xt-bg xt-text" @click="showMenu">
+      <div v-else>
+        <div class="city xt-bg xt-text pointer" @click="showMenu">
           {{ showOilData[0].city }}
           <CaretDownOutlined style="font-size: 16px; " />
         </div>
@@ -81,7 +79,7 @@ import { LineChartOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
 import city from '../../js/axios/city.ts'
 import { mapActions, mapState } from 'pinia'
 import { oilStore } from '../../store/store.ts'
-import {Icon as newIcon} from '@iconify/vue';
+import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: 'OilPrices',
   components: {
@@ -135,11 +133,11 @@ export default {
       defaultCityIndex: 0,
       city: city,
       isLoading: true,
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        offline: true
       }
     }
   },
@@ -185,35 +183,29 @@ export default {
     }
   },
   async mounted() {
+    let isCity = false
     this.isLoading = true
-    this.getCity().then(()=>{
+    this.getCity().then(() => {
       //  console.log(this.currentCity);
       //  await this.getCityOilData()
       // 判断用户ip是否在国内省市
-      const isCity = this.city.some(item => item.city == this.currentCity.p)
-      // console.log(isCity);
-      if (this.customData && this.customData.city) {
-        // console.log(this.customData.city);
-        this.cityOil(this.customData.city)
-      } else {
-        if (isCity && this.currentCity.p) {
-          // this.customData.city=this.currentCity.p
-          let city = this.currentCity.p
-          this.customData.city = city
-          this.cityOil(this.customData.city)
-
-        } else {
-          this.customData.city=this.city[this.defaultCityIndex].city
-          this.cityOil(this.city[this.defaultCityIndex].city)
-        }
-        // this.customData.city=this.city[this.defaultCityIndex].city
-        // this.cityOil(this.city[this.defaultCityIndex].city)
-
-      }
-      setTimeout(() => {
-        this.isLoading = false
-      }, 0);
+      isCity = this.city.some(item => item.city == this.currentCity.p)
+      // console.log(isCity,'isCity');
     })
+    if (this.customData && this.customData.city) {
+      this.cityOil(this.customData.city)
+    } else {
+      if (isCity && this.currentCity.p) {
+        let city = this.currentCity.p
+        this.customData.city = city
+        this.cityOil(this.customData.city)
+
+      } else {
+        this.customData.city = this.city[this.defaultCityIndex].city
+        this.cityOil(this.city[this.defaultCityIndex].city)
+      }
+    }
+    this.isLoading = false
 
   }
 
