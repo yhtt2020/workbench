@@ -28,10 +28,21 @@ const deskList = computed(() => {
 
 const defaultDesk = ref('')
 onMounted(()=>{
+    // console.log(deskList.value.filter((item)=> item.value === props.editItem.home.id),'target')
+    // const target = deskList.value.filter((item)=> item.value === props.editItem.home.id)
+    // if(target.length) defaultDesk.value = target[0].name
+    // props.editItem.home ? defaultDesk.value = deskList.value.filter((item)=> item.value === props.editItem.home.id).name : defaultDesk.value = deskList.value[0].name
     defaultDesk.value = '默认桌面'
+    // if(props.editItem.home){
+    //     const target = deskList.value.filter((item)=> item.value === props.editItem.home.id)
+    //     defaultDesk.value = target[0].id
+    //     console.log(target[0],'target')
+    // }else{
+    //     defaultDesk.value = deskList.value[0].id
+    // }
 })
 watch(()=>defaultDesk.value,()=>{
-    props.editItem.home = defaultDesk.value
+    props.editItem.home = {id:defaultDesk.value}
 })
 </script>
 <style lang='scss' scoped></style>

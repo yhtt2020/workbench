@@ -72,7 +72,7 @@
                         class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                        @click.stop="newOpenApp(item.type, item.value)">
+                        @click.stop="newOpenApp(item.type, item.value,item)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'">
                         </Team>
                         <Folder v-else-if="item.value === 'folder'" :iconList="item.children"></Folder>
@@ -459,7 +459,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius'
+      'editItem', 'navAttribute', 'iconRadius','jumpDesk'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -517,14 +517,15 @@ export default {
       handler(newVal, oldVal) {
         if (this.footNavigationList.length > this.copyFootNav.length) {
           const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+          console.log(target, 'length > copyFootNav')
           this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          console.log(target, 'target[0]')
+          console.log(target,this.copyFootNav, 'length < copyFootNav')
           target.forEach(element => {
             const index = this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
-              return this.judge(element, item);
+              return this.judge(item,element);
             });
             console.log(index, 'lost index');
             if (index !== -1) {
@@ -540,13 +541,13 @@ export default {
             const correspondingElement = this.copyFootNav.find((copyItem) => {
               return this.judge(item, copyItem);
             });
-
+            
             // 如果找到对应元素，则将其放入新数组中
             if (correspondingElement) {
               rearrangedCopyFootNav.push(correspondingElement);
             }
           });
-
+          console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
           // 更新 copyFootNav 为重新排列后的数组
           this.copyFootNav = rearrangedCopyFootNav;
 
@@ -634,6 +635,7 @@ export default {
       if (ele.type === 'coolApp') {
         return ele.value.url === item.value.url
       } else if (ele.type === 'folder' && ele.children && item.children && item.children.length > 0 && ele.children.length > 0) {
+        console.log(ele,item,'folder is none')
         return ele.children.every((j) => {
           return item.children.every((k) => {
             return (j.type === 'coolApp' && j.value.url === k.value.url) || (j.value === k.value)
@@ -837,7 +839,11 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-    newOpenApp(type, value) {
+    newOpenApp(type, value , item) {
+      if(value === 'home' && item.home) {
+        console.log(item.home,'item.home');
+        this.jumpDesk = item.home
+      }
       startApp(type, value, this.$router)
     },
     // 拖拽桌面图标
