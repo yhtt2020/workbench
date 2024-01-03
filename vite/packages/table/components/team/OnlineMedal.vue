@@ -119,11 +119,14 @@ export default {
   display: inline-block;
   &:hover {
     .big{
+      display: inline-block;
       opacity:1;
 
     }
   }
   .big{
+
+    display: none;
     transition: opacity 0.3s ease 0.3s;
     opacity: 0;
     background: rgba(37, 37, 37, 0.6);
