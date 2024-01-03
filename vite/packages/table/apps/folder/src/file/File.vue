@@ -73,7 +73,7 @@ const { list, layout } = toRefs(props);
  * 监听组件大小变化
  */
 const currentWidth = computed(() => {
-  const width = data.value.cardSize.width;
+  let [width, height] = data.value.size.split("x");
   return width;
 });
 /**
@@ -88,9 +88,9 @@ const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {
   let rows = "33.3% 33.3% 33.3%";
-  if (currentWidth.value == 2) {
+  if (currentWidth.value == 4) {
     rows = "20% 20% 20%  20% 20%";
-  } else if (currentWidth.value == 3) {
+  } else if (currentWidth.value == 6) {
     rows = "12.5%  12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%";
   }
   return layout.value === "rows" ? rows : "100%";
@@ -114,6 +114,7 @@ onMounted(() => {
     handle: "." + sortableBox.value,
     disabled: data.value.sort === "free" ? false : true,
     onEnd: function (evt) {
+      console.log('2222222 :>> ', 2222222);
       collisionDetection(evt.to.childNodes);
     },
   });

@@ -49,7 +49,6 @@ export default defineComponent({
 </script>
 
 <template>
-  dwadwdwadwa {{visible}}
   <xt-modal v-if="message?.id" v-model="visible" :footer="0" :title="message.title" boxClass="p-4 " :mask="1">
   <div  style="max-width:600px" >
     <div class="mt-2 mb-10">

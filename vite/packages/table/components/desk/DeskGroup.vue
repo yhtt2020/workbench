@@ -101,7 +101,7 @@
       <div class="panel s-bg">
         <div
           class="flex flex-row   tabs"
-          v-if="showTabs && displayDesks.length > 1"
+          v-if="showTabs "
         >
           <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
           <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
@@ -899,11 +899,16 @@ export default {
 }
 
 .desk-group-switcher {
-
   min-width: 100px;
-
   min-height: 20px;
   z-index: 99;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  display: flex;
+  justify-items: center;
+  margin: auto;
   .tabs {
     gap:10px;
     .tab {
@@ -980,13 +985,6 @@ export default {
     display: flex;
   }
 
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-  display: flex;
-  justify-items: center;
-  margin: auto;
 
   .panel {
     padding: 10px;

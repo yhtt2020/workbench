@@ -214,17 +214,14 @@ export default {
     const filterList  = computed(()=>{
       const uniqueList = [];
       for(const item of bodyList.value){
-        const itemInfo = item.communityInfo;
-        if(itemInfo !== undefined){
-          const index = uniqueList.findIndex((find)=>{  return find.communityInfo.id === itemInfo.id  });
-          if(index === -1){
-          const total = communityTotal(itemInfo.no,community.value.communityTree);
+        const index = uniqueList.findIndex((find)=>{  return find.id === item.id  });
+        if(index === -1){
+          const total = communityTotal(item.no,community.value.communityTree);
           const itemOption = {
             ...item,
             info:total === 0 ? [] : ['tr','red',`${total}`],
           }
           uniqueList.push(itemOption)
-          }
         }
       }
       const updateList = uniqueList.concat(createCommunityList.value);

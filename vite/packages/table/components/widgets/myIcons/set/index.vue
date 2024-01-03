@@ -28,7 +28,7 @@
         <div></div>
       </div>
       <div v-else style="width: 452px">
-        等待小胡实现111
+        <!-- <xt-option-icon />1 -->
         <xt-option-from :options="appearanceNameOptions" :data="edit" />
         <xt-option-from :options="appearanceOptions" :data="edit" />
         <xt-option-from :options="appearanceColorOptions" :data="edit" />
@@ -38,7 +38,14 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref, computed, watch, onMounted, onBeforeUnmount,getCurrentInstance } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance,
+} from "vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
 import LocalApp from "./LocalApp.vue";
@@ -113,12 +120,12 @@ const updateApp = (data) => {
  */
 watch(
   () => edit.value.mode,
-  (newVal,oldVal) => {
+  (newVal, oldVal) => {
     // edit.value.value = "";
     // if (newVal == "link") {
     //
     // }
-    console.log('newVal,oldVal :>> ', newVal,oldVal);
+    console.log("newVal,oldVal :>> ", newVal, oldVal);
     proxy.$xtConfirm("是否切换模式", "切换模式将清空数据，是否继续？", {
       okText: "切换",
 
@@ -127,10 +134,9 @@ watch(
         if (newVal == "link") {
           edit.value.type = "default";
         }
-
       },
       no: () => {
-        edit.value.mode = oldVal
+        edit.value.mode = oldVal;
       },
       type: "warning",
     });

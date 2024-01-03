@@ -4,6 +4,7 @@
     :expand="{
       disabled: true,
     }"
+    :secondary="true"
   ></Folder>
 </template>
 
@@ -15,12 +16,7 @@ const props = defineProps({
 const newData = {
   ...props.data,
 };
-newData.customData.cardSize = {
-  name: "860,630",
-  width: 3,
-  height: 3,
-};
-
+newData.customData.size = "6x4";
 
 // 860,420
 </script>

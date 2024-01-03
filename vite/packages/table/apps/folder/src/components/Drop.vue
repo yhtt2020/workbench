@@ -39,7 +39,12 @@ const emits = defineEmits(["createFile", "deleteFile"]);
 const handleDrop = async (dragEvent) => {
   if (data.value.model !== "custom") return;
   dragEvent.preventDefault();
-  if (dragId.value == index.value) return;
+  if (dragId.value == index.value) {
+    dragId.value = null;
+    console.log("111 :>> ", 111);
+    return;
+  }
+
   /**
    * 属于拖拽状态 说明来自其他文件夹
    */
@@ -59,6 +64,7 @@ const handleDrop = async (dragEvent) => {
     fileInfo.name = file.name;
     fileInfo.value = file.path;
     fileInfo.icon = fileImage;
+    fileInfo.type = 'tableApp';
     emits("createFile", fileInfo);
   }
 };

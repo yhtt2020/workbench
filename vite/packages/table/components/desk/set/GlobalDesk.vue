@@ -35,7 +35,8 @@
   <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
     <xt-option-info
       isSwitch
-      title="自动进入编辑模式（仅自由布局）在实现中"
+      v-model:switch="autoOpenEdit"
+      title="自动进入编辑模式"
       info="开启后在非编辑模式下添加小组件自动进入编辑模式。"
     />
   </div>
@@ -119,14 +120,17 @@
 <script setup>
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
-import { ref, toRefs,computed } from "vue";
+import { ref, toRefs, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
-
+import { useDeskStore } from "./store";
 
 const router = useRouter();
 const app = appStore();
 const { settings, backgroundSettings } = storeToRefs(app);
+
+const deskStore = useDeskStore();
+const {autoOpenEdit} =storeToRefs(deskStore)
 // props
 const props = defineProps({
   globalSettings: {},
@@ -148,7 +152,6 @@ const fallingList = ref([
     name: "叶",
   },
 ]);
-
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center" :style="iconSize">
+  <div class="flex justify-center items-center cursor-pointer" :style="iconSize">
     <myIcon :icon="icon" :style="iconSize" />
   </div>
 </template>

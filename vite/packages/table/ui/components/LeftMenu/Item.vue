@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center items-center">
+  <div class="flex flex-col justify-center items-center cursor-pointer">
     <!-- antd插槽 -->
     <div
       v-if="item.slot"
@@ -36,7 +36,6 @@
       w="40"
       :icon="item.full ? full : item.newIcon"
       :bgStyle="iconBg(item.bg)"
-
       radius="10"
     />
   </div>

@@ -1,7 +1,7 @@
 <template>
-  <xt-option-tab  v-model="tabStatus" :list="tabList" circle  style="height: 40px" />
+  <xt-option-tab  v-model="backgroundName.name" :list="tabList" circle class="mb-4"  style="height: 40px;" />
 
-  <template v-if="tabStatus === 'img'">
+  <template v-if="backgroundName.name === 'img'">
     <xt-button w="200" h="112" class="xt-bg-m relative"  style="border-radius: 6px"  @click="openPaperModal" >
      <div class="flex items-center justify-center" v-if="backImage.src === ''">
       <xt-new-icon icon="fluent:add-16-regular" size="20"></xt-new-icon>
@@ -14,7 +14,7 @@
 
   <template v-else>
    <div class="flex">
-    <xt-option-color v-model:color="color" />
+    <xt-option-color v-model:color="backgroundColor.color" />
    </div>
   </template>
 
@@ -33,12 +33,10 @@ const tabList = ref([
   { name: "纯色", value: "color" },
 ]);
 
-const color = ref("linear-gradient(135deg, #A8A9EE 0%, #3398DA 100%)");
-const tabStatus = ref("img");
 const paperModal = ref(null);
 
 const app = appStore();
-const { backgroundImage,backgroundColor } = storeToRefs(app);
+const { backgroundImage,backgroundName,backgroundColor } = storeToRefs(app);
 
 // 触发打开壁纸弹窗
 const openPaperModal = () => {
@@ -53,14 +51,6 @@ const backImage = computed(() => {
     return { src: "https://a.apps.vip/papers/neom-207NEuFvjlg-unsplash.jpg" };
   }
 });
-
-// backgroundColor.value.color = `${color.value}`;
-
-watch(()=>color.value,(newVal)=>{
-  backgroundImage.value.path = ''
-  backgroundColor.value.color = newVal;
-},{deep:true,immediate:true})
-
 
 </script>
 

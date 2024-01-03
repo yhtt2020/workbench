@@ -132,7 +132,8 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef"/>
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
+  <!-- 111 -->
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon" :isFolder="true"></EditNewNavigation>
 </template>
 
 <script>
@@ -154,6 +155,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import {LoadingOutlined} from '@ant-design/icons-vue'
 import GalleryModal from '../paperModal/GalleryModal.vue'
 import { useAddCard,file } from '../../ui/hooks/useAddCard';
+import { useDeskStore } from "./set/store";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -312,6 +314,7 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useNavigationStore, ['selectNav', 'isDesk']),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
     deskGroupMenus() {
       if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
         // let arr = _.cloneDeep(this.deskGroupMenu[1].children);
@@ -603,6 +606,9 @@ export default {
       }
     },
     newAddCard() {
+      if (this.autoOpenEdit) {
+        this.toggleEditing()
+      }
       this.addCardVisible = true;
       this.menuVisible = false;
     },
@@ -624,6 +630,7 @@ export default {
       this.menuVisible = false;
       this.selectNav = 'desktop'
       this.isDesk = true
+      console.log(this.selectNav,'selectNav')
     },
     file,
     useAddCard,

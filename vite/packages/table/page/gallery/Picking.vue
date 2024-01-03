@@ -6,13 +6,20 @@
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">拾光壁纸</span>
       </div>
       <div class="flex items-center justify-center">
-        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" :h="isModal ? 32 : 40" v-model="pickParams.setting.paperValue" style="width: 140px;margin-right: 12px;text-align: center;"  :borderClass="'rounded-md '" :border="false" @change="pickFilterChange($event)"/>
+        <template v-if="isModal">
+          <MinSelect :list="pickParams.paperSelect" @update="pickFilterChange($event)"/>
+        </template>
+
+        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250" 
+         v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false" 
+         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: center;" 
+        />
+        
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
         :newIcon="'fluent:filter-16-regular'" :iconBg="'var(--active-text)'" :class="isModal ? 'mr-3':''" >
-        <!--  @visible-change="getPickPaperList" -->
           <PickDropDetail :isModal="isModal" @emitPick="updateList"/>
-          <!--  @emitPaper="updateImgData" -->
         </xt-dropdown>
+
         <ClosePaperButton v-if="isModal"/>
       </div>
     </div>
@@ -35,22 +42,22 @@
                   <div class="absolute top-1 flex right-3">
                     <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                       <div class="flex items-center justify-center">
-                        <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
+                        <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                       </div>
                     </xt-button>
                     <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
                     :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }"
                     >
                       <div class="flex items-center justify-center">
-                        <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" style="color: var(--warning) !important;"></xt-new-icon>
-                        <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" style="color: var(--active-text) !important;"></xt-new-icon>
+                        <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
+                        <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                       </div>
                     </xt-button>
                   </div> 
                   <div class="absolute" style="top:50%;left:50%;transform: translate(-50%,-50%);">
                     <xt-button w="100" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
                       <div class="flex items-center justify-center">
-                        <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " style="color: var(--active-text) !important;"></xt-new-icon>
+                        <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " :color="'var(--active-text)'"></xt-new-icon>
                         <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
                       </div>
                     </xt-button>
@@ -101,6 +108,7 @@ import { message } from 'ant-design-vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
 import PickDropDetail from './components/content/PickDropDetail.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
+import MinSelect from './components/select/MinSelect.vue';
 
 let fs = require('fs')
 let path = require('path')
@@ -113,7 +121,7 @@ export default {
 
   components:{
     ClosePaperButton,PickDropDetail,
-    GradeSmallTip
+    GradeSmallTip,MinSelect
   },
 
   data(){
