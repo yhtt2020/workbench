@@ -145,6 +145,10 @@
     <NewGuidePage v-if="true"></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+    <!-- 定制桌面流程 -->
+    <!-- <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel> -->
+    <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel>
+
   </teleport>
 
   <GalleryModal ref="galleryRef"/>
@@ -223,6 +227,7 @@ import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
+import GuidePanel from "./GuidePanel.vue";
 
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
@@ -403,6 +408,7 @@ export default {
     RadioTab,
     GalleryModal,
     ScalePanel,
+    GuidePanel,
   },
   computed: {
     ...mapWritableState(navStore, [

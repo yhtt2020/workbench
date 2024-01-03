@@ -1,94 +1,119 @@
   <template>
-    <div class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 modal-center xt-modal" style="">
-      <!-- 顶部按钮 -->
-      <div v-if="step!==0" @click="prevStep" class="top-icon no-drag absolute ml-4">
-          <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
-      </div>
-      <div @click="themeSwitch" class="top-icon no-drag absolute mr-4" style="right:0;">
-          <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
-      </div>
-
-      <!-- 选择偏好 -->
-      <div v-if="step==0" class="h-full w-full ">
-        <div v-if="!loading">
-        <!-- <div v-if="false"> -->
-          <div class="text-center font-16 xt-text " style="margin-top:80px;">定制你的桌面</div>
-          <div class="text-center xt-text-2 font-16 mt-3">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
-          <a-row :gutter="20" class="flex justify-center mt-6">
-            <a-col v-for="item in deskType">
-              <div :class="{'active':deskTypeObj[item.key] == true}" 
-                class="setting-panel pointer px-4 pt-5"
-                @click="deskTypeObj[item.key] = !deskTypeObj[item.key]"
-                >
-                <div class="title">
-                  <MyIcon :icon="item.icon" width="56" height="56" />
-                  <div class="mt-2">{{ item.title }}</div>
-                </div>
-                <div class="content mt-2">{{ item.content }}</div>
-              </div>
-            </a-col>
-          </a-row>
+    <div class="fixed overflow-hidden modal-center xt-modal tran" 
+      :class="popState?'pop':'Popup' "
+      style="">
+      <div v-if="!popState" class="h-full">
+        <!-- 顶部按钮 -->
+        <div v-if="step!==0" @click="prevStep" class="top-icon no-drag absolute ml-4">
+            <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
         </div>
-        <!-- 加载过程 -->
-        <div class="flex justify-center items-center h-full w-full" v-else>
-          <div class="">
-            <div class="font-16 text-center xt-text">智能推荐进行中，稍一会儿，马上就好~</div>
-            <div class="mt-6" style="width:360px">
-              <a-progress :percent="time" :show-info="false" />
+        <div @click="themeSwitch" class="top-icon no-drag absolute mr-4" style="right:0;">
+            <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
+        </div>
+  
+        <!-- 选择偏好 -->
+        <div v-if="step==0" class="h-full w-full ">
+          <div v-if="!loading" style="padding-top;:80px">
+          <!-- <div v-if="false"> -->
+            <div class="text-center font-16 xt-text ">定制你的桌面</div>
+            <div class="text-center xt-text-2 font-16 mt-3">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
+            <a-row :gutter="20" class="flex justify-center mt-6">
+              <a-col v-for="item in deskType">
+                <div :class="{'active':deskTypeObj[item.key] == true}" 
+                  class="setting-panel pointer px-4 pt-5"
+                  @click="deskTypeObj[item.key] = !deskTypeObj[item.key]"
+                  >
+                  <div class="title">
+                    <MyIcon :icon="item.icon" width="56" height="56" />
+                    <div class="mt-2">{{ item.title }}</div>
+                  </div>
+                  <div class="content mt-2">{{ item.content }}</div>
+                </div>
+              </a-col>
+            </a-row>
+          </div>
+          <!-- 加载过程 -->
+          <div class="flex justify-center items-center h-full w-full" v-else>
+            <div class="">
+              <div class="font-16 text-center xt-text">智能推荐进行中，稍一会儿，马上就好~</div>
+              <div class="mt-6" style="width:360px">
+                <a-progress :percent="time" :show-info="false" />
+              </div>
             </div>
+          </div>
+        </div>
+  
+        <!-- 导入桌面图标 -->
+        <div v-else-if="step == 1">
+          <div class="font-16 xt-text text-center mt-6">导入你的桌面图标</div>
+          <div class="font-16 text-center xt-text-2" style="width:704px;margin: 16px auto 0;">我们帮你整理了桌面图标，你可以选择添加到桌面，或者后续将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
+          <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap px-4 justify-between " style="height: 400px;" >
+            <div v-for="(item, index) in appList" :key="index" class="span-list xt-bg-2 px-3 pt-3 " >
+              <!-- 标题 -->
+              <div class="xt-text-2 font-14 h-8 leading-8">{{ item.name }} ( {{ item.list.length }} )
+                <div class="float-right flex items-center">
+                  <MyIcon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
+                  <MyIcon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
+                  <div class="ml-2 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
+                    <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                  </div>
+                </div>
+              </div>
+              <!-- 内容列表 -->
+              <!-- {{ item.list }} -->
+              <div v-if="item.type == 'columns'" class="xt-scrollbar overflow-hidden overflow-y-auto mt-1" style="height:180px;">
+                <div v-for="app in item.list" class="flex items-center list-rows px-2 xt-text" >
+                  <a-avatar shape="square" :size="32" :src="app.icon" class="flex-none"></a-avatar>
+                  <div class="text-hidden ml-3">{{ app.name }}</div>
+                </div>
+              </div>
+              <div v-else class="xt-scrollbar overflow-hidden overflow-y-auto mt-1 flex flex-wrap justify-space" style="height:180px;">
+                <div v-for="app in item.list" class="flex list-columns xt-text flex-col text-center items-center" >
+                  <a-avatar shape="square" :size="40" :src="app.icon" class="flex-none "></a-avatar>
+                  <div style="width:60px;" class="text-hidden mt-1">{{ app.name }}</div>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+  
+          
+  
+        </div>
+  
+        <!-- 按钮 -->
+        <div class="flex w-full justify-between px-3" style="position: absolute;bottom: 12px;">
+          <div class="float-left">
+            <xt-button   class="button-bottom float-left" @click="preview"  style="width:113px !important;"  size="large">
+                <div class=" flex items-center">
+                  <MyIcon icon="fluent:desktop-16-regular" width="20" height="20"/>
+                  预览桌面
+                </div>
+              </xt-button>
+          </div>
+          <div class="flex" v-if="step==0 && !loading">
+  
+              <xt-button   class="button-bottom ml-3" @click="analysis"   size="large" type="theme">开始分析</xt-button>
+          </div>
+          <div class="flex" v-if="step==1">
+  
+              <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">暂不添加</xt-button>
+              <xt-button   class="button-bottom ml-3" @click="addFolder"   size="large" type="theme">确定添加</xt-button>
+          </div>
+          
+          <div class="flex" v-if="step==2 || step==3">
+              <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">确定添加</xt-button>
           </div>
         </div>
       </div>
 
-      <!-- 导入桌面图标 -->
-      <div v-else-if="step == 1">
-        <div class="font-16 xt-text text-center mt-6">导入你的桌面图标</div>
-        <div class="font-16 text-center xt-text-2" style="width:704px;margin: 16px auto 0;">我们帮你整理了桌面图标，你可以选择添加到桌面，或者后续将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
-        <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap px-4 justify-between " style="height: 400px;" >
-          <div v-for="(item, index) in appList" :key="index" class="span-list xt-bg-2 px-3 pt-3 " >
-            <!-- 标题 -->
-            <div class="xt-text-2 font-14 h-8 leading-8">{{ item.name }} ( {{ item.list.length }} )
-              <div class="float-right flex items-center">
-                <MyIcon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
-                <MyIcon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
-                <div class="ml-2 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
-                  <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
-                </div>
-              </div>
-            </div>
-            <!-- 内容列表 -->
-            <!-- {{ item.list }} -->
-            <div v-if="item.type == 'columns'" class="xt-scrollbar overflow-hidden overflow-y-auto mt-1" style="height:180px;">
-              <div v-for="app in item.list" class="flex items-center list-rows px-2 xt-text" >
-                <a-avatar shape="square" :size="32" :src="app.icon" class="flex-none"></a-avatar>
-                <div class="text-hidden ml-3">{{ app.name }}</div>
-              </div>
-            </div>
-            <div v-else class="xt-scrollbar overflow-hidden overflow-y-auto mt-1 flex flex-wrap justify-space" style="height:180px;">
-              <div v-for="app in item.list" class="flex list-columns xt-text flex-col text-center items-center" >
-                <a-avatar shape="square" :size="40" :src="app.icon" class="flex-none "></a-avatar>
-                <div style="width:60px;" class="text-hidden mt-1">{{ app.name }}</div>
-              </div>
-            </div>
-
+      <div v-else>
+        <div style="height:60px;width:200px" class="flex items-center px-4 justify-between xt-text font-16">
+          定制桌面
+          <div class="w-8 h-8 flex justify-center items-center rounded-lg xt-bg-2 pointer" @click="popState = flase">
+            <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
           </div>
         </div>
-
-        
-
-      </div>
-
-
-        
-      <!-- 按钮 -->
-      <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
-            
-            <div class="flex" v-if="step==0">
-                <xt-button   class="button-bottom ml-3" @click="analysis"   size="large" type="theme">开始分析</xt-button>
-            </div>
-            <div class="flex" v-else>
-                <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" type="theme">下一步</xt-button>
-            </div>
       </div>
     </div>
   </template>
@@ -115,6 +140,7 @@
   // ai分析
   import { getStreamData } from "../../AIAssistant/chat/main/api";
   import { message } from "ant-design-vue";
+  import { defaultData, defaultFolderData } from '../../../apps/folder/src/components/options';
   
   export default {
     components:{
@@ -195,9 +221,11 @@
             isCheck: true,
           },
         ],
+        popState: false,
       }
     },
     computed:{
+      ...mapWritableState(cardStore,['desks']),
 
     },
     mounted(){
@@ -253,6 +281,46 @@
         this.time = 0
         clearInterval(this.timer)
         this.timer = null
+      },
+
+      // 添加文件夹
+      addFolder(){
+        console.log('desks',this.desks);
+        console.log('this',this);
+        console.log('defaultData, defaultFolderData',defaultData, defaultFolderData);
+        console.log('appList', this.appList);
+        let folders = []
+        this.appList.forEach(item=>{
+          const now = new Date().getTime()
+          console.log('now', now)
+          if(item.isCheck){
+            let tmp = [];
+
+
+
+
+            folders.push({
+              data:{},
+              id: now,
+              name: "folder",
+              customData: {
+                ...defaultFolderData,
+                name: item.name,
+                layout: item.type,
+
+
+              }
+            })
+          }
+        })
+
+      },
+
+      // 预览桌面
+      preview(){
+        this.popState = true
+
+
       },
       
       // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来 
@@ -362,8 +430,7 @@
         border: 1px solid red;
     }
     .modal-center{
-        width:800px;
-        height:600px;background: #212121;
+        background: #212121;
         border: 1px solid var(--divider);
         box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);
         box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
@@ -371,6 +438,37 @@
         border-radius: 12px 12px 12px 12px;
         z-index: 999;
     }
+
+
+    .Popup{
+      width:800px;
+      height:600px;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-400px) translateY(-300px);
+    }
+
+    .pop{
+      position: fixed;
+      bottom: 80px ;
+      right: 40px ;
+      // display: none;
+      width:200px;
+      height:60px;
+      // scale: 0.1;
+    }
+
+
+
+    .tran{
+      transition: all 0.15s linear;
+    }
+
+
+
+
+
+
     .panel {
         border: 2px solid transparent;
         border-radius: 0.5em;
