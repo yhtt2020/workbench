@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full relative">
+  <div class="relative flex flex-col h-full">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
 
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
@@ -96,11 +96,11 @@
         </span>
       </template>
     </xt-mix-menu>
-    <div class="xt-main-top-util-bar  desk-group-switcher flex flex-row" v-if="showTopBar && !fullScreen">
+    <div class="flex flex-row xt-main-top-util-bar desk-group-switcher" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div class="panel s-bg">
         <div
-          class="flex flex-row   tabs"
+          class="flex flex-row tabs"
           v-if="showTabs "
         >
           <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-      <div class="dots flex item-content">
+      <div class="flex dots item-content">
         <div :class="{ 'active': currentDeskId === item.id }" class="dot" v-for="(item, index) in displayDesks">
           &nbsp;
         </div>
@@ -525,7 +525,7 @@ export default {
       "freeLayoutData",
       "freeLayoutState",
     ]),
-    ...mapWritableState(useNavigationStore, ['targetDesk', 'selectNav']),
+    ...mapWritableState(useNavigationStore, ['targetDesk', 'selectNav','jumpDesk']),
     getStep() {
       if (
         (this.taskID == "M0101" ||
@@ -602,6 +602,15 @@ export default {
     targetDesk() {
       if (this.selectNav === 'desktop' && this.targetDesk !== '') {
         this.setCurrentDeskId(this.targetDesk.id)
+      }
+    },
+    /**
+     * 设置指定桌面跳转
+     */
+    jumpDesk(){
+      if(this.jumpDesk !== '') {
+        this.setCurrentDeskId(this.jumpDesk.id)
+        this.jumpDesk = ''
       }
     }
   },

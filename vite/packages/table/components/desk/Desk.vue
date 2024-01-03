@@ -21,7 +21,7 @@
         <FreeLayoutCanvas class="home-widgets">
           <FreeLayoutContainer :currentDesk="currentDesk" :currentID="currentDesk.id" :isDrag="editing">
             <template #box="{ data }">
-              <component :desk="currentDesk" :is="data.name" :customIndex="data.id" :customData="data.customData" />
+              <component :desk="currentDesk" :is="data.name" :customIndex="data.id" :customData="data.customData" di />
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
@@ -67,7 +67,7 @@
                 100
               ).toFixed(2),
             }">
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData">
+              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData" >
               </component>
             </div>
           </template>
