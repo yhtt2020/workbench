@@ -8,7 +8,6 @@
       cursor: dragStyle,
     }"
   >
-    <xt-button> {{ freeLayoutEnv.scrollTop }}123</xt-button>
     <slot> </slot>
   </div>
 </template>

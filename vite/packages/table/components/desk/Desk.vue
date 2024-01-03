@@ -20,6 +20,8 @@
     </div>
     <FloatMenu
       v-if="editing"
+      @addIcon="newAddIcon"
+      @addFolder="addFolder"
       @add="newAddCard"
       @set="showSetting"
       @hide="showDesk"
@@ -31,7 +33,6 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
-    {{ newMenus }}
     <!-- 自由布局滚动 -->
     <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
       <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
@@ -42,7 +43,13 @@
             :isDrag="editing"
           >
             <template #box="{ data }">
-              <component :desk="currentDesk" :is="data.name" :customIndex="data.id" :customData="data.customData" di />
+              <component
+                :desk="currentDesk"
+                :is="data.name"
+                :customIndex="data.id"
+                :customData="data.customData"
+                di
+              />
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
@@ -118,7 +125,12 @@
                 ).toFixed(2),
               }"
             >
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData" >
+              <component
+                :desk="currentDesk"
+                :is="item.name"
+                :customIndex="item.id"
+                :customData="item.customData"
+              >
               </component>
             </div>
           </template>
@@ -395,7 +407,7 @@ export default {
       "isFreeLayout",
       "getFreeLayoutState",
     ]),
-    ...mapWritableState(useFloatMenuStore, ["menus",'newMenus']),
+    ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
     deskGroupMenus() {
@@ -472,9 +484,7 @@ export default {
           id: 4,
           newIcon: "fluent:app-folder-16-regular",
           name: "添加文件夹",
-          fn: () => {
-            registerFolder(this.currentDesk);
-          },
+          fn:this.addFolder,
         },
         { id: 5, divider: true },
         {
@@ -581,7 +591,7 @@ export default {
   mounted() {
     this.$bus.on("startAdjust", () => {
       console.log("2222 :>> ", 2222);
-      this.toggleEditing()
+      this.toggleEditing();
     });
 
     if (window.showed) {
@@ -604,6 +614,9 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
+    addFolder() {
+      registerFolder(this.currentDesk);
+    },
     resetLayout() {
       this.hide = true;
       setTimeout(() => {
