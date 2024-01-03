@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full vditor-markdown box " style="">
+  <div class="h-full w-full vditor-markdown box mb-3" style="border: 1px solid #434343;border-radius: 8px;">
     <div ref="vditor" class="h-full vditor-markdown"></div>
   </div>
 </template>

@@ -7,7 +7,7 @@
      </div>
      <div class="flex items-center justify-end" style="width:500px;">
       <div class="flex items-center mr-3">
-        <span class="xt-font xt-text font-14">to：</span>
+        <span class="xt-font xt-text font-14">To：</span>
         <xt-select style="width: 110px;" v-model="msgSetting.targetType" :list="targetList"  :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
       </div>
       <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>

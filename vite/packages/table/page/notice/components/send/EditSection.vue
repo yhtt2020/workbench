@@ -1,8 +1,8 @@
 <template>
  <div class="flex w-full h-full">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;" :bordered="false" placeholder="标题"></a-input>
-   <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;" :bordered="false" :rows="4" />
+   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;" :bordered="true" placeholder="标题"></a-input>
+   <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;" :bordered="true" :rows="4" />
    <MsgMarkdown ref="mkRef" />
 
    <div class="flex flex-col my-4" v-if="imgCover.cover.length !== 0" >
@@ -74,10 +74,10 @@ defineExpose({ mkRef });
 
 <style lang="scss" scoped>
 :deep(.ant-input){
- color: var(--primary-text);
+ color: var(--disable-text) !important;
  font-size: 1rem;
  &::placeholder{
-  color: var(--secondary-text);
+  color: var(--disable-text) !important;
  }
 }
 </style>
