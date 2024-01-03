@@ -54,6 +54,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             isDesk:false,
             // 目标桌面
             targetDesk:'',
+            // 跳转桌面,
+            jumpDesk:'',
         }
     },
     actions:{

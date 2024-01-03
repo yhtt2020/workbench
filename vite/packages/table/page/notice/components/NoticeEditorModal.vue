@@ -4,7 +4,7 @@
     end="1" model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" :style="!isFull ? {width:'976px',height:'600px'}:{ width:'100%',height:'100%' }"
    >  
      <template v-if="messageType === 'send'">
-       <NoticeSend />
+       <NoticeSend @close="editorVisible = false"/>
      </template>
 
      <template v-else>

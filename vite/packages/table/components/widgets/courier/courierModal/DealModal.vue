@@ -7,7 +7,7 @@
          <xt-button w="64" h="40" type="theme" @click="agreeRelevance">同意</xt-button>
        </div>
      </template>
-    <div class="xt-text h-full" style="width: 500px;height: 537px;">
+    <div class="xt-text h-full" style="width: 500px;height: 390px;">
 
 
      <div class="px-6 flex flex-col  h-full">
@@ -46,6 +46,7 @@ import { courierStore } from "../../../../apps/ecommerce/courier";
 import Modal from '../../../Modal.vue';
 import ui from '../lib/courierUI'
 import Article from '../../../Article.vue'
+import courierUI from '../lib/courierUI'
 
 export default {
  props:['type'],
@@ -81,29 +82,9 @@ export default {
         this.dealVisible=false
       })
     }else{
-      grab.jd.login(({ data }) => {
-        this.storeInfo.jd.nickname = data.nickname;
-        this.dealVisible  = false
-        message.loading({
-          content:"已成功绑定账号：" + data.nickname + "，正在为您获取订单信息，请稍候…",
-          key: "loadingTip",
-          duration: 0,
-        });
-        grab.jd.getOrder(async ({ data }) => {
-          // console.log(data)
-          message.success({
-            content:
-              "更新订单成功!本次共更新：" +
-              data.orders.length +
-              "条订单信息",
-            key: "loadingTip",
-            duration: 3,
-          });
-          this.storeInfo.jd.order = data;
-          await this.getOrderDetail(data.orders);
-          // console.log(data);
-        });
-      });
+      ui.bindJd(()=>{
+        this.dealVisible=false
+      })
     }
   }
 

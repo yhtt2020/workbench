@@ -21,36 +21,7 @@ const ui = {
         key: 'loadingTip',
         duration: 0
       })
-      //京东绑定了
-      grab.jd.getOrder(async (args) => {
-        if (args.status) {
-          tip && message.loading({
-            content: '订单获取成功，正在为您更新订单详情',
-            key: 'loadingTip',
-            duration: 0
-          })
-          await ui.getJdOrderDetail(args.data.orders)
-          let count = await store.saveJdOrders(args.data)
-          tip && message.success({content: '成功更新' + count + '个京东订单信息', key: 'loadingTip'})
-          await store.getDbCourier()
-        } else {
-          notification.info({
-            message: '京东账号已过期，点击重新绑定后再刷新。',
-            key: 'loadingTip',
-            onClick: () => {
-              grab.jd.login((args) => {
-                store.storeInfo.jd.nickname = args.data.nickname
-                message.success({
-                  content: '京东重新登录成功。请重新刷新。',
-                  key: 'loadingTip',
-                  duration: 0
-                })
-              })
-            }
-          })
-        }
-
-      })
+      await ui.getJdOrders(tip)
     }
     if (store.storeInfo.tb.nickname) {
       ui.getTbOrders(() => {
@@ -60,13 +31,52 @@ const ui = {
     }
     //todo 刷新其他订单
   },
+  async getJdOrders(tip) {
+    const store = courierStore()
+    //京东绑定了
+    grab.jd.getOrder(async (args) => {
+      if (args.status) {
+        tip && message.loading({
+          content: '订单获取成功，正在为您更新订单详情',
+          key: 'loadingTip',
+          duration: 0
+        })
+        console.log('kais ')
+        let count = await store.saveJdOrders(args.data)
+        //await ui.updateJdOrderDetail(args.data.orders)
+        for(const order of args.data.orders){
+          await store.updateOrder(order.id)
+        }
+        console.log('执行完毕')
+        tip && message.success({content: '成功更新' + count + '个京东订单信息', key: 'loadingTip'})
+        await store.getDbCourier()
+      } else {
+        store.storeInfo.jd.nickname = null
+        notification.info({
+          message: '京东账号已过期，点击重新绑定后再刷新。',
+          key: 'loadingTip',
+          onClick: () => {
+            grab.jd.login((args) => {
+              store.storeInfo.jd.nickname = args.data.nickname
+              message.success({
+                content: '京东重新登录成功。请重新刷新。',
+                key: 'loadingTip',
+                duration: 0
+              })
+            })
+          }
+        })
+      }
+
+    })
+  },
 
   /**
    * 获取京东的订单详情并存入数据库
    * @param orders
    * @param tip
    */
-  async getJdOrderDetail(orders, tip = true) {
+  async updateJdOrderDetail(orders, tip = true) {
     const store = courierStore()
     let completed = 0
     let promises = []
@@ -75,24 +85,29 @@ const ui = {
         //只检查等待收货的商品
         //仅检查未完成的订单
         let getProcess = new Promise((resolve, reject) => {
-          grab.jd.getOrderDetail(order.detailUrl, ({status, code, data}) => {
-            if (status) {
-              completed++
-              order.detail = {}
-              order.detail.expressNo = data.expressNo
-              order.detail.traceNodes = data.traceNodes
-              order.detail.expressType = data.expressType
-              order.detail.updateTime = Date.now()
+          if (order.detailUrl === 'https:undefined') {
+            //如果不存在详情链接，则跳过
+          } else {
+            console.log(order.detailUrl)
+            grab.jd.getOrderDetail(order.detailUrl, async ({status, code, data}) => {
 
-              resolve(data)
-            } else {
-              completed++
-              reject({
-                status, code
-              })
-            }
-
-          })
+              if (status) {
+                completed++
+                order.detail = {}
+                order.detail.expressNo = data.expressNo
+                order.detail.traceNodes = data.traceNodes
+                order.detail.expressType = data.expressType
+                order.detail.updateTime = Date.now()
+                await store.updateOrder(order.id)
+                resolve(data)
+              } else {
+                completed++
+                reject({
+                  status, code
+                })
+              }
+            })
+          }
         })
         promises.push(getProcess)
       }
@@ -132,6 +147,21 @@ const ui = {
       })
     });
   },
+  bindJd(callback,tip=true){
+    grab.jd.login((args) => {
+      const store = courierStore()
+      store.storeInfo.jd.nickname = args.data.nickname;
+      callback && callback()
+      tip && message.loading({
+        content: "已成功绑定京东账号：" + args.data.nickname + "，正在为您获取订单信息，请稍候…",
+        key: "loadingTip",
+        duration: 0,
+      });
+      ui.getJdOrders(() => {
+
+      })
+    });
+  },
   /**
    * 获取淘宝的订单详情
    * @param callback
@@ -166,7 +196,7 @@ const ui = {
         key: "loadingTip",
         duration: 3,
       });
-      let orders= await store.saveTbOrders(args.orders)
+      let orders = await store.saveTbOrders(args.orders)
       await ui.getTbOrderDetail(orders)
       await store.getDbCourier()
 
@@ -180,8 +210,8 @@ const ui = {
    */
   async getTbOrderDetail(orders, tip = true) {
     for (const order of orders) {
-      if (order.content.detailUrl && order.content.status==='卖家已发货') {
-       this.updateTbOrder(order)
+      if (order.content.detailUrl && order.content.status === '卖家已发货') {
+        this.updateTbOrder(order)
       }
     }
   },
@@ -189,10 +219,10 @@ const ui = {
    * 更新单个淘宝订单的物流信息
    * @param order
    */
-  updateTbOrder(order){
+  updateTbOrder(order) {
     const store = courierStore()
     const queue = queueStore()
-    const content=order.content
+    const content = order.content
     queue.log('添加任务：' + order.id)
     queue.add({
       name: '淘宝物流详情更新任务:[' + content.id + ']' + order.title, func: () => {
@@ -201,14 +231,14 @@ const ui = {
           if (status) {
             content.detail = {}
             content.detail.expressNo = data.expressNo
-            content.expressNo=data.expressNo
-            content.expressType= data.expressType
+            content.expressNo = data.expressNo
+            content.expressType = data.expressType
             content.detail.traceNodes = data.traceNodes
             content.detail.expressType = data.expressType
             content.detail.updateTime = Date.now()
-            order.logisticCode=data.expressNo
-            content.latestNodes=data.traceNodes
-            console.log('需要更新物流的订单',order)
+            order.logisticCode = data.expressNo
+            content.latestNodes = data.traceNodes
+            console.log('需要更新物流的订单', order)
             await store.updateDbItem(order)
             await store.getDbCourier()
             queue.log('任务成功，更新订单：' + content.id)

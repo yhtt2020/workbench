@@ -91,9 +91,11 @@ export function isLocalDownload(image:any){
 export function isDownLoad(data:any){
  const paper:any = paperStore();
  const { settings } = storeToRefs(paper);
- const fileData = fs.readdirSync(path.join(settings.value.savePath, 'lively'));
- const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
- return index > -1
+ if(settings.value.savePath){
+  const fileData = fs.readdirSync(path.join(settings.value.savePath, 'lively'));
+  const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
+  return index > -1
+ }
 }
 
 // 时间格式化转换

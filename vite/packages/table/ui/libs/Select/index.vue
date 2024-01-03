@@ -3,7 +3,7 @@
     style="position: relative"
     v-model:value="data" :bordered="border"
     class="no-drag w-full" :class="borderClass"
-    size="large" :style="{height:`${h}px`}"
+    size="large"
     @change="handleChange"
     :dropdownStyle="{
       'z-index':zIndex,
@@ -40,10 +40,6 @@ const props = defineProps({
   borderClass:{
     type:String,
     default:'rounded-xl',
-  },
-  h:{
-    style:Number,
-    default:32
   },
   zIndex:{
     type:Number,

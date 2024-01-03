@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full relative">
+  <div class="relative flex flex-col h-full">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
 
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
@@ -96,12 +96,12 @@
         </span>
       </template>
     </xt-mix-menu>
-    <div class="xt-main-top-util-bar  desk-group-switcher flex flex-row" v-if="showTopBar && !fullScreen">
+    <div class="flex flex-row xt-main-top-util-bar desk-group-switcher" v-if="showTopBar && !fullScreen">
       <!-- tabs   -->
       <div class="panel s-bg">
         <div
-          class="flex flex-row   tabs"
-          v-if="showTabs && displayDesks.length > 1"
+          class="flex flex-row tabs"
+          v-if="showTabs "
         >
           <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
           <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-      <div class="dots flex item-content">
+      <div class="flex dots item-content">
         <div :class="{ 'active': currentDeskId === item.id }" class="dot" v-for="(item, index) in displayDesks">
           &nbsp;
         </div>
@@ -525,7 +525,7 @@ export default {
       "freeLayoutData",
       "freeLayoutState",
     ]),
-    ...mapWritableState(useNavigationStore, ['targetDesk', 'selectNav']),
+    ...mapWritableState(useNavigationStore, ['targetDesk', 'selectNav','jumpDesk']),
     getStep() {
       if (
         (this.taskID == "M0101" ||
@@ -602,6 +602,15 @@ export default {
     targetDesk() {
       if (this.selectNav === 'desktop' && this.targetDesk !== '') {
         this.setCurrentDeskId(this.targetDesk.id)
+      }
+    },
+    /**
+     * 设置指定桌面跳转
+     */
+    jumpDesk(){
+      if(this.jumpDesk !== '') {
+        this.setCurrentDeskId(this.jumpDesk.id)
+        this.jumpDesk = ''
       }
     }
   },
@@ -899,11 +908,16 @@ export default {
 }
 
 .desk-group-switcher {
-
   min-width: 100px;
-
   min-height: 20px;
   z-index: 99;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  display: flex;
+  justify-items: center;
+  margin: auto;
   .tabs {
     gap:10px;
     .tab {
@@ -980,13 +994,6 @@ export default {
     display: flex;
   }
 
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-  display: flex;
-  justify-items: center;
-  margin: auto;
 
   .panel {
     padding: 10px;
