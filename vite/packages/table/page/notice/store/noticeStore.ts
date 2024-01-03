@@ -6,15 +6,31 @@ import {post} from '../../../js/axios/request'
 export const noticeStore = defineStore('notice', {
   state: () => ({
     detailList: [],
-    // 发送消息设置
+    // 发送消息配置
     msgSetting:{
-      
-    }
+      title:'', // 标题
+      summary:'', // 摘要
+      content:'测试', // 正文
+      noticeType:'1', // 消息类型
+      cover:[], // 封面
+      urls:[], //  按钮链接
+      videos:[],// b站视频链接
+      attachments:[], //附件
+
+    },
+    // // 还原发送消息配置
+    // restSetting:{
+    //   title:'', // 标题
+    //   summary:'', // 摘要
+    //   content:'', // 正文
+    //   noticeType:'1', // 消息类型
+    //   cover:[], // 封面
+    //   urls:[], //  按钮链接
+    //   videos:[],// b站视频链接
+    // }
   }),
 
   actions: {
-
-
     // 获取db数据库中的数据
     async getNoticeList() {
       // console.log('读取存储数据');
@@ -148,8 +164,13 @@ export const noticeStore = defineStore('notice', {
       console.log(item)
       await tsbApi.db.remove(item)
       await this.getNoticeList()
-    }
+    },
 
+    // 创建一个推送消息
+    async createNotice(){
+      console.log('执行....测试',this.msgSetting);
+      
+    }
 
   },
 
@@ -159,7 +180,7 @@ export const noticeStore = defineStore('notice', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: [],
+      paths: ['msgSetting'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]

@@ -1,7 +1,7 @@
 <template>
  <xt-modal v-model="editorVisible" ref="modelRef" :mask="false" :boxClass="'p-0'" :custom="true">
-   <xt-left-menu style="width: 800px;height: 720px;margin: 0 !important;border-radius: 12px !important;" :list="menuList" 
-    end="1" model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" :style="!isFull ? {width:'976px',height:'600px'}:{ width:'100%',height:'100%' }"
+   <xt-left-menu style="margin: 0 !important;border-radius: 12px !important;" :list="menuList" 
+    end="1" model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" :style="!isFull ? {width:'800px',height:'720px'}:{ width:'100%',height:'100%' }"
    >  
      <template v-if="messageType === 'send'">
        <NoticeSend @close="editorVisible = false"/>

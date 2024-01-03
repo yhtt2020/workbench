@@ -97,7 +97,7 @@
                 suppressScrollX: true,
                 wheelPropagation: false,
               }"
-              style="position: relative; padding-right: 8px; padding-left: 8px"
+              style="position: relative; " :style="scrollbarPadding"
               class="flex-1"
             >
               <slot>
@@ -170,6 +170,7 @@ export interface ModalProps {
   custom?: boolean;
   // 开启全屏功能
   full?: boolean;
+  scrollbarPadding:{ paddingRight: '8px'; paddingLeft: '8px' }
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
