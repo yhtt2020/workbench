@@ -6,9 +6,16 @@ export const useFloatMenuStore = defineStore("useFloatMenuStore", {
     x: null,
     y: null,
     menus: [],
-    firstPosition: ['right', 'bottom', -40, -35],
+    firstPosition: ["right", "bottom", -40, -35],
   }),
-  getters: {},
+  getters: {
+    newMenus() {
+      this.menus.forEach((item) => {
+        console.log("item :>> ", item);
+
+      });
+    },
+  },
   actions: {},
   persist: {
     enabled: true,

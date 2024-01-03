@@ -31,6 +31,7 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
+    {{ newMenus }}
     <!-- 自由布局滚动 -->
     <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
       <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
@@ -404,7 +405,7 @@ export default {
       "isFreeLayout",
       "getFreeLayoutState",
     ]),
-    ...mapWritableState(useFloatMenuStore, ["menus"]),
+    ...mapWritableState(useFloatMenuStore, ["menus",'newMenus']),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
     deskGroupMenus() {

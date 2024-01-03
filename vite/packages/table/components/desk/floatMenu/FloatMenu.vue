@@ -33,7 +33,9 @@ const { zoom, alone, aloneZoom, hide }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
+  "addIcon",
   "add",
+  "addFolder",
   "set",
   "hide",
   "update:zoom",
@@ -60,9 +62,23 @@ const defaultMenu = computed(() => {
   return [
     {
       icon: "fluent:add-16-regular",
+      title: "添加图标",
+      fn: () => {
+        emits("addIcon");
+      },
+    },
+    {
+      icon: "fluent:add-16-regular",
       title: "添加组件",
       fn: () => {
         emits("add");
+      },
+    },
+    {
+      icon: "fluent:add-16-regular",
+      title: "添加文件夹",
+      fn: () => {
+        emits("addFolder");
       },
     },
     {
@@ -262,6 +278,68 @@ onBeforeUnmount(() => {
   widgetStore.edit = false;
   // floatMenuStore.firstPosition = null;
 });
+
+// 滚动模式
+const scrollList = ref([
+  {
+    name: "自由",
+    value: "free",
+  },
+  {
+    name: "仅垂直",
+    value: "vertical",
+  },
+  {
+    name: "仅水平",
+    value: "horizontal",
+  },
+  {
+    name: "禁用",
+    value: "lock",
+  },
+]);
+const updateScroll = (newV) => {
+  if (newV === "free") {
+    getFreeLayoutState.value.mode.scroll = "free";
+  } else if (newV === "vertical") {
+    getFreeLayoutState.value.mode.scroll = "vertical";
+  } else if (newV === "horizontal") {
+    getFreeLayoutState.value.mode.scroll = "horizontal";
+  } else if (newV === "lock") {
+    getFreeLayoutState.value.mode.scroll = "lock";
+  }
+};
+
+// 排列模式
+const arrangeList = ref([
+  {
+    name: "对齐到网格",
+    value: "grid",
+  },
+  {
+    name: "组件边缘吸附",
+    value: "magnet",
+  },
+  {
+    name: "自由排列",
+    value: "free",
+  },
+]);
+const updateArrange = (newV) => {
+  if (newV === "grid") {
+    getFreeLayoutState.value.mode.arrange = "grid";
+    getFreeLayoutState.value.option.afterDragging = true;
+    getFreeLayoutState.value.option.magnet = false;
+  } else if (newV === "magnet") {
+    getFreeLayoutState.value.mode.arrange = "magnet";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = true;
+  } else if (newV === "free") {
+    getFreeLayoutState.value.option.arrange = "free";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = false;
+  }
+};
 </script>
 
 <template>
@@ -276,7 +354,7 @@ onBeforeUnmount(() => {
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
-      style="touch-action: none; width: 208px"
+      style="touch-action: none; width: 255px"
     >
       <xt-text type="2" class="mb-3">
         <template #center> 编辑桌面 </template>
@@ -298,14 +376,25 @@ onBeforeUnmount(() => {
         class="h-10 p-1 xt-bg-2 mb-3"
         style="font-size: 14px !important"
       />
-      <!-- <xt-modal :modelValue="1"> <test></test></xt-modal> -->
-
       <div class="flex my-3">
         <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
       </div>
       <template v-if="isFreeLayout && currentMode === 'free'">
-        <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
-        <!-- <Items :menus="freeLayoutMenu"></Items> -->
+        <xt-text type="2" class="mb-3 mt-2">滚动模式</xt-text>
+        <xt-select
+          h="40"
+          class="floatMenu"
+          v-model="getFreeLayoutState.mode.scroll"
+          :list="scrollList"
+          @cb="updateScroll"
+        />
+        <xt-text type="2" class="mb-3 mt-2">排列模式</xt-text>
+        <xt-option-select
+          :list="arrangeList"
+          @cb="updateArrange"
+          v-model="getFreeLayoutState.mode.arrange"
+        />
+        <!-- <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
         <div class="flex my-3">
           <Item
             v-for="(item, index) in freeLayoutMenu"
@@ -313,10 +402,9 @@ onBeforeUnmount(() => {
             :item="item"
             :class="{ 'mr-2': index !== freeLayoutMenu.length - 1 }"
           />
-        </div>
-
+        </div> -->
         <div class="mb-3 mt-2 flex items-center">
-          画布缩放
+          桌面缩放
           <xt-new-icon
             @click="resetZoom()"
             class="xt-text-2 ml-1"

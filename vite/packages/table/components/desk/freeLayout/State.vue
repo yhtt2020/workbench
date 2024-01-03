@@ -180,7 +180,7 @@ const updateScroll = (newV) => {
   }
 };
 
-// 排列模式 2023-12-20 已跑通
+// 排列模式
 const arrangeList = ref([
   {
     name: "对齐到网格",
