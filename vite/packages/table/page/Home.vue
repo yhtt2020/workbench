@@ -131,15 +131,19 @@
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
+  <!-- <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
-  </div>
-
+  </div> -->
+  
+  
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
   <teleport to="body">
+    <!-- 使用新版的配置导航 -->
+    <NewGuidePage v-if="true"></NewGuidePage>
+    <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
   </teleport>
 
@@ -171,6 +175,7 @@ import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
 import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
+import NewGuidePage from "./app/grade/NewGuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
@@ -378,6 +383,7 @@ export default {
     myIcons,
     NewAddCard,
     GuidePage,
+    NewGuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
