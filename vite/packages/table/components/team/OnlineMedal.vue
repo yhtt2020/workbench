@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div  style="position: absolute;width: 250px" class="badge-box big ">
+    <div  style="position: absolute;width: 250px;z-index:9999" class="badge-box big ">
       <a-row>
         <a-col :span="10">
           <img style="width: 75px;margin-top: 10px" :src="this.getPath+getBadge().badge+'.png'">
