@@ -16,18 +16,9 @@ export const noticeStore = defineStore('notice', {
       urls:[], //  按钮链接
       videos:[],// b站视频链接
       attachments:[], //附件
+      targetType: { name:'全员',value:1000 },
 
     },
-    // // 还原发送消息配置
-    // restSetting:{
-    //   title:'', // 标题
-    //   summary:'', // 摘要
-    //   content:'', // 正文
-    //   noticeType:'1', // 消息类型
-    //   cover:[], // 封面
-    //   urls:[], //  按钮链接
-    //   videos:[],// b站视频链接
-    // }
   }),
 
   actions: {
@@ -168,7 +159,17 @@ export const noticeStore = defineStore('notice', {
 
     // 创建一个推送消息
     async createNotice(){
-      console.log('执行....测试',this.msgSetting);
+      console.log('执行....测试-1',{
+        title:this.msgSetting.title,
+        cover:JSON.stringify(this.msgSetting.cover),
+        videos:JSON.stringify(this.msgSetting.videos),
+        urls:JSON.stringify(this.msgSetting.urls),
+        content:this.msgSetting.content,
+        summary:this.msgSetting.summary,
+        noticeType:this.msgSetting.noticeType,
+        attachments:JSON.stringify(this.msgSetting.attachments),
+        targetType:this.msgSetting.targetType,
+      });
       
     }
 

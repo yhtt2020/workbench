@@ -2,7 +2,7 @@
   <xt-modal v-model="buttonVisible" title="添加按钮链接" :scrollbarPadding="{paddingRight:'0px',paddingLeft:'0px'}">
    <div style="width: 500px;" class="flex items-center flex-col justify-center">
     <a-input spellcheck="false" v-model:value="linkName" class="h-10" style=" min-width: 452px; margin-bottom: 16px;border-radius: 10px;" placeholder="请输入按钮名称"></a-input>
-    <a-input class="h-10" spellcheck="false" v-model:value="linkValue"  style="border-radius: 10px;min-width: 452px;" placeholder="请输入链接地址"></a-input>
+    <a-textarea class="h-10" spellcheck="false" v-model:value="linkValue"  style="border-radius: 10px;min-width: 452px;" placeholder="请输入链接地址"></a-textarea>
    </div>
    <div style="height: 54px;"></div>
    <div class="flex w-full justify-end items-center  ">

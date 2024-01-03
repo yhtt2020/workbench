@@ -4,6 +4,7 @@
    <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;" :bordered="false" placeholder="标题"></a-input>
    <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;" :bordered="false" :rows="4" />
    <MsgMarkdown ref="mkRef" />
+
    <div class="flex flex-col my-4" v-if="imgCover.cover.length !== 0" >
     <div class="flex items-center justify-between mb-4" style="width: 350px;">
      <span class="xt-font xt-text-2 font-400 font-14">封面</span>
@@ -17,13 +18,16 @@
       </div> 
     </div>
    </div>
+
    <div class="flex flex-col mb-4" v-if="msgSetting.attachments.length !== 0">
     <span class="xt-font xt-text-2 font-400 font-14">附件</span>
    </div>
+
    <div class="flex flex-col mb-4" v-if="msgSetting.urls.length !== 0">
     <span class="xt-font xt-text-2 font-400 font-14 mb-4">按钮链接</span>
     <ButtonLinkDetail :list="msgSetting.urls"/>
    </div>
+
    <div class="flex flex-col mb-4" v-if="msgSetting.videos.length !== 0">
     <span class="xt-font xt-text-2 font-400 font-14 mb-3">b站视频链接</span>
     <BiliLinkDetail :list="msgSetting.videos"/>
@@ -46,7 +50,7 @@ const notice = noticeStore();
 const { msgSetting } = storeToRefs(notice);
 
 const mkRef = ref(null);
-const itemValue = ref('');
+
 
 const delCover = () =>{
  msgSetting.value.cover = '';

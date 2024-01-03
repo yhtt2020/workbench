@@ -5,9 +5,11 @@
        <xt-new-icon icon="fluent:send-32-regular" size="16"></xt-new-icon>
        <span class="xt-font xt-text font-14 ml-3">发消息</span>
      </div>
-     <div class="flex items-center justify-center">
-
-
+     <div class="flex items-center justify-end" style="width:500px;">
+      <div class="flex items-center mr-3">
+        <span class="xt-font xt-text font-14">to：</span>
+        <xt-select style="width: 110px;" v-model="msgSetting.targetType" :list="targetList"  :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
+      </div>
       <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
      
       <xt-button w="56" h="32" type="theme" style="border-radius: 8px;" class="mx-3" @click="send">
@@ -72,14 +74,16 @@
 
  <AddButtonLink ref="buttonLink"/>
  <AddBiliLink ref="biliLink"/>
+
+
 </template>
 
 <script setup>
-import { ref, } from 'vue';
+import { ref,watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { noticeStore } from '../../store/noticeStore';
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing';
-
+import { teamStore } from '../../../../store/team';
 
 // import dayjs, { Dayjs } from 'dayjs';
 // const value1 = ref(dayjs('2024/01/29',dateFormat))
@@ -96,11 +100,20 @@ const emits = defineEmits(['close']);
 
 const notice = noticeStore();
 const { msgSetting } = storeToRefs(notice);
+const teams = teamStore()
+const { team } = storeToRefs(teams);
 
-
+// 通知类型
 const list = ref([
   { name:'普通通知类型',value:'1' },
   { name:'强制弹窗类型',value:'2' }
+])
+// 发送目标
+const targetList = ref([
+  { name:'全员',value:1000 },
+  { name:'小队', value:1001},
+  { name:'社群',value:1002 },
+  { name:'指定用户',value:1003 }
 ])
 
 
@@ -113,17 +126,20 @@ const biliLink = ref(null);
 /**事件处理方法**/
 // 发送
 const send = () =>{
-  // console.log('执行....测试',msgSetting.value);
-  // notice.createNotice()
+  notice.createNotice()
   // isLoading.value = true;
   // setTimeout(()=>{
   //   isLoading.value = false;
   // },1000)
 }
+
+
 // 弹窗关闭
 const closeSend = () =>{
   emits('close');
 }
+
+
 // 图片上传
 const uploadImage = async() =>{
   document.querySelector('.imgRef').click();
@@ -154,6 +170,8 @@ const getMessageImg = async(evt) =>{
     msgSetting.value.cover = list
   }
 }
+
+
 // 上传附件
 const uploadAttachment = async() =>{
   // let openPath = await tsbApi.dialog.showOpenDialog({
@@ -165,15 +183,30 @@ const uploadAttachment = async() =>{
   // })
   // console.log('附件上传',openPath);
 } 
+
+
 // 链接上传
 const uploadButtonLink = () =>{
   buttonLink.value.openButtonModal()
 }
+
+
 // b站视频链接
 const uploadBiliLink = () =>{
   biliLink.value.openBiliModal();
 }
 
+
+// 通过watch来判断是否为社群和指定用户
+watch(()=>msgSetting.value.targetType,(newVal)=>{
+  console.log('测试',newVal);
+  if(newVal === 1002){
+    
+  }
+  else if(newVal === 1003) {
+    
+  }
+},{immediate:true,deep:true})
 </script>
  
 <style lang="scss" scoped>
