@@ -4,7 +4,7 @@
     <a-input spellcheck="false" v-model:value="linkName" class="h-10" style=" min-width: 452px; margin-bottom: 16px;border-radius: 10px;" placeholder="请输入按钮名称"></a-input>
     <a-textarea spellcheck="false" v-model:value="linkValue"  style="border-radius: 10px;min-width: 452px; height: 80px;" placeholder="请输入链接地址"></a-textarea>
    </div>
-   <div class="flex w-full justify-end items-center  mt-10">
+   <div class="flex w-full justify-end items-center mt-3">
     <xt-button w="64" h="40" class="mr-3" style="border-radius:10px;" @click="buttonVisible = false">
      <div class="flex items-center justify-center xt-text-2 font-400 font-14">
       取消
@@ -52,4 +52,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-input){
+  background: var(--secondary-bg) !important;
+}
 </style>

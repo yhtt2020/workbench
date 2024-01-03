@@ -26,11 +26,11 @@ const messageType = ref('send');
 
 const list = ref([
  { 
-  newIcon:'fluent:send-32-regular', type:'send',
+  newIcon:'fluent:send-32-regular', type:'send',bg:'var(--secondary-bg)',
   callBack:(item)=>{ messageType.value = item.type }
  },
  { 
-  newIcon:'fluent:clock-16-regular',type:'history',
+  newIcon:'fluent:clock-16-regular',type:'history',bg:'var(--secondary-bg)',
   callBack:(item)=>{ messageType.value = item.type }
  },
  { 

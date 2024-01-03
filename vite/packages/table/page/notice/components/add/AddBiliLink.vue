@@ -58,5 +58,7 @@ defineExpose({ openBiliModal });
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.ant-input){
+  background: var(--secondary-bg) !important;
+}
 </style>
