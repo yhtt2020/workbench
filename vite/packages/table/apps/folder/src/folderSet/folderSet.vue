@@ -8,7 +8,15 @@
       :footer="0"
       boxClass="px-4 pt-4"
     >
-      <xt-option-from :options="nameOptions" :data="data"> </xt-option-from>
+      <xt-option-from :options="nameOptions" :data="data">
+        <template #name>
+          <xt-option-icon
+            class="mb-3"
+            v-model:icon="data.icon"
+            v-model:input="data.name"
+          />
+        </template>
+      </xt-option-from>
       <xt-option-from :options="filesOptions" :data="data" style="width: 542px">
         <template #model>
           <xt-option-info title="分组模式" :info="modelInfo" />

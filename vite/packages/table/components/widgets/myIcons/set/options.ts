@@ -1,14 +1,14 @@
 export const attributeOptions = [
-  {
-    type: "info",
-    title: "图标名称",
-    info: "修改当前应用图标名称",
-  },
-  {
-    type: "input",
-    inputKey: "titleValue",
-    border: true,
-  },
+  // {
+  //   type: "info",
+  //   title: "图标名称",
+  //   info: "修改当前应用图标名称",
+  // },
+  // {
+  //   type: "input",
+  //   inputKey: "titleValue",
+  //   border: true,
+  // },
   // {
   //   type: "slot",
   //   slot: "title",
@@ -146,6 +146,41 @@ export const appearanceOptions = [
       {
         value: "rectangle",
         name: "长方形",
+      },
+    ],
+  },
+  {
+    type: "info",
+    title: "图标大小",
+    info: "选择图标大小",
+  },
+  {
+    type: "tab",
+    tabKey: "size",
+    list: [
+      {
+        value: "mini",
+        name: "1*1",
+      },
+      {
+        value: "mini1",
+        name: "2*1",
+      },
+      {
+        value: "small",
+        name: "2*2",
+      },
+      {
+        value: "default",
+        name: "2*4",
+      },
+      {
+        value: "long",
+        name: "4*2",
+      },
+      {
+        value: "big",
+        name: "4*4",
       },
     ],
   },
