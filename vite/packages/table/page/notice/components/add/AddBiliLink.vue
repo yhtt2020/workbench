@@ -43,7 +43,7 @@ const addBiliVideo = async() =>{
       const { title } = await getName.getUrlName(biliLinkValue.value);
       const videosObj = {
         title:title,
-        url:`${biliLinkValue.value}`
+        url:`https://player.bilibili.com/player.html?bvid=${biliLinkValue.value.split('/')[4]}`
       }
       msgSetting.value.videos.push(videosObj);
       biliLinkValue.value = ''

@@ -7,7 +7,6 @@ const getName = {
   const res  = await axios.get(url);
   const html = res.data
   const dom = cheerio.load(html)
-  // console.log('获取',dom('h1')[0]?.attribs.title);
   return {title:dom('h1')[0]?.attribs.title}
  }
 }

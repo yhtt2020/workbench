@@ -64,7 +64,7 @@
      </div>
      <div class="flex items-center justify-center">
       <span class="xt-font xt-text-2 font-14 ">消息有效期：</span>
-      <!-- <a-date-picker :bordered="false" v-model:value="value1"/> -->
+      <a-date-picker :bordered="false" v-model:value="value1"/>
      </div>
    </div>
 
@@ -80,14 +80,12 @@
 </template>
 
 <script setup>
-import { ref,watch } from 'vue';
+import { ref,watch,computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { noticeStore } from '../../store/noticeStore';
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing';
 import { teamStore } from '../../../../store/team';
-
-// import dayjs, { Dayjs } from 'dayjs';
-// const value1 = ref(dayjs('2024/01/29',dateFormat))
+import dayjs, { Dayjs } from 'dayjs';
 
 
 // 导入消息发送编辑模块
@@ -116,6 +114,19 @@ const targetList = ref([
   { name:'社群',value:1002 },
   { name:'指定用户',value:1003 }
 ])
+
+
+// 通过计算属性根据当前
+const getCurrentDay = computed(()=>{
+  let currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 30);
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  let day = currentDate.getDate();
+  return  `${year}/${month > 10 ? month : '0' + month }/${day > 10 ? day : '0' + day }`;
+})
+const dateFormat = 'YYYY/MM/DD';
+const value1 = ref(dayjs(`${getCurrentDay.value}`,dateFormat))
 
 
 const isLoading = ref(false); 
