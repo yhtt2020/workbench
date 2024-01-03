@@ -425,7 +425,7 @@ export default {
         {
           id: 3,
           newIcon: "fluent:slide-add-16-regular",
-          name: "添加桌面",
+          name: "添加新桌面",
           fn: this.showAddDeskForm,
         },
         {

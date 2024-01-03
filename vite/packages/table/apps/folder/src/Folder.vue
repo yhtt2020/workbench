@@ -99,6 +99,7 @@ const props = defineProps({
   },
   secondary: {},
 });
+
 const { customData, customIndex, expand, secondary } = toRefs(props);
 
 const refreshState = ref(false);
