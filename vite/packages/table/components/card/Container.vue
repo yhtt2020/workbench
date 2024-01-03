@@ -57,8 +57,15 @@
                   w="20"
                 />
                 <xt-ify-icon
-                  v-else-if="header.newIcon"
-                  :icon="header.newIcon"
+                  v-else-if="header.ifyIcon"
+                  :icon="header.ifyIcon"
+                />
+                <xt-icon-show
+                  boxW="20"
+                  boxH="20"
+                  w="18"
+                  h="18"
+                  :modelValue="header.showIcon"
                 />
               </template>
             </div>
@@ -67,7 +74,7 @@
               class="flex items-center px-2 h-full ml-1"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
-            :class="{ 'header-title': titleHover }"
+              :class="{ 'header-title': titleHover }"
             >
               <slot name="title">
                 {{ title }}
@@ -82,8 +89,8 @@
           <template v-if="rightIcons && rightIcons.length">
             <div v-for="item in rightIcons" class="header-right-icon mr-1">
               <xt-ify-icon
-                v-if="item.newIcon"
-                :icon="item.newIcon"
+                v-if="item.ifyIcon"
+                :icon="item.ifyIcon"
                 @click="item.fn"
                 :class="item.class"
                 size="20"
@@ -152,11 +159,11 @@
 <!-- lang="ts" -->
 <script>
 // import { PropType } from "vue";
+import { h } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
 import { useDebounceFn } from "@vueuse/core";
-import { message } from "ant-design-vue";
-
+import { message, notification } from "ant-design-vue";
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
@@ -168,10 +175,13 @@ import PageState from "./PageState.vue";
 
 import { deepMerge } from "./ContainerUtils";
 
+import XtButton from "../../ui/libs/Button/index.vue";
+
 export default {
   components: {
     RightMenu,
     PageState,
+    XtButton,
   },
   name: "Container",
   props: {
@@ -187,12 +197,13 @@ export default {
           disabled: false,
           // 左侧图标 适配旧版icon 适配新版newIcon
           icon: "",
-          newIcon: "",
+          ifyIcon: "",
           /**
            * 右侧图标
            * {
            *    icon: '旧版图标',
-           *    newIcon: '新版图标',
+           *    ifyIcon: '新版图标',
+           *    showIcon: '图标选择器的图标 小庄定义的命名规范'
            *    fn: lockClick,
            * }
            */
@@ -420,7 +431,46 @@ export default {
     ...mapActions(offlineStore, ["getIsOffline"]),
     // 头部拖拽开始
     titleDragStart() {
-      message.info("开启调整桌面布局可以拖拽小组件");
+      // message.info("开启调整桌面布局可以拖拽小组件");
+      const key = `open${Date.now()}`;
+      const fn = () => {
+        console.log("this :>> ", this);
+        this.$bus.emit("startAdjust");
+        notification.close(key);
+      };
+      notification["info"]({
+        message: "开启调整桌面布局可以拖拽小组件",
+        // description: "开启调整桌面布局可以拖拽小组件",
+        btn: () =>
+          h(
+            XtButton,
+            {
+              type: "theme",
+              w: "120",
+              h: 40,
+              onClick: fn,
+            },
+            { default: () => "调整布局" }
+          ),
+        key,
+      });
+      // notification.open({
+      //   message: "Notification Title",
+      //   description:
+      //     'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+      //   btn: () =>
+      //     h(
+      //       XtButton,
+      //       {
+      //         type: "theme",
+      //         size: "small",
+      //         onClick: () => () => {
+      //           console.log("123 :>> ", 123);
+      //         },
+      //       },
+      //       { default: () => "Confirm" }
+      //     ),
+      // });
     },
     // 左侧区域鼠标进入
     leftMouseEnter() {
@@ -445,7 +495,7 @@ export default {
     // 标题区域鼠标进入
     titleMouseEnter() {
       if (!this.header.titleHover) return;
-      this.showTitleHover= true;
+      this.showTitleHover = true;
     },
     // 标题区域鼠标离开
     titleMouseLeave() {
@@ -467,7 +517,7 @@ export default {
       this.refreshState = true;
       this.$emit("onRefresh");
       setTimeout(() => {
-        this.refreshState= false;
+        this.refreshState = false;
       }, 2000);
     },
     // 右键删除

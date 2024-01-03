@@ -21,7 +21,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 新增配置项 用于存储新版数据
       mode: {
         arrange: "grid", // 排列方式
-        scroll: "scroll", // 滚动方式
+        scroll: "free", // 滚动方式
         align: "custom", // 居中方式
       },
       // 系统数据

@@ -1,4 +1,14 @@
 <template>
+  <!-- <Widget>
+    <File
+      :list="customData.list"
+      :layout="customData.layout"
+      :model="customData.model"
+      @deleteFile="deleteFile"
+      @updateList="updateList"
+      @updateSort="updateSort"
+    />
+  </Widget> -->
   <Drop @createFile="createFile" @deleteFile="deleteFile">
     <xt-container
       :customIndex="customIndex"
@@ -93,8 +103,9 @@ const { customData, customIndex, expand, secondary } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
+  // https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#000000
   return {
-    newIcon: "fluent:folder-16-regular",
+    showIcon: customData.value.icon,
     title: customData.value.name,
     // add: true,
     // refresh: true,
@@ -110,7 +121,7 @@ const header = computed(() => {
       //   fn: lockClick,
       // },
       {
-        newIcon: layout.value,
+        ifyIcon: layout.value,
         fn: layoutClick,
       },
     ],
@@ -282,10 +293,14 @@ const onRefresh = () => {
   }, 1000);
 };
 
-
 onBeforeMount(() => {});
 
-onMounted(() => {});
+onMounted(() => {
+  if (customData.value.icon === "") {
+    customData.value.icon =
+      "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
+  }
+});
 </script>
 
 <style lang="scss" scoped>

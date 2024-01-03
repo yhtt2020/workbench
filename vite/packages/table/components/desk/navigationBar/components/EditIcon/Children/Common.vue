@@ -3,7 +3,7 @@
         <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
     </div>
     <EditName :editItem="props.editItem"></EditName>
-    <SelectHome v-if="props.editItem.value === 'home'"></SelectHome>
+    <SelectHome v-if="props.editItem.value === 'home'" :editItem="props.editItem"></SelectHome>
 </template>
 
 <script setup lang='ts'>
