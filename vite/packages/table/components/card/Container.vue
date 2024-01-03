@@ -7,7 +7,7 @@
   >
     <div
       v-if="!options?.custom"
-      class="flex flex-col widget rounded-xl"
+      class="flex flex-col xt-shadow widget rounded-xl"
       :class="[edit ? 'editing' : '']"
       :style="[
         getSize,
@@ -32,13 +32,13 @@
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
           <div
-            @click="onOpen"
+            @click="leftClick"
             class="flex items-center h-full"
-            @mouseenter="openMouseEnter"
-            @mouseleave="openMouseLeave"
+            @mouseenter="leftMouseEnter"
+            @mouseleave="leftMouseLeave"
             style=""
             :class="[
-              openState ? 'header-open cursor-pointer' : 'header-default',
+              leftHover ? 'header-open cursor-pointer' : 'header-default',
             ]"
           >
             <!-- 图标区域 -->
@@ -47,7 +47,7 @@
               @mouseenter="iconMouseEnter"
               @mouseleave="iconMouseLeave"
             >
-              <xt-ify-icon v-if="openState" icon="fluent:open-16-regular" />
+              <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
               <template v-else>
                 <xt-icon
                   v-if="header.icon"
@@ -57,28 +57,27 @@
                   w="20"
                 />
                 <xt-ify-icon
-                  v-else-if="header.newIcon"
-                  :icon="header.newIcon"
+                  v-else-if="header.ifyIcon"
+                  :icon="header.ifyIcon"
+                />
+                <xt-icon-show
+                  boxW="20"
+                  boxH="20"
+                  w="18"
+                  h="18"
+                  :modelValue="header.showIcon"
                 />
               </template>
             </div>
             <!-- 标题区域 -->
             <div
-              class="flex items-center px-1 h-full ml-1"
+              class="flex items-center px-2 h-full ml-1"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleState }"
+              :class="{ 'header-title': titleHover }"
             >
               <slot name="title">
-                <template v-if="openState">
-                  {{ iconName ? iconName : "点击打开" }}
-                </template>
-                <template v-else-if="titleState">
-                  {{ titleName ? titleName : "点击打开" }}
-                </template>
-                <template v-else>
-                  {{ header.title }}
-                </template>
+                {{ title }}
               </slot>
             </div>
             <slot name="left-extend"></slot>
@@ -90,8 +89,8 @@
           <template v-if="rightIcons && rightIcons.length">
             <div v-for="item in rightIcons" class="header-right-icon mr-1">
               <xt-ify-icon
-                v-if="item.newIcon"
-                :icon="item.newIcon"
+                v-if="item.ifyIcon"
+                :icon="item.ifyIcon"
                 @click="item.fn"
                 :class="item.class"
                 size="20"
@@ -160,11 +159,11 @@
 <!-- lang="ts" -->
 <script>
 // import { PropType } from "vue";
+import { h } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
 import { useDebounceFn } from "@vueuse/core";
-import { message } from "ant-design-vue";
-
+import { message, notification } from "ant-design-vue";
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
@@ -176,10 +175,13 @@ import PageState from "./PageState.vue";
 
 import { deepMerge } from "./ContainerUtils";
 
+import XtButton from "../../ui/libs/Button/index.vue";
+
 export default {
   components: {
     RightMenu,
     PageState,
+    XtButton,
   },
   name: "Container",
   props: {
@@ -195,12 +197,13 @@ export default {
           disabled: false,
           // 左侧图标 适配旧版icon 适配新版newIcon
           icon: "",
-          newIcon: "",
+          ifyIcon: "",
           /**
            * 右侧图标
            * {
            *    icon: '旧版图标',
-           *    newIcon: '新版图标',
+           *    ifyIcon: '新版图标',
+           *    showIcon: '图标选择器的图标 小庄定义的命名规范'
            *    fn: lockClick,
            * }
            */
@@ -213,15 +216,16 @@ export default {
           bg: false,
           // 标题颜色
           color: "",
-          // 鼠标经过显示 左侧图标 + 标题区域  true为打开 false为关闭
-          openState: false,
-          openName: "",
+          // 鼠标经过显示 整个左侧可操作区域 左侧图标 + 标题区域  true为打开 false为关闭
+          leftHover: false,
           // 鼠标经过显示 左侧图标 true为打开 false为关闭
-          iconState: false,
-          iconName: "",
+          iconHover: false,
+          // leftHover iconHover同用 leftHoverName leftHoverIcon 两个参数
+          leftHoverName: "",
+          leftHoverIcon: "",
           // 鼠标经过显示 标题区域  true为打开 false为关闭
-          titleState: false,
-          titleName: "",
+          titleHover: false,
+          titleHoverName: "",
         };
       },
     },
@@ -307,11 +311,11 @@ export default {
       // 刷新状态
       refreshState: false,
       // 左侧区域状态
-      showOpenState: false,
+      showLeftHover: false,
       // 左侧图标区域状态
-      showIconState: false,
+      showIconHover: false,
       // 标题区域状态
-      showTitleState: false,
+      showTitleHover: false,
       // 卡片尺寸
       currentSize: this.size,
     };
@@ -340,15 +344,15 @@ export default {
       ];
     },
     // 左侧区域状态
-    openState() {
+    leftHover() {
       return (
-        (this.showOpenState || this.showIconState) &&
-        (this.header.openState || this.header.iconState)
+        (this.showLeftHover || this.showIconHover) &&
+        (this.header.leftHover || this.header.iconHover)
       );
     },
     // 标题区域状态
-    titleState() {
-      return this.showTitleState && this.header.titleState;
+    titleHover() {
+      return this.showTitleHover && this.header.titleHover;
     },
     // 卡片尺寸
     getSize() {
@@ -386,6 +390,14 @@ export default {
       }
       return arr;
     },
+    title() {
+      if (this.leftHover) {
+        return this.header.leftHoverName;
+      } else if (this.titleHover) {
+        return this.header.titleHoverName;
+      }
+      return this.header.title;
+    },
   },
   created() {
     if (!this.defaultData) return;
@@ -419,42 +431,82 @@ export default {
     ...mapActions(offlineStore, ["getIsOffline"]),
     // 头部拖拽开始
     titleDragStart() {
-      message.info("开启调整桌面布局可以拖拽小组件");
+      // message.info("开启调整桌面布局可以拖拽小组件");
+      const key = `open${Date.now()}`;
+      const fn = () => {
+        console.log("this :>> ", this);
+        this.$bus.emit("startAdjust");
+        notification.close(key);
+      };
+      notification["info"]({
+        message: "开启调整桌面布局可以拖拽小组件",
+        // description: "开启调整桌面布局可以拖拽小组件",
+        btn: () =>
+          h(
+            XtButton,
+            {
+              type: "theme",
+              w: "120",
+              h: 40,
+              onClick: fn,
+            },
+            { default: () => "调整布局" }
+          ),
+        key,
+      });
+      // notification.open({
+      //   message: "Notification Title",
+      //   description:
+      //     'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+      //   btn: () =>
+      //     h(
+      //       XtButton,
+      //       {
+      //         type: "theme",
+      //         size: "small",
+      //         onClick: () => () => {
+      //           console.log("123 :>> ", 123);
+      //         },
+      //       },
+      //       { default: () => "Confirm" }
+      //     ),
+      // });
     },
     // 左侧区域鼠标进入
-    openMouseEnter() {
-      if (!this.header.openState) return;
-      this.showOpenState = true;
+    leftMouseEnter() {
+      if (!this.header.leftHover) return;
+      this.showLeftHover = true;
     },
     // 左侧区域鼠标离开
-    openMouseLeave() {
-      if (!this.header.openState) return;
-      this.showOpenState = false;
+    leftMouseLeave() {
+      if (!this.header.leftHover) return;
+      this.showLeftHover = false;
     },
     // 左侧图标鼠标进入
     iconMouseEnter() {
-      if (!this.header.iconState) return;
-      this.showIconState = true;
+      if (!this.header.iconHover) return;
+      this.showIconHover = true;
     },
     // 左侧图标鼠标离开
     iconMouseLeave() {
-      if (!this.header.iconState) return;
-      this.showIconState = false;
+      if (!this.header.iconHover) return;
+      this.showIconHover = false;
     },
     // 标题区域鼠标进入
     titleMouseEnter() {
-      if (!this.header.titleState) return;
-      this.showTitleState = true;
+      if (!this.header.titleHover) return;
+      this.showTitleHover = true;
     },
     // 标题区域鼠标离开
     titleMouseLeave() {
-      if (!this.header.titleState) return;
-      this.showTitleState = false;
+      if (!this.header.titleHover) return;
+      this.showTitleHover = false;
     },
     // 打开
-    onOpen() {
-      if (!this.header.openState) return;
-      this.$emit("onOpen");
+    leftClick() {
+      if (this.header.leftHover) {
+        this.$emit("leftClick");
+      }
     },
     // 新增
     onAdd() {
@@ -466,7 +518,7 @@ export default {
       this.$emit("onRefresh");
       setTimeout(() => {
         this.refreshState = false;
-      }, 6000);
+      }, 2000);
     },
     // 右键删除
     doRemoveCard() {

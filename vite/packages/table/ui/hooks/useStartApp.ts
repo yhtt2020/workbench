@@ -1,6 +1,6 @@
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
-import {taskStore} from "../../apps/task/store";
+import { taskStore } from "../../apps/task/store";
 /**
  *
  * @param type
@@ -11,6 +11,7 @@ export const startApp = (type, value, router?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
+  console.log("type,value :>> ", type, value);
   switch (type) {
     // 默认浏览器
     case "default":
@@ -41,26 +42,30 @@ export const startApp = (type, value, router?) => {
     // 系统应用
     case "systemApp":
       // router.push({ name: value });
-      openSysApp(value,router)
+      openSysApp(value, router);
       break;
     // 不知道是什么场景
     case "localApp":
       require("electron").shell.openPath(value);
       break;
+    // 导航栏文件夹
+    case "folder":
+      // console.log(2222);
+      break;
   }
 };
 
-export const openSysApp = (value,router)=>{
-  const useAppStore = appStore();
-  const useTakeStore = taskStore()
-  if(value === 'fullscreen'){
-    useAppStore.toggleFullScreen()
-  } else if(value === 'task'){
-    useTakeStore.isTaskDrawer = true
-  } else if(value === 'commun'){
+export const openSysApp = (value, router) => {
+  const useAppStore: any = appStore();
+  const useTakeStore = taskStore();
+  if (value === "fullscreen") {
+    useAppStore.toggleFullScreen();
+  } else if (value === "task") {
+    useTakeStore.isTaskDrawer = true;
+  } else if (value === "commun") {
     console.log(1111);
-    return
-  } else{
-    router.push({name:value})
+    return;
+  } else {
+    router.push({ name: value });
   }
-}
+};

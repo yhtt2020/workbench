@@ -6,9 +6,13 @@ export const nameOptions = [
     icon: "fluent:arrow-clockwise-16-regular",
     iconCb: "titleIconCb",
   },
+  // {
+  //   type: "input",
+  //   inputKey: "name",
+  // },
   {
-    type: "input",
-    inputKey: "name",
+    type: "slot",
+    slot: "name",
   },
 ];
 export const filesOptions = [
@@ -78,14 +82,14 @@ export const filesOptions = [
   {
     type: "info",
     title: "图标排序规则",
-    info: "选择图标排序方式",
+    info: "选择图标排序方式，不设置排序规则的情况下可自由拖拽排列。但是不拖出分组到桌面或其他位置。",
   },
   {
     type: "select",
     selectKey: "sort",
     list: [
       {
-        name: "自由拖拽",
+        name: "无",
         value: "free",
       },
       {

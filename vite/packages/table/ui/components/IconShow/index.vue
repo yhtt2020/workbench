@@ -1,78 +1,119 @@
-  <template>
-    <xt-selectIcon :menus="['icon','emoji']" v-model="modelValue" @getAvatar="getAvatar" isUpload="true"></xt-selectIcon>
-    <div class="flex items-center justify-center overflow-hidden"
+<template>
+  <xt-selectIcon
+    :defaultIcon="modelValue"
+    :maskIndex="maskIndex"
+    :menus="menus"
+    :isUpload="upload"
+    v-model="visible"
+    @getAvatar="getAvatar"
+  ></xt-selectIcon>
+  <div
+    class="flex items-center justify-center overflow-hidden pointer"
+    :style="{
+      height: `${boxH}px`,
+      width: `${boxW}px`,
+      'border-radius': `${boxR}`,
+      background: bg,
+      pointer: click ? 'pointer' : false,
+    }"
+    @click="visible = click"
+  >
+    <img
+      :src="avatarUrl"
+      alt=""
       :style="{
-        'height': `${boxW}px`,
-        'width': `${boxH}px`,
-        'border-radius': `${r}px`,
-        'background': `${bg}px`,
-        'pointer': isClick?true:false,
+        filter: color ? `drop-shadow(#${color} 1000px 0)` : '',
+        transform: color ? 'translateX(-1000px)' : '',
+        height: h + 'px',
+        width: w + 'px',
+        'border-radius': `${r}`,
+        'object-fit': fit,
       }"
-      @click =" modelValue = isClick"
-      >
-        <a-avatar :size="w" :src="avatarUrl"
-        :style="{'filter': bgColor?`drop-shadow(#${bgColor} 200px 0)`:'',transform:bgColor?'translateX(-200px)':''}"/>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, toRefs, onMounted, onBeforeUnmount, computed,  } from "vue";
-  
+    />
+  </div>
+</template>
 
-  //解析出来的颜色
-  const bgColor = ref('')
-  const modelValue = ref('')
-  const avatarUrl = ref('')
+<script setup>
+import { ref, toRefs, onMounted, onBeforeUnmount, computed, watch } from "vue";
+//解析出来的颜色
+const visible = ref("");
+const avatarUrl = ref(props.modelValue);
 
-  const props = defineProps({
-    // 是否支持点击打开选择器
-    isClick: {
-      default: true,
+const props = defineProps({
+  // 选择器数组
+  menus: {
+    default: () => {
+      return ["icon", "emoji"];
     },
-    // 外部宽
-    boxW: {
-      default: 40,
-    },
-    // 外部高
-    boxH: {
-      default: 40,
-    },
-    // 内部宽
-    w: {
-      default: 20,
-    },
-    // 内部高
-    h: {
-      default: 20,
-    },
-    // 圆角
-    r: {
-      default: 0,
-    },
-    // 背景
-    bg:{
-      default: '',
-    }
-  });
+  },
+  // 默认返回图标
+  modelValue: {
+    default:
+      "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn",
+  },
+  maskIndex: {
+    default: 900,
+  },
+  // 是否支持点击打开选择器
+  click: {
+    default: true,
+  },
+  upload: {
+    default: false,
+  },
+  // 外部宽
+  boxW: {
+    default: 40,
+  },
+  // 外部高
+  boxH: {
+    default: 40,
+  },
+  // 外部圆角
+  boxR: {
+    default: 0,
+  },
+  // 内部宽
+  w: {
+    default: 20,
+  },
+  // 内部高
+  h: {
+    default: 20,
+  },
+  // 圆角
+  r: {
+    default: 0,
+  },
+  // 背景
+  bg: {
+    default: "",
+  },
+  fit: {
+    default: "cover",
+  },
+});
+const { modelValue } = toRefs(props);
+const emits = defineEmits(["update:modelValue", "cb"]);
+const color = computed(() => {
+  if (avatarUrl.value.indexOf("color=") >= 0) {
+    let colors = avatarUrl.value.substr(avatarUrl.value.indexOf("color=") + 7);
+    return colors;
+  }
+});
+// 获取头像
+const getAvatar = (avatar) => {
+  avatarUrl.value = avatar;
+  emits("update:modelValue", avatarUrl.value);
+  emits("cb", avatarUrl.value);
+};
 
-   
+watch(
+  () => modelValue.value,
+  (newV) => {
+    avatarUrl.value = newV;
+  }
+);
+</script>
 
-    // 获取头像
-    const getAvatar = (avatar) => {
-      if (avatar.indexOf('color=') >= 0) {
-        let color = avatar.substr(avatar.indexOf('color=') + 7, 6)
-        bgColor.value = color
-      } else {
-        bgColor.value = ''
-      }
-      avatarUrl.value = avatar
-    }
-
-    
-
-    </script>
-  
-  <style lang="scss" scoped>
-
-  </style>
-  
+<style lang="scss" scoped></style>

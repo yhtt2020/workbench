@@ -17,7 +17,7 @@ export const defaultData = {
 };
 export const defaultFolderData = {
   name: "文件夹",
-  icon: "",
+  icon: "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
   list: [],
   size: "2x2",
   // 文件锁 开启后无法拖出

@@ -2,17 +2,18 @@
   <Teleport to="body">
     <!-- 弹窗 -->
     <div
+      v-element-size="resizeModel"
       v-if="modelValue"
       :class="[boxClass, isFull ? ' rounded-none w-full h-full' : 'rounded-xl']"
       ref="modal"
-      class="fixed flex flex-col text-base top-1/2 -translate-y-1/2 -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+      class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
       "
       :style="{
         'z-index': index,
-        // top: top + 'px',
+        top: `${(windowHeight - bottomBarHeight - modelHeight) / 2}px`,
       }"
     >
       <slot v-if="custom"></slot>
@@ -40,29 +41,12 @@
               <div class="right-0 z-20 flex items-center">
                 <slot name="header-right"> </slot>
                 <xt-button
-                 class="ml-3"
+                  class="ml-3"
                   w="32"
                   h="32"
                   radius="8"
                   v-if="full"
                   @click="isFull = !isFull"
-                >
-                  <xt-new-icon
-                    :icon="
-                      isFull
-                        ? 'fluent:full-screen-minimize-16-filled'
-                        : 'fluent:full-screen-maximize-16-regular'
-                    "
-                    size="16"
-                    class="xt-text-2"
-                  />
-                </xt-button>
-                <xt-button class="ml-3"
-                  w="32"
-                  h="32"
-                  radius="8"
-                  v-if="full"
-                  @click="updateFullState"
                 >
                   <xt-new-icon
                     :icon="
@@ -138,8 +122,9 @@
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
 import { ref, watch, toRefs, onMounted, onBeforeUnmount, nextTick } from "vue";
-import { useWindowSize } from "@vueuse/core";
-import { update } from "lodash";
+import { useWindowSize } from "../drag/src/hooks/useWindowSize";
+import { useElementSize, vElementSize } from "../drag/src/hooks/useElementSize";
+
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -199,12 +184,22 @@ const modal: any = ref(null);
 let topBarHeight = 0;
 let topUtilBarHeight = 0;
 let bottomBarHeight = 0;
+const windowHeight = ref(0);
+const modelHeight = ref(0);
 onMounted(() => {
   if (esc.value) {
     window.addEventListener("keydown", handleEscKeyPressed, {
       capture: true,
     });
   }
+  useWindowSize((size) => {
+    // console.log("size :>> ", size.height.value);
+    windowHeight.value = size.height.value;
+  });
+
+  // useElementSize(modal.value, (size: any) => {
+  //   // modelHeight.value = size;
+  // });
   return;
   // 处理定位问题
   const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
@@ -218,28 +213,10 @@ onMounted(() => {
   if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
 });
 const top = ref(-999);
-watch(
-  () => modelValue.value,
-  () => {
-    nextTick(() => {
-      if (!modal.value) return;
-      const modelHeight = modal.value.clientHeight;
-      const windowSize = useWindowSize();
-      const windowHeight = windowSize.height.value;
-
-      const x =
-        (windowHeight +
-          topBarHeight +
-          topUtilBarHeight -
-          bottomBarHeight -
-          modelHeight) /
-        2;
-
-      top.value = x;
-    });
-  },
-  { immediate: true }
-);
+const resizeModel = (size) => {
+  // console.log("size :>> ", size);
+  modelHeight.value = size.height;
+};
 const close = () => {
   emits("update:modelValue", false);
   emits("close");
@@ -264,9 +241,9 @@ const handleEscKeyPressed = (event) => {
 /**
  * 全屏状态切换
  * */
-const updateFullState =()=>{
-  isFull.value = !isFull.value
-}
+const updateFullState = () => {
+  isFull.value = !isFull.value;
+};
 onBeforeUnmount(() => {
   if (esc.value) {
     window.removeEventListener("keydown", handleEscKeyPressed, {
@@ -275,8 +252,12 @@ onBeforeUnmount(() => {
   }
 });
 defineExpose({
-  updateFullState,isFull,
-})
+  updateFullState,
+  isFull,
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.position {
+}
+</style>

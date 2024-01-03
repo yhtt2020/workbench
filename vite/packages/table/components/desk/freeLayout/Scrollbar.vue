@@ -8,6 +8,7 @@
       cursor: dragStyle,
     }"
   >
+    <xt-button> {{ freeLayoutEnv.scrollTop }}123</xt-button>
     <slot> </slot>
   </div>
 </template>
@@ -65,9 +66,16 @@ onMounted(async () => {
     // 监听自由布局滚动事件
     scrollbar.value.addEventListener("ps-scroll-x", () => {
       freeLayoutEnv.value.scrollLeft = scrollbar.value.scrollLeft;
+
     });
     scrollbar.value.addEventListener("ps-scroll-y", () => {
       freeLayoutEnv.value.scrollTop = scrollbar.value.scrollTop;
+
+      scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
+
+console.log(' scrollbar.value.scrollLeft  :>> ',  scrollbar.value.scrollLeft );
+
+
     });
 
     // 完成操作 开启
@@ -165,6 +173,9 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = (newV) => {
+  console.log("111 :>> ", 111);
+  freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
+  freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
   if (newV === "free") {
     perfectScrollbar.value.settings.suppressScrollX = false;
     perfectScrollbar.value.settings.suppressScrollY = false;
@@ -178,6 +189,11 @@ const updateScroll = (newV) => {
     perfectScrollbar.value.settings.suppressScrollX = true;
     perfectScrollbar.value.settings.suppressScrollY = true;
   }
+
+  scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
+  scrollbar.value.scrollTop = freeLayoutEnv.value.scrollOldTop;
+
+  console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
 };
 watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
 // 重置中心区域
@@ -207,7 +223,7 @@ function redirect() {
     // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
     // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
     w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-    h = getFreeLayoutState.value.line.centerLine.y
+    h = getFreeLayoutState.value.line.centerLine.y;
   }
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;

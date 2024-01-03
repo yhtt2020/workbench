@@ -1,10 +1,10 @@
 <template>
     <Teleport to="body">
-      <div 
+      <div
        v-show="modelValue"
        style='width:400px;height:400px;background:var(--modal-bg);
        border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-       border-radius: 10px;' 
+       border-radius: 10px;'
        :style="{
           'z-index': maskIndex + 10,
         }"
@@ -41,7 +41,7 @@
               <template #title>颜色选择</template>
               <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
             </a-tooltip>
-            
+
             <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
               <div class="ml-4 mt-2">自定义</div>
               <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
@@ -56,8 +56,8 @@
             </div>
           </div>
         </div>
-  
-        
+
+
         <!-- 渲染的列表 -->
         <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
           <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
@@ -72,7 +72,7 @@
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
             </a-tooltip>
           </div>
-  
+
         </div>
         <!-- 自定义上传 -->
         <div v-if="selIndex == menus.length" class="flex items-center flex-wrap flex-col px-6" style="height:330px;">
@@ -88,7 +88,7 @@
       </div>
       <!-- 遮罩层 -->
       <div
-        v-if="modelValue" 
+        v-if="modelValue"
         @click.stop.self="closeClick()"
         class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
         :style="{
@@ -97,7 +97,7 @@
       ></div>
     </Teleport>
   </template>
-  
+
   <script setup>
   import { ref, toRefs, onMounted, onBeforeUnmount, computed,  } from "vue";
   import {fileUpload} from '../../../components/card/hooks/imageProcessing'
@@ -105,7 +105,7 @@
   import iconList from './iconList/icon'
   import emojisList from './iconList/emojis'
   import goodsList from './iconList/goods'
-  
+
 //   const icon = iconList.list
 //   const emoji = emojisList.list
 //   const goods = goodsList.list
@@ -169,7 +169,7 @@
       maskIndex:{
         default:900
       }
-    
+
     });
     const { menus } = toRefs(props);
 
@@ -183,7 +183,7 @@
           if (i.alias.indexOf(searchValue.value)>=0 || i.name.indexOf(searchValue.value)>=0) {
             tmpList.push(i)
           }
-        })        
+        })
       }
       return tmpList
     });
@@ -208,7 +208,7 @@
     }
 
 
-    //随机图标 
+    //随机图标
     const onRandom = () => {
         const type = menus.value[selIndex.value]
         const randomLength = handleList.value[type].length
@@ -238,8 +238,8 @@
     }
 
       // 上传文件
-    const getFileInfo = async (evt) => 
-    { 
+    const getFileInfo = async (evt) =>
+    {
         let timer = setInterval(()=>{
           percent.value += 1
           if (percent == 99) {
@@ -261,7 +261,7 @@
       // 更换头像
     const updateGroupAvatar = () => {
       groupFileID.value.click()
-        
+
     }
 
       // 清除已上传信息
@@ -277,19 +277,19 @@
 
 
     const emits = defineEmits(["close", "ok", "modelValue",'getAvatar']);
-    
+
     // 关闭
     const closeClick = () => {
       emits("update:modelValue", false);
       emits("close");
     };
-    
+
     // 完成
     const okClick = () => {
       emits("update:modelValue", false);
       emits("ok");
     };
-    
+
     // esc关闭
     const handleEscKeyPressed = (event) => {
       if (props.esc && event.keyCode === 27) {
@@ -319,7 +319,7 @@
       });
     });
     </script>
-  
+
   <style lang="scss" scoped>
   .top-triangle{
     width: 0;
@@ -349,7 +349,7 @@
       justify-content: space-between;
     }
 
-    
+
     .top-icon .type-select span{
       display: flex;
       height: 48px;
@@ -363,7 +363,7 @@
       border-bottom: 2px solid transparent;
     }
 
-    
+
     .active{
       font-weight: 600 !important;
       border-bottom: 2px solid #508BFE !important;
@@ -403,4 +403,3 @@
 
 
   </style>
-  

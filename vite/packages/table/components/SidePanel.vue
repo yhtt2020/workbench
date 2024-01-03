@@ -4,8 +4,8 @@
     <!-- style="z-index: 99" -->
     <div @click.stop @drop.prevent="drop" @dragover.prevent="" :id="currentId"
       style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
-      class="flex flex-row justify-center box common-panel s-bg w-[80px] rounded-2xl xt-bg pt-0 pb-0 relative max-h-full side-bar"
-      ref="sideContent" @contextmenu="showMenu" :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})`, }">
+      class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
+      ref="sideContent" @contextmenu="showMenu" :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
       <div style="width: 52px;" class="w-full">
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
@@ -18,7 +18,7 @@
                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="sortId === 'left' ? 'right' : 'left'"></Team>
                   <template v-else>
                     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                   </template>

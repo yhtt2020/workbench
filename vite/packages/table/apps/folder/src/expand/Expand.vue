@@ -4,6 +4,7 @@
     :expand="{
       disabled: true,
     }"
+    :secondary="true"
   ></Folder>
 </template>
 

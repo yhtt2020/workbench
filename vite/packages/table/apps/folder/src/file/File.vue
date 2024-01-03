@@ -114,6 +114,7 @@ onMounted(() => {
     handle: "." + sortableBox.value,
     disabled: data.value.sort === "free" ? false : true,
     onEnd: function (evt) {
+      console.log('2222222 :>> ', 2222222);
       collisionDetection(evt.to.childNodes);
     },
   });

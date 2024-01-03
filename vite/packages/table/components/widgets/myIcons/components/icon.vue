@@ -5,21 +5,38 @@
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <div
+    <xt-icon-show
+      v-model="src"
+      :h="imgH"
+      :w="imgW"
+      :boxW="bgW"
+      :boxH="bgH"
+      :bg="bg"
+      :r="r"
+      boxR="12px"
+      :click="false"
+      :fit="fit"
+    />
+    <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]"
       :data-index="index"
     >
       <img
-        v-if="src && src.length > 0 && open.type === 'systemApp'" :src="src" alt="" :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index" />
-      <img v-if="src && src.length > 0 && open.type !== 'systemApp'"
+        v-if="src && src.length > 0 && open.type === 'systemApp'"
+        :src="src"
+        alt=""
+        :style="[imgSize, radiusState, imgStateStyle]"
+        :data-index="index"
+      />
+      <img
+        v-if="src && src.length > 0 && open.type !== 'systemApp'"
         :src="renderIcon(src)"
         alt=""
         :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
-    </div>
+    </div> -->
     <div
       v-if="isTitle"
       class="h-5 mx-auto text-center truncate xt-text"
@@ -38,7 +55,7 @@ import { message } from "ant-design-vue";
 import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
 import { renderIcon } from "../../../../js/common/common";
-import {startApp} from '../../../../ui/hooks/useStartApp'
+import { startApp } from "../../../../ui/hooks/useStartApp";
 export default {
   mixins: [editProps],
   props: {
@@ -84,16 +101,42 @@ export default {
       }
       return textSize;
     },
+    imgStateStyle() {
+      return {
+        "object-fit": this.imgState,
+      };
+    },
+    r() {
+      if (this.isRadius) return this.radius + '%';
+    },
+    bg() {
+      if (this.isBackground) return this.backgroundColor;
+    },
     imgSize() {
       return this.getSizeValues(this.size).imgSize;
     },
     bgSize() {
       return this.getSizeValues(this.size).bgSize;
     },
-    imgStateStyle() {
-      return {
-        "object-fit": this.imgState,
-      };
+    // 为了适配新版
+    imgH() {
+      let h = parseInt(this.getSizeValues(this.size).imgSize.height);
+      return h;
+    },
+    imgW() {
+      let w = parseInt(this.getSizeValues(this.size).imgSize.width);
+      return w;
+    },
+    bgW() {
+      let w = parseInt(this.getSizeValues(this.size).bgSize.width);
+      return w;
+    },
+    bgH() {
+      let h = parseInt(this.getSizeValues(this.size).bgSize.height);
+      return h;
+    },
+    fit() {
+      return this.imgState;
     },
   },
   watch: {
@@ -192,13 +235,12 @@ export default {
     startApp,
     // 单图标点击
     iconClick(event) {
-
       if (event.ctrlKey && event.button === 0) {
         this.$emit("custom-event");
         return;
       }
 
-      if (this.edit) return
+      if (this.edit) return;
       // 先检测是不是web端
       // if (!this.$isXT) {
       //   let arr = ["default", "internal", "thinksky"];
@@ -210,9 +252,9 @@ export default {
       //   return;
       // }
 
-      if(this.newIcon){
-        console.log(this.newIcon,'open');
-        this.startApp(this.open.type,this.open.value,this.$router)
+      if (this.newIcon) {
+        console.log(this.newIcon, "open");
+        this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");

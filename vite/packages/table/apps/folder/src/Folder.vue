@@ -1,4 +1,14 @@
 <template>
+  <!-- <Widget>
+    <File
+      :list="customData.list"
+      :layout="customData.layout"
+      :model="customData.model"
+      @deleteFile="deleteFile"
+      @updateList="updateList"
+      @updateSort="updateSort"
+    />
+  </Widget> -->
   <Drop @createFile="createFile" @deleteFile="deleteFile">
     <xt-container
       :customIndex="customIndex"
@@ -8,9 +18,8 @@
       :menuList="menuList"
       v-model:size="customData.size"
       :sizeList="sizeList"
-      @onOpen="iconClick"
+      @leftClick="leftClick"
       @onRefresh="onRefresh"
-
     >
       <!-- 右侧布局切换 -->
       <Resize :disabled="expand.disabled" v-model:size="customData.size">
@@ -63,7 +72,6 @@ import {
   onBeforeUnmount,
   onBeforeMount,
 } from "vue";
-import Widget from "../../../components/card/Widget.vue";
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
@@ -74,6 +82,8 @@ import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
+import Widget from "../../../components/card/Widget.vue";
+
 /**
  * 初始化阶段
  */
@@ -87,25 +97,31 @@ const props = defineProps({
       };
     },
   },
+  secondary: {},
 });
-const { customData, customIndex, expand } = toRefs(props);
+const { customData, customIndex, expand, secondary } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
+  // https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#000000
   return {
-    newIcon: "fluent:folder-16-regular",
+    showIcon: customData.value.icon,
     title: customData.value.name,
-    openState: true,
     // add: true,
     // refresh: true,
     // refreshState: refreshState.value,
+    leftHover: true,
+    leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
+    leftHoverIcon: secondary.value
+      ? "fluent:settings-16-regular"
+      : "fluent:open-16-regular",
     rightIcon: [
+      // {
+      //   newIcon: lockIcon.value,
+      //   fn: lockClick,
+      // },
       {
-        newIcon: lockIcon.value,
-        fn: lockClick,
-      },
-      {
-        newIcon: layout.value,
+        ifyIcon: layout.value,
         fn: layoutClick,
       },
     ],
@@ -141,7 +157,7 @@ const setVisible = ref(false);
 const menuList = computed(() => {
   return [
     {
-      title: "分组设置",
+      title: "设置",
       newIcon: "fluent:settings-16-regular",
       fn: () => {
         setVisible.value = true;
@@ -195,6 +211,8 @@ const updateSort = (val) => {
   if (mode === "free") {
     customData.value.lock = true;
     return;
+  } else {
+    customData.value.lock = false;
   }
   sortMode(mode);
 };
@@ -232,6 +250,7 @@ const lockClick = () => {
     message.info("自由排序或桌面文件下无法解锁");
     return;
   }
+  // customData.value.lock = false;
   customData.value.lock = !customData.value.lock;
 };
 
@@ -254,10 +273,13 @@ const updateList = (data) => {
  */
 const expandVisible = ref(false);
 const oldCardSize = ref();
-const iconClick = () => {
-  if (expand.value.disabled) return;
-  expandVisible.value = true;
-  oldCardSize.value = customData.value.size;
+const leftClick = () => {
+  if (secondary.value) {
+    setVisible.value = true;
+  } else {
+    expandVisible.value = true;
+    oldCardSize.value = customData.value.size;
+  }
 };
 
 const expandClose = () => {
@@ -273,7 +295,12 @@ const onRefresh = () => {
 
 onBeforeMount(() => {});
 
-onMounted(() => {});
+onMounted(() => {
+  if (customData.value.icon === "") {
+    customData.value.icon =
+      "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
+  }
+});
 </script>
 
 <style lang="scss" scoped>

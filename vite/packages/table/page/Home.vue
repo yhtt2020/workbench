@@ -230,6 +230,7 @@ import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
 import _ from "lodash-es";
+import {replaceType} from '../components/desk/navigationBar/hook/replaceType'
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
@@ -327,7 +328,6 @@ export default {
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
       hasTriggered: 1,
-      replaceFlag: true,
     };
   },
   components: {
@@ -696,6 +696,7 @@ export default {
         this.$refs.grid.update();
       }
     },
+    replaceType,
     learn() {
       browser.openInTable(
         "https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b"
@@ -726,44 +727,7 @@ export default {
           }
         })
       });
-      const updatedList = navigationList.map((item) => {
-        switch (item.type) {
-          case 'systemApp':
-            return { ...item };
-          case 'coolApp':
-            return {
-              ...item,
-              mode: 'app',
-              value: item.data || item.value
-            };
-          case 'lightApp':
-            return {
-              ...item,
-              mode: 'link',
-              value: item.package || item.value
-            };
-          case 'tableApp':
-            return {
-              ...item,
-              mode: 'app',
-              value: item.path || item.value
-            };
-          default:
-            return {
-              ...item,
-              mode: 'link',
-              type: 'default',
-              value: item.url || item.value
-            };
-        }
-      }).map((item) => ({
-        ...item,
-        bg: '',
-        isBg: false
-      }));
-
-      return updatedList;
-      this.replaceFlag = false;
+      return this.replaceType(navigationList)
     },
     setTransparent() {
       console.log(

@@ -1,44 +1,29 @@
 <template>
   <div
-
     class="xt-text flex h-full xt-bg"
-
     style="box-sizing: border-box"
-
     :class="[typeClass]"
-
   >
     <!-- 左侧区域开始 -->
     <div
-
       class="flex flex-col items-center h-full xt-br"
-
-      style=" position: relative"
-
+      style="position: relative"
       :style="{
         width: w + 'px',
         'min-width': w + 'px',
       }"
-      :class="[leftClass,leftMargin]"
+      :class="[leftClass, leftMargin]"
     >
       <div class="w-full" v-for="list in listOption" :class="list?.class">
         <Float
-
           @itemClick="itemClick"
-
           :list="item.children"
-
           v-for="item in list.array"
-
           :data="item"
-
         >
           <div
-
-            class="flex flex-col justify-center items-center"
-
+            class="flex flex-col justify-center items-center cursor-pointer"
             :class="[list?.boxClass]"
-
           >
             <Box :item="item" :id="currentIndex" :model="model">
               <Item :item="item" v-bind="list?.itemOption">
@@ -120,11 +105,11 @@ const props = defineProps({
   w: {
     default: 72,
   },
-  leftClass:{
-    default:''
+  leftClass: {
+    default: "",
   },
-  leftMargin:{
-    default:'mr-3'
+  leftMargin: {
+    default: "mr-3",
   },
 });
 // 全屏控制

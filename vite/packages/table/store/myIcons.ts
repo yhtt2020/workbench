@@ -30,6 +30,8 @@ export const myIcons = defineStore("myIcons", {
       isBackground: false, // 背景开关
       backgroundColor: "", // 背景颜色
       backgroundIndex: 0, // 背景下标
+      // 新增默认图标
+      defaultIcon:""
     },
     edit: {},
     iconSelect: false, // 图标多选情况

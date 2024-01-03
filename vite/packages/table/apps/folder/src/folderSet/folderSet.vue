@@ -8,7 +8,15 @@
       :footer="0"
       boxClass="px-4 pt-4"
     >
-      <xt-option-from :options="nameOptions" :data="data"> </xt-option-from>
+      <xt-option-from :options="nameOptions" :data="data">
+        <template #name>
+          <xt-option-icon
+            class="mb-3"
+            v-model:icon="data.icon"
+            v-model:input="data.name"
+          />
+        </template>
+      </xt-option-from>
       <xt-option-from :options="filesOptions" :data="data" style="width: 542px">
         <template #model>
           <xt-option-info title="分组模式" :info="modelInfo" />
@@ -42,9 +50,9 @@ const { data } = toRefs(props);
  */
 const modelInfo = computed(() => {
   if (props.data.model === "observe") {
-    return "“文件夹观察”支持监控文件夹的变化，当有新文件加入时，自动整理到分组。";
+    return "“文件夹观察”支持监控文件夹的变化，当有新文件加入时，自动整理到分组，该模式下不能将分组内图标拖动到桌面或其他位置";
   } else if (props.data.model === "arrange") {
-    return "桌面整理支持帮你自动整理Windows桌面。";
+    return "桌面整理支持帮你自动整理Windows桌面。该模式下不能将分组内图标拖动到桌面或其他位置。";
   } else {
     return "自定义模式支持自由选择图标进行分组管理。";
   }

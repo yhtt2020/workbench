@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 52px; height: 52px;" v-if="!item.isBg"
+    <div style="width: 52px; height: 52px;" v-if="!item.isBg" 
         :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
         class="relative flex items-center justify-center ">
         <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"

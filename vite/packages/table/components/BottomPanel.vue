@@ -1,10 +1,14 @@
 <template>
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
-  <!-- xt-main-bottom-bar 定位类不可删 -->
-    <div @click.stop class="xt-main-bottom-bar flex flex-row items-center justify-center w-full mb-3 bottom-panel " id="bottom-bar"
-      style="text-align: center" @contextmenu="showMenu" v-show="navigationToggle[2]"
-      :style="{ transform: `scale(${(this.navAttribute.navSize / 100)})` }">
+    <!-- xt-main-bottom-bar 定位类不可删 -->
+    <div style="position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);z-index: 500 !important;" class="rounded-xl pointer " >
+      <div class="w-[200px] h-[100px]" style="display: none;"></div>
+      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{disabled: true,}"/>
+    </div>
+    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
+      id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
+      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
@@ -12,18 +16,25 @@
         margin-top: 0;
         background: var(--primary-bg);
         color: var(--primary-text);
-        /* border-radius: 18px; */
+        border-radius: 18px;
         /* width: 160px; */
-        height: 80px;
         border: 1px solid var(--divider);
-      " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
-        <MyAvatar :chat="true" :level="false"></MyAvatar>
-        <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
-        <div v-show="settings.enableChat" class=" pointer">
-          <ChatButton></ChatButton>
+        height: 80px;
+        /* padding-left: 16px !important; */
+        /* padding-right: 16px !important; */
+        display: flex;
+        justify-content: center;
+      "
+        :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
+        <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
+          <MyAvatar :chat="true" :level="false"></MyAvatar>
+          <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
+          <div v-show="settings.enableChat" class="pl-4 pointer">
+            <ChatButton></ChatButton>
+          </div>
         </div>
-      </div>
 
+      </div>
 
       <!-- 快速搜索 底部栏区域 -->
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
@@ -65,8 +76,10 @@
                         class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                        @click.stop="newOpenApp(item.type, item.value)">
-                        <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"></Team>
+                        @click.stop="newOpenApp(item.type, item.value, item)">
+                        <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'">
+                        </Team>
+                        <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" @click="openFolder(item)"></FolderVue>
                         <template v-else>
                           <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
@@ -164,7 +177,8 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
+import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { Notifications } from '../js/common/sessionNotice'
@@ -174,6 +188,9 @@ import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
 import _ from 'lodash-es'
 import Avatar from './desk/navigationBar/components/Avatar.vue'
+import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
+import Folder from '../apps/folder'
+import { defaultFolderData } from '../apps/folder/src/components/options'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -198,7 +215,9 @@ export default {
     EditNewNavigation,
     xtMixMenu,
     EditIcon,
-    Avatar
+    Avatar,
+    FolderVue,
+    Folder
   },
   data() {
     return {
@@ -338,8 +357,14 @@ export default {
       currentItem: null,
       delItemIcon: false,
       notifications: new Notifications(),
-      tooltipVisible: true,
-      isDelete: true
+      isDelete: true,
+      // 当图标变为不可替换时
+      isBorder: false,
+      targetPosition: { x: 0, y: 0 },
+      defaultPosition: { x: 0, y: 0 },
+      defaultFolderData,
+      folderVisible:false,
+      folderList:[]
     }
   },
   props: {
@@ -416,42 +441,8 @@ export default {
         }
       })
     })
-    this.footNavigationList = this.footNavigationList.map((item) => {
-      // console.log(item, 'item');
-      switch (item.type) {
-        case 'systemApp':
-          return { ...item };
-        case 'coolApp':
-          return {
-            ...item,
-            mode: 'app',
-            value: item.data || item.value
-          };
-        case 'lightApp':
-          return {
-            ...item,
-            mode: 'link',
-            value: item.package || item.value
-          };
-        case 'tableApp':
-          return {
-            ...item,
-            mode: 'app',
-            value: item.path || item.value
-          };
-        default:
-          return {
-            ...item,
-            mode: 'link',
-            type: 'default',
-            value: item.url || item.value
-          };
-      }
-    }).map((item) => ({
-      ...item,
-      bg: '',
-      isBg: false
-    }));
+    // 图标整体替换格式方法
+    this.footNavigationList = this.replaceType(this.footNavigationList)
 
 
     // console.log(this.footNavigationList, 'foot');
@@ -478,7 +469,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -530,53 +521,57 @@ export default {
       // this.mainMenus[3].children=arr
       return this.mainMenus
     },
+    customData(){
+      return {
+        ...defaultFolderData,
+        list:this.folderList,
+        size:'4x4'
+      }
+    }
   },
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        if (this.footNavigationList.length > this.copyFootNav.length) {
-          const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-          this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
-        } else if (this.footNavigationList.length < this.copyFootNav.length) {
-          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          // console.log(target, 'target[0]')
-          target.forEach(element => {
-            const index = this.copyFootNav.findIndex(item => {
-              // 找到被删除元素在备份数据中的索引
-              if (element.type === 'coolApp') {
-                return item.value.url === element.value.url;
-              }
-              return item.value === element.value;
-            });
-            if (index !== -1) {
-              this.copyFootNav.splice(index, 1);
-            }
-          })
-        }
-        else {
-          const rearrangedCopyFootNav = [];
-          // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-          this.footNavigationList.forEach((item) => {
-            // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-            const correspondingElement = this.copyFootNav.find((copyItem) => {
-              if (item.type === 'coolApp') {
-                return copyItem.value.url === item.value.url;
-              }
-              return copyItem.value === item.value;
-            });
+        // if (this.footNavigationList.length > this.copyFootNav.length) {
+        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+        //   console.log(target, 'length > copyFootNav')
+        //   this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
+        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
+        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+        //   console.log(target,this.copyFootNav, 'length < copyFootNav')
+        //   target.forEach(element => {
+        //     const index = this.copyFootNav.findIndex(item => {
+        //       // 找到被删除元素在备份数据中的索引
+        //       return this.judge(item,element);
+        //     });
+        //     console.log(index, 'lost index');
+        //     if (index !== -1) {
+        //       this.copyFootNav.splice(index, 1);
+        //     }
+        //   })
+        // }
+        // else {
+        //   const rearrangedCopyFootNav = [];
+        //   // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
+        //   this.footNavigationList.forEach((item) => {
+        //     // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+        //     const correspondingElement = this.copyFootNav.find((copyItem) => {
+        //       return this.judge(item, copyItem);
+        //     });
 
-            // 如果找到对应元素，则将其放入新数组中
-            if (correspondingElement) {
-              rearrangedCopyFootNav.push(correspondingElement);
-            }
-          });
+        //     // 如果找到对应元素，则将其放入新数组中
+        //     if (correspondingElement) {
+        //       rearrangedCopyFootNav.push(correspondingElement);
+        //     }
+        //   });
+        //   console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
+        //   // 更新 copyFootNav 为重新排列后的数组
+        //   this.copyFootNav = rearrangedCopyFootNav;
 
-          // 更新 copyFootNav 为重新排列后的数组
-          this.copyFootNav = rearrangedCopyFootNav;
-
-        }
-        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        // console.log(this.copyFootNav, 'footNav')
+        // }
+        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        console.log(this.copyFootNav, 'copyFootNav')
+        console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -637,7 +632,7 @@ export default {
   methods: {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
-    ...mapActions(appStore, ['toggleFullScreen','settings']),
+    ...mapActions(appStore, ['toggleFullScreen', 'settings']),
     ...mapActions(navStore, [
       'setFootNavigationList',
       'sortFootNavigationList',
@@ -648,13 +643,24 @@ export default {
     updateNavList(navList, copyList) {
       const filteredNavList = navList.filter((item) => {
         return !copyList.some((i) => {
-          if (item.type === 'coolApp') {
-            return item.value.url === i.value.url;
-          }
-          return item.value === i.value;
+          return this.judge(item, i)
         });
       });
       return filteredNavList;
+    },
+    judge(ele, item) {
+      if (ele.type === 'coolApp') {
+        return ele.value.url === item.value.url
+      } else if (ele.type === 'folder' && ele.children && item.children && item.children.length > 0 && ele.children.length > 0) {
+        console.log(ele, item, 'folder is none')
+        return ele.children.every((j) => {
+          return item.children.every((k) => {
+            return (j.type === 'coolApp' && j.value.url === k.value.url) || (j.value === k.value)
+          })
+        })
+      } else {
+        return ele.value === item.value
+      }
     },
     editIcon(item) {
       this.quick = true
@@ -669,6 +675,11 @@ export default {
       } else {
         this.teamVisible = !this.teamVisible
       }
+    },
+    openFolder(item){
+      this.folderVisible = !this.folderVisible
+      this.folderList = [...item.children]
+      console.log(this.folderList, 'folderList')
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
@@ -850,60 +861,10 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
-    // clickNavigation(item) {
-    //   console.log(item);
-    //   if (this.editToggle) {
-    //     // this.enableDrag()
-    //     return
-    //   } else {
-    //     this.hideMenu()
-    //     switch (item.type) {
-    //       case 'systemApp':
-    //         if (item.event === 'fullscreen') {
-    //           this.toggleFullScreen()
-    //         } else if (item.event === '/status') {
-    //           if (this.$route.path === '/status') {
-    //             this.$router.go(-1)
-    //           } else {
-    //             this.$router.push({ path: '/status' })
-    //           }
-    //         } else if (item.data) {
-    //           this.$router.push({
-    //             name: 'app',
-    //             params: item.data,
-    //           })
-    //         } else {
-    //           this.$router.push({ name: item.event })
-    //         }
-    //         break
-    //       case 'coolApp':
-    //         this.$router.push({
-    //           name: 'app',
-    //           params: item.data,
-    //         })
-    //         break
-    //       case 'localApp':
-    //         require('electron').shell.openPath(item.path)
-    //         break
-    //       case 'lightApp':
-    //         ipc.send('executeAppByPackage', { package: item.package })
-    //         break
-    //       default:
-    //         require('electron').shell.openPath(item.path ? item.path : item.url)
-    //     }
-    //   }
-
-    // },
-    newOpenApp(type, value) {
-      if (type === 'nav') {
-        switch (value) {
-          case 'task':
-            this.isTaskDrawer = true
-            break;
-          case 'team':
-            console.log(111111)
-            break;
-        }
+    newOpenApp(type, value, item) {
+      if (value === 'home' && item.home) {
+        console.log(item.home, 'item.home');
+        this.jumpDesk = item.home
       }
       startApp(type, value, this.$router)
     },
@@ -1011,20 +972,28 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
+
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
+      let index = null
+      // let isTimer = false
+      let isDrag = false
       this.sortable = Sortable.create(drop, {
         sort: true,
         animation: 150,
         delay: 50,
         delayOnTouchOnly: true,
+        // 设置交换区域的阈值
+        swapThreshold: 0.6,
+        // 反向拖拽
+        invertSwap: true,
+        // 
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
           let delIcon = document.getElementById('delIcon2')
-          that.tooltipVisible = false
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
@@ -1087,33 +1056,59 @@ export default {
           // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
-          that.tooltipVisible = true
+          // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
+          // 
           that.popVisible = false
+          // 删除
           that.isDelete = true
-        },
-        // onMove: function (event) {
-        //   // 获取拖拽元素
-        //   let draggedElement = event.dragged;
-        //   // 获取鼠标位置
-        //   let mouseX = event.originalEvent.clientX;
-        //   let mouseY = event.originalEvent.clientY;
-        //   console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
+          index = null
+          that.isBorder = false
+          isDrag = false
+          // console.log('isDelete', that.footNavigationList);
+          // console.log(that.copyFootNav,'copyFootNav');
 
-        //   if(mouseX >=event.draggedRect.left && mouseX <= event.draggedRect.right && mouseY >= event.draggedRect.top && mouseY <= event.draggedRect.bottom){
-        //     console.log(draggedElement,mouseX,mouseY ,event.draggedRect, 'is changed ? change : no change');
-        //   }
-        //   that.isDelete = false
-        // },
-        // onChoose: function (event) {
-        //   console.log(event, '=====onChoose');
-        // }
-        // onRemove: function (event) {
-        //   console.log(111111111,'=====onRemove');
-        // }
+        },
+        onMove: function (event, originalEvent) {
+          console.log(event, originalEvent, 'move');
+          isDrag = true
+          that.isDelete = false
+          return true
+        },
+        onChoose: function (event) {
+          index = event.oldIndex
+          that.defaultPosition = {
+            x: event.originalEvent.clientX,
+            y: event.originalEvent.clientY,
+          }
+        },
+        // 触发替换中发生的事件
+        onChange(event) {
+        },
+        onUnchoose: function (event) {
+          // console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
+          if (!isDrag) {
+            // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
+            const oIndex = index
+            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
+            console.log(oIndex, nIndex, '==oIndex-nIndex');
+            if (oIndex === nIndex) {
+              return 0
+            }
+
+            that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            // console.log(that.footNavigationList);
+            // that.footNavigationList.splice(oIndex, 1)
+            // const items = that.diffItem(that.footNavigationList, that.copyFootNav)
+            // console.log(items, 'items');
+            that.removeFootNavigationList(oIndex)
+          }
+        }
       })
-      // message.success('开始调整底部栏，点击导航外部即可终止调整。')
     },
+    replaceType,
+    iconFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
@@ -1134,6 +1129,11 @@ export default {
 </script>
 <style></style>
 <style lang="scss" scoped>
+.dragging {
+  // pointer-events: none !important;
+  background-color: red;
+}
+
 .bottom-panel {
   :deep(.icon) {
     fill: var(--primary-text);

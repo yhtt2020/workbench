@@ -62,45 +62,55 @@ module.exports = class SystemHelper {
 
     let apps=[]
     let path = require('path')
-    function getDesktopFiles (_dir) {
+    async function getDesktopFiles (_dir) {
       const fs = require('fs')
       var filepaths = []
       //read directory
       let files = fs.readdirSync(_dir)
-      files.forEach(_file => {
+      for (const _file of files) {
         let _p = _dir + '/' + _file
         //changes slashing for file paths
         let _path = _p.replace(/\\\\/g, '/')
         let name = path.parse(_path).name
-
+        let icon = ''
         try {
           if (_path.endsWith('.lnk')) {
-            _path = require('electron').shell.readShortcutLink(_path).target
+            let urlFile = require('electron').shell.readShortcutLink(_path)
+            _path = urlFile.target
+          } else if (_path.endsWith('.url')) {
+            icon = await SystemHelper.readUrlIconInfo(_path)
           }
         } catch (e) {
           console.warn('存在失败的', e, _file)
           _path = '/icons/winapp.png'
         }
+
         filepaths.push({
           name: name,
           path: _path,
-          ext: path.parse(_path).ext
+          ext: path.parse(_path).ext,
+          icon: icon
         })
 
         //console.log(_file);
 
-      })
+      }
       return filepaths
 
     }
 
-    let filepaths = getDesktopFiles(app.getPath('desktop'))
+    let filepaths =await getDesktopFiles(app.getPath('desktop'))
 
     for (let file of filepaths) {
       try {
         let icon=''
         if(withIcon){
-         icon = await SystemHelper.extractFileIcon(file.path)
+          if(!file.icon){
+            icon = await SystemHelper.extractFileIcon(file.path)
+          }else{
+            icon=file.icon
+          }
+
           apps.push({
             name: file.name,
             ext: file.ext,
@@ -122,7 +132,31 @@ module.exports = class SystemHelper {
     }
     return apps
   }
+
+  /**
+   * 读取Url文件的图标信息
+   * @param filePath
+   * @returns {Promise<string>}
+   */
+  static async readUrlIconInfo(filePath){
+    const fs = require('fs');
+
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+    const urlPattern = /(IconFile=)(.*)/;
+    const urlMatch = fileContent.match(urlPattern);
+
+    if (urlMatch && urlMatch.length >= 3) {
+      const url = urlMatch[2];
+      return url
+    } else {
+      return ''
+    }
+  }
   static async extractFileIcon (uri) {
+    if(uri.endsWith('.url')){
+     return await this.readUrlIconInfo(uri)
+    }
     let savePath = path.join(app.getPath('userData'), 'icons')
     fs.ensureDirSync(savePath)
     let hash = SystemHelper.sha(uri)
