@@ -69,6 +69,7 @@
    </div>
 
    <input type="file" multiple="multiple" style="display: none;" class="imgRef" @change="getMessageImg($event)">
+   <input type="file" multiple="multiple" style="display: none;" class="attachmentRef" @change="getAttachmentFile($event)">
  </div>
 
 
@@ -174,15 +175,16 @@ const getMessageImg = async(evt) =>{
 
 // 上传附件
 const uploadAttachment = async() =>{
-  // let openPath = await tsbApi.dialog.showOpenDialog({
-  //   title:'选择导入的代码',
-  //   filters:[
-  //     {name: '全部', extensions: ['*']}
-  //   ],
-  //   properties: ['multiSelections']
-  // })
-  // console.log('附件上传',openPath);
+  document.querySelector('.attachmentRef').click();
 } 
+const getAttachmentFile = async(evt) =>{
+  const fileList = evt.target.files;
+  const newArr = [];
+  for(const item of fileList){
+    newArr.push({href:await fileUpload(item),title:item.name}) 
+  }
+  msgSetting.value.attachments = newArr;
+}
 
 
 // 链接上传

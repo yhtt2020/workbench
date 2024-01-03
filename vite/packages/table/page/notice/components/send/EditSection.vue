@@ -20,7 +20,8 @@
    </div>
 
    <div class="flex flex-col mb-4" v-if="msgSetting.attachments.length !== 0">
-    <span class="xt-font xt-text-2 font-400 font-14">附件</span>
+    <span class="xt-font xt-text-2 font-400 font-14 mb-4">附件</span>
+    <AttachmentDetail :list="msgSetting.attachments"/>
    </div>
 
    <div class="flex flex-col mb-4" v-if="msgSetting.urls.length !== 0">
@@ -45,6 +46,7 @@ import { noticeStore } from '../../store/noticeStore';
 import MsgMarkdown from "./MsgMarkdown.vue";
 import ButtonLinkDetail from "../detail/ButtonLinkDetail.vue";
 import BiliLinkDetail from "../detail/BiliLinkDetail.vue";
+import AttachmentDetail from "../detail/AttachmentDetail.vue";
 
 const notice = noticeStore();
 const { msgSetting } = storeToRefs(notice);
