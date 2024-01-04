@@ -7,7 +7,7 @@
 
    <div class="flex flex-col my-4" v-if="imgCover.cover.length !== 0" >
     <div class="flex items-center justify-between mb-4" style="width: 350px;">
-     <span class="xt-font xt-text-2 font-400 font-14">封面</span>
+     <span class="xt-font xt-text-2 font-400 font-14">封面（推荐图片比例 16:9）</span>
      <xt-button style="width: auto !important;" h="0" type="theme" @click="delCover">
        <div class="flex items-center justify-center link font-400 font-14 xt-font">删除</div>
      </xt-button>
@@ -19,12 +19,12 @@
     </div>
    </div>
 
-   <div class="flex flex-col mb-4" v-if="msgSetting.attachments.length !== 0">
+   <div class="flex flex-col" v-if="msgSetting.attachments.length !== 0">
     <span class="xt-font xt-text-2 font-400 font-14 mb-4">附件</span>
     <AttachmentDetail :list="msgSetting.attachments"/>
    </div>
 
-   <div class="flex flex-col mb-4" v-if="msgSetting.urls.length !== 0">
+   <div class="flex flex-col" v-if="msgSetting.urls.length !== 0">
     <span class="xt-font xt-text-2 font-400 font-14 mb-4">按钮链接</span>
     <ButtonLinkDetail :list="msgSetting.urls"/>
    </div>
@@ -74,7 +74,7 @@ defineExpose({ mkRef });
 
 <style lang="scss" scoped>
 :deep(.ant-input){
- color: var(--disable-text) !important;
+ color: var(--primary-text) !important;
  font-size: 1rem;
  &::placeholder{
   color: var(--disable-text) !important;

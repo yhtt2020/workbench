@@ -17,7 +17,7 @@ export const noticeStore = defineStore('notice', {
       videos:[],// b站视频链接
       attachments:[], //附件
       targetType: { name:'全员',value:1000 },
-
+      targetList:[], // 选中的用户
     },
   }),
 
@@ -169,6 +169,7 @@ export const noticeStore = defineStore('notice', {
         noticeType:this.msgSetting.noticeType,
         attachments:JSON.stringify(this.msgSetting.attachments),
         targetType:this.msgSetting.targetType,
+        targetList:JSON.stringify(this.msgSetting.targetList)
       });
       
     }

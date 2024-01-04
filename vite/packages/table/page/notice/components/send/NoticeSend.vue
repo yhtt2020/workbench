@@ -75,7 +75,8 @@
 
  <AddButtonLink ref="buttonLink"/>
  <AddBiliLink ref="biliLink"/>
-
+ <CommunitySelect ref="communityRef"/>
+ <AppointUserSelect ref="appointRef"/>
 
 </template>
 
@@ -92,7 +93,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import EditSection from './EditSection.vue';
 import AddButtonLink from '../add/AddButtonLink.vue';
 import AddBiliLink from '../add/AddBiliLink.vue';
-
+import CommunitySelect from '../userselect/CommunitySelect.vue';
+import AppointUserSelect from '../userselect/AppointUserSelect.vue';
 
 const emits = defineEmits(['close']);
 
@@ -133,6 +135,8 @@ const isLoading = ref(false);
 const msgEditor = ref(null);
 const buttonLink = ref(null);
 const biliLink = ref(null);
+const communityRef = ref(null);
+const appointRef = ref(null);
 
 
 /**事件处理方法**/
@@ -212,14 +216,13 @@ const uploadBiliLink = () =>{
 
 // 通过watch来判断是否为社群和指定用户
 watch(()=>msgSetting.value.targetType,(newVal)=>{
-  console.log('测试',newVal);
   if(newVal === 1002){
-    
+    communityRef.value.openCommunitySelect();
   }
   else if(newVal === 1003) {
-    
+    appointRef.value.openAppointModal()
   }
-},{immediate:true,deep:true})
+},)
 </script>
  
 <style lang="scss" scoped>
