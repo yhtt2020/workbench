@@ -14,8 +14,7 @@
       :customIndex="customIndex" 
       :customData="customData" 
       :defaultData="defaultFolderData" 
-      :header="header" 
-      :options="options"
+      :header="header"
       :menuList="menuList" 
       v-model:size="customData.size" 
       :sizeList="navBar.sizeOption ? sizeList : []" 
@@ -170,12 +169,12 @@ provide("data", customData);
 /**
  * 导航栏文件夹背景颜色
  */
-const options = computed(() => {
-  if(!navBar.value.bg){
-    return {bg:'var(--primary-bg)',}
-  }
-  return {bg:''}
-})
+// const options = computed(() => {
+//   if(!navBar.value.bg){
+//     return {bg:'var(--primary-bg)',}
+//   }
+//   return {bg:''}
+// })
 /**
  * 菜单配置
  */

@@ -6,7 +6,7 @@
     <div style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);z-index: 500 !important;"
       class="rounded-xl pointer ">
       <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false,bg:false}"/>
+      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
