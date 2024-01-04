@@ -1,15 +1,15 @@
 <template>
-  <div class="h-full w-full vditor-markdown box " style="">
+  <div class="h-full w-full vditor-markdown box mb-3" style="border: 1px solid #434343;border-radius: 8px;">
     <div ref="vditor" class="h-full vditor-markdown"></div>
   </div>
 </template>
 
 <script>
-import Vditor from 'vditor'
-import 'vditor/dist/index.css'
+import Vditor from 'vditor';
+import 'vditor/dist/index.css';
+import { mapActions,mapWritableState } from 'pinia';
+import { noticeStore } from '../../store/noticeStore';
 import { validateFile, fileUpload,} from '../../../../components/card/hooks/imageProcessing'; 
-
-
 
 export default {
   components: {},
@@ -19,9 +19,14 @@ export default {
 
     }
   },
+
+  computed:{
+    ...mapWritableState(noticeStore,['msgSetting']),
+  },
+
   mounted () {
     this.contentEditor = new Vditor(this.$refs.vditor, {
-      height: '80%',
+      height: '100%',
       mode: 'ir',
       theme: 'dark',
       placeholder: "正文",
@@ -34,12 +39,12 @@ export default {
         enable: false,
       },
       toolbar: [
-        {
-            hotkey: "⌘E",
-            icon: '<svg><use xlink:href="#vditor-icon-emoji"></use></svg>',
-            name: "emoji",
-            tipPosition: "s",
-        },
+        // {
+        //     hotkey: "⌘E",
+        //     icon: '<svg><use xlink:href="#vditor-icon-emoji"></use></svg>',
+        //     name: "emoji",
+        //     tipPosition: "s",
+        // },
         {
             hotkey: "⌘H",
             icon:
@@ -156,39 +161,41 @@ export default {
         },
       ],
       after: () => {
-        // if (this.selNote >= 0 && this.noteList.length) {
-        //   this.contentEditor.setValue(this.noteList[this.selNote]?.customData.text)
-        // }
+        this.$nextTick(()=>{
+          this.contentEditor.setValue(this.msgSetting.content);
+        })
       },
       blur: (value) => {
-      //  this.save(value)
+        this.$nextTick(()=>{
+          this.msgSetting.content = value
+        })
       },
       upload: {
-        // multiple: true,
-        // handler: async (files) => {
-        //   let urls = []
-        //   for (const file of files) {
-        //     let validate = validateFile(file, 2)
-        //     if (validate !== true) return message.error(validate)
-        //     let url = await fileUpload(file)
-        //     if (!url) return message.error('上传失败')
-        //     urls.push(`![image.png](${url})`)
-        //   }
-        //   this.contentEditor.insertValue(urls)
-        // },
+        multiple: true,
+        handler: async (files) => {
+          let urls = []
+          for (const file of files) {
+            let validate = validateFile(file, 2)
+            if (validate !== true) return message.error(validate)
+            let url = await fileUpload(file)
+            if (!url) return message.error('上传失败')
+            urls.push(`![image.png](${url})`)
+          }
+          this.contentEditor.insertValue(urls)
+        },
       },
     })
   },
   methods: {
     setEditorValue (value) {
       // 子组件中的事件逻辑
-      // this.contentEditor.setValue(value)
+      this.contentEditor.setValue(value);
     },
     getContent () {
-      // return this.contentEditor.getHTML()
+      return this.contentEditor.getHTML()
     },
     getMarkdown () {
-      // return this.contentEditor.getValue()
+      return this.contentEditor.getValue()
     },
   },
 }
@@ -196,13 +203,21 @@ export default {
 
 <style lang="scss" scoped >
 :deep(.vditor-reset){
+  color: var(--secondary-text) !important;
   padding: 10px 12px !important;
   background: var(--secondary-transp-bg) !important;
+  &::placeholder{
+    color: var(--secondary-text) !important;
+  }
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
 }
 
 :deep(.vditor-toolbar){
   background: var(--secondary-bg) !important;
   border: none !important;
+  border-top-right-radius: 8px !important;
+  border-top-left-radius: 8px !important;
 }
 
 </style>
