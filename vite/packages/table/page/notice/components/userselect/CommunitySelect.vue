@@ -87,7 +87,13 @@ const isSelected = (index) =>{
 
 // 保存选中数据
 const save  = () =>{
-  const mapSelect = selectList.value.map((item)=>{ return item.communityInfo.no });
+ const mapSelect = selectList.value.map((item)=>{ 
+  return {
+    no:item.communityInfo.no,
+    name:item.communityInfo.no,
+    avatar:item.communityInfo.icon
+  } 
+ });
  msgSetting.value.targetList = mapSelect;
  communityVisible.value = false;
  selectList.value = []

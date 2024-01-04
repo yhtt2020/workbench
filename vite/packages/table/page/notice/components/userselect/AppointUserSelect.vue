@@ -91,7 +91,7 @@ const removeSelectUser = (index) =>{
 
 // 保存选中数据
 const save  = () =>{
- const filterUser = selectUser.value.map((item)=>{ return item.userID });
+ const filterUser = selectUser.value.map((item)=>{ return { userID:item.userID, nick:item.profile.nick, avatar:item.profile.avatar,} });
  msgSetting.value.targetList = filterUser;
  appointVisible.value = false;
  selectUser.value = []

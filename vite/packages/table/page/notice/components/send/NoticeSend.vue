@@ -99,6 +99,7 @@ import { noticeStore } from '../../store/noticeStore';
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing';
 import { teamStore } from '../../../../store/team';
 import dayjs, { Dayjs } from 'dayjs';
+import { message } from 'ant-design-vue'
 
 
 // 导入消息发送编辑模块
@@ -192,29 +193,18 @@ const uploadImage = async() =>{
   document.querySelector('.imgRef').click();
 }
 const getMessageImg = async(evt) =>{
-  // 多张图片
-  if(evt.target.files.length === 1){
-    const file = evt.target.files[0];
-    const res = await fileUpload(file);
-    msgSetting.value.cover = [{cover:res}]
+  const fileList = evt.target.files;
+  if(msgSetting.value.cover.length === 3){
+    message.info('只能上传三张图片')
+    evt.preventDefault();
   }
-  else if(evt.target.files.length === 3){
-    const files = evt.target.files;
-    const list = []
-    for(const item of files){
-      const res = await fileUpload(item);
-      list.push({cover:res})
+  else {
+    if(fileList.length <= 3){
+      for(const file of fileList){
+       const res = await fileUpload(file);
+       msgSetting.value.cover.push({cover:res})
+      }
     }
-    msgSetting.value.cover = list
-  }
-  else if(evt.target.files.length === 2){
-    const files = evt.target.files;
-    const list = []
-    for(const item of files){
-      const res = await fileUpload(item);
-      list.push({cover:res})
-    }
-    msgSetting.value.cover = list
   }
 }
 
@@ -225,11 +215,9 @@ const uploadAttachment = async() =>{
 } 
 const getAttachmentFile = async(evt) =>{
   const fileList = evt.target.files;
-  const newArr = [];
   for(const item of fileList){
-    newArr.push({href:await fileUpload(item),title:item.name}) 
+    msgSetting.value.attachments.push({href:await fileUpload(item),title:item.name}) 
   }
-  msgSetting.value.attachments = newArr;
 }
 
 
