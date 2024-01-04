@@ -716,8 +716,6 @@ export default {
     replaceIcon(navigationList) {
       navigationData.systemAppList.forEach((item) => {
         navigationList.forEach((i) => {
-          i.bg = ''
-          i.isBg = false
           if (item.event === i.event) {
             i.type = 'systemApp'
             i.icon = item.icon

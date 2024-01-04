@@ -17,7 +17,7 @@
       :header="header"
       :menuList="menuList"
       v-model:size="customData.size"
-      :sizeList="navBar.sizeOption ? sizeList : []"
+      :sizeList="autoSizeList"
       @leftClick="leftClick"
       @onRefresh="onRefresh">
       <!-- 右侧布局切换 -->
@@ -53,7 +53,7 @@
   </folderSet>
 
   <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
-    <Expand :data="props"></Expand>
+    <Expand :data="props" :auto="false"></Expand>
   </xt-modal>
 </template>
 
@@ -108,15 +108,19 @@ const props = defineProps({
         type: Boolean
       },
       // 设置背景颜色
-      bg:{
+      bg: {
         default: true,
         type: Boolean
       }
     })
+  },
+  // 自动设置大小
+  auto: {
+    default: false
   }
 });
 
-const { customData, customIndex, expand, secondary ,navBar } = toRefs(props);
+const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -168,14 +172,34 @@ provide("index", customIndex);
 provide("data", customData);
 
 /**
- * 导航栏文件夹背景颜色
+ * 通过文件夹中数据的多少来自定义大小
  */
-// const options = computed(() => {
-//   if(!navBar.value.bg){
-//     return {bg:'var(--primary-bg)',}
-//   }
-//   return {bg:''}
-// })
+const autoSizeList = computed(() => {
+  if (auto.value) {
+    // console.log(auto.value, "自动调整")
+    sizeList.value.push({
+      name: autoSize.value,
+      value: autoSize.value
+    })
+    return sizeList.value
+  }
+  // console.log(auto.value, '自动调整大小')
+  return sizeList.value
+})
+
+
+const autoSize = computed(() => {
+  const length = customData.value.list.length
+  if (length <= 6) {
+    return '2x2'
+  } else if (length <= 12 && length > 6) {
+    return '3x3'
+  } else if (length <= 18 && length > 12) {
+    return '4x4'
+  } else {
+    return '6x4'
+  }
+})
 /**
  * 菜单配置
  */
@@ -319,7 +343,7 @@ const onRefresh = () => {
   }, 1000);
 };
 
-onBeforeMount(() => {});
+onBeforeMount(() => { });
 
 onMounted(() => {
   if (customData.value.icon === "") {
