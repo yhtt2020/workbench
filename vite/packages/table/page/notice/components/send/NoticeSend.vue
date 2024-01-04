@@ -12,12 +12,24 @@
       </div>
       <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
      
-      <xt-button w="56" h="32" type="theme" style="border-radius: 8px;" class="mx-3" @click="send">
-        <div class="flex items-center justify-center" v-if="isLoading === false" >
-          <span class="xt-font xt-active-text font-14">发送</span>
+      <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
+        <template #sendTitle>
+          <div class="flex items-center justify-center" v-if="isLoading === false">
+            <span class="xt-font xt-text font-14 font-400 mr-2">发送</span>
+            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"></xt-new-icon>
+          </div> 
+          <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
+        </template>
+
+        <div class="xt-modal rounded-xl p-2 flex flex-col xt-b">
+          <template v-for="item in sendList">
+            <div class="px-3 py-2.5 flex xt-hover rounded-xl">
+              <xt-new-icon :icon="item.newIcon" size="20" class="mr-3"></xt-new-icon>
+              <span class="">{{ item.name }}</span>
+            </div>
+          </template>
         </div>
-        <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
-      </xt-button>
+      </xt-dropdown>
      
       <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeSend">
         <div class="flex items-center justify-center">
@@ -31,7 +43,7 @@
       <EditSection ref="msgEditor"/>
    </div>
 
-   <div class="h-10 flex items-center justify-between w-full">
+   <div class="h-10 flex items-center mt-3 justify-between w-full">
      <div class="flex">
       <a-tooltip placement="top" title="图片">
         <xt-button w="32" h="32" class="xt-bg-t-2 mr-3" style="border-radius: 8px;" @click="uploadImage">
@@ -115,6 +127,25 @@ const targetList = ref([
   { name:'小队', value:1001},
   { name:'社群',value:1002 },
   { name:'指定用户',value:1003 }
+])
+
+const sendList = ref([
+  {
+    newIcon:'fluent:send-32-regular',name:'立即发送',
+    callBack:()=>{
+
+    }, 
+  },
+  {
+    newIcon:'fluent:clock-16-regular',name:'定时发送',
+    callBack:()=>{},
+  },
+  {
+    newIcon:'fluent:compose-16-regular',name:'保存草稿',
+    callBack:()=>{
+     
+    },
+  }
 ])
 
 
@@ -247,5 +278,14 @@ watch(()=>msgSetting.value.targetType,(newVal)=>{
 :deep(.ant-picker.ant-picker-borderless){
   background-color: var(--secondary-transp-bg) !important;
   border-radius: 8px !important;
+}
+
+:deep(.ant-image-mask-info){
+  display: none !important;
+}
+.xt-hover{
+  &:hover{
+    background-color: var(--active-secondary-bg) !important;
+  }
 }
 </style>

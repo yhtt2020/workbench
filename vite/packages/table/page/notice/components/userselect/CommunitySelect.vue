@@ -1,7 +1,7 @@
 <template>
- <xt-modal v-model="communityVisible" title="选择社群">
-  <div style="width: 500px;" class="flex  justify-between">
-   <div style="width: 250px;" class="flex flex-col">
+ <xt-modal v-model="communityVisible" title="选择社群" :boxClass="'px-6 py-4'" >
+  <div style="width: 600px;" class="flex  justify-between">
+   <div style="width: 300px;" class="flex flex-col">
     <span class="xt-text-2 xt-font font-14 font-400 mb-4">我的社群</span>
     <div style="height: 400px;">
      <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
@@ -18,7 +18,7 @@
 
    <a-divider type="vertical" style="margin: 0 16px; height:440px;border-top: 1px solid var(--divider);" />
 
-   <div  style="width: 250px;" class="flex flex-col">
+   <div  style="width: 300px;" class="flex flex-col">
     <span class="xt-text-2 xt-font font-14 font-400 mb-4">已选中（{{ selectList.length }}）</span>
     <div style="height: 370px;">
      <XtScrollbar  :y="true" style="height: 100%;width: 100%;">

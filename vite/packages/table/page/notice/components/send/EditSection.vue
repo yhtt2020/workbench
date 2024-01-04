@@ -1,20 +1,22 @@
 <template>
  <div class="flex w-full h-full">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;" :bordered="true" placeholder="标题"></a-input>
-   <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;" :bordered="true" :rows="4" />
+   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" placeholder="标题"></a-input>
+   <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" :rows="4" />
    <MsgMarkdown ref="mkRef" />
 
    <div class="flex flex-col my-4" v-if="imgCover.cover.length !== 0" >
     <div class="flex items-center justify-between mb-4" style="width: 350px;">
      <span class="xt-font xt-text-2 font-400 font-14">封面（推荐图片比例 16:9）</span>
-     <xt-button style="width: auto !important;" h="0" type="theme" @click="delCover">
+     <!-- <xt-button style="width: auto !important;" h="0" type="theme" @click="delCover">
        <div class="flex items-center justify-center link font-400 font-14 xt-font">删除</div>
-     </xt-button>
+     </xt-button> -->
     </div>
-    <div class="flex ">
+    <div class="flex">
+      <!-- <a-image v-for="img in imgCover.cover" :width="imgCover.width"  :src="img.cover" style="margin-right: 12px;"></a-image> -->
       <div  v-for="img in imgCover.cover" :style="{width:`${imgCover.width}px`,height:`${imgCover.height}px`}" class="mr-2 pointer">
-        <img  :src="img.cover" class="w-full h-full object-cover rounded" alt="">
+        <!-- <img  :src="img.cover" class="w-full h-full object-cover rounded" alt=""> -->
+        <a-image :w="imgCover.width" :src="img.cover"></a-image>
       </div> 
     </div>
    </div>
@@ -61,10 +63,10 @@ const delCover = () =>{
 // 通过计算属性判断图片数据
 const imgCover = computed(()=>{
   if(msgSetting.value.cover.length === 1){
-    return { cover:msgSetting.value.cover,width:350,height:200 };
+    return { cover:msgSetting.value.cover,width:350, };
   }
   else {
-    return { cover:msgSetting.value.cover,width:114,height:72 };
+    return { cover:msgSetting.value.cover,width:114, };
   }
 })
 
@@ -79,5 +81,9 @@ defineExpose({ mkRef });
  &::placeholder{
   color: var(--disable-text) !important;
  }
+}
+
+:deep(.ant-image-img){
+  border-radius: 8px !important;
 }
 </style>

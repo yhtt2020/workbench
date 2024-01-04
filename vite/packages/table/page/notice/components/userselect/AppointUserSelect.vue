@@ -1,8 +1,8 @@
 <template>
- <xt-modal v-model="appointVisible" title="选择用户">
+ <xt-modal v-model="appointVisible" title="选择用户" :boxClass="'px-6 py-4'" >
   <div style="width: 600px;" class="flex justify-between">
    <div style="width: 300px;" class="flex flex-col">
-    <span class="xt-font xt-text-2 font-14 font-400 mb-4">指定用户</span>
+    <span class="xt-font xt-text-2 font-14 font-400 mb-4">我的好友</span>
     <div style="height: 400px;">
      <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
       <template v-for="(item,index) in userList">
