@@ -384,7 +384,6 @@ export default {
   mounted() {
     // this.popVisible=true
     this.copyNav()
-    // console.log(this.copyFootNav, 'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -570,8 +569,7 @@ export default {
 
         // }
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'copyFootNav')
-        console.log(this.footNavigationList, 'footNav')
+
       },
       immediate: true,
       deep: true,
@@ -988,7 +986,7 @@ export default {
         swapThreshold: 0.6,
         // 反向拖拽
         invertSwap: true,
-        // 
+        //
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -1058,7 +1056,7 @@ export default {
         onEnd: function (event) {
           // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
-          // 
+          //
           that.popVisible = false
           // 删除
           that.isDelete = true

@@ -250,7 +250,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard, file } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./set/store";
+import { useDeskStore } from "./store";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -259,11 +259,6 @@ export default {
   props: {
     freeLayout: {
       default: true,
-    },
-    deskGroupMenu: {
-      default: () => {
-        return [];
-      },
     },
     globalSettings: {
       type: Object,
@@ -338,9 +333,11 @@ export default {
     },
   },
   watch: {
-    dropdownMenu: {
+    deskMenus: {
       handler(newVal) {
-        this.menus = newVal;
+        this.deskMenus.forEach((item) => {
+          this.addMenu(item);
+        });
       },
       deep: true,
       immediate: true,
@@ -371,6 +368,33 @@ export default {
         // }
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
+    },
+    // {
+
+    // 监听ID变化
+    "currentDesk.id": {
+      handler(newVal) {
+        let obj = {
+          id: 20,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
+          lock: true,
+          children: [
+            {
+              id: 4,
+              parentId: 3,
+              newIcon: "fluent:circle-off-16-regular",
+              name: "清空桌面",
+              fn: () => {
+                this.clear(this.currentDesk);
+              },
+            },
+          ],
+        };
+        this.addMenu(obj);
+      },
+      deep: true,
+      immediate: true,
     },
     "currentDesk.settings": {
       handler(newVal) {
@@ -410,37 +434,6 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
-    deskGroupMenus() {
-      if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
-        // let arr = _.cloneDeep(this.deskGroupMenu[1].children);
-        let arr = [...this.deskGroupMenu[1].children];
-        let exists = arr.findIndex((item) => item.id === 4);
-        if (exists === -1) {
-          arr.push({
-            id: 4,
-            newIcon: "fluent:circle-off-16-regular",
-            name: "清空桌面",
-            fn: () => {
-              this.clear(this.currentDesk);
-            },
-          });
-        } else {
-          arr.splice(exists, 1, {
-            id: 4,
-            newIcon: "fluent:circle-off-16-regular",
-            name: "清空桌面",
-            fn: () => {
-              this.clear(this.currentDesk);
-            },
-          });
-        }
-        arr.sort((a, b) => a.id - b.id);
-        let deskGroupMenu = [...this.deskGroupMenu];
-        deskGroupMenu[1].children = arr;
-        return deskGroupMenu;
-      }
-      return [];
-    },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -481,10 +474,17 @@ export default {
           fn: this.newAddCard,
         },
         {
-          id: 4,
-          newIcon: "fluent:app-folder-16-regular",
-          name: "添加文件夹",
-          fn:this.addFolder,
+          id: 3,
+          newIcon: "fluent:apps-add-in-20-filled",
+          name: "添加更多",
+          children: [
+            {
+              id: 2,
+              newIcon: "fluent:app-folder-16-regular",
+              name: "添加文件夹",
+              fn: this.addFolder,
+            },
+          ],
         },
         { id: 5, divider: true },
         {
@@ -494,14 +494,14 @@ export default {
             : "fluent:window-new-16-regular",
           name: this.editing ? "停止调整" : "调整桌面布局",
           fn: this.toggleEditing,
+
         },
         {
           id: 7,
-          newIcon: "fluent:image-multiple-16-regular",
-          name: "更换壁纸",
-          fn: () => {
-            this.$refs.galleryRef.openGalleryModal();
-          },
+          newIcon: "fluent:resize-large-16-regular",
+          name: "复原桌面位置",
+          disabled: this.isFreeLayout ? false : true,
+          fn: this.freeLayoutScrollbarRedirect,
         },
         {
           id: 8,
@@ -513,7 +513,16 @@ export default {
           },
         },
         {
-          id: 8,
+          id: 9,
+          newIcon: "fluent:image-multiple-16-regular",
+          name: "更换壁纸",
+          fn: () => {
+            this.$refs.galleryRef.openGalleryModal();
+          },
+        },
+
+        {
+          id: 10,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
@@ -530,20 +539,43 @@ export default {
               }
             }
           },
+          disabled: true,
         },
-        { id: 9, divider: true },
         {
-          id: 9,
+          id: 11,
+          disabled: true,
+          name: "添加到导航栏",
+          newIcon: "fluent:tablet-16-regular",
+          lock: true,
+          children: [
+            {
+              id: 1,
+              newIcon: "fluent:tablet-16-regular",
+              name: "底部导航",
+              fn: () => {},
+            },
+            {
+              id: 2,
+              newIcon: "fluent:panel-left-contract-16-regular",
+              name: "右侧导航",
+              fn: () => {},
+            },
+            {
+              id: 3,
+              newIcon: "fluent:panel-right-contract-16-regular",
+              name: "左侧导航",
+              fn: () => {},
+            },
+          ],
+        },
+        {
+          id: 12,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,
         },
+        { id: 13, divider: true },
       ];
-    },
-    dropdownMenu() {
-      let arr = [...this.deskGroupMenus, ...this.deskMenus, ...this.navMenu];
-      arr.sort((a, b) => a.id - b.id);
-      return arr;
     },
     usingSettings() {
       if (this.settings.enableZoom) {
@@ -590,7 +622,6 @@ export default {
   },
   mounted() {
     this.$bus.on("startAdjust", () => {
-      console.log("2222 :>> ", 2222);
       this.toggleEditing();
     });
 
@@ -614,6 +645,7 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
+    ...mapActions(useDeskStore, ["addMenu"]),
     addFolder() {
       registerFolder(this.currentDesk);
     },
