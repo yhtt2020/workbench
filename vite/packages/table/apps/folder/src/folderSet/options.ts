@@ -6,9 +6,13 @@ export const nameOptions = [
     icon: "fluent:arrow-clockwise-16-regular",
     iconCb: "titleIconCb",
   },
+  // {
+  //   type: "input",
+  //   inputKey: "name",
+  // },
   {
-    type: "input",
-    inputKey: "name",
+    type: "slot",
+    slot: "name",
   },
 ];
 export const filesOptions = [

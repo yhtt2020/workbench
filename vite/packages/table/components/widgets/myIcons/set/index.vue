@@ -6,17 +6,22 @@
     :index="index"
     :maskIndex="maskIndex"
   >
+    <template #header-right>
+      <xt-button @click="save" w="60" h="32" radius="8" type="theme"
+        >保存</xt-button
+      >
+    </template>
     <template #header-center>
       <xt-tab
         v-model="currentTab"
         :list="TabList"
-        style="width: 248px"
+        style="width: 168px"
         class="xt-bg-t-2 p-1"
         :boxStyle="{ 'border-radius': '10px' }"
-        :edit.valueStyle="{ 'border-radius': '6px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
     /></template>
     <div style="height: 50vh">
-      <div class="flex justify-center mb-3">
+      <div class="flex justify-center mb-3" style="zoom: 0.8">
         <Icon v-bind="edit" :edit="true"></Icon>
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
@@ -28,7 +33,18 @@
         <div></div>
       </div>
       <div v-else style="width: 452px">
-        <!-- <xt-option-icon />1 -->
+        <div class="p-4 xt-bg-2 rounded-xl mb-4">
+          <xt-option-info
+            title="图标和名称"
+            info="支持自定图标和名称。"
+            icon="fluent:arrow-clockwise-16-regular"
+            @onIconClick="refreshIcon"
+          />
+          <xt-option-icon
+            v-model:icon="edit.src"
+            v-model:input="edit.titleValue"
+          />
+        </div>
         <xt-option-from :options="appearanceNameOptions" :data="edit" />
         <xt-option-from :options="appearanceOptions" :data="edit" />
         <xt-option-from :options="appearanceColorOptions" :data="edit" />
@@ -59,7 +75,7 @@ const { proxy } = getCurrentInstance();
 
 const iconStore = myIcons();
 const { edit } = storeToRefs(iconStore);
-const emits = defineEmits(["close", "update:modelValue"]);
+const emits = defineEmits(["close", "update:modelValue", "save"]);
 const props = defineProps({
   modelValue: {},
   index: {
@@ -74,6 +90,15 @@ const res = arr.includes(edit.value.open.type);
 if (res) edit.value["type"] = edit.value.open.type;
 edit.value["mode"] = res ? "link" : "app";
 edit.value["value"] = edit.value.open.value;
+
+console.log(
+  '!edit.value["defaultIcon"] :>> ',
+  edit.value["defaultIcon"].length
+);
+if (!edit.value["defaultIcon"] && edit.value["defaultIcon"].length <= 0) {
+  console.log("123 :>> ", 222222222123);
+  edit.value["defaultIcon"] = edit.value.src;
+}
 console.log(edit.value["mode"]);
 
 onMounted(() => {});
@@ -142,28 +167,22 @@ watch(
     });
   }
 ),
-  // watch(
-  //   () => props.data.mode,
-  //   (newVal, oldVal) => {
-  //     proxy.$xtConfirm(
-  //       "是否切换模式",
-  //       "切换模式将清空数据，是否继续？",
-  //       {
-  //         okText: "切换",
-
-  //         ok: () => {
-  //           data.value.list = [];
-  //         },
-  //         no: () => {
-  //           data.value.model = oldVal;
-  //         },
-  //         type: "warning",
-  //       }
-  //     );
-  //     return;
-  //   }
-  // );
   onBeforeUnmount(() => {});
+
+/**
+ * 恢复默认图标
+ */
+const refreshIcon = () => {
+  if (edit.value["defaultIcon"]) {
+    edit.value.src = edit.value["defaultIcon"];
+  }
+};
+/**
+ * 保存数据
+ */
+const save = () => {
+  emits("save", edit.value);
+};
 </script>
 
 <style lang="scss" scoped></style>
