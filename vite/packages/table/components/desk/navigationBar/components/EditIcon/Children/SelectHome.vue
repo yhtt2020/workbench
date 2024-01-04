@@ -6,7 +6,7 @@
         <div class="mt-2 mb-2 text-sm xt-text-2">
             当你有多个桌面时，你可以选择点击打开的默认桌面作为主页
         </div>
-        <xt-select v-model="defaultDesk" :list="deskList"></xt-select>
+        <xt-select v-model="defaultDesk" :list="deskList" :zIndex="1250"></xt-select>
     </div>
 </template>
 

@@ -200,21 +200,19 @@ onMounted(() => {
   // useElementSize(modal.value, (size: any) => {
   //   // modelHeight.value = size;
   // });
+  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
   return;
   // 处理定位问题
   const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
   const topUtilBar = document.getElementsByClassName("xt-main-top-util-bar")[0];
-  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
 
   if (topBar) topBarHeight = topBar.clientHeight;
 
   if (topUtilBar) topUtilBarHeight = topUtilBar.clientHeight;
-
-  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
 });
 const top = ref(-999);
 const resizeModel = (size) => {
-  // console.log("size :>> ", size);
   modelHeight.value = size.height;
 };
 const close = () => {

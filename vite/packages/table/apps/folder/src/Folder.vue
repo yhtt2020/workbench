@@ -17,31 +17,28 @@
       :header="header"
       :menuList="menuList"
       v-model:size="customData.size"
-      :sizeList="sizeList"
+      :sizeList="navBar.sizeOption ? sizeList : []"
       @leftClick="leftClick"
-      @onRefresh="onRefresh"
-    >
+      @onRefresh="onRefresh">
       <!-- 右侧布局切换 -->
-      <Resize :disabled="expand.disabled" v-model:size="customData.size">
+      <Resize
+        :disabled="expand.disabled"
+        v-model:size="customData.size"
+        :resize="navBar.resize">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
           <Null :size="customData.size" @createFile="createFile"></Null>
         </template>
-        <vue-custom-scrollbar
-          v-else
-          :settings="{
-            suppressScrollY: false,
-          }"
-          class="w-full relative h-full"
-        >
+        <vue-custom-scrollbar v-else :settings="{
+          suppressScrollY: false,
+        }" class="relative w-full h-full">
           <File
             :list="customData.list"
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
             @updateList="updateList"
-            @updateSort="updateSort"
-          />
+            @updateSort="updateSort" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
@@ -52,8 +49,7 @@
     :data="customData"
     @close="setVisible = false"
     @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp"
-  >
+    @updateWindowApp="updateWindowApp">
   </folderSet>
 
   <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
@@ -98,8 +94,29 @@ const props = defineProps({
     },
   },
   secondary: {},
+  navBar: {
+    type: Object,
+    default: () => ({
+      // 右下角图标显示
+      resize: {
+        default: true,
+        type: Boolean
+      },
+      // 设置中尺寸大小选择
+      sizeOption: {
+        default: true,
+        type: Boolean
+      },
+      // 设置背景颜色
+      bg:{
+        default: true,
+        type: Boolean
+      }
+    })
+  }
 });
-const { customData, customIndex, expand, secondary } = toRefs(props);
+
+const { customData, customIndex, expand, secondary ,navBar } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -150,6 +167,15 @@ const sizeList = ref([
 provide("index", customIndex);
 provide("data", customData);
 
+/**
+ * 导航栏文件夹背景颜色
+ */
+// const options = computed(() => {
+//   if(!navBar.value.bg){
+//     return {bg:'var(--primary-bg)',}
+//   }
+//   return {bg:''}
+// })
 /**
  * 菜单配置
  */

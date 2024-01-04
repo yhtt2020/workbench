@@ -8,7 +8,6 @@
       cursor: dragStyle,
     }"
   >
-    <xt-button> {{ freeLayoutEnv.scrollTop }}123</xt-button>
     <slot> </slot>
   </div>
 </template>
@@ -71,7 +70,7 @@ onMounted(async () => {
     scrollbar.value.addEventListener("ps-scroll-y", () => {
       freeLayoutEnv.value.scrollTop = scrollbar.value.scrollTop;
 
-      scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
+      // scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
 
 console.log(' scrollbar.value.scrollLeft  :>> ',  scrollbar.value.scrollLeft );
 

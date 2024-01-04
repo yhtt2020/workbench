@@ -19,15 +19,16 @@
                         :style="{ borderRadius: navigationStore.iconRadius + 'px' }"></a-avatar>
                 </div>
             </div>
+            <Folder :customData="customData" :secondary="true"/>
 
-        </template> -->
+        </template>
 
 
-    <!-- </tippy> -->
+    </tippy> -->
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useNavigationStore } from '../../navigationStore';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 import { useRoute, useRouter } from 'vue-router'

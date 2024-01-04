@@ -50,7 +50,7 @@ const props = defineProps({
   menuWidth: {
     default: "w-full",
   },
-  stopPropagation:{default:true},
+  stopPropagation: { default: true },
   menuWidth: {
     default: "w-full",
   },
@@ -76,7 +76,7 @@ const defaultList = computed(() => {
   h.value = 200 + height.value;
 
   menus?.value?.forEach((item) => {
-    if (item?.children) {
+    if (item?.children && typeof item?.children == "array") {
       item.children.forEach((it) => {
         list.push(it);
       });
@@ -100,15 +100,15 @@ function beforeCreate() {
 }
 
 const emits = defineEmits(["mounted"]);
-const onMounted = ()=>{
+const onMounted = () => {
   emits("mounted");
-}
+};
 function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
-    onMounted()
+    onMounted();
   }
 }
 function defaultListContextmenu(event) {
@@ -116,19 +116,22 @@ function defaultListContextmenu(event) {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
-    onMounted()
+    onMounted();
   }
 }
 
 function custom() {
   console.log("menu.value :>> ", menu.value.handleOpenMenu);
-  menu.value.handleOpenMenu({
-    stopPropagation: () => {},
-    preventDefault: () => {},
+  menu.value.handleOpenMenu(
+    {
+      stopPropagation: () => {},
+      preventDefault: () => {},
 
-    clientX: 200,
-    clientY: 200,
-  },model.value);
+      clientX: 200,
+      clientY: 200,
+    },
+    model.value
+  );
 }
 defineExpose({
   custom,
