@@ -12,12 +12,24 @@
       </div>
       <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
      
-      <xt-button w="56" h="32" type="theme" style="border-radius: 8px;" class="mx-3" @click="send">
-        <div class="flex items-center justify-center" v-if="isLoading === false" >
-          <span class="xt-font xt-active-text font-14">发送</span>
+      <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
+        <template #sendTitle>
+          <div class="flex items-center justify-center" v-if="isLoading === false">
+            <span class="xt-font xt-text font-14 font-400 mr-2">发送</span>
+            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"></xt-new-icon>
+          </div> 
+          <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
+        </template>
+
+        <div class="xt-modal rounded-xl p-2 flex flex-col xt-b">
+          <template v-for="item in sendList">
+            <div class="px-3 py-2.5 flex xt-hover rounded-xl">
+              <xt-new-icon :icon="item.newIcon" size="20" class="mr-3"></xt-new-icon>
+              <span class="">{{ item.name }}</span>
+            </div>
+          </template>
         </div>
-        <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
-      </xt-button>
+      </xt-dropdown>
      
       <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeSend">
         <div class="flex items-center justify-center">
@@ -31,7 +43,7 @@
       <EditSection ref="msgEditor"/>
    </div>
 
-   <div class="h-10 flex items-center justify-between w-full">
+   <div class="h-10 flex items-center mt-3 justify-between w-full">
      <div class="flex">
       <a-tooltip placement="top" title="图片">
         <xt-button w="32" h="32" class="xt-bg-t-2 mr-3" style="border-radius: 8px;" @click="uploadImage">
@@ -75,7 +87,8 @@
 
  <AddButtonLink ref="buttonLink"/>
  <AddBiliLink ref="biliLink"/>
-
+ <CommunitySelect ref="communityRef"/>
+ <AppointUserSelect ref="appointRef"/>
 
 </template>
 
@@ -86,13 +99,15 @@ import { noticeStore } from '../../store/noticeStore';
 import { fileUpload } from '../../../../components/card/hooks/imageProcessing';
 import { teamStore } from '../../../../store/team';
 import dayjs, { Dayjs } from 'dayjs';
+import { message } from 'ant-design-vue'
 
 
 // 导入消息发送编辑模块
 import EditSection from './EditSection.vue';
 import AddButtonLink from '../add/AddButtonLink.vue';
 import AddBiliLink from '../add/AddBiliLink.vue';
-
+import CommunitySelect from '../userselect/CommunitySelect.vue';
+import AppointUserSelect from '../userselect/AppointUserSelect.vue';
 
 const emits = defineEmits(['close']);
 
@@ -115,6 +130,25 @@ const targetList = ref([
   { name:'指定用户',value:1003 }
 ])
 
+const sendList = ref([
+  {
+    newIcon:'fluent:send-32-regular',name:'立即发送',
+    callBack:()=>{
+
+    }, 
+  },
+  {
+    newIcon:'fluent:clock-16-regular',name:'定时发送',
+    callBack:()=>{},
+  },
+  {
+    newIcon:'fluent:compose-16-regular',name:'保存草稿',
+    callBack:()=>{
+     
+    },
+  }
+])
+
 
 // 通过计算属性根据当前
 const getCurrentDay = computed(()=>{
@@ -133,6 +167,8 @@ const isLoading = ref(false);
 const msgEditor = ref(null);
 const buttonLink = ref(null);
 const biliLink = ref(null);
+const communityRef = ref(null);
+const appointRef = ref(null);
 
 
 /**事件处理方法**/
@@ -157,29 +193,18 @@ const uploadImage = async() =>{
   document.querySelector('.imgRef').click();
 }
 const getMessageImg = async(evt) =>{
-  // 多张图片
-  if(evt.target.files.length === 1){
-    const file = evt.target.files[0];
-    const res = await fileUpload(file);
-    msgSetting.value.cover = [{cover:res}]
+  const fileList = evt.target.files;
+  if(msgSetting.value.cover.length === 3){
+    message.info('只能上传三张图片')
+    evt.preventDefault();
   }
-  else if(evt.target.files.length === 3){
-    const files = evt.target.files;
-    const list = []
-    for(const item of files){
-      const res = await fileUpload(item);
-      list.push({cover:res})
+  else {
+    if(fileList.length <= 3){
+      for(const file of fileList){
+       const res = await fileUpload(file);
+       msgSetting.value.cover.push({cover:res})
+      }
     }
-    msgSetting.value.cover = list
-  }
-  else if(evt.target.files.length === 2){
-    const files = evt.target.files;
-    const list = []
-    for(const item of files){
-      const res = await fileUpload(item);
-      list.push({cover:res})
-    }
-    msgSetting.value.cover = list
   }
 }
 
@@ -190,11 +215,9 @@ const uploadAttachment = async() =>{
 } 
 const getAttachmentFile = async(evt) =>{
   const fileList = evt.target.files;
-  const newArr = [];
   for(const item of fileList){
-    newArr.push({href:await fileUpload(item),title:item.name}) 
+    msgSetting.value.attachments.push({href:await fileUpload(item),title:item.name}) 
   }
-  msgSetting.value.attachments = newArr;
 }
 
 
@@ -212,14 +235,13 @@ const uploadBiliLink = () =>{
 
 // 通过watch来判断是否为社群和指定用户
 watch(()=>msgSetting.value.targetType,(newVal)=>{
-  console.log('测试',newVal);
   if(newVal === 1002){
-    
+    communityRef.value.openCommunitySelect();
   }
   else if(newVal === 1003) {
-    
+    appointRef.value.openAppointModal()
   }
-},{immediate:true,deep:true})
+},)
 </script>
  
 <style lang="scss" scoped>
@@ -244,5 +266,14 @@ watch(()=>msgSetting.value.targetType,(newVal)=>{
 :deep(.ant-picker.ant-picker-borderless){
   background-color: var(--secondary-transp-bg) !important;
   border-radius: 8px !important;
+}
+
+:deep(.ant-image-mask-info){
+  display: none !important;
+}
+.xt-hover{
+  &:hover{
+    background-color: var(--active-secondary-bg) !important;
+  }
 }
 </style>
