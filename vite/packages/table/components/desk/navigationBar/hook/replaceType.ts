@@ -4,7 +4,8 @@
  * @returns 
  */
 export const replaceType = (list) => {
-    return list.map((item)=>{
+  const arr = list.filter((item)=> item.type!==undefined)
+    return arr.map((item)=>{
         switch (item.type) {
             case 'systemApp':
               return { ...item };

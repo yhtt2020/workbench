@@ -3,10 +3,10 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);z-index: 500 !important;"
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
       class="rounded-xl pointer ">
       <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}"/>
+      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}" :auto="true"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -586,30 +586,10 @@ export default {
         // }
 
 
-        // 
-        const copyList = JSON.parse(JSON.stringify(this.footNavigationList));
-        // for (let i = 0; i < this.copyFootNav.length; i++) {
-        for (let j = 0; j < copyList.length; j++) {
-          if (copyList[j].type === 'coolApp') {
-            const item = this.copyFootNav.filter((item) => item.value.url === copyList[j].value.url)
-            copyList[j] = { ...item }
-          } else if (copyList[j].type === 'folder') {
-            for (let i = 0; i < copyList[j].children.length; i++) {
-              const item = this.copyFootNav.filter((item) => {
-                if (item.type === 'coolApp') {
 
-                }
-              })
-            }
-          } else {
-            const item = this.copyFootNav.filter((item) => item.value === copyList[j].value)
-            copyList[j] = { ...item }
-          }
-        }
-        // }
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        // console.log(this.copyFootNav, 'copyFootNav')
-        // console.log(this.footNavigationList, 'footNav')
+        console.log(this.copyFootNav, 'copyFootNav')
+        console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
