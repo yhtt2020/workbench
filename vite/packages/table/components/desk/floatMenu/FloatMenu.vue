@@ -376,7 +376,7 @@ const updateArrange = (newV) => {
         :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentMode"
         :list="deskList"
-        class="h-10 p-1 xt-bg-2 mb-3"
+        class="h-10 p-1 xt-bg-t-2 mb-3"
         style="font-size: 14px !important"
       />
       <div class="flex my-3">
