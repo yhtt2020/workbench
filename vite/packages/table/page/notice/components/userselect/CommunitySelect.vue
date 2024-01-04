@@ -90,7 +90,7 @@ const save  = () =>{
  const mapSelect = selectList.value.map((item)=>{ 
   return {
     no:item.communityInfo.no,
-    name:item.communityInfo.no,
+    nick:item.communityInfo.name,
     avatar:item.communityInfo.icon
   } 
  });
