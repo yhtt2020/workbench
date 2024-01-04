@@ -588,8 +588,8 @@ export default {
 
 
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'copyFootNav')
-        console.log(this.footNavigationList, 'footNav')
+        // console.log(this.copyFootNav, 'copyFootNav')
+        // console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
