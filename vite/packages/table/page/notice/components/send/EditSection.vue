@@ -8,16 +8,24 @@
    <div class="flex flex-col my-4" v-if="imgCover.cover.length !== 0" >
     <div class="flex items-center justify-between mb-4" style="width: 350px;">
      <span class="xt-font xt-text-2 font-400 font-14">封面（推荐图片比例 16:9）</span>
-     <!-- <xt-button style="width: auto !important;" h="0" type="theme" @click="delCover">
-       <div class="flex items-center justify-center link font-400 font-14 xt-font">删除</div>
-     </xt-button> -->
     </div>
     <div class="flex">
-      <!-- <a-image v-for="img in imgCover.cover" :width="imgCover.width"  :src="img.cover" style="margin-right: 12px;"></a-image> -->
-      <div  v-for="img in imgCover.cover" :style="{width:`${imgCover.width}px`,height:`${imgCover.height}px`}" class="mr-2 pointer">
-        <!-- <img  :src="img.cover" class="w-full h-full object-cover rounded" alt=""> -->
-        <a-image :w="imgCover.width" :src="img.cover"></a-image>
-      </div> 
+      <viewer :images="imgCover.cover" :options="options">
+        <a-row :gutter="[16,16]" id="bingImages">
+          <a-col v-for="(img,index) in imgCover.cover" :style="{width:`${imgCover.width}px`,height:`${imgCover.height}px`}">
+            <div class="img-hover">
+              <img class="image-item  pointer" :src="img.cover" :data-source="img.cover" style="position: relative">
+              <div class="absolute " style="top:50%;left:50%;transform: translate(-50% ,-50%);">
+                <xt-button style="width: auto !important; opacity: 0;" class="send-img" h="0" @click="removeImg(index)">
+                  <div class="flex items-center justify-center">
+                    <xt-new-icon icon="fluent:delete-16-regular" size="20" :color="'var(--active-text)'"></xt-new-icon>
+                  </div>
+                </xt-button>
+              </div> 
+            </div>
+          </a-col>
+        </a-row>
+      </viewer>
     </div>
    </div>
 
@@ -54,6 +62,9 @@ const notice = noticeStore();
 const { msgSetting } = storeToRefs(notice);
 
 const mkRef = ref(null);
+const options = ref(
+  { url: 'data-source', }
+)
 
 
 const delCover = () =>{
@@ -69,6 +80,11 @@ const imgCover = computed(()=>{
     return { cover:msgSetting.value.cover,width:114, };
   }
 })
+
+// 删除对应的图片
+const removeImg = (index) =>{
+  msgSetting.value.cover.splice(index,1)
+}
 
 
 defineExpose({ mkRef });
@@ -86,4 +102,14 @@ defineExpose({ mkRef });
 :deep(.ant-image-img){
   border-radius: 8px !important;
 }
+
+
+.img-hover{
+  &:hover{
+    .send-img{
+      opacity: 1 !important;
+    }
+  }
+}
+
 </style>
