@@ -162,7 +162,7 @@ export default {
 
     async getTeamBarrage(){
       if (this.myTeamNo) {
-        tsbApi.barrage.getList(this.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
+        tsbApi.barrage.getList(tsbApi.barrage.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
           if (rs.status) {
             rs.data.forEach(item => {
               item.create_time_text = tsbApi.util.friendlyDate(item.create_time)
@@ -227,9 +227,9 @@ export default {
       $manager.send(barrages)
     },
     async getList() {
-      this.CONST = tsbApi.barrage.CONST
+      const CONST = tsbApi.barrage.CONST
       try {
-        let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
+        let rs = await tsbApi.barrage.getList(CONST.CHANNEL.PUBLIC, this.pageUrl)
         this.barrages = rs.data
         if (rs.status) {
           if (this.settings.enableBarrage) {
