@@ -9,7 +9,7 @@ export const registerFolder = (desk) => {
     {
       name: "folder",
       id: Date.now(),
-      customData: defaultFolderData,
+      customData: {...defaultFolderData},
     },
     desk
   );
