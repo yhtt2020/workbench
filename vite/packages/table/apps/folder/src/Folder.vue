@@ -177,11 +177,11 @@ provide("data", customData);
 const autoSizeList = computed(() => {
   if (auto.value) {
     // console.log(auto.value, "自动调整")
-    sizeList.value.push({
-      name: autoSize.value,
+    const size = {
+       name: autoSize.value,
       value: autoSize.value
-    })
-    return sizeList.value
+    }
+    return [...sizeList.value, size]
   }
   // console.log(auto.value, '自动调整大小')
   return sizeList.value

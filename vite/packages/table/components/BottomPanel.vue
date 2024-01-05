@@ -73,7 +73,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <xt-menu :menus="iconMenus">
+                    <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
                         class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
@@ -526,6 +526,20 @@ export default {
       this.mainMenus[3].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
+    },
+    folderOptions() {
+      if(this.currentItem && this.currentItem.type === 'folder'){
+        const reset={
+          label:'解散文件夹',
+          color: "#FF4D4F",
+          newIcon:'fluent:plug-disconnected-16-regular',
+          callBack:()=>{
+            this.resetFolder(this.currentItem,this.currentIndex)
+          }
+        }
+        return [...this.iconMenus,reset]
+      }
+      return this.iconMenus
     },
     /**
      * 通过文件夹中数据的多少来自定义大小
@@ -1018,7 +1032,18 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
+    // 解散文件夹
+    resetFolder(item,index){
+      if(item.children){
+        this.footNavigationList.splice(index,1)
+        for (let index = 0; index < item.children.length; index++) {
+          const element = item.children[index];
+          this.footNavigationList.unshift(element)
+        }
+        // this.footNavigationList.push(...item.children)
 
+      }
+    },
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
