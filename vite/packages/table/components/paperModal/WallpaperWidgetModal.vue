@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="widgetVisible" full :footer="0" boxClass="px-3 pt-3" ref="modalRef">
+ <xt-modal v-model="widgetVisible" full :footer="false" boxClass="px-3 pt-3" ref="modalRef">
     <template #header-center>
       <div class="xt-font xt-text font-16 font-400">壁纸小组件设置</div>
     </template>

@@ -48,7 +48,7 @@
                         style="border-radius: 10px;"
                         v-model:value="this.options.title"
                         @change="changeName"
-                        maxlength="20"
+                        :maxlength="20"
                         class="search pl-1"></a-input>
                     </p>
                     <!--  穿梭框 -->
