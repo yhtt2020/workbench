@@ -156,7 +156,7 @@
 
   <xt-modal
     v-model="settingVisible"
-    :footer="0"
+    :footer="false"
     title="桌面设置"
     boxClass="p-4 pb-0"
     :mask="0"
