@@ -3,10 +3,10 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);z-index: 500 !important;"
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
       class="rounded-xl pointer ">
       <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}"/>
+      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}" :auto="true"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -73,7 +73,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <xt-menu :menus="iconMenus">
+                    <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
                         class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
@@ -527,6 +527,20 @@ export default {
       // this.mainMenus[3].children=arr
       return this.mainMenus
     },
+    folderOptions() {
+      if(this.currentItem && this.currentItem.type === 'folder'){
+        const reset={
+          label:'解散文件夹',
+          color: "#FF4D4F",
+          newIcon:'fluent:plug-disconnected-16-regular',
+          callBack:()=>{
+            this.resetFolder(this.currentItem,this.currentIndex)
+          }
+        }
+        return [...this.iconMenus,reset]
+      }
+      return this.iconMenus
+    },
     /**
      * 通过文件夹中数据的多少来自定义大小
      */
@@ -585,27 +599,7 @@ export default {
         // }
 
 
-        //
-        const copyList = JSON.parse(JSON.stringify(this.footNavigationList));
-        // for (let i = 0; i < this.copyFootNav.length; i++) {
-        for (let j = 0; j < copyList.length; j++) {
-          if (copyList[j].type === 'coolApp') {
-            const item = this.copyFootNav.filter((item) => item.value.url === copyList[j].value.url)
-            copyList[j] = { ...item }
-          } else if (copyList[j].type === 'folder') {
-            for (let i = 0; i < copyList[j].children.length; i++) {
-              const item = this.copyFootNav.filter((item) => {
-                if (item.type === 'coolApp') {
 
-                }
-              })
-            }
-          } else {
-            const item = this.copyFootNav.filter((item) => item.value === copyList[j].value)
-            copyList[j] = { ...item }
-          }
-        }
-        // }
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
 
       },
@@ -1038,7 +1032,18 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
+    // 解散文件夹
+    resetFolder(item,index){
+      if(item.children){
+        this.footNavigationList.splice(index,1)
+        for (let index = 0; index < item.children.length; index++) {
+          const element = item.children[index];
+          this.footNavigationList.unshift(element)
+        }
+        // this.footNavigationList.push(...item.children)
 
+      }
+    },
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
