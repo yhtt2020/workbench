@@ -9,7 +9,7 @@
                 border: 1px solid rgba(255,255,255,0.1);flex:1;
                 border-radius: 10px;"
                 placeholder="搜索"
-                maxlength="10"
+                :maxlength="10"
                 v-model:value="this.searchValue"
                 @change="changeSearchValue"
             ><Icon :icon="icons.search20Filled" /></a-input>
