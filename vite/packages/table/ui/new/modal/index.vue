@@ -8,7 +8,7 @@
       ref="modal"
       class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
       style="
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        /* border: 1px solid rgba(255, 255, 255, 0.1); */
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
       "
       :style="{
@@ -16,7 +16,11 @@
         top: `${(windowHeight - bottomBarHeight - modelHeight) / 2}px`,
       }"
     >
-      <slot v-if="custom"></slot>
+      <template v-if="custom">
+        <div class="  rounded-xl">
+          <slot></slot>
+        </div>
+      </template>
       <template v-else>
         <div class="flex flex-1 w-full">
           <!-- 左侧 -->

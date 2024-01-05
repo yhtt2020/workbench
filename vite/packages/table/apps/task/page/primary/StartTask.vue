@@ -11,9 +11,10 @@
     v-if="isFirst && store.success"
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
+    h="40"
     >领取奖励</xt-button
   >
-  <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()"
+  <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()" h="40"
     >开始任务</xt-button
   >
 </template>
@@ -25,7 +26,12 @@ import { guide } from "../../../../ui/components/Task/guide";
 import { lastGuide } from "./lastGuide";
 import { endGuide } from "./endGuide";
 import { taskStore } from "../../store";
+// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\store.ts
+import { appStore } from "../../../../store";
 
+const app = appStore();
+
+import { getAllTask, completeTask } from "../../api";
 // 初始化
 const store = taskStore();
 const router = useRouter();
@@ -87,12 +93,22 @@ const no = () => {
 };
 
 // 领取奖励
-const receive = () => {
+const receive = async () => {
   store.list.push(store.taskID);
   store.success = false;
   let fn = endGuide[store.taskID];
   store.taskID = props.task.suf;
   fn && fn();
+  // 1 查询任务状态
+  // 2 是否领取 差ID
+  const { data, code } = await completeTask({
+    taskName: store.taskID,
+    uid: app.userInfo.uid,
+  });
+  if (code !== 200) {
+
+  }
+  console.log("res :>> ", data, code);
 };
 </script>
 

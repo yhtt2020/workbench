@@ -12,6 +12,11 @@ export const taskStore = defineStore("taskStore", {
     deskID: 0,
     startBranchTask: [], // 启动的支线任务
     successBranchTask: [], // 完成的支线任务
+    // 任务更新时间
+    updateTime: "2023-01-05",
+    currentUpdateTime: "2023-01-05",
+    // 当前任务数据
+    currentTaskList: [],
   }),
   getters: {},
   actions: {
@@ -32,6 +37,8 @@ export const taskStore = defineStore("taskStore", {
           "isTask",
           "startBranchTask",
           "successBranchTask",
+          "currentUpdateTime",
+          "currentTaskList",
         ],
         storage: localStorage,
       },

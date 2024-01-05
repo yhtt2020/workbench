@@ -1,5 +1,12 @@
 <template>
-  <xt-tab v-model="currentTab" :list="list" class="xt-bg-2 p-1 h-12 mb-3" />
+  <div class="flex justify-center">
+    <xt-option-tab
+    v-model="currentTab"
+    style="width: 248px;height: 32px;"
+    :list="list"
+    class="xt-bg-t-2 p-1 h-8 mb-3"
+  />
+  </div>
   <Primary v-if="currentTab == 'Primary'" />
   <Complete v-else />
 </template>

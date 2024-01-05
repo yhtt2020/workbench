@@ -1,18 +1,17 @@
 <template>
-  <xt-text class="mb-3 font-medium">
-    <xt-new-icon
-      icon="fluent:chevron-left-16-filled"
-      @click="back()"
-      bgClass="xt-bg-2"
+  <xt-text class="mb-4 font-medium">
+    <xt-button
+      ifyIcon="fluent:chevron-left-16-regular"
+      w="32"
+      h="32"
+      radius="8"
       class="mr-3"
-      w="40"
+      @click="back()" 
     />
-    {{ task.chapter }}
-    <template #right>
-      {{ completedTask }}
-    </template>
+    {{ task.chapter }} ({{ completedTask }})
   </xt-text>
   <template v-if="getCompletedTasks.length">
+    <xt-text type="2" class="mb-4"> {{ task.info }}</xt-text>
     <xt-collapse v-for="data in getCompletedTasks">
       <template #title>
         <xt-text>

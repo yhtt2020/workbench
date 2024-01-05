@@ -47,7 +47,7 @@ export const communityStore = defineStore('communityStore',{
       if(res.status === 1){
         const list = res?.data?.list;
         return list;
-      } 
+      }
     },
     // 加入推荐群聊
     async joinRecommendCommunity(option:any){
@@ -99,7 +99,7 @@ export const communityStore = defineStore('communityStore',{
                 newList.push(option as never);
               }
              }
-          }); 
+          });
         }
         this.community.communityTree = newList;
       }
@@ -115,7 +115,7 @@ export const communityStore = defineStore('communityStore',{
       }
       else { return res };
     },
-   
+
     // 更新社群树状对应数据
     async updateCommunityTree(no:any){
       const list = this.community.communityTree;
@@ -141,7 +141,7 @@ export const communityStore = defineStore('communityStore',{
     },
     // 创建社群频道
     async createChannel(option:any,no:any){
-      const res  = await post(createChannels,option);      
+      const res  = await post(createChannels,option);
       if(res.status === 1){
         this.updateCommunityTree(no);
         return res;
@@ -168,7 +168,7 @@ export const communityStore = defineStore('communityStore',{
             const list = res.data.list;
             const filterList = _.filter(list,function(item:any){ return item.role === 'category' });
             this.community.categoryClass = filterList;
-          }          
+          }
         })
       }
     },
@@ -178,7 +178,7 @@ export const communityStore = defineStore('communityStore',{
       const res = await post(updateChannel,data);
       console.log('执行......更新',res);
     }
-    
+
   },
 
   persist:{

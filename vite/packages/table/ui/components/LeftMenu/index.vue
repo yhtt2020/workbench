@@ -1,6 +1,6 @@
 <template>
   <div
-    class="xt-text flex h-full xt-bg"
+    class="xt-text flex h-full"
     style="box-sizing: border-box"
     :class="[typeClass]"
   >
@@ -8,10 +8,13 @@
     <div
       class="flex flex-col items-center h-full xt-br"
       style="position: relative"
-      :style="{
-        width: w + 'px',
-        'min-width': w + 'px',
-      }"
+      :style="[
+        leftStyle,
+        {
+          width: w + 'px',
+          'min-width': w + 'px',
+        },
+      ]"
       :class="[leftClass, leftMargin]"
     >
       <div class="w-full" v-for="list in listOption" :class="list?.class">
@@ -106,6 +109,9 @@ const props = defineProps({
     default: 72,
   },
   leftClass: {
+    default: "",
+  },
+  leftStyle: {
     default: "",
   },
   leftMargin: {
