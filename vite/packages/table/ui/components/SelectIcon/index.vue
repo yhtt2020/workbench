@@ -8,17 +8,17 @@
        :style="{
           'z-index': maskIndex + 10,
         }"
-       class="float-icon fixed top-1/2 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2" id="selectIcon">
+       class="fixed -translate-x-1/2 -translate-y-1/2 float-icon top-1/2 left-1/2" id="selectIcon">
         <!-- 选择列表 -->
-        <div class="top-icon flex">
-          <div class="type-select flex" style="color:var(--primary-text)">
+        <div class="flex top-icon">
+          <div class="flex type-select" style="color:var(--primary-text)">
               <span v-for="(item,index) in menus" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item,index }}</span>
               <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
           </div>
           <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
         </div>
         <!--  搜索栏 随机 颜色选择 -->
-        <div class="action-search pl-3 pr-3 pt-3 flex" style="justify-content: space-between;" v-if="selIndex != menus.length">
+        <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;" v-if="selIndex != menus.length">
           <a-input
             style="height:40px;background: var(--secondary-bg);
             color: var(--primary-text);
@@ -31,25 +31,25 @@
           <!-- 随机 -->
           <a-tooltip>
             <template #title>随机</template>
-            <xt-button class="flex justify-center items-center ml-3" :w="40" :h="40"  style="background: var(--secondary-bg);border-radius: 10px;" @click="onRandom">
-              <Icon class="pointer flex items-center" icon="fluent:arrow-sync-20-filled"  width="20" height="20"/>
+            <xt-button class="flex items-center justify-center ml-3" :w="40" :h="40"  style="background: var(--secondary-bg);border-radius: 10px;" @click="onRandom">
+              <Icon class="flex items-center pointer" icon="fluent:arrow-sync-20-filled"  width="20" height="20"/>
             </xt-button>
           </a-tooltip>
           <!-- 颜色选择 -->
-          <div v-if="menus[selIndex] == 'icon'" class="flex justify-center items-center pointer ml-3" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
+          <div v-if="menus[selIndex] == 'icon'" class="flex items-center justify-center ml-3 pointer" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
             <a-tooltip>
               <template #title>颜色选择</template>
               <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
             </a-tooltip>
 
             <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
-              <div class="ml-4 mt-2">自定义</div>
-              <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
+              <div class="mt-2 ml-4">自定义</div>
+              <div style='width: 40px;height:40px;border-radius: 10px;' class="flex items-center justify-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
                 <XtBaseColor v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
               </div>
-              <div class="ml-4 mt-1">系统预设</div>
+              <div class="mt-1 ml-4">系统预设</div>
               <div class="flex flex-wrap">
-                <div v-for="(item,index) in bgColor.slice(0,6)" class="flex justify-center items-center pointer mt-2 ml-3" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
+                <div v-for="(item,index) in bgColor.slice(0,6)" class="flex items-center justify-center mt-2 ml-3 pointer" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
                   <div class="circle" :style="{background:bgColor[index]}"></div>
                 </div>
               </div>
@@ -59,14 +59,14 @@
 
 
         <!-- 渲染的列表 -->
-        <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar flex-wrap" style="height: 290px;">
-          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+        <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
+          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
             </a-tooltip>
           </div>
-          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex justify-center items-center mt-2 ml-2 pointer overflow-hidden" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
@@ -75,14 +75,14 @@
 
         </div>
         <!-- 自定义上传 -->
-        <div v-if="selIndex == menus.length" class="flex items-center flex-wrap flex-col px-6" style="height:330px;">
+        <div v-if="selIndex == menus.length" class="flex flex-col flex-wrap items-center px-6" style="height:330px;">
           <input type="file" style="display:none;" ref="groupFileID"  @change="getFileInfo($event)" />
-          <div v-if="!avatarUrl" class="pointer flex justify-center items-center" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
+          <div v-if="!avatarUrl" class="flex items-center justify-center pointer" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
             <Icon icon="fluent:add-16-filled" width="20" height="20"/>
           </div>
           <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl + '?imageMogr2/crop/260x260/gravity/center'"></a-avatar>
           <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
-          <xt-button class="xt-active-btn mt-4" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
+          <xt-button class="mt-4 xt-active-btn" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
           <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
         </div>
       </div>
@@ -90,7 +90,7 @@
       <div
         v-if="modelValue"
         @click.stop.self="closeClick()"
-        class="xt-mask h-full w-full fixed top-0 left-0 ring-0 bottom-0"
+        class="fixed top-0 bottom-0 left-0 w-full h-full xt-mask ring-0"
         :style="{
           'z-index': maskIndex,
         }"
@@ -152,7 +152,7 @@
       // 颜色数组
       bgColor:{
           default: ()=>{
-              return ['#508bfe','#ff6c61','#73cf77','#3dffed','#ed7149','#ffffff','#000000']
+              return ['#ffffff','#508bfe','#ff6c61','#73cf77','#3dffed','#ed7149','#000000']
           }
       },
       // 默认返回图标
