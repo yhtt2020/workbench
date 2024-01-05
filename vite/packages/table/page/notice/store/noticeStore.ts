@@ -6,6 +6,23 @@ import {post} from '../../../js/axios/request'
 
 const addNotice = sUrl("/app/notice/add");
 
+
+
+// 初始化配置数据
+const initMsgSetting = {
+  title:'', // 标题
+  summary:'', // 摘要
+  content:'', // 正文
+  noticeType:'1', // 消息类型
+  cover:[], // 封面
+  urls:[], //  按钮链接
+  videos:[],// b站视频链接
+  attachments:[], //附件
+  targetType: { name:'全员',value:1000 },
+  targetList:[], // 选中的用户
+  sendTime: new Date().getTime(), // 发送时间
+}
+
 //@ts-ignore
 export const noticeStore = defineStore('notice', {
   state: () => ({
@@ -22,7 +39,7 @@ export const noticeStore = defineStore('notice', {
       attachments:[], //附件
       targetType: { name:'全员',value:1000 },
       targetList:[], // 选中的用户
-      sendTime: new Date().getTime(), // 发送时间
+      sendTime: null, // 发送时间
     },
     // 草稿箱
     draftBox:[],
@@ -179,12 +196,17 @@ export const noticeStore = defineStore('notice', {
         targetList:JSON.stringify(this.msgSetting.targetList),
         sendTime:parseInt(this.msgSetting.sendTime)
       }
-      console.log('执行..排查',option);
       const res = await post(addNotice,option);
-      console.log('执行...返回',res);
-      
-    }
+      if(res.status === 1){
+        const index  = this.draftBox.findIndex((find:any)=>{ return Number(find.id) === Number(res.data.id) });
+        if(index === -1){
+          this.draftBox.push(res.data)
+          this.msgSetting = initMsgSetting;
+        }
+      }
+    },
 
+    
   },
 
 

@@ -4,7 +4,7 @@
    <div class="flex items-center justify-center">
      <xt-button w="28" h="28" class="xt-bg-m mr-3" style="border-radius: 8px;">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:link-20-filled" size="20" :color="'var(--active-text)'"></xt-new-icon>
+        <xt-new-icon icon="fluent:link-20-filled" size="20" :color="'var(--secondary-text)'"></xt-new-icon>
       </div>
      </xt-button>
      <span class="xt-font font-14 font-400 xt-text">{{ item.title }}</span>
