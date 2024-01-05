@@ -201,8 +201,6 @@ export default {
   mounted () {
     this.list = [...lively]
     this.savePath = this.settings.savePath
-    console.log('执行....测试',window.globalArgs);
-
     lively2.forEach((w) => {
       this.list.push({
         name: w
@@ -232,7 +230,6 @@ export default {
   computed: {
     ...mapWritableState(paperStore, ['settings']),
     displayList () {
-      console.log(this.list);
       return this.list.sort((a, b) => {
         return b.done - a.done
       })
