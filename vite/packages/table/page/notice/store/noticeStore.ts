@@ -2,6 +2,10 @@ import {defineStore} from "pinia";
 import {sUrl} from "../../../consts";
 import dbStorage from "../../../store/dbStorage";
 import {post} from '../../../js/axios/request'
+
+
+const addNotice = sUrl("/app/notice/add");
+
 //@ts-ignore
 export const noticeStore = defineStore('notice', {
   state: () => ({
@@ -18,7 +22,10 @@ export const noticeStore = defineStore('notice', {
       attachments:[], //附件
       targetType: { name:'全员',value:1000 },
       targetList:[], // 选中的用户
+      sendTime: new Date().getTime(), // 发送时间
     },
+    // 草稿箱
+    draftBox:[],
   }),
 
   actions: {
@@ -159,18 +166,22 @@ export const noticeStore = defineStore('notice', {
 
     // 创建一个推送消息
     async createNotice(){
-      console.log('执行....测试-1',{
+      const option  = {
         title:this.msgSetting.title,
-        cover:JSON.stringify(this.msgSetting.cover),
+        covers:JSON.stringify(this.msgSetting.cover),
         videos:JSON.stringify(this.msgSetting.videos),
         urls:JSON.stringify(this.msgSetting.urls),
         content:this.msgSetting.content,
         summary:this.msgSetting.summary,
-        noticeType:this.msgSetting.noticeType,
+        noticeType:parseInt(this.msgSetting.noticeType),
         attachments:JSON.stringify(this.msgSetting.attachments),
         targetType:this.msgSetting.targetType,
-        targetList:JSON.stringify(this.msgSetting.targetList)
-      });
+        targetList:JSON.stringify(this.msgSetting.targetList),
+        sendTime:parseInt(this.msgSetting.sendTime)
+      }
+      console.log('执行..排查',option);
+      const res = await post(addNotice,option);
+      console.log('执行...返回',res);
       
     }
 
@@ -182,7 +193,7 @@ export const noticeStore = defineStore('notice', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['msgSetting'],
+      paths: ['msgSetting','draftBox'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
