@@ -5,8 +5,16 @@
     <!-- 文件夹弹窗 -->
     <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
       class="rounded-xl pointer ">
-      <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}" :auto="true"/>
+      <!-- <div class="w-[200px] h-[100px]" style="display: none;"></div> -->
+      <Folder 
+        @update:layout="updateLayout"
+        @update:size="updateSize"
+        :customData="customData" 
+        :secondary="true" 
+        v-if="folderVisible" 
+        :expand="{ disabled: true }" 
+        :navBar="{resize:false,sizeOption:false}" 
+        :auto="true"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -664,8 +672,9 @@ export default {
       this.customData = {
         ...this.defaultFolderData,
         list: this.folderList,
-        size: this.resize,
-        name: this.folderName
+        size: this.currentItem.size || this.resize,
+        name: this.folderName,
+        layout: this.currentItem.layout || 'rows',
       }
     },
     'customData.list': {
@@ -742,6 +751,16 @@ export default {
         id: nanoid(6)
       }));
       this.folderName = item.name
+    },
+    // 更新大小尺寸
+    updateSize(value) {
+      this.currentItem.size = value
+      console.log(value,this.currentItem,'this.currentItem')
+    },
+    // 更新大小尺寸
+    updateLayout(value) {
+      this.currentItem.layout = value
+      console.log(value,this.currentItem,'this.currentItem')
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)

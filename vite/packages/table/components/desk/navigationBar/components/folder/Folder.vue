@@ -30,30 +30,12 @@
 <script setup lang='ts'>
 import { ref, reactive, computed, watch } from 'vue'
 import { useNavigationStore } from '../../navigationStore';
-import { startApp } from '../../../../../ui/hooks/useStartApp';
-import { useRoute, useRouter } from 'vue-router'
-import Folder from '../../../../../apps/folder/index'
-import { defaultFolderData } from '../../../../../apps/folder/src/components/options'
-const router = useRouter()
 const navigationStore = useNavigationStore()
-// interface props {
-//     iconList:{
-
-//     }
-// }
 const props = defineProps({
     iconList: Array
 })
-const body = computed(() => {
-    return document.body
-})
-const customData = ref({
-    ...defaultFolderData,
-    list: props.iconList,
-    size: '4x4'
-})
 const list = computed(() => {
-    console.log(props.iconList);
+    console.log(props.iconList)
     return props.iconList?.filter((item)=>item !== null )
 })
 </script>
