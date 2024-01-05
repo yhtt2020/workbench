@@ -4,7 +4,7 @@
         <div class="w-[52px] h-[52px] p-1 flex flex-wrap justify-center items-center"
             :style="{ borderRadius: navigationStore.iconRadius + 'px' }" style="border: 1px solid var(--divider);">
             <div class=" w-[16px] h-[16px]   flex flex-wrap  justify-center items-center"
-                v-for="(item, index) in iconList?.slice(0, 4)"
+                v-for="(item, index) in list?.slice(0, 4)"
                 :style="{ marginRight: index == 3 || index == 1 ? '0px' : '4px' }">
                 <a-avatar :size="16" shape="square" :src="item.icon"
                     :style="{ borderRadius: (navigationStore.iconRadius / 4) + 'px' }"></a-avatar>
@@ -19,15 +19,16 @@
                         :style="{ borderRadius: navigationStore.iconRadius + 'px' }"></a-avatar>
                 </div>
             </div>
+            <Folder :customData="customData" :secondary="true"/>
 
-        </template> -->
+        </template>
 
 
-    <!-- </tippy> -->
+    </tippy> -->
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useNavigationStore } from '../../navigationStore';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 import { useRoute, useRouter } from 'vue-router'
@@ -50,6 +51,10 @@ const customData = ref({
     ...defaultFolderData,
     list: props.iconList,
     size: '4x4'
+})
+const list = computed(() => {
+    console.log(props.iconList);
+    return props.iconList?.filter((item)=>item !== null )
 })
 </script>
 <style lang='scss' scoped></style>

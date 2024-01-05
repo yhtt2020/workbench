@@ -2,9 +2,11 @@
   <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
-    <div style="position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);z-index: 500 !important;" class="rounded-xl pointer " >
+    <!-- 文件夹弹窗 -->
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
+      class="rounded-xl pointer ">
       <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{disabled: true,}"/>
+      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}" :auto="true"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -71,7 +73,7 @@
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
-                    <xt-menu :menus="iconMenus">
+                    <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
                         class="flex items-center justify-center pointer"
                         :style="{ marginLeft: index === 0 ? '14px' : '20px' }"
@@ -79,7 +81,8 @@
                         @click.stop="newOpenApp(item.type, item.value, item)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'">
                         </Team>
-                        <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" @click="openFolder(item)"></FolderVue>
+                        <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" @click="openFolder(item)">
+                        </FolderVue>
                         <template v-else>
                           <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                         </template>
@@ -191,6 +194,7 @@ import Avatar from './desk/navigationBar/components/Avatar.vue'
 import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
+import { nanoid } from "nanoid";
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -363,8 +367,11 @@ export default {
       targetPosition: { x: 0, y: 0 },
       defaultPosition: { x: 0, y: 0 },
       defaultFolderData,
-      folderVisible:false,
-      folderList:[]
+      folderVisible: false,
+      folderList: [],
+      folderName: '文件夹',
+      customData: {},
+      folderItem: {}
     }
   },
   props: {
@@ -384,7 +391,6 @@ export default {
   mounted() {
     // this.popVisible=true
     this.copyNav()
-    // console.log(this.copyFootNav, 'copyFootNav');
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
@@ -521,11 +527,33 @@ export default {
       // this.mainMenus[3].children=arr
       return this.mainMenus
     },
-    customData(){
-      return {
-        ...defaultFolderData,
-        list:this.folderList,
-        size:'4x4'
+    folderOptions() {
+      if(this.currentItem && this.currentItem.type === 'folder'){
+        const reset={
+          label:'解散文件夹',
+          color: "#FF4D4F",
+          newIcon:'fluent:plug-disconnected-16-regular',
+          callBack:()=>{
+            this.resetFolder(this.currentItem,this.currentIndex)
+          }
+        }
+        return [...this.iconMenus,reset]
+      }
+      return this.iconMenus
+    },
+    /**
+     * 通过文件夹中数据的多少来自定义大小
+     */
+    resize(){
+      const length = this.folderList.length
+      if(length<=6){
+        return '2x2'
+      }else if(length<=12 && length>6){
+        return '3x3'
+      }else if(length<=18 && length>12){
+        return '4x4'
+      }else{
+        return '6x4'
       }
     }
   },
@@ -569,9 +597,11 @@ export default {
         //   this.copyFootNav = rearrangedCopyFootNav;
 
         // }
+
+
+
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
-        console.log(this.copyFootNav, 'copyFootNav')
-        console.log(this.footNavigationList, 'footNav')
+
       },
       immediate: true,
       deep: true,
@@ -628,6 +658,31 @@ export default {
         this.bottomToggle[2] = false
       }
     },
+    folderList() {
+      this.customData = {
+        ...this.defaultFolderData,
+        list: this.folderList,
+        size: this.resize,
+        name: this.folderName
+      }
+    },
+    'customData.list': {
+      handler(newV, oldV) {
+        // console.log('newV', newV, 'oldV', oldV)
+        const list = [...newV]
+        this.folderItem.children = list
+      },
+      deep: true,
+
+    },
+    'customData.name':{
+      handler(newV, oldV) {
+        this.folderName = newV
+        this.folderItem.name = newV
+        // console.log('newV', newV, 'oldV', oldV)
+      },
+      deep:true
+    }
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -676,10 +731,15 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
-    openFolder(item){
+    openFolder(item) {
       this.folderVisible = !this.folderVisible
-      this.folderList = [...item.children]
-      console.log(this.folderList, 'folderList')
+      // 获取当前的文件夹
+      this.folderItem = item
+      this.folderList = item.children.map((i) => ({
+        ...i,
+        id: nanoid(6)
+      }));
+      this.folderName = item.name
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
@@ -972,7 +1032,18 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
+    // 解散文件夹
+    resetFolder(item,index){
+      if(item.children){
+        this.footNavigationList.splice(index,1)
+        for (let index = 0; index < item.children.length; index++) {
+          const element = item.children[index];
+          this.footNavigationList.unshift(element)
+        }
+        // this.footNavigationList.push(...item.children)
 
+      }
+    },
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
@@ -988,7 +1059,7 @@ export default {
         swapThreshold: 0.6,
         // 反向拖拽
         invertSwap: true,
-        // 
+        //
         onStart: function (event) {
           if (that.popVisible) {
             that.notifications.NoticeToast()
@@ -1058,7 +1129,7 @@ export default {
         onEnd: function (event) {
           // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
-          // 
+          //
           that.popVisible = false
           // 删除
           that.isDelete = true

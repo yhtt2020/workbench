@@ -17,31 +17,28 @@
       :header="header"
       :menuList="menuList"
       v-model:size="customData.size"
-      :sizeList="sizeList"
+      :sizeList="autoSizeList"
       @leftClick="leftClick"
-      @onRefresh="onRefresh"
-    >
+      @onRefresh="onRefresh">
       <!-- 右侧布局切换 -->
-      <Resize :disabled="expand.disabled" v-model:size="customData.size">
+      <Resize
+        :disabled="expand.disabled"
+        v-model:size="customData.size"
+        :resize="navBar.resize">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
           <Null :size="customData.size" @createFile="createFile"></Null>
         </template>
-        <vue-custom-scrollbar
-          v-else
-          :settings="{
-            suppressScrollY: false,
-          }"
-          class="w-full relative h-full"
-        >
+        <vue-custom-scrollbar v-else :settings="{
+          suppressScrollY: false,
+        }" class="relative w-full h-full">
           <File
             :list="customData.list"
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
             @updateList="updateList"
-            @updateSort="updateSort"
-          />
+            @updateSort="updateSort" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
@@ -52,12 +49,11 @@
     :data="customData"
     @close="setVisible = false"
     @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp"
-  >
+    @updateWindowApp="updateWindowApp">
   </folderSet>
 
   <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
-    <Expand :data="props"></Expand>
+    <Expand :data="props" :auto="false"></Expand>
   </xt-modal>
 </template>
 
@@ -98,8 +94,33 @@ const props = defineProps({
     },
   },
   secondary: {},
+  navBar: {
+    type: Object,
+    default: () => ({
+      // 右下角图标显示
+      resize: {
+        default: true,
+        type: Boolean
+      },
+      // 设置中尺寸大小选择
+      sizeOption: {
+        default: true,
+        type: Boolean
+      },
+      // 设置背景颜色
+      bg: {
+        default: true,
+        type: Boolean
+      }
+    })
+  },
+  // 自动设置大小
+  auto: {
+    default: false
+  }
 });
-const { customData, customIndex, expand, secondary } = toRefs(props);
+
+const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -150,6 +171,35 @@ const sizeList = ref([
 provide("index", customIndex);
 provide("data", customData);
 
+/**
+ * 通过文件夹中数据的多少来自定义大小
+ */
+const autoSizeList = computed(() => {
+  if (auto.value) {
+    // console.log(auto.value, "自动调整")
+    const size = {
+       name: autoSize.value,
+      value: autoSize.value
+    }
+    return [...sizeList.value, size]
+  }
+  // console.log(auto.value, '自动调整大小')
+  return sizeList.value
+})
+
+
+const autoSize = computed(() => {
+  const length = customData.value.list.length
+  if (length <= 6) {
+    return '2x2'
+  } else if (length <= 12 && length > 6) {
+    return '3x3'
+  } else if (length <= 18 && length > 12) {
+    return '4x4'
+  } else {
+    return '6x4'
+  }
+})
 /**
  * 菜单配置
  */
@@ -293,7 +343,7 @@ const onRefresh = () => {
   }, 1000);
 };
 
-onBeforeMount(() => {});
+onBeforeMount(() => { });
 
 onMounted(() => {
   if (customData.value.icon === "") {

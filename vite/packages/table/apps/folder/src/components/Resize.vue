@@ -1,11 +1,12 @@
 <template>
   <div
-    class="boxs no-drag w-full h-full"
+    class="w-full h-full boxs no-drag"
     ref="textRef"
     :style="{ width: w, height: h }"
   >
     <slot></slot>
     <svg
+      v-show="resize"
       @mousedown.stop
       t="1684744355055"
       ref="dragRef"
@@ -49,6 +50,9 @@ export default {
     odd: {
       default: false,
     },
+    resize: {
+      
+    }
   },
   watch: {
     size(newV) {

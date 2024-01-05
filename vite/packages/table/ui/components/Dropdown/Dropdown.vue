@@ -5,9 +5,10 @@
         <slot></slot>
       </div>
       <xt-button v-else :style="{width:`${w}px`,height:`${h}px`}" :class="buttonClass" style="border-radius: 8px;padding: 4px;">
-        <div class="flex items-center justify-center">
+        <div class="flex items-center justify-center" v-if="title === ''">
           <DropIcon :icon="newIcon" :style="{fontSize:`${iconSize}px`,color:`${iconBg}`}" />
         </div>
+        <slot name="sendTitle" v-else></slot>
       </xt-button>
     </div>
 
@@ -48,6 +49,10 @@ const props = defineProps({
   iconBg:{
     type:String,
     default:'var(--primary-text)'
+  },
+  title:{
+    type:String,
+    default:'',
   }
   
 })

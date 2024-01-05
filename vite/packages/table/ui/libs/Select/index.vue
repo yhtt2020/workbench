@@ -58,7 +58,6 @@ const handleChange = (value) => {
 watch(
   () => props.modelValue,
   (newV) => {
-    // data = newV;
     data = newV;
   }
 );
