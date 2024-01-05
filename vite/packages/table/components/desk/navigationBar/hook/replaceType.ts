@@ -5,7 +5,7 @@
  */
 export const replaceType = (list) => {
   // 去除无效图标
-  const arr = list.filter((item)=> item?.type!==undefined)
+  const arr = list.filter((item) => item !== null && item !== undefined);
     return arr.map((item)=>{
         switch (item.type) {
             case 'systemApp':
