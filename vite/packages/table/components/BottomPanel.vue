@@ -3,18 +3,11 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
-      class="rounded-xl pointer ">
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
+      :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer ">
       <!-- <div class="w-[200px] h-[100px]" style="display: none;"></div> -->
-      <Folder 
-        @update:layout="updateLayout"
-        @update:size="updateSize"
-        :customData="customData" 
-        :secondary="true" 
-        v-if="folderVisible" 
-        :expand="{ disabled: true }" 
-        :navBar="{resize:false,sizeOption:false}" 
-        :auto="true"/>
+      <Folder @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
+        v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -79,7 +72,7 @@
               <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in showList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
@@ -379,7 +372,7 @@ export default {
       folderList: [],
       folderName: '文件夹',
       customData: {},
-      folderItem: {}
+      folderItem: {},
     }
   },
   props: {
@@ -459,7 +452,12 @@ export default {
     // 图标整体替换格式方法
     this.footNavigationList = this.replaceType(this.footNavigationList)
 
-
+    // const bottom = document.querySelector('#bottom-bar')
+    // const bottomWidth = bottom.getBoundingClientRect().width
+    // 获取最大可添加图标个数
+    const windowWidth = window.innerWidth
+    this.maxItemNum = Math.round((windowWidth - 240) / 72)
+    // console.log(this.maxItemNum, 'bottomWidth', windowWidth);
     // console.log(this.footNavigationList, 'foot');
   },
   computed: {
@@ -475,7 +473,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle',
+      'navigationToggle', 'maxItemNum',
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
@@ -537,34 +535,40 @@ export default {
       return this.mainMenus
     },
     folderOptions() {
-      if(this.currentItem && this.currentItem.type === 'folder'){
-        const reset={
-          label:'解散文件夹',
-          color: "#FF4D4F",
-          newIcon:'fluent:plug-disconnected-16-regular',
-          callBack:()=>{
-            this.resetFolder(this.currentItem,this.currentIndex)
+      if (this.currentItem && this.currentItem.type === 'folder') {
+        const reset = {
+          label: '解散文件夹',
+          newIcon: 'fluent:circle-off-16-regular',
+          callBack: () => {
+            this.resetFolder(this.currentItem, this.currentIndex)
           }
         }
-        return [...this.iconMenus,reset]
+        return [...this.iconMenus, reset]
       }
       return this.iconMenus
     },
     /**
      * 通过文件夹中数据的多少来自定义大小
      */
-    resize(){
+    resize() {
       const length = this.folderList.length
-      if(length<=6){
+      if (length <= 6) {
         return '2x2'
-      }else if(length<=12 && length>6){
+      } else if (length <= 12 && length > 6) {
         return '3x3'
-      }else if(length<=18 && length>12){
+      } else if (length <= 18 && length > 12) {
         return '4x4'
-      }else{
+      } else {
         return '6x4'
       }
+    },
+    /**
+     * 防止一次性添加过多导致图标截断
+     */
+    showList() {
+      return this.copyFootNav.slice(0, this.maxItemNum)
     }
+
   },
   watch: {
     footNavigationList: {
@@ -606,10 +610,19 @@ export default {
         //   this.copyFootNav = rearrangedCopyFootNav;
 
         // }
-
-
-
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
+          console.log(this.maxItemNum, 'maxItemNum')
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '后面无法添加', {
+            onOk: () => {
+              return true
+            }
+          })
+        } else {
+          console.log(this.maxItemNum, 'maxItemNum')
+        }
+
+
         // console.log(this.copyFootNav, 'copyFootNav')
         // console.log(this.footNavigationList, 'footNav')
       },
@@ -686,14 +699,14 @@ export default {
       deep: true,
 
     },
-    'customData.name':{
+    'customData.name': {
       handler(newV, oldV) {
         this.folderName = newV
         this.folderItem.name = newV
         // console.log('newV', newV, 'oldV', oldV)
       },
-      deep:true
-    }
+      deep: true
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -755,12 +768,12 @@ export default {
     // 更新大小尺寸
     updateSize(value) {
       this.currentItem.size = value
-      console.log(value,this.currentItem,'this.currentItem')
+      console.log(value, this.currentItem, 'this.currentItem')
     },
     // 更新大小尺寸
     updateLayout(value) {
       this.currentItem.layout = value
-      console.log(value,this.currentItem,'this.currentItem')
+      console.log(value, this.currentItem, 'this.currentItem')
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
@@ -1054,14 +1067,22 @@ export default {
       // }
     },
     // 解散文件夹
-    resetFolder(item,index){
-      if(item.children){
-        this.footNavigationList.splice(index,1)
-        for (let index = 0; index < item.children.length; index++) {
-          const element = item.children[index];
-          this.footNavigationList.unshift(element)
+    resetFolder(item, index) {
+      if (item.children) {
+        if (item.children.length + this.footNavigationList.length > this.maxItemNum) {
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '该文件夹无法解散', {
+            onOk: () => {
+              return true
+            }
+          })
+        } else {
+          this.footNavigationList.splice(index, 1)
+          for (let index = 0; index < item.children.length; index++) {
+            const element = item.children[index];
+            this.footNavigationList.unshift(element)
+          }
         }
-        // this.footNavigationList.push(...item.children)
+
 
       }
     },
