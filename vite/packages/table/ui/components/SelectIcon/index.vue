@@ -26,7 +26,6 @@
             border-radius: 10px;"
             placeholder="搜索"
             v-model:value="searchValue"
-            @change="searchIcon"
           />
           <!-- 随机 -->
           <a-tooltip>

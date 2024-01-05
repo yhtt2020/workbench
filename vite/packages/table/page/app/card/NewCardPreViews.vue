@@ -140,7 +140,7 @@
   <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
 
   <!-- 新版图标编辑 -->
-  <IconSet  v-if="settingVisible" v-model="settingVisible" index="99999" maskIndex="10001"/>
+  <IconSet  v-if="settingVisible" v-model="settingVisible" :index="99999" :maskIndex="10001"/>
 </template>
 
 <script>

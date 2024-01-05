@@ -49,7 +49,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <xt-modal v-if="message?.id" v-model="visible" :footer="0" :title="message.title" boxClass="p-4 " :mask="1">
+  <xt-modal v-if="message?.id" v-model="visible" :footer="false" :title="message.title" boxClass="p-4 " :mask="1">
   <div  style="max-width:600px" >
     <div class="mt-2 mb-10">
       <NoticeBody :content="message"></NoticeBody>

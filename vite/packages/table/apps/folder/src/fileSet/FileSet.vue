@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="visible" full :footer="0" boxClass="px-3 pt-3">
+  <xt-modal v-model="visible" full :footer="false" boxClass="px-3 pt-3">
     <template #header-center>
       <xt-tab
         v-model="currentTab"

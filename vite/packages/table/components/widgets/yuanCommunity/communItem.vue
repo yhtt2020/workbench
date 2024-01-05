@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="mt-1 text-base xt-text content-text" :style="{height:showImg?'54px':'100%'}" style="text-align: left;" :innerHTML="contentText">
-                    
+
                 </div>
             </div>
             <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg">
@@ -45,8 +45,8 @@ import { ref, reactive, computed } from 'vue'
 import emojiReplace from '../../../js/chat/emoji'
 const props = defineProps({
     showForumPost: {
-        type: Array,
-        default: () => []
+        type: Object,
+        default: () => {}
     },
 })
 const detailPost = computed(() => props.showForumPost)

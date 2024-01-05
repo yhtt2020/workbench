@@ -59,7 +59,7 @@
                    style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
                         border: none;box-shadow: none;padding: 0 0 0 50px; "
                    v-model:value="this.selNoteTitle"
-                   maxlength="15"
+                   :maxlength="15"
                    @blur="changeNoteTitle"
           ></a-input>
           <div class="mt-4 scroll-color xt-scroll" style="height: 92%;">

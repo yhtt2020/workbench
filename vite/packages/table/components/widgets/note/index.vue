@@ -45,14 +45,14 @@
         font-size: 16px;
         padding: 0;
       "
-        maxlength="15"
+        :maxlength="15"
         v-model:value="this.tmpTitle"
         spellcheck="false"
         @blur="changeNoteTitle"
       ></a-input>
     </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
-    
+
     <cardDrag ref="drag" @reSizeInit="reSizeInit">
       <template #="{ row }">
         <Markdown ref="mdEditor" :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
