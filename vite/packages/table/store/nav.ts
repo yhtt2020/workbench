@@ -297,7 +297,9 @@ export const navStore = defineStore("nav", {
     ],
     // navigationToggle: [true,false,true]
     navigationToggle: [false,false,true],
-    copyFlag:true
+    copyFlag:true,
+    // 底部导航栏最多图标数
+    maxItemNum:null
   }),
   actions: {
     copyNav(){
@@ -317,7 +319,10 @@ export const navStore = defineStore("nav", {
         this.footNavigationList.splice(evt.newIndex, 0, temp)
     },
     setFootNavigationList(item) {
-        this.footNavigationList.unshift(item)
+      // 当元素个数大于限制数时，将无法添加
+        if(this.maxItemNum >= this.footNavigationList.length){
+          this.footNavigationList.unshift(item)
+        }
     },
     removeSideNavigationList(index) {
         this.sideNavigationList.splice(index, 1)

@@ -121,6 +121,7 @@ const props = defineProps({
 });
 
 const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
+const emit = defineEmits(['update:size','update:layout'])
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -199,6 +200,22 @@ const autoSize = computed(() => {
   } else {
     return '6x4'
   }
+})
+
+/**
+ * 自定义大小
+ */
+watch(()=>customData.value.size,(newV,oldV)=>{
+  console.log(newV,oldV,'newV,oldV')
+  emit('update:size',newV)
+},{deep:true})
+
+/**
+ * 自定义布局
+ */
+watch(()=>customData.value.layout,(newV,oldV)=>{
+  console.log(newV,oldV,'newV,oldV')
+  emit('update:layout',newV)
 })
 /**
  * 菜单配置

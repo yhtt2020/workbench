@@ -3,10 +3,10 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }"
-      class="rounded-xl pointer ">
-      <div class="w-[200px] h-[100px]" style="display: none;"></div>
-      <Folder :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{resize:false,sizeOption:false}" :auto="true"/>
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
+      :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer " id="folder">
+      <Folder @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
+        v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -19,18 +19,14 @@
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
-        /* width: 160px; */
         border: 1px solid var(--divider);
         height: 80px;
-        /* padding-left: 16px !important; */
-        /* padding-right: 16px !important; */
         display: flex;
         justify-content: center;
       "
         :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
         <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
           <MyAvatar :chat="true" :level="false"></MyAvatar>
-          <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
           <div v-show="settings.enableChat" class="pl-4 pointer">
             <ChatButton></ChatButton>
           </div>
@@ -39,6 +35,7 @@
       </div>
 
       <!-- 快速搜索 底部栏区域 -->
+      <!-- <Drop @createFile="createFile"> -->
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
@@ -71,7 +68,7 @@
               <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in showList" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
@@ -97,7 +94,7 @@
         </xt-task>
 
       </div>
-
+      <!-- </Drop> -->
       <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team  :item="this.copyFootNav[0]" :shakeElement="shakeElement"></Team>
       </template> -->
@@ -180,7 +177,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder, updateIcon } from '../components/desk/navigationBar/index'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
@@ -195,6 +192,7 @@ import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from "nanoid";
+import Drop from '../apps/folder/src/components/Drop.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -221,7 +219,8 @@ export default {
     EditIcon,
     Avatar,
     FolderVue,
-    Folder
+    Folder,
+    Drop
   },
   data() {
     return {
@@ -281,17 +280,17 @@ export default {
           callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
-          id: 4,
+          id: 5,
           divider: true
         },
         {
-          id: 5,
+          id: 6,
           label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
           callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
-          id: 6,
+          id: 7,
           label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           callBack: () => { this.editNavigation(this.drawerMenus[1]) }
@@ -371,7 +370,8 @@ export default {
       folderList: [],
       folderName: '文件夹',
       customData: {},
-      folderItem: {}
+      folderItem: {},
+      folderId: '',
     }
   },
   props: {
@@ -395,26 +395,6 @@ export default {
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
-    // let inserted=localStorage.getItem('insertBird')
-    // if(!inserted){
-    //   this.navigationList.unshift( {
-    //     icon: 'http://a.apps.vip/icons/flappy.jpg',
-    //     type:'coolApp',
-    //     name: 'Mlappy Bird',
-    //     summary: '和小伙伴们一起飞。',
-    //     needInstall: false,
-    //     data: {
-    //       theme: '#030c13',
-    //       name: 'mlappyBird',
-    //       url: 'http://bird.apps.vip/?',
-    //       background: false,
-    //       type:'game',
-    //       scale:160
-    //     }
-    //   })
-    //   localStorage.setItem('insertBird','1')
-    // }
-    // this.enableDrag()
     this.getMessageIndex().then()
     //每3分钟刷新一次消息
     this.updateMessageTimer = setInterval(() => {
@@ -422,13 +402,6 @@ export default {
     }, 180000)
     let that = this
     this.checkScroll()
-    // const that = this
-    // window.onresize = function() {
-    //   return function(){
-    //     window.screenWidth = document.body.clientWidth;
-    //     that.screenWidth = window.screenWidth
-    //   }()
-    // }
     window.addEventListener('resize', that.checkScroll)
     let content = this.$refs.content
     content.addEventListener('wheel', (event) => {
@@ -450,7 +423,12 @@ export default {
     // 图标整体替换格式方法
     this.footNavigationList = this.replaceType(this.footNavigationList)
 
-
+    // const bottom = document.querySelector('#bottom-bar')
+    // const bottomWidth = bottom.getBoundingClientRect().width
+    // 获取最大可添加图标个数
+    const windowWidth = window.innerWidth
+    this.maxItemNum = Math.round((windowWidth - 240) / 72)
+    // console.log(this.maxItemNum, 'bottomWidth', windowWidth);
     // console.log(this.footNavigationList, 'foot');
   },
   computed: {
@@ -466,7 +444,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle',
+      'navigationToggle', 'maxItemNum',
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(offlineStore, ["isOffline", 'navList']),
@@ -528,79 +506,103 @@ export default {
       return this.mainMenus
     },
     folderOptions() {
-      if(this.currentItem && this.currentItem.type === 'folder'){
-        const reset={
-          label:'解散文件夹',
-          color: "#FF4D4F",
-          newIcon:'fluent:plug-disconnected-16-regular',
-          callBack:()=>{
-            this.resetFolder(this.currentItem,this.currentIndex)
+      if (this.currentItem && this.currentItem.type === 'folder') {
+        const reset = {
+          id: 4,
+          label: '解散文件夹',
+          newIcon: 'fluent:circle-off-16-regular',
+          callBack: () => {
+            this.resetFolder(this.currentItem, this.currentIndex)
           }
         }
-        return [...this.iconMenus,reset]
+        let arr = [...this.iconMenus, reset]
+        return arr.sort((a, b) => a.id - b.id)
       }
       return this.iconMenus
     },
     /**
      * 通过文件夹中数据的多少来自定义大小
      */
-    resize(){
+    resize() {
       const length = this.folderList.length
-      if(length<=6){
+      if (length <= 6) {
         return '2x2'
-      }else if(length<=12 && length>6){
+      } else if (length <= 12 && length > 6) {
         return '3x3'
-      }else if(length<=18 && length>12){
+      } else if (length <= 18 && length > 12) {
         return '4x4'
-      }else{
+      } else {
         return '6x4'
       }
+    },
+    /**
+     * 防止一次性添加过多导致图标截断
+     */
+    showList() {
+      return this.copyFootNav.slice(0, this.maxItemNum)
     }
+
   },
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        // if (this.footNavigationList.length > this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-        //   console.log(target, 'length > copyFootNav')
-        //   this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
-        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-        //   console.log(target,this.copyFootNav, 'length < copyFootNav')
-        //   target.forEach(element => {
-        //     const index = this.copyFootNav.findIndex(item => {
-        //       // 找到被删除元素在备份数据中的索引
-        //       return this.judge(item,element);
-        //     });
-        //     console.log(index, 'lost index');
-        //     if (index !== -1) {
-        //       this.copyFootNav.splice(index, 1);
-        //     }
-        //   })
-        // }
-        // else {
-        //   const rearrangedCopyFootNav = [];
-        //   // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-        //   this.footNavigationList.forEach((item) => {
-        //     // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-        //     const correspondingElement = this.copyFootNav.find((copyItem) => {
-        //       return this.judge(item, copyItem);
-        //     });
+        if (this.footNavigationList.length > this.copyFootNav.length) {
+          const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+          // console.log(target, 'length > copyFootNav')
+          // this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
+          for (let i = 0; i < target.length; i++) {
+            const index = this.footNavigationList.findIndex(item => {
+              return this.judge(item, target[i]);
+            })
+            this.copyFootNav.splice(index, 0, target[i]);
+          }
 
-        //     // 如果找到对应元素，则将其放入新数组中
-        //     if (correspondingElement) {
-        //       rearrangedCopyFootNav.push(correspondingElement);
-        //     }
-        //   });
-        //   console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
-        //   // 更新 copyFootNav 为重新排列后的数组
-        //   this.copyFootNav = rearrangedCopyFootNav;
+        } else if (this.footNavigationList.length < this.copyFootNav.length) {
+          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+          console.log(target, this.copyFootNav, 'length < copyFootNav')
+          target.forEach(element => {
+            const index = this.copyFootNav.findIndex(item => {
+              // 找到被删除元素在备份数据中的索引
+              return this.judge(item, element);
+            });
+            console.log(index, 'lost index');
+            if (index !== -1) {
+              this.copyFootNav.splice(index, 1);
+            }
+          })
+        }
+        else {
+          const rearrangedCopyFootNav = [];
+          // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
+          this.footNavigationList.forEach((item) => {
+            // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+            const correspondingElement = this.copyFootNav.find((copyItem) => {
+              return this.judge(item, copyItem);
+            });
 
-        // }
+            // 如果找到对应元素，则将其放入新数组中
+            if (correspondingElement) {
+              rearrangedCopyFootNav.push(correspondingElement);
+            }
+          });
+          // console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
+          // 更新 copyFootNav 为重新排列后的数组
+          this.copyFootNav = rearrangedCopyFootNav;
+
+        }
 
 
 
-        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+
+        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
+          // console.log(this.maxItemNum, 'maxItemNum')
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '后面无法添加', {
+            onOk: () => {
+              return true
+            }
+          })
+        }
 
       },
       immediate: true,
@@ -662,8 +664,9 @@ export default {
       this.customData = {
         ...this.defaultFolderData,
         list: this.folderList,
-        size: this.resize,
-        name: this.folderName
+        size: this.currentItem.size || this.resize,
+        name: this.folderName,
+        layout: this.currentItem.layout || 'rows',
       }
     },
     'customData.list': {
@@ -675,14 +678,14 @@ export default {
       deep: true,
 
     },
-    'customData.name':{
+    'customData.name': {
       handler(newV, oldV) {
         this.folderName = newV
         this.folderItem.name = newV
         // console.log('newV', newV, 'oldV', oldV)
       },
-      deep:true
-    }
+      deep: true
+    },
   },
   methods: {
     ...mapActions(teamStore, ['updateMy']),
@@ -706,16 +709,16 @@ export default {
     judge(ele, item) {
       if (ele.type === 'coolApp') {
         return ele.value.url === item.value.url
-      } else if (ele.type === 'folder' && ele.children && item.children && item.children.length > 0 && ele.children.length > 0) {
-        console.log(ele, item, 'folder is none')
-        return ele.children.every((j) => {
-          return item.children.every((k) => {
-            return (j.type === 'coolApp' && j.value.url === k.value.url) || (j.value === k.value)
-          })
-        })
+      } else if (ele.id && item.id) {
+        // console.log(ele, item, 'folder is none')
+        return ele.id === item.id
       } else {
         return ele.value === item.value
       }
+    },
+    closeFolder() {
+      this.folderVisible = false;
+      console.log(1111)
     },
     editIcon(item) {
       this.quick = true
@@ -740,6 +743,17 @@ export default {
         id: nanoid(6)
       }));
       this.folderName = item.name
+      this.folderId = item.id
+    },
+    // 更新大小尺寸
+    updateSize(value) {
+      this.currentItem.size = value
+      console.log(value, this.currentItem, 'this.currentItem')
+    },
+    // 更新大小尺寸
+    updateLayout(value) {
+      this.currentItem.layout = value
+      console.log(value, this.currentItem, 'this.currentItem')
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
@@ -1033,16 +1047,37 @@ export default {
       // }
     },
     // 解散文件夹
-    resetFolder(item,index){
-      if(item.children){
-        this.footNavigationList.splice(index,1)
-        for (let index = 0; index < item.children.length; index++) {
-          const element = item.children[index];
-          this.footNavigationList.unshift(element)
+    resetFolder(item, index) {
+      if (item.children) {
+        if (item.children.length + this.footNavigationList.length > this.maxItemNum) {
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '该文件夹无法解散', {
+            onOk: () => {
+              return true
+            }
+          })
+        } else {
+          this.footNavigationList.splice(index, 1)
+          // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
+          this.$nextTick(() => {
+            for (let index = 0; index < item.children.length; index++) {
+              const element = item.children[index];
+              this.footNavigationList.unshift(element)
+            }
+            this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
+            console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
+          })
+
+          if (this.folderId == item.id) {
+            this.closeFolder()
+          }
         }
-        // this.footNavigationList.push(...item.children)
+
 
       }
+    },
+    updateIcon,
+    createFile(item) {
+      console.log(item, 'from drop')
     },
     enableDrag() {
       let that = this
@@ -1162,18 +1197,21 @@ export default {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
             const oIndex = index
             const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            console.log(oIndex, nIndex, '==oIndex-nIndex');
+            // console.log(oIndex, nIndex, '==oIndex-nIndex');
             if (oIndex === nIndex) {
               return 0
             }
 
             that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
             that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
-            // console.log(that.footNavigationList);
-            // that.footNavigationList.splice(oIndex, 1)
-            // const items = that.diffItem(that.footNavigationList, that.copyFootNav)
-            // console.log(items, 'items');
+            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
+            const id = that.footNavigationList[nIndex].id
+            that.copyFootNav[nIndex].id = id
+            // const target = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             that.removeFootNavigationList(oIndex)
+            // that.removeFootNavigationList(nIndex)
+            // that.footNavigationList.splice(nIndex, 0, target)
           }
         }
       })
@@ -1196,6 +1234,13 @@ export default {
       }
     },
   },
+  // provide() {
+  //   return {
+  //     data:{
+  //       model:"custom",
+  //     }
+  //   }
+  // }
 }
 </script>
 <style></style>
