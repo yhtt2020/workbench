@@ -3,9 +3,8 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
-      :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer ">
-      <!-- <div class="w-[200px] h-[100px]" style="display: none;"></div> -->
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" 
+      :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer " id="folder">
       <Folder @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
         v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
     </div>
@@ -20,18 +19,14 @@
         background: var(--primary-bg);
         color: var(--primary-text);
         border-radius: 18px;
-        /* width: 160px; */
         border: 1px solid var(--divider);
         height: 80px;
-        /* padding-left: 16px !important; */
-        /* padding-right: 16px !important; */
         display: flex;
         justify-content: center;
       "
         :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
         <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
           <MyAvatar :chat="true" :level="false"></MyAvatar>
-          <!-- <div v-show="settings.enableChat && !simple" class="h-[40px] w-[1px] absolute" style="background-color: var(--divider);left: 80px;"></div> -->
           <div v-show="settings.enableChat" class="pl-4 pointer">
             <ChatButton></ChatButton>
           </div>
@@ -40,6 +35,7 @@
       </div>
 
       <!-- 快速搜索 底部栏区域 -->
+      <!-- <Drop @createFile="createFile"> -->
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
@@ -98,7 +94,7 @@
         </xt-task>
 
       </div>
-
+      <!-- </Drop> -->
       <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
         <Team  :item="this.copyFootNav[0]" :shakeElement="shakeElement"></Team>
       </template> -->
@@ -196,6 +192,7 @@ import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from "nanoid";
+import Drop from '../apps/folder/src/components/Drop.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -222,7 +219,8 @@ export default {
     EditIcon,
     Avatar,
     FolderVue,
-    Folder
+    Folder,
+    Drop
   },
   data() {
     return {
@@ -282,17 +280,17 @@ export default {
           callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
         },
         {
-          id: 4,
+          id: 5,
           divider: true
         },
         {
-          id: 5,
+          id: 6,
           label: '添加导航图标',
           newIcon: "fluent:add-16-regular",
           callBack: () => { this.editNavigation(this.drawerMenus[0]) },
         },
         {
-          id: 6,
+          id: 7,
           label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
           callBack: () => { this.editNavigation(this.drawerMenus[1]) }
@@ -373,6 +371,7 @@ export default {
       folderName: '文件夹',
       customData: {},
       folderItem: {},
+      folderId: '',
     }
   },
   props: {
@@ -537,13 +536,15 @@ export default {
     folderOptions() {
       if (this.currentItem && this.currentItem.type === 'folder') {
         const reset = {
+          id:4,
           label: '解散文件夹',
           newIcon: 'fluent:circle-off-16-regular',
           callBack: () => {
             this.resetFolder(this.currentItem, this.currentIndex)
           }
         }
-        return [...this.iconMenus, reset]
+        let arr = [...this.iconMenus,reset]
+        return arr.sort((a, b) => a.id - b.id)
       }
       return this.iconMenus
     },
@@ -612,7 +613,7 @@ export default {
         // }
         this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
         if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
-          console.log(this.maxItemNum, 'maxItemNum')
+          // console.log(this.maxItemNum, 'maxItemNum')
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '后面无法添加', {
             onOk: () => {
               return true
@@ -741,6 +742,10 @@ export default {
         return ele.value === item.value
       }
     },
+    closeFolder(){
+        this.folderVisible = false;
+        console.log(1111)
+    },
     editIcon(item) {
       this.quick = true
       this.componentId = 'EditIcon'
@@ -764,6 +769,7 @@ export default {
         id: nanoid(6)
       }));
       this.folderName = item.name
+      this.folderId = item.id
     },
     // 更新大小尺寸
     updateSize(value) {
@@ -1081,10 +1087,16 @@ export default {
             const element = item.children[index];
             this.footNavigationList.unshift(element)
           }
+          if(this.folderId == item.id){
+            this.closeFolder()
+          }
         }
 
 
       }
+    },
+    createFile(item) {
+      console.log(item,'from drop')
     },
     enableDrag() {
       let that = this
@@ -1204,7 +1216,7 @@ export default {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
             const oIndex = index
             const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            console.log(oIndex, nIndex, '==oIndex-nIndex');
+            // console.log(oIndex, nIndex, '==oIndex-nIndex');
             if (oIndex === nIndex) {
               return 0
             }
@@ -1238,6 +1250,13 @@ export default {
       }
     },
   },
+  // provide() {
+  //   return {
+  //     data:{
+  //       model:"custom",
+  //     }
+  //   }
+  // }
 }
 </script>
 <style></style>

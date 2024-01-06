@@ -35,7 +35,7 @@ const props = defineProps({
     iconList: Array
 })
 const list = computed(() => {
-    console.log(props.iconList)
+    // console.log(props.iconList)
     return props.iconList?.filter((item)=>item !== null )
 })
 </script>

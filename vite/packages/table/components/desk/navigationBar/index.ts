@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 export const navigationPosition = [
     
     {
@@ -429,6 +430,7 @@ export const iconFolder = (list, index, tIndex) => {
         value: 'folder',
         children: childrenFolder(arr).flat(1),
         mode: 'app',
+        id:nanoid(6),
     }
 }
 
