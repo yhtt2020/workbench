@@ -4,21 +4,22 @@ import dbStorage from "../../../store/dbStorage";
 import {post} from '../../../js/axios/request'
 
 
-const addNotice = sUrl("/app/notice/add");
+const addNotice = sUrl("/app/notice/add");  // 创建消息
+const sendNotice = sUrl("/app/notice/startPush"); // 推送消息
 
 
 
-// 初始化配置数据
+// 初始化编辑数据
 const initMsgSetting = {
   title:'', // 标题
   summary:'', // 摘要
   content:'', // 正文
-  noticeType:'1', // 消息类型
-  cover:[], // 封面
+  noticeType:1, // 消息类型
+  covers:[], // 封面
   urls:[], //  按钮链接
   videos:[],// b站视频链接
   attachments:[], //附件
-  targetType: { name:'全员',value:1000 },
+  targetType: 1000,
   targetList:[], // 选中的用户
   sendTime: new Date().getTime(), // 发送时间
 }
@@ -32,14 +33,14 @@ export const noticeStore = defineStore('notice', {
       title:'', // 标题
       summary:'', // 摘要
       content:'测试', // 正文
-      noticeType:'1', // 消息类型
-      cover:[], // 封面
+      noticeType:1, // 消息类型
+      covers:[], // 封面
       urls:[], //  按钮链接
       videos:[],// b站视频链接
       attachments:[], //附件
-      targetType: { name:'全员',value:1000 },
+      targetType: 1000 ,
       targetList:[], // 选中的用户
-      sendTime: null, // 发送时间
+      sendTime: new Date().getTime(), // 发送时间
     },
     // 草稿箱
     draftBox:[],
@@ -185,16 +186,16 @@ export const noticeStore = defineStore('notice', {
     async createNotice(){
       const option  = {
         title:this.msgSetting.title,
-        covers:JSON.stringify(this.msgSetting.cover),
+        covers:JSON.stringify(this.msgSetting.covers),
         videos:JSON.stringify(this.msgSetting.videos),
         urls:JSON.stringify(this.msgSetting.urls),
         content:this.msgSetting.content,
         summary:this.msgSetting.summary,
-        noticeType:parseInt(this.msgSetting.noticeType),
+        noticeType:this.msgSetting.noticeType,
         attachments:JSON.stringify(this.msgSetting.attachments),
         targetType:this.msgSetting.targetType,
         targetList:JSON.stringify(this.msgSetting.targetList),
-        sendTime:parseInt(this.msgSetting.sendTime)
+        sendTime:Number(this.msgSetting.sendTime)
       }
       const res = await post(addNotice,option);
       if(res.status === 1){
@@ -203,12 +204,28 @@ export const noticeStore = defineStore('notice', {
           this.draftBox.push(res.data)
           this.msgSetting = initMsgSetting;
         }
+        return res.data.id;
       }
     },
 
+    // 将编辑好消息发送出去
+    async pushNoticeMsg(id:any){
+      const res = await post(sendNotice,{noticeId:`${id}`});
+      if(res.status === 1){
+        this.initMsgData();
+        const index = this.draftBox.findIndex((find:any)=>{ return Number(find.id) === Number(id)  });
+        this.draftBox.splice(index,1);
+        this.getNoticeList();
+        return res
+      }
+    },
+
+    // 清空编辑数据
+    initMsgData(){
+      this.msgSetting = initMsgSetting;
+    },
     
   },
-
 
   persist: {
     enabled: true,

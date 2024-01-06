@@ -1,10 +1,17 @@
 <template>
  <div class="w-full px-4 pb-3 pt-5 h-full flex flex-col">
    <div class="flex items-center justify-between mb-4">
-     <div class="flex items-center justify-center">
+     <div class="flex items-center justify-center" v-if="!hide">
        <xt-new-icon icon="fluent:send-32-regular" size="16"></xt-new-icon>
        <span class="xt-font xt-text font-14 ml-3">发消息</span>
      </div>
+   
+     <xt-button v-else w="32" h="32" @click="backClick" style="border-radius: 8px;">
+      <div class="flex items-center justify-center">
+        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+      </div>
+     </xt-button>
+
      <div class="flex items-center justify-end" style="width:500px;">
       <div class="flex items-center mr-3">
         <span class="xt-font xt-text font-14">To：</span>
@@ -110,7 +117,7 @@ import CommunitySelect from '../userselect/CommunitySelect.vue';
 import AppointUserSelect from '../userselect/AppointUserSelect.vue';
 import TimingSend from './TimingSend.vue';
 
-const emits = defineEmits(['close']);
+const emits = defineEmits(['close','back']);
 
 
 const notice = noticeStore();
@@ -118,10 +125,17 @@ const { msgSetting } = storeToRefs(notice);
 const teams = teamStore()
 const { team } = storeToRefs(teams);
 
+const props = defineProps({
+  hide:{
+    type:Boolean,
+    default:false
+  }
+})
+
 // 通知类型
 const list = ref([
-  { name:'普通通知类型',value:'1' },
-  { name:'强制弹窗类型',value:'2' }
+  { name:'普通通知类型',value:1 },
+  { name:'强制弹窗类型',value:2 }
 ])
 // 发送目标
 const targetList = ref([
@@ -137,7 +151,7 @@ const sendList = ref([
   {
     newIcon:'fluent:send-32-regular',name:'立即发送',
     callBack:()=>{
-     
+     send()
     }, 
   },
   {
@@ -179,17 +193,35 @@ const appointRef = ref(null);
 /**事件处理方法**/
 // 发送
 const send = () =>{
-  notice.createNotice()
-  // isLoading.value = true;
-  // setTimeout(()=>{
-  //   isLoading.value = false;
-  // },1000)
+  isLoading.value = true;
+  setTimeout(async ()=>{
+    // 判断是否在已经成为草稿箱
+    if(msgSetting.value.hasOwnProperty('id')){
+     const res = await notice.pushNoticeMsg(msgSetting.value.id)
+     if(res.status === 1){
+      isLoading.value = false;
+     }
+    }
+    else {
+     const res = await notice.createNotice()
+     const result = await notice.pushNoticeMsg(res)
+     if(result.status === 1){
+      isLoading.value = false;
+     }
+    }
+  },200)
 }
 
 
 // 弹窗关闭
 const closeSend = () =>{
   emits('close');
+}
+
+// 返回按钮
+const backClick = () =>{
+  notice.initMsgData()
+  emits('back')
 }
 
 
@@ -199,7 +231,7 @@ const uploadImage = async() =>{
 }
 const getMessageImg = async(evt) =>{
   const fileList = evt.target.files;
-  if(msgSetting.value.cover.length === 3){
+  if(msgSetting.value.covers.length === 3){
     message.info('只能上传三张图片')
     evt.preventDefault();
   }
@@ -207,7 +239,7 @@ const getMessageImg = async(evt) =>{
     if(fileList.length <= 3){
       for(const file of fileList){
        const res = await fileUpload(file);
-       msgSetting.value.cover.push({cover:res})
+       msgSetting.value.covers.push({cover:res})
       }
     }
   }

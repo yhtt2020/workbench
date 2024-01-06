@@ -83,24 +83,19 @@ const options = ref(
   { url: 'data-source', }
 )
 
-
-const delCover = () =>{
- msgSetting.value.cover = '';
-}
-
 // 通过计算属性判断图片数据
 const imgCover = computed(()=>{
-  if(msgSetting.value.cover.length === 1){
-    return { cover:msgSetting.value.cover,width:350, };
+  if(msgSetting.value.covers.length === 1){
+    return { cover:msgSetting.value.covers,width:350, };
   }
   else {
-    return { cover:msgSetting.value.cover,width:114, };
+    return { cover:msgSetting.value.covers,width:114, };
   }
 })
 
 // 删除对应的图片
 const removeImg = (index) =>{
-  msgSetting.value.cover.splice(index,1)
+  msgSetting.value.covers.splice(index,1)
 }
 
 

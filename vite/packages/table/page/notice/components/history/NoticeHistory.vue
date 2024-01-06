@@ -20,36 +20,54 @@
   </template>
 
   <template v-else>
-    <DraftBoxDetail />
+    <DraftBoxDetail @edit="editDraftBox"/>
   </template>
  </div>
 
- <!-- <NoticeSend v-else/> -->
+ <NoticeSend :hide="true" v-else @back="tabShow = false"/>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
+import { storeToRefs } from 'pinia';
+import { noticeStore } from '../../store/noticeStore'
 
 import HistoryAll from "./content/HistoryAll.vue";
 import DraftBoxDetail from "./content/DraftBoxDetail.vue";
-
+import NoticeSend from '../send/NoticeSend.vue'
 
 const emit = defineEmits(['close']);
+
+const notice  = noticeStore();
+const { msgSetting } = storeToRefs(notice);
 
 const tabList  = ref([
   { name:'全部消息',value:'all' },
   { name:'草稿箱', value:'draft'}
 ])
-
 const tabShow = ref(false);
-
 const tabValue = ref('all')
+
 
 const closeModal = () =>{
  emit('close')
 }
 
+
+// 编辑草稿箱
+const editDraftBox = (value) =>{
+  tabShow.value = true;
+  const option = {
+    ...value,
+    noticeType:`${value.noticeType}`,
+    attachments:JSON.parse(value.attachments),
+    videos:JSON.parse(value.videos),
+    targetList:JSON.parse(value.targetList),
+    covers:JSON.parse(value.covers),
+    urls:JSON.parse(value.urls)
+  }
+  msgSetting.value = option
+}
 </script>
 
 <style lang="scss" scoped>

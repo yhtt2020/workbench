@@ -34,7 +34,7 @@ const { draftBox } = storeToRefs(notice);
 
 const { proxy } = getCurrentInstance();
 
-const emit = defineEmits(['updateTab'])
+const emit = defineEmits(['edit'])
 
 // 删除草稿箱
 const deleteDraftBox = (item) =>{
@@ -48,7 +48,7 @@ const deleteDraftBox = (item) =>{
 
 // 编辑草稿箱
 const editDraftBox = (item) =>{
- emit('')
+ emit('edit',item)
 }
 
 
