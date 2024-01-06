@@ -634,6 +634,9 @@ export default {
       let ref = this.$refs.mixMenu;
       ref.custom(e);
     },
+    update(){
+      this.$refs.currentDeskRef.update()
+    },
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
     },
