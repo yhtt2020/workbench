@@ -5,7 +5,7 @@
       v-model="setVisible"
       @close="setVisible = false"
       full
-      :footer="0"
+      :footer="false"
       boxClass="px-4 pt-4"
     >
       <xt-option-from :options="nameOptions" :data="data">

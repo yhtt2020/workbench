@@ -3,7 +3,7 @@
     <img class="pop-container" :src="this.backgroundImage.path?this.backgroundImage.path:'https://a.apps.vip/icons/defaultBackground.jpg'" alt="" />
     <div class="pop-box flex flex-wrap justify-center" style="min-width: 1000px;">
       <!-- 顶部 -->
-      <div style="justify-content: space-between;background-color: var(--secondary-bg);height: 64px;" class="flex w-full items-center px-3"> 
+      <div style="justify-content: space-between;background-color: var(--secondary-bg);height: 64px;" class="flex w-full items-center px-3">
         <div class="flex items-center">
           <div
             class="flex justify-center items-center mr-3 pointer center no-drag"
@@ -20,7 +20,7 @@
               style="width:40px;height:40px;border-radius: 10px;" :style="{background:background}"
               @click="isColor=!isColor"></div>
           <!-- 颜色选择 -->
-          <div v-show="isColor" 
+          <div v-show="isColor"
               style="justify-content: space-around;position: absolute;
                     width: 146px;height: 103px;top: 46px;left: -118px;
                     background-color: #2A2A2A;z-index: 100;
@@ -50,7 +50,7 @@
             style="color:rgba(255,255,255,0.85);font-size: 18px;font-weight: 500;word-wrap: break-word;text-wrap: wrap;
               border: none;box-shadow: none;padding: 0 0 0 50px; "
             v-model:value="this.selNoteTitle"
-            maxlength="15"
+            :maxlength="15"
             @blur="changeNoteTitle"
           ></a-input>
           <div class="mt-4 scroll-color xt-scroll" style="height:92%;"  >

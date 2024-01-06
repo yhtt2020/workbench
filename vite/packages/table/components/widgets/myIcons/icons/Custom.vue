@@ -109,15 +109,15 @@ export default {
   },
   watch: {
     w: {
-      async handler(newV) {
-        await this.setIconState();
+      handler(newV) {
+        this.setIconState();
         this.getAppCount();
         this.$emit("update:width", newV);
       },
       immediate: true,
     },
-    async h(newV) {
-      await this.setIconState();
+    h(newV) {
+      this.setIconState();
       this.getAppCount();
       this.$emit("update:height", newV);
     },
