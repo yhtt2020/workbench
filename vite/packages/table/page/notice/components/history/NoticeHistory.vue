@@ -25,8 +25,8 @@
  </div>
  
  <template v-else>
-  <NoticeSend :hide="true" v-if="noticeVisible"  @back="tabShow = false"/>
-  <HistoryDetail v-else-if="historyVisible" @close="closeModal"/>
+  <NoticeSend :hide="true" v-if="noticeVisible"  @back="tabShow = false;noticeVisible=false"/>
+  <HistoryDetail v-else-if="historyVisible" @close="closeModal" @back="tabShow = false;historyVisible = false"/>
  </template>
 </template>
 

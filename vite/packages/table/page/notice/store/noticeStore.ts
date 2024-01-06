@@ -44,6 +44,8 @@ export const noticeStore = defineStore('notice', {
     },
     // 草稿箱
     draftBox:[],
+    // 单个详情数据
+    detailItem:{},
   }),
 
   actions: {
@@ -232,7 +234,7 @@ export const noticeStore = defineStore('notice', {
     strategies: [{
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['msgSetting','draftBox'],
+      paths: ['msgSetting','draftBox','detailItem'],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
     }]
