@@ -331,22 +331,25 @@ export const addIconPosition=[
 // 副本内容与原始内容同步
 export const updateIcon = (list,copy)=>{
     if (list.length > copy.length) {
-        console.log('list 大于 copy')
+        // console.log('list 大于 copy')
         const target = updateNavList(list, copy);
-        console.log(target, 'target[0]')
-        copy = JSON.parse(JSON.stringify(target)).concat(copy);
+        // console.log(target, 'target[0]')
+        // copy = JSON.parse(JSON.stringify(target)).concat(copy);
+        for(let i=0;i<target.length;i++){
+          const index = list.findIndex(item => {
+              return judge(item, target[i]);
+          })
+          copy.splice(index, 0, target[i]);
+        }
         return copy
       } else if (list.length < copy.length) {
-        console.log('list 小于 copy')
+        // console.log('list 小于 copy')
         const target = updateNavList(copy, list);
-        console.log(target, 'target[0]')
+        // console.log(target, 'target[0]')
         target.forEach(element => {
           const index = copy.findIndex(item => {
             // 找到被删除元素在备份数据中的索引
-            if (element.type === 'coolApp') {
-              return item.value.url === element.value.url;
-            }
-            return item.value === element.value;
+            return judge(item, element);
           });
           if (index !== -1) {
             copy.splice(index, 1);
@@ -355,16 +358,13 @@ export const updateIcon = (list,copy)=>{
         return copy
       }
       else {
-        console.log('list 等于 copy')
+        // console.log('list 等于 copy')
         const rearrangedCopyFootNav = [];
         // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
         list.forEach((item) => {
           // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
           const correspondingElement = copy.find((copyItem) => {
-            if (item.type === 'coolApp') {
-              return copyItem.value.url === item.value.url;
-            }
-            return copyItem.value === item.value;
+            return judge(item, copyItem);
           });
 
           // 如果找到对应元素，则将其放入新数组中
@@ -392,6 +392,16 @@ export const updateNavList = (list,copy)=>{
       return filteredNavList;
 }
 
+export const  judge=(ele, item)=> {
+    if (ele.type === 'coolApp') {
+      return ele.value.url === item.value.url
+    } else if (ele.id && item.id) {
+      // console.log(ele, item, 'folder is none')
+      return ele.id === item.id
+    } else {
+      return ele.value === item.value
+    }
+  }
 
 // 图标文件夹模式
 // export const iconFolder= (list,index,tIndex)=>{
@@ -443,9 +453,28 @@ export const childrenFolder = (list) => {
             arr.push(item);
         }
     });
-    return arr;
+    return deduplicateArray(arr);
 };
 
+export const  deduplicateArray=(arr)=> {
+    return arr.reduce((uniqueArray, item) => {
+        // 检查是否已经存在于 uniqueArray 中
+        const exists = uniqueArray.some((i) => {
+            if (i.type === 'coolApp') {
+                return i.value.url === item.value.url;
+            } else {
+                return i.value === item.value;
+            }
+        });
+
+        // 如果不存在，则将当前元素添加到 uniqueArray
+        if (!exists) {
+            uniqueArray.push(item);
+        }
+
+        return uniqueArray;
+    }, []);
+}
 
 
 export const searchItem = (list,arr) =>{

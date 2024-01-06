@@ -3,7 +3,7 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;" 
+    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
       :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer " id="folder">
       <Folder @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
         v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
@@ -177,7 +177,7 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from "../js/common/offline";
-import { moreMenus, extraRightMenu, iconFolder } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu, iconFolder, updateIcon } from '../components/desk/navigationBar/index'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
@@ -396,26 +396,6 @@ export default {
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
-    // let inserted=localStorage.getItem('insertBird')
-    // if(!inserted){
-    //   this.navigationList.unshift( {
-    //     icon: 'http://a.apps.vip/icons/flappy.jpg',
-    //     type:'coolApp',
-    //     name: 'Mlappy Bird',
-    //     summary: '和小伙伴们一起飞。',
-    //     needInstall: false,
-    //     data: {
-    //       theme: '#030c13',
-    //       name: 'mlappyBird',
-    //       url: 'http://bird.apps.vip/?',
-    //       background: false,
-    //       type:'game',
-    //       scale:160
-    //     }
-    //   })
-    //   localStorage.setItem('insertBird','1')
-    // }
-    // this.enableDrag()
     this.getMessageIndex().then()
     //每3分钟刷新一次消息
     this.updateMessageTimer = setInterval(() => {
@@ -423,13 +403,6 @@ export default {
     }, 180000)
     let that = this
     this.checkScroll()
-    // const that = this
-    // window.onresize = function() {
-    //   return function(){
-    //     window.screenWidth = document.body.clientWidth;
-    //     that.screenWidth = window.screenWidth
-    //   }()
-    // }
     window.addEventListener('resize', that.checkScroll)
     let content = this.$refs.content
     content.addEventListener('wheel', (event) => {
@@ -536,14 +509,14 @@ export default {
     folderOptions() {
       if (this.currentItem && this.currentItem.type === 'folder') {
         const reset = {
-          id:4,
+          id: 4,
           label: '解散文件夹',
           newIcon: 'fluent:circle-off-16-regular',
           callBack: () => {
             this.resetFolder(this.currentItem, this.currentIndex)
           }
         }
-        let arr = [...this.iconMenus,reset]
+        let arr = [...this.iconMenus, reset]
         return arr.sort((a, b) => a.id - b.id)
       }
       return this.iconMenus
@@ -574,44 +547,55 @@ export default {
   watch: {
     footNavigationList: {
       handler(newVal, oldVal) {
-        // if (this.footNavigationList.length > this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-        //   console.log(target, 'length > copyFootNav')
-        //   this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
-        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-        //   console.log(target,this.copyFootNav, 'length < copyFootNav')
-        //   target.forEach(element => {
-        //     const index = this.copyFootNav.findIndex(item => {
-        //       // 找到被删除元素在备份数据中的索引
-        //       return this.judge(item,element);
-        //     });
-        //     console.log(index, 'lost index');
-        //     if (index !== -1) {
-        //       this.copyFootNav.splice(index, 1);
-        //     }
-        //   })
-        // }
-        // else {
-        //   const rearrangedCopyFootNav = [];
-        //   // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-        //   this.footNavigationList.forEach((item) => {
-        //     // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-        //     const correspondingElement = this.copyFootNav.find((copyItem) => {
-        //       return this.judge(item, copyItem);
-        //     });
+        if (this.footNavigationList.length > this.copyFootNav.length) {
+          const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+          // console.log(target, 'length > copyFootNav')
+          // this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
+          for (let i = 0; i < target.length; i++) {
+            const index = this.footNavigationList.findIndex(item => {
+              return this.judge(item, target[i]);
+            })
+            this.copyFootNav.splice(index, 0, target[i]);
+          }
 
-        //     // 如果找到对应元素，则将其放入新数组中
-        //     if (correspondingElement) {
-        //       rearrangedCopyFootNav.push(correspondingElement);
-        //     }
-        //   });
-        //   console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
-        //   // 更新 copyFootNav 为重新排列后的数组
-        //   this.copyFootNav = rearrangedCopyFootNav;
+        } else if (this.footNavigationList.length < this.copyFootNav.length) {
+          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+          console.log(target, this.copyFootNav, 'length < copyFootNav')
+          target.forEach(element => {
+            const index = this.copyFootNav.findIndex(item => {
+              // 找到被删除元素在备份数据中的索引
+              return this.judge(item, element);
+            });
+            console.log(index, 'lost index');
+            if (index !== -1) {
+              this.copyFootNav.splice(index, 1);
+            }
+          })
+        }
+        else {
+          const rearrangedCopyFootNav = [];
+          // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
+          this.footNavigationList.forEach((item) => {
+            // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+            const correspondingElement = this.copyFootNav.find((copyItem) => {
+              return this.judge(item, copyItem);
+            });
 
-        // }
-        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+            // 如果找到对应元素，则将其放入新数组中
+            if (correspondingElement) {
+              rearrangedCopyFootNav.push(correspondingElement);
+            }
+          });
+          // console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
+          // 更新 copyFootNav 为重新排列后的数组
+          this.copyFootNav = rearrangedCopyFootNav;
+
+        }
+
+
+
+
+        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
         if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
           // console.log(this.maxItemNum, 'maxItemNum')
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '后面无法添加', {
@@ -619,8 +603,6 @@ export default {
               return true
             }
           })
-        } else {
-          console.log(this.maxItemNum, 'maxItemNum')
         }
 
 
@@ -731,20 +713,16 @@ export default {
     judge(ele, item) {
       if (ele.type === 'coolApp') {
         return ele.value.url === item.value.url
-      } else if (ele.type === 'folder' && ele.children && item.children && item.children.length > 0 && ele.children.length > 0) {
-        console.log(ele, item, 'folder is none')
-        return ele.children.every((j) => {
-          return item.children.every((k) => {
-            return (j.type === 'coolApp' && j.value.url === k.value.url) || (j.value === k.value)
-          })
-        })
+      } else if (ele.id && item.id) {
+        // console.log(ele, item, 'folder is none')
+        return ele.id === item.id
       } else {
         return ele.value === item.value
       }
     },
-    closeFolder(){
-        this.folderVisible = false;
-        console.log(1111)
+    closeFolder() {
+      this.folderVisible = false;
+      console.log(1111)
     },
     editIcon(item) {
       this.quick = true
@@ -1083,11 +1061,17 @@ export default {
           })
         } else {
           this.footNavigationList.splice(index, 1)
-          for (let index = 0; index < item.children.length; index++) {
-            const element = item.children[index];
-            this.footNavigationList.unshift(element)
-          }
-          if(this.folderId == item.id){
+          // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
+          this.$nextTick(() => {
+            for (let index = 0; index < item.children.length; index++) {
+              const element = item.children[index];
+              this.footNavigationList.unshift(element)
+            }
+            this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
+            console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
+          })
+
+          if (this.folderId == item.id) {
             this.closeFolder()
           }
         }
@@ -1095,8 +1079,9 @@ export default {
 
       }
     },
+    updateIcon,
     createFile(item) {
-      console.log(item,'from drop')
+      console.log(item, 'from drop')
     },
     enableDrag() {
       let that = this
@@ -1223,11 +1208,14 @@ export default {
 
             that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
             that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
-            // console.log(that.footNavigationList);
-            // that.footNavigationList.splice(oIndex, 1)
-            // const items = that.diffItem(that.footNavigationList, that.copyFootNav)
-            // console.log(items, 'items');
+            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
+            const id = that.footNavigationList[nIndex].id
+            that.copyFootNav[nIndex].id = id
+            // const target = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             that.removeFootNavigationList(oIndex)
+            // that.removeFootNavigationList(nIndex)
+            // that.footNavigationList.splice(nIndex, 0, target)
           }
         }
       })
