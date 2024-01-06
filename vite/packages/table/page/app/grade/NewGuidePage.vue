@@ -1,6 +1,6 @@
   <template>
     <div class="fixed overflow-hidden modal-center xt-modal tran" 
-      :class="popState?'pop':'Popup' "
+      :class="popState?'pop':step==4?'theme':'Popup' "
       style="">
       <div v-if="!popState" class="h-full">
         <!-- 顶部按钮 -->
@@ -96,15 +96,15 @@
                     <img :style="{zoom:`${img.zoom}%`}" :src="`https://a.apps.vip/cards/${img.imgName}.png`" />
                   </div>
                 </div>
-
-                <div class="absolute bottom-3 pointer flex left-1/2" :style="{transform: `translateX(${-6*item.option?.length}px)`}">
+                <!-- 图片圆点 -->
+                <div class="absolute bottom-3 pointer flex left-1/2" v-if="item.option.length>1" :style="{transform: `translateX(${-6*item.option?.length}px)`}">
                   <div class="circle xt-enable-bg" v-for="(cir, cle) in item.option" @click="item.imgIndex = cle"
                    :class="cle==item.imgIndex?'circle-active':'', cle>0?'ml-2':''"
                   ></div>
                 </div>
               </div>
 
-              <div class="w-full px-3 pt-3">
+              <div class="w-full px-3 pt-3 pointer" @click="item.isCheck = !item.isCheck">
                 <div class="flex justify-between w-full items-center">
                   <div class="font-18 xt-text text-hidden">{{ item.cname }}</div>
                   <div class="ml-2 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
@@ -116,7 +116,7 @@
                 <div class=" mt-2 ">
                   <span class="font-14 xt-text-2 xt-enable-bg rounded-md" 
                   :class="n>0?'ml-1':''" style="padding:4px 8px;"
-                  v-for="(key, n) in item.sizes">{{ key }}</span>
+                  v-for="(key, n) in item.sizes.slice(0, 2)">{{ key }}</span>
                 </div>
                 <div class="xt-text-2 flex items-center mt-4">
                   <MyIcon icon="fluent:arrow-download-20-filled" width="16" height="16" />
@@ -133,20 +133,62 @@
           <div class="font-16 xt-text text-center pt-6" >添加导航图标</div>
           <div class="font-16 text-center xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。</div>
           <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap mt-4 content-start" style="height: 400px;padding-left:19px;" >
-            <div  class="nav-list flex relative xt-bg-2 rounded-lg items-center flex-col pt-4" v-for="(item, index) in navList"
-            :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':''">
+            <div  class="nav-list flex relative xt-bg-2 rounded-lg items-center flex-col pt-4 pointer" v-for="(item, index) in navList"
+            :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':'', index==0?'disabled':''" @click="changeNavList(item, index)">
               <div class="absolute top-1.5 right-1.5 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
-                <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                <a-checkbox :disabled="index==0" v-model:checked="item.isCheck"></a-checkbox>
               </div>
               <a-avatar class="flex-none" shape="square" :size="64" :src="item.icon"></a-avatar>
               <div class="mt-3 font-16 xt-text text-hidden w-full text-center">{{ item.name }}</div>
               <div class="mt-2 font-14 xt-text-2">{{ item.type=='systemApp'?'系统功能':item.type=='tableApp'?'应用程序':'文件夹' }}</div>
             </div>
+          </div>
+        </div>
 
+        <!-- 导入导航栏 -->
+        <div v-else-if="step == 4">
+          <div class="font-16 xt-text text-center pt-6" >最后一步啦，定制主题 ~</div>
+          <div class="px-4">
+
+            <div class="xt-bg-2 p-4 pb-1 mt-4 rounded-xl">
+              <xt-option-info title="主题色" />
+              <xt-option-color  v-model:color="themeColor"/>
+            </div>
+  
+            <div class="xt-bg-2 p-4 pb-1 mt-4 rounded-xl "><xt-option-info
+                title="桌面壁纸"
+                info="选择喜欢的图片作为工作台桌面壁纸。"
+              />
+              <!-- <div class="flex flex-col mb-4">
+                <xt-update-desk-bg></xt-update-desk-bg>
+              </div> -->
+              <hr />
+              <xt-option-info
+                title="桌面壁纸模糊度"
+                info="调节桌面壁纸的模糊程度。"
+                icon="fluent:arrow-clockwise-16-regular"
+                @onIconClick="backGroundImgBlur = 0"
+              />
+              <xt-option-slider
+                v-model:slider="backGroundImgBlur"
+                :min="0"
+                :max="100"
+              />
+            <!-- <hr /> -->
+  
+            <!-- <xt-option-info
+              isSwitch
+              v-model:switch="settings.transparent"
+              title="透明背景"
+              info="设置工作台窗口背景为透明，此功能下小组件的背景模糊会失效。"
+            /> -->
+            </div>
 
 
 
           </div>
+
+
         </div>
   
         <!-- 按钮 -->
@@ -211,11 +253,13 @@
   import { setThemeSwitch } from "../../../components/card/hooks/themeSwitch";
   // ai分析
   import { getStreamData } from "../../AIAssistant/chat/main/api";
-  import { message } from "ant-design-vue";
   import { defaultData, defaultFolderData } from '../../../apps/folder/src/components/options';
   import { nanoid } from 'nanoid'
   import { NavList } from '../card/navList'
   import { navStore } from '../../../store/nav';
+  import { message } from "ant-design-vue";
+  
+  import { setBgColor, setSecondaryBgColor } from "../../../components/card/hooks/styleSwitch/setStyle";
   
   export default {
     components:{
@@ -248,7 +292,7 @@
             game: false,
             current: false,
         },
-        step: 0,
+        step: 4,
         content:'',
         // 图片格式
         pictureFormat: ['png', 'jpeg', 'jpg', 'gif', 'psd', 'bmp', 'fpx', 'tiff', 'dxf', 'eps', 'svg', 'cdr', 'pcx', 'emf', 'wmf', 'swf', 'exif', 'pdf', 'cgm', 'raw', 'lic', 'dng', 'raf'],
@@ -298,6 +342,8 @@
         ],
         // 预览模式
         popState: false,
+        // 定制主题
+        themeState: true,
         baseNavList: [],
         // 三种不同的分类组件
         assist: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'search', 'Courier', 'wallpaper', 'fish', 'eatToday', 'OilPrices'],
@@ -324,6 +370,9 @@
           { type: 'systemApp', icon: '/logo/fullscreen.svg', name: '全屏', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: true},
           { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true},
         ],
+        // 主题色
+        themeColor: "",
+
       }
     },
     computed:{
@@ -348,7 +397,7 @@
     },
     mounted(){
 
-      this.getAiAnswer()
+      // this.getAiAnswer()
 
       // download: Math.floor(Math.random() * 10000) + 1,
         let items = []
@@ -413,7 +462,23 @@
 
 
     },
+
+    watch: {
+      themeColor(newV) {
+        if (!newV) return;
+        setBgColor(newV);
+      },
+    },
     methods:{
+      changeNavList(item, index){
+        console.log('item, index', item, index);
+        if(index>0){
+          item.isCheck = !item.isCheck
+        }else{
+          message.info("导航栏中至少包含一个桌面主页");
+        }
+
+      },
       themeSwitch(){
         this.styles = !this.styles
         setThemeSwitch(this.styles);
@@ -435,7 +500,8 @@
       async analysis(){
         // 请求开始
         // 开始加载过程
-        // this.loading = true
+        this.loading = true
+        this.getAiAnswer()
         this.timer = setInterval(()=>{
           this.time+=1
           if (this.time==99) {
@@ -455,10 +521,10 @@
 
       // 添加文件夹
       addFolder(){
-        console.log('desks',this.desks);
-        console.log('this',this);
-        console.log('defaultData, defaultFolderData',defaultData, defaultFolderData);
-        console.log('appList', this.appList);
+        // console.log('desks',this.desks);
+        // console.log('this',this);
+        // console.log('defaultData, defaultFolderData',defaultData, defaultFolderData);
+        // console.log('appList', this.appList);
         let folders = []
         this.appList.forEach(item=>{
           const now = new Date().getTime()
@@ -488,11 +554,27 @@
             }
             folders.push(obj)
             // this.desks[0]?.cards.push(obj)
-            
-            this.addCard(obj, this.desks[0]);
+            // setTimeout(() => {
+            //   this.addCard(obj, this.desks[0]);
+            // }, 5000);
           }
         })
         console.log('处理好的数据，', folders);
+        // setInterval(() => {
+          
+        // }, 2000);
+        // 通过定时器延时添加失效
+        folders.forEach((item,index)=>{
+          setTimeout(() => {
+            console.log('触发了index', index);
+            this.addCard(item, this.desks[0]);
+          }, index * 1000);
+        })
+
+        // setTimeout(() => {
+        //   console.log(123456);
+        //   this.$bus.emit("resetDesk");
+        // }, 3000);
 
       },
 
@@ -500,16 +582,29 @@
       addDeskCard(){
         console.log('cardList', this.cardList);
 
-        this.cardList.forEach(item=>{
+        this.cardList.forEach((item, index)=>{
+        // 通过定时器延时添加失效
           if(item.isCheck){
             const now = new Date().getTime()
-            this.addCard({
-              customData: {},
-              id: now,
-              name: item.name
-            },this.desks[0])
+            setTimeout(() => {
+              console.log('触发了index', index, this.desks[0].cards.length);
+              this.addCard({
+                customData: {},
+                id: now,
+                name: item.name
+              },this.desks[0])
+            }, index * 1000);
           }
         })
+        
+        
+        // setTimeout(() => {
+        //   console.log(123456);
+        //   this.$bus.emit("resetDesk");
+        // }, 3000);
+        // this.$bus.on("startAdjust", () => {
+        //   this.toggleEditing();
+        // });
 
 
       },
@@ -531,8 +626,6 @@
       // 预览桌面
       preview(){
         this.popState = true
-
-
       },
       
       // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来 
@@ -655,7 +748,7 @@
         z-index: 999;
     }
 
-
+    // 桌面主体部分
     .Popup{
       width:800px;
       height:600px;
@@ -664,6 +757,8 @@
       transform: translateX(-400px) translateY(-300px);
     }
 
+
+    // 右下角 预览桌面
     .pop{
       position: fixed;
       bottom: 80px ;
@@ -673,6 +768,16 @@
       height:60px;
       // scale: 0.1;
     }
+
+    // 右上角 定制主题
+    .theme{
+      width:400px;
+      height:584px;
+      position: fixed;
+      top: 60px;
+      right: 20px ;
+    }
+
 
 
 
@@ -788,6 +893,9 @@
       width: 378px;
       height: 184px;
     }
+    .card-list:hover{
+      opacity: 0.8;
+    }
 
     .card-left{
       width: 180px;
@@ -807,9 +915,12 @@
     .nav-list{
       width: 160px;
       height: 160px;
-
     }
     
+    .nav-list:hover{
+      opacity: 0.8;
+
+    }
     
   </style>
   
