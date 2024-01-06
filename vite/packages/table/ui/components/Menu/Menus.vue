@@ -1,7 +1,7 @@
 <template>
   <template v-for="menu in props.menus">
     <!--  disabled 为true时隐藏该列 -->
-    <div v-if="!menu. disabled" class="my-2">
+    <div v-if="!menu.disabled" class="my-2">
       <template v-if="menu.slot">
         <div class="rounded-lg w-full">
           <Item :data="menu" :name="name" :fn="fn" />

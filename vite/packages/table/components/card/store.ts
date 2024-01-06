@@ -7,7 +7,9 @@ export const useWidgetStore = defineStore("useWidgetStore", {
     rightModel: "default",
     edit: false,
   }),
-  getters: {},
+  getters: {
+
+  },
   actions: {},
   persist: {
     enabled: true,

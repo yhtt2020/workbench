@@ -33,7 +33,9 @@ const { zoom, alone, aloneZoom, hide }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
+  "addIcon",
   "add",
+  "addFolder",
   "set",
   "hide",
   "update:zoom",
@@ -60,9 +62,23 @@ const defaultMenu = computed(() => {
   return [
     {
       icon: "fluent:add-16-regular",
+      title: "添加图标",
+      fn: () => {
+        emits("addIcon");
+      },
+    },
+    {
+      icon: "fluent:collections-add-24-regular",
       title: "添加组件",
       fn: () => {
         emits("add");
+      },
+    },
+    {
+      icon: "fluent:app-folder-16-regular",
+      title: "添加文件夹",
+      fn: () => {
+        emits("addFolder");
       },
     },
     {
@@ -87,6 +103,20 @@ const defaultMenu = computed(() => {
     },
   ];
 });
+const updatePosition = () => {
+  getFreeLayoutState.value.mode.align === "custom";
+  getFreeLayoutState.value.line.centerLine = {
+    y: freeLayoutEnv.value.scrollTop,
+    x:
+      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
+    // x: freeLayoutEnv.value.scrollLeft,
+  };
+
+  message.success("修改中心点成功");
+};
+const redirectPosition = () => {
+  emits("scrollbarRedirect");
+};
 
 // 画布设置
 const freeLayoutMenu = computed(() => {
@@ -94,18 +124,7 @@ const freeLayoutMenu = computed(() => {
     {
       icon: "fluent:compose-16-regular",
       title: "修改中心点",
-      fn: () => {
-        getFreeLayoutState.value.mode.align === "custom";
-        getFreeLayoutState.value.line.centerLine = {
-          y: freeLayoutEnv.value.scrollTop,
-          x:
-            freeLayoutEnv.value.scrollLeft +
-            freeLayoutEnv.value.scrollData.width / 2,
-          // x: freeLayoutEnv.value.scrollLeft,
-        };
-
-        message.success("修改中心点成功");
-      },
+      fn: updatePosition,
     },
     {
       icon: "fluent:resize-large-16-regular",
@@ -140,22 +159,6 @@ const freeLayoutMenu = computed(() => {
 const canvasMenu = computed(() => {
   return [
     {
-      icon: "fluent:add-16-regular",
-      type: "default",
-      title: "放大",
-      fn: () => {
-        if (currentMode.value === "free") {
-          freeLayoutZoom.value += 5;
-        } else {
-          if (alone.value) {
-            defaultAloneZoom.value += 5;
-          } else {
-            defaultZoom.value += 5;
-          }
-        }
-      },
-    },
-    {
       icon: "fluent:subtract-16-regular",
       title: "缩小",
       type: "default",
@@ -167,6 +170,22 @@ const canvasMenu = computed(() => {
             defaultAloneZoom.value -= 5;
           } else {
             defaultZoom.value -= 5;
+          }
+        }
+      },
+    },
+    {
+      icon: "fluent:add-16-regular",
+      type: "default",
+      title: "放大",
+      fn: () => {
+        if (currentMode.value === "free") {
+          freeLayoutZoom.value += 5;
+        } else {
+          if (alone.value) {
+            defaultAloneZoom.value += 5;
+          } else {
+            defaultZoom.value += 5;
           }
         }
       },
@@ -262,6 +281,68 @@ onBeforeUnmount(() => {
   widgetStore.edit = false;
   // floatMenuStore.firstPosition = null;
 });
+
+// 滚动模式
+const scrollList = ref([
+  {
+    name: "自由",
+    value: "free",
+  },
+  {
+    name: "仅垂直",
+    value: "vertical",
+  },
+  {
+    name: "仅水平",
+    value: "horizontal",
+  },
+  {
+    name: "禁用",
+    value: "lock",
+  },
+]);
+const updateScroll = (newV) => {
+  if (newV === "free") {
+    getFreeLayoutState.value.mode.scroll = "free";
+  } else if (newV === "vertical") {
+    getFreeLayoutState.value.mode.scroll = "vertical";
+  } else if (newV === "horizontal") {
+    getFreeLayoutState.value.mode.scroll = "horizontal";
+  } else if (newV === "lock") {
+    getFreeLayoutState.value.mode.scroll = "lock";
+  }
+};
+
+// 排列模式
+const arrangeList = ref([
+  {
+    name: "对齐到网格",
+    value: "grid",
+  },
+  {
+    name: "组件边缘吸附",
+    value: "magnet",
+  },
+  {
+    name: "自由排列",
+    value: "free",
+  },
+]);
+const updateArrange = (newV) => {
+  if (newV === "grid") {
+    getFreeLayoutState.value.mode.arrange = "grid";
+    getFreeLayoutState.value.option.afterDragging = true;
+    getFreeLayoutState.value.option.magnet = false;
+  } else if (newV === "magnet") {
+    getFreeLayoutState.value.mode.arrange = "magnet";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = true;
+  } else if (newV === "free") {
+    getFreeLayoutState.value.option.arrange = "free";
+    getFreeLayoutState.value.option.afterDragging = false;
+    getFreeLayoutState.value.option.magnet = false;
+  }
+};
 </script>
 
 <template>
@@ -276,7 +357,7 @@ onBeforeUnmount(() => {
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
-      style="touch-action: none; width: 208px"
+      style="touch-action: none; width: 255px"
     >
       <xt-text type="2" class="mb-3">
         <template #center> 编辑桌面 </template>
@@ -295,17 +376,31 @@ onBeforeUnmount(() => {
         :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentMode"
         :list="deskList"
-        class="h-10 p-1 xt-bg-2 mb-3"
+        class="h-10 p-1 xt-bg-t-2 mb-3"
         style="font-size: 14px !important"
       />
-      <!-- <xt-modal :modelValue="1"> <test></test></xt-modal> -->
-
       <div class="flex my-3">
         <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
       </div>
       <template v-if="isFreeLayout && currentMode === 'free'">
-        <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
-        <!-- <Items :menus="freeLayoutMenu"></Items> -->
+        <xt-text type="2" class="mb-3 mt-2">滚动模式</xt-text>
+        <div>
+          <xt-option-select
+            class="floatMenu"
+            v-model="getFreeLayoutState.mode.scroll"
+            :list="scrollList"
+            @cb="updateScroll"
+            :border="false"
+          />
+        </div>
+        <xt-text type="2" class="mb-3 mt-2">排列模式</xt-text>
+        <xt-option-select
+          :border="false"
+          :list="arrangeList"
+          @cb="updateArrange"
+          v-model="getFreeLayoutState.mode.arrange"
+        />
+        <!-- <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
         <div class="flex my-3">
           <Item
             v-for="(item, index) in freeLayoutMenu"
@@ -313,10 +408,9 @@ onBeforeUnmount(() => {
             :item="item"
             :class="{ 'mr-2': index !== freeLayoutMenu.length - 1 }"
           />
-        </div>
-
+        </div> -->
         <div class="mb-3 mt-2 flex items-center">
-          画布缩放
+          桌面缩放
           <xt-new-icon
             @click="resetZoom()"
             class="xt-text-2 ml-1"
@@ -329,17 +423,18 @@ onBeforeUnmount(() => {
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
             v-model="freeLayoutZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
-            style="width: 60px; height: 40px"
+            class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+            style="width: 60px; height: 40px; border-radius: 10px"
+            type=""
           >
             <template #addonAfter>
               <div
-                class="h-full flex items-center xt-text justify-between px-3.5 relative xt-bg"
+                class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
                 style="border-radius: 0px 8px 8px 0"
               ></div>
               <div
                 class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
-                style="left: 7px"
+                style="left: 8px"
               >
                 %
               </div>
@@ -363,17 +458,18 @@ onBeforeUnmount(() => {
           <XtInput
             v-if="alone"
             v-model="defaultAloneZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
-            style="width: 60px; height: 40px"
+            class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+            style="width: 60px; height: 40px; border-radius: 10px"
+            type=""
           >
             <template #addonAfter>
               <div
-                class="h-full flex items-center xt-text justify-between px-3.5 relative xt-bg"
+                class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
                 style="border-radius: 0px 8px 8px 0"
               ></div>
               <div
                 class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
-                style="left: 7px"
+                style="left: 8px"
               >
                 %
               </div>
@@ -382,17 +478,18 @@ onBeforeUnmount(() => {
           <XtInput
             v-else
             v-model="defaultZoom"
-            class="flex-1 relative xt-main-bg xt-b overflow-hidden floatMenu"
-            style="width: 60px; height: 40px"
+            class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+            style="width: 60px; height: 40px; border-radius: 10px"
+            type=""
           >
             <template #addonAfter>
               <div
-                class="h-full flex items-center xt-text justify-between px-3.5 relative xt-bg"
+                class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
                 style="border-radius: 0px 8px 8px 0"
               ></div>
               <div
                 class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
-                style="left: 7px"
+                style="left: 8px"
               >
                 %
               </div>
@@ -400,6 +497,24 @@ onBeforeUnmount(() => {
           </XtInput>
         </div>
       </template>
+
+      <div class="mt-3 flex justify-between">
+        <xt-button
+          w="185"
+          class="xt-bg-t-2"
+          icon="fluent:resize-large-16-regular"
+          @click="redirectPosition"
+        >
+          复原桌面位置
+        </xt-button>
+        <xt-button
+          w="40"
+          class="xt-bg-t-2"
+          icon="fluent:compose-16-regular"
+          @click="updatePosition"
+        >
+        </xt-button>
+      </div>
     </div>
   </xt-drag>
 </template>

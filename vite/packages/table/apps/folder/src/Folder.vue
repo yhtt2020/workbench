@@ -10,20 +10,20 @@
     />
   </Widget> -->
   <Drop @createFile="createFile" @deleteFile="deleteFile">
-    <xt-container 
-      :customIndex="customIndex" 
-      :customData="customData" 
-      :defaultData="defaultFolderData" 
+    <xt-container
+      :customIndex="customIndex"
+      :customData="customData"
+      :defaultData="defaultFolderData"
       :header="header"
-      :menuList="menuList" 
-      v-model:size="customData.size" 
-      :sizeList="autoSizeList" 
+      :menuList="menuList"
+      v-model:size="customData.size"
+      :sizeList="autoSizeList"
       @leftClick="leftClick"
       @onRefresh="onRefresh">
       <!-- 右侧布局切换 -->
-      <Resize 
-        :disabled="expand.disabled" 
-        v-model:size="customData.size" 
+      <Resize
+        :disabled="expand.disabled"
+        v-model:size="customData.size"
         :resize="navBar.resize">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
@@ -32,19 +32,23 @@
         <vue-custom-scrollbar v-else :settings="{
           suppressScrollY: false,
         }" class="relative w-full h-full">
-          <File 
-            :list="customData.list" 
-            :layout="customData.layout" 
-            :model="customData.model" 
+          <File
+            :list="customData.list"
+            :layout="customData.layout"
+            :model="customData.model"
             @deleteFile="deleteFile"
-            @updateList="updateList" 
+            @updateList="updateList"
             @updateSort="updateSort" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
   </Drop>
 
-  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
     @updateWindowApp="updateWindowApp">
   </folderSet>
 
@@ -115,6 +119,7 @@ const props = defineProps({
     default: false
   }
 });
+
 const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
 const emit = defineEmits(['update:size','update:layout'])
 

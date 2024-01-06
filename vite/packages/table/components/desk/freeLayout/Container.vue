@@ -113,6 +113,7 @@ function updateCard(data) {
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
 }
+
 watch(
   currentDesk.value?.cards,
   (card) => {
@@ -125,6 +126,7 @@ watch(
     immediate: true,
   }
 );
+
 const test: any = ref(null);
 const drag = (obj) => {
   if (isSelectAll.value) {

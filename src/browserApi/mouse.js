@@ -1,8 +1,8 @@
-const { screen} = require('@electron/remote')
 
 const mouseApi = {
    getPos(){
-    return screen.dipToScreenPoint(screen.getCursorScreenPoint())
+    let pos= require('hmc-win32').getMouseMovePoints()
+     return pos[0]
    }
 }
 

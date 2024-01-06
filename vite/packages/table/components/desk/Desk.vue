@@ -20,6 +20,8 @@
     </div>
     <FloatMenu
       v-if="editing"
+      @addIcon="newAddIcon"
+      @addFolder="addFolder"
       @add="newAddCard"
       @set="showSetting"
       @hide="showDesk"
@@ -31,9 +33,15 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
-    <!-- 自由布局滚动 -->
-    <FreeLayoutMask v-if="isFreeLayout && $route.path == '/main' && freeLayout">
-      <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
+
+    <Drop>
+      <!-- 自由布局 -->
+
+      <FreeLayoutScrollbar
+        ref="freeLayoutScrollbar"
+        class="flex-1"
+        v-if="isFreeLayout && $route.path == '/main' && freeLayout"
+      >
         <FreeLayoutCanvas class="home-widgets">
           <FreeLayoutContainer
             :currentDesk="currentDesk"
@@ -41,109 +49,120 @@
             :isDrag="editing"
           >
             <template #box="{ data }">
-              <component :desk="currentDesk" :is="data.name" :customIndex="data.id" :customData="data.customData" di />
+              <component
+                :desk="currentDesk"
+                :is="data.name"
+                :customIndex="data.id"
+                :customData="data.customData"
+                di
+              />
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
-    </FreeLayoutMask>
-    <vue-custom-scrollbar
-      v-show="!isFreeLayout"
-      class="no-drag"
-      key="scrollbar"
-      id="scrollerBar"
-      :settings="{
-        ...scrollbarSettings,
-        suppressScrollY: settings.vDirection ? false : true,
-        suppressScrollX: settings.vDirection ? true : false,
-      }"
-      style="
-        position: relative;
-        width: calc(100% + 4px);
-        height: 100%;
-        margin-left: 0;
-        padding-left: 4px;
-        padding-right: 4px;
-        display: flex;
-        flex-direction: row;
-      "
-    >
-      <div
-        id="cardContent"
-        ref="deskContainer"
-        style="
-          /*display: flex;*/
-          /*align-items: center;*/
-          /*align-content: center;*/
-        "
-        :style="{
-          // 'flex-direction': settings.vDirection?'row':'column',
-          'padding-top': this.usingSettings.marginTop + 'px',
-          width: settings.vDirection ? '100%' : 'auto',
-          height: settings.vDirection ? 'auto' : '100%',
+      <vue-custom-scrollbar
+        v-show="!isFreeLayout"
+        class="no-drag"
+        key="scrollbar"
+        id="scrollerBar"
+        :settings="{
+          ...scrollbarSettings,
+          suppressScrollY: settings.vDirection ? false : true,
+          suppressScrollX: settings.vDirection ? true : false,
         }"
-        :class="notTrigger ? 'trigger' : ''"
+        style="
+          position: relative;
+          width: calc(100% + 4px);
+          height: 100%;
+          margin-left: 0;
+          padding-left: 4px;
+          padding-right: 4px;
+          display: flex;
+          flex-direction: row;
+        "
       >
-        <vuuri
-          v-show="showGrid"
-          :key="key"
-          v-if="
-            (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
-            !freeLayout
+        <div
+          id="cardContent"
+          ref="deskContainer"
+          style="
+            /*display: flex;*/
+            /*align-items: center;*/
+            /*align-content: center;*/
           "
-          item-key="id"
-          :get-item-margin="
-            () => {
-              return usingSettings.cardMargin * this.adjustZoom + 'px';
-            }
-          "
-          group-id="grid.id"
-          :drag-enabled="editing"
-          v-model="currentDesk.cards"
           :style="{
+            // 'flex-direction': settings.vDirection?'row':'column',
+            'padding-top': this.usingSettings.marginTop + 'px',
             width: settings.vDirection ? '100%' : 'auto',
             height: settings.vDirection ? 'auto' : '100%',
           }"
-          class="grid home-widgets"
-          ref="grid"
-          :options="muuriOptions"
+          :class="notTrigger ? 'trigger' : ''"
         >
-          <template #item="{ item }">
-            <div
-              :style="{
-                zoom: (
-                  (usingSettings.cardZoom * this.adjustZoom) /
-                  100
-                ).toFixed(2),
-              }"
-            >
-              <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData" >
-              </component>
-            </div>
-          </template>
-        </vuuri>
-        <div
-          class="xt-text"
-          v-show="!showGrid"
-          style="
-            text-align: center;
-            font-size: 32px;
-            margin: auto;
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%) translateX(-50%);
-            left: 50%;
-          "
-        >
-          <loading-outlined />
+          <vuuri
+            v-show="showGrid"
+            :key="key"
+            v-if="
+              (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
+              !freeLayout
+            "
+            item-key="id"
+            :get-item-margin="
+              () => {
+                return usingSettings.cardMargin * this.adjustZoom + 'px';
+              }
+            "
+            group-id="grid.id"
+            :drag-enabled="editing"
+            v-model="currentDesk.cards"
+            :style="{
+              width: settings.vDirection ? '100%' : 'auto',
+              height: settings.vDirection ? 'auto' : '100%',
+            }"
+            class="grid home-widgets"
+            ref="grid"
+            :options="muuriOptions"
+          >
+            <template #item="{ item }">
+              <div
+                :style="{
+                  zoom: (
+                    (usingSettings.cardZoom * this.adjustZoom) /
+                    100
+                  ).toFixed(2),
+                }"
+              >
+                <component
+                  :desk="currentDesk"
+                  :is="item.name"
+                  :customIndex="item.id"
+                  :customData="item.customData"
+                >
+                </component>
+              </div>
+            </template>
+          </vuuri>
+          <div
+            class="xt-text"
+            v-show="!showGrid"
+            style="
+              text-align: center;
+              font-size: 32px;
+              margin: auto;
+              position: fixed;
+              top: 50%;
+              transform: translateY(-50%) translateX(-50%);
+              left: 50%;
+            "
+          >
+            <loading-outlined />
+          </div>
         </div>
-      </div>
-    </vue-custom-scrollbar>
+      </vue-custom-scrollbar>
+    </Drop>
   </div>
 
   <xt-modal
     v-model="settingVisible"
-    :footer="0"
+    :footer="false"
     title="桌面设置"
     boxClass="p-4 pb-0"
     :mask="0"
@@ -237,20 +256,17 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard, file } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./set/store";
+import { useDeskStore } from "./store";
+
+import Drop from "./Drop.vue";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis],
-  components: { LoadingOutlined, EditNewNavigation, GalleryModal },
+  components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
     freeLayout: {
       default: true,
-    },
-    deskGroupMenu: {
-      default: () => {
-        return [];
-      },
     },
     globalSettings: {
       type: Object,
@@ -325,9 +341,11 @@ export default {
     },
   },
   watch: {
-    dropdownMenu: {
+    deskMenus: {
       handler(newVal) {
-        this.menus = newVal;
+        this.deskMenus.forEach((item) => {
+          this.addMenu(item);
+        });
       },
       deep: true,
       immediate: true,
@@ -358,6 +376,33 @@ export default {
         // }
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
+    },
+    // {
+
+    // 监听ID变化
+    "currentDesk.id": {
+      handler(newVal) {
+        let obj = {
+          id: 20,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
+          lock: true,
+          children: [
+            {
+              id: 4,
+              parentId: 3,
+              newIcon: "fluent:circle-off-16-regular",
+              name: "清空桌面",
+              fn: () => {
+                this.clear(this.currentDesk);
+              },
+            },
+          ],
+        };
+        this.addMenu(obj);
+      },
+      deep: true,
+      immediate: true,
     },
     "currentDesk.settings": {
       handler(newVal) {
@@ -394,40 +439,9 @@ export default {
       "isFreeLayout",
       "getFreeLayoutState",
     ]),
-    ...mapWritableState(useFloatMenuStore, ["menus"]),
+    ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
-    deskGroupMenus() {
-      if (this.deskGroupMenu && this.deskGroupMenu.length > 1) {
-        // let arr = _.cloneDeep(this.deskGroupMenu[1].children);
-        let arr = [...this.deskGroupMenu[1].children];
-        let exists = arr.findIndex((item) => item.id === 4);
-        if (exists === -1) {
-          arr.push({
-            id: 4,
-            newIcon: "fluent:circle-off-16-regular",
-            name: "清空桌面",
-            fn: () => {
-              this.clear(this.currentDesk);
-            },
-          });
-        } else {
-          arr.splice(exists, 1, {
-            id: 4,
-            newIcon: "fluent:circle-off-16-regular",
-            name: "清空桌面",
-            fn: () => {
-              this.clear(this.currentDesk);
-            },
-          });
-        }
-        arr.sort((a, b) => a.id - b.id);
-        let deskGroupMenu = [...this.deskGroupMenu];
-        deskGroupMenu[1].children = arr;
-        return deskGroupMenu;
-      }
-      return [];
-    },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -468,12 +482,17 @@ export default {
           fn: this.newAddCard,
         },
         {
-          id: 4,
-          newIcon: "fluent:app-folder-16-regular",
-          name: "添加文件夹",
-          fn: () => {
-            registerFolder(this.currentDesk);
-          },
+          id: 3,
+          newIcon: "fluent:apps-add-in-20-filled",
+          name: "添加更多",
+          children: [
+            {
+              id: 2,
+              newIcon: "fluent:app-folder-16-regular",
+              name: "添加文件夹",
+              fn: this.addFolder,
+            },
+          ],
         },
         { id: 5, divider: true },
         {
@@ -486,11 +505,10 @@ export default {
         },
         {
           id: 7,
-          newIcon: "fluent:image-multiple-16-regular",
-          name: "更换壁纸",
-          fn: () => {
-            this.$refs.galleryRef.openGalleryModal();
-          },
+          newIcon: "fluent:resize-large-16-regular",
+          name: "复原桌面位置",
+          disabled: this.isFreeLayout ? false : true,
+          fn: this.freeLayoutScrollbarRedirect,
         },
         {
           id: 8,
@@ -502,7 +520,16 @@ export default {
           },
         },
         {
-          id: 8,
+          id: 9,
+          newIcon: "fluent:image-multiple-16-regular",
+          name: "更换壁纸",
+          fn: () => {
+            this.$refs.galleryRef.openGalleryModal();
+          },
+        },
+
+        {
+          id: 10,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",
@@ -519,20 +546,43 @@ export default {
               }
             }
           },
+          disabled: true,
         },
-        { id: 9, divider: true },
         {
-          id: 9,
+          id: 11,
+          disabled: true,
+          name: "添加到导航栏",
+          newIcon: "fluent:tablet-16-regular",
+          lock: true,
+          children: [
+            {
+              id: 1,
+              newIcon: "fluent:tablet-16-regular",
+              name: "底部导航",
+              fn: () => {},
+            },
+            {
+              id: 2,
+              newIcon: "fluent:panel-left-contract-16-regular",
+              name: "右侧导航",
+              fn: () => {},
+            },
+            {
+              id: 3,
+              newIcon: "fluent:panel-right-contract-16-regular",
+              name: "左侧导航",
+              fn: () => {},
+            },
+          ],
+        },
+        {
+          id: 12,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: this.showSetting,
         },
+        { id: 13, divider: true },
       ];
-    },
-    dropdownMenu() {
-      let arr = [...this.deskGroupMenus, ...this.deskMenus, ...this.navMenu];
-      arr.sort((a, b) => a.id - b.id);
-      return arr;
     },
     usingSettings() {
       if (this.settings.enableZoom) {
@@ -579,8 +629,7 @@ export default {
   },
   mounted() {
     this.$bus.on("startAdjust", () => {
-      console.log("2222 :>> ", 2222);
-      this.toggleEditing()
+      this.toggleEditing();
     });
 
     if (window.showed) {
@@ -593,6 +642,16 @@ export default {
     window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
     this.resetLayout();
+
+    // 重排事件无效
+    // this.$bus.on("resetDesk", () => {
+    //   setTimeout(() => {
+    //     this.update();
+    //     this.resetLayout();
+    //   }, 2000);
+    // });
+
+
   },
   unmounted() {
     if (this.fullScreen) {
@@ -603,6 +662,10 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
+    ...mapActions(useDeskStore, ["addMenu"]),
+    addFolder() {
+      registerFolder(this.currentDesk);
+    },
     resetLayout() {
       this.hide = true;
       setTimeout(() => {

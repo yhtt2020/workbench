@@ -123,7 +123,7 @@ import { useRouter } from "vue-router";
 import { ref, toRefs, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
-import { useDeskStore } from "./store";
+import { useDeskStore } from "../store";
 
 const router = useRouter();
 const app = appStore();

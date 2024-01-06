@@ -131,16 +131,24 @@
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
+  <!-- <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
-  </div>
-
+  </div> -->
+  
+  
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
   <teleport to="body">
+    <!-- 使用新版的配置导航 -->
+    <NewGuidePage v-if="true"></NewGuidePage>
+    <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+    <!-- 定制桌面流程 -->
+    <!-- <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel> -->
+    <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel>
+
   </teleport>
 
   <GalleryModal ref="galleryRef"/>
@@ -171,6 +179,7 @@ import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
 import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
+import NewGuidePage from "./app/grade/NewGuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
@@ -218,6 +227,7 @@ import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
+import GuidePanel from "./GuidePanel.vue";
 
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
@@ -378,6 +388,7 @@ export default {
     myIcons,
     NewAddCard,
     GuidePage,
+    NewGuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
@@ -397,6 +408,7 @@ export default {
     RadioTab,
     GalleryModal,
     ScalePanel,
+    GuidePanel,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -884,7 +896,7 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
+        // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
           let deskTmp = _.cloneDeep(this.deskDefault[0]);
           let oldId = deskTmp.id
@@ -914,27 +926,23 @@ export default {
       })
       let appListHandle = []
       appList.forEach(item => {
+        const now = new Date().getTime()
         let obj = {
-          backgroundColor: '',
-          backgroundIndex: 0,
-          imgShape: "square",
-          imgState: "cover",
-          isBackground: false,
-          isRadius: true,
-          isTitle: true,
-          link: "fast",
-          linkValue: "",
-          radius: 5,
-          size: "mini",
-          // 图标
-          src: item.icon,
-          // 标题
-          titleValue: item.name,
-          open: {
-            type: "default",
-            // 网址
-            value: item.path
-          }
+          "value": item.path,
+          "icon": item.icon,
+          "name": item.name,
+          "id": now,
+          "useCount": 0,
+          "lastUseTime": "",
+          "mode": "link",
+          "type": "default",
+          "iconState": "cover",
+          "iconShape": "square",
+          "isName": true,
+          "bg": "",
+          "isBg": false,
+          "radius": 5,
+          "isRadius": true,
         }
         appListHandle.push(obj)
       })
@@ -942,8 +950,8 @@ export default {
         // 直接修改默认数据
         if (item.id == '1702026795921') {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if (appListHandle.length <= 1) {
-            this.desks[0].cards[index].customData.iconList = appListHandle
+          if (appListHandle.length > 1) {
+            this.desks[0].cards[index].customData.list = appListHandle
           } else {
             this.desks[0].cards[index] = {
               "name": "historyInfo",

@@ -13,11 +13,11 @@ body{
 }
 .s-bg{
   background: var(--primary-bg);
-  backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));
+
   box-shadow: var(--suspensiondBackGroundBoxShadow,0px 0px 10px 0px rgba(0,0,0,0.5))
 }//suspension-background
 .s-text{
-  text-shadow: 0 3px 6px #000000;
+  text-shadow: 0 3px 6px #000000  backdrop-filter:blur(var(--suspensiondBackGroundBlur,50px));;
 
 }//suspension-text
 .s-icon{

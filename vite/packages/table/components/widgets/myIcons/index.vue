@@ -1,10 +1,9 @@
 <!-- 图标组件入口 -->
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
-  <!-- 图标组件开始 -->
-  <Widget
+  <!-- 图标组件开始 Widget -->
+  <xt-container
     :customData="customData"
-    :editing="true"
     :customIndex="customIndex"
     :options="options"
     :menuList="menuList"
@@ -64,7 +63,7 @@
       </droppable-area>
       <!-- 卡片核心 -->
     </div>
-  </Widget>
+  </xt-container>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Set
@@ -148,7 +147,7 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { hide: true }, // 卡片核心配置
+      options: { custom: true }, // 卡片核心配置
     };
   },
   beforeMount() {
