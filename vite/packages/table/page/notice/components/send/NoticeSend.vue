@@ -47,7 +47,7 @@
    </div>
 
    <div class="flex-1 w-full h-4/5">
-      <EditSection ref="msgEditor"/>
+      <EditSection ref="msgEditor" @open="openUser"/>
    </div>
 
    <div class="h-10 flex items-center mt-3 justify-between w-full">
@@ -267,6 +267,22 @@ const uploadButtonLink = () =>{
 // b站视频链接
 const uploadBiliLink = () =>{
   biliLink.value.openBiliModal();
+}
+
+// 打开用户选择
+const openUser = () =>{
+  switch(msgSetting.value.targetType){
+    case 1000:
+      break;
+    case 1001:
+      break;
+    case 1002:
+      communityRef.value.openCommunitySelect();
+      break;
+    case 1003:
+      appointRef.value.openAppointModal()
+      break;
+  }
 }
 
 

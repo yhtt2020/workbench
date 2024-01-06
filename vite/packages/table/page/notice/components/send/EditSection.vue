@@ -1,22 +1,26 @@
 <template>
  <div class="flex w-full h-full">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-   <div class="flex flex-col" v-if="msgSetting.targetType !== 1000 ">
-    <span class="xt-font xt-text-2 font-14 font-400 mb-3">发送给</span>
-    <div class="flex mb-4" >
-      <template v-if="msgSetting.targetList.length > 5">
-        <div  v-for="item in msgSetting.targetList.slice(0,4)" class="flex items-center pointer justify-center mr-3 h-10 item-bg" >
+   <template v-if="msgSetting.targetType !== 1000 ">
+    <div class="flex flex-col" v-if="msgSetting.targetList.length !== 0">
+      <span class="xt-font xt-text-2 font-14 font-400 mb-3">发送给</span>
+      <div class="flex mb-4" >
+        <template v-if="msgSetting.targetList.length > 5">
+          <div  v-for="item in msgSetting.targetList.slice(0,4)" class="flex items-center pointer justify-center mr-3 h-10 item-bg" @click="openUserSelect">
+            <a-avatar :size="20" :src="item.avatar" ></a-avatar>
+            <span class="ml-3">{{ item.nick }}</span>
+          </div> 
+        </template>
+        <div v-else  v-for="item in msgSetting.targetList" class="flex items-center pointer justify-center mr-3 h-10 item-bg" @click="openUserSelect">
           <a-avatar :size="20" :src="item.avatar" ></a-avatar>
           <span class="ml-3">{{ item.nick }}</span>
-        </div> 
-      </template>
-      <div v-else  v-for="item in msgSetting.targetList" class="flex items-center pointer justify-center mr-3 h-10 item-bg" >
-        <a-avatar :size="20" :src="item.avatar" ></a-avatar>
-        <span class="ml-3">{{ item.nick }}</span>
+        </div>
+        <xt-button w="41" h="40" v-if="msgSetting.targetList.length > 5"  style="border-radius: 10px;" @click="openUserSelect">
+          <div class="flex items-center justify-center">+12</div>
+        </xt-button>
       </div>
-      <div v-if="msgSetting.targetList.length > 5" class="xt-bg-2 rounded-lg h-10 pointer flex items-center justify-center" style="width: 41px;">+12</div>
-    </div>
-   </div>
+    </div>      
+   </template>
 
    <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" placeholder="标题"></a-input>
    <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" :rows="4" />
@@ -77,6 +81,7 @@ import AttachmentDetail from "../detail/AttachmentDetail.vue";
 
 const notice = noticeStore();
 const { msgSetting } = storeToRefs(notice);
+const emits = defineEmits(['open'])
 
 const mkRef = ref(null);
 const options = ref(
@@ -96,6 +101,10 @@ const imgCover = computed(()=>{
 // 删除对应的图片
 const removeImg = (index) =>{
   msgSetting.value.covers.splice(index,1)
+}
+
+const openUserSelect = () =>{
+  emits('open')
 }
 
 

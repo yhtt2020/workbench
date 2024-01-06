@@ -16,15 +16,18 @@
   </div>
 
   <template v-if="tabValue === 'all'">
-    <HistoryAll />
+    <HistoryAll @enter="detail"/>
   </template>
 
   <template v-else>
     <DraftBoxDetail @edit="editDraftBox"/>
   </template>
  </div>
-
- <NoticeSend :hide="true" v-else @back="tabShow = false"/>
+ 
+ <template v-else>
+  <NoticeSend :hide="true" v-if="noticeVisible"  @back="tabShow = false"/>
+  <HistoryDetail v-else-if="historyVisible" @close="closeModal"/>
+ </template>
 </template>
 
 <script setup>
@@ -34,7 +37,8 @@ import { noticeStore } from '../../store/noticeStore'
 
 import HistoryAll from "./content/HistoryAll.vue";
 import DraftBoxDetail from "./content/DraftBoxDetail.vue";
-import NoticeSend from '../send/NoticeSend.vue'
+import NoticeSend from '../send/NoticeSend.vue';
+import HistoryDetail from "./content/HistoryDetail.vue";
 
 const emit = defineEmits(['close']);
 
@@ -47,6 +51,10 @@ const tabList  = ref([
 ])
 const tabShow = ref(false);
 const tabValue = ref('all')
+// 切换草稿箱的界面
+const noticeVisible = ref(false);
+// 切换历史消息详情界面
+const historyVisible = ref(false);
 
 
 const closeModal = () =>{
@@ -57,9 +65,9 @@ const closeModal = () =>{
 // 编辑草稿箱
 const editDraftBox = (value) =>{
   tabShow.value = true;
+  noticeVisible.value = true;
   const option = {
     ...value,
-    noticeType:`${value.noticeType}`,
     attachments:JSON.parse(value.attachments),
     videos:JSON.parse(value.videos),
     targetList:JSON.parse(value.targetList),
@@ -67,6 +75,12 @@ const editDraftBox = (value) =>{
     urls:JSON.parse(value.urls)
   }
   msgSetting.value = option
+}
+
+// 查看详情
+const detail = () =>{
+  tabShow.value = true;
+  historyVisible.value = true
 }
 </script>
 

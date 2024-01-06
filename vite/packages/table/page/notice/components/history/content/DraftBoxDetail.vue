@@ -3,7 +3,7 @@
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;"> 
     <template v-if="draftBox.length  === 0">
       <div class="flex items-center h-full justify-center">
-        暂无消息草稿
+        <a-empty :image="simpleImage" :description="'暂无消息草稿 '" />
       </div>
     </template>
     <template v-else>
@@ -29,8 +29,11 @@ import { storeToRefs } from 'pinia';
 import { noticeStore } from '../../../store/noticeStore';
 
 
+
 const notice = noticeStore();
 const { draftBox } = storeToRefs(notice);
+
+const simpleImage = ref('/img/state/null.png')
 
 const { proxy } = getCurrentInstance();
 
@@ -56,5 +59,19 @@ const editDraftBox = (item) =>{
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-empty){
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  flex-direction: column;
+  & .ant-empty-image{
+    width: 64px !important;
+    height: 64px !important;
+  }
 
+  & .ant-empty-description{
+    margin: 0 !important;
+  }
+}
 </style>
