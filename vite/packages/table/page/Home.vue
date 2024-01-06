@@ -896,7 +896,7 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
+        // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
           let deskTmp = _.cloneDeep(this.deskDefault[0]);
           let oldId = deskTmp.id
@@ -926,27 +926,23 @@ export default {
       })
       let appListHandle = []
       appList.forEach(item => {
+        const now = new Date().getTime()
         let obj = {
-          backgroundColor: '',
-          backgroundIndex: 0,
-          imgShape: "square",
-          imgState: "cover",
-          isBackground: false,
-          isRadius: true,
-          isTitle: true,
-          link: "fast",
-          linkValue: "",
-          radius: 5,
-          size: "mini",
-          // 图标
-          src: item.icon,
-          // 标题
-          titleValue: item.name,
-          open: {
-            type: "default",
-            // 网址
-            value: item.path
-          }
+          "value": item.path,
+          "icon": item.icon,
+          "name": item.name,
+          "id": now,
+          "useCount": 0,
+          "lastUseTime": "",
+          "mode": "link",
+          "type": "default",
+          "iconState": "cover",
+          "iconShape": "square",
+          "isName": true,
+          "bg": "",
+          "isBg": false,
+          "radius": 5,
+          "isRadius": true,
         }
         appListHandle.push(obj)
       })
@@ -954,8 +950,8 @@ export default {
         // 直接修改默认数据
         if (item.id == '1702026795921') {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if (appListHandle.length <= 1) {
-            this.desks[0].cards[index].customData.iconList = appListHandle
+          if (appListHandle.length > 1) {
+            this.desks[0].cards[index].customData.list = appListHandle
           } else {
             this.desks[0].cards[index] = {
               "name": "historyInfo",
