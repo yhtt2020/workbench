@@ -15,17 +15,17 @@
       <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
         <template #sendTitle>
           <div class="flex items-center justify-center" v-if="isLoading === false">
-            <span class="xt-font xt-text font-14 font-400 mr-2">发送</span>
-            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"></xt-new-icon>
+            <span class="xt-font xt-active-text font-14 font-400 mr-2">发送</span>
+            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"  :color="'var(--active-text)'"></xt-new-icon>
           </div> 
           <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
         </template>
 
         <div class="xt-modal rounded-xl p-2 flex flex-col xt-b">
           <template v-for="item in sendList">
-            <div class="px-3 py-2.5 flex xt-hover rounded-xl">
+            <div class="px-3 py-2.5 flex xt-hover rounded-xl" @click="item.callBack">
               <xt-new-icon :icon="item.newIcon" size="20" class="mr-3"></xt-new-icon>
-              <span class="">{{ item.name }}</span>
+              <span class="xt-text-2 xt-font font-14 font-400">{{ item.name }}</span>
             </div>
           </template>
         </div>
@@ -89,7 +89,7 @@
  <AddBiliLink ref="biliLink"/>
  <CommunitySelect ref="communityRef"/>
  <AppointUserSelect ref="appointRef"/>
-
+ <TimingSend ref="timingRef"/>
 </template>
 
 <script setup>
@@ -108,6 +108,7 @@ import AddButtonLink from '../add/AddButtonLink.vue';
 import AddBiliLink from '../add/AddBiliLink.vue';
 import CommunitySelect from '../userselect/CommunitySelect.vue';
 import AppointUserSelect from '../userselect/AppointUserSelect.vue';
+import TimingSend from './TimingSend.vue';
 
 const emits = defineEmits(['close']);
 
@@ -130,21 +131,25 @@ const targetList = ref([
   { name:'指定用户',value:1003 }
 ])
 
+const timingRef = ref(null);
+
 const sendList = ref([
   {
     newIcon:'fluent:send-32-regular',name:'立即发送',
     callBack:()=>{
-
+     
     }, 
   },
   {
     newIcon:'fluent:clock-16-regular',name:'定时发送',
-    callBack:()=>{},
+    callBack:()=>{
+      timingRef.value.openTimeModal()
+    },
   },
   {
     newIcon:'fluent:compose-16-regular',name:'保存草稿',
     callBack:()=>{
-     
+      notice.createNotice()
     },
   }
 ])
