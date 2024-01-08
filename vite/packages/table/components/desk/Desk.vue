@@ -646,13 +646,7 @@ export default {
     this.loaded = true;
     this.resetLayout();
 
-    // 重排事件无效
-    // this.$bus.on("resetDesk", () => {
-    //   setTimeout(() => {
-    //     this.update();
-    //     this.resetLayout();
-    //   }, 2000);
-    // });
+
   },
   unmounted() {
     if (this.fullScreen) {
