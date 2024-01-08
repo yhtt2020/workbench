@@ -20,6 +20,9 @@ export const taskStore = defineStore("taskStore", {
     // 新版任务命名
     startList: [],
     completedList: [],
+    claimRewards: false,
+    currentId: "",
+    currentType: "",
   }),
   getters: {},
   actions: {

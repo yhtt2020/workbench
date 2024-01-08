@@ -1,7 +1,7 @@
 <template>
   <xt-button @click="test()">任务重置</xt-button>
   <xt-button @click="completeAllTask()"></xt-button>
-  <newP></newP>
+  {{ aaa }}
   <template v-if="store.taskID">
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
@@ -34,7 +34,7 @@
   </template>
   <div v-else>已完成所有任务</div>
 
-  <CompleteStatus type="all" />
+  <!-- <CompleteStatus type="all" /> -->
 </template>
 
 <script setup>
@@ -46,8 +46,6 @@ import { ref, reactive, computed, toRefs } from "vue";
 import Reward from "../../components/Reward.vue";
 
 import CompleteStatus from "../../components/CompleteStatus.vue";
-
-import newP from "./newP.vue";
 /**
  * 处理主线任务
  */
@@ -106,6 +104,28 @@ const completeAllTask = () => {
   });
   // if
 };
+
+const aaa = computed(() => {
+  if (!store.taskID) {
+    return "";
+  }
+  let arr = tasks.find((item) => {
+    return (
+      item.tasks.find((task) => {
+        if (store.taskID == task.id) {
+          return true; // 返回 true 表示找到了匹配的任务
+        }
+      }) && item
+    ); // 只有当内部 find() 返回 true 时，才返回整个 item
+  });
+
+  // 使用find方法查找具有特定ID的对象
+// const foundObject = tasks.find(obj => obj.tasks.find(task => task.id === store.taskID ));
+
+
+const foundObject = tasks.find(obj => obj.id ===  store.taskID );
+  return foundObject;
+});
 </script>
 
 <style lang="scss" scoped>

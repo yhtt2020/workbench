@@ -16,6 +16,7 @@
         border-radius: 0px 10px 0px 10px;
       "
     >
+      123
       {{ types[type].name }}
     </div>
     <a-avatar

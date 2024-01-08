@@ -1,6 +1,7 @@
 <template>
     <!-- Your Drag-and-Drop Application -->
-
+    <!-- 任务弹窗 -->
+  <xt-task-reward/>
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale" >
