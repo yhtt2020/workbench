@@ -3,10 +3,12 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
-      :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer " id="folder">
-      <Folder @clickFile="this.folderVisible = false" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
-        v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
+    <div style="position: absolute; z-index: 500 !important;"
+      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }"
+      class="rounded-xl pointer " id="folder">
+      <Folder @clickFile="this.folderVisible = false" @update:layout="updateLayout" @update:size="updateSize"
+        :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
+        :navBar="{ resize: false, sizeOption: false }" :auto="true" />
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -33,7 +35,6 @@
         </div>
 
       </div>
-
       <!-- 快速搜索 底部栏区域 -->
       <!-- <Drop @createFile="createFile"> -->
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
@@ -69,6 +70,7 @@
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
+                    :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
@@ -193,6 +195,7 @@ import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from "nanoid";
 import Drop from '../apps/folder/src/components/Drop.vue'
+import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -373,7 +376,9 @@ export default {
       folderItem: {},
       folderId: '',
       // 弹窗显示
-      noticeFlag: true
+      noticeFlag: true,
+      left: 0,
+      parentSize: 0,
     }
   },
   props: {
@@ -425,15 +430,19 @@ export default {
     // 图标整体替换格式方法
     this.footNavigationList = this.replaceType(this.footNavigationList)
 
-    // const bottom = document.querySelector('#bottom-bar')
-    // const bottomWidth = bottom.getBoundingClientRect().width
-    // 获取最大可添加图标个数
-    const windowWidth = window.innerWidth
-    this.maxItemNum = Math.round((windowWidth - 240) / 72)
     this.noticeFlag = true
-    // console.log(this.maxItemNum, 'bottomWidth', windowWidth);
-    // console.log(this.footNavigationList, 'foot');
-    // console.log(this.data, this.getData, 'getData')
+
+    this.useWindowSize((size) => {
+      // 获取最大可添加图标个数
+      const windowWidth = size.width.value
+      this.parentSize = windowWidth
+      this.maxItemNum = Math.round((windowWidth - 240) / 72)
+      if (this.footNavigationList.length > this.maxItemNum) {
+        const width = windowWidth / (240 + this.footNavigationList.length * 72)
+        this.navAttribute.navSize = width.toFixed(2) * 100
+      }
+      // console.log(this.navAttribute.navSize, 'size')
+    }, 200)
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -601,9 +610,19 @@ export default {
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
+        // 防止数据同步失败，导致导航栏数据无法同步，导致数据错位
+        this.$nextTick(() => {
+          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+          if (target.length > 0) {
+            message.error('导航栏数据自动调整失败，将手动调整导航栏')
+            this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+          }
+        })
 
-
-        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        // 获取最大可添加图标个数
+        const windowWidth = window.innerWidth
+        this.maxItemNum = Math.round((windowWidth - 240) / 72)
+        // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
           // console.log(this.maxItemNum, 'maxItemNum')
@@ -737,7 +756,7 @@ export default {
     },
     closeFolder() {
       this.folderVisible = false;
-      console.log(1111)
+      // console.log(1111)
     },
     editIcon(item) {
       this.quick = true
@@ -763,16 +782,17 @@ export default {
       }));
       this.folderName = item.name
       this.folderId = item.id
+      this.ResetElementPosition()
     },
     // 更新大小尺寸
     updateSize(value) {
       this.currentItem.size = value
-      console.log(value, this.currentItem, 'this.currentItem')
+      // console.log(value, this.currentItem, 'this.currentItem')
     },
     // 更新大小尺寸
     updateLayout(value) {
       this.currentItem.layout = value
-      console.log(value, this.currentItem, 'this.currentItem')
+      // console.log(value, this.currentItem, 'this.currentItem')
     },
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
@@ -956,7 +976,7 @@ export default {
     },
     newOpenApp(type, value, item) {
       if (value === 'home' && item.home) {
-        console.log(item.home, 'item.home');
+        // console.log(item.home, 'item.home');
         this.jumpDesk = item.home
       }
       startApp(type, value, this.$router)
@@ -1083,7 +1103,7 @@ export default {
             this.footNavigationList.splice(index + i, 0, element)
           }
           this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
-          console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
+          // console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
         })
 
         if (this.folderId == item.id) {
@@ -1194,7 +1214,7 @@ export default {
 
         },
         onMove: function (event, originalEvent) {
-          console.log(event, originalEvent, 'move');
+          // console.log(event, originalEvent, 'move');
           isDrag = true
           that.isDelete = false
           return true
@@ -1205,6 +1225,7 @@ export default {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,
           }
+          // console.log(that.defaultPosition)
         },
         // 触发替换中发生的事件
         onChange(event) {
@@ -1234,6 +1255,7 @@ export default {
         }
       })
     },
+    useWindowSize,
     replaceType,
     iconFolder,
     renderIcon,
@@ -1251,6 +1273,30 @@ export default {
         }
       }
     },
+    // 重置元素位置
+    ResetElementPosition() {
+      const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x');
+      // console.log(this.defaultPosition.x, (this.defaultPosition.x - 100) + (draggableSize[0] * 200), 'draggableSize');
+      if (this.defaultPosition.x - 100 < 0) {
+        this.left = 0;
+      } else if (
+        (this.defaultPosition.x - 100) + (draggableSize[0] * 200) > this.parentSize
+      ) {
+        // 视图大小
+        let vW = this.parentSize
+        // 元素坐标
+        let posX = this.defaultPosition.x;
+        // 元素大小
+        let menuW = draggableSize[0] * 200
+        // console.log(vW,posX,menuW, 'vW');
+        posX = posX > vW - menuW ? vW - menuW : posX;
+
+        this.left = posX;
+        // console.log(this.left, 'left')
+      }else{
+        this.left = this.defaultPosition.x - 120
+      }
+    }
   },
   provide() {
     return {
