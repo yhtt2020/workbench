@@ -26,7 +26,7 @@
  
  <template v-else>
   <NoticeSend :hide="true" v-if="noticeVisible"  @back="tabShow = false;noticeVisible=false"/>
-  <HistoryDetail v-else-if="historyVisible" @close="closeModal" @back="tabShow = false;historyVisible = false"/>
+  <HistoryDetail :isFull="isFull" v-else-if="historyVisible" @close="closeModal" @back="tabShow = false;historyVisible = false"/>
  </template>
 </template>
 
@@ -41,6 +41,9 @@ import NoticeSend from '../send/NoticeSend.vue';
 import HistoryDetail from "./content/HistoryDetail.vue";
 
 const emit = defineEmits(['close']);
+const props = defineProps({
+  isFull:Boolean,
+})
 
 const notice  = noticeStore();
 const { msgSetting } = storeToRefs(notice);

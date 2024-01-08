@@ -24,7 +24,7 @@
     <HistoryDetailContent />
   </template>
   <template v-else>
-    <ReceiveContent />
+    <ReceiveContent :isFull="isFull"/>
   </template>
  </div>
 </template>
@@ -36,6 +36,7 @@ import HistoryDetailContent from './HistoryDetailContent.vue';
 import ReceiveContent from './ReceiveContent.vue';
 
 const emit = defineEmits(['close','back']);
+const props = defineProps({ isFull:Boolean })
 
 const tabList = ref([
  { name:'消息内容',value:'content',},

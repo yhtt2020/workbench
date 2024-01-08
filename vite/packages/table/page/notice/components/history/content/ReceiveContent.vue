@@ -15,9 +15,7 @@
      <span class="xt-font xt-text font-14 ">2024年1月26日</span>
     </div>
    </div>
-
    <a-divider type="vertical" style="height: 92px; margin: 0 16px; border-left: 1px solid var(--divider);" />
-   
    <div class="w-1/2 flex flex-col">
     <div class="flex justify-between">
      <span class="xt-font xt-text-2 font-14 ">发送目标</span>
@@ -30,7 +28,7 @@
    </div>
   </div>
   
-  <div class="flex flex-col  h-4/5">
+  <div class="flex flex-col" :class="full ? 'h-5/6' : 'h-3/4' ">
    <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
     <div class="mb-4 flex items-center justify-between w-full">
      <div class="flex items-center justify-start pl-4" style="width: 120px;">
@@ -51,19 +49,25 @@
      <span class="xt-font xt-text-2 font-14 w-full text-center" style="max-width: 50px;">{{ item.link }}</span>
      <span class="xt-font xt-text-2 font-14 w-full text-center"  style="max-width: 110px;">{{ item.time }}</span>
     </div>
-    <div style="height: 16px;"></div>
    </XtScrollbar>
   </div>
  </div>
 </template>
 
 <script setup>
+import { ref,computed } from 'vue';
 import mockData from '../../../libs/mockData';
 
+const props = defineProps({
+ isFull:Boolean,
+})
+
+const full = computed(()=>{
+ return props.isFull
+})
 
 
 </script>
 
 <style lang="scss" scoped>
-
 </style>
