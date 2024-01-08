@@ -5,7 +5,7 @@
     <!-- 文件夹弹窗 -->
     <div style="position: absolute;  left: 50%; transform: translateX(-50%);z-index: 500 !important;"
       :style="{ bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer " id="folder">
-      <Folder @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
+      <Folder @clickFile="this.folderVisible = false" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :secondary="true"
         v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }" :auto="true" />
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
@@ -372,6 +372,8 @@ export default {
       customData: {},
       folderItem: {},
       folderId: '',
+      // 弹窗显示
+      noticeFlag: true
     }
   },
   props: {
@@ -428,8 +430,10 @@ export default {
     // 获取最大可添加图标个数
     const windowWidth = window.innerWidth
     this.maxItemNum = Math.round((windowWidth - 240) / 72)
+    this.noticeFlag = true
     // console.log(this.maxItemNum, 'bottomWidth', windowWidth);
     // console.log(this.footNavigationList, 'foot');
+    // console.log(this.data, this.getData, 'getData')
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -540,8 +544,13 @@ export default {
      */
     showList() {
       return this.copyFootNav.slice(0, this.maxItemNum)
+    },
+    getData() {
+      return {
+        ...this.defaultFolderData,
+        model: 'custom',
+      }
     }
-
   },
   watch: {
     footNavigationList: {
@@ -595,22 +604,25 @@ export default {
 
 
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        // let flag = true
         if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
           // console.log(this.maxItemNum, 'maxItemNum')
-          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-            onOk: () => {
-              const width = window.innerWidth / (240 + this.footNavigationList.length * 72)
-              this.navAttribute.navSize = width
-            }
-          })
+          if (this.noticeFlag) {
+            this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+              onOk: () => {
+                const width = window.innerWidth / (240 + this.footNavigationList.length * 72)
+                this.navAttribute.navSize = width
+              }
+            })
+          }
           const width = window.innerWidth / (240 + this.footNavigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
-          // console.log(this.navAttribute.navSize, 'navSize')
+          this.noticeFlag = false
         }
 
 
-        console.log(this.copyFootNav, 'copyFootNav')
-        console.log(this.footNavigationList, 'footNav')
+        // console.log(this.copyFootNav, 'copyFootNav')
+        // console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -1066,9 +1078,9 @@ export default {
         this.footNavigationList.splice(index, 1)
         // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
         this.$nextTick(() => {
-          for (let index = 0; index < item.children.length; index++) {
-            const element = item.children[index];
-            this.footNavigationList.unshift(element)
+          for (let i = 0; i < item.children.length; i++) {
+            const element = item.children[i];
+            this.footNavigationList.splice(index + i, 0, element)
           }
           this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
           console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
@@ -1242,11 +1254,14 @@ export default {
   },
   provide() {
     return {
-      data:{
-        ...defaultFolderData
+      data: {
+        ...this.defaultFolderData,
+        model: 'custom',
       }
-    }
-  }
+    };
+  },
+
+
 }
 </script>
 <style></style>
