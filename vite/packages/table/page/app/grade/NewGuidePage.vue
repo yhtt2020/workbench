@@ -150,45 +150,31 @@
           <div class="font-16 xt-text text-center pt-6" >最后一步啦，定制主题 ~</div>
           <div class="px-4">
 
-            <div class="xt-bg-2 p-4 pb-1 mt-4 rounded-xl">
+            <div class="xt-bg-2 p-4 pb-1 mt-2 rounded-xl">
               <xt-option-info title="主题色" />
-              <xt-option-color  v-model:color="themeColor"/>
+              <xt-option-color  v-model:color="themeColor" colorNum="5"  />
             </div>
   
-            <div class="xt-bg-2 p-4 pb-1 mt-4 rounded-xl "><xt-option-info
-                title="桌面壁纸"
-                info="选择喜欢的图片作为工作台桌面壁纸。"
-              />
-              <!-- <div class="flex flex-col mb-4">
-                <xt-update-desk-bg></xt-update-desk-bg>
-              </div> -->
+            <div class="xt-bg-2 p-4 pb-1 mt-3 rounded-xl "><xt-option-info
+              title="桌面壁纸"
+              info="选择喜欢的图片作为工作台桌面壁纸。"
+            />
+
               <hr />
               <xt-option-info
                 title="桌面壁纸模糊度"
                 info="调节桌面壁纸的模糊程度。"
                 icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="backGroundImgBlur = 0"
+                @onIconClick="backgroundSettings.backGroundImgBlur = 0"
               />
-              <xt-option-slider
-                v-model:slider="backGroundImgBlur"
-                :min="0"
-                :max="100"
-              />
-            <!-- <hr /> -->
-  
-            <!-- <xt-option-info
-              isSwitch
-              v-model:switch="settings.transparent"
-              title="透明背景"
-              info="设置工作台窗口背景为透明，此功能下小组件的背景模糊会失效。"
-            /> -->
+              <xt-button w="200" h="112" class="xt-bg-m relative"  style="border-radius: 6px"  @click="openPaperModal" >
+                <div class="w-full h-full absolute top-0 left-0 rounded-md">
+                  <img :src="backgroundImage.path" class="w-full h-full object-cover rounded-md"/>
+                </div>
+              </xt-button>
+              <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
             </div>
-
-
-
           </div>
-
-
         </div>
   
         <!-- 按钮 -->
@@ -218,18 +204,22 @@
               <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="button-bottom ml-3" @click="addNavList"   size="large" type="theme">确定添加</xt-button>
             </div>
+            <div class="flex" v-if="step==4">
+              <xt-button   class="button-bottom ml-3" @click="closeGuide"   size="large" type="theme">Go ~</xt-button>
+            </div>
         </div>
       </div>
 
       <div v-else>
-        <div style="height:60px;width:200px" class="flex items-center px-4 justify-between xt-text font-16">
+        <div style="height:60px;width:200px" class="flex items-center px-4 justify-between xt-text font-16 pointer" @click="popState = flase">
           定制桌面
-          <div class="w-8 h-8 flex justify-center items-center rounded-lg xt-bg-2 pointer" @click="popState = flase">
+          <div class="w-8 h-8 flex justify-center items-center rounded-lg xt-bg-2">
             <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
           </div>
         </div>
         
       </div>
+      <GalleryModal ref="paperModal" />
     </div>
   </template>
   
@@ -260,11 +250,14 @@
   import { message } from "ant-design-vue";
   
   import { setBgColor, setSecondaryBgColor } from "../../../components/card/hooks/styleSwitch/setStyle";
+  import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
   
   export default {
     components:{
       MyIcon,
+      GalleryModal,
     },
+    props:['closeGuide'],
     data(){
       return{
         deskType: [
@@ -292,7 +285,7 @@
             game: false,
             current: false,
         },
-        step: 4,
+        step: 0,
         content:'',
         // 图片格式
         pictureFormat: ['png', 'jpeg', 'jpg', 'gif', 'psd', 'bmp', 'fpx', 'tiff', 'dxf', 'eps', 'svg', 'cdr', 'pcx', 'emf', 'wmf', 'swf', 'exif', 'pdf', 'cgm', 'raw', 'lic', 'dng', 'raf'],
@@ -350,7 +343,7 @@
         assistList: [],
         game: ['gameAssis', 'strategy', 'AIaides', 'wallpaper', 'capture', 'notes', 'music', 'historyInfo', 'tomatoTimer', 'todo', 'games', 'GameEpic', 'myFriends', 'Audio', 'fish'],
         gameList: [],
-        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'OilPrices', 'games', 'GameEpic', 'myFriends', 'music', 'Audio'],
+        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'OilPrices', 'games', 'GameEpic', 'myFriends', 'music'],
         currentList: [],
         // 导航
         navList: [
@@ -372,11 +365,14 @@
         ],
         // 主题色
         themeColor: "",
+        // 壁纸模糊
+        imgBlur: 0,
 
       }
     },
     computed:{
       ...mapWritableState(cardStore,['desks', 'addCard']),
+      ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage']),
       ...mapWritableState(navStore, [
         'footNavigationList',
       ]),
@@ -396,6 +392,7 @@
 
     },
     mounted(){
+      // console.log(this.desks[0])
 
       // this.getAiAnswer()
 
@@ -448,19 +445,6 @@
           })
         })
 
-
-
-        // console.log('this.baseNavList', this.baseNavList)
-        // console.log('this.assistList', this.assistList)
-        // console.log('this.gameList', this.gameList)
-        // console.log('this.currentList', this.currentList)
-        // console.log('this.footNavigationList', this.footNavigationList);
-        // this.footNavigationList = this.navList
-        // console.log('走了？1');
-
-
-
-
     },
 
     watch: {
@@ -470,8 +454,18 @@
       },
     },
     methods:{
+
+      // 触发打开壁纸弹窗
+      openPaperModal () {
+        // console.log('this.$refs', this.$refs.paperModal);
+        // console.log('this.$refs', this.$refs.paperModal.galleryVisible);
+        // this.$refs.paperModal.galleryVisible = true
+        this.$refs.paperModal.openGalleryModal()
+        // paperModal.openGalleryModal();
+      },
+
+
       changeNavList(item, index){
-        console.log('item, index', item, index);
         if(index>0){
           item.isCheck = !item.isCheck
         }else{
@@ -526,7 +520,7 @@
         // console.log('defaultData, defaultFolderData',defaultData, defaultFolderData);
         // console.log('appList', this.appList);
         let folders = []
-        this.appList.forEach(item=>{
+        this.appList.forEach((item, index)=>{
           const now = new Date().getTime()
           if(item.isCheck){
             let tmp = [];
@@ -543,7 +537,7 @@
 
             let obj = {
               data:{},
-              id: now,
+              id: now + index * 5,
               name: 'folder',
               customData: {
                 ...defaultFolderData,
@@ -553,49 +547,31 @@
               }
             }
             folders.push(obj)
-            // this.desks[0]?.cards.push(obj)
-            // setTimeout(() => {
-            //   this.addCard(obj, this.desks[0]);
-            // }, 5000);
           }
         })
         console.log('处理好的数据，', folders);
-        // setInterval(() => {
-          
-        // }, 2000);
-        // 通过定时器延时添加失效
         folders.forEach((item,index)=>{
-          setTimeout(() => {
-            console.log('触发了index', index);
-            this.addCard(item, this.desks[0]);
-          }, index * 1000);
+          this.addCard(item, this.desks[0]);
         })
-
-        // setTimeout(() => {
-        //   console.log(123456);
-        //   this.$bus.emit("resetDesk");
-        // }, 3000);
-
       },
 
       // 添加小组件
       addDeskCard(){
-        console.log('cardList', this.cardList);
 
         this.cardList.forEach((item, index)=>{
         // 通过定时器延时添加失效
           if(item.isCheck){
-            const now = new Date().getTime()
-            setTimeout(() => {
-              console.log('触发了index', index, this.desks[0].cards.length);
-              this.addCard({
-                customData: {},
-                id: now,
-                name: item.name
-              },this.desks[0])
-            }, index * 1000);
+            const now = new Date().getTime() + index * 5
+            console.log('触发了index', index, this.desks[0].cards.length);
+            this.addCard({
+              customData: {},
+              id: now,
+              name: item.option[0]?.name
+            },this.desks[0])
           }
         })
+        // this.$bus.emit('resetDesk')
+        // console.log(this.desks[0])
         
         
         // setTimeout(() => {
