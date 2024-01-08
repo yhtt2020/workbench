@@ -64,6 +64,7 @@ const reset = () => {
             return item.value === props.editItem.value
         }
     } )
+    // console.log(navigationList.value,'target')
     props.editItem.icon = target?.icon
     bgColor.value = ''
     props.editItem.bg = ''

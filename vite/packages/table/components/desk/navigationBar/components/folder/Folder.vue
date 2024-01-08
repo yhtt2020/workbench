@@ -6,7 +6,7 @@
                 v-for="(item, index) in list?.slice(0, 4)"
                 :style="{ marginRight: index == 3 || index == 1 ? '0px' : '4px' }">
                 <a-avatar :size="16" shape="square" :src="item.icon"
-                    :style="{ borderRadius: (navigationStore.iconRadius / 4) + 'px' }"></a-avatar>
+                    :style="{ borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }"></a-avatar>
             </div>
         </div>
     </div>

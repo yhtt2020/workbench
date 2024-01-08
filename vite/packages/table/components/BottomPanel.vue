@@ -68,7 +68,7 @@
               <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
                   <div v-if="footNavigationList.length <= 0" style=""></div>
-                  <a-tooltip v-for="(item, index) in showList" :key="item.name" :title="item.name"
+                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     @mouseenter="showElement(item, index)">
                     <xt-menu :menus="folderOptions">
                       <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
@@ -590,20 +590,23 @@ export default {
           this.copyFootNav = rearrangedCopyFootNav;
 
         }
-
+        // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
 
 
         // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
         if (this.footNavigationList.length > this.maxItemNum && this.maxItemNum !== null) {
           // console.log(this.maxItemNum, 'maxItemNum')
-          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '后面无法添加', {
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
             onOk: () => {
-              return true
+              const width = window.innerWidth / (240 + this.footNavigationList.length * 72)
+              this.navAttribute.navSize = width
             }
           })
+          const width = window.innerWidth / (240 + this.footNavigationList.length * 72)
+          this.navAttribute.navSize = width.toFixed(2) * 100
+          // console.log(this.navAttribute.navSize, 'navSize')
         }
-
       },
       immediate: true,
       deep: true,
@@ -1050,26 +1053,25 @@ export default {
     resetFolder(item, index) {
       if (item.children) {
         if (item.children.length + this.footNavigationList.length > this.maxItemNum) {
-          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '该文件夹无法解散', {
+          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
             onOk: () => {
               return true
             }
           })
-        } else {
-          this.footNavigationList.splice(index, 1)
-          // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
-          this.$nextTick(() => {
-            for (let index = 0; index < item.children.length; index++) {
-              const element = item.children[index];
-              this.footNavigationList.unshift(element)
-            }
-            this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
-            console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
-          })
-
-          if (this.folderId == item.id) {
-            this.closeFolder()
+        }
+        this.footNavigationList.splice(index, 1)
+        // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
+        this.$nextTick(() => {
+          for (let index = 0; index < item.children.length; index++) {
+            const element = item.children[index];
+            this.footNavigationList.unshift(element)
           }
+          this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
+          console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
+        })
+
+        if (this.folderId == item.id) {
+          this.closeFolder()
         }
 
 
