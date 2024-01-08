@@ -8,7 +8,7 @@
     <template v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
-        class="xt-sortable-fle-box flex justify-center"
+        class="flex justify-center xt-sortable-fle-box"
         :class="[sortableBox]"
         :data-id="item.id"
       >
@@ -62,7 +62,7 @@ const { proxy } = getCurrentInstance();
 
 const router = useRouter();
 
-const emits = defineEmits(["deleteFile", "updateSort", "updateList"]);
+const emits = defineEmits(["deleteFile", "updateSort", "updateList","clickFile"]);
 // 父组件数据
 const props = defineProps({
   layout: {},
@@ -225,6 +225,7 @@ const fileClick = (data) => {
   data.lastUseTime = new Date().getTime();
   startApp(data.type, data.value, router);
   emits("updateSort");
+  emits("clickFile");
 };
 const dragDeleteFile = (data) => {
   emits("deleteFile", data);
