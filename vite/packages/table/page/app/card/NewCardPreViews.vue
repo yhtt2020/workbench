@@ -153,6 +153,7 @@ import RemoteMarket from './RemoteMarket.vue'
 import { myIcons } from '../../../store/myIcons.ts'
 import _ from 'lodash-es'
 import { taskStore } from '../../../apps/task/store'
+import { completeTask } from '../../../apps/task/task'
 import IconSet from '../../../components/widgets/myIcons/set/index.vue'
 
 export default {
@@ -317,6 +318,10 @@ export default {
       )
       this.$emit('addSuccess')
       message.success('添加成功！')
+
+      if (item?.name == 'clocks') {
+        completeTask('M0101')
+      }
     },
     closeMarket (val) {
       this.openRemote = val

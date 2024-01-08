@@ -6,7 +6,7 @@
       h="32"
       radius="8"
       class="mr-3"
-      @click="back()" 
+      @click="back()"
     />
     {{ task.chapter }} ({{ completedTask }})
   </xt-text>
@@ -16,7 +16,7 @@
       <template #title>
         <xt-text>
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
-          {{ data.title }}
+          {{ data.name }}
         </xt-text>
       </template>
       <xt-text type="2" class="mb-3">{{ data.intro }}</xt-text>

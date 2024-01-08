@@ -628,10 +628,13 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
-
+    this.$bus.on("M0101", () => {
+      this.newAddCard();
+    });
     if (window.showed) {
       this.showGrid = true;
     }
@@ -650,8 +653,6 @@ export default {
     //     this.resetLayout();
     //   }, 2000);
     // });
-
-
   },
   unmounted() {
     if (this.fullScreen) {

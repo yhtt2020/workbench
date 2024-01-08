@@ -1,10 +1,4 @@
 <template>
-  <div>
-    <!-- {{ getTaskMedal }} -->
-    <!-- <img :src="getAvatarFrame" alt="" style="width: 48px;height: 48px;"/>
-
-    <img :src="getTaskMedal" alt="" style="width: 48px;height: 48px;"/> -->
-  </div>
   <div
     class="relative overflow-hidden rounded-xl"
     style="

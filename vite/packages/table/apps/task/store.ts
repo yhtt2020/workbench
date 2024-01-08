@@ -17,6 +17,9 @@ export const taskStore = defineStore("taskStore", {
     currentUpdateTime: "2023-01-05",
     // 当前任务数据
     currentTaskList: [],
+    // 新版任务命名
+    startList: [],
+    completedList: [],
   }),
   getters: {},
   actions: {
@@ -39,6 +42,8 @@ export const taskStore = defineStore("taskStore", {
           "successBranchTask",
           "currentUpdateTime",
           "currentTaskList",
+          "startList",
+          "completedList",
         ],
         storage: localStorage,
       },

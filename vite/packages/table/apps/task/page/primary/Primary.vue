@@ -1,9 +1,10 @@
 <template>
   <xt-button @click="test()">任务重置</xt-button>
   <xt-button @click="completeAllTask()"></xt-button>
+  <newP></newP>
   <template v-if="store.taskID">
+    <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
-      <!-- 章节进度 -->
       <xt-text>
         <div class="flex items-center">
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
@@ -17,7 +18,7 @@
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
-      <xt-title m="">{{ currentTask.title }}</xt-title>
+      <xt-title m="">{{ currentTask.name }}</xt-title>
       <xt-title type="text">{{ currentTask.intro }}</xt-title>
       <xt-title m="">任务说明</xt-title>
       <xt-title type="text">{{ currentTask.description }}</xt-title>
@@ -33,7 +34,7 @@
   </template>
   <div v-else>已完成所有任务</div>
 
-  <CompleteStatus  type="all"/>
+  <CompleteStatus type="all" />
 </template>
 
 <script setup>
@@ -45,6 +46,8 @@ import { ref, reactive, computed, toRefs } from "vue";
 import Reward from "../../components/Reward.vue";
 
 import CompleteStatus from "../../components/CompleteStatus.vue";
+
+import newP from "./newP.vue";
 /**
  * 处理主线任务
  */
@@ -74,7 +77,6 @@ let chapter = computed(() => {
 // 获取当前任务的下标
 const stage = computed(() => {
   let index = 0;
-  console.log("  chapter.value.tasks :>> ", chapter.value);
   chapter.value.tasks.find((item) => {
     if (store.taskID === item.id) {
       return true;

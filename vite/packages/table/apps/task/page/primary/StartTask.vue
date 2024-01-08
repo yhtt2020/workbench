@@ -17,10 +17,11 @@
   <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()" h="40"
     >开始任务</xt-button
   >
+  <xt-button plain type="theme"></xt-button>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
 import { guide } from "../../../../ui/components/Task/guide";
 import { lastGuide } from "./lastGuide";
@@ -28,7 +29,7 @@ import { endGuide } from "./endGuide";
 import { taskStore } from "../../store";
 // C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\store.ts
 import { appStore } from "../../../../store";
-
+const { proxy } = getCurrentInstance();
 const app = appStore();
 
 import { getAllTask, completeTask } from "../../api";
@@ -54,25 +55,21 @@ const init = () => {
 
 // 任务引导
 const taskGuide = () => {
-  let currentTask = guide[store.taskID][0];
-  switch (currentTask.type) {
+  const { type, value } = props.task.open;
+  // if (store.startList.includes(id)) return true;
+  // proxy.$bus()
+  store.startList.push(props.task.id);
+  store.isTaskDrawer = false;
+  switch (type) {
+    case "bus":
+      proxy.$bus.emit(value);
+      break;
     case "router":
-      init();
       router.push({
-        name: currentTask.value,
+        name: value,
       });
       break;
     case "message":
-      data.text = currentTask.value;
-      data.visible = true;
-      break;
-    case "router message":
-      data.text = currentTask.value;
-      data.visible = true;
-      break;
-
-    default:
-      break;
   }
 };
 
@@ -106,7 +103,6 @@ const receive = async () => {
     uid: app.userInfo.uid,
   });
   if (code !== 200) {
-
   }
   console.log("res :>> ", data, code);
 };
