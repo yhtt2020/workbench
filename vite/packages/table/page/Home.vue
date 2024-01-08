@@ -134,15 +134,15 @@
   <!-- <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
   </div> -->
-  
-  
+
+
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
-    <NewGuidePage v-if="true"></NewGuidePage>
+    <NewGuidePage :deskGroupRef="deskGroupRef" v-if="true"></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- 定制桌面流程 -->
@@ -444,7 +444,9 @@ export default {
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
     ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
-
+    deskGroupRef(){
+      return this.$refs.deskGroupRef
+    },
     desksList() {
       return this.desks.map((desk) => {
         return {
