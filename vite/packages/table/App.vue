@@ -55,7 +55,7 @@
     </div>
 
     <div v-else-if="backgroundName.name === 'color' && backgroundColor.color" class="fixed bg-image inset-0 video-container ">
-      <div class="w-full h-full " :style="{backgroundColor:`${backgroundColor.color}`}"></div>
+      <div class="w-full h-full " :style="{background:`${backgroundColor.color}`}"></div>
     </div>
 
     <div v-else>
