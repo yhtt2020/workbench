@@ -2,22 +2,22 @@
  <div class="flex flex-1 w-full h-full flex-col">
   <div class="flex justify-between  xt-bg-2 rounded-xl pt-3 pb-4 px-4 mb-4">
    <div class="w-1/2 flex flex-col">
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-4">
      <span class="xt-font xt-text-2 font-14 ">发送时间</span>
      <span class="xt-font xt-text font-14 ">2023年12月26日</span>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-4">
      <span class="xt-font xt-text-2 font-14 ">通知形式</span>
      <span class="xt-font xt-text font-14 ">普通通知类型</span>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between ">
      <span class="xt-font xt-text-2 font-14 ">有效期限</span>
      <span class="xt-font xt-text font-14 ">2024年1月26日</span>
     </div>
    </div>
-   <a-divider type="vertical" style="height: 92px; margin: 0 16px; border-left: 1px solid var(--divider);" />
+   <a-divider type="vertical" style="height: 100px; margin: 0 16px; border-left: 1px solid var(--divider);" />
    <div class="w-1/2 flex flex-col">
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-4">
      <span class="xt-font xt-text-2 font-14 ">发送目标</span>
      <span class="xt-font xt-text font-14 ">天天工作台官方社群</span>
     </div>
@@ -28,7 +28,7 @@
    </div>
   </div>
   
-  <div class="flex flex-col" :class="full ? 'h-5/6' : 'h-3/4' ">
+  <div class="flex flex-col" :class="full ? 'h-items' : 'h-item' ">
    <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
     <div class="mb-4 flex items-center justify-between w-full">
      <div class="flex items-center justify-start pl-4" style="width: 120px;">
@@ -70,4 +70,11 @@ const full = computed(()=>{
 </script>
 
 <style lang="scss" scoped>
+.h-item{
+ height: calc(100% - 180px);
+}
+
+.h-items{
+ height: calc(100% - 180px);
+}
 </style>

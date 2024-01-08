@@ -1,5 +1,5 @@
 <template>
- <div class="flex flex-col flex-1 h-4/5 mt-5">
+ <div class="flex flex-col flex-1 mt-5" style="height: calc(100% - 160px);">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
     <div v-for="item in allList" class="xt-bg-2 flex pointer justify-between items-center mb-3 rounded-xl px-4 py-3" @click="enterDetail(item)">
       <div class="xt-font xt-text font-14 font-400">{{ item.content.title }}</div>

@@ -1,5 +1,5 @@
 <template>
- <div class="p-4 w-full flex flex-col h-full" v-if="!tabShow">
+ <div class="px-4 pt-4 w-full flex flex-col h-full" v-if="!tabShow">
   <div class="w-full flex items-center justify-between">
     <div class="flex items-center justify-center">
        <xt-new-icon icon="fluent:clock-16-regular" size="16"></xt-new-icon>
