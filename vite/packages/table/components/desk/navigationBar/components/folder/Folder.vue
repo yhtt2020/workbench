@@ -2,11 +2,11 @@
     <div class="w-[58px] h-[58px] ">
         <div class="w-[52px] h-[52px] p-1 flex flex-wrap justify-center items-center"
             :style="{ borderRadius: navigationStore.iconRadius + 'px' }" style="border: 1px solid var(--divider);">
-            <div class=" w-[16px] h-[16px]   flex flex-wrap  justify-center items-center"
+            <div class=" w-[16px] h-[16px]   flex flex-wrap  justify-center items-center overflow-hidden"
                 v-for="(item, index) in list?.slice(0, 4)"
-                :style="{ marginRight: index == 3 || index == 1 ? '0px' : '4px' }">
+                :style="{ marginRight: index == 3 || index == 1 ? '0px' : '4px',borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }">
                 <a-avatar :size="16" shape="square" :src="item.icon"
-                    :style="{ borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }"></a-avatar>
+                    :style="[item.color]"></a-avatar>
             </div>
         </div>
     </div>

@@ -559,13 +559,13 @@ export default {
 
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          console.log(target, this.copyFootNav, 'length < copyFootNav')
+          // console.log(target, this.copyFootNav, 'length < copyFootNav')
           target.forEach(element => {
             const index = this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
               return this.judge(item, element);
             });
-            console.log(index, 'lost index');
+            // console.log(index, 'lost index');
             if (index !== -1) {
               this.copyFootNav.splice(index, 1);
             }
@@ -609,8 +609,8 @@ export default {
         }
 
 
-        // console.log(this.copyFootNav, 'copyFootNav')
-        // console.log(this.footNavigationList, 'footNav')
+        console.log(this.copyFootNav, 'copyFootNav')
+        console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -1097,7 +1097,7 @@ export default {
         delay: 50,
         delayOnTouchOnly: true,
         // 设置交换区域的阈值
-        swapThreshold: 0.6,
+        swapThreshold: 0.4,
         // 反向拖拽
         invertSwap: true,
         //
@@ -1240,13 +1240,13 @@ export default {
       }
     },
   },
-  // provide() {
-  //   return {
-  //     data:{
-  //       model:"custom",
-  //     }
-  //   }
-  // }
+  provide() {
+    return {
+      data:{
+        ...defaultFolderData
+      }
+    }
+  }
 }
 </script>
 <style></style>
