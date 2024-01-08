@@ -146,7 +146,6 @@
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- 定制桌面流程 -->
-    <!-- <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel> -->
     <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel>
 
   </teleport>
@@ -971,7 +970,7 @@ export default {
     },
     // 关闭引导弹窗
     closeGuide() {
-      this.visibleScale = false
+      this.visibleGuide = false
     },
 
 
