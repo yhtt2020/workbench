@@ -372,14 +372,14 @@ export default {
       this.editItem = item
     },
     /**
-     * 
+     *
      * @param {*} value 导航栏设置中关闭的导航
      */
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
     },
     // beforeCreate(){
-    //   return this.rightModel == 'follow' 
+    //   return this.rightModel == 'follow'
     // },
     enableDrag() {
       // if (this.sortable) {
@@ -607,6 +607,7 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
+    // 添加导航图标
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
@@ -639,7 +640,9 @@ export default {
       } else {
         return
       }
-
+// if (!xx=='桌面') {
+//   completeTask('m0105')
+// }
       this.menuVisible = false
     },
     showMenu() {

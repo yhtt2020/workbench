@@ -7,17 +7,19 @@
     :text="data.text"
   ></xt-message>
   <!-- 任务按钮 -->
+  <xt-button v-if="store.startList.includes(task.id)" plain type="theme"  @click="taskGuide()" block
+    >继续任务</xt-button
+  >
   <xt-button
-    v-if="isFirst && store.success"
+    v-else-if="isFirst && store.success"
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
     h="40"
     >领取奖励</xt-button
   >
-  <xt-button v-else style="width: 100%" type="theme" @click="taskGuide()" h="40"
+  <xt-button v-else style="width: 100%" type="theme"  h="40" @click='startTask'
     >开始任务</xt-button
   >
-  <xt-button plain type="theme"></xt-button>
 </template>
 
 <script setup>
@@ -54,23 +56,28 @@ const init = () => {
 };
 
 // 任务引导
+const startTask=()=>{
+  store.startList.push(props.task.id);
+  taskGuide()
+}
 const taskGuide = () => {
-  const { type, value } = props.task.open;
-  // if (store.startList.includes(id)) return true;
+  const open = props.task.open;
   // proxy.$bus()
   store.startList.push(props.task.id);
-  store.isTaskDrawer = false;
-  switch (type) {
-    case "bus":
-      proxy.$bus.emit(value);
-      break;
-    case "router":
+  open.forEach((item) => {
+    if (item.type === "router") {
       router.push({
-        name: value,
+        name: item.value,
       });
-      break;
-    case "message":
-  }
+    }
+    if (item.type === "bus") {
+      setTimeout(() => {
+        proxy.$bus.emit(item.value);
+      }, 200);
+    }
+  });
+
+  store.isTaskDrawer = false;
 };
 
 const ok = () => {

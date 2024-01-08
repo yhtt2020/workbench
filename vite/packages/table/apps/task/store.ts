@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { tasks } from "./page/primary/Primary";
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
@@ -13,14 +14,14 @@ export const taskStore = defineStore("taskStore", {
     startBranchTask: [], // 启动的支线任务
     successBranchTask: [], // 完成的支线任务
     // 任务更新时间
-    updateTime: "2023-01-05",
+    updateTime: "2023-01-08",
     currentUpdateTime: "2023-01-05",
     // 当前任务数据
     currentTaskList: [],
     // 新版任务命名
     startList: [],
     completedList: [],
-    claimRewards: false,
+   rewardVisible: false,
     currentId: "",
     currentType: "",
   }),
@@ -29,6 +30,15 @@ export const taskStore = defineStore("taskStore", {
     startfirstTask() {
       this.step = 1;
       this.taskID = "firstTask";
+    },
+    // 获取当前主线指定ID任务信息
+    getPrimaryTask(id) {
+      if (!id) return "";
+
+      const foundObject: any = tasks.find((obj) =>
+        obj.tasks.find((task) => task.id === id)
+      );
+      return foundObject.tasks.find((task) => task.id === id);
     },
   },
   persist: {

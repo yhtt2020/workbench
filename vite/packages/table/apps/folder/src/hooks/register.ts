@@ -3,6 +3,7 @@
  */
 import { cardStore } from "../../../../store/card";
 import { defaultFolderData } from "../components/options";
+import { completeTask } from "../../../task/task";
 export const registerFolder = (desk) => {
   // const card: any = cardStore();
   // card.addCard(
@@ -18,4 +19,5 @@ export const registerFolder = (desk) => {
     id: Date.now(),
     customData: { ...defaultFolderData },
   });
+  completeTask("M0103");
 };

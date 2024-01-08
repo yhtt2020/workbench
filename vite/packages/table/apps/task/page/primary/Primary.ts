@@ -27,10 +27,16 @@ export const tasks = [
             value: 30,
           },
         ],
-        open: {
-          type: "bus",
-          value: "M0101",
-        },
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0101",
+          },
+        ],
       },
       {
         id: "M0102",
@@ -47,6 +53,16 @@ export const tasks = [
           {
             type: "experience",
             value: 30,
+          },
+        ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0102",
           },
         ],
       },
@@ -68,6 +84,12 @@ export const tasks = [
             value: 30,
           },
         ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+        ],
       },
       {
         id: "M0104",
@@ -86,6 +108,16 @@ export const tasks = [
             value: 30,
           },
         ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0104",
+          },
+        ],
       },
       {
         id: "M0105",
@@ -102,6 +134,16 @@ export const tasks = [
           {
             type: "communityPoints",
             value: 30,
+          },
+        ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0105",
           },
         ],
       },

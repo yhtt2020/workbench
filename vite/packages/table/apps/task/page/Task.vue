@@ -164,6 +164,9 @@ if (
 ) {
   updateTaskList();
 }
+
+
+console.log('  currentTaskList.value :>> ',   currentTaskList.value);
 </script>
 
 <style lang="scss" scoped></style>

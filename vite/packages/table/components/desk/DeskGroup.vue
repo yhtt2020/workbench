@@ -368,7 +368,7 @@ import Emoji from "../comp/Emoji.vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 import { useDeskStore } from "./store";
-
+import { completeTask } from '../../apps/task/task'
 export default {
   name: "DeskGroup",
   components: {
@@ -494,6 +494,9 @@ export default {
     };
   },
   async mounted() {
+    this.$bus.on("M0104", () => {
+      this.showAddDeskForm();
+    });
     let obj = {
       id: 3,
       newIcon: "fluent:apps-add-in-20-filled",
@@ -651,6 +654,7 @@ export default {
       this.deskMarketVisible = false;
     },
     afterAdded() {
+      completeTask('m0104')
       this.hideMarket();
     },
     openPreview({ scheme, showModal }) {
@@ -863,6 +867,7 @@ export default {
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
+      completeTask('m0104')
     },
     cleanMuuriData(list) {
       list.forEach((li) => {

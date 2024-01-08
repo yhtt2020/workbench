@@ -16,7 +16,6 @@
         border-radius: 0px 10px 0px 10px;
       "
     >
-      123
       {{ types[type].name }}
     </div>
     <a-avatar
@@ -32,8 +31,8 @@
       :icon="types[type].icon"
       size="48"
     />
-    <div class="absolute z-10 bottom-0 text-sm" v-if="info" style="right: 6px">
-      {{ info }}
+    <div class="absolute z-10 bottom-0 text-sm" v-if="value" style="right: 6px">
+      {{ value }}
     </div>
   </div>
 </template>
@@ -45,10 +44,9 @@ import { storeToRefs } from "pinia";
 
 const store = taskStore();
 const { taskID, currentTaskList } = storeToRefs(store);
-console.log("currentTaskList.value :>> ", currentTaskList.value);
 const props = defineProps({
   type: {},
-  info: {},
+  value: {},
   id: {},
 });
 const { type, id } = toRefs(props);
@@ -88,15 +86,12 @@ const getTask = computed(() => {
 const getTaskMedal = computed(() => {
   if (type.value != "medal") return "";
   let { data } = getTask.value.find((item) => item.label == "道具");
-
-  console.log("data :>> ", data);
   return data.icon;
 });
 
 const getAvatarFrame = computed(() => {
   if (type.value != "avatarFrame") return "";
   let { data } = getTask.value.find((item) => item.label == "勋章");
-  console.log("data :>> ", data);
   return data.icon_sm;
 });
 </script>

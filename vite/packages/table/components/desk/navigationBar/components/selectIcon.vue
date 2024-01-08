@@ -20,7 +20,7 @@
                 recommendation.name }}</div>
             <div class="absolute top-3 right-3">
                 <xt-button :w="24" :h="24" :style="{ background: item.addNav ? '#52C41A' : 'var(--active-bg)' }"
-                @click.stop="clickRightListItem(item, index)">
+             >
                     <div class="flex items-center justify-center" v-if="item.addNav">
                         <xt-new-icon icon="fluent:checkmark-16-regular" size="20"
                             style="padding:2px;color: rgba(255, 255, 255, 0.85) !important;"></xt-new-icon>
@@ -43,6 +43,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import { Icon as navIcon } from '@iconify/vue'
 import { renderIcon } from '../../../../js/common/common'
 import { message } from 'ant-design-vue'
+import {completeTask} from "../../../../apps/task/task"
 export default {
     components: {
         navIcon
@@ -63,6 +64,8 @@ export default {
         // 添加图标的主要函数
         clickRightListItem(item, index) {
             this.$emit('clickRightListItem', item, index)
+            //
+            completeTask('M0102')
         },
         renderIcon(icon) {
             return renderIcon(icon);

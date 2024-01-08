@@ -1,7 +1,8 @@
 <template>
     <!-- Your Drag-and-Drop Application -->
     <!-- 任务弹窗 -->
-  <xt-task-reward/>
+  <!-- <xt-task-reward/> -->
+  <TaskCompleteStatus v-if="rewardVisible"/>
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale" >
@@ -119,6 +120,8 @@ import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import {notification} from "ant-design-vue";
 import ModalNotice from "./page/notice/ModalNotice.vue";
+import TaskCompleteStatus from "./apps/task/components/CompleteStatus.vue";
+import {taskStore} from "./apps/task/store";
 
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
@@ -135,7 +138,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: {ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage,DndProvider},
+  components: {ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage,DndProvider,TaskCompleteStatus},
   data() {
     return {
       HTML5Backend,
@@ -222,6 +225,7 @@ export default {
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
+    ...mapWritableState(taskStore, ['rewardVisible']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset','toggleFullScreen','exitFullScreen','ensureFullScreen']),

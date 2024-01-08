@@ -632,6 +632,9 @@ export default {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
+    this.$bus.on("M0102", () => {
+      this.newAddIcon();
+    });
     this.$bus.on("M0101", () => {
       this.newAddCard();
     });
