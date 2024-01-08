@@ -36,9 +36,9 @@ export const rowOption = {
   },
   big: {
     width: "86px",
-    height: "70px",
-    imgWidth: "46px",
-    imgHeight: "46px",
+    height: "71px",
+    imgWidth: "42px",
+    imgHeight: "42px",
   },
 };
 /**
@@ -53,8 +53,8 @@ export const columnOption = {
   },
   big: {
     width: "100%",
-    height: "58px",
-    imgWidth: "32px",
-    imgHeight: "32px",
+    height: "55px",
+    imgWidth: "35px",
+    imgHeight: "35px",
   },
 };

@@ -1,14 +1,18 @@
 <!-- 渲染不同尺寸的文件状态 -->
 <template>
   <div
-    class="flex justify-center items-center"
+    class="flex justify-center items-center mb-1"
     :class="boxClass"
     :style="getLayoutSize"
   >
     <div :style="getImgSize">
       <img :src="item.icon" class="w-full h-full" />
     </div>
-    <div class="w-full xt-text-2 text-sm truncate" :class="textClass">
+    <div
+      class="xt-text-2 text-sm truncate"
+      style="width: 80%"
+      :class="textClass"
+    >
       {{ item.name }}
     </div>
   </div>
@@ -59,7 +63,7 @@ const currentLayout = computed(() => {
   if (!data.value?.layout) return;
   if (data.value?.layout == "rows") {
     boxClass.value = " flex-col";
-    textClass.value = "text-center  mt-1";
+    textClass.value = "text-center  mx-auto";
     return rowOption;
   } else {
     boxClass.value = "pl-3  mb-1";
