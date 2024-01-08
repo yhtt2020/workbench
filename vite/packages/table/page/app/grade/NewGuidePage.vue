@@ -1,5 +1,5 @@
   <template>
-    <div class="fixed overflow-hidden modal-center xt-modal tran" 
+    <div class="fixed overflow-hidden modal-center xt-modal tran"
       :class="popState?'pop':step==4?'theme':'Popup' "
       style="">
       <div v-if="!popState" class="h-full">
@@ -10,7 +10,7 @@
         <div @click="themeSwitch" class="top-icon no-drag absolute mr-4" style="right:0;">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
         </div>
-  
+
         <!-- 选择偏好 -->
         <div v-if="step==0" class="h-full w-full ">
           <div v-if="!loading" style="padding-top:80px">
@@ -19,7 +19,7 @@
             <div class="text-center xt-text-2 font-16 mt-3">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
             <a-row :gutter="20" class="flex justify-center mt-6">
               <a-col v-for="item in deskType">
-                <div :class="{'active':deskTypeObj[item.key] == true}" 
+                <div :class="{'active':deskTypeObj[item.key] == true}"
                   class="setting-panel pointer px-4 pt-5"
                   @click="deskTypeObj[item.key] = !deskTypeObj[item.key]"
                   >
@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-  
+
         <!-- 导入桌面图标 -->
         <div v-else-if="step == 1">
           <div class="font-16 xt-text text-center pt-6">导入你的桌面图标</div>
@@ -114,7 +114,7 @@
 
                 <div class="font-16 xt-text-2 mt-2 text-hidden-2">{{ item.detail }}</div>
                 <div class=" mt-2 ">
-                  <span class="font-14 xt-text-2 xt-enable-bg rounded-md" 
+                  <span class="font-14 xt-text-2 xt-enable-bg rounded-md"
                   :class="n>0?'ml-1':''" style="padding:4px 8px;"
                   v-for="(key, n) in item.sizes.slice(0, 2)">{{ key }}</span>
                 </div>
@@ -176,7 +176,7 @@
             </div>
           </div>
         </div>
-  
+
         <!-- 按钮 -->
         <div class="flex w-full justify-between px-3" style="position: absolute;bottom: 12px;">
           <div class="float-left">
@@ -195,7 +195,7 @@
               <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="button-bottom ml-3" @click="addFolder"   size="large" type="theme">确定添加</xt-button>
             </div>
-            
+
             <div class="flex" v-if="step==2">
               <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="button-bottom ml-3" @click="addDeskCard"   size="large" type="theme">确定添加</xt-button>
@@ -217,12 +217,12 @@
             <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
           </div>
         </div>
-        
+
       </div>
       <GalleryModal ref="paperModal" />
     </div>
   </template>
-  
+
   <script>
   import { mapWritableState,mapActions } from 'pinia';
   import {appStore} from '../../../store'
@@ -248,7 +248,7 @@
   import { NavList } from '../card/navList'
   import { navStore } from '../../../store/nav';
   import { message } from "ant-design-vue";
-  
+
   import { setBgColor, setSecondaryBgColor } from "../../../components/card/hooks/styleSwitch/setStyle";
   import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
   
@@ -268,7 +268,7 @@
                 icon: 'fluent-emoji:rocket',
             },
             {
-                title: '游戏娱乐', 
+                title: '游戏娱乐',
                 content: '为你推荐和游戏娱乐相关的数据。',
                 key: 'game',
                 icon: 'fluent-emoji:joystick',
@@ -503,8 +503,8 @@
           }
         },100)
 
-        
-  
+
+
       },
 
       clear(){
@@ -603,12 +603,12 @@
       preview(){
         this.popState = true
       },
-      
-      // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来 
+
+      // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来
       async getAiAnswer(){
           const desktopApps = await ipc.sendSync('getDeskApps')
 
-          // 文件夹 
+          // 文件夹
           let folderList = []
           // 图片
           let pictureList = []
@@ -660,12 +660,12 @@
               tmp.audio = audioList
               tmp.other = otherList
 
-              
+
 
               // 分析出来的结果 接下来需要将icon和 path 放进去
               // console.log('结果tmp', tmp);
 
-              // 处理常用程序 和 游戏 的数据 
+              // 处理常用程序 和 游戏 的数据
               tmp.game?.forEach(i=>{
                   i.icon = desktopApps[i.index].icon
                   i.path = desktopApps[i.index].path
@@ -704,11 +704,11 @@
             }
             return this.content
         },
-      
+
     },
   }
   </script>
-  
+
   <style lang="scss" scoped>
 
     .border-1{
@@ -829,7 +829,7 @@
         background-color: #ccc; /* 滚动条颜色 */
         border-radius: 6px; /* 滚动条圆角 */
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
         background-color: #999; /* 悬停时滚动条颜色 */
     }
@@ -856,7 +856,7 @@
     .list-rows:not(:nth-last-of-type()){
       margin-bottom: 4px;
     }
-    
+
     .list-columns{
       height: 72px;
       width: 72px;
@@ -892,11 +892,10 @@
       width: 160px;
       height: 160px;
     }
-    
+
     .nav-list:hover{
       opacity: 0.8;
 
     }
-    
+
   </style>
-  

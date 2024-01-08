@@ -1,9 +1,9 @@
 <template>
  <div class="flex w-full h-full">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-   <div class="flex flex-col">
+   <div class="flex flex-col" v-if="msgSetting.targetType !== 1000 ">
     <span class="xt-font xt-text-2 font-14 font-400 mb-3">发送给</span>
-    <div class="flex mb-4">
+    <div class="flex mb-4" >
       <template v-if="msgSetting.targetList.length > 5">
         <div  v-for="item in msgSetting.targetList.slice(0,4)" class="flex items-center pointer justify-center mr-3 h-10 item-bg" >
           <a-avatar :size="20" :src="item.avatar" ></a-avatar>
