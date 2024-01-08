@@ -3,7 +3,7 @@
     style="position: relative"
     v-model:value="data" :bordered="border"
     class="no-drag w-full" :class="borderClass"
-    size="large"
+    size="large" :disabled="disabled"
     @change="handleChange"
     :dropdownStyle="{
       'z-index':zIndex,
@@ -44,6 +44,10 @@ const props = defineProps({
   zIndex:{
     type:Number,
     default:99,
+  },
+  disabled:{
+    type:Boolean,
+    default:false,
   }
 });
 
