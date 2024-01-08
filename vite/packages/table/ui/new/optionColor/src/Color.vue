@@ -36,9 +36,9 @@ const props = withDefaults(defineProps<colorProps>(), {
     color5: '#57BF60',
     color6: '#DE5DB3',
     color7: '#000000',
-    // color8: '#DE5DB3',
-    color8: '#43CADE',
-    color9: '#FFFFFF',
+    color8: '#808080',
+    color9: '#43CADE',
+    color10: '#FFFFFF',
   },
   linearList: {
     color1: ' linear-gradient(135deg, #A8A9EE 0%, #3398DA 100%)',
