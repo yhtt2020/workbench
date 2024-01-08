@@ -6,11 +6,11 @@
     <div class="p-4 relative body-shadow">
       <div class="font-16" style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);height: 100px;">
         <div style="height:60px;">
-          <div v-if="step!==0" @click="prevStep" class="left-icon top-icon no-drag float-left">
+          <div v-if="step!==0" @click="prevStep" class="top-icon no-drag">
             <!-- <xt-button v-if="step!==0" @click="prevStep" style="" size="large" class="button-bottom">上一步</xt-button> -->
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
-          <div @click="themeSwitch" class="right-icon top-icon no-drag float-right">
+          <div @click="themeSwitch" class="top-icon no-drag">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
           </div>
         </div>
@@ -165,7 +165,7 @@
           </div>
         </div>
 
-        <div v-if="step==5">
+        <!-- <div v-if="step==5">
           <div class="text-center xt-text-2 font-16 mt-3">完成选择后，会内置对应模式的数据和设置，你仍然可以在后续自定义修改各个功能和布局。</div>
           <a-row :gutter="20" class="flex justify-center mt-6">
             <a-col >
@@ -192,7 +192,7 @@
               </div>
             </a-col>
           </a-row>
-        </div>
+        </div> -->
       </div>
       <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
@@ -201,11 +201,11 @@
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
-          <xt-button type="theme" v-if="this.userInfo.uid" @click="nextStep" size="large"  class="button-bottom ml-3">已登录</xt-button>
+          <xt-button type="theme" v-if="this.userInfo.uid" @click="finish" size="large"  class="button-bottom ml-3">已登录</xt-button>
         </div>
-        <div class="flex" v-else-if="step == 5">
+        <!-- <div class="flex" v-else-if="step == 5">
           <xt-button class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
-        </div>
+        </div> -->
         <div class="flex" v-else-if="step == 2">
           <xt-button class="button-bottom ml-3" @click="prevStep"   size="large" type="theme">已解决</xt-button>
         </div>

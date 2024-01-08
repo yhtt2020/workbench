@@ -1,8 +1,11 @@
 import { storeToRefs  } from 'pinia';
 import { paperStore } from '../../../store/paper';
 import _ from 'lodash-es';
-let fs = require('fs')
+// let fs = require('fs')
+let fs = (window as any).$models.fs;
+
 let path = require('path')
+
 
 // 判断文件是否为图片
 export function fileImageExtension(filePath:any){
@@ -92,9 +95,14 @@ export function isDownLoad(data:any){
  const paper:any = paperStore();
  const { settings } = storeToRefs(paper);
  if(settings.value.savePath){
-  const fileData = fs.readdirSync(path.join(settings.value.savePath, 'lively'));
-  const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
-  return index > -1
+   if(fs.existsSync(path.join(settings.value.savePath, 'lively'))){
+    const fileData = fs.readdirSync(path.join(settings.value.savePath, 'lively'));
+    const index = _.findIndex(fileData,function(item:any){ return String(data.name) === String(item) })
+    return index > -1
+   }
+   else {
+    return false;
+   }
  }
 }
 

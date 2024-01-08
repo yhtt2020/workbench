@@ -52,16 +52,25 @@
       <div class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0 "
            style="min-height: 77px;background: var(--primary-bg);color: var(--primary-text) ;">
         <OnlineGradeDisplay :key='key' :grade="grade.grade" :extra="grade"></OnlineGradeDisplay>
+
+       <div class="flex item-content">
+         <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
+       </div>
       </div>
     </div>
     <div class="flex flex-col">
       <div class="mb-4 pd-0 m-3 p-1 mx-5 mt-0" style="color: var(--primary-text);">
         成就勋章
       </div>
-      <div class="bg-mask rounded-lg p-3 m-3 mx-5 mt-0  "
+      <div class="bg-mask rounded-lg p-2 m-3 mx-5 mt-0  "
            style="background: var(--primary-bg);color: var(--primary-text) ;">
-        <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
-        <Medal :medal="medal" v-for="medal in medals"></Medal>
+       <div class="flex flex-wrap justify-start justify-items-center items-center w-full">
+         <Medal :medal="medal" v-for="medal in medals"></Medal>
+         <div class="text-center" v-if="medals.length===0">
+           空空如也
+         </div>
+       </div>
+
       </div>
     </div>
     <div class="px-5 pb-4" v-if="uid!==myUserInfo.uid" v-show="relationship!=='unload'">

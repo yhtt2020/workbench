@@ -1,9 +1,9 @@
 <template>
-  <xt-modal ref="modalRef" v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" maskIndex="1010" index="1010">
-    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" 
+  <xt-modal ref="modalRef" v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" :maskIndex="1010" :index="1010">
+    <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64"
     style=" margin: 0 !important;border-radius: 12px !important;" :style="!isFull ? {width:'976px',height:'600px'}:{ width:'100%',height:'100%' }"
     :list="leftUpdateList" :index="galleryIndex" last="5" end="2"
-    >  
+    >
       <div class="w-full  xt-modal rounded-r-xl px-4  pt-4 pb-0" >
         <template v-if="galleryIndex === 'm'">
           <My isModal="true"/>
@@ -43,7 +43,7 @@ export default {
   components:{
     My,Bing,Lively,Picking,Setting,SiftPaper,
   },
-  
+
   props:[],
 
   setup(props,ctx){
@@ -52,7 +52,7 @@ export default {
 
     const galleryVisible = ref(false);
     const modalRef = ref(null);
-    
+
     const data = reactive({
       galleryIndex:'m',
     });
@@ -66,27 +66,27 @@ export default {
     const galleryTab = (item) =>{
       data.galleryIndex = item.index
     }
-    
+
     const galleryList = ref([
-      { 
+      {
         newIcon:'fluent:star-16-regular', index:'m', bg:'var(--secondary-bg)',
-        callBack:(item)=>{ galleryTab(item) }, 
+        callBack:(item)=>{ galleryTab(item) },
       },
-      { 
+      {
         newIcon:'fluent:emoji-smile-slight-24-regular',index:'w',bg:'var(--secondary-bg)',
-        callBack:(item)=>{ galleryTab(item) }, 
+        callBack:(item)=>{ galleryTab(item) },
       },
       {
         newIcon:'uim:bing',index:'b',bg:'var(--secondary-bg)',
-        callBack:(item)=>{ galleryTab(item) }, 
+        callBack:(item)=>{ galleryTab(item) },
       },
       {
         newIcon:'fluent:image-multiple-16-regular', index:'p',bg:'var(--secondary-bg)',
-        callBack:(item)=>{ galleryTab(item) }, 
+        callBack:(item)=>{ galleryTab(item) },
       },
       {
         index:'l',newIcon:'fluent:image-sparkle-16-regular',bg:'var(--secondary-bg)',
-        callBack:(item)=>{ galleryTab(item) }, 
+        callBack:(item)=>{ galleryTab(item) },
       },
       {
         index:'f',newIcon:'fluent:full-screen-maximize-16-filled',
@@ -130,7 +130,7 @@ export default {
         })
       })
     })
-    
+
     return{
       galleryVisible,galleryList,modalRef,isFull,leftUpdateList,
       openGalleryModal,

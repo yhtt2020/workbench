@@ -54,7 +54,7 @@
       <div class=" ml-6 w-28 h-12 rounded-lg flex justify-center items-center pointer"  >
         <a-select v-model:value="settings.proxy.type">
           <a-select-option value="none">不使用代理</a-select-option>
-<!--          <a-select-option value="web">网页代理</a-select-option>-->
+<!--          <a-select-option value="official">官方代理</a-select-option>-->
           <a-select-option value="http">http代理</a-select-option>
           <a-select-option value="socks5">socks5代理</a-select-option>
         </a-select>
@@ -75,12 +75,14 @@
           类型：
         </a-col>
           <a-col class="text-right" :span="18"><a-select v-model:value="settings.proxy.type">
+            <a-select-option value="official">官方代理</a-select-option>
             <a-select-option value="none">不使用代理代理</a-select-option>
 <!--            <a-select-option value="web">网页代理</a-select-option>-->
             <a-select-option value="http">http代理</a-select-option>
             <a-select-option value="socks5">socks5代理</a-select-option>
           </a-select></a-col></a-row>
       </div>
+      <template v-if="settings.proxy.type==='http' || settings.proxy.type==='socks5'">
       <div class="line   "><a-row>
         <a-col :span="5" class="text-left">
         地址：
@@ -104,7 +106,7 @@
           密码：
         </a-col><a-col :span="19"><a-input-password v-model:value="settings.proxy.password"></a-input-password></a-col>
       </a-row></div>
-
+      </template>
     </div>
 
   </Modal>
@@ -274,23 +276,26 @@ export default {
         console.log('修改了设置')
         const user=window.client
         const {type,address,port,userName,password}=newVal
-        //user.setOption('httpProxy',null)
+
         //user.setOption('socksProxy',null)
         //user.setOption('webCompatibilityMode',false)
 
         switch  (type){
           case 'none':
             break
+          case 'official':
+            user.setOption('httpProxy','http://47.96.156.74:5890')
+            break
           case 'http':
-            // if(userName || password){
-            //   user.setOption('httpProxy',`http://${userName}:${password}@${address}:${port}`)
-            // }else{
-            //   user.setOption('httpProxy',`http://${address}:${port}`)
-            // }
-           // user.httpProxy=`http://${address}:${port}`
+            if(userName || password){
+              user.setOption('httpProxy',`http://${userName}:${password}@${address}:${port}`)
+            }else{
+              user.setOption('httpProxy',`http://${address}:${port}`)
+            }
+           user.httpProxy=`http://${address}:${port}`
             break;
           case 'socks5':
-           // user.setOption('socksProxy',`socks5://${userName}:${password}@${address}:${port}`)
+           user.setOption('socksProxy',`socks5://${userName}:${password}@${address}:${port}`)
             break;
           case 'web':
            // user.setOption('webCompatibilityMode',true)
@@ -366,6 +371,10 @@ export default {
     getProxyOptions(){
       const {type,address,port,userName,password}=this.settings.proxy
       switch  (type) {
+        case 'official':
+          return {
+            httpProxy: `http://47.96.156.74:5890`
+          }
         case 'none':
           return {}
           break
@@ -386,6 +395,9 @@ export default {
     },
     showBind(){
       const options=this.getProxyOptions()
+      options.webCompatibilityMode=false
+      options.protocol=1
+      options.localPort=57760
       console.log(options,'参数')
       let session = new LoginSession(EAuthTokenPlatformType.SteamClient,options)
       session.on('authenticated', async () => {
@@ -479,17 +491,22 @@ export default {
           }).then((res) => {
             window.steamSession.submitSteamGuardCode(this.authCode).then(res => {
             }).catch(err => {
-              console.error(err)
+             // console.error(err)
               message.error({
                 content: '令牌错误'
               })
+              return
             })
           }).catch(err => {
-            console.error(err)
+            console.error(String(err))
             if(String(err).includes('ETIMEDOUT')){
               message.error({
                     content: '服务器超时',
                   })
+            }if(String(err).includes('ECONNRESET')){
+              message.error({
+                content: '连接错误',
+              })
             }else{
               message.error({
                 content: '用户或密码错误',

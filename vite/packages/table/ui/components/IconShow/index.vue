@@ -5,6 +5,7 @@
     :menus="menus"
     :isUpload="upload"
     v-model="visible"
+    v-if="visible"
     @getAvatar="getAvatar"
   ></xt-selectIcon>
   <div
