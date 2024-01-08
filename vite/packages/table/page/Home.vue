@@ -142,11 +142,10 @@
   </div>
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
-    <NewGuidePage :deskGroupRef="deskGroupRef" v-if="true"></NewGuidePage>
+    <NewGuidePage v-if="visibleGuide" @closeGuide="closeGuide"></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- 定制桌面流程 -->
-    <!-- <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel> -->
     <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel>
 
   </teleport>
@@ -260,6 +259,7 @@ export default {
   data() {
     return {
       visibleAdd: false,
+      visibleGuide: false,
       iconVisible: false,
       newDesk: {
         name: "",
@@ -970,6 +970,12 @@ export default {
     closeScale() {
       this.visibleScale = false
     },
+    // 关闭引导弹窗
+    closeGuide() {
+      this.visibleGuide = false
+    },
+
+
 
     showSetting() {
       // this.setInitCard()
