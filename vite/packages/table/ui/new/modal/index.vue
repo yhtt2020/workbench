@@ -13,7 +13,7 @@
       "
       :style="{
         'z-index': index,
-        top: `${(windowHeight - bottomBarHeight - modelHeight) / 2}px`,
+        top: `${isFull ? 0 : top}px`,
       }"
     >
       <slot v-if="custom"></slot>
@@ -81,7 +81,8 @@
                 suppressScrollX: true,
                 wheelPropagation: false,
               }"
-              style="position: relative; " :style="scrollbarPadding"
+              style="position: relative"
+              :style="scrollbarPadding"
               class="flex-1"
             >
               <slot>
@@ -121,7 +122,15 @@
 
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
-import { ref, watch, toRefs, onMounted, onBeforeUnmount, nextTick } from "vue";
+import {
+  ref,
+  watch,
+  toRefs,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  computed,
+} from "vue";
 import { useWindowSize } from "../drag/src/hooks/useWindowSize";
 import { useElementSize, vElementSize } from "../drag/src/hooks/useElementSize";
 
@@ -155,7 +164,7 @@ export interface ModalProps {
   custom?: boolean;
   // 开启全屏功能
   full?: boolean;
-  scrollbarPadding:{ paddingRight: '8px'; paddingLeft: '8px' }
+  scrollbarPadding: { paddingRight: "8px"; paddingLeft: "8px" };
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -193,25 +202,17 @@ onMounted(() => {
     });
   }
   useWindowSize((size) => {
-    // console.log("size :>> ", size.height.value);
     windowHeight.value = size.height.value;
   });
 
-  // useElementSize(modal.value, (size: any) => {
-  //   // modelHeight.value = size;
-  // });
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
   if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
   return;
-  // 处理定位问题
-  const topBar = document.getElementsByClassName("xt-main-top-bar")[0];
-  const topUtilBar = document.getElementsByClassName("xt-main-top-util-bar")[0];
-
-  if (topBar) topBarHeight = topBar.clientHeight;
-
-  if (topUtilBar) topUtilBarHeight = topUtilBar.clientHeight;
 });
-const top = ref(-999);
+const top = computed(() => {
+  return (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+});
+
 const resizeModel = (size) => {
   modelHeight.value = size.height;
 };
