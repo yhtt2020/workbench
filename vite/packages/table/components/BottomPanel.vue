@@ -644,8 +644,8 @@ export default {
         }
 
 
-        // console.log(this.copyFootNav, 'copyFootNav')
-        // console.log(this.footNavigationList, 'footNav')
+        console.log(this.copyFootNav, 'copyFootNav')
+        console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
