@@ -1,10 +1,10 @@
 <template>
-  <a-dropdown :trigger="[`${trigger}`]" :placement="placement">
+  <a-dropdown :disabled="disabled"  :trigger="[`${trigger}`]" :placement="placement">
     <div class="flex items-center justify-center">
       <div class="flex items-center justify-center" v-if="!buttonVisible">
         <slot></slot>
       </div>
-      <xt-button v-else :style="{width:`${w}px`,height:`${h}px`}" :class="buttonClass" style="border-radius: 8px;padding: 4px;">
+      <xt-button v-else :disabled="disabled" :style="{width:`${w}px`,height:`${h}px`}" :class="buttonClass" style="border-radius: 8px;padding: 4px;">
         <div class="flex items-center justify-center" v-if="title === ''">
           <DropIcon :icon="newIcon" :style="{fontSize:`${iconSize}px`,color:`${iconBg}`}" />
         </div>
@@ -53,6 +53,10 @@ const props = defineProps({
   title:{
     type:String,
     default:'',
+  },
+  disabled:{
+    type:Boolean,
+    default:false,
   }
   
 })

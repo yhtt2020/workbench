@@ -12,7 +12,7 @@
 
         <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250" 
          v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false" 
-         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: center;" 
+         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: left;" 
         />
         
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
