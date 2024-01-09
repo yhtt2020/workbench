@@ -68,7 +68,9 @@
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
               <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
-                  <div v-if="footNavigationList.length <= 0" style=""></div>
+                  <div v-if="footNavigationList.length <= 0" style="" class="flex items-center justify-center w-full h-full mt-2 ml-6" @click="this.editNavigation(this.drawerMenus[0])">
+                    <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
+                  </div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
                     :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                     @mouseenter="showElement(item, index)">
@@ -829,15 +831,20 @@ export default {
       }
       this.folderId = item.id
     },
-    // 更新大小尺寸
+    /**
+     * 更新大小尺寸
+     * @param {*} value 
+     */
     updateSize(value) {
       this.currentItem.size = value
-      // console.log(value, this.currentItem, 'this.currentItem')
+      this.ResetElementPosition()
     },
-    // 更新大小尺寸
+    /**
+     * 更新图标排序方式
+     * @param {*} value 
+     */
     updateLayout(value) {
       this.currentItem.layout = value
-      // console.log(value, this.currentItem, 'this.currentItem')
     },
     /**
      * 隐藏导航
@@ -870,22 +877,22 @@ export default {
     setFull(value) {
       this.full = value
     },
-    appChange() {
-      if (this.showScreen) {
-        this.tab = 'screen'
-        this.routeParams.url &&
-          ipc.send('hideTableApp', {
-            app: JSON.parse(JSON.stringify(this.routeParams)),
-          })
-      } else {
-        this.tab = 'apps'
-        this.routeParams.url &&
-          ipc.send('hideTableApp', {
-            app: JSON.parse(JSON.stringify(this.routeParams)),
-          })
-      }
-      this.changeFlag = true
-    },
+    // appChange() {
+    //   if (this.showScreen) {
+    //     this.tab = 'screen'
+    //     this.routeParams.url &&
+    //       ipc.send('hideTableApp', {
+    //         app: JSON.parse(JSON.stringify(this.routeParams)),
+    //       })
+    //   } else {
+    //     this.tab = 'apps'
+    //     this.routeParams.url &&
+    //       ipc.send('hideTableApp', {
+    //         app: JSON.parse(JSON.stringify(this.routeParams)),
+    //       })
+    //   }
+    //   this.changeFlag = true
+    // },
     closeChangeApp() {
       this.routeParams.url &&
         setTimeout(() => {
@@ -983,31 +990,6 @@ export default {
     // closeEdit(){
     //   this.editBar=false
     // },
-    openSetting() {
-      this.$router.push({ name: 'setting' })
-      this.hideMenu()
-    },
-    openStatus() {
-      this.hideMenu()
-      if (this.$route.path === '/status') {
-        this.$router.go(-1)
-      } else {
-        this.$router.push({ path: '/status' })
-      }
-    },
-    showDetailMenu() {
-      if (this.rightModel == 'follow') {
-        // console.log(111)
-        this.menuVisible = true
-      }
-
-    },
-    power() {
-      this.$router.push({ path: '/power' })
-    },
-    lock() {
-      this.$router.push({ path: '/lock' })
-    },
     transFile() {
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
@@ -1024,16 +1006,16 @@ export default {
         },
       })
     },
-    async setFullScreen() {
-      // await tsbApi.window.isFullScreen()
-      if (this.full) {
-        this.full = false
-        tsbApi.window.setFullScreen(false)
-      } else {
-        this.full = true
-        tsbApi.window.setFullScreen(true)
-      }
-    },
+    // async setFullScreen() {
+    //   // await tsbApi.window.isFullScreen()
+    //   if (this.full) {
+    //     this.full = false
+    //     tsbApi.window.setFullScreen(false)
+    //   } else {
+    //     this.full = true
+    //     tsbApi.window.setFullScreen(true)
+    //   }
+    // },
     /**
      * 打开应用
      * @param {*} type 图标类型
@@ -1043,6 +1025,7 @@ export default {
     newOpenApp(type, value, item) {
       if(type !== 'folder'){
         message.loading(`正在打开「${item.name}」...`)
+        this.folderVisible = false
       }
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
