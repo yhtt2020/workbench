@@ -12,7 +12,6 @@
     @mounted="onMounted"
     :stopPropagation="stopPropagation"
   >
-    {{ defaultList }}
     <slot> </slot>
     <template #cardSize>
       <slot name="follow"></slot>
