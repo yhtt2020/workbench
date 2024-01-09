@@ -15,9 +15,15 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { myIcons } from "../../store/myIcons";
 import { useAddCard } from "../../ui/hooks/useAddCard";
+import { useDeskStore } from "./store";
+
+const deskStore = useDeskStore();
+const { isEnterFolder } = storeToRefs(deskStore);
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
+
 const handleDrop = async (dragEvent) => {
+  if (isEnterFolder.value) return;
   dragEvent.preventDefault();
   let files = dragEvent.dataTransfer.files;
 
@@ -34,11 +40,6 @@ const handleDrop = async (dragEvent) => {
       titleValue: file.name,
       src: fileImage,
     };
-
-    // fileInfo.name = file.name;
-    // fileInfo.value = file.path;
-    // fileInfo.icon = fileImage;
-    // fileInfo.type = 'tableApp';
 
     useAddCard("myIcons", {
       iconList: [{ ...obj }],
