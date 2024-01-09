@@ -12,6 +12,7 @@
     @mounted="onMounted"
     :stopPropagation="stopPropagation"
   >
+    {{ defaultList }}
     <slot> </slot>
     <template #cardSize>
       <slot name="follow"></slot>
@@ -74,9 +75,8 @@ const h = ref();
 const defaultList = computed(() => {
   let list = [];
   h.value = 200 + height.value;
-
-  menus?.value?.forEach((item) => {
-    if (item?.children && typeof item?.children == "array") {
+  menus.value.forEach((item) => {
+    if (item?.children) {
       item.children.forEach((it) => {
         list.push(it);
       });

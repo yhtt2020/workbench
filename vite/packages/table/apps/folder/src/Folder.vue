@@ -92,7 +92,7 @@ import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
-import Widget from "../../../components/card/Widget.vue";
+// import Widget from "../../../components/card/Widget.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
@@ -100,6 +100,10 @@ import { useNavigationStore } from "../../../components/desk/navigationBar/navig
 const editVisible = ref(false);
 const navigationStore = useNavigationStore();
 const addFileClick = () => {
+  if ( customData.value.model != "custom") {
+    message.info("桌面文件下无法无法添加");
+    return;
+  }
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
