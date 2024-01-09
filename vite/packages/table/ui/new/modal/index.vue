@@ -210,6 +210,8 @@ onMounted(() => {
   return;
 });
 const top = computed(() => {
+  if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
+    return -9999;
   return (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
 });
 
