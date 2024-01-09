@@ -1349,25 +1349,24 @@ export default {
     ResetElementPosition() {
       const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x');
       // console.log(this.defaultPosition.x, (this.defaultPosition.x - 100) + (draggableSize[0] * 200), 'draggableSize');
-      if (this.defaultPosition.x - 100 < 0) {
-        this.left = 0;
-      } else if (
-        (this.defaultPosition.x - 100) + (draggableSize[0] * 200) > this.parentSize
-      ) {
+      // if (this.defaultPosition.x - 100 < 0) {
+      //   this.left = 0;
+      // } else if (
+      //   (this.defaultPosition.x - 100) + (draggableSize[0] * 240) > this.parentSize
+      // ) {
         // 视图大小
         let vW = this.parentSize
         // 元素坐标
-        let posX = this.defaultPosition.x;
+        let posX = Number((this.defaultPosition.x).toFixed(0));
         // 元素大小
-        let menuW = draggableSize[0] * 200
+        let menuW = draggableSize[0] * 140
         // console.log(vW,posX,menuW, 'vW');
-        posX = posX > vW - menuW ? vW - menuW : posX;
-
+        posX = posX > vW - menuW ? vW - menuW : posX - 140;
         this.left = posX;
         // console.log(this.left, 'left')
-      } else {
-        this.left = this.defaultPosition.x - 120
-      }
+      // } else {
+      //   this.left = this.defaultPosition.x - 120
+      // }
     }
   },
   provide() {
