@@ -107,10 +107,12 @@ export default {
         //   scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
         // })
       }
-      // } 
+      // }
     },
     // 添加图标函数
     clickListItem(item,index){
+      // if (this.selectNav !== 'desktop') {
+      // }
       switch (this.selectNav) {
         case 'foot':
           this.clickRightListItem(item,index,this.footNavigationList,this.setFootNavigationList)
@@ -121,12 +123,12 @@ export default {
         case 'right':
           this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
           break;
-      
+
           case 'desktop':
           this.$emit('clickListItem', item, index)
           break;
       }
-      
+
     },
     // 搜索目标图标
     filterIcon(list) {

@@ -320,9 +320,9 @@ export const navStore = defineStore("nav", {
     },
     setFootNavigationList(item) {
       // 当元素个数大于限制数时，将无法添加
-        if(this.maxItemNum >= this.footNavigationList.length){
+        // if(this.maxItemNum >= this.footNavigationList.length){
           this.footNavigationList.unshift(item)
-        }
+        // }
     },
     removeSideNavigationList(index) {
         this.sideNavigationList.splice(index, 1)
