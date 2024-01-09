@@ -91,7 +91,7 @@ const fileLayout = computed(() => {
   if (currentWidth.value == 4) {
     rows = "20% 20% 20%  20% 20%";
   } else if (currentWidth.value == 6) {
-    rows = "12.5%  12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%";
+    rows = "14.1%  14.1% 14.1% 14.1% 14.1% 14.1% 14.1% ";
   }
   return layout.value === "rows" ? rows : "100%";
 });

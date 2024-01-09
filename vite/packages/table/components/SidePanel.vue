@@ -372,14 +372,14 @@ export default {
       this.editItem = item
     },
     /**
-     * 
+     *
      * @param {*} value 导航栏设置中关闭的导航
      */
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
     },
     // beforeCreate(){
-    //   return this.rightModel == 'follow' 
+    //   return this.rightModel == 'follow'
     // },
     enableDrag() {
       // if (this.sortable) {
