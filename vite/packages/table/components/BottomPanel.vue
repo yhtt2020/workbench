@@ -4,11 +4,11 @@
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }"
-      class="rounded-xl pointer " id="folder">
-      <Folder @clickFile="this.folderVisible = false" @update:layout="updateLayout" @update:size="updateSize"
-        :customData="customData" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
-        :navBar="{ resize: false, sizeOption: false }" :auto="true" />
+      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
+      id="folder">
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+        :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false }"
+        :auto="true" />
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
@@ -319,6 +319,12 @@ export default {
           fn: () => { this.$emit('hiedNavBar', 'foot') },
         },
         {
+          id: 8,
+          name: "清空当前导航栏",
+          newIcon: "fluent:circle-off-16-regular",
+          fn: () => { this.clearAll() },
+        },
+        {
           id: 4,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
@@ -514,7 +520,7 @@ export default {
     },
     rightMenus() {
       // const arr=[...this.mainMenus[3].children]
-      this.mainMenus[3].children = [...this.childrenMenu]
+      this.mainMenus[4].children = [...this.childrenMenu]
       // this.mainMenus[3].children=arr
       return this.mainMenus
     },
@@ -553,12 +559,6 @@ export default {
      */
     showList() {
       return this.copyFootNav.slice(0, this.maxItemNum)
-    },
-    getData() {
-      return {
-        ...this.defaultFolderData,
-        model: 'custom',
-      }
     }
   },
   watch: {
@@ -613,7 +613,9 @@ export default {
         // 防止数据同步失败，导致导航栏数据无法同步，导致数据错位
         this.$nextTick(() => {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+          console.log(target, 'target')
           if (target.length > 0) {
+            console.log(target, 'target')
             message.error('导航栏数据自动调整失败，将手动调整导航栏')
             this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
           }
@@ -736,6 +738,11 @@ export default {
       'copyNav'
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
+    /**
+     * 找出不相同元素
+     * @param {*} navList 
+     * @param {*} copyList 
+     */
     updateNavList(navList, copyList) {
       const filteredNavList = navList.filter((item) => {
         return !copyList.some((i) => {
@@ -744,6 +751,28 @@ export default {
       });
       return filteredNavList;
     },
+    /**
+     * 点击文件夹子图标
+     * @param {*} item 
+     */
+    clickFile(item) {
+      this.folderVisible = false
+      message.loading(`正在打开「${item.name}」...`, 2)
+    },
+    /**
+     * 清空当前导航栏
+     */
+    clearAll() {
+      for (let i = this.footNavigationList.length - 1; i >= 0; --i) {
+        this.removeFootNavigationList(i, 1);
+        console.log(this.footNavigationList, 'footNavigationList');
+      }
+    },
+    /**
+     * 判断元素是否相同
+     * @param {*} ele 
+     * @param {*} item 
+     */
     judge(ele, item) {
       if (ele.type === 'coolApp') {
         return ele.value.url === item.value.url
@@ -772,8 +801,10 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
+    /**
+     * 打开文件夹
+     */
     openFolder(item) {
-      this.folderVisible = !this.folderVisible
       // 获取当前的文件夹
       this.folderItem = item
       this.folderList = item.children.map((i) => ({
@@ -781,8 +812,22 @@ export default {
         id: nanoid(6)
       }));
       this.folderName = item.name
-      this.folderId = item.id
       this.ResetElementPosition()
+      if (!this.folderVisible) {
+        this.folderVisible = true
+      } else if (this.folderVisible && this.currentItem.id && this.folderId === this.currentItem.id) {
+        this.folderVisible = false
+      } else {
+        console.log(this.currentItem.id, this.folderId, 'this.currentItem.id, this.folderId')
+        this.customData = {
+          ...this.defaultFolderData,
+          list: this.folderList,
+          size: this.currentItem.size || this.resize,
+          name: this.folderName,
+          layout: this.currentItem.layout || 'rows',
+        }
+      }
+      this.folderId = item.id
     },
     // 更新大小尺寸
     updateSize(value) {
@@ -794,6 +839,9 @@ export default {
       this.currentItem.layout = value
       // console.log(value, this.currentItem, 'this.currentItem')
     },
+    /**
+     * 隐藏导航
+     */
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
     },
@@ -863,6 +911,10 @@ export default {
         this.$router.push({ name: 'app', params: this.routeParams })
       this.menuVisible = false
     },
+    /**
+     * 打开菜单选项
+     * @param {*} item 
+     */
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
@@ -898,10 +950,18 @@ export default {
 
       this.menuVisible = false
     },
+    /**
+     * 关闭弹窗
+     */
     setQuick() {
       this.quick = false
       this.editToggle = false
     },
+    /**
+     * 删除图标判断
+     * @param {*} currentIndex 当前删除图标索引
+     * @param {*} currentItem 当前删除图标
+     */
     delCurrentIcon(currentIndex, currentItem) {
       if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
         this.removeFootNavigationList(currentIndex)
@@ -974,26 +1034,37 @@ export default {
         tsbApi.window.setFullScreen(true)
       }
     },
+    /**
+     * 打开应用
+     * @param {*} type 图标类型
+     * @param {*} value 打开路径
+     * @param {*} item 图标详细信息
+     */
     newOpenApp(type, value, item) {
+      if(type !== 'folder'){
+        message.loading(`正在打开「${item.name}」...`)
+      }
       if (value === 'home' && item.home) {
-        // console.log(item.home, 'item.home');
         this.jumpDesk = item.home
       }
       startApp(type, value, this.$router)
     },
-    // 拖拽桌面图标
+    /**
+     * 拖拽桌面图标
+     * @param {*} e 
+     */
     async drop(e) {
       // console.log(e,'from drop');
       // this.modelValue=false
-      const width = window.innerWidth
+      // const width = window.innerWidth
       let files = e.dataTransfer.files
-      if (e.x <= 300) {
-        this.selectNav = 'left'
-      } else if (e.x > 300 && e.x < width - 300) {
-        this.selectNav = 'foot'
-      } else if (e.x >= width - 300) {
-        this.selectNav = 'right'
-      }
+      // if (e.x <= 300) {
+      //   this.selectNav = 'left'
+      // } else if (e.x > 300 && e.x < width - 300) {
+      //   this.selectNav = 'foot'
+      // } else if (e.x >= width - 300) {
+      //   this.selectNav = 'right'
+      // }
       let filesArr = []
       if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
@@ -1022,7 +1093,11 @@ export default {
       this.dropList = []
       // this.modelValue=true
     },
-    // 添加图标的主要函数
+    /**
+     * 添加图标
+     * @param {*} item 
+     * @param {*} index 
+     */
     clickRightListItem(item, index) {
       this.activeRightItem = index
       //   this.editFlag = false
@@ -1052,6 +1127,11 @@ export default {
         }
       }
     },
+    /**
+     * 更新图标选择状态
+     * @param {*} addItem 
+     * @param {*} type 
+     */
     updateMainNav(addItem, type) {
       this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
       // console.log(this.mainNavList, 'this.mainNavList')
@@ -1085,7 +1165,11 @@ export default {
       // message.info('已中止导航栏调整')
       // }
     },
-    // 解散文件夹
+    /**
+     * 解散文件夹和切换文件夹
+     * @param {*} item 
+     * @param {*} index 
+     */
     resetFolder(item, index) {
       if (item.children) {
         if (item.children.length + this.footNavigationList.length > this.maxItemNum) {
@@ -1117,6 +1201,9 @@ export default {
     createFile(item) {
       console.log(item, 'from drop')
     },
+    /**
+     * sortable拖拽函数
+     */
     enableDrag() {
       let that = this
       let drop = document.getElementById('bottomContent')
@@ -1273,7 +1360,9 @@ export default {
         }
       }
     },
-    // 重置元素位置
+    /**
+     * 重置元素位置
+     */
     ResetElementPosition() {
       const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x');
       // console.log(this.defaultPosition.x, (this.defaultPosition.x - 100) + (draggableSize[0] * 200), 'draggableSize');
@@ -1293,7 +1382,7 @@ export default {
 
         this.left = posX;
         // console.log(this.left, 'left')
-      }else{
+      } else {
         this.left = this.defaultPosition.x - 120
       }
     }

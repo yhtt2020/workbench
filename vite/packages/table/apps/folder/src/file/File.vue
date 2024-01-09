@@ -225,7 +225,7 @@ const fileClick = (data) => {
   data.lastUseTime = new Date().getTime();
   startApp(data.type, data.value, router);
   emits("updateSort");
-  emits("clickFile");
+  emits("clickFile",data);
 };
 const dragDeleteFile = (data) => {
   emits("deleteFile", data);
