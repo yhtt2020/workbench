@@ -431,6 +431,22 @@ export const  judge=(ele, item)=> {
 // }
 export const iconFolder = (list, index, tIndex) => {
     const arr = [list[index], list[tIndex]];
+    if(list[tIndex].type === 'folder'){
+        const target = list[tIndex]
+        return {
+            name: target.name || "文件夹",
+            bg: '',
+            isBg: false,
+            icon: '',
+            type: 'folder',
+            value: 'folder',
+            children: childrenFolder(arr).flat(1),
+            mode: 'app',
+            id: target.id || nanoid(6),
+            size: target.size || '',
+            layout : target.layout || '',
+        }
+    }
     return {
         name: "文件夹",
         bg: '',

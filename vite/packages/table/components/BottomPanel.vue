@@ -1023,14 +1023,14 @@ export default {
      * @param {*} item 图标详细信息
      */
     newOpenApp(type, value, item) {
-      if(type !== 'folder'){
+      if(type === 'tableApp') {
         message.loading(`正在打开「${item.name}」...`)
-        this.folderVisible = false
       }
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
       startApp(type, value, this.$router)
+      type !== 'folder' ? this.folderVisible = false : ''
     },
     /**
      * 拖拽桌面图标
