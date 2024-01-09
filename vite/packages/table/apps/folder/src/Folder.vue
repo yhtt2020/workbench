@@ -47,8 +47,6 @@
             @updateList="updateList"
             @updateSort="updateSort"
           />
-            @updateSort="updateSort"
-            @clickFile="clickFile" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
