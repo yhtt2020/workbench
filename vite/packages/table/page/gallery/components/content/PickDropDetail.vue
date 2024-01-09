@@ -1,9 +1,11 @@
 <template>
   <div class="pickModal rounded-lg p-4 xt-modal">
-    <RadioTab :navList="pickParams.tabList" v-model:selectType="pickParams.setting.tabValue" class="mb-4 " style="height: 40px !important;"/>
-    <xt-select :list="paperCateList" v-model="pickParams.setting.cateValue"  style="margin-right: 12px;text-align:start;" @click.native="handleSelectClick"
+    <xt-tab class="mb-4 xt-bg-2" style="height: 40px !important;" :list="pickParams.tabList" v-model="pickParams.setting.order.value"></xt-tab>
+    <xt-tab class="mb-4 xt-bg-2" style="height: 40px !important;" :list="pickParams.largeList" v-model="pickParams.setting.cateHow"></xt-tab>
+    <!-- <RadioTab :navList="pickParams.tabList" v-model:selectType="pickParams.setting.order" class="mb-4 " style="height: 40px !important;"/>
+    <RadioTab :navList="pickParams.tabList" v-model:selectType="pickParams.setting.order" class="mb-4 " style="height: 40px !important;"/> -->
+    <xt-select :list="paperCateList" v-model="pickParams.setting.cateWhat"  style="margin-right: 12px;text-align:start;" @click.native="handleSelectClick"
       :borderClass="'rounded-md w-full '" :zIndex="1200" :border="false" @change="handleEmitData" h="40"/>
-
     <div class="w-full flex flex-col mt-4" @click.native="handleSelectClick">
       <div class="flex items-center justify-start" style="padding-bottom: 18px;">
         <span class="xt-text-2 xt-font font-400 mr-4" :class="isModal ? 'font-14':'font-16'">壁纸</span>
@@ -48,14 +50,16 @@ export default {
   computed:{
     ...mapWritableState(pickPaperStore,['pickParams']),
     paperCateList(){
-      if(this.pickParams.setting.paperValue === '/wallhaven/v2'){
-        this.pickParams.setting.cateValue = this.pickParams.wallhavenList[0].value;
-        return this.pickParams.wallhavenList;
-      }
-      else { 
-        this.pickParams.setting.cateValue = this.pickParams.paperList[0].value;
-        return this.pickParams.paperList; 
-      }
+      this.pickParams.setting.cateWhat = this.pickParams.paperList[0].value;
+      return this.pickParams.paperList;
+
+      // if(this.pickParams.setting.paperValue === '/wallhaven/v2'){
+      //   this.pickParams.setting.cateValue = this.pickParams.wallhavenList[0].value;
+      //   return this.pickParams.wallhavenList;
+      // }
+      // else { 
+         
+      // }
     },
     paperDescribe(){
       const params = this.pickParams.setting.paperValue;
@@ -80,7 +84,7 @@ export default {
 
 
   watch:{
-    'pickParams.setting.cateValue':{
+    'pickParams.setting.cateWhat':{
       handler(newVal){
         this.$emit('emitPaper');
       },

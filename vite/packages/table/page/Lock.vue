@@ -349,8 +349,8 @@ export default {
           break;
         // 拾光壁纸
         case 'picking':
-           let pickingUrl = `https://api.nguaduot.cn/timeline/v2?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
-           axios.get(pickingUrl).then(async res => {
+           let pickingUrl = `https://api.nguaduot.cn/timeline/v3?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
+           axios.get(pickingUrl,{headers:{'Timeline-Client':'thisky'}}).then(async res => {
             if (res.data.data.length !== 1) {
             let arr = res.data.data
             arr.forEach(item => {
