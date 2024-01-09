@@ -8,7 +8,7 @@
      </template>
 
      <template v-else>
-       <NoticeHistory @close="editorVisible = false"/>
+       <NoticeHistory :isFull="isFull" @close="editorVisible = false"/>
      </template>
    </xt-left-menu>
  </xt-modal>

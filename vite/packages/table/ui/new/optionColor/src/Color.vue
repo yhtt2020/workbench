@@ -3,7 +3,7 @@
     <template v-if="switch">
       <div class="item-box">
         <div class="flex items-center justify-center mr-4 item" :key=" item "
-          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="     item, index      in     6     "
+          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in Number(colorNum) "
           @click="chooseBg(item)">
           <xt-new-icon v-show=" color == colorList[`${'color' + item}`] " icon="ri:checkbox-circle-fill"
             size="20"></xt-new-icon>
@@ -25,6 +25,12 @@ export interface colorProps {
   linearList?: any;
   // 是否有渐变
   isLinear?: boolean;
+  // 显示颜色数量
+  colorNum?:Number;
+  // 推荐颜色选择颜色数量
+  selecctTopNum?:Number;
+  // 渐变色选择颜色数量
+  selecctTopNum?:Number;
 }
 const props = withDefaults(defineProps<colorProps>(), {
   switch: true,
@@ -36,9 +42,9 @@ const props = withDefaults(defineProps<colorProps>(), {
     color5: '#57BF60',
     color6: '#DE5DB3',
     color7: '#000000',
-    // color8: '#DE5DB3',
-    color8: '#43CADE',
-    color9: '#FFFFFF',
+    color8: '#808080',
+    color9: '#43CADE',
+    color10: '#FFFFFF',
   },
   linearList: {
     color1: ' linear-gradient(135deg, #A8A9EE 0%, #3398DA 100%)',
@@ -52,7 +58,8 @@ const props = withDefaults(defineProps<colorProps>(), {
     color9: '  linear-gradient(135deg, #EEA8A8 0%, #B633DA 100%)',
     color10: ' linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)',
   },
-  isLinear: true
+  isLinear: true,
+  colorNum: 6,
 });
 const { color } = toRefs(props);
 // 按钮回调
