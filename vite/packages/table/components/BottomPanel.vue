@@ -99,9 +99,6 @@
 
       </div>
       <!-- </Drop> -->
-      <!-- <template v-if="isMain && this.bottomToggle[1] && ((!simple && isMain) || (simple && isMain))">
-        <Team  :item="this.copyFootNav[0]" :shakeElement="shakeElement"></Team>
-      </template> -->
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
       </keep-alive>
@@ -607,7 +604,8 @@ export default {
           });
           // console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
           // 更新 copyFootNav 为重新排列后的数组
-          this.copyFootNav = rearrangedCopyFootNav;
+          this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
+          // console.log(this.copyFootNav, 'this.copyFootNav')
 
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
@@ -615,9 +613,7 @@ export default {
         // 防止数据同步失败，导致导航栏数据无法同步，导致数据错位
         this.$nextTick(() => {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          console.log(target, 'target')
-          if (target.length > 0) {
-            console.log(target, 'target')
+          if (target.length > 0 ) {
             message.error('导航栏数据自动调整失败，将手动调整导航栏')
             this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
           }
@@ -642,8 +638,6 @@ export default {
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-
-
         console.log(this.copyFootNav, 'copyFootNav')
         console.log(this.footNavigationList, 'footNav')
       },
@@ -759,7 +753,7 @@ export default {
      */
     clickFile(item) {
       this.folderVisible = false
-      message.loading(`正在打开「${item.name}」...`, 2)
+      this.msgNotice(item)
     },
     /**
      * 清空当前导航栏
@@ -1006,16 +1000,15 @@ export default {
         },
       })
     },
-    // async setFullScreen() {
-    //   // await tsbApi.window.isFullScreen()
-    //   if (this.full) {
-    //     this.full = false
-    //     tsbApi.window.setFullScreen(false)
-    //   } else {
-    //     this.full = true
-    //     tsbApi.window.setFullScreen(true)
-    //   }
-    // },
+    /**
+     * 打开桌面应用提示
+     * @param {*} item 当前图标
+     */
+    msgNotice(item){
+      if(item.type === 'tableApp'){
+        message.loading(`打开「${item.name}」...`)
+      }
+    },
     /**
      * 打开应用
      * @param {*} type 图标类型
@@ -1023,9 +1016,7 @@ export default {
      * @param {*} item 图标详细信息
      */
     newOpenApp(type, value, item) {
-      if(type === 'tableApp') {
-        message.loading(`正在打开「${item.name}」...`)
-      }
+      this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
@@ -1310,17 +1301,14 @@ export default {
             if (oIndex === nIndex) {
               return 0
             }
-
+            
             that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
             that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
             console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             const id = that.footNavigationList[nIndex].id
             that.copyFootNav[nIndex].id = id
-            // const target = that.iconFolder(that.footNavigationList, oIndex, nIndex)
             console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             that.removeFootNavigationList(oIndex)
-            // that.removeFootNavigationList(nIndex)
-            // that.footNavigationList.splice(nIndex, 0, target)
           }
         }
       })
