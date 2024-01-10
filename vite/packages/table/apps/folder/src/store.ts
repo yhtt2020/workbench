@@ -7,10 +7,7 @@ export const useFolderStore = defineStore("useFolderStore", {
     currentData: null,
     currentId: "",
 
-    // 进入文件夹状态
-    isEnter: false,
-    // 离开文件夹状态
-    isOver: false,
+    move:false
   }),
   getters: {},
   actions: {},

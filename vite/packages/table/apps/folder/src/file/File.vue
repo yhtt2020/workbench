@@ -1,4 +1,4 @@
-<!-- 负责单个文件渲染 -->
+<!-- 负责单个文件功能渲染 -->
 <template>
   <div
     class="xt-sortable-fle-container"
@@ -9,6 +9,8 @@
       <div
         v-show="fileDisabled(item)"
         class="xt-sortable-fle-box flex justify-center"
+        @drag="dragStart($event)"
+        @dragend="dragEnd(item)"
         :class="[sortableBox]"
         :data-id="item.id"
       >
@@ -21,6 +23,7 @@
             class="cursor-pointer"
             @click="fileClick(item)"
             @deleteFile="dragDeleteFile"
+            @updatePosition="updatePosition"
             :data="item"
           >
             <Files :item="item"></Files>
@@ -62,7 +65,12 @@ const { proxy } = getCurrentInstance();
 
 const router = useRouter();
 
-const emits = defineEmits(["deleteFile", "updateSort", "updateList"]);
+const emits = defineEmits([
+  "deleteFile",
+  "updateSort",
+  "updateList",
+  "updatePosition",
+]);
 // 父组件数据
 const props = defineProps({
   layout: {},
@@ -95,6 +103,15 @@ const fileLayout = computed(() => {
   }
   return layout.value === "rows" ? rows : "100%";
 });
+
+const dragStart = (e) => {};
+const dragEnd = (data) => {
+  // console.log("hhhhh :>> ", 112323123233);
+  // emits("updatePosition", data);
+};
+const updatePosition = (data) => {
+  emits("updatePosition", data);
+}
 // 是否禁用拖拽
 watch(
   () => data.value.sort,
@@ -114,8 +131,9 @@ onMounted(() => {
     handle: "." + sortableBox.value,
     disabled: data.value.sort === "free" ? false : true,
     onEnd: function (evt) {
-      console.log('2222222 :>> ', 2222222);
-      collisionDetection(evt.to.childNodes);
+      setTimeout(() => {
+        collisionDetection(evt.to.childNodes);
+      }, 100);
     },
   });
 });
@@ -208,6 +226,8 @@ const collisionDetection = (nodes) => {
     let data = list.value.find((obj) => obj.id == id);
     arr.push({ ...data });
   }
+
+  console.log('arr :>> ', arr);
   emits("updateList", arr);
 };
 

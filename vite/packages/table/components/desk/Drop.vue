@@ -71,11 +71,7 @@ const handleDrop = async (dragEvent) => {
 
       setTimeout(() => {
         addCard();
-        console.log(
-          "freeLayoutData.value[id] 2 :>> ",
-          id,
-          getFreeLayoutData.value[id]
-        );
+
       }, 100);
     } else {
       addCard();
@@ -84,13 +80,11 @@ const handleDrop = async (dragEvent) => {
 };
 const handleDragenter = (dragEvent) => {
   dragEvent.preventDefault();
-  console.log("222 :>> ");
 };
 
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
 
-  console.log("333 :>> ");
 };
 </script>
 

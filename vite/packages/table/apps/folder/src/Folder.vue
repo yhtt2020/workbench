@@ -9,7 +9,12 @@
       @updateSort="updateSort"
     />
   </Widget> -->
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+  >
     <xt-container
       :options="options"
       :customIndex="customIndex"
@@ -46,6 +51,7 @@
             @deleteFile="deleteFile"
             @updateList="updateList"
             @updateSort="updateSort"
+            @updatePosition="updatePosition"
           />
         </vue-custom-scrollbar>
       </Resize>
@@ -96,11 +102,33 @@ import Null from "./components/Null.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
+import {
+  useElementSize,
+  useElementBounding,
+  useMouseInElement,
+} from "@vueuse/core";
 
+/**
+ * 拖拽位置
+ */
+
+const folder = ref(null);
+const { isOutside } = useMouseInElement(folder);
+const updatePosition = (data) => {
+  if (isOutside.value) {
+    // deleteFile(data)
+    customData.value.list.splice(customData.value.list.indexOf(data), 1);
+    console.log("del :>> ");
+  }
+};
+
+/**
+ * 文件添加
+ */
 const editVisible = ref(false);
 const navigationStore = useNavigationStore();
 const addFileClick = () => {
-  if ( customData.value.model != "custom") {
+  if (customData.value.model != "custom") {
     message.info("桌面文件下无法无法添加");
     return;
   }
@@ -219,6 +247,7 @@ const sizeList = ref([
 
 provide("index", customIndex);
 provide("data", customData);
+provide("isOutside", isOutside);
 
 /**
  * 通过文件夹中数据的多少来自定义大小
