@@ -782,7 +782,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true,
       });
-      this.editVisible = false;
+      // this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

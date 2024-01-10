@@ -6,8 +6,9 @@ import { nanoid } from "nanoid";
  */
 export const replaceType = (list) => {
   // 去除无效图标
-  const arr = list.filter((item) => item !== null && item !== undefined);
-    return arr.map((item)=>{
+  // const arr = list.filter((item) => item !== null && item !== undefined);
+  // console.log(arr,'arr')
+    return list.map((item)=>{
         switch (item.type) {
             case 'systemApp':
               return { ...item };
