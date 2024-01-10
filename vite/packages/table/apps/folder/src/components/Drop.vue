@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full h-full"
-    @drop="handleDrop"
+    @drop.prevent.stop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     @dragleave="handleDragleave"
@@ -20,7 +20,10 @@ import { myIcons } from "../../../../store/myIcons";
 import { inject } from "vue";
 import { defaultData } from "./options";
 import { nanoid } from "nanoid";
+import { useDeskStore } from "../../../../components/desk/store";
 
+const deskStore = useDeskStore();
+const { isEnterFolder } = storeToRefs(deskStore);
 // 获取图标数据
 const icon = myIcons();
 const { isDrag: myIconDrag, iconList, iconsRefs } = storeToRefs(icon);
@@ -37,6 +40,7 @@ const emits = defineEmits(["createFile", "deleteFile"]);
  * 处理拖拽内容放置
  */
 const handleDrop = async (dragEvent) => {
+  isEnterFolder.value = false;
   if (data.value.model !== "custom") return;
   dragEvent.preventDefault();
   if (dragId.value == index.value) {
@@ -64,7 +68,7 @@ const handleDrop = async (dragEvent) => {
     fileInfo.name = file.name;
     fileInfo.value = file.path;
     fileInfo.icon = fileImage;
-    fileInfo.type = 'tableApp';
+    fileInfo.type = "tableApp";
     emits("createFile", fileInfo);
   }
 };
@@ -75,6 +79,7 @@ const handleDragenter = (dragEvent) => {
   dragEvent.preventDefault();
   currentId.value = index.value;
 
+  isEnterFolder.value = true;
   console.log("拖拽元素进入 :>> ");
 };
 
@@ -91,6 +96,8 @@ const handleDragover = (dragEvent) => {
  * 处理拖拽内容离开
  */
 const handleDragleave = () => {
+  isEnterFolder.value = false;
+
   if (data.value.lock) return;
   currentId.value = "";
 };

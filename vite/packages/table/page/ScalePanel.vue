@@ -40,8 +40,7 @@
       :min="30" :max="500" 
       v-model:value="newZoom"></a-slider>
     </div>
-
-
+    <xt-button class="button-bottom float-right mt-2" @click="close" :w="95" :h="40" type="theme">确定</xt-button>
   </div>
 
 </template>
@@ -184,7 +183,7 @@ export default {
 <style scoped lang="scss">
   .modal-float{
     width: 480px;
-    height: 484px;
+    height: 507px;
     // background:red;
     z-index: 1000;
     top: 59px;

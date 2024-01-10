@@ -7,10 +7,10 @@
       <div class="font-16" style="text-align: center;-webkit-app-region:drag;color: var(--primary-text);height: 100px;">
         <div style="height:60px;">
           <div v-if="step!==0" @click="prevStep" class="top-icon no-drag">
-            <!-- <xt-button v-if="step!==0" @click="prevStep" style="" size="large" class="button-bottom">上一步</xt-button> -->
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
-          <div @click="themeSwitch" class="top-icon no-drag">
+
+          <div @click="themeSwitch" class="top-icon no-drag right-4">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
           </div>
         </div>
@@ -626,6 +626,7 @@ export default {
   border-radius: 8px;
   color: var(--secondary-text);
   cursor: pointer;
+  position: absolute;
 }
 
 .bg-tab{

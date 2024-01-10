@@ -2,21 +2,24 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../components/desk/freeLayout/store";
 import { cardStore } from "../../store/card";
 
-export const useAddCard = (name, customData) => {
+export const useAddCard = (name, customData, id = Date.now()) => {
+
+  console.log('id :>> ', id);
   const freeLayoutStore = useFreeLayoutStore();
   const { getCurrentDesk }: any = storeToRefs(freeLayoutStore);
   const card: any = cardStore();
   card.addCard(
     {
       name,
-      id: Date.now(),
+      id,
       customData,
     },
     getCurrentDesk.value
   );
+  return id;
 };
 
-export const file = (item) =>{
+export const file = (item) => {
   return {
     model: "file",
     size: "mini",
@@ -29,10 +32,10 @@ export const file = (item) =>{
     src: item.icon,
     isRadius: true,
     radius: 5,
-    imgState: 'cover',
-    imgShape: 'square',
+    imgState: "cover",
+    imgShape: "square",
     isBackground: item.isBg,
     backgroundColor: item.bg,
     backgroundIndex: 0,
-  }
-}
+  };
+};
