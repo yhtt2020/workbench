@@ -574,7 +574,7 @@ export default {
             const index = this.footNavigationList.findIndex(item => {
               return this.judge(item, target[i]);
             })
-            this.copyFootNav.splice(index, 0, target[i]);
+            this.copyFootNav.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
           }
 
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
@@ -1171,7 +1171,7 @@ export default {
             const element = item.children[i];
             this.footNavigationList.splice(index + i, 0, element)
           }
-          this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
+          // this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
           // console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
         })
 
