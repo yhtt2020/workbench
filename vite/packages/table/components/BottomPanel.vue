@@ -68,7 +68,9 @@
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden">
               <div class=" scroll-content" style=" flex: 1; display: flex;margin-right: 14px;" ref="content">
                 <div style="white-space: nowrap; display: flex; align-items: center" id="bottomContent">
-                  <div v-if="footNavigationList.length <= 0" style="" class="flex items-center justify-center w-full h-full mt-2 ml-6" @click="this.editNavigation(this.drawerMenus[0])">
+                  <div v-if="footNavigationList.length <= 0" style=""
+                    class="flex items-center justify-center w-full h-full mt-2 ml-6"
+                    @click="this.editNavigation(this.drawerMenus[0])">
                     <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
                   </div>
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.name" :title="item.name"
@@ -587,38 +589,45 @@ export default {
               this.copyFootNav.splice(index, 1);
             }
           })
+          console.log(this.copyFootNav,'this.delete')
         }
         else {
           const rearrangedCopyFootNav = [];
           // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-          this.footNavigationList.forEach((item) => {
-            // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-            const correspondingElement = this.copyFootNav.find((copyItem) => {
-              return this.judge(item, copyItem);
-            });
+          // this.footNavigationList.forEach((item) => {
+          //   // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
+          //   const correspondingElement = this.copyFootNav.find((copyItem) => {
+          //     return this.judge(item, copyItem);
+          //   });
 
-            // 如果找到对应元素，则将其放入新数组中
-            if (correspondingElement) {
-              rearrangedCopyFootNav.push(correspondingElement);
+          //   // 如果找到对应元素，则将其放入新数组中
+          //   if (correspondingElement) {
+          //     rearrangedCopyFootNav.push(correspondingElement);
+          //   }
+          // });
+          for(let i = 0;i<this.footNavigationList.length;i++){
+            const item = this.copyFootNav.find((copyItem) => {
+              return this.judge(this.footNavigationList[i], copyItem);
+            })
+            if(item){
+              rearrangedCopyFootNav.push(item)
             }
-          });
-          // console.log(rearrangedCopyFootNav, 'rearrangedCopyFootNav')
+          }
           // 更新 copyFootNav 为重新排列后的数组
           this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
-          // console.log(this.copyFootNav, 'this.copyFootNav')
-
+          // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
+          console.log(this.copyFootNav,'this.copyFootNav---exchange')
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
         // 防止数据同步失败，导致导航栏数据无法同步，导致数据错位
         this.$nextTick(() => {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          if (target.length > 0 ) {
+          if (target.length > 0) {
             message.error('导航栏数据自动调整失败，将手动调整导航栏')
             this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
           }
         })
-
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
@@ -638,8 +647,8 @@ export default {
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-        console.log(this.copyFootNav, 'copyFootNav')
-        console.log(this.footNavigationList, 'footNav')
+        // console.log(this.copyFootNav, 'copyFootNav')
+        // console.log(this.footNavigationList, 'footNav')
       },
       immediate: true,
       deep: true,
@@ -682,7 +691,7 @@ export default {
     bottomToggle: {
       deep: true,
       handler(newV, oldV) {
-        if (this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) {
+        if ((this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) || this.bottomToggle[0]) {
           this.simple = false
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
@@ -761,7 +770,7 @@ export default {
     clearAll() {
       for (let i = this.footNavigationList.length - 1; i >= 0; --i) {
         this.removeFootNavigationList(i, 1);
-        console.log(this.footNavigationList, 'footNavigationList');
+        // console.log(this.footNavigationList, 'footNavigationList');
       }
     },
     /**
@@ -1004,8 +1013,8 @@ export default {
      * 打开桌面应用提示
      * @param {*} item 当前图标
      */
-    msgNotice(item){
-      if(item.type === 'tableApp'){
+    msgNotice(item) {
+      if (item.type === 'tableApp') {
         message.loading(`打开「${item.name}」...`)
       }
     },
@@ -1301,9 +1310,13 @@ export default {
             if (oIndex === nIndex) {
               return 0
             }
-            
-            that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
-            that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+
+            // that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            // that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            const target = that.iconFolder(that.footNavigationList, oIndex, nIndex)
+            that.footNavigationList.splice(nIndex, 1, target)
+            const item = that.iconFolder(that.copyFootNav, oIndex, nIndex)
+            that.copyFootNav.splice(nIndex, 1, item)
             console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             const id = that.footNavigationList[nIndex].id
             that.copyFootNav[nIndex].id = id
@@ -1336,25 +1349,16 @@ export default {
      */
     ResetElementPosition() {
       const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x');
-      // console.log(this.defaultPosition.x, (this.defaultPosition.x - 100) + (draggableSize[0] * 200), 'draggableSize');
-      // if (this.defaultPosition.x - 100 < 0) {
-      //   this.left = 0;
-      // } else if (
-      //   (this.defaultPosition.x - 100) + (draggableSize[0] * 240) > this.parentSize
-      // ) {
-        // 视图大小
-        let vW = this.parentSize
-        // 元素坐标
-        let posX = Number((this.defaultPosition.x).toFixed(0));
-        // 元素大小
-        let menuW = draggableSize[0] * 140
-        // console.log(vW,posX,menuW, 'vW');
-        posX = posX > vW - menuW ? vW - menuW : posX - 140;
-        this.left = posX;
-        // console.log(this.left, 'left')
-      // } else {
-      //   this.left = this.defaultPosition.x - 120
-      // }
+      // 视图大小
+      let vW = this.parentSize
+      // 元素坐标
+      let posX = Number((this.defaultPosition.x).toFixed(0));
+      // 元素大小
+      let menuW = draggableSize[0] * 144
+      // console.log(vW,posX,menuW, 'vW');
+      posX = posX > vW - menuW ? vW - menuW : posX ;
+      // console.log(posX, 'posX')
+      this.left = posX;
     }
   },
   provide() {
