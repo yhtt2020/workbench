@@ -58,13 +58,16 @@
         </div>
       </div>
       <PageState :env="env" :options="options">
-        <div class="flex-1 h-full rounded-b-lg" :style="[
-          {
-            background: main.bg,
-            color: main.color,
-            padding: main.scroll ? '0 14px' : '0 14px 14px 14px',
-          },
-        ]">
+        <div
+          class="flex-1 h-full rounded-b-lg"
+          :style="[
+            {
+              background: body.bg,
+              color: body.color,
+              padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+            },
+          ]"
+        >
           <slot>
             <!--  主体内容插槽1  -->
           </slot>
@@ -119,7 +122,7 @@ export default {
   name: "Container",
   props: {
     /**
-     * header main size sizeList defaultData
+     * header body size sizeList defaultData
      * 均为重构后的数据结构 需要阅读源码
      */
     header: {
@@ -162,7 +165,7 @@ export default {
         };
       },
     },
-    main: {
+    body: {
       default: () => {
         return {
           // 是否开启滚动条边距

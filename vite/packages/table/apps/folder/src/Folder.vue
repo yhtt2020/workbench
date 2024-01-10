@@ -9,29 +9,63 @@
       @updateSort="updateSort"
     />
   </Widget> -->
-  <Drop @createFile="createFile" @deleteFile="deleteFile">
-    <xt-container :customIndex="customIndex" :customData="customData" :defaultData="defaultFolderData" :header="header"
-      :menuList="menuList" v-model:size="customData.size" :sizeList="autoSizeList" @leftClick="leftClick"
-      @onRefresh="onRefresh">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+  >
+    <xt-container
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :defaultData="defaultFolderData"
+      :header="header"
+      :menuList="menuList"
+      v-model:size="customData.size"
+      :sizeList="autoSizeList"
+      @leftClick="leftClick"
+      @onRefresh="onRefresh"
+    >
       <!-- 右侧布局切换 -->
-      <Resize :disabled="expand.disabled" v-model:size="customData.size" :resize="navBar.resize">
+      <Resize
+        :disabled="expand.disabled"
+        v-model:size="customData.size"
+        :resize="navBar.resize"
+      >
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
-          <Null :size="customData.size" @createFile="createFile"></Null>
+          <Null :size="customData.size" @addFile="addFileClick" />
         </template>
         <vue-custom-scrollbar v-else :settings="{
           suppressScrollY: false,
         }" class="relative w-full h-full">
-          <File :list="customData.list" :layout="customData.layout" :model="customData.model" @deleteFile="deleteFile"
-            @updateList="updateList" @updateSort="updateSort" @clickFile="clickFile" />
+          <File
+            :list="customData.list"
+            :layout="customData.layout"
+            :model="customData.model"
+            @deleteFile="deleteFile"
+            @updateList="updateList"
+            @updateSort="updateSort" 
+            @clickFile="clickFile" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
   </Drop>
 
-  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp">
-  </folderSet>
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="false"
+  />
 
   <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
     <Expand :data="props" :auto="false"></Expand>
@@ -59,8 +93,48 @@ import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
-import Widget from "../../../components/card/Widget.vue";
+// import Widget from "../../../components/card/Widget.vue";
 
+import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
+import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
+import { useMouseInElement } from "@vueuse/core";
+
+/**
+ * 拖拽位置
+ */
+const folder = ref(null);
+const { isOutside } = useMouseInElement(folder);
+const updatePosition = (data) => {
+  if (isOutside.value) {
+    customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  }
+};
+
+/**
+ * 文件添加
+ */
+const editVisible = ref(false);
+const navigationStore = useNavigationStore();
+const addFileClick = () => {
+  if (customData.value.model != "custom") {
+    message.info("桌面文件下无法无法添加");
+    return;
+  }
+  navigationStore.selectNav = "desktop";
+  editVisible.value = true;
+};
+const addFile = (data) => {
+  const { name, icon, type, value } = data;
+  let fileInfo = {
+    ...defaultData,
+    id: nanoid(6),
+    name,
+    icon,
+    type,
+    value,
+  };
+  createFile(fileInfo);
+};
 /**
  * 初始化阶段
  */
@@ -81,32 +155,32 @@ const props = defineProps({
       // 右下角图标显示
       resize: {
         default: true,
-        type: Boolean
+        type: Boolean,
       },
       // 设置中尺寸大小选择
       sizeOption: {
         default: true,
-        type: Boolean
+        type: Boolean,
       },
       // 设置背景颜色
       bg: {
         default: true,
-        type: Boolean
-      }
-    })
+        type: Boolean,
+      },
+    }),
   },
   // 自动设置大小
   auto: {
-    default: false
-  }
+    default: false,
+  },
 });
 
-const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
-const emit = defineEmits(['update:size', 'update:layout', 'clickFile'])
+const { customData, customIndex, expand, secondary, navBar, auto } =
+  toRefs(props);
+const emit = defineEmits(['update:size','update:layout','clickFile'])
 
 const refreshState = ref(false);
 const header = computed(() => {
-  // https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#000000
   return {
     showIcon: customData.value.icon,
     title: customData.value.name,
@@ -124,15 +198,23 @@ const header = computed(() => {
       //   fn: lockClick,
       // },
       {
+        ifyIcon: "fluent:add-16-filled",
+        fn: addFileClick,
+      },
+      {
         ifyIcon: layout.value,
         fn: layoutClick,
       },
     ],
   };
 });
-// options:{
-//   ex
-// }
+
+const options = computed(() => {
+  return {
+    bg: isDrag.value ? "var(--active-secondary-bg) " : "",
+  };
+});
+
 const sizeList = ref([
   {
     name: "2x2",
@@ -154,6 +236,7 @@ const sizeList = ref([
 
 provide("index", customIndex);
 provide("data", customData);
+provide("isOutside", isOutside);
 
 /**
  * 通过文件夹中数据的多少来自定义大小
@@ -163,29 +246,28 @@ const autoSizeList = computed(() => {
     // console.log(auto.value, "自动调整")
     const size = {
       name: autoSize.value,
-      value: autoSize.value
-    }
-    return [...sizeList.value, size]
+      value: autoSize.value,
+    };
+    return [...sizeList.value, size];
   }
   // console.log(auto.value, '自动调整大小')
-  return sizeList.value
-})
-
+  return sizeList.value;
+});
 /**
  * 自动尺寸
  */
 const autoSize = computed(() => {
-  const length = customData.value.list.length
+  const length = customData.value.list.length;
   if (length <= 6) {
-    return '2x2'
+    return "2x2";
   } else if (length <= 12 && length > 6) {
-    return '3x3'
+    return "3x3";
   } else if (length <= 18 && length > 12) {
-    return '4x4'
+    return "4x4";
   } else {
-    return '6x4'
+    return "6x4";
   }
-})
+});
 
 /**
  * 点击组件关闭
@@ -251,7 +333,10 @@ const deleteFile = (data) => {
 };
 // 改
 const updateFile = (data) => {
-  // customData.value.list.push(data);
+  const index = customData.value.list.findIndex(item => item && item.id === data.id);
+
+  customData.value.list[index] = data;
+
 };
 
 /**
@@ -351,7 +436,13 @@ const onRefresh = () => {
   }, 1000);
 };
 
-onBeforeMount(() => { });
+const isDrag = ref(false);
+const updateBg = (val) => {
+  // customData.value.bg = !customData.value.bg;
+  isDrag.value = val;
+};
+
+onBeforeMount(() => {});
 
 onMounted(() => {
   if (customData.value.icon === "") {
