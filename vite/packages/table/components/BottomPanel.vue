@@ -444,10 +444,11 @@ export default {
       const windowWidth = size.width.value
       this.parentSize = windowWidth
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
-      if (this.footNavigationList.length > this.maxItemNum) {
+      // if (this.footNavigationList.length > this.maxItemNum) {
         const width = windowWidth / (240 + this.footNavigationList.length * 72)
         this.navAttribute.navSize = width.toFixed(2) * 100
-      }
+        this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
+      // }
       // console.log(this.navAttribute.navSize, 'size')
     }, 200)
   },
@@ -589,7 +590,6 @@ export default {
               this.copyFootNav.splice(index, 1);
             }
           })
-          console.log(this.copyFootNav,'this.delete')
         }
         else {
           const rearrangedCopyFootNav = [];
@@ -605,18 +605,18 @@ export default {
           //     rearrangedCopyFootNav.push(correspondingElement);
           //   }
           // });
-          for(let i = 0;i<this.footNavigationList.length;i++){
+          for (let i = 0; i < this.footNavigationList.length; i++) {
             const item = this.copyFootNav.find((copyItem) => {
               return this.judge(this.footNavigationList[i], copyItem);
             })
-            if(item){
+            if (item) {
               rearrangedCopyFootNav.push(item)
             }
           }
           // 更新 copyFootNav 为重新排列后的数组
           this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
           // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
-          console.log(this.copyFootNav,'this.copyFootNav---exchange')
+          // console.log(this.copyFootNav,'this.copyFootNav---exchange')
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
@@ -647,8 +647,11 @@ export default {
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-        // console.log(this.copyFootNav, 'copyFootNav')
-        // console.log(this.footNavigationList, 'footNav')
+        console.log(this.copyFootNav, 'copyFootNav')
+        console.log(this.footNavigationList, 'footNav')
+        if (this.copyFootNav.length === 0 && this.footNavigationList.length > 0) {
+          this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+        }
       },
       immediate: true,
       deep: true,
@@ -782,7 +785,6 @@ export default {
       if (ele.type === 'coolApp') {
         return ele.value.url === item.value.url
       } else if (ele.id && item.id) {
-        // console.log(ele, item, 'folder is none')
         return ele.id === item.id
       } else {
         return ele.value === item.value
@@ -1356,7 +1358,7 @@ export default {
       // 元素大小
       let menuW = draggableSize[0] * 144
       // console.log(vW,posX,menuW, 'vW');
-      posX = posX > vW - menuW ? vW - menuW : posX ;
+      posX = posX > vW - menuW ? vW - menuW : posX;
       // console.log(posX, 'posX')
       this.left = posX;
     }

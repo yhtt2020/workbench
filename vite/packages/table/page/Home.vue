@@ -150,7 +150,7 @@
 
   </teleport>
 
-  <GalleryModal ref="galleryRef"/>
+  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
@@ -239,7 +239,7 @@ import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
 import _ from "lodash-es";
-import {replaceType} from '../components/desk/navigationBar/hook/replaceType'
+import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
@@ -444,7 +444,7 @@ export default {
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
     ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
-    deskGroupRef(){
+    deskGroupRef() {
       return this.$refs.deskGroupRef
     },
     desksList() {
@@ -475,15 +475,15 @@ export default {
       }
     },
   },
-  beforeUpdate() {
-    if (this.hasTriggered <= 10) {
-      console.log("chufa");
-      this.replaceIcon(this.sideNavigationList);
-      this.replaceIcon(this.rightNavigationList);
-      this.replaceIcon(this.footNavigationList);
-      this.hasTriggered++;
-    }
-  },
+  // beforeUpdate() {
+  //   if (this.hasTriggered <= 10) {
+  //     console.log("chufa");
+  //     this.replaceIcon(this.sideNavigationList);
+  //     this.replaceIcon(this.rightNavigationList);
+  //     this.replaceIcon(this.footNavigationList);
+  //     this.hasTriggered++;
+  //   }
+  // },
   async mounted() {
     this.replaceIcon(this.sideNavigationList);
     this.replaceIcon(this.rightNavigationList);
@@ -492,29 +492,29 @@ export default {
     //   this.replaceIcon()
     // },500)
     let n = 0;
-    if (navigator.connection.downlink < 1) {
-      let timer = setInterval(() => {
-        if (n > 3) {
-          clearInterval(timer);
-          return;
-        }
-        this.replaceIcon(this.sideNavigationList);
-        this.replaceIcon(this.rightNavigationList);
-        this.replaceIcon(this.footNavigationList);
-        n++;
-      }, 3000);
-    } else {
-      let timer = setInterval(() => {
-        if (n > 2) {
-          clearInterval(timer);
-          return;
-        }
-        this.replaceIcon(this.sideNavigationList);
-        this.replaceIcon(this.rightNavigationList);
-        this.replaceIcon(this.footNavigationList);
-        n++;
-      }, 1000);
-    }
+    // if (navigator.connection.downlink < 1) {
+    let timer = setInterval(() => {
+      if (n > 3) {
+        clearInterval(timer);
+        return;
+      }
+      this.replaceIcon(this.sideNavigationList);
+      this.replaceIcon(this.rightNavigationList);
+      this.replaceIcon(this.footNavigationList);
+      n++;
+    }, 2000);
+    // } else {
+    //   let timer = setInterval(() => {
+    //     if (n > 2) {
+    //       clearInterval(timer);
+    //       return;
+    //     }
+    //     this.replaceIcon(this.sideNavigationList);
+    //     this.replaceIcon(this.rightNavigationList);
+    //     this.replaceIcon(this.footNavigationList);
+    //     n++;
+    //   }, 1000);
+    // }
     // 判断是否是第一次加载
     if (this.deskInit) {
       // 新用户第一次进入加载一个默认桌面
