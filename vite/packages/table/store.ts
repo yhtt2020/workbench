@@ -218,6 +218,7 @@ export const appStore = defineStore('appStore', {
     // 桌面壁纸支持纯色
     setBackgroundImage(value:any) {
       this.backgroundImage = value
+      this.backgroundColor.color = '';
     },
 
 
