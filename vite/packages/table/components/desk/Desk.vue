@@ -631,6 +631,9 @@ export default {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
+    this.$bus.on("reset", () => {
+      this.resetLayout();
+    });
 
     if (window.showed) {
       this.showGrid = true;

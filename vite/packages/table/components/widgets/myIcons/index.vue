@@ -196,7 +196,6 @@ export default {
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
 
-    console.log("this.getCurrentDesk :>> ", this.getCurrentDesk);
     if (this.customData.iconList.length <= 1) return;
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
@@ -230,6 +229,7 @@ export default {
         list,
       },
     };
+    this.$bus.emit('reset')
   },
   provide() {
     return {
@@ -364,10 +364,7 @@ export default {
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
-      console.log(
-        "this.customData.iconList[this.index] :>> ",
-        this.customData.iconList[this.index]
-      );
+
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
         this.edit[k] = icon[k] || this.iconOption[k];
@@ -514,7 +511,6 @@ export default {
         );
 
         let list = [];
-        console.log("替换文件夹 :>> ", 123);
         this.customData.iconList.forEach((item) => {
           const file = {
             ...defaultData,
@@ -545,7 +541,7 @@ export default {
           },
         };
 
-        console.log(this.desk.cards[index]);
+        this.$bus.emit('reset')
       });
 
       // 遍历图标组件进行删除
