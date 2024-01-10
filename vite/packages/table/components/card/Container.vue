@@ -1,5 +1,5 @@
 <template>
-  <RightMenu :menus="menus" :customIndex="customIndex" v-model:size="currentSize" :sizeList="sizeList">
+  <RightMenu :menus="menus" :customIndex="customIndex" v-model:size="currentSize" :sizeList="sizeList" :disableHierarchy="options.hierarchy">
     <div v-if="!options?.custom" class="flex flex-col xt-shadow widget rounded-xl" :class="[edit ? 'editing' : '']"
       style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)" :style="[
         getSize,
@@ -49,7 +49,7 @@
               <xt-icon v-else-if="item.icon" :icon="item.icon" @click="item.fn" type="" size="19" w="20" />
             </div>
           </template>
-          <RightMenu :menus="menus" :customIndex="customIndex" model="all" v-model:size="currentSize" :disabledCENGJI="OPTION.CENGF"
+          <RightMenu :menus="menus" :customIndex="customIndex" model="all" v-model:size="currentSize" :disableHierarchy="options.hierarchy"
             :sizeList="sizeList">
             <div class="header-right-icon">
               <xt-ify-icon icon="fluent:line-horizontal-3-20-filled" size="20" />

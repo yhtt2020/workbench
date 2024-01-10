@@ -109,8 +109,10 @@ const props = defineProps({
       return [];
     },
   },
+  // 隐藏层级
+  disableHierarchy:false
 });
-const { menus, sizes, model, sizeList ,size} = toRefs(props);
+const { menus, sizes, model, sizeList ,size,disableHierarchy} = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -145,7 +147,7 @@ const menuList = computed(() => {
       newIcon: "fluent:window-new-16-regular",
       title: "层叠位置",
       lock: true,
-      
+      disabled: disableHierarchy.value ? true : false,
       children: [
         {
           newIcon: "fluent:chevron-up-16-filled",

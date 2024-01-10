@@ -153,20 +153,15 @@ const props = defineProps({
     type: Object,
     default: () => ({
       // 右下角图标显示
-      resize: {
-        default: true,
-        type: Boolean,
-      },
+      resize: true,
       // 设置中尺寸大小选择
-      sizeOption: {
-        default: true,
-        type: Boolean,
-      },
+      sizeOption: true,
       // 设置背景颜色
-      bg: {
-        default: true,
-        type: Boolean,
-      },
+      bg: true,
+      // 隐藏删除小组件选项
+      isDel:false,
+      // 隐藏层级选择
+      hierarchy:false,
     }),
   },
   // 自动设置大小
@@ -212,6 +207,8 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
+    del: navBar.value.isDel ,
+    hierarchy: navBar.value.hierarchy
   };
 });
 
