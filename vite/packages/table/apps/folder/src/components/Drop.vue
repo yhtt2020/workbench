@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full"
+    class="w-full h-full rounded-xl"
     @drop.prevent.stop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"
@@ -17,11 +17,11 @@
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../store";
 import { myIcons } from "../../../../store/myIcons";
-import { inject } from "vue";
+import { inject, ref, watch } from "vue";
 import { defaultData } from "./options";
 import { nanoid } from "nanoid";
 import { useDeskStore } from "../../../../components/desk/store";
-
+//
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
 // 获取图标数据
@@ -34,7 +34,7 @@ const { dragId, isDrag, isEnter, isOver, currentId, currentData } =
   storeToRefs(folderStore);
 const index = inject("index", "");
 const data = inject("data", "");
-const emits = defineEmits(["createFile", "deleteFile"]);
+const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
 /**
  * 处理拖拽内容放置
@@ -106,6 +106,7 @@ const handleDragleave = () => {
  * 处理图标组件放置
  */
 const handleMouseup = () => {
+  isDragIcon.value = false;
   if (data.value.model !== "custom") return;
   if (!myIconDrag.value) return;
   if (iconList.value.length < 1) return;
@@ -142,12 +143,26 @@ const handleMouseup = () => {
 /**
  * 处理图标离开
  */
-const handleMouseleave = () => {};
+const isDragIcon = ref(false);
+
+watch(
+  () => isDragIcon.value,
+  (val) => {
+    emits("updateBg", val);
+  }
+);
+const handleMouseleave = () => {
+  isDragIcon.value = false;
+};
 
 /**
  * 处理图标进入
  */
 const handleMouseover = () => {
+  if (myIconDrag.value) {
+    isDragIcon.value = true;
+    console.log("1233213 :>> ", 1233213);
+  }
   isOver.value = false;
   isEnter.value = true;
 };
