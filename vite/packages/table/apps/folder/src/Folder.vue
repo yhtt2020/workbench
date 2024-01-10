@@ -10,21 +10,11 @@
     />
   </Widget> -->
   <Drop @createFile="createFile" @deleteFile="deleteFile">
-    <xt-container
-      :customIndex="customIndex"
-      :customData="customData"
-      :defaultData="defaultFolderData"
-      :header="header"
-      :menuList="menuList"
-      v-model:size="customData.size"
-      :sizeList="autoSizeList"
-      @leftClick="leftClick"
+    <xt-container :customIndex="customIndex" :customData="customData" :defaultData="defaultFolderData" :header="header"
+      :menuList="menuList" v-model:size="customData.size" :sizeList="autoSizeList" @leftClick="leftClick"
       @onRefresh="onRefresh">
       <!-- 右侧布局切换 -->
-      <Resize
-        :disabled="expand.disabled"
-        v-model:size="customData.size"
-        :resize="navBar.resize">
+      <Resize :disabled="expand.disabled" v-model:size="customData.size" :resize="navBar.resize">
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
           <Null :size="customData.size" @createFile="createFile"></Null>
@@ -32,24 +22,14 @@
         <vue-custom-scrollbar v-else :settings="{
           suppressScrollY: false,
         }" class="relative w-full h-full">
-          <File
-            :list="customData.list"
-            :layout="customData.layout"
-            :model="customData.model"
-            @deleteFile="deleteFile"
-            @updateList="updateList"
-            @updateSort="updateSort" 
-            @clickFile="clickFile" />
+          <File :list="customData.list" :layout="customData.layout" :model="customData.model" @deleteFile="deleteFile"
+            @updateList="updateList" @updateSort="updateSort" @clickFile="clickFile" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
   </Drop>
 
-  <folderSet
-    v-if="setVisible"
-    :data="customData"
-    @close="setVisible = false"
-    @updateSort="updateSort"
+  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
     @updateWindowApp="updateWindowApp">
   </folderSet>
 
@@ -122,7 +102,7 @@ const props = defineProps({
 });
 
 const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
-const emit = defineEmits(['update:size','update:layout','clickFile'])
+const emit = defineEmits(['update:size', 'update:layout', 'clickFile'])
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -150,7 +130,9 @@ const header = computed(() => {
     ],
   };
 });
-
+// options:{
+//   ex
+// }
 const sizeList = ref([
   {
     name: "2x2",
@@ -180,7 +162,7 @@ const autoSizeList = computed(() => {
   if (auto.value) {
     // console.log(auto.value, "自动调整")
     const size = {
-       name: autoSize.value,
+      name: autoSize.value,
       value: autoSize.value
     }
     return [...sizeList.value, size]
@@ -206,25 +188,25 @@ const autoSize = computed(() => {
 })
 
 /**
- * 
+ * 点击组件关闭
  */
-const clickFile = (data)=>{
-  emit('clickFile',data)
+const clickFile = (data) => {
+  emit('clickFile', data)
 }
 /**
  * 自定义大小
  */
-watch(()=>customData.value.size,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:size',newV)
-},{deep:true})
+watch(() => customData.value.size, (newV, oldV) => {
+  console.log(newV, oldV, 'newV,oldV')
+  emit('update:size', newV)
+}, { deep: true })
 
 /**
  * 自定义布局
  */
-watch(()=>customData.value.layout,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:layout',newV)
+watch(() => customData.value.layout, (newV, oldV) => {
+  console.log(newV, oldV, 'newV,oldV')
+  emit('update:layout', newV)
 })
 /**
  * 菜单配置

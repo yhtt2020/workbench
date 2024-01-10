@@ -445,9 +445,9 @@ export default {
       this.parentSize = windowWidth
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
       // if (this.footNavigationList.length > this.maxItemNum) {
-        const width = windowWidth / (240 + this.footNavigationList.length * 72)
-        this.navAttribute.navSize = width.toFixed(2) * 100
-        this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
+      const width = windowWidth / (240 + this.footNavigationList.length * 72)
+      this.navAttribute.navSize = width.toFixed(2) * 100
+      this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
       // }
       // console.log(this.navAttribute.navSize, 'size')
     }, 200)
@@ -579,17 +579,15 @@ export default {
 
         } else if (this.footNavigationList.length < this.copyFootNav.length) {
           const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          // console.log(target, this.copyFootNav, 'length < copyFootNav')
-          target.forEach(element => {
-            const index = this.copyFootNav.findIndex(item => {
+          console.log(target, 'length < copyFootNav')
+          const list = target.map(element => {
+            return this.copyFootNav.findIndex(item => {
               // 找到被删除元素在备份数据中的索引
               return this.judge(item, element);
             });
-            // console.log(index, 'lost index');
-            if (index !== -1) {
-              this.copyFootNav.splice(index, 1);
-            }
           })
+          console.log(list, this.copyFootNav, 'list')
+          this.copyFootNav = this.copyFootNav.filter((item, index) => { return list.indexOf(index) === -1 })
         }
         else {
           const rearrangedCopyFootNav = [];
@@ -614,9 +612,10 @@ export default {
             }
           }
           // 更新 copyFootNav 为重新排列后的数组
-          this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
+          // this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
+          this.copyFootNav = [...rearrangedCopyFootNav]
           // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
-          // console.log(this.copyFootNav,'this.copyFootNav---exchange')
+          console.log(this.copyFootNav,'this---exchange')
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
@@ -1319,10 +1318,9 @@ export default {
             that.footNavigationList.splice(nIndex, 1, target)
             const item = that.iconFolder(that.copyFootNav, oIndex, nIndex)
             that.copyFootNav.splice(nIndex, 1, item)
-            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
             const id = that.footNavigationList[nIndex].id
             that.copyFootNav[nIndex].id = id
-            console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')
+            console.log(target, 'target',  that.copyFootNav, 'that.copyFootNav')
             that.removeFootNavigationList(oIndex)
           }
         }

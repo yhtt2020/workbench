@@ -11,12 +11,12 @@
   >
     <slot></slot>
     <template #follow>
-      <div class="flex flex-wrap mb-2 ml-2 my-1">
+      <div class="flex flex-wrap my-1 mb-2 ml-2">
         <template v-if="sizeList.length > 0">
           <div
             v-for="item in sizeList"
             :class="[size == item.value ? 'xt-theme-bg' : 'xt-bg-2']"
-            class="h-8 w-12 text-sm xt-base-btn mr-2"
+            class="w-12 h-8 mr-2 text-sm xt-base-btn"
             style="border-radius: 16px"
             @click="updateSize(item.value)"
           >
@@ -26,7 +26,7 @@
         <template v-else-if="sizes.length > 0">
           <div
             v-for="item in sizes"
-            class="h-8 w-12 xt-bg-2 text-sm xt-base-btn mr-2"
+            class="w-12 h-8 mr-2 text-sm xt-bg-2 xt-base-btn"
             style="border-radius: 16px"
             @click="updateCardSize(item)"
           >
@@ -145,6 +145,7 @@ const menuList = computed(() => {
       newIcon: "fluent:window-new-16-regular",
       title: "层叠位置",
       lock: true,
+      
       children: [
         {
           newIcon: "fluent:chevron-up-16-filled",
