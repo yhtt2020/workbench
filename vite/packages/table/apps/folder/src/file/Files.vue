@@ -1,7 +1,7 @@
 <!-- 渲染不同尺寸的文件状态 -->
 <template>
   <div
-    class="flex  mb-1"
+    class="flex  mb-1   items-center"
     :class="boxClass"
     :style="getLayoutSize"
   >
@@ -63,7 +63,7 @@ const currentLayout = computed(() => {
   if (!data.value?.layout) return;
   if (data.value?.layout == "rows") {
     boxClass.value = " flex-col justify-center items-center";
-    textClass.value = "text-center  mx-auto";
+    textClass.value = "text-center  mx-auto mt-1";
     return rowOption;
   } else {
     boxClass.value = "pl-3  mb-1";

@@ -9,7 +9,12 @@
       @updateSort="updateSort"
     />
   </Widget> -->
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+  >
     <xt-container
       :options="options"
       :customIndex="customIndex"
@@ -44,8 +49,11 @@
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
+            @updateFile="updateFile"
             @updateList="updateList"
             @updateSort="updateSort"
+            @updatePosition="updatePosition"
+            @clickFile="clickFile"
           />
         </vue-custom-scrollbar>
       </Resize>
@@ -96,11 +104,26 @@ import Null from "./components/Null.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
+import { useMouseInElement } from "@vueuse/core";
 
+/**
+ * 拖拽位置
+ */
+const folder = ref(null);
+const { isOutside } = useMouseInElement(folder);
+const updatePosition = (data) => {
+  if (isOutside.value) {
+    customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  }
+};
+
+/**
+ * 文件添加
+ */
 const editVisible = ref(false);
 const navigationStore = useNavigationStore();
 const addFileClick = () => {
-  if ( customData.value.model != "custom") {
+  if (customData.value.model != "custom") {
     message.info("桌面文件下无法无法添加");
     return;
   }
@@ -161,6 +184,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto } =
   toRefs(props);
+const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -219,6 +243,7 @@ const sizeList = ref([
 
 provide("index", customIndex);
 provide("data", customData);
+provide("isOutside", isOutside);
 
 /**
  * 通过文件夹中数据的多少来自定义大小
@@ -235,7 +260,9 @@ const autoSizeList = computed(() => {
   // console.log(auto.value, '自动调整大小')
   return sizeList.value;
 });
-
+/**
+ * 自动尺寸
+ */
 const autoSize = computed(() => {
   const length = customData.value.list.length;
   if (length <= 6) {
@@ -247,29 +274,36 @@ const autoSize = computed(() => {
   } else {
     return "6x4";
   }
-})
+});
 
 /**
  *
  */
-const clickFile = ()=>{
-  emit('clickFile')
-}
+const clickFile = (data) => {
+  emit("clickFile", data);
+};
 /**
  * 自定义大小
  */
-watch(()=>customData.value.size,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:size',newV)
-},{deep:true})
+watch(
+  () => customData.value.size,
+  (newV, oldV) => {
+    console.log(newV, oldV, "newV,oldV");
+    emit("update:size", newV);
+  },
+  { deep: true }
+);
 
 /**
  * 自定义布局
  */
-watch(()=>customData.value.layout,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:layout',newV)
-})
+watch(
+  () => customData.value.layout,
+  (newV, oldV) => {
+    console.log(newV, oldV, "newV,oldV");
+    emit("update:layout", newV);
+  }
+);
 /**
  * 菜单配置
  */
@@ -313,7 +347,11 @@ const deleteFile = (data) => {
 };
 // 改
 const updateFile = (data) => {
-  // customData.value.list.push(data);
+  const index = customData.value.list.findIndex(
+    (item) => item && item.id === data.id
+  );
+
+  customData.value.list[index] = data;
 };
 
 /**
@@ -421,10 +459,37 @@ const updateBg = (val) => {
 
 onBeforeMount(() => {});
 
-onMounted(() => {
+onMounted(async () => {
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
+  }
+  if (customData.value.model != "custom") {
+    const desktopApps = await ipc.sendSync("getDeskApps");
+    let desktopAppsList = [];
+
+    desktopApps.forEach((item) => {
+      const file = {
+        ...defaultData,
+        name: item.name,
+        value: item.path,
+        icon: item.icon,
+        type: "tableApp",
+        id: nanoid(6),
+      };
+      desktopAppsList.push(file);
+    });
+    customData.value.list = customData.value.list.filter((item) =>
+      desktopAppsList.find((file) => item.name == file.name)
+    );
+    let newList = [];
+    desktopAppsList.forEach((item) => {
+      let data = customData.value.list.find((file) => item.name == file.name);
+
+      if (typeof data == "undefined") {
+        customData.value.list.push(item);
+      }
+    });
   }
 });
 </script>

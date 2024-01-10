@@ -3,12 +3,12 @@
     <template v-if="switch">
       <div class="item-box">
         <div class="flex items-center justify-center mr-4 item" :key=" item "
-          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in Number(colorNum) "
+          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in colorNum "
           @click="chooseBg(item)">
           <xt-new-icon v-show=" color == colorList[`${'color' + item}`] " icon="ri:checkbox-circle-fill"
             size="20"></xt-new-icon>
         </div>
-        <colorP @change=" updateBackground " :defaultList=" colorList " :linearList=" linearList " :isLinear=" isLinear "/>
+        <colorP @change=" updateBackground " :defaultList=" colorList " :linearList=" linearList " :isLinear=" isLinear " :colorNum="colorShowNum" :linearNum="linearShowNum"/>
       </div>
 
     </template>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, toRefs,onMounted } from "vue";
 import colorP from '../../../../components/desk/navigationBar/components/EditIcon/Children/colorP.vue'
 export interface colorProps {
   switch?: boolean;
@@ -26,11 +26,11 @@ export interface colorProps {
   // 是否有渐变
   isLinear?: boolean;
   // 显示颜色数量
-  colorNum?:Number;
+  colorNum?:number;
   // 推荐颜色选择颜色数量
-  selecctTopNum?:Number;
+  colorShowNum?:number;
   // 渐变色选择颜色数量
-  selecctTopNum?:Number;
+  linearShowNum?:number;
 }
 const props = withDefaults(defineProps<colorProps>(), {
   switch: true,
@@ -60,8 +60,10 @@ const props = withDefaults(defineProps<colorProps>(), {
   },
   isLinear: true,
   colorNum: 6,
+  colorShowNum: 9,
+  linearShowNum: 10
 });
-const { color } = toRefs(props);
+const { colorNum, colorShowNum, linearShowNum } = toRefs(props);
 // 按钮回调
 const emit = defineEmits(["update:color"]);
 const chooseBg = (item) => {
@@ -74,6 +76,20 @@ const updateBackground = (item) => {
   emit("update:color", item);
 };
 const colorIndex = ref(0);
+/**
+ * 防止渲染的数据超过颜色列表
+ * @param num 页面显示的数目
+ * @param list 颜色列表
+ */
+const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
+  const length = list.length
+  num > length ? length : num
+}
+onMounted(()=>{
+  colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
+  colorShowNum.value = limitNum(colorShowNum.value, Object.keys(props.colorList))
+  linearShowNum.value = limitNum(linearShowNum.value, Object.keys(props.linearList))
+})
 </script>
 
 <style lang="scss" scoped>

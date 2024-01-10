@@ -10,12 +10,24 @@ import { useFolderStore } from "../store";
 import { inject } from "vue";
 // import { useAddCard } from "../hooks/useAddCard";
 import { useAddCard } from "../../../../ui/hooks/useAddCard";
-const emits = defineEmits(["deleteFile"]);
+
+import { useDeskStore } from "../../../../components/desk/store";
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
+
+// 自由布局
+const freeLayoutStore = useFreeLayoutStore();
+const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
+  storeToRefs(freeLayoutStore);
+// 获取桌面数据
+const deskStore = useDeskStore();
+const { mouseInElement } = storeToRefs(deskStore);
+const emits = defineEmits(["deleteFile", "updatePosition"]);
 
 const index = inject("index", "");
 const data = inject("data", "");
+const isOutside = inject("isOutside", "");
 const folderStore = useFolderStore();
-const { dragId, isDrag, isOver, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData } =
   storeToRefs(folderStore);
 const props = defineProps({
   data: {},
@@ -24,26 +36,32 @@ const props = defineProps({
  * 文件托起
  */
 const handleDragStart = (event) => {
+  move.value = false;
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;
   currentData.value = props.data;
 };
-
+// const handleDragLeave = (event) => {
+//   console.log("handleDragLeave :>> ");
+// };
+// const handleDragEnter = (event) => {
+//   console.log("handleDragEnter :>> ");
+// };
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
+  dragId.value = "";
   // if (data.value.sort === "free") return;
+  isDrag.value = false;
   if (data.value.model !== "custom") {
-    console.log('222222222 :>> ', 222222222);
     return;
   }
   // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
-  if (index.value == currentId.value) {
-    console.log("11111111111 :>> ", 11111111111);
+  if (!isOutside.value) {
     return;
   }
 
-  if (!currentId.value) {
+  if (!move.value) {
     const file = {
       model: "file",
       size: "mini",
@@ -62,12 +80,29 @@ const handleDragEnd = (event) => {
       backgroundColor: currentData.value.bg,
       backgroundIndex: 0,
     };
-    // iconList: [{ ...data }]
-    // useAddCard(file);
-    useAddCard("myIcons", {
-      iconList: [{ ...file }],
-    });
+
+    let id = Date.now();
+    if (isFreeLayout.value) {
+      const { x, y } = mouseInElement.value;
+      const { scrollLeft, scrollTop } = freeLayoutEnv.value;
+
+      getFreeLayoutData.value[id] = {
+        left: scrollLeft + x,
+        top: scrollTop + y -50,
+        index: 1,
+        id,
+      };
+    }
+    useAddCard(
+      "myIcons",
+      {
+        iconList: [{ ...file }],
+      },
+      id
+    );
+
     emits("deleteFile", props.data);
+
     return;
   }
   // 判断是否处在当前文件夹

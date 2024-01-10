@@ -2,62 +2,63 @@
   <div
     class="w-full h-full rounded-xl"
     @drop.prevent.stop="handleDrop"
-    @dragover="handleDragover"
-    @dragenter="handleDragenter"
-    @dragleave="handleDragleave"
-    @mouseup="handleMouseup"
+    @dragenter.prevent.stop="handleDragenter"
+    @dragleave.prevent.stop="handleDragleave"
+    @mouseup="handleMouseUp"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
   >
     <slot></slot>
   </div>
 </template>
-<script></script>
+
 <script setup>
-import { storeToRefs } from "pinia";
-import { useFolderStore } from "../store";
-import { myIcons } from "../../../../store/myIcons";
 import { inject, ref, watch } from "vue";
-import { defaultData } from "./options";
+import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
+
+import { myIcons } from "../../../../store/myIcons";
+import { useFolderStore } from "../store";
 import { useDeskStore } from "../../../../components/desk/store";
-//
+
+import { defaultData } from "./options";
+// 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
-// 获取图标数据
-const icon = myIcons();
-const { isDrag: myIconDrag, iconList, iconsRefs } = storeToRefs(icon);
-
 // 获取文件夹数据
 const folderStore = useFolderStore();
-const { dragId, isDrag, isEnter, isOver, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData } =
   storeToRefs(folderStore);
-const index = inject("index", "");
+// 获取图标数据
+const iconStore = myIcons();
+const { isDrag: iconDrag, iconList, iconsRefs } = storeToRefs(iconStore);
+
+// 获取父组件数据
 const data = inject("data", "");
+const index = inject("index", "");
+const isOutside = inject("isOutside", false);
+// 自定义事件
 const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
 /**
- * 处理拖拽内容放置
+ * 处理drop放置
  */
 const handleDrop = async (dragEvent) => {
   isEnterFolder.value = false;
+  // 非自定义模式禁止图标组件添加
   if (data.value.model !== "custom") return;
-  dragEvent.preventDefault();
-  if (dragId.value == index.value) {
-    dragId.value = null;
-    console.log("111 :>> ", 111);
-    return;
-  }
 
-  /**
-   * 属于拖拽状态 说明来自其他文件夹
-   */
-  if (isDrag.value) {
+  // 属于文件互相拖拽添加
+  if (!isOutside.value && dragId.value && index.value != dragId.value) {
+    move.value = true;
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
+
+  // 处理系统拖拽进入的文件
   let files = dragEvent.dataTransfer.files;
   if (!files || files.length <= 0) return;
+
 
   for (let file of files) {
     let fileInfo = {
@@ -72,72 +73,76 @@ const handleDrop = async (dragEvent) => {
     emits("createFile", fileInfo);
   }
 };
-/**
- * 处理拖拽内容进入
- */
-const handleDragenter = (dragEvent) => {
-  dragEvent.preventDefault();
-  currentId.value = index.value;
-
-  isEnterFolder.value = true;
-  console.log("拖拽元素进入 :>> ");
-};
 
 /**
+    @dragover="handleDragover"
  * 处理拖拽内容在放置区移动
  */
-const handleDragover = (dragEvent) => {
-  dragEvent.preventDefault();
+
+/**
+ * 处理darg进入
+ */
+const handleDragenter = (dragEvent) => {
   currentId.value = index.value;
-  console.log("拖拽元素在上方移动 :>> ");
+  isEnterFolder.value = true;
+  console.log("拖拽元素在放置区移动 :>> ");
 };
 
 /**
- * 处理拖拽内容离开
+ * 处理darg离开
  */
-const handleDragleave = () => {
+const handleDragleave = (dragEvent) => {
   isEnterFolder.value = false;
 
-  if (data.value.lock) return;
-  currentId.value = "";
+  // console.log("拖拽元素离开放置区 :>> ");
 };
 
 /**
- * 处理图标组件放置
+ * 处理鼠标弹起
  */
-const handleMouseup = () => {
-  isDragIcon.value = false;
-  if (data.value.model !== "custom") return;
-  if (!myIconDrag.value) return;
-  if (iconList.value.length < 1) return;
+const handleMouseUp = () => {
+  // console.log("鼠标弹起 :>> ");
 
-  // 新数据处理
+  // 非自定义模式禁止图标组件添加
+  if (data.value.model !== "custom") return;
+
+  // 图标组件添加
+  // 1 新数据处理
   iconList.value.forEach((item) => {
-    setTimeout(() => {
-      const file = {
-        ...defaultData,
-        id: Date.now(),
-      };
-      file.type = item.open.type;
-      file.value = item.open.value;
-      file.icon = item.src;
-      file.name = item.titleValue;
-      file.isName = item.isTitle;
-      file.bg = item.backgroundColor;
-      file.isBg = item.isBackground;
-      file.radius = item.radius;
-      file.isRadius = item.isRadius;
-      file.iconState = item.imgState;
-      file.iconShape = item.imgShape;
-      emits("createFile", file);
-    }, 10);
+    const file = {
+      ...defaultData,
+      id: nanoid(6),
+    };
+    file.type = item.open.type;
+    file.value = item.open.value;
+    file.icon = item.src;
+    file.name = item.titleValue;
+    file.isName = item.isTitle;
+    file.bg = item.backgroundColor;
+    file.isBg = item.isBackground;
+    file.radius = item.radius;
+    file.isRadius = item.isRadius;
+    file.iconState = item.imgState;
+    file.iconShape = item.imgShape;
+    emits("createFile", file);
   });
 
-  // 旧数据删除
+  // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
   iconsRefs.value.forEach((item) => {
     item.doRemoveCard();
   });
+};
+
+const handleMouseleave = (dragEvent) => {
+  // console.log("鼠标离开 :>> ");
+  isDragIcon.value = false;
+};
+const handleMouseover = (dragEvent) => {
+  // console.log("鼠标进入 :>> ");
+  if (iconDrag.value) {
+    isDragIcon.value = true;
+  }
 };
 
 /**
@@ -151,21 +156,24 @@ watch(
     emits("updateBg", val);
   }
 );
-const handleMouseleave = () => {
-  isDragIcon.value = false;
-};
 
-/**
- * 处理图标进入
- */
-const handleMouseover = () => {
-  if (myIconDrag.value) {
-    isDragIcon.value = true;
-    console.log("1233213 :>> ", 1233213);
+watch(
+  () => isOutside.value,
+  (val) => {
+    if (isDrag.value) {
+      isDragIcon.value = !val;
+    }
   }
-  isOver.value = false;
-  isEnter.value = true;
-};
+);
+watch(
+  () => isDrag.value,
+  (val) => {
+    if (!isDrag.value) {
+      isDragIcon.value = false
+    }
+  }
+);
+
 </script>
 
 <style lang="scss" scoped></style>

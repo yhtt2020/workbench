@@ -51,9 +51,9 @@
             <template #box="{ data }">
               <component
                 :desk="currentDesk"
-                :is="data.name"
-                :customIndex="data.id"
-                :customData="data.customData"
+                :is="data?.name"
+                :customIndex="data?.id"
+                :customData="data?.customData"
                 di
               />
             </template>
@@ -632,6 +632,9 @@ export default {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
+    this.$bus.on("reset", () => {
+      this.resetLayout();
+    });
     this.$bus.on("M0102", () => {
       this.newAddIcon();
     });
@@ -788,7 +791,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true,
       });
-      this.editVisible = false;
+      // this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

@@ -1,17 +1,18 @@
 <template>
-    <div style="width: 52px; height: 52px;" v-if="!item.isBg" 
-        :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
-        class="relative flex items-center justify-center ">
-        <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
-            :class="{ 'shaking-element': shakeElement }"></a-avatar>
+  <div style="width: 52px; height: 52px;" v-if="!item.isBg"
+    :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
+    class="relative flex items-center justify-center ">
+    <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
+      :class="{ 'shaking-element': shakeElement }"></a-avatar>
+  </div>
+  <div v-else style="width: 52px; height: 58px;">
+    <div style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
+      :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }">
+      <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
+        :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item.color]"
+        :class="{ 'shaking-element': shakeElement }"></a-avatar>
     </div>
-    <div v-else style="width: 52px; height: 52px;margin-top: -5px;"
-        class="relative flex items-center justify-center overflow-hidden"
-        :style="{ borderRadius:navigationBar.iconRadius + 'px', background: item.bg || '' }">
-        <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"
-            :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item.color]"
-            :class="{ 'shaking-element': shakeElement }"></a-avatar>
-    </div>
+  </div>
 </template>
 
 <script setup lang='ts'>
@@ -20,8 +21,8 @@ import { renderIcon } from '../../../../js/common/common';
 import { useNavigationStore } from '../navigationStore';
 const navigationBar = useNavigationStore();
 const props = defineProps({
-    item: Object,
-    shakeElement: Boolean
+  item: Object,
+  shakeElement: Boolean
 })
 
 </script>
@@ -52,5 +53,4 @@ const props = defineProps({
     transform: translateY(0);
   }
 }
-
 </style>

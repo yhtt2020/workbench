@@ -4,6 +4,7 @@
     @drop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"
+    ref="target"
   >
     <slot></slot>
   </div>
@@ -18,13 +19,18 @@ import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 
+import { useMouseInElement } from '@vueuse/core'
+const target = ref(null);
+
 // 自由布局
 const freeLayoutStore = useFreeLayoutStore();
 const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 // 桌面
 const deskStore = useDeskStore();
-const { isEnterFolder } = storeToRefs(deskStore);
+const { isEnterFolder, mouseInElement } = storeToRefs(deskStore);
+
+mouseInElement.value = useMouseInElement(target);
 // 图标组件
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
@@ -60,7 +66,6 @@ const handleDrop = async (dragEvent) => {
       );
     };
     if (isFreeLayout.value) {
-      console.log(" offsetX, offsetY  :>> ", offsetX, offsetY);
 
       getFreeLayoutData.value[id] = {
         left: offsetX,
@@ -71,11 +76,6 @@ const handleDrop = async (dragEvent) => {
 
       setTimeout(() => {
         addCard();
-        console.log(
-          "freeLayoutData.value[id] 2 :>> ",
-          id,
-          getFreeLayoutData.value[id]
-        );
       }, 100);
     } else {
       addCard();
@@ -84,13 +84,10 @@ const handleDrop = async (dragEvent) => {
 };
 const handleDragenter = (dragEvent) => {
   dragEvent.preventDefault();
-  console.log("222 :>> ");
 };
 
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
-
-  console.log("333 :>> ");
 };
 </script>
 
