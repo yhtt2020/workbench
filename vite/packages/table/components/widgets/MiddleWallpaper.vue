@@ -1,6 +1,6 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot"  :desk="desk">
+    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot"  class="cardSlot" :desk="desk">
       <template #left-title-icon>
         <div class="absolute flex hover-container items-center top-2.5 left-0 justify-center" style="z-index:1000;">
           <xt-new-icon icon="fluent:image-multiple-16-regular" size="29" :color="'var(--active-text)'"></xt-new-icon>
@@ -22,21 +22,17 @@
         </template>
   
         <template v-else>
+
           <div class="w-full h-full hover-container pointer">
-            <div class="absolute top-shadow w-full  left-0 h-12 " @click="setVisible"></div>
-  
             <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
              playsinline="" autoplay="" muted="" loop="" v-if="getCustomDataPaper.srcProtocol">
              <source :src="getCustomDataPaper.srcProtocol" type="video/mp4" id="bgVid"/>
             </video>
-  
-            <a-image :width="'100%'" :height="'100%'" class="relative" v-else-if="getCustomDataPaper.middleSrc"  :src="getCustomDataPaper.middleSrc" ></a-image>
-            <a-image :width="'100%'" :height="'100%'" class="relative" v-else :src="getCustomDataPaper.src" :previewMask="true" :preview="{
-              visible,
-              onVisibleChange: setVisible,
-              src:getCustomDataPaper.path
-            }" >
-            </a-image>
+            <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else>
+              <div v-for=" (img,index)  in  [getCustomDataPaper] " :style="{width:`${imgWH.width}px`,height:`${imgWH.height}px`}" class="rounded-lg">
+                <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="w-full h-full object-cover rounded-lg pointer relative">
+              </div>
+            </viewer>
   
             <div class="absolute bottom-0  flex right-0 hover-item" style="opacity: 0;">
               <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
@@ -137,6 +133,13 @@ export default {
       imgIndex:0,
       randomFlag: false,
       imgSpin:false,
+      imgOption: { 
+        url: 'data-source',
+        button:false,
+        toolbar:false,
+        navbar:false
+      },
+      imgLoading:true,
 
       // 大小切换
       sizeList:[
@@ -145,6 +148,10 @@ export default {
       ],
       // 右键菜单
       menuList:[
+        { 
+          newIcon:'fluent:image-multiple-16-regular',title:'在应用中打开', 
+          fn:()=>{ this.goGallery(this.customData.value) }, 
+        },
         { 
           newIcon:'fluent:chevron-up-16-regular',title:'上一张',
           fn:()=>{ this.lastImg() },  
@@ -225,6 +232,7 @@ export default {
     //获取customData中存储的数据
     getCustomDataPaper(){
       if(this.customData && this.customData.paper !== undefined){
+        this.imgSpin = false;
         return this.customData.paper;
       }
       else {
@@ -238,6 +246,22 @@ export default {
       return index > -1;
     },
 
+    // 计算图片的宽高
+    imgWH(){
+      if(this.customData && this.customData.width !== undefined){
+        const result = { 
+          width:this.customData.width * 280 + (this.customData.width - 1) * 10,
+          height:this.customData.height * 205 + (this.customData.height - 1) * 10
+        }
+        return result;
+      }
+      else {
+        return {
+          width: 2 * 280 + (2-1) * 10,
+          height:2 * 205 + (2-1) * 10
+        }
+      }
+    }
   },
 
   mounted(){
@@ -285,31 +309,17 @@ export default {
          let pickImage = result.data;
          const mapImageList = pickImage.map((img)=>{
           let randomIndex = Math.floor(Math.random() * animations.length);
-          const paramsObj = { str:'',  thumburl:'' };
-          if(img.thumburl !== null && img.thumburl.indexOf('@') !== -1){
-            paramsObj.str = img.thumburl.substring( img.thumburl.indexOf('@'), img.thumburl.length);
-            paramsObj.thumburl = img.thumburl.replace(paramsObj.str, '@1200w.webp');
-          }
-
-          else if(img.thumburl !== null && img.thumburl.indexOf('400') !== -1){
-            const subImg = img.thumburl.substring(0, img.thumburl.indexOf('400')) + '1200';
-            const sliceImg = img.thumburl.slice( img.thumburl.indexOf('400') - img.thumburl.length + 3);
-            paramsObj.thumburl = subImg + sliceImg;
-          }
-
-          else if(img.thumburl !== null && img.thumburl.indexOf('fw') !== -1){
-            paramsObj.str = img.thumburl.substring(img.thumburl.indexOf('fw'), img.thumburl.length);
-            paramsObj.thumburl = img.thumburl.replace(paramsObj.str, 'fw1200webp');
-          }
 
           const returnObj = {
             animations: animations[randomIndex],
             path: img.imgurl,
             resolution: img.size,
             no: img.no,
-            src:img.thumburl,
+            src:img.imgurl,
+            // img.thumburl
           }
           return returnObj;
+
          })
          this.imgList = mapImageList
         }
@@ -338,18 +348,18 @@ export default {
 
     // 上一张壁纸和下一张壁纸
     lastImg(){
+      this.customData.paper = this.imgList[this.imgIndex];
       this.imgIndex -= 1
       if (this.imgIndex < 0) {
         this.imgIndex = this.imgList.length - 1
       }
-      this.customData.paper = this.imgList[this.imgIndex];
     },
     nextImg(){
-      this.imgIndex += 1
+      this.customData.paper = this.imgList[this.imgIndex];
+      this.imgIndex += 1;
       if (this.imgIndex >= this.imgList.length) {
         this.imgIndex = 0
       }
-      this.customData.paper = this.imgList[this.imgIndex];
     },
 
     // 随机壁纸
@@ -463,7 +473,16 @@ export default {
     // 进入应用
     goPickOut(){
       this.$refs.galleryRef.openGalleryModal();
-    }
+    },
+
+    // 进入对应的应用
+    goGallery (value) {
+      const paperType = ['wallhaven','timeline','glutton'];
+      if(paperType.includes(value)) return this.$router.push({ name: 'pickingPaper' });
+      if(value === 'my') return this.$router.push({ name:  'my'});
+      if(value === 'bing') return this.$router.push({ name:  'bing'});
+    },
+
 
   },
 
@@ -499,6 +518,8 @@ export default {
 :deep(.ant-image-preview-root){
   background: red !important;
 }
+
+
 </style>
 
 <!--   border:1px solid red  !important;

@@ -127,6 +127,7 @@ const leftList = ref([
   {
     newIcon:'fluent:send-32-regular', flag: true,
     callBack:()=>{
+      close()
       editorRef.value.openEditorModal();
     }
   },
