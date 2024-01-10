@@ -32,12 +32,8 @@
       </div>
     </template>
   </div>
-  <FileSet
-    v-if="fileSetVisible"
-    v-model="fileSetVisible"
-    :tab="currentTab"
-    :data="currentItem"
-  />
+
+  <Set v-if="fileSetVisible" v-model="fileSetVisible" @save="save" />
 </template>
 
 <script setup>
@@ -53,14 +49,21 @@ import {
 import { useRouter, useRoute } from "vue-router";
 import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
-import FileSet from "../fileSet/FileSet.vue";
 import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
 import { fileTypes } from "./options";
+import Set from "../../../../components/widgets/myIcons/set/index.vue";
+import { myIcons } from "../../../../store/myIcons";
+
+import {
+  useFileConversionIcon,
+  useIconConversionFile,
+} from "../hooks/useDataConversion";
 
 const index = inject("index", "");
 const data = inject("data", "");
 
+const iconStore = myIcons();
 const { proxy } = getCurrentInstance();
 
 const router = useRouter();
@@ -69,6 +72,7 @@ const emits = defineEmits([
   "deleteFile",
   "updateSort",
   "updateList",
+  "updateFile",
   "updatePosition",
 ]);
 // 父组件数据
@@ -111,7 +115,7 @@ const dragEnd = (data) => {
 };
 const updatePosition = (data) => {
   emits("updatePosition", data);
-}
+};
 // 是否禁用拖拽
 watch(
   () => data.value.sort,
@@ -177,14 +181,16 @@ const menuList = computed(() => {
     //     currentTab.value = "attribute";
     //   },
     // },
-    // {
-    //   name: "编辑图标",
-    //   newIcon: "fluent:compose-16-regular",
-    //   fn: () => {
-    //     currentTab.value = "appearance";
-    //     fileSetVisible.value = true;
-    //   },
-    // },
+    {
+      name: "编辑",
+      newIcon: "fluent:compose-16-regular",
+      fn: () => {
+        // currentTab.value = "appearance";
+        let data = useFileConversionIcon(currentItem.value);
+        iconStore.edit = data;
+        fileSetVisible.value = true;
+      },
+    },
 
     {
       name: "删除",
@@ -227,7 +233,7 @@ const collisionDetection = (nodes) => {
     arr.push({ ...data });
   }
 
-  console.log('arr :>> ', arr);
+  console.log("arr :>> ", arr);
   emits("updateList", arr);
 };
 
@@ -275,6 +281,14 @@ const fileDisabled = (item) => {
 
   const extension = getExtension(item.value);
   return typeRules.value.includes(extension);
+};
+
+// 保存数据
+const save = () => {
+  const data = useIconConversionFile(iconStore.edit);
+  data.useCount = currentItem.value.useCount;
+  data.id = currentItem.value.id;
+  emits("updateFile", data);
 };
 </script>
 

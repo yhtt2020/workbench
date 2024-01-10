@@ -1,6 +1,5 @@
 <template>
   <div draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
-
     <slot></slot>
   </div>
 </template>
@@ -13,11 +12,16 @@ import { inject } from "vue";
 import { useAddCard } from "../../../../ui/hooks/useAddCard";
 
 import { useDeskStore } from "../../../../components/desk/store";
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 
+// 自由布局
+const freeLayoutStore = useFreeLayoutStore();
+const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
+  storeToRefs(freeLayoutStore);
 // 获取桌面数据
 const deskStore = useDeskStore();
-
-const emits = defineEmits(["deleteFile",'updatePosition']);
+const { mouseInElement } = storeToRefs(deskStore);
+const emits = defineEmits(["deleteFile", "updatePosition"]);
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -32,7 +36,7 @@ const props = defineProps({
  * 文件托起
  */
 const handleDragStart = (event) => {
-  move.value = false
+  move.value = false;
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;
@@ -46,7 +50,9 @@ const handleDragStart = (event) => {
 // };
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
+  dragId.value = "";
   // if (data.value.sort === "free") return;
+  isDrag.value = false;
   if (data.value.model !== "custom") {
     return;
   }
@@ -55,7 +61,6 @@ const handleDragEnd = (event) => {
     return;
   }
 
-    console.log('move.value :>> ',move.value);
   if (!move.value) {
     const file = {
       model: "file",
@@ -76,12 +81,27 @@ const handleDragEnd = (event) => {
       backgroundIndex: 0,
     };
 
-    useAddCard("myIcons", {
-      iconList: [{ ...file }],
-    });
+    let id = Date.now();
+    if (isFreeLayout.value) {
+      const { x, y } = mouseInElement.value;
+      const { scrollLeft, scrollTop } = freeLayoutEnv.value;
 
+      getFreeLayoutData.value[id] = {
+        left: scrollLeft + x,
+        top: scrollTop + y -50,
+        index: 1,
+        id,
+      };
+    }
+    useAddCard(
+      "myIcons",
+      {
+        iconList: [{ ...file }],
+      },
+      id
+    );
 
-      emits("deleteFile", props.data);
+    emits("deleteFile", props.data);
 
     return;
   }

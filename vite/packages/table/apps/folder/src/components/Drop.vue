@@ -8,8 +8,6 @@
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
   >
-    1{{ move }}--
-
     <slot></slot>
   </div>
 </template>
@@ -29,11 +27,11 @@ const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
 // 获取文件夹数据
 const folderStore = useFolderStore();
-const { dragId, move, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData } =
   storeToRefs(folderStore);
 // 获取图标数据
 const iconStore = myIcons();
-const { isDrag:iconDrag,iconList, iconsRefs } = storeToRefs(iconStore);
+const { isDrag: iconDrag, iconList, iconsRefs } = storeToRefs(iconStore);
 
 // 获取父组件数据
 const data = inject("data", "");
@@ -51,8 +49,9 @@ const handleDrop = async (dragEvent) => {
   if (data.value.model !== "custom") return;
 
   // 属于文件互相拖拽添加
-  if (!isOutside.value && index.value != dragId.value) {
-    move.value = true
+  if (!isOutside.value && dragId.value && index.value != dragId.value) {
+    console.log('2222222 :>> ', 2222222);
+    move.value = true;
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
@@ -60,6 +59,7 @@ const handleDrop = async (dragEvent) => {
   // 处理系统拖拽进入的文件
   let files = dragEvent.dataTransfer.files;
   if (!files || files.length <= 0) return;
+
 
   for (let file of files) {
     let fileInfo = {
@@ -86,7 +86,7 @@ const handleDrop = async (dragEvent) => {
 const handleDragenter = (dragEvent) => {
   currentId.value = index.value;
   isEnterFolder.value = true;
-  // console.log("拖拽元素在放置区移动 :>> ");
+  console.log("拖拽元素在放置区移动 :>> ");
 };
 
 /**
@@ -94,6 +94,7 @@ const handleDragenter = (dragEvent) => {
  */
 const handleDragleave = (dragEvent) => {
   isEnterFolder.value = false;
+
   // console.log("拖拽元素离开放置区 :>> ");
 };
 
@@ -156,6 +157,24 @@ watch(
     emits("updateBg", val);
   }
 );
+
+watch(
+  () => isOutside.value,
+  (val) => {
+    if (isDrag.value) {
+      isDragIcon.value = !val;
+    }
+  }
+);
+watch(
+  () => isDrag.value,
+  (val) => {
+    if (!isDrag.value) {
+      isDragIcon.value = false
+    }
+  }
+);
+
 </script>
 
 <style lang="scss" scoped></style>

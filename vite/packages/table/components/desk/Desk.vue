@@ -51,9 +51,9 @@
             <template #box="{ data }">
               <component
                 :desk="currentDesk"
-                :is="data.name"
-                :customIndex="data.id"
-                :customData="data.customData"
+                :is="data?.name"
+                :customIndex="data?.id"
+                :customData="data?.customData"
                 di
               />
             </template>

@@ -49,6 +49,7 @@
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
+            @updateFile="updateFile"
             @updateList="updateList"
             @updateSort="updateSort"
             @updatePosition="updatePosition"
@@ -102,23 +103,16 @@ import Null from "./components/Null.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
-import {
-  useElementSize,
-  useElementBounding,
-  useMouseInElement,
-} from "@vueuse/core";
+import { useMouseInElement } from "@vueuse/core";
 
 /**
  * 拖拽位置
  */
-
 const folder = ref(null);
 const { isOutside } = useMouseInElement(folder);
 const updatePosition = (data) => {
   if (isOutside.value) {
-    // deleteFile(data)
     customData.value.list.splice(customData.value.list.indexOf(data), 1);
-    console.log("del :>> ");
   }
 };
 
@@ -320,7 +314,10 @@ const deleteFile = (data) => {
 };
 // 改
 const updateFile = (data) => {
-  // customData.value.list.push(data);
+  const index = customData.value.list.findIndex(item => item && item.id === data.id);
+
+  customData.value.list[index] = data;
+
 };
 
 /**

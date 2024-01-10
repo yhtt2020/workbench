@@ -11,7 +11,6 @@
     :desk="desk"
   >
     <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
-      <!-- @contextmenu.stop="handleMenu()" -->
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
@@ -22,7 +21,7 @@
             @drag-start="handleDragStart"
           >
             <!-- 多图标组件 -->
-            <template
+            <!-- <template
               v-if="
                 customData.iconList !== undefined &&
                 customData.iconList.length > 1
@@ -44,20 +43,20 @@
                   @iconsRightClick="handleMenu()"
                 ></icons>
               </div>
-            </template>
+            </template> -->
             <!-- 单图标组件 -->
-            <template
+            <!-- <template
               v-else-if="
                 customData.iconList !== undefined &&
                 customData.iconList.length > 0
               "
-            >
-              <icon
-                :newIcon="customData.newIcon"
-                v-bind="customData.iconList[0]"
-                @custom-event="handleCustomEvent"
-              ></icon>
-            </template>
+            > -->
+            <icon
+              :newIcon="customData.newIcon"
+              v-bind="customData.iconList[0]"
+              @custom-event="handleCustomEvent"
+            ></icon>
+            <!-- </template> -->
           </drag-and-follow>
         </xt-task>
       </droppable-area>
@@ -120,7 +119,7 @@ import {
 } from "../../../apps/folder/src/components/options";
 
 import { nanoid } from "nanoid";
-// import {useFreeLayoutStore} from '../../desk/freeLayout/store'
+import { useFreeLayoutStore } from "../../desk/freeLayout/store";
 export default {
   props: {
     customIndex: {
@@ -196,6 +195,41 @@ export default {
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
+
+    console.log("this.getCurrentDesk :>> ", this.getCurrentDesk);
+    if (this.customData.iconList.length <= 1) return;
+    let index = this.desk.cards.findIndex(
+      (item) => item.id == this.customIndex
+    );
+    let list = [];
+    this.customData.iconList.forEach((item) => {
+      const file = {
+        ...defaultData,
+        id: nanoid(5),
+      };
+      file.type = item.open.type;
+      file.value = item.open.value;
+      file.icon = item.src;
+      file.name = item.titleValue;
+      file.isName = item.isTitle;
+      file.bg = item.backgroundColor;
+      file.isBg = item.isBackground;
+      file.radius = item.radius;
+      file.isRadius = item.isRadius;
+      file.iconState = item.imgState;
+      file.iconShape = item.imgShape;
+      list.push({
+        ...file,
+      });
+    });
+    this.desk.cards[index] = {
+      ...this.desk.cards[index],
+      name: "folder",
+      customData: {
+        ...defaultFolderData,
+        list,
+      },
+    };
   },
   provide() {
     return {
@@ -216,6 +250,8 @@ export default {
       "edit",
     ]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(useFreeLayoutStore, ["getCurrentDesk", "isFreeLayout"]),
+
     m02021() {
       return (
         this.customData.copy === true &&
@@ -478,6 +514,7 @@ export default {
         );
 
         let list = [];
+        console.log("替换文件夹 :>> ", 123);
         this.customData.iconList.forEach((item) => {
           const file = {
             ...defaultData,
@@ -504,9 +541,11 @@ export default {
           name: "folder",
           customData: {
             ...defaultFolderData,
-            list
+            list,
           },
         };
+
+        console.log(this.desk.cards[index]);
       });
 
       // 遍历图标组件进行删除
