@@ -190,6 +190,9 @@ const menuList = computed(() => {
         iconStore.edit = data;
         fileSetVisible.value = true;
       },
+      disabled: ["observe", "arrange"].includes(data.value.model)
+       ? true
+        : false,
     },
 
     {

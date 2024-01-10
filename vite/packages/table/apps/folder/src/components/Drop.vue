@@ -50,7 +50,6 @@ const handleDrop = async (dragEvent) => {
 
   // 属于文件互相拖拽添加
   if (!isOutside.value && dragId.value && index.value != dragId.value) {
-    console.log('2222222 :>> ', 2222222);
     move.value = true;
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
