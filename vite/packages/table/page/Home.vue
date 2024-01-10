@@ -142,11 +142,28 @@
   </div>
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
-    <NewGuidePage v-if="visibleGuide" @closeGuide="closeGuide"></NewGuidePage>
+    <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage>
+    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
-    <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+    <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel>
+    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 定制桌面流程 -->
-    <GuidePanel v-if="visibleScale" @closeScale="closeScale"></GuidePanel>
+    <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel>
+    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
+    
+    <!-- 全屏遮罩层 -->
+    <div
+      v-show="visibleScale || visibleGuide"
+      class="h-full w-full fixed top-0 left-0 ring-0 bottom-0 cursor-not-allowed"
+      style="z-index:900;background-color:rgba(255,255,255,0.1);"
+    ></div>
+
+    <!-- 局部遮罩层 -->
+    <!-- <div
+      v-show="showGuide"
+      class="w-full fixed left-0 ring-0 bottom-0 cursor-not-allowed"
+      style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
+    ></div> -->
 
   </teleport>
 
@@ -259,7 +276,6 @@ export default {
   data() {
     return {
       visibleAdd: false,
-      visibleGuide: false,
       iconVisible: false,
       newDesk: {
         name: "",
@@ -338,6 +354,8 @@ export default {
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
       hasTriggered: 1,
+      // 新建桌面id
+      deskId: '',
     };
   },
   components: {
@@ -433,12 +451,15 @@ export default {
       "fullScreen",
       "infoVisible",
       "searchFullScreen",
+      "deskInit",
+      "visibleScale",
+      "visibleGuide",
+      "showGuide",
+
     ]),
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
-      deskInit: 'deskInit',
-      visibleScale: 'visibleScale',
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -969,12 +990,22 @@ export default {
     // 关闭缩放弹窗
     closeScale() {
       this.visibleScale = false
+      this.visibleGuide = true
     },
     // 关闭引导弹窗
     closeGuide() {
       this.visibleGuide = false
     },
 
+    // 触发引导弹窗
+    addGuide(deskId) {
+      this.deskId = deskId
+      this.showGuide = true
+    },
+    // 关闭引导弹窗
+    closeShowGuide(){
+      this.showGuide = false
+    },
 
 
     showSetting() {

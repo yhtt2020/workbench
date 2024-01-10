@@ -1,113 +1,119 @@
 <template>
   <Teleport to="body">
     <!-- 弹窗 -->
-    <div
-      v-element-size="resizeModel"
-      v-if="modelValue"
-      :class="[boxClass, isFull ? ' rounded-none w-full h-full' : 'rounded-xl']"
-      ref="modal"
-      class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
-      style="
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-      "
-      :style="{
-        'z-index': index,
-        top: `${isFull ? 0 : top}px`,
-      }"
-    >
-      <slot v-if="custom"></slot>
-      <template v-else>
-        <div class="flex flex-1 w-full">
-          <!-- 左侧 -->
-          <nav v-if="nav">
-            <slot name="nav"> </slot>
-          </nav>
-          <main class="flex flex-col flex-1 h-full">
-            <header class="relative flex items-center mb-4" v-if="header">
-              <!-- 标题左侧 -->
-              <div class="z-20 flex items-center flex-1">
-                <slot name="header-left"> </slot>
-              </div>
-              <!-- 标题中间 -->
-              <div
-                class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
+
+    <Transition name="up">
+      <div
+        v-element-size="resizeModel"
+        v-if="modelValue"
+        :class="[
+          boxClass,
+          isFull ? ' rounded-none w-full h-full' : 'rounded-xl',
+        ]"
+        ref="modal"
+        class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+        style="
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+        "
+        :style="{
+          'z-index': index,
+          top: `${top}px`,
+        }"
+      >
+        <slot v-if="custom"></slot>
+        <template v-else>
+          <div class="flex flex-1 w-full">
+            <!-- 左侧 -->
+            <nav v-if="nav">
+              <slot name="nav"> </slot>
+            </nav>
+            <main class="flex flex-col flex-1 h-full">
+              <header class="relative flex items-center mb-4" v-if="header">
+                <!-- 标题左侧 -->
+                <div class="z-20 flex items-center flex-1">
+                  <slot name="header-left"> </slot>
+                </div>
+                <!-- 标题中间 -->
+                <div
+                  class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
+                >
+                  <slot name="header-center">
+                    {{ title }}
+                  </slot>
+                </div>
+                <!-- 标题右侧 -->
+                <div class="right-0 z-20 flex items-center">
+                  <slot name="header-right"> </slot>
+                  <xt-button
+                    class="ml-3"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    v-if="full"
+                    @click="isFull = !isFull"
+                  >
+                    <xt-new-icon
+                      :icon="
+                        isFull
+                          ? 'fluent:full-screen-minimize-16-filled'
+                          : 'fluent:full-screen-maximize-16-regular'
+                      "
+                      size="16"
+                      class="xt-text-2"
+                    />
+                  </xt-button>
+                  <xt-button
+                    class="ml-3"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    @click="onNo()"
+                  >
+                    <xt-new-icon
+                      icon="fluent:dismiss-16-regular"
+                      size="16"
+                      class="xt-text-2"
+                    />
+                  </xt-button>
+                </div>
+              </header>
+              <!-- 内容区 -->
+              <vue-custom-scrollbar
+                :settings="{
+                  swipeEasing: true,
+                  suppressScrollY: false,
+                  suppressScrollX: true,
+                  wheelPropagation: false,
+                }"
+                style="position: relative"
+                :style="scrollbarPadding"
+                class="flex-1"
               >
-                <slot name="header-center">
-                  {{ title }}
+                <slot>
+                  <McDonalds />
                 </slot>
-              </div>
-              <!-- 标题右侧 -->
-              <div class="right-0 z-20 flex items-center">
-                <slot name="header-right"> </slot>
-                <xt-button
-                  class="ml-3"
-                  w="32"
-                  h="32"
-                  radius="8"
-                  v-if="full"
-                  @click="isFull = !isFull"
-                >
-                  <xt-new-icon
-                    :icon="
-                      isFull
-                        ? 'fluent:full-screen-minimize-16-filled'
-                        : 'fluent:full-screen-maximize-16-regular'
-                    "
-                    size="16"
-                    class="xt-text-2"
-                  />
-                </xt-button>
-                <xt-button
-                  class="ml-3"
-                  w="32"
-                  h="32"
-                  radius="8"
-                  @click="onNo()"
-                >
-                  <xt-new-icon
-                    icon="fluent:dismiss-16-regular"
-                    size="16"
-                    class="xt-text-2"
-                  />
-                </xt-button>
-              </div>
-            </header>
-            <!-- 内容区 -->
-            <vue-custom-scrollbar
-              :settings="{
-                swipeEasing: true,
-                suppressScrollY: false,
-                suppressScrollX: true,
-                wheelPropagation: false,
-              }"
-              style="position: relative"
-              :style="scrollbarPadding"
-              class="flex-1"
-            >
-              <slot>
-                <McDonalds />
-              </slot>
-            </vue-custom-scrollbar>
-          </main>
-        </div>
-        <slot name="footer">
-          <footer class="flex items-center justify-end mt-4" v-if="footer">
-            <xt-button w="64" h="40" @click="onNo()">
-              <span class="xt-text-2">{{ noName }}</span>
-            </xt-button>
-            <xt-button
-              w="64"
-              h="40"
-              class="ml-3"
-              type="theme"
-              @click="onOk()"
-              >{{ okName }}</xt-button
-            >
-          </footer>
-        </slot>
-      </template>
-    </div>
+              </vue-custom-scrollbar>
+            </main>
+          </div>
+          <slot name="footer">
+            <footer class="flex items-center justify-end mt-4" v-if="footer">
+              <xt-button w="64" h="40" @click="onNo()">
+                <span class="xt-text-2">{{ noName }}</span>
+              </xt-button>
+              <xt-button
+                w="64"
+                h="40"
+                class="ml-3"
+                type="theme"
+                @click="onOk()"
+                >{{ okName }}</xt-button
+              >
+            </footer>
+          </slot>
+        </template>
+      </div>
+    </Transition>
     <!-- 遮罩 -->
     <div
       v-if="modelValue && mask"
@@ -210,6 +216,9 @@ onMounted(() => {
   return;
 });
 const top = computed(() => {
+  if (isFull.value) return 0;
+  if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
+    return -9999;
   return (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
 });
 
@@ -257,6 +266,14 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.position {
+.up-enter-active,
+.up-leave-active {
+  transition: all 0.3s;
+}
+.up-enter-from,
+.up-leave-to {
+  opacity: 0;
+  transform: translate3D(-50%, 20px, 0);
+  // transform: translateY(v-bind(top));
 }
 </style>

@@ -94,14 +94,15 @@ const { fixedSettings } = toRefs(props);
 // 桌面布局切换
 const currentLayout = ref(isFreeLayout.value === true ? "free" : "fixed");
 const layoutList = ref([
+{
+    name: "自动排列",
+    value: "fixed",
+  },
   {
     name: "自由布局",
     value: "free",
   },
-  {
-    name: "固定布局",
-    value: "fixed",
-  },
+
 ]);
 const updateTab = (data) => {
   freeLayoutStore.renewFreeLayout();

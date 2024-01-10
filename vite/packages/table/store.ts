@@ -132,8 +132,11 @@ export const appStore = defineStore('appStore', {
     // 桌面初始化
     deskInit: false,
     // 桌面缩放
-   visibleScale: false,
-
+    visibleScale: false,
+    // 是否开始定制
+    visibleGuide: false,
+    // 定制弹窗
+    showGuide: false,
   }),
   getters: {},
 
@@ -218,6 +221,7 @@ export const appStore = defineStore('appStore', {
     // 桌面壁纸支持纯色
     setBackgroundImage(value:any) {
       this.backgroundImage = value
+      this.backgroundColor.color = '';
     },
 
 

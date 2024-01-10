@@ -114,6 +114,13 @@ import { myIcons } from "../../../store/myIcons.ts";
 
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
+import {
+  defaultFolderData,
+  defaultData,
+} from "../../../apps/folder/src/components/options";
+
+import { nanoid } from "nanoid";
+// import {useFreeLayoutStore} from '../../desk/freeLayout/store'
 export default {
   props: {
     customIndex: {
@@ -465,7 +472,43 @@ export default {
           return;
         }
         this.customData.iconList.push({ ...icon });
+
+        let index = this.desk.cards.findIndex(
+          (item) => item.id == this.customIndex
+        );
+
+        let list = [];
+        this.customData.iconList.forEach((item) => {
+          const file = {
+            ...defaultData,
+            id: nanoid(5),
+          };
+          file.type = item.open.type;
+          file.value = item.open.value;
+          file.icon = item.src;
+          file.name = item.titleValue;
+          file.isName = item.isTitle;
+          file.bg = item.backgroundColor;
+          file.isBg = item.isBackground;
+          file.radius = item.radius;
+          file.isRadius = item.isRadius;
+          file.iconState = item.imgState;
+          file.iconShape = item.imgShape;
+          list.push({
+            ...file,
+          });
+        });
+
+        this.desk.cards[index] = {
+          ...this.desk.cards[index],
+          name: "folder",
+          customData: {
+            ...defaultFolderData,
+            list
+          },
+        };
       });
+
       // 遍历图标组件进行删除
       this.iconsRefs.forEach((item) => {
         if (item.customIndex === this.customIndex) return;
