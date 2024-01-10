@@ -208,8 +208,8 @@ const autoSize = computed(() => {
 /**
  * 
  */
-const clickFile = ()=>{
-  emit('clickFile')
+const clickFile = (data)=>{
+  emit('clickFile',data)
 }
 /**
  * 自定义大小

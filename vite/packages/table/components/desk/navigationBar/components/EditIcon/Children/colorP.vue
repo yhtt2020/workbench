@@ -14,7 +14,7 @@
                 </div>
                 <div class="item-box">
                     <div class="flex items-center justify-center mr-4 item" :key="item"
-                        :style="{ background: props.defaultList[`${'color' + item}`] }" v-for="(item, index) in 9"
+                        :style="{ background: props.defaultList[`${'color' + item}`] }" v-for="(item, index) in colorNum"
                         @click="chooseDf(item)">
                         <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
@@ -26,7 +26,7 @@
                     <div class="mb-4 text-base xt-text-2">渐变色</div>
                     <div class="item-box">
                         <div class="flex items-center justify-center mr-4 item" :key="item"
-                            :style="{ background: props.linearList[`${'color' + item}`] }" v-for="(item, index) in 10"
+                            :style="{ background: props.linearList[`${'color' + item}`] }" v-for="(item, index) in linearNum"
                             @click="chooseLinear(item)">
                             <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill"
                                 size="20"></xt-new-icon>
@@ -56,7 +56,9 @@ export interface colorPicker {
     linearList: {
         [key: string]: string
     },
-    isLinear?: boolean
+    isLinear?: boolean,
+    colorNum?:number,
+    linearNum?:number
 }
 const props = withDefaults(defineProps<colorPicker>(), {
     defaultList: {
@@ -83,9 +85,12 @@ const props = withDefaults(defineProps<colorPicker>(), {
         color9: '  linear-gradient(135deg, #EEA8A8 0%, #B633DA 100%)',
         color10: ' linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)',
     },
-    isLinear: true
+    isLinear: true,
+    colorNum:9,
+    linearNum:10
 
 })
+// Object.keys(linearList).length
 const body = computed(() => {
     return document.body
 })
