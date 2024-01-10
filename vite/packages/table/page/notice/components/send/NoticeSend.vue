@@ -1,10 +1,17 @@
 <template>
  <div class="w-full px-4 pb-3 pt-5 h-full flex flex-col">
    <div class="flex items-center justify-between mb-4">
-     <div class="flex items-center justify-center">
+     <div class="flex items-center justify-center" v-if="!hide">
        <xt-new-icon icon="fluent:send-32-regular" size="16"></xt-new-icon>
        <span class="xt-font xt-text font-14 ml-3">发消息</span>
      </div>
+   
+     <xt-button v-else w="32" h="32" @click="backClick" style="border-radius: 8px;">
+      <div class="flex items-center justify-center">
+        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+      </div>
+     </xt-button>
+
      <div class="flex items-center justify-end" style="width:500px;">
       <div class="flex items-center mr-3">
         <span class="xt-font xt-text font-14">To：</span>
@@ -15,17 +22,17 @@
       <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
         <template #sendTitle>
           <div class="flex items-center justify-center" v-if="isLoading === false">
-            <span class="xt-font xt-text font-14 font-400 mr-2">发送</span>
-            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"></xt-new-icon>
+            <span class="xt-font xt-active-text font-14 font-400 mr-2">发送</span>
+            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"  :color="'var(--active-text)'"></xt-new-icon>
           </div> 
           <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
         </template>
 
         <div class="xt-modal rounded-xl p-2 flex flex-col xt-b">
           <template v-for="item in sendList">
-            <div class="px-3 py-2.5 flex xt-hover rounded-xl">
+            <div class="px-3 py-2.5 flex xt-hover rounded-xl" @click="item.callBack">
               <xt-new-icon :icon="item.newIcon" size="20" class="mr-3"></xt-new-icon>
-              <span class="">{{ item.name }}</span>
+              <span class="xt-text-2 xt-font font-14 font-400">{{ item.name }}</span>
             </div>
           </template>
         </div>
@@ -40,7 +47,7 @@
    </div>
 
    <div class="flex-1 w-full h-4/5">
-      <EditSection ref="msgEditor"/>
+      <EditSection ref="msgEditor" @open="openUser"/>
    </div>
 
    <div class="h-10 flex items-center mt-3 justify-between w-full">
@@ -89,7 +96,7 @@
  <AddBiliLink ref="biliLink"/>
  <CommunitySelect ref="communityRef"/>
  <AppointUserSelect ref="appointRef"/>
-
+ <TimingSend ref="timingRef"/>
 </template>
 
 <script setup>
@@ -108,8 +115,9 @@ import AddButtonLink from '../add/AddButtonLink.vue';
 import AddBiliLink from '../add/AddBiliLink.vue';
 import CommunitySelect from '../userselect/CommunitySelect.vue';
 import AppointUserSelect from '../userselect/AppointUserSelect.vue';
+import TimingSend from './TimingSend.vue';
 
-const emits = defineEmits(['close']);
+const emits = defineEmits(['close','back']);
 
 
 const notice = noticeStore();
@@ -117,10 +125,17 @@ const { msgSetting } = storeToRefs(notice);
 const teams = teamStore()
 const { team } = storeToRefs(teams);
 
+const props = defineProps({
+  hide:{
+    type:Boolean,
+    default:false
+  }
+})
+
 // 通知类型
 const list = ref([
-  { name:'普通通知类型',value:'1' },
-  { name:'强制弹窗类型',value:'2' }
+  { name:'普通通知类型',value:1 },
+  { name:'强制弹窗类型',value:2 }
 ])
 // 发送目标
 const targetList = ref([
@@ -130,21 +145,25 @@ const targetList = ref([
   { name:'指定用户',value:1003 }
 ])
 
+const timingRef = ref(null);
+
 const sendList = ref([
   {
     newIcon:'fluent:send-32-regular',name:'立即发送',
     callBack:()=>{
-
+     send()
     }, 
   },
   {
     newIcon:'fluent:clock-16-regular',name:'定时发送',
-    callBack:()=>{},
+    callBack:()=>{
+      timingRef.value.openTimeModal()
+    },
   },
   {
     newIcon:'fluent:compose-16-regular',name:'保存草稿',
     callBack:()=>{
-     
+      notice.createNotice()
     },
   }
 ])
@@ -174,17 +193,35 @@ const appointRef = ref(null);
 /**事件处理方法**/
 // 发送
 const send = () =>{
-  notice.createNotice()
-  // isLoading.value = true;
-  // setTimeout(()=>{
-  //   isLoading.value = false;
-  // },1000)
+  isLoading.value = true;
+  setTimeout(async ()=>{
+    // 判断是否在已经成为草稿箱
+    if(msgSetting.value.hasOwnProperty('id')){
+     const res = await notice.pushNoticeMsg(msgSetting.value.id)
+     if(res.status === 1){
+      isLoading.value = false;
+     }
+    }
+    else {
+     const res = await notice.createNotice()
+     const result = await notice.pushNoticeMsg(res)
+     if(result.status === 1){
+      isLoading.value = false;
+     }
+    }
+  },200)
 }
 
 
 // 弹窗关闭
 const closeSend = () =>{
   emits('close');
+}
+
+// 返回按钮
+const backClick = () =>{
+  notice.initMsgData()
+  emits('back')
 }
 
 
@@ -194,7 +231,7 @@ const uploadImage = async() =>{
 }
 const getMessageImg = async(evt) =>{
   const fileList = evt.target.files;
-  if(msgSetting.value.cover.length === 3){
+  if(msgSetting.value.covers.length === 3){
     message.info('只能上传三张图片')
     evt.preventDefault();
   }
@@ -202,7 +239,7 @@ const getMessageImg = async(evt) =>{
     if(fileList.length <= 3){
       for(const file of fileList){
        const res = await fileUpload(file);
-       msgSetting.value.cover.push({cover:res})
+       msgSetting.value.covers.push({cover:res})
       }
     }
   }
@@ -230,6 +267,22 @@ const uploadButtonLink = () =>{
 // b站视频链接
 const uploadBiliLink = () =>{
   biliLink.value.openBiliModal();
+}
+
+// 打开用户选择
+const openUser = () =>{
+  switch(msgSetting.value.targetType){
+    case 1000:
+      break;
+    case 1001:
+      break;
+    case 1002:
+      communityRef.value.openCommunitySelect();
+      break;
+    case 1003:
+      appointRef.value.openAppointModal()
+      break;
+  }
 }
 
 

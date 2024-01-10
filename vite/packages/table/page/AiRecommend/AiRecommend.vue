@@ -15,8 +15,6 @@
   export default {
     data() {
       return {
-        list: [],
-        selIndex: 0,
         n:'',
         // 图片格式
         pictureFormat: ['png', 'jpeg', 'jpg', 'gif', 'psd', 'bmp', 'fpx', 'tiff', 'dxf', 'eps', 'svg', 'cdr', 'pcx', 'emf', 'wmf', 'swf', 'exif', 'pdf', 'cgm', 'raw', 'lic', 'dng', 'raf'],

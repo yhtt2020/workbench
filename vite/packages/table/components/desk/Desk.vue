@@ -162,7 +162,7 @@
 
   <xt-modal
     v-model="settingVisible"
-    :footer="0"
+    :footer="false"
     title="桌面设置"
     boxClass="p-4 pb-0"
     :mask="0"
@@ -642,6 +642,8 @@ export default {
     window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
     this.resetLayout();
+
+
   },
   unmounted() {
     if (this.fullScreen) {
@@ -780,7 +782,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true,
       });
-      this.editVisible = false;
+      // this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

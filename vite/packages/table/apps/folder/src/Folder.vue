@@ -53,7 +53,8 @@
             @updateList="updateList"
             @updateSort="updateSort"
             @updatePosition="updatePosition"
-          />
+
+            @clickFile="clickFile" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
@@ -183,6 +184,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto } =
   toRefs(props);
+const emit = defineEmits(['update:size','update:layout','clickFile'])
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -258,7 +260,9 @@ const autoSizeList = computed(() => {
   // console.log(auto.value, '自动调整大小')
   return sizeList.value;
 });
-
+/**
+ * 自动尺寸
+ */
 const autoSize = computed(() => {
   const length = customData.value.list.length;
   if (length <= 6) {
@@ -271,6 +275,28 @@ const autoSize = computed(() => {
     return "6x4";
   }
 });
+
+/**
+ *
+ */
+const clickFile = (data)=>{
+  emit('clickFile',data)
+}
+/**
+ * 自定义大小
+ */
+watch(()=>customData.value.size,(newV,oldV)=>{
+  console.log(newV,oldV,'newV,oldV')
+  emit('update:size',newV)
+},{deep:true})
+
+/**
+ * 自定义布局
+ */
+watch(()=>customData.value.layout,(newV,oldV)=>{
+  console.log(newV,oldV,'newV,oldV')
+  emit('update:layout',newV)
+})
 /**
  * 菜单配置
  */

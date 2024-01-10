@@ -5,8 +5,8 @@
     :class="boxClass"
     :style="getLayoutSize"
   >
-    <div :style="getImgSize">
-      <img :src="item.icon" class="w-full h-full" />
+    <div :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
+      <img :src="item.icon" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
       class="xt-text-2 text-sm truncate"

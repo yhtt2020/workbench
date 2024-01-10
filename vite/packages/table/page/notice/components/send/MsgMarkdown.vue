@@ -14,6 +14,8 @@ import { validateFile, fileUpload,} from '../../../../components/card/hooks/imag
 export default {
   components: {},
  
+  props:['msgContent'],
+
   data () {
     return {
 
@@ -162,7 +164,7 @@ export default {
       ],
       after: () => {
         this.$nextTick(()=>{
-          this.contentEditor.setValue(this.msgSetting.content);
+          this.contentEditor.setValue(this.msgContent);
         })
       },
       blur: (value) => {
@@ -188,8 +190,10 @@ export default {
   },
   methods: {
     setEditorValue (value) {
+      console.log('执行',this.contentEditor);
+      console.log('执行',this.contentEditor?.setValue());
       // 子组件中的事件逻辑
-      this.contentEditor.setValue(value);
+      this.contentEditor?.setValue(1111);
     },
     getContent () {
       return this.contentEditor.getHTML()

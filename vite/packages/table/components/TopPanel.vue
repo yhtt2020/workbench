@@ -159,6 +159,7 @@ import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 import TopPanelButton from './drawer/TopPanelButton.vue'
 import PaperLock from './topPanel/PaperLock.vue'
+import { message } from "ant-design-vue";
 
 export default {
   name: 'TopPanel',
@@ -187,7 +188,7 @@ export default {
   computed:{
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
-    ...mapWritableState(appStore,['status','showWindowController']),
+    ...mapWritableState(appStore,['status','showWindowController', 'showGuide']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
     ...mapWritableState(steamUserStore, ['runningGame']),
@@ -253,8 +254,13 @@ export default {
     },
     // 打开右侧抽屉菜单
     toggleRightDrawer(){
-      this.$refs.rightDrawerRef.openRightDrawer();
-      this.hideNoticeEntry();
+      // 定制桌面过程中需要屏蔽一下
+      if(!this.showGuide){
+        this.$refs.rightDrawerRef.openRightDrawer();
+        this.hideNoticeEntry();
+      }else{
+        message.error("定制过程中无法操作");
+      }
     },
 
     // topClockTimerVisibleSetting(){

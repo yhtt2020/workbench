@@ -12,7 +12,7 @@
 
         <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250" 
          v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false" 
-         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: center;" 
+         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: left;" 
         />
         
         <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
@@ -165,9 +165,7 @@ export default {
       if ($("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false){
         // 获取最小值score
         const pickArrScore = this.pickImageData.sort((a,b)=>{ return a.score - b.score });
-        // const minScore = this.pickImageData.reduce((min, image) => Math.min(min, image.score), this.pickImageData[0].score);
-        // console.log('执行....测试',minScore);
-        this.pickParams.setting.score = pickArrScore[14].score;
+        this.pickParams.setting.score = pickArrScore[14].score4w;
         this.getPickPaperList();
       }
     })
@@ -186,34 +184,20 @@ export default {
 
     // 获取壁纸源数据
     getPickPaperList(){
-      const pickFilterValue = this.pickParams.setting.paperValue;
-      const api = 'https://api.nguaduot.cn';
-      const cate = this.pickParams.setting.cateValue;
-      const tabValue = this.pickParams.setting.tabValue.value;
-      const no = this.pickParams.setting.no;
-      const dateTime = this.pickParams.setting.dateTime;
-      const score = this.pickParams.setting.score;
-      // wallhaven
-      if(pickFilterValue === '/wallhaven/v2'){
-        const wallhavenUrl = `${api}${pickFilterValue}?cate=${cate}&order=${tabValue}&no=${no}&date=${dateTime}&score=${score}&client=thisky`;
-        this.getAccordingToUrlData(wallhavenUrl);
-      }
-      // 拾光
-      else if(pickFilterValue === '/timeline/v2'){
-        const url = `${api}${pickFilterValue}?cate=${cate}&order=${tabValue}&no=${no}&date=${dateTime}&score=${score}&client=thisky`;
-        this.getAccordingToUrlData(url);
-      }
-      // 其他
-      else {
-        const otherUrl = `${api}${pickFilterValue}?order=${tabValue}&no=${no}&date=${dateTime}&score=${score}&client=thisky`;
-        this.getAccordingToUrlData(otherUrl);
-      }
+      const apiParams = this.pickParams.setting.paperValue;
+      const order = this.pickParams.setting.order.value;
+      const cateHow = this.pickParams.setting.cateHow;
+      const cateWhat = this.pickParams.setting.cateWhat;
+      const date = this.pickParams.setting.dateTime;
+      const url = `https://api.nguaduot.cn${apiParams}?order=${order}&no=${this.pickParams.setting.no}&catehow=${cateHow}&catewaht=${cateWhat}&date=${date}&score=${this.pickParams.setting.score}`
+      this.getAccordingToUrlData(url);
     },
     getAccordingToUrlData(url){
       if (!this.isLoading){
         this.isLoading = true;
-        axios.get(url)
+        axios.get(url,{headers:{'Timeline-Client':'thisky'}})
         .then((res)=>{
+          console.log('调试-2',res);
          if(res.status === 200){
           let pickImage = res.data.data
           this.count = res.data.count

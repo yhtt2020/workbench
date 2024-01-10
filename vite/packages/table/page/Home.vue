@@ -131,16 +131,40 @@
     <GradeNotice></GradeNotice>
   </div> -->
   <!-- 引导暂时隐藏 等后续开发 -->
-  <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
+  <!-- <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
     <GuidePage></GuidePage>
-  </div>
+  </div> -->
+
 
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
     <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
   </div>
   <teleport to="body">
-    <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
+    <!-- 使用新版的配置导航 -->
+    <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage>
+    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
+    <!-- 右上方的缩放推荐 -->
+    <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel>
+    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
+    <!-- 定制桌面流程 -->
+    <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel>
+    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
+    
+    <!-- 全屏遮罩层 -->
+    <div
+      v-show="visibleScale || visibleGuide"
+      class="h-full w-full fixed top-0 left-0 ring-0 bottom-0 cursor-not-allowed"
+      style="z-index:900;background-color:rgba(255,255,255,0.1);"
+    ></div>
+
+    <!-- 局部遮罩层 -->
+    <!-- <div
+      v-show="showGuide"
+      class="w-full fixed left-0 ring-0 bottom-0 cursor-not-allowed"
+      style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
+    ></div> -->
+
   </teleport>
 
   <GalleryModal ref="galleryRef"/>
@@ -171,6 +195,7 @@ import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
 import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
 import GuidePage from "./app/grade/GuidePage.vue";
+import NewGuidePage from "./app/grade/NewGuidePage.vue";
 import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
 import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
 import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
@@ -218,6 +243,7 @@ import EatToday from "../components/widgets/eat/EatToday.vue";
 import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
+import GuidePanel from "./GuidePanel.vue";
 
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
@@ -328,6 +354,8 @@ export default {
       exportModal: false,
       // 在页面创建的第一次触发，后面就不触发了--替换图标
       hasTriggered: 1,
+      // 新建桌面id
+      deskId: '',
     };
   },
   components: {
@@ -378,6 +406,7 @@ export default {
     myIcons,
     NewAddCard,
     GuidePage,
+    NewGuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
@@ -397,6 +426,7 @@ export default {
     RadioTab,
     GalleryModal,
     ScalePanel,
+    GuidePanel,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -421,18 +451,23 @@ export default {
       "fullScreen",
       "infoVisible",
       "searchFullScreen",
+      "deskInit",
+      "visibleScale",
+      "visibleGuide",
+      "showGuide",
+
     ]),
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
-      deskInit: 'deskInit',
-      visibleScale: 'visibleScale',
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
     ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
-
+    deskGroupRef(){
+      return this.$refs.deskGroupRef
+    },
     desksList() {
       return this.desks.map((desk) => {
         return {
@@ -884,7 +919,7 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        // 会有一个清楚数据的过程 暂时没找到原因 先用定时器延迟执行
+        // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
           let deskTmp = _.cloneDeep(this.deskDefault[0]);
           let oldId = deskTmp.id
@@ -914,27 +949,23 @@ export default {
       })
       let appListHandle = []
       appList.forEach(item => {
+        const now = new Date().getTime()
         let obj = {
-          backgroundColor: '',
-          backgroundIndex: 0,
-          imgShape: "square",
-          imgState: "cover",
-          isBackground: false,
-          isRadius: true,
-          isTitle: true,
-          link: "fast",
-          linkValue: "",
-          radius: 5,
-          size: "mini",
-          // 图标
-          src: item.icon,
-          // 标题
-          titleValue: item.name,
-          open: {
-            type: "default",
-            // 网址
-            value: item.path
-          }
+          "value": item.path,
+          "icon": item.icon,
+          "name": item.name,
+          "id": now,
+          "useCount": 0,
+          "lastUseTime": "",
+          "mode": "link",
+          "type": "default",
+          "iconState": "cover",
+          "iconShape": "square",
+          "isName": true,
+          "bg": "",
+          "isBg": false,
+          "radius": 5,
+          "isRadius": true,
         }
         appListHandle.push(obj)
       })
@@ -942,8 +973,8 @@ export default {
         // 直接修改默认数据
         if (item.id == '1702026795921') {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
-          if (appListHandle.length <= 1) {
-            this.desks[0].cards[index].customData.iconList = appListHandle
+          if (appListHandle.length > 1) {
+            this.desks[0].cards[index].customData.list = appListHandle
           } else {
             this.desks[0].cards[index] = {
               "name": "historyInfo",
@@ -959,7 +990,23 @@ export default {
     // 关闭缩放弹窗
     closeScale() {
       this.visibleScale = false
+      this.visibleGuide = true
     },
+    // 关闭引导弹窗
+    closeGuide() {
+      this.visibleGuide = false
+    },
+
+    // 触发引导弹窗
+    addGuide(deskId) {
+      this.deskId = deskId
+      this.showGuide = true
+    },
+    // 关闭引导弹窗
+    closeShowGuide(){
+      this.showGuide = false
+    },
+
 
     showSetting() {
       // this.setInitCard()

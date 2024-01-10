@@ -142,7 +142,8 @@ export const selectWallPaper = [
 export const wallpaperOptions = [
   {
     name: '拾光壁纸',value: 'timeline',label: '拾光壁纸',
-    path: 'https://api.nguaduot.cn/timeline/v2?client=thisky',
+    path: 'https://api.nguaduot.cn/timeline/v3',
+    header:{'Timeline-Client':'thisky'}
   },
   { name: '我的收藏', value: 'my', path: '',label: '我的收藏', },
   {
@@ -150,16 +151,22 @@ export const wallpaperOptions = [
     path: 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8',
   },
   {
-    name: '贪食鬼',value: 'glutton', label: '贪食鬼',
-    path: 'https://api.nguaduot.cn/glutton/v2?client=thisky',
+    name:'精选壁纸',value:'sift',path:'',label:'精选壁纸',
   },
-  // {
-  //   name: '贪吃蛇',value: 'snake',label: '贪吃蛇',
-  //   path: 'https://api.nguaduot.cn/snake/v2?client=thisky',  
-  // },
+  {
+    name: '贪食鬼',value: 'glutton', label: '贪食鬼',
+    path: 'https://api.nguaduot.cn/glutton/v3',
+    header:{'Timeline-Client':'thisky'}
+  },
+  {
+    name: '贪吃蛇',value: 'snake',label: '贪吃蛇',
+    path: 'https://api.nguaduot.cn/snake/v3',  
+    header:{'Timeline-Client':'thisky'}
+  },
   {
     name: 'Wallhaven',value: 'wallhaven',label: 'Wallhaven',
-    path: 'https://api.nguaduot.cn/wallhaven/v2?client=thisky',
+    path: 'https://api.nguaduot.cn/wallhaven/v3',
+    header:{'Timeline-Client':'thisky'}
   },
   // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
 ]
