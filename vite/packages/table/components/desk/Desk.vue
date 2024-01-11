@@ -168,7 +168,7 @@
     :mask="0"
   >
     <template #header-center>
-      <XtTab
+      <xt-tab
         v-if="settingVisible"
         style="height: 34px; width: 300px"
         boxClass="p-1 xt-bg-2"
@@ -176,7 +176,7 @@
         :itemStyle="{ 'border-radius': '6px' }"
         v-model="currentSettingTab"
         :list="settingsTab"
-      ></XtTab>
+      ></xt-tab>
     </template>
     <div style="height: calc(66vh); width: 452px">
       <!-- 当前桌面设置 -->
@@ -782,7 +782,7 @@ export default {
         iconList: [{ ...file }],
         newIcon: true,
       });
-      this.editVisible = false;
+      // this.editVisible = false;
     },
     /**
      * 暂存布局，与restore结对使用。

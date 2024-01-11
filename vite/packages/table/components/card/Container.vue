@@ -9,12 +9,7 @@
       v-if="!options?.custom"
       class="flex flex-col xt-shadow widget rounded-xl"
       :class="[edit ? 'editing' : '']"
-      style="
-         {
-          backdrop-filter: blur(50px);
-          -webkit-backdrop-filter: blur(50px);
-        }
-      "
+      style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)"
       :style="[
         getSize,
         {

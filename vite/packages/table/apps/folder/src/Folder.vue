@@ -38,7 +38,8 @@
             :model="customData.model"
             @deleteFile="deleteFile"
             @updateList="updateList"
-            @updateSort="updateSort" />
+            @updateSort="updateSort" 
+            @clickFile="clickFile" />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
@@ -121,7 +122,7 @@ const props = defineProps({
 });
 
 const { customData, customIndex, expand, secondary, navBar, auto } = toRefs(props);
-const emit = defineEmits(['update:size','update:layout'])
+const emit = defineEmits(['update:size','update:layout','clickFile'])
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -188,7 +189,9 @@ const autoSizeList = computed(() => {
   return sizeList.value
 })
 
-
+/**
+ * 自动尺寸
+ */
 const autoSize = computed(() => {
   const length = customData.value.list.length
   if (length <= 6) {
@@ -202,6 +205,12 @@ const autoSize = computed(() => {
   }
 })
 
+/**
+ * 
+ */
+const clickFile = (data)=>{
+  emit('clickFile',data)
+}
 /**
  * 自定义大小
  */

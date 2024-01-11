@@ -4,20 +4,25 @@ import dbStorage from "../../store/dbStorage";
 // @ts-ignore
 export const useDeskStore = defineStore("useDeskStore", {
   state: () => ({
-    menus: [],
+    menus: [], // 桌面菜单配置项
     autoOpenEdit: false, // 是否自动打开编辑
+    isEnterFolder: false, // 是否拖拽进入文件夹
   }),
   getters: {
     newMenus() {},
     currentMenus() {},
   },
   actions: {
+    // 添加菜单项
     addMenu(menu) {
-      const existingMenu = this.menus.find(item => item.id === menu.id);
+      const existingMenu = this.menus.find((item) => item.id === menu.id);
 
       if (existingMenu) {
         if (existingMenu.children && menu.children) {
-          existingMenu.children = this.processChildren(existingMenu.children, menu.children);
+          existingMenu.children = this.processChildren(
+            existingMenu.children,
+            menu.children
+          );
         } else {
           Object.assign(existingMenu, menu); // 更新现有菜单项
         }

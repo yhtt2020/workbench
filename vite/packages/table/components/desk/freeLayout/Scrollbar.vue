@@ -64,11 +64,14 @@ onMounted(async () => {
     freeLayoutEnv.value.scrollHeight = height;
     // 监听自由布局滚动事件
     scrollbar.value.addEventListener("ps-scroll-x", () => {
-      freeLayoutEnv.value.scrollLeft = scrollbar.value.scrollLeft;
+      freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
+
+console.log(' scrollbar.value.scrollTop  :>> ',  scrollbar.value.scrollTop );
+
 
     });
     scrollbar.value.addEventListener("ps-scroll-y", () => {
-      freeLayoutEnv.value.scrollTop = scrollbar.value.scrollTop;
+      freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
 
       // scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
 
@@ -234,12 +237,12 @@ function redirect() {
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
   window.removeEventListener("mousedown", handleMouseDown);

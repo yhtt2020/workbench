@@ -311,6 +311,7 @@ export default {
       setTextColor(newV);
     },
     wallpaperColor(newV) {
+      console.log('执行',newV);
       setWallpaperColor(newV);
     },
     // simple(){
@@ -351,7 +352,7 @@ export default {
       "style",
       "showWindowController",
     ]),
-    ...mapWritableState(appStore, ["userInfo"]),
+    ...mapWritableState(appStore, ["userInfo","backgroundColor"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
