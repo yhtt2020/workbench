@@ -1,82 +1,38 @@
 <template>
-  <RightMenu
-    :menus="menus"
-    :customIndex="customIndex"
-    v-model:size="currentSize"
-    :sizeList="sizeList"
-  >
-    <div
-      v-if="!options?.custom"
-      class="flex flex-col xt-shadow widget rounded-xl"
-      :class="[edit ? 'editing' : '']"
-      style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)"
-      :style="[
+  <RightMenu :menus="menus" :customIndex="customIndex" v-model:size="currentSize" :sizeList="sizeList" :disableHierarchy="options.hierarchy">
+    <div v-if="!options?.custom" class="flex flex-col xt-shadow widget rounded-xl" :class="[edit ? 'editing' : '']"
+      style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)" :style="[
         getSize,
         {
           background: options.bg || 'var( --primary-bg)',
           color: options.color || 'var(--primary-text)',
         },
-      ]"
-    >
+      ]">
       <!-- 头部区域 -->
-      <div
-        v-if="!header.disabled"
-        @dragstart.stop="titleDragStart"
-        draggable="true"
-        class="w-full flex items-center justify-between"
-        style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
+      <div v-if="!header.disabled" @dragstart.stop="titleDragStart" draggable="true"
+        class="flex items-center justify-between w-full" style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
         :style="{
           background: header.bg || '',
           color: header.color || '',
-        }"
-      >
+        }">
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
-          <div
-            @click="leftClick"
-            class="flex items-center h-full"
-            @mouseenter="leftMouseEnter"
-            @mouseleave="leftMouseLeave"
-            style=""
-            :class="[
+          <div @click="leftClick" class="flex items-center h-full" @mouseenter="leftMouseEnter"
+            @mouseleave="leftMouseLeave" style="" :class="[
               leftHover ? 'header-open cursor-pointer' : 'header-default',
-            ]"
-          >
+            ]">
             <!-- 图标区域 -->
-            <div
-              class="flex items-center h-full"
-              @mouseenter="iconMouseEnter"
-              @mouseleave="iconMouseLeave"
-            >
+            <div class="flex items-center h-full" @mouseenter="iconMouseEnter" @mouseleave="iconMouseLeave">
               <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
               <template v-else>
-                <xt-icon
-                  v-if="header.icon"
-                  :icon="header.icon"
-                  type=""
-                  size="19"
-                  w="20"
-                />
-                <xt-ify-icon
-                  v-else-if="header.ifyIcon"
-                  :icon="header.ifyIcon"
-                />
-                <xt-icon-show
-                  boxW="20"
-                  boxH="20"
-                  w="18"
-                  h="18"
-                  :modelValue="header.showIcon"
-                />
+                <xt-icon v-if="header.icon" :icon="header.icon" type="" size="19" w="20" />
+                <xt-ify-icon v-else-if="header.ifyIcon" :icon="header.ifyIcon" />
+                <xt-icon-show boxW="20" boxH="20" w="18" h="18" :modelValue="header.showIcon" />
               </template>
             </div>
             <!-- 标题区域 -->
-            <div
-              class="flex items-center px-2 h-full ml-1"
-              @mouseenter="titleMouseEnter"
-              @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleHover }"
-            >
+            <div class="flex items-center h-full px-2 ml-1" @mouseenter="titleMouseEnter" @mouseleave="titleMouseLeave"
+              :class="{ 'header-title': titleHover }">
               <slot name="title">
                 {{ title }}
               </slot>
@@ -88,36 +44,15 @@
         <div class="flex items-center header-right" style="padding-right: 14px">
           <slot name="right-extend"></slot>
           <template v-if="rightIcons && rightIcons.length">
-            <div v-for="item in rightIcons" class="header-right-icon mr-1">
-              <xt-ify-icon
-                v-if="item.ifyIcon"
-                :icon="item.ifyIcon"
-                @click="item.fn"
-                :class="item.class"
-                size="20"
-              />
-              <xt-icon
-                v-else-if="item.icon"
-                :icon="item.icon"
-                @click="item.fn"
-                type=""
-                size="19"
-                w="20"
-              />
+            <div v-for="item in rightIcons" class="mr-1 header-right-icon">
+              <xt-ify-icon v-if="item.ifyIcon" :icon="item.ifyIcon" @click="item.fn" :class="item.class" size="20" />
+              <xt-icon v-else-if="item.icon" :icon="item.icon" @click="item.fn" type="" size="19" w="20" />
             </div>
           </template>
-          <RightMenu
-            :menus="menus"
-            :customIndex="customIndex"
-            model="all"
-            v-model:size="currentSize"
-            :sizeList="sizeList"
-          >
+          <RightMenu :menus="menus" :customIndex="customIndex" model="all" v-model:size="currentSize" :disableHierarchy="options.hierarchy"
+            :sizeList="sizeList">
             <div class="header-right-icon">
-              <xt-ify-icon
-                icon="fluent:line-horizontal-3-20-filled"
-                size="20"
-              />
+              <xt-ify-icon icon="fluent:line-horizontal-3-20-filled" size="20" />
             </div>
           </RightMenu>
         </div>
@@ -288,7 +223,7 @@ export default {
     //组件自定义数据，每个卡片独立，并存入桌面数据当中
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
 
     desk: {
@@ -341,6 +276,7 @@ export default {
           },
           title: "删除小组件",
           color: "#FF4D4F",
+          disabled: this.options.del ? true : false
         },
       ];
     },
@@ -404,7 +340,7 @@ export default {
     if (!this.defaultData) return;
     deepMerge(this.customData, this.defaultData);
   },
-  mounted() {},
+  mounted() { },
   watch: {
     /**
      * 监听size变化
@@ -561,6 +497,7 @@ export default {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -569,9 +506,11 @@ export default {
 .header-right {
   display: none;
 }
+
 .widget:hover .header-right {
   display: flex;
 }
+
 .header-right-icon {
   display: flex;
   justify-content: center;
@@ -579,13 +518,16 @@ export default {
   width: 28px;
   height: 28px;
   border-radius: 6px;
+
   &:hover {
     background: var(--secondary-transp-bg);
   }
 }
+
 .header-default {
   margin-left: 14px;
 }
+
 .header-open {
   height: 28px;
   background: var(--modal-bg);

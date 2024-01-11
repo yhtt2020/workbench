@@ -51,9 +51,9 @@
             <template #box="{ data }">
               <component
                 :desk="currentDesk"
-                :is="data.name"
-                :customIndex="data.id"
-                :customData="data.customData"
+                :is="data?.name"
+                :customIndex="data?.id"
+                :customData="data?.customData"
                 di
               />
             </template>
@@ -630,6 +630,9 @@ export default {
   mounted() {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
+    });
+    this.$bus.on("reset", () => {
+      this.resetLayout();
     });
 
     if (window.showed) {

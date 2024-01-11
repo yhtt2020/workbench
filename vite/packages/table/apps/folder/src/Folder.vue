@@ -9,7 +9,12 @@
       @updateSort="updateSort"
     />
   </Widget> -->
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+  >
     <xt-container
       :options="options"
       :customIndex="customIndex"
@@ -32,13 +37,9 @@
         <template v-if="customData.list.length <= 0 && !dragSortState">
           <Null :size="customData.size" @addFile="addFileClick" />
         </template>
-        <vue-custom-scrollbar
-          v-else
-          :settings="{
-            suppressScrollY: false,
-          }"
-          class="relative w-full h-full"
-        >
+        <vue-custom-scrollbar v-else :settings="{
+          suppressScrollY: false,
+        }" class="relative w-full h-full">
           <File
             :list="customData.list"
             :layout="customData.layout"
@@ -96,11 +97,26 @@ import Null from "./components/Null.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
+import { useMouseInElement } from "@vueuse/core";
 
+/**
+ * 拖拽位置
+ */
+const folder = ref(null);
+const { isOutside } = useMouseInElement(folder);
+const updatePosition = (data) => {
+  if (isOutside.value) {
+    customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  }
+};
+
+/**
+ * 文件添加
+ */
 const editVisible = ref(false);
 const navigationStore = useNavigationStore();
 const addFileClick = () => {
-  if ( customData.value.model != "custom") {
+  if (customData.value.model != "custom") {
     message.info("桌面文件下无法无法添加");
     return;
   }
@@ -137,20 +153,15 @@ const props = defineProps({
     type: Object,
     default: () => ({
       // 右下角图标显示
-      resize: {
-        default: true,
-        type: Boolean,
-      },
+      resize: true,
       // 设置中尺寸大小选择
-      sizeOption: {
-        default: true,
-        type: Boolean,
-      },
+      sizeOption: true,
       // 设置背景颜色
-      bg: {
-        default: true,
-        type: Boolean,
-      },
+      bg: true,
+      // 隐藏删除小组件选项
+      isDel:false,
+      // 隐藏层级选择
+      hierarchy:false,
     }),
   },
   // 自动设置大小
@@ -196,6 +207,8 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
+    del: navBar.value.isDel ,
+    hierarchy: navBar.value.hierarchy
   };
 });
 
@@ -220,6 +233,7 @@ const sizeList = ref([
 
 provide("index", customIndex);
 provide("data", customData);
+provide("isOutside", isOutside);
 
 /**
  * 通过文件夹中数据的多少来自定义大小
@@ -250,28 +264,28 @@ const autoSize = computed(() => {
   } else {
     return "6x4";
   }
-})
+});
 
 /**
- *
+ *点击组件关闭
  */
-const clickFile = (data)=>{
-  emit('clickFile',data)
+const clickFile = (data) => {
+  emit('clickFile', data)
 }
 /**
  * 自定义大小
  */
-watch(()=>customData.value.size,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:size',newV)
-},{deep:true})
+watch(() => customData.value.size, (newV, oldV) => {
+  console.log(newV, oldV, 'newV,oldV')
+  emit('update:size', newV)
+}, { deep: true })
 
 /**
  * 自定义布局
  */
-watch(()=>customData.value.layout,(newV,oldV)=>{
-  console.log(newV,oldV,'newV,oldV')
-  emit('update:layout',newV)
+watch(() => customData.value.layout, (newV, oldV) => {
+  console.log(newV, oldV, 'newV,oldV')
+  emit('update:layout', newV)
 })
 /**
  * 菜单配置
@@ -316,7 +330,10 @@ const deleteFile = (data) => {
 };
 // 改
 const updateFile = (data) => {
-  // customData.value.list.push(data);
+  const index = customData.value.list.findIndex(item => item && item.id === data.id);
+
+  customData.value.list[index] = data;
+
 };
 
 /**
