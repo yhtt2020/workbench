@@ -20,7 +20,7 @@ export async function postMock(url, data, options = {crud: false}) {
   return post(url, data, options)
 }
 
-export async function post(url, data, options = {crud: false}) {
+export async function post(url, data={}, options = {crud: false}) {
   let conf = await getConfig()
   if (options.crud) {
     conf.headers['Content-Type'] = 'application/json'

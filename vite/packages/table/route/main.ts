@@ -89,13 +89,14 @@ import MemberManage from '../page/chat/page/setting/memberManage.vue'
 import MoreSetting from '../page/chat/page/setting/moreSetting.vue'
 import RoleAuthority from '../page/chat/page/setting/roleAuthority.vue'
 /**聊天团队模式结束**/
-
+import Device from '../apps/console/pages/Device.vue'
+import FileTransfer from '../apps/console/pages/FileTransfer.vue'
 //导入应用路由
 import ShortcutKeyRoute from '../apps/shortcutKey/route'
 import BarrageRoute from '../apps/barrage/route'
 import ChatAdmin from '../page/chat/page/admin.vue'
 import Power from "../page/Power.vue";
-
+import Remote from '../apps/console/pages/Remote.vue'
 
 export default [
   {
@@ -103,6 +104,33 @@ export default [
     name: "main",
     component: Main,
     children: [
+      {
+        path:'/device',
+        name:'device',
+        component:Device,
+        children: [
+          {
+            meta:{
+              tab1:'console',
+              tab2:'fileTransfer',
+              tab3:'fileTransfer'
+            },
+            path:'',
+            name:'fileHelper',
+            component:FileTransfer
+          },
+          {
+            meta:{
+              tab1:'console',
+              tab2:'fileTransfer',
+              tab3:'remote'
+            },
+            path:'',
+            name:'remote',
+            component:Remote
+          }
+        ]
+      },
       {
         path: '/power',
         name: 'power',
