@@ -2,6 +2,7 @@ import {createRouter, createWebHashHistory} from "vue-router";
 import routes from "./route/route";
 import {cardStore} from "./store/card";
 import {appStore} from "./store";
+import { message } from "ant-design-vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -47,6 +48,8 @@ router.beforeEach((to, from, next) => {
     }
     cardStore().setRouteParams(to.params)
     next()
+  }else{
+    message.error("定制过程中无法操作");
   }
   
 
