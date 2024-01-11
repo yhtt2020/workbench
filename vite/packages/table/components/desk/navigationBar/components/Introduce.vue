@@ -97,7 +97,7 @@ export default {
         this.dropList = []
       } else {
         for (let i = 0; i <navigationList.length; i++) {
-          if (navigationList[i].name === item.name) return message.info('已添加', 1)
+          if (navigationList[i].name === item.name) return message.info('该图标已添加，无法重复添加。', 1)
         }
         this.updateMainNav(item, 'add')
         item.addNav = true
@@ -123,8 +123,7 @@ export default {
         case 'right':
           this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
           break;
-
-          case 'desktop':
+        case 'desktop':
           this.$emit('clickListItem', item, index)
           break;
       }

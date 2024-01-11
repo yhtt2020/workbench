@@ -352,7 +352,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'copyNav']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'loadNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
     updateIcon,
