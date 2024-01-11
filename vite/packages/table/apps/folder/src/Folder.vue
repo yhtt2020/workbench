@@ -207,7 +207,9 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
+    // 隐藏删除
     del: navBar.value.isDel ,
+    // 隐藏层级
     hierarchy: navBar.value.hierarchy
   };
 });
@@ -242,7 +244,7 @@ const autoSizeList = computed(() => {
   if (auto.value) {
     // console.log(auto.value, "自动调整")
     const size = {
-      name: autoSize.value,
+      name: '自动',
       value: autoSize.value,
     };
     return [...sizeList.value, size];
@@ -436,6 +438,7 @@ const onRefresh = () => {
 const isDrag = ref(false);
 const updateBg = (val) => {
   // customData.value.bg = !customData.value.bg;
+  console.log(val,'from val')
   isDrag.value = val;
 };
 

@@ -4,8 +4,7 @@
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
-      id="folder">
+      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer ">
       <Folder 
         @clickFile="clickFile" 
         @update:layout="updateLayout" 
@@ -43,8 +42,8 @@
 
       </div>
       <!-- 快速搜索 底部栏区域 -->
-      <!-- <Drop @createFile="createFile"> -->
-      <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+      <!-- <Drop @createFile="createFile" class="h-full max-w-full"> -->
+      <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" ref="bottomPanel" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -202,8 +201,10 @@ import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from "nanoid";
-import Drop from '../apps/folder/src/components/Drop.vue'
+// import Drop from '../apps/folder/src/components/Drop.vue'
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
+import { useMouseInElement } from "@vueuse/core";
+import Drop from './desk/navigationBar/components/folder/Drop.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -623,6 +624,7 @@ export default {
           this.copyFootNav = [...rearrangedCopyFootNav]
           // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
           console.log(this.copyFootNav,'this---exchange')
+          // this.$forceUpdate()
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
@@ -1033,7 +1035,7 @@ export default {
      * @param {*} item 图标详细信息
      */
     newOpenApp(type, value, item) {
-      this.msgNotice(item)
+      if(item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
@@ -1333,6 +1335,7 @@ export default {
         }
       })
     },
+    useMouseInElement,
     useWindowSize,
     replaceType,
     iconFolder,
@@ -1363,10 +1366,10 @@ export default {
       // 元素大小
       let menuW = draggableSize[0] * 144
       // console.log(vW,posX,menuW, 'vW');
-      posX = posX > vW - menuW ? vW - menuW : posX;
+      posX = posX > vW - menuW ? vW - menuW : (posX - menuW/2 < 0 ? 0 : posX - menuW/2) ;
       // console.log(posX, 'posX')
       this.left = posX;
-    }
+    },
   },
   provide() {
     return {
