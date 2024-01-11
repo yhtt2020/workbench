@@ -91,6 +91,7 @@ import { lively, lively2 } from '../../js/data/livelyData';
 import { Icon as newIcon } from '@iconify/vue';
 import { wallpaperOptions,selectWallPaper } from '../../page/gallery/data/gallery';
 import { getFileName } from '../../page/gallery/libs/utils';
+import { paperGet,bingGet } from '../../js/axios/request';
 
 import Widget from '../card/Widget.vue';
 import WallpaperWidgetModal from '../paperModal/WallpaperWidgetModal.vue';
@@ -300,44 +301,50 @@ export default {
     },
     getOtherList(params){
       this.imgSpin = true;
-      axios.get(params.path,{headers:params.header}).then((res)=>{
-       if(res.status === 200){
-        this.imgSpin = false
-        let result = res.data;
-        let animations = ['ani-gray', 'bowen', 'ani-rotate'];
-        if(result.hasOwnProperty('data')){
-         let pickImage = result.data;
-         const mapImageList = pickImage.map((img)=>{
-          let randomIndex = Math.floor(Math.random() * animations.length);
-
-          const returnObj = {
-            animations: animations[randomIndex],
-            path: img.imgurl,
-            resolution: img.size,
-            no: img.no,
-            src:img.imgurl,
-            // img.thumburl
+      let animations = ['ani-gray', 'bowen', 'ani-rotate'];
+      if(params.value !== 'bing'){
+        paperGet(params.path)
+        .then((res)=>{
+          if(res.status === 200){
+            let pickImage = res.data.data;
+            const mapImageList = pickImage.map((img)=>{
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              const returnObj = {
+               animations: animations[randomIndex],
+               path: img.imgurl,
+               resolution: img.size,
+               no: img.no,
+               src:img.imgurl,
+               //  src:img.thumburl,
+              }
+              return returnObj;
+            })
+            this.imgList = mapImageList
           }
-          return returnObj;
-
-         })
-         this.imgList = mapImageList
-        }
-        else{
-         let images = result.images;
-         images.forEach((img)=>{
-          let randomIndex = Math.floor( Math.random() * animations.length );
-          let image = {
-           title: false, // img.title,
-           src: 'https://cn.bing.com' + img.url,
-           path: 'https://cn.bing.com' + img.url,
-           animation: animations[randomIndex], //['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
+        })
+        .catch((err)=>{ console.error('报错了',err); })
+        .finally(()=>{ this.$nextTick(()=>{ this.imgSpin = false }) })
+      }
+      else {
+        bingGet(params.path)
+        .then((res)=>{
+          if(res.status === 200){
+            let images = res.data.images;
+            const mapImage = images.map((img)=>{
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              return {
+                title: false, // img.title,
+                src: 'https://cn.bing.com' + img.url,
+                path: 'https://cn.bing.com' + img.url,
+                animation: animations[randomIndex], //['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
+              }
+            })
+            this.imgList = mapImage;
           }
-          this.imgList.push(image)
-         })
-        }
-       }
-      }).catch((err)=>{ console.error('报错了',err); }).finally(()=>{ this.$nextTick(()=>{ this.imgSpin = false }) })
+        })
+        .catch((err)=>{ console.error('报错了',err); })
+        .finally(()=>{ this.$nextTick(()=>{ this.imgSpin = false }) })
+      }
     },
 
     // 更新壁纸源数据以及更新customData

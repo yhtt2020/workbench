@@ -2,8 +2,6 @@ import { defineStore } from 'pinia';
 import dbStorage from '../../../store/dbStorage';
 import axios from 'axios';
 
-const pickLightUrl = 'https://api.nguaduot.cn/timeline/cate'; // 获取拾光壁纸分类接口
-const wallheavenUrl = 'https://api.nguaduot.cn/wallhaven/cate';
 
 
 // @ts-ignore

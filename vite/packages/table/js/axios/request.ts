@@ -42,3 +42,20 @@ export async function post(url, data, options = {crud: false}) {
     return null
   }
 }
+
+
+//提取壁纸接口请求
+export async function paperGet(url:any, params = {}) {
+  const getUrl = `https://api.nguaduot.cn${url}`;
+  const result = await axios.get(getUrl, {
+    params: params,
+    headers:{'Timeline-Client':'thisky'},
+  })
+  return result;
+}
+
+// 获取必应数据
+export async function bingGet(url:any){
+  const result = await axios.get(url)
+  return result;
+}

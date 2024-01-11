@@ -142,8 +142,7 @@ export const selectWallPaper = [
 export const wallpaperOptions = [
   {
     name: '拾光壁纸',value: 'timeline',label: '拾光壁纸',
-    path: 'https://api.nguaduot.cn/timeline/v3',
-    header:{'Timeline-Client':'thisky'}
+    path: '/timeline/v3',
   },
   { name: '我的收藏', value: 'my', path: '',label: '我的收藏', },
   {
@@ -155,18 +154,15 @@ export const wallpaperOptions = [
   },
   {
     name: '贪食鬼',value: 'glutton', label: '贪食鬼',
-    path: 'https://api.nguaduot.cn/glutton/v3',
-    header:{'Timeline-Client':'thisky'}
+    path: '/glutton/v3',
   },
   {
     name: '贪吃蛇',value: 'snake',label: '贪吃蛇',
-    path: 'https://api.nguaduot.cn/snake/v3',  
-    header:{'Timeline-Client':'thisky'}
+    path: '/snake/v3',  
   },
   {
     name: 'Wallhaven',value: 'wallhaven',label: 'Wallhaven',
-    path: 'https://api.nguaduot.cn/wallhaven/v3',
-    header:{'Timeline-Client':'thisky'}
+    path: '/wallhaven/v3',
   },
   // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
 ]
