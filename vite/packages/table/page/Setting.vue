@@ -166,13 +166,12 @@
 
 
               <a-col :span="6">
-                <xt-task id="M0301" no="1" @cb="styleVisible = true">
+
                   <div @click="styleVisible = true" class="btn">
                     <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
                     <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
                     <div>主题颜色</div>
                   </div>
-                </xt-task>
               </a-col>
               <a-col v-if="isMain() && !this.isOffline" :span="6">
                 <div @click="invite" class="btn">
@@ -211,7 +210,7 @@
   <div  style="z-index: 90" v-if="editNavigationVisible">
     <EditNewNavigation @setQuick="editNavigationVisible = false,this.editToggle=false"></EditNewNavigation>
   </div>
-  <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
+  <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 102">
     <xt-task id="M0301" no="2"></xt-task>
     <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
     <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
@@ -341,6 +340,9 @@ export default {
     this.textColor = getTextColor();
     this.wallpaperColor = getWallpaperColor();
     window.removeEventListener('keydown',this.listenEnter)
+    this.$bus.on("M0202", () => {
+      this.styleVisible = true
+    });
   },
   computed: {
     ...mapWritableState(appStore, [

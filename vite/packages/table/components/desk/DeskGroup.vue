@@ -2,7 +2,7 @@
   <div class="relative flex flex-col h-full">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
-      <xt-task :modelValue="getStep" :mask="false" />
+
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
         @changeEditing="editing = !editing"
@@ -495,8 +495,13 @@ export default {
   },
   async mounted() {
     this.$bus.on("M0104", () => {
+      this.currentAddTab.name = 'custom'
       this.showAddDeskForm();
     });
+    this.$bus.on("M0203", () => {
+      this.showAddDeskForm();
+    });
+
     let obj = {
       id: 3,
       newIcon: "fluent:apps-add-in-20-filled",
@@ -541,18 +546,7 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-    getStep() {
-      if (
-        (this.taskID == "M0101" ||
-          this.taskID == "M0102" ||
-          this.taskID == "M0103" ||
-          this.taskID == "M0201" ||
-          this.taskID == "M0302") &&
-        this.step == 1
-      ) {
-        return true;
-      }
-    },
+
     M01022() {
       return this.taskID == "M0102" && this.step == 2;
     },
@@ -607,10 +601,6 @@ export default {
     },
   },
   watch: {
-    getStep(val) {
-      if (!val) return;
-      // this.startTask();
-    },
     /**
      * 添加图标中下拉框桌面切换
      */
@@ -654,7 +644,8 @@ export default {
       this.deskMarketVisible = false;
     },
     afterAdded() {
-      completeTask('m0104')
+      // completeTask('m0104')
+      completeTask('m0203')
       this.hideMarket();
     },
     openPreview({ scheme, showModal }) {
@@ -868,6 +859,7 @@ export default {
       this.key = Date.now();
       this.addDeskVisible = false;
       completeTask('m0104')
+      // completeTask('m0203')
     },
     cleanMuuriData(list) {
       list.forEach((li) => {

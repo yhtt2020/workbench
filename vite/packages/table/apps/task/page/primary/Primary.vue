@@ -46,7 +46,7 @@ import Reward from "../../components/Reward.vue";
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0104";
+  store.taskID = "M0302";
   store.success = false;
   store.step = -1;
 };

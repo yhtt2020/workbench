@@ -429,6 +429,9 @@ export default {
       if (item?.name == "clocks") {
         completeTask("m0101");
       }
+      if (item?.name == "yuanCommunity") {
+        completeTask("m0302");
+      }
     },
     closeMarket(val) {
       this.openRemote = val;

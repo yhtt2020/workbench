@@ -10,12 +10,12 @@
           <MinSelect :list="pickParams.paperSelect" @update="pickFilterChange($event)"/>
         </template>
 
-        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250" 
-         v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false" 
-         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: left;" 
+        <xt-select :list="pickParams.paperSelect" class="xt-bg-t-2" v-else :zIndex="1250"
+         v-model="pickParams.setting.paperValue"  :borderClass="'rounded-md '" :border="false"
+         @change="pickFilterChange($event)" style="width: 140px;margin-right: 12px;text-align: left;"
         />
-        
-        <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'" 
+
+        <xt-dropdown :w="isModal ? 32 : 40" :h="isModal ? 32 : 40"  :iconSize="isModal ? 20 : 24" :placement="'bottomRight'" :buttonClass="'xt-active-bg'"
         :newIcon="'fluent:filter-16-regular'" :iconBg="'var(--active-text)'" :class="isModal ? 'mr-3':''" >
           <PickDropDetail :isModal="isModal" @emitPick="updateList"/>
         </xt-dropdown>
@@ -30,7 +30,7 @@
           <a-spin  />
         </div>
       </template>
-      
+
       <XtScrollbar  :y="true" style="height: 100%;" id="pick-wrapper" ref="pickWrapperRef" v-show="isLoading === false">
         <div style="height:8px;"></div>
         <viewer :images="pickImageData" :options="options" >
@@ -53,7 +53,7 @@
                         <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                       </div>
                     </xt-button>
-                  </div> 
+                  </div>
                   <div class="absolute" style="top:50%;left:50%;transform: translate(-50%,-50%);">
                     <xt-button w="100" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
                       <div class="flex items-center justify-center">
@@ -67,12 +67,12 @@
             </a-col>
           </a-row>
         </viewer>
-        <div style="height:16px;"></div> 
+        <div style="height:16px;"></div>
       </XtScrollbar>
 
       <!-- <template v-else>
         <vue-custom-scrollbar  :settings="settingsScroller" style="height: 100%" id="pick-wrapper" >
-          <div style="height:8px;"></div> 
+          <div style="height:8px;"></div>
           <viewer :images="pickImageData" :options="options" >
             <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
               <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" >
@@ -81,13 +81,13 @@
                     <img  class="image-item pointer" :src="img.src" :data-source="img.path" :alt="img.resolution" style="position: relative">
                     <div class="absolute top-1 right-3">
                       123
-                    </div> 
+                    </div>
                   </xt-mix-menu>
                 </div>
               </a-col>
             </a-row>
           </viewer>
-          <div style="height:16px;"></div> 
+          <div style="height:16px;"></div>
         </vue-custom-scrollbar>
       </template> -->
     </div>
@@ -109,6 +109,7 @@ import ClosePaperButton from './components/close/ClosePaperButton.vue';
 import PickDropDetail from './components/content/PickDropDetail.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import MinSelect from './components/select/MinSelect.vue';
+import {completeTask} from '../../apps/task/task'
 
 let fs = require('fs')
 let path = require('path')
@@ -139,17 +140,17 @@ export default {
         wheelPropagation: true
       },
       pickPaperMenu:[
-       { 
+       {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.currentPaper) } 
+        callBack:()=>{ this.setAppPaper(this.currentPaper) }
        },
-       { 
+       {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
-        callBack:()=>{  this.setDesktopPaper(this.currentPaper)  } 
+        callBack:()=>{  this.setDesktopPaper(this.currentPaper)  }
        },
        {
         newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
-        callBack:()=>{  this.download(this.currentPaper) } 
+        callBack:()=>{  this.download(this.currentPaper) }
        },
       ]
     }
@@ -222,7 +223,7 @@ export default {
         .finally(()=>{
           this.$nextTick(() => { this.isLoading = false; });
         })
-      }  
+      }
     },
 
     // 菜单回传事件
@@ -234,7 +235,7 @@ export default {
     // },
 
     // 收藏
-    addToMy(img) { 
+    addToMy(img) {
       this.removeToMyPaper(img);
     },
 

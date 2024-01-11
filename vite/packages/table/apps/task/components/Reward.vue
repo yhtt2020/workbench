@@ -19,7 +19,7 @@
       {{ types[type].name }}
     </div>
     <a-avatar
-      v-if="type == 'communityPoints' || type == 'medal'"
+      v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
       :size="48"
       :src="types[type].icon"
@@ -77,20 +77,28 @@ const currentId = computed(() => {
 });
 
 const getTask = computed(() => {
-  let { awardList } = currentTaskList.value.find(
+  const result = currentTaskList.value.find(
     (item) => item.name == currentId.value
   );
-  return awardList;
+  if (result) {
+    let { awardList } = result;
+    return awardList;
+  } else {
+    return null; // 返回一个默认值
+  }
 });
 
 const getTaskMedal = computed(() => {
   if (type.value != "medal") return "";
+  if (!getTask.value) return "";
+
   let { data } = getTask.value.find((item) => item.label == "道具");
   return data.icon;
 });
 
 const getAvatarFrame = computed(() => {
   if (type.value != "avatarFrame") return "";
+  if (!getTask.value) return "";
   let { data } = getTask.value.find((item) => item.label == "勋章");
   return data.icon_sm;
 });

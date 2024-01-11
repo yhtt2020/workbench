@@ -640,9 +640,7 @@ export default {
       } else {
         return
       }
-// if (!xx=='桌面') {
-//   completeTask('m0105')
-// }
+
       this.menuVisible = false
     },
     showMenu() {

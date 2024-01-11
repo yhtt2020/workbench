@@ -163,7 +163,6 @@
   <xt-modal
     v-model="settingVisible"
     :footer="false"
-    title="桌面设置"
     boxClass="p-4 pb-0"
     :mask="0"
   >
@@ -641,6 +640,16 @@ export default {
     this.$bus.on("M0101", () => {
       this.newAddCard();
     });
+    this.$bus.on("M0302", () => {
+      this.newAddCard();
+    });
+    this.$bus.on("M0201", () => {
+      // this.$refs.galleryRef.openGalleryModal();
+      setTimeout(() => {
+      this.$refs.galleryRef.openGalleryModal();
+      }, 100);
+    });
+
     if (window.showed) {
       this.showGrid = true;
     }

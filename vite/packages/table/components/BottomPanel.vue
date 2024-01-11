@@ -401,6 +401,8 @@ export default {
     }
   },
   mounted() {
+    this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
+
     // this.popVisible=true
     this.copyNav()
     this.enableDrag()
@@ -736,8 +738,8 @@ export default {
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
     /**
      * 找出不相同元素
-     * @param {*} navList 
-     * @param {*} copyList 
+     * @param {*} navList
+     * @param {*} copyList
      */
     updateNavList(navList, copyList) {
       const filteredNavList = navList.filter((item) => {
@@ -749,7 +751,7 @@ export default {
     },
     /**
      * 点击文件夹子图标
-     * @param {*} item 
+     * @param {*} item
      */
     clickFile(item) {
       this.folderVisible = false
@@ -766,8 +768,8 @@ export default {
     },
     /**
      * 判断元素是否相同
-     * @param {*} ele 
-     * @param {*} item 
+     * @param {*} ele
+     * @param {*} item
      */
     judge(ele, item) {
       if (ele.type === 'coolApp') {
@@ -827,7 +829,7 @@ export default {
     },
     /**
      * 更新大小尺寸
-     * @param {*} value 
+     * @param {*} value
      */
     updateSize(value) {
       this.currentItem.size = value
@@ -835,7 +837,7 @@ export default {
     },
     /**
      * 更新图标排序方式
-     * @param {*} value 
+     * @param {*} value
      */
     updateLayout(value) {
       this.currentItem.layout = value
@@ -914,7 +916,7 @@ export default {
     },
     /**
      * 打开菜单选项
-     * @param {*} item 
+     * @param {*} item
      */
     editNavigation(item) {
       if (item.component) {
@@ -1025,7 +1027,7 @@ export default {
     },
     /**
      * 拖拽桌面图标
-     * @param {*} e 
+     * @param {*} e
      */
     async drop(e) {
       // console.log(e,'from drop');
@@ -1069,8 +1071,8 @@ export default {
     },
     /**
      * 添加图标
-     * @param {*} item 
-     * @param {*} index 
+     * @param {*} item
+     * @param {*} index
      */
     clickRightListItem(item, index) {
       this.activeRightItem = index
@@ -1103,8 +1105,8 @@ export default {
     },
     /**
      * 更新图标选择状态
-     * @param {*} addItem 
-     * @param {*} type 
+     * @param {*} addItem
+     * @param {*} type
      */
     updateMainNav(addItem, type) {
       this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
@@ -1141,8 +1143,8 @@ export default {
     },
     /**
      * 解散文件夹和切换文件夹
-     * @param {*} item 
-     * @param {*} index 
+     * @param {*} item
+     * @param {*} index
      */
     resetFolder(item, index) {
       if (item.children) {
@@ -1301,7 +1303,7 @@ export default {
             if (oIndex === nIndex) {
               return 0
             }
-            
+
             that.footNavigationList[nIndex] = that.iconFolder(that.footNavigationList, oIndex, nIndex)
             that.copyFootNav[nIndex] = that.iconFolder(that.copyFootNav, oIndex, nIndex)
             console.log(that.footNavigationList[nIndex].id, 'that.footNavigationList', that.copyFootNav[nIndex].id, 'that.copyFootNav')

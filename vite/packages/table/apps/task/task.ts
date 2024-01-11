@@ -47,6 +47,8 @@ export const completeTask = async (id) => {
     rewardVisible.value = true;
     notification.close(key);
   };
+
+  console.log('2323231 :>> ', 2323231);
   notification["info"]({
     message: "任务完成！",
     description: "已完成「" + id + "」任务，点击领取奖励。",

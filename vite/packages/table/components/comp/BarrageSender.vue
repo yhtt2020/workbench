@@ -14,7 +14,8 @@
 import { message } from 'ant-design-vue'
 import { mapActions, mapState } from 'pinia'
 import { teamStore } from '../../store/team'
-import {completeTask} from "../../apps/task/page/branch/task.ts"
+// import {completeTask} from "../../apps/task/page/branch/task.ts"
+import {completeTask} from "../../apps/task/task"
 export default {
   name: 'BarrageSender',
   props:['currentChannel'],
@@ -26,6 +27,8 @@ export default {
     }
   },
   mounted () {
+
+
     this.CONST = tsbApi.barrage.CONST
   },
   computed:{
@@ -39,13 +42,13 @@ export default {
         message.error('请输入弹幕内容')
         return
       } else {
-        completeTask('Z0501')
+        // completeTask('Z0501')
         let channelType=this.CONST.CHANNEL.PUBLIC
         let pageUrl='table'
         if(this.currentChannel.name!=='all'){
           channelType=this.CONST.CHANNEL.TEAM
           pageUrl=this.myTeamNo
-          completeTask('Z0502')
+          // completeTask('Z0502')
           if(String(pageUrl).trim()===''){
             await this.updateMy()
             if(String(pageUrl).trim()===''){
@@ -67,6 +70,7 @@ export default {
           }
           console.log('33233333 :>> ', 33233333);
           message.success('弹幕发送成功')
+
           setTimeout(() => {
             if(this.currentChannel.name==='all'){
               this.$emit('loadAllBarrages')

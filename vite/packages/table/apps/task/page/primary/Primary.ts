@@ -170,6 +170,16 @@ export const tasks = [
             value: 30,
           },
         ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0201",
+          },
+        ],
       },
       {
         id: "M0202",
@@ -185,6 +195,16 @@ export const tasks = [
           {
             type: "experience",
             value: 30,
+          },
+        ],
+        open: [
+          {
+            type: "router",
+            value: "setting",
+          },
+          {
+            type: "bus",
+            value: "M0202",
           },
         ],
       },
@@ -205,6 +225,16 @@ export const tasks = [
             value: 30,
           },
         ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0203",
+          },
+        ],
       },
       {
         id: "M0204",
@@ -221,6 +251,13 @@ export const tasks = [
             value: 30,
           },
         ],
+        open: [
+          {
+            type: "router",
+            value: "barrage",
+          },
+
+        ],
       },
     ],
   },
@@ -230,12 +267,12 @@ export const tasks = [
     tasks: [
       {
         id: "M0301",
-        name: "开启弹幕功能",
+        name: "修改一次个人信息",
         pre: "M0204",
         suf: "M0302",
         repeatable: true,
         frequency: 1,
-        intro: "是时候和其他人见面了，开启弹幕功能吧！",
+        intro: "设置一个你喜欢的头像和昵称，同步展示到工组台和元社区。",
         description:
           "在底部导航或工作台设置中心，点击头像即可进入用户中心选择修改资料。",
         reward: [
@@ -245,6 +282,16 @@ export const tasks = [
           },
           {
             type: "avatarFrame",
+          },
+        ],
+        open: [
+          {
+            type: "router",
+            value: "socialMy",
+          },
+          {
+            type: "bus",
+            value: "M0301",
           },
         ],
       },
@@ -266,6 +313,16 @@ export const tasks = [
           },
           {
             type: "medal",
+          },
+        ],
+        open: [
+          {
+            type: "router",
+            value: "home",
+          },
+          {
+            type: "bus",
+            value: "M0302",
           },
         ],
       },
