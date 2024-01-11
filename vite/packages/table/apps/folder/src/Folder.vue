@@ -47,7 +47,8 @@
             @deleteFile="deleteFile"
             @updateList="updateList"
             @updateSort="updateSort"
-            @clickFile="clickFile" />
+            @clickFile="clickFile"
+          />
         </vue-custom-scrollbar>
       </Resize>
     </xt-container>
@@ -172,7 +173,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto } =
   toRefs(props);
-const emit = defineEmits(['update:size','update:layout','clickFile'])
+const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -270,23 +271,25 @@ const autoSize = computed(() => {
  *点击组件关闭
  */
 const clickFile = (data) => {
-  emit('clickFile', data)
-}
+  emit("clickFile", data);
+};
 /**
  * 自定义大小
  */
 watch(() => customData.value.size, (newV, oldV) => {
-  console.log(newV, oldV, 'newV,oldV')
-  emit('update:size', newV)
-}, { deep: true })
+  console.log(newV, oldV, "newV,oldV");
+    emit("update:size", newV);
+  },
+   { deep: true });
 
 /**
  * 自定义布局
  */
 watch(() => customData.value.layout, (newV, oldV) => {
-  console.log(newV, oldV, 'newV,oldV')
-  emit('update:layout', newV)
-})
+  console.log(newV, oldV, "newV,oldV");
+    emit("update:layout", newV);
+  }
+);
 /**
  * 菜单配置
  */
@@ -330,10 +333,11 @@ const deleteFile = (data) => {
 };
 // 改
 const updateFile = (data) => {
-  const index = customData.value.list.findIndex(item => item && item.id === data.id);
+  const index = customData.value.list.findIndex(
+    (item) => item && item.id === data.id
+  );
 
   customData.value.list[index] = data;
-
 };
 
 /**
@@ -441,10 +445,37 @@ const updateBg = (val) => {
 
 onBeforeMount(() => {});
 
-onMounted(() => {
+onMounted(async () => {
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
+  }
+  if (customData.value.model != "custom") {
+    const desktopApps = await ipc.sendSync("getDeskApps");
+    let desktopAppsList = [];
+
+    desktopApps.forEach((item) => {
+      const file = {
+        ...defaultData,
+        name: item.name,
+        value: item.path,
+        icon: item.icon,
+        type: "tableApp",
+        id: nanoid(6),
+      };
+      desktopAppsList.push(file);
+    });
+    customData.value.list = customData.value.list.filter((item) =>
+      desktopAppsList.find((file) => item.name == file.name)
+    );
+    let newList = [];
+    desktopAppsList.forEach((item) => {
+      let data = customData.value.list.find((file) => item.name == file.name);
+
+      if (typeof data == "undefined") {
+        customData.value.list.push(item);
+      }
+    });
   }
 });
 </script>
