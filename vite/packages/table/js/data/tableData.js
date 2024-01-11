@@ -332,6 +332,12 @@ export default {
     event: 'setting',
     fn: () => { vm.$router.push({ name: 'setting' })}
   },
+  {
+    type:'systemApp',
+    icon:'/logo/control.svg',
+    name:'控制中心',
+    event:'control',
+  }
 
   ],
 }
