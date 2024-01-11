@@ -279,7 +279,21 @@ app.whenReady().then(() => {
       },
 
     ]
-
+    tpl.push({
+        label: '版本号：' + require('electron').app.getVersion()
+      },
+      {
+        label: '检测升级',
+        click: () => {
+          const Updater=require('./src/main/update')
+          let updater=new Updater()
+          updater.checkUpdate(true)
+        }
+      },
+      {
+        type: 'separator'
+      }
+    )
 
     tpl.push(
       {
@@ -322,7 +336,7 @@ app.whenReady().then(() => {
         }
       })
     if (tableRunning) {
-      tpl.splice(tpl.length-1,0,{
+      tpl.splice(tpl.length - 1, 0, {
         label: '退出工作台',
         click () {
           global.tableManager.close()
