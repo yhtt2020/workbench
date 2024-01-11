@@ -126,6 +126,7 @@ export default {
 
           case 'desktop':
           this.$emit('clickListItem', item, index)
+          message.success('添加成功',0.5)
           break;
       }
 
