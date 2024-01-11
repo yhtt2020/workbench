@@ -81,8 +81,8 @@
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
               <div class=" scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px" ref="content">
                 <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px" id="bottomContent">
-                  <div v-if="footNavigationList.length <= 0" style=""
-                    class="flex items-center justify-center w-full h-full mt-6 ml-6"
+                  <div v-if="copyFootNav.length <= 0" style=""
+                    class="flex items-center justify-center   h-full w-[52px] h-[52px]   6"
                     @click="this.editNavigation(this.drawerMenus[0])">
                     <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
                   </div>
@@ -787,10 +787,7 @@ export default {
      * 清空当前导航栏
      */
     clearAll() {
-      for (let i = this.footNavigationList.length - 1; i >= 0; --i) {
-        this.removeFootNavigationList(i, 1);
-        // console.log(this.footNavigationList, 'footNavigationList');
-      }
+      this.copyFootNav=[]
     },
     /**
      * 判断元素是否相同

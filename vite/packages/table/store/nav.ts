@@ -324,7 +324,7 @@ export const navStore = defineStore("nav", {
       // 当元素个数大于限制数时，将无法添加
         // if(this.maxItemNum >= this.footNavigationList.length){
       if(!item.id) { item.id=nanoid(6)}
-          this.footNavigationList.unshift(item)
+          this.copyFootNav.unshift(item)
         // }
     },
     removeSideNavigationList(index) {

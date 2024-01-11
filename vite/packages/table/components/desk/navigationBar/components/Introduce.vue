@@ -115,7 +115,7 @@ export default {
       // }
       switch (this.selectNav) {
         case 'foot':
-          this.clickRightListItem(item,index,this.footNavigationList,this.setFootNavigationList)
+          this.clickRightListItem(item,index,this.copyFootNav,this.setFootNavigationList)
           break;
         case 'left':
           this.clickRightListItem(item,index,this.sideNavigationList,this.setSideNavigationList)
@@ -138,7 +138,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),
-    ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(navStore, ['copyFootNav','mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
     filterList() {
       if (this.selectTag === 'webNavigation') {
         return this.filterIcon(this.webList[0])
