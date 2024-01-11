@@ -42,3 +42,31 @@ export const useFileConversionIcon = (data) => {
 
   return icon;
 };
+
+// 文件夹图标转为导航栏图标格式
+export const useIconConversionNav = (data)=>{
+  const icon = {
+    icon:data.icon,
+    name:data.name,
+    value:data.value,
+    mode:data.mode,
+    isBg:data.isBg,
+    bg:data.bg,
+    type:data.type,
+  }
+  return icon;
+}
+
+// 单图标组件转为导航栏图标格式
+export const useFileConversionNav = (data)=>{
+  const icon = {
+    icon:data.src,
+    name:data.titleValue,
+    value:data.open.value,
+    mode:'app',
+    isBg:data.isBackground,
+    bg:data.backgroundColor,
+    type:data.open.type,
+  }
+  return icon;
+}

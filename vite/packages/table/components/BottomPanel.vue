@@ -42,7 +42,7 @@
 
       </div>
       <!-- 快速搜索 底部栏区域 -->
-      <!-- <Drop @createFile="createFile" class="h-full max-w-full"> -->
+      <Drop @createFile="createFile" >
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" ref="bottomPanel" style="
         display: flex;
         flex-direction: column;
@@ -52,7 +52,7 @@
         align-items: center;
         /* border-radius: 18px; */
         height: 80px;
-        max-width: 90%;
+        max-width: 100%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -106,7 +106,7 @@
         </xt-task>
 
       </div>
-      <!-- </Drop> -->
+      </Drop>
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
       </keep-alive>
@@ -594,23 +594,11 @@ export default {
               return this.judge(item, element);
             });
           })
-          console.log(list, this.copyFootNav, 'list')
+          // console.log(list, this.copyFootNav, 'list')
           this.copyFootNav = this.copyFootNav.filter((item, index) => { return list.indexOf(index) === -1 })
         }
         else {
           const rearrangedCopyFootNav = [];
-          // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-          // this.footNavigationList.forEach((item) => {
-          //   // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-          //   const correspondingElement = this.copyFootNav.find((copyItem) => {
-          //     return this.judge(item, copyItem);
-          //   });
-
-          //   // 如果找到对应元素，则将其放入新数组中
-          //   if (correspondingElement) {
-          //     rearrangedCopyFootNav.push(correspondingElement);
-          //   }
-          // });
           for (let i = 0; i < this.footNavigationList.length; i++) {
             const item = this.copyFootNav.find((copyItem) => {
               return this.judge(this.footNavigationList[i], copyItem);
@@ -623,8 +611,7 @@ export default {
           // this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
           this.copyFootNav = [...rearrangedCopyFootNav]
           // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
-          console.log(this.copyFootNav,'this---exchange')
-          // this.$forceUpdate()
+          // console.log(this.copyFootNav,'this---exchange')
         }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
@@ -660,6 +647,7 @@ export default {
         if (this.copyFootNav.length === 0 && this.footNavigationList.length > 0) {
           this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
         }
+        // this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
       },
       immediate: true,
       deep: true,
@@ -1047,17 +1035,7 @@ export default {
      * @param {*} e 
      */
     async drop(e) {
-      // console.log(e,'from drop');
-      // this.modelValue=false
-      // const width = window.innerWidth
       let files = e.dataTransfer.files
-      // if (e.x <= 300) {
-      //   this.selectNav = 'left'
-      // } else if (e.x > 300 && e.x < width - 300) {
-      //   this.selectNav = 'foot'
-      // } else if (e.x >= width - 300) {
-      //   this.selectNav = 'right'
-      // }
       let filesArr = []
       if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
@@ -1191,8 +1169,15 @@ export default {
       }
     },
     updateIcon,
-    createFile(item) {
-      console.log(item, 'from drop')
+    createFile(item,x) {
+      // console.log(item, 'from drop')
+      const bottom = document.querySelector('#bottomPanel')
+      const rect = bottom.getBoundingClientRect()
+      // console.log(rect,x, 'rect');
+      // this.footNavigationList.unshift(item)
+      const index = Math.round ((x - rect.x) / 72)
+      console.log(index, 'index');
+      this.footNavigationList.splice(index, 0, item)
     },
     /**
      * sortable拖拽函数
@@ -1365,7 +1350,7 @@ export default {
       let posX = Number((this.defaultPosition.x).toFixed(0));
       // 元素大小
       let menuW = draggableSize[0] * 144
-      // console.log(vW,posX,menuW, 'vW');
+      console.log(vW,posX,menuW, 'vW');
       posX = posX > vW - menuW ? vW - menuW : (posX - menuW/2 < 0 ? 0 : posX - menuW/2) ;
       // console.log(posX, 'posX')
       this.left = posX;
