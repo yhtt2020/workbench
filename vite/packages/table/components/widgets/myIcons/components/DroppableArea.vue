@@ -24,7 +24,6 @@ export default {
 
     // 处理鼠标经过事件
     handleHover(event) {
-      console.log("2 :>> ", 2);
       this.$emit("hover", event);
     },
   },

@@ -21,6 +21,7 @@ export const initSocket = async () => {
       token:config.headers.Authorization,
       clientId:tsbApi.runtime.clientId,
       platform:process.platform,//此处要指定设备平台
+      clientName:tsbApi.runtime.clientName
     }
   }
   if(!dev){

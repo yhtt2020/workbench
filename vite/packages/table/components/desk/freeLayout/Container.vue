@@ -96,10 +96,7 @@ function updateCard(data) {
   }
 
   data.forEach((item) => {
-    console.log('item :>> ', item);
     const { id, customData } = item;
-
-    console.log('getFreeLayoutData.value[id]  :>> ', getFreeLayoutData.value[id] );
     // 优化2 判断初始化还是更新
     if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
       console.log("旧数据处理 :>> ");
@@ -110,8 +107,6 @@ function updateCard(data) {
         id,
       };
     } else {
-      console.log("id :>> ", id);
-
       getPosition(item);
     }
   });

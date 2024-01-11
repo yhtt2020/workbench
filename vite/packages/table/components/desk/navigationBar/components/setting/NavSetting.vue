@@ -125,33 +125,34 @@ const changeFn=(item,index)=>{
     navigationStore.bottomToggle[index]=item.switch
 }
 /**
+ * 社区和任务的监听函数
+ * @param target 目标值
+ * @param value 
+ * @param item 
+ */
+const findItem = (target,value,item)=>{
+    if(target){
+        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === value);
+        if (hasTargetItem) {
+            return true;
+        }
+        useNavStore.setFootNavigationList(item);
+    }else{
+        const index = useNavStore.footNavigationList.findIndex(item => item.value === value);
+        if (index !== -1) {
+           useNavStore.removeFootNavigationList(index); 
+        }
+    }
+}
+/**
  * 社区中心和任务中心
  */
 watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
-    if (newValue) {
-        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === 'commun');
-        if (hasTargetItem) {
-            console.log('Found target item');
-            return true;
-        }
-        useNavStore.setFootNavigationList(iconList.value[0]);
-    } else {
-        const index = useNavStore.footNavigationList.findIndex(item => item.value === 'commun');
-        useNavStore.removeFootNavigationList(index);
-    }
+    findItem(newValue,'commun',iconList.value[0])
 }, { deep: true, immediate: true });
 
 watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
-    if (newValue) {
-        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === 'task');
-        if (hasTargetItem) {
-            return true;
-        }
-        useNavStore.setFootNavigationList(iconList.value[1]);
-    } else {
-        const index = useNavStore.footNavigationList.findIndex(item => item.value === 'task');
-        useNavStore.removeFootNavigationList(index);
-    }
+    findItem(newValue,'task',iconList.value[1])
 }, { deep: true, immediate: true });
 </script>
 <style lang='scss' scoped></style>

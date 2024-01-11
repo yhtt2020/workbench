@@ -13,28 +13,15 @@
       添加图标</xt-button
     >
   </div>
-
-  <EditNewNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    @addIcon="addIcon"
-    :isFolder="false"
-  ></EditNewNavigation>
 </template>
 
 <script setup>
-import EditNewNavigation from "../../../../components/desk/navigationBar/EditNewNavigation.vue";
-import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
 import { watch, toRefs, ref, computed } from "vue";
-import { defaultData } from "./options";
-import { nanoid } from "nanoid";
 
 const props = defineProps({
   size: {},
 });
-const navigationStore = useNavigationStore();
-const editVisible = ref(false);
-const emits = defineEmits([""]);
+const emits = defineEmits(["addFile"]);
 
 const { size } = toRefs(props);
 
@@ -44,21 +31,7 @@ const currentSize = computed(() => {
 });
 
 const editClick = () => {
-  navigationStore.selectNav = "desktop";
-  editVisible.value = true;
-};
-
-const addIcon = (data) => {
-  const { name, icon, type, value } = data;
-  let fileInfo = {
-    ...defaultData,
-    id: nanoid(6),
-    name,
-    icon,
-    type,
-    value,
-  };
-  emits("createFile", fileInfo);
+  emits("addFile");
 };
 </script>
 
